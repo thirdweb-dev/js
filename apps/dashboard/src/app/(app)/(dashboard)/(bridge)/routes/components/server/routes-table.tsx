@@ -92,14 +92,22 @@ export async function RoutesData(props: {
             <p className="text-2xl">No Results found</p>
           </div>
         ) : props.activeView === "table" ? (
-          <TableContainer>
+          <TableContainer className="overflow-hidden rounded-xl border border-border/50 bg-card/50 shadow-sm transition-all">
             <Table>
               <TableHeader className="z-0">
-                <TableRow>
-                  <TableHead>Origin Token</TableHead>
-                  <TableHead>Origin Chain</TableHead>
-                  <TableHead>Destination Token</TableHead>
-                  <TableHead>Destination Chain</TableHead>
+                <TableRow className="border-border/50 border-b bg-muted/50">
+                  <TableHead className="py-4 font-medium text-muted-foreground/80 text-xs uppercase tracking-wider">
+                    Origin Token
+                  </TableHead>
+                  <TableHead className="py-4 font-medium text-muted-foreground/80 text-xs uppercase tracking-wider">
+                    Origin Chain
+                  </TableHead>
+                  <TableHead className="py-4 font-medium text-muted-foreground/80 text-xs uppercase tracking-wider">
+                    Destination Token
+                  </TableHead>
+                  <TableHead className="py-4 font-medium text-muted-foreground/80 text-xs uppercase tracking-wider">
+                    Destination Chain
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

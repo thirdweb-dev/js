@@ -52,20 +52,20 @@ export async function RouteListRow({
   ]);
 
   return (
-    <TableRow linkBox className="hover:bg-accent/50">
+    <TableRow linkBox className="group transition-colors hover:bg-accent/50">
       <TableCell>
-        <div className="flex flex-row items-center gap-4">
-          <div className="flex items-center gap-1">
+        <div className="flex flex-row items-center gap-3">
+          <div className="flex items-center gap-2">
             {resolvedOriginTokenIconUri ? (
               // For now we're using a normal img tag because the domain for these images is unknown
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={resolvedOriginTokenIconUri}
                 alt={originTokenAddress}
-                className="size-6 rounded-full border border-muted-foreground"
+                className="size-7 rounded-full border border-border/50 shadow-sm transition-transform group-hover:scale-105"
               />
             ) : (
-              <div className="size-6 rounded-full bg-muted-foreground" />
+              <div className="size-7 rounded-full bg-muted-foreground/20" />
             )}
             {originTokenSymbol && (
               <CopyTextButton
@@ -76,7 +76,7 @@ export async function RouteListRow({
                     : originTokenSymbol
                 }
                 tooltip="Copy Token Address"
-                className="relative z-10 text-base"
+                className="relative z-10 font-medium text-base"
                 variant="ghost"
                 copyIconPosition="right"
               />
@@ -85,22 +85,22 @@ export async function RouteListRow({
         </div>
       </TableCell>
 
-      <TableCell className="text-muted-foreground">
-        {originChain.name}
+      <TableCell className="text-muted-foreground/90">
+        <span className="font-medium">{originChain.name}</span>
       </TableCell>
 
       <TableCell>
-        <div className="flex flex-row items-center gap-4">
-          <div className="flex items-center gap-1">
+        <div className="flex flex-row items-center gap-3">
+          <div className="flex items-center gap-2">
             {resolvedDestinationTokenIconUri ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={resolvedDestinationTokenIconUri}
                 alt={destinationTokenAddress}
-                className="size-6 rounded-full border border-muted-foreground"
+                className="size-7 rounded-full border border-border/50 shadow-sm transition-transform group-hover:scale-105"
               />
             ) : (
-              <div className="size-6 rounded-full bg-muted-foreground" />
+              <div className="size-7 rounded-full bg-muted-foreground/20" />
             )}
             {destinationTokenSymbol && (
               <CopyTextButton
@@ -111,7 +111,7 @@ export async function RouteListRow({
                     : destinationTokenSymbol
                 }
                 tooltip="Copy Token Address"
-                className="relative z-10 text-base"
+                className="relative z-10 font-medium text-base"
                 variant="ghost"
                 copyIconPosition="right"
               />
@@ -120,8 +120,8 @@ export async function RouteListRow({
         </div>
       </TableCell>
 
-      <TableCell className="text-muted-foreground">
-        {destinationChain.name}
+      <TableCell className="text-muted-foreground/90">
+        <span className="font-medium">{destinationChain.name}</span>
       </TableCell>
     </TableRow>
   );
