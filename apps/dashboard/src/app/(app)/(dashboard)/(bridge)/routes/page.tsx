@@ -10,7 +10,7 @@ import {
   type SearchParams,
 } from "./components/server/routes-table";
 
-const title = "Routes: Swap, Bridge, and On-Ramp";
+const title = "Universal Bridge Routes: Swap, Bridge, and Onramp";
 const description =
   "A list of token routes for swapping, bridging, and on-ramping between EVM chains with thirdweb.";
 

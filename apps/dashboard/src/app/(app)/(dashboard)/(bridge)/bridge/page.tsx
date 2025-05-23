@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { getClientThirdwebClient } from "../../../../../@/constants/thirdweb-client.client";
 import { UniversalBridgeEmbed } from "./components/client/UniversalBridgeEmbed";
 
-const title = "Universal Bridge: Swap, Bridge, and On-Ramp";
+const title = "Universal Bridge: Swap, Bridge, and Onramp";
 const description =
   "Swap, bridge, and on-ramp to any EVM chain with thirdweb's Universal Bridge.";
 

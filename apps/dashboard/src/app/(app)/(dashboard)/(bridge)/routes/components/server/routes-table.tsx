@@ -77,17 +77,11 @@ export async function RoutesData(props: {
 
   const totalPages = Math.ceil(filteredCount / DEFAULT_PAGE_SIZE);
 
-  const activePage = Number(props.searchParams.page || 1);
-  const pageSize = DEFAULT_PAGE_SIZE;
-  const startIndex = (activePage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const paginatedRoutes = routesToRender.slice(startIndex, endIndex);
-
   return (
     <>
       <main>
         {/* empty state */}
-        {paginatedRoutes.length === 0 ? (
+        {routesToRender.length === 0 ? (
           <div className="flex h-[300px] items-center justify-center rounded-lg border p-8 lg:h-[500px]">
             <p className="text-2xl">No Results found</p>
           </div>
@@ -111,7 +105,7 @@ export async function RoutesData(props: {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paginatedRoutes.map((route) => (
+                {routesToRender.map((route) => (
                   <RouteListRow
                     key={`${route.originToken.chainId}:${route.originToken.address}-${route.destinationToken.chainId}:${route.destinationToken.address}`}
                     originChainId={route.originToken.chainId}
@@ -131,7 +125,7 @@ export async function RoutesData(props: {
           </TableContainer>
         ) : (
           <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {paginatedRoutes.map((route) => (
+            {routesToRender.map((route) => (
               <li
                 key={`${route.originToken.chainId}:${route.originToken.address}-${route.destinationToken.chainId}:${route.destinationToken.address}`}
                 className="h-full"
@@ -155,12 +149,15 @@ export async function RoutesData(props: {
       </main>
       <div className="h-10" />
       {totalPages > 1 && (
-        <ChainlistPagination totalPages={totalPages} activePage={activePage} />
+        <ChainlistPagination
+          totalPages={totalPages}
+          activePage={Number(props.searchParams.page) || 1}
+        />
       )}
       <div className="h-4" />
       <p className="text-balance text-center text-muted-foreground text-sm">
         Showing{" "}
-        <span className="text-accent-foreground">{paginatedRoutes.length}</span>{" "}
+        <span className="text-accent-foreground">{routesToRender.length}</span>{" "}
         out of{" "}
         {filteredCount !== totalCount ? (
           <>
