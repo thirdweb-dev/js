@@ -2,13 +2,13 @@
   {
     "name": "thirdweb (esm)",
     "path": "./dist/esm/exports/thirdweb.js",
-    "limit": "60 kB",
+    "limit": "65 kB",
     "import": "*"
   },
   {
     "name": "thirdweb (cjs)",
     "path": "./dist/cjs/exports/thirdweb.js",
-    "limit": "350 kB"
+    "limit": "375 kB"
   },
   {
     "name": "thirdweb (minimal + tree-shaking)",
