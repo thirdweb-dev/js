@@ -1,14 +1,14 @@
-import {
-  type FiatProvider,
-  FiatProviders,
-} from "../../../../../../../pay/utils/commonTypes.js";
+import type { FiatProvider } from "../../../../../../../pay/utils/commonTypes.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Link } from "../../../../components/text.js";
+import { getProviderLabel } from "../utils.js";
 /**
  * @internal
  */
+
 export function Providers(props: {
+  supportedProviders: FiatProvider[];
   preferredProvider?: FiatProvider;
   onSelect: (provider: FiatProvider) => void;
 }) {
@@ -21,37 +21,34 @@ export function Providers(props: {
         alignItems: "flex-start",
       }}
     >
-      {FiatProviders.map((provider) => {
-        return (
-          <Container
-            key={provider}
-            flex="row"
-            expand
-            style={{
-              justifyContent: "space-between",
-            }}
+      {props.supportedProviders.map((provider) => (
+        <Container
+          key={provider}
+          flex="row"
+          expand
+          style={{
+            justifyContent: "space-between",
+          }}
+        >
+          <Button
+            fullWidth
+            onClick={() => props.onSelect(provider)}
+            variant={"link"}
           >
-            <Button
-              fullWidth
-              onClick={() => props.onSelect(provider)}
-              variant={"link"}
+            <Link
+              color={
+                props.preferredProvider === provider
+                  ? "primaryText"
+                  : "secondaryText"
+              }
+              size="sm"
+              hoverColor="primaryText"
             >
-              <Link
-                color={
-                  props.preferredProvider === provider
-                    ? "primaryText"
-                    : "secondaryText"
-                }
-                size="sm"
-                hoverColor="primaryText"
-              >
-                {provider.charAt(0).toUpperCase() +
-                  provider.slice(1).toLowerCase()}
-              </Link>
-            </Button>
-          </Container>
-        );
-      })}
+              {getProviderLabel(provider)}
+            </Link>
+          </Button>
+        </Container>
+      ))}
     </Container>
   );
 }

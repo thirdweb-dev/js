@@ -98,6 +98,7 @@ export type PayUIOptions = Prettify<
             currency?: CurrencyMeta["shorthand"];
           };
           preferredProvider?: FiatProvider;
+          supportedProviders?: FiatProvider[];
         }
       | false;
 
