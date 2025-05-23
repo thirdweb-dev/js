@@ -1,5 +1,29 @@
 # thirdweb
 
+## 5.101.0
+
+### Minor Changes
+
+- [#7103](https://github.com/thirdweb-dev/js/pull/7103) [`f3abea3`](https://github.com/thirdweb-dev/js/commit/f3abea32762da1549b5bc3bc19365bec51d419ab) Thanks [@jnsdls](https://github.com/jnsdls)! - Added webhook verification functionality to securely verify incoming webhooks from thirdweb. This includes:
+
+  - New `Webhook.parse` function to verify webhook signatures and timestamps
+  - Support for both `x-payload-signature` and `x-pay-signature` header formats
+  - Timestamp verification with configurable tolerance
+  - Version 2 webhook payload type support
+
+  Example usage:
+
+  ```typescript
+  import { Webhook } from "thirdweb/bridge";
+
+  const webhook = await Webhook.parse(
+    payload,
+    headers,
+    secret,
+    300, // optional tolerance in seconds
+  );
+  ```
+
 ## 5.100.2
 
 ### Patch Changes
