@@ -31,7 +31,7 @@ import type { ThirdwebClient } from "thirdweb";
 import { PaginationButtons } from "../../../@/components/pagination-buttons";
 import { cn } from "../../../@/lib/utils";
 import type { ProjectContract } from "../../../app/(app)/account/contracts/_components/getProjectContracts";
-import { removeContractFromProject } from "../../../app/(app)/team/[team_slug]/[project_slug]/hooks/project-contracts";
+import { removeContractFromProject } from "../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/hooks/project-contracts";
 import { useAllChainsData } from "../../../hooks/chains/allChains";
 import { ContractNameCell, ContractTypeCell } from "./cells";
 
