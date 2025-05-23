@@ -9,25 +9,19 @@ type UiError = {
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function getErrorMessage(err: any): UiError {
   if (err instanceof ApiError) {
+    if (err.code === "INTERNAL_SERVER_ERROR") {
+      return {
+        code: "INTERNAL_SERVER_ERROR",
+        title: "Failed to Find Quote",
+        message: "An unknown error occurred. Please try again.",
+      };
+    }
     return {
       code: err.code,
       title: "Failed to Find Quote",
       message: getErrorMessageFromBridgeApiError(err),
     };
   }
-
-  if (typeof err.error === "object" && err.error.code) {
-    if (err.error.code === "MINIMUM_PURCHASE_AMOUNT") {
-      return {
-        code: "MINIMUM_PURCHASE_AMOUNT",
-        title: "Amount Too Low",
-        message:
-          "The requested amount is less than the minimum purchase. Try another provider or amount.",
-      };
-    }
-  }
-
-  console.error(err);
 
   return {
     code: "UNABLE_TO_GET_PRICE_QUOTE",
