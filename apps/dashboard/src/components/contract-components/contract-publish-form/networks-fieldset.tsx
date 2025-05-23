@@ -1,5 +1,12 @@
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
-import { Flex, FormControl, Select } from "@chakra-ui/react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 import { useFormContext } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import { Heading, Text } from "tw-components";
@@ -16,30 +23,32 @@ export const NetworksFieldset: React.FC<NetworksFieldsetProps> = ({
   const form = useFormContext();
 
   return (
-    <Flex flexDir="column" gap={fromStandard ? 6 : 4}>
-      <Flex flexDir="column" gap={2}>
+    <div className={cn("flex flex-col", fromStandard ? "gap-6" : "gap-4")}>
+      <div className="flex flex-col gap-2">
         <Heading size={fromStandard ? "title.lg" : "title.md"}>
           Networks that your contract can be deployed to
         </Heading>
-      </Flex>
-      <FormControl isRequired>
+      </div>
+      <div className="flex flex-col gap-2" data-required>
         <Select
-          onChange={(e) =>
-            form.setValue(
-              "networksForDeployment.allNetworks",
-              e.target.value === "all",
-            )
-          }
           value={
             form.watch("networksForDeployment.allNetworks") ? "all" : "specific"
           }
+          onValueChange={(value) =>
+            form.setValue("networksForDeployment.allNetworks", value === "all")
+          }
         >
-          <option value="all">All networks</option>
-          <option value="specific">Specific networks</option>
+          <SelectTrigger className="w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All networks</SelectItem>
+            <SelectItem value="specific">Specific networks</SelectItem>
+          </SelectContent>
         </Select>
-      </FormControl>
+      </div>
       {!form.watch("networksForDeployment.allNetworks") && (
-        <Flex flexDir="column" gap={2}>
+        <div className="flex flex-col gap-2">
           <Text>Please select the networks you want to enable:</Text>
           <MultiNetworkSelector
             client={client}
@@ -50,8 +59,8 @@ export const NetworksFieldset: React.FC<NetworksFieldsetProps> = ({
               form.watch("networksForDeployment.networksEnabled") || []
             }
           />
-        </Flex>
+        </div>
       )}
-    </Flex>
+    </div>
   );
 };
