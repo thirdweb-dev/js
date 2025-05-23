@@ -79,6 +79,7 @@ export async function getTransactionStatus(args: {
   const { client, transactionId } = args;
   const searchResult = await searchTransactions({
     baseUrl: getThirdwebBaseUrl("engineCloud"),
+    bodySerializer: stringify,
     fetch: getClientFetch(client),
     body: {
       filters: [

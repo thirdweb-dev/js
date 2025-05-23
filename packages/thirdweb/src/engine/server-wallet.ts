@@ -144,13 +144,14 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
 
     const result = await sendTransaction({
       baseUrl: getThirdwebBaseUrl("engineCloud"),
+      bodySerializer: stringify,
       fetch: getClientFetch(client),
       headers,
       body,
     });
 
     if (result.error) {
-      throw new Error(`Error sending transaction: ${result.error}`);
+      throw new Error(`Error sending transaction: ${stringify(result.error)}`);
     }
 
     const data = result.data?.result;
@@ -220,6 +221,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
 
       const signResult = await signMessage({
         baseUrl: getThirdwebBaseUrl("engineCloud"),
+        bodySerializer: stringify,
         fetch: getClientFetch(client),
         headers,
         body: {
@@ -256,6 +258,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
 
       const signResult = await signTypedData({
         baseUrl: getThirdwebBaseUrl("engineCloud"),
+        bodySerializer: stringify,
         fetch: getClientFetch(client),
         headers,
         body: {
