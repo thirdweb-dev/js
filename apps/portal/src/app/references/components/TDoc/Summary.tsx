@@ -85,7 +85,7 @@ export function TypedocSummary(props: {
               <Heading
                 key={Math.random()}
                 level={s.depth}
-                id={slugger.slug(s.children[0]?.value, false)}
+                id={slugger.slug(s.children[0]?.data?.hName ?? "", false)}
               >
                 <TypedocSummary summary={s.children} />
               </Heading>

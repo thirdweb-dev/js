@@ -411,7 +411,7 @@ export function getExtensionName(
 ): string | undefined {
   try {
     const extensionNameString =
-      extensionBlockTag?.summary?.[0]?.children?.[0]?.value || "Common";
+      extensionBlockTag?.summary?.[0]?.data?.hName || "Common";
 
     if (typeof extensionNameString === "string" && extensionNameString) {
       return extensionNameString;

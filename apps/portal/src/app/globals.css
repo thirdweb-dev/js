@@ -2,23 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  /* scroll-behavior: smooth; */
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  font-feature-settings: "rlig" 1, "calt" 0;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  font-variation-settings: normal;
-  -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: transparent;
-}
-
 @layer base {
-  :root {
-    --radius: 0.5rem;
-    --sticky-top-height: 70px;
-  }
-
   :root {
     /* bg - neutral  */
     --background: 0 0% 98%;
@@ -27,7 +11,7 @@ html {
     --secondary: 0 0% 90%;
     --muted: 0 0% 93%;
     --accent: 0 0% 93%;
-    --inverted: 0 0 0%;
+    --inverted: 0 0% 4%;
 
     /* bg - colorful */
     --primary: 221 83% 54%;
@@ -46,13 +30,26 @@ html {
     --link-foreground: 221.21deg 83.19% 53.33%;
     --success-text: 142.09 70.56% 35.29%;
     --warning-text: 38 92% 40%;
-    --destructive-text: 357.15deg 100% 68.72%;
+    --destructive-text: 360 72% 60%;
 
     /* Borders */
     --border: 0 0% 85%;
     --active-border: 0 0% 70%;
     --input: 0 0% 85%;
     --ring: 0 0% 80%;
+
+    /* Others */
+    --radius: 0.5rem;
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 0 0% 4%;
+    --sidebar-primary: 221 83% 54%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 93%;
+    --sidebar-accent-foreground: 0 0% 9%;
+    --sidebar-border: 0 0% 85%;
+    --sidebar-ring: 0 0% 80%;
   }
 
   .dark {
@@ -89,7 +86,103 @@ html {
     --active-border: 0 0% 22%;
     --ring: 0 0% 30%;
     --input: 0 0% 15%;
+
+    /* sidebar */
+    --sidebar-background: 0 0% 0%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 221 83% 54%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 11%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 0 0% 30%;
   }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark) !important;
+  /* Optional, if you also want font styles */
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+.shiki,
+.shiki span {
+  background-color: transparent !important;
+}
+
+/* Fix colors on auto-filled inputs  */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  /* Revert text color */
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  color: hsl(var(--foreground)) !important;
+  caret-color: hsl(var(--foreground)) !important;
+
+  /* Revert background color */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar,
+  .no-scrollbar *::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar,
+  .no-scrollbar * {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+.styled-scrollbar::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+@media (max-width: 640px) {
+  .styled-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
+.styled-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 0.5rem;
+  transition: color 200ms ease;
+  background: var(--border);
+}
+.styled-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--foreground));
+}
+.styled-scrollbar::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+::selection {
+  background: hsl(var(--foreground));
+  color: hsl(var(--background));
+}
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
 
 .dark .light-only {
@@ -106,56 +199,4 @@ code span {
 
 .dark code span {
   color: var(--code-dark-color);
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-.styled-scrollbar::-webkit-scrollbar {
-  width: 0.5rem;
-  height: 0.5rem;
-}
-
-@media (max-width: 640px) {
-  .styled-scrollbar::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-  }
-}
-
-.styled-scrollbar::-webkit-scrollbar-thumb {
-  border-radius: 0.5rem;
-  transition: color 200ms ease;
-  background: var(--border);
-}
-
-.styled-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--foreground));
-}
-
-.styled-scrollbar::-webkit-scrollbar-track {
-  background-color: transparent;
-}
-
-button {
-  -webkit-tap-highlight-color: transparent;
-}
-
-::selection {
-  background: hsl(var(--foreground));
-  color: hsl(var(--background));
-}
-
-.hide-scrollbar {
-  scrollbar-width: none; /* Firefox */
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
 }
