@@ -8,6 +8,7 @@ import { getContractMetadata } from "thirdweb/extensions/common";
 import { isAddress, isContractDeployed } from "thirdweb/utils";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { NebulaChatButton } from "../../../../../nebula-app/(app)/components/FloatingChat/FloatingChat";
+import { examplePrompts } from "../../../../../nebula-app/(app)/data/examplePrompts";
 import {
   getAuthTokenWalletAddress,
   getUserThirdwebClient,
@@ -20,7 +21,6 @@ import { supportedERCs } from "./_utils/detectedFeatures/supportedERCs";
 import { getContractPageParamsInfo } from "./_utils/getContractFromParams";
 import { getContractPageMetadata } from "./_utils/getContractPageMetadata";
 import { getContractPageSidebarLinks } from "./_utils/getContractPageSidebarLinks";
-import { examplePrompts } from "../../../../../nebula-app/(app)/data/examplePrompts";
 
 export default async function Layout(props: {
   params: Promise<{

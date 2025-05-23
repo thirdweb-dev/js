@@ -3,7 +3,9 @@ import { getTeams } from "@/api/team";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import { redirect } from "next/navigation";
+import { siwaExamplePrompts } from "../../../(dashboard)/support/page";
 import { getClientThirdwebClient } from "../../../../../@/constants/thirdweb-client.client";
+import { CustomChatButton } from "../../../../nebula-app/(app)/components/CustomChat/CustomChatButton";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import {
   getAuthToken,
@@ -12,8 +14,6 @@ import {
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
 import { ProjectSidebarLayout } from "./components/ProjectSidebarLayout";
 import { SaveLastUsedProject } from "./components/SaveLastUsedProject";
-import { CustomChatButton } from "../../../../nebula-app/(app)/components/CustomChat/CustomChatButton";
-import { siwaExamplePrompts } from "../../../(dashboard)/support/page";
 
 export default async function ProjectLayout(props: {
   children: React.ReactNode;
