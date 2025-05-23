@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.100.2
+
+### Patch Changes
+
+- [#7119](https://github.com/thirdweb-dev/js/pull/7119) [`dcd6b99`](https://github.com/thirdweb-dev/js/commit/dcd6b99e676206a06a6bf75031295c4bff3567b1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better error messages in PayEmbed
+
+- [#7090](https://github.com/thirdweb-dev/js/pull/7090) [`1e0b142`](https://github.com/thirdweb-dev/js/commit/1e0b1422f32a81e1e2b300427b8431e2afeb5a63) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow limiting the selectable countries for SMS login via a new `allowedSmsCountryCodes` option placed alongside `defaultSmsCountryCode`.
+
+- [#7123](https://github.com/thirdweb-dev/js/pull/7123) [`f31116e`](https://github.com/thirdweb-dev/js/commit/f31116ea5a799512af8ebf15102a3386a58314fd) Thanks [@jnsdls](https://github.com/jnsdls)! - fix avatar image detection on Node
+
+- [#7110](https://github.com/thirdweb-dev/js/pull/7110) [`7b72e88`](https://github.com/thirdweb-dev/js/commit/7b72e886111bac5f847ef39d30d980b7fab7929e) Thanks [@RobbyUitbeijerse](https://github.com/RobbyUitbeijerse)! - Fix loading spinner theme color in PayEmbed
+
+- [#7108](https://github.com/thirdweb-dev/js/pull/7108) [`dd2fb1b`](https://github.com/thirdweb-dev/js/commit/dd2fb1b13df5a524e2fb2e9ef4a93130e3119109) Thanks [@RobbyUitbeijerse](https://github.com/RobbyUitbeijerse)! - Add support for filtering fiat payment providers in PayEmbed
+
+- [#7121](https://github.com/thirdweb-dev/js/pull/7121) [`376bdb2`](https://github.com/thirdweb-dev/js/commit/376bdb23d22eeaccf4fa96f82e312c3a62cde518) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Payment link support in PayEmbed
+
+- [#7145](https://github.com/thirdweb-dev/js/pull/7145) [`69fdef0`](https://github.com/thirdweb-dev/js/commit/69fdef07f57a4fd8738b76f2ff792210fedc23b7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Ensure bigints are stringified before usage with server wallets
+
 ## 5.100.1
 
 ### Patch Changes
