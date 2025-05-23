@@ -34,6 +34,11 @@ export const socialAuthOptions = [
   "steam",
 ] as const;
 export type SocialAuthOption = (typeof socialAuthOptions)[number];
+
+export function isSocialAuthOption(option: string): option is SocialAuthOption {
+  return socialAuthOptions.includes(option as SocialAuthOption);
+}
+
 export type OAuthOption = SocialAuthOption | "guest";
 
 export const authOptions = [
