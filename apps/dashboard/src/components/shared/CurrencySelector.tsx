@@ -1,12 +1,23 @@
-import { Flex, Input, Select, type SelectProps } from "@chakra-ui/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 import { CURRENCIES, type CurrencyMetadata } from "constants/currencies";
 import { useMemo, useState } from "react";
 import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS, isAddress } from "thirdweb";
-import { Button } from "tw-components";
 import { useAllChainsData } from "../../hooks/chains/allChains";
 
-interface CurrencySelectorProps extends SelectProps {
+interface CurrencySelectorProps {
   value: string;
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  className?: string;
+  isDisabled?: boolean;
   small?: boolean;
   hideDefaultCurrencies?: boolean;
   showCustomCurrency?: boolean;
@@ -15,7 +26,7 @@ interface CurrencySelectorProps extends SelectProps {
   contractChainId: number;
 }
 
-export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
+export function CurrencySelector({
   value,
   onChange,
   small,
@@ -24,8 +35,9 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
   isPaymentsSelector = false,
   defaultCurrencies = [],
   contractChainId: chainId,
-  ...props
-}) => {
+  className,
+  isDisabled,
+}: CurrencySelectorProps) {
   const { idToChain } = useAllChainsData();
   const chain = chainId ? idToChain.get(chainId) : undefined;
 
@@ -92,40 +104,41 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
 
   if (isAddingCurrency && !hideDefaultCurrencies) {
     return (
-      <div className="flex flex-col">
-        <Flex align="center">
-          <Button
-            borderRadius="4px 0px 0px 4px"
-            colorScheme="primary"
-            onClick={() => setIsAddingCurrency(false)}
-          >
-            &lt;-
-          </Button>
-          <Input
-            w="auto"
-            isRequired
-            placeholder="ERC20 Address"
-            borderRadius="none"
-            value={editCustomCurrency}
-            onChange={(e) => setEditCustomCurrency(e.target.value)}
-          />
-          <Button
-            borderRadius="0px 4px 4px 0px"
-            colorScheme="primary"
-            onClick={addCustomCurrency}
-            isDisabled={!isAddress(editCustomCurrency)}
-          >
-            Save
-          </Button>
-        </Flex>
+      <div className="flex items-center">
+        <Button
+          className="rounded-r-none rounded-l-md"
+          onClick={() => setIsAddingCurrency(false)}
+        >
+          &lt;-
+        </Button>
+        <Input
+          className="w-full rounded-none"
+          required
+          placeholder="ERC20 Address"
+          value={editCustomCurrency}
+          onChange={(e) => setEditCustomCurrency(e.target.value)}
+        />
+        <Button
+          className="rounded-r-md rounded-l-none"
+          onClick={addCustomCurrency}
+          disabled={!isAddress(editCustomCurrency)}
+        >
+          Save
+        </Button>
       </div>
     );
   }
 
   return (
-    <Flex direction="column" mt={small && !hideDefaultCurrencies ? 5 : 0}>
+    <div
+      className={cn(
+        "flex flex-col",
+        small && !hideDefaultCurrencies && "mt-5",
+        className,
+      )}
+    >
       <Select
-        position="relative"
+        disabled={isDisabled}
         value={
           isPaymentsSelector
             ? value
@@ -133,46 +146,54 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
               ? NATIVE_TOKEN_ADDRESS.toLowerCase()
               : value?.toLowerCase()
         }
-        onChange={(e) => {
-          if (e.target.value === "custom") {
+        onValueChange={(val) => {
+          if (val === "custom") {
             setIsAddingCurrency(true);
           } else {
-            onChange?.(e);
+            onChange?.({
+              target: { value: val },
+            } as React.ChangeEvent<HTMLSelectElement>);
           }
         }}
-        placeholder="Select Currency"
-        {...props}
       >
-        {chainId &&
-          !hideDefaultCurrencies &&
-          currencyOptions.map((currency: CurrencyMetadata, idx: number) => (
-            <option
-              key={`${currency.address}-${idx}`}
-              value={
-                isPaymentsSelector
-                  ? currency.symbol
-                  : currency.address.toLowerCase()
-              }
+        <SelectTrigger>
+          <SelectValue placeholder="Select Currency" />
+        </SelectTrigger>
+        <SelectContent>
+          {chainId &&
+            !hideDefaultCurrencies &&
+            currencyOptions.map((currency: CurrencyMetadata, idx: number) => (
+              <SelectItem
+                key={`${currency.address}-${idx}`}
+                value={
+                  isPaymentsSelector
+                    ? currency.symbol
+                    : currency.address.toLowerCase()
+                }
+              >
+                {currency.symbol} ({currency.name})
+              </SelectItem>
+            ))}
+          {isCustomCurrency &&
+            !isPaymentsSelector &&
+            initialValue !== NATIVE_TOKEN_ADDRESS.toLowerCase() && (
+              <SelectItem key={initialValue} value={initialValue}>
+                {initialValue}
+              </SelectItem>
+            )}
+          {customCurrency && (
+            <SelectItem
+              key={customCurrency}
+              value={customCurrency.toLowerCase()}
             >
-              {currency.symbol} ({currency.name})
-            </option>
-          ))}
-        {isCustomCurrency &&
-          !isPaymentsSelector &&
-          initialValue !== NATIVE_TOKEN_ADDRESS.toLowerCase() && (
-            <option key={initialValue} value={initialValue}>
-              {initialValue}
-            </option>
+              {customCurrency}
+            </SelectItem>
           )}
-        {customCurrency && (
-          <option key={customCurrency} value={customCurrency.toLowerCase()}>
-            {customCurrency}
-          </option>
-        )}
-        {!hideDefaultCurrencies && showCustomCurrency && (
-          <option value="custom">Custom ERC20</option>
-        )}
+          {!hideDefaultCurrencies && showCustomCurrency && (
+            <SelectItem value="custom">Custom ERC20</SelectItem>
+          )}
+        </SelectContent>
       </Select>
-    </Flex>
+    </div>
   );
-};
+}
