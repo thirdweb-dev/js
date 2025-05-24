@@ -410,12 +410,17 @@ export function getExtensionName(
   extensionBlockTag: BlockTag,
 ): string | undefined {
   try {
-    const extensionNameString =
-      extensionBlockTag?.summary?.[0]?.data?.hName || "Common";
-
-    if (typeof extensionNameString === "string" && extensionNameString) {
-      return extensionNameString;
+    const summary = extensionBlockTag.summary?.[0];
+    if (summary && "children" in summary) {
+      const firstChild = summary.children[0];
+      if (firstChild && "value" in firstChild) {
+        const extensionNameString = firstChild.value || "Common";
+        if (typeof extensionNameString === "string" && extensionNameString) {
+          return extensionNameString;
+        }
+      }
     }
+    return undefined;
   } catch {
     return undefined;
   }

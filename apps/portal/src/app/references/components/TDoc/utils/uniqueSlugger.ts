@@ -2,7 +2,7 @@ export function uniqueSlugger(options: {
   base: string;
   isUnique: (slug: string) => boolean;
 }) {
-  const limit = 10;
+  const limit = 20;
   const { base, isUnique } = options;
 
   // if slug is unique, save it and return
