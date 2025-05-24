@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.101.1
+
+### Patch Changes
+
+- [#7151](https://github.com/thirdweb-dev/js/pull/7151) [`5277edd`](https://github.com/thirdweb-dev/js/commit/5277eddb70b3cf7b3dccbb4570c677f49b8dc854) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix Webhook schema type
+
+- [#7147](https://github.com/thirdweb-dev/js/pull/7147) [`3489ece`](https://github.com/thirdweb-dev/js/commit/3489ecec98c283ee79977fcf79fceed43e3f1c00) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better Quote errors
+
 ## 5.101.0
 
 ### Minor Changes
