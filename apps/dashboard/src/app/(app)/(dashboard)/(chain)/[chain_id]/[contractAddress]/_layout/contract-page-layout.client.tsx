@@ -2,8 +2,9 @@
 
 import { useQuery } from "@tanstack/react-query";
 import type { MinimalTeamsAndProjects } from "components/contract-components/contract-deploy-form/add-to-project-card";
-import type { ThirdwebClient, ThirdwebContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
+import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { ErrorPage, LoadingPage } from "../_components/page-skeletons";
 import { useContractPageMetadata } from "../_hooks/useContractPageMetadata";
 import { getContractPageSidebarLinks } from "../_utils/getContractPageSidebarLinks";
@@ -15,7 +16,7 @@ export function ContractPageLayoutClient(props: {
   contract: ThirdwebContract;
   children: React.ReactNode;
   teamsAndProjects: MinimalTeamsAndProjects | undefined;
-  client: ThirdwebClient;
+  projectMeta: ProjectMeta | undefined;
 }) {
   const metadataQuery = useContractPageMetadata(props.contract);
   const headerMetadataQuery = useQuery({
@@ -39,6 +40,7 @@ export function ContractPageLayoutClient(props: {
     chainSlug: props.chainMetadata.slug,
     contractAddress: props.contract.address,
     metadata: metadataQuery.data,
+    projectMeta: props.projectMeta,
   });
 
   return (

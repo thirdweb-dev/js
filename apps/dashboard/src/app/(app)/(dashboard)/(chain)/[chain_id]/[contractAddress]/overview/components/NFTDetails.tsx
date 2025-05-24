@@ -7,13 +7,16 @@ import type { ThirdwebContract } from "thirdweb";
 import * as ERC721 from "thirdweb/extensions/erc721";
 import * as ERC1155 from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
+import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { NFTCards } from "../../_components/NFTCards";
+import { buildContractPagePath } from "../../_utils/contract-page-path";
 
 type NFTDetailsProps = {
   contract: ThirdwebContract;
   trackingCategory: string;
   isErc721: boolean;
   chainSlug: string;
+  projectMeta: ProjectMeta | undefined;
 };
 
 export function NFTDetails({
@@ -21,8 +24,14 @@ export function NFTDetails({
   trackingCategory,
   isErc721,
   chainSlug,
+  projectMeta,
 }: NFTDetailsProps) {
-  const nftsHref = `/${chainSlug}/${contract.address}/nfts`;
+  const nftsHref = buildContractPagePath({
+    projectMeta,
+    chainIdOrSlug: chainSlug,
+    contractAddress: contract.address,
+    subpath: "/nfts",
+  });
 
   const nftQuery = useReadContract(
     isErc721 ? ERC721.getNFTs : ERC1155.getNFTs,
@@ -58,6 +67,7 @@ export function NFTDetails({
       {/* cards */}
       <div className="p-6">
         <NFTCards
+          projectMeta={projectMeta}
           nfts={displayableNFTs.map((t) => ({
             ...t,
             contractAddress: contract.address,

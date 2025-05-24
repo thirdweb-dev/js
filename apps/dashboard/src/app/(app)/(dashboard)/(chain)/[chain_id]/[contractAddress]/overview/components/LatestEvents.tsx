@@ -22,20 +22,30 @@ import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import type { ThirdwebContract } from "thirdweb";
 import { shortenString } from "utils/usedapp-external";
+import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "../../_utils/contract-page-path";
 
 export function LatestEvents(props: {
   trackingCategory: string;
   contract: ThirdwebContract;
   chainSlug: string;
+  projectMeta: ProjectMeta | undefined;
 }) {
   const autoUpdate = true;
   const allEvents = useActivity(props.contract, autoUpdate);
+
+  const eventsHref = buildContractPagePath({
+    projectMeta: props.projectMeta,
+    chainIdOrSlug: props.chainSlug,
+    contractAddress: props.contract.address,
+    subpath: "/events",
+  });
 
   return (
     <LatestEventsUI
       allEvents={allEvents}
       autoUpdate={autoUpdate}
-      eventsHref={`/${props.chainSlug}/${props.contract.address}/events`}
+      eventsHref={eventsHref}
       trackingCategory={props.trackingCategory}
     />
   );

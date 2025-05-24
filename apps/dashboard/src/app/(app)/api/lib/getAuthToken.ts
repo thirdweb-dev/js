@@ -29,8 +29,18 @@ export async function getAuthTokenWalletAddress() {
   return null;
 }
 
-export async function getUserThirdwebClient() {
+export async function getUserThirdwebClient(params: {
+  teamId: string | undefined;
+}) {
   const authToken = await getAuthToken();
+
+  if (params.teamId) {
+    return getClientThirdwebClient({
+      jwt: authToken,
+      teamId: params.teamId,
+    });
+  }
+
   const cookiesManager = await cookies();
   const lastUsedTeamId = cookiesManager.get(LAST_USED_TEAM_ID)?.value;
 

@@ -19,6 +19,8 @@ import {
 import { useReadContract } from "thirdweb/react";
 import { min } from "thirdweb/utils";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "../../_utils/contract-page-path";
 import { ListingStatsV3 } from "./listing-stats";
 
 type ListingData =
@@ -41,14 +43,22 @@ type ListingCardsSectionProps = {
   contract: ThirdwebContract;
   trackingCategory: string;
   chainSlug: string;
+  projectMeta: ProjectMeta | undefined;
 };
 
 const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
   trackingCategory,
   contract,
   chainSlug,
+  projectMeta,
 }) => {
-  const directListingsHref = `/${chainSlug}/${contract.address}/direct-listings`;
+  const directListingsHref = buildContractPagePath({
+    projectMeta,
+    chainIdOrSlug: chainSlug,
+    contractAddress: contract.address,
+    subpath: "/direct-listings",
+  });
+
   const countQuery = useReadContract(totalListings, { contract });
   const listingsQuery = useReadContract(getAllListings, {
     contract,
@@ -109,6 +119,7 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
           trackingCategory={trackingCategory}
           chainSlug={chainSlug}
           contractAddress={contract.address}
+          projectMeta={projectMeta}
         />
       </div>
     </div>
@@ -119,8 +130,15 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
   trackingCategory,
   contract,
   chainSlug,
+  projectMeta,
 }) => {
-  const englishAuctionsHref = `/${chainSlug}/${contract.address}/english-auctions`;
+  const englishAuctionsHref = buildContractPagePath({
+    projectMeta,
+    chainIdOrSlug: chainSlug,
+    contractAddress: contract.address,
+    subpath: "/english-auctions",
+  });
+
   const countQuery = useReadContract(totalAuctions, { contract });
   const auctionsQuery = useReadContract(getAllAuctions, {
     contract,
@@ -180,6 +198,7 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
           trackingCategory={trackingCategory}
           chainSlug={chainSlug}
           contractAddress={contract.address}
+          projectMeta={projectMeta}
         />
       </div>
     </div>
@@ -192,6 +211,7 @@ interface MarketplaceDetailsVersionProps {
   hasEnglishAuctions: boolean;
   hasDirectListings: boolean;
   chainSlug: string;
+  projectMeta: ProjectMeta | undefined;
 }
 
 export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
@@ -200,6 +220,7 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
   hasDirectListings,
   hasEnglishAuctions,
   chainSlug,
+  projectMeta,
 }) => {
   return (
     <div className="flex flex-col gap-10">
@@ -214,6 +235,7 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
           contract={contract}
           trackingCategory={trackingCategory}
           chainSlug={chainSlug}
+          projectMeta={projectMeta}
         />
       )}
 
@@ -222,6 +244,7 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
           contract={contract}
           trackingCategory={trackingCategory}
           chainSlug={chainSlug}
+          projectMeta={projectMeta}
         />
       )}
     </div>
@@ -269,6 +292,7 @@ interface ListingCardsProps {
   isMarketplaceV1?: boolean;
   chainSlug: string;
   contractAddress: string;
+  projectMeta: ProjectMeta | undefined;
 }
 const ListingCards: React.FC<ListingCardsProps> = ({
   listings,
@@ -277,13 +301,20 @@ const ListingCards: React.FC<ListingCardsProps> = ({
   trackingCategory,
   chainSlug,
   contractAddress,
+  projectMeta,
 }) => {
+  const contractLayout = buildContractPagePath({
+    projectMeta,
+    chainIdOrSlug: chainSlug,
+    contractAddress,
+  });
+
   listings = isPending
     ? Array.from({ length: 3 }).map((_, idx) => dummyMetadata(idx))
     : listings.slice(0, 3);
 
-  const directListingsHref = `/${chainSlug}/${contractAddress}/direct-listings`;
-  const englishAuctionsHref = `/${chainSlug}/${contractAddress}/english-auctions`;
+  const directListingsHref = `${contractLayout}/direct-listings`;
+  const englishAuctionsHref = `${contractLayout}/english-auctions`;
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3 ">

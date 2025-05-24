@@ -54,6 +54,9 @@ function Story() {
     console.log("Removed contract", contractId);
   };
 
+  const teamSlug = "team-slug";
+  const projectSlug = "project-slug";
+
   return (
     <ThirdwebProvider>
       <div className="container flex max-w-6xl flex-col gap-10 py-10">
@@ -64,6 +67,8 @@ function Story() {
             contracts={[]}
             removeContractFromProject={removeContractStub}
             pageSize={10}
+            teamSlug={teamSlug}
+            projectSlug={projectSlug}
           />
         </BadgeContainer>
 
@@ -74,6 +79,8 @@ function Story() {
             contracts={[popularPolygonNFTs[0] as ProjectContract]}
             pageSize={10}
             removeContractFromProject={removeContractStub}
+            teamSlug={teamSlug}
+            projectSlug={projectSlug}
           />
         </BadgeContainer>
 
@@ -84,6 +91,8 @@ function Story() {
             contracts={popularPolygonNFTs}
             pageSize={10}
             removeContractFromProject={removeContractStub}
+            teamSlug={teamSlug}
+            projectSlug={projectSlug}
           />
         </BadgeContainer>
 
@@ -94,6 +103,8 @@ function Story() {
             contracts={[...popularPolygonNFTs, ...EthereumPopularNFTs]}
             pageSize={10}
             removeContractFromProject={removeContractStub}
+            teamSlug={teamSlug}
+            projectSlug={projectSlug}
           />
         </BadgeContainer>
 
@@ -108,6 +119,8 @@ function Story() {
             ]}
             pageSize={10}
             removeContractFromProject={removeContractStub}
+            teamSlug={teamSlug}
+            projectSlug={projectSlug}
           />
         </BadgeContainer>
       </div>

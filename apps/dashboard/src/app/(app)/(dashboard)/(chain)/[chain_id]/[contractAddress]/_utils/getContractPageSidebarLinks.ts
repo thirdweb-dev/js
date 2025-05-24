@@ -1,4 +1,6 @@
 import type { SidebarBaseLink, SidebarLink } from "@/components/blocks/Sidebar";
+import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "./contract-page-path";
 import type { ContractPageMetadata } from "./getContractPageMetadata";
 
 type SidebarBaseLinkWithHide = SidebarBaseLink & {
@@ -9,8 +11,13 @@ export function getContractPageSidebarLinks(data: {
   metadata: ContractPageMetadata;
   contractAddress: string;
   chainSlug: string;
+  projectMeta: ProjectMeta | undefined;
 }) {
-  const layoutPrefix = `/${data.chainSlug}/${data.contractAddress}`;
+  const layoutPrefix = buildContractPagePath({
+    projectMeta: data.projectMeta,
+    chainIdOrSlug: data.chainSlug,
+    contractAddress: data.contractAddress,
+  });
 
   const generalLinks: SidebarBaseLinkWithHide[] = [
     {

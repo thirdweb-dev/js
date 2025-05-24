@@ -1,12 +1,22 @@
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
+import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "../../_utils/contract-page-path";
 
 export function BuildYourApp(props: {
   trackingCategory: string;
   contractAddress: string;
   chainSlug: string;
+  projectMeta: ProjectMeta | undefined;
 }) {
+  const codePath = buildContractPagePath({
+    projectMeta: props.projectMeta,
+    chainIdOrSlug: props.chainSlug,
+    contractAddress: props.contractAddress,
+    subpath: "/code",
+  });
+
   return (
     <div className="relative flex flex-col justify-between gap-4 rounded-lg border bg-card p-6 hover:border-active-border lg:flex-row">
       {/* left */}
@@ -17,7 +27,7 @@ export function BuildYourApp(props: {
         <TrackedLinkTW
           category={props.trackingCategory}
           label="build_your_app"
-          href={`/${props.chainSlug}/${props.contractAddress}/code`}
+          href={codePath}
           className="block text-balance text-muted-foreground text-sm before:absolute before:inset-0"
         >
           Learn more about how you can use thirdweb tools to build apps on top

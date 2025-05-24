@@ -11,6 +11,8 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "../../_utils/contract-page-path";
 
 function getDayKey(date: Date) {
   return date.toISOString().split("T")[0];
@@ -21,6 +23,7 @@ export function ContractAnalyticsOverviewCard(props: {
   chainId: number;
   trackingCategory: string;
   chainSlug: string;
+  projectMeta: ProjectMeta | undefined;
 }) {
   const trackEvent = useTrack();
   const [startDate] = useState(
@@ -85,6 +88,13 @@ export function ContractAnalyticsOverviewCard(props: {
     });
   }, [wallets.data, transactions.data, events.data, isPending]);
 
+  const analyticsPath = buildContractPagePath({
+    projectMeta: props.projectMeta,
+    chainIdOrSlug: props.chainSlug,
+    contractAddress: props.contractAddress,
+    subpath: "/analytics",
+  });
+
   return (
     <ThirdwebAreaChart
       config={{
@@ -121,9 +131,7 @@ export function ContractAnalyticsOverviewCard(props: {
               });
             }}
           >
-            <Link
-              href={`/${props.chainSlug}/${props.contractAddress}/analytics`}
-            >
+            <Link href={analyticsPath}>
               <span>View All</span>
               <ArrowRightIcon className="size-4" />
             </Link>

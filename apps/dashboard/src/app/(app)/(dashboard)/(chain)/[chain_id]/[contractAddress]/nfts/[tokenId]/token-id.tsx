@@ -28,6 +28,8 @@ import { getNFT as getErc721NFT } from "thirdweb/extensions/erc721";
 import { getNFT as getErc1155NFT } from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "../../_utils/contract-page-path";
 import { NftProperty } from "../components/nft-property";
 import { useNFTDrawerTabs } from "./useNftDrawerTabs";
 
@@ -53,6 +55,7 @@ interface TokenIdPageProps {
   isErc721: boolean;
   isLoggedIn: boolean;
   accountAddress: string | undefined;
+  projectMeta: ProjectMeta | undefined;
 }
 
 // TODO: verify the entire nft object with zod schema and display an error message
@@ -63,6 +66,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
   isErc721,
   isLoggedIn,
   accountAddress,
+  projectMeta,
 }) => {
   const [tab, setTab] = useState("Details");
   const router = useDashboardRouter();
@@ -113,6 +117,13 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
       : undefined,
   };
 
+  const nftsPagePath = buildContractPagePath({
+    projectMeta,
+    chainIdOrSlug: chainSlug.toString(),
+    contractAddress: contract.address,
+    subpath: "/nfts",
+  });
+
   return (
     <div>
       <div className="flex flex-col gap-6 lg:flex-row">
@@ -130,10 +141,10 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
               <BreadcrumbList>
                 <BreadcrumbItem>
                   <BreadcrumbLink
-                    href={`/${chainSlug}/${contract.address}/nfts`}
+                    href={nftsPagePath}
                     onClick={(e) => {
                       e.preventDefault();
-                      router.push(`/${chainSlug}/${contract.address}/nfts`);
+                      router.push(nftsPagePath);
                     }}
                   >
                     NFTs

@@ -58,6 +58,8 @@ import {
 import { useActiveAccount, useSwitchActiveWalletChain } from "thirdweb/react";
 import { concatHex, padHex } from "thirdweb/utils";
 import { z } from "zod";
+import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "../_utils/contract-page-path";
 import { SingleNetworkSelector } from "./single-network-selector";
 
 type CrossChain = {
@@ -91,6 +93,7 @@ export function DataTable({
   inputSalt,
   initCode,
   isDirectDeploy,
+  projectMeta,
 }: {
   data: CrossChain[];
   coreMetadata: FetchDeployMetadataResult;
@@ -100,6 +103,7 @@ export function DataTable({
   inputSalt?: `0x${string}`;
   initCode?: `0x${string}`;
   isDirectDeploy: boolean;
+  projectMeta: ProjectMeta | undefined;
 }) {
   const activeAccount = useActiveAccount();
   const switchChain = useSwitchActiveWalletChain();
@@ -234,12 +238,19 @@ export function DataTable({
       accessorKey: "network",
       header: "Network",
       cell: ({ row }) => {
+        const chainId = row.getValue("chainId");
         if (row.getValue("status") === "DEPLOYED") {
+          const linkPath = buildContractPagePath({
+            projectMeta,
+            chainIdOrSlug: `${chainId}`,
+            contractAddress: coreContract.address,
+          });
+
           return (
             <Link
               target="_blank"
               className="text-blue-500 underline"
-              href={`/${row.getValue("chainId")}/${coreContract.address}`}
+              href={linkPath}
             >
               {row.getValue("network")}
             </Link>
@@ -405,9 +416,17 @@ export function DataTable({
         });
       }
       deployStatusModal.nextStep();
-      deployStatusModal.setViewContractLink(
-        `/${chain.id}/${crosschainContractAddress}`,
-      );
+
+      if (crosschainContractAddress) {
+        const contractLink = buildContractPagePath({
+          projectMeta,
+          chainIdOrSlug: `${chain.id}`,
+          contractAddress: crosschainContractAddress,
+        });
+
+        deployStatusModal.setViewContractLink(contractLink);
+      }
+
       deployStatusModal.close();
 
       setCustomChainData((prevData) =>

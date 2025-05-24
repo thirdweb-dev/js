@@ -42,6 +42,8 @@ export default async function Page(props: {
         projectId={project.id}
         authToken={authToken}
         client={client}
+        teamSlug={params.team_slug}
+        projectSlug={params.project_slug}
       />
       <div className="h-20" />
       <ContractsFooter />

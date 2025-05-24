@@ -12,6 +12,8 @@ import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import { getAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
+import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "../../_utils/contract-page-path";
 
 interface ContractChecklistProps {
   contract: ThirdwebContract;
@@ -20,6 +22,7 @@ interface ContractChecklistProps {
   isErc20: boolean;
   chainSlug: string;
   functionSelectors: string[];
+  projectMeta: ProjectMeta | undefined;
 }
 
 type Step = {
@@ -44,13 +47,20 @@ function Inner({
   isErc721,
   functionSelectors,
   chainSlug,
+  projectMeta,
 }: ContractChecklistProps & {
   functionSelectors: string[];
 }) {
-  const nftHref = `/${chainSlug}/${contract.address}/nfts`;
-  const tokenHref = `/${chainSlug}/${contract.address}/tokens`;
-  const accountsHref = `/${chainSlug}/${contract.address}/accounts`;
-  const claimConditionsHref = `/${chainSlug}/${contract.address}/claim-conditions`;
+  const contractLayout = buildContractPagePath({
+    projectMeta,
+    chainIdOrSlug: chainSlug,
+    contractAddress: contract.address,
+  });
+
+  const nftHref = `${contractLayout}/nfts`;
+  const tokenHref = `${contractLayout}/tokens`;
+  const accountsHref = `${contractLayout}/accounts`;
+  const claimConditionsHref = `${contractLayout}/claim-conditions`;
 
   const erc721Claimed = useReadContract(ERC721Ext.getTotalClaimedSupply, {
     contract: contract,

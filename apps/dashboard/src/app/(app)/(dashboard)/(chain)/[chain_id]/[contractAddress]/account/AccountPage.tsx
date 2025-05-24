@@ -3,6 +3,7 @@
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { Heading } from "tw-components";
+import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { AccountBalance } from "./components/account-balance";
 import { DepositNative } from "./components/deposit-native";
 import { NftsOwned } from "./components/nfts-owned";
@@ -12,6 +13,7 @@ interface AccountPageProps {
   chainMetadata: ChainMetadata;
   isLoggedIn: boolean;
   isInsightSupported: boolean;
+  projectMeta: ProjectMeta | undefined;
 }
 
 export const AccountPage: React.FC<AccountPageProps> = ({
@@ -19,6 +21,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({
   chainMetadata,
   isLoggedIn,
   isInsightSupported,
+  projectMeta,
 }) => {
   const symbol = chainMetadata.nativeCurrency.symbol || "Native Token";
 
@@ -44,7 +47,11 @@ export const AccountPage: React.FC<AccountPageProps> = ({
       <div className="flex flex-row items-center justify-between">
         <Heading size="title.sm">NFTs owned</Heading>
       </div>
-      <NftsOwned contract={contract} isInsightSupported={isInsightSupported} />
+      <NftsOwned
+        contract={contract}
+        isInsightSupported={isInsightSupported}
+        projectMeta={projectMeta}
+      />
     </div>
   );
 };

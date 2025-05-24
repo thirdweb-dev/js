@@ -41,16 +41,20 @@ import type { NFT, ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
+import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "../../_utils/contract-page-path";
 
 interface ContractOverviewNFTGetAllProps {
   contract: ThirdwebContract;
   isErc721: boolean;
   tokenByIndex: boolean;
+  projectMeta: ProjectMeta | undefined;
 }
 export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   contract,
   isErc721,
   tokenByIndex,
+  projectMeta,
 }) => {
   // if it's not erc721, it's erc1155
   const isErc1155 = !isErc721;
@@ -297,12 +301,17 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                     if (!tokenId && tokenId !== 0n) {
                       return;
                     }
-                    router.push(
-                      `/${chainSlug}/${contract.address}/nfts/${tokenId.toString()}`,
-                      {
-                        scroll: true,
-                      },
-                    );
+
+                    const path = buildContractPagePath({
+                      projectMeta,
+                      chainIdOrSlug: chainSlug.toString(),
+                      contractAddress: contract.address,
+                      subpath: `/nfts/${tokenId.toString()}`,
+                    });
+
+                    router.push(path, {
+                      scroll: true,
+                    });
                   }}
                   borderBottomWidth={1}
                   _last={{ borderBottomWidth: 0 }}

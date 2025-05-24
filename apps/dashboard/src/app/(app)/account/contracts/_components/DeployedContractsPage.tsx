@@ -12,6 +12,8 @@ export function DeployedContractsPage(props: {
   projectId: string;
   authToken: string;
   client: ThirdwebClient;
+  teamSlug: string;
+  projectSlug: string;
 }) {
   return (
     <div className="flex grow flex-col">
@@ -39,6 +41,8 @@ async function DeployedContractsPageAsync(props: {
   projectId: string;
   authToken: string;
   client: ThirdwebClient;
+  teamSlug: string;
+  projectSlug: string;
 }) {
   const deployedContracts = await getSortedDeployedContracts({
     teamId: props.teamId,
@@ -56,6 +60,8 @@ async function DeployedContractsPageAsync(props: {
         teamId={props.teamId}
         projectId={props.projectId}
         client={props.client}
+        teamSlug={props.teamSlug}
+        projectSlug={props.projectSlug}
       />
     </ClientOnly>
   );

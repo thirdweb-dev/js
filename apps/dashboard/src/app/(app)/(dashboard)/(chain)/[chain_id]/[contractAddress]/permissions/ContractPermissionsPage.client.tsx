@@ -2,6 +2,7 @@
 
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
+import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { ErrorPage, LoadingPage } from "../_components/page-skeletons";
 import { useContractPageMetadata } from "../_hooks/useContractPageMetadata";
 import { ContractPermissionsPage } from "./ContractPermissionsPage";
@@ -10,6 +11,7 @@ export function ContractPermissionsPageClient(props: {
   contract: ThirdwebContract;
   chainMetadata: ChainMetadata;
   isLoggedIn: boolean;
+  projectMeta: ProjectMeta | undefined;
 }) {
   const metadataQuery = useContractPageMetadata(props.contract);
 
@@ -23,6 +25,7 @@ export function ContractPermissionsPageClient(props: {
 
   return (
     <ContractPermissionsPage
+      projectMeta={props.projectMeta}
       contract={props.contract}
       chainSlug={props.chainMetadata.slug}
       isLoggedIn={props.isLoggedIn}

@@ -16,6 +16,8 @@ import type { ThirdwebContract } from "thirdweb";
 import { getAccounts, totalAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
 import { Text, TrackedCopyButton } from "tw-components";
+import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "../../_utils/contract-page-path";
 
 const columnHelper = createColumnHelper<{ account: string }>();
 
@@ -38,9 +40,13 @@ const columns = [
 
 type AccountsTableProps = {
   contract: ThirdwebContract;
+  projectMeta: ProjectMeta | undefined;
 };
 
-export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
+export const AccountsTable: React.FC<AccountsTableProps> = ({
+  contract,
+  projectMeta,
+}) => {
   const router = useDashboardRouter();
   const chainSlug = useChainSlug(contract.chain.id);
 
@@ -92,7 +98,13 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
         isPending={accountsQuery.isPending}
         isFetched={accountsQuery.isFetched}
         onRowClick={(row) => {
-          router.push(`/${chainSlug}/${row.account}`);
+          const accountContractPagePath = buildContractPagePath({
+            projectMeta,
+            chainIdOrSlug: chainSlug.toString(),
+            contractAddress: row.account,
+          });
+
+          router.push(accountContractPagePath);
         }}
       />
       {/* pagination */}

@@ -21,7 +21,11 @@ export default async function Image({
   };
 }) {
   try {
-    const info = await getContractPageParamsInfo(params);
+    const info = await getContractPageParamsInfo({
+      contractAddress: params.contractAddress,
+      chainIdOrSlug: params.chain_id,
+      teamId: undefined,
+    });
 
     if (!info) {
       throw new Error();

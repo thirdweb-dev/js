@@ -5,6 +5,8 @@ import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { ButtonGroup, Divider, Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { Card, Heading, Link, LinkButton, Text } from "tw-components";
+import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "../_utils/contract-page-path";
 import { Permissions } from "./components";
 
 interface ContractPermissionsPageProps {
@@ -12,16 +14,28 @@ interface ContractPermissionsPageProps {
   detectedPermissionEnumerable: boolean;
   chainSlug: string;
   isLoggedIn: boolean;
+  projectMeta: ProjectMeta | undefined;
 }
 
 export const ContractPermissionsPage: React.FC<
   ContractPermissionsPageProps
-> = ({ contract, detectedPermissionEnumerable, chainSlug, isLoggedIn }) => {
+> = ({
+  contract,
+  detectedPermissionEnumerable,
+  chainSlug,
+  isLoggedIn,
+  projectMeta,
+}) => {
+  const explorerHref = buildContractPagePath({
+    projectMeta,
+    chainIdOrSlug: chainSlug,
+    contractAddress: contract.address,
+    subpath: "/explorer",
+  });
+
   useIsomorphicLayoutEffect(() => {
     window?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-
-  const explorerHref = `/${chainSlug}/${contract.address}/explorer`;
 
   if (!detectedPermissionEnumerable) {
     return (

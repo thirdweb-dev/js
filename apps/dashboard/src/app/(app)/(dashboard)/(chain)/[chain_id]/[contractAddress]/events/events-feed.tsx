@@ -33,12 +33,18 @@ import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { stringify } from "thirdweb/utils";
 import { Button, Card, FormLabel, Heading, Text } from "tw-components";
+import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "../_utils/contract-page-path";
 
 interface EventsFeedProps {
   contract: ThirdwebContract;
+  projectMeta: ProjectMeta | undefined;
 }
 
-export const EventsFeed: React.FC<EventsFeedProps> = ({ contract }) => {
+export const EventsFeed: React.FC<EventsFeedProps> = ({
+  contract,
+  projectMeta,
+}) => {
   const [autoUpdate, setAutoUpdate] = useState(true);
   const allEvents = useActivity(contract, autoUpdate);
   const searchParams = useSearchParams();
@@ -81,11 +87,18 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contract }) => {
             value={selectedEvent}
             onChange={(e) => {
               const val = e.target.value;
+
               if (eventTypes.includes(val)) {
-                const path =
-                  e.target.value === "all"
-                    ? `/${chainSlug}/${contract.address}/events`
-                    : `/${chainSlug}/${contract.address}/events?event=${val}`;
+                const path = buildContractPagePath({
+                  projectMeta,
+                  chainIdOrSlug: chainSlug.toString(),
+                  contractAddress: contract.address,
+                  subpath:
+                    e.target.value === "all"
+                      ? "/events"
+                      : `/events?event=${val}`,
+                });
+
                 router.push(path);
                 setSelectedEvent(val);
               }
@@ -154,6 +167,7 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contract }) => {
                 setSelectedEvent={setSelectedEvent}
                 contractAddress={contract.address}
                 chainSlug={chainSlug}
+                projectMeta={projectMeta}
               />
             ))}
           </Accordion>
@@ -168,6 +182,7 @@ interface EventsFeedItemProps {
   setSelectedEvent: React.Dispatch<React.SetStateAction<string>>;
   contractAddress: string;
   chainSlug: string | number;
+  projectMeta: ProjectMeta | undefined;
 }
 
 const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
@@ -175,9 +190,9 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
   setSelectedEvent,
   contractAddress,
   chainSlug,
+  projectMeta,
 }) => {
   const { onCopy } = useClipboard(transaction.transactionHash);
-
   const router = useDashboardRouter();
 
   return (
@@ -246,9 +261,14 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
                 key={idx}
                 onClick={(ev) => {
                   ev.stopPropagation();
-                  router.push(
-                    `/${chainSlug}/${contractAddress}/events?event=${e.eventName}`,
-                  );
+                  const path = buildContractPagePath({
+                    projectMeta,
+                    chainIdOrSlug: chainSlug.toString(),
+                    contractAddress: contractAddress,
+                    subpath: `/events?event=${e.eventName}`,
+                  });
+
+                  router.push(path);
                   setSelectedEvent(e.eventName);
                 }}
               >

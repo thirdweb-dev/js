@@ -7,10 +7,11 @@ import { getUserThirdwebClient } from "../../../../../api/lib/getAuthToken";
 
 export async function getContractPageParamsInfo(params: {
   contractAddress: string;
-  chain_id: string;
+  chainIdOrSlug: string;
+  teamId: string | undefined;
 }) {
   const contractAddress = getCheckSummedAddress(params.contractAddress);
-  const chainSlugOrId = params.chain_id;
+  const chainSlugOrId = params.chainIdOrSlug;
   const chainMetadata = await fetchChainWithLocalOverrides(chainSlugOrId);
 
   if (!chainMetadata) {
@@ -31,7 +32,9 @@ export async function getContractPageParamsInfo(params: {
     // eslint-disable-next-line no-restricted-syntax
     chain: mapV4ChainToV5Chain(chainMetadata),
     // if we have the auth token pass it into the client
-    client: await getUserThirdwebClient(),
+    client: await getUserThirdwebClient({
+      teamId: params.teamId,
+    }),
   });
 
   return {

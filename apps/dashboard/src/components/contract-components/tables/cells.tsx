@@ -18,6 +18,8 @@ export const ContractNameCell = memo(function ContractNameCell(props: {
   chainId: string;
   contractAddress: string;
   linkOverlay?: boolean;
+  teamSlug: string;
+  projectSlug: string;
 }) {
   const chainSlug = useChainSlug(Number(props.chainId));
   const chain = useV5DashboardChain(Number(props.chainId));
@@ -40,7 +42,7 @@ export const ContractNameCell = memo(function ContractNameCell(props: {
       render={(v) => {
         return (
           <Link
-            href={`/${chainSlug}/${props.contractAddress}`}
+            href={`/team/${props.teamSlug}/${props.projectSlug}/contract/${chainSlug}/${props.contractAddress}`}
             passHref
             className={cn(
               "text-foreground",

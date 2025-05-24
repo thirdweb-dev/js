@@ -1,6 +1,7 @@
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
+import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { BatchLazyMintButton } from "./components/batch-lazy-mint-button";
 import { NFTClaimButton } from "./components/claim-button";
 import { NFTLazyMintButton } from "./components/lazy-mint-button";
@@ -16,6 +17,7 @@ interface NftOverviewPageProps {
   tokenId?: string;
   functionSelectors: string[];
   isLoggedIn: boolean;
+  projectMeta: ProjectMeta | undefined;
 }
 
 export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
@@ -23,6 +25,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   isErc721,
   functionSelectors,
   isLoggedIn,
+  projectMeta,
 }) => {
   const isERC721ClaimToSupported =
     ERC721Ext.isClaimToSupported(functionSelectors);
@@ -107,6 +110,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
           contract={contract}
           isErc721={isErc721}
           tokenByIndex={isTokenByIndexSupported}
+          projectMeta={projectMeta}
         />
       )}
     </div>
