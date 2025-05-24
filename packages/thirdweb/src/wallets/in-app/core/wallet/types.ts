@@ -60,6 +60,8 @@ export type ExecutionModeOptions =
       mode: "EOA";
     };
 
+export type InAppWalletRequired = "email";
+
 export type InAppWalletCreationOptions =
   | {
       auth?: {
@@ -67,6 +69,7 @@ export type InAppWalletCreationOptions =
          * List of authentication options to display in the Connect Modal
          */
         options: InAppWalletAuth[];
+        required?: InAppWalletRequired[];
         /**
          * Whether to display the social auth prompt in a popup or redirect
          */
