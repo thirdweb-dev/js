@@ -85,7 +85,8 @@ export function TypedocSummary(props: {
               <Heading
                 key={Math.random()}
                 level={s.depth}
-                id={slugger.slug(s.children[0]?.data?.hName ?? "", false)}
+                // biome-ignore lint/suspicious/noExplicitAny: complex type
+                id={slugger.slug((s.children[0] as any)?.value ?? "", false)}
               >
                 <TypedocSummary summary={s.children} />
               </Heading>

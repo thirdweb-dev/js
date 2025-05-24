@@ -12,6 +12,5 @@ const config = getTDocPage({
 });
 
 export default config.default;
-// TODO: fix duplicate slugs
-// export const generateStaticParams = config.generateStaticParams;
+export const generateStaticParams = config.generateStaticParams;
 export const generateMetadata = config.generateMetadata;
