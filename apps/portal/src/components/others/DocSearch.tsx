@@ -357,7 +357,7 @@ export function DocSearch(props: { variant: "icon" | "search" }) {
           <DialogTrigger asChild>
             <Button
               variant="outline"
-              className="flex w-56 justify-between px-3"
+              className="flex w-64 justify-between px-3"
             >
               Search Docs
               <div className="flex items-center gap-1 rounded-sm border bg-background px-2 py-1 text-muted-foreground text-xs">
@@ -386,10 +386,6 @@ export function DocSearch(props: { variant: "icon" | "search" }) {
     </QueryClientProvider>
   );
 }
-
-// function isNewSDK(href: string) {
-// 	return href.includes("/typescript/v5");
-// }
 
 function getTagsFromHref(href: string): Tag[] | undefined {
   if (href.includes("/react-native/v0")) {

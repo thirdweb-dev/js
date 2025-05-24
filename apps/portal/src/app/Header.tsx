@@ -27,6 +27,11 @@ import { ThirdwebIcon } from "../icons/thirdweb";
 
 const links = [
   {
+    name: "Connect",
+    href: "/connect",
+    icon: TableOfContentsIcon,
+  },
+  {
     name: "Bridge",
     href: "/pay",
   },
@@ -46,13 +51,13 @@ const links = [
     name: "Nebula",
     href: "/nebula",
   },
-];
-
-const toolLinks = [
   {
     name: "Vault",
     href: "/vault",
   },
+];
+
+const toolLinks = [
   {
     name: "Chain List",
     href: "https://thirdweb.com/chainlist",
@@ -140,6 +145,39 @@ const apisLinks = [
   },
 ];
 
+const sdkLinks = [
+  {
+    name: "TypeScript",
+    href: "/typescript/v5",
+    icon: TypeScriptIcon,
+  },
+  {
+    name: "React",
+    href: "/react/v5",
+    icon: ReactIcon,
+  },
+  {
+    name: "React Native",
+    href: "/react-native/v5",
+    icon: ReactIcon,
+  },
+  {
+    name: ".NET",
+    href: "/dotnet",
+    icon: DotNetIcon,
+  },
+  {
+    name: "Unity",
+    href: "/unity",
+    icon: UnityIcon,
+  },
+  {
+    name: "Unreal Engine",
+    href: "/unreal-engine",
+    icon: UnrealEngineIcon,
+  },
+];
+
 const supportLinks = [
   {
     name: "Get thirdweb support",
@@ -155,58 +193,57 @@ export function Header() {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
 
   return (
-    <header className="flex w-full items-center border-b bg-background">
-      <div className="container flex items-center justify-between gap-6 p-4 xl:justify-start">
-        <Link
-          className="flex items-center gap-2"
-          href="/"
-          aria-label="thirdweb Docs"
-          title="thirdweb Docs"
-        >
-          <ThirdwebIcon className="size-8" />
-          <span className="font-bold text-[23px] text-foreground leading-none tracking-tight">
-            Docs
-          </span>
-        </Link>
-
-        <div className="flex items-center gap-1 xl:hidden">
-          <ThemeSwitcher className="border-none bg-transparent" />
-
-          <DocSearch variant="icon" />
-
+    <header className="flex w-full flex-col gap-2 border-b bg-background p-2 lg:px-4">
+      <div className="container flex items-center justify-between gap-6">
+        {/* Top row */}
+        <div className="flex items-center gap-2">
           <Link
-            href="https://github.com/thirdweb-dev"
-            target="_blank"
-            className="text-foreground"
+            className="flex items-center gap-2"
+            href="/"
+            aria-label="thirdweb Docs"
+            title="thirdweb Docs"
           >
-            <GithubIcon className="mx-3 size-6" />
+            <ThirdwebIcon className="size-8" />
+            <span className="font-bold text-[23px] text-foreground leading-none tracking-tight">
+              Docs
+            </span>
           </Link>
-
-          {/* Mobile burger menu */}
-          <Button
-            variant="ghost"
-            className="p-2"
-            onClick={() => setShowBurgerMenu(!showBurgerMenu)}
-          >
-            <MenuIcon className="size-7" />
-          </Button>
         </div>
 
-        <nav
-          className={clsx(
-            "grow gap-5",
-            !showBurgerMenu ? "hidden xl:flex" : "flex",
-            "fade-in-20 slide-in-from-top-3 fixed inset-0 top-sticky-top-height animate-in flex-col overflow-auto bg-card p-6",
-            "xl:static xl:animate-none xl:flex-row xl:justify-between xl:bg-transparent xl:p-0",
-          )}
-        >
-          <ul className="flex flex-col gap-5 xl:flex-row xl:items-center">
-            <DropdownLinks
-              links={connectLinks}
-              onLinkClick={() => setShowBurgerMenu(false)}
-              category="Connect"
-            />
+        <div className="flex items-center gap-3">
+          <div className="hidden xl:flex">
+            <ThemeSwitcher />
+          </div>
 
+          <div className="hidden xl:block">
+            <DocSearch variant="search" />
+          </div>
+
+          <div className="flex items-center gap-1 xl:hidden">
+            <ThemeSwitcher className="border-none bg-transparent" />
+            <DocSearch variant="icon" />
+            <Link
+              href="https://github.com/thirdweb-dev"
+              target="_blank"
+              className="text-foreground"
+            >
+              <GithubIcon className="mx-3 size-6" />
+            </Link>
+            <Button
+              variant="ghost"
+              className="p-2"
+              onClick={() => setShowBurgerMenu(!showBurgerMenu)}
+            >
+              <MenuIcon className="size-7" />
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom row - hidden on mobile */}
+      <div className="container hidden items-center justify-between gap-6 xl:flex">
+        <nav className="flex grow gap-5">
+          <ul className="flex flex-row items-center gap-5">
             {links.map((link) => {
               return (
                 <li
@@ -230,50 +267,124 @@ export function Header() {
               category="Tools"
             />
           </ul>
+        </nav>
 
-          <div className="flex flex-col justify-start gap-5 xl:flex-row xl:items-center xl:gap-3">
-            <div className="hidden xl:flex">
-              <ThemeSwitcher />
+        <div className="flex items-center gap-3">
+          <div className="px-1">
+            <DropdownLinks
+              links={sdkLinks}
+              onLinkClick={() => setShowBurgerMenu(false)}
+              category="SDKs"
+            />
+          </div>
+          <div className="px-1">
+            <DropdownLinks
+              links={apisLinks}
+              onLinkClick={() => setShowBurgerMenu(false)}
+              category="APIs"
+            />
+          </div>
+
+          <div className="px-1">
+            <DropdownLinks
+              links={supportLinks}
+              onLinkClick={() => setShowBurgerMenu(false)}
+              category="Support"
+            />
+          </div>
+
+          <NavLink
+            name="Changelog"
+            href="/changelog"
+            onClick={() => {
+              setShowBurgerMenu(false);
+            }}
+          />
+
+          <Link
+            href="https://github.com/thirdweb-dev"
+            target="_blank"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <GithubIcon className="mx-2 size-6" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      {showBurgerMenu && (
+        <div className="fixed inset-0 top-sticky-top-height z-50 overflow-auto bg-card p-6 xl:hidden">
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
+              <h3 className="font-semibold text-lg">Products</h3>
+              {links.map((link) => (
+                <NavLink
+                  key={link.name}
+                  name={link.name}
+                  href={link.href}
+                  icon={link.icon}
+                  onClick={() => setShowBurgerMenu(false)}
+                />
+              ))}
             </div>
 
-            <div className="hidden xl:block">
-              <DocSearch variant="search" />
+            <div className="flex flex-col gap-4">
+              <h3 className="font-semibold text-lg">SDKs</h3>
+              {sdkLinks.map((link) => (
+                <NavLink
+                  key={link.name}
+                  name={link.name}
+                  href={link.href}
+                  icon={link.icon}
+                  onClick={() => setShowBurgerMenu(false)}
+                />
+              ))}
             </div>
 
-            <div className="xl:px-1">
-              <DropdownLinks
-                links={apisLinks}
-                onLinkClick={() => setShowBurgerMenu(false)}
-                category="APIs"
-              />
+            <div className="flex flex-col gap-4">
+              <h3 className="font-semibold text-lg">APIs</h3>
+              {apisLinks.map((link) => (
+                <NavLink
+                  key={link.name}
+                  name={link.name}
+                  href={link.href}
+                  onClick={() => setShowBurgerMenu(false)}
+                />
+              ))}
             </div>
 
-            <div className="xl:px-1">
-              <DropdownLinks
-                links={supportLinks}
-                onLinkClick={() => setShowBurgerMenu(false)}
-                category="Support"
-              />
+            <div className="flex flex-col gap-4">
+              <h3 className="font-semibold text-lg">Support</h3>
+              {supportLinks.map((link) => (
+                <NavLink
+                  key={link.name}
+                  name={link.name}
+                  href={link.href}
+                  onClick={() => setShowBurgerMenu(false)}
+                />
+              ))}
             </div>
 
             <NavLink
               name="Changelog"
               href="/changelog"
-              onClick={() => {
-                setShowBurgerMenu(false);
-              }}
+              onClick={() => setShowBurgerMenu(false)}
             />
 
-            <Link
-              href="https://github.com/thirdweb-dev"
-              target="_blank"
-              className="hidden text-muted-foreground transition-colors hover:text-foreground xl:block"
-            >
-              <GithubIcon className="mx-2 size-6" />
-            </Link>
+            <div className="flex flex-col gap-4">
+              <h3 className="font-semibold text-lg">Tools</h3>
+              {toolLinks.map((link) => (
+                <NavLink
+                  key={link.name}
+                  name={link.name}
+                  href={link.href}
+                  onClick={() => setShowBurgerMenu(false)}
+                />
+              ))}
+            </div>
           </div>
-        </nav>
-      </div>
+        </div>
+      )}
     </header>
   );
 }
