@@ -110,7 +110,7 @@ export function ChatBar(props: {
         images.map(async (image) => {
           const b64 = await uploadImageMutation.mutateAsync(image);
           return { file: image, b64: b64 };
-        }),
+        })
       );
 
       setImages((prev) => [...prev, ...urls]);
@@ -127,8 +127,15 @@ export function ChatBar(props: {
       <div
         className={cn(
           "overflow-hidden rounded-2xl border border-border bg-card",
-          props.className,
+          props.className
         )}
+        onDrop={(e) => {
+          e.preventDefault();
+          if (!props.allowImageUpload) return;
+          const files = Array.from(e.dataTransfer.files);
+          if (files.length > 0) handleImageUpload(files);
+        }}
+        onDragOver={(e) => e.preventDefault()}
       >
         {images.length > 0 && (
           <ImagePreview
@@ -146,6 +153,14 @@ export function ChatBar(props: {
               placeholder={props.placeholder}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onPaste={(e) => {
+                if (!props.allowImageUpload) return;
+                const files = Array.from(e.clipboardData.files);
+                if (files.length > 0) {
+                  e.preventDefault();
+                  handleImageUpload(files);
+                }
+              }}
               onKeyDown={(e) => {
                 // ignore if shift key is pressed to allow entering new lines
                 if (e.shiftKey) {
@@ -266,7 +281,7 @@ export function ChatBar(props: {
                         `You can only upload up to ${maxAllowedImagesPerMessage} images at a time`,
                         {
                           position: "top-right",
-                        },
+                        }
                       );
                       return;
                     }
@@ -543,7 +558,7 @@ function WalletSelector(props: {
                 key={wallet.address}
                 className={cn(
                   "flex cursor-pointer items-center justify-between px-3 py-4 hover:bg-accent/50",
-                  props.selectedAddress === wallet.address && "bg-accent/50",
+                  props.selectedAddress === wallet.address && "bg-accent/50"
                 )}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
