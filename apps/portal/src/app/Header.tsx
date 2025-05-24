@@ -9,9 +9,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import clsx from "clsx";
-import { ChevronDownIcon, MenuIcon, TableOfContentsIcon } from "lucide-react";
+import {
+  BotIcon,
+  ChevronDownIcon,
+  MenuIcon,
+  TableOfContentsIcon,
+} from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { GithubIcon } from "../components/Document/GithubButtonLink";
 import { CustomAccordion } from "../components/others/CustomAccordion";
@@ -29,7 +34,6 @@ const links = [
   {
     name: "Connect",
     href: "/connect",
-    icon: TableOfContentsIcon,
   },
   {
     name: "Bridge",
@@ -191,6 +195,7 @@ const supportLinks = [
 
 export function Header() {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
+  const router = useRouter();
 
   return (
     <header className="flex w-full flex-col gap-2 border-b bg-background p-2 lg:px-4">
@@ -211,17 +216,27 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="hidden xl:flex">
-            <ThemeSwitcher />
-          </div>
-
           <div className="hidden xl:block">
             <DocSearch variant="search" />
           </div>
 
-          <div className="flex items-center gap-1 xl:hidden">
+          <div className="hidden xl:block">
+            <Button
+              variant="primary"
+              onClick={() => {
+                router.push("/chat");
+              }}
+            >
+              <BotIcon className="mr-2 size-4" />
+              Ask AI
+            </Button>
+          </div>
+
+          <div className="hidden xl:block">
             <ThemeSwitcher className="border-none bg-transparent" />
-            <DocSearch variant="icon" />
+          </div>
+
+          <div className="hidden xl:block">
             <Link
               href="https://github.com/thirdweb-dev"
               target="_blank"
@@ -229,6 +244,18 @@ export function Header() {
             >
               <GithubIcon className="mx-3 size-6" />
             </Link>
+          </div>
+
+          <div className="flex items-center gap-1 xl:hidden">
+            <ThemeSwitcher className="border-none bg-transparent" />
+            <DocSearch variant="icon" />
+            <Button
+              variant="ghost"
+              className="p-2"
+              onClick={() => router.push("/chat")}
+            >
+              <BotIcon className="size-7" />
+            </Button>
             <Button
               variant="ghost"
               className="p-2"
@@ -260,12 +287,6 @@ export function Header() {
                 </li>
               );
             })}
-
-            <DropdownLinks
-              links={toolLinks}
-              onLinkClick={() => setShowBurgerMenu(false)}
-              category="Tools"
-            />
           </ul>
         </nav>
 
@@ -287,6 +308,14 @@ export function Header() {
 
           <div className="px-1">
             <DropdownLinks
+              links={toolLinks}
+              onLinkClick={() => setShowBurgerMenu(false)}
+              category="Tools"
+            />
+          </div>
+
+          <div className="px-1">
+            <DropdownLinks
               links={supportLinks}
               onLinkClick={() => setShowBurgerMenu(false)}
               category="Support"
@@ -300,14 +329,6 @@ export function Header() {
               setShowBurgerMenu(false);
             }}
           />
-
-          <Link
-            href="https://github.com/thirdweb-dev"
-            target="_blank"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <GithubIcon className="mx-2 size-6" />
-          </Link>
         </div>
       </div>
 
@@ -322,7 +343,6 @@ export function Header() {
                   key={link.name}
                   name={link.name}
                   href={link.href}
-                  icon={link.icon}
                   onClick={() => setShowBurgerMenu(false)}
                 />
               ))}

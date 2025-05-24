@@ -28,14 +28,14 @@ const jsOrTsLangs = new Set([
 
 export async function CodeBlock(props: {
   code: string;
-  lang: BuiltinLanguage | SpecialLanguage;
+  lang: BuiltinLanguage | SpecialLanguage | string | undefined | null;
   tokenLinks?: Map<string, string>;
   className?: string;
   containerClassName?: string;
   scrollContainerClassName?: string;
 }) {
   let code = props.code;
-  let lang = props.lang;
+  let lang = props.lang || "javascript";
   const tokenLinks = props.tokenLinks;
 
   if (lang === "shell" || lang === "sh") {
@@ -90,12 +90,11 @@ export async function CodeBlock(props: {
 
 async function RenderCode(props: {
   code: string;
-  lang: BuiltinLanguage | SpecialLanguage;
+  lang: BuiltinLanguage | SpecialLanguage | string | undefined | null;
   tokenLinks?: Map<string, string>;
 }) {
   const { tokens } = await codeToTokens(props.code, {
-    // theme: "github-dark",
-    lang: props.lang,
+    lang: (props.lang || "javascript") as BuiltinLanguage | SpecialLanguage,
     themes: {
       light: "github-light",
       dark: "github-dark-dimmed",

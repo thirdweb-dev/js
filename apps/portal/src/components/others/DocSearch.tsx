@@ -135,7 +135,7 @@ function SearchModalContent(props: { closeModal: () => void }) {
               e.target.blur();
             }
           }}
-          placeholder="Search documentation"
+          placeholder="Search docs"
           className={cn(
             "h-auto flex-1 border-none bg-transparent p-4 px-0 text-base placeholder:text-base placeholder:text-muted-foreground",
             "focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-transparent",
@@ -357,7 +357,7 @@ export function DocSearch(props: { variant: "icon" | "search" }) {
           <DialogTrigger asChild>
             <Button
               variant="outline"
-              className="flex w-64 justify-between px-3"
+              className="flex w-64 justify-between gap-6 px-3 text-muted-foreground"
             >
               Search Docs
               <div className="flex items-center gap-1 rounded-sm border bg-background px-2 py-1 text-muted-foreground text-xs">
@@ -502,24 +502,3 @@ function SearchResultItem(props: {
     </Link>
   );
 }
-
-// const HighlightMatches = memo(function _HighlightMatches(props: {
-// 	value: string;
-// 	match: string;
-// }) {
-// 	const tokens = getMatches(props);
-// 	return (
-// 		<div>
-// 			{tokens.map((t) => {
-// 				return (
-// 					<span
-// 						key={t.text}
-// 						className={t.highlight ? "bg-muted text-foreground" : "text-muted-foreground"}
-// 					>
-// 						{t.text}
-// 					</span>
-// 				);
-// 			})}
-// 		</div>
-// 	);
-// });

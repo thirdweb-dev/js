@@ -117,15 +117,12 @@ export function getTDocPage(options: {
           const paths = await getDoc(version)
             .then((doc) => fetchAllSlugs(doc))
             .then((slugs) => {
-              return [
-                ...slugs.map((slug) => {
-                  return {
-                    slug: slug.split("/") as string[],
-                    version: version,
-                  };
-                }),
-                { version, slug: [] },
-              ];
+              return Array.from(new Set(slugs)).map((slug) => {
+                return {
+                  slug: slug.split("/") as string[],
+                  version: version,
+                };
+              });
             });
           return paths;
         }),
