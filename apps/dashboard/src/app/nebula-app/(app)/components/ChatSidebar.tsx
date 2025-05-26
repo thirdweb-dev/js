@@ -13,11 +13,11 @@ import {
   ChevronRightIcon,
   FileCode2Icon,
   LogOutIcon,
-  MoonIcon,
   PlusIcon,
-  SunIcon,
+  SettingsIcon,
+  BotIcon,
+  CalendarClockIcon,
 } from "lucide-react";
-import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -29,7 +29,6 @@ import {
 } from "thirdweb/react";
 import { WalletIcon, WalletName, WalletProvider } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
-import { useIsClientMounted } from "../../../../components/ClientOnly/ClientOnly";
 import { doNebulaLogout } from "../../login/auth-actions";
 import type { TruncatedSessionInfo } from "../api/types";
 import { useNewChatPageLink } from "../hooks/useNewChatPageLink";
@@ -85,7 +84,7 @@ export function ChatSidebar(props: {
       <div className="h-5" />
 
       {sessionsToShow.length > 0 && (
-        <div className="flex-1 overflow-auto border-t border-dashed p-2 pt-2">
+        <div className="border-t border-dashed p-2 pt-2">
           <div className="flex items-center justify-between px-2 py-3">
             <h3 className="text-muted-foreground text-xs">Recent Chats</h3>
             {sessionsToShow.length < sessions.length && (
@@ -114,6 +113,27 @@ export function ChatSidebar(props: {
         </div>
       )}
 
+      {/* Agents and Tasks Links */}
+      <div className="border-t border-dashed px-4 py-4 space-y-1">
+        <Link
+          href="/agents"
+          className="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-accent transition-colors"
+        >
+          <BotIcon className="w-5 h-5 text-muted-foreground" />
+          <span>Agents</span>
+        </Link>
+        <Link
+          href="/tasks"
+          className="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-accent transition-colors"
+        >
+          <CalendarClockIcon className="w-5 h-5 text-muted-foreground" />
+          <span>Tasks</span>
+        </Link>
+      </div>
+
+      {/* This div takes up remaining space to push wallet details to bottom */}
+      <div className="flex-1" />
+
       <div className="mt-auto">
         <WalletDetails />
       </div>
@@ -126,7 +146,11 @@ export function ChatSidebar(props: {
           target="_blank"
         />
 
-        <ToggleThemeButton />
+        <SidebarIconLink
+          href="/settings"
+          icon={SettingsIcon}
+          label="Settings"
+        />
 
         <SidebarIconButton
           onClick={async () => {
@@ -157,7 +181,7 @@ function WalletDetails() {
           size="sm"
           className={cn(
             "h-auto w-auto p-1.5 transition-transform duration-300",
-            isExpanded ? "rotate-180" : "",
+            isExpanded ? "rotate-180" : ""
           )}
           onClick={() => setIsExpanded(!isExpanded)}
         >
@@ -258,23 +282,6 @@ function CustomConnectButton() {
         }
       />
     </div>
-  );
-}
-
-function ToggleThemeButton() {
-  const { theme, setTheme } = useTheme();
-  const isClientMounted = useIsClientMounted();
-
-  return (
-    <SidebarIconButton
-      onClick={() => {
-        setTheme(theme === "light" ? "dark" : "light");
-      }}
-      icon={
-        isClientMounted ? (theme === "light" ? SunIcon : MoonIcon) : Spinner
-      }
-      label="Toggle Theme"
-    />
   );
 }
 
