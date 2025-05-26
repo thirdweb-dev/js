@@ -2,7 +2,7 @@ import type { Config } from "@hey-api/client-fetch";
 import { client } from "./client/client.gen.js";
 
 export type InsightClientOptions = {
-  readonly clientId: string;
+  readonly clientId?: string;
   readonly secretKey?: string;
 };
 

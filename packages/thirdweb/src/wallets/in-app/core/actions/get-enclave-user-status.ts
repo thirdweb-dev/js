@@ -25,7 +25,6 @@ export async function getUserStatus({
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-thirdweb-client-id": client.clientId,
         Authorization: `Bearer embedded-wallet-token:${authToken}`,
       },
     },
