@@ -1,15 +1,14 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import type { ControllerRenderProps } from "react-hook-form";
+import { MultiSelect } from "@/components/blocks/multi-select";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ChevronDownIcon, SearchIcon, XIcon } from "lucide-react";
 
 interface Preset {
   label: string;
@@ -145,53 +144,109 @@ interface AggregateParameterInputProps {
     },
     string
   >;
-  showTip: boolean;
-  hasError: boolean;
-  placeholder: string;
-  endpointPath: string; // New prop
+  showTip?: boolean;
+  hasError?: boolean;
+  placeholder?: string;
+  endpointPath: string;
 }
 
 export function AggregateParameterInput(props: AggregateParameterInputProps) {
-  const { field, showTip, hasError, placeholder, endpointPath } = props;
+  const { field, placeholder, endpointPath } = props;
   const { value, onChange } = field;
+  const [searchQuery, setSearchQuery] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
-  const presets = getAggregatePresets(endpointPath);
+  const presets = useMemo(() => getAggregatePresets(endpointPath), [endpointPath]);
+  
+  const selectedValues = useMemo(() => {
+    if (!value) return [];
+    return String(value).split(',').filter(Boolean);
+  }, [value]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e);
+  };
+
+  const handlePresetSelect = useCallback((preset: { value: string; label: string }) => {
+    const newValue = value ? `${value}, ${preset.value}` : preset.value;
+    onChange({ target: { value: newValue } });
+    inputRef.current?.focus();
+  }, [value, onChange]);
 
   return (
-    <div className="flex flex-col space-y-1">
+    <div className="w-full space-y-2">
+      {/* Main input field */}
       <Input
-        {...field}
-        className={cn(
-          "h-auto truncate rounded-none border-0 bg-transparent py-5 font-mono text-sm focus-visible:ring-0 focus-visible:ring-offset-0",
-          showTip && "lg:pr-10",
-          hasError && "text-destructive-text",
-        )}
-        placeholder={placeholder}
+        ref={inputRef}
+        value={value || ''}
+        onChange={handleInputChange}
+        placeholder={placeholder || "Enter aggregation formula..."}
+        className="w-full font-mono text-sm"
       />
-      <Select
-        value={presets.find((p) => p.value === value)?.value || ""}
-        onValueChange={(selectedValue) => {
-          if (selectedValue) {
-            onChange({ target: { value: selectedValue } });
-          }
-        }}
-      >
-        <SelectTrigger
-          className={cn(
-            "h-8 border-dashed bg-transparent text-xs focus:ring-0 focus:ring-offset-0",
-            !presets.find((p) => p.value === value) && "text-muted-foreground",
-          )}
-        >
-          <SelectValue placeholder="Select a preset (optional)" />
-        </SelectTrigger>
-        <SelectContent className="font-mono">
-          {presets.map((preset) => (
-            <SelectItem key={preset.value} value={preset.value}>
-              {preset.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      
+      {/* Preset selector */}
+      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+        <PopoverTrigger asChild>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full justify-between text-muted-foreground"
+            type="button"
+          >
+            <span>Select from presets</span>
+            <ChevronDownIcon className="h-4 w-4" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[500px] p-0" align="start">
+          <div className="p-2 border-b">
+            <div className="relative">
+              <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search aggregations..."
+                className="pl-8 h-9"
+              />
+            </div>
+          </div>
+          <div className="max-h-[300px] overflow-auto p-1">
+            {presets
+              .filter(preset => 
+                !searchQuery ||
+                preset.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                preset.value.toLowerCase().includes(searchQuery.toLowerCase())
+              )
+              .map((preset) => (
+                <button
+                  key={preset.value}
+                  className="w-full text-left p-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-md flex items-center justify-between"
+                  onClick={() => handlePresetSelect(preset)}
+                  type="button"
+                >
+                  <span>{preset.label}</span>
+                  <span className="text-xs text-muted-foreground font-mono ml-2">
+                    {preset.value}
+                  </span>
+                </button>
+              ))}
+          </div>
+        </PopoverContent>
+      </Popover>
+      
+      {/* Selected presets as badges */}
+      {selectedValues.length > 0 && (
+        <div className="flex flex-wrap gap-1">
+          {selectedValues.map((val) => {
+            const preset = presets.find(p => p.value === val);
+            return (
+              <Badge key={val} variant="secondary" className="font-normal">
+                {preset?.label || val}
+              </Badge>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
