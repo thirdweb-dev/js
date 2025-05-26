@@ -1,10 +1,15 @@
 "use client";
 
-import { MultiSelect } from "@/components/blocks/multi-select";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
+import { MultiSelect } from "@/components/blocks/multi-select";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ChevronDownIcon, SearchIcon, XIcon } from "lucide-react";
 
 interface Preset {
   label: string;
@@ -147,130 +152,102 @@ interface AggregateParameterInputProps {
 }
 
 export function AggregateParameterInput(props: AggregateParameterInputProps) {
-  const { field, placeholder, endpointPath, showTip } = props;
+  const { field, placeholder, endpointPath } = props;
   const { value, onChange } = field;
+  const [searchQuery, setSearchQuery] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
-  const presets = useMemo(
-    () => getAggregatePresets(endpointPath),
-    [endpointPath],
-  );
-
+  const presets = useMemo(() => getAggregatePresets(endpointPath), [endpointPath]);
+  
   const selectedValues = useMemo(() => {
     if (!value) return [];
-    return Array.from(
-      new Set(
-        String(value)
-          .split(",")
-          .map((v) => v.trim()) // remove leading / trailing spaces
-          .filter(Boolean),
-      ),
-    );
+    return String(value).split(',').filter(Boolean);
   }, [value]);
 
-  const handlePresetChange = useCallback(
-    (values: string[]) => {
-      onChange({ target: { value: values.join(",") } });
-    },
-    [onChange],
-  );
-
-  // Custom search function for the MultiSelect
-  const searchFunction = useCallback(
-    (option: { value: string; label: string }, searchTerm: string) => {
-      if (!searchTerm) return true;
-      const query = searchTerm.toLowerCase();
-      return (
-        option.label.toLowerCase().includes(query) ||
-        option.value.toLowerCase().includes(query)
-      );
-    },
-    [],
-  );
-
-  // Get display values for the selected items
-  useCallback(
-    (value: string) => {
-      const preset = presets.find((p) => p.value === value);
-      return preset ? preset.label : value;
-    },
-    [presets],
-  );
-
-  // Format selected values for display in the MultiSelect
-  useMemo(() => {
-    return selectedValues.map((value) => {
-      const preset = presets.find((p) => p.value === value);
-      return {
-        label: preset?.label || value,
-        value,
-      };
-    });
-  }, [selectedValues, presets]);
-
-  // State for the manual input text
-  const [manualInput, setManualInput] = useState("");
-
-  // Update manual input when selected values change
-  useEffect(() => {
-    if (selectedValues.length === 0) {
-      setManualInput("");
-    } else {
-      setManualInput(selectedValues.join(", "));
-    }
-  }, [selectedValues]);
-
-  // Handle manual input changes
-  const handleManualInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setManualInput(value);
-
-    // Update selected values by splitting on commas and trimming whitespace
-    const newValues = value
-      .split(",")
-      .map((v) => v.trim())
-      .filter(Boolean);
-
-    onChange({ target: { value: newValues.join(",") } });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e);
   };
 
-  return (
-    <div className="w-full">
-      {/* Editable formula text field */}
-      <div className="relative">
-        <Input
-          value={manualInput}
-          onChange={handleManualInputChange}
-          placeholder={placeholder}
-          className={cn(
-            "h-auto truncate rounded-none border-0 bg-transparent py-3 font-mono text-sm focus-visible:ring-0 focus-visible:ring-offset-0",
-            showTip && "lg:pr-10",
-          )}
-        />
-      </div>
+  const handlePresetSelect = useCallback((preset: { value: string; label: string }) => {
+    const newValue = value ? `${value}, ${preset.value}` : preset.value;
+    onChange({ target: { value: newValue } });
+    inputRef.current?.focus();
+  }, [value, onChange]);
 
-      {/* MultiSelect for choosing aggregations */}
-      <MultiSelect
-        options={presets}
-        selectedValues={selectedValues}
-        onSelectedValuesChange={handlePresetChange}
-        placeholder="Select presets (optional)"
-        searchPlaceholder="Search aggregation presets"
-        className={cn(
-          "rounded-none border-0 border-border border-t-2 border-dashed",
-          "hover:bg-inherit",
-        )}
-        popoverContentClassName="min-w-[calc(100vw-20px)] lg:min-w-[500px]"
-        selectedBadgeClassName="font-normal"
-        overrideSearchFn={searchFunction}
-        renderOption={(option) => (
-          <div className="flex w-full items-center justify-between">
-            <span className="truncate">{option.label}</span>
-            <span className="ml-2 truncate font-mono text-muted-foreground text-xs">
-              {option.value}
-            </span>
-          </div>
-        )}
+  return (
+    <div className="w-full space-y-2">
+      {/* Main input field */}
+      <Input
+        ref={inputRef}
+        value={value || ''}
+        onChange={handleInputChange}
+        placeholder={placeholder || "Enter aggregation formula..."}
+        className="w-full font-mono text-sm"
       />
+      
+      {/* Preset selector */}
+      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+        <PopoverTrigger asChild>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full justify-between text-muted-foreground"
+            type="button"
+          >
+            <span>Select from presets</span>
+            <ChevronDownIcon className="h-4 w-4" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[500px] p-0" align="start">
+          <div className="p-2 border-b">
+            <div className="relative">
+              <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search aggregations..."
+                className="pl-8 h-9"
+              />
+            </div>
+          </div>
+          <div className="max-h-[300px] overflow-auto p-1">
+            {presets
+              .filter(preset => 
+                !searchQuery ||
+                preset.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                preset.value.toLowerCase().includes(searchQuery.toLowerCase())
+              )
+              .map((preset) => (
+                <button
+                  key={preset.value}
+                  className="w-full text-left p-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-md flex items-center justify-between"
+                  onClick={() => handlePresetSelect(preset)}
+                  type="button"
+                >
+                  <span>{preset.label}</span>
+                  <span className="text-xs text-muted-foreground font-mono ml-2">
+                    {preset.value}
+                  </span>
+                </button>
+              ))}
+          </div>
+        </PopoverContent>
+      </Popover>
+      
+      {/* Selected presets as badges */}
+      {selectedValues.length > 0 && (
+        <div className="flex flex-wrap gap-1">
+          {selectedValues.map((val) => {
+            const preset = presets.find(p => p.value === val);
+            return (
+              <Badge key={val} variant="secondary" className="font-normal">
+                {preset?.label || val}
+              </Badge>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
