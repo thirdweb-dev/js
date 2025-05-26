@@ -1,41 +1,18 @@
-import { notFound, redirect } from "next/navigation";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
-import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
-import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
-import { ContractProposalsPage } from "./ContractProposalsPage";
-import { ContractProposalsPageClient } from "./ContractProposalsPage.client";
+import type { PublicContractPageParams } from "../types";
+import { SharedContractProposalsPage } from "./shared-proposals-page";
 
 export default async function Page(props: {
-  params: Promise<{
-    contractAddress: string;
-    chain_id: string;
-  }>;
+  params: Promise<PublicContractPageParams>;
 }) {
-  const params = await props.params;
-  const info = await getContractPageParamsInfo(params);
-
-  if (!info) {
-    notFound();
-  }
-  const account = await getRawAccount();
-
-  const { clientContract, serverContract, isLocalhostChain } = info;
-  if (isLocalhostChain) {
-    return (
-      <ContractProposalsPageClient
-        contract={clientContract}
-        isLoggedIn={!!account}
-      />
-    );
-  }
-
-  const { isVoteContract } = await getContractPageMetadata(serverContract);
-
-  if (!isVoteContract) {
-    redirect(`/${params.chain_id}/${params.contractAddress}`);
-  }
+  const [params, account] = await Promise.all([props.params, getRawAccount()]);
 
   return (
-    <ContractProposalsPage contract={clientContract} isLoggedIn={!!account} />
+    <SharedContractProposalsPage
+      contractAddress={params.contractAddress}
+      chainIdOrSlug={params.chain_id}
+      projectMeta={undefined}
+      isLoggedIn={!!account}
+    />
   );
 }

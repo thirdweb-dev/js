@@ -46,6 +46,8 @@ export function ContractTable(props: {
   projectId: string;
   client: ThirdwebClient;
   variant: "asset" | "contract";
+  teamSlug: string;
+  projectSlug: string;
 }) {
   return (
     <ContractTableUI
@@ -53,6 +55,8 @@ export function ContractTable(props: {
       contracts={props.contracts}
       client={props.client}
       pageSize={props.pageSize}
+      teamSlug={props.teamSlug}
+      projectSlug={props.projectSlug}
       removeContractFromProject={async (contractId) => {
         await removeContractFromProject({
           teamId: props.teamId,
@@ -70,6 +74,8 @@ export function ContractTableUI(props: {
   removeContractFromProject: (contractId: string) => Promise<void>;
   client: ThirdwebClient;
   variant: "asset" | "contract";
+  teamSlug: string;
+  projectSlug: string;
 }) {
   // instantly update the table without waiting for router refresh by adding deleted contract ids to the state
   const [deletedContractIds, setDeletedContractIds] = useState<string[]>([]);
@@ -168,6 +174,8 @@ export function ContractTableUI(props: {
                       chainId={contract.chainId}
                       contractAddress={contract.contractAddress}
                       linkOverlay
+                      teamSlug={props.teamSlug}
+                      projectSlug={props.projectSlug}
                     />
                   </TableCell>
 

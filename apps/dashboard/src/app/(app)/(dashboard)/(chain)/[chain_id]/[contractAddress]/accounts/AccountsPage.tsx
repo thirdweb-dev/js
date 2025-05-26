@@ -3,6 +3,7 @@
 import { ButtonGroup, Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { Heading, TrackedLinkButton } from "tw-components";
+import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { AccountsCount } from "./components/accounts-count";
 import { AccountsTable } from "./components/accounts-table";
 import { CreateAccountButton } from "./components/create-account-button";
@@ -10,11 +11,13 @@ import { CreateAccountButton } from "./components/create-account-button";
 interface AccountsPageProps {
   contract: ThirdwebContract;
   isLoggedIn: boolean;
+  projectMeta: ProjectMeta | undefined;
 }
 
 export const AccountsPage: React.FC<AccountsPageProps> = ({
   contract,
   isLoggedIn,
+  projectMeta,
 }) => {
   return (
     <Flex direction="column" gap={6}>
@@ -43,7 +46,7 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
         </ButtonGroup>
       </Flex>
       <AccountsCount contract={contract} />
-      <AccountsTable contract={contract} />
+      <AccountsTable contract={contract} projectMeta={projectMeta} />
     </Flex>
   );
 };

@@ -65,6 +65,8 @@ export default async function Page(props: {
             projectId={project.id}
             authToken={authToken}
             client={client}
+            teamSlug={params.team_slug}
+            projectSlug={params.project_slug}
           />
         </Suspense>
       </div>
@@ -92,6 +94,8 @@ async function AssetsPageAsync(props: {
   projectId: string;
   authToken: string;
   client: ThirdwebClient;
+  teamSlug: string;
+  projectSlug: string;
 }) {
   const deployedContracts = await getSortedDeployedContracts({
     teamId: props.teamId,
@@ -109,6 +113,8 @@ async function AssetsPageAsync(props: {
         teamId={props.teamId}
         projectId={props.projectId}
         client={props.client}
+        teamSlug={props.teamSlug}
+        projectSlug={props.projectSlug}
       />
     </ClientOnly>
   );

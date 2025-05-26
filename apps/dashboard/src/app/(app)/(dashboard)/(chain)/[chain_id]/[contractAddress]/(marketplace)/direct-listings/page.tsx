@@ -1,45 +1,18 @@
-import { notFound, redirect } from "next/navigation";
 import { getRawAccount } from "../../../../../../account/settings/getAccount";
-import { getContractPageParamsInfo } from "../../_utils/getContractFromParams";
-import { getContractPageMetadata } from "../../_utils/getContractPageMetadata";
-import { ContractDirectListingsPage } from "./ContractDirectListingsPage";
-import { ContractDirectListingsPageClient } from "./ContractDirectListingsPage.client";
+import type { PublicContractPageParams } from "../../types";
+import { SharedDirectListingsPage } from "./shared-direct-listings-page";
 
 export default async function Page(props: {
-  params: Promise<{
-    contractAddress: string;
-    chain_id: string;
-  }>;
+  params: Promise<PublicContractPageParams>;
 }) {
-  const params = await props.params;
-  const account = await getRawAccount();
-  const info = await getContractPageParamsInfo(params);
-
-  if (!info) {
-    notFound();
-  }
-
-  if (info.isLocalhostChain) {
-    return (
-      <ContractDirectListingsPageClient
-        contract={info.clientContract}
-        isLoggedIn={!!account}
-      />
-    );
-  }
-
-  const { isDirectListingSupported, isInsightSupported } =
-    await getContractPageMetadata(info.serverContract);
-
-  if (!isDirectListingSupported) {
-    redirect(`/${params.chain_id}/${params.contractAddress}`);
-  }
+  const [params, account] = await Promise.all([props.params, getRawAccount()]);
 
   return (
-    <ContractDirectListingsPage
-      contract={info.clientContract}
+    <SharedDirectListingsPage
+      contractAddress={params.contractAddress}
+      chainIdOrSlug={params.chain_id}
+      projectMeta={undefined}
       isLoggedIn={!!account}
-      isInsightSupported={isInsightSupported}
     />
   );
 }

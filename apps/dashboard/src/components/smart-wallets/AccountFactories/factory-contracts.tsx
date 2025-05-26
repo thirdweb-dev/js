@@ -22,6 +22,8 @@ interface FactoryContractsProps {
   contracts: ProjectContract[];
   isPending: boolean;
   isFetched: boolean;
+  teamSlug: string;
+  projectSlug: string;
 }
 
 function NetworkName(props: { id: number }) {
@@ -45,6 +47,8 @@ function NetworkName(props: { id: number }) {
 
 export const FactoryContracts: React.FC<FactoryContractsProps> = ({
   contracts,
+  teamSlug,
+  projectSlug,
 }) => {
   return (
     <TableContainer>
@@ -64,6 +68,8 @@ export const FactoryContracts: React.FC<FactoryContractsProps> = ({
                 <ContractNameCell
                   chainId={contract.chainId}
                   contractAddress={contract.contractAddress}
+                  teamSlug={teamSlug}
+                  projectSlug={projectSlug}
                 />
               </TableCell>
               <TableCell>

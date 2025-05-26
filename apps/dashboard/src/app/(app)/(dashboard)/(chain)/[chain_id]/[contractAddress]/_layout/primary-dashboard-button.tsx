@@ -26,6 +26,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import type { Chain, ThirdwebClient } from "thirdweb";
 import { useAddContractToProject } from "../../../../../team/[team_slug]/[project_slug]/(sidebar)/hooks/project-contracts";
+import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "../_utils/contract-page-path";
 
 const TRACKING_CATEGORY = "add_to_dashboard_upsell";
 
@@ -36,6 +38,7 @@ type AddToDashboardCardProps = {
   hideCodePageLink?: boolean;
   teamsAndProjects: MinimalTeamsAndProjects | undefined;
   client: ThirdwebClient;
+  projectMeta: ProjectMeta | undefined;
 };
 
 export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
@@ -45,8 +48,16 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
   hideCodePageLink,
   teamsAndProjects,
   client,
+  projectMeta,
 }) => {
   const pathname = usePathname();
+
+  const codePagePath = buildContractPagePath({
+    projectMeta,
+    chainIdOrSlug: contractInfo.chainSlug,
+    contractAddress: contractAddress,
+    subpath: "/code",
+  });
 
   // if user is not logged in
   if (!teamsAndProjects) {
@@ -57,9 +68,7 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
     if (!pathname?.endsWith("/code")) {
       return (
         <Button variant="outline" asChild className="gap-2">
-          <Link
-            href={`/${contractInfo.chainSlug}/${contractInfo.contractAddress}/code`}
-          >
+          <Link href={codePagePath}>
             <CodeIcon className="size-4" />
             Code Snippets
           </Link>
@@ -67,6 +76,11 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
       );
     }
 
+    return null;
+  }
+
+  // if user is on a project page
+  if (projectMeta) {
     return null;
   }
 

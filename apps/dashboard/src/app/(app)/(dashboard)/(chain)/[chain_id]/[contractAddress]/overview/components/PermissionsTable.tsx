@@ -19,12 +19,22 @@ import { ArrowRightIcon } from "lucide-react";
 import { useMemo } from "react";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { useReadContract } from "thirdweb/react";
+import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "../../_utils/contract-page-path";
 
 export function PermissionsTable(props: {
   contract: ThirdwebContract;
   trackingCategory: string;
   chainSlug: string;
+  projectMeta: ProjectMeta | undefined;
 }) {
+  const permissionsHref = buildContractPagePath({
+    projectMeta: props.projectMeta,
+    chainIdOrSlug: props.chainSlug,
+    contractAddress: props.contract.address,
+    subpath: "/permissions",
+  });
+
   const allRoleMembers = useReadContract(getAllRoleMembers, {
     contract: props.contract,
   });
@@ -53,7 +63,7 @@ export function PermissionsTable(props: {
     <PermissionsTableUI
       members={members}
       isPending={allRoleMembers.isPending}
-      viewMoreLink={`/${props.chainSlug}/${props.contract.address}/permissions`}
+      viewMoreLink={permissionsHref}
       trackingCategory={props.trackingCategory}
     />
   );

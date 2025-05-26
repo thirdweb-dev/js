@@ -1,48 +1,17 @@
-import { notFound } from "next/navigation";
-import {
-  isClaimToSupported,
-  isMintToSupported,
-} from "thirdweb/extensions/erc20";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
-import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
-import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
-import { ContractTokensPage } from "./ContractTokensPage";
-import { ContractTokensPageClient } from "./ContractTokensPage.client";
+import type { PublicContractPageParams } from "../types";
+import { SharedContractTokensPage } from "./shared-page";
 
 export default async function Page(props: {
-  params: Promise<{
-    contractAddress: string;
-    chain_id: string;
-  }>;
+  params: Promise<PublicContractPageParams>;
 }) {
-  const params = await props.params;
-  const info = await getContractPageParamsInfo(params);
-
-  if (!info) {
-    notFound();
-  }
-
-  const account = await getRawAccount();
-
-  if (info.isLocalhostChain) {
-    return (
-      <ContractTokensPageClient
-        contract={info.clientContract}
-        isLoggedIn={!!account}
-      />
-    );
-  }
-
-  const { supportedERCs, functionSelectors } = await getContractPageMetadata(
-    info.serverContract,
-  );
+  const [params, account] = await Promise.all([props.params, getRawAccount()]);
 
   return (
-    <ContractTokensPage
-      contract={info.clientContract}
-      isERC20={supportedERCs.isERC20}
-      isMintToSupported={isMintToSupported(functionSelectors)}
-      isClaimToSupported={isClaimToSupported(functionSelectors)}
+    <SharedContractTokensPage
+      contractAddress={params.contractAddress}
+      chainIdOrSlug={params.chain_id}
+      projectMeta={undefined}
       isLoggedIn={!!account}
     />
   );

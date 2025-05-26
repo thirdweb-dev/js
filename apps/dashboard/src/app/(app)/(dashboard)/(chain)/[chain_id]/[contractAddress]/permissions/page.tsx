@@ -1,44 +1,16 @@
-import { notFound } from "next/navigation";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
-import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
-import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
-import { ContractPermissionsPage } from "./ContractPermissionsPage";
-import { ContractPermissionsPageClient } from "./ContractPermissionsPage.client";
+import type { PublicContractPageParams } from "../types";
+import { SharedPermissionsPage } from "./shared-permissions-page";
 
 export default async function Page(props: {
-  params: Promise<{
-    contractAddress: string;
-    chain_id: string;
-  }>;
+  params: Promise<PublicContractPageParams>;
 }) {
-  const params = await props.params;
-  const info = await getContractPageParamsInfo(params);
-
-  if (!info) {
-    notFound();
-  }
-
-  const account = await getRawAccount();
-
-  const { clientContract, serverContract, isLocalhostChain } = info;
-  if (isLocalhostChain) {
-    return (
-      <ContractPermissionsPageClient
-        contract={clientContract}
-        chainMetadata={info.chainMetadata}
-        isLoggedIn={!!account}
-      />
-    );
-  }
-
-  const { isPermissionsEnumerableSupported } =
-    await getContractPageMetadata(serverContract);
-
+  const [params, account] = await Promise.all([props.params, getRawAccount()]);
   return (
-    <ContractPermissionsPage
-      contract={clientContract}
-      chainSlug={info.chainMetadata.slug}
-      detectedPermissionEnumerable={isPermissionsEnumerableSupported}
+    <SharedPermissionsPage
+      contractAddress={params.contractAddress}
+      chainIdOrSlug={params.chain_id}
+      projectMeta={undefined}
       isLoggedIn={!!account}
     />
   );

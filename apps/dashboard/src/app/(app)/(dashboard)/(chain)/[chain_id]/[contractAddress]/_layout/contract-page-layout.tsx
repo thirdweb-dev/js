@@ -4,8 +4,9 @@ import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 import type { DashboardContractMetadata } from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
 import type { MinimalTeamsAndProjects } from "components/contract-components/contract-deploy-form/add-to-project-card";
 import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
-import type { ThirdwebClient, ThirdwebContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
+import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { ContractMetadata } from "./contract-metadata";
 import { PrimaryDashboardButton } from "./primary-dashboard-button";
 
@@ -15,8 +16,8 @@ export function ContractPageLayout(props: {
   children: React.ReactNode;
   sidebarLinks: SidebarLink[];
   dashboardContractMetadata: DashboardContractMetadata | undefined;
-  client: ThirdwebClient;
   teamsAndProjects: MinimalTeamsAndProjects | undefined;
+  projectMeta: ProjectMeta | undefined;
   externalLinks:
     | {
         name: string;
@@ -31,7 +32,7 @@ export function ContractPageLayout(props: {
     dashboardContractMetadata,
     externalLinks,
     teamsAndProjects,
-    client,
+    projectMeta,
   } = props;
 
   return (
@@ -46,6 +47,7 @@ export function ContractPageLayout(props: {
               externalLinks={externalLinks}
             />
             <PrimaryDashboardButton
+              projectMeta={projectMeta}
               contractAddress={contract.address}
               chain={contract.chain}
               contractInfo={{
@@ -54,7 +56,7 @@ export function ContractPageLayout(props: {
                 contractAddress: contract.address,
               }}
               teamsAndProjects={teamsAndProjects}
-              client={client}
+              client={contract.client}
             />
           </div>
           <DeprecatedAlert chain={chainMetadata} />

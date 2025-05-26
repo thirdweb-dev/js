@@ -1,42 +1,18 @@
-import { notFound, redirect } from "next/navigation";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
-import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
-import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
-import { ContractSplitPage } from "./ContractSplitPage";
-import { ContractSplitPageClient } from "./ContractSplitPage.client";
+import type { PublicContractPageParams } from "../types";
+import { SharedContractSplitPage } from "./shared-split-page";
 
 export default async function Page(props: {
-  params: Promise<{
-    contractAddress: string;
-    chain_id: string;
-  }>;
+  params: Promise<PublicContractPageParams>;
 }) {
-  const params = await props.params;
-  const info = await getContractPageParamsInfo(params);
-
-  if (!info) {
-    notFound();
-  }
-  const { clientContract, serverContract, isLocalhostChain } = info;
-
-  const twAccount = await getRawAccount();
-
-  if (isLocalhostChain) {
-    return (
-      <ContractSplitPageClient
-        contract={clientContract}
-        isLoggedIn={!!twAccount}
-      />
-    );
-  }
-
-  const { isSplitSupported } = await getContractPageMetadata(serverContract);
-
-  if (!isSplitSupported) {
-    redirect(`/${params.chain_id}/${params.contractAddress}`);
-  }
+  const [params, account] = await Promise.all([props.params, getRawAccount()]);
 
   return (
-    <ContractSplitPage contract={clientContract} isLoggedIn={!!twAccount} />
+    <SharedContractSplitPage
+      contractAddress={params.contractAddress}
+      chainIdOrSlug={params.chain_id}
+      projectMeta={undefined}
+      isLoggedIn={!!account}
+    />
   );
 }

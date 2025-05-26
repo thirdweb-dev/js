@@ -3,6 +3,8 @@ import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useMemo } from "react";
 import { type NFT, ZERO_ADDRESS } from "thirdweb";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "../_utils/contract-page-path";
 
 type NFTWithContract = NFT & { contractAddress: string; chainId: number };
 
@@ -29,6 +31,7 @@ interface NFTCardsProps {
   trackingCategory: string;
   isPending: boolean;
   allNfts?: boolean;
+  projectMeta: ProjectMeta | undefined;
 }
 
 export const NFTCards: React.FC<NFTCardsProps> = ({
@@ -36,6 +39,7 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
   trackingCategory,
   isPending,
   allNfts,
+  projectMeta,
 }) => {
   const dummyData = useMemo(() => {
     return Array.from({
@@ -87,7 +91,12 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
                       <TrackedLinkTW
                         category={trackingCategory}
                         label="view_nft"
-                        href={`/${token.chainId}/${token.contractAddress}/nfts/${tokenId}`}
+                        href={buildContractPagePath({
+                          projectMeta,
+                          chainIdOrSlug: token.chainId.toString(),
+                          contractAddress: token.contractAddress,
+                          subpath: `/nfts/${tokenId}`,
+                        })}
                         className="before:absolute before:inset-0"
                       >
                         {v.name}

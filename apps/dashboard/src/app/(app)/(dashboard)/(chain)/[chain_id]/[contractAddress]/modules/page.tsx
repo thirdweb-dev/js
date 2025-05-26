@@ -1,43 +1,17 @@
-import { notFound, redirect } from "next/navigation";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
-import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
-import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
-import { ContractEditModulesPage } from "./ContractEditModulesPage";
-import { ContractEditModulesPageClient } from "./ContractEditModulesPage.client";
+import type { PublicContractPageParams } from "../types";
+import { SharedModulesPage } from "./shared-modules-page";
 
 export default async function Page(props: {
-  params: Promise<{
-    contractAddress: string;
-    chain_id: string;
-  }>;
+  params: Promise<PublicContractPageParams>;
 }) {
-  const params = await props.params;
-  const info = await getContractPageParamsInfo(params);
-
-  if (!info) {
-    notFound();
-  }
-
-  const { clientContract, serverContract, isLocalhostChain } = info;
-
-  const account = await getRawAccount();
-
-  if (isLocalhostChain) {
-    return (
-      <ContractEditModulesPageClient
-        contract={clientContract}
-        isLoggedIn={!!account}
-      />
-    );
-  }
-
-  const { isModularCore } = await getContractPageMetadata(serverContract);
-
-  if (!isModularCore) {
-    redirect(`/${params.chain_id}/${params.contractAddress}`);
-  }
-
+  const [params, account] = await Promise.all([props.params, getRawAccount()]);
   return (
-    <ContractEditModulesPage contract={clientContract} isLoggedIn={!!account} />
+    <SharedModulesPage
+      contractAddress={params.contractAddress}
+      chainIdOrSlug={params.chain_id}
+      projectMeta={undefined}
+      isLoggedIn={!!account}
+    />
   );
 }

@@ -1,63 +1,23 @@
-import { notFound, redirect } from "next/navigation";
 import { getRawAccount } from "../../../../../../account/settings/getAccount";
-import { getAuthTokenWalletAddress } from "../../../../../../api/lib/getAuthToken";
-import { getContractPageParamsInfo } from "../../_utils/getContractFromParams";
-import { getContractPageMetadata } from "../../_utils/getContractPageMetadata";
-import { TokenIdPageClient } from "./TokenIdPage.client";
-import { TokenIdPage } from "./token-id";
+import type { PublicContractPageParams } from "../../types";
+import { SharedNFTTokenPage } from "./shared-nfts-token-page";
 
 export default async function Page(props: {
-  params: Promise<{
-    contractAddress: string;
-    chain_id: string;
-    tokenId: string;
-  }>;
+  params: Promise<
+    PublicContractPageParams & {
+      tokenId: string;
+    }
+  >;
 }) {
-  const params = await props.params;
-  const info = await getContractPageParamsInfo(params);
-  if (!info) {
-    notFound();
-  }
-
-  if (!isOnlyNumbers(params.tokenId)) {
-    // redirect to nfts index page
-    redirect(`/${params.chain_id}/${params.contractAddress}/nfts`);
-  }
-
-  const [accountAddress, account] = await Promise.all([
-    getAuthTokenWalletAddress(),
-    getRawAccount(),
-  ]);
-
-  const { clientContract, serverContract, isLocalhostChain } = info;
-  if (isLocalhostChain) {
-    return (
-      <TokenIdPageClient
-        contract={clientContract}
-        tokenId={params.tokenId}
-        isLoggedIn={!!account}
-        accountAddress={accountAddress || undefined}
-      />
-    );
-  }
-
-  const { supportedERCs } = await getContractPageMetadata(serverContract);
-
-  if (!supportedERCs.isERC721 && !supportedERCs.isERC1155) {
-    redirect(`/${params.chain_id}/${params.contractAddress}`);
-  }
+  const [params, account] = await Promise.all([props.params, getRawAccount()]);
 
   return (
-    <TokenIdPage
-      contract={clientContract}
-      isErc721={supportedERCs.isERC721}
+    <SharedNFTTokenPage
+      contractAddress={params.contractAddress}
+      chainIdOrSlug={params.chain_id}
       tokenId={params.tokenId}
+      projectMeta={undefined}
       isLoggedIn={!!account}
-      accountAddress={accountAddress || undefined}
     />
   );
-}
-
-function isOnlyNumbers(str: string) {
-  return /^\d+$/.test(str);
 }

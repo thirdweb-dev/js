@@ -3,10 +3,13 @@
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useEffect, useRef } from "react";
 import type { ThirdwebContract } from "thirdweb";
+import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { buildContractPagePath } from "../_utils/contract-page-path";
 import { LoadingPage } from "./page-skeletons";
 
 export function RedirectToContractOverview(props: {
   contract: ThirdwebContract;
+  projectMeta: ProjectMeta | undefined;
 }) {
   const router = useDashboardRouter();
   const redirected = useRef(false);
@@ -17,8 +20,14 @@ export function RedirectToContractOverview(props: {
       return;
     }
     redirected.current = true;
-    router.replace(`/${props.contract.chain.id}/${props.contract.address}`);
-  }, [router, props.contract]);
+    const landingPage = buildContractPagePath({
+      projectMeta: props.projectMeta,
+      chainIdOrSlug: props.contract.chain.id.toString(),
+      contractAddress: props.contract.address,
+    });
+
+    router.replace(landingPage);
+  }, [router, props]);
 
   return <LoadingPage />;
 }

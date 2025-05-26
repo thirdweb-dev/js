@@ -50,6 +50,8 @@ export default async function Page(props: {
       <YourFactoriesSection
         teamId={team.id}
         projectId={project.id}
+        teamSlug={team.slug}
+        projectSlug={project.slug}
         authToken={authToken}
       />
     </div>
@@ -60,6 +62,8 @@ function YourFactoriesSection(props: {
   teamId: string;
   projectId: string;
   authToken: string;
+  teamSlug: string;
+  projectSlug: string;
 }) {
   return (
     <div className="flex flex-col gap-4">
@@ -98,6 +102,8 @@ function YourFactoriesSection(props: {
           teamId={props.teamId}
           projectId={props.projectId}
           authToken={props.authToken}
+          teamSlug={props.teamSlug}
+          projectSlug={props.projectSlug}
         />
       </Suspense>
     </div>
@@ -108,6 +114,8 @@ async function AsyncYourFactories(props: {
   teamId: string;
   projectId: string;
   authToken: string;
+  teamSlug: string;
+  projectSlug: string;
 }) {
   const deployedContracts = await getSortedDeployedContracts({
     teamId: props.teamId,
@@ -140,6 +148,8 @@ async function AsyncYourFactories(props: {
       <FactoryContracts
         contracts={factories}
         isPending={false}
+        teamSlug={props.teamSlug}
+        projectSlug={props.projectSlug}
         isFetched={true}
       />
     </ClientOnly>
