@@ -80,4 +80,47 @@ describe.runIf(process.env.TW_SECRET_KEY)("updateMetadata ERC721", () => {
       "No base URI set. Please set a base URI before updating metadata",
     );
   });
+
+  it(
+    "should handle very large batch",
+    {
+      timeout: 600000,
+    },
+    async () => {
+      const address = await deployERC721Contract({
+        client,
+        chain,
+        account,
+        type: "DropERC721",
+        params: {
+          name: "NFT Drop",
+          contractURI: TEST_CONTRACT_URI,
+        },
+      });
+      const contract = getContract({
+        address,
+        client,
+        chain,
+      });
+      const lazyMintTx = lazyMint({
+        contract,
+        nfts: Array.from({ length: 1000 }, (_, i) => ({
+          name: `token ${i}`,
+        })),
+      });
+      await sendAndConfirmTransaction({ transaction: lazyMintTx, account });
+      const updateTx = updateMetadata({
+        contract,
+        targetTokenId: 1n,
+        newMetadata: { name: "token 1 - updated" },
+      });
+      await sendAndConfirmTransaction({ transaction: updateTx, account });
+      const nfts = await getNFTs({ contract });
+
+      expect(nfts.length).toBe(100); // first page
+      expect(nfts[0]?.metadata.name).toBe("token 0");
+      expect(nfts[1]?.metadata.name).toBe("token 1 - updated");
+      expect(nfts[2]?.metadata.name).toBe("token 2");
+    },
+  );
 });

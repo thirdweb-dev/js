@@ -45,7 +45,12 @@ export async function guestAuthenticate(args: {
     }),
   });
 
-  if (!res.ok) throw new Error("Failed to generate guest account");
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(
+      `Failed to generate guest account: ${res.status} ${res.statusText} ${error}`,
+    );
+  }
 
   return (await res.json()) satisfies AuthStoredTokenWithCookieReturnType;
 }
