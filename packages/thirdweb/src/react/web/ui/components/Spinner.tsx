@@ -9,8 +9,8 @@ import { StyledCircle, StyledSvg } from "../design-system/elements.js";
  * @internal
  */
 export const Spinner: React.FC<{
-  color: keyof Theme["colors"];
   size: keyof typeof iconSize;
+  color?: keyof Theme["colors"];
 }> = (props) => {
   const theme = useCustomTheme();
   return (
@@ -26,7 +26,7 @@ export const Spinner: React.FC<{
         cy="25"
         r="20"
         fill="none"
-        stroke={theme.colors[props.color]}
+        stroke={props.color ? theme.colors[props.color] : "currentColor"}
         strokeWidth={Number(iconSize[props.size]) > 64 ? "2" : "4"}
       />
     </Svg>

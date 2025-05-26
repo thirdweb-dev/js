@@ -230,7 +230,7 @@ export function FiatScreenContent(props: {
       </Container>
 
       <Button
-        variant={disableSubmit ? "outline" : "accent"}
+        variant="accent"
         data-disabled={disableSubmit}
         disabled={disableSubmit}
         fullWidth
@@ -250,7 +250,7 @@ export function FiatScreenContent(props: {
         {fiatQuoteQuery.isLoading ? (
           <>
             Getting price quote
-            <Spinner size="sm" color="accentButtonText" />
+            <Spinner size="sm" />
           </>
         ) : (
           "Continue"

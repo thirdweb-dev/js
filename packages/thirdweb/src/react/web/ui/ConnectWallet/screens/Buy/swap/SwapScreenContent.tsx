@@ -334,7 +334,7 @@ export function SwapScreenContent(props: {
         />
       ) : (
         <Button
-          variant={disableContinue ? "outline" : "accent"}
+          variant="accent"
           fullWidth
           data-disabled={disableContinue}
           disabled={disableContinue}
@@ -360,7 +360,7 @@ export function SwapScreenContent(props: {
           {quoteQuery.isLoading ? (
             <>
               Getting price quote
-              <Spinner size="sm" color="accentButtonText" />
+              <Spinner size="sm" />
             </>
           ) : (
             "Continue"
