@@ -334,7 +334,7 @@ export function SwapScreenContent(props: {
         />
       ) : (
         <Button
-          variant="accent"
+          variant={disableContinue ? "outline" : "accent"}
           fullWidth
           data-disabled={disableContinue}
           disabled={disableContinue}

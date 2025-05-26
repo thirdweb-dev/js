@@ -230,7 +230,7 @@ export function FiatScreenContent(props: {
       </Container>
 
       <Button
-        variant="accent"
+        variant={disableSubmit ? "outline" : "accent"}
         data-disabled={disableSubmit}
         disabled={disableSubmit}
         fullWidth
