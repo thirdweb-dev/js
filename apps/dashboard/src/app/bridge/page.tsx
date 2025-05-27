@@ -25,8 +25,9 @@ export default async function BridgePage({
 }: { searchParams: Promise<Record<string, string | string[]>> }) {
   const { chainId, tokenAddress, amount } = await searchParams;
 
-  // Replace the existing destructuring block with error‐handled fetch
-  let symbol, decimals, tokenName;
+  let symbol: string | undefined;
+  let decimals: number | undefined;
+  let tokenName: string | undefined;
 
   if (chainId && tokenAddress) {
     try {
@@ -40,7 +41,7 @@ export default async function BridgePage({
       });
       ({ symbol, decimals, name: tokenName } = metadata);
     } catch (error) {
-      console.warn('Failed to fetch token metadata:', error);
+      console.warn("Failed to fetch token metadata:", error);
       // Continue with undefined values; the component should handle gracefully
     }
   }
