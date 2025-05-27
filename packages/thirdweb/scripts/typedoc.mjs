@@ -13,6 +13,7 @@ const app = await Application.bootstrapWithPlugins({
     "src/bridge/index.ts",
     "src/bridge/Buy.ts",
     "src/bridge/Sell.ts",
+    "src/bridge/Onramp.ts",
     "src/insight/index.ts",
     "src/engine/index.ts",
   ],
