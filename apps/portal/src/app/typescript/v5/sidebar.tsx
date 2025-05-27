@@ -284,6 +284,35 @@ export const sidebar: SideBar = {
                     };
                   }) || [],
             },
+            {
+              name: "Onramp",
+              links:
+                docs.functions
+                  ?.filter((f) => {
+                    const [tag] = getCustomTag(f) || [];
+                    if (tag !== "@bridge") return false;
+                    const blockTag = f.signatures?.[0]?.blockTags?.find(
+                      (b) => b.tag === "@bridge",
+                    );
+                    const extensionName = blockTag
+                      ? getExtensionName(blockTag) || "Common"
+                      : "Common";
+                    if (extensionName !== "Onramp") return false;
+                    return true;
+                  })
+                  .map((f) => {
+                    const blockTag = f.signatures?.[0]?.blockTags?.find(
+                      (b) => b.tag === "@bridge",
+                    );
+                    const extensionName = blockTag
+                      ? getExtensionName(blockTag) || "Common"
+                      : "Common";
+                    return {
+                      name: f.name,
+                      href: `${slug}/${extensionName.toLowerCase()}/${f.name}`,
+                    };
+                  }) || [],
+            },
             ...(docs.functions
               ?.filter((f) => {
                 const [tag] = getCustomTag(f) || [];
