@@ -1,21 +1,18 @@
 "use client";
 
-import { getSDKTheme } from "app/(app)/components/sdk-component-theme";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { useTheme } from "next-themes";
-import type { ThirdwebClient } from "thirdweb";
 import { PayEmbed } from "thirdweb/react";
+import { getSDKTheme } from "../../../(app)/components/sdk-component-theme";
+import { useV5DashboardChain } from "../../../../lib/v5-adapter";
+import { bridgeAppThirdwebClient } from "../../constants";
 
-export function UniversalBridgeEmbed({
-  chainId,
-  client,
-}: { chainId?: number; client: ThirdwebClient }) {
+export function UniversalBridgeEmbed({ chainId }: { chainId?: number }) {
   const { theme } = useTheme();
   const chain = useV5DashboardChain(chainId || 1);
 
   return (
     <PayEmbed
-      client={client}
+      client={bridgeAppThirdwebClient}
       payOptions={{
         mode: "fund_wallet",
         prefillBuy: {

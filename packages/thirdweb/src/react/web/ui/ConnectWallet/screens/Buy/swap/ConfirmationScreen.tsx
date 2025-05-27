@@ -78,6 +78,13 @@ export function SwapConfirmationScreen(props: {
           message: "Your wallet rejected the approval request.",
         };
       }
+      if (error.toLowerCase().includes("insufficient funds for gas")) {
+        return {
+          title: "Insufficient Native Funds",
+          message:
+            "You do not have enough native funds to approve the transaction.",
+        };
+      }
       return {
         title: "Failed to Approve",
         message:
@@ -94,6 +101,13 @@ export function SwapConfirmationScreen(props: {
         return {
           title: "Failed to Confirm",
           message: "Your wallet rejected the confirmation request.",
+        };
+      }
+      if (error.toLowerCase().includes("insufficient funds for gas")) {
+        return {
+          title: "Insufficient Native Funds",
+          message:
+            "You do not have enough native funds to confirm the transaction.",
         };
       }
       return {
@@ -333,6 +347,7 @@ export function SwapConfirmationScreen(props: {
                 } catch (e) {
                   console.error(e);
                   setStatus("error");
+                  setError((e as Error).message);
                 }
               }
             }}

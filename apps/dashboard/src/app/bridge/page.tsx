@@ -1,6 +1,5 @@
 import { ArrowUpRightIcon } from "lucide-react";
 import type { Metadata } from "next";
-import { getClientThirdwebClient } from "../../../../../@/constants/thirdweb-client.client";
 import { UniversalBridgeEmbed } from "./components/client/UniversalBridgeEmbed";
 
 const title = "Universal Bridge: Swap, Bridge, and Onramp";
@@ -16,18 +15,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RoutesPage({
+export default async function BridgePage({
   searchParams,
-}: { searchParams: Record<string, string | string[]> }) {
-  const { chainId } = searchParams;
-  const client = getClientThirdwebClient(undefined);
+}: { searchParams: Promise<Record<string, string | string[]>> }) {
+  const { chainId } = await searchParams;
   return (
     <div className="relative mx-auto flex h-screen w-full flex-col items-center justify-center overflow-hidden border py-10">
       <main className="container z-10 flex justify-center">
-        <UniversalBridgeEmbed
-          chainId={chainId ? Number(chainId) : undefined}
-          client={client}
-        />
+        <UniversalBridgeEmbed chainId={chainId ? Number(chainId) : undefined} />
       </main>
 
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -37,7 +32,7 @@ export default async function RoutesPage({
         className="-bottom-12 -right-12 pointer-events-none absolute lg:right-0 lg:bottom-0"
       />
 
-      <div className="absolute inset-x-0 bottom-24 z-20">
+      <div className="absolute inset-x-0 bottom-8 z-20">
         <div className="container mx-auto px-4">
           <div className="relative overflow-hidden rounded-lg border-2 border-green-500/20 bg-gradient-to-br from-card/80 to-card/50 p-4 shadow-[inset_0_1px_2px_0_rgba(0,0,0,0.02)]">
             <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent" />
