@@ -25,20 +25,25 @@ export default async function BridgePage({
 }: { searchParams: Promise<Record<string, string | string[]>> }) {
   const { chainId, tokenAddress, amount } = await searchParams;
 
-  const {
-    symbol,
-    decimals,
-    name: tokenName,
-  } = chainId && tokenAddress
-    ? await getCurrencyMetadata({
+  // Replace the existing destructuring block with error‐handled fetch
+  let symbol, decimals, tokenName;
+
+  if (chainId && tokenAddress) {
+    try {
+      const metadata = await getCurrencyMetadata({
         contract: getContract({
           client: bridgeAppThirdwebClient,
           // eslint-disable-next-line no-restricted-syntax
           chain: defineChain(Number(chainId)),
           address: tokenAddress as Address,
         }),
-      })
-    : {};
+      });
+      ({ symbol, decimals, name: tokenName } = metadata);
+    } catch (error) {
+      console.warn('Failed to fetch token metadata:', error);
+      // Continue with undefined values; the component should handle gracefully
+    }
+  }
 
   return (
     <div className="relative mx-auto flex h-screen w-full flex-col items-center justify-center overflow-hidden border py-10">
