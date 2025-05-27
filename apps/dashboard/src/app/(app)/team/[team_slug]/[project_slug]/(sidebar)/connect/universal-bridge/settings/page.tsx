@@ -2,6 +2,8 @@ import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getFees } from "@/api/universal-bridge/developer";
 import { PayConfig } from "components/pay/PayConfig";
+import { RouteDiscovery } from "components/pay/RouteDiscovery";
+
 import { redirect } from "next/navigation";
 
 export default async function Page(props: {
@@ -47,11 +49,17 @@ export default async function Page(props: {
   }
 
   return (
-    <PayConfig
-      project={project}
-      teamId={team.id}
-      teamSlug={team_slug}
-      fees={fees}
-    />
+    <div className="flex flex-col p-5">
+      <PayConfig
+        project={project}
+        teamId={team.id}
+        teamSlug={team_slug}
+        fees={fees}
+      />
+
+      <div className="flex pt-5">
+        <RouteDiscovery project={project} />
+      </div>
+    </div>
   );
 }

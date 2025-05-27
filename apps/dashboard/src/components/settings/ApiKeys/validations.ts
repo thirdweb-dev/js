@@ -1,3 +1,4 @@
+import { isAddress } from "thirdweb";
 import { RE_DOMAIN } from "utils/regex";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
@@ -122,6 +123,20 @@ export const apiKeyPayConfigValidationSchema = z.object({
     })
     .optional(),
 });
+
+export const routeDiscoveryValidationSchema = z.object({
+  chainId: z.number(),
+  tokenAddress: z
+    .string({
+      required_error: "Token address is required",
+    })
+    .refine((value) => isAddress(value), {
+      message: "Invalid Ethereum address format",
+    }),
+});
+export type RouteDiscoveryValidationSchema = z.infer<
+  typeof routeDiscoveryValidationSchema
+>;
 
 export type ApiKeyEmbeddedWalletsValidationSchema = z.infer<
   typeof apiKeyEmbeddedWalletsValidationSchema
