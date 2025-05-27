@@ -8,6 +8,7 @@ export type NebulaContext = {
   chainIds: string[] | null;
   walletAddress: string | null;
   networks: "mainnet" | "testnet" | "all" | null;
+  agentId: string | null;
 };
 
 export type NebulaSwapData = {
@@ -61,6 +62,7 @@ export async function promptNebula(params: {
       chain_ids: params.context.chainIds || [],
       wallet_address: params.context.walletAddress,
       networks: params.context.networks,
+      agent_id: params.context.agentId,
     };
   }
 
@@ -193,6 +195,7 @@ export async function promptNebula(params: {
           wallet_address: string;
           chain_ids: number[];
           networks: NebulaContext["networks"];
+          agent_id: string;
         };
 
         params.handleStream({
@@ -259,6 +262,7 @@ type ChatStreamedResponse =
         wallet_address: string;
         chain_ids: number[];
         networks: NebulaContext["networks"];
+        agent_id: string;
       };
     }
   | {

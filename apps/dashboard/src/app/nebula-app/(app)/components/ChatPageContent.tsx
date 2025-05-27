@@ -68,6 +68,7 @@ export function ChatPageContent(props: {
         [],
       walletAddress: contextRes?.wallet_address || props.accountAddress || null,
       networks: "mainnet",
+      agentId: contextRes?.agent_id || null,
     };
 
     return value;
@@ -78,6 +79,7 @@ export function ChatPageContent(props: {
       chainIds: _contextFilters?.chainIds || [],
       networks: _contextFilters?.networks || null,
       walletAddress: address || _contextFilters?.walletAddress || null,
+      agentId: _contextFilters?.agentId || null,
     } satisfies NebulaContext;
   }, [_contextFilters, address]);
 
@@ -107,6 +109,7 @@ export function ChatPageContent(props: {
             networks: _contextFilters?.networks || null,
             walletAddress: _contextFilters?.walletAddress || null,
             chainIds: lastUsedChainIds,
+            agentId: _contextFilters?.agentId || null,
           };
         }
       } catch {
@@ -118,7 +121,7 @@ export function ChatPageContent(props: {
   }, [props.session, props.initialParams?.q]);
 
   const [sessionId, setSessionId] = useState<string | undefined>(
-    props.session?.id,
+    props.session?.id
   );
 
   const [chatAbortController, setChatAbortController] = useState<
@@ -159,7 +162,7 @@ export function ChatPageContent(props: {
         ?.text.toLowerCase();
 
       const interceptedReply = examplePrompts.find(
-        (prompt) => prompt.message.toLowerCase() === lowerCaseMessage,
+        (prompt) => prompt.message.toLowerCase() === lowerCaseMessage
       )?.interceptedReply;
       if (interceptedReply) {
         // slight delay to match other response times
@@ -235,7 +238,7 @@ export function ChatPageContent(props: {
       messages.length,
       initSession,
       setContextFilters,
-    ],
+    ]
   );
 
   const hasDoneAutoPrompt = useRef(false);
@@ -274,7 +277,7 @@ export function ChatPageContent(props: {
   }));
 
   const handleUpdateContextFilters = async (
-    values: NebulaContext | undefined,
+    values: NebulaContext | undefined
   ) => {
     // if session is not yet created, don't need to update sessions - starting a chat will create a session with the context
     if (sessionId) {
@@ -288,7 +291,7 @@ export function ChatPageContent(props: {
 
   const handleSetActiveWallet = (walletMeta: WalletMeta) => {
     const wallet = connectedWallets.find(
-      (x) => x.getAccount()?.address === walletMeta.address,
+      (x) => x.getAccount()?.address === walletMeta.address
     );
     if (wallet) {
       setActiveWallet(wallet);
@@ -427,7 +430,7 @@ function saveLastUsedChainIds(chainIds: string[] | undefined) {
     if (chainIds && chainIds.length > 0) {
       localStorage.setItem(
         NEBULA_LAST_USED_CHAIN_IDS_KEY,
-        JSON.stringify(chainIds),
+        JSON.stringify(chainIds)
       );
     } else {
       localStorage.removeItem(NEBULA_LAST_USED_CHAIN_IDS_KEY);
@@ -440,7 +443,7 @@ function saveLastUsedChainIds(chainIds: string[] | undefined) {
 function getLastUsedChainIds(): string[] | null {
   try {
     const lastUsedChainIdsStr = localStorage.getItem(
-      NEBULA_LAST_USED_CHAIN_IDS_KEY,
+      NEBULA_LAST_USED_CHAIN_IDS_KEY
     );
     return lastUsedChainIdsStr ? JSON.parse(lastUsedChainIdsStr) : null;
   } catch {
@@ -597,6 +600,7 @@ export async function handleNebulaPrompt(params: {
             chainIds: res.data.chain_ids.map((x) => x.toString()),
             walletAddress: res.data.wallet_address,
             networks: res.data.networks,
+            agentId: res.data.agent_id || null,
           });
           return;
         }
@@ -645,7 +649,7 @@ export function handleNebulaPromptError(params: {
   setMessages((prev) => {
     const newMessages = prev.slice(
       0,
-      prev[prev.length - 1]?.type === "presence" ? -1 : undefined,
+      prev[prev.length - 1]?.type === "presence" ? -1 : undefined
     );
 
     // add error message

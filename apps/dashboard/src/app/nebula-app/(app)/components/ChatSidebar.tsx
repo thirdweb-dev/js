@@ -46,7 +46,7 @@ export function ChatSidebar(props: {
   type: "desktop" | "mobile";
 }) {
   const sessions = useSessionsWithLocalOverrides(props.sessions);
-  const sessionsToShow = sessions.slice(0, 10);
+  const sessionsToShow = sessions.slice(0, 5);
   const newChatPage = useNewChatPageLink();
   const router = useDashboardRouter();
   const logoutMutation = useMutation({
