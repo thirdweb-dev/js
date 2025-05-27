@@ -250,7 +250,7 @@ export function FiatScreenContent(props: {
         {fiatQuoteQuery.isLoading ? (
           <>
             Getting price quote
-            <Spinner size="sm" color="accentButtonText" />
+            <Spinner size="sm" />
           </>
         ) : (
           "Continue"
