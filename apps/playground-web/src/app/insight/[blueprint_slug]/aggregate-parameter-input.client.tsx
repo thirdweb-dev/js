@@ -157,7 +157,14 @@ export function AggregateParameterInput(props: AggregateParameterInputProps) {
 
   const selectedValues = useMemo(() => {
     if (!value) return [];
-    return String(value).split(",").filter(Boolean);
+    return Array.from(
+      new Set(
+        String(value)
+          .split(",")
+          .map((v) => v.trim()) // remove leading / trailing spaces
+          .filter(Boolean),
+      ),
+    );
   }, [value]);
 
   const handlePresetChange = useCallback(
