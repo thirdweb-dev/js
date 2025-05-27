@@ -77,6 +77,11 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
       {
         name: "Get ERC-20 balances by address",
         path: "/v1/tokens/erc20/{ownerAddress}",
+        deprecated: true,
+      },
+      {
+        name: "Get tokens",
+        path: "/v1/tokens",
         deprecated: false,
       },
       {
