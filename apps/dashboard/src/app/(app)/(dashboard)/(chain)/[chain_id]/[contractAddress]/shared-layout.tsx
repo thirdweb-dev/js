@@ -11,6 +11,7 @@ import { NebulaChatButton } from "../../../../../nebula-app/(app)/components/Flo
 import { examplePrompts } from "../../../../../nebula-app/(app)/data/examplePrompts";
 import { getAuthTokenWalletAddress } from "../../../../api/lib/getAuthToken";
 import type { ProjectMeta } from "../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { TeamHeader } from "../../../../team/components/TeamHeader/team-header";
 import { ConfigureCustomChain } from "./_layout/ConfigureCustomChain";
 import { getContractMetadataHeaderData } from "./_layout/contract-metadata";
 import { ContractPageLayout } from "./_layout/contract-page-layout";
@@ -19,6 +20,7 @@ import { supportedERCs } from "./_utils/detectedFeatures/supportedERCs";
 import { getContractPageParamsInfo } from "./_utils/getContractFromParams";
 import { getContractPageMetadata } from "./_utils/getContractPageMetadata";
 import { getContractPageSidebarLinks } from "./_utils/getContractPageSidebarLinks";
+import { shouldRenderNewPublicPage } from "./_utils/newPublicPage";
 
 export async function SharedContractLayout(props: {
   contractAddress: string;
@@ -53,15 +55,25 @@ export async function SharedContractLayout(props: {
 
   if (isLocalhostChain) {
     return (
-      <ContractPageLayoutClient
-        chainMetadata={chainMetadata}
-        contract={clientContract}
-        teamsAndProjects={teamsAndProjects}
-        projectMeta={props.projectMeta}
-      >
-        {props.children}
-      </ContractPageLayoutClient>
+      <ConditionalTeamHeaderLayout projectMeta={props.projectMeta}>
+        <ContractPageLayoutClient
+          chainMetadata={chainMetadata}
+          contract={clientContract}
+          teamsAndProjects={teamsAndProjects}
+          projectMeta={props.projectMeta}
+        >
+          {props.children}
+        </ContractPageLayoutClient>
+      </ConditionalTeamHeaderLayout>
     );
+  }
+
+  // if rendering new public page - do not render the old layout
+  if (!props.projectMeta) {
+    const shouldHide = await shouldRenderNewPublicPage(info.serverContract);
+    if (shouldHide) {
+      return props.children;
+    }
   }
 
   const [
@@ -99,31 +111,33 @@ Users may be considering integrating the contract into their applications. Discu
 The following is the user's message:`;
 
   return (
-    <ContractPageLayout
-      chainMetadata={chainMetadata}
-      contract={clientContract}
-      sidebarLinks={sidebarLinks}
-      dashboardContractMetadata={contractMetadata}
-      externalLinks={externalLinks}
-      teamsAndProjects={teamsAndProjects}
-      projectMeta={props.projectMeta}
-    >
-      <NebulaChatButton
-        isLoggedIn={!!accountAddress}
-        networks={info.chainMetadata.testnet ? "testnet" : "mainnet"}
-        isFloating={true}
-        pageType="contract"
-        label="Ask AI about this contract"
-        client={clientContract.client}
-        nebulaParams={{
-          messagePrefix: contractPromptPrefix,
-          chainIds: [chainId],
-          wallet: accountAddress ?? undefined,
-        }}
-        examplePrompts={examplePrompts}
-      />
-      {props.children}
-    </ContractPageLayout>
+    <ConditionalTeamHeaderLayout projectMeta={props.projectMeta}>
+      <ContractPageLayout
+        chainMetadata={chainMetadata}
+        contract={clientContract}
+        sidebarLinks={sidebarLinks}
+        dashboardContractMetadata={contractMetadata}
+        externalLinks={externalLinks}
+        teamsAndProjects={teamsAndProjects}
+        projectMeta={props.projectMeta}
+      >
+        <NebulaChatButton
+          isLoggedIn={!!accountAddress}
+          networks={info.chainMetadata.testnet ? "testnet" : "mainnet"}
+          isFloating={true}
+          pageType="contract"
+          label="Ask AI about this contract"
+          client={clientContract.client}
+          nebulaParams={{
+            messagePrefix: contractPromptPrefix,
+            chainIds: [chainId],
+            wallet: accountAddress ?? undefined,
+          }}
+          examplePrompts={examplePrompts}
+        />
+        {props.children}
+      </ContractPageLayout>
+    </ConditionalTeamHeaderLayout>
   );
 }
 
@@ -215,4 +229,23 @@ export async function generateContractLayoutMetadata(params: {
       description: `View tokens, transactions, balances, source code, and analytics for the smart contract  on Chain ID ${params.chainIdOrSlug}`,
     };
   }
+}
+
+function ConditionalTeamHeaderLayout({
+  children,
+  projectMeta,
+}: { children: React.ReactNode; projectMeta: ProjectMeta | undefined }) {
+  // if inside a project page - do not another team header
+  if (projectMeta) {
+    return children;
+  }
+
+  return (
+    <div className="flex grow flex-col">
+      <div className="border-border border-b bg-card">
+        <TeamHeader />
+      </div>
+      {children}
+    </div>
+  );
 }

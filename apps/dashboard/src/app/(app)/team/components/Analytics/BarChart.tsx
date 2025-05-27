@@ -42,7 +42,7 @@ export function BarChart({
       className="aspect-auto h-[250px] w-full pt-6"
     >
       {data.length === 0 || data.every((d) => d[activeKey] === 0) ? (
-        <EmptyChartState> {emptyChartContent} </EmptyChartState>
+        <EmptyChartState type="bar"> {emptyChartContent} </EmptyChartState>
       ) : (
         <RechartsBarChart
           accessibilityLayer

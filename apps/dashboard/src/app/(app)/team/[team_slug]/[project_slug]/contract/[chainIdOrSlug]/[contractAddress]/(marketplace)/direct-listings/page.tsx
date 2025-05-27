@@ -19,7 +19,7 @@ export default async function Page(props: {
       chainIdOrSlug={params.chainIdOrSlug}
       projectMeta={{
         teamId: project.teamId,
-        projectSlug: params.project_slug,
+        projectSlug: project.slug,
         teamSlug: params.team_slug,
       }}
       isLoggedIn={true}

@@ -81,7 +81,17 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
 
   // if user is on a project page
   if (projectMeta) {
-    return null;
+    return (
+      <Button variant="default" asChild>
+        <Link
+          href={`/${contractInfo.chainSlug}/${contractAddress}`}
+          target="_blank"
+          className="gap-2"
+        >
+          View Asset Page <ExternalLinkIcon className="size-3.5" />
+        </Link>
+      </Button>
+    );
   }
 
   return (

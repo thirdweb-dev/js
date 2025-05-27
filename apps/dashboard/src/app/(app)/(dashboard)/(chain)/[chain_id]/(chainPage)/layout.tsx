@@ -24,6 +24,7 @@ import {
   getAuthToken,
   getAuthTokenWalletAddress,
 } from "../../../../api/lib/getAuthToken";
+import { TeamHeader } from "../../../../team/components/TeamHeader/team-header";
 import { StarButton } from "../../components/client/star-button";
 import { getChain, getChainMetadata } from "../../utils";
 import { AddChainToWallet } from "./components/client/add-chain-to-wallet";
@@ -95,7 +96,10 @@ The following is the user's message:
   }
 
   return (
-    <>
+    <div className="flex grow flex-col">
+      <div className="border-border border-b bg-card">
+        <TeamHeader />
+      </div>
       <NebulaChatButton
         isLoggedIn={!!authToken}
         networks={chain.testnet ? "testnet" : "mainnet"}
@@ -225,7 +229,7 @@ The following is the user's message:
           {children}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

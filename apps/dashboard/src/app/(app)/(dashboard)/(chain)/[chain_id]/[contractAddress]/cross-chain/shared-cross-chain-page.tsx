@@ -20,8 +20,10 @@ import { eth_getCode, getRpcClient } from "thirdweb/rpc";
 import type { TransactionReceipt } from "thirdweb/transaction";
 import { type AbiFunction, decodeFunctionData } from "thirdweb/utils";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
+import { redirectToContractLandingPage } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/utils";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
+import { shouldRenderNewPublicPage } from "../_utils/newPublicPage";
 import { DataTable } from "./data-table";
 import { NoCrossChainPrompt } from "./no-crosschain-prompt";
 
@@ -46,6 +48,18 @@ export async function SharedCrossChainPage(props: {
 
   if (!info) {
     notFound();
+  }
+
+  // new public page can't show /cross-chain page
+  if (!props.projectMeta) {
+    const shouldHide = await shouldRenderNewPublicPage(info.serverContract);
+    if (shouldHide) {
+      redirectToContractLandingPage({
+        contractAddress: props.contractAddress,
+        chainIdOrSlug: props.chainIdOrSlug,
+        projectMeta: props.projectMeta,
+      });
+    }
   }
 
   const { clientContract, serverContract } = info;

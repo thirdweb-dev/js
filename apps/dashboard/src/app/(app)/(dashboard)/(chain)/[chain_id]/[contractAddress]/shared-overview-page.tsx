@@ -1,11 +1,18 @@
 import { notFound } from "next/navigation";
 import { ErrorBoundary } from "react-error-boundary";
+import type { ThirdwebContract } from "thirdweb";
+import type { ChainMetadata } from "thirdweb/chains";
 import type { ProjectMeta } from "../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { getContractPageParamsInfo } from "./_utils/getContractFromParams";
 import { getContractPageMetadata } from "./_utils/getContractPageMetadata";
+import {
+  type NewPublicPageType,
+  shouldRenderNewPublicPage,
+} from "./_utils/newPublicPage";
 import { ContractOverviewPage } from "./overview/ContractOverviewPage";
 import { PublishedBy } from "./overview/components/published-by.server";
 import { ContractOverviewPageClient } from "./overview/contract-overview-page.client";
+import { ERC20PublicPage } from "./public-pages/erc20/erc20";
 
 export async function SharedContractOverviewPage(props: {
   contractAddress: string;
@@ -24,6 +31,7 @@ export async function SharedContractOverviewPage(props: {
 
   const { clientContract, serverContract, chainMetadata, isLocalhostChain } =
     info;
+
   if (isLocalhostChain) {
     return (
       <ContractOverviewPageClient
@@ -32,6 +40,21 @@ export async function SharedContractOverviewPage(props: {
         contract={clientContract}
       />
     );
+  }
+
+  // for public page
+  if (!props.projectMeta) {
+    const renderNewPublicPage = await shouldRenderNewPublicPage(serverContract);
+    if (renderNewPublicPage) {
+      return (
+        <RenderNewPublicContractPage
+          serverContract={serverContract}
+          clientContract={clientContract}
+          chainMetadata={chainMetadata}
+          type={renderNewPublicPage.type}
+        />
+      );
+    }
   }
 
   const contractPageMetadata = await getContractPageMetadata(serverContract);
@@ -58,4 +81,26 @@ export async function SharedContractOverviewPage(props: {
       }
     />
   );
+}
+
+function RenderNewPublicContractPage(props: {
+  serverContract: ThirdwebContract;
+  clientContract: ThirdwebContract;
+  chainMetadata: ChainMetadata;
+  type: NewPublicPageType;
+}) {
+  switch (props.type) {
+    case "erc20": {
+      return (
+        <ERC20PublicPage
+          serverContract={props.serverContract}
+          clientContract={props.clientContract}
+          chainMetadata={props.chainMetadata}
+        />
+      );
+    }
+    default: {
+      return null;
+    }
+  }
 }
