@@ -967,8 +967,8 @@ importers:
   packages/engine:
     dependencies:
       '@hey-api/client-fetch':
-        specifier: 0.10.0
-        version: 0.10.0(@hey-api/openapi-ts@0.67.5(magicast@0.3.5)(typescript@5.8.3))
+        specifier: 0.10.2
+        version: 0.10.2(@hey-api/openapi-ts@0.67.5(magicast@0.3.5)(typescript@5.8.3))
       typescript:
         specifier: '>=5.0.4'
         version: 5.8.3
@@ -986,8 +986,8 @@ importers:
   packages/insight:
     dependencies:
       '@hey-api/client-fetch':
-        specifier: 0.10.0
-        version: 0.10.0(@hey-api/openapi-ts@0.67.5(magicast@0.3.5)(typescript@5.8.3))
+        specifier: 0.10.2
+        version: 0.10.2(@hey-api/openapi-ts@0.67.5(magicast@0.3.5)(typescript@5.8.3))
       typescript:
         specifier: '>=5.0.4'
         version: 5.8.3
@@ -3539,8 +3539,8 @@ packages:
     peerDependencies:
       react: '>= 16 || ^19.0.0-rc'
 
-  '@hey-api/client-fetch@0.10.0':
-    resolution: {integrity: sha512-C7vzj4t52qPiHCqjn1l8cRTI2p4pZCd7ViLtJDTHr5ZwI4sWOYC1tmv6bd529qqY6HFFbhGCz4TAZSwKAMJncg==}
+  '@hey-api/client-fetch@0.10.2':
+    resolution: {integrity: sha512-AGiFYDx+y8VT1wlQ3EbzzZtfU8EfV+hLLRTtr8Y/tjYZaxIECwJagVZf24YzNbtEBXONFV50bwcU1wLVGXe1ow==}
     peerDependencies:
       '@hey-api/openapi-ts': < 2
 
@@ -19808,7 +19808,7 @@ snapshots:
     dependencies:
       react: 19.1.0
 
-  '@hey-api/client-fetch@0.10.0(@hey-api/openapi-ts@0.67.5(magicast@0.3.5)(typescript@5.8.3))':
+  '@hey-api/client-fetch@0.10.2(@hey-api/openapi-ts@0.67.5(magicast@0.3.5)(typescript@5.8.3))':
     dependencies:
       '@hey-api/openapi-ts': 0.67.5(magicast@0.3.5)(typescript@5.8.3)
 
