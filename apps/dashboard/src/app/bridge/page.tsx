@@ -1,6 +1,11 @@
 import { ArrowUpRightIcon } from "lucide-react";
 import type { Metadata } from "next";
+import type { Address } from "thirdweb";
+import { defineChain } from "thirdweb/chains";
+import { getContract } from "thirdweb/contract";
+import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { UniversalBridgeEmbed } from "./components/client/UniversalBridgeEmbed";
+import { bridgeAppThirdwebClient } from "./constants";
 
 const title = "Universal Bridge: Swap, Bridge, and Onramp";
 const description =
@@ -18,11 +23,45 @@ export const metadata: Metadata = {
 export default async function BridgePage({
   searchParams,
 }: { searchParams: Promise<Record<string, string | string[]>> }) {
-  const { chainId } = await searchParams;
+  const { chainId, tokenAddress, amount } = await searchParams;
+
+  let symbol: string | undefined;
+  let decimals: number | undefined;
+  let tokenName: string | undefined;
+
+  if (chainId && tokenAddress) {
+    try {
+      const metadata = await getCurrencyMetadata({
+        contract: getContract({
+          client: bridgeAppThirdwebClient,
+          // eslint-disable-next-line no-restricted-syntax
+          chain: defineChain(Number(chainId)),
+          address: tokenAddress as Address,
+        }),
+      });
+      ({ symbol, decimals, name: tokenName } = metadata);
+    } catch (error) {
+      console.warn("Failed to fetch token metadata:", error);
+      // Continue with undefined values; the component should handle gracefully
+    }
+  }
+
   return (
     <div className="relative mx-auto flex h-screen w-full flex-col items-center justify-center overflow-hidden border py-10">
       <main className="container z-10 flex justify-center">
-        <UniversalBridgeEmbed chainId={chainId ? Number(chainId) : undefined} />
+        <UniversalBridgeEmbed
+          chainId={chainId ? Number(chainId) : undefined}
+          token={
+            symbol && decimals && tokenName
+              ? {
+                  address: tokenAddress as Address,
+                  name: tokenName,
+                  symbol,
+                }
+              : undefined
+          }
+          amount={(amount || "0.01") as string}
+        />
       </main>
 
       {/* eslint-disable-next-line @next/next/no-img-element */}
