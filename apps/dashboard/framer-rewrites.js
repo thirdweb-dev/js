@@ -27,10 +27,7 @@ module.exports = [
   // -- engine
   "/engine",
   // -- solutions pages --
-  "/solutions/gaming",
-  "/solutions/consumer-apps",
-  "/solutions/defi",
-  "/solutions/ecosystem",
+  "/solutions/:solution_slug",
   // -- campaigns --
   // "/unlimited-wallets", -- OFF for now
   // -- TPP --
