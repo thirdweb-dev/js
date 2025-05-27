@@ -111,8 +111,8 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
               <TableHead>Label</TableHead>
               <TableHead>Url</TableHead>
               <TableHead>Created</TableHead>
-              <TableHead>Version</TableHead>
-              <TableHead>Delete</TableHead>
+              <TableHead className="text-center">Version</TableHead>
+              <TableHead className="text-center">Delete</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -123,8 +123,10 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
                 <TableCell>
                   {formatDistanceToNow(webhook.createdAt, { addSuffix: true })}
                 </TableCell>
-                <TableCell>{webhook.version || "v1"}</TableCell>
-                <TableCell className="text-right">
+                <TableCell className="text-center">
+                  {webhook.version || "1"}
+                </TableCell>
+                <TableCell className="text-center">
                   <DeleteWebhookButton
                     clientId={props.clientId}
                     teamId={props.teamId}
