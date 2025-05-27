@@ -46,8 +46,12 @@ type ThirdwebAreaChartProps<TConfig extends ChartConfig> = {
   // chart className
   chartClassName?: string;
   isPending: boolean;
+  className?: string;
+  cardContentClassName?: string;
   hideLabel?: boolean;
   toolTipLabelFormatter?: (label: string, payload: unknown) => React.ReactNode;
+  toolTipValueFormatter?: (value: unknown) => React.ReactNode;
+  emptyChartState?: React.ReactElement;
 };
 
 export function ThirdwebAreaChart<TConfig extends ChartConfig>(
@@ -56,7 +60,7 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
   const configKeys = useMemo(() => Object.keys(props.config), [props.config]);
 
   return (
-    <Card>
+    <Card className={props.className}>
       {props.header && (
         <CardHeader>
           <CardTitle className={cn("mb-2", props.header.titleClassName)}>
@@ -70,12 +74,16 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
 
       {props.customHeader && props.customHeader}
 
-      <CardContent className={cn(!props.header && "pt-6")}>
+      <CardContent
+        className={cn(!props.header && "pt-6", props.cardContentClassName)}
+      >
         <ChartContainer config={props.config} className={props.chartClassName}>
           {props.isPending ? (
             <LoadingChartState />
           ) : props.data.length === 0 ? (
-            <EmptyChartState />
+            <EmptyChartState type="area">
+              {props.emptyChartState}
+            </EmptyChartState>
           ) : (
             <AreaChart accessibilityLayer data={props.data}>
               <CartesianGrid vertical={false} />
@@ -100,6 +108,7 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
                       props.hideLabel !== undefined ? props.hideLabel : true
                     }
                     labelFormatter={props.toolTipLabelFormatter}
+                    valueFormatter={props.toolTipValueFormatter}
                   />
                 }
               />

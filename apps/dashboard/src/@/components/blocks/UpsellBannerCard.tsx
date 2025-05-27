@@ -41,6 +41,7 @@ type UpsellBannerCardProps = {
   cta: {
     text: React.ReactNode;
     icon?: React.ReactNode;
+    target?: "_blank";
     link: string;
   };
   trackingCategory: string;
@@ -55,7 +56,7 @@ export function UpsellBannerCard(props: UpsellBannerCardProps) {
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-lg border bg-gradient-to-r p-5",
+        "relative overflow-hidden rounded-lg border bg-gradient-to-r p-4 lg:p-6",
         color.border,
         color.bgFrom,
       )}
@@ -73,7 +74,7 @@ export function UpsellBannerCard(props: UpsellBannerCardProps) {
           {props.icon ? (
             <div
               className={cn(
-                "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
+                "mt-0.5 hidden h-9 w-9 shrink-0 items-center justify-center rounded-full lg:flex",
                 color.iconBg,
               )}
             >
@@ -90,9 +91,7 @@ export function UpsellBannerCard(props: UpsellBannerCardProps) {
             >
               {props.title}
             </h3>
-            <p className={cn("mt-0.5 text-sm", color.desc)}>
-              {props.description}
-            </p>
+            <p className={cn("text-sm", color.desc)}>{props.description}</p>
           </div>
         </div>
 
@@ -108,6 +107,7 @@ export function UpsellBannerCard(props: UpsellBannerCardProps) {
             href={props.cta.link}
             category={props.trackingCategory}
             label={props.trackingLabel}
+            target={props.cta.target}
           >
             {props.cta.text}
             {props.cta.icon && <span className="ml-2">{props.cta.icon}</span>}

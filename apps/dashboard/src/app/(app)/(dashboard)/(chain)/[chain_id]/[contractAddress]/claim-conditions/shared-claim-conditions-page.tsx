@@ -4,6 +4,7 @@ import { redirectToContractLandingPage } from "../../../../../team/[team_slug]/[
 import { ClaimConditions } from "../_components/claim-conditions/claim-conditions";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../_utils/getContractPageMetadata";
+import { shouldRenderNewPublicPage } from "../_utils/newPublicPage";
 import { ClaimConditionsClient } from "./ClaimConditions.client";
 
 export async function SharedClaimConditionsPage(props: {
@@ -20,6 +21,18 @@ export async function SharedClaimConditionsPage(props: {
 
   if (!info) {
     notFound();
+  }
+
+  // new public page can't show /claim-conditions page
+  if (!props.projectMeta) {
+    const shouldHide = await shouldRenderNewPublicPage(info.serverContract);
+    if (shouldHide) {
+      redirectToContractLandingPage({
+        contractAddress: props.contractAddress,
+        chainIdOrSlug: props.chainIdOrSlug,
+        projectMeta: props.projectMeta,
+      });
+    }
   }
 
   const { clientContract, serverContract, isLocalhostChain } = info;

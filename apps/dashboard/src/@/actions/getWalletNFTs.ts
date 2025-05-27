@@ -12,7 +12,7 @@ import type { WalletNFT } from "lib/wallet/nfts/types";
 import { getVercelEnv } from "../../lib/vercel-utils";
 import { isAlchemySupported } from "../../lib/wallet/nfts/isAlchemySupported";
 import { isMoralisSupported } from "../../lib/wallet/nfts/isMoralisSupported";
-import { NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID } from "../constants/public-envs";
+import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "../constants/public-envs";
 import { MORALIS_API_KEY } from "../constants/server-envs";
 
 type WalletNFTApiReturn =
@@ -149,7 +149,7 @@ async function getWalletNFTsFromInsight(params: {
 
   const response = await fetch(url, {
     headers: {
-      "x-client-id": NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID,
+      "x-client-id": NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
     },
   });
 

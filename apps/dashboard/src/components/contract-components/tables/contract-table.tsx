@@ -156,7 +156,11 @@ export function ContractTableUI(props: {
                   }}
                 />
               </TableHead>
-              <TableHead>Contract Address</TableHead>
+              {props.variant === "contract" && (
+                <TableHead>Contract Address</TableHead>
+              )}
+
+              {props.variant === "asset" && <TableHead> Asset Page</TableHead>}
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -193,14 +197,30 @@ export function ContractTableUI(props: {
                     />
                   </TableCell>
 
-                  <TableCell>
-                    <CopyAddressButton
-                      copyIconPosition="left"
-                      address={contract.contractAddress}
-                      variant="ghost"
-                      className="-translate-x-2 relative z-10"
-                    />
-                  </TableCell>
+                  {props.variant === "contract" && (
+                    <TableCell>
+                      <CopyAddressButton
+                        copyIconPosition="left"
+                        address={contract.contractAddress}
+                        variant="ghost"
+                        className="-translate-x-2 relative z-10"
+                      />
+                    </TableCell>
+                  )}
+
+                  {props.variant === "asset" && (
+                    <TableCell>
+                      <Button variant="ghost" asChild size="sm">
+                        <Link
+                          href={`/${contract.chainId}/${contract.contractAddress}`}
+                          target="_blank"
+                          className="-translate-x-2 relative z-10 flex items-center gap-1.5 text-muted-foreground"
+                        >
+                          View <ExternalLinkIcon className="size-3" />
+                        </Link>
+                      </Button>
+                    </TableCell>
+                  )}
 
                   <TableCell>
                     <ContractActionsCell

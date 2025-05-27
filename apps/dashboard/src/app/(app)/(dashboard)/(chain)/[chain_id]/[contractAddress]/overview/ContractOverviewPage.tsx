@@ -1,3 +1,5 @@
+import { UpsellBannerCard } from "@/components/blocks/UpsellBannerCard";
+import { ExternalLinkIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { TokenDetailsCard } from "../tokens/components/supply";
@@ -43,6 +45,22 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
   return (
     <div className="flex flex-col gap-10 lg:flex-row lg:gap-8">
       <div className="flex grow flex-col gap-10 overflow-hidden">
+        {isErc20 && (
+          <UpsellBannerCard
+            title="Public asset page available"
+            description="A public page is available for this contract for anyone to buy this asset"
+            cta={{
+              text: "View asset page",
+              icon: <ExternalLinkIcon className="size-4" />,
+              target: "_blank",
+              link: `https://thirdweb.com/${chainSlug}/${contract.address}`,
+            }}
+            trackingCategory="erc20-contract"
+            trackingLabel="view-asset-page"
+            accentColor="blue"
+          />
+        )}
+
         <ContractChecklist
           isErc721={isErc721}
           isErc1155={isErc1155}

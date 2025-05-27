@@ -82,21 +82,19 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
               </h1>
             )}
 
-            {chain && (
-              <Link
-                href={`/${chain.slug}`}
-                className="flex w-fit shrink-0 items-center gap-2 rounded-3xl border border-border bg-card px-2.5 py-1.5 hover:bg-accent"
-              >
-                <ChainIconClient
-                  src={chain.icon?.url}
-                  client={client}
-                  className="size-4"
-                />
-                {cleanedChainName && (
-                  <span className="text-xs">{cleanedChainName}</span>
-                )}
-              </Link>
-            )}
+            <Link
+              href={`/${chain.slug}`}
+              className="flex w-fit shrink-0 items-center gap-2 rounded-3xl border border-border bg-card px-2.5 py-1.5 hover:bg-accent"
+            >
+              <ChainIconClient
+                src={chain.icon?.url}
+                client={client}
+                className="size-4"
+              />
+              {cleanedChainName && (
+                <span className="text-xs">{cleanedChainName}</span>
+              )}
+            </Link>
           </div>
         )}
 
@@ -115,7 +113,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
           <CopyAddressButton
             address={address}
             copyIconPosition="left"
-            className="bg-card text-xs"
+            className="bg-card px-2.5 py-1.5 text-xs"
             variant="outline"
           />
 
