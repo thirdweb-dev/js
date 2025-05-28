@@ -415,7 +415,7 @@ const ConnectEmbedContent = (props: {
         walletConnect={props.walletConnect}
         wallets={props.wallets}
         modalHeader={undefined}
-        walletIdsToHide={undefined}
+        walletIdsToHide={props.hiddenWallets}
       />
     );
   }
