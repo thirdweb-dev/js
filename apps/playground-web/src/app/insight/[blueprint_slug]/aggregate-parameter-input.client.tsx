@@ -1,14 +1,9 @@
 "use client";
 
+import { MultiSelect } from "@/components/blocks/multi-select";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
 
 interface Preset {
@@ -145,53 +140,137 @@ interface AggregateParameterInputProps {
     },
     string
   >;
-  showTip: boolean;
-  hasError: boolean;
-  placeholder: string;
-  endpointPath: string; // New prop
+  showTip?: boolean;
+  hasError?: boolean;
+  placeholder?: string;
+  endpointPath: string;
 }
 
 export function AggregateParameterInput(props: AggregateParameterInputProps) {
-  const { field, showTip, hasError, placeholder, endpointPath } = props;
+  const { field, placeholder, endpointPath, showTip } = props;
   const { value, onChange } = field;
 
-  const presets = getAggregatePresets(endpointPath);
+  const presets = useMemo(
+    () => getAggregatePresets(endpointPath),
+    [endpointPath],
+  );
+
+  const selectedValues = useMemo(() => {
+    if (!value) return [];
+    return Array.from(
+      new Set(
+        String(value)
+          .split(",")
+          .map((v) => v.trim()) // remove leading / trailing spaces
+          .filter(Boolean),
+      ),
+    );
+  }, [value]);
+
+  const handlePresetChange = useCallback(
+    (values: string[]) => {
+      onChange({ target: { value: values.join(",") } });
+    },
+    [onChange],
+  );
+
+  // Custom search function for the MultiSelect
+  const searchFunction = useCallback(
+    (option: { value: string; label: string }, searchTerm: string) => {
+      if (!searchTerm) return true;
+      const query = searchTerm.toLowerCase();
+      return (
+        option.label.toLowerCase().includes(query) ||
+        option.value.toLowerCase().includes(query)
+      );
+    },
+    [],
+  );
+
+  // Get display values for the selected items
+  useCallback(
+    (value: string) => {
+      const preset = presets.find((p) => p.value === value);
+      return preset ? preset.label : value;
+    },
+    [presets],
+  );
+
+  // Format selected values for display in the MultiSelect
+  useMemo(() => {
+    return selectedValues.map((value) => {
+      const preset = presets.find((p) => p.value === value);
+      return {
+        label: preset?.label || value,
+        value,
+      };
+    });
+  }, [selectedValues, presets]);
+
+  // State for the manual input text
+  const [manualInput, setManualInput] = useState("");
+
+  // Update manual input when selected values change
+  useEffect(() => {
+    if (selectedValues.length === 0) {
+      setManualInput("");
+    } else {
+      setManualInput(selectedValues.join(", "));
+    }
+  }, [selectedValues]);
+
+  // Handle manual input changes
+  const handleManualInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setManualInput(value);
+
+    // Update selected values by splitting on commas and trimming whitespace
+    const newValues = value
+      .split(",")
+      .map((v) => v.trim())
+      .filter(Boolean);
+
+    onChange({ target: { value: newValues.join(",") } });
+  };
 
   return (
-    <div className="flex flex-col space-y-1">
-      <Input
-        {...field}
-        className={cn(
-          "h-auto truncate rounded-none border-0 bg-transparent py-5 font-mono text-sm focus-visible:ring-0 focus-visible:ring-offset-0",
-          showTip && "lg:pr-10",
-          hasError && "text-destructive-text",
-        )}
-        placeholder={placeholder}
-      />
-      <Select
-        value={presets.find((p) => p.value === value)?.value || ""}
-        onValueChange={(selectedValue) => {
-          if (selectedValue) {
-            onChange({ target: { value: selectedValue } });
-          }
-        }}
-      >
-        <SelectTrigger
+    <div className="w-full">
+      {/* Editable formula text field */}
+      <div className="relative">
+        <Input
+          value={manualInput}
+          onChange={handleManualInputChange}
+          placeholder={placeholder}
           className={cn(
-            "h-8 border-dashed bg-transparent text-xs focus:ring-0 focus:ring-offset-0",
-            !presets.find((p) => p.value === value) && "text-muted-foreground",
+            "h-auto truncate rounded-none border-0 bg-transparent py-3 font-mono text-sm focus-visible:ring-0 focus-visible:ring-offset-0",
+            showTip && "lg:pr-10",
           )}
-        >
-          <SelectValue placeholder="Select a preset (optional)" />
-        </SelectTrigger>
-        <SelectContent className="font-mono">
-          {presets.map((preset) => (
-            <SelectItem key={preset.value} value={preset.value}>
-              {preset.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        />
+      </div>
+
+      {/* MultiSelect for choosing aggregations */}
+      <MultiSelect
+        options={presets}
+        selectedValues={selectedValues}
+        onSelectedValuesChange={handlePresetChange}
+        placeholder="Select presets (optional)"
+        searchPlaceholder="Search aggregation presets"
+        className={cn(
+          "rounded-none border-0 border-border border-t-2 border-dashed",
+          "hover:bg-inherit",
+        )}
+        popoverContentClassName="min-w-[calc(100vw-20px)] lg:min-w-[500px]"
+        selectedBadgeClassName="font-normal"
+        overrideSearchFn={searchFunction}
+        renderOption={(option) => (
+          <div className="flex w-full items-center justify-between">
+            <span className="truncate">{option.label}</span>
+            <span className="ml-2 truncate font-mono text-muted-foreground text-xs">
+              {option.value}
+            </span>
+          </div>
+        )}
+      />
     </div>
   );
 }

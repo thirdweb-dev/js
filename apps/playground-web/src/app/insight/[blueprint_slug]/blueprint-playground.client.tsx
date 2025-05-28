@@ -527,7 +527,9 @@ function ParameterSection(props: {
                                 <div className="flex flex-col gap-2">
                                   {description && (
                                     <p className="text-foreground">
-                                      {description}
+                                      {param.name === "aggregate"
+                                        ? "Aggregation(s). You can type in multiple, separated by a comma, or select from the presets"
+                                        : description}
                                     </p>
                                   )}
 
@@ -536,7 +538,9 @@ function ParameterSection(props: {
                                       <p className="mb-1 text-muted-foreground">
                                         Example:{" "}
                                         <span className="font-mono">
-                                          {exampleToShow}
+                                          {param.name === "aggregate"
+                                            ? "count() AS count_all, countDistinct(address) AS unique_addresses"
+                                            : exampleToShow}
                                         </span>
                                       </p>
                                     </div>
@@ -547,7 +551,10 @@ function ParameterSection(props: {
                               <Button
                                 asChild
                                 variant="ghost"
-                                className="-translate-y-1/2 absolute top-1/2 right-2 hidden h-auto w-auto p-1.5 text-muted-foreground opacity-50 hover:opacity-100 lg:flex"
+                                className={cn(
+                                  "-translate-y-1/2 absolute top-1/2 right-2 hidden h-auto w-auto p-1.5 text-muted-foreground opacity-50 hover:opacity-100 lg:flex",
+                                  param.name === "aggregate" && "top-[21px]",
+                                )}
                               >
                                 <div>
                                   <InfoIcon className="size-4" />
