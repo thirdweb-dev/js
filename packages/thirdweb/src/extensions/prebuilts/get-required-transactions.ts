@@ -140,7 +140,7 @@ async function getTransactionsForImplementation(options: {
     options;
 
   if (deployMetadata.name === "MarketplaceV3") {
-    return getTransactionsForMaketplaceV3(options);
+    return getTransactionsForMarketplaceV3(options);
   }
 
   if (deployMetadata.routerType === "dynamic") {
@@ -173,7 +173,7 @@ async function getTransactionsForImplementation(options: {
   return result ? [result] : [];
 }
 
-async function getTransactionsForMaketplaceV3(options: {
+async function getTransactionsForMarketplaceV3(options: {
   chain: Chain;
   client: ThirdwebClient;
 }): Promise<DeployTransactionResult[]> {

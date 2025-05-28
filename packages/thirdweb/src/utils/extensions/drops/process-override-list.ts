@@ -90,7 +90,7 @@ export async function processOverrideList(options: {
     client: options.client,
     files: [stringify(options.overrides)],
   });
-  // 7. assmeble the final sharded merkle tree info
+  // 7. assemble the final sharded merkle tree info
   const shardedMerkleInfo: ShardedMerkleTreeInfo = {
     merkleRoot: tree.getHexRoot(),
     baseUri,

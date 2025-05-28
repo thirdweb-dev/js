@@ -308,7 +308,7 @@ export async function deployContractfromDeployMetadata(
         method,
         params: normalizeFunctionParams(method, initializeParams),
       });
-      // asumption here is that the factory address returns the deployed proxy address
+      // assumption here is that the factory address returns the deployed proxy address
       const address = await simulateTransaction({
         transaction: deployTx,
       });
