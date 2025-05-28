@@ -323,7 +323,7 @@ export function FilterDetailsStep({
                           : null}
                       </SelectValue>
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="max-h-60 overflow-y-auto">
                       {eventSignatures.map((event) => {
                         // Truncate the hash for display purposes
                         const truncatedHash = truncateMiddle(
@@ -373,7 +373,7 @@ export function FilterDetailsStep({
                           : null}
                       </SelectValue>
                     </SelectTrigger>
-                    <SelectContent className="max-w-[600px]">
+                    <SelectContent className="max-h-60 max-w-[600px] overflow-y-auto">
                       {functionSignatures.map((func) => (
                         <SelectItem
                           key={func.signature}
