@@ -53,6 +53,7 @@ interface OnrampApiRequestBody {
   maxSteps?: number;
   excludeChainIds?: string;
   paymentLinkId?: string;
+  country?: string;
 }
 
 /**
@@ -107,6 +108,22 @@ interface OnrampApiRequestBody {
  * }
  * ```
  *
+ * ### Global Support
+ *
+ * For the best user experience, specify the user's `country` code in your request. This will return an error if the user's country is not supported by the provider.
+ *
+ * ```typescript
+ * const preparedOnramp = await Bridge.Onramp.prepare({
+ *   client: thirdwebClient,
+ *   onramp: "stripe",
+ *   chainId: ethereum.id,
+ *   tokenAddress: NATIVE_TOKEN_ADDRESS,
+ *   receiver: "0x...", // receiver's address
+ *   amount: toWei("10"), // 10 of the destination token
+ *   country: "AU" // User's country code
+ * });
+ * ```
+ *
  * @param options - The options for preparing the onramp.
  * @param options.client - Your thirdweb client.
  * @param options.onramp - The onramp provider to use (e.g., "stripe", "coinbase", "transak").
@@ -121,6 +138,7 @@ interface OnrampApiRequestBody {
  * @param [options.currency] - The currency for the onramp (e.g., "USD", "GBP"). Defaults to user's preferred or "USD".
  * @param [options.maxSteps] - Maximum number of post-onramp steps.
  * @param [options.excludeChainIds] - Chain IDs to exclude from the route (string or array of strings).
+ * @param [options.country] - The user's country code (e.g. "US", "JP"). Defaults to "US". We highly recommend this be set (based on the user's IP address).
  *
  * @returns A promise that resolves to the prepared onramp details, including the link and quote.
  * @throws Will throw an error if there is an issue preparing the onramp.
@@ -145,6 +163,7 @@ export async function prepare(
     maxSteps,
     excludeChainIds,
     paymentLinkId,
+    country,
   } = options;
 
   const clientFetch = getClientFetch(client);
@@ -185,6 +204,9 @@ export async function prepare(
   }
   if (paymentLinkId !== undefined) {
     apiRequestBody.paymentLinkId = paymentLinkId;
+  }
+  if (country !== undefined) {
+    apiRequestBody.country = country;
   }
 
   const response = await clientFetch(url, {
@@ -247,6 +269,7 @@ export declare namespace prepare {
     currency?: string;
     maxSteps?: number;
     excludeChainIds?: string | string[];
+    country?: string;
     /**
      * @hidden
      */
