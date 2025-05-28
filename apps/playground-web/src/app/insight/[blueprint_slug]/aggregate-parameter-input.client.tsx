@@ -1,123 +1,177 @@
 "use client";
 
-import { MultiSelect } from "@/components/blocks/multi-select";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
+import { InfoIcon, SearchIcon } from "lucide-react";
+import { useMemo, useState } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
 
 interface Preset {
+  id: string;
   label: string;
   value: string;
 }
 
 const DEFAULT_AGGREGATE_PRESETS: Preset[] = [
-  { label: "Count All Items", value: "count() AS count_all" },
-  { label: "Sum (gas_used)", value: "sum(gas_used) AS total_gas_used" },
-  { label: "Average (gas_used)", value: "avg(gas_used) AS avg_gas_used" },
-  { label: "Min (gas_used)", value: "min(gas_used) AS min_gas_used" },
-  { label: "Max (gas_used)", value: "max(gas_used) AS max_gas_used" },
-  // Presets for a user-defined field
   {
-    label: "Count (custom field)",
-    value: "count(your_field_here) AS count_custom",
+    id: "count-all",
+    label: "Count All Items",
+    value: "count() AS count_all",
   },
-  { label: "Sum (custom field)", value: "sum(your_field_here) AS sum_custom" },
   {
-    label: "Average (custom field)",
-    value: "avg(your_field_here) AS avg_custom",
+    id: "sum-gas",
+    label: "Sum (gas_used)",
+    value: "sum(gas_used) AS total_gas_used",
   },
-  { label: "Min (custom field)", value: "min(your_field_here) AS min_custom" },
-  { label: "Max (custom field)", value: "max(your_field_here) AS max_custom" },
+  {
+    id: "avg-gas",
+    label: "Average (gas_used)",
+    value: "avg(gas_used) AS avg_gas_used",
+  },
+  {
+    id: "min-gas",
+    label: "Min (gas_used)",
+    value: "min(gas_used) AS min_gas_used",
+  },
+  {
+    id: "max-gas",
+    label: "Max (gas_used)",
+    value: "max(gas_used) AS max_gas_used",
+  },
+  {
+    id: "count-distinct",
+    label: "Count Distinct",
+    value: "countDistinct(column_name) AS unique_count",
+  },
 ];
 
 const GENERAL_TRANSACTIONS_PRESETS: Preset[] = [
-  { label: "Transaction Count", value: "count() AS transaction_count" },
   {
-    label: "Total Value Transferred (Wei)",
+    id: "tx-count",
+    label: "Transaction Count",
+    value: "count() AS transaction_count",
+  },
+  {
+    id: "total-value",
+    label: "Total Value (Wei)",
     value: "sum(value) AS total_value_wei",
   },
-  { label: "Total Gas Used", value: "sum(gas_used) AS total_gas_used" },
   {
-    label: "Average Value Transferred (Wei)",
-    value: "avg(value) AS average_value_wei",
+    id: "total-gas",
+    label: "Total Gas Used",
+    value: "sum(gas_used) AS total_gas_used",
   },
-  { label: "Average Gas Used", value: "avg(gas_used) AS average_gas_used" },
   {
-    label: "Max Value Transferred (Wei)",
-    value: "max(value) AS max_value_wei",
+    id: "avg-value",
+    label: "Avg Value (Wei)",
+    value: "avg(value) AS avg_value_wei",
   },
-  { label: "Max Gas Used", value: "max(gas_used) AS max_gas_used" },
   {
-    label: "Min Value Transferred (Wei)",
-    value: "min(value) AS min_value_wei",
+    id: "avg-gas",
+    label: "Avg Gas Used",
+    value: "avg(gas_used) AS avg_gas_used",
   },
-  { label: "Min Gas Used", value: "min(gas_used) AS min_gas_used" },
+  {
+    id: "unique-senders",
+    label: "Unique Senders",
+    value: "countDistinct(from_address) AS unique_senders",
+  },
+  {
+    id: "unique-receivers",
+    label: "Unique Receivers",
+    value: "countDistinct(to_address) AS unique_receivers",
+  },
 ];
 
 const WALLET_TRANSACTIONS_PRESETS: Preset[] = [
-  { label: "Wallet Transaction Count", value: "count() AS wallet_tx_count" },
   {
-    label: "Wallet Total Value (Wei)",
-    value: "sum(value) AS wallet_total_value_wei",
+    id: "wallet-tx-count",
+    label: "Transaction Count",
+    value: "count() AS transaction_count",
   },
   {
-    label: "Wallet Total Gas Spent",
-    value: "sum(gas_used) AS wallet_total_gas_spent",
+    id: "wallet-total-value",
+    label: "Total Value (Wei)",
+    value: "sum(value) AS total_value_wei",
   },
   {
-    label: "Wallet Average Value (Wei)",
-    value: "avg(value) AS wallet_avg_value",
+    id: "wallet-avg-value",
+    label: "Avg Value (Wei)",
+    value: "avg(value) AS avg_value_wei",
   },
   {
-    label: "Wallet Average Gas Spent",
-    value: "avg(gas_used) AS wallet_avg_gas_spent",
+    id: "wallet-total-fees",
+    label: "Total Fees (Wei)",
+    value: "sum(gas_used * gas_price) AS total_fees_wei",
   },
-  {
-    label: "Wallet Max Value Tx (Wei)",
-    value: "max(value) AS wallet_max_value_tx",
-  },
-  { label: "Wallet Max Gas Tx", value: "max(gas_used) AS wallet_max_gas_tx" },
-  {
-    label: "Wallet Min Value Tx (Wei)",
-    value: "min(value) AS wallet_min_value_tx",
-  },
-  { label: "Wallet Min Gas Tx", value: "min(gas_used) AS wallet_min_gas_tx" },
 ];
 
 const EVENTS_PRESETS: Preset[] = [
-  { label: "Event Count", value: "count() AS event_count" },
   {
+    id: "event-count",
+    label: "Event Count",
+    value: "count() AS event_count",
+  },
+  {
+    id: "unique-addresses",
     label: "Unique Addresses",
     value: "countDistinct(address) AS unique_addresses",
   },
-  { label: "Min Block Number", value: "min(block_number) AS min_block" },
-  { label: "Max Block Number", value: "max(block_number) AS max_block" },
+  {
+    id: "min-block",
+    label: "Min Block Number",
+    value: "min(block_number) AS min_block",
+  },
+  {
+    id: "max-block",
+    label: "Max Block Number",
+    value: "max(block_number) AS max_block",
+  },
+  {
+    id: "unique-topics",
+    label: "Unique Topics",
+    value: "countDistinct(topic0) AS unique_topics",
+  },
 ];
 
 const BLOCKS_PRESETS: Preset[] = [
-  { label: "Block Count", value: "count() AS block_count" },
-  { label: "Min Block Number", value: "min(block_number) AS min_block_number" },
-  { label: "Max Block Number", value: "max(block_number) AS max_block_number" },
-  { label: "Total Gas Used", value: "sum(gas_used) AS total_gas_used" },
-  { label: "Average Gas Used", value: "avg(gas_used) AS avg_gas_used" },
-  { label: "Max Gas Used", value: "max(gas_used) AS max_gas_used" },
-  { label: "Min Gas Used", value: "min(gas_used) AS min_gas_used" },
   {
+    id: "block-count",
+    label: "Block Count",
+    value: "count() AS block_count",
+  },
+  {
+    id: "total-transactions",
     label: "Total Transactions",
     value: "sum(transaction_count) AS total_transactions",
   },
   {
-    label: "Average Transactions per Block",
-    value: "avg(transaction_count) AS avg_txs_per_block",
+    id: "avg-transactions",
+    label: "Avg Transactions/Block",
+    value: "avg(transaction_count) AS avg_transactions_per_block",
   },
   {
-    label: "Max Transactions in a Block",
-    value: "max(transaction_count) AS max_txs_in_block",
+    id: "total-gas-used",
+    label: "Total Gas Used",
+    value: "sum(gas_used) AS total_gas_used",
   },
   {
-    label: "Min Transactions in a Block",
-    value: "min(transaction_count) AS min_txs_in_block",
+    id: "min-block-number",
+    label: "Min Block Number",
+    value: "min(number) AS min_block_number",
+  },
+  {
+    id: "max-block-number",
+    label: "Max Block Number",
+    value: "max(number) AS max_block_number",
   },
 ];
 
@@ -134,21 +188,22 @@ function getAggregatePresets(endpointPath: string): Preset[] {
 }
 
 interface AggregateParameterInputProps {
-  field: ControllerRenderProps<
-    {
-      [x: string]: string | number;
-    },
-    string
-  >;
+  field: ControllerRenderProps<{ [x: string]: string | number }, string>;
   showTip?: boolean;
   hasError?: boolean;
   placeholder?: string;
   endpointPath: string;
 }
 
-export function AggregateParameterInput(props: AggregateParameterInputProps) {
-  const { field, placeholder, endpointPath, showTip } = props;
+export function AggregateParameterInput({
+  field,
+  placeholder = "Enter aggregation query...",
+  endpointPath,
+  showTip = true,
+}: AggregateParameterInputProps) {
   const { value, onChange } = field;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const presets = useMemo(
     () => getAggregatePresets(endpointPath),
@@ -157,120 +212,148 @@ export function AggregateParameterInput(props: AggregateParameterInputProps) {
 
   const selectedValues = useMemo(() => {
     if (!value) return [];
-    return Array.from(
-      new Set(
-        String(value)
-          .split(",")
-          .map((v) => v.trim()) // remove leading / trailing spaces
-          .filter(Boolean),
-      ),
-    );
-  }, [value]);
-
-  const handlePresetChange = useCallback(
-    (values: string[]) => {
-      onChange({ target: { value: values.join(",") } });
-    },
-    [onChange],
-  );
-
-  // Custom search function for the MultiSelect
-  const searchFunction = useCallback(
-    (option: { value: string; label: string }, searchTerm: string) => {
-      if (!searchTerm) return true;
-      const query = searchTerm.toLowerCase();
-      return (
-        option.label.toLowerCase().includes(query) ||
-        option.value.toLowerCase().includes(query)
-      );
-    },
-    [],
-  );
-
-  // Get display values for the selected items
-  useCallback(
-    (value: string) => {
-      const preset = presets.find((p) => p.value === value);
-      return preset ? preset.label : value;
-    },
-    [presets],
-  );
-
-  // Format selected values for display in the MultiSelect
-  useMemo(() => {
-    return selectedValues.map((value) => {
-      const preset = presets.find((p) => p.value === value);
-      return {
-        label: preset?.label || value,
-        value,
-      };
-    });
-  }, [selectedValues, presets]);
-
-  // State for the manual input text
-  const [manualInput, setManualInput] = useState("");
-
-  // Update manual input when selected values change
-  useEffect(() => {
-    if (selectedValues.length === 0) {
-      setManualInput("");
-    } else {
-      setManualInput(selectedValues.join(", "));
-    }
-  }, [selectedValues]);
-
-  // Handle manual input changes
-  const handleManualInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setManualInput(value);
-
-    // Update selected values by splitting on commas and trimming whitespace
-    const newValues = value
+    return String(value)
       .split(",")
       .map((v) => v.trim())
       .filter(Boolean);
+  }, [value]);
+
+  const filteredPresets = useMemo(() => {
+    if (!searchTerm) return presets;
+    const query = searchTerm.toLowerCase();
+    return presets.filter(
+      (preset) =>
+        preset.label.toLowerCase().includes(query) ||
+        preset.value.toLowerCase().includes(query),
+    );
+  }, [presets, searchTerm]);
+
+  const selectedPresets = useMemo(() => {
+    return presets
+      .filter((preset) => selectedValues.includes(preset.value.trim()))
+      .map((preset) => preset.id);
+  }, [presets, selectedValues]);
+
+  const handlePresetToggle = (presetId: string) => {
+    const preset = presets.find((p) => p.id === presetId);
+    if (!preset) return;
+
+    const isSelected = selectedValues.includes(preset.value.trim());
+    let newValues: string[];
+
+    if (isSelected) {
+      newValues = selectedValues.filter((v) => v !== preset.value.trim());
+    } else {
+      newValues = [...selectedValues, preset.value.trim()];
+    }
 
     onChange({ target: { value: newValues.join(",") } });
   };
 
-  return (
-    <div className="w-full">
-      {/* Editable formula text field */}
-      <div className="relative">
-        <Input
-          value={manualInput}
-          onChange={handleManualInputChange}
-          placeholder={placeholder}
-          className={cn(
-            "h-auto truncate rounded-none border-0 bg-transparent py-3 font-mono text-sm focus-visible:ring-0 focus-visible:ring-offset-0",
-            showTip && "lg:pr-10",
-          )}
-        />
-      </div>
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onChange({ target: { value: e.target.value } });
+  };
 
-      {/* MultiSelect for choosing aggregations */}
-      <MultiSelect
-        options={presets}
-        selectedValues={selectedValues}
-        onSelectedValuesChange={handlePresetChange}
-        placeholder="Select presets (optional)"
-        searchPlaceholder="Search aggregation presets"
-        className={cn(
-          "rounded-none border-0 border-border border-t-2 border-dashed",
-          "hover:bg-inherit",
-        )}
-        popoverContentClassName="min-w-[calc(100vw-20px)] lg:min-w-[500px]"
-        selectedBadgeClassName="font-normal"
-        overrideSearchFn={searchFunction}
-        renderOption={(option) => (
-          <div className="flex w-full items-center justify-between">
-            <span className="truncate">{option.label}</span>
-            <span className="ml-2 truncate font-mono text-muted-foreground text-xs">
-              {option.value}
-            </span>
+  const getButtonText = () => {
+    if (selectedValues.length === 0) return "aggregate";
+    if (selectedValues.length === 1)
+      return `${selectedValues.length} aggregation added`;
+    return `${selectedValues.length} aggregations added`;
+  };
+
+  return (
+    <div className="relative w-full">
+      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="ghost"
+            className="-ml-1 w-full justify-start border-0 border-none bg-transparent font-mono text-muted-foreground shadow-none hover:bg-transparent hover:text-muted-foreground focus:ring-0 focus:ring-offset-0"
+          >
+            <span className="truncate">{getButtonText()}</span>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          className="w-[calc(100vw-2rem)] p-0 sm:w-[32rem]"
+          align="center"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
+          <div className="space-y-4 p-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                {showTip && (
+                  <div className="ml-auto flex items-center text-muted-foreground text-xs">
+                    <InfoIcon className="mr-1.5 h-3.5 w-3.5" />
+                    <span>Separate multiple with commas</span>
+                  </div>
+                )}
+              </div>
+              <Textarea
+                id="aggregate-textarea"
+                placeholder={placeholder}
+                value={(value as string) || ""}
+                onChange={handleTextareaChange}
+                className="min-h-[100px] font-mono text-sm"
+                spellCheck={false}
+              />
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="relative w-full">
+                  <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="search"
+                    placeholder="Search presets..."
+                    className="h-8 pl-8 text-sm"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="max-h-60 overflow-y-auto rounded-md border">
+                {filteredPresets.length > 0 ? (
+                  <div className="divide-y">
+                    {filteredPresets.map((preset) => (
+                      <div key={preset.id} className="p-3 hover:bg-accent/50">
+                        <div className="flex items-start space-x-3">
+                          <Checkbox
+                            id={preset.id}
+                            checked={selectedPresets.includes(preset.id)}
+                            onCheckedChange={() =>
+                              handlePresetToggle(preset.id)
+                            }
+                            className="mt-1 h-4 w-4 rounded"
+                          />
+                          <div className="flex-1 space-y-1">
+                            <div className="flex items-center">
+                              <Label
+                                htmlFor={preset.id}
+                                className="cursor-pointer font-medium text-sm leading-none"
+                              >
+                                {preset.label}
+                              </Label>
+                            </div>
+                            <div className="flex justify-between">
+                              <code className="break-all font-mono text-muted-foreground text-xs">
+                                {preset.value}
+                              </code>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-4 text-center text-muted-foreground text-sm">
+                    No presets found. Try a different search term.
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-        )}
-      />
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }

@@ -551,10 +551,7 @@ function ParameterSection(props: {
                               <Button
                                 asChild
                                 variant="ghost"
-                                className={cn(
-                                  "-translate-y-1/2 absolute top-1/2 right-2 hidden h-auto w-auto p-1.5 text-muted-foreground opacity-50 hover:opacity-100 lg:flex",
-                                  param.name === "aggregate" && "top-[21px]",
-                                )}
+                                className="-translate-y-1/2 absolute top-1/2 right-2 hidden h-auto w-auto p-1.5 text-muted-foreground opacity-50 hover:opacity-100 lg:flex"
                               >
                                 <div>
                                   <InfoIcon className="size-4" />
@@ -630,7 +627,6 @@ function ParameterInput(props: {
       <AggregateParameterInput
         field={field}
         showTip={showTip}
-        hasError={hasError}
         placeholder={placeholder}
         endpointPath={props.endpointPath}
       />
