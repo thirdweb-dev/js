@@ -2,6 +2,7 @@
 import { FullWidthSidebarLayout } from "@/components/blocks/SidebarLayout";
 import { Badge } from "@/components/ui/badge";
 import {
+  BellIcon,
   BookTextIcon,
   BoxIcon,
   CoinsIcon,
@@ -93,6 +94,16 @@ export function ProjectSidebarLayout(props: {
           label: "Nebula",
           icon: NebulaIcon,
           tracking: tracking("nebula"),
+        },
+        {
+          href: `${layoutPath}/webhooks`,
+          label: (
+            <span className="flex items-center gap-2">
+              Webhooks <Badge>New</Badge>
+            </span>
+          ),
+          icon: BellIcon,
+          tracking: tracking("webhooks"),
         },
       ]}
       footerSidebarLinks={[

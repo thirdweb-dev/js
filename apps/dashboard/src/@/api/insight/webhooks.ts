@@ -4,7 +4,7 @@
 import { getAuthToken } from "app/(app)/api/lib/getAuthToken";
 import { THIRDWEB_INSIGHT_API_DOMAIN } from "constants/urls";
 
-interface WebhookResponse {
+export interface WebhookResponse {
   id: string;
   name: string;
   team_id: string;
@@ -19,7 +19,7 @@ interface WebhookResponse {
   updated_at: string | null;
 }
 
-interface WebhookFilters {
+export interface WebhookFilters {
   "v1.events"?: {
     chain_ids?: string[];
     addresses?: string[];
@@ -130,8 +130,8 @@ export async function getWebhooks(
     };
   }
 }
-// biome-ignore lint/correctness/noUnusedVariables: will be used in the next PR
-async function deleteWebhook(
+
+export async function deleteWebhook(
   webhookId: string,
   clientId: string,
 ): Promise<WebhookSingleResponse> {
