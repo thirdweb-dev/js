@@ -20,6 +20,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import Papa from "papaparse";
 import { useCallback, useState } from "react";
 import type { WalletUser } from "thirdweb/wallets";
+import { SearchInput } from "./SearchInput";
 
 const getUserIdentifier = (accounts: WalletUser["linkedAccounts"]) => {
   const mainDetail = accounts[0]?.details;
@@ -103,12 +104,38 @@ export function InAppWalletUsersPageContent(props: {
   authToken: string;
 }) {
   const [activePage, setActivePage] = useState(1);
+  const [searchValue, setSearchValue] = useState("");
   const walletsQuery = useEmbeddedWallets({
     authToken: props.authToken,
     clientId: props.clientId,
     page: activePage,
   });
   const wallets = walletsQuery?.data?.users || [];
+  const filteredWallets = searchValue
+    ? wallets.filter((wallet) => {
+        const term = searchValue.toLowerCase();
+        if (wallet.id.toLowerCase().includes(term)) {
+          return true;
+        }
+        if (
+          wallet.wallets?.some((w) => w.address?.toLowerCase().includes(term))
+        ) {
+          return true;
+        }
+        if (
+          wallet.linkedAccounts?.some((acc) => {
+            return Object.values(acc.details).some(
+              (detail) =>
+                typeof detail === "string" &&
+                detail.toLowerCase().includes(term),
+            );
+          })
+        ) {
+          return true;
+        }
+        return false;
+      })
+    : wallets;
   const { mutateAsync: getAllEmbeddedWallets, isPending } =
     useAllEmbeddedWallets({
       authToken: props.authToken,
@@ -146,7 +173,14 @@ export function InAppWalletUsersPageContent(props: {
     <div>
       <div className="flex flex-col gap-4">
         {/* Top section */}
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-end gap-3">
+          <div className="w-full max-w-xs">
+            <SearchInput
+              placeholder="Search"
+              value={searchValue}
+              onValueChange={setSearchValue}
+            />
+          </div>
           <Button
             disabled={wallets.length === 0 || isPending}
             variant="outline"
@@ -162,7 +196,7 @@ export function InAppWalletUsersPageContent(props: {
         <div>
           <TWTable
             title="in-app wallets"
-            data={wallets}
+            data={filteredWallets}
             columns={columns}
             isPending={walletsQuery.isPending}
             isFetched={walletsQuery.isFetched}
