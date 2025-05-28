@@ -17,9 +17,13 @@ import { PlayIcon, TrashIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useTestWebhook } from "../hooks/useTestWebhook";
+import { CreateWebhookModal } from "./CreateWebhookModal";
 import { RelativeTime } from "./RelativeTime";
 
 function getEventType(filters: WebhookFilters): string {
+  if (!filters || typeof filters !== "object") {
+    return "Unknown";
+  }
   if (filters["v1.events"]) return "Event";
   if (filters["v1.transactions"]) return "Transaction";
   return "Unknown";
@@ -120,11 +124,15 @@ export function WebhooksTable({ webhooks, clientId }: WebhooksTableProps) {
       header: "Created",
       cell: ({ getValue }) => {
         const date = getValue() as string;
+        const dateObj = new Date(date);
+        const formattedDate = Number.isNaN(dateObj.getTime())
+          ? "Invalid date"
+          : format(dateObj, "MMM d, yyyy");
         return (
           <div className="flex flex-col">
             <RelativeTime date={date} />
             <span className="text-muted-foreground text-xs">
-              {format(new Date(date), "MMM d, yyyy")}
+              {formattedDate}
             </span>
           </div>
         );
@@ -202,7 +210,7 @@ export function WebhooksTable({ webhooks, clientId }: WebhooksTableProps) {
   return (
     <div className="w-full">
       <div className="mb-4 flex items-center justify-end">
-        <Button type="button">New Webhook</Button>
+        <CreateWebhookModal clientId={clientId} />
       </div>
       <TWTable
         data={sortedWebhooks}

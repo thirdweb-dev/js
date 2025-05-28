@@ -67,8 +67,7 @@ interface TestWebhookResponse {
   error?: string;
 }
 
-// biome-ignore lint/correctness/noUnusedVariables: will be used in the next PR
-async function createWebhook(
+export async function createWebhook(
   payload: CreateWebhookPayload,
   clientId: string,
 ): Promise<WebhookSingleResponse> {

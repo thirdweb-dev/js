@@ -18,14 +18,17 @@ export function useTestWebhook(clientId: string) {
     type: "event" | "transaction",
     id?: string,
   ) => {
-    if (!webhookUrl) {
+    try {
+      new URL(webhookUrl);
+    } catch {
       toast.error("Cannot test webhook", {
-        description: "Webhook URL is required",
+        description:
+          "Please enter a valid URL starting with http:// or https://",
       });
       return false;
     }
 
-    const uniqueId = id || webhookUrl;
+    const uniqueId = id || `${webhookUrl}-${type}`;
 
     if (isTestingMap[uniqueId]) return false;
 

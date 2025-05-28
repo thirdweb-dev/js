@@ -51,6 +51,7 @@ export default async function WebhooksPage({
               category="webhooks"
               label="learn-more"
               target="_blank"
+              rel="noopener noreferrer"
               href="https://portal.thirdweb.com/insight/webhooks"
             >
               Learn more about webhooks.
@@ -79,7 +80,7 @@ export default async function WebhooksPage({
                 Create a webhook to get started.
               </p>
             </div>
-            <CreateWebhookModal />
+            <CreateWebhookModal clientId={clientId} />
           </div>
         )}
       </div>

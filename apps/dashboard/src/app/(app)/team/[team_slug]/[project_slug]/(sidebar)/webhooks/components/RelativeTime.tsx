@@ -1,5 +1,4 @@
 "use client";
-import { cn } from "@/lib/utils";
 import { formatDistanceToNowStrict } from "date-fns";
 import { useEffect, useState } from "react";
 
@@ -38,5 +37,5 @@ export function RelativeTime({
     return () => clearInterval(interval);
   }, [date]);
 
-  return <span className={cn(className)}>{content}</span>;
+  return <span className={className}>{content}</span>;
 }
