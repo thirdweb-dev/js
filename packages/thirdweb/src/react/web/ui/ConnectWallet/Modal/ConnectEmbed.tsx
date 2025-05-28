@@ -5,6 +5,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getDefaultWallets } from "../../../../../wallets/defaultWallets.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
+import type { WalletId } from "../../../../../wallets/wallet-types.js";
 import {
   CustomThemeProvider,
   useCustomTheme,
@@ -295,6 +296,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           modalSize={modalSize}
           style={props.style}
           welcomeScreen={props.welcomeScreen}
+          hiddenWallets={props.hiddenWallets}
         />
         {autoConnectComp}
       </WalletUIStatesProvider>
@@ -337,6 +339,7 @@ const ConnectEmbedContent = (props: {
   onConnect: ((wallet: Wallet) => void) | undefined;
   recommendedWallets: Wallet[] | undefined;
   showAllWallets: boolean | undefined;
+  hiddenWallets: WalletId[] | undefined;
   walletConnect:
     | {
         projectId?: string;
@@ -415,7 +418,7 @@ const ConnectEmbedContent = (props: {
         walletConnect={props.walletConnect}
         wallets={props.wallets}
         modalHeader={undefined}
-        walletIdsToHide={undefined}
+        walletIdsToHide={props.hiddenWallets}
       />
     );
   }

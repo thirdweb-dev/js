@@ -982,6 +982,11 @@ export type ConnectButtonProps = {
   showAllWallets?: boolean;
 
   /**
+   * All wallet IDs included in this array will be hidden from the wallet selection list.
+   */
+  hiddenWallets?: WalletId[];
+
+  /**
    * Enable SIWE (Sign in with Ethererum) by passing an object of type `SiweAuthOptions` to
    * enforce the users to sign a message after connecting their wallet to authenticate themselves.
    *

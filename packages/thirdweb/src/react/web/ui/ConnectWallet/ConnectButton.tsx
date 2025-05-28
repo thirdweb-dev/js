@@ -300,6 +300,8 @@ export function ConnectButton(props: ConnectButtonProps) {
   const activeAccount = useActiveAccount();
   const activeWallet = useActiveWallet();
   const siweAuth = useSiweAuth(activeWallet, activeAccount, props.auth);
+  const hiddenWallets =
+    props.hiddenWallets || props.detailsModal?.hiddenWallets;
 
   usePreloadWalletProviders({
     wallets,
@@ -393,6 +395,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         onConnect={props.onConnect}
         recommendedWallets={props.recommendedWallets}
         showAllWallets={props.showAllWallets}
+        hiddenWallets={hiddenWallets}
         walletConnect={props.walletConnect}
         wallets={wallets}
       />
@@ -557,7 +560,10 @@ function ConnectButtonInner(
       <ConnectedWalletDetails
         theme={theme}
         detailsButton={props.detailsButton}
-        detailsModal={props.detailsModal}
+        detailsModal={{
+          ...props.detailsModal,
+          hiddenWallets: hiddenWallets,
+        }}
         supportedTokens={supportedTokens}
         supportedNFTs={props.supportedNFTs}
         onDisconnect={(info) => {
@@ -582,7 +588,7 @@ function ConnectButtonInner(
           showAllWallets: props.showAllWallets,
           walletConnect: props.walletConnect,
           wallets: props.wallets,
-          hiddenWallets: props.detailsModal?.hiddenWallets,
+          hiddenWallets: hiddenWallets,
         }}
       />
     </AccountProvider>

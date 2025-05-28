@@ -5,6 +5,7 @@ import { getDefaultWallets } from "../../../../wallets/defaultWallets.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
+import type { WalletId } from "../../../../wallets/wallet-types.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
@@ -142,6 +143,7 @@ function Modal(
         onConnect={props.onConnect}
         recommendedWallets={props.recommendedWallets}
         showAllWallets={props.showAllWallets}
+        hiddenWallets={props.hiddenWallets}
         wallets={wallets}
         chains={props.chains}
         walletConnect={props.walletConnect}
@@ -363,6 +365,11 @@ export type UseConnectModalOptions = {
    * You can disable this button by setting `showAllWallets` prop to `false`
    */
   showAllWallets?: boolean;
+
+  /**
+   * All wallet IDs included in this array will be hidden from the wallet selection list.
+   */
+  hiddenWallets?: WalletId[];
 
   /**
    * Title to show in Connect Modal

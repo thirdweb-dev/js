@@ -4,6 +4,7 @@ import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
+import type { WalletId } from "../../../../../wallets/wallet-types.js";
 import type { SiweAuthOptions } from "../../../../core/hooks/auth/useSiweAuth.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import {
@@ -42,6 +43,7 @@ type ConnectModalOptions = {
   localeId: LocaleId;
   chain: Chain | undefined;
   showAllWallets: boolean | undefined;
+  hiddenWallets: WalletId[] | undefined;
   chains: Chain[] | undefined;
   walletConnect:
     | {
@@ -151,7 +153,7 @@ const ConnectModal = (props: ConnectModalOptions) => {
         chains={props.chains}
         walletConnect={props.walletConnect}
         modalHeader={undefined}
-        walletIdsToHide={undefined}
+        walletIdsToHide={props.hiddenWallets}
       />
     </Modal>
   );
