@@ -60,6 +60,11 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     name: "Tokens",
     paths: [
       {
+        name: "Get token owners by contract",
+        path: "/v1/tokens/owners",
+        deprecated: false,
+      },
+      {
         name: "Get token transfers by transaction",
         path: "/v1/tokens/transfers/transaction/{transaction_hash}",
         deprecated: false,
@@ -126,7 +131,7 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
         deprecated: false,
       },
       {
-        name: "Get NFTs by owner",
+        name: "Get NFTs",
         path: "/v1/nfts",
         deprecated: false,
       },
