@@ -13,9 +13,10 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { ColumnDef } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns";
-import { TrashIcon } from "lucide-react";
+import { PlayIcon, TrashIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import { useTestWebhook } from "../hooks/useTestWebhook";
 import { RelativeTime } from "./RelativeTime";
 
 function getEventType(filters: WebhookFilters): string {
@@ -31,7 +32,7 @@ interface WebhooksTableProps {
 
 export function WebhooksTable({ webhooks, clientId }: WebhooksTableProps) {
   const [isDeleting, setIsDeleting] = useState<Record<string, boolean>>({});
-  //   const { testWebhookEndpoint, isTestingMap } = useTestWebhook(clientId);
+  const { testWebhookEndpoint, isTestingMap } = useTestWebhook(clientId);
   const router = useDashboardRouter();
 
   const handleDeleteWebhook = async (webhookId: string) => {
@@ -53,6 +54,22 @@ export function WebhooksTable({ webhooks, clientId }: WebhooksTableProps) {
     } finally {
       setIsDeleting((prev) => ({ ...prev, [webhookId]: false }));
     }
+  };
+
+  const handleTestWebhook = async (webhook: WebhookResponse) => {
+    const filterType = getEventType(webhook.filters);
+    if (filterType === "Unknown") {
+      toast.error("Cannot test webhook", {
+        description:
+          "This webhook does not have a valid event type (event or transaction).",
+      });
+      return;
+    }
+    await testWebhookEndpoint(
+      webhook.webhook_url,
+      filterType.toLowerCase() as "event" | "transaction",
+      webhook.id,
+    );
   };
 
   const columns: ColumnDef<WebhookResponse>[] = [
@@ -129,12 +146,26 @@ export function WebhooksTable({ webhooks, clientId }: WebhooksTableProps) {
     },
     {
       id: "actions",
-      header: "Actions",
+      header: () => <div className="flex w-full justify-end pr-2">Actions</div>,
       cell: ({ row }) => {
         const webhook = row.original;
 
         return (
-          <div className="flex justify-end gap-2">
+          <div className="flex items-center justify-end gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              disabled={isTestingMap[webhook.id] || isDeleting[webhook.id]}
+              onClick={() => handleTestWebhook(webhook)}
+              aria-label={`Test webhook ${webhook.name}`}
+            >
+              {isTestingMap[webhook.id] ? (
+                <Spinner className="h-4 w-4" />
+              ) : (
+                <PlayIcon className="h-4 w-4" />
+              )}
+            </Button>
             <Button
               size="icon"
               variant="outline"

@@ -164,8 +164,8 @@ export async function deleteWebhook(
     };
   }
 }
-// biome-ignore lint/correctness/noUnusedVariables: will be used in the next PR
-async function testWebhook(
+
+export async function testWebhook(
   payload: TestWebhookPayload,
   clientId: string,
 ): Promise<TestWebhookResponse> {
