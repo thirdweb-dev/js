@@ -1,7 +1,7 @@
+import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { Button, Heading, Text } from "tw-components";
 import { ExternalLinksInput } from "./external-links-input";
 
 export const ExternalLinksFieldset = () => {
@@ -29,8 +29,10 @@ export const ExternalLinksFieldset = () => {
   return (
     <fieldset className="flex flex-col gap-8">
       <div className="flex flex-col gap-2">
-        <Heading size="title.md">Resources</Heading>
-        <Text>Provide links to docs, usage guides etc. for the contract.</Text>
+        <h3 className="font-semibold text-xl tracking-tight">Resources</h3>
+        <p className="text-muted-foreground">
+          Provide links to docs, usage guides etc. for the contract.
+        </p>
       </div>
       <div className="flex flex-col gap-4">
         {fields.map((item, index) => (
@@ -40,9 +42,8 @@ export const ExternalLinksFieldset = () => {
           <Button
             type="button"
             size="sm"
-            colorScheme="primary"
-            borderRadius="md"
-            leftIcon={<PlusIcon className="size-5" />}
+            variant="outline"
+            className="gap-2"
             onClick={() =>
               append({
                 name: "",
@@ -50,6 +51,7 @@ export const ExternalLinksFieldset = () => {
               })
             }
           >
+            <PlusIcon className="size-5" />
             Add Resource
           </Button>
         </div>
