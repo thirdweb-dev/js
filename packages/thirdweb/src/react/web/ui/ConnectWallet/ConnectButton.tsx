@@ -413,6 +413,8 @@ function ConnectButtonInner(
   const siweAuth = props.siweAuth;
   const activeAccount = useActiveAccount();
   const [showSignatureModal, setShowSignatureModal] = useState(false);
+  const hiddenWallets =
+    props.hiddenWallets || props.detailsModal?.hiddenWallets;
 
   // if wallet gets disconnected suddently, close the signature modal if it's open
   useEffect(() => {
