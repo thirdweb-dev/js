@@ -80,11 +80,9 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
             <Link
               target="_blank"
               className="text-blue-500 underline"
-              href={
-                "https://blog.thirdweb.com/mint-fees-for-contract-deployments-update/"
-              }
+              href={"https://thirdweb.com/pricing"}
             >
-              Read more.
+              See fee breakdown on pricing page.
             </Link>
           </p>
         ) : (
@@ -94,11 +92,9 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
             <Link
               target="_blank"
               className="text-blue-500 underline"
-              href={
-                "https://blog.thirdweb.com/mint-fees-for-contract-deployments-update/"
-              }
+              href={"https://thirdweb.com/pricing"}
             >
-              Read more.
+              See fee breakdown on pricing page.
             </Link>
           </p>
         )}

@@ -220,7 +220,7 @@ export function SendTestTransaction(props: {
               </Select>
             </div>
             <div className="flex flex-1 flex-col gap-2">
-              <p className="text-sm">Network</p>
+              <p className="text-sm">Select Testnet</p>
               <SingleNetworkSelector
                 className="bg-background"
                 chainIds={chainsQuery.allChains
