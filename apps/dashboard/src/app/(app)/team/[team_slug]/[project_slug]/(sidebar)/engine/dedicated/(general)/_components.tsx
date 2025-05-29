@@ -1,9 +1,6 @@
 import type { Team } from "@/api/team";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
-import { PRO_CONTACT_US_URL } from "constants/pro";
 import { ArrowRightIcon, DownloadIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -77,74 +74,6 @@ function EngineInfoSection(props: { team_slug: string; project_slug: string }) {
   );
 }
 
-function CloudHostedEngineSection(props: {
-  teamPlan: Exclude<Team["billingPlan"], "accelerate" | "scale">;
-  teamSlug: string;
-}) {
-  return (
-    <div className="flex flex-col">
-      <h3 className="mb-0.5 font-semibold text-lg tracking-tight">
-        Get Managed Engine
-      </h3>
-
-      {props.teamPlan !== "pro" ? (
-        <div>
-          <p className="text-muted-foreground text-sm">
-            Upgrade your plan to{" "}
-            <UnderlineLink href="/pricing" target="_blank">
-              Accelerate
-            </UnderlineLink>{" "}
-            or{" "}
-            <UnderlineLink href="/pricing" target="_blank">
-              Scale
-            </UnderlineLink>{" "}
-            to get a managed Engine instance
-          </p>
-
-          <div className="h-5" />
-          <div className="flex justify-start gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              asChild
-              className="gap-2 bg-card"
-            >
-              <Link href={`/team/${props.teamSlug}/~/settings/billing`}>
-                Upgrade Plan
-                <ArrowRightIcon className="size-3 text-muted-foreground" />
-              </Link>
-            </Button>
-
-            <Button
-              variant="outline"
-              size="sm"
-              asChild
-              className="gap-2 bg-card"
-            >
-              <Link href="/pricing" target="_blank">
-                View Pricing
-                <ExternalLinkIcon className="size-3 text-muted-foreground" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <div>
-          <p className="mb-4 text-muted-foreground text-sm">
-            Contact us to get a managed engine for your team
-          </p>
-          <Button variant="outline" size="sm" asChild className="gap-2">
-            <Link href={PRO_CONTACT_US_URL} target="_blank">
-              Contact Us
-              <ExternalLinkIcon className="size-3 text-muted-foreground" />
-            </Link>
-          </Button>
-        </div>
-      )}
-    </div>
-  );
-}
-
 export function EngineFooterCard(props: {
   teamPlan: Team["billingPlan"];
   team_slug: string;
@@ -152,16 +81,6 @@ export function EngineFooterCard(props: {
 }) {
   return (
     <div className="relative rounded-lg border p-6">
-      {props.teamPlan === "accelerate" || props.teamPlan === "scale" ? null : (
-        <>
-          <CloudHostedEngineSection
-            teamPlan={props.teamPlan}
-            teamSlug={props.team_slug}
-          />
-          <Separator className="my-5" />
-        </>
-      )}
-
       <EngineInfoSection
         team_slug={props.team_slug}
         project_slug={props.project_slug}

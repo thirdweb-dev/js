@@ -181,7 +181,7 @@ export const InAppWalletSettingsUI: React.FC<
   const authRequiredPlan = "growth";
   const brandingRequiredPlan = "starter";
 
-  // accelerate or higher plan required
+  // growth or higher plan required
   const canEditSmsCountries =
     planToTierRecordForGating[props.teamPlan] >=
     planToTierRecordForGating[authRequiredPlan];

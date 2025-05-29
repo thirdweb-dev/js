@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { CheckIcon, CircleDollarSignIcon } from "lucide-react";
+import { CheckIcon, DollarSignIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import { TEAM_PLANS } from "utils/pricing";
@@ -105,9 +105,12 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
         {/* Price */}
         <div className="flex flex-col gap-0.5">
+          {plan.isStartingPriceOnly && (
+            <span className="text-muted-foreground text-xs">Starting at</span>
+          )}
           <div className="flex items-center gap-2">
             <span className="font-semibold text-2xl text-foreground tracking-tight">
-              ${plan.price}
+              ${plan.price.toLocaleString()}
             </span>
 
             {!isCustomPrice && (
@@ -183,10 +186,10 @@ const billingPlanToSkuMap: Record<Team["billingPlan"], ProductSKU | undefined> =
   {
     starter: "plan:starter",
     growth: "plan:growth",
-    accelerate: "plan:accelerate",
     scale: "plan:scale",
+    pro: "plan:pro",
     // we can't render checkout buttons for these plans:
-    pro: undefined,
+    accelerate: undefined,
     free: undefined,
     growth_legacy: undefined,
     starter_legacy: undefined,
@@ -201,16 +204,19 @@ function FeatureItem({ text }: FeatureItemProps) {
 
   return (
     <div className="flex items-center gap-2 text-sm">
-      <CheckIcon className="size-4 shrink-0 text-green-500" />
+      {Array.isArray(text) ? (
+        <ToolTipLabel label={text[1]}>
+          <DollarSignIcon className="size-4 shrink-0 text-green-500" />
+        </ToolTipLabel>
+      ) : (
+        <CheckIcon className="size-4 shrink-0 text-green-500" />
+      )}
       {Array.isArray(text) ? (
         <div className="flex items-center gap-2">
           <p className="text-muted-foreground">
             {titleStr}{" "}
             <span className="text-muted-foreground md:hidden">{text[1]}</span>
           </p>
-          <ToolTipLabel label={text[1]}>
-            <CircleDollarSignIcon className="hidden size-4 text-muted-foreground md:block" />
-          </ToolTipLabel>
         </div>
       ) : (
         <p className="text-muted-foreground">{titleStr}</p>

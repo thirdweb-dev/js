@@ -57,7 +57,7 @@ function Variants() {
           <SelectContent>
             <SelectItem value="free">Free</SelectItem>
             <SelectItem value="growth">Growth</SelectItem>
-            <SelectItem value="accelerate">Accelerate</SelectItem>
+            <SelectItem value="scale">Scale</SelectItem>
             <SelectItem value="pro">Pro</SelectItem>
           </SelectContent>
         </Select>
