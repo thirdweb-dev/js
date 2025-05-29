@@ -1,12 +1,16 @@
 "use client";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
+import { DecimalInput } from "@/components/ui/decimal-input";
 import { Label } from "@/components/ui/label";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { CheckIcon, CircleIcon, XIcon } from "lucide-react";
+import { useTrack } from "hooks/analytics/useTrack";
+import { CheckIcon, CircleIcon, ExternalLinkIcon, XIcon } from "lucide-react";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -22,10 +26,13 @@ import {
   type getActiveClaimCondition,
   getApprovalForTransaction,
 } from "thirdweb/extensions/erc20";
-import { useActiveAccount, useSendTransaction } from "thirdweb/react";
+import {
+  useActiveAccount,
+  useActiveWallet,
+  useSendTransaction,
+} from "thirdweb/react";
 import { getClaimParams } from "thirdweb/utils";
 import { tryCatch } from "utils/try-catch";
-import { DecimalInput } from "../../../../../../../../../../@/components/ui/decimal-input";
 import { getSDKTheme } from "../../../../../../../../components/sdk-component-theme";
 import { PublicPageConnectButton } from "../../../_components/PublicPageConnectButton";
 import { getCurrencyMeta } from "../../_utils/getCurrencyMeta";
@@ -48,12 +55,47 @@ export function ClaimTokenCardUI(props: {
 }) {
   const [quantity, setQuantity] = useState("1");
   const account = useActiveAccount();
+  const activeWallet = useActiveWallet();
   const { theme } = useTheme();
+  const trackEvent = useTrack();
   const sendClaimTx = useSendTransaction({
     payModal: {
       theme: getSDKTheme(theme === "light" ? "light" : "dark"),
     },
   });
+  const [successScreen, setSuccessScreen] = useState<
+    | undefined
+    | {
+        txHash: string;
+      }
+  >(undefined);
+
+  function trackAssetBuy(
+    params:
+      | {
+          type: "attempt" | "success";
+        }
+      | {
+          type: "error";
+          errorMessage: string;
+        },
+  ) {
+    trackEvent({
+      category: "asset",
+      action: "buy",
+      label: params.type,
+      contractType: "DropERC20",
+      accountAddress: account?.address,
+      walletId: activeWallet?.id,
+      chainId: props.contract.chain.id,
+      ...(params.type === "error"
+        ? {
+            errorMessage: params.errorMessage,
+          }
+        : {}),
+    });
+  }
+
   const [stepsUI, setStepsUI] = useState<
     | undefined
     | {
@@ -68,6 +110,10 @@ export function ClaimTokenCardUI(props: {
         toast.error("Wallet is not connected");
         return;
       }
+
+      trackAssetBuy({
+        type: "attempt",
+      });
 
       setStepsUI(undefined);
 
@@ -101,6 +147,12 @@ export function ClaimTokenCardUI(props: {
             approve: "error",
             claim: "idle",
           });
+
+          trackAssetBuy({
+            type: "error",
+            errorMessage: approveTxResult.error.message,
+          });
+
           console.error(approveTxResult.error);
           toast.error("Failed to approve spending", {
             description: approveTxResult.error.message,
@@ -116,7 +168,7 @@ export function ClaimTokenCardUI(props: {
 
       async function sendAndConfirm() {
         const result = await sendClaimTx.mutateAsync(transaction);
-        await waitForReceipt(result);
+        return await waitForReceipt(result);
       }
 
       setStepsUI({
@@ -130,8 +182,14 @@ export function ClaimTokenCardUI(props: {
           approve: approveTx ? "success" : undefined,
           claim: "error",
         });
+
+        trackAssetBuy({
+          type: "error",
+          errorMessage: claimTxResult.error.message,
+        });
+
         console.error(claimTxResult.error);
-        toast.error("Failed to claim tokens", {
+        toast.error("Failed to buy tokens", {
           description: claimTxResult.error.message,
         });
         return;
@@ -142,7 +200,13 @@ export function ClaimTokenCardUI(props: {
         claim: "success",
       });
 
-      toast.success("Tokens claimed successfully");
+      trackAssetBuy({
+        type: "success",
+      });
+
+      setSuccessScreen({
+        txHash: claimTxResult.data.transactionHash,
+      });
     },
   });
 
@@ -192,6 +256,51 @@ export function ClaimTokenCardUI(props: {
 
   const claimParamsData = claimParamsQuery.data;
 
+  if (successScreen) {
+    const explorerUrl =
+      props.chainMetadata.explorers?.[0]?.url ??
+      `https://thirdweb.com/${props.chainMetadata.slug}`;
+
+    return (
+      <div className="rounded-xl border bg-card p-6">
+        {/* icon */}
+        <div className="flex justify-center py-8">
+          <div className="rounded-full border bg-background p-3">
+            <CheckIcon className="size-8" />
+          </div>
+        </div>
+
+        <div className="mb-12">
+          <h2 className="mb-1 text-center font-bold text-xl">
+            Purchase Successful
+          </h2>
+          <p className="text-center text-muted-foreground text-sm">
+            You have successfully purchased {quantity}{" "}
+            {props.symbol || "tokens"}
+          </p>
+        </div>
+
+        <Button className="w-full bg-muted/50" variant="outline" asChild>
+          <Link
+            href={`${explorerUrl}/tx/${successScreen.txHash}`}
+            target="_blank"
+            className="gap-1.5"
+          >
+            View Transaction{" "}
+            <ExternalLinkIcon className="size-3.5 text-muted-foreground" />
+          </Link>
+        </Button>
+
+        <Button
+          onClick={() => setSuccessScreen(undefined)}
+          className="mt-3 w-full"
+        >
+          Buy More
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-xl border bg-card ">
       <div className="border-b px-4 py-5 lg:px-5">
@@ -225,10 +334,12 @@ export function ClaimTokenCardUI(props: {
                 skeletonData={`0.00 ${props.claimConditionCurrency.symbol}`}
                 loadedData={
                   claimParamsData
-                    ? `${toTokens(
-                        claimParamsData.pricePerTokenWei,
-                        claimParamsData.decimals,
-                      )} ${claimParamsData.symbol}`
+                    ? claimParamsData.pricePerTokenWei === 0n
+                      ? "FREE"
+                      : `${toTokens(
+                          claimParamsData.pricePerTokenWei,
+                          claimParamsData.decimals,
+                        )} ${claimParamsData.symbol}`
                     : undefined
                 }
                 render={(v) => {
@@ -251,14 +362,16 @@ export function ClaimTokenCardUI(props: {
                   skeletonData={"0.00 ETH"}
                   loadedData={
                     claimParamsData
-                      ? `${
-                          Number(
-                            toTokens(
-                              claimParamsData.pricePerTokenWei,
-                              claimParamsData.decimals,
-                            ),
-                          ) * Number(quantity)
-                        } ${claimParamsData.symbol}`
+                      ? claimParamsData.pricePerTokenWei === 0n
+                        ? "FREE"
+                        : `${
+                            Number(
+                              toTokens(
+                                claimParamsData.pricePerTokenWei,
+                                claimParamsData.decimals,
+                              ),
+                            ) * Number(quantity)
+                          } ${claimParamsData.symbol}`
                       : undefined
                   }
                   render={(v) => {
@@ -353,7 +466,6 @@ function PriceInput(props: {
         id={props.id}
         value={String(props.quantity)}
         onChange={(value) => {
-          console.log("value", value);
           props.setQuantity(value);
         }}
         className="!text-2xl h-auto truncate bg-muted/50 pr-14 font-bold"

@@ -62,7 +62,10 @@ export function CreateTokenAssetPage(props: {
     );
 
     trackEvent(
-      getTokenDeploymentTrackingData("attempt", Number(formValues.chain)),
+      getTokenDeploymentTrackingData({
+        type: "attempt",
+        chainId: Number(formValues.chain),
+      }),
     );
 
     const socialUrls = formValues.socialUrls.reduce(
@@ -109,7 +112,10 @@ export function CreateTokenAssetPage(props: {
       );
 
       trackEvent(
-        getTokenDeploymentTrackingData("success", Number(formValues.chain)),
+        getTokenDeploymentTrackingData({
+          type: "success",
+          chainId: Number(formValues.chain),
+        }),
       );
 
       // add contract to project in background
@@ -133,11 +139,16 @@ export function CreateTokenAssetPage(props: {
           action: "deploy",
           chainId: Number(formValues.chain),
           status: "error",
+          errorMessage: e instanceof Error ? e.message : "Unknown error",
         }),
       );
 
       trackEvent(
-        getTokenDeploymentTrackingData("error", Number(formValues.chain)),
+        getTokenDeploymentTrackingData({
+          type: "error",
+          chainId: Number(formValues.chain),
+          errorMessage: e instanceof Error ? e.message : "Unknown error",
+        }),
       );
       throw e;
     }
@@ -201,6 +212,7 @@ export function CreateTokenAssetPage(props: {
           action: "airdrop",
           chainId: Number(formValues.chain),
           status: "error",
+          errorMessage: e instanceof Error ? e.message : "Unknown error",
         }),
       );
       throw e;
@@ -270,6 +282,7 @@ export function CreateTokenAssetPage(props: {
           action: "mint",
           chainId: Number(formValues.chain),
           status: "error",
+          errorMessage: e instanceof Error ? e.message : "Unknown error",
         }),
       );
       throw e;
@@ -368,6 +381,7 @@ export function CreateTokenAssetPage(props: {
           action: "claim-conditions",
           chainId: Number(formValues.chain),
           status: "error",
+          errorMessage: e instanceof Error ? e.message : "Unknown error",
         }),
       );
       throw e;

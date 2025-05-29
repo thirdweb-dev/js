@@ -46,18 +46,29 @@ export function LaunchTokenStatus(props: {
   const trackEvent = useTrack();
 
   async function handleSubmitClick() {
-    function launchTracking(type: "attempt" | "success" | "error") {
+    function launchTracking(
+      params:
+        | {
+            type: "attempt" | "success";
+          }
+        | {
+            type: "error";
+            errorMessage: string;
+          },
+    ) {
       trackEvent(
         getLaunchTrackingData({
           chainId: Number(formValues.chain),
           airdropEnabled: formValues.airdropEnabled,
           saleEnabled: formValues.saleEnabled,
-          type,
+          ...params,
         }),
       );
     }
 
-    launchTracking("attempt");
+    launchTracking({
+      type: "attempt",
+    });
 
     function updateStatus(index: number, newStatus: MultiStepState["status"]) {
       setSteps((prev) => {
@@ -84,12 +95,18 @@ export function LaunchTokenStatus(props: {
             // do not use await next step
             nextStep.execute();
           } else {
-            launchTracking("success");
+            launchTracking({
+              type: "success",
+            });
             props.onLaunchSuccess();
           }
         } catch (error) {
           updateStatus(index, "error");
-          launchTracking("error");
+          launchTracking({
+            type: "error",
+            errorMessage:
+              error instanceof Error ? error.message : "Unknown error",
+          });
           console.error(error);
         }
       };

@@ -75,11 +75,7 @@ export function ProjectSidebarLayout(props: {
         },
         {
           href: `${layoutPath}/engine`,
-          label: (
-            <span className="flex items-center gap-2">
-              Engine <Badge>New</Badge>
-            </span>
-          ),
+          label: "Engine",
           icon: EngineIcon,
           tracking: tracking("engine"),
         },

@@ -107,9 +107,16 @@ function RecentTransfersUI(props: {
                       </div>
                     </TableCell>
                     <TableCell className="text-sm">
-                      {formatDistanceToNow(new Date(transfer.block_timestamp), {
-                        addSuffix: true,
-                      })}
+                      {formatDistanceToNow(
+                        new Date(
+                          transfer.block_timestamp.endsWith("Z")
+                            ? transfer.block_timestamp
+                            : `${transfer.block_timestamp}Z`,
+                        ),
+                        {
+                          addSuffix: true,
+                        },
+                      )}
                     </TableCell>
                     <TableCell>
                       <Button
