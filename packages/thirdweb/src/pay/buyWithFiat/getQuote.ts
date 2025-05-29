@@ -276,6 +276,7 @@ export type BuyWithFiatQuote = {
  *
  * window.open(quote.onRampLink, "_blank");
  * ```
+ * @deprecated
  * @buyCrypto
  */
 export async function getBuyWithFiatQuote(
