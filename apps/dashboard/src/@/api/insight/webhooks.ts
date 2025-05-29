@@ -73,15 +73,18 @@ export async function createWebhook(
 ): Promise<WebhookSingleResponse> {
   try {
     const authToken = await getAuthToken();
-    const response = await fetch(`${THIRDWEB_INSIGHT_API_DOMAIN}/v1/webhooks`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-client-id": clientId,
-        Authorization: `Bearer ${authToken}`,
+    const response = await fetch(
+      `https://${THIRDWEB_INSIGHT_API_DOMAIN}/v1/webhooks`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-client-id": clientId,
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(payload),
       },
-      body: JSON.stringify(payload),
-    });
+    );
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -105,13 +108,16 @@ export async function getWebhooks(
 ): Promise<WebhooksListResponse> {
   try {
     const authToken = await getAuthToken();
-    const response = await fetch(`${THIRDWEB_INSIGHT_API_DOMAIN}/v1/webhooks`, {
-      method: "GET",
-      headers: {
-        "x-client-id": clientId,
-        Authorization: `Bearer ${authToken}`,
+    const response = await fetch(
+      `https://${THIRDWEB_INSIGHT_API_DOMAIN}/v1/webhooks`,
+      {
+        method: "GET",
+        headers: {
+          "x-client-id": clientId,
+          Authorization: `Bearer ${authToken}`,
+        },
       },
-    });
+    );
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -137,7 +143,7 @@ export async function deleteWebhook(
   try {
     const authToken = await getAuthToken();
     const response = await fetch(
-      `${THIRDWEB_INSIGHT_API_DOMAIN}/v1/webhooks/${encodeURIComponent(webhookId)}`,
+      `https://${THIRDWEB_INSIGHT_API_DOMAIN}/v1/webhooks/${encodeURIComponent(webhookId)}`,
       {
         method: "DELETE",
         headers: {
@@ -171,7 +177,7 @@ export async function testWebhook(
   try {
     const authToken = await getAuthToken();
     const response = await fetch(
-      `${THIRDWEB_INSIGHT_API_DOMAIN}/v1/webhooks/test`,
+      `https://${THIRDWEB_INSIGHT_API_DOMAIN}/v1/webhooks/test`,
       {
         method: "POST",
         headers: {

@@ -20,7 +20,7 @@ export interface WebhookPayload {
       signatures?: Array<{
         sig_hash: string;
         abi?: string;
-        params: Record<string, unknown> | unknown[];
+        params: Record<string, unknown>;
       }>;
     }
   >;
@@ -59,7 +59,7 @@ export function buildTransactionWebhookPayload(
     txSignatures.push({
       sig_hash: data.sigHash,
       abi: data.sigHashAbi,
-      params: [],
+      params: {},
     });
   }
   return {
