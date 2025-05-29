@@ -1,5 +1,11 @@
 # @thirdweb-dev/insight
 
+## 3.0.2
+
+### Patch Changes
+
+- [#7158](https://github.com/thirdweb-dev/js/pull/7158) [`ec7bc2b`](https://github.com/thirdweb-dev/js/commit/ec7bc2bb1e58f1a45d01eec0f308bc0f86479050) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - client id optional
+
 ## 3.0.1
 
 ### Patch Changes
