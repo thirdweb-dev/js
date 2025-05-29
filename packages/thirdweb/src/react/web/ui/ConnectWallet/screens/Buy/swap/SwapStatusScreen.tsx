@@ -3,8 +3,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { BuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
+import type { Buy } from "../../../../../../../bridge/index.js";
 import { iconSize } from "../../../../../../core/design-system/index.js";
 import { useBuyWithCryptoStatus } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
 import { invalidateWalletBalance } from "../../../../../../core/providers/invalidateWalletBalance.js";
@@ -28,7 +28,7 @@ export function SwapStatusScreen(props: {
   onDone: () => void;
   transactionMode: boolean;
   isEmbed: boolean;
-  quote: BuyWithCryptoQuote | undefined;
+  quote: Buy.prepare.Result | undefined;
   onSuccess: ((status: BuyWithCryptoStatus) => void) | undefined;
 }) {
   const { onSuccess } = props;

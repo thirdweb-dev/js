@@ -2,8 +2,9 @@ import { useMemo, useState } from "react";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
-import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { BuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
+import { Buy } from "../../../../../../../bridge/index.js";
+import { Value } from "ox";
 import type { TokenInfo } from "../../../../../../core/utils/defaultTokens.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
 import type { PayerInfo } from "../types.js";
@@ -13,7 +14,7 @@ import { SwapStatusScreen } from "./SwapStatusScreen.js";
 type SwapFlowProps = {
   title: string;
   onBack?: () => void;
-  buyWithCryptoQuote: BuyWithCryptoQuote;
+  quote: Buy.prepare.Result;
   payer: PayerInfo;
   client: ThirdwebClient;
   isFiatFlow: boolean;
@@ -22,40 +23,46 @@ type SwapFlowProps = {
   transactionMode: boolean;
   isEmbed: boolean;
   onSuccess: ((status: BuyWithCryptoStatus) => void) | undefined;
-  approvalAmount?: bigint;
 };
 
 export function SwapFlow(props: SwapFlowProps) {
   const [swapTxHash, setSwapTxHash] = useState<string | undefined>();
 
-  const quote = props.buyWithCryptoQuote;
+  const quote = props.quote;
+  const firstStep = quote.steps[0];
+
+  if (!firstStep) {
+    throw new Error("Bridge quote must have at least one step");
+  }
 
   const fromChain = useMemo(
-    () => getCachedChain(quote.swapDetails.fromToken.chainId),
-    [quote],
+    () => getCachedChain(firstStep.originToken.chainId),
+    [firstStep],
   );
 
   const toChain = useMemo(
-    () => getCachedChain(quote.swapDetails.toToken.chainId),
-    [quote],
+    () => getCachedChain(firstStep.destinationToken.chainId),
+    [firstStep],
   );
 
-  const fromTokenSymbol = quote.swapDetails.fromToken.symbol || "";
-  const toTokenSymbol = quote.swapDetails.toToken.symbol || "";
+  const fromTokenSymbol = firstStep.originToken.symbol || "";
+  const toTokenSymbol = firstStep.destinationToken.symbol || "";
 
-  const fromAmount = quote.swapDetails.fromAmount;
-  const toAmount = quote.swapDetails.toAmount;
+  // For now, we'll use the first step amounts for display
+  // TODO: In future, we'll show the full multi-step flow
+  const fromAmount = Value.format(firstStep.originAmount, firstStep.originToken.decimals).toString();
+  const toAmount = Value.format(firstStep.destinationAmount, firstStep.destinationToken.decimals).toString();
 
-  const _toToken = quote.swapDetails.toToken;
-  const _fromToken = quote.swapDetails.fromToken;
+  const _toToken = firstStep.destinationToken;
+  const _fromToken = firstStep.originToken;
 
   const toToken: ERC20OrNativeToken = useMemo(() => {
-    if (_toToken.tokenAddress === NATIVE_TOKEN_ADDRESS) {
+    if (_toToken.address === NATIVE_TOKEN_ADDRESS) {
       return NATIVE_TOKEN;
     }
 
     const tokenInfo: TokenInfo = {
-      address: _toToken.tokenAddress,
+      address: _toToken.address,
       name: _toToken.name || "",
       symbol: _toToken.symbol || "",
     };
@@ -63,12 +70,12 @@ export function SwapFlow(props: SwapFlowProps) {
   }, [_toToken]);
 
   const fromToken: ERC20OrNativeToken = useMemo(() => {
-    if (_fromToken.tokenAddress === NATIVE_TOKEN_ADDRESS) {
+    if (_fromToken.address === NATIVE_TOKEN_ADDRESS) {
       return NATIVE_TOKEN;
     }
 
     const tokenInfo: TokenInfo = {
-      address: _fromToken.tokenAddress,
+      address: _fromToken.address,
       name: _fromToken.name || "",
       symbol: _fromToken.symbol || "",
     };
@@ -111,7 +118,6 @@ export function SwapFlow(props: SwapFlowProps) {
       quote={quote}
       isFiatFlow={props.isFiatFlow}
       payer={props.payer}
-      preApprovedAmount={props.approvalAmount}
     />
   );
 }

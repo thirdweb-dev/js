@@ -1,27 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import { trackPayEvent } from "../../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../../chains/types.js";
-import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
-import { getContract } from "../../../../../../../contract/contract.js";
-import { allowance } from "../../../../../../../extensions/erc20/__generated__/IERC20/read/allowance.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
-import { useBuyPrepare, type UseBuyPrepareParams } from "../../../../../../core/hooks/bridge/useBuyPrepare.js";
+import {
+  useBuyPrepare,
+  type UseBuyPrepareParams,
+} from "../../../../../../core/hooks/bridge/useBuyPrepare.js";
 import { getErrorMessage } from "../../../../../utils/errors.js";
 import type { PayEmbedConnectOptions } from "../../../../PayEmbed.js";
-import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import { Value } from "ox";
-import * as ox__AbiFunction from "ox/AbiFunction";
-import {
-  Drawer,
-  DrawerOverlay,
-  useDrawer,
-} from "../../../../components/Drawer.js";
-import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
@@ -29,11 +19,17 @@ import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import type { ConnectLocale } from "../../../locale/types.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
-import { EstimatedTimeAndFees } from "../EstimatedTimeAndFees.js";
 import type { SelectedScreen } from "../main/types.js";
 import type { PayerInfo } from "../types.js";
-import { SwapFees } from "./Fees.js";
 import { PayWithCryptoQuoteInfo } from "./PayWithCrypto.js";
+import {
+  fontSize,
+  iconSize,
+  radius,
+} from "../../../../../../core/design-system/index.js";
+import { ClockIcon } from "@radix-ui/react-icons";
+import { formatSeconds } from "./formatSeconds.js";
+import { Skeleton } from "../../../../components/Skeleton.js";
 
 export function SwapScreenContent(props: {
   setScreen: (screen: SelectedScreen) => void;
@@ -75,10 +71,6 @@ export function SwapScreenContent(props: {
   )?.paymentInfo?.sellerAddress;
   const receiverAddress =
     defaultRecipientAddress || props.activeAccount.address;
-  const { drawerRef, drawerOverlayRef, isOpen, setIsOpen } = useDrawer();
-  const [drawerScreen, setDrawerScreen] = useState<
-    "fees" | "receiver" | "payer"
-  >("fees");
 
   const fromTokenBalanceQuery = useWalletBalance(
     {
@@ -106,24 +98,24 @@ export function SwapScreenContent(props: {
   const quoteParams: UseBuyPrepareParams | undefined =
     fromChain && fromToken && swapRequired
       ? {
-          // wallets
-          fromAddress: payer.account.address,
-          toAddress: receiverAddress,
-          // from
-          fromChainId: fromChain.id,
-          fromTokenAddress: isNativeToken(fromToken)
-            ? NATIVE_TOKEN_ADDRESS
-            : fromToken.address,
-          // to
-          toChainId: toChain.id,
-          toTokenAddress: isNativeToken(toToken)
-            ? NATIVE_TOKEN_ADDRESS
-            : toToken.address,
-          toAmount: tokenAmount,
-          client,
-          purchaseData: payOptions.purchaseData,
-          paymentLinkId: props.paymentLinkId,
-        }
+        // wallets
+        fromAddress: payer.account.address,
+        toAddress: receiverAddress,
+        // from
+        fromChainId: fromChain.id,
+        fromTokenAddress: isNativeToken(fromToken)
+          ? NATIVE_TOKEN_ADDRESS
+          : fromToken.address,
+        // to
+        toChainId: toChain.id,
+        toTokenAddress: isNativeToken(toToken)
+          ? NATIVE_TOKEN_ADDRESS
+          : toToken.address,
+        toAmount: tokenAmount,
+        client,
+        purchaseData: payOptions.purchaseData,
+        paymentLinkId: props.paymentLinkId,
+      }
       : undefined;
 
   const quoteQuery = useBuyPrepare(quoteParams, {
@@ -133,145 +125,17 @@ export function SwapScreenContent(props: {
     gcTime: 30 * 1000,
   });
 
-  // Convert Bridge quote to BuyWithCryptoQuote format for backwards compatibility
-  // This is a temporary adapter until we update all components to handle multi-step quotes
-  const adaptedQuote: BuyWithCryptoQuote | undefined = (() => {
-    if (!quoteQuery.data || !quoteQuery.data.steps[0]) {
-      return undefined;
-    }
-    
-    const firstStep = quoteQuery.data.steps[0];
-    const approvalTxs = firstStep.transactions.filter(tx => tx.action === "approval");
-    const swapTxs = firstStep.transactions.filter(tx => tx.action !== "approval");
-    const swapTx = swapTxs[0];
-    
-    if (!swapTx) {
-      return undefined;
-    }
+  // Extract values directly from Bridge quote for display
+  const firstStep = quoteQuery.data?.steps[0];
+  const hasValidQuote = !!quoteQuery.data && !!firstStep;
 
-    let approvalData: BuyWithCryptoQuote["approvalData"] = undefined;
-    if (approvalTxs[0]) {
-      const approvalTx = approvalTxs[0];
-      const abiFunction = ox__AbiFunction.from([
-        "function approve(address spender, uint256 amount)",
-      ]);
-      const [spender, amount] = ox__AbiFunction.decodeData(
-        abiFunction,
-        approvalTx.data,
-      );
-      approvalData = {
-        chainId: firstStep.originToken.chainId,
-        tokenAddress: firstStep.originToken.address,
-        spenderAddress: spender,
-        amountWei: amount.toString(),
-      };
-    }
-
-    return {
-      transactionRequest: {
-        ...swapTx,
-        extraGas: 50000n,
-      },
-      approvalData,
-      swapDetails: {
-        fromAddress: quoteQuery.data.intent.sender,
-        toAddress: quoteQuery.data.intent.receiver,
-        fromToken: {
-          tokenAddress: firstStep.originToken.address,
-          chainId: firstStep.originToken.chainId,
-          decimals: firstStep.originToken.decimals,
-          symbol: firstStep.originToken.symbol,
-          name: firstStep.originToken.name,
-          priceUSDCents: firstStep.originToken.priceUsd * 100,
-        },
-        toToken: {
-          tokenAddress: firstStep.destinationToken.address,
-          chainId: firstStep.destinationToken.chainId,
-          decimals: firstStep.destinationToken.decimals,
-          symbol: firstStep.destinationToken.symbol,
-          name: firstStep.destinationToken.name,
-          priceUSDCents: firstStep.destinationToken.priceUsd * 100,
-        },
-        fromAmount: Value.format(
-          quoteQuery.data.originAmount,
-          firstStep.originToken.decimals,
-        ).toString(),
-        fromAmountWei: quoteQuery.data.originAmount.toString(),
-        toAmountMinWei: quoteQuery.data.destinationAmount.toString(),
-        toAmountMin: Value.format(
-          quoteQuery.data.destinationAmount,
-          firstStep.destinationToken.decimals,
-        ).toString(),
-        toAmountWei: quoteQuery.data.destinationAmount.toString(),
-        toAmount: Value.format(
-          quoteQuery.data.destinationAmount,
-          firstStep.destinationToken.decimals,
-        ).toString(),
-        estimated: {
-          fromAmountUSDCents:
-            Number(
-              Value.format(quoteQuery.data.originAmount, firstStep.originToken.decimals),
-            ) *
-            firstStep.originToken.priceUsd *
-            100,
-          toAmountMinUSDCents:
-            Number(
-              Value.format(
-                quoteQuery.data.destinationAmount,
-                firstStep.destinationToken.decimals,
-              ),
-            ) *
-            firstStep.destinationToken.priceUsd *
-            100,
-          toAmountUSDCents:
-            Number(
-              Value.format(
-                quoteQuery.data.destinationAmount,
-                firstStep.destinationToken.decimals,
-              ),
-            ) *
-            firstStep.destinationToken.priceUsd *
-            100,
-          slippageBPS: 0,
-          feesUSDCents: 0,
-          gasCostUSDCents: 0,
-          durationSeconds: firstStep.estimatedExecutionTimeMs / 1000,
-        },
-        maxSlippageBPS: 0,
-      },
-      paymentTokens: [],
-      processingFees: [],
-      client: props.client,
-    };
-  })();
-
-  const allowanceQuery = useQuery({
-    queryKey: [
-      "allowance",
-      payer.account.address,
-      adaptedQuote?.approvalData,
-    ],
-    queryFn: () => {
-      if (!adaptedQuote?.approvalData) {
-        return null;
-      }
-      return allowance({
-        contract: getContract({
-          client: props.client,
-          address: adaptedQuote.swapDetails.fromToken.tokenAddress,
-          chain: getCachedChain(adaptedQuote.swapDetails.fromToken.chainId),
-        }),
-        spender: adaptedQuote.approvalData.spenderAddress,
-        owner: props.payer.account.address,
-      });
-    },
-    enabled: !!adaptedQuote?.approvalData,
-    refetchOnMount: true,
-  });
-
-  const sourceTokenAmount = swapRequired
-    ? adaptedQuote?.swapDetails.fromAmount
-    : tokenAmount;
+  const sourceTokenAmount =
+    swapRequired && firstStep
+      ? Value.format(
+        firstStep.originAmount,
+        firstStep.originToken.decimals,
+      ).toString()
+      : tokenAmount;
 
   const isNotEnoughBalance =
     !!sourceTokenAmount &&
@@ -281,9 +145,8 @@ export function SwapScreenContent(props: {
   const disableContinue =
     !fromChain ||
     !fromToken ||
-    (swapRequired && !adaptedQuote) ||
-    isNotEnoughBalance ||
-    allowanceQuery.isLoading;
+    (swapRequired && !hasValidQuote) ||
+    isNotEnoughBalance;
 
   const errorMsg =
     !quoteQuery.isLoading && quoteQuery.error
@@ -319,45 +182,18 @@ export function SwapScreenContent(props: {
       return;
     }
 
-    if (!adaptedQuote) {
+    if (!quoteQuery.data) {
       return;
     }
 
     setScreen({
       id: "swap-flow",
-      quote: adaptedQuote,
-      approvalAmount: allowanceQuery.data ?? undefined,
+      quote: quoteQuery.data,
     });
-  }
-
-  function showFees() {
-    if (!adaptedQuote) {
-      return;
-    }
-
-    setIsOpen(true);
-    setDrawerScreen("fees");
   }
 
   return (
     <Container flex="column" gap="lg" animate="fadein">
-      {isOpen && (
-        <>
-          <DrawerOverlay ref={drawerOverlayRef} />
-          <Drawer ref={drawerRef} close={() => setIsOpen(false)}>
-            {drawerScreen === "fees" && adaptedQuote && (
-              <div>
-                <Text size="lg" color="primaryText">
-                  Fees
-                </Text>
-                <Spacer y="lg" />
-                <SwapFees quote={adaptedQuote} />
-              </div>
-            )}
-          </Drawer>
-        </>
-      )}
-
       {/* Quote info */}
       <Container flex="column" gap="sm">
         <Container flex="row" gap="xxs" center="y">
@@ -386,13 +222,43 @@ export function SwapScreenContent(props: {
             onSelectToken={props.showFromTokenSelector}
           />
           {swapRequired && fromChain && fromToken && (
-            <EstimatedTimeAndFees
-              quoteIsLoading={quoteQuery.isLoading}
-              estimatedSeconds={
-                adaptedQuote?.swapDetails.estimated.durationSeconds
-              }
-              onViewFees={showFees}
-            />
+            <Container
+              bg="tertiaryBg"
+              flex="row"
+              borderColor="borderColor"
+              style={{
+                borderRadius: radius.md,
+                borderTopLeftRadius: 0,
+                borderTopRightRadius: 0,
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderWidth: "1px",
+                borderStyle: "solid",
+              }}
+            >
+              <Container
+                flex="row"
+                center="y"
+                gap="xxs"
+                color="accentText"
+                p="sm"
+              >
+                <ClockIcon width={iconSize.sm} height={iconSize.sm} />
+                {quoteQuery.isLoading ? (
+                  <Skeleton
+                    height={fontSize.xs}
+                    width="50px"
+                    color="borderColor"
+                  />
+                ) : (
+                  <Text size="xs" color="secondaryText">
+                    {quoteQuery.data?.estimatedExecutionTimeMs !== undefined
+                      ? `~${formatSeconds(quoteQuery.data.estimatedExecutionTimeMs / 1000)}`
+                      : "--"}
+                  </Text>
+                )}
+              </Container>
+            </Container>
           )}
         </div>
         {/* Error message */}

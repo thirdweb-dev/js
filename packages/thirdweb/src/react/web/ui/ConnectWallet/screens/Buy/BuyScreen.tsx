@@ -325,7 +325,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
             id: "buy-with-crypto",
           });
         }}
-        buyWithCryptoQuote={screen.quote}
+        quote={screen.quote}
         payer={payer}
         isFiatFlow={false}
         onDone={onDone}
@@ -335,7 +335,6 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           });
         }}
         onSuccess={onSwapSuccess}
-        approvalAmount={screen.approvalAmount}
       />
     );
   }

@@ -2,15 +2,10 @@ import { useMemo, useState } from "react";
 import { trackPayEvent } from "../../../../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import { getContract } from "../../../../../../../contract/contract.js";
-import { approve } from "../../../../../../../extensions/erc20/write/approve.js";
-import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import type { Buy } from "../../../../../../../bridge/index.js";
 import { sendBatchTransaction } from "../../../../../../../transaction/actions/send-batch-transaction.js";
 import { sendTransaction } from "../../../../../../../transaction/actions/send-transaction.js";
-import {
-  type WaitForReceiptOptions,
-  waitForReceipt,
-} from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
+import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
@@ -34,7 +29,7 @@ export function SwapConfirmationScreen(props: {
   title: string;
   onBack?: () => void;
   client: ThirdwebClient;
-  quote: BuyWithCryptoQuote;
+  quote: Buy.prepare.Result;
   setSwapTxHash: (txHash: string) => void;
   onTryAgain: () => void;
   toChain: Chain;
@@ -47,78 +42,57 @@ export function SwapConfirmationScreen(props: {
   fromTokenSymbol: string;
   isFiatFlow: boolean;
   payer: PayerInfo;
-  preApprovedAmount?: bigint;
 }) {
-  const approveTxRequired =
-    props.quote.approvalData &&
-    props.preApprovedAmount !== undefined &&
-    props.preApprovedAmount < BigInt(props.quote.approvalData.amountWei);
-  const needsApprovalStep =
-    approveTxRequired && !props.payer.account.sendBatchTransaction;
-  const initialStep = needsApprovalStep ? "approval" : "swap";
+  // For now, we'll handle only the first step - multi-step support will be added later
+  const firstStep = props.quote.steps[0];
+  if (!firstStep) {
+    throw new Error("Quote must have at least one step");
+  }
 
-  const [step, setStep] = useState<"approval" | "swap">(initialStep);
+  // Get all transactions in order from the first step
+  const allTransactions = firstStep.transactions;
+
+  const [currentTransactionIndex, setCurrentTransactionIndex] = useState(0);
   const [error, setError] = useState<string | undefined>();
   const [status, setStatus] = useState<
     "pending" | "success" | "error" | "idle"
   >("idle");
 
-  const receiver = props.quote.swapDetails.toAddress;
-  const sender = props.quote.swapDetails.fromAddress;
+  const currentTransaction = allTransactions[currentTransactionIndex];
+  const isLastTransaction =
+    currentTransactionIndex >= allTransactions.length - 1;
+
+  const receiver = props.quote.intent.receiver;
+  const sender = props.quote.intent.sender;
 
   const uiErrorMessage = useMemo(() => {
-    if (step === "approval" && status === "error" && error) {
-      if (
-        error.toLowerCase().includes("user rejected") ||
-        error.toLowerCase().includes("user closed modal") ||
-        error.toLowerCase().includes("user denied")
-      ) {
-        return {
-          title: "Failed to Approve",
-          message: "Your wallet rejected the approval request.",
-        };
-      }
-      if (error.toLowerCase().includes("insufficient funds for gas")) {
-        return {
-          title: "Insufficient Native Funds",
-          message:
-            "You do not have enough native funds to approve the transaction.",
-        };
-      }
-      return {
-        title: "Failed to Approve",
-        message:
-          "Your wallet failed to approve the transaction for an unknown reason. Please try again or contact support.",
-      };
-    }
+    if (status === "error" && error && currentTransaction) {
+      const isApproval = currentTransaction.action === "approval";
 
-    if (step === "swap" && status === "error" && error) {
       if (
         error.toLowerCase().includes("user rejected") ||
         error.toLowerCase().includes("user closed modal") ||
         error.toLowerCase().includes("user denied")
       ) {
         return {
-          title: "Failed to Confirm",
-          message: "Your wallet rejected the confirmation request.",
+          title: isApproval ? "Failed to Approve" : "Failed to Execute",
+          message: `Your wallet rejected the ${isApproval ? "approval" : "transaction"} request.`,
         };
       }
       if (error.toLowerCase().includes("insufficient funds for gas")) {
         return {
           title: "Insufficient Native Funds",
-          message:
-            "You do not have enough native funds to confirm the transaction.",
+          message: `You do not have enough native funds to ${isApproval ? "approve" : "execute"} the transaction.`,
         };
       }
       return {
-        title: "Failed to Confirm",
-        message:
-          "Your wallet failed to confirm the transaction for an unknown reason. Please try again or contact support.",
+        title: isApproval ? "Failed to Approve" : "Failed to Execute",
+        message: `Your wallet failed to ${isApproval ? "approve" : "execute"} the transaction for an unknown reason. Please try again or contact support.`,
       };
     }
 
     return undefined;
-  }, [error, step, status]);
+  }, [status, error, currentTransaction]);
 
   return (
     <Container p="lg">
@@ -157,30 +131,35 @@ export function SwapConfirmationScreen(props: {
 
       <Spacer y="md" />
 
-      {/* Show 2 steps - Approve and confirm  */}
-      {needsApprovalStep && (
-        <>
-          <Spacer y="sm" />
-          <Container
-            gap="sm"
-            flex="row"
-            style={{
-              justifyContent: "space-between",
-            }}
-            center="y"
-            color="accentText"
-          >
-            <Step
-              isDone={step === "swap"}
-              isActive={step === "approval"}
-              label={step === "approval" ? "Approve" : "Approved"}
-            />
-            <ConnectorLine />
-            <Step isDone={false} label="Confirm" isActive={step === "swap"} />
-          </Container>
-          <Spacer y="lg" />
-        </>
-      )}
+      {/* Show steps for each transaction */}
+      {allTransactions.length > 1 &&
+        !("sendBatchTransaction" in props.payer.account) && (
+          <>
+            <Spacer y="sm" />
+            <Container
+              gap="sm"
+              flex="row"
+              style={{
+                justifyContent: "space-between",
+              }}
+              center="y"
+              color="accentText"
+            >
+              {allTransactions.map((tx, index) => (
+                <>
+                  {index > 0 && <ConnectorLine key={`connector-${tx.id}`} />}
+                  <Step
+                    key={tx.id}
+                    isDone={index < currentTransactionIndex}
+                    isActive={index === currentTransactionIndex}
+                    label={tx.action === "approval" ? "Approve" : "Confirm"}
+                  />
+                </>
+              ))}
+            </Container>
+            <Spacer y="lg" />
+          </>
+        )}
 
       {uiErrorMessage && (
         <>
@@ -224,114 +203,104 @@ export function SwapConfirmationScreen(props: {
                 throw new Error("Payer wallet has no account");
               }
 
-              if (step === "approval" && props.quote.approvalData) {
+              // Handle step-by-step execution or batch execution
+              if (!("sendBatchTransaction" in account)) {
+                if (typeof currentTransaction === "undefined") {
+                  throw new Error("No transaction to execute");
+                }
+
+                // Execute one transaction at a time
                 try {
                   setStatus("pending");
 
+                  const isApproval = currentTransaction.action === "approval";
                   trackPayEvent({
-                    event: "prompt_swap_approval",
+                    event: isApproval
+                      ? "prompt_swap_approval"
+                      : "prompt_swap_execution",
                     client: props.client,
                     walletAddress: account.address,
                     walletType: wallet.id,
-                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                    amountWei: props.quote.swapDetails.fromAmountWei,
-                    toToken: props.quote.swapDetails.toToken.tokenAddress,
-                    toChainId: props.quote.swapDetails.toToken.chainId,
-                    chainId: props.quote.swapDetails.fromToken.chainId,
-                  });
-
-                  const transaction = approve({
-                    contract: getContract({
-                      client: props.client,
-                      address: props.quote.swapDetails.fromToken.tokenAddress,
-                      chain: props.fromChain,
-                    }),
-                    spender: props.quote.approvalData.spenderAddress,
-                    amountWei: BigInt(props.quote.approvalData.amountWei),
+                    fromToken: firstStep.originToken.address,
+                    amountWei: firstStep.originAmount.toString(),
+                    toToken: firstStep.destinationToken.address,
+                    toChainId: firstStep.destinationToken.chainId,
+                    chainId: firstStep.originToken.chainId,
                   });
 
                   const tx = await sendTransaction({
                     account: account,
-                    transaction,
+                    transaction: currentTransaction,
                   });
 
                   await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
 
                   trackPayEvent({
-                    event: "swap_approval_success",
+                    event: isApproval
+                      ? "swap_approval_success"
+                      : "swap_execution_success",
                     client: props.client,
                     walletAddress: account.address,
                     walletType: wallet.id,
-                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                    amountWei: props.quote.swapDetails.fromAmountWei,
-                    toToken: props.quote.swapDetails.toToken.tokenAddress,
-                    toChainId: props.quote.swapDetails.toToken.chainId,
-                    chainId: props.quote.swapDetails.fromToken.chainId,
+                    fromToken: firstStep.originToken.address,
+                    amountWei: firstStep.originAmount.toString(),
+                    toToken: firstStep.destinationToken.address,
+                    toChainId: firstStep.destinationToken.chainId,
+                    chainId: firstStep.originToken.chainId,
                   });
 
-                  setStep("swap");
-                  setStatus("idle");
+                  // Move to next transaction or complete
+                  if (isLastTransaction) {
+                    // do not add pending tx if the swap is part of fiat flow
+                    if (!props.isFiatFlow) {
+                      addPendingTx({
+                        type: "swap",
+                        txHash: tx.transactionHash,
+                        chainId: tx.chain.id,
+                      });
+                    }
+                    props.setSwapTxHash(tx.transactionHash);
+                  } else {
+                    setCurrentTransactionIndex(currentTransactionIndex + 1);
+                    setStatus("idle");
+                  }
                 } catch (e) {
                   console.error(e);
                   setError((e as Error).message);
                   setStatus("error");
                 }
-              }
-
-              if (step === "swap") {
-                setStatus("pending");
+              } else {
+                // Execute all transactions as a batch (smart account only)
                 try {
+                  setStatus("pending");
+
                   trackPayEvent({
                     event: "prompt_swap_execution",
                     client: props.client,
                     walletAddress: account.address,
                     walletType: wallet.id,
-                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                    amountWei: props.quote.swapDetails.fromAmountWei,
-                    toToken: props.quote.swapDetails.toToken.tokenAddress,
-                    toChainId: props.quote.swapDetails.toToken.chainId,
-                    chainId: props.quote.swapDetails.fromToken.chainId,
+                    fromToken: firstStep.originToken.address,
+                    amountWei: firstStep.originAmount.toString(),
+                    toToken: firstStep.destinationToken.address,
+                    toChainId: firstStep.destinationToken.chainId,
+                    chainId: firstStep.originToken.chainId,
                   });
-                  const tx = props.quote.transactionRequest;
-                  let _swapTx: WaitForReceiptOptions;
-                  // check if we can batch approval and swap
-                  const canBatch = account.sendBatchTransaction;
-                  if (
-                    canBatch &&
-                    props.quote.approvalData &&
-                    approveTxRequired
-                  ) {
-                    const approveTx = approve({
-                      contract: getContract({
-                        client: props.client,
-                        address: props.quote.swapDetails.fromToken.tokenAddress,
-                        chain: props.fromChain,
-                      }),
-                      spender: props.quote.approvalData.spenderAddress,
-                      amountWei: BigInt(props.quote.approvalData.amountWei),
-                    });
 
-                    _swapTx = await sendBatchTransaction({
-                      account: account,
-                      transactions: [approveTx, tx],
-                    });
-                  } else {
-                    _swapTx = await sendTransaction({
-                      account: account,
-                      transaction: tx,
-                    });
-                  }
+                  const _swapTx = await sendBatchTransaction({
+                    account: account,
+                    transactions: allTransactions,
+                  });
 
                   trackPayEvent({
                     event: "swap_execution_success",
                     client: props.client,
                     walletAddress: account.address,
                     walletType: wallet.id,
-                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                    amountWei: props.quote.swapDetails.fromAmountWei,
-                    toToken: props.quote.swapDetails.toToken.tokenAddress,
-                    toChainId: props.quote.swapDetails.toToken.chainId,
-                    chainId: props.quote.swapDetails.fromToken.chainId,
+                    fromToken: firstStep.originToken.address,
+                    amountWei: firstStep.originAmount.toString(),
+                    toToken: firstStep.destinationToken.address,
+                    toChainId: firstStep.destinationToken.chainId,
+                    chainId: firstStep.originToken.chainId,
                   });
 
                   // do not add pending tx if the swap is part of fiat flow
@@ -353,9 +322,9 @@ export function SwapConfirmationScreen(props: {
             }}
             gap="xs"
           >
-            {step === "approval" &&
+            {currentTransaction?.action === "approval" &&
               (status === "pending" ? "Approving" : "Approve")}
-            {step === "swap" &&
+            {currentTransaction?.action !== "approval" &&
               (status === "pending" ? "Confirming" : "Confirm")}
             {status === "pending" && (
               <Spinner size="sm" color="accentButtonText" />

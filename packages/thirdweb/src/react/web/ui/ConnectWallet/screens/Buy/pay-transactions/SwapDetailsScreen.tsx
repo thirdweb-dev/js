@@ -1,8 +1,9 @@
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { ValidBuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
+import { Buy } from "../../../../../../../bridge/index.js";
+import { Value } from "ox";
 import { formatExplorerTxUrl } from "../../../../../../../utils/url.js";
 import {
   fontSize,
@@ -53,7 +54,7 @@ export function SwapTxDetailsTable(
   props:
     | {
         type: "quote";
-        quote: BuyWithCryptoQuote;
+        quote: Buy.prepare.Result;
         client: ThirdwebClient;
       }
     | {
@@ -105,23 +106,28 @@ export function SwapTxDetailsTable(
     };
   } else {
     const quote = props.quote;
+    const firstStep = quote.steps[0];
+    if (!firstStep) {
+      throw new Error("Bridge quote must have at least one step");
+    }
+    
     uiData = {
       fromToken: {
-        chainId: quote.swapDetails.fromToken.chainId,
-        symbol: quote.swapDetails.fromToken.symbol || "",
-        address: quote.swapDetails.fromToken.tokenAddress,
-        amount: quote.swapDetails.fromAmount,
+        chainId: firstStep.originToken.chainId,
+        symbol: firstStep.originToken.symbol || "",
+        address: firstStep.originToken.address,
+        amount: Value.format(firstStep.originAmount, firstStep.originToken.decimals).toString(),
       },
       quotedToToken: {
-        chainId: quote.swapDetails.toToken.chainId,
-        symbol: quote.swapDetails.toToken.symbol || "",
-        address: quote.swapDetails.toToken.tokenAddress,
-        amount: quote.swapDetails.toAmount,
+        chainId: firstStep.destinationToken.chainId,
+        symbol: firstStep.destinationToken.symbol || "",
+        address: firstStep.destinationToken.address,
+        amount: Value.format(firstStep.destinationAmount, firstStep.destinationToken.decimals).toString(),
       },
       isPartialSuccess: false,
-      estimatedDuration: quote.swapDetails.estimated.durationSeconds || 0,
-      fromAddress: quote.swapDetails.fromAddress,
-      toAddress: quote.swapDetails.toAddress,
+      estimatedDuration: (quote.estimatedExecutionTimeMs || 0) / 1000,
+      fromAddress: quote.intent.sender,
+      toAddress: quote.intent.receiver,
     };
   }
 

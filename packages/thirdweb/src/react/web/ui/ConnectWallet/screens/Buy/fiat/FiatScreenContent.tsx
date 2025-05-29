@@ -23,7 +23,6 @@ import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
-import { EstimatedTimeAndFees } from "../EstimatedTimeAndFees.js";
 import { PayProviderSelection } from "../PayProviderSelection.js";
 import { PayWithCreditCard } from "../PayWIthCreditCard.js";
 import type { SelectedScreen } from "../main/types.js";
@@ -76,10 +75,10 @@ export function FiatScreenContent(props: {
   >(
     buyWithFiatOptions !== false
       ? buyWithFiatOptions?.preferredProvider ||
-          ((localStorage.getItem(
-            PREFERRED_FIAT_PROVIDER_STORAGE_KEY,
-          ) as FiatProvider | null) ??
-            undefined)
+      ((localStorage.getItem(
+        PREFERRED_FIAT_PROVIDER_STORAGE_KEY,
+      ) as FiatProvider | null) ??
+        undefined)
       : undefined,
   );
 
@@ -89,9 +88,9 @@ export function FiatScreenContent(props: {
     const optionsWithPreferred =
       options.length > 0
         ? new Set([
-            ...(preferredProvider ? [preferredProvider] : []),
-            ...options,
-          ])
+          ...(preferredProvider ? [preferredProvider] : []),
+          ...options,
+        ])
         : FiatProviders;
     return Array.from(optionsWithPreferred);
   })();
@@ -99,20 +98,20 @@ export function FiatScreenContent(props: {
   const fiatQuoteQuery = useBuyWithFiatQuote(
     buyWithFiatOptions !== false && tokenAmount
       ? {
-          fromCurrencySymbol: selectedCurrency.shorthand,
-          toChainId: toChain.id,
-          toAddress: receiverAddress,
-          toTokenAddress: isNativeToken(toToken)
-            ? NATIVE_TOKEN_ADDRESS
-            : toToken.address,
-          toAmount: tokenAmount,
-          client,
-          isTestMode: buyWithFiatOptions?.testMode,
-          purchaseData: props.payOptions.purchaseData,
-          fromAddress: payer.account.address,
-          paymentLinkId: paymentLinkId,
-          preferredProvider: preferredProvider ?? supportedProviders[0],
-        }
+        fromCurrencySymbol: selectedCurrency.shorthand,
+        toChainId: toChain.id,
+        toAddress: receiverAddress,
+        toTokenAddress: isNativeToken(toToken)
+          ? NATIVE_TOKEN_ADDRESS
+          : toToken.address,
+        toAmount: tokenAmount,
+        client,
+        isTestMode: buyWithFiatOptions?.testMode,
+        purchaseData: props.payOptions.purchaseData,
+        fromAddress: payer.account.address,
+        paymentLinkId: paymentLinkId,
+        preferredProvider: preferredProvider ?? supportedProviders[0],
+      }
       : undefined,
   );
 
@@ -125,15 +124,6 @@ export function FiatScreenContent(props: {
       id: "fiat-flow",
       quote: fiatQuoteQuery.data,
     });
-  }
-
-  function showFees() {
-    if (!fiatQuoteQuery.data) {
-      return;
-    }
-
-    setDrawerScreen("fees");
-    setIsOpen(true);
   }
 
   function showProviders() {
@@ -207,12 +197,6 @@ export function FiatScreenContent(props: {
             quotedProvider={fiatQuoteQuery.data?.provider}
             preferredProvider={preferredProvider}
             supportedProviders={supportedProviders}
-          />
-          {/* Estimated time + View fees button */}
-          <EstimatedTimeAndFees
-            quoteIsLoading={fiatQuoteQuery.isLoading}
-            estimatedSeconds={fiatQuoteQuery.data?.estimatedDurationSeconds}
-            onViewFees={showFees}
           />
         </div>
 
