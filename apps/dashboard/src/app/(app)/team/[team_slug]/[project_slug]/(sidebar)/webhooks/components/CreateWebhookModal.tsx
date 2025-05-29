@@ -41,9 +41,13 @@ import {
 
 interface CreateWebhookModalProps {
   clientId: string;
+  supportedChainIds: Array<number>;
 }
 
-export function CreateWebhookModal({ clientId }: CreateWebhookModalProps) {
+export function CreateWebhookModal({
+  clientId,
+  supportedChainIds,
+}: CreateWebhookModalProps) {
   const router = useDashboardRouter();
   const thirdwebClient = useThirdwebClient();
   const [isOpen, setIsOpen] = useState(false);
@@ -270,6 +274,7 @@ export function CreateWebhookModal({ clientId }: CreateWebhookModalProps) {
                   goToNextStep={goToNextStep}
                   goToPreviousStep={goToPreviousStep}
                   isLoading={isLoading}
+                  supportedChainIds={supportedChainIds}
                 />
               )}
 

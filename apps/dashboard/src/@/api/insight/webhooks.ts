@@ -67,6 +67,10 @@ interface TestWebhookResponse {
   error?: string;
 }
 
+type SupportedWebhookChainsResponse =
+  | { chains: Array<number> }
+  | { error: string };
+
 export async function createWebhook(
   payload: CreateWebhookPayload,
   clientId: string,
@@ -203,5 +207,33 @@ export async function testWebhook(
       success: false,
       error: `Network or parsing error: ${error instanceof Error ? error.message : "Unknown error"}`,
     };
+  }
+}
+
+export async function getSupportedWebhookChains(): Promise<SupportedWebhookChainsResponse> {
+  try {
+    const response = await fetch(
+      `https://${THIRDWEB_INSIGHT_API_DOMAIN}/service/chains`,
+      {
+        method: "GET",
+        headers: {
+          "x-service-api-key": process.env.INSIGHT_SERVICE_API_KEY || "",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const errorText = await response.json();
+      return { error: `Failed to fetch supported chains: ${errorText.error}` };
+    }
+
+    const data = await response.json();
+    if (Array.isArray(data.data)) {
+      return { chains: data.data };
+    }
+    return { error: "Unexpected response format" };
+  } catch (error) {
+    console.error("Error fetching supported chains:", error);
+    return { error: `Failed to fetch supported chains: ${error}` };
   }
 }

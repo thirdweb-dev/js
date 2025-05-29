@@ -1,4 +1,8 @@
-import { type WebhookResponse, getWebhooks } from "@/api/insight/webhooks";
+import {
+  type WebhookResponse,
+  getSupportedWebhookChains,
+  getWebhooks,
+} from "@/api/insight/webhooks";
 import { getProject } from "@/api/projects";
 import { TrackedUnderlineLink } from "@/components/ui/tracked-link";
 import { notFound } from "next/navigation";
@@ -11,6 +15,7 @@ export default async function WebhooksPage({
   let webhooks: WebhookResponse[] = [];
   let clientId = "";
   let errorMessage = "";
+  let supportedChainIds: number[] = [];
 
   try {
     // Await params before accessing properties
@@ -31,6 +36,13 @@ export default async function WebhooksPage({
       errorMessage = webhooksRes.error;
     } else if (webhooksRes.data) {
       webhooks = webhooksRes.data;
+    }
+
+    const supportedChainsRes = await getSupportedWebhookChains();
+    if ("chains" in supportedChainsRes) {
+      supportedChainIds = supportedChainsRes.chains;
+    } else {
+      errorMessage = supportedChainsRes.error;
     }
   } catch (error) {
     errorMessage = "Failed to load webhooks. Please try again later.";
@@ -71,7 +83,11 @@ export default async function WebhooksPage({
             </div>
           </div>
         ) : webhooks.length > 0 ? (
-          <WebhooksTable webhooks={webhooks} clientId={clientId} />
+          <WebhooksTable
+            webhooks={webhooks}
+            clientId={clientId}
+            supportedChainIds={supportedChainIds}
+          />
         ) : (
           <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-border p-12 text-center">
             <div>
@@ -80,7 +96,10 @@ export default async function WebhooksPage({
                 Create a webhook to get started.
               </p>
             </div>
-            <CreateWebhookModal clientId={clientId} />
+            <CreateWebhookModal
+              clientId={clientId}
+              supportedChainIds={supportedChainIds}
+            />
           </div>
         )}
       </div>

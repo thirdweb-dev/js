@@ -1,6 +1,5 @@
 "use client";
 
-import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,6 +23,7 @@ import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useQueryClient } from "@tanstack/react-query";
 import type { UseFormReturn } from "react-hook-form";
 
+import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { truncateMiddle } from "../utils/abiUtils";
 import type {
   AbiData,
@@ -45,6 +45,7 @@ interface FilterDetailsStepProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   isLoading: boolean;
+  supportedChainIds: Array<number>;
 }
 
 export function FilterDetailsStep({
@@ -60,6 +61,7 @@ export function FilterDetailsStep({
   goToNextStep,
   goToPreviousStep,
   isLoading,
+  supportedChainIds,
 }: FilterDetailsStepProps) {
   const thirdwebClient = useThirdwebClient();
   const queryClient = useQueryClient();
@@ -106,6 +108,7 @@ export function FilterDetailsStep({
                   }
                   onChange={(chainIds) => field.onChange(chainIds.map(String))}
                   client={thirdwebClient}
+                  chainIds={supportedChainIds}
                 />
               </FormControl>
               <FormMessage />

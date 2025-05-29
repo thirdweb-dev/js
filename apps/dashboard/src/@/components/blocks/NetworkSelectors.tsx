@@ -27,8 +27,15 @@ export function MultiNetworkSelector(props: {
   side?: "left" | "right" | "top" | "bottom";
   showSelectedValuesInModal?: boolean;
   client: ThirdwebClient;
+  chainIds?: number[];
 }) {
-  const { allChains, idToChain } = useAllChainsData();
+  let { allChains, idToChain } = useAllChainsData();
+
+  if (props.chainIds && props.chainIds.length > 0) {
+    allChains = allChains.filter((chain) =>
+      props.chainIds?.includes(chain.chainId),
+    );
+  }
 
   const options = useMemo(() => {
     let sortedChains = allChains;

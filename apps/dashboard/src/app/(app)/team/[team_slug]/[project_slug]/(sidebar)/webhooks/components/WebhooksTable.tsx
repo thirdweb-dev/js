@@ -32,9 +32,14 @@ function getEventType(filters: WebhookFilters): string {
 interface WebhooksTableProps {
   webhooks: WebhookResponse[];
   clientId: string;
+  supportedChainIds: number[];
 }
 
-export function WebhooksTable({ webhooks, clientId }: WebhooksTableProps) {
+export function WebhooksTable({
+  webhooks,
+  clientId,
+  supportedChainIds,
+}: WebhooksTableProps) {
   const [isDeleting, setIsDeleting] = useState<Record<string, boolean>>({});
   const { testWebhookEndpoint, isTestingMap } = useTestWebhook(clientId);
   const router = useDashboardRouter();
@@ -210,7 +215,10 @@ export function WebhooksTable({ webhooks, clientId }: WebhooksTableProps) {
   return (
     <div className="w-full">
       <div className="mb-4 flex items-center justify-end">
-        <CreateWebhookModal clientId={clientId} />
+        <CreateWebhookModal
+          clientId={clientId}
+          supportedChainIds={supportedChainIds}
+        />
       </div>
       <TWTable
         data={sortedWebhooks}
