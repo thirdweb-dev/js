@@ -127,6 +127,7 @@ const THIRDWEB_DOMAINS = [
   // dev domains
   ".thirdweb.dev",
   ".thirdweb-dev.com",
+  ".thirdwebstorage-dev.com",
 ] as const;
 
 export const IS_THIRDWEB_URL_CACHE = new LruMap<boolean>(4096);
