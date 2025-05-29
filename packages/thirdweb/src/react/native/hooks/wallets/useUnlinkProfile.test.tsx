@@ -40,6 +40,32 @@ describe("useUnlinkProfile", () => {
       client: TEST_CLIENT,
       ecosystem: undefined,
       profileToUnlink: mockProfile,
+      allowAccountDeletion: false,
+    });
+    expect(queryClient.invalidateQueries).toHaveBeenCalledWith({
+      queryKey: ["profiles"],
+    });
+  });
+
+  it("should call unlinkProfile with allowAccountDeletion if true", async () => {
+    const { result } = renderHook(() => useUnlinkProfile(), {
+      wrapper,
+    });
+    const mutationFn = result.current.mutateAsync;
+
+    await act(async () => {
+      await mutationFn({
+        client: TEST_CLIENT,
+        profileToUnlink: mockProfile,
+        allowAccountDeletion: true,
+      });
+    });
+
+    expect(unlinkProfile).toHaveBeenCalledWith({
+      client: TEST_CLIENT,
+      ecosystem: undefined,
+      profileToUnlink: mockProfile,
+      allowAccountDeletion: true,
     });
     expect(queryClient.invalidateQueries).toHaveBeenCalledWith({
       queryKey: ["profiles"],
@@ -70,6 +96,7 @@ describe("useUnlinkProfile", () => {
           ?.partnerId,
       },
       profileToUnlink: mockProfile,
+      allowAccountDeletion: false,
     });
   });
 });

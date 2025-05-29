@@ -40,6 +40,7 @@ describe("useUnlinkProfile", () => {
       client: TEST_CLIENT,
       ecosystem: undefined,
       profileToUnlink: mockProfile,
+      allowAccountDeletion: false,
     });
     expect(queryClient.invalidateQueries).toHaveBeenCalledWith({
       queryKey: ["profiles"],
@@ -70,6 +71,7 @@ describe("useUnlinkProfile", () => {
           ?.partnerId,
       },
       profileToUnlink: mockProfile,
+      allowAccountDeletion: false,
     });
   });
 });

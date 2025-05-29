@@ -470,12 +470,13 @@ export class InAppWebConnector implements InAppConnector {
     });
   }
 
-  async unlinkProfile(profile: Profile) {
+  async unlinkProfile(profile: Profile, allowAccountDeletion?: boolean) {
     return await unlinkAccount({
       client: this.client,
       storage: this.storage,
       ecosystem: this.ecosystem,
       profileToUnlink: profile,
+      allowAccountDeletion,
     });
   }
 

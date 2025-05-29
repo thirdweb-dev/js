@@ -203,7 +203,10 @@ export async function linkProfile(args: AuthArgsType) {
  */
 export async function unlinkProfile(args: UnlinkParams) {
   const connector = await getInAppWalletConnector(args.client, args.ecosystem);
-  return await connector.unlinkProfile(args.profileToUnlink);
+  return await connector.unlinkProfile(
+    args.profileToUnlink,
+    args.allowAccountDeletion,
+  );
 }
 
 /**

@@ -367,7 +367,7 @@ export class InAppNativeConnector implements InAppConnector {
     });
   }
 
-  async unlinkProfile(profile: Profile) {
+  async unlinkProfile(profile: Profile, allowAccountDeletion?: boolean) {
     const { unlinkAccount } = await import(
       "../core/authentication/linkAccount.js"
     );
@@ -376,6 +376,7 @@ export class InAppNativeConnector implements InAppConnector {
       ecosystem: this.ecosystem,
       storage: this.storage,
       profileToUnlink: profile,
+      allowAccountDeletion,
     });
   }
 

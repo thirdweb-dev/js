@@ -66,11 +66,13 @@ export async function unlinkAccount({
   client,
   ecosystem,
   profileToUnlink,
+  allowAccountDeletion = false,
   storage,
 }: {
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
   profileToUnlink: Profile;
+  allowAccountDeletion?: boolean;
   storage: ClientScopedStorage;
 }): Promise<Profile[]> {
   const clientFetch = getClientFetch(client, ecosystem);
@@ -90,7 +92,11 @@ export async function unlinkAccount({
     {
       method: "POST",
       headers,
-      body: stringify(profileToUnlink),
+      body: stringify({
+        type: profileToUnlink.type,
+        details: profileToUnlink.details,
+        allowAccountDeletion,
+      }),
     },
   );
 

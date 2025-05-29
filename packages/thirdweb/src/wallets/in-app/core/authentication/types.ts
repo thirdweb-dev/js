@@ -259,4 +259,5 @@ export type UnlinkParams = {
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
   profileToUnlink: Profile;
+  allowAccountDeletion?: boolean;
 };
