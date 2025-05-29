@@ -37,7 +37,10 @@ export interface InAppConnector {
   ): Promise<AuthLoginReturnType>;
   logout(): Promise<LogoutReturnType>;
   linkProfile(args: AuthArgsType): Promise<Profile[]>;
-  unlinkProfile(args: Profile): Promise<Profile[]>;
+  unlinkProfile(
+    args: Profile,
+    allowAccountDeletion?: boolean,
+  ): Promise<Profile[]>;
   getProfiles(): Promise<Profile[]>;
   storage: ClientScopedStorage;
 }

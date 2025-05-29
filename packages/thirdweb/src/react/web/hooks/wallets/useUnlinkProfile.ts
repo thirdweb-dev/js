@@ -31,6 +31,23 @@ import { useConnectedWallets } from "../../../core/hooks/wallets/useConnectedWal
  * };
  * ```
  *
+ * ### Unlinking an email account with account deletion
+ *
+ * ```jsx
+ * import { useUnlinkProfile } from "thirdweb/react";
+ *
+ * const { mutate: unlinkProfile } = useUnlinkProfile();
+ *
+ * const onClick = () => {
+ *   unlinkProfile({
+ *     client,
+ *      // Select the profile you want to unlink
+ *     profileToUnlink: connectedProfiles[0],
+ *     allowAccountDeletion: true, // This will delete the account if it's the last profile linked to the account
+ *   });
+ * };
+ * ```
+ *
  * @wallet
  */
 export function useUnlinkProfile() {
@@ -40,7 +57,12 @@ export function useUnlinkProfile() {
     mutationFn: async ({
       client,
       profileToUnlink,
-    }: { client: ThirdwebClient; profileToUnlink: Profile }) => {
+      allowAccountDeletion = false,
+    }: {
+      client: ThirdwebClient;
+      profileToUnlink: Profile;
+      allowAccountDeletion?: boolean;
+    }) => {
       const ecosystemWallet = wallets.find((w) => isEcosystemWallet(w));
       const ecosystem: Ecosystem | undefined = ecosystemWallet
         ? {
@@ -53,6 +75,7 @@ export function useUnlinkProfile() {
         client,
         ecosystem,
         profileToUnlink,
+        allowAccountDeletion,
       });
     },
     onSuccess: () => {

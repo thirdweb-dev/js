@@ -90,7 +90,37 @@ describe("Account linking functions", () => {
             Authorization: "Bearer iaw-auth-token:mock-token",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(profileToUnlink),
+          body: JSON.stringify({
+            type: profileToUnlink.type,
+            details: profileToUnlink.details,
+            allowAccountDeletion: false,
+          }),
+        },
+      );
+      expect(result).toEqual(mockLinkedAccounts);
+    });
+
+    it("should successfully unlink an account with allowAccountDeletion", async () => {
+      const result = await unlinkAccount({
+        client: mockClient,
+        profileToUnlink,
+        storage: mockStorage,
+        allowAccountDeletion: true,
+      });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        "https://embedded-wallet.thirdweb.com/api/2024-05-05/account/disconnect",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer iaw-auth-token:mock-token",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: profileToUnlink.type,
+            details: profileToUnlink.details,
+            allowAccountDeletion: true,
+          }),
         },
       );
       expect(result).toEqual(mockLinkedAccounts);

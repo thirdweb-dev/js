@@ -224,6 +224,8 @@ export async function linkProfile(args: AuthArgsType) {
  * @throws If the unlinking fails. This can happen if the account has no other associated profiles or if the profile that is being unlinked doesn't exists for the current logged in user.
  *
  * @example
+ * ### Unlinking an authentication method
+ *
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
  *
@@ -239,11 +241,41 @@ export async function linkProfile(args: AuthArgsType) {
  *  profileToUnlink: profiles[0],
  * });
  * ```
+ *
+ * ### Unlinking an authentication for ecosystems
+ *
+ * ```ts
+ * import { unlinkProfile } from "thirdweb/wallets/in-app";
+ *
+ * const updatedProfiles = await unlinkProfile({
+ *  client,
+ *  ecosystem: {
+ *    id: "ecosystem.your-ecosystem-id",
+ *  },
+ *  profileToUnlink: profiles[0],
+ * });
+ * ```
+ *
+ * ### Unlinking an authentication method with account deletion
+ *
+ * ```ts
+ * import { unlinkProfile } from "thirdweb/wallets/in-app";
+ *
+ * const updatedProfiles = await unlinkProfile({
+ *  client,
+ *  profileToUnlink: profiles[0],
+ *  allowAccountDeletion: true, // This will delete the account if it's the last profile linked to the account
+ * });
+ * ```
+ *
  * @wallet
  */
 export async function unlinkProfile(args: UnlinkParams) {
   const connector = await getInAppWalletConnector(args.client, args.ecosystem);
-  return await connector.unlinkProfile(args.profileToUnlink);
+  return await connector.unlinkProfile(
+    args.profileToUnlink,
+    args.allowAccountDeletion,
+  );
 }
 
 /**
