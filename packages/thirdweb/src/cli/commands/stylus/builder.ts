@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import open from "open";
 import ora, { type Ora } from "ora";
+import prompts from "prompts";
 import { parse } from "toml";
 import { createThirdwebClient } from "../../../client/client.js";
 import { upload } from "../../../storage/upload.js";
@@ -95,15 +96,49 @@ async function buildStylus(spinner: Ora, secretKey?: string) {
     spinner.succeed("ABI generated.");
 
     // Step 4: Process the output
-    const contractName = extractContractNameFromExportAbi(abiContent);
-    if (!contractName) {
+    const parts = abiContent.split(/======= <stdin>:/g).filter(Boolean);
+    const contractNames = extractContractNamesFromExportAbi(abiContent);
+
+    let selectedContractName: string | undefined;
+    let selectedAbiContent: string | undefined;
+
+    if (contractNames.length === 1) {
+      selectedContractName = contractNames[0]?.replace(/^I/, "");
+      selectedAbiContent = parts[0];
+    } else {
+      const response = await prompts({
+        type: "select",
+        name: "contract",
+        message: "Select entrypoint:",
+        choices: contractNames.map((name, idx) => ({
+          title: name,
+          value: idx,
+        })),
+      });
+
+      const selectedIndex = response.contract;
+
+      if (typeof selectedIndex !== "number") {
+        spinner.fail("No contract selected.");
+        process.exit(1);
+      }
+
+      selectedContractName = contractNames[selectedIndex]?.replace(/^I/, "");
+      selectedAbiContent = parts[selectedIndex];
+    }
+
+    if (!selectedAbiContent) {
+      throw new Error("Entrypoint not found");
+    }
+
+    if (!selectedContractName) {
       spinner.fail("Error: Could not determine contract name from ABI output.");
       process.exit(1);
     }
 
     let cleanedAbi = "";
     try {
-      const jsonMatch = abiContent.match(/\[.*\]/s);
+      const jsonMatch = selectedAbiContent.match(/\[.*\]/s);
       if (jsonMatch) {
         cleanedAbi = jsonMatch[0];
       } else {
@@ -125,7 +160,7 @@ async function buildStylus(spinner: Ora, secretKey?: string) {
       },
       settings: {
         compilationTarget: {
-          "src/main.rs": contractName,
+          "src/main.rs": selectedContractName,
         },
       },
       sources: {},
@@ -152,12 +187,12 @@ async function buildStylus(spinner: Ora, secretKey?: string) {
       client,
       files: [
         {
-          name: contractName,
+          name: selectedContractName,
           metadataUri,
           bytecodeUri,
           analytics: {
             command: "publish-stylus",
-            contract_name: contractName,
+            contract_name: selectedContractName,
             cli_version: "",
             project_type: "stylus",
           },
@@ -178,12 +213,10 @@ async function buildStylus(spinner: Ora, secretKey?: string) {
   }
 }
 
-function extractContractNameFromExportAbi(abiRawOutput: string): string | null {
-  const match = abiRawOutput.match(/<stdin>:(I[A-Za-z0-9_]+)/);
-  if (match?.[1]) {
-    return match[1].replace(/^I/, "");
-  }
-  return null;
+function extractContractNamesFromExportAbi(abiRawOutput: string): string[] {
+  return [...abiRawOutput.matchAll(/<stdin>:(I?[A-Za-z0-9_]+)/g)]
+    .map((m) => m[1])
+    .filter((name): name is string => typeof name === "string");
 }
 
 function getUrl(hash: string, command: string) {

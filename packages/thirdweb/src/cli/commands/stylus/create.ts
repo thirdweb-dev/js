@@ -37,15 +37,40 @@ export async function createStylusProject() {
     message: "Project name:",
     initial: "my-stylus-project",
   });
-  spinner.start(`Creating new Stylus project: ${projectName}...`);
-  const newProject = spawnSync("cargo", ["stylus", "new", projectName], {
-    stdio: "inherit",
-  });
-  if (newProject.status !== 0) {
-    spinner.fail("Failed to create Stylus project.");
-    process.exit(1);
-  }
-  spinner.succeed("Project created successfully.");
 
-  console.log(`\n✅ Done! cd into your project: ${projectName}`);
+  // Step 4: Select project type
+  const { projectType } = await prompts({
+    type: "select",
+    name: "projectType",
+    message: "Select a template:",
+    choices: [
+      { title: "Default", value: "default" },
+      { title: "ERC20", value: "erc20" },
+    ],
+  });
+
+  // Step 5: Create the project
+  if (projectType === "default") {
+    spinner.start(`Creating new Stylus project: ${projectName}...`);
+    const newProject = spawnSync("cargo", ["stylus", "new", projectName], {
+      stdio: "inherit",
+    });
+    if (newProject.status !== 0) {
+      spinner.fail("Failed to create Stylus project.");
+      process.exit(1);
+    }
+  } else if (projectType === "erc20") {
+    const repoUrl = "git@github.com:thirdweb-example/stylus-erc20-template.git";
+    spinner.start(`Creating new ERC20 Stylus project: ${projectName}...`);
+    const clone = spawnSync("git", ["clone", repoUrl, projectName], {
+      stdio: "inherit",
+    });
+    if (clone.status !== 0) {
+      spinner.fail("Failed to create Stylus project.");
+      process.exit(1);
+    }
+  }
+
+  spinner.succeed("Project created successfully.");
+  console.log(`\n✅ cd into your project: ${projectName}`);
 }
