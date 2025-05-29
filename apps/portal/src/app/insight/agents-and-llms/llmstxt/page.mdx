@@ -34,6 +34,64 @@ Insight is a powerful tool that lets you retrieve blockchain data from any EVM c
 
 - **Response Processing**: Some numeric values are returned as strings to maintain precision. Convert them appropriately in your application.
 
+## Aggregation Examples
+
+Insight supports various aggregation functions that can be used to analyze blockchain data. Here are some common examples:
+
+### Basic Aggregations
+
+```typescript
+// Count all transactions
+const count = await fetch('https://10.insight.thirdweb.com/v1/transactions?aggregate=count() AS transaction_count');
+
+// Get total value transferred (in wei)
+const totalValue = await fetch('https://10.insight.thirdweb.com/v1/transactions?aggregate=sum(value) AS total_value_wei');
+
+// Get average gas used
+const avgGas = await fetch('https://10.insight.thirdweb.com/v1/transactions?aggregate=avg(gas_used) AS avg_gas_used');
+```
+
+### Wallet-Specific Aggregations
+
+```typescript
+// Get wallet transaction count and total value
+const walletStats = await fetch(
+  'https://10.insight.thirdweb.com/v1/wallets/0x123.../transactions?aggregate=count() AS transaction_count&aggregate=sum(value) AS total_value_wei'
+);
+
+// Calculate total fees paid by a wallet
+const walletFees = await fetch(
+  'https://10.insight.thirdweb.com/v1/wallets/0x123.../transactions?aggregate=sum(gas_used * gas_price) AS total_fees_wei'
+);
+```
+
+### Block Data Aggregations
+
+```typescript
+// Get block statistics
+const blockStats = await fetch(
+  'https://10.insight.thirdweb.com/v1/blocks?aggregate=sum(transaction_count) AS total_transactions&aggregate=avg(transaction_count) AS avg_transactions_per_block'
+);
+
+// Get block range
+const blockRange = await fetch(
+  'https://10.insight.thirdweb.com/v1/blocks?aggregate=min(number) AS min_block_number&aggregate=max(number) AS max_block_number'
+);
+```
+
+### Filtering with Aggregations
+
+```typescript
+// Get transaction stats for a specific time period
+const txStats = await fetch(
+  'https://10.insight.thirdweb.com/v1/transactions?aggregate=count() AS transaction_count&aggregate=sum(value) AS total_value_wei&filter_timestamp_gte=2024-01-01&filter_timestamp_lte=2024-01-31'
+);
+
+// Get block metrics for recent blocks
+const recentBlocks = await fetch(
+  'https://10.insight.thirdweb.com/v1/blocks?aggregate=sum(transaction_count) AS total_transactions&filter_number_gte=18000000'
+);
+```
 
 ## API URL
 

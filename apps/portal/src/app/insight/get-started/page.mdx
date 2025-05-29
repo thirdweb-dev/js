@@ -139,6 +139,60 @@ Once you execute the query above you will receive a result similar to this:
 }
 ```
 
+## Using Aggregations
+
+Insight provides several predefined aggregation presets that make it easy to analyze your blockchain data. These presets are available in the Insight Playground, where you can experiment with them using a user-friendly interface.
+
+### Example: Get Transaction Statistics
+
+```typescript
+const getTransactionStats = async () => {
+  try {
+    const response = await fetch(
+      'https://1.insight.thirdweb.com/v1/transactions?aggregate=count() AS transaction_count&aggregate=sum(value) AS total_value&aggregate=avg(gas_used) AS avg_gas',
+      {
+        headers: {
+          'x-client-id': '<YOUR_THIRDWEB_CLIENT_ID>'
+        }
+      }
+    );
+    const stats = await response.json();
+    return stats;
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+```
+
+### Example: Get Block Metrics
+
+```typescript
+const getBlockMetrics = async () => {
+  try {
+    const response = await fetch(
+      'https://1.insight.thirdweb.com/v1/blocks?aggregate=count() AS block_count&aggregate=sum(transaction_count) AS total_transactions&aggregate=avg(transaction_count) AS avg_transactions',
+      {
+        headers: {
+          'x-client-id': '<YOUR_THIRDWEB_CLIENT_ID>'
+        }
+      }
+    );
+    const metrics = await response.json();
+    return metrics;
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+```
+
+### Explore in the Playground
+
+For a more interactive experience, try out the aggregation presets in the Insight Playground. The Playground allows you to:
+- Browse available presets for each endpoint
+- See real-time results
+- Generate code snippets for your application
+- Test different aggregation combinations
+
 ## Multichain Queries
 
 Insight also supports querying multiple chains in a single API call. This is useful when you need to retrieve data across different networks without making separate requests.

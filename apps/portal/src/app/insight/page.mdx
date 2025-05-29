@@ -1,7 +1,7 @@
 import { OpenSourceCard, DocImage, Grid, ArticleCard, FeatureCard } from "@doc";
 import { createMetadata } from "@/components/Document";
 import SupportedChains from "../_images/supported-chains.png";
-import { WalletIcon, FileIcon, MessageCircleIcon, BracesIcon, BotIcon, BlocksIcon, AlbumIcon, ServerIcon, ZapIcon } from "lucide-react";
+import { WalletIcon, FileIcon, MessageCircleIcon, BracesIcon, BotIcon, BlocksIcon, AlbumIcon, ServerIcon, ZapIcon, FunctionSquareIcon } from "lucide-react";
 
 
 export const metadata = createMetadata({
@@ -22,7 +22,7 @@ Insight is a tool that lets you retrieve blockchain data from any EVM chain, enr
 ## Features
 
 <div
-	className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-2 "
+	className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3"
 >
 	<FeatureCard
 		title="Easy-to-Use API"
@@ -37,18 +37,23 @@ Insight is a tool that lets you retrieve blockchain data from any EVM chain, enr
 	/>
 
 	<FeatureCard
+		title="Powerful Aggregations"
+		description="Perform complex data analysis with built-in aggregation functions"
+		iconUrl={<FunctionSquareIcon />}
+		href="/insight/get-started#using-aggregations"
+	/>
+
+	<FeatureCard
 		title="Custom Blueprints"
 		description="Transform and enrich data easily to suit your needs."
 		iconUrl={<AlbumIcon />}
 	/>
 
-		<FeatureCard
+	<FeatureCard
 		title="Lightning-Fast Queries"
 		description="Access any transaction, event or token API data"
 		iconUrl={<ZapIcon />}
 	/>
-
-
 </div>
 
 ## Video Tutorials
