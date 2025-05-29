@@ -21,7 +21,6 @@ import {
 } from "../../../../components/Drawer.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
-import { SwitchNetworkButton } from "../../../../components/SwitchNetwork.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
@@ -171,8 +170,6 @@ export function SwapScreenContent(props: {
     (swapRequired && !quoteQuery.data) ||
     isNotEnoughBalance ||
     allowanceQuery.isLoading;
-  const switchChainRequired =
-    props.payer.wallet.getChain()?.id !== fromChain?.id;
 
   const errorMsg =
     !quoteQuery.isLoading && quoteQuery.error
@@ -319,19 +316,6 @@ export function SwapScreenContent(props: {
         >
           Pay with another token
         </Button>
-      ) : switchChainRequired &&
-        fromChain &&
-        !quoteQuery.isLoading &&
-        !allowanceQuery.isLoading &&
-        !isNotEnoughBalance &&
-        !quoteQuery.error ? (
-        <SwitchNetworkButton
-          variant="accent"
-          fullWidth
-          switchChain={async () => {
-            await props.payer.wallet.switchChain(fromChain);
-          }}
-        />
       ) : (
         <Button
           variant={disableContinue ? "outline" : "accent"}
@@ -340,6 +324,9 @@ export function SwapScreenContent(props: {
           disabled={disableContinue}
           onClick={async () => {
             if (!disableContinue) {
+              if (props.payer.wallet.getChain()?.id !== fromChain?.id) {
+                await props.payer.wallet.switchChain(fromChain);
+              }
               showSwapFlow();
               trackPayEvent({
                 event: "confirm_swap_quote",
