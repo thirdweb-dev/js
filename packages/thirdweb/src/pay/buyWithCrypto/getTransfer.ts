@@ -133,6 +133,7 @@ export async function getBuyWithCryptoTransfer(
       client: params.client,
       feePayer: params.feePayer,
       paymentLinkId: params.paymentLinkId,
+      purchaseData: params.purchaseData,
     });
 
     const firstStep = quote.steps[0];
