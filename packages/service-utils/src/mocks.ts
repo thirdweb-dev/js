@@ -93,11 +93,24 @@ export const validTeamResponse: TeamResponse = {
       enabled: true,
       customAuth: true,
       customBranding: true,
+      sms: {
+        domestic: true,
+        international: true,
+      },
     },
     engineCloud: {
       enabled: true,
       mainnetEnabled: true,
       rateLimit: 100,
+    },
+    pay: {
+      enabled: true,
+      rateLimit: 1000,
+    },
+    platform: {
+      auditLogs: true,
+      ecosystemWallets: true,
+      seats: true,
     },
   },
   planCancellationDate: null,

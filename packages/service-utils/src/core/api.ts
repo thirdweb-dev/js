@@ -49,6 +49,11 @@ export type ApiResponse = {
  * This type should match the schema from API server.
  */
 type TeamCapabilities = {
+  platform: {
+    auditLogs: boolean;
+    ecosystemWallets: boolean;
+    seats: boolean;
+  };
   rpc: {
     enabled: boolean;
     rateLimit: number;
@@ -81,10 +86,18 @@ type TeamCapabilities = {
     enabled: boolean;
     customAuth: boolean;
     customBranding: boolean;
+    sms: {
+      domestic: boolean;
+      international: boolean;
+    };
   };
   engineCloud: {
     enabled: boolean;
     mainnetEnabled: boolean;
+    rateLimit: number;
+  };
+  pay: {
+    enabled: boolean;
     rateLimit: number;
   };
 };

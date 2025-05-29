@@ -28,8 +28,8 @@ export const AllVariants: Story = {
 
 function Variants() {
   const [requiredPlan, setRequiredPlan] = useState<
-    "free" | "growth" | "accelerate" | "pro"
-  >("accelerate");
+    "free" | "growth" | "scale" | "pro"
+  >("scale");
 
   const plans: Team["billingPlan"][] = [
     "free",
@@ -38,6 +38,7 @@ function Variants() {
     "growth_legacy",
     "growth",
     "accelerate",
+    "scale",
     "pro",
   ];
 
