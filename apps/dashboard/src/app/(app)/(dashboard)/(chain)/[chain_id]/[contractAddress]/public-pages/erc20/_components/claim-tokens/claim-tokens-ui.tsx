@@ -122,8 +122,8 @@ export function ClaimTokenCardUI(props: {
       }
 
       async function sendAndConfirm() {
-        const receipt = await sendClaimTx.mutateAsync(transaction);
-        await waitForReceipt(receipt);
+        const result = await sendClaimTx.mutateAsync(transaction);
+        await waitForReceipt(result);
       }
 
       setStepsUI({
@@ -286,6 +286,7 @@ export function ClaimTokenCardUI(props: {
           {account ? (
             <TransactionButton
               transactionCount={undefined}
+              checkBalance={false}
               isLoggedIn={true}
               isPending={approveAndClaim.isPending}
               onClick={async () => {

@@ -49,5 +49,6 @@ export function useTokenTransfers(params: {
       const data = json.data as TokenTransfersData[];
       return data;
     },
+    refetchInterval: 5000,
   });
 }
