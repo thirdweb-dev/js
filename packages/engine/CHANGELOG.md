@@ -1,5 +1,11 @@
 # @thirdweb-dev/insight
 
+## 3.0.3
+
+### Patch Changes
+
+- [#7190](https://github.com/thirdweb-dev/js/pull/7190) [`861e623`](https://github.com/thirdweb-dev/js/commit/861e623a1b7519bcac09c0c6d975cad2c0c5be4f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Updated to latest API
+
 ## 3.0.2
 
 ### Patch Changes
