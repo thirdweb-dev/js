@@ -11,7 +11,7 @@ import {
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
-import { toEther } from "../../utils/units.js";
+import { toEther, toWei } from "../../utils/units.js";
 import { name } from "../common/read/name.js";
 import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { canClaim } from "./drops/read/canClaim.js";
@@ -20,6 +20,8 @@ import { claimTo } from "./drops/write/claimTo.js";
 import { resetClaimEligibility } from "./drops/write/resetClaimEligibility.js";
 import { setClaimConditions } from "./drops/write/setClaimConditions.js";
 import { getBalance } from "./read/getBalance.js";
+import { getApprovalForTransaction } from "./write/getApprovalForTransaction.js";
+import { mintTo } from "./write/mintTo.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "DropERC20",
@@ -133,6 +135,94 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         (await getBalance({ contract, address: TEST_ACCOUNT_C.address }))
           .displayValue,
       ).toBe("2");
+    });
+
+    it("should allow to claim tokens with erc20 price", async () => {
+      expect(
+        (await getBalance({ contract, address: TEST_ACCOUNT_C.address }))
+          .displayValue,
+      ).toBe("2");
+      const erc20ContractAddres = await deployERC20Contract({
+        account: TEST_ACCOUNT_A,
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
+        type: "TokenERC20",
+        params: {
+          name: "Test DropERC20",
+        },
+      });
+      const erc20Contract = getContract({
+        address: erc20ContractAddres,
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
+      });
+      const mintToTx = mintTo({
+        contract: erc20Contract,
+        to: TEST_ACCOUNT_C.address,
+        amount: "0.02",
+      });
+      await sendAndConfirmTransaction({
+        transaction: mintToTx,
+        account: TEST_ACCOUNT_A,
+      });
+      expect(
+        (
+          await getBalance({
+            contract: erc20Contract,
+            address: TEST_ACCOUNT_C.address,
+          })
+        ).displayValue,
+      ).toBe("0.02");
+      // set cc with price
+      await sendAndConfirmTransaction({
+        transaction: setClaimConditions({
+          contract,
+          phases: [
+            {
+              price: "0.01",
+              currencyAddress: erc20ContractAddres,
+            },
+          ],
+        }),
+        account: TEST_ACCOUNT_A,
+      });
+      const claimTx = claimTo({
+        contract,
+        to: TEST_ACCOUNT_C.address,
+        quantity: "2",
+      });
+      // assert value is set correctly
+      const value = await resolvePromisedValue(claimTx.erc20Value);
+      expect(value).toBeDefined();
+      if (!value) throw new Error("value is undefined");
+      expect(value.amountWei).toBe(toWei("0.02"));
+      const approve = await getApprovalForTransaction({
+        transaction: claimTx,
+        account: TEST_ACCOUNT_C,
+      });
+      if (approve) {
+        await sendAndConfirmTransaction({
+          transaction: approve,
+          account: TEST_ACCOUNT_C,
+        });
+      }
+      // claim
+      await sendAndConfirmTransaction({
+        transaction: claimTx,
+        account: TEST_ACCOUNT_C,
+      });
+      expect(
+        (await getBalance({ contract, address: TEST_ACCOUNT_C.address }))
+          .displayValue,
+      ).toBe("4");
+      expect(
+        (
+          await getBalance({
+            contract: erc20Contract,
+            address: TEST_ACCOUNT_C.address,
+          })
+        ).displayValue,
+      ).toBe("0");
     });
 
     describe("Allowlists", () => {

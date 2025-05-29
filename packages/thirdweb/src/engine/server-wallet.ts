@@ -19,7 +19,7 @@ import type {
   Account,
   SendTransactionOption,
 } from "../wallets/interfaces/wallet.js";
-import { waitForTransactionHash } from "./get-status.js";
+import { waitForTransactionHash } from "./wait-for-tx-hash.js";
 
 /**
  * Options for creating an server wallet.
@@ -53,6 +53,9 @@ export type ServerWallet = Account & {
   enqueueTransaction: (args: {
     transaction: PreparedTransaction;
     simulate?: boolean;
+  }) => Promise<{ transactionId: string }>;
+  enqueueBatchTransaction: (args: {
+    transactions: PreparedTransaction[];
   }) => Promise<{ transactionId: string }>;
 };
 
@@ -102,6 +105,37 @@ export type ServerWallet = Account & {
  * console.log("Transaction sent:", transactionHash);
  * ```
  *
+ *  ### Sending a batch of transactions
+ * ```ts
+ * // prepare the transactions
+ * const transaction1 = claimTo({
+ *   contract,
+ *   to: firstRecipient,
+ *   quantity: 1n,
+ * });
+ * const transaction2 = claimTo({
+ *   contract,
+ *   to: secondRecipient,
+ *   quantity: 1n,
+ * });
+ *
+ *
+ * // enqueue the transactions in a batch
+ * const { transactionId } = await myServerWallet.enqueueBatchTransaction({
+ *   transactions: [transaction1, transaction2],
+ * });
+ * ```
+ *
+ * ### Polling for the batch of transactions to be submitted onchain
+ * ```ts
+ * // optionally poll for the transaction to be submitted onchain
+ * const { transactionHash } = await Engine.waitForTransactionHash({
+ *   client,
+ *   transactionId,
+ * });
+ * console.log("Transaction sent:", transactionHash);
+ * ```
+ *
  * ### Getting the execution status of a transaction
  * ```ts
  * const executionResult = await Engine.getTransactionStatus({
@@ -130,16 +164,30 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
         };
   };
 
-  const enqueueTx = async (transaction: SendTransactionOption) => {
+  const enqueueTx = async (transaction: SendTransactionOption[]) => {
+    if (transaction.length === 0) {
+      throw new Error("No transactions to enqueue");
+    }
+    const firstTransaction = transaction[0];
+    if (!firstTransaction) {
+      throw new Error("No transactions to enqueue");
+    }
+    const chainId = firstTransaction.chainId;
+    // Validate all transactions are on the same chain
+    for (let i = 1; i < transaction.length; i++) {
+      if (transaction[i]?.chainId !== chainId) {
+        throw new Error(
+          `All transactions in batch must be on the same chain. Expected ${chainId}, got ${transaction[i]?.chainId} at index ${i}`,
+        );
+      }
+    }
     const body = {
-      executionOptions: getExecutionOptions(transaction.chainId),
-      params: [
-        {
-          to: transaction.to ?? undefined,
-          data: transaction.data,
-          value: transaction.value?.toString(),
-        },
-      ],
+      executionOptions: getExecutionOptions(chainId),
+      params: transaction.map((t) => ({
+        to: t.to ?? undefined,
+        data: t.data,
+        value: t.value?.toString(),
+      })),
     };
 
     const result = await sendTransaction({
@@ -158,11 +206,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
     if (!data) {
       throw new Error("No data returned from engine");
     }
-    const transactionId = data.transactions?.[0]?.id;
-    if (!transactionId) {
-      throw new Error("No transactionId returned from engine");
-    }
-    return transactionId;
+    return data.transactions.map((t) => t.id);
   };
 
   return {
@@ -193,11 +237,54 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
           value: value ?? undefined,
         };
       }
-      const transactionId = await enqueueTx(serializedTransaction);
+      const transactionIds = await enqueueTx([serializedTransaction]);
+      const transactionId = transactionIds[0];
+      if (!transactionId) {
+        throw new Error("No transactionId returned from engine");
+      }
+      return { transactionId };
+    },
+    enqueueBatchTransaction: async (args: {
+      transactions: PreparedTransaction[];
+    }) => {
+      const serializedTransactions: SendTransactionOption[] = [];
+      for (const transaction of args.transactions) {
+        const [to, data, value] = await Promise.all([
+          transaction.to ? resolvePromisedValue(transaction.to) : null,
+          encode(transaction),
+          transaction.value ? resolvePromisedValue(transaction.value) : null,
+        ]);
+        serializedTransactions.push({
+          chainId: transaction.chain.id,
+          data,
+          to: to ?? undefined,
+          value: value ?? undefined,
+        });
+      }
+      const transactionIds = await enqueueTx(serializedTransactions);
+      const transactionId = transactionIds[0];
+      if (!transactionId) {
+        throw new Error("No transactionId returned from engine");
+      }
       return { transactionId };
     },
     sendTransaction: async (transaction: SendTransactionOption) => {
-      const transactionId = await enqueueTx(transaction);
+      const transactionIds = await enqueueTx([transaction]);
+      const transactionId = transactionIds[0];
+      if (!transactionId) {
+        throw new Error("No transactionId returned from engine");
+      }
+      return waitForTransactionHash({
+        client,
+        transactionId,
+      });
+    },
+    sendBatchTransaction: async (transactions: SendTransactionOption[]) => {
+      const transactionIds = await enqueueTx(transactions);
+      const transactionId = transactionIds[0];
+      if (!transactionId) {
+        throw new Error("No transactionId returned from engine");
+      }
       return waitForTransactionHash({
         client,
         transactionId,

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { chains } from "./Chains.js";
 
-describe("chains", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("chains", () => {
   it("should fetch chains", async () => {
     // Setup
     const client = TEST_CLIENT;
