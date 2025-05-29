@@ -280,7 +280,7 @@ export function FilterDetailsStep({
 
       {/* Advanced Options Section */}
       <div className="space-y-3">
-        {/* Signature Hash Field - reused for both event and transaction types */}
+        {/* Signature Hash Field - rebuilt for both event and transaction types */}
         <FormField
           control={form.control}
           name="sigHash"
@@ -299,40 +299,29 @@ export function FilterDetailsStep({
                 </p>
               </div>
               <FormControl>
-                {watchFilterType === "event" &&
-                Object.keys(fetchedAbis).length > 0 &&
-                eventSignatures.length > 0 ? (
-                  <Select
-                    value={field.value}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      // Find the selected event
-                      const selectedEvent = eventSignatures.find(
-                        (sig) => sig.signature === value,
-                      );
-                      // Set the ABI for the event
-                      form.setValue("sigHashAbi", selectedEvent?.abi || "");
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select an event signature">
-                        {field.value
-                          ? eventSignatures.find(
-                              (sig) => sig.signature === field.value,
-                            )?.name || ""
-                          : null}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="max-h-60 overflow-y-auto">
-                      {eventSignatures.map((event) => {
-                        // Truncate the hash for display purposes
-                        const truncatedHash = truncateMiddle(
-                          event.signature,
-                          6,
-                          4,
+                {watchFilterType === "event" ? (
+                  eventSignatures && eventSignatures.length > 0 ? (
+                    <Select
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        const selectedEvent = eventSignatures.find(
+                          (sig) => sig.signature === value,
                         );
-
-                        return (
+                        form.setValue("sigHashAbi", selectedEvent?.abi || "");
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select an event signature">
+                          {field.value
+                            ? eventSignatures.find(
+                                (sig) => sig.signature === field.value,
+                              )?.name || ""
+                            : null}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent className="max-h-60 overflow-y-auto">
+                        {eventSignatures.map((event) => (
                           <SelectItem
                             key={event.signature}
                             value={event.signature}
@@ -341,73 +330,83 @@ export function FilterDetailsStep({
                             <div className="flex flex-col">
                               <span className="font-medium">{event.name}</span>
                               <span className="text-muted-foreground text-xs">
-                                Signature: {truncatedHash}
+                                Signature:{" "}
+                                {truncateMiddle(event.signature, 6, 4)}
                               </span>
                             </div>
                           </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Input
+                      placeholder={
+                        isFetchingEventAbi
+                          ? "Fetching event signatures..."
+                          : "No event signatures available"
+                      }
+                      value={field.value}
+                      onChange={field.onChange}
+                      disabled
+                    />
+                  )
+                ) : watchFilterType === "transaction" ? (
+                  functionSignatures && functionSignatures.length > 0 ? (
+                    <Select
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        const selectedFunction = functionSignatures.find(
+                          (sig) => sig.signature === value,
                         );
-                      })}
-                    </SelectContent>
-                  </Select>
-                ) : watchFilterType === "transaction" &&
-                  Object.keys(fetchedTxAbis).length > 0 &&
-                  functionSignatures.length > 0 ? (
-                  <Select
-                    value={field.value}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      // Find the selected function
-                      const selectedFunction = functionSignatures.find(
-                        (sig) => sig.signature === value,
-                      );
-                      // Set the ABI for the function
-                      form.setValue("sigHashAbi", selectedFunction?.abi || "");
-                    }}
-                  >
-                    <SelectTrigger className="max-w-full">
-                      <SelectValue placeholder="Select a function signature">
-                        {field.value
-                          ? functionSignatures.find(
-                              (sig) => sig.signature === field.value,
-                            )?.name || ""
-                          : null}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="max-h-60 max-w-[600px] overflow-y-auto">
-                      {functionSignatures.map((func) => (
-                        <SelectItem
-                          key={func.signature}
-                          value={func.signature}
-                          title={func.signature}
-                          className="w-full overflow-x-auto"
-                        >
-                          <div className="flex w-full flex-col">
-                            <span className="overflow-x-auto whitespace-nowrap pb-1 font-medium">
-                              {func.name}
-                            </span>
-                            <span className="overflow-x-auto text-muted-foreground text-xs">
-                              Selector: {func.signature}
-                            </span>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                ) : (
-                  <Input
-                    placeholder={
-                      watchFilterType === "event"
-                        ? "Fetching event signatures..."
-                        : "Fetching function signatures..."
-                    }
-                    value={field.value}
-                    onChange={field.onChange}
-                    disabled={
-                      (watchFilterType === "event" && isFetchingEventAbi) ||
-                      (watchFilterType === "transaction" && isFetchingTxAbi)
-                    }
-                  />
-                )}
+                        form.setValue(
+                          "sigHashAbi",
+                          selectedFunction?.abi || "",
+                        );
+                      }}
+                    >
+                      <SelectTrigger className="max-w-full">
+                        <SelectValue placeholder="Select a function signature">
+                          {field.value
+                            ? functionSignatures.find(
+                                (sig) => sig.signature === field.value,
+                              )?.name || ""
+                            : null}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent className="max-h-60 max-w-[600px] overflow-y-auto">
+                        {functionSignatures.map((func) => (
+                          <SelectItem
+                            key={func.signature}
+                            value={func.signature}
+                            title={func.signature}
+                            className="w-full overflow-x-auto"
+                          >
+                            <div className="flex w-full flex-col">
+                              <span className="overflow-x-auto whitespace-nowrap pb-1 font-medium">
+                                {func.name}
+                              </span>
+                              <span className="overflow-x-auto text-muted-foreground text-xs">
+                                Selector: {truncateMiddle(func.signature, 6, 4)}
+                              </span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Input
+                      placeholder={
+                        isFetchingTxAbi
+                          ? "Fetching function signatures..."
+                          : "No function signatures available"
+                      }
+                      value={field.value}
+                      onChange={field.onChange}
+                      disabled
+                    />
+                  )
+                ) : null}
               </FormControl>
               <FormMessage />
             </FormItem>
