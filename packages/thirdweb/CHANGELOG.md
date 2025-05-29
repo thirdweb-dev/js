@@ -1,5 +1,25 @@
 # thirdweb
 
+## 5.101.2
+
+### Patch Changes
+
+- [#7185](https://github.com/thirdweb-dev/js/pull/7185) [`41e59a9`](https://github.com/thirdweb-dev/js/commit/41e59a9c2036d02802e38070122db9d9b7fe5664) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds `country` to onramp parameters
+
+- [#7157](https://github.com/thirdweb-dev/js/pull/7157) [`52d451f`](https://github.com/thirdweb-dev/js/commit/52d451ff708ccf85d21e25e960ff2a9e7f5c9c68) Thanks [@RobbyUitbeijerse](https://github.com/RobbyUitbeijerse)! - default the spinner stroke color to currentColor and make the color prop optional
+
+- [#7158](https://github.com/thirdweb-dev/js/pull/7158) [`ec7bc2b`](https://github.com/thirdweb-dev/js/commit/ec7bc2bb1e58f1a45d01eec0f308bc0f86479050) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle large NFT colletions when updating metadata
+
+- [#7183](https://github.com/thirdweb-dev/js/pull/7183) [`655df03`](https://github.com/thirdweb-dev/js/commit/655df037ddd7f2215d46e06772bce2629fffd3d0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add a `hiddenWallets` prop to `ConnectEmbed`, `ConnectButton`, and `useConnectModal` to hide specific wallets from the connect list.
+
+- [#7191](https://github.com/thirdweb-dev/js/pull/7191) [`44a7460`](https://github.com/thirdweb-dev/js/commit/44a7460c83661581f0523163752d9260a38c5781) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Remove unnecessary Switch Network button in PayEmbed
+
+- [#7202](https://github.com/thirdweb-dev/js/pull/7202) [`3d3c6f3`](https://github.com/thirdweb-dev/js/commit/3d3c6f3d45d8298f7800a731844213ac0fde314b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes a bug with purchaseData not being included on PayEmbed transfers
+
+- Updated dependencies [[`ec7bc2b`](https://github.com/thirdweb-dev/js/commit/ec7bc2bb1e58f1a45d01eec0f308bc0f86479050), [`ec7bc2b`](https://github.com/thirdweb-dev/js/commit/ec7bc2bb1e58f1a45d01eec0f308bc0f86479050)]:
+  - @thirdweb-dev/engine@3.0.2
+  - @thirdweb-dev/insight@1.0.1
+
 ## 5.101.1
 
 ### Patch Changes
