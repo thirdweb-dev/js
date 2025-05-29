@@ -15,7 +15,7 @@ export function getTokenDeploymentTrackingData(
 
 // example: asset.claim-conditions.attempt
 export function getTokenStepTrackingData(params: {
-  action: "claim-conditions" | "airdrop" | "mint";
+  action: "claim-conditions" | "airdrop" | "mint" | "deploy";
   chainId: number;
   status: "attempt" | "success" | "error";
 }) {

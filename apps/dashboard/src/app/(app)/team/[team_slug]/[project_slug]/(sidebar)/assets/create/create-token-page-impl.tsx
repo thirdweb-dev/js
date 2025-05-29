@@ -38,6 +38,8 @@ export function CreateTokenAssetPage(props: {
   client: ThirdwebClient;
   teamId: string;
   projectId: string;
+  teamSlug: string;
+  projectSlug: string;
 }) {
   const account = useActiveAccount();
   const { idToChain } = useAllChainsData();
@@ -50,6 +52,14 @@ export function CreateTokenAssetPage(props: {
       toast.error("No Connected Wallet");
       throw new Error("No Connected Wallet");
     }
+
+    trackEvent(
+      getTokenStepTrackingData({
+        action: "deploy",
+        chainId: Number(formValues.chain),
+        status: "attempt",
+      }),
+    );
 
     trackEvent(
       getTokenDeploymentTrackingData("attempt", Number(formValues.chain)),
@@ -91,6 +101,14 @@ export function CreateTokenAssetPage(props: {
       });
 
       trackEvent(
+        getTokenStepTrackingData({
+          action: "deploy",
+          chainId: Number(formValues.chain),
+          status: "success",
+        }),
+      );
+
+      trackEvent(
         getTokenDeploymentTrackingData("success", Number(formValues.chain)),
       );
 
@@ -110,6 +128,14 @@ export function CreateTokenAssetPage(props: {
         contractAddress: contractAddress,
       };
     } catch (e) {
+      trackEvent(
+        getTokenStepTrackingData({
+          action: "deploy",
+          chainId: Number(formValues.chain),
+          status: "error",
+        }),
+      );
+
       trackEvent(
         getTokenDeploymentTrackingData("error", Number(formValues.chain)),
       );
@@ -352,6 +378,8 @@ export function CreateTokenAssetPage(props: {
     <CreateTokenAssetPageUI
       accountAddress={props.accountAddress}
       client={props.client}
+      teamSlug={props.teamSlug}
+      projectSlug={props.projectSlug}
       onLaunchSuccess={() => {
         revalidatePathAction(
           `/team/${props.teamId}/project/${props.projectId}/assets`,

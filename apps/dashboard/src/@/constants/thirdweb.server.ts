@@ -1,5 +1,5 @@
 import {
-  NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID,
+  NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
   NEXT_PUBLIC_IPFS_GATEWAY_URL,
 } from "@/constants/public-envs";
 import {
@@ -76,7 +76,7 @@ export function getConfiguredThirdwebClient(options: {
   return createThirdwebClient({
     teamId: options.teamId,
     secretKey: options.secretKey,
-    clientId: NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID,
+    clientId: NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
     config: {
       storage: {
         gatewayUrl: NEXT_PUBLIC_IPFS_GATEWAY_URL,

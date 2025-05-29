@@ -5,13 +5,13 @@ import { cn } from "@/lib/utils";
 import { MessageCircleIcon, XIcon } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { createThirdwebClient } from "thirdweb";
-import { NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID } from "../../../../../@/constants/public-envs";
+import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "../../../../../@/constants/public-envs";
 import { useTrack } from "../../../../../hooks/analytics/useTrack";
 import CustomChatContent from "./CustomChatContent";
 
 // Create a thirdweb client for the chat functionality
 const client = createThirdwebClient({
-  clientId: NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID,
+  clientId: NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
 });
 
 export function CustomChatButton(props: {

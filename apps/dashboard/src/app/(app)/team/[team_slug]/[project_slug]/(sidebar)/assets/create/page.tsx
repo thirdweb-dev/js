@@ -57,6 +57,8 @@ export default async function Page(props: {
       />
       <div className="container max-w-5xl pt-8 pb-32">
         <CreateTokenAssetPage
+          teamSlug={params.team_slug}
+          projectSlug={params.project_slug}
           accountAddress={accountAddress}
           client={client}
           teamId={team.id}

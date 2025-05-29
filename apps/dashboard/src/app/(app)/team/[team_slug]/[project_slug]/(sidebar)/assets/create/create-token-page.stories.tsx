@@ -41,6 +41,8 @@ const mockCreateTokenFunctions = {
 export const Default: Story = {
   args: {
     accountAddress: "0x1234567890123456789012345678901234567890",
+    teamSlug: "test-team",
+    projectSlug: "test-project",
     client: storybookThirdwebClient,
     createTokenFunctions: mockCreateTokenFunctions,
     onLaunchSuccess: () => {},
@@ -50,6 +52,8 @@ export const Default: Story = {
 export const ErrorOnDeploy: Story = {
   args: {
     accountAddress: "0x1234567890123456789012345678901234567890",
+    teamSlug: "test-team",
+    projectSlug: "test-project",
     client: storybookThirdwebClient,
     onLaunchSuccess: () => {},
     createTokenFunctions: {

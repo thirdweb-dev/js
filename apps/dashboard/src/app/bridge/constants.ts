@@ -1,5 +1,5 @@
 import {
-  NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID,
+  NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
   NEXT_PUBLIC_IPFS_GATEWAY_URL,
 } from "@/constants/public-envs";
 import {
@@ -34,7 +34,7 @@ function getBridgeThirdwebClient() {
 
   return createThirdwebClient({
     secretKey: undefined,
-    clientId: NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID,
+    clientId: NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
     config: {
       storage: {
         gatewayUrl: NEXT_PUBLIC_IPFS_GATEWAY_URL,

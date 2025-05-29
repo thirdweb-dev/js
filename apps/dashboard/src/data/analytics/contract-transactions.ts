@@ -1,4 +1,4 @@
-import { NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID } from "@/constants/public-envs";
+import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
 import { getUnixTime } from "date-fns";
 import { getVercelEnv } from "../../lib/vercel-utils";
 
@@ -49,7 +49,7 @@ export async function getContractTransactionAnalytics(params: {
     `https://insight.${thirdwebDomain}.com/v1/transactions/${params.contractAddress}?${queryParams}`,
     {
       headers: {
-        "x-client-id": NET_PUBLIC_DASHBOARD_THIRDWEB_CLIENT_ID,
+        "x-client-id": NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
       },
     },
   );

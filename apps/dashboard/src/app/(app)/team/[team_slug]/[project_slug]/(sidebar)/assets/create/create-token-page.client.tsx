@@ -35,6 +35,8 @@ export function CreateTokenAssetPageUI(props: {
   client: ThirdwebClient;
   createTokenFunctions: CreateTokenFunctions;
   onLaunchSuccess: () => void;
+  teamSlug: string;
+  projectSlug: string;
 }) {
   const [step, setStep] = useState<"token-info" | "distribution" | "launch">(
     "token-info",
@@ -114,6 +116,8 @@ export function CreateTokenAssetPageUI(props: {
 
       {step === "launch" && (
         <LaunchTokenStatus
+          teamSlug={props.teamSlug}
+          projectSlug={props.projectSlug}
           client={props.client}
           onLaunchSuccess={props.onLaunchSuccess}
           onPrevious={() => {

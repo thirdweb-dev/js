@@ -3,16 +3,17 @@ import type { SVGProps } from "react";
 export const XIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
-      role="img"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
       fill="currentColor"
-      width={24}
-      height={24}
+      height="20"
+      viewBox="0 0 16 16"
+      width="20"
+      xmlns="http://www.w3.org/2000/svg"
+      role="presentation"
       {...props}
     >
-      <title>X</title>
-      <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+      <g id="Twitter">
+        <path d="M9.14163 7.19284L13.6089 2H12.5503L8.67137 6.50887L5.57328 2H2L6.68492 8.81821L2 14.2637H3.05866L7.15491 9.50218L10.4267 14.2637H14L9.14163 7.19284ZM7.69165 8.87828L7.21697 8.19934L3.44011 2.79694H5.06615L8.11412 7.15685L8.5888 7.83579L12.5508 13.503H10.9248L7.69165 8.87828Z" />
+      </g>
     </svg>
   );
 };

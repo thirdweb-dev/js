@@ -33,6 +33,8 @@ export function LaunchTokenStatus(props: {
   onPrevious: () => void;
   client: ThirdwebClient;
   onLaunchSuccess: () => void;
+  teamSlug: string;
+  projectSlug: string;
 }) {
   const formValues = props.values;
   const { createTokenFunctions } = props;
@@ -100,7 +102,9 @@ export function LaunchTokenStatus(props: {
         retryLabel: "Failed to deploy contract",
         execute: createSequenceExecutorFn(0, async (values) => {
           const result = await createTokenFunctions.deployContract(values);
-          setContractLink(`/${values.chain}/${result.contractAddress}`);
+          setContractLink(
+            `/team/${props.teamSlug}/${props.projectSlug}/contract/${values.chain}/${result.contractAddress}`,
+          );
         }),
       },
       {
