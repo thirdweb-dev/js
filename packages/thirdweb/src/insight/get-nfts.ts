@@ -319,7 +319,12 @@ async function transformNFTModel(
         });
       }
 
-      return parsedNft;
+      return {
+        ...parsedNft,
+        ...(contract?.type === "erc1155"
+          ? { quantityOwned: balance ? BigInt(balance) : undefined }
+          : {}),
+      };
     }),
   );
 }

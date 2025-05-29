@@ -47,6 +47,23 @@ describe.runIf(
       });
     });
 
+    it("should create a server wallet", async () => {
+      const serverWallet = await Engine.createServerWallet({
+        client: TEST_CLIENT,
+        label: "My Server Wallet",
+      });
+      expect(serverWallet).toBeDefined();
+
+      const serverWallets = await Engine.getServerWallets({
+        client: TEST_CLIENT,
+      });
+      expect(serverWallets).toBeDefined();
+      expect(serverWallets.length).toBeGreaterThan(0);
+      expect(
+        serverWallets.find((s) => s.address === serverWallet.address),
+      ).toBeDefined();
+    });
+
     it("should sign a message", async () => {
       const signature = await serverWallet.signMessage({
         message: "hello",
@@ -95,6 +112,16 @@ describe.runIf(
         transactionId: result.transactionId,
       });
       expect(txHash.transactionHash).toBeDefined();
+
+      const res = await Engine.searchTransactions({
+        client: TEST_CLIENT,
+        filters: [
+          { field: "id", values: [result.transactionId], operation: "OR" },
+        ],
+      });
+      expect(res).toBeDefined();
+      expect(res.transactions.length).toBe(1);
+      expect(res.transactions[0]?.id).toBe(result.transactionId);
     });
 
     it("should send a extension tx", async () => {
@@ -113,6 +140,33 @@ describe.runIf(
         transaction: claimTx,
       });
       expect(tx).toBeDefined();
+    });
+
+    it("should enqueue a batch of txs", async () => {
+      const tokenContract = getContract({
+        client: TEST_CLIENT,
+        chain: baseSepolia,
+        address: "0x87C52295891f208459F334975a3beE198fE75244",
+      });
+      const claimTx1 = mintTo({
+        contract: tokenContract,
+        to: serverWallet.address,
+        amount: "0.001",
+      });
+      const claimTx2 = mintTo({
+        contract: tokenContract,
+        to: serverWallet.address,
+        amount: "0.002",
+      });
+      const tx = await serverWallet.enqueueBatchTransaction({
+        transactions: [claimTx1, claimTx2],
+      });
+      expect(tx.transactionId).toBeDefined();
+      const txHash = await Engine.waitForTransactionHash({
+        client: TEST_CLIENT,
+        transactionId: tx.transactionId,
+      });
+      expect(txHash.transactionHash).toBeDefined();
     });
 
     it("should get revert reason", async () => {

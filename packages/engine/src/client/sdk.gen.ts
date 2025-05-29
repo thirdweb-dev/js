@@ -7,6 +7,8 @@ import type {
 } from "@hey-api/client-fetch";
 import { client as _heyApiClient } from "./client.gen.js";
 import type {
+  CreateAccountData,
+  CreateAccountResponse,
   EncodeFunctionDataData,
   EncodeFunctionDataResponse,
   GetNativeBalanceData,
@@ -15,6 +17,8 @@ import type {
   GetTransactionAnalyticsResponse,
   GetTransactionAnalyticsSummaryData,
   GetTransactionAnalyticsSummaryResponse,
+  ListAccountsData,
+  ListAccountsResponse,
   ReadContractData,
   ReadContractResponse,
   SearchTransactionsData,
@@ -46,6 +50,56 @@ export type Options<
    * used to access values that aren't defined as part of the SDK function.
    */
   meta?: Record<string, unknown>;
+};
+
+/**
+ * List Server Wallets
+ * List all engine server wallets for the current project. Returns an array of EOA addresses with their corresponding predicted smart account addresses.
+ */
+export const listAccounts = <ThrowOnError extends boolean = false>(
+  options?: Options<ListAccountsData, ThrowOnError>,
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    ListAccountsResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        name: "x-secret-key",
+        type: "apiKey",
+      },
+    ],
+    url: "/v1/accounts",
+    ...options,
+  });
+};
+
+/**
+ * Create Server Wallet
+ * Create a new engine server wallet. This is a helper route for creating a new EOA with your KMS provider, provided as a convenient alternative to creating an EOA directly with your KMS provider. Your KMS credentials are not stored, and usage of created accounts require your KMS credentials to be sent with requests.
+ */
+export const createAccount = <ThrowOnError extends boolean = false>(
+  options?: Options<CreateAccountData, ThrowOnError>,
+) => {
+  return (options?.client ?? _heyApiClient).post<
+    CreateAccountResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      {
+        name: "x-secret-key",
+        type: "apiKey",
+      },
+    ],
+    url: "/v1/accounts",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  });
 };
 
 /**

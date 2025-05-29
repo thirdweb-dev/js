@@ -9,7 +9,7 @@ export type TransactionsFilterValue = {
     | "smartAccountAddress"
     | "chainId";
   values: Array<string>;
-  operation: "AND" | "OR";
+  operation?: "AND" | "OR";
 };
 
 export type TransactionsFilterNested = {
@@ -91,6 +91,70 @@ export type AaZksyncExecutionOptions = {
    */
   chainId: string;
 };
+
+export type ListAccountsData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/v1/accounts";
+};
+
+export type ListAccountsResponses = {
+  /**
+   * Accounts retrieved successfully
+   */
+  200: {
+    result: Array<{
+      /**
+       * EVM address in hex format
+       */
+      address: string;
+      /**
+       * The predicted smart account address for use with the default thirdweb v0.7 AccountFactory
+       */
+      smartAccountAddress?: string;
+    }>;
+  };
+};
+
+export type ListAccountsResponse =
+  ListAccountsResponses[keyof ListAccountsResponses];
+
+export type CreateAccountData = {
+  body?: {
+    label: string;
+  };
+  headers?: {
+    /**
+     * Vault Access Token used to access your EOA
+     */
+    "x-vault-access-token"?: string;
+  };
+  path?: never;
+  query?: never;
+  url: "/v1/accounts";
+};
+
+export type CreateAccountResponses = {
+  /**
+   * Account created successfully
+   */
+  201: {
+    result: {
+      /**
+       * EVM address in hex format
+       */
+      address: string;
+      /**
+       * The predicted smart account address for use with the default thirdweb v0.7 AccountFactory
+       */
+      smartAccountAddress?: string;
+    };
+  };
+};
+
+export type CreateAccountResponse =
+  CreateAccountResponses[keyof CreateAccountResponses];
 
 export type WriteContractData = {
   body?: {
