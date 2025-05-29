@@ -7,13 +7,15 @@ import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import { getContract } from "../../../../../../../contract/contract.js";
 import { allowance } from "../../../../../../../extensions/erc20/__generated__/IERC20/read/allowance.js";
-import type { GetBuyWithCryptoQuoteParams } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
-import { useBuyWithCryptoQuote } from "../../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
+import { useBuyPrepare, type UseBuyPrepareParams } from "../../../../../../core/hooks/bridge/useBuyPrepare.js";
 import { getErrorMessage } from "../../../../../utils/errors.js";
 import type { PayEmbedConnectOptions } from "../../../../PayEmbed.js";
+import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import { Value } from "ox";
+import * as ox__AbiFunction from "ox/AbiFunction";
 import {
   Drawer,
   DrawerOverlay,
@@ -101,7 +103,7 @@ export function SwapScreenContent(props: {
     !!fromChain &&
     !!fromTokenId &&
     !(fromChain?.id === toChain.id && fromTokenId === toTokenId);
-  const quoteParams: GetBuyWithCryptoQuoteParams | undefined =
+  const quoteParams: UseBuyPrepareParams | undefined =
     fromChain && fromToken && swapRequired
       ? {
           // wallets
@@ -124,39 +126,151 @@ export function SwapScreenContent(props: {
         }
       : undefined;
 
-  const quoteQuery = useBuyWithCryptoQuote(quoteParams, {
+  const quoteQuery = useBuyPrepare(quoteParams, {
     // refetch every 30 seconds
     staleTime: 30 * 1000,
     refetchInterval: 30 * 1000,
     gcTime: 30 * 1000,
   });
 
+  // Convert Bridge quote to BuyWithCryptoQuote format for backwards compatibility
+  // This is a temporary adapter until we update all components to handle multi-step quotes
+  const adaptedQuote: BuyWithCryptoQuote | undefined = (() => {
+    if (!quoteQuery.data || !quoteQuery.data.steps[0]) {
+      return undefined;
+    }
+    
+    const firstStep = quoteQuery.data.steps[0];
+    const approvalTxs = firstStep.transactions.filter(tx => tx.action === "approval");
+    const swapTxs = firstStep.transactions.filter(tx => tx.action !== "approval");
+    const swapTx = swapTxs[0];
+    
+    if (!swapTx) {
+      return undefined;
+    }
+
+    let approvalData: BuyWithCryptoQuote["approvalData"] = undefined;
+    if (approvalTxs[0]) {
+      const approvalTx = approvalTxs[0];
+      const abiFunction = ox__AbiFunction.from([
+        "function approve(address spender, uint256 amount)",
+      ]);
+      const [spender, amount] = ox__AbiFunction.decodeData(
+        abiFunction,
+        approvalTx.data,
+      );
+      approvalData = {
+        chainId: firstStep.originToken.chainId,
+        tokenAddress: firstStep.originToken.address,
+        spenderAddress: spender,
+        amountWei: amount.toString(),
+      };
+    }
+
+    return {
+      transactionRequest: {
+        ...swapTx,
+        extraGas: 50000n,
+      },
+      approvalData,
+      swapDetails: {
+        fromAddress: quoteQuery.data.intent.sender,
+        toAddress: quoteQuery.data.intent.receiver,
+        fromToken: {
+          tokenAddress: firstStep.originToken.address,
+          chainId: firstStep.originToken.chainId,
+          decimals: firstStep.originToken.decimals,
+          symbol: firstStep.originToken.symbol,
+          name: firstStep.originToken.name,
+          priceUSDCents: firstStep.originToken.priceUsd * 100,
+        },
+        toToken: {
+          tokenAddress: firstStep.destinationToken.address,
+          chainId: firstStep.destinationToken.chainId,
+          decimals: firstStep.destinationToken.decimals,
+          symbol: firstStep.destinationToken.symbol,
+          name: firstStep.destinationToken.name,
+          priceUSDCents: firstStep.destinationToken.priceUsd * 100,
+        },
+        fromAmount: Value.format(
+          quoteQuery.data.originAmount,
+          firstStep.originToken.decimals,
+        ).toString(),
+        fromAmountWei: quoteQuery.data.originAmount.toString(),
+        toAmountMinWei: quoteQuery.data.destinationAmount.toString(),
+        toAmountMin: Value.format(
+          quoteQuery.data.destinationAmount,
+          firstStep.destinationToken.decimals,
+        ).toString(),
+        toAmountWei: quoteQuery.data.destinationAmount.toString(),
+        toAmount: Value.format(
+          quoteQuery.data.destinationAmount,
+          firstStep.destinationToken.decimals,
+        ).toString(),
+        estimated: {
+          fromAmountUSDCents:
+            Number(
+              Value.format(quoteQuery.data.originAmount, firstStep.originToken.decimals),
+            ) *
+            firstStep.originToken.priceUsd *
+            100,
+          toAmountMinUSDCents:
+            Number(
+              Value.format(
+                quoteQuery.data.destinationAmount,
+                firstStep.destinationToken.decimals,
+              ),
+            ) *
+            firstStep.destinationToken.priceUsd *
+            100,
+          toAmountUSDCents:
+            Number(
+              Value.format(
+                quoteQuery.data.destinationAmount,
+                firstStep.destinationToken.decimals,
+              ),
+            ) *
+            firstStep.destinationToken.priceUsd *
+            100,
+          slippageBPS: 0,
+          feesUSDCents: 0,
+          gasCostUSDCents: 0,
+          durationSeconds: firstStep.estimatedExecutionTimeMs / 1000,
+        },
+        maxSlippageBPS: 0,
+      },
+      paymentTokens: [],
+      processingFees: [],
+      client: props.client,
+    };
+  })();
+
   const allowanceQuery = useQuery({
     queryKey: [
       "allowance",
       payer.account.address,
-      quoteQuery.data?.approvalData,
+      adaptedQuote?.approvalData,
     ],
     queryFn: () => {
-      if (!quoteQuery.data?.approvalData) {
+      if (!adaptedQuote?.approvalData) {
         return null;
       }
       return allowance({
         contract: getContract({
           client: props.client,
-          address: quoteQuery.data.swapDetails.fromToken.tokenAddress,
-          chain: getCachedChain(quoteQuery.data.swapDetails.fromToken.chainId),
+          address: adaptedQuote.swapDetails.fromToken.tokenAddress,
+          chain: getCachedChain(adaptedQuote.swapDetails.fromToken.chainId),
         }),
-        spender: quoteQuery.data.approvalData.spenderAddress,
+        spender: adaptedQuote.approvalData.spenderAddress,
         owner: props.payer.account.address,
       });
     },
-    enabled: !!quoteQuery.data?.approvalData,
+    enabled: !!adaptedQuote?.approvalData,
     refetchOnMount: true,
   });
 
   const sourceTokenAmount = swapRequired
-    ? quoteQuery.data?.swapDetails.fromAmount
+    ? adaptedQuote?.swapDetails.fromAmount
     : tokenAmount;
 
   const isNotEnoughBalance =
@@ -167,7 +281,7 @@ export function SwapScreenContent(props: {
   const disableContinue =
     !fromChain ||
     !fromToken ||
-    (swapRequired && !quoteQuery.data) ||
+    (swapRequired && !adaptedQuote) ||
     isNotEnoughBalance ||
     allowanceQuery.isLoading;
 
@@ -205,19 +319,19 @@ export function SwapScreenContent(props: {
       return;
     }
 
-    if (!quoteQuery.data) {
+    if (!adaptedQuote) {
       return;
     }
 
     setScreen({
       id: "swap-flow",
-      quote: quoteQuery.data,
+      quote: adaptedQuote,
       approvalAmount: allowanceQuery.data ?? undefined,
     });
   }
 
   function showFees() {
-    if (!quoteQuery.data) {
+    if (!adaptedQuote) {
       return;
     }
 
@@ -231,13 +345,13 @@ export function SwapScreenContent(props: {
         <>
           <DrawerOverlay ref={drawerOverlayRef} />
           <Drawer ref={drawerRef} close={() => setIsOpen(false)}>
-            {drawerScreen === "fees" && quoteQuery.data && (
+            {drawerScreen === "fees" && adaptedQuote && (
               <div>
                 <Text size="lg" color="primaryText">
                   Fees
                 </Text>
                 <Spacer y="lg" />
-                <SwapFees quote={quoteQuery.data} />
+                <SwapFees quote={adaptedQuote} />
               </div>
             )}
           </Drawer>
@@ -275,7 +389,7 @@ export function SwapScreenContent(props: {
             <EstimatedTimeAndFees
               quoteIsLoading={quoteQuery.isLoading}
               estimatedSeconds={
-                quoteQuery.data?.swapDetails.estimated.durationSeconds
+                adaptedQuote?.swapDetails.estimated.durationSeconds
               }
               onViewFees={showFees}
             />

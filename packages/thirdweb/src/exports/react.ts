@@ -102,6 +102,12 @@ export {
   type BuyWithCryptoQuoteQueryOptions,
 } from "../react/core/hooks/pay/useBuyWithCryptoQuote.js";
 export { useBuyWithCryptoStatus } from "../react/core/hooks/pay/useBuyWithCryptoStatus.js";
+
+// bridge
+export {
+  useBuyPrepare,
+  type UseBuyPrepareParams,
+} from "../react/core/hooks/bridge/useBuyPrepare.js";
 export {
   useBuyWithCryptoHistory,
   type BuyWithCryptoHistoryQueryOptions,
