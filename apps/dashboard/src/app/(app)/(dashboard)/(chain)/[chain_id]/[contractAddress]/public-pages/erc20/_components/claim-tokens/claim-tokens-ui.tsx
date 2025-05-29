@@ -122,8 +122,8 @@ export function ClaimTokenCardUI(props: {
       }
 
       async function sendAndConfirm() {
-        const receipt = await sendClaimTx.mutateAsync(transaction);
-        await waitForReceipt(receipt);
+        const result = await sendClaimTx.mutateAsync(transaction);
+        await waitForReceipt(result);
       }
 
       setStepsUI({
@@ -154,12 +154,7 @@ export function ClaimTokenCardUI(props: {
   });
 
   const claimParamsQuery = useQuery({
-    queryKey: [
-      "claim-params",
-      props.contract.address,
-      quantity,
-      account?.address,
-    ],
+    queryKey: ["claim-params", props.contract.address, account?.address],
     queryFn: async () => {
       const defaultPricing = {
         pricePerTokenWei: props.claimCondition.pricePerToken,
@@ -180,7 +175,7 @@ export function ClaimTokenCardUI(props: {
       const claimParams = await getClaimParams({
         contract: props.contract,
         to: account.address,
-        quantity: BigInt(quantity),
+        quantity: 1n, // not relevant
         type: "erc20",
         tokenDecimals: props.decimals,
         from: account.address,
@@ -203,12 +198,6 @@ export function ClaimTokenCardUI(props: {
   });
 
   const claimParamsData = claimParamsQuery.data;
-
-  const totalPriceInTokens = claimParamsData
-    ? Number(
-        toTokens(claimParamsData.pricePerTokenWei, claimParamsData.decimals),
-      ) * quantity
-    : undefined;
 
   return (
     <div className="rounded-xl border bg-card ">
@@ -269,8 +258,15 @@ export function ClaimTokenCardUI(props: {
                 <SkeletonContainer
                   skeletonData={"0.00 ETH"}
                   loadedData={
-                    totalPriceInTokens && claimParamsData
-                      ? `${totalPriceInTokens} ${claimParamsData.symbol}`
+                    claimParamsData
+                      ? `${
+                          Number(
+                            toTokens(
+                              claimParamsData.pricePerTokenWei,
+                              claimParamsData.decimals,
+                            ),
+                          ) * quantity
+                        } ${claimParamsData.symbol}`
                       : undefined
                   }
                   render={(v) => {
@@ -286,6 +282,7 @@ export function ClaimTokenCardUI(props: {
           {account ? (
             <TransactionButton
               transactionCount={undefined}
+              checkBalance={false}
               isLoggedIn={true}
               isPending={approveAndClaim.isPending}
               onClick={async () => {

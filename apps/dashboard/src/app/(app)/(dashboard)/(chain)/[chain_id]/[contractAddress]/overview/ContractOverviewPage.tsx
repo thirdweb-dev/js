@@ -53,7 +53,7 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
               text: "View asset page",
               icon: <ExternalLinkIcon className="size-4" />,
               target: "_blank",
-              link: `https://thirdweb.com/${chainSlug}/${contract.address}`,
+              link: `/${chainSlug}/${contract.address}`,
             }}
             trackingCategory="erc20-contract"
             trackingLabel="view-asset-page"

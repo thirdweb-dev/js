@@ -6,10 +6,17 @@ import {
   useContractTransactionAnalytics,
   useContractUniqueWalletAnalytics,
 } from "data/analytics/hooks";
+import { differenceInCalendarDays, formatDate } from "date-fns";
 import { useMemo, useState } from "react";
 
-function getDayKey(date: Date) {
-  return date.toISOString().split("T")[0];
+function getDateKey(date: Date, precision: "day" | "hour") {
+  const dayKey = date.toISOString().split("T")[0];
+  if (precision === "day") {
+    return dayKey;
+  }
+
+  const hourKey = date.getHours();
+  return `${dayKey}-${hourKey}`;
 }
 
 export function ContractAnalyticsOverview(props: {
@@ -50,33 +57,59 @@ export function ContractAnalyticsOverview(props: {
   const isPending =
     wallets.isPending || transactions.isPending || events.isPending;
 
-  const mergedData = useMemo(() => {
+  const { data, precision } = useMemo(() => {
     if (isPending) {
-      return undefined;
+      return {
+        data: undefined,
+        precision: "day" as const,
+      };
     }
 
     const time = (wallets.data || transactions.data || events.data || []).map(
       (wallet) => wallet.time,
     );
 
-    return time.map((time) => {
-      const wallet = wallets.data?.find(
-        (wallet) => getDayKey(wallet.time) === getDayKey(time),
-      );
-      const transaction = transactions.data?.find(
-        (transaction) => getDayKey(transaction.time) === getDayKey(time),
-      );
-      const event = events.data?.find((event) => {
-        return getDayKey(event.time) === getDayKey(time);
-      });
+    // if the time difference between the first and last time is less than 3 days - use hour precision
+    const firstTime = time[0];
+    const lastTime = time[time.length - 1];
+    const timeDiff =
+      firstTime && lastTime
+        ? differenceInCalendarDays(lastTime, firstTime)
+        : undefined;
 
-      return {
-        time,
-        wallets: wallet?.count || 0,
-        transactions: transaction?.count || 0,
-        events: event?.count || 0,
-      };
-    });
+    const precision: "day" | "hour" = !timeDiff
+      ? "hour"
+      : timeDiff < 3
+        ? "hour"
+        : "day";
+
+    return {
+      data: time.map((time) => {
+        const wallet = wallets.data?.find(
+          (wallet) =>
+            getDateKey(wallet.time, precision) === getDateKey(time, precision),
+        );
+        const transaction = transactions.data?.find(
+          (transaction) =>
+            getDateKey(transaction.time, precision) ===
+            getDateKey(time, precision),
+        );
+
+        const event = events.data?.find((event) => {
+          return (
+            getDateKey(event.time, precision) === getDateKey(time, precision)
+          );
+        });
+
+        return {
+          time,
+          wallets: wallet?.count || 0,
+          transactions: transaction?.count || 0,
+          events: event?.count || 0,
+        };
+      }),
+      precision,
+    };
   }, [wallets.data, transactions.data, events.data, isPending]);
 
   return (
@@ -105,11 +138,26 @@ export function ContractAnalyticsOverview(props: {
             color: "hsl(var(--chart-3))",
           },
         }}
-        data={mergedData || []}
+        data={data || []}
         isPending={isPending}
         showLegend
+        hideLabel={false}
         chartClassName="aspect-[1.5] lg:aspect-[3]"
+        toolTipLabelFormatter={toolTipLabelFormatterWithPrecision(precision)}
       />
     </div>
   );
+}
+
+function toolTipLabelFormatterWithPrecision(precision: "day" | "hour") {
+  return function toolTipLabelFormatter(_v: string, item: unknown) {
+    if (Array.isArray(item)) {
+      const time = item[0].payload.time as number;
+      return formatDate(
+        new Date(time),
+        precision === "day" ? "MMM d, yyyy" : "MMM d, yyyy hh:mm a",
+      );
+    }
+    return undefined;
+  };
 }

@@ -80,13 +80,20 @@ type MistmatchButtonProps = React.ComponentProps<typeof Button> & {
   txChainId: number;
   isLoggedIn: boolean;
   isPending: boolean;
+  checkBalance?: boolean;
 };
 
 export const MismatchButton = forwardRef<
   HTMLButtonElement,
   MistmatchButtonProps
 >((props, ref) => {
-  const { txChainId, isLoggedIn, isPending, ...buttonProps } = props;
+  const {
+    txChainId,
+    isLoggedIn,
+    isPending,
+    checkBalance = true,
+    ...buttonProps
+  } = props;
   const account = useActiveAccount();
   const wallet = useActiveWallet();
   const activeWalletChain = useActiveWalletChain();
@@ -150,7 +157,8 @@ export const MismatchButton = forwardRef<
   }
 
   const isBalanceRequired =
-    wallet.id === "smart" ? false : !GAS_FREE_CHAINS.includes(txChainId);
+    checkBalance &&
+    (wallet.id === "smart" ? false : !GAS_FREE_CHAINS.includes(txChainId));
 
   const notEnoughBalance =
     (txChainBalance.data?.value || 0n) === 0n && isBalanceRequired;

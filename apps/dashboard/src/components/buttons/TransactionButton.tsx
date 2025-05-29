@@ -29,6 +29,7 @@ type TransactionButtonProps = Omit<ButtonProps, "variant"> & {
   txChainID: number;
   variant?: "destructive" | "primary" | "default";
   isLoggedIn: boolean;
+  checkBalance?: boolean;
 };
 
 export const TransactionButton: React.FC<TransactionButtonProps> = ({
@@ -38,6 +39,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   txChainID,
   variant,
   isLoggedIn,
+  checkBalance,
   ...restButtonProps
 }) => {
   const activeWallet = useActiveWallet();
@@ -68,6 +70,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
           txChainId={txChainID}
           {...restButtonProps}
           disabled={disabled}
+          checkBalance={checkBalance}
           className={cn("relative overflow-hidden", restButtonProps.className)}
           style={{
             paddingLeft: transactionCount

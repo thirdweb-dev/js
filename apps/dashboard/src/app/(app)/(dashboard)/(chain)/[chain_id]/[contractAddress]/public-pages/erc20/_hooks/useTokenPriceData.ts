@@ -51,5 +51,6 @@ export function useTokenPriceData(params: {
           }
         : { type: "no-data" as const };
     },
+    refetchInterval: 5000,
   });
 }
