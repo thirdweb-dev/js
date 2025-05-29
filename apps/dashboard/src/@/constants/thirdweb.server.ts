@@ -1,7 +1,4 @@
-import {
-  NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
-  NEXT_PUBLIC_IPFS_GATEWAY_URL,
-} from "@/constants/public-envs";
+import { NEXT_PUBLIC_IPFS_GATEWAY_URL } from "@/constants/public-envs";
 import {
   THIRDWEB_BRIDGE_URL,
   THIRDWEB_BUNDLER_DOMAIN,
@@ -22,10 +19,21 @@ import {
 import { getZkPaymasterData } from "thirdweb/wallets/smart";
 import { getVercelEnv } from "../../lib/vercel-utils";
 
-export function getConfiguredThirdwebClient(options: {
-  secretKey: string | undefined;
-  teamId: string | undefined;
-}): ThirdwebClient {
+export function getConfiguredThirdwebClient(
+  options:
+    | {
+        type: "server";
+        secretKey: string;
+        clientId: string | undefined;
+        teamId: string | undefined;
+      }
+    | {
+        type: "client";
+        clientId: string;
+        secretKey: string | undefined;
+        teamId: string | undefined;
+      },
+): ThirdwebClient {
   if (getVercelEnv() !== "production") {
     // if not on production: run this when creating a client to set the domains
     setThirdwebDomains({
@@ -73,16 +81,30 @@ export function getConfiguredThirdwebClient(options: {
     });
   }
 
-  return createThirdwebClient({
-    teamId: options.teamId,
-    secretKey: options.secretKey,
-    clientId: NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
-    config: {
-      storage: {
-        gatewayUrl: NEXT_PUBLIC_IPFS_GATEWAY_URL,
-      },
-    },
-  });
+  return createThirdwebClient(
+    // this ternary is purely for making typescript happy - both are same object
+    options.type === "server"
+      ? {
+          teamId: options.teamId,
+          secretKey: options.secretKey,
+          clientId: options.clientId,
+          config: {
+            storage: {
+              gatewayUrl: NEXT_PUBLIC_IPFS_GATEWAY_URL,
+            },
+          },
+        }
+      : {
+          teamId: options.teamId,
+          secretKey: options.secretKey,
+          clientId: options.clientId,
+          config: {
+            storage: {
+              gatewayUrl: NEXT_PUBLIC_IPFS_GATEWAY_URL,
+            },
+          },
+        },
+  );
 }
 
 /**

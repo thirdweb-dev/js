@@ -1,19 +1,11 @@
 "use client";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import {
-  CheckIcon,
-  CircleIcon,
-  MinusIcon,
-  PlusIcon,
-  XIcon,
-} from "lucide-react";
+import { CheckIcon, CircleIcon, XIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -33,6 +25,7 @@ import {
 import { useActiveAccount, useSendTransaction } from "thirdweb/react";
 import { getClaimParams } from "thirdweb/utils";
 import { tryCatch } from "utils/try-catch";
+import { DecimalInput } from "../../../../../../../../../../@/components/ui/decimal-input";
 import { getSDKTheme } from "../../../../../../../../components/sdk-component-theme";
 import { PublicPageConnectButton } from "../../../_components/PublicPageConnectButton";
 import { getCurrencyMeta } from "../../_utils/getCurrencyMeta";
@@ -53,7 +46,7 @@ export function ClaimTokenCardUI(props: {
     symbol: string;
   };
 }) {
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState("1");
   const account = useActiveAccount();
   const { theme } = useTheme();
   const sendClaimTx = useSendTransaction({
@@ -216,6 +209,7 @@ export function ClaimTokenCardUI(props: {
               quantity={quantity}
               setQuantity={setQuantity}
               id="token-amount"
+              symbol={props.symbol}
             />
             {/* <p className="text-xs text-muted-foreground">Maximum purchasable: {tokenData.maxPurchasable} tokens</p> */}
           </div>
@@ -246,9 +240,7 @@ export function ClaimTokenCardUI(props: {
             {/* Quantity */}
             <div className="flex justify-between font-medium text-sm">
               <span>Quantity</span>
-              <span>
-                {quantity} Token{quantity > 1 ? "s" : ""}
-              </span>
+              <span>{quantity}</span>
             </div>
 
             {/* Total Price */}
@@ -265,7 +257,7 @@ export function ClaimTokenCardUI(props: {
                               claimParamsData.pricePerTokenWei,
                               claimParamsData.decimals,
                             ),
-                          ) * quantity
+                          ) * Number(quantity)
                         } ${claimParamsData.symbol}`
                       : undefined
                   }
@@ -293,7 +285,7 @@ export function ClaimTokenCardUI(props: {
               txChainID={props.contract.chain.id}
               disabled={approveAndClaim.isPending || !claimParamsData}
             >
-              Buy Token{quantity > 1 ? "s" : ""}
+              Buy
             </TransactionButton>
           ) : (
             <PublicPageConnectButton connectButtonClassName="!w-full" />
@@ -350,39 +342,25 @@ function StepUI(props: {
 }
 
 function PriceInput(props: {
-  quantity: number;
-  setQuantity: (quantity: number) => void;
+  quantity: string;
+  setQuantity: (quantity: string) => void;
   id: string;
+  symbol: string;
 }) {
   return (
-    <div className="flex items-center">
-      <Input
+    <div className="relative">
+      <DecimalInput
         id={props.id}
-        type="number"
-        value={props.quantity}
-        onChange={(e) =>
-          props.setQuantity(Math.max(1, Number(e.target.value) || 1))
-        }
-        min="1"
-        className="!text-xl h-12 rounded-r-none border-r-0 font-semibold "
+        value={String(props.quantity)}
+        onChange={(value) => {
+          console.log("value", value);
+          props.setQuantity(value);
+        }}
+        className="!text-2xl h-auto truncate bg-muted/50 pr-14 font-bold"
       />
-
-      <Button
-        variant="outline"
-        className="h-12 w-16 rounded-none border-r-0 bg-background p-0 disabled:opacity-100"
-        onClick={() => props.setQuantity(props.quantity - 1)}
-        disabled={props.quantity <= 1}
-      >
-        <MinusIcon className="size-4" />
-      </Button>
-
-      <Button
-        className="h-12 w-16 rounded-l-none bg-background p-0 disabled:opacity-100"
-        variant="outline"
-        onClick={() => props.setQuantity(props.quantity + 1)}
-      >
-        <PlusIcon className="size-4" />
-      </Button>
+      <div className="-translate-y-1/2 absolute top-1/2 right-4 text-base text-muted-foreground">
+        {props.symbol}
+      </div>
     </div>
   );
 }

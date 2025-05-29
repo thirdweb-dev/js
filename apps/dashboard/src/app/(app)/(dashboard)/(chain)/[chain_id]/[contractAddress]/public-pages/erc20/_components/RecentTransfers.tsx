@@ -18,7 +18,7 @@ import {
   ChevronRightIcon,
   ExternalLinkIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { type ThirdwebContract, toTokens } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import {
@@ -199,6 +199,7 @@ export function RecentTransfers(props: {
 }) {
   const rowsPerPage = 10;
   const [page, setPage] = useState(0);
+  const [hasFetchedOnce, setHasFetchedOnce] = useState(false);
 
   const tokenQuery = useTokenTransfers({
     chainId: props.clientContract.chain.id,
@@ -207,11 +208,18 @@ export function RecentTransfers(props: {
     limit: rowsPerPage,
   });
 
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (!tokenQuery.isPending) {
+      setHasFetchedOnce(true);
+    }
+  }, [tokenQuery.isPending]);
+
   return (
     <div>
       <RecentTransfersUI
         data={tokenQuery.data ?? []}
-        isPending={tokenQuery.isPending}
+        isPending={tokenQuery.isPending && !hasFetchedOnce}
         rowsPerPage={rowsPerPage}
         tokenMetadata={{
           decimals: props.decimals,

@@ -3,7 +3,7 @@
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
-import { Input } from "@/components/ui/input";
+import { DecimalInput } from "@/components/ui/decimal-input";
 import { Switch } from "@/components/ui/switch";
 import type { ThirdwebClient } from "thirdweb";
 import type { TokenDistributionForm } from "../form";
@@ -110,40 +110,5 @@ export function TokenSaleSection(props: {
         )}
       </div>
     </DynamicHeight>
-  );
-}
-
-function DecimalInput(props: {
-  value: string;
-  onChange: (value: string) => void;
-  maxValue?: number;
-}) {
-  return (
-    <Input
-      type="text"
-      value={props.value}
-      inputMode="decimal"
-      onChange={(e) => {
-        const number = Number(e.target.value);
-        // ignore if string becomes invalid number
-        if (Number.isNaN(number)) {
-          return;
-        }
-
-        if (props.maxValue && number > props.maxValue) {
-          return;
-        }
-
-        // replace leading multiple zeros with single zero
-        let cleanedValue = e.target.value.replace(/^0+/, "0");
-
-        // replace leading zero before decimal point
-        if (!cleanedValue.includes(".")) {
-          cleanedValue = cleanedValue.replace(/^0+/, "");
-        }
-
-        props.onChange(cleanedValue || "0");
-      }}
-    />
   );
 }
