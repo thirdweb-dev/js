@@ -1,5 +1,41 @@
 # thirdweb
 
+## 5.102.1
+
+### Patch Changes
+
+- [#7211](https://github.com/thirdweb-dev/js/pull/7211) [`31c4bb2`](https://github.com/thirdweb-dev/js/commit/31c4bb22fc4b9fb5e99824f31ccb25427aaa409e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - **Add account deletion support when unlinking profiles**
+
+  Added optional `allowAccountDeletion` parameter to `useUnlinkProfile` hook and `unlinkProfile` function. When set to `true`, this allows deleting the entire account when unlinking the last profile associated with it.
+
+  **React Hook Example:**
+
+  ```tsx
+  import { useUnlinkProfile } from "thirdweb/react";
+
+  const { mutate: unlinkProfile } = useUnlinkProfile();
+
+  const handleUnlink = () => {
+    unlinkProfile({
+      client,
+      profileToUnlink: connectedProfiles[0],
+      allowAccountDeletion: true, // Delete account if last profile
+    });
+  };
+  ```
+
+  **Direct Function Example:**
+
+  ```ts
+  import { unlinkProfile } from "thirdweb/wallets/in-app";
+
+  const updatedProfiles = await unlinkProfile({
+    client,
+    profileToUnlink: profiles[0],
+    allowAccountDeletion: true, // Delete account if last profile
+  });
+  ```
+
 ## 5.102.0
 
 ### Minor Changes
