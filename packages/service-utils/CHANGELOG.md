@@ -1,5 +1,13 @@
 # @thirdweb-dev/service-utils
 
+## 0.9.11
+
+### Patch Changes
+
+- [#7210](https://github.com/thirdweb-dev/js/pull/7210) [`86fd445`](https://github.com/thirdweb-dev/js/commit/86fd445276f3061a71bd97c53359b3a6ec9f01e3) Thanks [@jnsdls](https://github.com/jnsdls)! - add new capabilities to the type
+
+- [#7215](https://github.com/thirdweb-dev/js/pull/7215) [`55fba51`](https://github.com/thirdweb-dev/js/commit/55fba51dabac300f8789db8936f68ddffb11a46d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update service descriptions
+
 ## 0.9.10
 
 ### Patch Changes

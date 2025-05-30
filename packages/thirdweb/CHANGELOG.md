@@ -1,5 +1,16 @@
 # thirdweb
 
+## 5.102.2
+
+### Patch Changes
+
+- [#7225](https://github.com/thirdweb-dev/js/pull/7225) [`3edbe28`](https://github.com/thirdweb-dev/js/commit/3edbe2898cd99fe14c135bd86f7ad0972ab621fa) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix use of purchaseData in payment links
+
+- [#7220](https://github.com/thirdweb-dev/js/pull/7220) [`4fed9f4`](https://github.com/thirdweb-dev/js/commit/4fed9f4593f32944f5189596d0736702f53a776b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update token price APIs to query from insight
+
+- Updated dependencies [[`4fed9f4`](https://github.com/thirdweb-dev/js/commit/4fed9f4593f32944f5189596d0736702f53a776b)]:
+  - @thirdweb-dev/insight@1.0.2
+
 ## 5.102.1
 
 ### Patch Changes
