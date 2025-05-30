@@ -1,6 +1,5 @@
 import { apiServerProxy } from "@/actions/proxies";
 import type { Project } from "@/api/projects";
-import type { Team } from "@/api/team";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useActiveAccount } from "thirdweb/react";
 import { accountKeys, authorizedWallets } from "../cache-keys";
@@ -188,7 +187,7 @@ export function useUpdateNotifications() {
 export const verifyEmailClient = async (input: ConfirmEmailInput) => {
   type Result = {
     error?: { message: string };
-    data: { team: Team; account: Account };
+    data: { account: Account };
   };
 
   const res = await apiServerProxy<Result>({

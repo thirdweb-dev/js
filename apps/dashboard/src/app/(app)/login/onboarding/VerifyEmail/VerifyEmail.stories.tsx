@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { newAccountStub, teamStub } from "stories/stubs";
+import { newAccountStub } from "stories/stubs";
 import { storybookLog } from "stories/utils";
 import { AccountOnboardingLayout } from "../onboarding-layout";
 import { VerifyEmail } from "./VerifyEmail";
@@ -60,7 +60,6 @@ function Story(props: {
             throw new Error("Example error");
           }
           return {
-            team: teamStub("foo", "free"),
             account: newAccountStub(),
           };
         }}

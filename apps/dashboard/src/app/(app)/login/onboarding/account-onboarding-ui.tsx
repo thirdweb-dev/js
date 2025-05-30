@@ -1,6 +1,4 @@
 "use client";
-
-import type { Team } from "@/api/team";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { TrackingParams } from "hooks/analytics/useTrack";
 import { useState } from "react";
@@ -27,18 +25,12 @@ type AccountOnboardingScreen =
     };
 
 type AccountOnboardingProps = {
-  onComplete: (param: {
-    team: Team;
-    account: Account;
-  }) => void;
+  onComplete: (param: { account: Account }) => void;
   accountAddress: string;
   trackEvent: (params: TrackingParams) => void;
   verifyEmail: (params: {
     confirmationToken: string;
-  }) => Promise<{
-    team: Team;
-    account: Account;
-  }>;
+  }) => Promise<{ account: Account }>;
   resendEmailConfirmation: () => Promise<void>;
   loginOrSignup: (input: {
     email: string;
@@ -106,12 +98,7 @@ export function AccountOnboardingUI(props: AccountOnboardingProps) {
           verifyEmail={props.verifyEmail}
           resendConfirmationEmail={props.resendEmailConfirmation}
           trackEvent={props.trackEvent}
-          onEmailConfirmed={(data) => {
-            props.onComplete({
-              team: data.team,
-              account: data.account,
-            });
-          }}
+          onEmailConfirmed={props.onComplete}
           onBack={() => setScreen(screen.backScreen)}
           email={screen.email}
         />

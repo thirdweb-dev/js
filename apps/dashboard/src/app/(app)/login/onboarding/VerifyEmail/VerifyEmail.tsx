@@ -1,6 +1,4 @@
 "use client";
-
-import type { Team } from "@/api/team";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,17 +22,11 @@ import {
 
 type VerifyEmailProps = {
   email: string;
-  onEmailConfirmed: (params: {
-    team: Team;
-    account: Account;
-  }) => void;
+  onEmailConfirmed: (params: { account: Account }) => void;
   onBack: () => void;
   verifyEmail: (params: {
     confirmationToken: string;
-  }) => Promise<{
-    team: Team;
-    account: Account;
-  }>;
+  }) => Promise<{ account: Account }>;
   resendConfirmationEmail: () => Promise<void>;
   trackEvent: (params: TrackingParams) => void;
   accountAddress: string;
