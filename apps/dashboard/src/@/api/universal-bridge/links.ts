@@ -15,7 +15,7 @@ type PaymentLink = {
     chainId: number;
   };
   amount: bigint | undefined;
-  purchaseData: unknown;
+  purchaseData: Record<string, unknown> | undefined;
 };
 
 export async function getPaymentLink(props: {

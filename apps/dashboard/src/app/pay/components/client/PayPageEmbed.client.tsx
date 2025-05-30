@@ -28,7 +28,7 @@ export function PayPageEmbed({
   redirectUri?: string;
   clientId: string;
   theme?: "light" | "dark";
-  purchaseData: unknown | undefined;
+  purchaseData: Record<string, unknown> | undefined;
 }) {
   const { theme: browserTheme, setTheme } = useTheme();
 
@@ -52,19 +52,8 @@ export function PayPageEmbed({
             name,
             image,
           },
-  // Validate and sanitize purchaseData
-  const sanitizedPurchaseData = purchaseData && typeof purchaseData === 'object'
-    ? purchaseData
-    : undefined;
-
-  payOptions={{
-    metadata: {
-      name,
-      image,
-    },
-    purchaseData: sanitizedPurchaseData,
-  }}
           mode: "direct_payment",
+          purchaseData,
           paymentInfo: {
             chain,
             sellerAddress: recipientAddress,

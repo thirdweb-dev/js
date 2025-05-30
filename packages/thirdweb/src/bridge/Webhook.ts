@@ -46,10 +46,15 @@ const webhookSchema = z.union([
       sender: addressSchema,
       receiver: addressSchema,
       type: z.string(),
-      transactions: z.array(hexSchema),
+      transactions: z.array(
+        z.object({
+          chainId: z.coerce.number(),
+          transactionHash: hexSchema,
+        }),
+      ),
       developerFeeBps: z.coerce.number(),
       developerFeeRecipient: addressSchema,
-      purchaseData: z.record(z.string(), z.unknown()),
+      purchaseData: z.optional(z.record(z.string(), z.unknown())),
     }),
   }),
 ]);
