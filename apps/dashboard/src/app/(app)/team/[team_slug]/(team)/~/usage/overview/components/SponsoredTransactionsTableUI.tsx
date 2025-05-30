@@ -124,71 +124,77 @@ export function SponsoredTransactionsTableUI(
           </TableHeader>
           <TableBody>
             {!props.isPending
-              ? props.sponsoredTransactions.map((transaction) => (
-                  <TableRow key={transaction.transactionHash}>
-                    {/* Tx Hash */}
-                    <TableCell>
-                      <TransactionHashCell
-                        hash={transaction.transactionHash}
-                        chainId={transaction.chainId}
-                      />
-                    </TableCell>
+              ? props.sponsoredTransactions.map((transaction) => {
+                  const utcTimestamp = transaction.timestamp.endsWith("Z")
+                    ? transaction.timestamp
+                    : `${transaction.timestamp}Z`;
 
-                    {/* Project */}
-                    {props.variant === "team" && (
+                  return (
+                    <TableRow key={transaction.transactionHash}>
+                      {/* Tx Hash */}
                       <TableCell>
-                        <ProjectCell
-                          teamSlug={props.teamSlug}
-                          project={props.projects.find(
-                            (p) => p.id === transaction.projectId,
-                          )}
+                        <TransactionHashCell
+                          hash={transaction.transactionHash}
+                          chainId={transaction.chainId}
+                        />
+                      </TableCell>
+
+                      {/* Project */}
+                      {props.variant === "team" && (
+                        <TableCell>
+                          <ProjectCell
+                            teamSlug={props.teamSlug}
+                            project={props.projects.find(
+                              (p) => p.id === transaction.projectId,
+                            )}
+                            client={props.client}
+                          />
+                        </TableCell>
+                      )}
+
+                      {/* Chain */}
+                      <TableCell>
+                        <ChainCell
+                          chainId={transaction.chainId}
                           client={props.client}
                         />
                       </TableCell>
-                    )}
 
-                    {/* Chain */}
-                    <TableCell>
-                      <ChainCell
-                        chainId={transaction.chainId}
-                        client={props.client}
-                      />
-                    </TableCell>
+                      {/* Wallet */}
+                      <TableCell>
+                        <WalletAddress
+                          address={transaction.walletAddress}
+                          client={props.client}
+                        />
+                      </TableCell>
 
-                    {/* Wallet */}
-                    <TableCell>
-                      <WalletAddress
-                        address={transaction.walletAddress}
-                        client={props.client}
-                      />
-                    </TableCell>
+                      {/* Time */}
+                      <TableCell>
+                        <ToolTipLabel
+                          hoverable
+                          label={format(new Date(utcTimestamp), "PPpp")}
+                        >
+                          <span>
+                            {formatDistance(
+                              new Date(utcTimestamp),
+                              new Date(),
+                              {
+                                addSuffix: true,
+                              },
+                            )}
+                          </span>
+                        </ToolTipLabel>
+                      </TableCell>
 
-                    {/* Time */}
-                    <TableCell>
-                      <ToolTipLabel
-                        hoverable
-                        label={format(new Date(transaction.timestamp), "PPpp")}
-                      >
-                        <span>
-                          {formatDistance(
-                            new Date(transaction.timestamp),
-                            new Date(),
-                            {
-                              addSuffix: true,
-                            },
-                          )}
-                        </span>
-                      </ToolTipLabel>
-                    </TableCell>
-
-                    {/* Fee */}
-                    <TableCell>
-                      <TransactionFeeCell
-                        usdValue={transaction.transactionFeeUsd}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))
+                      {/* Fee */}
+                      <TableCell>
+                        <TransactionFeeCell
+                          usdValue={transaction.transactionFeeUsd}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               : Array.from({ length: props.pageSize }).map((_, index) => (
                   <SkeletonRow
                     // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
