@@ -5,6 +5,7 @@ export type ProductSKU =
   | "plan:custom"
   | "plan:accelerate"
   | "plan:scale"
+  | "plan:pro"
   | "product:ecosystem_wallets"
   | "product:engine_standard"
   | "product:engine_premium"

@@ -97,7 +97,8 @@ export function InviteTeamMembersUI(props: {
         recommendedMembers={[]}
         customCTASection={
           <div className="flex gap-3">
-            {props.team.billingPlan === "free" && (
+            {(props.team.billingPlan === "free" ||
+              props.team.billingPlan === "starter") && (
               <Button
                 size="sm"
                 variant="default"
@@ -154,30 +155,8 @@ function InviteModalContent(props: {
   getTeam: () => Promise<Team>;
   teamId: string;
 }) {
-  const [planToShow, setPlanToShow] = useState<
-    "starter" | "growth" | "accelerate" | "scale"
-  >("growth");
-
-  const starterPlan = (
-    <PricingCard
-      billingPlan="starter"
-      billingStatus={props.billingStatus}
-      teamSlug={props.teamSlug}
-      cta={{
-        label: "Get Started",
-        type: "checkout",
-        onClick() {
-          props.trackEvent({
-            category: "teamOnboarding",
-            action: "upgradePlan",
-            label: "attempt",
-            plan: "starter",
-          });
-        },
-      }}
-      getTeam={props.getTeam}
-      teamId={props.teamId}
-    />
+  const [planToShow, setPlanToShow] = useState<"growth" | "scale" | "pro">(
+    "growth",
   );
 
   const growthPlan = (
@@ -198,28 +177,6 @@ function InviteModalContent(props: {
         },
       }}
       highlighted
-      getTeam={props.getTeam}
-      teamId={props.teamId}
-    />
-  );
-
-  const acceleratePlan = (
-    <PricingCard
-      billingPlan="accelerate"
-      billingStatus={props.billingStatus}
-      teamSlug={props.teamSlug}
-      cta={{
-        label: "Get started",
-        type: "checkout",
-        onClick() {
-          props.trackEvent({
-            category: "teamOnboarding",
-            action: "upgradePlan",
-            label: "attempt",
-            plan: "accelerate",
-          });
-        },
-      }}
       getTeam={props.getTeam}
       teamId={props.teamId}
     />
@@ -247,6 +204,28 @@ function InviteModalContent(props: {
     />
   );
 
+  const proPlan = (
+    <PricingCard
+      billingPlan="pro"
+      billingStatus={props.billingStatus}
+      teamSlug={props.teamSlug}
+      cta={{
+        label: "Get started",
+        type: "checkout",
+        onClick() {
+          props.trackEvent({
+            category: "teamOnboarding",
+            action: "upgradePlan",
+            label: "attempt",
+            plan: "pro",
+          });
+        },
+      }}
+      getTeam={props.getTeam}
+      teamId={props.teamId}
+    />
+  );
+
   return (
     <div>
       <SheetHeader className="space-y-0.5">
@@ -266,10 +245,9 @@ function InviteModalContent(props: {
 
       {/* Desktop */}
       <div className="hidden grid-cols-1 gap-6 md:grid-cols-4 md:gap-4 lg:grid">
-        {starterPlan}
         {growthPlan}
-        {acceleratePlan}
         {scalePlan}
+        {proPlan}
       </div>
 
       {/* Mobile */}
@@ -277,32 +255,26 @@ function InviteModalContent(props: {
         <TabButtons
           tabs={[
             {
-              name: "Starter",
-              onClick: () => setPlanToShow("starter"),
-              isActive: planToShow === "starter",
-            },
-            {
               name: "Growth",
               onClick: () => setPlanToShow("growth"),
               isActive: planToShow === "growth",
-            },
-            {
-              name: "Accelerate",
-              onClick: () => setPlanToShow("accelerate"),
-              isActive: planToShow === "accelerate",
             },
             {
               name: "Scale",
               onClick: () => setPlanToShow("scale"),
               isActive: planToShow === "scale",
             },
+            {
+              name: "Pro",
+              onClick: () => setPlanToShow("pro"),
+              isActive: planToShow === "pro",
+            },
           ]}
         />
         <div className="h-4" />
-        {planToShow === "starter" && starterPlan}
         {planToShow === "growth" && growthPlan}
-        {planToShow === "accelerate" && acceleratePlan}
         {planToShow === "scale" && scalePlan}
+        {planToShow === "pro" && proPlan}
       </div>
     </div>
   );

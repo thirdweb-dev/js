@@ -85,7 +85,10 @@ export function InviteSection(props: {
   let bottomSection: React.ReactNode = null;
   const maxAllowedInvitesAtOnce = 10;
   // invites are enabled if user has edit permission and team plan is not "free"
-  const inviteEnabled = teamPlan !== "free" && props.userHasEditPermission;
+  const inviteEnabled =
+    teamPlan !== "free" &&
+    teamPlan !== "starter" &&
+    props.userHasEditPermission;
 
   const form = useForm<InviteFormValues>({
     resolver: zodResolver(inviteFormSchema),
@@ -108,7 +111,7 @@ export function InviteSection(props: {
     },
   });
 
-  if (teamPlan === "free") {
+  if (teamPlan === "free" || teamPlan === "starter") {
     bottomSection = (
       <div className="lg:px6 flex items-center justify-between gap-4 border-border border-t px-4 py-4">
         <p className="text-muted-foreground text-sm">
@@ -127,7 +130,7 @@ export function InviteSection(props: {
         ) : (
           <Button variant="outline" size="sm" asChild>
             <Link
-              href={`/team/${props.team.slug}/~/settings/billing`}
+              href={`/team/${props.team.slug}/~/settings/billing?showPlans=true&highlight=growth`}
               className="gap-2"
             >
               Upgrade
@@ -147,29 +150,16 @@ export function InviteSection(props: {
   } else {
     bottomSection = (
       <div className="flex items-center border-border border-t px-4 py-4 lg:justify-between lg:px-6">
-        {teamPlan === "pro" ? (
-          <p className="text-muted-foreground text-sm">
-            Team members are billed according to your plan.{" "}
-            <Link
-              href="https://meetings.hubspot.com/sales-thirdweb/thirdweb-pro"
-              target="_blank"
-              className="text-link-foreground hover:text-foreground"
-            >
-              Reach out to sales <ExternalLinkIcon className="inline size-3" />.
-            </Link>
-          </p>
-        ) : (
-          <p className="text-muted-foreground text-sm">
-            Team members are billed according to your plan.{" "}
-            <Link
-              href="https://thirdweb.com/pricing"
-              target="_blank"
-              className="text-link-foreground hover:text-foreground"
-            >
-              View pricing <ExternalLinkIcon className="inline size-3" />
-            </Link>
-          </p>
-        )}
+        <p className="text-muted-foreground text-sm">
+          Team members are billed according to your plan.{" "}
+          <Link
+            href="https://thirdweb.com/pricing"
+            target="_blank"
+            className="text-link-foreground hover:text-foreground"
+          >
+            View pricing <ExternalLinkIcon className="inline size-3" />
+          </Link>
+        </p>
 
         <div className="flex gap-3">
           {!props.shouldHideInviteButton && (

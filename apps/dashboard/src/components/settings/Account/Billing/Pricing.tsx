@@ -3,10 +3,7 @@
 import type { Team } from "@/api/team";
 import { PricingCard } from "@/components/blocks/pricing-card";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { CheckIcon } from "lucide-react";
-import Link from "next/link";
 import { useTransition } from "react";
 
 import { useStripeRedirectEvent } from "../../../../app/(app)/(stripe)/stripe-redirect/stripeRedirectChannel";
@@ -79,16 +76,16 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
     (!highlightPlan &&
       !isCurrentPlanScheduledToCancel &&
       validTeamPlan === "starter_legacy");
-  const highlightAcceleratePlan =
-    highlightPlan === "accelerate" ||
-    (!highlightPlan &&
-      !isCurrentPlanScheduledToCancel &&
-      validTeamPlan === "growth");
   const highlightScalePlan =
     highlightPlan === "scale" ||
     (!highlightPlan &&
       !isCurrentPlanScheduledToCancel &&
-      validTeamPlan === "accelerate");
+      (validTeamPlan === "accelerate" || validTeamPlan === "growth"));
+  const highlightProPlan =
+    highlightPlan === "pro" ||
+    (!highlightPlan &&
+      !isCurrentPlanScheduledToCancel &&
+      validTeamPlan === "pro");
 
   return (
     <div>
@@ -139,22 +136,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
           getTeam={getTeam}
         />
 
-        {/* Accelerate */}
-        <PricingCard
-          billingPlan="accelerate"
-          billingStatus={team.billingStatus}
-          teamSlug={team.slug}
-          teamId={team.id}
-          current={validTeamPlan === "accelerate"}
-          cta={getPlanCta(
-            validTeamPlan,
-            "accelerate",
-            isCurrentPlanScheduledToCancel,
-          )}
-          highlighted={highlightAcceleratePlan}
-          getTeam={getTeam}
-        />
-
         {/* Scale */}
         <PricingCard
           billingPlan="scale"
@@ -170,58 +151,30 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
           highlighted={highlightScalePlan}
           getTeam={getTeam}
         />
+
+        {/* Pro */}
+        <PricingCard
+          billingPlan="pro"
+          billingStatus={team.billingStatus}
+          teamSlug={team.slug}
+          teamId={team.id}
+          current={validTeamPlan === "pro"}
+          cta={getPlanCta(validTeamPlan, "pro", isCurrentPlanScheduledToCancel)}
+          highlighted={highlightProPlan}
+          getTeam={getTeam}
+        />
       </div>
-      <div className="h-8" />
-      <ProCard />
     </div>
   );
 };
-
-const proFeatures = [
-  "Custom rate limits for APIs & Infra",
-  "Guaranteed support response time",
-  "Direct access to solutions & engineering teams",
-  "Enterprise grade SLAs",
-];
-
-function ProCard() {
-  return (
-    <div className="flex flex-col justify-between gap-6 rounded-lg border bg-card p-6 lg:flex-row">
-      <div>
-        <h2 className="mb-0.5 font-semibold text-xl tracking-tight">
-          Need more? Upgrade to Pro
-        </h2>
-        <p className="text-muted-foreground text-sm">
-          Ideal for teams that require more customization, SLAs, and support.
-        </p>
-
-        <ul className="mt-5 grid max-w-3xl grid-cols-1 gap-x-8 gap-y-2 text-muted-foreground text-sm lg:grid-cols-2">
-          {proFeatures.map((feature, i) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            <li key={i} className="flex items-center gap-2">
-              <CheckIcon className="size-4 text-success-text" />
-              {feature}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <Button variant="outline" asChild className="gap-2 bg-background">
-        <Link href={PRO_CONTACT_US_URL} target="_blank">
-          Contact Us
-        </Link>
-      </Button>
-    </div>
-  );
-}
 
 function getPlanCta(
   currentPlan: Team["billingPlan"],
   targetPlan: Team["billingPlan"],
   isScheduledToCancel: boolean,
 ): CtaLink | undefined {
-  // if any of the plan is pro - show contact us
-  if (currentPlan === "pro" || targetPlan === "pro") {
+  // if the CURRENT plan is pro, show contact us link
+  if (currentPlan === "pro") {
     return {
       label: "Contact us",
       href: PRO_CONTACT_US_URL,

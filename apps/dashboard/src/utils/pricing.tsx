@@ -3,13 +3,14 @@ import type { Team } from "../@/api/team";
 type SelectivePlans = Exclude<
   Team["billingPlan"],
   // we will never show cards for these plans - so exclude it
-  "pro" | "growth_legacy" | "free" | "starter_legacy"
+  "accelerate" | "growth_legacy" | "free" | "starter_legacy"
 >;
 
 export const TEAM_PLANS: Record<
   SelectivePlans,
   {
     title: string;
+    isStartingPriceOnly?: boolean;
     price: string | number;
     subTitle: string | null;
     trialPeriodDays: number;
@@ -18,61 +19,68 @@ export const TEAM_PLANS: Record<
   }
 > = {
   starter: {
-    price: 9,
+    price: 5,
     title: "Starter",
     subTitle: null,
     trialPeriodDays: 0,
-    description: "Ideal for hobbyists who require basic features.",
+    description: "Ideal for individual developers who require basic features.",
     features: [
-      "$25 Usage Credits",
-      "Community Support",
+      "Community & AI Support",
       "Web, Mobile & Gaming SDKs",
       "Contract and Wallet APIs",
       "Audited smart contracts",
+      "Managed Infrastructure (RPC, IPFS)",
       "Account Abstraction",
-      "Blockchain Infra (RPC, IPFS)",
+      "Engine Cloud",
     ],
   },
   growth: {
-    price: 79,
+    price: 99,
     title: "Growth",
     subTitle: "Everything in Starter, plus:",
     trialPeriodDays: 0,
-    description: "Ideal for scalable production-grade apps.",
+    description: "Ideal for teams building production-grade apps.",
     features: [
-      "$100 Usage Credits",
-      "Email support",
-      "SMS Onboarding",
-      "Custom Wallet Branding & Auth",
-      "30d User Analytics",
-      "Gas grant for transactions",
-    ],
-  },
-  accelerate: {
-    price: 249,
-    title: "Accelerate",
-    subTitle: "Everything in Growth, plus:",
-    trialPeriodDays: 0,
-    description: "For funded startups and mid-size businesses.",
-    features: [
-      "$250 Usage Credits",
-      "24hr Guaranteed Support",
-      "90d User Analytics",
+      "Email Support",
+      "48hr Guaranteed Response",
+      "Invite Team Members",
+      "Custom In-App Wallet Auth",
     ],
   },
   scale: {
-    price: 549,
+    price: 499,
     title: "Scale",
-    description: "For large organizations with custom needs.",
-    subTitle: "Everything in Accelerate, plus:",
+    description: "For funded startups and mid-size businesses.",
+    subTitle: "Everything in Growth, plus:",
     trialPeriodDays: 0,
     features: [
-      "$500 Usage Credits",
+      "Slack & Telegram Support",
+      "24hr Guaranteed Response",
+      "Remove thirdweb branding",
+      "Audit Logs",
+      [
+        "Ecosystem Wallet Add-On",
+        "Unlocks the ability to deploy your own ecosystem wallets.",
+      ],
+      [
+        "Dedicated Infrastructure Add-Ons",
+        "Dedicated RPC nodes, indexers, etc.",
+      ],
+    ],
+  },
+  pro: {
+    price: 1499,
+    isStartingPriceOnly: true,
+    title: "Pro",
+    subTitle: "Everything in Scale, plus:",
+    trialPeriodDays: 0,
+    description: "For large organizations with custom needs.",
+    features: [
+      "Dedicated Account Executive",
       "12hr Guaranteed Response",
-      "Slack Channel Support",
-      "Whitelabel Infra Support",
-      "Ultra-high Rate Limits",
-      "Ecosystem Wallets",
+      "No Rate Limits",
+      ["Custom Infrastructure Add-Ons", "Infrastructure for custom chains."],
+      ["Volume Discounts", "Negotiated volume discounts that fit your scale."],
     ],
   },
 };
