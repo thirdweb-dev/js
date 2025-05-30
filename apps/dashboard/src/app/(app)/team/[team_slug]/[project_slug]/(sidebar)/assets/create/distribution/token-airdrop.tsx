@@ -248,6 +248,7 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
     noCsv,
     reset,
     removeInvalid,
+    processData,
   } = useCsvUpload<AirdropAddressInput>({
     csvParser: (items: AirdropAddressInput[]) => {
       return items
@@ -262,35 +263,12 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
 
   const normalizeData = normalizeQuery.data;
 
-  // Handle text input - create CSV and trigger file input
+  // Handle text input - directly process the parsed data
   const handleTextSubmit = () => {
     if (!textInput.trim()) return;
 
     const parsedData = parseTextInput(textInput);
-
-    // Create CSV content
-    const csvContent = `address,quantity\n${parsedData
-      .map((item) => `${item.address},${item.quantity}`)
-      .join("\n")}`;
-
-    // Create file and trigger the existing file input
-    const blob = new Blob([csvContent], { type: "text/csv" });
-    const file = new File([blob], "manual-input.csv", { type: "text/csv" });
-
-    // Get the file input and trigger change event
-    const fileInput = document.querySelector(
-      'input[type="file"]',
-    ) as HTMLInputElement;
-    if (fileInput) {
-      // Create a new FileList-like object
-      const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(file);
-      fileInput.files = dataTransfer.files;
-
-      // Trigger change event
-      const event = new Event("change", { bubbles: true });
-      fileInput.dispatchEvent(event);
-    }
+    processData(parsedData);
   };
 
   if (!normalizeData && rawData.length > 0) {
