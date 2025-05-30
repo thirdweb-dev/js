@@ -107,7 +107,7 @@ export async function convertCryptoToFiat(
         },
       }),
     {
-      cacheKey: `convert-fiat-to-crypto-${to}-${chain.id}`,
+      cacheKey: `convert-fiat-to-crypto-${fromTokenAddress}-${chain.id}`,
       cacheTime: 1000 * 60, // 1 minute cache
     },
   );
