@@ -69,6 +69,7 @@ import type {
   GetV1ResolveByInputData,
   GetV1ResolveByInputError,
   GetV1ResolveByInputResponse,
+  GetV1TokensData,
   GetV1TokensErc20ByOwnerAddressData,
   GetV1TokensErc20ByOwnerAddressResponse,
   GetV1TokensErc721ByOwnerAddressData,
@@ -77,10 +78,14 @@ import type {
   GetV1TokensErc1155ByOwnerAddressResponse,
   GetV1TokensLookupData,
   GetV1TokensLookupResponse,
+  GetV1TokensOwnersData,
+  GetV1TokensOwnersError,
+  GetV1TokensOwnersResponse,
   GetV1TokensPriceData,
   GetV1TokensPriceResponse,
   GetV1TokensPriceSupportedData,
   GetV1TokensPriceSupportedResponse,
+  GetV1TokensResponse,
   GetV1TokensTransfersByContractAddressData,
   GetV1TokensTransfersByContractAddressError,
   GetV1TokensTransfersByContractAddressResponse,
@@ -111,12 +116,6 @@ import type {
   PostV1DecodeByContractAddressData,
   PostV1DecodeByContractAddressError,
   PostV1DecodeByContractAddressResponse,
-  PostV1WebhooksByWebhookIdResendOtpData,
-  PostV1WebhooksByWebhookIdResendOtpError,
-  PostV1WebhooksByWebhookIdResendOtpResponse,
-  PostV1WebhooksByWebhookIdVerifyData,
-  PostV1WebhooksByWebhookIdVerifyError,
-  PostV1WebhooksByWebhookIdVerifyResponse,
   PostV1WebhooksData,
   PostV1WebhooksError,
   PostV1WebhooksResponse,
@@ -156,16 +155,7 @@ export const getV1Webhooks = <ThrowOnError extends boolean = false>(
   >({
     security: [
       {
-        name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
+        name: "x-secret-key",
         type: "apiKey",
       },
     ],
@@ -176,7 +166,7 @@ export const getV1Webhooks = <ThrowOnError extends boolean = false>(
 
 /**
  * Create webhook
- * Create a new webhook. The webhook will start out as suspended and an OTP code will be sent to the webhook URL. This OTP code must be verified using the Verify Webhook endpoint within 15 minutes.
+ * Create a new webhook. In order to receive decoded data, specify a partial ABI in the filters.
  */
 export const postV1Webhooks = <ThrowOnError extends boolean = false>(
   options?: Options<PostV1WebhooksData, ThrowOnError>,
@@ -188,16 +178,7 @@ export const postV1Webhooks = <ThrowOnError extends boolean = false>(
   >({
     security: [
       {
-        name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
+        name: "x-secret-key",
         type: "apiKey",
       },
     ],
@@ -226,16 +207,7 @@ export const deleteV1WebhooksByWebhookId = <
   >({
     security: [
       {
-        name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
+        name: "x-secret-key",
         type: "apiKey",
       },
     ],
@@ -246,7 +218,7 @@ export const deleteV1WebhooksByWebhookId = <
 
 /**
  * Update webhook
- * Update a webhook. If the URL is updated, it needs to verified again the same way as when creating a webhook.
+ * Update a webhook.
  */
 export const patchV1WebhooksByWebhookId = <
   ThrowOnError extends boolean = false,
@@ -260,16 +232,7 @@ export const patchV1WebhooksByWebhookId = <
   >({
     security: [
       {
-        name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
+        name: "x-secret-key",
         type: "apiKey",
       },
     ],
@@ -279,74 +242,6 @@ export const patchV1WebhooksByWebhookId = <
       "Content-Type": "application/json",
       ...options?.headers,
     },
-  });
-};
-
-/**
- * Verify webhook
- * Verify a webhook using a OTP code that was sent to the webhook URL. The webhook will be activated after verification.
- */
-export const postV1WebhooksByWebhookIdVerify = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<PostV1WebhooksByWebhookIdVerifyData, ThrowOnError>,
-) => {
-  return (options.client ?? _heyApiClient).post<
-    PostV1WebhooksByWebhookIdVerifyResponse,
-    PostV1WebhooksByWebhookIdVerifyError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
-    ],
-    url: "/v1/webhooks/{webhook_id}/verify",
-    ...options,
-  });
-};
-
-/**
- * Resend OTP code
- * Resend a OTP code to the webhook URL. This will invalidate the old OTP and will again expire after 15 minutes.
- */
-export const postV1WebhooksByWebhookIdResendOtp = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<PostV1WebhooksByWebhookIdResendOtpData, ThrowOnError>,
-) => {
-  return (options.client ?? _heyApiClient).post<
-    PostV1WebhooksByWebhookIdResendOtpResponse,
-    PostV1WebhooksByWebhookIdResendOtpError,
-    ThrowOnError
-  >({
-    security: [
-      {
-        name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
-    ],
-    url: "/v1/webhooks/{webhook_id}/resend-otp",
-    ...options,
   });
 };
 
@@ -364,16 +259,7 @@ export const postV1WebhooksTest = <ThrowOnError extends boolean = false>(
   >({
     security: [
       {
-        name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
+        name: "x-secret-key",
         type: "apiKey",
       },
     ],
@@ -403,15 +289,6 @@ export const getV1Events = <ThrowOnError extends boolean = false>(
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/events",
     ...options,
@@ -435,15 +312,6 @@ export const getV1EventsByContractAddress = <
     security: [
       {
         name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
         type: "apiKey",
       },
     ],
@@ -471,15 +339,6 @@ export const getV1EventsByContractAddressBySignature = <
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/events/{contractAddress}/{signature}",
     ...options,
@@ -501,15 +360,6 @@ export const getV1Transactions = <ThrowOnError extends boolean = false>(
     security: [
       {
         name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
         type: "apiKey",
       },
     ],
@@ -535,15 +385,6 @@ export const getV1TransactionsByContractAddress = <
     security: [
       {
         name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
         type: "apiKey",
       },
     ],
@@ -574,17 +415,31 @@ export const getV1TransactionsByContractAddressBySignature = <
         name: "x-client-id",
         type: "apiKey",
       },
+    ],
+    url: "/v1/transactions/{contractAddress}/{signature}",
+    ...options,
+  });
+};
+
+/**
+ * Get token owners by contract
+ * Get token owners for specific contract
+ */
+export const getV1TokensOwners = <ThrowOnError extends boolean = false>(
+  options: Options<GetV1TokensOwnersData, ThrowOnError>,
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetV1TokensOwnersResponse,
+    GetV1TokensOwnersError,
+    ThrowOnError
+  >({
+    security: [
       {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
+        name: "x-client-id",
         type: "apiKey",
       },
     ],
-    url: "/v1/transactions/{contractAddress}/{signature}",
+    url: "/v1/tokens/owners",
     ...options,
   });
 };
@@ -609,15 +464,6 @@ export const getV1TokensTransfersTransactionByTransactionHash = <
     security: [
       {
         name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
         type: "apiKey",
       },
     ],
@@ -645,15 +491,6 @@ export const getV1TokensTransfersByContractAddress = <
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/tokens/transfers/{contract_address}",
     ...options,
@@ -661,13 +498,13 @@ export const getV1TokensTransfersByContractAddress = <
 };
 
 /**
- * Get token transfers by wallet address
- * Get token transfers by wallet address
+ * Get token transfers
+ * Get token transfers
  */
 export const getV1TokensTransfers = <ThrowOnError extends boolean = false>(
-  options: Options<GetV1TokensTransfersData, ThrowOnError>,
+  options?: Options<GetV1TokensTransfersData, ThrowOnError>,
 ) => {
-  return (options.client ?? _heyApiClient).get<
+  return (options?.client ?? _heyApiClient).get<
     GetV1TokensTransfersResponse,
     GetV1TokensTransfersError,
     ThrowOnError
@@ -677,15 +514,6 @@ export const getV1TokensTransfers = <ThrowOnError extends boolean = false>(
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/tokens/transfers",
     ...options,
@@ -693,8 +521,9 @@ export const getV1TokensTransfers = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * @deprecated
  * Get ERC-20 balances by address
- * Get ERC-20 balances for a given address
+ * Get ERC-20 balances for a given address. [BEING DEPRECATED IN FAVOR OF /tokens]
  */
 export const getV1TokensErc20ByOwnerAddress = <
   ThrowOnError extends boolean = false,
@@ -711,17 +540,31 @@ export const getV1TokensErc20ByOwnerAddress = <
         name: "x-client-id",
         type: "apiKey",
       },
+    ],
+    url: "/v1/tokens/erc20/{ownerAddress}",
+    ...options,
+  });
+};
+
+/**
+ * Get tokens
+ * Query tokens
+ */
+export const getV1Tokens = <ThrowOnError extends boolean = false>(
+  options: Options<GetV1TokensData, ThrowOnError>,
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetV1TokensResponse,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
       {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
+        name: "x-client-id",
         type: "apiKey",
       },
     ],
-    url: "/v1/tokens/erc20/{ownerAddress}",
+    url: "/v1/tokens",
     ...options,
   });
 };
@@ -744,15 +587,6 @@ export const getV1TokensErc721ByOwnerAddress = <
     security: [
       {
         name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
         type: "apiKey",
       },
     ],
@@ -781,15 +615,6 @@ export const getV1TokensErc1155ByOwnerAddress = <
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/tokens/erc1155/{ownerAddress}",
     ...options,
@@ -811,15 +636,6 @@ export const getV1TokensPriceSupported = <ThrowOnError extends boolean = false>(
     security: [
       {
         name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
         type: "apiKey",
       },
     ],
@@ -845,15 +661,6 @@ export const getV1TokensPrice = <ThrowOnError extends boolean = false>(
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/tokens/price",
     ...options,
@@ -875,15 +682,6 @@ export const getV1TokensLookup = <ThrowOnError extends boolean = false>(
     security: [
       {
         name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
         type: "apiKey",
       },
     ],
@@ -909,15 +707,6 @@ export const getV1ResolveByInput = <ThrowOnError extends boolean = false>(
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/resolve/{input}",
     ...options,
@@ -939,15 +728,6 @@ export const getV1Blocks = <ThrowOnError extends boolean = false>(
     security: [
       {
         name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
         type: "apiKey",
       },
     ],
@@ -975,15 +755,6 @@ export const getV1ContractsAbiByContractAddress = <
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/contracts/abi/{contractAddress}",
     ...options,
@@ -1009,15 +780,6 @@ export const getV1ContractsMetadataByContractAddress = <
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/contracts/metadata/{contractAddress}",
     ...options,
@@ -1041,15 +803,6 @@ export const postV1DecodeByContractAddress = <
     security: [
       {
         name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
         type: "apiKey",
       },
     ],
@@ -1081,15 +834,6 @@ export const getV1NftsBalanceByOwnerAddress = <
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/nfts/balance/{ownerAddress}",
     ...options,
@@ -1115,15 +859,6 @@ export const getV1NftsCollectionsByContractAddress = <
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/nfts/collections/{contract_address}",
     ...options,
@@ -1131,8 +866,8 @@ export const getV1NftsCollectionsByContractAddress = <
 };
 
 /**
- * Get NFTs by owner
- * Get NFTs by owner
+ * Get NFTs
+ * Get NFTs
  */
 export const getV1Nfts = <ThrowOnError extends boolean = false>(
   options: Options<GetV1NftsData, ThrowOnError>,
@@ -1145,15 +880,6 @@ export const getV1Nfts = <ThrowOnError extends boolean = false>(
     security: [
       {
         name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
         type: "apiKey",
       },
     ],
@@ -1181,15 +907,6 @@ export const getV1NftsOwnersByContractAddress = <
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/nfts/owners/{contract_address}",
     ...options,
@@ -1215,15 +932,6 @@ export const getV1NftsOwnersByContractAddressByTokenId = <
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/nfts/owners/{contract_address}/{token_id}",
     ...options,
@@ -1231,13 +939,13 @@ export const getV1NftsOwnersByContractAddressByTokenId = <
 };
 
 /**
- * Get NFT transfers by owner
- * Get NFT transfers by owner
+ * Get NFT transfers
+ * Get NFT transfers
  */
 export const getV1NftsTransfers = <ThrowOnError extends boolean = false>(
-  options: Options<GetV1NftsTransfersData, ThrowOnError>,
+  options?: Options<GetV1NftsTransfersData, ThrowOnError>,
 ) => {
-  return (options.client ?? _heyApiClient).get<
+  return (options?.client ?? _heyApiClient).get<
     GetV1NftsTransfersResponse,
     GetV1NftsTransfersError,
     ThrowOnError
@@ -1245,15 +953,6 @@ export const getV1NftsTransfers = <ThrowOnError extends boolean = false>(
     security: [
       {
         name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
         type: "apiKey",
       },
     ],
@@ -1284,15 +983,6 @@ export const getV1NftsTransfersTransactionByTransactionHash = <
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/nfts/transfers/transaction/{transaction_hash}",
     ...options,
@@ -1318,15 +1008,6 @@ export const getV1NftsTransfersByContractAddress = <
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/nfts/transfers/{contract_address}",
     ...options,
@@ -1350,15 +1031,6 @@ export const getV1NftsByContractAddress = <
     security: [
       {
         name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
         type: "apiKey",
       },
     ],
@@ -1389,15 +1061,6 @@ export const getV1NftsTransfersByContractAddressByTokenId = <
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/nfts/transfers/{contract_address}/{token_id}",
     ...options,
@@ -1423,15 +1086,6 @@ export const getV1NftsByContractAddressByTokenId = <
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/nfts/{contract_address}/{token_id}",
     ...options,
@@ -1455,15 +1109,6 @@ export const getV1NftsMetadataRefreshByContractAddress = <
     security: [
       {
         name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
         type: "apiKey",
       },
     ],
@@ -1494,15 +1139,6 @@ export const getV1NftsMetadataRefreshByContractAddressByTokenId = <
         name: "x-client-id",
         type: "apiKey",
       },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
-        type: "apiKey",
-      },
     ],
     url: "/v1/nfts/metadata/refresh/{contract_address}/{token_id}",
     ...options,
@@ -1526,15 +1162,6 @@ export const getV1WalletsByWalletAddressTransactions = <
     security: [
       {
         name: "x-client-id",
-        type: "apiKey",
-      },
-      {
-        scheme: "bearer",
-        type: "http",
-      },
-      {
-        in: "query",
-        name: "clientId",
         type: "apiKey",
       },
     ],
