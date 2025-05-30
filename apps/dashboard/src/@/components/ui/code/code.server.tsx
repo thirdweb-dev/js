@@ -6,13 +6,17 @@ export type CodeProps = {
   code: string;
   lang: BundledLanguage;
   className?: string;
+  ignoreFormattingErrors?: boolean;
 };
 
 export const CodeServer: React.FC<CodeProps> = async ({
   code,
   lang,
   className,
+  ignoreFormattingErrors,
 }) => {
-  const { html, formattedCode } = await getCodeHtml(code, lang);
+  const { html, formattedCode } = await getCodeHtml(code, lang, {
+    ignoreFormattingErrors,
+  });
   return <RenderCode code={formattedCode} html={html} className={className} />;
 };

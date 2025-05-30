@@ -197,6 +197,8 @@ export declare namespace quote {
  *   destinationChainId: 10,
  *   destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
  *   amount: toWei("0.01"),
+ *   sender: "0x...",
+ *   receiver: "0x...",
  *   client: thirdwebClient,
  * });
  * ```
@@ -282,6 +284,8 @@ export declare namespace quote {
  *   destinationChainId: 10,
  *   destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
  *   amount: toWei("0.01"),
+ *   sender: "0x...",
+ *   receiver: "0x...",
  *   purchaseData: {
  *     size: "large",
  *     shippingAddress: "123 Main St, New York, NY 10001",
@@ -299,6 +303,8 @@ export declare namespace quote {
  *   destinationChainId: 10,
  *   destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
  *   amount: toWei("0.01"),
+ *   sender: "0x...",
+ *   receiver: "0x...",
  *   maxSteps: 2, // Will only return a quote for routes with 2 or fewer steps
  *   client: thirdwebClient,
  * });
@@ -312,7 +318,7 @@ export declare namespace quote {
  * @param options.amount - The amount of the destination token to receive.
  * @param options.sender - The address of the sender.
  * @param options.receiver - The address of the recipient.
- * @param options.purchaseData - Arbitrary data to be passed to the purchase function and included with any webhooks or status calls.
+ * @param [options.purchaseData] - Arbitrary data to be passed to the purchase function and included with any webhooks or status calls.
  * @param [options.maxSteps] - Limit the number of total steps in the route.
  * @param options.client - Your thirdweb client.
  *
