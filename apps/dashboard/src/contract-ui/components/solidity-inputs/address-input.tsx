@@ -12,6 +12,7 @@ import { validateAddress } from "./helpers";
 
 export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
   formContext: form,
+  client,
   ...inputProps
 }) => {
   const { name, ...restOfInputProps } = inputProps;
@@ -21,7 +22,10 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
   const localInput = _localInput === undefined ? inputNameWatch : _localInput;
   const address = useActiveAccount()?.address;
 
-  const ensQuery = useEns(localInput);
+  const ensQuery = useEns({
+    client,
+    addressOrEnsName: localInput,
+  });
 
   const { setValue, clearErrors } = form;
 

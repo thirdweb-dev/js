@@ -131,6 +131,7 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
         <MobileBurgerMenuButton
           type="loggedIn"
           email={props.account?.email}
+          client={props.client}
           logout={props.logout}
           connectButton={props.connectButton}
           accountAddress={props.accountAddress}

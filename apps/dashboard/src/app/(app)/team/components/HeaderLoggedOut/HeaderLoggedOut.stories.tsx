@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { mobileViewport } from "../../../../../stories/utils";
+import {
+  mobileViewport,
+  storybookThirdwebClient,
+} from "../../../../../stories/utils";
 import { HeaderLoggedOut } from "./HeaderLoggedOut";
 
 const meta = {
@@ -34,7 +37,7 @@ function Variants() {
   return (
     <div className="background flex min-h-dvh flex-col gap-6">
       <div className="border-b bg-card">
-        <HeaderLoggedOut />
+        <HeaderLoggedOut client={storybookThirdwebClient} />
       </div>
     </div>
   );

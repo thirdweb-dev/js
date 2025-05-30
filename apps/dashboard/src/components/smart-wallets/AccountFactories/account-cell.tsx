@@ -1,16 +1,18 @@
 "use client";
 
 import { SkeletonContainer } from "@/components/ui/skeleton";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { memo } from "react";
-import { getContract } from "thirdweb";
+import { type ThirdwebClient, getContract } from "thirdweb";
 import { getAllAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
 import { useV5DashboardChain } from "../../../lib/v5-adapter";
 
-function useAccountCount(address: string, chainId: number) {
+function useAccountCount(
+  address: string,
+  chainId: number,
+  client: ThirdwebClient,
+) {
   const chain = useV5DashboardChain(chainId);
-  const client = useThirdwebClient();
   const contract = getContract({
     address,
     chain,
@@ -28,10 +30,12 @@ function useAccountCount(address: string, chainId: number) {
 export const FactoryAccountCell = memo(function FactoryAccountCell(props: {
   chainId: string;
   contractAddress: string;
+  client: ThirdwebClient;
 }) {
   const accountsQuery = useAccountCount(
     props.contractAddress,
     Number(props.chainId),
+    props.client,
   );
   return (
     <SkeletonContainer

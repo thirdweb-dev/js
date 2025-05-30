@@ -1,4 +1,3 @@
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useQuery } from "@tanstack/react-query";
 import pLimit from "p-limit";
 import Papa from "papaparse";
@@ -83,6 +82,7 @@ type Props<T> = {
    */
   csvParser: (items: T[]) => T[];
   defaultRawData?: T[] | undefined;
+  client: ThirdwebClient;
 };
 
 /**
@@ -95,7 +95,6 @@ export function useCsvUpload<
   // Always gonna need the wallet address
   T extends { address: string },
 >(props: Props<T>) {
-  const thirdwebClient = useThirdwebClient();
   const [rawData, setRawData] = useState<
     T[] | Array<T & { [key in string]: unknown }>
   >(props.defaultRawData || []);
@@ -141,7 +140,9 @@ export function useCsvUpload<
       const limit = pLimit(50);
       const results = await Promise.all(
         rawData.map((item) => {
-          return limit(() => checkIsAddress({ item: item, thirdwebClient }));
+          return limit(() =>
+            checkIsAddress({ item: item, thirdwebClient: props.client }),
+          );
         }),
       );
       return {

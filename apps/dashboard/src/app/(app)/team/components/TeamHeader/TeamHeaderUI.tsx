@@ -210,6 +210,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
           logout={props.logout}
           connectButton={props.connectButton}
           accountAddress={props.accountAddress}
+          client={props.client}
         />
       </div>
     </header>

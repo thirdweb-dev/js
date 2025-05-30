@@ -60,7 +60,7 @@ export function TokenDistributionFieldset(props: {
               />
             </div>
 
-            <TokenAirdropSection form={form} />
+            <TokenAirdropSection form={form} client={props.client} />
             <TokenSaleSection
               form={form}
               chainId={props.chainId}

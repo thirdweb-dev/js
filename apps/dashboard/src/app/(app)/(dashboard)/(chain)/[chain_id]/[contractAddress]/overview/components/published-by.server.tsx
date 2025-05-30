@@ -11,7 +11,6 @@ export const PublishedBy: React.FC<PublishedByProps> = async ({ contract }) => {
   const props = await getPublishedByCardProps({
     address,
     contract,
-    client: contract.client,
   });
 
   if (!props) {

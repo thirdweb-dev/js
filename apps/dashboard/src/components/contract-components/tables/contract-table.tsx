@@ -161,6 +161,7 @@ export function ContractTableUI(props: {
               )}
 
               {props.variant === "asset" && <TableHead> Asset Page</TableHead>}
+
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -180,6 +181,7 @@ export function ContractTableUI(props: {
                       linkOverlay
                       teamSlug={props.teamSlug}
                       projectSlug={props.projectSlug}
+                      client={props.client}
                     />
                   </TableCell>
 
@@ -187,6 +189,7 @@ export function ContractTableUI(props: {
                     <ContractTypeCell
                       chainId={contract.chainId}
                       contractAddress={contract.contractAddress}
+                      client={props.client}
                     />
                   </TableCell>
 

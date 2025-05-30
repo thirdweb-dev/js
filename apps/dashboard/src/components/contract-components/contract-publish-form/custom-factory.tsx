@@ -29,6 +29,7 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
   const form = useFormContext();
 
   const customFactoryAbi = useCustomFactoryAbi(
+    client,
     form.watch("customFactoryAddresses[0].value"),
     form.watch("customFactoryAddresses[0].key"),
   );

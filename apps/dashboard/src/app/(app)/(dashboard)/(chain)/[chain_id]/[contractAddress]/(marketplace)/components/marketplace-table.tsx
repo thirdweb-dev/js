@@ -99,7 +99,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
         Header: "Media",
         accessor: (row) => row.asset.metadata,
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        Cell: (cell: any) => <MediaCell cell={cell} />,
+        Cell: (cell: any) => <MediaCell cell={cell} client={contract.client} />,
       },
       {
         Header: "Name",

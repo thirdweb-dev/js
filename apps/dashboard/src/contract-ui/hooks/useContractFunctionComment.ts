@@ -1,4 +1,3 @@
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useQuery } from "@tanstack/react-query";
 import type { ThirdwebContract } from "thirdweb";
 import { getCompilerMetadata } from "thirdweb/contract";
@@ -14,7 +13,6 @@ export function useContractFunctionComment(
   contract: ThirdwebContract,
   functionName: string,
 ) {
-  const client = useThirdwebClient();
   return useQuery({
     queryKey: [
       "contract-function-comment",
@@ -80,7 +78,7 @@ export function useContractFunctionComment(
             const ipfsHash = ipfsLink.split("ipfs/")[1];
             const source = await download({
               uri: `ipfs://${ipfsHash}`,
-              client,
+              client: contract.client,
             })
               .then((r) => r.text())
               .catch(() => "Failed to fetch source from IPFS");

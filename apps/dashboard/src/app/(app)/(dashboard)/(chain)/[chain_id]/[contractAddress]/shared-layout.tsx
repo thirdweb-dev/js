@@ -1,5 +1,6 @@
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import type { MinimalTeamsAndProjects } from "components/contract-components/contract-deploy-form/add-to-project-card";
 import { resolveFunctionSelectors } from "lib/selectors";
 import type { Metadata } from "next";
@@ -27,6 +28,7 @@ export async function SharedContractLayout(props: {
   chainIdOrSlug: string;
   projectMeta: ProjectMeta | undefined;
   children: React.ReactNode;
+  authToken: string | undefined | null;
 }) {
   if (!isAddress(props.contractAddress)) {
     return notFound();
@@ -43,7 +45,15 @@ export async function SharedContractLayout(props: {
   ]);
 
   if (!info) {
-    return <ConfigureCustomChain chainSlug={props.chainIdOrSlug} />;
+    return (
+      <ConfigureCustomChain
+        chainSlug={props.chainIdOrSlug}
+        client={getClientThirdwebClient({
+          jwt: props.authToken,
+          teamId: props.projectMeta?.teamId,
+        })}
+      />
+    );
   }
 
   const { clientContract, serverContract, chainMetadata, isLocalhostChain } =

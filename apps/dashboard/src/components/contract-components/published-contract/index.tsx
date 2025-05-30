@@ -1,6 +1,5 @@
 "use client";
 
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { Divider, Flex, GridItem, List, ListItem } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
@@ -46,14 +45,15 @@ interface ExtendedPublishedContract extends PublishedContractWithVersion {
 interface PublishedContractProps {
   publishedContract: ExtendedPublishedContract;
   isLoggedIn: boolean;
+  client: ThirdwebClient;
 }
 
 export const PublishedContract: React.FC<PublishedContractProps> = ({
   publishedContract,
   isLoggedIn,
+  client,
 }) => {
   const address = useActiveAccount()?.address;
-  const client = useThirdwebClient();
 
   const contractFunctions = usePublishedContractFunctions(publishedContract);
   const contractEvents = usePublishedContractEvents(publishedContract);
@@ -157,7 +157,10 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
       <GridItem colSpan={{ base: 12, md: 3 }}>
         <Flex flexDir="column" gap={6}>
           {publishedContract.publisher && (
-            <PublisherHeader wallet={publishedContract.publisher} />
+            <PublisherHeader
+              wallet={publishedContract.publisher}
+              client={client}
+            />
           )}
 
           <Separator />

@@ -344,6 +344,7 @@ const ListingCards: React.FC<ListingCardsProps> = ({
               render={(v) => {
                 return (
                   <NFTMediaWithEmptyState
+                    client={client}
                     metadata={v}
                     requireInteraction
                     width="100%"

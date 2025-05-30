@@ -198,6 +198,7 @@ export const CustomConnectWallet = (props: {
         open={isNetworkConfigModalOpen}
         onOpenChange={setIsNetworkConfigModalOpen}
         editChain={editChain}
+        client={client}
       />
     </>
   );

@@ -17,6 +17,7 @@ import {
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useLayoutEffect, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { ThirdwebMiniLogo } from "./ThirdwebMiniLogo";
 
 export function MobileBurgerMenuButton(
@@ -27,16 +28,20 @@ export function MobileBurgerMenuButton(
         logout: () => void;
         accountAddress: string;
         connectButton: React.ReactNode;
+        client: ThirdwebClient;
       }
     | {
         type: "loggedOut";
+        client: ThirdwebClient;
       },
 ) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { setTheme, theme } = useTheme();
-  const ensQuery = useEns(
-    props.type === "loggedIn" ? props.accountAddress : undefined,
-  );
+  const ensQuery = useEns({
+    client: props.client,
+    addressOrEnsName:
+      props.type === "loggedIn" ? props.accountAddress : undefined,
+  });
   // const [isCMDSearchModalOpen, setIsCMDSearchModalOpen] = useState(false);
 
   useLayoutEffect(() => {

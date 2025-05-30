@@ -2,15 +2,18 @@ import { cn } from "@/lib/utils";
 import type { AbiParameter } from "abitype";
 import { PlusIcon } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { Button } from "tw-components";
 import { RefContractImplInput } from "./ref-input-impl";
 
 interface RefInputImplFieldsetProps {
   param: AbiParameter;
+  client: ThirdwebClient;
 }
 
 export const RefInputImplFieldset: React.FC<RefInputImplFieldsetProps> = ({
   param,
+  client,
 }) => {
   const form = useFormContext();
 
@@ -30,6 +33,7 @@ export const RefInputImplFieldset: React.FC<RefInputImplFieldsetProps> = ({
           index={index}
           param={param}
           className={cn(!hideAddButton && "border-border border-b pb-5")}
+          client={client}
         />
       ))}
 

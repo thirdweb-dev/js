@@ -75,7 +75,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
         Header: "Media",
         accessor: (row) => row.metadata,
         Cell: (cell: CellProps<NFT, NFT["metadata"]>) => (
-          <MediaCell cell={cell} />
+          <MediaCell cell={cell} client={contract.client} />
         ),
       },
       {

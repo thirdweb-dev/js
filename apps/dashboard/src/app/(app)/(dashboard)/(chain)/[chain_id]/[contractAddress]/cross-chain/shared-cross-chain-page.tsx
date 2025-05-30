@@ -183,7 +183,6 @@ export async function SharedCrossChainPage(props: {
     coreMetadata = (
       await fetchPublishedContractsFromDeploy({
         contract: serverContract,
-        client: serverContract.client,
       })
     ).at(-1) as FetchDeployMetadataResult;
   } catch {}
@@ -256,7 +255,6 @@ export async function SharedCrossChainPage(props: {
                   client: serverContract.client,
                   address: m,
                 }),
-                client: serverContract.client,
               })
             ).at(-1),
           ),

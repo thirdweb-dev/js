@@ -528,6 +528,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                     form.setValue(`phases.${index}.snapshot`, snapshot)
                   }
                   isDisabled={!canEditForm}
+                  client={contract.client}
                 />
 
                 <ClaimsConditionFormContext.Provider

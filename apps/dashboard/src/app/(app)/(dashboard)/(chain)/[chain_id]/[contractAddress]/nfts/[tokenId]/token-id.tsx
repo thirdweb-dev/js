@@ -126,7 +126,11 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
           {/* border */}
           <div className="absolute inset-0 z-0 rounded-lg border" />
           {/* media */}
-          <NFTMediaWithEmptyState metadata={nftMetadata} className="z-10" />
+          <NFTMediaWithEmptyState
+            metadata={nftMetadata}
+            className="z-10"
+            client={contract.client}
+          />
         </div>
 
         <div className="flex w-full flex-col gap-6">

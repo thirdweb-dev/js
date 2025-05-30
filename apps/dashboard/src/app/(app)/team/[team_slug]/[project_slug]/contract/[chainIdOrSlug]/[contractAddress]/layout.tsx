@@ -73,6 +73,7 @@ export default async function ContractLayout(props: {
       <SharedContractLayout
         contractAddress={params.contractAddress}
         chainIdOrSlug={params.chainIdOrSlug}
+        authToken={authToken}
         projectMeta={{
           teamId: team.id,
           projectSlug: params.project_slug,

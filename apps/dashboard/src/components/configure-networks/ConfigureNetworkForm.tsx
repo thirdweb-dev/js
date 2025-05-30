@@ -9,7 +9,7 @@ import { ChainIconClient } from "components/icons/ChainIcon";
 import { getDashboardChainRpc } from "lib/rpc";
 import { CircleAlertIcon, Trash2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useThirdwebClient } from "../../@/constants/thirdweb.client";
+import type { ThirdwebClient } from "thirdweb";
 import { useAllChainsData } from "../../hooks/chains/allChains";
 import {
   type StoredChain,
@@ -46,6 +46,7 @@ interface NetworkConfigFormProps {
   prefillName?: string;
   onCustomClick?: (name: string) => void;
   onSubmit: (chain: StoredChain) => void;
+  client: ThirdwebClient;
 }
 
 const maxAllowedChainOverrides = 10;
@@ -55,8 +56,8 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
   onSubmit,
   prefillSlug,
   prefillChainId,
+  client,
 }) => {
-  const client = useThirdwebClient();
   const { idToChain, nameToChain } = useAllChainsData();
   const chainOverrides = useStore(chainOverridesStore);
 

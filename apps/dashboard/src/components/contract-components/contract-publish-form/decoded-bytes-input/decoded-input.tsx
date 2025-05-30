@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import type { AbiParameter } from "abitype";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { RefBytesInputFieldset } from "./ref-bytes-input-fieldset";
 
 interface DecodedInputProps {
@@ -18,6 +19,7 @@ interface DecodedInputProps {
   paramIndex: number;
   setIndex: number;
   className?: string;
+  client: ThirdwebClient;
 }
 
 export const DecodedInput: React.FC<DecodedInputProps> = ({
@@ -25,6 +27,7 @@ export const DecodedInput: React.FC<DecodedInputProps> = ({
   paramIndex,
   setIndex,
   className,
+  client,
 }) => {
   const form = useFormContext();
   const [isCustomAddress, setIsCustomAddress] = useState(false);
@@ -111,6 +114,7 @@ export const DecodedInput: React.FC<DecodedInputProps> = ({
             param={param}
             setIndex={setIndex}
             paramIndex={paramIndex}
+            client={client}
           />
         ) : (
           <Input

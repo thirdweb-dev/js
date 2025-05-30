@@ -27,11 +27,14 @@ import {
 } from "lucide-react";
 import { useMemo } from "react";
 import { type Column, usePagination, useTable } from "react-table";
+import type { ThirdwebClient } from "thirdweb";
 import type { NFTInput } from "thirdweb/utils";
-import { useThirdwebClient } from "../../@/constants/thirdweb.client";
 
-const FileImage: React.FC<ImageProps> = ({ src, ...props }) => {
-  const client = useThirdwebClient();
+const FileImage: React.FC<
+  ImageProps & {
+    client: ThirdwebClient;
+  }
+> = ({ src, client, ...props }) => {
   const img = useImageFileOrUrl(
     typeof src === "string" && src.startsWith("ipfs://")
       ? replaceIpfsUrl(src, client)
@@ -42,9 +45,11 @@ const FileImage: React.FC<ImageProps> = ({ src, ...props }) => {
 
 const FileVideo: React.FC<
   BoxProps &
-    Omit<React.ComponentProps<"video">, "ref" | "src"> & { src: string | File }
-> = ({ src, ...props }) => {
-  const client = useThirdwebClient();
+    Omit<React.ComponentProps<"video">, "ref" | "src"> & {
+      src: string | File;
+      client: ThirdwebClient;
+    }
+> = ({ src, client, ...props }) => {
   const video = useImageFileOrUrl(
     typeof src === "string" && src.startsWith("ipfs://")
       ? replaceIpfsUrl(src, client)
@@ -56,12 +61,14 @@ interface BatchTableProps {
   data: NFTInput[];
   portalRef: React.RefObject<HTMLDivElement | null>;
   nextTokenIdToMint?: bigint;
+  client: ThirdwebClient;
 }
 
 export const BatchTable: React.FC<BatchTableProps> = ({
   data,
   portalRef,
   nextTokenIdToMint,
+  client,
 }) => {
   const columns = useMemo(() => {
     let cols: Column<NFTInput>[] = [];
@@ -83,6 +90,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
             objectFit="contain"
             src={value}
             alt=""
+            client={client}
           />
         ),
       },
@@ -99,6 +107,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
             playsInline
             muted
             loop
+            client={client}
           />
         ),
       },
@@ -130,7 +139,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
       { Header: "Background Color", accessor: (row) => row.background_color },
     ]);
     return cols;
-  }, [nextTokenIdToMint]);
+  }, [nextTokenIdToMint, client]);
 
   const {
     getTableProps,

@@ -24,7 +24,10 @@ export function AccountButton(props: {
   accountAddress: string;
 }) {
   const { setTheme, theme } = useTheme();
-  const ensQuery = useEns(props.accountAddress);
+  const ensQuery = useEns({
+    addressOrEnsName: props.accountAddress,
+    client: props.client,
+  });
   const [isOpen, setIsOpen] = useState(false);
 
   return (

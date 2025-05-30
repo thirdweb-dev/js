@@ -27,6 +27,7 @@ export const NftsOwned: React.FC<NftsOwnedProps> = ({
 
   return nfts.length !== 0 ? (
     <NFTCards
+      client={contract.client}
       projectMeta={projectMeta}
       nfts={nfts.map((nft) => ({
         id: BigInt(nft.id),

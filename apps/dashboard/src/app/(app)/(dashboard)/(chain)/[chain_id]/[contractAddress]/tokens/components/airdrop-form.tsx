@@ -97,6 +97,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
           <div className="mb-3 flex w-full flex-col gap-6 md:flex-row">
             {airdropFormOpen ? (
               <AirdropUpload
+                client={contract.client}
                 onClose={() => setAirdropFormOpen(false)}
                 setAirdrop={(value) =>
                   setValue("addresses", value, { shouldDirty: true })

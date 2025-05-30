@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import type { AbiParameter } from "abitype";
 import { TrashIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { useAllVersions, usePublishedContractsQuery } from "../../hooks";
 
 interface RefContractInputProps {
@@ -20,6 +21,7 @@ interface RefContractInputProps {
   index: number;
   remove: (index: number) => void;
   className?: string;
+  client: ThirdwebClient;
 }
 
 export const RefContractInput: React.FC<RefContractInputProps> = ({
@@ -27,14 +29,16 @@ export const RefContractInput: React.FC<RefContractInputProps> = ({
   index,
   remove,
   className,
+  client,
 }) => {
   const form = useFormContext();
 
-  const publishedContractsQuery = usePublishedContractsQuery(
-    form.watch(
+  const publishedContractsQuery = usePublishedContractsQuery({
+    client,
+    address: form.watch(
       `constructorParams.${param.name ? param.name : "*"}.dynamicValue.refContracts.${index}.publisherAddress`,
     ),
-  );
+  });
 
   const allVersions = useAllVersions(
     form.watch(
@@ -43,6 +47,7 @@ export const RefContractInput: React.FC<RefContractInputProps> = ({
     form.watch(
       `constructorParams.${param.name ? param.name : "*"}.dynamicValue.refContracts.${index}.contractId`,
     ),
+    client,
   );
 
   return (

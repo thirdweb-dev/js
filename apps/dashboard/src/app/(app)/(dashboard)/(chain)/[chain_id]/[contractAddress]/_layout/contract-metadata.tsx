@@ -43,7 +43,6 @@ export async function getContractMetadataHeaderData(
     fetchDashboardContractMetadata(contract),
     fetchPublishedContractsFromDeploy({
       contract,
-      client: contract.client,
     }),
   ]);
 

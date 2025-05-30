@@ -2,11 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useTrack } from "hooks/analytics/useTrack";
 import { replaceDeployerAddress } from "lib/publisher-utils";
 import Link from "next/link";
-import { ZERO_ADDRESS } from "thirdweb";
+import { type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import {
   AccountAddress,
   AccountAvatar,
@@ -21,10 +20,16 @@ const TRACKING_CATEGORY = "releaser-header";
 
 interface PublisherHeaderProps {
   wallet: string;
+  client: ThirdwebClient;
 }
-export const PublisherHeader: React.FC<PublisherHeaderProps> = ({ wallet }) => {
-  const ensQuery = useEns(wallet);
-  const client = useThirdwebClient();
+export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
+  wallet,
+  client,
+}) => {
+  const ensQuery = useEns({
+    client,
+    addressOrEnsName: wallet,
+  });
   const trackEvent = useTrack();
 
   return (

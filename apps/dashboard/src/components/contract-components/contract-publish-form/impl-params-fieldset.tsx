@@ -139,7 +139,7 @@ export const ImplementationParamsFieldset: React.FC<
                     />
                   </FormControl>
                 ) : (
-                  <RefInputImplFieldset param={param} />
+                  <RefInputImplFieldset param={param} client={client} />
                 )}
 
                 {paramTemplateValues.length > 0 &&

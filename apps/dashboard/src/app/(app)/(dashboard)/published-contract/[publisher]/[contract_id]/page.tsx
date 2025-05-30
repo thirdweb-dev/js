@@ -1,9 +1,11 @@
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Separator } from "@/components/ui/separator";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { PublishedContract } from "components/contract-components/published-contract";
 import { notFound } from "next/navigation";
-import { serverThirdwebClient } from "../../../../../../@/constants/thirdweb-client.server";
 import { getRawAccount } from "../../../../account/settings/getAccount";
+import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { PublishedActions } from "../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../components/contract-header";
 import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
@@ -36,7 +38,10 @@ export default async function PublishedContractPage(
     notFound();
   }
 
-  const account = await getRawAccount();
+  const [account, authToken] = await Promise.all([
+    getRawAccount(),
+    getAuthToken(),
+  ]);
 
   return (
     <>
@@ -57,6 +62,10 @@ export default async function PublishedContractPage(
           <PublishedContract
             publishedContract={publishedContract}
             isLoggedIn={!!account}
+            client={getClientThirdwebClient({
+              jwt: authToken,
+              teamId: undefined,
+            })}
           />
         </div>
       </ChakraProviderSetup>

@@ -13,6 +13,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { ChevronFirstIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import {
   getContractPublisher,
@@ -20,7 +21,6 @@ import {
 } from "thirdweb/extensions/thirdweb";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Text } from "tw-components";
-import { useThirdwebClient } from "../../../@/constants/thirdweb.client";
 import { useEns, useFunctionParamsFromABI } from "../hooks";
 import { ContractParamsFieldset } from "./contract-params-fieldset";
 import { FactoryFieldset } from "./factory-fieldset";
@@ -31,9 +31,9 @@ import { NetworksFieldset } from "./networks-fieldset";
 export function ContractPublishForm(props: {
   publishMetadata: FetchDeployMetadataResult;
   onPublishSuccess: () => Promise<void>;
-  jwt: string;
+  isLoggedIn: boolean;
+  client: ThirdwebClient;
 }) {
-  const client = useThirdwebClient(props.jwt);
   const [customFactoryAbi, setCustomFactoryAbi] = useState<Abi>([]);
   const [fieldsetToShow, setFieldsetToShow] = useState<
     "landing" | "factory" | "contractParams" | "implParams" | "networks"
@@ -130,7 +130,10 @@ export function ContractPublishForm(props: {
     !form.watch("displayName") ||
     !!form.getFieldState("version", form.formState).error;
 
-  const ensQuery = useEns(account?.address);
+  const ensQuery = useEns({
+    client: props.client,
+    addressOrEnsName: account?.address,
+  });
 
   const ensNameOrAddress = useMemo(() => {
     return ensQuery?.data?.ensName || ensQuery.data?.address;
@@ -260,7 +263,7 @@ export function ContractPublishForm(props: {
 
             const tx = publishContract({
               account,
-              contract: getContractPublisher(client),
+              contract: getContractPublisher(props.client),
               metadata,
               previousMetadata: props.publishMetadata,
             });
@@ -328,20 +331,21 @@ export function ContractPublishForm(props: {
             <LandingFieldset
               latestVersion={latestVersion}
               placeholderVersion={placeholderVersion}
+              client={props.client}
             />
           )}
 
           {fieldsetToShow === "contractParams" && (
             <ContractParamsFieldset
               deployParams={deployParams}
-              client={client}
+              client={props.client}
             />
           )}
 
           {fieldsetToShow === "implParams" && implDeployParams?.length > 0 && (
             <ImplementationParamsFieldset
               implParams={implDeployParams}
-              client={client}
+              client={props.client}
             />
           )}
 
@@ -350,14 +354,14 @@ export function ContractPublishForm(props: {
               <FactoryFieldset
                 abi={props.publishMetadata.abi || []}
                 setCustomFactoryAbi={setCustomFactoryAbi}
-                client={client}
+                client={props.client}
               />
             </Flex>
           )}
 
           {fieldsetToShow === "networks" && (
             <Flex flexDir="column" gap={24}>
-              <NetworksFieldset fromStandard client={client} />
+              <NetworksFieldset fromStandard client={props.client} />
             </Flex>
           )}
 
@@ -373,8 +377,8 @@ export function ContractPublishForm(props: {
                 <>
                   <Box />
                   <CustomConnectWallet
-                    isLoggedIn={!!props.jwt}
-                    client={client}
+                    isLoggedIn={props.isLoggedIn}
+                    client={props.client}
                   />
                 </>
               ) : fieldsetToShow === "landing" &&

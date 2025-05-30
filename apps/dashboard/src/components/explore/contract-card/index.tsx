@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
@@ -202,6 +203,7 @@ export async function ContractCard({
           <ClientOnly ssr={<Skeleton className="size-5 rounded-full" />}>
             <ContractPublisher
               addressOrEns={publishedContractResult.publisher}
+              client={getClientThirdwebClient()}
             />
           </ClientOnly>
         )}

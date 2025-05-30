@@ -2,18 +2,21 @@ import { Button } from "@/components/ui/button";
 import type { AbiParameter } from "abitype";
 import { PlusIcon } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { RefBytesContractInput } from "./ref-bytes-input";
 
 interface RefBytesInputFieldsetProps {
   param: AbiParameter;
   paramIndex: number;
   setIndex: number;
+  client: ThirdwebClient;
 }
 
 export const RefBytesInputFieldset: React.FC<RefBytesInputFieldsetProps> = ({
   param,
   setIndex,
   paramIndex,
+  client,
 }) => {
   const form = useFormContext();
 
@@ -33,6 +36,7 @@ export const RefBytesInputFieldset: React.FC<RefBytesInputFieldsetProps> = ({
           paramIndex={paramIndex}
           setIndex={setIndex}
           className="border-border border-b pb-6"
+          client={client}
         />
       ))}
 

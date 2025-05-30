@@ -1,5 +1,6 @@
 import { useTrack } from "hooks/analytics/useTrack";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import {
   type StoredChain,
   addChainOverrides,
@@ -24,6 +25,7 @@ interface ConfigureNetworksProps {
   prefillSlug?: string;
   prefillChainId?: string;
   editChain: StoredChain | undefined;
+  client: ThirdwebClient;
 }
 
 export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
@@ -65,6 +67,7 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
           <ConfigureNetworkForm
             editingChain={editChain}
             onSubmit={handleSubmit}
+            client={props.client}
           />
         )}
 
@@ -74,6 +77,7 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
             prefillSlug={props.prefillSlug}
             prefillChainId={props.prefillChainId}
             onSubmit={handleSubmit}
+            client={props.client}
           />
         )}
       </div>

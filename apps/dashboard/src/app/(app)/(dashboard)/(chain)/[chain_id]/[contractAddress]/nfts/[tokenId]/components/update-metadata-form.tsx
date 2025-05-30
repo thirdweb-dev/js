@@ -252,6 +252,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
         <div className="flex flex-row flex-wrap gap-3">
           {nft?.metadata && !mediaFileUrl && (
             <NFTMediaWithEmptyState
+              client={contract.client}
               metadata={{
                 name: nft.metadata.name,
                 animation_url:

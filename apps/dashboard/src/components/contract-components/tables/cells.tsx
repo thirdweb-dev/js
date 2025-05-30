@@ -2,14 +2,13 @@
 
 import { Badge } from "@/components/ui/badge";
 import { SkeletonContainer } from "@/components/ui/skeleton";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
 import { useDashboardContractMetadata } from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import Link from "next/link";
 import { memo } from "react";
-import { getContract } from "thirdweb";
+import { type ThirdwebClient, getContract } from "thirdweb";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { THIRDWEB_DEPLOYER_ADDRESS } from "../../../constants/addresses";
 import { usePublishedContractsFromDeploy } from "../hooks";
@@ -20,13 +19,13 @@ export const ContractNameCell = memo(function ContractNameCell(props: {
   linkOverlay?: boolean;
   teamSlug: string;
   projectSlug: string;
+  client: ThirdwebClient;
 }) {
   const chainSlug = useChainSlug(Number(props.chainId));
   const chain = useV5DashboardChain(Number(props.chainId));
-  const client = useThirdwebClient();
 
   const contract = getContract({
-    client,
+    client: props.client,
     address: props.contractAddress,
     chain,
   });
@@ -60,11 +59,11 @@ export const ContractNameCell = memo(function ContractNameCell(props: {
 export const ContractTypeCell = memo(function ContractTypeCell(props: {
   chainId: string;
   contractAddress: string;
+  client: ThirdwebClient;
 }) {
-  const client = useThirdwebClient();
   const chain = useV5DashboardChain(Number(props.chainId));
   const contract = getContract({
-    client,
+    client: props.client,
     address: props.contractAddress,
     chain,
   });

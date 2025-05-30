@@ -69,9 +69,10 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
   const { contract, account } = props;
   const { errors } = formState;
 
-  const { data, isPending, isFetching } = usePublishedContractsQuery(
-    watch("publisherAddress"),
-  );
+  const { data, isPending, isFetching } = usePublishedContractsQuery({
+    client: contract.client,
+    address: watch("publisherAddress"),
+  });
 
   // filter out all the contracts that AREN'T modules
   const modulesOnly = useMemo(() => {
@@ -88,6 +89,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
   const allVersions = useAllVersions(
     watch("publisherAddress"),
     watch("moduleContract"),
+    contract.client,
   );
 
   const installMutation = useMutation({

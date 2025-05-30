@@ -67,6 +67,7 @@ export function NFTDetails({
       {/* cards */}
       <div className="p-6">
         <NFTCards
+          client={contract.client}
           projectMeta={projectMeta}
           nfts={displayableNFTs.map((t) => ({
             ...t,

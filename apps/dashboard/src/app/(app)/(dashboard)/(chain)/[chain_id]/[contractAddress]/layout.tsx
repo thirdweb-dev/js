@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import {
   SharedContractLayout,
   generateContractLayoutMetadata,
@@ -11,12 +12,13 @@ export default async function Layout(props: {
   }>;
   children: React.ReactNode;
 }) {
-  const params = await props.params;
+  const [params, authToken] = await Promise.all([props.params, getAuthToken()]);
   return (
     <SharedContractLayout
       contractAddress={params.contractAddress}
       chainIdOrSlug={params.chain_id}
       projectMeta={undefined}
+      authToken={authToken}
     >
       {props.children}
     </SharedContractLayout>

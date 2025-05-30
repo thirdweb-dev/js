@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useStore } from "@/lib/reactive";
 import { cn } from "@/lib/utils";
 import { popularChains } from "@3rdweb-sdk/react/components/popularChains";
@@ -10,6 +9,7 @@ import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
 import { ChevronDownIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { useActiveWallet } from "thirdweb/react";
 import { useNetworkSwitcherModal } from "thirdweb/react";
 import { useFavoriteChainIds } from "../../app/(app)/(dashboard)/(chain)/components/client/star-button";
@@ -30,6 +30,7 @@ interface NetworkSelectorButtonProps {
   isDisabled?: boolean;
   onSwitchChain?: (chain: StoredChain) => void;
   className?: string;
+  client: ThirdwebClient;
 }
 
 export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
@@ -38,8 +39,8 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
   isDisabled,
   onSwitchChain,
   className,
+  client,
 }) => {
-  const client = useThirdwebClient();
   const { idToChain, allChains } = useAllChainsData();
 
   // recently used chains
@@ -214,6 +215,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
         open={isNetworkConfigModalOpen}
         onOpenChange={setIsNetworkConfigModalOpen}
         editChain={editChain}
+        client={client}
       />
     </>
   );

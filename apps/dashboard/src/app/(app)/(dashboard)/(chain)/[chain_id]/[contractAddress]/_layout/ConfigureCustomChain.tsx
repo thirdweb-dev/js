@@ -6,9 +6,11 @@ import { ConfigureNetworks } from "components/configure-networks/ConfigureNetwor
 import { CheckIcon, CircleAlertIcon, RotateCcwIcon } from "lucide-react";
 import { useState } from "react";
 import { addChainOverrides } from "stores/chainStores";
+import type { ThirdwebClient } from "thirdweb";
 
 export function ConfigureCustomChain(props: {
   chainSlug: string;
+  client: ThirdwebClient;
 }) {
   const { chainSlug } = props;
   const isSlugNumber = Number.isInteger(Number(chainSlug));
@@ -61,6 +63,7 @@ export function ConfigureCustomChain(props: {
             }
           }}
           editChain={undefined}
+          client={props.client}
         />
       </div>
     </div>

@@ -559,6 +559,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                           width="140px"
                           height="140px"
                           requireInteraction
+                          client={contract.client}
                         />
                       </Box>
                     </Tooltip>

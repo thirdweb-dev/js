@@ -15,6 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ContractNameCell } from "components/contract-components/tables/cells";
 import { FactoryAccountCell } from "components/smart-wallets/AccountFactories/account-cell";
 import { useV5DashboardChain } from "lib/v5-adapter";
+import type { ThirdwebClient } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
 import type { ProjectContract } from "../../../app/(app)/account/contracts/_components/getProjectContracts";
 
@@ -24,6 +25,7 @@ interface FactoryContractsProps {
   isFetched: boolean;
   teamSlug: string;
   projectSlug: string;
+  client: ThirdwebClient;
 }
 
 function NetworkName(props: { id: number }) {
@@ -49,6 +51,7 @@ export const FactoryContracts: React.FC<FactoryContractsProps> = ({
   contracts,
   teamSlug,
   projectSlug,
+  client,
 }) => {
   return (
     <TableContainer>
@@ -70,6 +73,7 @@ export const FactoryContracts: React.FC<FactoryContractsProps> = ({
                   contractAddress={contract.contractAddress}
                   teamSlug={teamSlug}
                   projectSlug={projectSlug}
+                  client={client}
                 />
               </TableCell>
               <TableCell>
@@ -87,6 +91,7 @@ export const FactoryContracts: React.FC<FactoryContractsProps> = ({
                 <FactoryAccountCell
                   chainId={contract.chainId}
                   contractAddress={contract.contractAddress}
+                  client={client}
                 />
               </TableCell>
             </TableRow>

@@ -1,6 +1,7 @@
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { CustomContractForm } from "components/contract-components/contract-deploy-form/custom-contract";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import { getAuthToken } from "../../../api/lib/getAuthToken";
@@ -42,6 +43,11 @@ export async function DeployFormForUri(props: DeployFormForUriProps) {
     })),
   );
 
+  const client = getClientThirdwebClient({
+    jwt: authToken,
+    teamId: undefined,
+  });
+
   // TODO: remove the `ChakraProviderSetup` wrapper once the form is updated to no longer use chakra
   return (
     <ChakraProviderSetup>
@@ -49,8 +55,9 @@ export async function DeployFormForUri(props: DeployFormForUriProps) {
         metadata={contractMetadata}
         metadataNoFee={contractMetadataNoFee}
         modules={modules?.filter((m) => m !== null)}
-        jwt={authToken}
+        isLoggedIn={!!authToken}
         teamsAndProjects={teamsAndProjects}
+        client={client}
       />
     </ChakraProviderSetup>
   );

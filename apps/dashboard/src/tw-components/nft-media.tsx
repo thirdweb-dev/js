@@ -1,8 +1,8 @@
 "use client";
 
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
 import { ImageIcon } from "lucide-react";
+import type { ThirdwebClient } from "thirdweb";
 import { MediaRenderer } from "thirdweb/react";
 
 export const NFTMediaWithEmptyState: React.FC<{
@@ -16,9 +16,8 @@ export const NFTMediaWithEmptyState: React.FC<{
   };
   requireInteraction?: boolean;
   controls?: boolean;
+  client: ThirdwebClient;
 }> = (props) => {
-  const client = useThirdwebClient();
-
   // No media
   if (!(props.metadata.image || props.metadata.animation_url)) {
     return (
@@ -51,7 +50,7 @@ export const NFTMediaWithEmptyState: React.FC<{
       )}
     >
       <MediaRenderer
-        client={client}
+        client={props.client}
         src={props.metadata.animation_url || props.metadata.image}
         alt={props.metadata.name?.toString() || ""}
         poster={props.metadata.image}

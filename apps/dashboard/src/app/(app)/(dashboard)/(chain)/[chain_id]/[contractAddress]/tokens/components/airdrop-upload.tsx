@@ -7,7 +7,7 @@ import { useCsvUpload } from "hooks/useCsvUpload";
 import { CircleAlertIcon, UploadIcon } from "lucide-react";
 import { useMemo, useRef } from "react";
 import type { Column } from "react-table";
-import { ZERO_ADDRESS } from "thirdweb";
+import { type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import { Button, Heading, Text } from "tw-components";
 import { CsvDataTable } from "../../_components/csv-data-table";
 
@@ -19,6 +19,7 @@ export interface AirdropAddressInput {
 interface AirdropUploadProps {
   setAirdrop: (airdrop: AirdropAddressInput[]) => void;
   onClose: () => void;
+  client: ThirdwebClient;
 }
 
 const csvParser = (items: AirdropAddressInput[]): AirdropAddressInput[] => {
@@ -33,6 +34,7 @@ const csvParser = (items: AirdropAddressInput[]): AirdropAddressInput[] => {
 export const AirdropUpload: React.FC<AirdropUploadProps> = ({
   setAirdrop,
   onClose,
+  client,
 }) => {
   const {
     normalizeQuery,
@@ -43,7 +45,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
     noCsv,
     reset,
     removeInvalid,
-  } = useCsvUpload<AirdropAddressInput>({ csvParser });
+  } = useCsvUpload<AirdropAddressInput>({ csvParser, client });
   const paginationPortalRef = useRef<HTMLDivElement>(null);
 
   const normalizeData = normalizeQuery.data;

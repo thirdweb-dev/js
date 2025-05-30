@@ -10,15 +10,17 @@ import { cn } from "@/lib/utils";
 import type { AbiParameter } from "abitype";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { DecodedInputSet } from "./decoded-input-set";
 
 interface DecodedInputArrayFieldsetProps {
   param: AbiParameter;
+  client: ThirdwebClient;
 }
 
 export const DecodedInputArrayFieldset: React.FC<
   DecodedInputArrayFieldsetProps
-> = ({ param }) => {
+> = ({ param, client }) => {
   const form = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
@@ -56,7 +58,11 @@ export const DecodedInputArrayFieldset: React.FC<
               </AccordionTrigger>
               <AccordionContent className="px-1 pb-6">
                 <div className="rounded-lg border border-border px-6 pt-1 pb-6">
-                  <DecodedInputSet setIndex={index} param={param} />
+                  <DecodedInputSet
+                    setIndex={index}
+                    param={param}
+                    client={client}
+                  />
                 </div>
               </AccordionContent>
             </AccordionItem>

@@ -18,6 +18,7 @@ import { SelectOption } from "core-ui/batch-upload/lazy-mint-form/select-option"
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import type { ExtendedMetadata } from "thirdweb/utils";
 import {
   Card,
@@ -28,20 +29,20 @@ import {
   Link,
   Text,
 } from "tw-components";
-import { useThirdwebClient } from "../../../@/constants/thirdweb.client";
 import { MarkdownRenderer } from "../published-contract/markdown-renderer";
 import { ExternalLinksFieldset } from "./external-links-fieldset";
 
 interface LandingFieldsetProps {
   latestVersion: string | undefined;
   placeholderVersion: string;
+  client: ThirdwebClient;
 }
 
 export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
   latestVersion,
   placeholderVersion,
+  client,
 }) => {
-  const client = useThirdwebClient();
   const form = useFormContext<ExtendedMetadata>();
   const logoUrl = useImageFileOrUrl(form.watch("logo"));
 

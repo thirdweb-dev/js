@@ -1,10 +1,12 @@
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getFees } from "@/api/universal-bridge/developer";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { PayConfig } from "components/pay/PayConfig";
 import { RouteDiscovery } from "components/pay/RouteDiscovery";
-
 import { redirect } from "next/navigation";
+import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
+import { loginRedirect } from "../../../../../../../login/loginRedirect";
 
 export default async function Page(props: {
   params: Promise<{
@@ -14,10 +16,17 @@ export default async function Page(props: {
 }) {
   const { team_slug, project_slug } = await props.params;
 
-  const [project, team] = await Promise.all([
+  const [project, team, authToken] = await Promise.all([
     getProject(team_slug, project_slug),
     getTeamBySlug(team_slug),
+    getAuthToken(),
   ]);
+
+  if (!authToken) {
+    loginRedirect(
+      `/team/${team_slug}/${project_slug}/connect/universal-bridge/settings`,
+    );
+  }
 
   if (!team) {
     redirect("/team");
@@ -48,6 +57,11 @@ export default async function Page(props: {
     };
   }
 
+  const client = getClientThirdwebClient({
+    jwt: authToken,
+    teamId: team.id,
+  });
+
   return (
     <div className="flex flex-col p-5">
       <PayConfig
@@ -58,7 +72,7 @@ export default async function Page(props: {
       />
 
       <div className="flex pt-5">
-        <RouteDiscovery project={project} />
+        <RouteDiscovery project={project} client={client} />
       </div>
     </div>
   );

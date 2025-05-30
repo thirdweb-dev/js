@@ -1,6 +1,7 @@
 import type { Team } from "@/api/team";
 import type { Meta, StoryObj } from "@storybook/react";
 import { projectStub } from "../../../stories/stubs";
+import { storybookThirdwebClient } from "../../../stories/utils";
 import { InAppWalletSettingsUI } from "./index";
 
 const meta = {
@@ -54,6 +55,7 @@ function Variants(props: {
       <div className="flex flex-col gap-10">
         <InAppWalletSettingsUI
           teamPlan={props.currentPlan}
+          client={storybookThirdwebClient}
           project={projectStub("foo", "bar")}
           teamId="bar"
           embeddedWalletService={{

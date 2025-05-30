@@ -4,6 +4,7 @@ import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoading
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { DefaultFactoriesSection } from "components/smart-wallets/AccountFactories";
@@ -11,7 +12,7 @@ import { FactoryContracts } from "components/smart-wallets/AccountFactories/fact
 import { PlusIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { defineChain, getContract } from "thirdweb";
+import { type ThirdwebClient, defineChain, getContract } from "thirdweb";
 import { getCompilerMetadata } from "thirdweb/contract";
 import { getSortedDeployedContracts } from "../../../../../../../account/contracts/_components/getSortedDeployedContracts";
 import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
@@ -44,6 +45,11 @@ export default async function Page(props: {
     redirect(`/team/${params.team_slug}`);
   }
 
+  const client = getClientThirdwebClient({
+    jwt: authToken,
+    teamId: team.id,
+  });
+
   return (
     <div className="flex flex-col gap-6">
       <DefaultFactoriesSection />
@@ -53,6 +59,7 @@ export default async function Page(props: {
         teamSlug={team.slug}
         projectSlug={project.slug}
         authToken={authToken}
+        clientThirdwebClient={client}
       />
     </div>
   );
@@ -64,6 +71,7 @@ function YourFactoriesSection(props: {
   authToken: string;
   teamSlug: string;
   projectSlug: string;
+  clientThirdwebClient: ThirdwebClient;
 }) {
   return (
     <div className="flex flex-col gap-4">
@@ -104,6 +112,7 @@ function YourFactoriesSection(props: {
           authToken={props.authToken}
           teamSlug={props.teamSlug}
           projectSlug={props.projectSlug}
+          clientThirdwebClient={props.clientThirdwebClient}
         />
       </Suspense>
     </div>
@@ -116,6 +125,7 @@ async function AsyncYourFactories(props: {
   authToken: string;
   teamSlug: string;
   projectSlug: string;
+  clientThirdwebClient: ThirdwebClient;
 }) {
   const deployedContracts = await getSortedDeployedContracts({
     teamId: props.teamId,
@@ -151,6 +161,7 @@ async function AsyncYourFactories(props: {
         teamSlug={props.teamSlug}
         projectSlug={props.projectSlug}
         isFetched={true}
+        client={props.clientThirdwebClient}
       />
     </ClientOnly>
   );

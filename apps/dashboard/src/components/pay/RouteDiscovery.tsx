@@ -20,10 +20,17 @@ import {
 import { useTrack } from "hooks/analytics/useTrack";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 
 const TRACKING_CATEGORY = "token_discovery";
 
-export const RouteDiscovery = ({ project }: { project: ProjectResponse }) => {
+export const RouteDiscovery = ({
+  project,
+  client,
+}: {
+  project: ProjectResponse;
+  client: ThirdwebClient;
+}) => {
   const form = useForm<RouteDiscoveryValidationSchema>({
     resolver: zodResolver(routeDiscoveryValidationSchema),
     defaultValues: {
@@ -133,6 +140,7 @@ export const RouteDiscovery = ({ project }: { project: ProjectResponse }) => {
                     <FormLabel>Blockchain</FormLabel>
                     <FormControl>
                       <NetworkSelectorButton
+                        client={client}
                         onSwitchChain={(chain) => {
                           // Update the form field value
                           field.onChange(chain.chainId);

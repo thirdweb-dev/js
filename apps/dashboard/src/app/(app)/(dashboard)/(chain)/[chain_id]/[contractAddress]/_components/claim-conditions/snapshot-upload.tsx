@@ -14,7 +14,7 @@ import { useCsvUpload } from "hooks/useCsvUpload";
 import { CircleAlertIcon, DownloadIcon, UploadIcon } from "lucide-react";
 import { useRef } from "react";
 import type { Column } from "react-table";
-import { ZERO_ADDRESS } from "thirdweb";
+import { type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import { CsvDataTable } from "../csv-data-table";
 
 interface SnapshotAddressInput {
@@ -30,6 +30,7 @@ interface SnapshotUploadProps {
   isDisabled: boolean;
   value?: SnapshotAddressInput[] | undefined;
   onClose: () => void;
+  client: ThirdwebClient;
 }
 
 const csvParser = (items: SnapshotAddressInput[]): SnapshotAddressInput[] => {
@@ -49,6 +50,7 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
   isDisabled,
   value,
   onClose,
+  client,
 }) => {
   const {
     normalizeQuery,
@@ -59,7 +61,11 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
     noCsv,
     reset,
     removeInvalid,
-  } = useCsvUpload<SnapshotAddressInput>({ csvParser, defaultRawData: value });
+  } = useCsvUpload<SnapshotAddressInput>({
+    csvParser,
+    defaultRawData: value,
+    client,
+  });
 
   const paginationPortalRef = useRef<HTMLDivElement>(null);
   const normalizeData = normalizeQuery.data;

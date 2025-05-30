@@ -1,10 +1,11 @@
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { getActiveAccountCookie, getJWTCookie } from "@/constants/cookie";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { ContractPublishForm } from "components/contract-components/contract-publish-form";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
-import { serverThirdwebClient } from "../../../../../../@/constants/thirdweb-client.server";
 import { getLatestPublishedContractsWithPublisherMapping } from "../../../published-contract/[publisher]/[contract_id]/utils/getPublishedContractsWithPublisherMapping";
 
 type DirectDeployPageProps = {
@@ -71,7 +72,7 @@ export default async function PublishContractPage(
     <div className="container flex max-w-[1130px] flex-col gap-8 py-8">
       <ChakraProviderSetup>
         <ContractPublishForm
-          jwt={token}
+          isLoggedIn={!!token}
           publishMetadata={publishMetadata}
           onPublishSuccess={async () => {
             "use server";
@@ -82,6 +83,10 @@ export default async function PublishContractPage(
               "layout",
             );
           }}
+          client={getClientThirdwebClient({
+            jwt: token,
+            teamId: undefined,
+          })}
         />
       </ChakraProviderSetup>
     </div>

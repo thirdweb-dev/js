@@ -1,9 +1,9 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { replaceDeployerAddress } from "lib/publisher-utils";
 import Link from "next/link";
+import type { ThirdwebClient } from "thirdweb";
 import {
   AccountAddress,
   AccountAvatar,
@@ -15,12 +15,13 @@ import { shortenIfAddress } from "utils/usedapp-external";
 
 interface ContractPublisherProps {
   addressOrEns: string;
+  client: ThirdwebClient;
 }
 
 export const ContractPublisher: React.FC<ContractPublisherProps> = ({
   addressOrEns,
+  client,
 }) => {
-  const client = useThirdwebClient();
   return (
     <AccountProvider address={addressOrEns} client={client}>
       <Link

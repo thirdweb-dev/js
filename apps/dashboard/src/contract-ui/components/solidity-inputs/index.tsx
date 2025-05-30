@@ -15,6 +15,7 @@ type InputProps = React.ComponentProps<typeof Input>;
 export interface SolidityInputProps extends InputProps {
   // biome-ignore lint/suspicious/noExplicitAny: FIXME
   formContext: UseFormReturn<any, any>;
+  client: ThirdwebClient;
 }
 export interface SolidityInputWithTypeProps extends SolidityInputProps {
   solidityType: string;

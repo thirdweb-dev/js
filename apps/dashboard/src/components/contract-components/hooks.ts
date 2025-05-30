@@ -1,6 +1,5 @@
 "use client";
 
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import type { Abi } from "abitype";
 import { resolveEns } from "lib/ens";
@@ -19,8 +18,8 @@ import { fetchPublishedContractsFromDeploy } from "./fetchPublishedContractsFrom
 export function useAllVersions(
   publisherAddress: string | undefined,
   contractId: string | undefined,
+  client: ThirdwebClient,
 ) {
-  const client = useThirdwebClient();
   return useQuery({
     queryKey: ["all-releases", publisherAddress, contractId],
     queryFn: () => {
@@ -40,7 +39,6 @@ export function useAllVersions(
 }
 
 export function usePublishedContractsFromDeploy(contract: ThirdwebContract) {
-  const client = useThirdwebClient();
   return useQuery({
     queryKey: [
       "published-contracts-from-deploy",
@@ -50,7 +48,6 @@ export function usePublishedContractsFromDeploy(contract: ThirdwebContract) {
     queryFn: () =>
       fetchPublishedContractsFromDeploy({
         contract,
-        client,
       }),
     enabled: !!contract,
     retry: false,
@@ -108,8 +105,11 @@ export type PublishedContractDetails = Awaited<
   ReturnType<typeof fetchPublishedContracts>
 >[number];
 
-export function usePublishedContractsQuery(address?: string) {
-  const client = useThirdwebClient();
+export function usePublishedContractsQuery(params: {
+  client: ThirdwebClient;
+  address?: string;
+}) {
+  const { client, address } = params;
   return useQuery<PublishedContractDetails[]>({
     queryKey: ["published-contracts", address],
     queryFn: () => fetchPublishedContracts({ address, client }),
@@ -176,8 +176,11 @@ function ensQuery(params: {
   });
 }
 
-export function useEns(addressOrEnsName?: string) {
-  const client = useThirdwebClient();
+export function useEns(params: {
+  client: ThirdwebClient;
+  addressOrEnsName?: string;
+}) {
+  const { client, addressOrEnsName } = params;
   return useQuery(ensQuery({ addressOrEnsName, client }));
 }
 
@@ -186,11 +189,11 @@ export function useContractEvents(abi: Abi) {
 }
 
 export function useCustomFactoryAbi(
+  client: ThirdwebClient,
   contractAddress: string,
   chainId: number | undefined,
 ) {
   const chain = useV5DashboardChain(chainId);
-  const client = useThirdwebClient();
 
   return useQuery({
     queryKey: ["custom-factory-abi", { contractAddress, chainId }],

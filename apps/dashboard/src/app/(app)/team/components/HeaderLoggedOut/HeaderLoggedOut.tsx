@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { ThirdwebClient } from "thirdweb";
 import { SecondaryNavLinks } from "../../../components/Header/SecondaryNav/SecondaryNav";
 import { MobileBurgerMenuButton } from "../../../components/MobileBurgerMenuButton";
 import { ThirdwebMiniLogo } from "../../../components/ThirdwebMiniLogo";
 
 function HeaderLoggedOutDesktopUI(props: {
   className?: string;
+  client: ThirdwebClient;
 }) {
   const pathname = usePathname();
   return (
@@ -50,6 +52,7 @@ function HeaderLoggedOutDesktopUI(props: {
 
 function HeaderLoggedOutMobileUI(props: {
   className?: string;
+  client: ThirdwebClient;
 }) {
   const pathname = usePathname();
 
@@ -72,17 +75,20 @@ function HeaderLoggedOutMobileUI(props: {
             Connect Wallet
           </Link>
         </Button>
-        <MobileBurgerMenuButton type="loggedOut" />
+        <MobileBurgerMenuButton type="loggedOut" client={props.client} />
       </div>
     </header>
   );
 }
 
-export function HeaderLoggedOut() {
+export function HeaderLoggedOut(props: { client: ThirdwebClient }) {
   return (
     <div>
-      <HeaderLoggedOutDesktopUI className="max-lg:hidden" />
-      <HeaderLoggedOutMobileUI className="lg:hidden" />
+      <HeaderLoggedOutDesktopUI
+        className="max-lg:hidden"
+        client={props.client}
+      />
+      <HeaderLoggedOutMobileUI className="lg:hidden" client={props.client} />
     </div>
   );
 }

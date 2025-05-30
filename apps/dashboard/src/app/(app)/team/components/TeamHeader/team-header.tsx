@@ -19,8 +19,13 @@ export async function TeamHeader() {
     getAuthToken(),
   ]);
 
+  const client = getClientThirdwebClient({
+    jwt: authToken,
+    teamId: undefined,
+  });
+
   if (!account || !accountAddress || !teams) {
-    return <HeaderLoggedOut />;
+    return <HeaderLoggedOut client={client} />;
   }
 
   const cookiesObj = await cookies();
@@ -38,17 +43,17 @@ export async function TeamHeader() {
   const selectedTeam = lastUsedTeam || firstTeam;
 
   if (!selectedTeam) {
-    return <HeaderLoggedOut />;
+    return <HeaderLoggedOut client={client} />;
   }
 
-  const client = getClientThirdwebClient({
+  const lastUsedTeamClient = getClientThirdwebClient({
     jwt: authToken,
     teamId: lastUsedTeam?.id,
   });
 
   return (
     <TeamHeaderLoggedIn
-      client={client}
+      client={lastUsedTeamClient}
       currentTeam={selectedTeam}
       teamsAndProjects={teamsAndProjects}
       currentProject={undefined}

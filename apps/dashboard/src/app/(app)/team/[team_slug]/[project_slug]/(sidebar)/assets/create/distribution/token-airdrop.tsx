@@ -36,6 +36,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import type { TokenDistributionForm } from "../form";
 
 type AirdropAddressInput = {
@@ -47,6 +48,7 @@ type AirdropAddressInput = {
 
 export function TokenAirdropSection(props: {
   form: TokenDistributionForm;
+  client: ThirdwebClient;
 }) {
   const airdropAddresses = props.form.watch("airdropAddresses");
   const [showUploadSheet, setShowUploadSheet] = useState(false);
@@ -158,6 +160,7 @@ export function TokenAirdropSection(props: {
                       </SheetDescription>
                     </SheetHeader>
                     <AirdropUpload
+                      client={props.client}
                       setAirdrop={(addresses) => {
                         props.form.setValue("airdropAddresses", addresses);
                         setShowUploadSheet(false);
@@ -187,6 +190,7 @@ export function TokenAirdropSection(props: {
 type AirdropUploadProps = {
   setAirdrop: (airdrop: AirdropAddressInput[]) => void;
   onClose: () => void;
+  client: ThirdwebClient;
 };
 
 // CSV parser for airdrop data
@@ -202,6 +206,7 @@ const csvParser = (items: AirdropAddressInput[]): AirdropAddressInput[] => {
 const AirdropUpload: React.FC<AirdropUploadProps> = ({
   setAirdrop,
   onClose,
+  client,
 }) => {
   const {
     normalizeQuery,
@@ -211,7 +216,7 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
     noCsv,
     reset,
     removeInvalid,
-  } = useCsvUpload<AirdropAddressInput>({ csvParser });
+  } = useCsvUpload<AirdropAddressInput>({ csvParser, client });
 
   const normalizeData = normalizeQuery.data;
 

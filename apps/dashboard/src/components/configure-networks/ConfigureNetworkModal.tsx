@@ -1,4 +1,5 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import type { ThirdwebClient } from "thirdweb";
 import {
   type StoredChain,
   addRecentlyUsedChainId,
@@ -10,6 +11,7 @@ export type ConfigureNetworkModalProps = {
   onOpenChange: (open: boolean) => void;
   onNetworkAdded?: (chain: StoredChain) => void;
   editChain: StoredChain | undefined;
+  client: ThirdwebClient;
 };
 
 export const ConfigureNetworkModal: React.FC<ConfigureNetworkModalProps> = (
@@ -30,6 +32,7 @@ export const ConfigureNetworkModal: React.FC<ConfigureNetworkModalProps> = (
           }}
           onNetworkConfigured={onModalClose}
           editChain={props.editChain}
+          client={props.client}
         />
       </DialogContent>
     </Dialog>

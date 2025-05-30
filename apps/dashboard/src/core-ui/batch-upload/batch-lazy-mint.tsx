@@ -193,6 +193,7 @@ export const BatchLazyMint: ComponentWithChildren<
                 portalRef={paginationPortalRef}
                 data={nftMetadatas}
                 nextTokenIdToMint={props.nextTokenIdToMint}
+                client={props.client}
               />
               <div className="border-border border-t">
                 <div className="flex flex-col items-center justify-between p-0 md:flex-row md:p-4">

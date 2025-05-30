@@ -1,7 +1,7 @@
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useMemo } from "react";
-import { type NFT, ZERO_ADDRESS } from "thirdweb";
+import { type NFT, type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../_utils/contract-page-path";
@@ -32,6 +32,7 @@ interface NFTCardsProps {
   isPending: boolean;
   allNfts?: boolean;
   projectMeta: ProjectMeta | undefined;
+  client: ThirdwebClient;
 }
 
 export const NFTCards: React.FC<NFTCardsProps> = ({
@@ -40,6 +41,7 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
   isPending,
   allNfts,
   projectMeta,
+  client,
 }) => {
   const dummyData = useMemo(() => {
     return Array.from({
@@ -73,6 +75,7 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
                       requireInteraction
                       width="100%"
                       height="100%"
+                      client={client}
                     />
                   );
                 }}

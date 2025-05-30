@@ -9,7 +9,6 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { verifyContract } from "app/(app)/(dashboard)/(chain)/[chain_id]/[contractAddress]/sources/ContractSourcesPage";
@@ -34,7 +33,7 @@ import {
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
-import { ZERO_ADDRESS, getContract } from "thirdweb";
+import { type ThirdwebClient, ZERO_ADDRESS, getContract } from "thirdweb";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import {
   deployContractfromDeployMetadata,
@@ -82,9 +81,10 @@ import { TrustedForwardersFieldset } from "./trusted-forwarders-fieldset";
 interface CustomContractFormProps {
   metadata: FetchDeployMetadataResult;
   metadataNoFee: FetchDeployMetadataResult | null;
-  jwt: string;
+  isLoggedIn: boolean;
   modules?: FetchDeployMetadataResult[];
   teamsAndProjects: MinimalTeamsAndProjects;
+  client: ThirdwebClient;
 }
 
 type CustomContractDeploymentFormData = {
@@ -155,11 +155,10 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   metadata,
   metadataNoFee,
   modules,
-  jwt,
+  isLoggedIn,
   teamsAndProjects,
+  client,
 }) => {
-  const thirdwebClient = useThirdwebClient(jwt);
-
   const [isImportEnabled, setIsImportEnabled] = useState(true);
 
   const [importSelection, setImportSelection] = useState<{
@@ -226,6 +225,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   )[0] || ["", ""];
 
   const customFactoryAbi = useCustomFactoryAbi(
+    client,
     customFactoryAddress,
     customFactoryNetwork ? Number(customFactoryNetwork) : undefined,
   );
@@ -460,7 +460,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
           return (
             <Param
-              client={thirdwebClient}
+              client={client}
               key={paramKey}
               paramKey={paramKey}
               deployParam={deployParam}
@@ -476,7 +476,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
       deployParams,
       metadata.constructorParams,
       shouldHide,
-      thirdwebClient,
+      client,
     ],
   );
 
@@ -498,7 +498,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
       if (hasContractURI && params.contractMetadata) {
         // upload the contract metadata
         _contractURI = await upload({
-          client: thirdwebClient,
+          client,
           files: [params.contractMetadata],
         });
       }
@@ -521,7 +521,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         return await deployMarketplaceContract({
           account: activeAccount,
           chain: walletChain,
-          client: thirdwebClient,
+          client,
           params: {
             name: params.contractMetadata?.name || "",
             contractURI: _contractURI,
@@ -570,7 +570,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
       const coreContractAddress = await deployContractfromDeployMetadata({
         account: activeAccount,
         chain: walletChain,
-        client: thirdwebClient,
+        client,
         deployMetadata: isFeeExempt && metadataNoFee ? metadataNoFee : metadata,
         initializeParams,
         implementationConstructorParams,
@@ -600,7 +600,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
       return await getRequiredTransactions({
         chain: walletChain,
-        client: thirdwebClient,
+        client,
         deployMetadata: metadata,
         modules: modules?.map((m) => ({
           deployMetadata: m,
@@ -626,7 +626,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
           id="custom-contract-form"
           as="form"
           onSubmit={form.handleSubmit(async (formData) => {
-            if (!walletChain?.id || !activeAccount || !jwt) {
+            if (!walletChain?.id || !activeAccount || !isLoggedIn) {
               return;
             }
 
@@ -664,7 +664,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 getContract({
                   address: contractAddr,
                   chain: walletChain,
-                  client: thirdwebClient,
+                  client,
                 }),
               );
 
@@ -735,7 +735,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                       form.formState,
                     ).error?.message
                   }
-                  client={thirdwebClient}
+                  client={client}
                 />
               )}
 
@@ -754,7 +754,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                       form.formState,
                     ).error?.message
                   }
-                  client={thirdwebClient}
+                  client={client}
                 />
               )}
 
@@ -788,7 +788,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                       form.formState,
                     ).error?.message,
                   }}
-                  client={thirdwebClient}
+                  client={client}
                 />
               )}
 
@@ -797,17 +797,14 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   form={form}
                   isMarketplace={isMarketplace}
                   disabled={!isFeeExempt}
-                  client={thirdwebClient}
+                  client={client}
                 />
               )}
 
-              {isSplit && <SplitFieldset form={form} client={thirdwebClient} />}
+              {isSplit && <SplitFieldset form={form} client={client} />}
 
               {hasTrustedForwarders && (
-                <TrustedForwardersFieldset
-                  form={form}
-                  client={thirdwebClient}
-                />
+                <TrustedForwardersFieldset form={form} client={client} />
               )}
 
               {/* for StakeERC721 */}
@@ -830,7 +827,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                           deployParam={deployParam}
                           extraMetadataParam={extraMetadataParam}
                           isRequired
-                          client={thirdwebClient}
+                          client={client}
                         />
                       );
                     })}
@@ -858,7 +855,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                           deployParam={deployParam}
                           extraMetadataParam={extraMetadataParam}
                           isRequired
-                          client={thirdwebClient}
+                          client={client}
                         />
                       );
                     })}
@@ -901,7 +898,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                       extraMetadataParam={extraMetadataParam}
                       inputClassName="bg-card"
                       isRequired
-                      client={thirdwebClient}
+                      client={client}
                     />
                   );
                 })}
@@ -911,7 +908,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   form={form}
                   modules={modules}
                   isTWPublisher={isTWPublisher}
-                  client={thirdwebClient}
+                  client={client}
                 />
               )}
 
@@ -935,7 +932,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
           )}
 
           <AddToProjectCardUI
-            client={thirdwebClient}
+            client={client}
             teamsAndProjects={teamsAndProjects}
             selection={importSelection}
             enabled={isImportEnabled}
@@ -957,6 +954,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 <div className="flex flex-col gap-3">
                   <div className="flex flex-col gap-4 md:flex-row">
                     <NetworkSelectorButton
+                      client={client}
                       className="bg-background"
                       networksEnabled={
                         metadata?.name === "AccountFactory" ||
@@ -1027,7 +1025,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                       <SolidityInput
                         solidityType="string"
                         {...form.register("saltForCreate2")}
-                        client={thirdwebClient}
+                        client={client}
                       />
                       <div className="h-2" />
                       <CheckboxWithLabel>

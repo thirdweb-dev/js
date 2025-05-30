@@ -236,9 +236,9 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                     />
                   </FormControl>
                 ) : param.type === "address" || param.type === "address[]" ? (
-                  <RefInputFieldset param={param} />
+                  <RefInputFieldset param={param} client={client} />
                 ) : (
-                  <DecodedInputArrayFieldset param={param} />
+                  <DecodedInputArrayFieldset param={param} client={client} />
                 )}
 
                 {/* Checkboxes */}

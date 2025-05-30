@@ -9,16 +9,19 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import type { AbiParameter } from "abitype";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { DecodedInput } from "./decoded-input";
 
 interface DecodedInputSetProps {
   param: AbiParameter;
   setIndex: number;
+  client: ThirdwebClient;
 }
 
 export const DecodedInputSet: React.FC<DecodedInputSetProps> = ({
   param,
   setIndex,
+  client,
 }) => {
   const form = useFormContext();
 
@@ -62,6 +65,7 @@ export const DecodedInputSet: React.FC<DecodedInputSetProps> = ({
                 paramIndex={index}
                 setIndex={setIndex}
                 param={param}
+                client={client}
               />
             </AccordionContent>
           </AccordionItem>

@@ -51,6 +51,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
         <div className="flex flex-row gap-6">
           <NFTMediaWithEmptyState
             metadata={renderData.asset.metadata}
+            client={contract.client}
             requireInteraction
             width="150px"
             height="150px"

@@ -2,7 +2,7 @@ import { fetchPublishedContractsFromDeploy } from "components/contract-component
 import { ContractCard } from "components/explore/contract-card";
 import { THIRDWEB_DEPLOYER_ADDRESS } from "constants/addresses";
 import { resolveEns } from "lib/ens";
-import type { ThirdwebClient, ThirdwebContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
 import { getBytecode, getContract } from "thirdweb/contract";
 import { getPublishedUriFromCompilerUri } from "thirdweb/extensions/thirdweb";
@@ -20,13 +20,11 @@ type ModuleMetadataPickedKeys = {
 export async function getPublishedByCardProps(params: {
   address: string | null;
   contract: ThirdwebContract;
-  client: ThirdwebClient;
 }) {
-  const { address, contract, client } = params;
+  const { address, contract } = params;
 
   const publishedContractsFromDeploy = await fetchPublishedContractsFromDeploy({
     contract,
-    client,
   });
 
   const reversedPublishedContractsFromDeploy = [
@@ -54,7 +52,10 @@ export async function getPublishedByCardProps(params: {
   let publisherAddressOrEns = publishedContractToShow.publisher;
   if (!isValidENSName(publishedContractToShow.publisher)) {
     try {
-      const res = await resolveEns(publishedContractToShow.publisher, client);
+      const res = await resolveEns(
+        publishedContractToShow.publisher,
+        contract.client,
+      );
       if (res.ensName) {
         publisherAddressOrEns = res.ensName;
       }

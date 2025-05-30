@@ -1,5 +1,5 @@
 import { THIRDWEB_DEPLOYER_ADDRESS } from "constants/addresses";
-import type { ThirdwebClient, ThirdwebContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import { fetchPublishedContract } from "thirdweb/contract";
 import {
   getContractPublisher,
@@ -19,9 +19,8 @@ type ZkSolcMetadata = {
 
 export async function fetchPublishedContractsFromDeploy(options: {
   contract: ThirdwebContract;
-  client: ThirdwebClient;
 }) {
-  const { contract, client } = options;
+  const { contract } = options;
   const { bytecode } = await resolveImplementation(contract);
   const contractUri = extractIPFSUri(bytecode);
   if (!contractUri) {
@@ -29,7 +28,7 @@ export async function fetchPublishedContractsFromDeploy(options: {
   }
 
   let publishURIs = await getPublishedUriFromCompilerUri({
-    contract: getContractPublisher(client),
+    contract: getContractPublisher(contract.client),
     compilerMetadataUri: contractUri,
   });
 
@@ -39,7 +38,7 @@ export async function fetchPublishedContractsFromDeploy(options: {
     try {
       const res = await download({
         uri: contractUri,
-        client,
+        client: contract.client,
       });
 
       const deployMetadata = (await res.json()) as ZkSolcMetadata;
@@ -50,7 +49,7 @@ export async function fetchPublishedContractsFromDeploy(options: {
 
       if (contractId[0]) {
         const published = await fetchPublishedContract({
-          client,
+          client: contract.client,
           contractId: contractId[0],
           publisherAddress: THIRDWEB_DEPLOYER_ADDRESS,
         });
@@ -60,6 +59,6 @@ export async function fetchPublishedContractsFromDeploy(options: {
   }
 
   return await Promise.all(
-    publishURIs.map((uri) => fetchDeployMetadata(uri, client)),
+    publishURIs.map((uri) => fetchDeployMetadata(uri, contract.client)),
   );
 }

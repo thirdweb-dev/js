@@ -21,7 +21,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
 import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
@@ -39,6 +38,7 @@ import type React from "react";
 import { useState } from "react";
 import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import { upload } from "thirdweb/storage";
 import { toArrFromList } from "utils/string";
 import { planToTierRecordForGating } from "../../settings/Account/Billing/planToTierRecord";
@@ -52,6 +52,7 @@ type InAppWalletSettingsPageProps = {
   teamSlug: string;
   teamPlan: Team["billingPlan"];
   smsCountryTiers: SMSCountryTiers;
+  client: ThirdwebClient;
 };
 
 const TRACKING_CATEGORY = "embedded-wallet";
@@ -157,6 +158,7 @@ const InAppWalletSettingsPageUI: React.FC<
     <InAppWalletSettingsUI
       {...props}
       embeddedWalletService={embeddedWalletService}
+      client={props.client}
     />
   );
 };
@@ -169,6 +171,7 @@ export const InAppWalletSettingsUI: React.FC<
     ) => void;
     isUpdating: boolean;
     embeddedWalletService: ProjectEmbeddedWalletsService;
+    client: ThirdwebClient;
   }
 > = (props) => {
   const services = props.project.services;
@@ -275,6 +278,7 @@ export const InAppWalletSettingsUI: React.FC<
         <BrandingFieldset
           form={form}
           teamPlan={props.teamPlan}
+          client={props.client}
           teamSlug={props.teamSlug}
           requiredPlan={brandingRequiredPlan}
         />
@@ -326,6 +330,7 @@ function BrandingFieldset(props: {
   teamPlan: Team["billingPlan"];
   teamSlug: string;
   requiredPlan: Team["billingPlan"];
+  client: ThirdwebClient;
 }) {
   return (
     <Fieldset legend="Branding">
@@ -376,6 +381,7 @@ function BrandingFieldset(props: {
               </FormDescription>
               <FormControl>
                 <AppImageFormControl
+                  client={props.client}
                   uri={props.form.watch("branding.applicationImageUrl")}
                   setUri={(uri) => {
                     props.form.setValue("branding.applicationImageUrl", uri, {
@@ -417,18 +423,18 @@ function BrandingFieldset(props: {
 function AppImageFormControl(props: {
   uri: string | undefined;
   setUri: (uri: string) => void;
+  client: ThirdwebClient;
 }) {
-  const client = useThirdwebClient();
   const [image, setImage] = useState<File | undefined>();
   const resolveUrl = resolveSchemeWithErrorHandler({
-    client: client,
+    client: props.client,
     uri: props.uri || undefined,
   });
 
   const uploadImage = useMutation({
     mutationFn: async (file: File) => {
       const uri = await upload({
-        client: client,
+        client: props.client,
         files: [file],
       });
 
