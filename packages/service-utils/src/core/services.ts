@@ -62,7 +62,7 @@ export const SERVICE_DEFINITIONS = {
   insight: {
     name: "insight",
     title: "Insight",
-    description: "Insight services",
+    description: "Indexed data for any EVM chain",
     // all actions allowed
     actions: [],
   },
@@ -76,9 +76,9 @@ export const SERVICE_DEFINITIONS = {
   },
   engineCloud: {
     name: "engineCloud",
-    title: "Server wallets",
+    title: "Engine Cloud",
     description:
-      "Server wallets with high transaction throughput and low latency",
+      "Transaction API and Server wallets with high transaction throughput and low latency",
     // all actions allowed
     actions: [],
   },
