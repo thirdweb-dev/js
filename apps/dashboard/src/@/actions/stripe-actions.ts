@@ -59,3 +59,16 @@ export async function getTeamInvoices(
     throw new Error("Failed to fetch billing history");
   }
 }
+
+async function getStripeCustomer(customerId: string) {
+  return await getStripe().customers.retrieve(customerId);
+}
+
+export async function getStripeBalance(customerId: string) {
+  const customer = await getStripeCustomer(customerId);
+  if (customer.deleted) {
+    return 0;
+  }
+  // Stripe returns a positive balance for credits, so we need to multiply by -1 to get the actual balance (as long as the balance is not 0)
+  return customer.balance === 0 ? 0 : customer.balance * -1;
+}
