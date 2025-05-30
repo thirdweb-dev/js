@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import clsx from "clsx";
 import {
-  BotIcon,
   ChevronDownIcon,
   MenuIcon,
+  MessageCircleIcon,
   TableOfContentsIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -222,12 +222,11 @@ export function Header() {
 
           <div className="hidden xl:block">
             <Button
-              variant="primary"
               onClick={() => {
                 router.push("/chat");
               }}
             >
-              <BotIcon className="mr-2 size-4" />
+              <MessageCircleIcon className="mr-2 size-4" />
               Ask AI
             </Button>
           </div>
@@ -254,7 +253,7 @@ export function Header() {
               className="p-2"
               onClick={() => router.push("/chat")}
             >
-              <BotIcon className="size-7" />
+              <MessageCircleIcon className="size-7" />
             </Button>
             <Button
               variant="ghost"

@@ -1,4 +1,6 @@
 import { Grid, Heading, SDKCard } from "@/components/Document";
+import { Button } from "@/components/ui/button";
+import { MessageCircleIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { UnityIcon } from "../icons";
@@ -40,6 +42,13 @@ function Hero() {
           <p className="mb-8 max-w-md text-lg text-muted-foreground leading-normal">
             Development framework for building onchain apps, games, and agents.
           </p>
+
+          <Link href="/chat">
+            <Button className="flex items-center gap-2">
+              <MessageCircleIcon className="size-4" />
+              Ask AI
+            </Button>
+          </Link>
         </div>
       </div>
 

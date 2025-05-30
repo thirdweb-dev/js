@@ -11,6 +11,7 @@ export const getChatResponse = async (
     const payload = {
       message: userMessage,
       conversationId: sessionId,
+      source: "portal",
     };
     const response = await fetch(`${apiUrl}/v1/chat`, {
       method: "POST",
@@ -39,5 +40,33 @@ export const getChatResponse = async (
       error instanceof Error ? error.message : "Unknown error",
     );
     return null;
+  }
+};
+
+export const sendFeedback = async (
+  conversationId: string,
+  feedbackRating: 1 | -1,
+) => {
+  try {
+    const response = await fetch(`${apiUrl}/v1/chat/feedback`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-service-api-key": serviceKey,
+      },
+      body: JSON.stringify({ conversationId, feedbackRating }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Failed to send feedback: ${response.status} - ${error}`);
+    }
+    return true;
+  } catch (error) {
+    console.error(
+      "Feedback API error:",
+      error instanceof Error ? error.message : "Unknown error",
+    );
+    return false;
   }
 };

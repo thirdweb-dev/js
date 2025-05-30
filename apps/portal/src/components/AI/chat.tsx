@@ -5,7 +5,8 @@ import { LoadingDots } from "@/components/ui/LoadingDots";
 import { Button } from "@/components/ui/button";
 import { AutoResizeTextarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { ArrowUpIcon, BotIcon } from "lucide-react";
+import { MessageCircleIcon } from "lucide-react";
+import { ArrowUpIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
 import { usePostHog } from "posthog-js/react";
 import {
   type ChangeEvent,
@@ -15,13 +16,14 @@ import {
   useRef,
   useState,
 } from "react";
-import { getChatResponse } from "./api";
+import { getChatResponse, sendFeedback } from "./api";
 
 interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
   isLoading?: boolean;
+  feedback?: 1 | -1;
 }
 
 const predefinedPrompts = [
@@ -36,7 +38,7 @@ function ChatEmptyState({
 }: { onPromptClick: (prompt: string) => void }) {
   return (
     <div className="flex flex-col items-center justify-center space-y-8 py-16 text-center">
-      <BotIcon className="size-16" />
+      <MessageCircleIcon className="size-16" />
 
       <h2 className="font-semibold text-3xl text-foreground">
         How can I help you <br />
@@ -153,6 +155,21 @@ export function Chat() {
     }
   };
 
+  const handleFeedback = async (messageId: string, feedback: 1 | -1) => {
+    if (!conversationId) return; // Don't send feedback if no conversation
+
+    try {
+      await sendFeedback(conversationId, feedback);
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.id === messageId ? { ...msg, feedback } : msg,
+        ),
+      );
+    } catch (_e) {
+      // Optionally handle error
+    }
+  };
+
   return (
     <div
       className="mx-auto flex size-full flex-col overflow-hidden lg:min-w-[800px] lg:max-w-5xl"
@@ -183,11 +200,37 @@ export function Chat() {
                   {message.role === "assistant" && message.isLoading ? (
                     <LoadingDots />
                   ) : (
-                    <StyledMarkdownRenderer
-                      text={message.content}
-                      isMessagePending={false}
-                      type={message.role}
-                    />
+                    <>
+                      <StyledMarkdownRenderer
+                        text={message.content}
+                        isMessagePending={false}
+                        type={message.role}
+                      />
+                      {message.role === "assistant" && !message.isLoading && (
+                        <div className="mt-2 flex gap-2">
+                          {!message.feedback && (
+                            <>
+                              <button
+                                type="button"
+                                aria-label="Thumbs up"
+                                className="text-muted-foreground transition-colors hover:text-green-500"
+                                onClick={() => handleFeedback(message.id, 1)}
+                              >
+                                <ThumbsUpIcon className="size-5" />
+                              </button>
+                              <button
+                                type="button"
+                                aria-label="Thumbs down"
+                                className="text-muted-foreground transition-colors hover:text-red-500"
+                                onClick={() => handleFeedback(message.id, -1)}
+                              >
+                                <ThumbsDownIcon className="size-5" />
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               </div>

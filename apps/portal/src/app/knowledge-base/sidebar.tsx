@@ -70,6 +70,10 @@ export const sidebar: SideBar = {
               name: "Batch Upload",
               href: "/knowledge-base/troubleshoot/contracts/batch-upload",
             },
+            {
+              name: "Transfer Amount Exceeds Allowance",
+              href: "/knowledge-base/troubleshoot/contracts/erc20-transfer-allowance",
+            },
           ],
         },
       ],

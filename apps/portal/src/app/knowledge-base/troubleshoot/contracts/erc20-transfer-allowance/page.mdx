@@ -1,0 +1,15 @@
+# ERC20 - Transfer Amount Exceeds Allowance
+
+## What it means
+
+The "ERC20: transfer amount exceeds allowance" error occurs when trying to transfer ERC20 tokens beyond the allowed limit set by the token owner. ERC20 tokens use an allowance system that grants specific addresses permission to transfer a certain amount of tokens on behalf of the owner.
+
+## How to fix it
+
+1. Check allowance: Use the thirdweb Dashboard to verify the current allowance for the sender’s address.
+2. Increase allowance: If the allowance is too low, the token owner should call the approve function to increase it.
+3. Transfer tokens: Once the allowance is updated, retry the transfer using transferFrom or transfer.
+
+Following these steps should resolve the error. Ensure the allowance covers the transfer amount before initiating.
+
+Can't get this working? [**Contact our support team**](https://thirdweb.com/support) for help. 

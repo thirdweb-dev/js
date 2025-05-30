@@ -102,6 +102,7 @@ function CustomChatContentLoggedIn(props: {
           message:
             messageToSend.content.find((x) => x.type === "text")?.text ?? "",
           conversationId: sessionId,
+          source: "dashboard-support",
         };
         const apiUrl = process.env.NEXT_PUBLIC_SIWA_URL;
         const response = await fetch(`${apiUrl}/v1/chat`, {
