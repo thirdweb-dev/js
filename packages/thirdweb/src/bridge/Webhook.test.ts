@@ -52,8 +52,14 @@ describe("parseIncomingWebhook", () => {
       receiver: "0x1234567890123456789012345678901234567890",
       type: "transfer",
       transactions: [
-        "0x1234567890123456789012345678901234567890",
-        "0x1234567890123456789012345678901234567890",
+        {
+          chainId: 1,
+          transactionHash: "0x1234567890123456789012345678901234567890",
+        },
+        {
+          chainId: 1,
+          transactionHash: "0x1234567890123456789012345678901234567890",
+        },
       ],
       developerFeeBps: 100,
       developerFeeRecipient: "0x1234567890123456789012345678901234567890",

@@ -92,6 +92,7 @@ export default async function PayPage({
       name={params.name}
       image={params.image}
       theme={params.theme}
+      purchaseData={undefined}
     />
   );
 }

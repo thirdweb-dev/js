@@ -65,6 +65,7 @@ export default async function PayPage({
       name={paymentLink.title}
       image={paymentLink.imageUrl}
       theme={theme}
+      purchaseData={paymentLink.purchaseData}
     />
   );
 }

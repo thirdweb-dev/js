@@ -16,6 +16,7 @@ export function PayPageEmbed({
   image,
   redirectUri,
   theme,
+  purchaseData,
 }: {
   chainId: number;
   recipientAddress: string;
@@ -27,6 +28,7 @@ export function PayPageEmbed({
   redirectUri?: string;
   clientId: string;
   theme?: "light" | "dark";
+  purchaseData: Record<string, unknown> | undefined;
 }) {
   const { theme: browserTheme, setTheme } = useTheme();
 
@@ -51,6 +53,7 @@ export function PayPageEmbed({
             image,
           },
           mode: "direct_payment",
+          purchaseData,
           paymentInfo: {
             chain,
             sellerAddress: recipientAddress,
