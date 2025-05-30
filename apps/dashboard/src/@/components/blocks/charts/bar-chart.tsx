@@ -17,13 +17,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { formatDate } from "date-fns";
-import { useMemo } from "react";
+import { cn } from "@/lib/utils";
 import {
   EmptyChartState,
   LoadingChartState,
-} from "../../../../components/analytics/empty-chart-state";
-import { cn } from "../../../lib/utils";
+} from "components/analytics/empty-chart-state";
+import { formatDate } from "date-fns";
+import { useMemo } from "react";
 
 type ThirdwebBarChartProps<TConfig extends ChartConfig> = {
   // metadata

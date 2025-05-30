@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { defineChain } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
-import { serverThirdwebClient } from "../../../../../../../@/constants/thirdweb-client.server";
 
 type RouteListCardProps = {
   originChainId: number;

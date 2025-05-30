@@ -2,11 +2,11 @@ import { getProjects } from "@/api/projects";
 import { type Team, getTeams } from "@/api/team";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { TabPathLinks } from "@/components/ui/tabs";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import type React from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { getClientThirdwebClient } from "../../../@/constants/thirdweb-client.client";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,

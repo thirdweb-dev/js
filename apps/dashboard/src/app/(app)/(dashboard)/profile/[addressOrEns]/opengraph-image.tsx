@@ -1,11 +1,11 @@
 import { GradientBlobbie } from "@/components/blocks/Avatars/GradientBlobbie";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 /* eslint-disable @next/next/no-img-element */
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 import { resolveAvatar } from "thirdweb/extensions/ens";
 import { shortenIfAddress } from "utils/usedapp-external";
-import { serverThirdwebClient } from "../../../../../@/constants/thirdweb-client.server";
 import { resolveAddressAndEns } from "./resolveAddressAndEns";
 
 export const runtime = "edge";

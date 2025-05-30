@@ -1,8 +1,8 @@
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { resolveEns } from "lib/ens";
 import { isAddress } from "thirdweb";
 import { isValidENSName } from "thirdweb/utils";
 import z from "zod";
-import { getClientThirdwebClient } from "../@/constants/thirdweb-client.client";
 
 /**
  * This file contains some useful zod schemas from the SDK v4

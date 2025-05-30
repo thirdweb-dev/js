@@ -1,6 +1,6 @@
 import { getTeamBySlug } from "@/api/team";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { notFound } from "next/navigation";
-import { getClientThirdwebClient } from "../../../../../../../../../../../../../@/constants/thirdweb-client.client";
 import { getAuthToken } from "../../../../../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../../../../../login/loginRedirect";
 import { UpdatePartnerForm } from "../../../components/client/update-partner-form.client";

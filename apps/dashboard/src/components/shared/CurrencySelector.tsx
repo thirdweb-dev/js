@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { CURRENCIES, type CurrencyMetadata } from "constants/currencies";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { useMemo, useState } from "react";
 import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS, isAddress } from "thirdweb";
-import { useAllChainsData } from "../../hooks/chains/allChains";
 
 interface CurrencySelectorProps {
   value: string;

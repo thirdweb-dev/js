@@ -1,7 +1,7 @@
 import "server-only";
 
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { download } from "thirdweb/storage";
-import { serverThirdwebClient } from "../../../@/constants/thirdweb-client.server";
 import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
 import type { GenerateURLParams, WalletNFT } from "./types";
 

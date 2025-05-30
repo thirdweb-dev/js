@@ -7,8 +7,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import Link from "next/link";
-import { serverThirdwebClient } from "../../../@/constants/thirdweb-client.server";
 import { fetchDeployMetadata } from "../fetchDeployMetadata";
 import { ContractIdImage } from "../shared/contract-id-image";
 

@@ -6,11 +6,11 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useStore } from "@/lib/reactive";
 import { ChainIconClient } from "components/icons/ChainIcon";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { getDashboardChainRpc } from "lib/rpc";
 import { CircleAlertIcon, Trash2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
-import { useAllChainsData } from "../../hooks/chains/allChains";
 import {
   type StoredChain,
   chainOverridesStore,

@@ -1,8 +1,8 @@
 import { getProjects } from "@/api/projects";
 import { getTeamBySlug, getTeams } from "@/api/team";
 import { AppFooter } from "@/components/blocks/app-footer";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { notFound } from "next/navigation";
-import { getClientThirdwebClient } from "../../../../../@/constants/thirdweb-client.client";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import {
   getAuthToken,

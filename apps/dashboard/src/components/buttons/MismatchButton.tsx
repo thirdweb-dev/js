@@ -27,6 +27,7 @@ import type {
 import { getSDKTheme } from "app/(app)/components/sdk-component-theme";
 import { LOCAL_NODE_PKEY } from "constants/misc";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { ExternalLinkIcon, UnplugIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -52,7 +53,6 @@ import {
 } from "thirdweb/react";
 import { type Wallet, privateKeyToAccount } from "thirdweb/wallets";
 import { getFaucetClaimAmount } from "../../app/(app)/api/testnet-faucet/claim/claim-amount";
-import { useAllChainsData } from "../../hooks/chains/allChains";
 import { useV5DashboardChain } from "../../lib/v5-adapter";
 
 const GAS_FREE_CHAINS = [

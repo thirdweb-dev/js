@@ -1,8 +1,8 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { type ReactNode, useEffect, useState } from "react";
 import type { ComponentWithChildren } from "types/component-with-children";
-import { cn } from "../../@/lib/utils";
 import styles from "./ClientOnly.module.css";
 
 interface ClientOnlyProps {

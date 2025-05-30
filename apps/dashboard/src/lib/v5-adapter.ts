@@ -1,10 +1,10 @@
 "use client";
 
+import { useAllChainsData } from "hooks/chains/allChains";
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import { useMemo } from "react";
 import type { Chain, ChainMetadata } from "thirdweb/chains";
 import { useActiveWalletChain } from "thirdweb/react";
-import { useAllChainsData } from "../hooks/chains/allChains";
 
 export function useV5DashboardChain(chainId: undefined): undefined;
 export function useV5DashboardChain(chainId: number): Chain;

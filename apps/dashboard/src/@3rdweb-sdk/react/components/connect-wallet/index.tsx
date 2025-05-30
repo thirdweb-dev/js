@@ -3,9 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { useStore } from "@/lib/reactive";
 import { getSDKTheme } from "app/(app)/components/sdk-component-theme";
+import { LazyConfigureNetworkModal } from "components/configure-networks/LazyConfigureNetworkModal";
 import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,8 +22,6 @@ import {
 } from "thirdweb/react";
 import { useFavoriteChainIds } from "../../../../app/(app)/(dashboard)/(chain)/components/client/star-button";
 import { doLogout } from "../../../../app/(app)/login/auth-actions";
-import { LazyConfigureNetworkModal } from "../../../../components/configure-networks/LazyConfigureNetworkModal";
-import { useAllChainsData } from "../../../../hooks/chains/allChains";
 import {
   type StoredChain,
   addRecentlyUsedChainId,

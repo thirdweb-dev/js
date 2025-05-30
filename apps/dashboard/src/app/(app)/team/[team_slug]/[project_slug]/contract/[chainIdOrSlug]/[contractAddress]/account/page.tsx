@@ -1,6 +1,6 @@
+import { getProject } from "@/api/projects";
 import { notFound } from "next/navigation";
 import { SharedContractAccountPage } from "../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/account/shared-account-page";
-import { getProject } from "../../../../../../../../../@/api/projects";
 import type { ProjectContractPageParams } from "../types";
 
 export default async function Page(props: {

@@ -1,10 +1,10 @@
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 /* eslint-disable @next/next/no-img-element */
 import { replaceIpfsUrl } from "lib/sdk";
 import type { StaticImageData } from "next/image";
 import Image from "next/image";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import generalContractIcon from "../../../../public/assets/tw-icons/general.png";
-import { serverThirdwebClient } from "../../../@/constants/thirdweb-client.server";
 
 type ContractIdImageProps = {
   deployedMetadataResult: FetchDeployMetadataResult;

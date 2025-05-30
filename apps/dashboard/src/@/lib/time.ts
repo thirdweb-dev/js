@@ -1,9 +1,9 @@
-import { differenceInCalendarDays } from "date-fns";
 import {
   type DurationId,
   type Range,
   getLastNDaysRange,
-} from "../../components/analytics/date-range-selector";
+} from "components/analytics/date-range-selector";
+import { differenceInCalendarDays } from "date-fns";
 
 export function normalizeTime(date: Date) {
   const newDate = new Date(date);

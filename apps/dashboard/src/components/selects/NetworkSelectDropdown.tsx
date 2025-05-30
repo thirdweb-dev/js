@@ -6,9 +6,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ChainIconClient } from "components/icons/ChainIcon";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { useAllChainsData } from "../../hooks/chains/allChains";
 
 interface NetworkSelectDropdownProps {
   enabledChainIds?: number[];

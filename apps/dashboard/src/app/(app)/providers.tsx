@@ -1,5 +1,6 @@
 "use client";
 
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { isSanctionedAddress } from "data/eth-sanctioned-addresses";
@@ -14,7 +15,6 @@ import {
   useActiveAccount,
   useConnectionManager,
 } from "thirdweb/react";
-import { getClientThirdwebClient } from "../../@/constants/thirdweb-client.client";
 import { TWAutoConnect } from "./components/autoconnect";
 
 const queryClient = new QueryClient();

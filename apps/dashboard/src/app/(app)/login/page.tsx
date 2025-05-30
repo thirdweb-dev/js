@@ -1,4 +1,4 @@
-import { getClientThirdwebClient } from "../../../@/constants/thirdweb-client.client";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getRawAccount } from "../account/settings/getAccount";
 import { LoginAndOnboardingPage } from "./LoginPage";
 import { isValidEncodedRedirectPath } from "./isValidEncodedRedirectPath";

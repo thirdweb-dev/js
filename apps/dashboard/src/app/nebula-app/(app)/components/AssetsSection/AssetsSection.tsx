@@ -1,6 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { isProd } from "@/constants/env-utils";
 import { useQuery } from "@tanstack/react-query";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { XIcon } from "lucide-react";
 import Link from "next/link";
 import {
@@ -19,7 +20,6 @@ import {
 } from "thirdweb/react";
 import { getWalletBalance } from "thirdweb/wallets";
 import { ChainIconClient } from "../../../../../components/icons/ChainIcon";
-import { useAllChainsData } from "../../../../../hooks/chains/allChains";
 import { nebulaAppThirdwebClient } from "../../utils/nebulaThirdwebClient";
 
 export type AssetBalance = {

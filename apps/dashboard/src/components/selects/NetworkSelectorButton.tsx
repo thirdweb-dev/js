@@ -5,6 +5,7 @@ import { useStore } from "@/lib/reactive";
 import { cn } from "@/lib/utils";
 import { popularChains } from "@3rdweb-sdk/react/components/popularChains";
 import { ChainIconClient } from "components/icons/ChainIcon";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
 import { ChevronDownIcon } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -15,7 +16,6 @@ import { useNetworkSwitcherModal } from "thirdweb/react";
 import { useFavoriteChainIds } from "../../app/(app)/(dashboard)/(chain)/components/client/star-button";
 import { getSDKTheme } from "../../app/(app)/components/sdk-component-theme";
 import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
-import { useAllChainsData } from "../../hooks/chains/allChains";
 import {
   type StoredChain,
   addRecentlyUsedChainId,

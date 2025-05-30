@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
-import { getClientThirdwebClient } from "../@/constants/thirdweb-client.client";
 
 function StoryBadge(props: {
   label: string;

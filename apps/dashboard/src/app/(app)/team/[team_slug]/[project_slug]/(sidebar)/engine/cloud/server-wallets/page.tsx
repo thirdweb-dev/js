@@ -1,8 +1,8 @@
 import { getProject } from "@/api/projects";
 import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
 import { notFound } from "next/navigation";
-import { getClientThirdwebClient } from "../../../../../../../../../@/constants/thirdweb-client.client";
 import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
 import type { Wallet } from "./wallet-table/types";
 import { ServerWalletsTable } from "./wallet-table/wallet-table";

@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { Divider, Flex, GridItem, List, ListItem } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
@@ -21,8 +23,6 @@ import { useActiveAccount } from "thirdweb/react";
 import { download } from "thirdweb/storage";
 import invariant from "tiny-invariant";
 import { Card, Heading, LinkButton, Text } from "tw-components";
-import { Button } from "../../../@/components/ui/button";
-import { Separator } from "../../../@/components/ui/separator";
 import type { PublishedContractWithVersion } from "../fetch-contracts-with-versions";
 import {
   usePublishedContractEvents,

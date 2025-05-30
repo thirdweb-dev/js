@@ -1,6 +1,7 @@
 "use client";
 
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import {
   Table,
   TableBody,
@@ -14,7 +15,6 @@ import {
   DEFAULT_ACCOUNT_FACTORY_V0_6,
   DEFAULT_ACCOUNT_FACTORY_V0_7,
 } from "thirdweb/wallets/smart";
-import { UnderlineLink } from "../../../@/components/ui/UnderlineLink";
 
 export function DefaultFactoriesSection() {
   const data = [

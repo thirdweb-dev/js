@@ -15,6 +15,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import {
   PROJECT_SHOWCASE_DATA,
@@ -26,7 +27,6 @@ import { FileTextIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { serverThirdwebClient } from "../../../@/constants/thirdweb-client.server";
 
 export const metadata: Metadata = {
   title: "Project Showcase | Built on thirdweb",

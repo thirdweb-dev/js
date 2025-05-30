@@ -1,3 +1,4 @@
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import {
   fetchPublishedContractVersion,
   fetchPublishedContractVersions,
@@ -6,7 +7,6 @@ import { ZERO_FEE_VERSIONS } from "constants/fee-config";
 import { isAddress } from "thirdweb";
 import { fetchDeployMetadata } from "thirdweb/contract";
 import { resolveAddress } from "thirdweb/extensions/ens";
-import { serverThirdwebClient } from "../../../../../@/constants/thirdweb-client.server";
 import { DeployContractHeader } from "./contract-header";
 import { DeployFormForUri } from "./uri-based-deploy";
 
