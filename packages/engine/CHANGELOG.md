@@ -1,4 +1,4 @@
-# @thirdweb-dev/insight
+# @thirdweb-dev/engine
 
 ## 3.0.3
 

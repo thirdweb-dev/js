@@ -213,7 +213,7 @@ export async function getNFT(args: {
 
   const defaultQueryOptions: GetV1NftsByContractAddressByTokenIdData["query"] =
     {
-      chain: chain.id,
+      chain_id: [chain.id],
       include_owners:
         includeOwners === true ? ("true" as const) : ("false" as const),
     };

@@ -1,3 +1,4 @@
+import { getV1TokensPrice } from "@thirdweb-dev/insight";
 import type { Address } from "abitype";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -5,8 +6,10 @@ import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
 import { getBytecode } from "../../contract/actions/get-bytecode.js";
 import { getContract } from "../../contract/contract.js";
 import { isAddress } from "../../utils/address.js";
+import { getThirdwebDomains } from "../../utils/domains.js";
 import { getClientFetch } from "../../utils/fetch.js";
-import { getPayConvertCryptoToFiatEndpoint } from "../utils/definitions.js";
+import { stringify } from "../../utils/json.js";
+import { withCache } from "../../utils/promise/withCache.js";
 import type { SupportedFiatCurrency } from "./type.js";
 
 /**
@@ -92,21 +95,35 @@ export async function convertCryptoToFiat(
       );
     }
   }
-  const params = {
-    fromTokenAddress,
-    to,
-    chainId: String(chain.id),
-    fromAmount: String(fromAmount),
-  };
-  const queryString = new URLSearchParams(params).toString();
-  const url = `${getPayConvertCryptoToFiatEndpoint()}?${queryString}`;
-  const response = await getClientFetch(client)(url);
-  if (!response.ok) {
+
+  const result = await withCache(
+    () =>
+      getV1TokensPrice({
+        baseUrl: `https://${getThirdwebDomains().insight}`,
+        fetch: getClientFetch(client),
+        query: {
+          address: fromTokenAddress,
+          chain_id: [chain.id],
+        },
+      }),
+    {
+      cacheKey: `convert-fiat-to-crypto-${to}-${chain.id}`,
+      cacheTime: 1000 * 60, // 1 minute cache
+    },
+  );
+
+  if (result.error) {
+    throw new Error(
+      `Failed to fetch ${to} value for token (${fromTokenAddress}) on chainId: ${chain.id} - ${result.response.status} ${result.response.statusText} - ${result.error ? stringify(result.error) : "Unknown error"}`,
+    );
+  }
+
+  const firstResult = result.data?.data[0];
+
+  if (!firstResult) {
     throw new Error(
       `Failed to fetch ${to} value for token (${fromTokenAddress}) on chainId: ${chain.id}`,
     );
   }
-
-  const data: { result: number } = await response.json();
-  return data;
+  return { result: firstResult.price_usd * fromAmount };
 }
