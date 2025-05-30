@@ -52,7 +52,18 @@ export function PayPageEmbed({
             name,
             image,
           },
-          purchaseData,
+  // Validate and sanitize purchaseData
+  const sanitizedPurchaseData = purchaseData && typeof purchaseData === 'object'
+    ? purchaseData
+    : undefined;
+
+  payOptions={{
+    metadata: {
+      name,
+      image,
+    },
+    purchaseData: sanitizedPurchaseData,
+  }}
           mode: "direct_payment",
           paymentInfo: {
             chain,
