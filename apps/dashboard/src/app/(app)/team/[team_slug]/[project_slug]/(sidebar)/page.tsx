@@ -41,6 +41,7 @@ import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../login/loginRedirect";
 import { CombinedBarChartCard } from "../../../components/Analytics/CombinedBarChartCard";
 import { PieChartCard } from "../../../components/Analytics/PieChartCard";
+import { EngineCloudChartCard } from "./components/EngineCloudChartCard";
 import { ProjectFTUX } from "./components/ProjectFTUX/ProjectFTUX";
 import { RpcMethodBarChartCard } from "./components/RpcMethodBarChartCard";
 import { TransactionsCharts } from "./components/Transactions";
@@ -273,6 +274,13 @@ async function ProjectAnalytics(props: {
         />
       )}
       <RpcMethodBarChartCard
+        from={range.from}
+        to={range.to}
+        period={interval}
+        teamId={project.teamId}
+        projectId={project.id}
+      />
+      <EngineCloudChartCard
         from={range.from}
         to={range.to}
         period={interval}

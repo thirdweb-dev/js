@@ -16,6 +16,7 @@ yalc.lock
 ./build/
 playwright-report/
 .env/
+.pnpm-store/
 
 # codecov binary
 codecov

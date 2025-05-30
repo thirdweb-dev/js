@@ -3,6 +3,7 @@ import "server-only";
 import type {
   AnalyticsQueryParams,
   EcosystemWalletStats,
+  EngineCloudStats,
   InAppWalletStats,
   RpcMethodStats,
   TransactionStats,
@@ -430,4 +431,25 @@ export async function getUniversalBridgeWalletUsage(args: {
 
   const json = await res.json();
   return json.data as UniversalBridgeWalletStats[];
+}
+
+export async function getEngineCloudMethodUsage(
+  params: AnalyticsQueryParams,
+): Promise<EngineCloudStats[]> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(
+    `v2/engine-cloud/requests?${searchParams.toString()}`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    },
+  );
+
+  if (res?.status !== 200) {
+    console.error("Failed to fetch Engine Cloud method usage");
+    return [];
+  }
+
+  const json = await res.json();
+  return json.data as EngineCloudStats[];
 }
