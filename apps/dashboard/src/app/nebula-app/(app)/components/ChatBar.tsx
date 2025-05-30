@@ -53,6 +53,12 @@ export type WalletMeta = {
 
 const maxAllowedImagesPerMessage = 4;
 
+function showSigninToUploadImagesToast() {
+  toast.error("Sign in to upload images to Nebula", {
+    position: "top-right",
+  });
+}
+
 export function ChatBar(props: {
   sendMessage: (message: NebulaUserMessage) => void;
   isChatStreaming: boolean;
@@ -76,6 +82,7 @@ export function ChatBar(props: {
   const [images, setImages] = useState<
     Array<{ file: File; b64: string | undefined }>
   >([]);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   function handleSubmit(message: string) {
     const userMessage: NebulaUserMessage = {
@@ -104,10 +111,45 @@ export function ChatBar(props: {
     },
   });
 
-  async function handleImageUpload(images: File[]) {
+  const supportedFileTypes = ["image/jpeg", "image/png", "image/webp"];
+
+  async function handleImageUpload(files: File[]) {
+    const totalFiles = files.length + images.length;
+
+    if (totalFiles > maxAllowedImagesPerMessage) {
+      toast.error(
+        `You can only upload up to ${maxAllowedImagesPerMessage} images at a time`,
+        {
+          position: "top-right",
+        },
+      );
+      return;
+    }
+
+    const validFiles: File[] = [];
+
+    for (const file of files) {
+      if (!supportedFileTypes.includes(file.type)) {
+        toast.error("Unsupported file type", {
+          description: `File: ${file.name}`,
+          position: "top-right",
+        });
+        continue;
+      }
+
+      if (file.size <= 5 * 1024 * 1024) {
+        validFiles.push(file);
+      } else {
+        toast.error("Image is larger than 5MB", {
+          description: `File: ${file.name}`,
+          position: "top-right",
+        });
+      }
+    }
+
     try {
       const urls = await Promise.all(
-        images.map(async (image) => {
+        validFiles.map(async (image) => {
           const b64 = await uploadImageMutation.mutateAsync(image);
           return { file: image, b64: b64 };
         }),
@@ -126,9 +168,44 @@ export function ChatBar(props: {
     <DynamicHeight transition="height 200ms ease">
       <div
         className={cn(
-          "overflow-hidden rounded-2xl border border-border bg-card",
+          "overflow-hidden rounded-2xl border border-border bg-card transition-colors",
+          isDragOver && "border-nebula-pink-foreground bg-nebula-pink/5",
           props.className,
         )}
+        onDrop={(e) => {
+          setIsDragOver(false);
+          e.preventDefault();
+          if (!props.allowImageUpload) {
+            showSigninToUploadImagesToast();
+            return;
+          }
+          const files = Array.from(e.dataTransfer.files);
+          if (files.length > 0) handleImageUpload(files);
+        }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragOver(true);
+          if (!props.allowImageUpload) {
+            return;
+          }
+        }}
+        onDragEnter={(e) => {
+          e.preventDefault();
+          setIsDragOver(true);
+          if (!props.allowImageUpload) {
+            return;
+          }
+        }}
+        onDragLeave={(e) => {
+          e.preventDefault();
+          if (!props.allowImageUpload) {
+            return;
+          }
+          // Only set drag over to false if we're leaving the container entirely
+          if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+            setIsDragOver(false);
+          }
+        }}
       >
         {images.length > 0 && (
           <ImagePreview
@@ -146,6 +223,17 @@ export function ChatBar(props: {
               placeholder={props.placeholder}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onPaste={(e) => {
+                const files = Array.from(e.clipboardData.files);
+                if (files.length > 0) {
+                  e.preventDefault();
+                  if (!props.allowImageUpload) {
+                    showSigninToUploadImagesToast();
+                    return;
+                  }
+                  handleImageUpload(files);
+                }
+              }}
               onKeyDown={(e) => {
                 // ignore if shift key is pressed to allow entering new lines
                 if (e.shiftKey) {
@@ -257,34 +345,9 @@ export function ChatBar(props: {
                 <ImageUploadButton
                   multiple
                   value={undefined}
-                  accept="image/jpeg,image/png,image/webp"
+                  accept={supportedFileTypes.join(",")}
                   onChange={(files) => {
-                    const totalFiles = files.length + images.length;
-
-                    if (totalFiles > maxAllowedImagesPerMessage) {
-                      toast.error(
-                        `You can only upload up to ${maxAllowedImagesPerMessage} images at a time`,
-                        {
-                          position: "top-right",
-                        },
-                      );
-                      return;
-                    }
-
-                    const validFiles: File[] = [];
-
-                    for (const file of files) {
-                      if (file.size <= 5 * 1024 * 1024) {
-                        validFiles.push(file);
-                      } else {
-                        toast.error("Image is larger than 5MB", {
-                          description: `File: ${file.name}`,
-                          position: "top-right",
-                        });
-                      }
-                    }
-
-                    handleImageUpload(validFiles);
+                    handleImageUpload(files);
                   }}
                   variant="ghost"
                   className="!h-auto w-auto shrink-0 gap-2 p-2"
