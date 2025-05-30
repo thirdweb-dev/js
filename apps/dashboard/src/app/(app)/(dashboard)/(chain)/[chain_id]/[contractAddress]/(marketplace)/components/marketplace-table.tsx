@@ -237,7 +237,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
                   </Th>
                 ))}
                 {/* // Need to add an empty header for the drawer button */}
-                <Th border="none" />
+                <Th border="none" key="drawer" />
               </Tr>
             ))}
           </Thead>

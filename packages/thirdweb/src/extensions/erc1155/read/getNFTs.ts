@@ -84,8 +84,14 @@ async function getNFTsFromInsight(
     Math.max(0, Number(supply) - currentOffset),
   );
   if (result.length < expectedResultLength) {
-    // fresh contracts might be delayed in indexing, so we fallback to RPC
-    return getNFTsFromRPC(options);
+    try {
+      // fresh contracts might be delayed in indexing, so we fallback to RPC
+      // must use await here
+      return await getNFTsFromRPC(options);
+    } catch {
+      // if RPC fails, we return the result from insight
+      return result;
+    }
   }
   return result;
 }

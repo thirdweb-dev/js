@@ -278,7 +278,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                   </Th>
                 ))}
                 {/* Need to add an empty header for the drawer button */}
-                <Th border="none" />
+                <Th border="none" key="drawer" />
               </Tr>
             ))}
           </Thead>
