@@ -60,7 +60,7 @@ export async function PayAnalytics(props: {
   const hasVolume = volumeData.some((d) => d.amountUsdCents > 0);
   const hasWallet = walletData.some((d) => d.count > 0);
   if (!hasVolume && !hasWallet) {
-    return <PayEmbedFTUX clientId={props.clientId} />;
+    return <PayEmbedFTUX clientId={props.projectClientId} />;
   }
 
   return (
