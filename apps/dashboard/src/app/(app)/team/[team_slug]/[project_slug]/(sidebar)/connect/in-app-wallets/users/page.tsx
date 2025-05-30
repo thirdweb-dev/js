@@ -1,4 +1,5 @@
 import { getProject } from "@/api/projects";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { InAppWalletUsersPageContent } from "components/embedded-wallets/Users";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
@@ -24,13 +25,17 @@ export default async function Page(props: {
     redirect(`/team/${params.team_slug}`);
   }
 
+  const client = getClientThirdwebClient({
+    jwt: authToken,
+    teamId: project.teamId,
+  });
+
   return (
-    <>
-      <InAppWalletUsersPageContent
-        clientId={project.publishableKey}
-        trackingCategory={TRACKING_CATEGORY}
-        authToken={authToken}
-      />
-    </>
+    <InAppWalletUsersPageContent
+      projectClientId={project.publishableKey}
+      trackingCategory={TRACKING_CATEGORY}
+      authToken={authToken}
+      client={client}
+    />
   );
 }

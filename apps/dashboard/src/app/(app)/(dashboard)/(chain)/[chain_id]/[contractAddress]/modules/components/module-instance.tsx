@@ -14,7 +14,7 @@ const OpenEditionMetadataModule = lazy(() => import("./OpenEditionMetadata"));
 
 export type ModuleInstanceProps = Omit<
   ModuleCardUIProps,
-  "children" | "updateButton" | "isOwnerAccount"
+  "children" | "updateButton" | "isOwnerAccount" | "client"
 > & {
   contract: ThirdwebContract;
   ownerAccount: Account | undefined;
@@ -52,5 +52,11 @@ export function ModuleInstance(props: ModuleInstanceProps) {
     return <OpenEditionMetadataModule {...props} />;
   }
 
-  return <ModuleCardUI {...props} isOwnerAccount={!!props.ownerAccount} />;
+  return (
+    <ModuleCardUI
+      {...props}
+      isOwnerAccount={!!props.ownerAccount}
+      client={props.contract.client}
+    />
+  );
 }

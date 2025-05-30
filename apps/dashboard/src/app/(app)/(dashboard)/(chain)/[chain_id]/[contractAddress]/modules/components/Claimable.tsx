@@ -271,6 +271,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
   return (
     <ClaimableModuleUI
       {...props}
+      client={props.contract.client}
       primarySaleRecipientSection={{
         data: primarySaleRecipientQuery.data
           ? { primarySaleRecipient: primarySaleRecipientQuery.data }

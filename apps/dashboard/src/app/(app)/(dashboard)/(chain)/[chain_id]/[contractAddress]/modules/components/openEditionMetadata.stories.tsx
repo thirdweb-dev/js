@@ -84,6 +84,7 @@ function Component() {
               isPending: removeMutation.isPending,
             }}
             isOwnerAccount={isOwner}
+            client={storybookThirdwebClient}
             contractChainId={1}
             isLoggedIn={true}
           />

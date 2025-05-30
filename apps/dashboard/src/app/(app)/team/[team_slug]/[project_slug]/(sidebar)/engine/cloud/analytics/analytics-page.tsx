@@ -1,5 +1,6 @@
 import type { Project } from "@/api/projects";
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
+import type { ThirdwebClient } from "thirdweb";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import { TransactionAnalyticsFilter } from "./filter";
 import { TransactionsChartCard } from "./tx-chart/tx-chart";
@@ -15,6 +16,7 @@ export function TransactionsAnalyticsPageContent(props: {
   showAnalytics: boolean;
   wallets?: Wallet[];
   teamSlug: string;
+  client: ThirdwebClient;
 }) {
   return (
     <ResponsiveSearchParamsProvider value={props.searchParams}>
@@ -36,6 +38,7 @@ export function TransactionsAnalyticsPageContent(props: {
           project={props.project}
           wallets={props.wallets}
           teamSlug={props.teamSlug}
+          client={props.client}
         />
       </div>
     </ResponsiveSearchParamsProvider>

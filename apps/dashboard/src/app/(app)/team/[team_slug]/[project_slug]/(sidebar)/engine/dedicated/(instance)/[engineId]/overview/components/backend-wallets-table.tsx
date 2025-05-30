@@ -148,7 +148,9 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
         header: "Address",
         cell: (cell) => {
           const address = cell.getValue();
-          return <WalletAddress address={getAddress(address)} />;
+          return (
+            <WalletAddress address={getAddress(address)} client={client} />
+          );
         },
       }),
       columnHelper.accessor("label", {
@@ -266,12 +268,14 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
           disclosure={editDisclosure}
           instanceUrl={instanceUrl}
           authToken={authToken}
+          client={client}
         />
       )}
       {selectedBackendWallet && receiveDisclosure.isOpen && (
         <ReceiveFundsModal
           backendWallet={selectedBackendWallet}
           disclosure={receiveDisclosure}
+          client={client}
         />
       )}
       {selectedBackendWallet && sendDisclosure.isOpen && (
@@ -291,6 +295,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
           disclosure={deleteDisclosure}
           instanceUrl={instanceUrl}
           authToken={authToken}
+          client={client}
         />
       )}
     </>
@@ -302,11 +307,13 @@ const EditModal = ({
   disclosure,
   instanceUrl,
   authToken,
+  client,
 }: {
   backendWallet: BackendWallet;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
   authToken: string;
+  client: ThirdwebClient;
 }) => {
   const updateBackendWallet = useEngineUpdateBackendWallet({
     instanceUrl,
@@ -363,6 +370,7 @@ const EditModal = ({
               <WalletAddress
                 address={backendWallet.address}
                 shortenAddress={false}
+                client={client}
               />
             </FormControl>
             <FormControl>
@@ -393,9 +401,11 @@ const EditModal = ({
 const ReceiveFundsModal = ({
   backendWallet,
   disclosure,
+  client,
 }: {
   backendWallet: BackendWallet;
   disclosure: UseDisclosureReturn;
+  client: ThirdwebClient;
 }) => {
   const qrCodeBase64Query = useQuery({
     queryKey: ["engine", "receive-funds-qr-code", backendWallet.address],
@@ -434,6 +444,7 @@ const ReceiveFundsModal = ({
             <WalletAddress
               address={backendWallet.address}
               shortenAddress={false}
+              client={client}
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -526,6 +537,7 @@ const SendFundsModal = ({
               <WalletAddress
                 address={fromWallet.address}
                 shortenAddress={false}
+                client={client}
               />
             </FormControl>
             <FormControl isRequired>
@@ -618,11 +630,13 @@ function DeleteModal({
   disclosure,
   instanceUrl,
   authToken,
+  client,
 }: {
   backendWallet: BackendWallet;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
   authToken: string;
+  client: ThirdwebClient;
 }) {
   const deleteBackendWallet = useEngineDeleteBackendWallet({
     instanceUrl,
@@ -688,6 +702,7 @@ function DeleteModal({
               <WalletAddress
                 address={backendWallet.address}
                 shortenAddress={false}
+                client={client}
               />
             </FormItem>
           </div>

@@ -2,7 +2,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { BadgeContainer } from "stories/utils";
+import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
 import { ModuleCardUI } from "./module-card";
 
@@ -64,11 +64,12 @@ function Component() {
           <ModuleCardUI
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
+            client={storybookThirdwebClient}
+            isOwnerAccount={isOwner}
             uninstallButton={{
               onClick: () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,
             }}
-            isOwnerAccount={isOwner}
           />
         </BadgeContainer>
 
@@ -76,6 +77,7 @@ function Component() {
           <ModuleCardUI
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
+            client={storybookThirdwebClient}
             uninstallButton={{
               onClick: () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,
@@ -93,6 +95,7 @@ function Component() {
           <ModuleCardUI
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
+            client={storybookThirdwebClient}
             uninstallButton={{
               onClick: () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,

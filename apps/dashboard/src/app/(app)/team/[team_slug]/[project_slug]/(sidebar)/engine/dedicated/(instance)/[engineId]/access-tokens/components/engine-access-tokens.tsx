@@ -9,6 +9,7 @@ import {
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { ButtonGroup, Flex } from "@chakra-ui/react";
 import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { Button, Heading, Link, Text } from "tw-components";
 import { AccessTokensTable } from "./access-tokens-table";
 import { AddAccessTokenButton } from "./add-access-token-button";
@@ -18,12 +19,14 @@ import { KeypairsTable } from "./keypairs-table";
 interface EngineAccessTokensProps {
   instanceUrl: string;
   authToken: string;
+  client: ThirdwebClient;
 }
 
 type AccessTokenType = "standard" | "keypair";
 
 export const EngineAccessTokens: React.FC<EngineAccessTokensProps> = ({
   instanceUrl,
+  client,
   authToken,
 }) => {
   const [selected, setSelected] = useState<AccessTokenType>("standard");
@@ -71,6 +74,7 @@ export const EngineAccessTokens: React.FC<EngineAccessTokensProps> = ({
         <StandardAccessTokensPanel
           instanceUrl={instanceUrl}
           authToken={authToken}
+          client={client}
         />
       ) : selected === "keypair" ? (
         <KeypairAuthenticationPanel
@@ -85,8 +89,10 @@ export const EngineAccessTokens: React.FC<EngineAccessTokensProps> = ({
 const StandardAccessTokensPanel = ({
   instanceUrl,
   authToken,
+  client,
 }: {
   instanceUrl: string;
+  client: ThirdwebClient;
   authToken: string;
 }) => {
   const accessTokens = useEngineAccessTokens({
@@ -109,6 +115,7 @@ const StandardAccessTokensPanel = ({
       </Text>
 
       <AccessTokensTable
+        client={client}
         instanceUrl={instanceUrl}
         accessTokens={accessTokens.data ?? []}
         isPending={accessTokens.isPending}

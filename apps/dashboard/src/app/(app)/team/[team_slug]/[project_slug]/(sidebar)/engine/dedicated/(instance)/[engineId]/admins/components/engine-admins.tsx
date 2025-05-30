@@ -1,6 +1,7 @@
 "use client";
 
 import { useEnginePermissions } from "@3rdweb-sdk/react/hooks/useEngine";
+import type { ThirdwebClient } from "thirdweb";
 import { Heading, Link, Text } from "tw-components";
 import { AddAdminButton } from "./add-admin-button";
 import { AdminsTable } from "./admins-table";
@@ -8,11 +9,13 @@ import { AdminsTable } from "./admins-table";
 interface EngineAdminsProps {
   instanceUrl: string;
   authToken: string;
+  client: ThirdwebClient;
 }
 
 export const EngineAdmins: React.FC<EngineAdminsProps> = ({
   instanceUrl,
   authToken,
+  client,
 }) => {
   const admins = useEnginePermissions({
     instanceUrl,
@@ -41,6 +44,7 @@ export const EngineAdmins: React.FC<EngineAdminsProps> = ({
         isPending={admins.isPending}
         isFetched={admins.isFetched}
         authToken={authToken}
+        client={client}
       />
       <AddAdminButton instanceUrl={instanceUrl} authToken={authToken} />
     </div>

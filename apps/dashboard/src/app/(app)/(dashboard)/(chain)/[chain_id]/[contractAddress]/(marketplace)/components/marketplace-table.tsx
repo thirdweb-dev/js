@@ -40,49 +40,6 @@ import { min } from "thirdweb/utils";
 import { ListingDrawer } from "./listing-drawer";
 import { LISTING_STATUS } from "./types";
 
-const tableColumns: Column<DirectListing | EnglishAuction>[] = [
-  {
-    Header: "Listing Id",
-    accessor: (row) => row.id.toString(),
-  },
-  {
-    Header: "Media",
-    accessor: (row) => row.asset.metadata,
-    // biome-ignore lint/suspicious/noExplicitAny: FIXME
-    Cell: (cell: any) => <MediaCell cell={cell} />,
-  },
-  {
-    Header: "Name",
-    accessor: (row) => row.asset.metadata.name ?? "N/A",
-  },
-  {
-    Header: "Creator",
-    accessor: (row) => row.creatorAddress,
-    // biome-ignore lint/suspicious/noExplicitAny: FIXME
-    Cell: ({ cell }: { cell: Cell<any, string> }) => (
-      <WalletAddress address={cell.value} />
-    ),
-  },
-  {
-    Header: "Price",
-    accessor: (row) =>
-      (row as DirectListing)?.currencyValuePerToken ||
-      (row as EnglishAuction)?.buyoutCurrencyValue,
-    // biome-ignore lint/suspicious/noExplicitAny: FIXME
-    Cell: ({ cell }: { cell: Cell<any, any> }) => {
-      return (
-        <p className="whitespace-nowrap text-muted-foreground">
-          {cell.value.displayValue} {cell.value.symbol}
-        </p>
-      );
-    },
-  },
-  {
-    Header: "Status",
-    accessor: (row) => LISTING_STATUS[row.status],
-  },
-];
-
 interface MarketplaceTableProps {
   contract: ThirdwebContract;
   getAllQueryResult: UseQueryResult<DirectListing[] | EnglishAuction[]>;
@@ -131,6 +88,51 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
     }
     return getValidQueryResult?.data || prevData;
   }, [getAllQueryResult, getValidQueryResult, listingsToShow, prevData]);
+
+  const tableColumns: Column<DirectListing | EnglishAuction>[] = useMemo(() => {
+    return [
+      {
+        Header: "Listing Id",
+        accessor: (row) => row.id.toString(),
+      },
+      {
+        Header: "Media",
+        accessor: (row) => row.asset.metadata,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
+        Cell: (cell: any) => <MediaCell cell={cell} />,
+      },
+      {
+        Header: "Name",
+        accessor: (row) => row.asset.metadata.name ?? "N/A",
+      },
+      {
+        Header: "Creator",
+        accessor: (row) => row.creatorAddress,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
+        Cell: ({ cell }: { cell: Cell<any, string> }) => (
+          <WalletAddress address={cell.value} client={contract.client} />
+        ),
+      },
+      {
+        Header: "Price",
+        accessor: (row) =>
+          (row as DirectListing)?.currencyValuePerToken ||
+          (row as EnglishAuction)?.buyoutCurrencyValue,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
+        Cell: ({ cell }: { cell: Cell<any, any> }) => {
+          return (
+            <p className="whitespace-nowrap text-muted-foreground">
+              {cell.value.displayValue} {cell.value.symbol}
+            </p>
+          );
+        },
+      },
+      {
+        Header: "Status",
+        accessor: (row) => LISTING_STATUS[row.status],
+      },
+    ];
+  }, [contract.client]);
 
   const {
     getTableProps,

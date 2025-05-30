@@ -198,7 +198,10 @@ export function SendTestTransaction(props: {
                 <SelectTrigger className="w-full">
                   <SelectValue>
                     <div className="flex items-center gap-2">
-                      <SmartAccountCell wallet={selectedWallet} />
+                      <SmartAccountCell
+                        wallet={selectedWallet}
+                        client={thirdwebClient}
+                      />
                       <span className="text-muted-foreground text-sm">
                         {selectedWallet.metadata.label}
                       </span>
@@ -209,7 +212,10 @@ export function SendTestTransaction(props: {
                   {props.wallets.map((wallet, index) => (
                     <SelectItem key={wallet.address} value={index.toString()}>
                       <div className="flex items-center gap-2">
-                        <SmartAccountCell wallet={wallet} />
+                        <SmartAccountCell
+                          wallet={wallet}
+                          client={thirdwebClient}
+                        />
                         <span className="text-muted-foreground text-sm">
                           {wallet.metadata.label}
                         </span>

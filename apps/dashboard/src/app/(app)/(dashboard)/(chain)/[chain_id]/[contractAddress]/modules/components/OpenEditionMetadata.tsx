@@ -73,6 +73,7 @@ function OpenEditionMetadataModule(props: ModuleInstanceProps) {
       setSharedMetadata={setSharedMetadata}
       isOwnerAccount={!!props.ownerAccount}
       contractChainId={props.contract.chain.id}
+      client={props.contract.client}
     />
   );
 }

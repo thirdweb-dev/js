@@ -4,6 +4,7 @@ import { WalletAddress } from "@/components/blocks/wallet-address";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { useMemo } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import type { UniversalBridgeWalletStats } from "types/analytics";
 import { toUSD } from "../../../../utils/number";
 import {
@@ -20,6 +21,7 @@ type PayTopCustomersData = Array<{
 
 export function PayCustomersTable(props: {
   data: UniversalBridgeWalletStats[];
+  client: ThirdwebClient;
 }) {
   const tableData = useMemo(() => {
     return getTopCustomers(props.data);
@@ -62,6 +64,7 @@ export function PayCustomersTable(props: {
                   key={customer.walletAddress}
                   customer={customer}
                   rowIndex={i}
+                  client={props.client}
                 />
               );
             })}
@@ -82,6 +85,7 @@ function CustomerTableRow(props: {
     walletAddress: string;
     totalSpendUSDCents: number;
   };
+  client: ThirdwebClient;
   rowIndex: number;
 }) {
   const delayAnim = {
@@ -96,7 +100,7 @@ function CustomerTableRow(props: {
           style={delayAnim}
           loadedData={props.customer?.walletAddress}
           skeletonData="0x0000000000000000000000000000000000000000"
-          render={(v) => <WalletAddress address={v} />}
+          render={(v) => <WalletAddress address={v} client={props.client} />}
         />
       </TableData>
       <TableData>

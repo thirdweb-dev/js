@@ -24,7 +24,8 @@ import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { PencilIcon, Trash2Icon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { Button, FormLabel, Text } from "tw-components";
 
 interface AdminsTableProps {
@@ -33,35 +34,10 @@ interface AdminsTableProps {
   isPending: boolean;
   isFetched: boolean;
   authToken: string;
+  client: ThirdwebClient;
 }
 
 const columnHelper = createColumnHelper<EngineAdmin>();
-
-const columns = [
-  columnHelper.accessor("walletAddress", {
-    header: "Address",
-    cell: (cell) => {
-      const address = cell.getValue();
-      return <WalletAddress address={address} />;
-    },
-  }),
-  columnHelper.accessor("label", {
-    header: "Label",
-    cell: (cell) => {
-      return (
-        <Text isTruncated maxW={300}>
-          {cell.getValue()}
-        </Text>
-      );
-    },
-  }),
-  columnHelper.accessor("permissions", {
-    header: "Role",
-    cell: (cell) => {
-      return <Badge variant="default">{cell.getValue()}</Badge>;
-    },
-  }),
-];
 
 export const AdminsTable: React.FC<AdminsTableProps> = ({
   instanceUrl,
@@ -69,10 +45,39 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
   isPending,
   isFetched,
   authToken,
+  client,
 }) => {
   const editDisclosure = useDisclosure();
   const removeDisclosure = useDisclosure();
   const [selectedAdmin, setSelectedAdmin] = useState<EngineAdmin>();
+
+  const columns = useMemo(() => {
+    return [
+      columnHelper.accessor("walletAddress", {
+        header: "Address",
+        cell: (cell) => {
+          const address = cell.getValue();
+          return <WalletAddress address={address} client={client} />;
+        },
+      }),
+      columnHelper.accessor("label", {
+        header: "Label",
+        cell: (cell) => {
+          return (
+            <Text isTruncated maxW={300}>
+              {cell.getValue()}
+            </Text>
+          );
+        },
+      }),
+      columnHelper.accessor("permissions", {
+        header: "Role",
+        cell: (cell) => {
+          return <Badge variant="default">{cell.getValue()}</Badge>;
+        },
+      }),
+    ];
+  }, [client]);
 
   return (
     <>

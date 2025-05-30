@@ -106,6 +106,7 @@ function Component() {
 
         <BadgeContainer label="Empty Primary Sale Recipient">
           <MintableModuleUI
+            client={storybookThirdwebClient}
             isLoggedIn={true}
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
@@ -126,6 +127,7 @@ function Component() {
 
         <BadgeContainer label="Filled Primary Sale Recipient">
           <MintableModuleUI
+            client={storybookThirdwebClient}
             isLoggedIn={true}
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
@@ -146,6 +148,7 @@ function Component() {
 
         <BadgeContainer label="Pending">
           <MintableModuleUI
+            client={storybookThirdwebClient}
             isLoggedIn={true}
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"

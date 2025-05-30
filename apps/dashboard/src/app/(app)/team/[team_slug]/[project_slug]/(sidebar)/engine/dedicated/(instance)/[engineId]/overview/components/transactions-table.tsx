@@ -234,7 +234,10 @@ export function TransactionsTable(props: {
                     {/* From Address */}
                     <TableCell>
                       {tx.fromAddress ? (
-                        <WalletAddress address={tx.fromAddress} />
+                        <WalletAddress
+                          address={tx.fromAddress}
+                          client={props.client}
+                        />
                       ) : (
                         "N/A"
                       )}
@@ -725,6 +728,7 @@ const TransactionDetailsDrawer = ({
 
           <TransactionTimeline
             transaction={transaction}
+            client={client}
             instanceUrl={instanceUrl}
             authToken={authToken}
           />

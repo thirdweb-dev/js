@@ -8,24 +8,24 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
-import { toEther } from "thirdweb";
+import { type ThirdwebClient, toEther } from "thirdweb";
 import { statusDetails } from "../../analytics/tx-table/tx-table-ui";
 import type { Transaction } from "../../analytics/tx-table/types";
 
 export function TransactionDetailsUI({
   transaction,
+  client,
 }: {
   transaction: Transaction;
   teamSlug: string;
+  client: ThirdwebClient;
   project: Project;
 }) {
-  const thirdwebClient = useThirdwebClient();
   const { idToChain } = useAllChainsData();
 
   // Extract relevant data from transaction
@@ -181,7 +181,7 @@ export function TransactionDetailsUI({
                   <div className="flex items-center gap-2">
                     <ChainIconClient
                       className="size-4"
-                      client={thirdwebClient}
+                      client={client}
                       src={chain.icon?.url}
                     />
                     <span className="text-sm">{chain.name}</span>
@@ -203,7 +203,7 @@ export function TransactionDetailsUI({
                 Sender Address
               </div>
               <div className="md:w-2/3">
-                <WalletAddress address={senderAddress} />
+                <WalletAddress address={senderAddress} client={client} />
               </div>
             </div>
 
@@ -212,7 +212,7 @@ export function TransactionDetailsUI({
                 Signer Address
               </div>
               <div className="md:w-2/3">
-                <WalletAddress address={signerAddress} />
+                <WalletAddress address={signerAddress} client={client} />
               </div>
             </div>
           </CardContent>

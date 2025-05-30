@@ -24,7 +24,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNowStrict } from "date-fns";
@@ -33,6 +32,7 @@ import { useV5DashboardChain } from "lib/v5-adapter";
 import { SendIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import {
   DEFAULT_ACCOUNT_FACTORY_V0_7,
   predictSmartAccountAddress,
@@ -48,6 +48,7 @@ export function ServerWalletsTableUI({
   totalRecords,
   currentPage,
   totalPages,
+  client,
 }: {
   wallets: Wallet[];
   project: Project;
@@ -56,6 +57,7 @@ export function ServerWalletsTableUI({
   totalRecords: number;
   currentPage: number;
   totalPages: number;
+  client: ThirdwebClient;
 }) {
   const [showSigners, setShowSigners] = useState(false);
   return (
@@ -111,9 +113,9 @@ export function ServerWalletsTableUI({
                 <TableRow key={wallet.id} className="hover:bg-accent/50">
                   <TableCell>
                     {showSigners ? (
-                      <WalletAddress address={wallet.address} />
+                      <WalletAddress address={wallet.address} client={client} />
                     ) : (
-                      <SmartAccountCell wallet={wallet} />
+                      <SmartAccountCell wallet={wallet} client={client} />
                     )}
                   </TableCell>
                   <TableCell>{wallet.metadata.label || "none"}</TableCell>
@@ -194,10 +196,15 @@ export function ServerWalletsTableUI({
   );
 }
 
-export function SmartAccountCell({ wallet }: { wallet: Wallet }) {
+export function SmartAccountCell({
+  wallet,
+  client,
+}: {
+  wallet: Wallet;
+  client: ThirdwebClient;
+}) {
   const chainId = 1; // TODO: add chain switcher for balance + smart account address
   const chain = useV5DashboardChain(chainId);
-  const client = useThirdwebClient();
 
   const smartAccountAddressQuery = useQuery({
     queryKey: ["smart-account-address", wallet.address],
@@ -216,7 +223,10 @@ export function SmartAccountCell({ wallet }: { wallet: Wallet }) {
     <div>
       {smartAccountAddressQuery.data ? (
         <div className="flex items-center gap-2">
-          <WalletAddress address={smartAccountAddressQuery.data} />
+          <WalletAddress
+            address={smartAccountAddressQuery.data}
+            client={client}
+          />
           <Badge variant={"default"}>Smart Account</Badge>
         </div>
       ) : (

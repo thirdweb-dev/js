@@ -27,15 +27,18 @@ import { formatDate } from "date-fns";
 import { MinusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import { SearchInput } from "../components/SearchInput";
 
 export function LinkWallet(props: {
   wallets: LinkedWallet[];
   accountEmail: string | undefined;
+  client: ThirdwebClient;
 }) {
   const router = useDashboardRouter();
   return (
     <LinkWalletUI
+      client={props.client}
       wallets={props.wallets}
       accountEmail={props.accountEmail}
       unlinkWallet={async (walletId) => {
@@ -59,6 +62,7 @@ export function LinkWalletUI(props: {
   wallets: LinkedWallet[];
   unlinkWallet: (walletId: string) => Promise<void>;
   accountEmail: string | undefined;
+  client: ThirdwebClient;
 }) {
   const [deletedWalletIds, setDeletedWalletIds] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState("");
@@ -98,6 +102,7 @@ export function LinkWalletUI(props: {
                   <WalletAddress
                     address={wallet.walletAddress}
                     className="text-muted-foreground"
+                    client={props.client}
                   />
                 </TableCell>
                 <TableCell className="text-muted-foreground text-sm">
@@ -105,6 +110,7 @@ export function LinkWalletUI(props: {
                 </TableCell>
                 <TableCell>
                   <UnlinkButton
+                    client={props.client}
                     wallet={wallet}
                     unlinkWallet={props.unlinkWallet}
                     accountEmail={props.accountEmail}
@@ -143,6 +149,7 @@ function UnlinkButton(props: {
   unlinkWallet: (walletId: string) => Promise<void>;
   onUnlinkSuccess: () => void;
   accountEmail: string | undefined;
+  client: ThirdwebClient;
 }) {
   const [open, setOpen] = useState(false);
   const unlinkWallet = useMutation({
@@ -181,6 +188,7 @@ function UnlinkButton(props: {
             <WalletAddress
               address={props.wallet.walletAddress}
               className="text-muted-foreground"
+              client={props.client}
             />
           </div>
         </div>

@@ -177,6 +177,7 @@ function MintableModule(props: ModuleInstanceProps) {
       name={props.contractInfo.name}
       isBatchMetadataInstalled={isBatchMetadataInstalled}
       contractChainId={contract.chain.id}
+      client={contract.client}
     />
   );
 }

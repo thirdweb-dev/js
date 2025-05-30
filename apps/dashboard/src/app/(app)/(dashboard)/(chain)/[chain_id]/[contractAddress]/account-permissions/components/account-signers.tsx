@@ -40,6 +40,7 @@ export const AccountSigners: React.FC<AccountSignersProps> = ({ contract }) => {
           <AccountSigner
             key={item.signer}
             item={item}
+            client={contract.client}
             contractChainId={contract.chain.id}
           />
         ))}

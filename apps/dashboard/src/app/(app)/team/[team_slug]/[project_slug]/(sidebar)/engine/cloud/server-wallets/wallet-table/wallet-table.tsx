@@ -1,4 +1,5 @@
 import type { Project } from "@/api/projects";
+import type { ThirdwebClient } from "thirdweb";
 import type { Wallet } from "./types";
 import { ServerWalletsTableUI } from "./wallet-table-ui.client";
 
@@ -10,6 +11,7 @@ export function ServerWalletsTable({
   totalPages,
   totalRecords,
   managementAccessToken,
+  client,
 }: {
   wallets: Wallet[];
   project: Project;
@@ -18,6 +20,7 @@ export function ServerWalletsTable({
   totalRecords: number;
   currentPage: number;
   totalPages: number;
+  client: ThirdwebClient;
 }) {
   return (
     <ServerWalletsTableUI
@@ -28,6 +31,7 @@ export function ServerWalletsTable({
       project={project}
       teamSlug={teamSlug}
       managementAccessToken={managementAccessToken}
+      client={client}
     />
   );
 }

@@ -147,6 +147,7 @@ function Component() {
         </div>
 
         <ClaimableModuleUI
+          client={storybookThirdwebClient}
           isLoggedIn={true}
           contractInfo={contractInfo}
           moduleAddress="0x0000000000000000000000000000000000000000"

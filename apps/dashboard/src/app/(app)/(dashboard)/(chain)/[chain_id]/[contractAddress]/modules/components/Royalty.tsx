@@ -150,6 +150,7 @@ function RoyaltyModule(props: ModuleInstanceProps) {
       setRoyaltyInfoForToken={setRoyaltyInfoForToken}
       isOwnerAccount={!!ownerAccount}
       contractChainId={props.contract.chain.id}
+      client={props.contract.client}
     />
   );
 }

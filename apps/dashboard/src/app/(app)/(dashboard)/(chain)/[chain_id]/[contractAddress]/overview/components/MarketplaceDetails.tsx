@@ -7,7 +7,11 @@ import { SkeletonContainer } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ArrowRightIcon } from "lucide-react";
 import { useMemo } from "react";
-import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
+import {
+  type ThirdwebClient,
+  type ThirdwebContract,
+  ZERO_ADDRESS,
+} from "thirdweb";
 import {
   type DirectListing,
   type EnglishAuction,
@@ -120,6 +124,7 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
           chainSlug={chainSlug}
           contractAddress={contract.address}
           projectMeta={projectMeta}
+          client={contract.client}
         />
       </div>
     </div>
@@ -193,6 +198,7 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
       </div>
       <div className="p-6">
         <ListingCards
+          client={contract.client}
           listings={auctions}
           isPending={auctionsQuery.isPending}
           trackingCategory={trackingCategory}
@@ -293,6 +299,7 @@ interface ListingCardsProps {
   chainSlug: string;
   contractAddress: string;
   projectMeta: ProjectMeta | undefined;
+  client: ThirdwebClient;
 }
 const ListingCards: React.FC<ListingCardsProps> = ({
   listings,
@@ -302,6 +309,7 @@ const ListingCards: React.FC<ListingCardsProps> = ({
   chainSlug,
   contractAddress,
   projectMeta,
+  client,
 }) => {
   const contractLayout = buildContractPagePath({
     projectMeta,
@@ -394,6 +402,7 @@ const ListingCards: React.FC<ListingCardsProps> = ({
                   <WalletAddress
                     className="relative z-[1] self-start text-xs"
                     address={v}
+                    client={client}
                   />
                 </div>
               )}

@@ -94,6 +94,7 @@ function BatchMetadataModule(props: ModuleInstanceProps) {
       uploadMetadata={uploadMetadata}
       isOwnerAccount={!!ownerAccount}
       contractChainId={contract.chain.id}
+      client={contract.client}
     />
   );
 }

@@ -92,7 +92,10 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
                 <p className="font-bold">Seller</p>
               </GridItem>
               <GridItem colSpan={9}>
-                <WalletAddress address={renderData.creatorAddress} />
+                <WalletAddress
+                  address={renderData.creatorAddress}
+                  client={contract.client}
+                />
               </GridItem>
               <GridItem colSpan={3}>
                 <p className="font-bold">Listing ID</p>

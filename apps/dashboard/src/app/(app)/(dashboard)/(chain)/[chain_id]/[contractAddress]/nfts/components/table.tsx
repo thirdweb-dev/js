@@ -133,7 +133,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
         Header: "Owner",
         accessor: (row) => row.owner,
         Cell: (cell: CellProps<NFT, string>) => (
-          <WalletAddress address={cell.value} />
+          <WalletAddress address={cell.value} client={contract.client} />
         ),
       });
     }
@@ -153,7 +153,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
       });
     }
     return cols;
-  }, [isErc721, isErc1155]);
+  }, [isErc721, isErc1155, contract.client]);
 
   const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });
 

@@ -157,7 +157,10 @@ export function SponsoredTransactionsTableUI(
 
                     {/* Wallet */}
                     <TableCell>
-                      <WalletAddress address={transaction.walletAddress} />
+                      <WalletAddress
+                        address={transaction.walletAddress}
+                        client={props.client}
+                      />
                     </TableCell>
 
                     {/* Time */}

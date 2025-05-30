@@ -1,3 +1,5 @@
+import { getTeamBySlug } from "@/api/team";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { notFound } from "next/navigation";
 import { getValidAccount } from "../../../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
@@ -11,9 +13,10 @@ export async function engineInstancePageHandler(params: {
 }) {
   const pagePath = `/team/${params.teamSlug}/${params.projectSlug}/engine/dedicated/${params.engineId}/access-tokens`;
 
-  const [authToken, account] = await Promise.all([
+  const [authToken, account, team] = await Promise.all([
     getAuthToken(),
     getValidAccount(pagePath),
+    getTeamBySlug(params.teamSlug),
   ]);
 
   if (!authToken) {
@@ -27,10 +30,15 @@ export async function engineInstancePageHandler(params: {
     accountId: account.id,
   });
 
-  if (!instance) {
+  if (!instance || !team) {
     // this case is already handled in layout
     notFound();
   }
 
-  return { instance, authToken, account };
+  const client = getClientThirdwebClient({
+    jwt: authToken,
+    teamId: team.id,
+  });
+
+  return { instance, authToken, account, client };
 }

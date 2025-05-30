@@ -1,6 +1,10 @@
 import type { LinkedWallet } from "@/api/linked-wallets";
 import type { Meta, StoryObj } from "@storybook/react";
-import { BadgeContainer, mobileViewport } from "stories/utils";
+import {
+  BadgeContainer,
+  mobileViewport,
+  storybookThirdwebClient,
+} from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
 import { LinkWalletUI } from "./LinkWalletUI";
 
@@ -72,6 +76,7 @@ function Variants() {
             accountEmail="team@example.com"
             unlinkWallet={unlinkWalletSuccessStub}
             wallets={accountWalletsStub}
+            client={storybookThirdwebClient}
           />
         </BadgeContainer>
 
@@ -80,6 +85,7 @@ function Variants() {
             accountEmail="team@example.com"
             unlinkWallet={unlinkWalletFailureStub}
             wallets={accountWalletsStub}
+            client={storybookThirdwebClient}
           />
         </BadgeContainer>
 
@@ -88,6 +94,7 @@ function Variants() {
             wallets={[]}
             unlinkWallet={unlinkWalletSuccessStub}
             accountEmail="team@example.com"
+            client={storybookThirdwebClient}
           />
         </BadgeContainer>
       </div>

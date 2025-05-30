@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
 import { formatDistance } from "date-fns/formatDistance";
 import { useAllChainsData } from "hooks/chains/allChains";
+import type { ThirdwebClient } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { Card, Heading, Text } from "tw-components";
 
@@ -16,11 +17,13 @@ export type AccountSignerType = {
 interface AccountSignerProps {
   item: AccountSignerType;
   contractChainId: number;
+  client: ThirdwebClient;
 }
 
 export const AccountSigner: React.FC<AccountSignerProps> = ({
   item,
   contractChainId,
+  client,
 }) => {
   const address = useActiveAccount()?.address;
   const { idToChain } = useAllChainsData();
@@ -43,7 +46,11 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({
             flexDir={{ base: "column", lg: "row" }}
           >
             <Heading size="label.lg">
-              <WalletAddress shortenAddress={isMobile} address={signer} />
+              <WalletAddress
+                shortenAddress={isMobile}
+                address={signer}
+                client={client}
+              />
             </Heading>
             <div className="flex flex-row gap-2">
               {isAdmin ? <Badge>Admin Key</Badge> : <Badge>Scoped key</Badge>}

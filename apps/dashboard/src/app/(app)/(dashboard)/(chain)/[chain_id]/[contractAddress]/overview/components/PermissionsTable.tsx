@@ -17,7 +17,11 @@ import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { getAllRoleMembers } from "contract-ui/hooks/permissions";
 import { ArrowRightIcon } from "lucide-react";
 import { useMemo } from "react";
-import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
+import {
+  type ThirdwebClient,
+  type ThirdwebContract,
+  ZERO_ADDRESS,
+} from "thirdweb";
 import { useReadContract } from "thirdweb/react";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
@@ -65,6 +69,7 @@ export function PermissionsTable(props: {
       isPending={allRoleMembers.isPending}
       viewMoreLink={permissionsHref}
       trackingCategory={props.trackingCategory}
+      client={props.contract.client}
     />
   );
 }
@@ -74,6 +79,7 @@ export function PermissionsTableUI(props: {
   trackingCategory: string;
   members: { member: string; roles: string[] }[];
   isPending: boolean;
+  client: ThirdwebClient;
 }) {
   return (
     <div className="rounded-lg border bg-card">
@@ -106,7 +112,7 @@ export function PermissionsTableUI(props: {
             {props.members.map((data) => (
               <TableRow key={data.member}>
                 <TableCell>
-                  <WalletAddress address={data.member} />
+                  <WalletAddress address={data.member} client={props.client} />
                 </TableCell>
                 <TableCell>
                   <div className="flex w-max flex-wrap gap-2">

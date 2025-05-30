@@ -23,7 +23,8 @@ import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { PencilIcon, Trash2Icon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { Button, FormLabel, Text } from "tw-components";
 import { toDateTimeLocal } from "utils/date-utils";
 
@@ -33,48 +34,10 @@ interface AccessTokensTableProps {
   isPending: boolean;
   isFetched: boolean;
   authToken: string;
+  client: ThirdwebClient;
 }
 
 const columnHelper = createColumnHelper<AccessToken>();
-
-const columns = [
-  columnHelper.accessor("tokenMask", {
-    header: "Access Token",
-    cell: (cell) => {
-      return (
-        <p className="py-3 font-mono text-foreground">{cell.getValue()}</p>
-      );
-    },
-  }),
-  columnHelper.accessor("label", {
-    header: "Label",
-    cell: (cell) => {
-      return (
-        <Text isTruncated maxW={300}>
-          {cell.getValue()}
-        </Text>
-      );
-    },
-  }),
-  columnHelper.accessor("walletAddress", {
-    header: "Created By",
-    cell: (cell) => {
-      const address = cell.getValue();
-      return <WalletAddress address={address} />;
-    },
-  }),
-  columnHelper.accessor("createdAt", {
-    header: "Created At",
-    cell: (cell) => {
-      const value = cell.getValue();
-
-      if (!value) {
-        return;
-      }
-      return <Text>{toDateTimeLocal(value)}</Text>;
-    },
-  }),
-];
 
 export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
   instanceUrl,
@@ -82,10 +45,52 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
   isPending,
   isFetched,
   authToken,
+  client,
 }) => {
   const editDisclosure = useDisclosure();
   const removeDisclosure = useDisclosure();
   const [selectedAccessToken, setSelectedAccessToken] = useState<AccessToken>();
+
+  const columns = useMemo(() => {
+    return [
+      columnHelper.accessor("tokenMask", {
+        header: "Access Token",
+        cell: (cell) => {
+          return (
+            <p className="py-3 font-mono text-foreground">{cell.getValue()}</p>
+          );
+        },
+      }),
+      columnHelper.accessor("label", {
+        header: "Label",
+        cell: (cell) => {
+          return (
+            <Text isTruncated maxW={300}>
+              {cell.getValue()}
+            </Text>
+          );
+        },
+      }),
+      columnHelper.accessor("walletAddress", {
+        header: "Created By",
+        cell: (cell) => {
+          const address = cell.getValue();
+          return <WalletAddress address={address} client={client} />;
+        },
+      }),
+      columnHelper.accessor("createdAt", {
+        header: "Created At",
+        cell: (cell) => {
+          const value = cell.getValue();
+
+          if (!value) {
+            return;
+          }
+          return <Text>{toDateTimeLocal(value)}</Text>;
+        },
+      }),
+    ];
+  }, [client]);
 
   return (
     <>

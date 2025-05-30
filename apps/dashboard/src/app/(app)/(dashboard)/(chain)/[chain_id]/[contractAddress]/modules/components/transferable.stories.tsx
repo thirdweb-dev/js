@@ -79,6 +79,7 @@ function Component() {
         <BadgeContainer label="Empty AllowList, Not Restricted">
           <TransferableModuleUI
             contractInfo={contractInfo}
+            client={storybookThirdwebClient}
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
             isRestricted={false}
@@ -97,6 +98,7 @@ function Component() {
         <BadgeContainer label="Empty AllowList, Restricted">
           <TransferableModuleUI
             contractInfo={contractInfo}
+            client={storybookThirdwebClient}
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
             isRestricted={true}
@@ -126,6 +128,7 @@ function Component() {
             }}
             isOwnerAccount={isOwner}
             contractChainId={1}
+            client={storybookThirdwebClient}
             isLoggedIn={true}
           />
         </BadgeContainer>

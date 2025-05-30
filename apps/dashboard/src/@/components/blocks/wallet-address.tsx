@@ -5,7 +5,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { useClipboard } from "hooks/useClipboard";
 import { CheckIcon, CopyIcon, XIcon } from "lucide-react";
@@ -24,8 +23,8 @@ export function WalletAddress(props: {
   shortenAddress?: boolean;
   className?: string;
   iconClassName?: string;
+  client: ThirdwebClient;
 }) {
-  const thirdwebClient = useThirdwebClient();
   // default back to zero address if no address provided
   const address = useMemo(() => props.address || ZERO_ADDRESS, [props.address]);
 
@@ -40,7 +39,7 @@ export function WalletAddress(props: {
 
   const profiles = useSocialProfiles({
     address: address,
-    client: thirdwebClient,
+    client: props.client,
   });
 
   const { onCopy, hasCopied } = useClipboard(address, 2000);
@@ -78,7 +77,7 @@ export function WalletAddress(props: {
             <WalletAvatar
               address={address}
               profiles={profiles.data || []}
-              thirdwebClient={thirdwebClient}
+              thirdwebClient={props.client}
               iconClassName={props.iconClassName}
             />
           )}
@@ -122,7 +121,7 @@ export function WalletAddress(props: {
           ) : (
             profiles.data?.map((profile) => {
               const walletAvatarLink = resolveSchemeWithErrorHandler({
-                client: thirdwebClient,
+                client: props.client,
                 uri: profile.avatar,
               });
 

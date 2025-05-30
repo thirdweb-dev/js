@@ -123,6 +123,7 @@ function TransferableModule(props: ModuleInstanceProps) {
       update={update}
       isOwnerAccount={!!props.ownerAccount}
       contractChainId={props.contract.chain.id}
+      client={props.contract.client}
     />
   );
 }

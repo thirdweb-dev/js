@@ -87,6 +87,7 @@ function Component() {
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
             uploadMetadata={uploadMetadataStub}
+            client={storybookThirdwebClient}
             uninstallButton={{
               onClick: async () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,

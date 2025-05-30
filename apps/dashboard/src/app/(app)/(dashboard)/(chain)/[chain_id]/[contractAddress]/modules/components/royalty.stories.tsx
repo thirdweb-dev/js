@@ -83,6 +83,7 @@ function Component() {
 
         <BadgeContainer label="Empty Transfer Validator & Default Royalty Info">
           <RoyaltyModuleUI
+            client={storybookThirdwebClient}
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
@@ -115,11 +116,13 @@ function Component() {
             isOwnerAccount={isOwner}
             contractChainId={1}
             isLoggedIn={true}
+            client={storybookThirdwebClient}
           />
         </BadgeContainer>
 
         <BadgeContainer label="Non-Empty Transfer Validator & Empty Default Royalty Info">
           <RoyaltyModuleUI
+            client={storybookThirdwebClient}
             contractInfo={contractInfo}
             moduleAddress="0x0000000000000000000000000000000000000000"
             isPending={false}
@@ -154,6 +157,7 @@ function Component() {
             isOwnerAccount={isOwner}
             contractChainId={1}
             isLoggedIn={true}
+            client={storybookThirdwebClient}
           />
         </BadgeContainer>
       </div>

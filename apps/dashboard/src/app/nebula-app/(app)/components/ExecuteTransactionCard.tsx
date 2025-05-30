@@ -69,6 +69,7 @@ export function ExecuteTransactionCardLayout(props: {
               <WalletAddress
                 address={account.address}
                 className="h-auto py-0"
+                client={props.client}
                 iconClassName="size-5"
               />
             ) : (
@@ -84,6 +85,7 @@ export function ExecuteTransactionCardLayout(props: {
               <WalletAddress
                 address={txData.to}
                 className="h-auto py-0"
+                client={props.client}
                 iconClassName="size-5"
               />
             </div>

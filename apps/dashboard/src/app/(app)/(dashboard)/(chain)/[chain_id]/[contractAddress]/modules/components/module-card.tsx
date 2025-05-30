@@ -22,6 +22,7 @@ import { Suspense, useEffect, useState } from "react";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import { toast } from "sonner";
 import {
+  type ThirdwebClient,
   type ThirdwebContract,
   getContract,
   sendTransaction,
@@ -180,6 +181,7 @@ export function ModuleCard(props: ModuleCardProps) {
 
 export type ModuleCardUIProps = {
   children?: React.ReactNode;
+  client: ThirdwebClient;
   contractInfo: {
     name: string;
     description?: string;
@@ -249,7 +251,10 @@ export function ModuleCardUI(props: ModuleCardUIProps) {
                         <p className="text-muted-foreground text-sm">
                           Published By
                         </p>
-                        <WalletAddress address={props.contractInfo.publisher} />
+                        <WalletAddress
+                          address={props.contractInfo.publisher}
+                          client={props.client}
+                        />
                       </div>
                     )}
 

@@ -22,6 +22,7 @@ import { format } from "date-fns";
 import { CheckIcon } from "lucide-react";
 import { useRef } from "react";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import { Button, FormLabel, Text } from "tw-components";
 
 interface TimelineStep {
@@ -36,9 +37,11 @@ export const TransactionTimeline = ({
   transaction,
   instanceUrl,
   authToken,
+  client,
 }: {
   transaction: Transaction;
   instanceUrl: string;
+  client: ThirdwebClient;
   authToken: string;
 }) => {
   let timeline: TimelineStep[];
@@ -55,6 +58,7 @@ export const TransactionTimeline = ({
               transaction={transaction}
               instanceUrl={instanceUrl}
               authToken={authToken}
+              client={client}
             />
           ),
         },
@@ -75,6 +79,7 @@ export const TransactionTimeline = ({
               transaction={transaction}
               instanceUrl={instanceUrl}
               authToken={authToken}
+              client={client}
             />
           ),
         },
@@ -183,10 +188,12 @@ const CancelTransactionButton = ({
   transaction,
   instanceUrl,
   authToken,
+  client,
 }: {
   transaction: Transaction;
   instanceUrl: string;
   authToken: string;
+  client: ThirdwebClient;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -246,6 +253,7 @@ const CancelTransactionButton = ({
                 <WalletAddress
                   address={transaction.fromAddress ?? ""}
                   shortenAddress={false}
+                  client={client}
                 />
               </FormControl>
               <FormControl>

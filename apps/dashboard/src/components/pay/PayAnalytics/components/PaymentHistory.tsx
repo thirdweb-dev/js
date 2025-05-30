@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useMemo, useState } from "react";
-import { toTokens } from "thirdweb";
+import { type ThirdwebClient, toTokens } from "thirdweb";
 import {
   CardHeading,
   TableData,
@@ -25,7 +25,8 @@ import {
 const pageSize = 50;
 
 export function PaymentHistory(props: {
-  clientId: string;
+  client: ThirdwebClient;
+  projectClientId: string;
   teamId: string;
 }) {
   const [page, setPage] = useState(1);
@@ -33,10 +34,10 @@ export function PaymentHistory(props: {
     PaymentsResponse,
     Error
   >({
-    queryKey: ["payments", props.clientId, page],
+    queryKey: ["payments", props.projectClientId, page],
     queryFn: async () => {
       const res = await getPayments({
-        clientId: props.clientId,
+        clientId: props.projectClientId,
         teamId: props.teamId,
         limit: pageSize,
         offset: (page - 1) * pageSize,
@@ -82,7 +83,13 @@ export function PaymentHistory(props: {
                 (payPurchaseData && !isLoading ? (
                   <>
                     {payPurchaseData.data.map((purchase) => {
-                      return <TableRow key={purchase.id} purchase={purchase} />;
+                      return (
+                        <TableRow
+                          key={purchase.id}
+                          purchase={purchase}
+                          client={props.client}
+                        />
+                      );
                     })}
                   </>
                 ) : (
@@ -115,7 +122,7 @@ export function PaymentHistory(props: {
   );
 }
 
-function TableRow(props: { purchase: Payment }) {
+function TableRow(props: { purchase: Payment; client: ThirdwebClient }) {
   const { purchase } = props;
   const originAmount = toTokens(
     purchase.originAmount,
@@ -181,7 +188,7 @@ function TableRow(props: { purchase: Payment }) {
 
       {/* Address */}
       <TableData>
-        <WalletAddress address={purchase.sender} />
+        <WalletAddress address={purchase.sender} client={props.client} />
       </TableData>
 
       {/* Date */}

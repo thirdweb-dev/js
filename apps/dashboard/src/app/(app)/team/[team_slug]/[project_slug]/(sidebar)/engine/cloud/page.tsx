@@ -1,5 +1,6 @@
 import { getProject } from "@/api/projects";
 import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
 import { notFound, redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
@@ -77,6 +78,11 @@ export default async function TransactionsAnalyticsPage(props: {
   }
   const hasTransactions = initialData ? initialData.totalCount > 0 : false;
 
+  const client = getClientThirdwebClient({
+    jwt: authToken,
+    teamId: project.teamId,
+  });
+
   return (
     <div className="flex grow flex-col">
       <EngineChecklist
@@ -101,6 +107,7 @@ export default async function TransactionsAnalyticsPage(props: {
         project={project}
         showAnalytics={hasTransactions && !searchParams.testTxWithWallet}
         wallets={wallets}
+        client={client}
       />
     </div>
   );

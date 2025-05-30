@@ -2,6 +2,7 @@
 
 import { engineCloudProxy } from "@/actions/proxies";
 import type { Project } from "@/api/projects";
+import type { ThirdwebClient } from "thirdweb";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
 import { TransactionsTableUI } from "./tx-table-ui";
 import type { TransactionsResponse } from "./types";
@@ -10,6 +11,7 @@ export function TransactionsTable(props: {
   project: Project;
   wallets?: Wallet[];
   teamSlug: string;
+  client: ThirdwebClient;
 }) {
   return (
     <TransactionsTableUI
@@ -22,6 +24,7 @@ export function TransactionsTable(props: {
       project={props.project}
       wallets={props.wallets}
       teamSlug={props.teamSlug}
+      client={props.client}
     />
   );
 }

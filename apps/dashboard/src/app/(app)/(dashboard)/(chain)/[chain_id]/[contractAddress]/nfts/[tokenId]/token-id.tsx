@@ -225,6 +225,7 @@ function NFTDetailsTab(props: {
             <div>
               <p className="mb-1 text-muted-foreground text-sm">Owner</p>
               <WalletAddress
+                client={client}
                 address={nft.owner}
                 className="h-auto rounded-full border bg-card px-2 py-1 pr-4 text-foreground text-sm"
               />

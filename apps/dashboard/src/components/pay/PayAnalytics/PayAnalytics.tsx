@@ -2,6 +2,7 @@ import {
   getUniversalBridgeUsage,
   getUniversalBridgeWalletUsage,
 } from "@/api/analytics";
+import type { ThirdwebClient } from "thirdweb";
 import type { Range } from "../../analytics/date-range-selector";
 import { PayCustomersTable } from "./components/PayCustomersTable";
 import { PayNewCustomers } from "./components/PayNewCustomers";
@@ -12,7 +13,8 @@ import { TotalPayVolume } from "./components/TotalPayVolume";
 import { TotalVolumePieChart } from "./components/TotalVolumePieChart";
 
 export async function PayAnalytics(props: {
-  clientId: string;
+  projectClientId: string;
+  client: ThirdwebClient;
   projectId: string;
   teamId: string;
   range: Range;
@@ -84,10 +86,14 @@ export async function PayAnalytics(props: {
         <div className="border-border border-b pb-6 xl:border-none xl:pb-0">
           <PayNewCustomers data={walletData || []} dateFormat={dateFormat} />
         </div>
-        <PayCustomersTable data={walletData || []} />
+        <PayCustomersTable data={walletData || []} client={props.client} />
       </GridWithSeparator>
       <CardContainer>
-        <PaymentHistory clientId={props.clientId} teamId={props.teamId} />
+        <PaymentHistory
+          client={props.client}
+          teamId={props.teamId}
+          projectClientId={props.projectClientId}
+        />
       </CardContainer>
     </div>
   );

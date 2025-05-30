@@ -38,6 +38,7 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
 import type {
   Transaction,
@@ -51,6 +52,7 @@ export function TransactionsTableUI(props: {
   project: Project;
   teamSlug: string;
   wallets?: Wallet[];
+  client: ThirdwebClient;
 }) {
   const router = useDashboardRouter();
   const [autoUpdate, setAutoUpdate] = useState(true);
@@ -164,7 +166,14 @@ export function TransactionsTableUI(props: {
 
                     {/* From Address */}
                     <TableCell>
-                      {tx.from ? <WalletAddress address={tx.from} /> : "N/A"}
+                      {tx.from ? (
+                        <WalletAddress
+                          address={tx.from}
+                          client={props.client}
+                        />
+                      ) : (
+                        "N/A"
+                      )}
                     </TableCell>
 
                     {/* Tx Hash */}

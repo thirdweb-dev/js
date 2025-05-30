@@ -19,7 +19,7 @@ import {
   ExternalLinkIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { type ThirdwebContract, toTokens } from "thirdweb";
+import { type ThirdwebClient, type ThirdwebContract, toTokens } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import {
   type TokenTransfersData,
@@ -43,6 +43,7 @@ function RecentTransfersUI(props: {
   page: number;
   setPage: (page: number) => void;
   explorerUrl: string;
+  client: ThirdwebClient;
 }) {
   return (
     <div>
@@ -84,10 +85,16 @@ function RecentTransfersUI(props: {
                     }
                   >
                     <TableCell className="text-sm">
-                      <WalletAddress address={transfer.from_address} />
+                      <WalletAddress
+                        address={transfer.from_address}
+                        client={props.client}
+                      />
                     </TableCell>
                     <TableCell className="text-sm">
-                      <WalletAddress address={transfer.to_address} />
+                      <WalletAddress
+                        address={transfer.to_address}
+                        client={props.client}
+                      />
                     </TableCell>
                     <TableCell className="text-sm ">
                       <div className="flex items-center gap-1.5">
@@ -228,6 +235,7 @@ export function RecentTransfers(props: {
         data={tokenQuery.data ?? []}
         isPending={tokenQuery.isPending && !hasFetchedOnce}
         rowsPerPage={rowsPerPage}
+        client={props.clientContract.client}
         tokenMetadata={{
           decimals: props.decimals,
           symbol: props.tokenSymbol,
