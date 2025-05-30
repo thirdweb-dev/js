@@ -1,5 +1,6 @@
 "use client";
 
+import { PaginationButtons } from "@/components/pagination-buttons";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
@@ -19,20 +20,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { NetworkSelectDropdown } from "components/selects/NetworkSelectDropdown";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { EllipsisVerticalIcon, ExternalLinkIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import React from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
-import { PaginationButtons } from "../../../@/components/pagination-buttons";
-import { cn } from "../../../@/lib/utils";
 import type { ProjectContract } from "../../../app/(app)/account/contracts/_components/getProjectContracts";
 import { removeContractFromProject } from "../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/hooks/project-contracts";
-import { useAllChainsData } from "../../../hooks/chains/allChains";
 import { ContractNameCell, ContractTypeCell } from "./cells";
 
 type ContractTableFilters = {

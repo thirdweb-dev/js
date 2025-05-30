@@ -4,10 +4,10 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useMutation } from "@tanstack/react-query";
+import type { TrackingParams } from "hooks/analytics/useTrack";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { toast } from "sonner";
 import { shortenString } from "utils/usedapp-external";
-import type { TrackingParams } from "../../../../../hooks/analytics/useTrack";
 
 export function LinkWalletPrompt(props: {
   email: string;

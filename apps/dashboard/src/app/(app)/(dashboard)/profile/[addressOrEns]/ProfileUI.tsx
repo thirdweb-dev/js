@@ -1,8 +1,8 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { fetchPublishedContracts } from "components/contract-components/fetchPublishedContracts";
 import { Suspense } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { serverThirdwebClient } from "../../../../../@/constants/thirdweb-client.server";
 import { ProfileHeader } from "./components/profile-header";
 import { PublishedContracts } from "./components/published-contracts";
 

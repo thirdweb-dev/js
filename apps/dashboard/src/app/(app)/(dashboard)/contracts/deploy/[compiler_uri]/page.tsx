@@ -1,6 +1,6 @@
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { notFound } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
-import { serverThirdwebClient } from "../../../../../../@/constants/thirdweb-client.server";
 import { DeployContractInfo } from "../../../published-contract/components/contract-info";
 import { DeployFormForUri } from "../../../published-contract/components/uri-based-deploy";
 

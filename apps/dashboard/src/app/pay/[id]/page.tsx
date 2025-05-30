@@ -1,9 +1,9 @@
 import { getPaymentLink } from "@/api/universal-bridge/links";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import type { Metadata } from "next";
 import { defineChain, getContract } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { checksumAddress } from "thirdweb/utils";
-import { getClientThirdwebClient } from "../../../@/constants/thirdweb-client.client";
 import { PayPageEmbed } from "../components/client/PayPageEmbed.client";
 
 const title = "thirdweb Pay";

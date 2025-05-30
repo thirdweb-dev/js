@@ -15,14 +15,14 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { formatDate } from "date-fns";
-import { useMemo } from "react";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { cn } from "@/lib/utils";
 import {
   EmptyChartState,
   LoadingChartState,
-} from "../../../../components/analytics/empty-chart-state";
-import { cn } from "../../../lib/utils";
+} from "components/analytics/empty-chart-state";
+import { formatDate } from "date-fns";
+import { useMemo } from "react";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 type ThirdwebAreaChartProps<TConfig extends ChartConfig> = {
   header?: {

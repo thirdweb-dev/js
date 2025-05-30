@@ -1,3 +1,5 @@
+import { useAllChainsData } from "hooks/chains/allChains";
+import { useTokensData } from "hooks/tokens/tokens";
 import { useCallback, useMemo } from "react";
 import {
   NATIVE_TOKEN_ADDRESS,
@@ -5,8 +7,6 @@ import {
   getAddress,
 } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
-import { useAllChainsData } from "../../../hooks/chains/allChains";
-import { useTokensData } from "../../../hooks/tokens/tokens";
 import { replaceIpfsUrl } from "../../../lib/sdk";
 import { fallbackChainIcon } from "../../../utils/chain-icons";
 import type { TokenMetadata } from "../../api/universal-bridge/tokens";

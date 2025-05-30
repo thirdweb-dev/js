@@ -5,10 +5,12 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
 import { ChainIconClient } from "components/icons/ChainIcon";
+import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 import { InstagramIcon } from "components/icons/brand-icons/InstagramIcon";
 import { LinkedInIcon } from "components/icons/brand-icons/LinkedinIcon";
 import { RedditIcon } from "components/icons/brand-icons/RedditIcon";
+import { TelegramIcon } from "components/icons/brand-icons/TelegramIcon";
 import { TiktokIcon } from "components/icons/brand-icons/TiktokIcon";
 import { XIcon as TwitterXIcon } from "components/icons/brand-icons/XIcon";
 import { YoutubeIcon } from "components/icons/brand-icons/YoutubeIcon";
@@ -17,8 +19,6 @@ import Link from "next/link";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
-import { DiscordIcon } from "../../../../../../../../../components/icons/brand-icons/DiscordIcon";
-import { TelegramIcon } from "../../../../../../../../../components/icons/brand-icons/TelegramIcon";
 
 const platformToIcons: Record<string, React.FC<{ className?: string }>> = {
   twitter: TwitterXIcon,

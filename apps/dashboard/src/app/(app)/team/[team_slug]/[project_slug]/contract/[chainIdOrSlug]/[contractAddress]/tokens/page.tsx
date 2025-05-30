@@ -1,6 +1,6 @@
+import { getProject } from "@/api/projects";
 import { notFound } from "next/navigation";
 import { SharedContractTokensPage } from "../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/tokens/shared-page";
-import { getProject } from "../../../../../../../../../@/api/projects";
 import type { ProjectContractPageParams } from "../types";
 
 export default async function Page(props: {

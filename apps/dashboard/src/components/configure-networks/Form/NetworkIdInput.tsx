@@ -1,7 +1,7 @@
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Input } from "@/components/ui/input";
+import { useAllChainsData } from "hooks/chains/allChains";
 import type { UseFormReturn } from "react-hook-form";
-import { useAllChainsData } from "../../../hooks/chains/allChains";
 import type { NetworkConfigFormData } from "../ConfigureNetworkForm";
 
 export const NetworkIDInput: React.FC<{

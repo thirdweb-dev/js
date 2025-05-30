@@ -1,13 +1,13 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { isProd } from "@/constants/env-utils";
 import { useQuery } from "@tanstack/react-query";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { XIcon } from "lucide-react";
 import Link from "next/link";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
 import { ChainIconClient } from "../../../../../components/icons/ChainIcon";
-import { useAllChainsData } from "../../../../../hooks/chains/allChains";
 import { nebulaAppThirdwebClient } from "../../utils/nebulaThirdwebClient";
 
 // Note: this is not the full object type returned from insight API, it only includes fields we care about

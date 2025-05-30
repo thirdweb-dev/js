@@ -1,10 +1,10 @@
 "use client";
 
 import { Img } from "@/components/blocks/Img";
+import { cn } from "@/lib/utils";
 /* eslint-disable @next/next/no-img-element */
 import { replaceIpfsUrl } from "lib/sdk";
 import type { ThirdwebClient } from "thirdweb";
-import { cn } from "../../@/lib/utils";
 import { fallbackChainIcon } from "../../utils/chain-icons";
 
 type ImageProps = React.ComponentProps<"img">;

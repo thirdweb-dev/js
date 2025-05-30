@@ -5,9 +5,9 @@ import {
   updateAccountClient,
   verifyEmailClient,
 } from "@3rdweb-sdk/react/hooks/useApi";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useActiveWallet } from "thirdweb/react";
 import { useDisconnect } from "thirdweb/react";
-import { useTrack } from "../../../../hooks/analytics/useTrack";
 import { doLogout } from "../auth-actions";
 import { AccountOnboardingUI } from "./account-onboarding-ui";
 

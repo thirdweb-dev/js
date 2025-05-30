@@ -23,6 +23,7 @@ import {
   getWalletUsers,
   isProjectActive,
 } from "@/api/analytics";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import {
   EmptyStateCard,
   EmptyStateContent,
@@ -36,7 +37,6 @@ import {
   getChainMetadata,
 } from "thirdweb/chains";
 import { type WalletId, getWalletInfo } from "thirdweb/wallets";
-import { getClientThirdwebClient } from "../../../../../../@/constants/thirdweb-client.client";
 import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../login/loginRedirect";
 import { CombinedBarChartCard } from "../../../components/Analytics/CombinedBarChartCard";

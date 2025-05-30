@@ -1,5 +1,5 @@
 import { getDefaultTeam } from "@/api/team";
-import { getClientThirdwebClient } from "../../../../@/constants/thirdweb-client.client";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getAuthToken } from "../../api/lib/getAuthToken";
 import { loginRedirect } from "../../login/loginRedirect";
 import { AccountSettingsPage } from "./AccountSettingsPage";

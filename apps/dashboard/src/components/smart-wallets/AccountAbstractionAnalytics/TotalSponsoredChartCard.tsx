@@ -10,9 +10,9 @@ import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import { DocLink } from "components/shared/DocLink";
 import { formatDate } from "date-fns";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { useMemo } from "react";
 import type { UserOpStats } from "types/analytics";
-import { useAllChainsData } from "../../../hooks/chains/allChains";
 import { toUSD } from "../../../utils/number";
 
 type ChartData = Record<string, number> & {

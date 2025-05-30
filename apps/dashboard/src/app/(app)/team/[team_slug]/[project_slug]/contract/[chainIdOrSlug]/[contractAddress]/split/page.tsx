@@ -1,6 +1,6 @@
+import { getProject } from "@/api/projects";
 import { notFound } from "next/navigation";
 import { SharedContractSplitPage } from "../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/split/shared-split-page";
-import { getProject } from "../../../../../../../../../@/api/projects";
 import type { ProjectContractPageParams } from "../types";
 
 export default async function Page(props: {

@@ -1,5 +1,5 @@
 import { getLinkedWallets } from "@/api/linked-wallets";
-import { getClientThirdwebClient } from "../../../../@/constants/thirdweb-client.client";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getAuthToken } from "../../api/lib/getAuthToken";
 import { loginRedirect } from "../../login/loginRedirect";
 import { getValidAccount } from "../settings/getAccount";

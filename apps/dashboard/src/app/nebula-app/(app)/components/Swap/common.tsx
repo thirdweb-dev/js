@@ -2,6 +2,7 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTrack } from "hooks/analytics/useTrack";
 import { CircleCheckIcon, CircleXIcon } from "lucide-react";
 import { ExternalLinkIcon } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -10,7 +11,6 @@ import { useCallback, useState } from "react";
 import { type PreparedTransaction, waitForReceipt } from "thirdweb";
 import { useSendTransaction } from "thirdweb/react";
 import { getSDKTheme } from "../../../../(app)/components/sdk-component-theme";
-import { useTrack } from "../../../../../hooks/analytics/useTrack";
 import { useV5DashboardChain } from "../../../../../lib/v5-adapter";
 
 export type TxStatus =

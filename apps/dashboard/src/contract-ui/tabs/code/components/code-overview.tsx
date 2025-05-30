@@ -28,6 +28,7 @@ import {
 } from "abitype";
 import { getContractFunctionsFromAbi } from "components/contract-components/getContractFunctionsFromAbi";
 import { useContractEvents } from "components/contract-components/hooks";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
@@ -37,7 +38,6 @@ import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import { useActiveAccount } from "thirdweb/react";
 import { toFunctionSelector } from "thirdweb/utils";
 import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
-import { useAllChainsData } from "../../../../hooks/chains/allChains";
 
 interface CodeOverviewProps {
   abi?: Abi;

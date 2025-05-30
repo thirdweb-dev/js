@@ -1,4 +1,4 @@
-import type { Team } from "../@/api/team";
+import type { Team } from "@/api/team";
 
 type SelectivePlans = Exclude<
   Team["billingPlan"],

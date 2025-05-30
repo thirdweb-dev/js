@@ -1,5 +1,5 @@
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { CircleAlertIcon } from "lucide-react";
-import { getClientThirdwebClient } from "../../../../../../@/constants/thirdweb-client.client";
 import { getRawAccount } from "../../../../account/settings/getAccount";
 import { getChain, getChainMetadata } from "../../utils";
 import NextSteps from "./components/client/NextSteps";

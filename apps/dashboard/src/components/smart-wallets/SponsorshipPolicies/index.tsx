@@ -1,5 +1,7 @@
 "use client";
 
+import type { Project } from "@/api/projects";
+import type { Team } from "@/api/team";
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
 import {
@@ -33,8 +35,6 @@ import {
 import { joinWithComma, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
-import type { Project } from "../../../@/api/projects";
-import type { Team } from "../../../@/api/team";
 
 type AccountAbstractionSettingsPageProps = {
   bundlerService: ProjectBundlerService;

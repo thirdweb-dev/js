@@ -1,3 +1,4 @@
+import { getTeams } from "@/api/team";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpenIcon, ChevronRightIcon } from "lucide-react";
@@ -9,7 +10,6 @@ import contractsIcon from "../../../../../public/assets/support/contracts.png";
 import engineIcon from "../../../../../public/assets/support/engine.png";
 import miscIcon from "../../../../../public/assets/support/misc.svg";
 import connectIcon from "../../../../../public/assets/support/wallets.png";
-import { getTeams } from "../../../../@/api/team";
 import { CustomChatButton } from "../../../nebula-app/(app)/components/CustomChat/CustomChatButton";
 import {
   getAuthToken,

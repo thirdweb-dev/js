@@ -1,3 +1,4 @@
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -12,7 +13,6 @@ import {
   getActiveClaimCondition as getActiveClaimCondition1155,
   getNFT as getNFT1155,
 } from "thirdweb/extensions/erc1155";
-import { serverThirdwebClient } from "../../../../@/constants/thirdweb-client.server";
 import { DROP_PAGES } from "./data";
 import { NftMint } from "./mint-ui";
 

@@ -1,7 +1,7 @@
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { ImageResponse } from "next/og";
 import { download } from "thirdweb/storage";
 import { fetchChain } from "utils/fetchChain";
-import { serverThirdwebClient } from "../../../../../../@/constants/thirdweb-client.server";
 
 // Route segment config
 export const runtime = "edge";

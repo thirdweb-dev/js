@@ -1,6 +1,6 @@
+import { getProject } from "@/api/projects";
 import { notFound } from "next/navigation";
 import { SharedEnglishAuctionsPage } from "../../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/(marketplace)/english-auctions/shared-english-auctions-page";
-import { getProject } from "../../../../../../../../../../@/api/projects";
 import type { ProjectContractPageParams } from "../../types";
 
 export default async function Page(props: {

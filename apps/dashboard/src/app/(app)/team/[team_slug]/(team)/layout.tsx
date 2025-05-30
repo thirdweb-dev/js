@@ -2,10 +2,10 @@ import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { TabPathLinks } from "@/components/ui/tabs";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import { redirect } from "next/navigation";
 import { siwaExamplePrompts } from "../../../(dashboard)/support/page";
-import { getClientThirdwebClient } from "../../../../../@/constants/thirdweb-client.client";
 import { CustomChatButton } from "../../../../nebula-app/(app)/components/CustomChat/CustomChatButton";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import {

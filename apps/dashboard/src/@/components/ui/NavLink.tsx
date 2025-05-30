@@ -1,9 +1,9 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useTrack } from "hooks/analytics/useTrack";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTrack } from "../../../hooks/analytics/useTrack";
 
 export type NavButtonProps = {
   className?: string;

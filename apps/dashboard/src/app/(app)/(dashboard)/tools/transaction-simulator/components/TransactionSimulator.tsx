@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import type { Abi, AbiFunction } from "abitype";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { ArrowDownIcon, WalletIcon } from "lucide-react";
@@ -24,7 +25,6 @@ import {
 import { resolveContractAbi } from "thirdweb/contract";
 import { useActiveAccount } from "thirdweb/react";
 import { parseAbiParams } from "thirdweb/utils";
-import { getClientThirdwebClient } from "../../../../../../@/constants/thirdweb-client.client";
 import { ShareButton } from "../../components/share";
 
 export type SimulateTransactionForm = {

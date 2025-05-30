@@ -7,11 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { PROJECT_SHOWCASE_DATA } from "lib/project-showcase-constants";
 import { ExternalLinkIcon, FileTextIcon } from "lucide-react";
 import Link from "next/link";
-import { serverThirdwebClient } from "../../../../@/constants/thirdweb-client.server";
 
 export default async function DetailPage(props: {
   params: Promise<{ slug: string }>;

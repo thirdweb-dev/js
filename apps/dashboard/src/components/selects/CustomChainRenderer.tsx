@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { OPSponsoredChains } from "constants/chains";
+import { useAllChainsData } from "hooks/chains/allChains";
 import { SettingsIcon } from "lucide-react";
 import type { ThirdwebClient } from "thirdweb";
 import type { UseNetworkSwitcherModalOptions } from "thirdweb/react";
-import { useAllChainsData } from "../../hooks/chains/allChains";
 import {
   type StoredChain,
   addRecentlyUsedChainId,

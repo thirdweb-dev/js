@@ -3,8 +3,8 @@
 import type { Team } from "@/api/team";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useTrack } from "hooks/analytics/useTrack";
 import Link from "next/link";
-import { useTrack } from "../../../hooks/analytics/useTrack";
 
 const teamPlanToBadgeVariant: Record<
   Team["billingPlan"],

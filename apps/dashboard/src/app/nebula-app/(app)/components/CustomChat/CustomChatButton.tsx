@@ -1,12 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
 import { cn } from "@/lib/utils";
+import { useTrack } from "hooks/analytics/useTrack";
 import { MessageCircleIcon, XIcon } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { createThirdwebClient } from "thirdweb";
-import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "../../../../../@/constants/public-envs";
-import { useTrack } from "../../../../../hooks/analytics/useTrack";
 import CustomChatContent from "./CustomChatContent";
 
 // Create a thirdweb client for the chat functionality

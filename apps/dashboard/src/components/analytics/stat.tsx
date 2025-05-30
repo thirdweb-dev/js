@@ -1,4 +1,4 @@
-import { Skeleton } from "../../@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const StatCard: React.FC<{
   label: string;
