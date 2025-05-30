@@ -426,7 +426,7 @@ export async function getUniversalBridgeWalletUsage(args: {
     console.error(
       `Failed to fetch universal bridge wallet stats: ${res?.status} - ${res.statusText} - ${reason}`,
     );
-    return null;
+    return [];
   }
 
   const json = await res.json();

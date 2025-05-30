@@ -4,6 +4,7 @@ import {
 } from "@/api/analytics";
 import type { ThirdwebClient } from "thirdweb";
 import type { Range } from "../../analytics/date-range-selector";
+import { PayEmbedFTUX } from "./PayEmbedFTUX";
 import { PayCustomersTable } from "./components/PayCustomersTable";
 import { PayNewCustomers } from "./components/PayNewCustomers";
 import { PaymentHistory } from "./components/PaymentHistory";
@@ -55,6 +56,12 @@ export async function PayAnalytics(props: {
     volumeDataPromise,
     walletDataPromise,
   ]);
+
+  const hasVolume = volumeData.some((d) => d.amountUsdCents > 0);
+  const hasWallet = walletData.some((d) => d.count > 0);
+  if (!hasVolume && !hasWallet) {
+    return <PayEmbedFTUX clientId={props.clientId} />;
+  }
 
   return (
     <div className="flex flex-col gap-10 lg:gap-6">
