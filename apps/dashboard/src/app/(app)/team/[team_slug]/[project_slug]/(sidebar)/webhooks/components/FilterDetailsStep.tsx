@@ -12,15 +12,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
@@ -46,6 +46,74 @@ interface FilterDetailsStepProps {
   goToPreviousStep: () => void;
   isLoading: boolean;
   supportedChainIds: Array<number>;
+}
+
+interface SignatureDropdownProps {
+  signatures: Array<{ name: string; signature: string; abi?: string }>;
+  value: string;
+  onChange: (val: string) => void;
+  setAbi: (abi: string) => void;
+  buttonLabel: string;
+  secondaryTextFormatter: (sig: { name: string; signature: string }) => string;
+  disabled?: boolean;
+}
+
+function SignatureDropdown({
+  signatures,
+  value,
+  onChange,
+  setAbi,
+  buttonLabel,
+  secondaryTextFormatter,
+  disabled,
+}: SignatureDropdownProps) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Popover modal open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className={cn(
+            "h-10 w-full rounded-md border bg-background px-3 py-2 text-left text-sm focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50",
+            !value && "text-muted-foreground",
+          )}
+          disabled={disabled}
+        >
+          {value
+            ? signatures.find((sig) => sig.signature === value)?.name || ""
+            : buttonLabel}
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        className="max-h-60 w-[--radix-popover-trigger-width] overflow-y-auto p-0"
+        align="start"
+      >
+        <ul className="divide-y divide-border">
+          {signatures.map((sig) => (
+            <li key={sig.signature}>
+              <button
+                type="button"
+                className={cn(
+                  "w-full px-4 py-2 text-left text-sm hover:bg-accent focus:bg-accent",
+                  value === sig.signature && "bg-accent",
+                )}
+                onClick={() => {
+                  onChange(sig.signature);
+                  setAbi(sig.abi || "");
+                  setOpen(false);
+                }}
+              >
+                <div className="font-medium">{sig.name}</div>
+                <div className="text-muted-foreground text-xs">
+                  {secondaryTextFormatter(sig)}
+                </div>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </PopoverContent>
+    </Popover>
+  );
 }
 
 export function FilterDetailsStep({
@@ -305,97 +373,29 @@ export function FilterDetailsStep({
                 {watchFilterType === "event" &&
                 Object.keys(fetchedAbis).length > 0 &&
                 eventSignatures.length > 0 ? (
-                  <Select
-                    value={field.value}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      // Find the selected event
-                      const selectedEvent = eventSignatures.find(
-                        (sig) => sig.signature === value,
-                      );
-                      // Set the ABI for the event
-                      form.setValue("sigHashAbi", selectedEvent?.abi || "");
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select an event signature">
-                        {field.value
-                          ? eventSignatures.find(
-                              (sig) => sig.signature === field.value,
-                            )?.name || ""
-                          : null}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="max-h-60 overflow-y-auto">
-                      {eventSignatures.map((event) => {
-                        // Truncate the hash for display purposes
-                        const truncatedHash = truncateMiddle(
-                          event.signature,
-                          6,
-                          4,
-                        );
-
-                        return (
-                          <SelectItem
-                            key={event.signature}
-                            value={event.signature}
-                            title={event.name}
-                          >
-                            <div className="flex flex-col">
-                              <span className="font-medium">{event.name}</span>
-                              <span className="text-muted-foreground text-xs">
-                                Signature: {truncatedHash}
-                              </span>
-                            </div>
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
+                  <SignatureDropdown
+                    signatures={eventSignatures}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    setAbi={(abi) => form.setValue("sigHashAbi", abi)}
+                    buttonLabel="Select an event signature"
+                    secondaryTextFormatter={(sig) =>
+                      `Signature: ${truncateMiddle(sig.signature, 6, 4)}`
+                    }
+                  />
                 ) : watchFilterType === "transaction" &&
                   Object.keys(fetchedTxAbis).length > 0 &&
                   functionSignatures.length > 0 ? (
-                  <Select
-                    value={field.value}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      // Find the selected function
-                      const selectedFunction = functionSignatures.find(
-                        (sig) => sig.signature === value,
-                      );
-                      // Set the ABI for the function
-                      form.setValue("sigHashAbi", selectedFunction?.abi || "");
-                    }}
-                  >
-                    <SelectTrigger className="max-w-full">
-                      <SelectValue placeholder="Select a function signature">
-                        {field.value
-                          ? functionSignatures.find(
-                              (sig) => sig.signature === field.value,
-                            )?.name || ""
-                          : null}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent className="max-h-60 max-w-[600px] overflow-y-auto">
-                      {functionSignatures.map((func) => (
-                        <SelectItem
-                          key={func.signature}
-                          value={func.signature}
-                          title={func.signature}
-                          className="w-full overflow-x-auto"
-                        >
-                          <div className="flex w-full flex-col">
-                            <span className="overflow-x-auto whitespace-nowrap pb-1 font-medium">
-                              {func.name}
-                            </span>
-                            <span className="overflow-x-auto text-muted-foreground text-xs">
-                              Selector: {func.signature}
-                            </span>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <SignatureDropdown
+                    signatures={functionSignatures}
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    setAbi={(abi) => form.setValue("sigHashAbi", abi)}
+                    buttonLabel="Select a function signature"
+                    secondaryTextFormatter={(sig) =>
+                      `Selector: ${sig.signature}`
+                    }
+                  />
                 ) : (
                   <Input
                     placeholder={
