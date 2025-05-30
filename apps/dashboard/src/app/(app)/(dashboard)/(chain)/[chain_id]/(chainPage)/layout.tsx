@@ -164,6 +164,7 @@ The following is the user's message:
             headerImageUrl={chainMetadata?.headerImgUrl}
             logoUrl={chain.icon?.url}
             chain={chain}
+            client={client}
           />
 
           <div className="h-4 md:h-8" />
@@ -210,6 +211,7 @@ The following is the user's message:
             <div className="w-full sm:hidden">
               <div className="grid grid-cols-2 gap-2">
                 <AddChainToWallet
+                  client={client}
                   chain={
                     // Do not include chain overrides for chain pages
                     // eslint-disable-next-line no-restricted-syntax

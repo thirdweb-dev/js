@@ -6,11 +6,13 @@ import { PINNED_FILES_QUERY_KEY_ROOT } from "app/(app)/team/[team_slug]/(team)/~
 import { FileInput } from "components/shared/FileInput";
 import { UploadIcon } from "lucide-react";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 
-export const IconUpload: React.FC<{ onUpload: (url: string) => void }> = ({
-  onUpload,
-}) => {
-  const storageUpload = useDashboardStorageUpload();
+export const IconUpload: React.FC<{
+  onUpload: (url: string) => void;
+  client: ThirdwebClient;
+}> = ({ onUpload, client }) => {
+  const storageUpload = useDashboardStorageUpload({ client });
   const queryClient = useQueryClient();
 
   const handleIconUpload = (file: File) => {

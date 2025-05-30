@@ -407,6 +407,7 @@ function SendFundsToFaucetModalContent(props: {
             isLoggedIn={props.isLoggedIn}
             connectButtonClassName="!w-full"
             detailsButtonClassName="!w-full"
+            client={props.client}
           />
         )}
 

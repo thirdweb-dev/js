@@ -1,5 +1,6 @@
 import { getTeamBySlug } from "@/api/team";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
 import { fetchEcosystem } from "../../../utils/fetchEcosystem";
@@ -37,9 +38,15 @@ export async function EcosystemLayoutSlug({
     redirect(ecosystemLayoutPath);
   }
 
+  const client = getClientThirdwebClient({
+    teamId: team.id,
+    jwt: authToken,
+  });
+
   return (
     <div className="flex grow flex-col">
       <EcosystemHeader
+        client={client}
         ecosystem={ecosystem}
         ecosystemLayoutPath={ecosystemLayoutPath}
         teamIdOrSlug={params.team_slug}

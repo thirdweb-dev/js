@@ -41,6 +41,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import { useEcosystemList } from "../../../hooks/use-ecosystem-list";
 import type { Ecosystem } from "../../../types";
 import { useUpdateEcosystem } from "../configuration/hooks/use-update-ecosystem";
@@ -134,6 +135,7 @@ export function EcosystemHeader(props: {
   teamIdOrSlug: string;
   authToken: string;
   teamId: string;
+  client: ThirdwebClient;
 }) {
   const { data: fetchedEcosystem } = useEcosystem({
     teamIdOrSlug: props.teamIdOrSlug,
@@ -164,7 +166,9 @@ export function EcosystemHeader(props: {
   const [isNameDialogOpen, setIsNameDialogOpen] = useState(false);
   const [tempName, setTempName] = useState(ecosystem.name);
 
-  const storageUpload = useDashboardStorageUpload();
+  const storageUpload = useDashboardStorageUpload({
+    client: props.client,
+  });
   const router = useDashboardRouter();
 
   const { mutateAsync: updateEcosystem, isPending: isUpdating } =

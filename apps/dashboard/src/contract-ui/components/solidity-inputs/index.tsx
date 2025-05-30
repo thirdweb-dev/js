@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { forwardRef } from "react";
 import { type UseFormReturn, useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { SolidityAddressInput } from "./address-input";
 import { SolidityBoolInput } from "./bool-input";
 import { SolidityBytesInput } from "./bytes-input";
@@ -17,6 +18,7 @@ export interface SolidityInputProps extends InputProps {
 }
 export interface SolidityInputWithTypeProps extends SolidityInputProps {
   solidityType: string;
+  client: ThirdwebClient;
   solidityName?: string;
   solidityComponents?:
     | {
@@ -31,6 +33,7 @@ export interface SolidityInputWithTypeProps extends SolidityInputProps {
 interface SolidityInputPropsOptionalFormProps extends InputProps {
   solidityType: string;
   solidityName?: string;
+  client: ThirdwebClient;
   solidityComponents?:
     | {
         // biome-ignore lint/suspicious/noExplicitAny: FIXME

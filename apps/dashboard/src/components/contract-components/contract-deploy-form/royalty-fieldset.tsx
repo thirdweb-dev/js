@@ -2,6 +2,7 @@ import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import type { UseFormRegisterReturn } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { Fieldset } from "./common";
 
 export function RoyaltyFieldset(props: {
@@ -21,6 +22,7 @@ export function RoyaltyFieldset(props: {
     register: UseFormRegisterReturn;
     errorMessage: string | undefined;
   };
+  client: ThirdwebClient;
 }) {
   const bpsNumValue = Number.parseInt(props.royaltyBps.value);
   return (
@@ -42,6 +44,7 @@ export function RoyaltyFieldset(props: {
             <SolidityInput
               solidityType="address"
               {...props.royaltyRecipient.register}
+              client={props.client}
             />
           </FormFieldSetup>
 
@@ -75,6 +78,7 @@ export function RoyaltyFieldset(props: {
             <SolidityInput
               solidityType="address"
               {...props.transferValidator.register}
+              client={props.client}
             />
           </FormFieldSetup>
         )}

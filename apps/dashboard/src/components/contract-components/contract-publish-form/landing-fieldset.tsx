@@ -258,6 +258,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
             <FormLabel>Audit report</FormLabel>
             <SolidityInput
               solidityType="string"
+              client={client}
               {...form.register("audit")}
               placeholder="ipfs://... or https://..."
             />

@@ -127,6 +127,7 @@ export const SettingsPrimarySale = ({
             >
               <FormLabel>Recipient Address</FormLabel>
               <SolidityInput
+                client={contract.client}
                 disabled={mutation.isPending || !address}
                 solidityType="address"
                 formContext={form}

@@ -6,7 +6,6 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { MinusIcon, PlusIcon } from "lucide-react";
@@ -46,7 +45,6 @@ export function NftMint(props: Props) {
   const [useCustomAddress, setUseCustomAddress] = useState(false);
   const [customAddress, setCustomAddress] = useState("");
   const account = useActiveAccount();
-  const client = useThirdwebClient();
 
   const decreaseQuantity = () => {
     setQuantity((prev) => Math.max(1, prev - 1));
@@ -100,7 +98,7 @@ export function NftMint(props: Props) {
         <CardContent className="pt-6">
           <div className="relative mb-4 aspect-square overflow-hidden rounded-lg">
             <MediaRenderer
-              client={client}
+              client={props.contract.client}
               className="h-full w-full object-cover"
               alt=""
               src={props.thumbnail}
@@ -225,6 +223,7 @@ export function NftMint(props: Props) {
             </ClaimButton>
           ) : (
             <CustomConnectWallet
+              client={props.contract.client}
               loginRequired={false}
               isLoggedIn={true}
               connectButtonClassName="!w-full !rounded !bg-primary !text-primary-foreground !px-4 !py-2 !text-sm"

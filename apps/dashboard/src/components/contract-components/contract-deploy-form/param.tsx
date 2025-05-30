@@ -2,11 +2,13 @@ import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 
 interface ParamProps {
   paramKey: string;
   isRequired: boolean;
   inputClassName?: string;
+  client: ThirdwebClient;
   extraMetadataParam?: {
     displayName?: string;
     description?: string;
@@ -23,6 +25,7 @@ export const Param: React.FC<ParamProps> = ({
   deployParam,
   isRequired,
   inputClassName,
+  client,
 }) => {
   const form = useFormContext();
 
@@ -58,6 +61,7 @@ export const Param: React.FC<ParamProps> = ({
       </span>
       <SolidityInput
         solidityType={deployParam.type}
+        client={client}
         className={inputClassName}
         {...form.register(`deployParams.${paramKey}`)}
       />

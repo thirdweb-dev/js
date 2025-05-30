@@ -2,6 +2,7 @@ import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import Link from "next/link";
+import type { ThirdwebClient } from "thirdweb";
 import { Fieldset } from "./common";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 
@@ -9,12 +10,14 @@ interface PlatformFeeFieldsetProps {
   form: CustomContractDeploymentForm;
   isMarketplace: boolean;
   disabled: boolean;
+  client: ThirdwebClient;
 }
 
 export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
   form,
   isMarketplace,
   disabled,
+  client,
 }) => {
   return (
     <Fieldset legend="Platform fees">
@@ -45,6 +48,7 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
               <SolidityInput
                 solidityType="address"
                 {...form.register("deployParams._platformFeeRecipient")}
+                client={client}
               />
             </FormFieldSetup>
 

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import type { ThirdwebClient } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { mapV4ChainToV5Chain } from "../../../../../../../../contexts/map-chains";
 import { ChainIcon } from "../../../../components/server/chain-icon";
@@ -10,6 +11,7 @@ type ChainHeaderProps = {
   headerImageUrl?: string;
   logoUrl?: string;
   chain: ChainMetadata;
+  client: ThirdwebClient;
 };
 
 // TODO: improve the behavior when clicking "Get started with thirdweb", currently just redirects to the dashboard
@@ -51,6 +53,7 @@ export function ChainHeader(props: ChainHeaderProps) {
           {/* Desktop only */}
           <div className="hidden flex-row gap-2 lg:flex">
             <AddChainToWallet
+              client={props.client}
               chain={
                 // Do not include chain overrides for chain pages
                 // eslint-disable-next-line no-restricted-syntax

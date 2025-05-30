@@ -129,6 +129,7 @@ export const SettingsPlatformFees = ({
             >
               <FormLabel>Recipient Address</FormLabel>
               <SolidityInput
+                client={contract.client}
                 solidityType="address"
                 formContext={form}
                 {...form.register("platform_fee_recipient")}

@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useStore } from "@/lib/reactive";
 import { getSDKTheme } from "app/(app)/components/sdk-component-theme";
 import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
@@ -12,7 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
-import type { Chain } from "thirdweb";
+import type { Chain, ThirdwebClient } from "thirdweb";
 import {
   ConnectButton,
   type NetworkSelectorProps,
@@ -36,9 +35,11 @@ export const CustomConnectWallet = (props: {
   signInLinkButtonClassName?: string;
   detailsButtonClassName?: string;
   chain?: Chain;
+  client: ThirdwebClient;
   isLoggedIn: boolean;
 }) => {
-  const thirdwebClient = useThirdwebClient();
+  const client = props.client;
+
   const loginRequired =
     props.loginRequired === undefined ? true : props.loginRequired;
 
@@ -140,7 +141,7 @@ export const CustomConnectWallet = (props: {
     <>
       <ConnectButton
         theme={getSDKTheme(t)}
-        client={thirdwebClient}
+        client={client}
         connectModal={{
           privacyPolicyUrl: "/privacy-policy",
           termsOfServiceUrl: "/terms",
@@ -175,7 +176,7 @@ export const CustomConnectWallet = (props: {
             renderChain(props) {
               return (
                 <CustomChainRenderer
-                  client={thirdwebClient}
+                  client={client}
                   {...props}
                   openEditChainModal={(c) => {
                     setIsNetworkConfigModalOpen(true);
@@ -276,12 +277,11 @@ function ConnectWalletWelcomeScreen(props: {
 export function useCustomConnectModal() {
   const { connect } = useConnectModal();
   const { theme } = useTheme();
-  const thirdwebClient = useThirdwebClient();
 
   return useCallback(
-    (options?: { chain?: Chain }) => {
+    (options: { chain?: Chain; client: ThirdwebClient }) => {
       return connect({
-        client: thirdwebClient,
+        client: options.client,
         appMetadata: {
           name: "thirdweb",
           logoUrl: "https://thirdweb.com/favicon.ico",
@@ -299,7 +299,7 @@ export function useCustomConnectModal() {
         theme: getSDKTheme(theme === "light" ? "light" : "dark"),
       });
     },
-    [connect, theme, thirdwebClient],
+    [connect, theme],
   );
 }
 

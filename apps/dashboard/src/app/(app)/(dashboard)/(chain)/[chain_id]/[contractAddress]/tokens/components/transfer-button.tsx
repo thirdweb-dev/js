@@ -72,6 +72,7 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
             <FormControl isRequired isInvalid={!!form.formState.errors.to}>
               <FormLabel>To Address</FormLabel>
               <SolidityInput
+                client={contract.client}
                 formContext={form}
                 solidityType="address"
                 placeholder={ZERO_ADDRESS}

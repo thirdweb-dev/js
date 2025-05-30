@@ -5,12 +5,13 @@ import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { InfoIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useFieldArray } from "react-hook-form";
-import { ZERO_ADDRESS } from "thirdweb";
+import { type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import { Fieldset } from "./common";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 
 interface SplitFieldsetProps {
   form: CustomContractDeploymentForm;
+  client: ThirdwebClient;
 }
 
 export interface Recipient {
@@ -18,7 +19,10 @@ export interface Recipient {
   sharesBps: number;
 }
 
-export const SplitFieldset: React.FC<SplitFieldsetProps> = ({ form }) => {
+export const SplitFieldset: React.FC<SplitFieldsetProps> = ({
+  form,
+  client,
+}) => {
   const { fields, append, remove } = useFieldArray({
     name: "recipients",
     control: form.control,
@@ -48,6 +52,7 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({ form }) => {
                   }
                 >
                   <SolidityInput
+                    client={client}
                     solidityType="address"
                     formContext={form}
                     placeholder={ZERO_ADDRESS}

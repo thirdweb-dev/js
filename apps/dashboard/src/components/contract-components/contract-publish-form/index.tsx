@@ -332,11 +332,17 @@ export function ContractPublishForm(props: {
           )}
 
           {fieldsetToShow === "contractParams" && (
-            <ContractParamsFieldset deployParams={deployParams} />
+            <ContractParamsFieldset
+              deployParams={deployParams}
+              client={client}
+            />
           )}
 
           {fieldsetToShow === "implParams" && implDeployParams?.length > 0 && (
-            <ImplementationParamsFieldset implParams={implDeployParams} />
+            <ImplementationParamsFieldset
+              implParams={implDeployParams}
+              client={client}
+            />
           )}
 
           {fieldsetToShow === "factory" && (
@@ -366,7 +372,10 @@ export function ContractPublishForm(props: {
               {!account ? (
                 <>
                   <Box />
-                  <CustomConnectWallet isLoggedIn={!!props.jwt} />
+                  <CustomConnectWallet
+                    isLoggedIn={!!props.jwt}
+                    client={client}
+                  />
                 </>
               ) : fieldsetToShow === "landing" &&
                 form.watch("deployType") === "standard" ? (

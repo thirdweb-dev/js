@@ -1,6 +1,7 @@
 import { FormControl } from "@chakra-ui/react";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useMemo } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import { FormErrorMessage, FormLabel } from "tw-components";
 import type { CustomContractDeploymentForm } from "./custom-contract";
@@ -20,6 +21,7 @@ export function ModularContractDefaultModulesFieldset(props: {
   modules: FetchDeployMetadataResult[];
   form: CustomContractDeploymentForm;
   isTWPublisher: boolean;
+  client: ThirdwebClient;
 }) {
   return (
     <div className="flex flex-col gap-8">
@@ -30,6 +32,7 @@ export function ModularContractDefaultModulesFieldset(props: {
             module={mod}
             isTWPublisher={props.isTWPublisher}
             form={props.form}
+            client={props.client}
           />
         );
       })}
@@ -41,6 +44,7 @@ function RenderModule(props: {
   module: FetchDeployMetadataResult;
   form: CustomContractDeploymentForm;
   isTWPublisher: boolean;
+  client: ThirdwebClient;
 }) {
   const { module, form } = props;
 
@@ -57,13 +61,23 @@ function RenderModule(props: {
 
     if (showRoyaltyFieldset(paramNames)) {
       return (
-        <RenderRoyaltyFieldset module={module} form={form} isTWPublisher />
+        <RenderRoyaltyFieldset
+          module={module}
+          form={form}
+          isTWPublisher
+          client={props.client}
+        />
       );
     }
 
     if (showPrimarySaleFieldset(paramNames)) {
       return (
-        <RenderPrimarySaleFieldset module={module} form={form} isTWPublisher />
+        <RenderPrimarySaleFieldset
+          module={module}
+          form={form}
+          isTWPublisher
+          client={props.client}
+        />
       );
     }
 
@@ -73,6 +87,7 @@ function RenderModule(props: {
           module={module}
           form={form}
           isTWPublisher
+          client={props.client}
         />
       );
     }
@@ -98,6 +113,7 @@ function RenderModule(props: {
             >
               <FormLabel> {param.name}</FormLabel>
               <SolidityInput
+                client={props.client}
                 solidityType={param.type}
                 // @ts-expect-error - old types, need to update
                 solidityComponents={param.components}
@@ -121,8 +137,9 @@ function RenderPrimarySaleFieldset(props: {
   module: FetchDeployMetadataResult;
   form: CustomContractDeploymentForm;
   isTWPublisher: boolean;
+  client: ThirdwebClient;
 }) {
-  const { module, form } = props;
+  const { module, form, client } = props;
 
   const primarySaleRecipientPath =
     `moduleData.${module.name}.primarySaleRecipient` as const;
@@ -137,6 +154,7 @@ function RenderPrimarySaleFieldset(props: {
         form.getFieldState(primarySaleRecipientPath, form.formState).error
           ?.message
       }
+      client={client}
     />
   );
 }
@@ -145,8 +163,9 @@ function RenderSequentialTokenIdFieldset(props: {
   module: FetchDeployMetadataResult;
   form: CustomContractDeploymentForm;
   isTWPublisher: boolean;
+  client: ThirdwebClient;
 }) {
-  const { module, form } = props;
+  const { module, form, client } = props;
 
   const startTokenIdPath = `moduleData.${module.name}.startTokenId` as const;
 
@@ -157,6 +176,7 @@ function RenderSequentialTokenIdFieldset(props: {
       errorMessage={
         form.getFieldState(startTokenIdPath, form.formState).error?.message
       }
+      client={client}
     />
   );
 }
@@ -165,6 +185,7 @@ function RenderRoyaltyFieldset(props: {
   module: FetchDeployMetadataResult;
   form: CustomContractDeploymentForm;
   isTWPublisher: boolean;
+  client: ThirdwebClient;
 }) {
   const { module, form } = props;
 
@@ -178,6 +199,7 @@ function RenderRoyaltyFieldset(props: {
 
   return (
     <RoyaltyFieldset
+      client={props.client}
       royaltyRecipient={{
         isInvalid: !!form.getFieldState(royaltyRecipientPath, form.formState)
           .error,

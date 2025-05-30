@@ -49,7 +49,7 @@ export function AccountHeader(props: {
   const headerProps: AccountHeaderCompProps = {
     teamsAndProjects: props.teamsAndProjects,
     logout: logout,
-    connectButton: <CustomConnectWallet isLoggedIn={true} />,
+    connectButton: <CustomConnectWallet isLoggedIn={true} client={client} />,
     createProject: (team: Team) =>
       setCreateProjectDialogState({
         team,

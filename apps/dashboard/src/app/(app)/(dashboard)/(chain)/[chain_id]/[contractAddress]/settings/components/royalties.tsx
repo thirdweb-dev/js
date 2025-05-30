@@ -141,6 +141,7 @@ export const SettingsRoyalties = ({
             >
               <FormLabel>Recipient Address</FormLabel>
               <SolidityInput
+                client={contract.client}
                 solidityType="address"
                 formContext={form}
                 {...form.register("fee_recipient")}

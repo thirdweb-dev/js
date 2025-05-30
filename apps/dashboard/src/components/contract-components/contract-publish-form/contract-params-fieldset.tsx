@@ -12,14 +12,17 @@ import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { getTemplateValuesForType } from "lib/deployment/template-values";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { DecodedInputArrayFieldset } from "./decoded-bytes-input/decoded-input-array-fieldset";
 import { RefInputFieldset } from "./ref-contract-input/ref-input-fieldset";
 
 interface ContractParamsFieldsetProps {
   deployParams: readonly AbiParameter[];
+  client: ThirdwebClient;
 }
 export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
   deployParams,
+  client,
 }) => {
   const form = useFormContext();
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -215,6 +218,7 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                 {!isCustomInputEnabledArray[idx] ? (
                   <FormControl>
                     <SolidityInput
+                      client={client}
                       className="!bg-background !text-sm placeholder:!text-sm"
                       solidityType={param.type}
                       placeholder={

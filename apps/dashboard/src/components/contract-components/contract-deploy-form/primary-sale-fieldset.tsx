@@ -1,12 +1,14 @@
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import type { UseFormRegisterReturn } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { Fieldset } from "./common";
 
 interface PrimarySaleFieldsetProps {
   isInvalid: boolean;
   register: UseFormRegisterReturn;
   errorMessage: string | undefined;
+  client: ThirdwebClient;
 }
 
 export const PrimarySaleFieldset: React.FC<PrimarySaleFieldsetProps> = (
@@ -25,7 +27,11 @@ export const PrimarySaleFieldset: React.FC<PrimarySaleFieldsetProps> = (
           </>
         }
       >
-        <SolidityInput solidityType="address" {...props.register} />
+        <SolidityInput
+          solidityType="address"
+          {...props.register}
+          client={props.client}
+        />
       </FormFieldSetup>
     </Fieldset>
   );

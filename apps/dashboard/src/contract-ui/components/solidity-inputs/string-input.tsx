@@ -12,9 +12,10 @@ export const SolidityStringInput: React.FC<SolidityInputWithTypeProps> = ({
   functionName,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   solidityType,
+  client,
   ...inputProps
 }) => {
-  const storageUpload = useDashboardStorageUpload();
+  const storageUpload = useDashboardStorageUpload({ client });
   const queryClient = useQueryClient();
   const { name, ...restOfInputProps } = inputProps;
   const inputName = name as string;

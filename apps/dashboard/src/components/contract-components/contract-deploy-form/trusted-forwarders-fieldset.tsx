@@ -1,5 +1,6 @@
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
+import type { ThirdwebClient } from "thirdweb";
 import { Fieldset } from "./common";
 import type {
   CustomContractDeploymentForm,
@@ -8,11 +9,12 @@ import type {
 
 interface TrustedForwardersFieldsetProps {
   form: CustomContractDeploymentForm;
+  client: ThirdwebClient;
 }
 
 export const TrustedForwardersFieldset: React.FC<
   TrustedForwardersFieldsetProps
-> = ({ form }) => {
+> = ({ form, client }) => {
   const isDynamicValue = (val: string | DynamicValue): val is DynamicValue => {
     return typeof val === "object" && val !== null && "dynamicValue" in val;
   };
@@ -45,6 +47,7 @@ export const TrustedForwardersFieldset: React.FC<
             }
           >
             <SolidityInput
+              client={client}
               value={value}
               solidityType="address[]"
               {...form.register("deployParams._trustedForwarders")}

@@ -14,6 +14,7 @@ import {
   useActiveAccount,
   useConnectionManager,
 } from "thirdweb/react";
+import { getClientThirdwebClient } from "../../@/constants/thirdweb-client.client";
 import { TWAutoConnect } from "./components/autoconnect";
 
 const queryClient = new QueryClient();
@@ -65,6 +66,8 @@ function SyncChainDefinitionsToConnectionManager() {
   return null;
 }
 
+const client = getClientThirdwebClient();
+
 const SanctionedAddressesChecker = ({
   children,
 }: {
@@ -80,7 +83,11 @@ const SanctionedAddressesChecker = ({
       <div className="fixed inset-0 flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
           <p> Your wallet address is blocked </p>
-          <CustomConnectWallet loginRequired={false} isLoggedIn={true} />
+          <CustomConnectWallet
+            loginRequired={false}
+            isLoggedIn={true}
+            client={client}
+          />
         </div>
       </div>
     );

@@ -7,14 +7,16 @@ import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { getTemplateValuesForType } from "lib/deployment/template-values";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { RefInputImplFieldset } from "./ref-contract-impl-input/ref-input-impl-fieldset";
 
 interface ImplementationParamsFieldsetProps {
   implParams: readonly AbiParameter[];
+  client: ThirdwebClient;
 }
 export const ImplementationParamsFieldset: React.FC<
   ImplementationParamsFieldsetProps
-> = ({ implParams }) => {
+> = ({ implParams, client }) => {
   const form = useFormContext();
 
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -119,6 +121,7 @@ export const ImplementationParamsFieldset: React.FC<
                 {!isCustomInputEnabled[idx] ? (
                   <FormControl>
                     <SolidityInput
+                      client={client}
                       className="!bg-background !text-sm placeholder:!text-sm"
                       solidityType={param.type}
                       placeholder={

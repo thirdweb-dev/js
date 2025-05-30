@@ -485,6 +485,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                 >
                   <FormLabel>Contract address</FormLabel>
                   <SolidityInput
+                    client={contract.client}
                     solidityType="address"
                     formContext={form}
                     {...form.register("selected.contractAddress", {

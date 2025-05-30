@@ -381,6 +381,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
                 client={client}
               />
               <IconUpload
+                client={client}
                 onUpload={(uri) => {
                   form.setValue("icon", uri, { shouldDirty: true });
                 }}

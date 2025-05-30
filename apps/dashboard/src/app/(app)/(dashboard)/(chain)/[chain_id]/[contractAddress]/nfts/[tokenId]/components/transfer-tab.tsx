@@ -103,6 +103,7 @@ const TransferTab: React.FC<TransferTabProps> = ({
             <FormControl isRequired isInvalid={!!form.formState.errors.to}>
               <FormLabel>To Address</FormLabel>
               <SolidityInput
+                client={contract.client}
                 solidityType="address"
                 formContext={form}
                 placeholder={ZERO_ADDRESS}

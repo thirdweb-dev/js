@@ -6,7 +6,7 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useCustomConnectModal } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import type { Chain } from "thirdweb";
+import type { Chain, ThirdwebClient } from "thirdweb";
 import {
   useActiveAccount,
   useActiveWalletChain,
@@ -16,6 +16,7 @@ import { useDebounce } from "use-debounce";
 
 type AddChainToWalletProps = {
   chain: Chain;
+  client: ThirdwebClient;
 };
 
 export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
@@ -49,7 +50,10 @@ export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
         onClick={() => {
           // Connect directly to this chain
           if (!account) {
-            return customConnectModal({ chain: props.chain });
+            return customConnectModal({
+              chain: props.chain,
+              client: props.client,
+            });
           }
 
           // switch to this chain

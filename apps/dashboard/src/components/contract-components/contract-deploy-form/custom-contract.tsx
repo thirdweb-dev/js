@@ -460,6 +460,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
           return (
             <Param
+              client={thirdwebClient}
               key={paramKey}
               paramKey={paramKey}
               deployParam={deployParam}
@@ -470,7 +471,13 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
           );
         })
         .filter((x) => x !== null),
-    [formDeployParams, deployParams, metadata.constructorParams, shouldHide],
+    [
+      formDeployParams,
+      deployParams,
+      metadata.constructorParams,
+      shouldHide,
+      thirdwebClient,
+    ],
   );
 
   // mutations go here
@@ -728,6 +735,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                       form.formState,
                     ).error?.message
                   }
+                  client={thirdwebClient}
                 />
               )}
 
@@ -746,6 +754,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                       form.formState,
                     ).error?.message
                   }
+                  client={thirdwebClient}
                 />
               )}
 
@@ -779,6 +788,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                       form.formState,
                     ).error?.message,
                   }}
+                  client={thirdwebClient}
                 />
               )}
 
@@ -787,13 +797,17 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   form={form}
                   isMarketplace={isMarketplace}
                   disabled={!isFeeExempt}
+                  client={thirdwebClient}
                 />
               )}
 
-              {isSplit && <SplitFieldset form={form} />}
+              {isSplit && <SplitFieldset form={form} client={thirdwebClient} />}
 
               {hasTrustedForwarders && (
-                <TrustedForwardersFieldset form={form} />
+                <TrustedForwardersFieldset
+                  form={form}
+                  client={thirdwebClient}
+                />
               )}
 
               {/* for StakeERC721 */}
@@ -816,6 +830,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                           deployParam={deployParam}
                           extraMetadataParam={extraMetadataParam}
                           isRequired
+                          client={thirdwebClient}
                         />
                       );
                     })}
@@ -843,6 +858,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                           deployParam={deployParam}
                           extraMetadataParam={extraMetadataParam}
                           isRequired
+                          client={thirdwebClient}
                         />
                       );
                     })}
@@ -885,6 +901,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                       extraMetadataParam={extraMetadataParam}
                       inputClassName="bg-card"
                       isRequired
+                      client={thirdwebClient}
                     />
                   );
                 })}
@@ -894,6 +911,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   form={form}
                   modules={modules}
                   isTWPublisher={isTWPublisher}
+                  client={thirdwebClient}
                 />
               )}
 
@@ -1009,6 +1027,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                       <SolidityInput
                         solidityType="string"
                         {...form.register("saltForCreate2")}
+                        client={thirdwebClient}
                       />
                       <div className="h-2" />
                       <CheckboxWithLabel>
