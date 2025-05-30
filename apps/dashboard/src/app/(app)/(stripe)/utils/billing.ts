@@ -120,3 +120,39 @@ function getAbsoluteStripeRedirectUrl() {
   url.pathname = "/stripe-redirect";
   return url.toString();
 }
+
+export async function getCryptoTopupUrl(options: {
+  teamSlug: string;
+  amountUSD: number;
+}): Promise<string | undefined> {
+  const token = await getAuthToken();
+  if (!token) {
+    return undefined;
+  }
+
+  const res = await fetch(
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamSlug}/checkout/crypto-top-up`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        amountUSD: options.amountUSD,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (!res.ok) {
+    return undefined;
+  }
+
+  const json = await res.json();
+
+  if (!json.result) {
+    return undefined;
+  }
+
+  return json.result as string;
+}
