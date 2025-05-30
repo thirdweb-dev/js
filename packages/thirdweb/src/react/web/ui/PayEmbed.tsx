@@ -1,8 +1,12 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
+import { getToken } from "../../../pay/convert/get-token.js";
+import { toTokens } from "../../../utils/units.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../wallets/types.js";
@@ -22,6 +26,10 @@ import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
 import { useConnectionManager } from "../../core/providers/connection-manager.js";
 import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
 import { AutoConnect } from "../../web/ui/AutoConnect/AutoConnect.js";
+import {
+  BridgeOrchestrator,
+  type UIOptions,
+} from "./Bridge/BridgeOrchestrator.js";
 import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
 import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
@@ -307,6 +315,128 @@ export type PayEmbedProps = {
  * @buyCrypto
  */
 export function PayEmbed(props: PayEmbedProps) {
+  const localeQuery = useConnectLocale(props.locale || "en_US");
+  const theme = props.theme || "dark";
+
+  const bridgeDataQuery = useQuery({
+    queryKey: ["bridgeData", props],
+    queryFn: async (): Promise<UIOptions> => {
+      if (!props.payOptions?.mode) {
+        const ETH = await getToken(props.client, NATIVE_TOKEN_ADDRESS, 1);
+        return {
+          mode: "fund_wallet",
+          destinationToken: ETH,
+          initialAmount: "0.01",
+        };
+      }
+
+      if (props.payOptions?.mode === "fund_wallet") {
+        const prefillInfo = props.payOptions?.prefillBuy;
+        if (!prefillInfo) {
+          const ETH = await getToken(props.client, NATIVE_TOKEN_ADDRESS, 1);
+          return {
+            mode: "fund_wallet",
+            destinationToken: ETH,
+          };
+        }
+        const token = await getToken(
+          props.client,
+          prefillInfo.token?.address || NATIVE_TOKEN_ADDRESS,
+          prefillInfo.chain.id,
+        );
+        if (!token) {
+          console.error("Token not found for prefillInfo", prefillInfo);
+          throw new Error("Token not found");
+        }
+        return {
+          mode: "fund_wallet",
+          destinationToken: token,
+          initialAmount: prefillInfo.amount,
+        };
+      }
+
+      if (props.payOptions?.mode === "direct_payment") {
+        const paymentInfo = props.payOptions.paymentInfo;
+        const token = await getToken(
+          props.client,
+          paymentInfo.token?.address || NATIVE_TOKEN_ADDRESS,
+          paymentInfo.chain.id,
+        );
+        if (!token) {
+          console.error("Token not found for paymentInfo", paymentInfo);
+          throw new Error("Token not found");
+        }
+        const amount =
+          "amount" in paymentInfo
+            ? paymentInfo.amount
+            : toTokens(paymentInfo.amountWei, token.decimals);
+        return {
+          mode: "direct_payment",
+          paymentInfo: {
+            token,
+            amount,
+            sellerAddress: paymentInfo.sellerAddress as `0x${string}`,
+            metadata: {
+              name: props.payOptions?.metadata?.name || "Direct Payment",
+              image: props.payOptions?.metadata?.image || "",
+            },
+            feePayer: paymentInfo.feePayer,
+          },
+        };
+      }
+
+      if (props.payOptions?.mode === "transaction") {
+        return {
+          mode: "transaction",
+          transaction: props.payOptions.transaction,
+        };
+      }
+
+      throw new Error("Invalid mode");
+    },
+  });
+
+  let content = null;
+  if (!localeQuery.data || bridgeDataQuery.isLoading) {
+    content = (
+      <div
+        style={{
+          minHeight: "350px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Spinner size="xl" color="secondaryText" />
+      </div>
+    );
+  } else {
+    content = bridgeDataQuery.data ? (
+      <BridgeOrchestrator
+        client={props.client}
+        uiOptions={bridgeDataQuery.data}
+        connectOptions={props.connectOptions}
+        connectLocale={localeQuery.data}
+        purchaseData={props.payOptions?.purchaseData}
+        paymentLinkId={props.paymentLinkId}
+      />
+    ) : null;
+  }
+
+  return (
+    <CustomThemeProvider theme={theme}>
+      <EmbedContainer
+        modalSize="compact"
+        style={props.style}
+        className={props.className}
+      >
+        <DynamicHeight>{content}</DynamicHeight>
+      </EmbedContainer>
+    </CustomThemeProvider>
+  );
+}
+
+export function PayEmbed2(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const [screen, setScreen] = useState<"buy" | "execute-tx">("buy");
   const theme = props.theme || "dark";

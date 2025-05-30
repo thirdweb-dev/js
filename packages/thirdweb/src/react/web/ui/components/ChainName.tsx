@@ -11,6 +11,7 @@ import { Text } from "./text.js";
 export const ChainName: React.FC<{
   chain: Chain;
   size: "xs" | "sm" | "md" | "lg";
+  color?: "primaryText" | "secondaryText";
   client: ThirdwebClient;
   short?: boolean;
 }> = (props) => {
@@ -18,7 +19,7 @@ export const ChainName: React.FC<{
 
   if (name) {
     return (
-      <Text size={props.size}>
+      <Text size={props.size} color={props.color}>
         {props.short ? shorterChainName(name) : name}
       </Text>
     );
@@ -27,7 +28,7 @@ export const ChainName: React.FC<{
   return <Skeleton width="50px" height={fontSize[props.size]} />;
 };
 
-function shorterChainName(name: string) {
+export function shorterChainName(name: string) {
   const split = name.split(" ");
   const wordsToRemove = new Set(["mainnet", "testnet", "chain"]);
   return split

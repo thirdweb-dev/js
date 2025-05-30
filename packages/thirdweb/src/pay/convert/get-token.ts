@@ -2,7 +2,7 @@ import { tokens } from "../../bridge/Token.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { withCache } from "../../utils/promise/withCache.js";
 
-export async function getTokenPrice(
+export async function getToken(
   client: ThirdwebClient,
   tokenAddress: string,
   chainId: number,
@@ -14,7 +14,11 @@ export async function getTokenPrice(
         tokenAddress,
         chainId,
       });
-      return result[0]?.priceUsd;
+      const token = result[0];
+      if (!token) {
+        throw new Error("Token not found");
+      }
+      return token;
     },
     {
       cacheKey: `get-token-price-${tokenAddress}-${chainId}`,
