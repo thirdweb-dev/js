@@ -1,5 +1,6 @@
 "use client";
 
+import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,13 +18,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
-
-import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import type { ThirdwebClient } from "thirdweb";
 import { truncateMiddle } from "../utils/abiUtils";
 import type {
   AbiData,
@@ -46,6 +45,7 @@ interface FilterDetailsStepProps {
   goToPreviousStep: () => void;
   isLoading: boolean;
   supportedChainIds: Array<number>;
+  client: ThirdwebClient;
 }
 
 interface SignatureDropdownProps {
@@ -130,8 +130,8 @@ export function FilterDetailsStep({
   goToPreviousStep,
   isLoading,
   supportedChainIds,
+  client,
 }: FilterDetailsStepProps) {
-  const thirdwebClient = useThirdwebClient();
   const queryClient = useQueryClient();
   const watchFilterType = form.watch("filterType") as
     | "event"
@@ -175,7 +175,7 @@ export function FilterDetailsStep({
                     Array.isArray(field.value) ? field.value.map(Number) : []
                   }
                   onChange={(chainIds) => field.onChange(chainIds.map(String))}
-                  client={thirdwebClient}
+                  client={client}
                   chainIds={supportedChainIds}
                 />
               </FormControl>

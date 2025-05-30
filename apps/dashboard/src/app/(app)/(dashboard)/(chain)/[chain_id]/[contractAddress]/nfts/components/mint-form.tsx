@@ -365,6 +365,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
         </Button>
         <TransactionButton
           txChainID={contract.chain.id}
+          client={contract.client}
           transactionCount={1}
           isPending={sendAndConfirmTx.isPending}
           form={MINT_FORM_ID}

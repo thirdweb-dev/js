@@ -135,6 +135,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                 </Text>
               )}
               <TransactionButton
+                client={contract.client}
                 isLoggedIn={isLoggedIn}
                 transactionCount={1}
                 isPending={sendTransaction.isPending}

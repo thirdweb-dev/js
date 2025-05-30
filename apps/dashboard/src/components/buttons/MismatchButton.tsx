@@ -16,7 +16,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { FaucetButton } from "app/(app)/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
@@ -86,6 +85,7 @@ type MistmatchButtonProps = React.ComponentProps<typeof Button> & {
   isLoggedIn: boolean;
   isPending: boolean;
   checkBalance?: boolean;
+  client: ThirdwebClient;
 };
 
 export const MismatchButton = forwardRef<
@@ -104,7 +104,6 @@ export const MismatchButton = forwardRef<
   const activeWalletChain = useActiveWalletChain();
   const [dialog, setDialog] = useState<undefined | "no-funds" | "pay">();
   const { theme } = useTheme();
-  const client = useThirdwebClient();
   const pathname = usePathname();
   const txChain = useV5DashboardChain(txChainId);
   const connectionStatus = useActiveWalletConnectionStatus();
@@ -112,7 +111,7 @@ export const MismatchButton = forwardRef<
   const txChainBalance = useWalletBalance({
     address: account?.address,
     chain: txChain,
-    client,
+    client: props.client,
   });
 
   const networksMismatch = useIsNetworkMismatch(txChainId);
@@ -277,13 +276,13 @@ export const MismatchButton = forwardRef<
                 }}
                 onCloseModal={() => setDialog(undefined)}
                 isLoggedIn={props.isLoggedIn}
-                client={client}
+                client={props.client}
               />
             )}
 
             {dialog === "pay" && (
               <PayEmbed
-                client={client}
+                client={props.client}
                 theme={getSDKTheme(theme === "dark" ? "dark" : "light")}
                 className="!w-auto"
                 payOptions={{
@@ -392,7 +391,7 @@ function NoFundsDialogContent(props: {
           <div>
             {props.chain.id === localhost.id ? (
               // localhost case
-              <GetLocalHostTestnetFunds />
+              <GetLocalHostTestnetFunds client={props.client} />
             ) : chainWithServiceInfoQuery.data.testnet ? (
               // faucet case
               <GetFundsFromFaucet
@@ -571,21 +570,20 @@ const MismatchNotice: React.FC<{
   );
 };
 
-const GetLocalHostTestnetFunds: React.FC = () => {
+const GetLocalHostTestnetFunds = (props: { client: ThirdwebClient }) => {
   const address = useActiveAccount()?.address;
-  const client = useThirdwebClient();
   const requestFunds = async () => {
     if (!address) {
       return toast.error("No active account detected");
     }
     const faucet = privateKeyToAccount({
       privateKey: LOCAL_NODE_PKEY,
-      client,
+      client: props.client,
     });
     const transaction = prepareTransaction({
       to: address,
       chain: localhost,
-      client,
+      client: props.client,
       value: toWei("10"),
     });
     const promise = sendTransaction({

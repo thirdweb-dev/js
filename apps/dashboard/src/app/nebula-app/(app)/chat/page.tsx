@@ -4,6 +4,7 @@ import {
   getNebulaAuthTokenWalletAddress,
 } from "../../_utils/authToken";
 import { ChatPageContent } from "../components/ChatPageContent";
+import { nebulaAppThirdwebClient } from "../utils/nebulaThirdwebClient";
 
 export default async function Page() {
   const [authToken, accountAddress] = await Promise.all([
@@ -19,6 +20,7 @@ export default async function Page() {
     <ChatPageContent
       accountAddress={accountAddress}
       authToken={authToken}
+      client={nebulaAppThirdwebClient}
       session={undefined}
       type="new-chat"
       initialParams={undefined}

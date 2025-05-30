@@ -5,7 +5,9 @@ import {
 } from "@/api/insight/webhooks";
 import { getProject } from "@/api/projects";
 import { TrackedUnderlineLink } from "@/components/ui/tracked-link";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { notFound } from "next/navigation";
+import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { CreateWebhookModal } from "./components/CreateWebhookModal";
 import { WebhooksTable } from "./components/WebhooksTable";
 
@@ -13,25 +15,27 @@ export default async function WebhooksPage({
   params,
 }: { params: Promise<{ team_slug: string; project_slug: string }> }) {
   let webhooks: WebhookResponse[] = [];
-  let clientId = "";
   let errorMessage = "";
   let supportedChainIds: number[] = [];
 
+  const [authToken, resolvedParams] = await Promise.all([
+    getAuthToken(),
+    params,
+  ]);
+
+  const project = await getProject(
+    resolvedParams.team_slug,
+    resolvedParams.project_slug,
+  );
+
+  if (!project || !authToken) {
+    notFound();
+  }
+
+  const projectClientId = project.publishableKey;
+
   try {
-    // Await params before accessing properties
-    const resolvedParams = await params;
-    const team_slug = resolvedParams.team_slug;
-    const project_slug = resolvedParams.project_slug;
-
-    const project = await getProject(team_slug, project_slug);
-
-    if (!project) {
-      notFound();
-    }
-
-    clientId = project.publishableKey;
-
-    const webhooksRes = await getWebhooks(clientId);
+    const webhooksRes = await getWebhooks(projectClientId);
     if (webhooksRes.error) {
       errorMessage = webhooksRes.error;
     } else if (webhooksRes.data) {
@@ -48,6 +52,11 @@ export default async function WebhooksPage({
     errorMessage = "Failed to load webhooks. Please try again later.";
     console.error("Error loading project or webhooks", error);
   }
+
+  const client = getClientThirdwebClient({
+    jwt: authToken,
+    teamId: project.teamId,
+  });
 
   return (
     <div className="flex grow flex-col">
@@ -85,7 +94,8 @@ export default async function WebhooksPage({
         ) : webhooks.length > 0 ? (
           <WebhooksTable
             webhooks={webhooks}
-            clientId={clientId}
+            projectClientId={projectClientId}
+            client={client}
             supportedChainIds={supportedChainIds}
           />
         ) : (
@@ -97,7 +107,8 @@ export default async function WebhooksPage({
               </p>
             </div>
             <CreateWebhookModal
-              clientId={clientId}
+              client={client}
+              projectClientId={projectClientId}
               supportedChainIds={supportedChainIds}
             />
           </div>

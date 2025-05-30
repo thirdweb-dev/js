@@ -174,6 +174,7 @@ export function LaunchTokenStatus(props: {
         type: "custom",
         custom: (
           <TransactionButton
+            client={props.client}
             variant="default"
             txChainID={Number(formValues.chain)}
             isLoggedIn={true}

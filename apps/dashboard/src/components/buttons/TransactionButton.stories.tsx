@@ -190,6 +190,7 @@ function Variant(props: {
   return (
     <BadgeContainer label={props.label}>
       <TransactionButton
+        client={storybookThirdwebClient}
         disabled={props.disabled}
         className={props.className}
         variant={props.variant}

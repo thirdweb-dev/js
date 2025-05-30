@@ -16,6 +16,7 @@ import { format } from "date-fns";
 import { PlayIcon, TrashIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import { useTestWebhook } from "../hooks/useTestWebhook";
 import { CreateWebhookModal } from "./CreateWebhookModal";
 import { RelativeTime } from "./RelativeTime";
@@ -31,17 +32,19 @@ function getEventType(filters: WebhookFilters): string {
 
 interface WebhooksTableProps {
   webhooks: WebhookResponse[];
-  clientId: string;
+  projectClientId: string;
   supportedChainIds: number[];
+  client: ThirdwebClient;
 }
 
 export function WebhooksTable({
   webhooks,
-  clientId,
+  projectClientId,
+  client,
   supportedChainIds,
 }: WebhooksTableProps) {
   const [isDeleting, setIsDeleting] = useState<Record<string, boolean>>({});
-  const { testWebhookEndpoint, isTestingMap } = useTestWebhook(clientId);
+  const { testWebhookEndpoint, isTestingMap } = useTestWebhook(projectClientId);
   const router = useDashboardRouter();
 
   const handleDeleteWebhook = async (webhookId: string) => {
@@ -49,7 +52,7 @@ export function WebhooksTable({
 
     try {
       setIsDeleting((prev) => ({ ...prev, [webhookId]: true }));
-      await deleteWebhook(webhookId, clientId);
+      await deleteWebhook(webhookId, projectClientId);
       toast.success("Webhook deleted successfully");
       router.refresh();
     } catch (error) {
@@ -216,8 +219,9 @@ export function WebhooksTable({
     <div className="w-full">
       <div className="mb-4 flex items-center justify-end">
         <CreateWebhookModal
-          clientId={clientId}
+          projectClientId={projectClientId}
           supportedChainIds={supportedChainIds}
+          client={client}
         />
       </div>
       <TWTable

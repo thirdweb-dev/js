@@ -8,7 +8,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -21,6 +20,7 @@ import ReviewStep from "./ReviewStep";
 
 import { createWebhook } from "@/api/insight/webhooks";
 import { XIcon } from "lucide-react";
+import type { ThirdwebClient } from "thirdweb";
 import { useAbiMultiFetch } from "../hooks/useAbiProcessing";
 import { useTestWebhook } from "../hooks/useTestWebhook";
 import {
@@ -40,16 +40,17 @@ import {
 } from "../utils/webhookTypes";
 
 interface CreateWebhookModalProps {
-  clientId: string;
+  projectClientId: string;
   supportedChainIds: Array<number>;
+  client: ThirdwebClient;
 }
 
 export function CreateWebhookModal({
-  clientId,
+  projectClientId,
   supportedChainIds,
+  client,
 }: CreateWebhookModalProps) {
   const router = useDashboardRouter();
-  const thirdwebClient = useThirdwebClient();
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState<WebhookFormStep>(
     WebhookFormSteps.BasicInfo,
@@ -83,7 +84,7 @@ export function CreateWebhookModal({
 
   const eventAbi = useAbiMultiFetch({
     isOpen,
-    thirdwebClient,
+    thirdwebClient: client,
     chainIds,
     addresses,
     extractSignatures: extractEventSignatures,
@@ -92,7 +93,7 @@ export function CreateWebhookModal({
 
   const txAbi = useAbiMultiFetch({
     isOpen,
-    thirdwebClient,
+    thirdwebClient: client,
     chainIds,
     addresses: toAddresses || "",
     extractSignatures: extractFunctionSignatures,
@@ -127,7 +128,7 @@ export function CreateWebhookModal({
         payload = buildTransactionWebhookPayload(data);
       }
 
-      const response = await createWebhook(payload, clientId);
+      const response = await createWebhook(payload, projectClientId);
       if (response?.error) {
         toast.error(`${response.error}`);
         return;
@@ -213,7 +214,7 @@ export function CreateWebhookModal({
   };
 
   const { testWebhookEndpoint, isTestingMap, testResults, isRecentResult } =
-    useTestWebhook(clientId);
+    useTestWebhook(projectClientId);
 
   const handleTestWebhook = async (webhookUrl: string) => {
     const filterType = formHook.getValues("filterType");
@@ -262,6 +263,7 @@ export function CreateWebhookModal({
 
               {currentStep === WebhookFormSteps.FilterDetails && (
                 <FilterDetailsStep
+                  client={client}
                   form={formHook}
                   eventSignatures={eventAbi.signatures}
                   functionSignatures={txAbi.signatures}

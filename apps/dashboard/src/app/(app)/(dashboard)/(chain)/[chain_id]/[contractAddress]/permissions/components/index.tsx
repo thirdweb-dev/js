@@ -127,6 +127,7 @@ export function Permissions({
           </Button>
           <TransactionButton
             isLoggedIn={isLoggedIn}
+            client={contract.client}
             txChainID={contract.chain.id}
             transactionCount={1}
             disabled={!form.formState.isDirty}

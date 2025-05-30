@@ -183,6 +183,7 @@ export const SettingsRoyalties = ({
         </Flex>
         <AdminOnly contract={contract}>
           <TransactionButton
+            client={contract.client}
             txChainID={contract.chain.id}
             transactionCount={1}
             disabled={query.isPending || !form.formState.isDirty}

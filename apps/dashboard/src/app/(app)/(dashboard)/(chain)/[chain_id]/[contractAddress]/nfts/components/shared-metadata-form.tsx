@@ -290,6 +290,7 @@ export const SharedMetadataForm: React.FC<{
           Cancel
         </Button>
         <TransactionButton
+          client={contract.client}
           txChainID={contract.chain.id}
           transactionCount={1}
           isPending={sendAndConfirmTx.isPending}

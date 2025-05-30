@@ -1,5 +1,4 @@
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   type CreateRelayerInput,
   useEngineBackendWallets,
@@ -26,17 +25,20 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CirclePlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { isAddress, shortenAddress } from "thirdweb/utils";
 import { Button, FormHelperText, FormLabel } from "tw-components";
 
 interface AddRelayerButtonProps {
   instanceUrl: string;
   authToken: string;
+  client: ThirdwebClient;
 }
 
 export const AddRelayerButton: React.FC<AddRelayerButtonProps> = ({
   instanceUrl,
   authToken,
+  client,
 }) => {
   const disclosure = useDisclosure();
 
@@ -58,6 +60,7 @@ export const AddRelayerButton: React.FC<AddRelayerButtonProps> = ({
           instanceUrl={instanceUrl}
           disclosure={disclosure}
           authToken={authToken}
+          client={client}
         />
       )}
     </>
@@ -76,12 +79,13 @@ const AddModal = ({
   instanceUrl,
   disclosure,
   authToken,
+  client,
 }: {
   instanceUrl: string;
   disclosure: UseDisclosureReturn;
   authToken: string;
+  client: ThirdwebClient;
 }) => {
-  const client = useThirdwebClient();
   const { mutate: createRelayer } = useEngineCreateRelayer({
     instanceUrl,
     authToken,

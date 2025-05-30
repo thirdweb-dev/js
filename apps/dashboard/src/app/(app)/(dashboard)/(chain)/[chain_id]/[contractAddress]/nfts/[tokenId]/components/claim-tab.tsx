@@ -124,6 +124,7 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
         </Flex>
 
         <TransactionButton
+          client={contract.client}
           isLoggedIn={isLoggedIn}
           txChainID={contract.chain.id}
           transactionCount={1}

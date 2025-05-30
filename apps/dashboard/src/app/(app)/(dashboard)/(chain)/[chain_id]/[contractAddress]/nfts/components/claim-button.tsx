@@ -107,6 +107,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
         </form>
         <div className="mt-4 flex justify-end">
           <TransactionButton
+            client={contract.client}
             isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             transactionCount={1}

@@ -23,7 +23,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { sendAndConfirmTransaction } from "thirdweb";
+import { type ThirdwebClient, sendAndConfirmTransaction } from "thirdweb";
 import { OpenEditionMetadataERC721 } from "thirdweb/modules";
 import { z } from "zod";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
@@ -100,6 +100,7 @@ export function OpenEditionMetadataModuleUI(
                 setSharedMetadata={props.setSharedMetadata}
                 contractChainId={props.contractChainId}
                 isLoggedIn={props.isLoggedIn}
+                client={props.client}
               />
             )}
             {!props.isOwnerAccount && (
@@ -122,6 +123,7 @@ function SetSharedMetadataSection(props: {
   setSharedMetadata: (values: SetSharedMetadataFormValues) => Promise<void>;
   contractChainId: number;
   isLoggedIn: boolean;
+  client: ThirdwebClient;
 }) {
   const form = useForm<SetSharedMetadataFormValues>({
     resolver: zodResolver(setSharedMetadataFormSchema),
@@ -213,6 +215,7 @@ function SetSharedMetadataSection(props: {
           <div className="flex justify-end">
             <TransactionButton
               size="sm"
+              client={props.client}
               className="min-w-24"
               disabled={setSharedMetadataMutation.isPending}
               type="submit"

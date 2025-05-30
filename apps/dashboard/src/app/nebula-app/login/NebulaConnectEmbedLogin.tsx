@@ -3,19 +3,20 @@
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { isVercel } from "lib/vercel-utils";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import {
   ConnectEmbed,
   useActiveAccount,
   useActiveWalletConnectionStatus,
 } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
+import { nebulaAppThirdwebClient } from "../(app)/utils/nebulaThirdwebClient";
 import { getSDKTheme } from "../../(app)/components/sdk-component-theme";
 import { nebulaAAOptions } from "./account-abstraction";
 import {
@@ -100,17 +101,21 @@ function NebulaLoginPageContent(props: {
     screen.id === "login" ||
     !accountAddress
   ) {
-    return <CustomConnectEmbed onLogin={onLogin} />;
+    return (
+      <CustomConnectEmbed onLogin={onLogin} client={nebulaAppThirdwebClient} />
+    );
   }
 
-  return <CustomConnectEmbed onLogin={onLogin} />;
+  return (
+    <CustomConnectEmbed onLogin={onLogin} client={nebulaAppThirdwebClient} />
+  );
 }
 
 function CustomConnectEmbed(props: {
   onLogin: () => void;
+  client: ThirdwebClient;
 }) {
   const { theme } = useTheme();
-  const client = useThirdwebClient();
   const [turnstileToken, setTurnstileToken] = useState<string | undefined>(
     undefined,
   );
@@ -168,7 +173,7 @@ function CustomConnectEmbed(props: {
             },
           }}
           wallets={loginOptions}
-          client={client}
+          client={props.client}
           modalSize="wide"
           theme={getSDKTheme(theme === "light" ? "light" : "dark")}
           className="shadow-lg"

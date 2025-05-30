@@ -137,6 +137,7 @@ export const Proposal: React.FC<IProposal> = ({
       tokensDelegatedQuery.data ? (
         <div className="mt-6 flex gap-2">
           <TransactionButton
+            client={contract.client}
             isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             size="sm"
@@ -151,6 +152,7 @@ export const Proposal: React.FC<IProposal> = ({
             </div>
           </TransactionButton>
           <TransactionButton
+            client={contract.client}
             isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             size="sm"
@@ -166,6 +168,7 @@ export const Proposal: React.FC<IProposal> = ({
             </div>
           </TransactionButton>
           <TransactionButton
+            client={contract.client}
             isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             size="sm"

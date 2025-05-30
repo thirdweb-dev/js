@@ -161,6 +161,7 @@ export function ModuleCard(props: ModuleCardProps) {
               </Button>
 
               <TransactionButton
+                client={contract.client}
                 isLoggedIn={props.isLoggedIn}
                 txChainID={contract.chain.id}
                 transactionCount={1}

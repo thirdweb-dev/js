@@ -68,6 +68,7 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
           </SheetHeader>
           <BatchLazyMint
             isLoggedIn={isLoggedIn}
+            client={contract.client}
             chainId={contract.chain.id}
             onSubmit={async ({ revealType, data }) => {
               // nice, we can set up everything the same for both the only thing that changes is the action string

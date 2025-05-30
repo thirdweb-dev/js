@@ -2,7 +2,6 @@
 
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   type AddContractSubscriptionInput,
   useEngineAddContractSubscription,
@@ -32,7 +31,7 @@ import { useV5DashboardChain } from "lib/v5-adapter";
 import { CirclePlusIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
-import { getContract, isAddress } from "thirdweb";
+import { type ThirdwebClient, getContract, isAddress } from "thirdweb";
 import {
   Button,
   Card,
@@ -45,11 +44,12 @@ import {
 interface AddContractSubscriptionButtonProps {
   instanceUrl: string;
   authToken: string;
+  client: ThirdwebClient;
 }
 
 export const AddContractSubscriptionButton: React.FC<
   AddContractSubscriptionButtonProps
-> = ({ instanceUrl, authToken }) => {
+> = ({ instanceUrl, authToken, client }) => {
   const disclosure = useDisclosure();
 
   return (
@@ -70,6 +70,7 @@ export const AddContractSubscriptionButton: React.FC<
           instanceUrl={instanceUrl}
           disclosure={disclosure}
           authToken={authToken}
+          client={client}
         />
       )}
     </>
@@ -90,10 +91,12 @@ const AddModal = ({
   instanceUrl,
   disclosure,
   authToken,
+  client,
 }: {
   instanceUrl: string;
   disclosure: UseDisclosureReturn;
   authToken: string;
+  client: ThirdwebClient;
 }) => {
   const { mutate: addContractSubscription } = useEngineAddContractSubscription({
     instanceUrl,
@@ -171,9 +174,17 @@ const AddModal = ({
         <ModalCloseButton />
 
         {modalState === "inputContract" ? (
-          <ModalBodyInputContract form={form} setModalState={setModalState} />
+          <ModalBodyInputContract
+            form={form}
+            setModalState={setModalState}
+            client={client}
+          />
         ) : modalState === "inputData" ? (
-          <ModalBodyInputData form={form} setModalState={setModalState} />
+          <ModalBodyInputData
+            form={form}
+            setModalState={setModalState}
+            client={client}
+          />
         ) : null}
       </ModalContent>
     </Modal>
@@ -183,11 +194,12 @@ const AddModal = ({
 const ModalBodyInputContract = ({
   form,
   setModalState,
+  client,
 }: {
   form: UseFormReturn<AddContractSubscriptionForm>;
   setModalState: Dispatch<SetStateAction<"inputContract" | "inputData">>;
+  client: ThirdwebClient;
 }) => {
-  const client = useThirdwebClient();
   return (
     <>
       <ModalBody>
@@ -278,9 +290,11 @@ const ModalBodyInputContract = ({
 const ModalBodyInputData = ({
   form,
   setModalState,
+  client,
 }: {
   form: UseFormReturn<AddContractSubscriptionForm>;
   setModalState: Dispatch<SetStateAction<"inputContract" | "inputData">>;
+  client: ThirdwebClient;
 }) => {
   const processEventLogsDisclosure = useDisclosure({
     defaultIsOpen: form.getValues("processEventLogs"),
@@ -372,6 +386,7 @@ const ModalBodyInputData = ({
                           setFilter={(value) =>
                             form.setValue("filterEvents", value)
                           }
+                          client={client}
                         />
                       </Collapse>
                     </div>
@@ -428,6 +443,7 @@ const ModalBodyInputData = ({
                           setFilter={(value) =>
                             form.setValue("filterFunctions", value)
                           }
+                          client={client}
                         />
                       </Collapse>
                     </div>
@@ -464,14 +480,15 @@ const FilterSelector = ({
   form,
   filter,
   setFilter,
+  client,
 }: {
   abiItemType: "function" | "event";
 
   form: UseFormReturn<AddContractSubscriptionForm>;
   filter: string[];
   setFilter: (value: string[]) => void;
+  client: ThirdwebClient;
 }) => {
-  const client = useThirdwebClient();
   const chain = useV5DashboardChain(form.getValues("chainId"));
   const address = form.getValues("contractAddress");
   const contract = useMemo(

@@ -98,6 +98,7 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
         <SheetFooter className="mt-10">
           <TransactionButton
             isLoggedIn={isLoggedIn}
+            client={contract.client}
             txChainID={contract.chain.id}
             transactionCount={1}
             form={BURN_FORM_ID}

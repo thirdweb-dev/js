@@ -8,10 +8,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { ArrowRightIcon, MessageSquareXIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import {
   useActiveAccount,
   useActiveWalletConnectionStatus,
@@ -35,6 +35,7 @@ export function ChatPageContent(props: {
   session: SessionInfo | undefined;
   accountAddress: string;
   authToken: string;
+  client: ThirdwebClient;
   type: "landing" | "new-chat";
   initialParams:
     | {
@@ -48,7 +49,6 @@ export function ChatPageContent(props: {
   const connectedWallets = useConnectedWallets();
   const setActiveWallet = useSetActiveWallet();
 
-  const client = useThirdwebClient(props.authToken);
   const [userHasSubmittedMessage, setUserHasSubmittedMessage] = useState(false);
   const [messages, setMessages] = useState<Array<ChatMessage>>(() => {
     if (props.session?.history) {
@@ -344,7 +344,7 @@ export function ChatPageContent(props: {
                   authToken={props.authToken}
                   sessionId={sessionId}
                   className="min-w-0 pt-6 pb-32"
-                  client={client}
+                  client={props.client}
                   enableAutoScroll={enableAutoScroll}
                   setEnableAutoScroll={setEnableAutoScroll}
                   sendMessage={handleSendMessage}
@@ -358,7 +358,7 @@ export function ChatPageContent(props: {
                   showContextSelector={true}
                   connectedWallets={connectedWalletsMeta}
                   setActiveWallet={handleSetActiveWallet}
-                  client={client}
+                  client={props.client}
                   prefillMessage={undefined}
                   sendMessage={handleSendMessage}
                   isChatStreaming={isChatStreaming}

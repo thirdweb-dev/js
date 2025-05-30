@@ -94,6 +94,7 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
           <TransactionButton
             isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
+            client={contract.client}
             transactionCount={1}
             form={CLAIM_FORM_ID}
             isPending={form.formState.isSubmitting}

@@ -6,6 +6,7 @@ import {
 } from "../../../_utils/authToken";
 import { getSessionById } from "../../api/session";
 import { ChatPageContent } from "../../components/ChatPageContent";
+import { nebulaAppThirdwebClient } from "../../utils/nebulaThirdwebClient";
 
 export default async function Page(props: {
   params: Promise<{
@@ -34,6 +35,7 @@ export default async function Page(props: {
     <ChatPageContent
       accountAddress={accountAddress}
       authToken={authToken}
+      client={nebulaAppThirdwebClient}
       session={session}
       type="new-chat"
       initialParams={undefined}

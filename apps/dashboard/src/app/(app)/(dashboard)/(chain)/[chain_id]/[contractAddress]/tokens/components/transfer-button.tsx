@@ -101,6 +101,7 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
         </form>
         <SheetFooter className="mt-10">
           <TransactionButton
+            client={contract.client}
             txChainID={contract.chain.id}
             transactionCount={1}
             isLoggedIn={isLoggedIn}

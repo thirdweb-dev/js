@@ -386,6 +386,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
         {/* Submit */}
         <div className="flex justify-end">
           <TransactionButton
+            client={contract.client}
             isLoggedIn={props.isLoggedIn}
             txChainID={contract.chain.id}
             transactionCount={1}

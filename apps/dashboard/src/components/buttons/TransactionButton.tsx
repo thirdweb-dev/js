@@ -12,6 +12,7 @@ import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
 import { ArrowLeftRightIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import {
   useActiveAccount,
   useActiveWallet,
@@ -30,6 +31,7 @@ type TransactionButtonProps = Omit<ButtonProps, "variant"> & {
   variant?: "destructive" | "primary" | "default";
   isLoggedIn: boolean;
   checkBalance?: boolean;
+  client: ThirdwebClient;
 };
 
 export const TransactionButton: React.FC<TransactionButtonProps> = ({
@@ -40,6 +42,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   variant,
   isLoggedIn,
   checkBalance,
+  client,
   ...restButtonProps
 }) => {
   const activeWallet = useActiveWallet();
@@ -64,6 +67,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
     <Popover open={walletRequiresExternalConfirmation && isPending}>
       <PopoverTrigger asChild>
         <MismatchButton
+          client={client}
           isPending={isPending}
           variant={variant || "primary"}
           isLoggedIn={isLoggedIn}

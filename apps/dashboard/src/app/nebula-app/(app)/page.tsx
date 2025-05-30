@@ -5,6 +5,7 @@ import {
 } from "../_utils/authToken";
 import { ChatPageContent } from "./components/ChatPageContent";
 import { getChainsForNebula } from "./utils/getChainIds";
+import { nebulaAppThirdwebClient } from "./utils/nebulaThirdwebClient";
 
 export default async function Page(props: {
   searchParams: Promise<{
@@ -28,6 +29,7 @@ export default async function Page(props: {
     <ChatPageContent
       accountAddress={accountAddress}
       authToken={authToken}
+      client={nebulaAppThirdwebClient}
       session={undefined}
       type="landing"
       initialParams={{

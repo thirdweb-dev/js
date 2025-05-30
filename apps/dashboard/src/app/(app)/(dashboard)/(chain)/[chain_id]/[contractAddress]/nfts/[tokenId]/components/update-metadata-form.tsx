@@ -407,6 +407,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
           Cancel
         </Button>
         <TransactionButton
+          client={contract.client}
           isLoggedIn={isLoggedIn}
           txChainID={contract.chain.id}
           transactionCount={1}

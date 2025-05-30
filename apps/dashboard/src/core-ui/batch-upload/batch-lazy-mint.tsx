@@ -19,6 +19,7 @@ import { ChevronLeftIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import type { CreateDelayedRevealBatchParams } from "thirdweb/extensions/erc721";
 import type { NFTInput } from "thirdweb/utils";
 import {
@@ -53,6 +54,7 @@ interface BatchLazyMintEVMProps {
   canCreateDelayedRevealBatch: boolean;
   onSubmit: (formData: SubmitType) => Promise<unknown>;
   chainId: number;
+  client: ThirdwebClient;
 }
 
 type BatchLazyMintProps = BatchLazyMintEVMProps;
@@ -262,6 +264,7 @@ export const BatchLazyMint: ComponentWithChildren<
               </CheckboxWithLabel>
               <div className="w-full md:w-[61%]">
                 <TransactionButton
+                  client={props.client}
                   txChainID={props.chainId}
                   className="mt-4 w-full"
                   transactionCount={1}

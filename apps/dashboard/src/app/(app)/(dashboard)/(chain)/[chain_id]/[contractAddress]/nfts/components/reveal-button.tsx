@@ -153,6 +153,7 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
           </form>
           <div className="mt-4 flex justify-end">
             <TransactionButton
+              client={contract.client}
               isLoggedIn={isLoggedIn}
               txChainID={contract.chain.id}
               transactionCount={1}

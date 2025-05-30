@@ -144,6 +144,7 @@ export const SettingsPrimarySale = ({
         </Flex>
         <AdminOnly contract={contract}>
           <TransactionButton
+            client={contract.client}
             isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             transactionCount={1}

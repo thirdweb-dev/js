@@ -23,7 +23,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { sendAndConfirmTransaction } from "thirdweb";
+import { type ThirdwebClient, sendAndConfirmTransaction } from "thirdweb";
 import { RoyaltyERC721, RoyaltyERC1155 } from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
 import { z } from "zod";
@@ -187,6 +187,7 @@ export function RoyaltyModuleUI(
                   setRoyaltyInfoForToken={props.setRoyaltyInfoForToken}
                   contractChainId={props.contractChainId}
                   isLoggedIn={props.isLoggedIn}
+                  client={props.client}
                 />
               ) : (
                 <Alert variant="info">
@@ -210,6 +211,7 @@ export function RoyaltyModuleUI(
                   defaultRoyaltyInfo={props.defaultRoyaltyInfo}
                   contractChainId={props.contractChainId}
                   isLoggedIn={props.isLoggedIn}
+                  client={props.client}
                 />
               ) : (
                 <Alert variant="info">
@@ -233,6 +235,7 @@ export function RoyaltyModuleUI(
                   transferValidator={props.transferValidator}
                   contractChainId={props.contractChainId}
                   isLoggedIn={props.isLoggedIn}
+                  client={props.client}
                 />
               ) : (
                 <Alert variant="info">
@@ -270,6 +273,7 @@ function RoyaltyInfoPerTokenSection(props: {
   setRoyaltyInfoForToken: (values: RoyaltyInfoFormValues) => Promise<void>;
   contractChainId: number;
   isLoggedIn: boolean;
+  client: ThirdwebClient;
 }) {
   const form = useForm<RoyaltyInfoFormValues>({
     resolver: zodResolver(royaltyInfoFormSchema),
@@ -349,6 +353,7 @@ function RoyaltyInfoPerTokenSection(props: {
 
           <div className="mt-4 flex justify-end">
             <TransactionButton
+              client={props.client}
               isLoggedIn={props.isLoggedIn}
               size="sm"
               className="min-w-24"
@@ -384,6 +389,7 @@ function DefaultRoyaltyInfoSection(props: {
   update: (values: DefaultRoyaltyFormValues) => Promise<void>;
   contractChainId: number;
   isLoggedIn: boolean;
+  client: ThirdwebClient;
 }) {
   const [defaultRoyaltyRecipient, defaultRoyaltyPercentage] =
     props.defaultRoyaltyInfo || [];
@@ -453,6 +459,7 @@ function DefaultRoyaltyInfoSection(props: {
 
           <div className="mt-4 flex justify-end">
             <TransactionButton
+              client={props.client}
               size="sm"
               className="min-w-24"
               disabled={updateMutation.isPending}
@@ -484,6 +491,7 @@ function TransferValidatorSection(props: {
   update: (values: TransferValidatorFormValues) => Promise<void>;
   contractChainId: number;
   isLoggedIn: boolean;
+  client: ThirdwebClient;
 }) {
   const form = useForm<TransferValidatorFormValues>({
     resolver: zodResolver(transferValidatorFormSchema),
@@ -531,6 +539,7 @@ function TransferValidatorSection(props: {
 
         <div className="mt-4 flex justify-end">
           <TransactionButton
+            client={props.client}
             isLoggedIn={props.isLoggedIn}
             size="sm"
             className="min-w-24 gap-2"

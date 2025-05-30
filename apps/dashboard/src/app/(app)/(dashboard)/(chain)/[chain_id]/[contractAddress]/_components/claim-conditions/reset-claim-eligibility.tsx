@@ -94,6 +94,7 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
   return (
     <AdminOnly contract={contract} fallback={<div className="pb-5" />}>
       <TransactionButton
+        client={contract.client}
         isLoggedIn={isLoggedIn}
         transactionCount={1}
         type="button"

@@ -162,6 +162,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({
             more, please do it in multiple transactions.
           </p>
           <TransactionButton
+            client={contract.client}
             isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             transactionCount={1}

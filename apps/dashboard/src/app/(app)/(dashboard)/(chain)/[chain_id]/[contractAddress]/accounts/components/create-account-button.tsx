@@ -61,6 +61,7 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
 
   return (
     <TransactionButton
+      client={contract.client}
       isLoggedIn={isLoggedIn}
       txChainID={contract.chain.id}
       onClick={() => {

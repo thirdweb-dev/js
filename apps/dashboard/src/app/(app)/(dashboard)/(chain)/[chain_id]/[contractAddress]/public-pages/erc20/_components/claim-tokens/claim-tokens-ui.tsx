@@ -386,6 +386,7 @@ export function ClaimTokenCardUI(props: {
 
           {account ? (
             <TransactionButton
+              client={props.contract.client}
               transactionCount={undefined}
               checkBalance={false}
               isLoggedIn={true}

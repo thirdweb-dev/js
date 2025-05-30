@@ -658,6 +658,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                   hasRemovedPhases ||
                   !isMultiPhase ? (
                     <TransactionButton
+                      client={contract.client}
                       isLoggedIn={isLoggedIn}
                       txChainID={contract.chain.id}
                       transactionCount={1}

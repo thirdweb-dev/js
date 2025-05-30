@@ -77,6 +77,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
     return (
       <TransactionButton
         isLoggedIn={isLoggedIn}
+        client={contract.client}
         isPending={mutation.isPending}
         onClick={distributeFunds}
         txChainID={contract.chain.id}
@@ -100,6 +101,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
   return (
     <TransactionButton
       isLoggedIn={isLoggedIn}
+      client={contract.client}
       transactionCount={numTransactions}
       isPending={mutation.isPending}
       onClick={distributeFunds}

@@ -20,7 +20,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { type Control, useFieldArray } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
@@ -163,7 +162,11 @@ export function AllowedOperationsSection({
 
                 {allowedOperationsFields.fields[index]?.signMethod ===
                   "personal_sign" && (
-                  <PersonalSignRestrictions control={control} index={index} />
+                  <PersonalSignRestrictions
+                    control={control}
+                    index={index}
+                    client={client}
+                  />
                 )}
               </div>
             ))}
@@ -449,9 +452,11 @@ function TypedDataRestrictions({
 function PersonalSignRestrictions({
   control,
   index,
+  client,
 }: {
   control: Control<PartnerFormValues>;
   index: number;
+  client: ThirdwebClient;
 }) {
   const personalSignArray = useFieldArray({
     control,
@@ -527,6 +532,7 @@ function PersonalSignRestrictions({
                 control={control}
                 opIndex={index}
                 signIndex={signIndex}
+                client={client}
               />
             ) : (
               <FormField
@@ -573,12 +579,13 @@ function UserOpTransactions({
   control,
   opIndex,
   signIndex,
+  client,
 }: {
   control: Control<PartnerFormValues>;
   opIndex: number;
   signIndex: number;
+  client: ThirdwebClient;
 }) {
-  const client = useThirdwebClient();
   const userOpTransactionsArray = useFieldArray({
     control,
     name: `accessControl.allowedOperations.${opIndex}.allowedPersonalSigns.${signIndex}.allowedTransactions`,

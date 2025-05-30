@@ -27,7 +27,11 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { type PreparedTransaction, sendAndConfirmTransaction } from "thirdweb";
+import {
+  type PreparedTransaction,
+  type ThirdwebClient,
+  sendAndConfirmTransaction,
+} from "thirdweb";
 import {
   MintableERC20,
   MintableERC721,
@@ -193,6 +197,7 @@ export function MintableModuleUI(
     isBatchMetadataInstalled: boolean;
     contractChainId: number;
     isLoggedIn: boolean;
+    client: ThirdwebClient;
   },
 ) {
   return (
@@ -216,6 +221,7 @@ export function MintableModuleUI(
                     name={props.name}
                     isBatchMetadataInstalled={props.isBatchMetadataInstalled}
                     contractChainId={props.contractChainId}
+                    client={props.client}
                   />
                 )}
                 {!props.isOwnerAccount && (
@@ -243,6 +249,7 @@ export function MintableModuleUI(
                   update={props.updatePrimaryRecipient}
                   contractChainId={props.contractChainId}
                   isLoggedIn={props.isLoggedIn}
+                  client={props.client}
                 />
               </AccordionContent>
             </AccordionItem>
@@ -263,6 +270,7 @@ function PrimarySalesSection(props: {
   isOwnerAccount: boolean;
   contractChainId: number;
   isLoggedIn: boolean;
+  client: ThirdwebClient;
 }) {
   const form = useForm<UpdateFormValues>({
     resolver: zodResolver(primarySaleRecipientFormSchema),
@@ -312,6 +320,7 @@ function PrimarySalesSection(props: {
 
         <div className="mt-4 flex justify-end">
           <TransactionButton
+            client={props.client}
             isLoggedIn={props.isLoggedIn}
             size="sm"
             className="min-w-24"
@@ -341,6 +350,7 @@ function MintNFTSection(props: {
   isBatchMetadataInstalled: boolean;
   contractChainId: number;
   isLoggedIn: boolean;
+  client: ThirdwebClient;
 }) {
   const form = useForm<MintFormValues>({
     resolver: zodResolver(mintFormSchema),
@@ -524,6 +534,7 @@ function MintNFTSection(props: {
 
           <div className="flex justify-end">
             <TransactionButton
+              client={props.client}
               isLoggedIn={props.isLoggedIn}
               size="sm"
               className="min-w-24"

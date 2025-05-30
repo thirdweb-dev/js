@@ -1,5 +1,4 @@
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   type EngineRelayer,
   type UpdateRelayerInput,
@@ -32,6 +31,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
 import {
   Button,
@@ -49,6 +49,7 @@ interface RelayersTableProps {
   isPending: boolean;
   isFetched: boolean;
   authToken: string;
+  client: ThirdwebClient;
 }
 
 const columnHelper = createColumnHelper<EngineRelayer>();
@@ -59,12 +60,12 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
   isPending,
   isFetched,
   authToken,
+  client,
 }) => {
   const editDisclosure = useDisclosure();
   const removeDisclosure = useDisclosure();
   const [selectedRelayer, setSelectedRelayer] = useState<EngineRelayer>();
   const { idToChain } = useAllChainsData();
-  const client = useThirdwebClient();
 
   const columns = [
     columnHelper.accessor("chainId", {
@@ -191,6 +192,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
           disclosure={editDisclosure}
           instanceUrl={instanceUrl}
           authToken={authToken}
+          client={client}
         />
       )}
       {selectedRelayer && removeDisclosure.isOpen && (
@@ -199,6 +201,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
           disclosure={removeDisclosure}
           instanceUrl={instanceUrl}
           authToken={authToken}
+          client={client}
         />
       )}
     </>
@@ -210,13 +213,14 @@ const EditModal = ({
   disclosure,
   instanceUrl,
   authToken,
+  client,
 }: {
   relayer: EngineRelayer;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
   authToken: string;
+  client: ThirdwebClient;
 }) => {
-  const client = useThirdwebClient();
   const { mutate: updateRelayer } = useEngineUpdateRelayer({
     instanceUrl,
     authToken,
@@ -355,13 +359,14 @@ const RemoveModal = ({
   disclosure,
   instanceUrl,
   authToken,
+  client,
 }: {
   relayer: EngineRelayer;
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
   authToken: string;
+  client: ThirdwebClient;
 }) => {
-  const client = useThirdwebClient();
   const { mutate: revokeRelayer } = useEngineRevokeRelayer({
     instanceUrl,
     authToken,

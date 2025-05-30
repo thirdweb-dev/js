@@ -131,6 +131,7 @@ const TransferTab: React.FC<TransferTabProps> = ({
             )}
           </div>
           <TransactionButton
+            client={contract.client}
             isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             transactionCount={1}

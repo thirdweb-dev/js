@@ -126,6 +126,7 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({
         />
 
         <TransactionButton
+          client={contract.client}
           txChainID={contract.chain.id}
           transactionCount={1}
           isPending={sendAndConfirmTx.isPending}

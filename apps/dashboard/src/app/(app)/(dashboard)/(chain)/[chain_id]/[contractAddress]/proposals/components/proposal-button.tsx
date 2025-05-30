@@ -106,6 +106,7 @@ export const ProposalButton: React.FC<VoteButtonProps> = ({
             Cancel
           </Button>
           <TransactionButton
+            client={contract.client}
             isLoggedIn={isLoggedIn}
             txChainID={contract.chain.id}
             transactionCount={1}

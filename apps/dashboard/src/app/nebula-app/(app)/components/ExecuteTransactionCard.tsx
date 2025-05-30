@@ -129,6 +129,7 @@ export function ExecuteTransactionCardLayout(props: {
         {props.status.type !== "confirmed" && (
           <div className="flex items-center justify-end border-t px-4 py-5 lg:px-5">
             <TransactionButton
+              client={props.client}
               isPending={props.status.type === "sending"}
               transactionCount={undefined}
               txChainID={txData.chainId}

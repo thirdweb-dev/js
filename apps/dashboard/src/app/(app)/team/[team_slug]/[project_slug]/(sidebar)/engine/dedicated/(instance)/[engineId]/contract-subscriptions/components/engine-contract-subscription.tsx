@@ -1,6 +1,5 @@
 "use client";
 
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useEngineContractSubscription } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex, FormControl, Switch } from "@chakra-ui/react";
 import { useState } from "react";
@@ -8,16 +7,17 @@ import { FormLabel, Heading, Text, TrackedLink } from "tw-components";
 import { AddContractSubscriptionButton } from "./add-contract-subscription-button";
 import { ContractSubscriptionTable } from "./contract-subscriptions-table";
 
+import type { ThirdwebClient } from "thirdweb";
 interface EngineContractSubscriptionsProps {
   instanceUrl: string;
   authToken: string;
+  client: ThirdwebClient;
 }
 
 export const EngineContractSubscriptions: React.FC<
   EngineContractSubscriptionsProps
-> = ({ instanceUrl, authToken }) => {
+> = ({ instanceUrl, authToken, client }) => {
   const [autoUpdate, setAutoUpdate] = useState<boolean>(true);
-  const client = useThirdwebClient();
   const contractSubscriptionsQuery = useEngineContractSubscription({
     instanceUrl,
     authToken,
@@ -67,6 +67,7 @@ export const EngineContractSubscriptions: React.FC<
       <AddContractSubscriptionButton
         instanceUrl={instanceUrl}
         authToken={authToken}
+        client={client}
       />
     </Flex>
   );

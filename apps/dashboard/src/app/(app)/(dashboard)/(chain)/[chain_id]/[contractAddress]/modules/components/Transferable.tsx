@@ -185,6 +185,7 @@ export function TransferableModuleUI(
           updateButton={() => {
             return (
               <TransactionButton
+                client={props.client}
                 size="sm"
                 className="min-w-24 gap-2"
                 type="submit"

@@ -23,7 +23,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { sendAndConfirmTransaction } from "thirdweb";
+import { type ThirdwebClient, sendAndConfirmTransaction } from "thirdweb";
 import { BatchMetadataERC721, BatchMetadataERC1155 } from "thirdweb/modules";
 import { parseAttributes } from "utils/parseAttributes";
 import { z } from "zod";
@@ -105,6 +105,7 @@ export function BatchMetadataModuleUI(
     uploadMetadata: (values: UploadMetadataFormValues) => Promise<void>;
     contractChainId: number;
     isLoggedIn: boolean;
+    client: ThirdwebClient;
   },
 ) {
   return (
@@ -122,6 +123,7 @@ export function BatchMetadataModuleUI(
                   isLoggedIn={props.isLoggedIn}
                   uploadMetadata={props.uploadMetadata}
                   contractChainId={props.contractChainId}
+                  client={props.client}
                 />
               )}
               {!props.isOwnerAccount && (
@@ -164,6 +166,7 @@ function UploadMetadataNFTSection(props: {
   uploadMetadata: (values: UploadMetadataFormValues) => Promise<void>;
   contractChainId: number;
   isLoggedIn: boolean;
+  client: ThirdwebClient;
 }) {
   const form = useForm<UploadMetadataFormValues>({
     resolver: zodResolver(uploadMetadataFormSchema),
@@ -262,6 +265,7 @@ function UploadMetadataNFTSection(props: {
 
           <div className="flex justify-end">
             <TransactionButton
+              client={props.client}
               isLoggedIn={props.isLoggedIn}
               size="sm"
               className="min-w-24"

@@ -124,6 +124,7 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
           </form>
           <SheetFooter className="mt-10">
             <TransactionButton
+              client={contract.client}
               isLoggedIn={isLoggedIn}
               txChainID={contract.chain.id}
               transactionCount={1}

@@ -1,7 +1,6 @@
 "use client";
 
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   type EngineContractSubscription,
   useEngineRemoveContractSubscription,
@@ -215,6 +214,7 @@ export const ContractSubscriptionTable: React.FC<
             chainId={chainId}
             autoUpdate={autoUpdate}
             authToken={authToken}
+            client={client}
           />
         );
       },
@@ -258,11 +258,12 @@ export const ContractSubscriptionTable: React.FC<
 const ChainLastBlockTimestamp = ({
   chainId,
   blockNumber,
+  client,
 }: {
   chainId: number;
   blockNumber: bigint;
+  client: ThirdwebClient;
 }) => {
-  const client = useThirdwebClient();
   const chain = useV5DashboardChain(chainId);
   // Get the block timestamp to display how delayed the last processed block is.
   const ethBlockQuery = useQuery({
@@ -298,11 +299,13 @@ const ChainLastBlock = ({
   chainId,
   autoUpdate,
   authToken,
+  client,
 }: {
   instanceUrl: string;
   chainId: number;
   autoUpdate: boolean;
   authToken: string;
+  client: ThirdwebClient;
 }) => {
   const lastBlockQuery = useEngineSubscriptionsLastBlock({
     instanceUrl,
@@ -325,6 +328,7 @@ const ChainLastBlock = ({
           <ChainLastBlockTimestamp
             chainId={chainId}
             blockNumber={BigInt(lastBlockQuery.data)}
+            client={client}
           />
         }
         shouldWrapChildren

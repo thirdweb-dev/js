@@ -2,7 +2,6 @@
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { TrackedUnderlineLink } from "@/components/ui/tracked-link";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import {
   type EngineInstance,
   useEngineBackendWallets,
@@ -21,6 +20,7 @@ interface EngineOverviewProps {
   teamSlug: string;
   projectSlug: string;
   authToken: string;
+  client: ThirdwebClient;
 }
 
 export const EngineOverview: React.FC<EngineOverviewProps> = ({
@@ -28,9 +28,8 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
   teamSlug,
   projectSlug,
   authToken,
+  client,
 }) => {
-  const client = useThirdwebClient();
-
   return (
     <div>
       <BackendWalletsSection

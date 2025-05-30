@@ -92,6 +92,7 @@ export function SwapTransactionCardLayout(props: {
         {props.status.type !== "confirmed" && (
           <div className="flex items-center justify-end border-t px-4 py-4 lg:px-5">
             <TransactionButton
+              client={props.client}
               isPending={props.status.type === "sending"}
               transactionCount={undefined}
               txChainID={swapData.transaction.chainId}
@@ -211,6 +212,7 @@ export function ApproveTransactionCardLayout(props: {
         {props.status.type !== "confirmed" && (
           <div className="flex items-center justify-end border-t px-4 py-4 lg:px-5">
             <TransactionButton
+              client={props.client}
               isPending={isTransactionPending}
               transactionCount={undefined}
               txChainID={swapData.transaction.chainId}

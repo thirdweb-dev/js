@@ -38,6 +38,7 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({
   return (
     <ToolTipLabel label="You need to delegate tokens to this contract before you can make proposals and vote.">
       <TransactionButton
+        client={contract.client}
         isLoggedIn={isLoggedIn}
         txChainID={contract.chain.id}
         transactionCount={1}

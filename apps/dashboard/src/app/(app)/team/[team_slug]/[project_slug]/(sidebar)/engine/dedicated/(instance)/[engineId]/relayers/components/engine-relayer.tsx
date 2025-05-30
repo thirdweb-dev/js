@@ -1,6 +1,7 @@
 "use client";
 
 import { useEngineRelayer } from "@3rdweb-sdk/react/hooks/useEngine";
+import type { ThirdwebClient } from "thirdweb";
 import { Heading, Link, Text } from "tw-components";
 import { AddRelayerButton } from "./add-relayer-button";
 import { RelayersTable } from "./relayers-table";
@@ -8,11 +9,13 @@ import { RelayersTable } from "./relayers-table";
 interface EngineRelayerProps {
   instanceUrl: string;
   authToken: string;
+  client: ThirdwebClient;
 }
 
 export const EngineRelayer: React.FC<EngineRelayerProps> = ({
   instanceUrl,
   authToken,
+  client,
 }) => {
   const relayers = useEngineRelayer({
     instanceUrl,
@@ -43,8 +46,13 @@ export const EngineRelayer: React.FC<EngineRelayerProps> = ({
         isPending={relayers.isPending}
         isFetched={relayers.isFetched}
         authToken={authToken}
+        client={client}
       />
-      <AddRelayerButton instanceUrl={instanceUrl} authToken={authToken} />
+      <AddRelayerButton
+        instanceUrl={instanceUrl}
+        authToken={authToken}
+        client={client}
+      />
     </div>
   );
 };

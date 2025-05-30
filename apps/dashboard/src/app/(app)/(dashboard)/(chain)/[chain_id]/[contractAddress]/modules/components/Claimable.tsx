@@ -41,6 +41,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import {
   NATIVE_TOKEN_ADDRESS,
   type PreparedTransaction,
+  type ThirdwebClient,
   ZERO_ADDRESS,
   getContract,
   sendAndConfirmTransaction,
@@ -343,6 +344,7 @@ export function ClaimableModuleUI(
       isLoading: boolean;
     };
     isLoggedIn: boolean;
+    client: ThirdwebClient;
   },
 ) {
   return (
@@ -358,6 +360,7 @@ export function ClaimableModuleUI(
             </AccordionTrigger>
             <AccordionContent className="px-1">
               <MintNFTSection
+                client={props.client}
                 mint={props.mintSection.mint}
                 name={props.name}
                 contractChainId={props.contractChainId}
@@ -390,6 +393,7 @@ export function ClaimableModuleUI(
               {props.name !== "ClaimableERC1155" || props.isValidTokenId ? (
                 props.claimConditionSection.data ? (
                   <ClaimConditionSection
+                    client={props.client}
                     isLoggedIn={props.isLoggedIn}
                     isOwnerAccount={props.isOwnerAccount}
                     claimCondition={
@@ -424,6 +428,7 @@ export function ClaimableModuleUI(
             <AccordionContent className="px-1">
               {props.primarySaleRecipientSection.data ? (
                 <PrimarySaleRecipientSection
+                  client={props.client}
                   isLoggedIn={props.isLoggedIn}
                   isOwnerAccount={props.isOwnerAccount}
                   primarySaleRecipient={
@@ -490,6 +495,7 @@ function ClaimConditionSection(props: {
   tokenId: string;
   noClaimConditionSet: boolean;
   isLoggedIn: boolean;
+  client: ThirdwebClient;
 }) {
   const { idToChain } = useAllChainsData();
   const chain = idToChain.get(props.chainId);
@@ -741,6 +747,7 @@ function ClaimConditionSection(props: {
 
               <div className="flex justify-end">
                 <TransactionButton
+                  client={props.client}
                   isLoggedIn={props.isLoggedIn}
                   size="sm"
                   className="min-w-24"
@@ -775,6 +782,7 @@ function PrimarySaleRecipientSection(props: {
   isOwnerAccount: boolean;
   contractChainId: number;
   isLoggedIn: boolean;
+  client: ThirdwebClient;
 }) {
   const form = useForm<PrimarySaleRecipientFormValues>({
     resolver: zodResolver(primarySaleRecipientFormSchema),
@@ -823,6 +831,7 @@ function PrimarySaleRecipientSection(props: {
 
         <div className="flex justify-end">
           <TransactionButton
+            client={props.client}
             isLoggedIn={props.isLoggedIn}
             size="sm"
             className="min-w-24 gap-2"
@@ -859,6 +868,7 @@ function MintNFTSection(props: {
   name: string;
   contractChainId: number;
   isLoggedIn: boolean;
+  client: ThirdwebClient;
 }) {
   const form = useForm<MintFormValues>({
     resolver: zodResolver(mintFormSchema),
@@ -940,6 +950,7 @@ function MintNFTSection(props: {
 
           <div className="flex justify-end">
             <TransactionButton
+              client={props.client}
               size="sm"
               className="min-w-24 gap-2"
               disabled={mintMutation.isPending}

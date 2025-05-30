@@ -48,6 +48,7 @@ export const DepositNative: React.FC<DepositNativeProps> = ({
         value={amount}
       />
       <TransactionButton
+        client={client}
         isLoggedIn={isLoggedIn}
         txChainID={v5Chain.id}
         transactionCount={1}

@@ -540,6 +540,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
                 Simulate
               </Button>
               <TransactionButton
+                client={contract.client}
                 disabled={
                   !abiFunction || txSimulation.isPending || mutationLoading
                 }

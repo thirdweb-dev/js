@@ -659,6 +659,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
           Cancel
         </Button>
         <TransactionButton
+          client={contract.client}
           isLoggedIn={isLoggedIn}
           txChainID={contract.chain.id}
           isPending={isFormLoading}

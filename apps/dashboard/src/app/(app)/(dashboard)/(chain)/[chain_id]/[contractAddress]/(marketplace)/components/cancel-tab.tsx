@@ -30,6 +30,7 @@ export const CancelTab: React.FC<CancelTabProps> = ({
   return (
     <div className="flex flex-col gap-3 pt-3">
       <TransactionButton
+        client={contract.client}
         isLoggedIn={isLoggedIn}
         txChainID={contract.chain.id}
         transactionCount={1}
