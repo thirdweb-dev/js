@@ -57,6 +57,11 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
     ],
     stripeCustomerId: "cus_1234567890",
     capabilities: {
+      platform: {
+        auditLogs: true,
+        ecosystemWallets: true,
+        seats: true,
+      },
       rpc: {
         enabled: true,
         rateLimit: 1000,
@@ -85,6 +90,10 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
         enabled: true,
         customAuth: true,
         customBranding: true,
+        sms: {
+          domestic: true,
+          international: true,
+        },
       },
       nebula: {
         enabled: true,
@@ -94,6 +103,10 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
         enabled: true,
         rateLimit: 100,
         mainnetEnabled: true,
+      },
+      pay: {
+        enabled: true,
+        rateLimit: 1000,
       },
     },
     planCancellationDate: null,
