@@ -2,12 +2,12 @@
 
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { LazyCreateProjectDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import { useCallback, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { doLogout } from "../../login/auth-actions";
 import {
@@ -23,6 +23,7 @@ import {
 export function AccountHeader(props: {
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   account: Account;
+  client: ThirdwebClient;
   accountAddress: string;
 }) {
   const router = useDashboardRouter();
@@ -30,7 +31,6 @@ export function AccountHeader(props: {
     { team: Team; isOpen: true } | { isOpen: false }
   >({ isOpen: false });
 
-  const client = useThirdwebClient();
   const wallet = useActiveWallet();
   const { disconnect } = useDisconnect();
 
@@ -49,14 +49,16 @@ export function AccountHeader(props: {
   const headerProps: AccountHeaderCompProps = {
     teamsAndProjects: props.teamsAndProjects,
     logout: logout,
-    connectButton: <CustomConnectWallet isLoggedIn={true} client={client} />,
+    connectButton: (
+      <CustomConnectWallet isLoggedIn={true} client={props.client} />
+    ),
     createProject: (team: Team) =>
       setCreateProjectDialogState({
         team,
         isOpen: true,
       }),
     account: props.account,
-    client,
+    client: props.client,
     accountAddress: props.accountAddress,
     getInboxNotifications: getInboxNotifications,
     markNotificationAsRead: markNotificationAsRead,

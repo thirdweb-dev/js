@@ -20,6 +20,7 @@ export function DeployedContractsPage(props: {
       <DeployedContractsPageHeader
         teamId={props.teamId}
         projectId={props.projectId}
+        client={props.client}
       />
       <div className="h-6" />
       <div className="container flex max-w-7xl grow flex-col">
@@ -28,6 +29,7 @@ export function DeployedContractsPage(props: {
         </Suspense>
         <div className="h-8" />
         <DeployViaCLIOrImportCard
+          client={props.client}
           teamId={props.teamId}
           projectId={props.projectId}
         />

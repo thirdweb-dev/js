@@ -35,7 +35,12 @@ import { usePathname } from "next/navigation";
 import type React from "react";
 import { forwardRef, useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
-import { prepareTransaction, sendTransaction, toWei } from "thirdweb";
+import {
+  type ThirdwebClient,
+  prepareTransaction,
+  sendTransaction,
+  toWei,
+} from "thirdweb";
 import { type Chain, type ChainMetadata, localhost } from "thirdweb/chains";
 import {
   PayEmbed,
@@ -272,6 +277,7 @@ export const MismatchButton = forwardRef<
                 }}
                 onCloseModal={() => setDialog(undefined)}
                 isLoggedIn={props.isLoggedIn}
+                client={client}
               />
             )}
 
@@ -333,6 +339,7 @@ function NoFundsDialogContent(props: {
   openPayModal: () => void;
   onCloseModal: () => void;
   isLoggedIn: boolean;
+  client: ThirdwebClient;
 }) {
   const chainWithServiceInfoQuery = useQuery({
     queryKey: ["chain-with-services", props.chain.id],
@@ -391,6 +398,7 @@ function NoFundsDialogContent(props: {
               <GetFundsFromFaucet
                 isLoggedIn={props.isLoggedIn}
                 chain={chainWithServiceInfoQuery.data}
+                client={props.client}
               />
             ) : chainWithServiceInfoQuery.data.services.find(
                 (x) => x.enabled && x.service === "pay",
@@ -431,6 +439,7 @@ function NoFundsDialogContent(props: {
 function GetFundsFromFaucet(props: {
   chain: ChainMetadata;
   isLoggedIn: boolean;
+  client: ThirdwebClient;
 }) {
   const amountToGive = getFaucetClaimAmount(props.chain.chainId);
 
@@ -461,6 +470,7 @@ function GetFundsFromFaucet(props: {
 
         <FaucetButton
           chain={props.chain}
+          client={props.client}
           amount={amountToGive}
           isLoggedIn={props.isLoggedIn}
         />

@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -22,6 +21,7 @@ import { Loader2Icon, LockIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import * as z from "zod";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import { SmartAccountCell } from "../server-wallets/wallet-table/wallet-table-ui.client";
@@ -42,8 +42,8 @@ export function SendTestTransaction(props: {
   userAccessToken?: string;
   expanded?: boolean;
   walletId?: string;
+  client: ThirdwebClient;
 }) {
-  const thirdwebClient = useThirdwebClient();
   const queryClient = useQueryClient();
   const [hasSentTx, setHasSentTx] = useState(false);
   const router = useDashboardRouter();
@@ -200,7 +200,7 @@ export function SendTestTransaction(props: {
                     <div className="flex items-center gap-2">
                       <SmartAccountCell
                         wallet={selectedWallet}
-                        client={thirdwebClient}
+                        client={props.client}
                       />
                       <span className="text-muted-foreground text-sm">
                         {selectedWallet.metadata.label}
@@ -214,7 +214,7 @@ export function SendTestTransaction(props: {
                       <div className="flex items-center gap-2">
                         <SmartAccountCell
                           wallet={wallet}
-                          client={thirdwebClient}
+                          client={props.client}
                         />
                         <span className="text-muted-foreground text-sm">
                           {wallet.metadata.label}
@@ -236,7 +236,7 @@ export function SendTestTransaction(props: {
                       chain.stackType !== "zksync_stack",
                   )
                   .map((chain) => chain.chainId)}
-                client={thirdwebClient}
+                client={props.client}
                 chainId={form.watch("chainId")}
                 onChange={(chainId) => {
                   form.setValue("chainId", chainId);

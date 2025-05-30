@@ -2,6 +2,7 @@
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import type { Ecosystem, Partner } from "../../../../../types";
 import { useUpdatePartner } from "../../hooks/use-update-partner";
 import { PartnerForm, type PartnerFormValues } from "./partner-form.client";
@@ -11,11 +12,13 @@ export function UpdatePartnerForm({
   partner,
   authToken,
   teamId,
+  client,
 }: {
   ecosystem: Ecosystem;
   partner: Partner;
   authToken: string;
   teamId: string;
+  client: ThirdwebClient;
 }) {
   const router = useDashboardRouter();
   const params = useParams();
@@ -68,6 +71,7 @@ export function UpdatePartnerForm({
   return (
     <PartnerForm
       partner={partner}
+      client={client}
       onSubmit={handleSubmit}
       isSubmitting={isPending}
       submitLabel="Update"

@@ -1,23 +1,24 @@
 "use client";
 
 import type { Team } from "@/api/team";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { TeamSettingsSidebar } from "./_components/sidebar/TeamSettingsSidebar";
 import { TeamSettingsMobileNav } from "./_components/sidebar/TeamsMobileNav";
 import { getTeamSettingsLinks } from "./_components/sidebar/getTeamSettingsLinks";
 
 // on the /~/settings page
 // - On desktop: show the general settings as usual
-// - On mobile: show the full nav instead of page content and when user clicks on the "General Settings" ( first link ) - hide the full nav and show the page content
+// - On mobile: show the full nav instead of page content   and when user clicks on the "General Settings" ( first link ) - hide the full nav and show the page content
 
 export function SettingsLayout(props: {
   team: Team;
   children: React.ReactNode;
   account: Account;
+  client: ThirdwebClient;
 }) {
   const [_showFullNavOnMobile, setShowFullNavOnMobile] = useState(true);
   const pathname = usePathname();
@@ -25,7 +26,6 @@ export function SettingsLayout(props: {
   const showFullNavOnMobile = _showFullNavOnMobile && isSettingsOverview;
   const links = getTeamSettingsLinks(props.team.slug);
   const activeLink = links.find((link) => pathname === link.href);
-  const client = useThirdwebClient();
 
   return (
     <div className="flex grow flex-col">
@@ -51,7 +51,7 @@ export function SettingsLayout(props: {
         <TeamSettingsSidebar
           team={props.team}
           account={props.account}
-          client={client}
+          client={props.client}
         />
         <div
           className={cn(

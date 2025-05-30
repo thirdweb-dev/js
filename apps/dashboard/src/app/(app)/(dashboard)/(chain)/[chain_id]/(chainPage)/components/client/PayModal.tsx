@@ -1,16 +1,19 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useTrack } from "hooks/analytics/useTrack";
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import { useTheme } from "next-themes";
+import type { ThirdwebClient } from "thirdweb";
 import { PayEmbed } from "thirdweb/react";
 import { getSDKTheme } from "../../../../../../components/sdk-component-theme";
 
-export function PayModalButton(props: { chainId: number; label: string }) {
+export function PayModalButton(props: {
+  chainId: number;
+  label: string;
+  client: ThirdwebClient;
+}) {
   const { theme } = useTheme();
-  const client = useThirdwebClient();
   const trackEvent = useTrack();
   return (
     <Dialog>
@@ -35,7 +38,7 @@ export function PayModalButton(props: { chainId: number; label: string }) {
         dialogCloseClassName="focus:ring-0"
       >
         <PayEmbed
-          client={client}
+          client={props.client}
           theme={getSDKTheme(theme === "dark" ? "dark" : "light")}
           className="!w-auto"
           payOptions={{

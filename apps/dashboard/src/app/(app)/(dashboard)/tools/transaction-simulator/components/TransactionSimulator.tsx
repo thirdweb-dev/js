@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import type { Abi, AbiFunction } from "abitype";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { ArrowDownIcon, WalletIcon } from "lucide-react";
@@ -25,6 +24,7 @@ import {
 import { resolveContractAbi } from "thirdweb/contract";
 import { useActiveAccount } from "thirdweb/react";
 import { parseAbiParams } from "thirdweb/utils";
+import { getClientThirdwebClient } from "../../../../../../@/constants/thirdweb-client.client";
 import { ShareButton } from "../../components/share";
 
 export type SimulateTransactionForm = {
@@ -61,8 +61,7 @@ export const TransactionSimulator = (props: {
   const chain = useV5DashboardChain(
     Number.isInteger(Number(chainId)) ? chainId : undefined,
   );
-  const client = useThirdwebClient();
-
+  const client = getClientThirdwebClient();
   async function handleSimulation(data: SimulateTransactionForm) {
     try {
       setIsPending(true);

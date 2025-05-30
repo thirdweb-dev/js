@@ -1,4 +1,5 @@
 import { getTeamBySlug } from "@/api/team";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "../../../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../../../login/loginRedirect";
@@ -27,6 +28,11 @@ export default async function AddPartnerPage({
   const teamSlug = team_slug;
   const ecosystemSlug = slug;
 
+  const client = getClientThirdwebClient({
+    jwt: authToken,
+    teamId: team.id,
+  });
+
   try {
     const ecosystem = await fetchEcosystem({
       teamIdOrSlug: teamSlug,
@@ -44,6 +50,7 @@ export default async function AddPartnerPage({
             ecosystem={ecosystem}
             authToken={authToken}
             teamId={team.id}
+            client={client}
           />
         </div>
       </div>

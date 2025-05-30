@@ -5,7 +5,6 @@ import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoading
 import { ToggleThemeButton } from "@/components/color-mode-toggle";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Turnstile } from "@marsidev/react-turnstile";
@@ -14,6 +13,7 @@ import { isVercel } from "lib/vercel-utils";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { Suspense, lazy, useEffect, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import {
   ConnectEmbed,
   useActiveAccount,
@@ -77,6 +77,7 @@ export function LoginAndOnboardingPage(props: {
   account: Account | undefined;
   redirectPath: string;
   loginWithInAppWallet: boolean;
+  client: ThirdwebClient;
 }) {
   return (
     <div className="relative flex min-h-dvh flex-col overflow-hidden bg-background">
@@ -118,6 +119,7 @@ export function LoginAndOnboardingPage(props: {
       </div>
 
       <LoginAndOnboardingPageContent
+        client={props.client}
         account={props.account}
         redirectPath={props.redirectPath}
         loginWithInAppWallet={props.loginWithInAppWallet}
@@ -161,6 +163,7 @@ function LoginAndOnboardingPageContent(props: {
   redirectPath: string;
   account: Account | undefined;
   loginWithInAppWallet: boolean;
+  client: ThirdwebClient;
 }) {
   const accountAddress = useActiveAccount()?.address;
   const [screen, setScreen] = useState<
@@ -228,6 +231,7 @@ function LoginAndOnboardingPageContent(props: {
     return (
       <LoginPageContainer>
         <CustomConnectEmbed
+          client={props.client}
           onLogin={onLogin}
           loginWithInAppWallet={props.loginWithInAppWallet}
         />
@@ -254,6 +258,7 @@ function LoginAndOnboardingPageContent(props: {
       <CustomConnectEmbed
         onLogin={onLogin}
         loginWithInAppWallet={props.loginWithInAppWallet}
+        client={props.client}
       />
     </LoginPageContainer>
   );
@@ -262,9 +267,9 @@ function LoginAndOnboardingPageContent(props: {
 function CustomConnectEmbed(props: {
   onLogin: () => void;
   loginWithInAppWallet: boolean;
+  client: ThirdwebClient;
 }) {
   const { theme } = useTheme();
-  const client = useThirdwebClient();
   const [turnstileToken, setTurnstileToken] = useState<string | undefined>(
     undefined,
   );
@@ -320,7 +325,7 @@ function CustomConnectEmbed(props: {
           wallets={
             props.loginWithInAppWallet ? inAppWalletLoginOptions : loginOptions
           }
-          client={client}
+          client={props.client}
           modalSize="wide"
           theme={getSDKTheme(theme === "light" ? "light" : "dark")}
           className="shadow-lg"

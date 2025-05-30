@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import type { z } from "zod";
 import type { Partner } from "../../../../../types";
 import { partnerFormSchema } from "../../constants";
@@ -32,6 +33,7 @@ type PartnerFormProps = {
   ) => void;
   isSubmitting: boolean;
   submitLabel: string;
+  client: ThirdwebClient;
 };
 
 export function PartnerForm({
@@ -39,6 +41,7 @@ export function PartnerForm({
   onSubmit,
   isSubmitting,
   submitLabel,
+  client,
 }: PartnerFormProps) {
   // Check if partner has accessControl and serverVerifier
   const hasAccessControl = partner ? !!partner.accessControl : false;
@@ -342,6 +345,7 @@ export function PartnerForm({
 
               {/* Allowed Operations Section */}
               <AllowedOperationsSection
+                client={client}
                 control={form.control}
                 enabled={allowedOperationsEnabled}
                 onToggle={(checked) => {

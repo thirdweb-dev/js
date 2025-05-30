@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { TabButtons } from "@/components/ui/tabs";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { ExternalLinkIcon } from "lucide-react";
@@ -77,8 +76,6 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
     isLoggedIn,
     accountAddress,
   });
-
-  const client = useThirdwebClient();
 
   const { data: nft, isPending } = useReadContract(
     isErc721 ? getErc721NFT : getErc1155NFT,
@@ -175,7 +172,9 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
           />
 
           {/* tab contents */}
-          {tab === "Details" && <NFTDetailsTab nft={nft} client={client} />}
+          {tab === "Details" && (
+            <NFTDetailsTab nft={nft} client={contract.client} />
+          )}
 
           {tabs.map((tb) => {
             return (

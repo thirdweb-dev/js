@@ -1,5 +1,6 @@
 import { getTeamBySlug } from "@/api/team";
 import { notFound } from "next/navigation";
+import { getClientThirdwebClient } from "../../../../../../../../../../../../../@/constants/thirdweb-client.client";
 import { getAuthToken } from "../../../../../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../../../../../login/loginRedirect";
 import { UpdatePartnerForm } from "../../../components/client/update-partner-form.client";
@@ -28,6 +29,11 @@ export default async function EditPartnerPage({
   const teamSlug = team_slug;
   const ecosystemSlug = slug;
   const partnerId = partner_id;
+
+  const client = getClientThirdwebClient({
+    jwt: authToken,
+    teamId: team.id,
+  });
 
   try {
     const ecosystem = await fetchEcosystem({
@@ -68,6 +74,7 @@ export default async function EditPartnerPage({
               partner={partner}
               authToken={authToken}
               teamId={team.id}
+              client={client}
             />
           </div>
         </div>

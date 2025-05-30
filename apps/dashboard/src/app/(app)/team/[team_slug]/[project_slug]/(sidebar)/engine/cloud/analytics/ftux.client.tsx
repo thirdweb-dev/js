@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { type Step, StepsCard } from "components/dashboard/StepsCard";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import CreateServerWallet from "../server-wallets/components/create-server-wallet.client";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import CreateVaultAccountButton from "../vault/components/create-vault-account.client";
@@ -17,6 +18,7 @@ interface Props {
   hasTransactions: boolean;
   teamSlug: string;
   testTxWithWallet?: string | undefined;
+  client: ThirdwebClient;
 }
 
 export const EngineChecklist: React.FC<Props> = (props) => {
@@ -61,6 +63,7 @@ export const EngineChecklist: React.FC<Props> = (props) => {
         <SendTestTransaction
           wallets={props.wallets}
           project={props.project}
+          client={props.client}
           userAccessToken={userAccessToken}
           teamSlug={props.teamSlug}
         />
@@ -77,6 +80,7 @@ export const EngineChecklist: React.FC<Props> = (props) => {
     props.hasTransactions,
     userAccessToken,
     props.teamSlug,
+    props.client,
   ]);
 
   const isComplete = useMemo(
@@ -89,6 +93,7 @@ export const EngineChecklist: React.FC<Props> = (props) => {
       <SendTestTransaction
         wallets={props.wallets}
         project={props.project}
+        client={props.client}
         userAccessToken={userAccessToken}
         walletId={props.testTxWithWallet}
         teamSlug={props.teamSlug}

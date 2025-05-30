@@ -1,8 +1,9 @@
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { replaceDeployerAddress } from "lib/publisher-utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { shortenIfAddress } from "utils/usedapp-external";
-import { serverThirdwebClient } from "../../../../../@/constants/thirdweb-client.server";
 import { ProfileUI } from "./ProfileUI";
 import { resolveAddressAndEns } from "./resolveAddressAndEns";
 
@@ -27,6 +28,7 @@ export default async function Page(props: PageProps) {
     <ProfileUI
       ensName={replaceDeployerAddress(resolvedInfo.ensName || "")}
       profileAddress={resolvedInfo.address}
+      client={getClientThirdwebClient()}
     />
   );
 }

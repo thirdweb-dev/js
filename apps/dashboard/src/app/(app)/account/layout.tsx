@@ -5,7 +5,12 @@ import { TabPathLinks } from "@/components/ui/tabs";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import type React from "react";
-import { getAuthTokenWalletAddress } from "../api/lib/getAuthToken";
+import type { ThirdwebClient } from "thirdweb";
+import { getClientThirdwebClient } from "../../../@/constants/thirdweb-client.client";
+import {
+  getAuthToken,
+  getAuthTokenWalletAddress,
+} from "../api/lib/getAuthToken";
 import { TWAutoConnect } from "../components/autoconnect";
 import { loginRedirect } from "../login/loginRedirect";
 import { AccountHeader } from "./components/AccountHeader";
@@ -14,15 +19,21 @@ import { getValidAccount } from "./settings/getAccount";
 export default async function AccountLayout(props: {
   children: React.ReactNode;
 }) {
-  const [teams, account, accountAddress] = await Promise.all([
+  const [teams, account, accountAddress, authToken] = await Promise.all([
     getTeams(),
     getValidAccount("/account"),
     getAuthTokenWalletAddress(),
+    getAuthToken(),
   ]);
 
-  if (!teams || !accountAddress) {
+  if (!teams || !accountAddress || !authToken) {
     loginRedirect("/account");
   }
+
+  const client = getClientThirdwebClient({
+    jwt: authToken,
+    teamId: undefined,
+  });
 
   return (
     <div className="flex min-h-dvh flex-col bg-background">
@@ -31,6 +42,7 @@ export default async function AccountLayout(props: {
           teams={teams}
           twAccount={account}
           accountAddress={accountAddress}
+          client={client}
         />
         {props.children}
       </div>
@@ -44,6 +56,7 @@ async function HeaderAndNav(props: {
   teams: Team[];
   twAccount: Account;
   accountAddress: string;
+  client: ThirdwebClient;
 }) {
   const teamsAndProjects = await Promise.all(
     props.teams.map(async (team) => ({
@@ -59,6 +72,7 @@ async function HeaderAndNav(props: {
         teamsAndProjects={teamsAndProjects}
         account={props.twAccount}
         accountAddress={props.accountAddress}
+        client={props.client}
       />
       <TabPathLinks
         tabContainerClassName="px-4 lg:px-6"

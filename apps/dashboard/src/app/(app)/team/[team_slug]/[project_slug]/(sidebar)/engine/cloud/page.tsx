@@ -92,6 +92,7 @@ export default async function TransactionsAnalyticsPage(props: {
         project={project}
         wallets={wallets ?? []}
         testTxWithWallet={searchParams.testTxWithWallet as string | undefined}
+        client={client}
       />
       {hasTransactions && !searchParams.testTxWithWallet && (
         <TransactionAnalyticsSummary

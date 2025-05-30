@@ -23,18 +23,21 @@ import { Switch } from "@/components/ui/switch";
 import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { type Control, useFieldArray } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import type { PartnerFormValues } from "./partner-form.client";
 
 type AllowedOperationsSectionProps = {
   control: Control<PartnerFormValues>;
   enabled: boolean;
   onToggle: (checked: boolean) => void;
+  client: ThirdwebClient;
 };
 
 export function AllowedOperationsSection({
   control,
   enabled,
   onToggle,
+  client,
 }: AllowedOperationsSectionProps) {
   // Setup field array for allowed operations
   const allowedOperationsFields = useFieldArray({
@@ -142,12 +145,20 @@ export function AllowedOperationsSection({
                 {/* Render different fields based on the signature method */}
                 {allowedOperationsFields.fields[index]?.signMethod ===
                   "eth_signTransaction" && (
-                  <TransactionRestrictions control={control} index={index} />
+                  <TransactionRestrictions
+                    control={control}
+                    index={index}
+                    client={client}
+                  />
                 )}
 
                 {allowedOperationsFields.fields[index]?.signMethod ===
                   "eth_signTypedData_v4" && (
-                  <TypedDataRestrictions control={control} index={index} />
+                  <TypedDataRestrictions
+                    control={control}
+                    index={index}
+                    client={client}
+                  />
                 )}
 
                 {allowedOperationsFields.fields[index]?.signMethod ===
@@ -182,11 +193,12 @@ export function AllowedOperationsSection({
 function TransactionRestrictions({
   control,
   index,
+  client,
 }: {
   control: Control<PartnerFormValues>;
   index: number;
+  client: ThirdwebClient;
 }) {
-  const client = useThirdwebClient();
   const transactionsArray = useFieldArray({
     control,
     name: `accessControl.allowedOperations.${index}.allowedTransactions`,
@@ -312,11 +324,12 @@ function TransactionRestrictions({
 function TypedDataRestrictions({
   control,
   index,
+  client,
 }: {
   control: Control<PartnerFormValues>;
   index: number;
+  client: ThirdwebClient;
 }) {
-  const client = useThirdwebClient();
   const typedDataArray = useFieldArray({
     control,
     name: `accessControl.allowedOperations.${index}.allowedTypedData`,

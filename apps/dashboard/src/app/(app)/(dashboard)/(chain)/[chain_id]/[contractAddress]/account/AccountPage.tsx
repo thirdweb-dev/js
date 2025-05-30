@@ -41,6 +41,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({
           address={contract.address}
           symbol={symbol}
           chain={chainMetadata}
+          client={contract.client}
         />
       )}
 

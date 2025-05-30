@@ -25,7 +25,6 @@ import {
 import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
@@ -149,13 +148,12 @@ export function EcosystemHeader(props: {
     refetchOnWindowFocus: false,
     initialData: props.ecosystem,
   });
-  const client = useThirdwebClient();
 
   const ecosystem = fetchedEcosystem ?? props.ecosystem;
 
   const ecosystemImageLink = resolveSchemeWithErrorHandler({
     uri: ecosystem.imageUrl,
-    client,
+    client: props.client,
   });
 
   // ------------------- Image Upload Logic -------------------

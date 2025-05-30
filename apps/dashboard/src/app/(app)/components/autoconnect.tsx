@@ -1,16 +1,13 @@
 "use client";
-
-// don't know why - but getting compilation error without adding "use client" even though it's already added
-// where we import AutoConnect from in thirdweb/react
-
-import { useThirdwebClient } from "@/constants/thirdweb.client";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { AutoConnect } from "thirdweb/react";
 import type { SmartWalletOptions } from "thirdweb/wallets";
+
+const client = getClientThirdwebClient();
 
 export function TWAutoConnect(props: {
   accountAbstraction?: SmartWalletOptions;
 }) {
-  const client = useThirdwebClient();
   return (
     <AutoConnect
       client={client}

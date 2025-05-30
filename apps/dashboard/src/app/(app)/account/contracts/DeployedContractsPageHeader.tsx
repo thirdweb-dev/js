@@ -2,24 +2,24 @@
 
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { ImportModal } from "components/contract-components/import-contract/modal";
 import { useTrack } from "hooks/analytics/useTrack";
 import { DownloadIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 
 export function DeployedContractsPageHeader(props: {
   teamId: string;
   projectId: string;
+  client: ThirdwebClient;
 }) {
   const [importModalOpen, setImportModalOpen] = useState(false);
-  const client = useThirdwebClient();
   const trackEvent = useTrack();
 
   return (
     <div className="border-b">
       <ImportModal
-        client={client}
+        client={props.client}
         isOpen={importModalOpen}
         onClose={() => {
           setImportModalOpen(false);

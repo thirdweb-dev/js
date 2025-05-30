@@ -1,7 +1,7 @@
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { FormControl } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
+import type { ThirdwebClient } from "thirdweb";
 import invariant from "tiny-invariant";
 import { FormErrorMessage, FormLabel } from "tw-components";
 import type { InstallModuleForm } from "./ModuleForm";
@@ -20,9 +20,9 @@ export type ModuleMeta = {
 export function useModuleInstallParams(props: {
   module?: ModuleMeta;
   isQueryEnabled: boolean;
+  client: ThirdwebClient;
 }) {
-  const client = useThirdwebClient();
-  const { module, isQueryEnabled } = props;
+  const { module, isQueryEnabled, client } = props;
   return useQuery({
     queryKey: ["useModuleInstallParams", module],
     queryFn: async () => {

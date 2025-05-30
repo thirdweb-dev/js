@@ -28,7 +28,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ChainIconClient } from "components/icons/ChainIcon";
@@ -156,7 +155,10 @@ export function TransactionsTableUI(props: {
 
                     {/* Chain Id */}
                     <TableCell>
-                      <TxChainCell chainId={tx.chainId || undefined} />
+                      <TxChainCell
+                        chainId={tx.chainId || undefined}
+                        client={props.client}
+                      />
                     </TableCell>
 
                     {/* Status */}
@@ -301,10 +303,12 @@ function SkeletonRow() {
   );
 }
 
-function TxChainCell(props: { chainId: string | undefined }) {
+function TxChainCell(props: {
+  chainId: string | undefined;
+  client: ThirdwebClient;
+}) {
   const { chainId } = props;
   const { idToChain } = useAllChainsData();
-  const thirdwebClient = useThirdwebClient();
   if (!chainId) {
     return "N/A";
   }
@@ -319,7 +323,7 @@ function TxChainCell(props: { chainId: string | undefined }) {
     <div className="flex items-center gap-2">
       <ChainIconClient
         className="size-5"
-        client={thirdwebClient}
+        client={props.client}
         src={chain.icon?.url}
       />
       <div className="max-w-[150px] truncate">

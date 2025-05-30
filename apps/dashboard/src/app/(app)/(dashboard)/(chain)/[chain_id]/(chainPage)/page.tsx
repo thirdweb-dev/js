@@ -1,4 +1,5 @@
 import { CircleAlertIcon } from "lucide-react";
+import { getClientThirdwebClient } from "../../../../../../@/constants/thirdweb-client.client";
 import { getRawAccount } from "../../../../account/settings/getAccount";
 import { getChain, getChainMetadata } from "../../utils";
 import NextSteps from "./components/client/NextSteps";
@@ -16,6 +17,7 @@ export default async function Page(props: {
   const params = await props.params;
   const chain = await getChain(params.chain_id);
   const chainMetadata = await getChainMetadata(chain.chainId);
+  const client = getClientThirdwebClient();
   const isDeprecated = chain.status === "deprecated";
 
   const account = await getRawAccount();
@@ -42,9 +44,9 @@ export default async function Page(props: {
 
       {/* Faucet / Buy Funds */}
       {chain.testnet ? (
-        <FaucetSection chain={chain} isLoggedIn={!!account} />
+        <FaucetSection chain={chain} isLoggedIn={!!account} client={client} />
       ) : chain.services.find((c) => c.service === "pay" && c.enabled) ? (
-        <BuyFundsSection chain={chain} />
+        <BuyFundsSection chain={chain} client={client} />
       ) : null}
 
       {/* Chain Overview */}

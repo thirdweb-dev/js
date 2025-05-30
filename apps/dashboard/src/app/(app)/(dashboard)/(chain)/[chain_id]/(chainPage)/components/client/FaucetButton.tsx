@@ -23,7 +23,6 @@ import {
   NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
   NEXT_PUBLIC_TURNSTILE_SITE_KEY,
 } from "@/constants/public-envs";
-import { useThirdwebClient } from "@/constants/thirdweb.client";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Turnstile } from "@marsidev/react-turnstile";
@@ -77,13 +76,14 @@ export function FaucetButton({
   chain,
   amount,
   isLoggedIn,
+  client,
 }: {
   chain: ChainMetadata;
   amount: number;
   isLoggedIn: boolean;
+  client: ThirdwebClient;
 }) {
   const pathname = usePathname();
-  const client = useThirdwebClient();
   const address = useActiveAccount()?.address;
   const chainId = chain.chainId;
   // do not include local overrides for chain pages
