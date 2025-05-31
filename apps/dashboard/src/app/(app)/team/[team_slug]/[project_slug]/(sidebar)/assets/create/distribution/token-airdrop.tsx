@@ -23,6 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { useCsvUpload } from "hooks/useCsvUpload";
 import {
@@ -92,7 +93,7 @@ export function TokenAirdropSection(props: {
               <div className="flex w-full flex-col gap-4 rounded-lg border bg-background p-4 md:flex-row lg:items-center lg:justify-between">
                 {/* left */}
                 <div>
-                  <h3 className="font-medium text-sm">CSV File Uploaded</h3>
+                  <h3 className="font-medium text-sm">Airdrop List Set</h3>
                   <p className="text-muted-foreground text-sm">
                     <span className="font-semibold">
                       {airdropAddresses.length}
@@ -109,14 +110,14 @@ export function TokenAirdropSection(props: {
                     <SheetTrigger asChild>
                       <Button size="sm" variant="outline">
                         <FileTextIcon className="mr-2 size-4" />
-                        View CSV
+                        View List
                       </Button>
                     </SheetTrigger>
 
                     <SheetContent className="flex h-dvh w-full flex-col gap-0 overflow-hidden lg:max-w-2xl">
                       <SheetHeader className="mb-3">
                         <SheetTitle className="text-left">
-                          Airdrop CSV
+                          Airdrop List
                         </SheetTitle>
                       </SheetHeader>
                       <AirdropTable
@@ -152,11 +153,11 @@ export function TokenAirdropSection(props: {
                   <SheetContent className="flex h-dvh w-full flex-col gap-0 overflow-hidden lg:max-w-2xl">
                     <SheetHeader className="mb-3">
                       <SheetTitle className="text-left font-semibold text-lg">
-                        Airdrop CSV File
+                        Set up Airdrop
                       </SheetTitle>
                       <SheetDescription>
-                        Upload a CSV file to airdrop tokens to a list of
-                        addresses
+                        Upload a CSV file or enter comma-separated addresses and
+                        amounts to airdrop tokens
                       </SheetDescription>
                     </SheetHeader>
                     <AirdropUpload
@@ -176,7 +177,7 @@ export function TokenAirdropSection(props: {
                   className="min-w-44 gap-2 bg-background"
                 >
                   <ArrowUpFromLineIcon className="size-4 text-muted-foreground" />
-                  Upload CSV
+                  Set up Airdrop
                 </Button>
               </div>
             )}
@@ -193,14 +194,43 @@ type AirdropUploadProps = {
   client: ThirdwebClient;
 };
 
-// CSV parser for airdrop data
-const csvParser = (items: AirdropAddressInput[]): AirdropAddressInput[] => {
-  return items
-    .map(({ address, quantity }) => ({
-      address: (address || "").trim(),
-      quantity: (quantity || "1").trim(),
-    }))
-    .filter(({ address }) => address !== "");
+// Parse text input and convert to CSV-like format
+const parseTextInput = (text: string): AirdropAddressInput[] => {
+  const lines = text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line !== "");
+  const result: AirdropAddressInput[] = [];
+
+  for (const line of lines) {
+    let parts: string[] = [];
+
+    if (line.includes("=")) {
+      parts = line.split("=");
+    } else if (line.includes(",")) {
+      parts = line.split(",");
+    } else if (line.includes("\t")) {
+      parts = line.split("\t");
+    } else {
+      parts = line.split(/\s+/);
+    }
+
+    parts = parts.map((part) => part.trim()).filter((part) => part !== "");
+
+    if (parts.length >= 1) {
+      const address = parts[0];
+      const quantity = parts[1] || "1";
+
+      if (address) {
+        result.push({
+          address: address.trim(),
+          quantity: quantity.trim(),
+        });
+      }
+    }
+  }
+
+  return result;
 };
 
 const AirdropUpload: React.FC<AirdropUploadProps> = ({
@@ -208,6 +238,8 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
   onClose,
   client,
 }) => {
+  const [textInput, setTextInput] = useState("");
+
   const {
     normalizeQuery,
     getInputProps,
@@ -216,11 +248,30 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
     noCsv,
     reset,
     removeInvalid,
-  } = useCsvUpload<AirdropAddressInput>({ csvParser, client });
+    processData,
+  } = useCsvUpload<AirdropAddressInput>({
+    csvParser: (items: AirdropAddressInput[]) => {
+      return items
+        .map(({ address, quantity }) => ({
+          address: (address || "").trim(),
+          quantity: (quantity || "1").trim(),
+        }))
+        .filter(({ address }) => address !== "");
+    },
+    client,
+  });
 
   const normalizeData = normalizeQuery.data;
 
-  if (!normalizeData) {
+  // Handle text input - directly process the parsed data
+  const handleTextSubmit = () => {
+    if (!textInput.trim()) return;
+
+    const parsedData = parseTextInput(textInput);
+    processData(parsedData);
+  };
+
+  if (!normalizeData && rawData.length > 0) {
     return (
       <div className="flex h-[300px] w-full grow items-center justify-center rounded-lg border border-border">
         <Spinner className="size-10" />
@@ -229,6 +280,8 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
   }
 
   const handleContinue = () => {
+    if (!normalizeData) return;
+
     setAirdrop(
       normalizeData.result.map((o) => ({
         address: o.resolvedAddress || o.address,
@@ -239,9 +292,16 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
     onClose();
   };
 
+  const handleReset = () => {
+    reset();
+    setTextInput("");
+  };
+
   return (
     <div className="flex w-full grow flex-col gap-6 overflow-hidden">
-      {normalizeData.result.length && rawData.length > 0 ? (
+      {normalizeData &&
+      normalizeData.result.length > 0 &&
+      rawData.length > 0 ? (
         <div className="flex grow flex-col overflow-hidden outline">
           {normalizeQuery.data.invalidFound && (
             <p className="mb-3 text-red-500 text-sm">
@@ -253,19 +313,12 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
             className="rounded-b-none"
           />
           <div className="flex justify-between gap-3 rounded-b-lg border border-t-0 bg-card p-6">
-            <Button
-              variant="outline"
-              disabled={rawData.length === 0}
-              onClick={() => {
-                reset();
-              }}
-            >
+            <Button variant="outline" onClick={handleReset}>
               <RotateCcwIcon className="mr-2 size-4" />
               Reset
             </Button>
             {normalizeQuery.data.invalidFound ? (
               <Button
-                disabled={rawData.length === 0}
                 onClick={() => {
                   removeInvalid();
                 }}
@@ -274,69 +327,120 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
                 Remove invalid addresses
               </Button>
             ) : (
-              <Button onClick={handleContinue} disabled={rawData.length === 0}>
+              <Button onClick={handleContinue}>
                 Continue <ArrowRightIcon className="ml-2 size-4" />
               </Button>
             )}
           </div>
         </div>
       ) : (
-        <div>
-          <div className="relative w-full">
-            <div
-              className={cn(
-                "flex h-[300px] cursor-pointer items-center justify-center rounded-md border border-dashed bg-card hover:border-active-border",
-                noCsv &&
-                  "border-red-500 bg-red-200/30 text-red-500 hover:border-red-600 dark:border-red-900 dark:bg-red-900/30 dark:hover:border-red-800",
-              )}
-              {...getRootProps()}
-            >
-              <input {...getInputProps()} accept=".csv" />
-              <div className="flex flex-col items-center justify-center gap-3">
-                {!noCsv && (
-                  <div className="flex flex-col items-center">
-                    <div className="mb-3 flex size-11 items-center justify-center rounded-full border bg-card">
-                      <UploadIcon className="size-5" />
-                    </div>
-                    <h2 className="mb-0.5 text-center font-medium text-lg">
-                      Upload CSV File
-                    </h2>
-                    <p className="text-center font-medium text-muted-foreground text-sm">
-                      Drag and drop your file or click here to upload
-                    </p>
-                  </div>
-                )}
+        <div className="flex flex-col gap-6">
+          {/* CSV Upload Section - First */}
+          <div className="space-y-4">
+            <CSVFormatDetails />
 
-                {noCsv && (
-                  <div className="flex flex-col items-center">
-                    <div className="mb-3 flex size-11 items-center justify-center rounded-full border border-red-500 bg-red-200/50 text-red-500 dark:border-red-900 dark:bg-red-900/30 dark:text-foreground">
-                      <XIcon className="size-5" />
-                    </div>
-                    <h2 className="mb-0.5 text-center font-medium text-foreground text-lg">
-                      Invalid CSV
-                    </h2>
-                    <p className="text-balance text-center text-sm">
-                      Your CSV does not contain the "address" & "quantity"
-                      columns
-                    </p>
-
-                    <Button
-                      className="relative z-50 mt-4"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        reset();
-                      }}
-                    >
-                      Remove Invalid CSV
-                    </Button>
-                  </div>
+            <div className="relative w-full">
+              <div
+                className={cn(
+                  "flex h-[180px] cursor-pointer items-center justify-center rounded-md border border-dashed bg-card hover:border-active-border",
+                  noCsv &&
+                    "border-red-500 bg-red-200/30 text-red-500 hover:border-red-600 dark:border-red-900 dark:bg-red-900/30 dark:hover:border-red-800",
                 )}
+                {...getRootProps()}
+              >
+                <input {...getInputProps()} accept=".csv" />
+                <div className="flex flex-col items-center justify-center gap-3">
+                  {!noCsv && (
+                    <div className="flex flex-col items-center">
+                      <div className="mb-3 flex size-11 items-center justify-center rounded-full border bg-card">
+                        <UploadIcon className="size-5" />
+                      </div>
+                      <h2 className="mb-0.5 text-center font-medium text-lg">
+                        Upload CSV File
+                      </h2>
+                      <p className="text-center font-medium text-muted-foreground text-sm">
+                        Drag and drop your file or click here to upload
+                      </p>
+                    </div>
+                  )}
+
+                  {noCsv && (
+                    <div className="flex flex-col items-center">
+                      <div className="mb-3 flex size-11 items-center justify-center rounded-full border border-red-500 bg-red-200/50 text-red-500 dark:border-red-900 dark:bg-red-900/30 dark:text-foreground">
+                        <XIcon className="size-5" />
+                      </div>
+                      <h2 className="mb-0.5 text-center font-medium text-foreground text-lg">
+                        Invalid CSV
+                      </h2>
+                      <p className="text-balance text-center text-sm">
+                        Your CSV does not contain the "address" & "quantity"
+                        columns
+                      </p>
+
+                      <Button
+                        className="relative z-50 mt-4"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          reset();
+                        }}
+                      >
+                        Remove Invalid CSV
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-          <div className="h-6" />
-          <CSVFormatDetails />
+
+          {/* Divider */}
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or enter manually
+              </span>
+            </div>
+          </div>
+
+          {/* Text Input Section - Second */}
+          <div className="space-y-4">
+            <div>
+              <h3 className="mb-2 font-semibold">
+                Enter Addresses and Amounts
+              </h3>
+              <p className="mb-3 text-muted-foreground text-sm">
+                Enter one address and amount on each line. Supports various
+                formats. (space, comma, or =)
+              </p>
+              <div className="space-y-3">
+                <Textarea
+                  placeholder={`0x314ab97b76e39d63c78d5c86c2daf8eaa306b182 3.141592
+thirdweb.eth,2.7182
+0x141ca95b6177615fb1417cf70e930e102bf8f384=1.41421`}
+                  value={textInput}
+                  onChange={(e) => setTextInput(e.target.value)}
+                  className="min-h-[120px] font-mono text-sm"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && e.ctrlKey) {
+                      e.preventDefault();
+                      handleTextSubmit();
+                    }
+                  }}
+                />
+                <Button
+                  onClick={handleTextSubmit}
+                  disabled={!textInput.trim()}
+                  className="w-full"
+                >
+                  Enter
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
