@@ -59,3 +59,15 @@ export async function getTeamInvoices(
     throw new Error("Failed to fetch billing history");
   }
 }
+
+async function getStripeCustomer(customerId: string) {
+  return await getStripe().customers.retrieve(customerId);
+}
+
+export async function getStripeBalance(customerId: string) {
+  const customer = await getStripeCustomer(customerId);
+  if (customer.deleted) {
+    return 0;
+  }
+  return customer.balance;
+}

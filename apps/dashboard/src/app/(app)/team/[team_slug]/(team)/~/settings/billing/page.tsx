@@ -1,10 +1,14 @@
+import { getStripeBalance } from "@/actions/stripe-actions";
 import { type Team, getTeamBySlug } from "@/api/team";
 import { getTeamSubscriptions } from "@/api/team-subscription";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { Billing } from "components/settings/Account/Billing";
 import { redirect } from "next/navigation";
+import { CreditsInfoCard } from "../../../../../../../../components/settings/Account/Billing/PlanCard";
+import { Coupons } from "../../../../../../../../components/settings/Account/Billing/SubscriptionCoupons/Coupons";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
+import { PlanInfoCardClient } from "./components/PlanInfoCard.client";
+import CreditTopupSection from "./components/top-up-section.client";
 
 export default async function Page(props: {
   params: Promise<{
@@ -29,7 +33,10 @@ export default async function Page(props: {
     redirect("/team");
   }
 
-  const subscriptions = await getTeamSubscriptions(team.slug);
+  const [subscriptions, stripeBalance] = await Promise.all([
+    getTeamSubscriptions(team.slug),
+    team.stripeCustomerId ? getStripeBalance(team.stripeCustomerId) : 0,
+  ]);
 
   const client = getClientThirdwebClient({
     jwt: authToken,
@@ -44,18 +51,40 @@ export default async function Page(props: {
     );
   }
 
+  const highlightPlan =
+    typeof searchParams.highlight === "string"
+      ? (searchParams.highlight as Team["billingPlan"])
+      : undefined;
+
+  const openPlanSheetButtonByDefault = searchParams.showPlans === "true";
+
+  const validPayment =
+    team.billingStatus === "validPayment" || team.billingStatus === "pastDue";
+
   return (
-    <Billing
-      highlightPlan={
-        typeof searchParams.highlight === "string"
-          ? (searchParams.highlight as Team["billingPlan"])
-          : undefined
-      }
-      openPlanSheetButtonByDefault={searchParams.showPlans === "true"}
-      team={team}
-      subscriptions={subscriptions}
-      twAccount={account}
-      client={client}
-    />
+    <div className="flex flex-col gap-12">
+      <div>
+        <PlanInfoCardClient
+          team={team}
+          subscriptions={subscriptions}
+          openPlanSheetButtonByDefault={openPlanSheetButtonByDefault}
+          highlightPlan={highlightPlan}
+        />
+      </div>
+
+      <CreditTopupSection
+        // stripe treats the balance as negative when it is due to the customer (to the customer this is a "positive" balance)
+        // we also need to divide by 100 to get the balance in USD (it is returned in USD cents)
+        currentBalance={stripeBalance === 0 ? 0 : stripeBalance / -100}
+        teamSlug={team.slug}
+      />
+
+      <CreditsInfoCard
+        twAccount={account}
+        client={client}
+        teamSlug={team.slug}
+      />
+      <Coupons teamId={team.id} isPaymentSetup={validPayment} />
+    </div>
   );
 }
