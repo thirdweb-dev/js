@@ -5,6 +5,7 @@ import { getContract } from "../../../../contract/contract.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 import { formatNumber } from "../../../../utils/formatNumber.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { isSmartWallet } from "../../../../wallets/smart/is-smart-wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
@@ -13,7 +14,6 @@ import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.j
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../../core/hooks/wallets/useActiveWalletChain.js";
 import { useDisconnect } from "../../../core/hooks/wallets/useDisconnect.js";
-import { hasSmartAccount } from "../../../core/utils/isSmartWallet.js";
 import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
 import { fontSize, radius, spacing } from "../../design-system/index.js";
 import { Address } from "../components/Address.js";
@@ -326,14 +326,14 @@ function SmartAccountBadge(props: {
 }) {
   const activeAccount = useActiveAccount();
   const activeWallet = useActiveWallet();
-  const isSmartWallet = hasSmartAccount(activeWallet);
+  const isSW = isSmartWallet(activeWallet);
   const chain = useActiveWalletChain();
   const { client, theme } = props;
 
   const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
 
   useEffect(() => {
-    if (activeAccount && isSmartWallet && activeAccount.address && chain) {
+    if (activeAccount && isSW && activeAccount.address && chain) {
       const contract = getContract({
         address: activeAccount.address,
         chain,
@@ -346,7 +346,7 @@ function SmartAccountBadge(props: {
     } else {
       setIsSmartWalletDeployed(false);
     }
-  }, [activeAccount, chain, client, isSmartWallet]);
+  }, [activeAccount, chain, client, isSW]);
 
   const content = (
     <View
@@ -377,7 +377,7 @@ function SmartAccountBadge(props: {
     </View>
   );
 
-  if (chain && activeAccount && isSmartWallet) {
+  if (chain && activeAccount && isSW) {
     return (
       <>
         <Spacer size="smd" />

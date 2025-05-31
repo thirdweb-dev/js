@@ -4,6 +4,7 @@ import type { PreparedTransaction } from "../../../../transaction/prepare-transa
 import { shortenAddress } from "../../../../utils/address.js";
 import { formatNumber } from "../../../../utils/formatNumber.js";
 import { toTokens } from "../../../../utils/units.js";
+import { hasSponsoredTransactionsEnabled } from "../../../../wallets/smart/is-smart-wallet.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
@@ -13,7 +14,6 @@ import {
 } from "../../../core/design-system/index.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
-import { hasSponsoredTransactionsEnabled } from "../../../core/utils/wallet.js";
 import { ErrorState } from "../../wallets/shared/ErrorState.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
 import { CoinsIcon } from "../ConnectWallet/icons/CoinsIcon.js";

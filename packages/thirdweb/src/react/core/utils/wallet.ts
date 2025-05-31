@@ -7,8 +7,7 @@ import { resolveName } from "../../../extensions/ens/resolve-name.js";
 import { shortenAddress } from "../../../utils/address.js";
 import { parseAvatarRecord } from "../../../utils/ens/avatar.js";
 import { getWalletInfo } from "../../../wallets/__generated__/getWalletInfo.js";
-import { isEcosystemWallet } from "../../../wallets/ecosystem/is-ecosystem-wallet.js";
-import type { Account, Wallet } from "../../../wallets/interfaces/wallet.js";
+import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { WalletInfo } from "../../../wallets/wallet-info.js";
 import type { WalletId } from "../../../wallets/wallet-types.js";
 import { useWalletBalance } from "../hooks/others/useWalletBalance.js";
@@ -214,51 +213,4 @@ export function useWalletImage(id: WalletId | undefined) {
     refetchOnMount: false,
     enabled: !!id,
   });
-}
-
-/**
- * @internal
- */
-export function hasSponsoredTransactionsEnabled(wallet: Wallet | undefined) {
-  if (!wallet) {
-    return false;
-  }
-  let sponsoredTransactionsEnabled = false;
-  if (wallet && wallet.id === "smart") {
-    const options = (wallet as Wallet<"smart">).getConfig();
-    if ("sponsorGas" in options) {
-      sponsoredTransactionsEnabled = options.sponsorGas;
-    }
-    if ("gasless" in options) {
-      sponsoredTransactionsEnabled = options.gasless;
-    }
-  }
-  if (wallet && (wallet.id === "inApp" || isEcosystemWallet(wallet))) {
-    const options = (wallet as Wallet<"inApp">).getConfig();
-    if (options && "smartAccount" in options && options.smartAccount) {
-      const smartOptions = options.smartAccount;
-      if ("sponsorGas" in smartOptions) {
-        sponsoredTransactionsEnabled = smartOptions.sponsorGas;
-      }
-      if ("gasless" in smartOptions) {
-        sponsoredTransactionsEnabled = smartOptions.gasless;
-      }
-    }
-    if (options?.executionMode) {
-      const execMode = options.executionMode;
-      if (execMode.mode === "EIP4337") {
-        const smartOptions = execMode.smartAccount;
-        if (smartOptions && "sponsorGas" in smartOptions) {
-          sponsoredTransactionsEnabled = smartOptions.sponsorGas;
-        }
-        if (smartOptions && "gasless" in smartOptions) {
-          sponsoredTransactionsEnabled = smartOptions.gasless;
-        }
-      }
-      if (execMode.mode === "EIP7702") {
-        sponsoredTransactionsEnabled = execMode.sponsorGas || false;
-      }
-    }
-  }
-  return sponsoredTransactionsEnabled;
 }

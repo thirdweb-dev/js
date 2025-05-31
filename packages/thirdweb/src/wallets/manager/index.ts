@@ -1,7 +1,6 @@
 import type { Chain } from "../../chains/types.js";
 import { cacheChains } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { hasSmartAccount } from "../../react/core/utils/isSmartWallet.js";
 import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
@@ -135,7 +134,7 @@ export function createConnectionManager(storage: AsyncStorage) {
     }
 
     const activeWallet = await (async () => {
-      if (options?.accountAbstraction && !hasSmartAccount(wallet)) {
+      if (options?.accountAbstraction && !isSmartWallet(wallet)) {
         return await handleSmartWalletConnection(
           wallet,
           options.client,

@@ -13,12 +13,12 @@ import { getTransactionGasCost } from "../../../../transaction/utils.js";
 import type { Hex } from "../../../../utils/encoding/hex.js";
 import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { hasSponsoredTransactionsEnabled } from "../../../../wallets/smart/is-smart-wallet.js";
 import { getTokenBalance } from "../../../../wallets/utils/getTokenBalance.js";
 import { getWalletBalance } from "../../../../wallets/utils/getWalletBalance.js";
 import type { LocaleId } from "../../../web/ui/types.js";
 import type { Theme } from "../../design-system/index.js";
 import type { SupportedTokens } from "../../utils/defaultTokens.js";
-import { hasSponsoredTransactionsEnabled } from "../../utils/wallet.js";
 
 /**
  * Configuration for the "Pay Modal" that opens when the user doesn't have enough funds to send a transaction.
