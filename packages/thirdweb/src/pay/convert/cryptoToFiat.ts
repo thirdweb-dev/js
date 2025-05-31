@@ -1,9 +1,6 @@
 import type { Address } from "abitype";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
-import { getBytecode } from "../../contract/actions/get-bytecode.js";
-import { getContract } from "../../contract/contract.js";
 import { isAddress } from "../../utils/address.js";
 import { getTokenPrice } from "./get-token.js";
 import type { SupportedFiatCurrency } from "./type.js";
@@ -76,22 +73,6 @@ export async function convertCryptoToFiat(
       "Invalid fromTokenAddress. Expected a valid EVM contract address",
     );
   }
-  // Make sure it's either a valid contract or a native token address
-  if (fromTokenAddress.toLowerCase() !== NATIVE_TOKEN_ADDRESS.toLowerCase()) {
-    const bytecode = await getBytecode(
-      getContract({
-        address: fromTokenAddress,
-        chain,
-        client,
-      }),
-    ).catch(() => undefined);
-    if (!bytecode || bytecode === "0x") {
-      throw new Error(
-        `Error: ${fromTokenAddress} on chainId: ${chain.id} is not a valid contract address.`,
-      );
-    }
-  }
-
   const price = await getTokenPrice(client, fromTokenAddress, chain.id);
   if (!price) {
     throw new Error(
