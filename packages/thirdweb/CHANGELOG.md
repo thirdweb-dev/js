@@ -1,5 +1,38 @@
 # thirdweb
 
+## 5.102.3
+
+### Patch Changes
+
+- [#7240](https://github.com/thirdweb-dev/js/pull/7240) [`ad8cc9a`](https://github.com/thirdweb-dev/js/commit/ad8cc9a1d2740eb6ae4a89f57ef475857fb16c21) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add `Bridge.tokens()` function to retrieve supported Universal Bridge tokens
+
+  New function allows fetching and filtering tokens supported by the Universal Bridge service. Supports filtering by chain ID, token address, symbol, name, and includes pagination with limit/offset parameters.
+
+  ```typescript
+  import { Bridge } from "thirdweb";
+
+  // Get all supported tokens
+  const tokens = await Bridge.tokens({
+    client: thirdwebClient,
+  });
+
+  // Filter tokens by chain and symbol
+  const ethTokens = await Bridge.tokens({
+    chainId: 1,
+    symbol: "USDC",
+    limit: 50,
+    client: thirdwebClient,
+  });
+  ```
+
+- [#7242](https://github.com/thirdweb-dev/js/pull/7242) [`f10fbc8`](https://github.com/thirdweb-dev/js/commit/f10fbc8383166552400c48257de47facecd20600) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Optimize fiat conversion query
+
+- [#7230](https://github.com/thirdweb-dev/js/pull/7230) [`8245c06`](https://github.com/thirdweb-dev/js/commit/8245c06b3e7f53379929c430ce4fb7cbe76e9a1b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixes token pricing in PayEmbed
+
+- [#7234](https://github.com/thirdweb-dev/js/pull/7234) [`4e93539`](https://github.com/thirdweb-dev/js/commit/4e935392fa4d3415a0f86774a17e41fdfd1e8a25) Thanks [@MananTank](https://github.com/MananTank)! - Fallback to insight response if RPC request fails in ERC721 & ERC1155 `getNFTs` extension
+
+- [#7241](https://github.com/thirdweb-dev/js/pull/7241) [`38627d3`](https://github.com/thirdweb-dev/js/commit/38627d352bc33b465657994d67245906abb63f63) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle smart account detection for inApp and ecosystem wallets
+
 ## 5.102.2
 
 ### Patch Changes
