@@ -5,6 +5,7 @@ import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import { toTokens } from "../../../../../../utils/units.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
+import { hasSponsoredTransactionsEnabled } from "../../../../../../wallets/smart/is-smart-wallet.js";
 import { useCustomTheme } from "../../../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
@@ -16,7 +17,6 @@ import { useChainMetadata } from "../../../../../core/hooks/others/useChainQuery
 import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
 import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../../../core/hooks/wallets/useActiveWallet.js";
-import { hasSponsoredTransactionsEnabled } from "../../../../../core/utils/wallet.js";
 import { ErrorState } from "../../../../wallets/shared/ErrorState.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";

@@ -30,6 +30,7 @@ import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { Ecosystem } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { isSmartWallet } from "../../../../wallets/smart/is-smart-wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import {
   type AppMetadata,
@@ -77,7 +78,6 @@ import type {
   SupportedNFTs,
   SupportedTokens,
 } from "../../../core/utils/defaultTokens.js";
-import { hasSmartAccount } from "../../../core/utils/isSmartWallet.js";
 import { useWalletInfo } from "../../../core/utils/wallet.js";
 import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
 import { ChainActiveDot } from "../components/ChainActiveDot.js";
@@ -1186,14 +1186,14 @@ export function ConnectedToSmartWallet(props: {
 }) {
   const activeAccount = useActiveAccount();
   const activeWallet = useActiveWallet();
-  const isSmartWallet = hasSmartAccount(activeWallet);
+  const isSW = isSmartWallet(activeWallet);
   const chain = useActiveWalletChain();
   const { client, connectLocale: locale } = props;
 
   const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
 
   useEffect(() => {
-    if (activeAccount && isSmartWallet && activeAccount.address && chain) {
+    if (activeAccount && isSW && activeAccount.address && chain) {
       const contract = getContract({
         address: activeAccount.address,
         chain,
@@ -1206,7 +1206,7 @@ export function ConnectedToSmartWallet(props: {
     } else {
       setIsSmartWalletDeployed(false);
     }
-  }, [activeAccount, chain, client, isSmartWallet]);
+  }, [activeAccount, chain, client, isSW]);
 
   const content = (
     <Container flex="row" gap="3xs" center="y">
@@ -1216,7 +1216,7 @@ export function ConnectedToSmartWallet(props: {
     </Container>
   );
 
-  if (chain && activeAccount && isSmartWallet) {
+  if (chain && activeAccount && isSW) {
     return (
       <>
         {isSmartWalletDeployed ? (
@@ -1251,7 +1251,7 @@ export function InAppWalletUserInfo(props: {
   const activeWallet = useActiveWallet();
   const adminWallet = useAdminWallet();
   const { data: walletInfo } = useWalletInfo(activeWallet?.id);
-  const isSmartWallet = hasSmartAccount(activeWallet);
+  const isSW = isSmartWallet(activeWallet);
   const { data: walletName } = useQuery({
     queryKey: [
       "wallet-name",
@@ -1317,7 +1317,7 @@ export function InAppWalletUserInfo(props: {
     enabled: !!adminWallet,
   });
 
-  if (!userInfoQuery.data && isSmartWallet) {
+  if (!userInfoQuery.data && isSW) {
     return <ConnectedToSmartWallet client={client} connectLocale={locale} />;
   }
 
