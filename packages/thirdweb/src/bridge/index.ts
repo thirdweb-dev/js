@@ -6,6 +6,7 @@ export * as Webhook from "./Webhook.js";
 export { status } from "./Status.js";
 export { routes } from "./Routes.js";
 export { chains } from "./Chains.js";
+export { tokens } from "./Token.js";
 export { parse } from "./Webhook.js";
 
 export type { Chain } from "./types/Chain.js";
