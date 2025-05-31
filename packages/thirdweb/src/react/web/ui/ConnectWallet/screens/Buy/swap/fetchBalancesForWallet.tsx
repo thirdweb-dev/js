@@ -154,7 +154,7 @@ async function fetchBalancesForWallet({
         const matching = sourceSupportedTokens[b.chainId]?.find(
           (t) => t.address.toLowerCase() === b.tokenAddress.toLowerCase(),
         );
-        if (matching) {
+        if (matching && b.value > 0n) {
           balances.push({
             balance: b,
             chain: getCachedChain(b.chainId),
