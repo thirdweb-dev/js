@@ -3,10 +3,7 @@ import { TEST_CLIENT } from "~test/test-clients.js";
 import { base } from "../../chains/chain-definitions/base.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 import { sepolia } from "../../chains/chain-definitions/sepolia.js";
-import {
-  NATIVE_TOKEN_ADDRESS,
-  ZERO_ADDRESS,
-} from "../../constants/addresses.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
 import { convertCryptoToFiat } from "./cryptoToFiat.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("Pay: crypto-to-fiat", () => {
@@ -76,20 +73,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("Pay: crypto-to-fiat", () => {
       }),
     ).rejects.toThrowError(
       "Invalid fromTokenAddress. Expected a valid EVM contract address",
-    );
-  });
-
-  it("should throw error if fromTokenAddress is set to a wallet address", async () => {
-    await expect(
-      convertCryptoToFiat({
-        chain: base,
-        fromTokenAddress: ZERO_ADDRESS,
-        fromAmount: 1,
-        to: "USD",
-        client: TEST_CLIENT,
-      }),
-    ).rejects.toThrowError(
-      `Error: ${ZERO_ADDRESS} on chainId: ${base.id} is not a valid contract address.`,
     );
   });
 });
