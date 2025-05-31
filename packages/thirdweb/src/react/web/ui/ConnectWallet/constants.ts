@@ -3,6 +3,7 @@ export const reservedScreens = {
   getStarted: "getStarted",
   signIn: "signIn",
   showAll: "showAll",
+  linkProfile: "linkProfile",
 };
 
 export const modalMaxWidthCompact = "360px";

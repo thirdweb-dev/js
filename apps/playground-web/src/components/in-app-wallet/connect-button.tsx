@@ -1,11 +1,11 @@
 "use client";
 
 import { inAppWallet } from "thirdweb/wallets/in-app";
-import { StyledConnectEmbed } from "../styled-connect-embed";
+import { StyledConnectButton } from "../styled-connect-button";
 
 export function InAppConnectEmbed() {
   return (
-    <StyledConnectEmbed
+    <StyledConnectButton
       wallets={[
         inAppWallet({
           auth: {
@@ -24,6 +24,7 @@ export function InAppConnectEmbed() {
               "passkey",
               "guest",
             ],
+            required: ["email"],
           },
         }),
       ]}

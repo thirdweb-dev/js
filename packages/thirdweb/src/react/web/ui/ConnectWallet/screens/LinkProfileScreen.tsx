@@ -28,13 +28,14 @@ export function LinkProfileScreen(props: {
   locale: ConnectLocale;
   client: ThirdwebClient;
   walletConnect: { projectId?: string } | undefined;
+  wallet?: Wallet;
 }) {
   const adminWallet = useAdminWallet();
   const activeWallet = useActiveWallet();
   const chain = useActiveWalletChain();
   const queryClient = useQueryClient();
 
-  const wallet = adminWallet || activeWallet;
+  const wallet = props.wallet || adminWallet || activeWallet;
 
   if (!wallet) {
     return <LoadingScreen />;

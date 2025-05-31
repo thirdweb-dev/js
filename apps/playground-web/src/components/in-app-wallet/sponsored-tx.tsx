@@ -43,6 +43,7 @@ export function SponsoredInAppTxPreview() {
                   "passkey",
                   "guest",
                 ],
+                required: ["email"],
               },
               // TODO (7702): update to 7702 once pectra is out
               executionMode: {
