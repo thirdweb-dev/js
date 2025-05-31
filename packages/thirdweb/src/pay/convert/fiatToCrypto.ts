@@ -1,4 +1,3 @@
-import { getV1TokensPrice } from "@thirdweb-dev/insight";
 import type { Address } from "abitype";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -6,10 +5,7 @@ import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
 import { getBytecode } from "../../contract/actions/get-bytecode.js";
 import { getContract } from "../../contract/contract.js";
 import { isAddress } from "../../utils/address.js";
-import { getThirdwebDomains } from "../../utils/domains.js";
-import { getClientFetch } from "../../utils/fetch.js";
-import { stringify } from "../../utils/json.js";
-import { withCache } from "../../utils/promise/withCache.js";
+import { getTokenPrice } from "./get-token.js";
 import type { SupportedFiatCurrency } from "./type.js";
 
 /**
@@ -64,7 +60,7 @@ export type ConvertFiatToCryptoParams = {
 export async function convertFiatToCrypto(
   options: ConvertFiatToCryptoParams,
 ): Promise<{ result: number }> {
-  const { client, from, to, chain, fromAmount } = options;
+  const { client, to, chain, fromAmount } = options;
   if (Number(fromAmount) === 0) {
     return { result: 0 };
   }
@@ -94,34 +90,11 @@ export async function convertFiatToCrypto(
       );
     }
   }
-  const result = await withCache(
-    () =>
-      getV1TokensPrice({
-        baseUrl: `https://${getThirdwebDomains().insight}`,
-        fetch: getClientFetch(client),
-        query: {
-          address: to,
-          chain_id: [chain.id],
-        },
-      }),
-    {
-      cacheKey: `convert-fiat-to-crypto-${to}-${chain.id}`,
-      cacheTime: 1000 * 60, // 1 minute cache
-    },
-  );
-
-  if (result.error) {
+  const price = await getTokenPrice(client, to, chain.id);
+  if (!price || price === 0) {
     throw new Error(
-      `Failed to fetch ${from} value for token (${to}) on chainId: ${chain.id} - ${result.response.status} ${result.response.statusText} - ${result.error ? stringify(result.error) : "Unknown error"}`,
+      `Error: Failed to fetch price for token ${to} on chainId: ${chain.id}`,
     );
   }
-
-  const firstResult = result.data?.data[0];
-
-  if (!firstResult || firstResult.price_usd === 0) {
-    throw new Error(
-      `Failed to fetch ${from} value for token (${to}) on chainId: ${chain.id}`,
-    );
-  }
-  return { result: fromAmount / firstResult.price_usd };
+  return { result: fromAmount / price };
 }
