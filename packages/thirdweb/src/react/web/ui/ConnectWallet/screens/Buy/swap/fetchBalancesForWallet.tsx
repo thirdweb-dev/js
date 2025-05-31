@@ -145,6 +145,9 @@ async function fetchBalancesForWallet({
         ownerAddress: account.address,
         chains: chunk,
         client,
+        queryOptions: {
+          limit: 100,
+        },
       });
 
       for (const b of owned) {
@@ -194,7 +197,7 @@ async function fetchBalancesForWallet({
           b.chain.id === chainId &&
           b.token.address.toLowerCase() === token.address.toLowerCase(),
       );
-      if (isAlreadyFetched && !isNative) {
+      if (isAlreadyFetched) {
         // ERC20 on insight-enabled chain already handled by insight call
         continue;
       }
