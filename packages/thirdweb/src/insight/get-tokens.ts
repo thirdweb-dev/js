@@ -1,12 +1,12 @@
 import type {
   GetV1TokensData,
-  GetV1TokensErc20ByOwnerAddressResponse,
+  GetV1TokensResponse,
 } from "@thirdweb-dev/insight";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import type { GetWalletBalanceResult } from "../wallets/utils/getWalletBalance.js";
 
-type OwnedToken = GetV1TokensErc20ByOwnerAddressResponse["data"][number];
+type OwnedToken = GetV1TokensResponse["data"][number];
 
 /**
  * Get ERC20 tokens owned by an address
@@ -53,6 +53,7 @@ export async function getOwnedTokens(args: {
     owner_address: ownerAddress,
     chain_id: chains.map((chain) => chain.id),
     include_native: "true",
+    include_spam: "false",
     metadata: "true",
     limit: 50,
   };
