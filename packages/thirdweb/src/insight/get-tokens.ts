@@ -1,12 +1,12 @@
 import type {
-  GetV1TokensErc20ByOwnerAddressData,
-  GetV1TokensErc20ByOwnerAddressResponse,
+  GetV1TokensData,
+  GetV1TokensResponse,
 } from "@thirdweb-dev/insight";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import type { GetWalletBalanceResult } from "../wallets/utils/getWalletBalance.js";
 
-type OwnedToken = GetV1TokensErc20ByOwnerAddressResponse["data"][number];
+type OwnedToken = GetV1TokensResponse["data"][number];
 
 /**
  * Get ERC20 tokens owned by an address
@@ -26,10 +26,13 @@ export async function getOwnedTokens(args: {
   client: ThirdwebClient;
   chains: Chain[];
   ownerAddress: string;
-  queryOptions?: GetV1TokensErc20ByOwnerAddressData["query"];
+  queryOptions?: Omit<
+    GetV1TokensData["query"],
+    "owner_address" | "chain_id" | "chain"
+  >;
 }): Promise<GetWalletBalanceResult[]> {
   const [
-    { getV1TokensErc20ByOwnerAddress },
+    { getV1Tokens },
     { getThirdwebDomains },
     { getClientFetch },
     { assertInsightEnabled },
@@ -46,19 +49,18 @@ export async function getOwnedTokens(args: {
 
   await assertInsightEnabled(chains);
 
-  const defaultQueryOptions: GetV1TokensErc20ByOwnerAddressData["query"] = {
-    chain: chains.map((chain) => chain.id),
+  const defaultQueryOptions: GetV1TokensData["query"] = {
+    owner_address: ownerAddress,
+    chain_id: chains.map((chain) => chain.id),
+    include_native: "true",
     include_spam: "false",
     metadata: "true",
     limit: 50,
   };
 
-  const result = await getV1TokensErc20ByOwnerAddress({
+  const result = await getV1Tokens({
     baseUrl: `https://${getThirdwebDomains().insight}`,
     fetch: getClientFetch(client),
-    path: {
-      ownerAddress: ownerAddress,
-    },
     query: {
       ...defaultQueryOptions,
       ...queryOptions,

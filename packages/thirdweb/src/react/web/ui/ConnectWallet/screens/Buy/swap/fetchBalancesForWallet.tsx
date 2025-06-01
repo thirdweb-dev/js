@@ -141,17 +141,37 @@ async function fetchBalancesForWallet({
   const insightChunks = chunkChains(insightEnabledChains);
   await Promise.all(
     insightChunks.map(async (chunk) => {
-      const owned = await getOwnedTokens({
-        ownerAddress: account.address,
-        chains: chunk,
-        client,
-      });
+      let owned: GetWalletBalanceResult[] = [];
+      let page = 0;
+      const limit = 100;
+
+      while (true) {
+        const batch = await getOwnedTokens({
+          ownerAddress: account.address,
+          chains: chunk,
+          client,
+          queryOptions: {
+            limit,
+            page,
+          },
+        }).catch((err) => {
+          console.error("error fetching balances from insight", err);
+          return [];
+        });
+
+        if (batch.length === 0) {
+          break;
+        }
+
+        owned = [...owned, ...batch];
+        page += 1;
+      }
 
       for (const b of owned) {
         const matching = sourceSupportedTokens[b.chainId]?.find(
           (t) => t.address.toLowerCase() === b.tokenAddress.toLowerCase(),
         );
-        if (matching) {
+        if (matching && b.value > 0n) {
           balances.push({
             balance: b,
             chain: getCachedChain(b.chainId),
@@ -187,6 +207,10 @@ async function fetchBalancesForWallet({
     const chainId = Number(chainIdStr);
     const chain = getCachedChain(chainId);
 
+    if (insightEnabledChains.some((c) => c.id === chainId)) {
+      continue;
+    }
+
     for (const token of tokens) {
       const isNative = isNativeToken(token);
       const isAlreadyFetched = balances.some(
@@ -194,7 +218,7 @@ async function fetchBalancesForWallet({
           b.chain.id === chainId &&
           b.token.address.toLowerCase() === token.address.toLowerCase(),
       );
-      if (isAlreadyFetched && !isNative) {
+      if (isAlreadyFetched) {
         // ERC20 on insight-enabled chain already handled by insight call
         continue;
       }
@@ -222,7 +246,7 @@ async function fetchBalancesForWallet({
             }
           } catch (err) {
             console.warn(
-              `Failed to fetch balance for ${token.symbol} on chain ${chainId}`,
+              `Failed to fetch RPC balance for ${token.symbol} on chain ${chainId}`,
               err,
             );
           }
