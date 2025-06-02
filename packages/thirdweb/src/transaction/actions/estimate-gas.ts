@@ -94,6 +94,7 @@ export async function estimateGas(
         throw await extractError({
           error,
           contract: options.transaction.__contract,
+          fromAddress,
         });
       }
     }
@@ -150,6 +151,7 @@ export async function estimateGas(
       throw await extractError({
         error,
         contract: options.transaction.__contract,
+        fromAddress,
       });
     }
   })();

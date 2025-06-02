@@ -1,5 +1,7 @@
 import { type UseMutationResult, useMutation } from "@tanstack/react-query";
+import { isInsufficientFundsError } from "../../../../analytics/track/helpers.js";
 import { trackPayEvent } from "../../../../analytics/track/pay.js";
+import { trackInsufficientFundsError } from "../../../../analytics/track/transaction.js";
 import * as Bridge from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
@@ -174,6 +176,18 @@ export function useSendTransactionCore(args: {
 
             resolve(res);
           } catch (e) {
+            // Track insufficient funds errors specifically
+            if (isInsufficientFundsError(e)) {
+              trackInsufficientFundsError({
+                client: tx.client,
+                error: e,
+                walletAddress: account.address,
+                chainId: tx.chain.id,
+                contractAddress: await resolvePromisedValue(tx.to ?? undefined),
+                transactionValue: await resolvePromisedValue(tx.value),
+              });
+            }
+
             reject(e);
           }
         };
