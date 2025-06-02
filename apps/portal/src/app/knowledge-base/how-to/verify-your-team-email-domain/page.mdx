@@ -1,0 +1,61 @@
+# Verify your team email domain
+
+## Why should I verify my domain?
+
+- Verified badge: Your team gets a special badge, so it’s easier to confirm you're in the right place.
+- Recommended team members: On the Settings → Members page, you’ll see users with emails that match your domain but aren’t in the team yet — making it super easy to invite everyone on the team.
+- Instant invite alerts: Team owners will get a notification (in the dashboard and optionally via email) when someone signs up with your verified domain — with a 1-click invite option.
+
+## How to verify your domain
+
+1. Navigate to [Team Settings](https://thirdweb.com/team/~/~/settings) and look for *Domain Verification*.
+1. Enter your domain name.
+  - Your domain name is the part after the `@` symbol in your company email address. It is NOT a website and should not contain `https://` nor `www`.
+1. You should see instructions to add a `TXT record` on your domain to complete verification.
+  - Type: TXT
+  - Name/Host: `_tw-<YOUR_TEAM_ID>.<YOUR_DOMAIN>`
+  - Value: `tw-verify=<YOUR_VERIFICATION_CODE>`
+  - See below for provider-specific instructions.
+
+thirdweb will automatically detect the TXT record once it's live. DNS changes may take several hours to update.
+Check this dashboard page periodically to confirm when it's completed.
+
+### Verify your TXT record
+
+Use a tool like [MxToolbox](https://mxtoolbox.com/txtlookup.aspx) or `dig` in the command line to check if your TXT record is correct.
+
+```bash
+$ dig +short -t txt _tw-<TEAM_ID>.<YOUR_DOMAIN> 
+
+# If correct, you should see this response:
+"tw-verify=<YOUR_VERIFICATION_CODE>"
+```
+
+## Provider-specific instructions
+
+Here are instructions for common DNS providers. Please refer to the provider's documentation for further support.
+
+### Cloudflare
+
+- Navigate to the Cloudflare dashboard.
+- Select your zone and domain.
+- Select *DNS* > *Records*.
+- Select *Add record*.
+
+[Cloudflare documentation](https://www.cloudflare.com/learning/dns/dns-records/dns-txt-record/)
+
+### AWS Route 53
+
+- Navigate to the Route 53 console.
+- Select *Hosted Zones* and select your domain.
+- Select *Create record*.
+
+[AWS Documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-creating.html)
+
+### Google Cloud DNS
+- Navigate to the Google Cloud Console.
+- Select *Network Services* > *Cloud DNS*.
+- Select your zone.
+- Select *Add record set*.
+
+[Google Cloud documentation](https://cloud.google.com/dns/docs/records#add-rrset)

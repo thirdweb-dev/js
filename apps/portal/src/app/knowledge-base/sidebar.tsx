@@ -22,12 +22,17 @@ export const sidebar: SideBar = {
           icon: <BracesIcon />,
           links: [
             {
-              name: "Creating Soulbound NFTs",
+              name: "Verify your team email domain",
+              expanded: true,
+              href: "/knowledge-base/how-to/verify-your-team-email-domain",
+            },
+            {
+              name: "Creating soulbound NFTs",
               expanded: true,
               href: "/knowledge-base/how-to/creating-soulbound-nfts",
             },
             {
-              name: "Console Error Sharing",
+              name: "Console error sharing",
               expanded: true,
               href: "/knowledge-base/how-to/console-error-sharing",
             },
