@@ -23,3 +23,24 @@ There is no way for thirdweb to “silently” access your vault without your kn
 
 Rotating your engine’s vault account through a thirdweb-stored rotation code requires a signature from your wallet. You will also be able to see rotation history, the thirdweb account which initiated this rotation, and their wallet signature.
 </Details>
+
+<Details summary="Which key would I use to create additional server wallets?">
+You need either:
+- The admin key (which can perform any action, including creating Vault EOAs, aka server wallets).
+- Or an access token that has explicit permissions to create Vault EOAs.
+
+For Engine Cloud by default, we generate an access token for you during onboarding. This token can create Vault EOAs.
+
+However, if you want to restrict access to creating Vault EOAs, you can create a custom access token with the required scopes.
+</Details>
+
+<Details summary="How is my admin key used in the dashboard?">
+The admin key is temporarily stored in dashboard when performing actions that require it, such as creating or managing server wallets:
+
+- It is only stored locally in memory for the duration of your session.
+- It is only sent over the network when end-to-end encrypted communication with Vault is happening.
+- It is not persisted or stored after your session ends.
+
+Please note, you should never share your admin key with third parties.
+</Details>
+

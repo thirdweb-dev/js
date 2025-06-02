@@ -75,10 +75,6 @@ const toolLinks = [
     href: "https://thirdweb.com/tools/hex-converter",
   },
   {
-    name: "Account",
-    href: "/account",
-  },
-  {
     name: "API Keys",
     href: "/account/api-keys",
   },
@@ -188,8 +184,12 @@ const supportLinks = [
     href: "/knowledge-base",
   },
   {
-    name: "Contact Sales",
-    href: "https://thirdweb.com/contact-us",
+    name: "Account",
+    href: "/account",
+  },
+  {
+    name: "Status",
+    href: "https://status.thirdweb.com",
   },
 ];
 
