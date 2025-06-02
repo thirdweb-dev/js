@@ -1,5 +1,7 @@
 import type * as ox__TypedData from "ox/TypedData";
+import { isInsufficientFundsError } from "../../analytics/track/helpers.js";
 import { trackTransaction } from "../../analytics/track/transaction.js";
+import { trackInsufficientFundsError } from "../../analytics/track/transaction.js";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -559,6 +561,20 @@ async function _sendUserOp(args: {
       chain: options.chain,
       transactionHash: receipt.transactionHash,
     };
+  } catch (error) {
+    // Track insufficient funds errors
+    if (isInsufficientFundsError(error)) {
+      trackInsufficientFundsError({
+        client: options.client,
+        error,
+        walletAddress: options.accountContract.address,
+        chainId: options.chain.id,
+        contractAddress: await resolvePromisedValue(executeTx.to ?? undefined),
+        transactionValue: await resolvePromisedValue(executeTx.value),
+      });
+    }
+
+    throw error;
   } finally {
     // reset the isDeploying flag after every transaction or error
     clearAccountDeploying(options.accountContract);

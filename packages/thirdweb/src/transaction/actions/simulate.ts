@@ -89,6 +89,7 @@ export async function simulateTransaction<
     throw await extractError({
       error,
       contract: options.transaction.__contract,
+      fromAddress: from,
     });
   }
 }

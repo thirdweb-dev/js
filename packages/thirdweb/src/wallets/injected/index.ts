@@ -5,7 +5,9 @@ import {
   serializeTypedData,
   validateTypedData,
 } from "viem";
+import { isInsufficientFundsError } from "../../analytics/track/helpers.js";
 import { trackTransaction } from "../../analytics/track/transaction.js";
+import { trackInsufficientFundsError } from "../../analytics/track/transaction.js";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain, getChainMetadata } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -200,25 +202,41 @@ function createAccount({
         },
       ];
 
-      const transactionHash = (await provider.request({
-        method: "eth_sendTransaction",
-        // @ts-expect-error - overriding types here
-        params,
-      })) as Hex;
+      try {
+        const transactionHash = (await provider.request({
+          method: "eth_sendTransaction",
+          // @ts-expect-error - overriding types here
+          params,
+        })) as Hex;
 
-      trackTransaction({
-        client,
-        chainId: tx.chainId,
-        walletAddress: getAddress(address),
-        walletType: id,
-        transactionHash,
-        contractAddress: tx.to ?? undefined,
-        gasPrice: tx.gasPrice,
-      });
+        trackTransaction({
+          client,
+          chainId: tx.chainId,
+          walletAddress: getAddress(address),
+          walletType: id,
+          transactionHash,
+          contractAddress: tx.to ?? undefined,
+          gasPrice: tx.gasPrice,
+        });
 
-      return {
-        transactionHash,
-      };
+        return {
+          transactionHash,
+        };
+      } catch (error) {
+        // Track insufficient funds errors
+        if (isInsufficientFundsError(error)) {
+          trackInsufficientFundsError({
+            client,
+            error,
+            walletAddress: getAddress(address),
+            chainId: tx.chainId,
+            contractAddress: tx.to || undefined,
+            transactionValue: tx.value,
+          });
+        }
+
+        throw error;
+      }
     },
     async signMessage({ message }) {
       if (!account.address) {
