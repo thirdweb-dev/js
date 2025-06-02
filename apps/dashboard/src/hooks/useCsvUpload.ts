@@ -161,6 +161,20 @@ export function useCsvUpload<
     // Also filteredData's type is the superset of T[]
     setRawData(filteredData as unknown as T[]);
   }, [normalizeQuery.data?.result]);
+
+  const processData = useCallback(
+    (data: T[]) => {
+      setNoCsv(false);
+      const processedData = props.csvParser(data);
+      if (!processedData[0]?.address) {
+        setNoCsv(true);
+        return;
+      }
+      setRawData(processedData);
+    },
+    [props.csvParser],
+  );
+
   return {
     normalizeQuery,
     getInputProps,
@@ -170,5 +184,6 @@ export function useCsvUpload<
     noCsv,
     reset,
     removeInvalid,
+    processData,
   };
 }
