@@ -79,7 +79,7 @@
     "p-limit": "^6.2.0",
     "papaparse": "^5.5.3",
     "pluralize": "^8.0.0",
-    "posthog-js": "1.67.1",
+    "posthog-js": "1.249.1",
     "prettier": "3.5.3",
     "qrcode": "^1.5.3",
     "react": "19.1.0",
