@@ -59,6 +59,7 @@ const GAS_FREE_CHAINS = [
   75513, // Geek verse testnet
   75512, // Geek verse mainnet
   531050104, // sophon testnet
+  50104, // sophon mainnet
   37111, // lens sepolia
   4457845, // zero testnet
   978658, // treasure topaz
