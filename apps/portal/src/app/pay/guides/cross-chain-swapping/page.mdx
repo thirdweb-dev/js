@@ -93,7 +93,7 @@ const buyQuote = await Bridge.Buy.quote({
   originTokenAddress: NATIVE_TOKEN_ADDRESS,
   destinationChainId: 10, // Optimism
   destinationTokenAddress: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85", // Optimism USDC
-  buyAmountWei: 10000000n, // 10 USDC
+  amount: 10000000n, // 10 USDC
   client: thirdwebClient,
 });
 
@@ -117,98 +117,108 @@ const preparedBuy = await Bridge.Buy.prepare({
   originTokenAddress: NATIVE_TOKEN_ADDRESS,
   destinationChainId: 10, // Optimism
   destinationTokenAddress: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85", // Optimism USDC
-  buyAmountWei: 10000000n, // 10 USDC
-  sender: "0x...", // Your user's wallet address
-  receiver: "0x...", // Recipient address (can be the same as sender)
+  amount: 10000000n, // 10 USDC
+  sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709", // Your user's wallet address
+  receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709", // Recipient address (can be the same as sender)
   client: thirdwebClient,
 });
 
-// The prepared quote contains the transactions you need to execute
-console.log(`Transactions to execute: ${preparedBuy.transactions.length}`);
+// The prepared quote contains the steps and transactions you need to execute
+console.log(`Steps: ${preparedBuy.steps.length}`);
 ```
 
-This will return a `PreparedQuote` object. It will look very similar to the `Quote` you received in the previous step, but it will include a `transactions` array. This array will contain the transactions you need to execute to complete the swap.
+This will return a `PreparedQuote` object. It will look very similar to the `Quote` you received in the previous step, but it will include a `steps` array containing all the transactions you need to execute to complete the swap.
 </Step>
 <Step title='Execute the swap'>
-To execute the swap, we'll need to send all transactions in the `transactions` array one after the other.
-
-<Callout variant="warning">
-  Currently, the `transactions` array does not include approvals. You'll need to execute any necessary approvals prior to executing the swap transactions.
-</Callout>
+To execute the swap, we'll need to send all transactions in each step one after the other. The SDK automatically includes any necessary approvals in the transactions array.
 
 ```tsx
-import { sendTransaction, waitForReceipt } from "thirdweb";
+import { sendAndConfirmTransaction } from "thirdweb";
 
 const preparedBuy = await Bridge.Buy.prepare({
   originChainId: 8453, // Base
   originTokenAddress: NATIVE_TOKEN_ADDRESS,
   destinationChainId: 10, // Optimism
   destinationTokenAddress: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85", // Optimism USDC
-  buyAmountWei: 10000000n, // 10 USDC
-  sender: "0x...", // Your user's wallet address
-  receiver: "0x...", // Recipient address (can be the same as sender)
+  amount: 10000000n, // 10 USDC
+  sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709", // Your user's wallet address
+  receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709", // Recipient address (can be the same as sender)
   client: thirdwebClient,
 });
 
-};
-
-for (const transaction of preparedBuy.transactions) {
-  const tx = prepareTransaction({
-    to: transaction.to as string,
-    value: BigInt(transaction.value ?? 0n),
-    data: transaction.data,
-    chain: defineChain(transaction.chainId),
-    client
-  });
-
-  const result = await sendAndConfirmTransaction({ transaction: tx, account });
-  let swapStatus;
-  do {
-    swapStatus = await Bridge.status({
-      transactionHash: result.transactionHash,
-      client,
-    });
-  } while (swapStatus.status !== "COMPLETED");
-};
+// Execute all transactions in sequence
+for (const step of preparedBuy.steps) {
+  for (const transaction of step.transactions) {
+    // Handle approvals first
+    if (transaction.action === "approval") {
+      const result = await sendAndConfirmTransaction({ 
+        transaction, 
+        account: wallet.account 
+      });
+      console.log("Approval sent:", result.transactionHash);
+    } else {
+      // Execute the main swap transaction
+      const result = await sendAndConfirmTransaction({ 
+        transaction, 
+        account: wallet.account 
+      });
+      console.log("Swap transaction sent:", result.transactionHash);
+      
+      // Wait for completion before continuing
+      let swapStatus;
+      do {
+        swapStatus = await Bridge.status({
+          transactionHash: result.transactionHash,
+          chainId: transaction.chainId,
+          client: thirdwebClient,
+        });
+        if (swapStatus.status === "PENDING") {
+          await new Promise(resolve => setTimeout(resolve, 3000)); // Wait 3 seconds
+        }
+      } while (swapStatus.status === "PENDING");
+      
+      if (swapStatus.status === "FAILED") {
+        throw new Error("Swap transaction failed");
+      }
+    }
+  }
+}
 ```
-
 <Callout variant="info">
-  The returned transactions follow the [Ox](https://oxlib.sh/) standard [TransactionEnvelopeEip1559](https://oxlib.sh/guides/transaction-envelopes)
-  format. This is a simple transaction with `data`, `to`, `value`, and `chainId` properties. **Gas is not included in the transaction, and should
-  be estimated separately if necessary.** Normally, the thirdweb SDK will handle this for you.
+  The transactions come pre-configured with all necessary parameters including gas estimation. Each transaction has an `action` property that indicates whether it's an "approval" or the main swap transaction.
 </Callout>
 
 </Step>
 <Step title='Getting the swap status'>
-You'll notice in the previous step we call `Bridge.status` to get the status of the swap. We can get the status of any past swap using just the transaction hash and chain ID of its origin transaction.
+You can get the status of any swap using the transaction hash and chain ID of its origin transaction.
 
-When sending the transactions in a prepared quote, you **must** use `Bridge.status` to get the `COMPLETED` status before moving on to the next transaction. This is because `status` waits for both the origin
-and destination transactions to complete. Waiting for the origin transaction receipt is not sufficient since the funds might not have arrived on the destination chain yet.
+When sending transactions in a prepared quote, you **must** use `Bridge.status` to confirm `COMPLETED` status before moving to the next transaction. This ensures both origin and destination transactions have completed successfully.
 
-The `status` will also return all transactions (origin and destination) involved in the swap.
 ```tsx
 import { Bridge } from "thirdweb";
 
 // Check the status of a bridge transaction
 const bridgeStatus = await Bridge.status({
-  transactionHash:
-    "0xe199ef82a0b6215221536e18ec512813c1aa10b4f5ed0d4dfdfcd703578da56d",
-  chainId: 8453, // The chain ID where the transaction was initiated
+  transactionHash: "0x5959b9321ec581640db531b80bac53cbd968f3d34fc6cb1d5f4ea75f26df2ad7",
+  chainId: 137, // The chain ID where the transaction was initiated
   client: thirdwebClient,
 });
 
 // The status will be one of: "COMPLETED", "PENDING", "FAILED", or "NOT_FOUND"
-if (bridgeStatus.status === "completed") {
+if (bridgeStatus.status === "COMPLETED") {
   console.log(`
     Bridge completed!
     Sent: ${bridgeStatus.originAmount} wei on chain ${bridgeStatus.originChainId}
     Received: ${bridgeStatus.destinationAmount} wei on chain ${bridgeStatus.destinationChainId}
   `);
-} else if (bridgeStatus.status === "pending") {
+} else if (bridgeStatus.status === "PENDING") {
   console.log("Bridge transaction is still pending...");
-} else {
+} else if (bridgeStatus.status === "FAILED") {
   console.log("Bridge transaction failed");
+} else {
+  console.log("Transaction not found");
 }
 ```
 </Step>
 </Steps>
+

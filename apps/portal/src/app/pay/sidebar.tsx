@@ -60,16 +60,12 @@ export const sidebar: SideBar = {
       icon: <AlbumIcon />,
       links: [
         {
-          name: "Accept Direct Payments",
-          href: `${paySlug}/guides/accept-direct-payments`,
-        },
-        {
-          name: "Build a Custom Onramp Experience",
-          href: `${paySlug}/guides/build-a-custom-experience`,
-        },
-        {
           name: "Cross-Chain Swapping",
           href: `${paySlug}/guides/cross-chain-swapping`,
+        },
+        {
+          name: "Smart Accounts",
+          href: `${paySlug}/guides/smart-accounts`,
         },
       ],
     },
