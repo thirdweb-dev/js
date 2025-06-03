@@ -5,6 +5,7 @@ import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { redirect } from "next/navigation";
 import { SaveLastUsedProject } from "../../../(sidebar)/components/SaveLastUsedProject";
 import { SharedContractLayout } from "../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/shared-layout";
+import { ErrorProvider } from "../../../../../../../../contexts/error-handler";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import {
   getAuthToken,
@@ -59,31 +60,33 @@ export default async function ContractLayout(props: {
   });
 
   return (
-    <div className="flex min-h-dvh flex-col bg-background">
-      <div className="border-border border-b bg-card">
-        <TeamHeaderLoggedIn
-          currentProject={project}
-          currentTeam={team}
-          teamsAndProjects={teamsAndProjects}
-          account={account}
-          accountAddress={accountAddress}
-          client={client}
-        />
+    <ErrorProvider>
+      <div className="flex min-h-dvh flex-col bg-background">
+        <div className="border-border border-b bg-card">
+          <TeamHeaderLoggedIn
+            currentProject={project}
+            currentTeam={team}
+            teamsAndProjects={teamsAndProjects}
+            account={account}
+            accountAddress={accountAddress}
+            client={client}
+          />
+        </div>
+        <SharedContractLayout
+          contractAddress={params.contractAddress}
+          chainIdOrSlug={params.chainIdOrSlug}
+          authToken={authToken}
+          projectMeta={{
+            teamId: team.id,
+            projectSlug: params.project_slug,
+            teamSlug: params.team_slug,
+          }}
+        >
+          {props.children}
+        </SharedContractLayout>
+        <SaveLastUsedProject projectId={project.id} teamId={team.id} />
+        <AppFooter />
       </div>
-      <SharedContractLayout
-        contractAddress={params.contractAddress}
-        chainIdOrSlug={params.chainIdOrSlug}
-        authToken={authToken}
-        projectMeta={{
-          teamId: team.id,
-          projectSlug: params.project_slug,
-          teamSlug: params.team_slug,
-        }}
-      >
-        {props.children}
-      </SharedContractLayout>
-      <SaveLastUsedProject projectId={project.id} teamId={team.id} />
-      <AppFooter />
-    </div>
+    </ErrorProvider>
   );
 }
