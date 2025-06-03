@@ -1,0 +1,199 @@
+import {
+	createMetadata,
+	Callout,
+	DocImage,
+	InstallTabs,
+	Steps,
+	Step,
+	Tabs,
+	TabsList,
+	TabsTrigger,
+	TabsContent,
+} from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "thirdweb Universal Bridge - Onramp Integration",
+		icon: "thirdweb",
+	},
+	title: "thirdweb Universal Bridge - Onramp Integration | thirdweb",
+	description:
+		"Learn how to integrate fiat-to-crypto onramps using Stripe, Coinbase, and Transak with Universal Bridge.",
+});
+
+# Fiat-to-Crypto Onramp Integration
+
+Learn how to integrate seamless fiat-to-crypto onramps using Universal Bridge. This guide covers integration with Stripe, Coinbase, and Transak providers, enabling your users to purchase crypto directly with fiat currency.
+
+Universal Bridge's onramp functionality provides a unified interface across multiple providers, automatic routing to the best rates, and comprehensive status tracking.
+
+---
+
+<Steps>
+<Step title='Install the SDK'>
+<InstallTabs
+	npm="npm i thirdweb"
+	yarn="yarn add thirdweb"
+	pnpm="pnpm i thirdweb"
+/>
+</Step>
+<Step title='Setup and Configuration'>
+
+Configure your client and understand the available onramp providers:
+
+```typescript
+import { createThirdwebClient } from "thirdweb";
+import { Bridge, NATIVE_TOKEN_ADDRESS } from "thirdweb";
+
+const client = createThirdwebClient({ 
+  clientId: "your_client_id" 
+});
+```
+
+</Step>
+<Step title='Basic Onramp Integration'>
+
+Create a basic onramp experience for your users:
+
+<Tabs defaultValue="stripe">
+<TabsList className="grid w-full grid-cols-3">
+<TabsTrigger value="stripe">Stripe</TabsTrigger>
+<TabsTrigger value="coinbase">Coinbase</TabsTrigger>
+<TabsTrigger value="transak">Transak</TabsTrigger>
+</TabsList>
+
+<TabsContent value="stripe">
+
+```typescript
+import { Bridge, NATIVE_TOKEN_ADDRESS, toWei } from "thirdweb";
+
+    const onrampSession = await Bridge.Onramp.prepare({
+      client,
+      onramp: "stripe",
+      chainId: 1, // Ethereum
+      tokenAddress: NATIVE_TOKEN_ADDRESS, // ETH
+      receiver: userAddress,
+      amount: toWei("0.1"), // 0.1 ETH
+      currency: "USD",
+      country: "US", // User's country - important for compliance
+    });
+    
+    window.open(onrampSession.link);
+```
+
+</TabsContent>
+
+<TabsContent value="coinbase">
+
+```typescript
+import { Bridge, NATIVE_TOKEN_ADDRESS, toWei } from "thirdweb";
+
+async function createCoinbaseOnramp(userAddress: string) {
+  try {
+    const onrampSession = await Bridge.Onramp.prepare({
+      client,
+      onramp: "coinbase",
+      chainId: 8453, // Base (Coinbase's L2)
+      tokenAddress: NATIVE_TOKEN_ADDRESS, // ETH on Base
+      receiver: userAddress,
+      amount: toWei("0.05"), // 0.05 ETH
+      currency: "USD",
+      country: "US",
+    });
+
+    console.log("Coinbase onramp session:", onrampSession.id);
+    console.log("Estimated cost:", `$${onrampSession.currencyAmount}`);
+    
+    // Redirect to Coinbase onramp
+    window.location.href = onrampSession.link;
+    
+    return onrampSession;
+  } catch (error) {
+    console.error("Failed to create Coinbase onramp:", error);
+    throw error;
+  }
+}
+```
+
+</TabsContent>
+
+<TabsContent value="transak">
+```typescript
+import { Bridge, NATIVE_TOKEN_ADDRESS, toWei } from "thirdweb";
+
+async function createTransakOnramp(userAddress: string) {
+  try {
+    const onrampSession = await Bridge.Onramp.prepare({
+      client,
+      onramp: "transak",
+      chainId: 137, // Polygon
+      tokenAddress: NATIVE_TOKEN_ADDRESS, // MATIC
+      receiver: userAddress,
+      amount: toWei("10"), // 10 MATIC
+      currency: "USD",
+      country: "US",
+    });
+    
+    // Redirect to Transak
+    window.open(onrampSession.link);
+    
+    return onrampSession;
+  } catch (error) {
+    console.error("Failed to create Transak onramp:", error);
+    throw error;
+  }
+}
+```
+</TabsContent>
+</Tabs>
+</Step>
+<Step title='Status Monitoring'>
+
+Monitor onramp transactions and handle completion:
+
+```typescript
+import { Bridge } from "thirdweb";
+
+// Monitor onramp status
+    const status = await Bridge.Onramp.status({
+      sessionId,
+      client,
+    });
+
+    switch (status.status) {
+      case "COMPLETED":
+        console.log("Onramp completed successfully!");
+        console.log("Transaction hash:", status.transactionHash);
+        console.log("Amount received:", status.destinationAmount);
+        // Update your UI to show success
+        break;
+        
+      case "PENDING":
+        console.log("Onramp in progress...");
+        // Show loading state to user
+        setTimeout(() => monitorOnrampStatus(sessionId), 10000); // Check again in 10s
+        break;
+        
+      case "FAILED":
+        console.log("Onramp failed:", status.error);
+        // Show error message to user
+        break;
+        
+      case "CANCELLED":
+        console.log("Onramp was cancelled by user");
+        // Handle cancellation
+        break;
+        
+      default:
+        console.log("Unknown status:", status.status);
+    }
+```
+</Step>
+</Steps>
+
+## Next Steps
+
+- **[Onramp Providers](/pay/onramp-providers)** - Detailed provider comparison and features
+- **[Webhooks](/pay/webhooks)** - Set up real-time onramp status notifications  
+- **[Testing](/pay/testing-pay)** - Test onramp flows in development mode
+- **[Universal Bridge API](https://bridge.thirdweb.com/reference)** - Complete API reference 

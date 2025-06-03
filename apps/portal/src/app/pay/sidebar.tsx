@@ -5,7 +5,6 @@ import {
   BracesIcon,
   CircleDollarSignIcon,
   CodeIcon,
-  FlaskConicalIcon,
   MessageCircleQuestionIcon,
   PaletteIcon,
   RocketIcon,
@@ -64,8 +63,12 @@ export const sidebar: SideBar = {
           href: `${paySlug}/guides/cross-chain-swapping`,
         },
         {
-          name: "Smart Accounts",
+          name: "Swap Smart Accounts",
           href: `${paySlug}/guides/smart-accounts`,
+        },
+        {
+          name: "Fiat Onramp",
+          href: `${paySlug}/guides/onramp-integration`,
         },
       ],
     },
@@ -108,11 +111,6 @@ export const sidebar: SideBar = {
       name: "Webhooks",
       href: `${paySlug}/webhooks`,
       icon: <WebhookIcon />,
-    },
-    {
-      name: "Developer Mode",
-      href: `${paySlug}/testing-pay`,
-      icon: <FlaskConicalIcon />,
     },
     {
       name: "FAQs",
