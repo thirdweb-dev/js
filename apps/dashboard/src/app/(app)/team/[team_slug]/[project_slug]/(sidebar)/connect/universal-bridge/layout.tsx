@@ -33,7 +33,7 @@ export default async function Layout(props: {
             tokens via cross-chain routing.{" "}
             <UnderlineLink
               target="_blank"
-              href="https://portal.thirdweb.com/connect/pay/overview"
+              href="https://portal.thirdweb.com/pay"
             >
               Learn more
             </UnderlineLink>

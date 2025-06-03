@@ -156,7 +156,7 @@ function WalletAuth({ onConnect }: { onConnect: (address: string) => void }) {
 Create the main checkout component that handles the complete purchase flow:
 
 ```typescript
-import { Bridge, NATIVE_TOKEN_ADDRESS, toWei } from "thirdweb";
+import { Bridge, NATIVE_TOKEN_ADDRESS, toWei, sendTransaction } from "thirdweb";
 import { prepareContractCall } from "thirdweb";
 import { mintTo } from "thirdweb/extensions/erc721";
 import { useState, useEffect } from "react";
@@ -672,6 +672,8 @@ Put it all together in your main application:
 
 ```typescript
 import { ThirdwebProvider } from "thirdweb/react";
+// Import all the components we defined earlier
+import { NFTCheckout, WalletAuth, PaymentOptions, ProcessingStep, SuccessStep, ErrorStep } from "./nft-checkout-components";
 
 function App() {
   return (
@@ -700,46 +702,3 @@ function App() {
 
 export default App;
 ```
-
-<Callout variant="info">
-  This creates a complete NFT purchase flow where users can sign in with familiar social accounts, choose their preferred payment method, and have their NFT automatically minted after payment completion - all in a seamless single-click experience.
-</Callout>
-
-</Step>
-</Steps>
-
-## Key Features
-
-### **Seamless User Experience**
-- **One-Click Payments**: Users select "Pay with [Provider]" and everything happens automatically
-- **Social Login**: Users sign in with Google, Apple, or email
-- **Real-time Progress**: Clear visual feedback showing payment → confirmation → minting
-- **Auto-completion**: NFT mints automatically after successful payment
-
-### **Production Ready**
-- **Multiple Providers**: Stripe, Coinbase, and Transak options with clear fee comparison
-- **Session Persistence**: Resume interrupted flows
-- **Error Recovery**: Graceful handling of failed transactions
-- **Mobile Optimized**: Responsive design for all devices
-
-### **Security & Compliance**
-- **Provider Verification**: All payments processed through established, compliant providers
-- **Secure Authentication**: Industry-standard OAuth flows
-- **Transaction Verification**: Blockchain confirmation before success
-
-## Use Cases
-
-This streamlined NFT checkout pattern is perfect for:
-
-- **Gaming Platforms**: In-game item purchases with instant delivery
-- **Art Marketplaces**: Digital art and collectibles with zero friction
-- **Event Ticketing**: NFT-based tickets with immediate access
-- **Membership Programs**: Exclusive access tokens with instant activation
-- **Brand Collectibles**: Loyalty rewards and limited drops
-
-## Next Steps
-
-- **[Swap with Smart Accounts](/pay/guides/smart-accounts)** - Add batched transactions and gas sponsorship
-- **[Fiat Onramp](/pay/guides/onramp-integration)** - Dive deeper into onramp configuration
-- **[Webhooks](/pay/webhooks)** - Set up server-side transaction monitoring
-- **[Testing](/pay/testing-pay)** - Test your checkout flow in development mode
