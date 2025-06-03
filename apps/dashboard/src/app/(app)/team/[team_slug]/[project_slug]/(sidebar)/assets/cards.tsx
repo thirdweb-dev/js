@@ -32,8 +32,8 @@ export function Cards(props: {
       />
 
       <CardLink
-        title="Create Token"
-        description="Launch your own ERC-20 token"
+        title="Create Coin"
+        description="Launch your own ERC-20 coin"
         href={`/team/${props.teamSlug}/${props.projectSlug}/assets/create`}
         icon={CoinsIcon}
         trackingLabel="create-token"
@@ -76,12 +76,14 @@ function CardLink(props: {
   const trackEvent = useTrack();
 
   function handleClick() {
-    trackEvent({
-      category: "assets-landing-page",
-      action: "click",
-      label: props.trackingLabel,
-    });
-    onClick?.();
+    if (onClick) {
+      trackEvent({
+        category: "assets-landing-page",
+        action: "click",
+        label: props.trackingLabel,
+      });
+      onClick();
+    }
   }
 
   return (

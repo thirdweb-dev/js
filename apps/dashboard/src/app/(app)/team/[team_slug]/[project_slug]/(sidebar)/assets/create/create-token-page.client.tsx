@@ -101,6 +101,7 @@ export function CreateTokenAssetPageUI(props: {
 
       {step === "distribution" && (
         <TokenDistributionFieldset
+          tokenSymbol={tokenInfoForm.watch("symbol")}
           client={props.client}
           form={tokenDistributionForm}
           accountAddress={props.accountAddress}

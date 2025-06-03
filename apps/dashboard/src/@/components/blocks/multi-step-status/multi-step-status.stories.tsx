@@ -22,41 +22,36 @@ export const AllStates: Story = {
   args: {
     steps: [
       {
-        status: "completed",
+        status: { type: "completed" },
         label: "Connect Wallet",
-        retryLabel: "Failed to connect wallet",
         execute: async () => {
           await sleep(1000);
         },
       },
       {
-        status: "pending",
+        status: { type: "pending" },
         label: "Sign Message",
-        retryLabel: "Failed to sign message",
         execute: async () => {
           await sleep(1000);
         },
       },
       {
-        status: "error",
+        status: { type: "error", message: "This is an error message" },
         label: "Approve Transaction",
-        retryLabel: "Transaction approval failed",
         execute: async () => {
           await sleep(1000);
         },
       },
       {
-        status: "idle",
+        status: { type: "idle" },
         label: "Confirm Transaction",
-        retryLabel: "Transaction confirmation failed",
         execute: async () => {
           await sleep(1000);
         },
       },
       {
-        status: "idle",
+        status: { type: "idle" },
         label: "Finalize",
-        retryLabel: "Finalization failed",
         execute: async () => {
           await sleep(1000);
         },

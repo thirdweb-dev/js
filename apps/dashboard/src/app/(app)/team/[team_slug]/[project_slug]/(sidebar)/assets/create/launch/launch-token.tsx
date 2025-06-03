@@ -16,11 +16,16 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { ArrowRightIcon, ImageOffIcon, RocketIcon } from "lucide-react";
+import {
+  ArrowRightIcon,
+  ArrowUpFromLineIcon,
+  ImageOffIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWallet } from "thirdweb/react";
+import { parseError } from "../../../../../../../../../utils/errorParser";
 import { StepCard } from "../create-token-card";
 import type { CreateTokenFunctions } from "../create-token-page.client";
 import { TokenDistributionBarChart } from "../distribution/token-distribution";
@@ -85,10 +90,10 @@ export function LaunchTokenStatus(props: {
       executeFn: (values: CreateAssetFormValues) => Promise<void>,
     ) {
       return async () => {
-        updateStatus(index, "pending");
+        updateStatus(index, { type: "pending" });
         try {
           await executeFn(formValues);
-          updateStatus(index, "completed");
+          updateStatus(index, { type: "completed" });
           // start next one
           const nextStep = initialSteps[index + 1];
           if (nextStep) {
@@ -101,7 +106,7 @@ export function LaunchTokenStatus(props: {
             props.onLaunchSuccess();
           }
         } catch (error) {
-          updateStatus(index, "error");
+          updateStatus(index, { type: "error", message: parseError(error) });
           launchTracking({
             type: "error",
             errorMessage:
@@ -115,8 +120,7 @@ export function LaunchTokenStatus(props: {
     const initialSteps: MultiStepState[] = [
       {
         label: "Deploy contract",
-        status: "idle",
-        retryLabel: "Failed to deploy contract",
+        status: { type: "idle" },
         execute: createSequenceExecutorFn(0, async (values) => {
           const result = await createTokenFunctions.deployContract(values);
           setContractLink(
@@ -126,8 +130,7 @@ export function LaunchTokenStatus(props: {
       },
       {
         label: "Set claim conditions",
-        status: "idle",
-        retryLabel: "Failed to set claim conditions",
+        status: { type: "idle" },
         execute: createSequenceExecutorFn(
           1,
           createTokenFunctions.setClaimConditions,
@@ -135,8 +138,7 @@ export function LaunchTokenStatus(props: {
       },
       {
         label: "Mint tokens",
-        status: "idle",
-        retryLabel: "Failed to mint tokens",
+        status: { type: "idle" },
         execute: createSequenceExecutorFn(2, createTokenFunctions.mintTokens),
       },
     ];
@@ -144,8 +146,7 @@ export function LaunchTokenStatus(props: {
     if (formValues.airdropEnabled && formValues.airdropAddresses.length > 0) {
       initialSteps.push({
         label: "Airdrop tokens",
-        status: "idle",
-        retryLabel: "Failed to airdrop tokens",
+        status: { type: "idle" },
         execute: createSequenceExecutorFn(
           3,
           createTokenFunctions.airdropTokens,
@@ -160,13 +161,13 @@ export function LaunchTokenStatus(props: {
     initialSteps[0]?.execute();
   }
 
-  const isComplete = steps.every((step) => step.status === "completed");
-  const isPending = steps.some((step) => step.status === "pending");
+  const isComplete = steps.every((step) => step.status.type === "completed");
+  const isPending = steps.some((step) => step.status.type === "pending");
 
   return (
     <StepCard
       page="launch"
-      title="Launch Token"
+      title="Launch Coin"
       prevButton={{
         onClick: props.onPrevious,
       }}
@@ -182,8 +183,8 @@ export function LaunchTokenStatus(props: {
             transactionCount={undefined}
             onClick={handleSubmitClick}
           >
-            <RocketIcon className="size-4" />
-            Launch Token
+            <ArrowUpFromLineIcon className="size-4" />
+            Launch Coin
           </TransactionButton>
         ),
       }}
@@ -256,7 +257,7 @@ export function LaunchTokenStatus(props: {
               <div>
                 <Button asChild className="gap-2">
                   <Link href={contractLink}>
-                    View Launched Token <ArrowRightIcon className="size-4" />
+                    View Coin <ArrowRightIcon className="size-4" />
                   </Link>
                 </Button>
               </div>

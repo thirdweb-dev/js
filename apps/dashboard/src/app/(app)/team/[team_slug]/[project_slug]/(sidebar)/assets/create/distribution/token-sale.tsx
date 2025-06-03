@@ -26,7 +26,7 @@ export function TokenSaleSection(props: {
           <div>
             <h2 className="font-semibold text-lg">Sale</h2>
             <p className="text-muted-foreground text-sm">
-              Make your token available for purchase by setting a price
+              Make your coin available for purchase by setting a price
             </p>
           </div>
 

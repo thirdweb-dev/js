@@ -336,7 +336,7 @@ export function CreateTokenAssetPage(props: {
         metadata: {
           name:
             formValues.saleEnabled && salePercent > 0
-              ? "Token Sale phase"
+              ? "Coin Sale phase"
               : "Only Owner phase",
         },
         overrideList: [

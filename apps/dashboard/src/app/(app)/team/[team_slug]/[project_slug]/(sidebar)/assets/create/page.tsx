@@ -89,7 +89,7 @@ function PageHeader(props: {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Create Token</BreadcrumbPage>
+              <BreadcrumbPage>Create Coin</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -98,10 +98,10 @@ function PageHeader(props: {
       <div className="container flex max-w-5xl flex-col gap-3 py-8 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h1 className="font-semibold text-2xl tracking-tight lg:text-3xl">
-            Create Token
+            Create Coin
           </h1>
           <p className="text-muted-foreground">
-            Launch an ERC-20 token for your project
+            Launch an ERC-20 coin for your project
           </p>
         </div>
       </div>

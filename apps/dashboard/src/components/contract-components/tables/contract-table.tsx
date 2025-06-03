@@ -33,7 +33,11 @@ import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import type { ProjectContract } from "../../../app/(app)/account/contracts/_components/getProjectContracts";
 import { removeContractFromProject } from "../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/hooks/project-contracts";
-import { ContractNameCell, ContractTypeCell } from "./cells";
+import {
+  ContractNameCell,
+  ContractTypeCell,
+  ContractTypeCellUI,
+} from "./cells";
 
 type ContractTableFilters = {
   chainId: number | undefined;
@@ -186,11 +190,21 @@ export function ContractTableUI(props: {
                   </TableCell>
 
                   <TableCell>
-                    <ContractTypeCell
-                      chainId={contract.chainId}
-                      contractAddress={contract.contractAddress}
-                      client={props.client}
-                    />
+                    {contract.contractType &&
+                    props.variant === "asset" &&
+                    contractTypeToAssetTypeRecord[contract.contractType] ? (
+                      <ContractTypeCellUI
+                        name={
+                          contractTypeToAssetTypeRecord[contract.contractType]
+                        }
+                      />
+                    ) : (
+                      <ContractTypeCell
+                        chainId={contract.chainId}
+                        contractAddress={contract.contractAddress}
+                        client={props.client}
+                      />
+                    )}
                   </TableCell>
 
                   <TableCell>
@@ -277,6 +291,10 @@ export function ContractTableUI(props: {
     </div>
   );
 }
+
+const contractTypeToAssetTypeRecord: Record<string, string | undefined> = {
+  DropERC20: "Coin",
+};
 
 const NetworkFilterCell = React.memo(function NetworkFilterCell({
   chainId: selectedChain,

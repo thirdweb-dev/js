@@ -103,23 +103,21 @@ export const ContractTypeCell = memo(function ContractTypeCell(props: {
       loadedData={contractType || contractMetadata.data?.contractType}
       skeletonData="Custom Contract"
       render={(v) => {
-        if (v === contractType) {
-          return (
-            <Badge
-              className="line-clamp-1 inline-block max-w-[200px] truncate py-1"
-              variant="outline"
-            >
-              {v}
-            </Badge>
-          );
-        }
-
-        return (
-          <Badge variant="outline" className="inline-block py-1">
-            {v || "Custom"}
-          </Badge>
-        );
+        return <ContractTypeCellUI name={v} />;
       }}
     />
   );
 });
+
+export function ContractTypeCellUI(props: {
+  name: string | undefined;
+}) {
+  return (
+    <Badge
+      variant="outline"
+      className="line-clamp-1 inline-block max-w-[200px] truncate py-1"
+    >
+      {props.name || "Custom"}
+    </Badge>
+  );
+}

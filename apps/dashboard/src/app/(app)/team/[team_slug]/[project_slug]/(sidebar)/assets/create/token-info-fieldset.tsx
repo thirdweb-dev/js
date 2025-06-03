@@ -32,7 +32,7 @@ export function TokenInfoFieldset(props: {
       <form onSubmit={form.handleSubmit(props.onNext)}>
         <StepCard
           page="info"
-          title="Token Information"
+          title="Coin Information"
           prevButton={undefined}
           nextButton={{
             type: "submit",
@@ -70,7 +70,7 @@ export function TokenInfoFieldset(props: {
                 >
                   <Input
                     id="name"
-                    placeholder="My Token"
+                    placeholder="My Coin"
                     {...form.register("name")}
                   />
                 </FormFieldSetup>
@@ -120,7 +120,7 @@ export function TokenInfoFieldset(props: {
               >
                 <Textarea
                   id="description"
-                  placeholder="Describe your token"
+                  placeholder="Describe your coin"
                   className="grow"
                   {...form.register("description")}
                 />

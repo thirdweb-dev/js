@@ -23,6 +23,7 @@ export function TokenDistributionFieldset(props: {
   form: TokenDistributionForm;
   chainId: string;
   client: ThirdwebClient;
+  tokenSymbol: string | undefined;
 }) {
   const { form } = props;
 
@@ -30,7 +31,7 @@ export function TokenDistributionFieldset(props: {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(props.onNext)}>
         <StepCard
-          title="Token Distribution"
+          title="Coin Distribution"
           page="distribution"
           prevButton={{
             onClick: props.onPrevious,
@@ -50,7 +51,7 @@ export function TokenDistributionFieldset(props: {
                 <div className="relative">
                   <Input id="supply" {...form.register("supply")} />
                   <span className="-translate-y-1/2 absolute top-1/2 right-3 text-muted-foreground text-sm">
-                    Tokens
+                    {props.tokenSymbol || "Tokens"}
                   </span>
                 </div>
               </FormFieldSetup>
@@ -107,9 +108,6 @@ export function TokenDistributionBarChart(props: {
   ];
 
   return (
-    <DistributionBarChart
-      segments={tokenAllocations}
-      title="Token Allocation"
-    />
+    <DistributionBarChart segments={tokenAllocations} title="Coin Allocation" />
   );
 }

@@ -26,7 +26,7 @@ export function parseErrorToMessage(error: unknown): string | JSX.Element {
   );
 }
 
-function parseError(error: unknown): string | JSX.Element {
+export function parseError(error: unknown): string | JSX.Element {
   // if the error is a straight string just return it
   if (typeof error === "string") {
     return error;
