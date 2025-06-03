@@ -68,3 +68,25 @@ export async function getRoutes({
 
   return routes;
 }
+
+export async function getOnrampCountrySupport(
+  provider: "stripe" | "coinbase" | "transak",
+) {
+  const url = new URL(
+    `${NEXT_PUBLIC_THIRDWEB_BRIDGE_HOST}/v1/onramp/countries`,
+  );
+  url.searchParams.set("provider", provider);
+  const res = await fetch(url.toString(), {
+    headers: {
+      "x-secret-key": DASHBOARD_THIRDWEB_SECRET_KEY,
+    },
+    next: { revalidate: 60 * 60 },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch onramp countries");
+  }
+
+  const json = await res.json();
+  return json.data as import("./types/onramp-country").OnrampCountrySupport;
+}
