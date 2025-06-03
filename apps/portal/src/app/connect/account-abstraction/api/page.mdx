@@ -1,0 +1,490 @@
+# Thirdweb Bundler - API Reference
+
+The Thirdweb Bundler is a service that provides Account Abstraction (ERC-4337 and EIP-7702) bundler functionality with integrated paymaster services, zkSync chains support, and EIP-7702 transaction delegation.
+
+## Table of Contents
+
+- [Url format](#url-format)
+- [Authentication](#authentication)
+- [Request Format](#request-format)
+- [Paymaster Methods](#paymaster-methods)
+- [User Operation Methods](#user-operation-methods)
+- [Gas Price Methods](#gas-price-methods)
+- [Status and Tracking Methods](#status-and-tracking-methods)
+- [zkSync-Specific Methods](#zksync-specific-methods)
+- [EIP-7702 Methods](#eip-7702-methods)
+- [Standard ERC-4337 Methods](#standard-erc-4337-methods)
+- [Error Responses](#error-responses)
+- [Policy Enforcement](#policy-enforcement)
+
+## Url format
+
+- **Chain Parameter**: the chain id is always specified in the subdomain (e.g., `<chain_id>.bundler.thirdweb.com`)
+- **Version Parameter**: the version is specified in the path, we recommend using `/v2`
+
+```
+https://<chain_id>.bundler.thirdweb.com/v2
+```
+
+## Authentication
+
+All requests require authentication via:
+
+- **Client ID**: Provided as `X-Client-Id: <client_id>` header - used for frontend authentication
+- **Secret Key**: Provided as `X-Secret-Key: <secret_key>` header - used for backend authentication
+
+## Request Format
+
+All RPC requests follow the JSON-RPC 2.0 specification:
+
+```json
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "method": "<method_name>",
+  "params": [...]
+}
+```
+
+## Paymaster Methods
+
+### `pm_sponsorUserOperation`
+
+**Purpose**: Sponsors a user operation by providing paymaster data to cover gas costs.
+
+**Parameters**:
+
+```json
+[
+  {
+    "sender": "0x...", // Address of the smart account
+    "nonce": "0x...", // Nonce for the operation
+    "initCode": "0x...", // Account initialization code (if needed)
+    "callData": "0x...", // The call data to execute
+    "callGasLimit": "0x...", // Gas limit for the call
+    "verificationGasLimit": "0x...", // Gas limit for verification
+    "preVerificationGas": "0x...", // Pre-verification gas
+    "maxFeePerGas": "0x...", // Maximum fee per gas
+    "maxPriorityFeePerGas": "0x...", // Maximum priority fee per gas
+    "paymasterAndData": "0x...", // Paymaster data (EntryPoint v0.6)
+    // OR for EntryPoint v0.7:
+    "paymaster": "0x...", // Paymaster address
+    "paymasterData": "0x...", // Paymaster data
+    "paymasterVerificationGasLimit": "0x...",
+    "paymasterPostOpGasLimit": "0x..."
+  },
+  "0x...", // Entry point address
+  "0x...", // Chain ID (hex)
+]
+```
+
+**Response**:
+
+```json
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "paymaster": "0x...", // Paymaster address
+    "paymasterData": "0x...", // Paymaster data
+    "paymasterAndData": "0x..." // Combined paymaster data (v0.6)
+  }
+}
+```
+
+### `pm_getPaymasterData`
+
+**Purpose**: Gets paymaster data for sponsoring a user operation (functionally equivalent to `pm_sponsorUserOperation`).
+
+**Parameters**: Same as `pm_sponsorUserOperation`
+**Response**: Same as `pm_sponsorUserOperation`
+
+### `pm_getPaymasterStubData`
+
+**Purpose**: Gets stub paymaster data for gas estimation purposes without actual sponsorship.
+
+**Parameters**: Same as `pm_sponsorUserOperation`
+**Response**: Similar to `pm_sponsorUserOperation` but with placeholder data for estimation.
+
+### `pm_getAcceptedPaymentTokens`
+
+**Purpose**: Returns the list of tokens accepted for gas payments by the paymaster.
+
+**Parameters**: `[]`
+
+**Response**:
+
+```json
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "acceptedTokens": []
+  }
+}
+```
+
+## User Operation Methods
+
+### `eth_estimateUserOperationGas`
+
+**Purpose**: Estimates gas limits required for a user operation.
+
+**Parameters**:
+
+```json
+[
+  {
+    "sender": "0x...", // Smart account address
+    "nonce": "0x...", // Account nonce
+    "initCode": "0x...", // Initialization code (if deploying)
+    "callData": "0x...", // Transaction call data
+    "maxFeePerGas": "0x...", // Maximum fee per gas
+    "maxPriorityFeePerGas": "0x..." // Maximum priority fee
+  },
+  "0x...", // Entry point address
+  {} // State overrides (optional)
+]
+```
+
+**Response**:
+
+```json
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "preVerificationGas": "0x...", // Pre-verification gas
+    "verificationGasLimit": "0x...", // Verification gas limit
+    "callGasLimit": "0x...", // Call gas limit
+    // For EntryPoint v0.7:
+    "paymasterVerificationGasLimit": "0x...",
+    "paymasterPostOpGasLimit": "0x..."
+  }
+}
+```
+
+### `eth_sendUserOperation`
+
+**Purpose**: Submits a user operation to the bundler for execution on-chain.
+
+**Parameters**: Same format as the user operation object used in other methods.
+
+**Response**:
+
+```json
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": "0x..." // User operation hash
+}
+```
+
+## Gas Price Methods
+
+### `thirdweb_getUserOperationGasPrice`
+
+**Purpose**: Gets current gas prices optimized for user operations.
+
+**Parameters**: `[]`
+
+**Response**:
+
+```json
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "maxFeePerGas": "0x...", // Recommended max fee per gas
+    "maxPriorityFeePerGas": "0x..." // Recommended priority fee
+  }
+}
+```
+
+## Status and Tracking Methods
+
+### `thirdweb_getUserOperationStatus`
+
+**Purpose**: Gets the current status of a submitted user operation.
+
+**Parameters**:
+
+```json
+["0x..."] // User operation hash (hex string)
+```
+
+**Response**:
+
+```json
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "status": "not_found|not_submitted|submitted|rejected|included|failed|queued",
+    "transactionHash": "0x..." // Transaction hash (null if not yet included)
+  }
+}
+```
+
+**Status Values**:
+
+- `not_found`: User operation not found
+- `not_submitted`: Not yet submitted to mempool
+- `submitted`: Submitted to mempool
+- `rejected`: Rejected by bundler
+- `included`: Successfully included in a block
+- `failed`: Transaction failed on-chain
+- `queued`: Queued for processing
+
+## zkSync-Specific Methods
+
+### `zk_paymasterData`
+
+**Purpose**: Gets paymaster data for zkSync chains to enable gasless transactions.
+
+**Parameters**:
+
+```json
+[
+  {
+    "nonce": "0x...", // Transaction nonce
+    "from": "0x...", // Sender address
+    "to": "0x...", // Recipient address
+    "gas": "0x...", // Gas limit
+    "gasPrice": "0x...", // Gas price
+    "value": "0x...", // ETH value to send
+    "data": "0x...", // Transaction data
+    "maxFeePerGas": "0x...", // EIP-1559 max fee
+    "maxPriorityFeePerGas": "0x...", // EIP-1559 priority fee
+    "chainId": "0x..." // Chain ID
+  }
+]
+```
+
+**Response**:
+
+```json
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "paymaster": "0x...", // Paymaster contract address
+    "paymasterInput": "0x..." // Encoded paymaster input data
+  }
+}
+```
+
+### `zk_broadcastTransaction`
+
+**Purpose**: Broadcasts a signed transaction on zkSync chains.
+
+**Parameters**:
+
+```json
+[
+  {
+    "nonce": "0x...",
+    "from": "0x...",
+    "to": "0x...",
+    "gas": "0x...",
+    "gasPrice": "0x...",
+    "value": "0x...",
+    "data": "0x...",
+    "maxFeePerGas": "0x...",
+    "maxPriorityFeePerGas": "0x...",
+    "chainId": "0x...",
+    "signedTransaction": "0x..." // Raw signed transaction bytes
+  }
+]
+```
+
+**Response**:
+
+```json
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": "0x..." // Transaction hash
+}
+```
+
+## EIP-7702 Methods
+
+### `tw_execute`
+
+**Purpose**: Executes transactions using EIP-7702 (Account Abstraction via Authorization Lists). This enables EOAs to temporarily act as smart contracts.
+
+**Parameters**:
+
+```json
+[
+  "0x...", // EOA address that will execute the calls
+  {
+    "calls": [
+      {
+        "target": "0x...", // Contract address to call
+        "value": "0x...", // ETH value to send (hex)
+        "data": "0x..." // Call data
+      }
+      // ... more calls
+    ],
+    "uid": "0x..." // Unique identifier for the batch (bytes32)
+  },
+  "0x...", // Signature authorizing the execution
+  {
+    // Authorization list (optional)
+    "chainId": 1,
+    "address": "0x...",
+    "nonce": "0x...",
+    "yParity": 0,
+    "r": "0x...",
+    "s": "0x..."
+  }
+]
+```
+
+**Response**:
+
+```json
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "queueId": "..." // Queue ID for tracking the transaction
+  }
+}
+```
+
+### `tw_getTransactionHash`
+
+**Purpose**: Gets the transaction hash for a queued EIP-7702 transaction.
+
+**Parameters**:
+
+```json
+["queue_id"] // Queue ID returned from tw_execute
+```
+
+**Response**:
+
+```json
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "transactionHash": "0x..." // Transaction hash (null if not yet mined)
+  }
+}
+```
+
+## Standard ERC-4337 Methods
+
+The service supports all the standard ERC-4337 bundler methods:
+
+- `eth_chainId` - Returns the current chain ID
+- `eth_getUserOperationByHash` - Retrieves user operation by hash
+- `eth_getUserOperationReceipt` - Gets the receipt for a user operation
+- `eth_supportedEntryPoints` - Lists supported EntryPoint contracts
+- Any other standard bundler RPC methods defined in ERC-4337
+
+## Error Responses
+
+All methods may return error responses following the JSON-RPC 2.0 error format:
+
+```json
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "error": {
+    "code": 400,
+    "message": "Detailed error description"
+  }
+}
+```
+
+### Common Error Codes
+
+- **400**: Invalid parameters, malformed request, or unsupported chain
+- **401**: Invalid authentication credentials or insufficient permissions
+- **500**: Internal server error
+- **502**: Upstream bundler provider error
+
+### Example Error Scenarios
+
+```json
+// Invalid chain
+{
+  "error": "Invalid chain: unsupported_chain",
+  "chain": "unsupported_chain",
+  "code": 400
+}
+
+// Mainnet access denied
+{
+  "error": "Mainnets not enabled for this account, please enable billing...",
+  "code": 401
+}
+
+// Invalid user operation hash
+{
+  "error": "Invalid userOpHash parameter",
+  "code": 400
+}
+```
+
+## Policy Enforcement
+
+Paymaster methods support policy-based access control. When a transaction is subject to policy evaluation:
+
+### Policy Check Process
+
+1. The system evaluates paymaster requests against configured policies
+2. Policies can restrict based on:
+   - Contract addresses being called
+   - Transaction data
+   - Gas limits
+   - Sender addresses
+   - Custom endpoint logic
+
+### Policy Rejection Response
+
+If a request is rejected by policy, the response format is:
+
+```json
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "policyId": "policy_123", // ID of the policy that rejected the request
+    "reason": "Transaction rejected by policy: Unauthorized contract call"
+  }
+}
+```
+
+### Affected Methods
+
+Policy enforcement applies to:
+
+- `pm_sponsorUserOperation`
+- `pm_getPaymasterData`
+- `zk_paymasterData`
+
+## Rate Limits and Quotas
+
+- Rate limits may apply based on your billing plan
+- Mainnet access requires billing information
+- Testnet access is available on free plans
+
+## Supported Networks
+
+For the most up-to-date list of supported chains, check the [thirdweb dashboard](https://thirdweb.com/dashboard).
+
+## SDK Integration
+
+For easier integration, consider using the thirdweb SDKs:
+
+- [JavaScript/TypeScript SDK](/typescript)
+- [React SDK](/react)
+- [Unity SDK](/unity)
+- [Dotnet SDK](/dotnet)
+- [Unreal Engine SDK](/unreal)

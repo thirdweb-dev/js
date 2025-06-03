@@ -199,6 +199,10 @@ export const sidebar: SideBar = {
               href: `${aAslug}/sponsorship-rules`,
             },
             {
+              name: "API Reference",
+              href: `${aAslug}/api`,
+            },
+            {
               name: "FAQs",
               href: `${aAslug}/faq`,
             },
