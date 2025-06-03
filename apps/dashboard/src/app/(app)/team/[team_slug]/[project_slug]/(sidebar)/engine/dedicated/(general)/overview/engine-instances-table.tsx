@@ -2,7 +2,6 @@
 
 import type { Team } from "@/api/team";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -53,7 +52,6 @@ import {
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { PRO_CONTACT_US_URL } from "constants/pro";
 import { useTrack } from "hooks/analytics/useTrack";
 import {
   CheckIcon,
@@ -895,37 +893,17 @@ function EmptyEngineState(props: {
                   Managed Engine
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  {props.teamPlan !== "pro" ? (
-                    <>
-                      Upgrade your team plan to Accelerate or Scale to get a
-                      fully managed engine instance.{" "}
-                      <UnderlineLink href="/pricing" target="_blank">
-                        View pricing
-                      </UnderlineLink>
-                    </>
-                  ) : (
-                    <>
-                      Contact us to add a managed engine instance to your team
-                    </>
-                  )}
+                  Contact us to add a managed engine instance to your team.{" "}
+                  <br /> We recommend using Engine Cloud in most cases
                 </p>
                 <div className="h-4" />
                 <div className="mt-auto">
-                  {props.teamPlan !== "pro" ? (
-                    <Button className="w-full gap-2" size="sm" asChild>
-                      <Link href={`/team/${props.teamSlug}/~/settings/billing`}>
-                        Upgrade Plan
-                        <ArrowRightIcon size={16} />
-                      </Link>
-                    </Button>
-                  ) : (
-                    <Button className="w-full gap-2" size="sm" asChild>
-                      <Link href={PRO_CONTACT_US_URL} target="_blank">
-                        Contact Us
-                        <ArrowRightIcon size={16} />
-                      </Link>
-                    </Button>
-                  )}
+                  <Button className="w-full gap-2" size="sm" asChild>
+                    <Link href={"/contact-us"} target="_blank">
+                      Contact Us
+                      <ArrowRightIcon size={16} />
+                    </Link>
+                  </Button>
                 </div>
               </div>
             )}
