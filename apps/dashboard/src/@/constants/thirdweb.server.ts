@@ -42,10 +42,13 @@ export function getConfiguredThirdwebClient(options: {
 
   if (!getTransactionDecorator()) {
     setTransactionDecorator(async ({ account, transaction }) => {
-      // special override for sophon testnet (zk chain)
+      // special override for sophon (zk chain)
       // sophon only allows transactions through their paymaster
       // so always use eip712 tx + paymaster
-      if (transaction.chain.id === 531050104) {
+      if (
+        transaction.chain.id === 531050104 ||
+        transaction.chain.id === 50104
+      ) {
         const serializedTx = await populateEip712Transaction({
           transaction,
           account,
