@@ -141,6 +141,12 @@ function ReferenceSection() {
           iconClassName="text-muted-foreground"
         />
         <SDKCard
+          title="Bundler"
+          href="/connect/account-abstraction/api" // TODO: actual openAPI docs
+          icon={ConnectIcon}
+          iconClassName="text-muted-foreground"
+        />
+        <SDKCard
           title="Nebula"
           href="/nebula/api-reference" // TODO: actual openAPI docs
           icon={NebulaIcon}
