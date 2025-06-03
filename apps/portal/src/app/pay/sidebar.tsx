@@ -45,16 +45,12 @@ export const sidebar: SideBar = {
       icon: <RocketIcon />,
       links: [
         {
-          name: "ConnectButton",
-          href: `${paySlug}/get-started#option-1-connectbutton`,
+          name: "Installation",
+          href: `${paySlug}/get-started#installation`,
         },
         {
-          name: "Embed",
-          href: `${paySlug}/get-started#option-2-embed-pay`,
-        },
-        {
-          name: "Send a Transaction",
-          href: `${paySlug}/get-started#option-3-send-a-transaction-with-pay`,
+          name: "Recipes",
+          href: `${paySlug}/get-started#recipes`,
         },
       ],
     },

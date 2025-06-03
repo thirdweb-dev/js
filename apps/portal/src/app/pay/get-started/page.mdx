@@ -5,9 +5,12 @@ import {
 	Steps,
 	Step,
 	InstallTabs,
+	Tabs,
+	TabsList,
+	TabsTrigger,
+	TabsContent,
 } from "@doc";
-import GetStartedSend from "../assets/get-started-send.png";
-import GetStartedEmbed from "../assets/get-started-embed.png";
+
 export const metadata = createMetadata({
 	image: {
 		title: "thirdweb Universal Bridge - Get Started",
@@ -15,21 +18,19 @@ export const metadata = createMetadata({
 	},
 	title: "Universal Bridge Implementation Guide — thirdweb docs",
 	description:
-		"Learn how to implement all-in-one web3 payment solution, Universal bridge: the technical step-by-step process",
+		"Learn how to implement cross-chain payments, bridging, and onramps with the Universal Bridge SDK",
 });
 
 # Get Started
 
-Learn how to add onramps and crypto purchases to your application. To see which integration is right for you, refer to our [integrations overview](/connect/pay/overview#integration-options).
-
-The following guide uses our React SDK. You can also learn how to integrate Universal Bridge with our [Unity SDK](https://portal.thirdweb.com/unity/pay/getbuywithcryptoquote).
+Learn how to integrate Universal Bridge into your application for cross-chain payments, bridging, swapping, and fiat onramps. This guide covers the core SDK modules and practical implementation examples.
 
 ---
 
 ## Installation
 
 <Steps>
-<Step title="Install the Connect SDK">
+<Step title="Install the SDK">
 <InstallTabs
 	npm="npm i thirdweb"
 	yarn="yarn add thirdweb"
@@ -38,95 +39,260 @@ The following guide uses our React SDK. You can also learn how to integrate Univ
 </Step>
 <Step title="Get Your Client ID">
 
-Log in to [the thirdweb dashboard](https://thirdweb.com/team). Navigate to the **Settings** page and create an API key to get your **Client ID**. You'll need your Client ID to interact with the Connect SDK.
+Log in to [the thirdweb dashboard](https://thirdweb.com/team). Navigate to the **Settings** page and create an API key to get your **Client ID**. You'll need your Client ID to interact with the Universal Bridge.
+
+</Step>
+<Step title="Initialize the Client">
+
+```typescript
+import { createThirdwebClient } from "thirdweb";
+
+const client = createThirdwebClient({ 
+  clientId: "your_client_id" 
+});
+```
+
+</Step>
+<Step title="Prepare a Swap">
+
+Get a quote and prepare your first cross-chain swap:
+
+```typescript
+import { Bridge, NATIVE_TOKEN_ADDRESS, toWei } from "thirdweb";
+
+const prepared = await Bridge.Buy.prepare({
+  originChainId: 1,
+  originTokenAddress: NATIVE_TOKEN_ADDRESS,
+  destinationChainId: 137,
+  destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
+  amount: toWei("0.1"),
+  sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+  receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+  client,
+});
+```
 
 </Step>
 </Steps>
+
 ---
 
-## Option 1: ConnectButton
+## Recipes
 
-Universal Bridge is available by default with our `ConnectButton` component. When users log in with Connect, they'll be able to onramp and purchase crypto directly from the logged in Connect interface. You can read more about `ConnectButton` [in this guide](/connect/sign-in/ConnectButton).
+<Tabs defaultValue="buy">
+<TabsList className="grid w-full grid-cols-4">
+<TabsTrigger value="buy">Bridge & Swap</TabsTrigger>
+<TabsTrigger value="transfer">Transfers</TabsTrigger>
+<TabsTrigger value="onramp">Fiat Onramps</TabsTrigger>
+<TabsTrigger value="routes">Route Discovery</TabsTrigger>
+</TabsList>
 
-```tsx
-import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
+<TabsContent value="buy">
 
-const client = createThirdwebClient({ clientId: your_client_id });
+Use the `Buy` module to purchase tokens on any supported chain using tokens from another chain:
 
-export default function App() {
-	return (
-		<ThirdwebProvider>
-			<ConnectButton client={client} />
-		</ThirdwebProvider>
-	);
+```typescript
+import { Bridge, NATIVE_TOKEN_ADDRESS, toWei } from "thirdweb";
+
+// Step 1: Get a quote for the purchase
+const quote = await Bridge.Buy.quote({
+  originChainId: 1, // Ethereum
+  originTokenAddress: NATIVE_TOKEN_ADDRESS, // ETH
+  destinationChainId: 137, // Polygon
+  destinationTokenAddress: NATIVE_TOKEN_ADDRESS, // MATIC
+  amount: toWei("0.1"), // 0.1 MATIC
+  client,
+});
+
+console.log(`Need ${quote.originAmount} origin tokens`);
+
+// Step 2: Prepare a Swap
+const prepared = await Bridge.Buy.prepare({
+  originChainId: 1,
+  originTokenAddress: NATIVE_TOKEN_ADDRESS,
+  destinationChainId: 137,
+  destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
+  amount: toWei("0.1"),
+  sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+  receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+  client,
+});
+
+// Step 3: Execute transactions
+for (const step of prepared.steps) {
+  for (const transaction of step.transactions) {
+    const result = await sendTransaction({
+      transaction,
+      account: wallet.account,
+    });
+    console.log("Transaction sent:", result.transactionHash);
+  }
 }
 ```
 
-Our `ConnectButton` has a number of [customization options](/connect/pay/customization/connectbutton) so you can tailor it to your experience.
+**Best for:** NFT purchases, token swaps across chains, DeFi interactions
 
----
+</TabsContent>
 
-## Option 2: Embed
+<TabsContent value="transfer">
 
-The `PayEmbed` allows users to onramp and purchase crypto directly from your application interface.
+Use the `Transfer` module for same-chain or cross-chain token transfers:
 
-```tsx
-import { ThirdwebProvider, PayEmbed } from "thirdweb/react";
+```typescript
+import { Bridge, NATIVE_TOKEN_ADDRESS, toWei } from "thirdweb";
 
-const client = createThirdwebClient({ clientId: your_client_id });
+// Prepare transfer
+const transfer = await Bridge.Transfer.prepare({
+  chainId: 1, // Ethereum
+  tokenAddress: NATIVE_TOKEN_ADDRESS,
+  amount: toWei("0.05"), // 0.05 ETH
+  sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+  receiver: "0x742d35Cc6634C0532925a3b8D400A1B5000d3ae5",
+  client,
+});
 
-export default function App() {
-	return (
-		<ThirdwebProvider>
-			<PayEmbed client={client} />
-		</ThirdwebProvider>
-	);
+// Execute transfer transactions
+for (const step of transfer.steps) {
+  for (const transaction of step.transactions) {
+    const result = await sendTransaction({
+      transaction,
+      account: wallet.account,
+    });
+  }
 }
 ```
 
-The embedded component will be displayed like so in your application interface:
+**Best for:** P2P payments, payroll, direct transfers
 
-<DocImage src={GetStartedEmbed} />
+</TabsContent>
 
-And voila! Your users can now onramp and convert crypto directly from your application.
+<TabsContent value="onramp">
 
-Our `PayEmbed` has a number of [customization options](/connect/pay/customization/payembed) so you can tailor it to your experience.
+Use the `Onramp` module to convert fiat currency to crypto via supported providers:
+
+```typescript
+import { Bridge, NATIVE_TOKEN_ADDRESS, toWei } from "thirdweb";
+
+// Prepare onramp session
+const onramp = await Bridge.Onramp.prepare({
+  client,
+  onramp: "stripe", // or "coinbase", "transak"
+  chainId: 1,
+  tokenAddress: NATIVE_TOKEN_ADDRESS,
+  receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+  amount: toWei("0.1"), // 0.1 ETH
+  country: "US",
+});
+
+console.log(`Cost: $${onramp.currencyAmount} ${onramp.currency}`);
+
+// Redirect user to complete purchase
+window.location.href = onramp.link;
+```
+
+**Best for:** New users entering crypto, applications requiring fiat payments
+
+</TabsContent>
+
+<TabsContent value="routes">
+
+Use the `routes` function to discover available bridging paths:
+
+```typescript
+import { Bridge, NATIVE_TOKEN_ADDRESS } from "thirdweb";
+
+// Find all routes from Ethereum ETH
+const allRoutes = await Bridge.routes({
+  originChainId: 1,
+  originTokenAddress: NATIVE_TOKEN_ADDRESS,
+  client,
+});
+
+// Find specific routes with pagination
+const filteredRoutes = await Bridge.routes({
+  originChainId: 1,
+  originTokenAddress: NATIVE_TOKEN_ADDRESS,
+  destinationChainId: 137,
+  limit: 10,
+  sortBy: "popularity",
+  client,
+});
+
+console.log(`Found ${filteredRoutes.length} routes`);
+```
+
+**Best for:** Building route selectors, showing available options to users
+
+</TabsContent>
+
+</Tabs>
 
 ---
 
-## Option 3: Send a Transaction with Pay
+## Transaction Status Tracking
 
-Universal Bridge is enabled by default for any contract call sent with `sendTransaction`. It will automatically be invoked when a user does not have enough funds to complete the transaction.
+Monitor the progress of your Universal Bridge transactions:
 
-<Callout variant="info">
-	ℹ️ `sendTransaction` is available in [Connect SDK v5](/typescript/v5) or
-	above.
-</Callout>
+```typescript
+import { Bridge } from "thirdweb";
 
-```tsx
-import { useSendTransaction } from "thirdweb/react";
-import { mintTo } from "thirdweb/extensions/erc721";
+// Check transaction status
+const status = await Bridge.status({
+  transactionHash: "0x5959b9321ec581640db531b80bac53cbd968f3d34fc6cb1d5f4ea75f26df2ad7",
+  chainId: 137,
+  client,
+});
 
-const { mutate: sendTx, data: transactionResult } = useSendTransaction();
-
-const onClick = () => {
-	const transaction = mintTo({
-		contract,
-		to: "0x...",
-		nft: {
-			name: "NFT Name",
-			description: "NFT Description",
-			image: "https://example.com/image.png",
-		},
-	});
-	sendTx(transaction);
-};
+switch (status.status) {
+  case "COMPLETED":
+    console.log("Bridge completed!");
+    console.log("Final amount:", status.destinationAmount);
+    break;
+  case "PENDING":
+    console.log("Still processing...");
+    break;
+  case "FAILED":
+    console.log("Transaction failed");
+    break;
+  case "NOT_FOUND":
+    console.log("Transaction not found");
+    break;
+}
 ```
 
-When a user clicks this button, Universal Bridge will perform gas estimation to determine if the user has a sufficient balance. If their balance is sufficient, the transaction will execute normally. If their balance is not sufficient, the following modal will pop up asking them to either onramp funds or convert crypto to the required amount:
+---
 
-<DocImage src={GetStartedSend} />
+## Error Handling
 
-Once a user onramps or converts their funds to the required token, the user will be prompted once more to confirm the transaction. The transaction will then execute as expected.
+Universal Bridge functions throw `ApiError` for failed requests:
 
-For deeper customization of the Universal Bridge transaction modal, you can refer to our [sendTransaction customization guide](/connect/pay/customization/send-transaction).
+```typescript
+import { Bridge, ApiError } from "thirdweb";
+
+try {
+  const quote = await Bridge.Buy.quote({
+    originChainId: 1,
+    originTokenAddress: NATIVE_TOKEN_ADDRESS,
+    destinationChainId: 999999, // Invalid chain
+    destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
+    amount: toWei("0.1"),
+    client,
+  });
+} catch (error) {
+  if (error instanceof ApiError) {
+    console.log("API Error:", error.message);
+    console.log("Status Code:", error.statusCode);
+    console.log("Correlation ID:", error.correlationId);
+  }
+}
+```
+
+---
+
+## Next Steps
+
+- **[API Reference](https://bridge.thirdweb.com/reference)** - Complete REST API documentation
+- **[SDK Reference](/typescript/v5/buy/quote)** - TypeScript SDK function reference  
+- **[Webhooks](/pay/webhooks)** - Set up real-time notifications
+- **[Customization Guides](/pay/customization)** - Advanced configuration options
+- **[Playground](https://playground.thirdweb.com/connect/pay)** - Interactive testing environment
