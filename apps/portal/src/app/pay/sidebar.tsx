@@ -63,12 +63,16 @@ export const sidebar: SideBar = {
           href: `${paySlug}/guides/cross-chain-swapping`,
         },
         {
-          name: "Swap Smart Accounts",
+          name: "Swap with Smart Accounts",
           href: `${paySlug}/guides/smart-accounts`,
         },
         {
           name: "Fiat Onramp",
           href: `${paySlug}/guides/onramp-integration`,
+        },
+        {
+          name: "NFT Checkout",
+          href: `${paySlug}/guides/nft-checkout`,
         },
       ],
     },
