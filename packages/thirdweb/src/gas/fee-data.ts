@@ -46,6 +46,7 @@ const FORCE_GAS_PRICE_CHAIN_IDS = [
   5464, // Saga Mainnet
   2020, // Ronin Mainnet
   2021, // Ronin Testnet (Saigon)
+  98866, // Plume mainnet
 ];
 
 /**
