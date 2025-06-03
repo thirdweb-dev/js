@@ -1,0 +1,154 @@
+import {
+	createMetadata,
+	Callout,
+	DocImage,
+	InstallTabs,
+	Steps,
+	Step,
+} from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "thirdweb Universal Bridge - Smart Accounts",
+		icon: "thirdweb",
+	},
+	title: "thirdweb Universal Bridge - Smart Accounts | thirdweb",
+	description:
+		"Learn how to use EIP7702 smart accounts with batched transactions for seamless Universal Bridge experiences.",
+});
+
+# Smart Accounts with Universal Bridge
+
+Learn how to leverage EIP7702 smart accounts to batch Universal Bridge transactions for optimal user experience. This approach enables gasless transactions, batched execution, and seamless cross-chain operations.
+
+Smart accounts with EIP7702 allow you to upgrade any EOA (Externally Owned Account) into a smart account without code changes, enabling advanced features like transaction batching and gas sponsorship.
+
+---
+
+<Steps>
+<Step title='Install the SDK'>
+<InstallTabs
+	npm="npm i thirdweb"
+	yarn="yarn add thirdweb"
+	pnpm="pnpm i thirdweb"
+/>
+</Step>
+<Step title='Set up EIP7702 In-App Wallet'>
+
+Configure an in-app wallet with EIP7702 execution mode to enable smart account features:
+
+```typescript
+import { createThirdwebClient } from "thirdweb";
+import { inAppWallet } from "thirdweb/wallets/in-app";
+
+const client = createThirdwebClient({ 
+  clientId: "your_client_id" 
+});
+
+// Create in-app wallet with EIP7702 smart account features
+const wallet = inAppWallet({
+  executionMode: {
+    mode: "EIP7702",
+    sponsorGas: true, // Enable gas sponsorship
+  },
+});
+
+// Connect the wallet
+const account = await wallet.connect({
+  client,
+  strategy: "google", // or other auth strategies
+});
+```
+
+<Callout variant="info">
+  EIP7702 execution mode upgrades your EOA into a smart account, enabling batched transactions, gas sponsorship, and other advanced features without requiring contract deployment.
+</Callout>
+
+</Step>
+<Step title='Prepare Batched Bridge Transactions'>
+
+Use Universal Bridge to prepare transactions, then batch them per step (since each step may be on a different chain):
+
+```typescript
+import { Bridge, NATIVE_TOKEN_ADDRESS, toWei } from "thirdweb";
+import { sendBatchTransaction } from "thirdweb";
+
+const bridgePreparation = await Bridge.Buy.prepare({
+  originChainId: 1, // Ethereum
+  originTokenAddress: NATIVE_TOKEN_ADDRESS,
+  destinationChainId: 137, // Polygon
+  destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
+  amount: toWei("0.1"), // 0.1 MATIC
+  sender: account.address,
+  receiver: account.address,
+  client,
+});
+```
+
+<Callout variant="important">
+  **Key Rule**: You can only batch transactions that are on the same chain. Since Universal Bridge steps may span multiple chains, you must batch transactions within each step separately, not across steps.
+</Callout>
+
+</Step>
+<Step title='Execute Batched Transactions'>
+
+Execute transactions in batches per step (same chain), proceeding through steps sequentially:
+
+```typescript
+import { sendBatchTransaction, waitForReceipt } from "thirdweb";
+// Execute each step's transactions as a batch (same chain)
+for (let i = 0; i < bridgePreparation.steps.length; i++) {
+  const step = bridgePreparation.steps[i];
+
+  // Batch all transactions within this step (they're all on the same chain)
+  const stepBatchResult = await sendBatchTransaction({
+    transactions: step.transactions,
+    account,
+  });
+
+  console.log(`Step ${i + 1} batch sent:`, stepBatchResult.transactionHash);
+
+  const receipt = await waitForReceipt({
+    client,
+    chain: step.transactions[0].chain,
+    transactionHash: stepBatchResult.transactionHash,
+  });
+
+  console.log(`Step ${i + 1} completed:`, receipt.status);
+
+    // Monitor bridge completion status for this step
+    let bridgeStatus;
+    do {
+      bridgeStatus = await Bridge.status({
+        transactionHash: stepBatchResult.transactionHash,
+        chainId: step.transactions[0].chainId,
+        client,
+      });
+      
+      if (bridgeStatus.status === "PENDING") {
+        console.log(`Bridge step ${i + 1} still pending...`);
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+      }
+    } while (bridgeStatus.status === "PENDING");
+    
+    if (bridgeStatus.status === "COMPLETED") {
+      console.log(`Bridge step ${i + 1} completed!`);
+    } else if (bridgeStatus.status === "FAILED") {
+      throw new Error(`Bridge step ${i + 1} failed`);
+    }
+}
+```
+
+<Callout variant="info">
+  With EIP7702 smart accounts, transactions within each step execute atomically. Steps execute sequentially, ensuring proper cross-chain coordination. Gas sponsorship applies to all batched transactions.
+</Callout>
+
+</Step>
+</Steps>
+
+## Next Steps
+
+- **[EIP7702 Documentation](/connect/account-abstraction/overview)** - Learn more about smart account features
+- **[Batching Transactions](/typescript/v5/account-abstraction/batching-transactions)** - Explore advanced batching patterns
+- **[Gas Sponsorship](/connect/account-abstraction/sponsoring-gas)** - Set up custom gas sponsorship rules
+- **[Universal Bridge API](/pay/webhooks)** - Monitor cross-chain operations with webhooks

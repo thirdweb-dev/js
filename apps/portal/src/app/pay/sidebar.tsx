@@ -5,7 +5,6 @@ import {
   BracesIcon,
   CircleDollarSignIcon,
   CodeIcon,
-  FlaskConicalIcon,
   MessageCircleQuestionIcon,
   PaletteIcon,
   RocketIcon,
@@ -45,16 +44,12 @@ export const sidebar: SideBar = {
       icon: <RocketIcon />,
       links: [
         {
-          name: "ConnectButton",
-          href: `${paySlug}/get-started#option-1-connectbutton`,
+          name: "Installation",
+          href: `${paySlug}/get-started#installation`,
         },
         {
-          name: "Embed",
-          href: `${paySlug}/get-started#option-2-embed-pay`,
-        },
-        {
-          name: "Send a Transaction",
-          href: `${paySlug}/get-started#option-3-send-a-transaction-with-pay`,
+          name: "Recipes",
+          href: `${paySlug}/get-started#recipes`,
         },
       ],
     },
@@ -64,16 +59,20 @@ export const sidebar: SideBar = {
       icon: <AlbumIcon />,
       links: [
         {
-          name: "Accept Direct Payments",
-          href: `${paySlug}/guides/accept-direct-payments`,
-        },
-        {
-          name: "Build a Custom Onramp Experience",
-          href: `${paySlug}/guides/build-a-custom-experience`,
-        },
-        {
           name: "Cross-Chain Swapping",
           href: `${paySlug}/guides/cross-chain-swapping`,
+        },
+        {
+          name: "Swap with Smart Accounts",
+          href: `${paySlug}/guides/smart-accounts`,
+        },
+        {
+          name: "Fiat Onramp",
+          href: `${paySlug}/guides/onramp-integration`,
+        },
+        {
+          name: "NFT Checkout",
+          href: `${paySlug}/guides/nft-checkout`,
         },
       ],
     },
@@ -116,11 +115,6 @@ export const sidebar: SideBar = {
       name: "Webhooks",
       href: `${paySlug}/webhooks`,
       icon: <WebhookIcon />,
-    },
-    {
-      name: "Developer Mode",
-      href: `${paySlug}/testing-pay`,
-      icon: <FlaskConicalIcon />,
     },
     {
       name: "FAQs",
