@@ -10,6 +10,7 @@ type DistributionBarChartProps = {
   segments: Segment[];
   title: string;
 };
+
 export function DistributionBarChart(props: DistributionBarChartProps) {
   const totalPercentage = props.segments.reduce(
     (sum, segment) => sum + segment.percent,
@@ -59,7 +60,13 @@ export function DistributionBarChart(props: DistributionBarChartProps) {
                   backgroundColor: segment.color,
                 }}
               />
-              <p className="text-sm">
+              <p
+                className={cn(
+                  "text-sm",
+                  (segment.percent > 100 || segment.percent < 0) &&
+                    "text-destructive-text",
+                )}
+              >
                 {segment.label}: {segment.percent}%
               </p>
             </div>

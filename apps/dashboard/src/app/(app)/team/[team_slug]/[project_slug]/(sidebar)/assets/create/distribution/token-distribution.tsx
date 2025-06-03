@@ -26,6 +26,7 @@ export function TokenDistributionFieldset(props: {
   tokenSymbol: string | undefined;
 }) {
   const { form } = props;
+  const distributionError = getDistributionError(form);
 
   return (
     <Form {...form}>
@@ -38,6 +39,7 @@ export function TokenDistributionFieldset(props: {
           }}
           nextButton={{
             type: "submit",
+            disabled: !!distributionError,
           }}
         >
           <div>
@@ -56,9 +58,17 @@ export function TokenDistributionFieldset(props: {
                 </div>
               </FormFieldSetup>
 
-              <TokenDistributionBarChart
-                distributionFormValues={form.watch()}
-              />
+              <div className="flex flex-col gap-3">
+                <TokenDistributionBarChart
+                  distributionFormValues={form.watch()}
+                />
+
+                {distributionError && (
+                  <div className="text-destructive-text text-sm">
+                    {distributionError}
+                  </div>
+                )}
+              </div>
             </div>
 
             <TokenAirdropSection form={form} client={props.client} />
@@ -74,6 +84,36 @@ export function TokenDistributionFieldset(props: {
   );
 }
 
+function getDistributionError(form: TokenDistributionForm) {
+  const supply = Number(form.watch("supply"));
+  const totalAirdrop = form.watch("airdropAddresses").reduce((sum, addr) => {
+    return sum + SafeNumber(addr.quantity);
+  }, 0);
+
+  if (totalAirdrop > supply) {
+    return "Total airdrop quantity exceeds total supply";
+  }
+
+  const saleSupplyPercentage = SafeNumber(
+    form.watch("saleAllocationPercentage"),
+  );
+
+  const saleSupply = (saleSupplyPercentage / 100) * supply;
+  const ownerSupply = Math.max(supply - totalAirdrop - saleSupply, 0);
+  const totalSumOfSupply = totalAirdrop + saleSupply + ownerSupply;
+
+  if (totalSumOfSupply > supply) {
+    return "Token distribution exceeds total supply";
+  }
+
+  return undefined;
+}
+
+function SafeNumber(value: string) {
+  const num = Number(value);
+  return Number.isNaN(num) ? 0 : num;
+}
+
 export function TokenDistributionBarChart(props: {
   distributionFormValues: TokenDistributionFormValues;
 }) {
@@ -87,7 +127,8 @@ export function TokenDistributionBarChart(props: {
   const salePercentage = Number(
     props.distributionFormValues.saleAllocationPercentage,
   );
-  const ownerPercentage = 100 - airdropPercentage - salePercentage;
+
+  const ownerPercentage = Math.max(100 - airdropPercentage - salePercentage, 0);
 
   const tokenAllocations: Segment[] = [
     {

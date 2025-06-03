@@ -15,6 +15,7 @@ export function StepCard(props: {
     | undefined
     | {
         type: "submit";
+        disabled?: boolean;
       }
     | {
         type: "custom";
@@ -56,6 +57,7 @@ export function StepCard(props: {
             variant="default"
             className="gap-2"
             type="submit"
+            disabled={props.nextButton.disabled}
             onClick={() => {
               trackEvent(
                 getStepCardTrackingData({
