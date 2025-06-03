@@ -6,13 +6,7 @@ import { EngineCloudBarChartCardUI } from "./EngineCloudBarChartCardUI";
 
 export function EngineCloudChartCard(props: AnalyticsQueryParams) {
   return (
-    <Suspense
-      fallback={
-        <div className="h-[400px]">
-          <LoadingChartState />
-        </div>
-      }
-    >
+    <Suspense fallback={<LoadingChartState className="h-[377px] border" />}>
       <EngineCloudChartCardAsync {...props} />
     </Suspense>
   );

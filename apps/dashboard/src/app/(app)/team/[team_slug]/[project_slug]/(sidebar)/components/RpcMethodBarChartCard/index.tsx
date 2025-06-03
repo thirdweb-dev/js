@@ -7,13 +7,7 @@ import { RpcMethodBarChartCardUI } from "./RpcMethodBarChartCardUI";
 export function RpcMethodBarChartCard(props: AnalyticsQueryParams) {
   return (
     // TODO: Add better LoadingChartState
-    <Suspense
-      fallback={
-        <div className="h-[400px]">
-          <LoadingChartState />
-        </div>
-      }
-    >
+    <Suspense fallback={<LoadingChartState className="h-[377px] border" />}>
       <RpcMethodBarChartCardAsync {...props} />
     </Suspense>
   );

@@ -13,13 +13,7 @@ export function TransactionsCharts(
 ) {
   return (
     // TODO: Add better LoadingChartState
-    <Suspense
-      fallback={
-        <div className="h-[400px]">
-          <LoadingChartState />
-        </div>
-      }
-    >
+    <Suspense fallback={<LoadingChartState className="h-[458px] border" />}>
       <TransactionsChartCardAsync {...props} />
     </Suspense>
   );

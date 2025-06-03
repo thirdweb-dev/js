@@ -3,6 +3,7 @@ import { LoadingDots } from "@/components/ui/LoadingDots";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { useMemo } from "react";
 import { Area, AreaChart, Bar, BarChart } from "recharts";
+import { cn } from "../../@/lib/utils";
 
 type FakeCartData = {
   value: number;
@@ -37,9 +38,14 @@ export function EmptyChartState({
   );
 }
 
-export function LoadingChartState() {
+export function LoadingChartState({ className }: { className?: string }) {
   return (
-    <div className="pointer-events-none flex h-full w-full items-center justify-center rounded-lg bg-muted/30">
+    <div
+      className={cn(
+        "pointer-events-none flex h-full w-full items-center justify-center rounded-lg bg-muted/30",
+        className,
+      )}
+    >
       <LoadingDots />
     </div>
   );
