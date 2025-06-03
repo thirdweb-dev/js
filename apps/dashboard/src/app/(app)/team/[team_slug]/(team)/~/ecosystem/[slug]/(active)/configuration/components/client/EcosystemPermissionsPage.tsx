@@ -1,4 +1,5 @@
 "use client";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { useEcosystem } from "../../../hooks/use-ecosystem";
 import { AuthOptionsSection } from "../server/auth-options-section";
 import { EcosystemPartnersSection } from "../server/ecosystem-partners-section";
@@ -18,6 +19,8 @@ export function EcosystemPermissionsPage({
     teamIdOrSlug: params.team_slug,
   });
 
+  const client = getClientThirdwebClient({ jwt: authToken, teamId });
+
   return (
     <div className="flex flex-col gap-8">
       <IntegrationPermissionsSection
@@ -29,6 +32,7 @@ export function EcosystemPermissionsPage({
         ecosystem={ecosystem}
         authToken={authToken}
         teamId={teamId}
+        client={client}
       />
       {ecosystem?.permission === "PARTNER_WHITELIST" && (
         <EcosystemPartnersSection

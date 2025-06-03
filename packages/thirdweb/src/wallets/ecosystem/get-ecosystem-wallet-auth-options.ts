@@ -15,7 +15,8 @@ type EcosystemOptions = {
 type SmartAccountOptions = {
   defaultChainId: number;
   sponsorGas: boolean;
-  accountFactoryAddress: string;
+  accountFactoryAddress?: string;
+  executionMode?: "EIP4337" | "EIP7702";
 };
 
 /**

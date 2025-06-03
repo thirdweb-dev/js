@@ -38,7 +38,8 @@ export type Ecosystem = {
   smartAccountOptions?: {
     defaultChainId: number;
     sponsorGas: boolean;
-    accountFactoryAddress: string;
+    accountFactoryAddress?: string;
+    executionMode?: "EIP4337" | "EIP7702";
   } | null;
   url: string;
   status: "active" | "requested" | "paymentFailed";
