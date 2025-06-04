@@ -2,7 +2,7 @@ import { getTeamBySlug } from "@/api/team";
 import { getLast24HoursRPCUsage } from "@/api/usage/rpc";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import {
   AlertTriangleIcon,
   CheckCircleIcon,
@@ -63,6 +63,23 @@ export default async function RPCUsage(props: {
     Number(totalCounts.rateLimitedCount) +
     Number(totalCounts.overageCount);
 
+  const peakRateDate = (() => {
+    if (peakRate.date) {
+      try {
+        // treat peakRate.date as UTC
+        const date = peakRate.date.endsWith("Z")
+          ? parseISO(peakRate.date)
+          : // force the timestamp to be in UTC
+            parseISO(`${peakRate.date}Z`);
+        return format(date, "MMM d, HH:mm");
+      } catch (e) {
+        console.error("Error parsing peak rate date", peakRate.date, e);
+        return null;
+      }
+    }
+    return null;
+  })();
+
   return (
     <div className="container mx-auto space-y-8 py-6">
       <div className="flex flex-col gap-2">
@@ -113,9 +130,7 @@ export default async function RPCUsage(props: {
             </div>
             <p className="mt-1 text-muted-foreground text-xs">
               <ClockIcon className="mr-1 inline h-3 w-3" />
-              {peakRate.date
-                ? format(new Date(`${peakRate.date}Z`), "MMM d, HH:mm")
-                : "No Requests in last 24 hours"}
+              {peakRateDate ? peakRateDate : "No Requests in last 24 hours"}
             </p>
           </CardContent>
         </Card>
@@ -134,12 +149,14 @@ export default async function RPCUsage(props: {
               <CheckCircleIcon className="mr-1 h-3 w-3 text-green-500" />
               <span>
                 {/* we count both included and overage as included */}
-                {(
-                  ((Number(totalCounts.includedCount) +
-                    Number(totalCounts.overageCount)) /
-                    Number(totalRequests)) *
-                  100
-                ).toFixed(1)}
+                {totalRequests === 0
+                  ? "0.0"
+                  : (
+                      ((Number(totalCounts.includedCount) +
+                        Number(totalCounts.overageCount)) /
+                        Number(totalRequests)) *
+                      100
+                    ).toFixed(1)}
                 % successful requests
               </span>
             </div>
@@ -159,7 +176,7 @@ export default async function RPCUsage(props: {
               <span>
                 {/* if there are no requests, we show 100% success rate */}
                 {totalRequests === 0
-                  ? "100"
+                  ? "0.0"
                   : (
                       (Number(totalCounts.rateLimitedCount) /
                         Number(totalRequests)) *
