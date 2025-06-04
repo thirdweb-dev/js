@@ -51,10 +51,7 @@ export const PlanToCreditsRecord: Record<Team["billingPlan"], CreditsRecord> = {
     plan: "starter",
     ...tier1Credits,
   },
-  starter_legacy: {
-    plan: "starter_legacy",
-    ...tier1Credits,
-  },
+
   growth: {
     plan: "growth",
     ...tier1Credits,

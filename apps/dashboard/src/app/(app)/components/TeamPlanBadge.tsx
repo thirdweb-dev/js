@@ -14,7 +14,7 @@ const teamPlanToBadgeVariant: Record<
   free: "secondary",
   // yellow
   starter: "warning",
-  starter_legacy: "warning",
+
   growth_legacy: "warning",
   // green
   accelerate: "success",
@@ -28,9 +28,7 @@ export function getTeamPlanBadgeLabel(plan: Team["billingPlan"]) {
   if (plan === "growth_legacy") {
     return "Growth - Legacy";
   }
-  if (plan === "starter_legacy") {
-    return "Starter - Legacy";
-  }
+
   return plan;
 }
 

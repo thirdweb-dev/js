@@ -13,7 +13,6 @@ import { PRO_CONTACT_US_URL } from "../../../../constants/pro";
 // this is used to determine whether to show "Upgrade" or "Downgrade" label based on tier level
 const planToTierRecord: Record<Team["billingPlan"], number> = {
   free: 0,
-  starter_legacy: 1,
   starter: 2,
   growth_legacy: 3,
   growth: 4,
@@ -71,11 +70,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
         validTeamPlan === "starter" ||
         validTeamPlan === "growth_legacy"));
 
-  const highlightStarterPlan =
-    highlightPlan === "starter" ||
-    (!highlightPlan &&
-      !isCurrentPlanScheduledToCancel &&
-      validTeamPlan === "starter_legacy");
+  const highlightStarterPlan = highlightPlan === "starter";
   const highlightScalePlan =
     highlightPlan === "scale" ||
     (!highlightPlan &&
