@@ -36,9 +36,9 @@ const meta = {
   args: {
     token: ETH,
     client: storyClient,
-    onContinue: (amount, token, chain) => {
-      console.log("Continue clicked:", { amount, token, chain });
-      alert(`Continue with ${amount} ${token.symbol} on ${chain.name}`);
+    onContinue: (amount, token, receiverAddress) => {
+      console.log("Continue clicked:", { amount, token, receiverAddress });
+      alert(`Continue with ${amount} ${token.symbol} to ${receiverAddress}`);
     },
     receiverAddress: "0x2247d5d238d0f9d37184d8332aE0289d1aD9991b",
     theme: "dark",

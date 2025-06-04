@@ -43,11 +43,10 @@ const meta = {
   tags: ["autodocs"],
   args: {
     client: storyClient,
-    onContinue: (amount, token, chain, receiverAddress) =>
+    onContinue: (amount, token, receiverAddress) =>
       console.log("Continue with payment:", {
         amount,
         token,
-        chain,
         receiverAddress,
       }),
     theme: "dark",

@@ -36,10 +36,9 @@ export interface PaymentMachineContext {
   // Flow configuration
   mode: PaymentMode;
 
-  // Target requirements (resolved in resolveRequirements state)
-  destinationChainId?: number;
-  destinationTokenAddress?: string;
+  // Target requirements (resolved in init state)
   destinationAmount?: string;
+  destinationToken?: Token;
   receiverAddress?: Address;
 
   // User selections (set in methodSelection state)
@@ -67,9 +66,8 @@ export interface PaymentMachineContext {
  */
 export type PaymentMachineEvent =
   | {
-      type: "REQUIREMENTS_RESOLVED";
-      destinationChainId: number;
-      destinationTokenAddress: string;
+      type: "DESTINATION_CONFIRMED";
+      destinationToken: Token;
       destinationAmount: string;
       receiverAddress: Address;
     }
@@ -83,7 +81,7 @@ export type PaymentMachineEvent =
   | { type: "BACK" };
 
 type PaymentMachineState =
-  | "resolveRequirements"
+  | "init"
   | "methodSelection"
   | "quote"
   | "preview"
@@ -98,9 +96,7 @@ export function usePaymentMachine(
   adapters: PaymentMachineContext["adapters"],
   mode: PaymentMode = "fund_wallet",
 ) {
-  const [currentState, setCurrentState] = useState<PaymentMachineState>(
-    "resolveRequirements",
-  );
+  const [currentState, setCurrentState] = useState<PaymentMachineState>("init");
   const [context, setContext] = useState<PaymentMachineContext>({
     mode,
     adapters,
@@ -111,12 +107,11 @@ export function usePaymentMachine(
       setCurrentState((state) => {
         setContext((ctx) => {
           switch (state) {
-            case "resolveRequirements":
-              if (event.type === "REQUIREMENTS_RESOLVED") {
+            case "init":
+              if (event.type === "DESTINATION_CONFIRMED") {
                 return {
                   ...ctx,
-                  destinationChainId: event.destinationChainId,
-                  destinationTokenAddress: event.destinationTokenAddress,
+                  destinationToken: event.destinationToken,
                   destinationAmount: event.destinationAmount,
                   receiverAddress: event.receiverAddress,
                 };
@@ -124,7 +119,7 @@ export function usePaymentMachine(
                 return {
                   ...ctx,
                   currentError: event.error,
-                  retryState: "resolveRequirements",
+                  retryState: "init",
                 };
               }
               break;
@@ -209,15 +204,15 @@ export function usePaymentMachine(
 
         // State transitions
         switch (state) {
-          case "resolveRequirements":
-            if (event.type === "REQUIREMENTS_RESOLVED")
+          case "init":
+            if (event.type === "DESTINATION_CONFIRMED")
               return "methodSelection";
             if (event.type === "ERROR_OCCURRED") return "error";
             break;
 
           case "methodSelection":
             if (event.type === "PAYMENT_METHOD_SELECTED") return "quote";
-            if (event.type === "BACK") return "resolveRequirements";
+            if (event.type === "BACK") return "init";
             if (event.type === "ERROR_OCCURRED") return "error";
             break;
 
@@ -240,15 +235,15 @@ export function usePaymentMachine(
             break;
 
           case "success":
-            if (event.type === "RESET") return "resolveRequirements";
+            if (event.type === "RESET") return "init";
             break;
 
           case "error":
             if (event.type === "RETRY") {
-              return context.retryState ?? "resolveRequirements";
+              return context.retryState ?? "init";
             }
             if (event.type === "RESET") {
-              return "resolveRequirements";
+              return "init";
             }
             break;
         }

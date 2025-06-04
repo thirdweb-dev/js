@@ -34,8 +34,7 @@ export async function saveSnapshot(
       value: state,
       context: {
         mode: context.mode,
-        destinationChainId: context.destinationChainId,
-        destinationTokenAddress: context.destinationTokenAddress,
+        destinationToken: context.destinationToken,
         destinationAmount: context.destinationAmount,
         selectedPaymentMethod: context.selectedPaymentMethod,
         preparedQuote: context.preparedQuote,

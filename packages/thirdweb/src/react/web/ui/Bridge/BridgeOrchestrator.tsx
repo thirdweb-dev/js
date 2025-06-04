@@ -1,7 +1,6 @@
 "use client";
 import { useCallback, useMemo } from "react";
 import type { Token } from "../../../../bridge/types/Token.js";
-import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { Address } from "../../../../utils/address.js";
@@ -123,30 +122,6 @@ export function BridgeOrchestrator({
   // Use the payment machine hook
   const [state, send] = usePaymentMachine(adapters, uiOptions.mode);
 
-  // Get destination token and amount based on mode
-  const getDestinationInfo = () => {
-    switch (uiOptions.mode) {
-      case "fund_wallet":
-        return {
-          token: uiOptions.destinationToken,
-          amount: uiOptions.initialAmount,
-        };
-      case "direct_payment":
-        return {
-          token: uiOptions.paymentInfo.token,
-          amount: uiOptions.paymentInfo.amount,
-        };
-      case "transaction":
-        // For transaction mode, we'll need to define what token/amount to use
-        return {
-          token: undefined,
-          amount: undefined,
-        };
-    }
-  };
-
-  const destinationInfo = getDestinationInfo();
-
   // Handle completion
   const handleComplete = useCallback(() => {
     onComplete?.();
@@ -198,13 +173,12 @@ export function BridgeOrchestrator({
 
   // Handle requirements resolved from FundWallet and DirectPayment
   const handleRequirementsResolved = useCallback(
-    (amount: string, token: Token, chain: Chain, receiverAddress: Address) => {
+    (amount: string, token: Token, receiverAddress: Address) => {
       send({
-        type: "REQUIREMENTS_RESOLVED",
-        destinationChainId: chain.id,
-        destinationTokenAddress: token.address,
+        type: "DESTINATION_CONFIRMED",
+        destinationToken: token,
+        receiverAddress,
         destinationAmount: amount,
-        receiverAddress: receiverAddress,
       });
     },
     [send],
@@ -222,35 +196,33 @@ export function BridgeOrchestrator({
       )}
 
       {/* Render current screen based on state */}
-      {state.value === "resolveRequirements" &&
-        uiOptions.mode === "fund_wallet" && (
-          <FundWallet
-            token={uiOptions.destinationToken}
-            receiverAddress={receiverAddress}
-            initialAmount={uiOptions.initialAmount}
-            client={client}
-            onContinue={handleRequirementsResolved}
-            connectOptions={connectOptions}
-          />
-        )}
+      {state.value === "init" && uiOptions.mode === "fund_wallet" && (
+        <FundWallet
+          token={uiOptions.destinationToken}
+          receiverAddress={receiverAddress}
+          initialAmount={uiOptions.initialAmount}
+          client={client}
+          onContinue={handleRequirementsResolved}
+          connectOptions={connectOptions}
+        />
+      )}
 
-      {state.value === "resolveRequirements" &&
-        uiOptions.mode === "direct_payment" && (
-          <DirectPayment
-            paymentInfo={uiOptions.paymentInfo}
-            client={client}
-            onContinue={handleRequirementsResolved}
-            connectOptions={connectOptions}
-          />
-        )}
+      {state.value === "init" && uiOptions.mode === "direct_payment" && (
+        <DirectPayment
+          paymentInfo={uiOptions.paymentInfo}
+          client={client}
+          onContinue={handleRequirementsResolved}
+          connectOptions={connectOptions}
+        />
+      )}
 
       {state.value === "methodSelection" &&
-        destinationInfo.token &&
-        destinationInfo.amount && (
+        state.context.destinationToken &&
+        state.context.destinationAmount && (
           <PaymentSelection
-            destinationToken={destinationInfo.token}
+            destinationToken={state.context.destinationToken}
             client={client}
-            destinationAmount={destinationInfo.amount}
+            destinationAmount={state.context.destinationAmount}
             onPaymentMethodSelected={handlePaymentMethodSelected}
             onError={handleError}
             onBack={() => {
@@ -264,15 +236,15 @@ export function BridgeOrchestrator({
       {state.value === "quote" &&
         state.context.selectedPaymentMethod &&
         state.context.receiverAddress &&
-        destinationInfo.token &&
-        destinationInfo.amount && (
+        state.context.destinationToken &&
+        state.context.destinationAmount && (
           <QuoteLoader
-            destinationToken={destinationInfo.token}
+            destinationToken={state.context.destinationToken}
             purchaseData={purchaseData}
             paymentLinkId={paymentLinkId}
             paymentMethod={state.context.selectedPaymentMethod}
             receiver={state.context.receiverAddress}
-            amount={destinationInfo.amount}
+            amount={state.context.destinationAmount}
             client={client}
             onQuoteReceived={handleQuoteReceived}
             onError={handleError}

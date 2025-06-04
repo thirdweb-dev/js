@@ -1,6 +1,5 @@
 "use client";
 import type { Token } from "../../../../bridge/types/Token.js";
-import type { Chain } from "../../../../chains/types.js";
 import { defineChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { type Address, shortenAddress } from "../../../../utils/address.js";
@@ -42,12 +41,7 @@ export interface DirectPaymentProps {
   /**
    * Called when user continues with the payment
    */
-  onContinue: (
-    amount: string,
-    token: Token,
-    chain: Chain,
-    receiverAddress: Address,
-  ) => void;
+  onContinue: (amount: string, token: Token, receiverAddress: Address) => void;
 
   /**
    * Connect options for wallet connection
@@ -68,7 +62,6 @@ export function DirectPayment({
     onContinue(
       paymentInfo.amount,
       paymentInfo.token,
-      chain,
       paymentInfo.sellerAddress,
     );
   };

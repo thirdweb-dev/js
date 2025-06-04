@@ -1,8 +1,6 @@
 "use client";
 import { useState } from "react";
 import type { Token } from "../../../../bridge/types/Token.js";
-import type { Chain } from "../../../../chains/types.js";
-import { getCachedChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { type Address, getAddress } from "../../../../utils/address.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
@@ -47,12 +45,7 @@ export interface FundWalletProps {
   /**
    * Called when continue is clicked with the resolved requirements
    */
-  onContinue: (
-    amount: string,
-    token: Token,
-    chain: Chain,
-    receiverAddress: Address,
-  ) => void;
+  onContinue: (amount: string, token: Token, receiverAddress: Address) => void;
 
   /**
    * Connect options for wallet connection
@@ -69,7 +62,6 @@ export function FundWallet({
   connectOptions,
 }: FundWalletProps) {
   const [amount, setAmount] = useState(initialAmount);
-  const chain = getCachedChain(token.chainId);
   const theme = useCustomTheme();
   const account = useActiveAccount();
   const receiver = receiverAddress ?? account?.address;
@@ -324,7 +316,7 @@ export function FundWallet({
           disabled={!isValidAmount}
           onClick={() => {
             if (isValidAmount) {
-              onContinue(amount, token, chain, getAddress(receiver));
+              onContinue(amount, token, getAddress(receiver));
             }
           }}
           style={{
