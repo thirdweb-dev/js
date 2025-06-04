@@ -202,7 +202,7 @@ export function useStepExecutor(
       });
       const hash = result.transactionHash;
 
-      if (tx.action === "approval") {
+      if (tx.action === "approval" || tx.action === "fee") {
         // don't poll status for approval transactions, just wait for confirmation
         await waitForReceipt(result);
         return;
