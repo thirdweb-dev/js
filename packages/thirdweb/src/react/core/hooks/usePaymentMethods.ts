@@ -61,8 +61,10 @@ export function usePaymentMethods(options: {
         destinationChainId: destinationToken.chainId,
         destinationTokenAddress: destinationToken.address,
         sortBy: "popularity",
+        includePrices: true,
         limit: 100, // Get top 100 most popular routes
       });
+      console.log("allRoutes", allRoutes);
 
       // 1. Resolve all unique chains in the supported token map
       const uniqueChains = Array.from(
