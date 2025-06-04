@@ -56,7 +56,7 @@ export function TokenAndChain({
             style={{
               position: "absolute",
               bottom: "-2px",
-              right: "-2px",
+              right: "-6px",
               width: size === "lg" || size === "xl" ? iconSize.sm : iconSize.xs,
               height:
                 size === "lg" || size === "xl" ? iconSize.sm : iconSize.xs,

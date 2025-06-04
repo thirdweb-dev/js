@@ -273,6 +273,64 @@ export const simpleBuyQuote: BridgePrepareResult = JSON.parse(
   }),
 );
 
+export const longTokenNameBuyQuote: BridgePrepareResult = JSON.parse(
+  stringify({
+    type: "buy",
+    originAmount: 1000000000000000000n, // 1 ETH
+    destinationAmount: 100000000n, // 100 USDC
+    timestamp: Date.now(),
+    estimatedExecutionTimeMs: 60000,
+    steps: [
+      {
+        originToken: {
+          chainId: 1,
+          address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+          name: "Ethereum",
+          symbol: "ETH",
+          decimals: 18,
+          priceUsd: 2500.0,
+          iconUri:
+            "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
+        },
+        destinationToken: {
+          chainId: 42793,
+          address: "0x796Ea11Fa2dD751eD01b53C372fFDB4AAa8f00F9",
+          name: "USD Coin (USDC.e on Etherlink)",
+          symbol: "USDC.e",
+          decimals: 6,
+          priceUsd: 1.0,
+          iconUri:
+            "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
+        },
+        originAmount: 1000000000000000000n,
+        destinationAmount: 100000000n,
+        estimatedExecutionTimeMs: 60000,
+        transactions: [
+          {
+            action: "buy",
+            id: "0xsingle123",
+            to: "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45",
+            data: "0x472b43f3",
+            value: 1000000000000000000n,
+            chainId: 1,
+            client: storyClient,
+            chain: defineChain(1),
+          },
+        ],
+      },
+    ],
+    intent: {
+      originChainId: 1,
+      originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      destinationChainId: 1,
+      destinationTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      amount: 100000000n,
+      sender: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+      receiver: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+    },
+  }),
+);
+
 // Buy quote with approval + buy in single step
 export const buyWithApprovalQuote: BridgePrepareResult = JSON.parse(
   stringify({

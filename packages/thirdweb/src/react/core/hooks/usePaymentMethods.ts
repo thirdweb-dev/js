@@ -3,7 +3,6 @@ import { routes } from "../../../bridge/Routes.js";
 import type { Token } from "../../../bridge/types/Token.js";
 import { getCachedChain } from "../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import { isInsightEnabled } from "../../../insight/common.js";
 import { getOwnedTokens } from "../../../insight/get-tokens.js";
 import { toTokens } from "../../../utils/units.js";
@@ -198,37 +197,4 @@ export function usePaymentMethods(options: {
     isSuccess: routesQuery.isSuccess,
     refetch: routesQuery.refetch,
   };
-}
-
-function sortOwnedTokens(
-  owned: OwnedTokenWithQuote[],
-  destinationToken: Token,
-) {
-  return [
-    ...owned.filter((t) => t.originToken.chainId === destinationToken.chainId),
-    ...owned.filter(
-      (t) =>
-        t.originToken.chainId !== destinationToken.chainId &&
-        t.originToken.address.toLowerCase() ===
-          NATIVE_TOKEN_ADDRESS.toLowerCase(),
-    ),
-    ...owned.filter(
-      (t) =>
-        t.originToken.chainId !== destinationToken.chainId &&
-        t.originToken.symbol === "USDC",
-    ),
-    ...owned.filter(
-      (t) =>
-        t.originToken.chainId !== destinationToken.chainId &&
-        t.originToken.symbol === "USDT",
-    ),
-    ...owned.filter(
-      (t) =>
-        t.originToken.chainId !== destinationToken.chainId &&
-        t.originToken.address.toLowerCase() !==
-          NATIVE_TOKEN_ADDRESS.toLowerCase() &&
-        t.originToken.symbol !== "USDC" &&
-        t.originToken.symbol !== "USDT",
-    ),
-  ];
 }

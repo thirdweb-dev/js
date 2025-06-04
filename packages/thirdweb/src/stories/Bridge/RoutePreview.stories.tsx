@@ -10,6 +10,7 @@ import {
   STORY_MOCK_WALLET,
   buyWithApprovalQuote,
   complexBuyQuote,
+  longTokenNameBuyQuote,
   onrampWithSwapsQuote,
   simpleBuyQuote,
   simpleOnrampQuote,
@@ -211,6 +212,23 @@ export const BuySimpleLight: Story = {
   },
   parameters: {
     backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story: "Simple buy quote with a single transaction (light theme).",
+      },
+    },
+  },
+};
+
+export const BuyWithLongTokenName: Story = {
+  args: {
+    theme: "dark",
+    preparedQuote: longTokenNameBuyQuote,
+    paymentMethod: ethCryptoPaymentMethod,
+    client: storyClient,
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
     docs: {
       description: {
         story: "Simple buy quote with a single transaction (light theme).",
