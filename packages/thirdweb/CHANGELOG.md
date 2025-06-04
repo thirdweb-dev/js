@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.102.4
+
+### Patch Changes
+
+- [#7243](https://github.com/thirdweb-dev/js/pull/7243) [`283dc28`](https://github.com/thirdweb-dev/js/commit/283dc289fca1ad16a9296e610d293b73a7123709) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Include native tokens in Insight.getOwnedTokens
+
+- [#7268](https://github.com/thirdweb-dev/js/pull/7268) [`b237318`](https://github.com/thirdweb-dev/js/commit/b237318b7dcfdb9e04ac6c003c215683050e2dd3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support EIP7702 execution for ecosystem wallets
+
 ## 5.102.3
 
 ### Patch Changes
