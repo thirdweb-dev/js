@@ -1,4 +1,5 @@
 "use client";
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -27,6 +28,7 @@ import { PlusIcon } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { isAddress } from "thirdweb";
+import type { ThirdwebClient } from "thirdweb";
 import { getSocialIcon } from "thirdweb/wallets/in-app";
 import {
   DEFAULT_ACCOUNT_FACTORY_V0_6,
@@ -47,13 +49,20 @@ type AuthOptionsFormData = {
   defaultChainId: number;
   accountFactoryType: "v0.6" | "v0.7" | "custom";
   customAccountFactoryAddress: string;
+  executionMode: "EIP4337" | "EIP7702";
 };
 
 export function AuthOptionsForm({
   ecosystem,
   authToken,
   teamId,
-}: { ecosystem: Ecosystem; authToken: string; teamId: string }) {
+  client,
+}: {
+  ecosystem: Ecosystem;
+  authToken: string;
+  teamId: string;
+  client: ThirdwebClient;
+}) {
   const form = useForm<AuthOptionsFormData>({
     defaultValues: {
       authOptions: ecosystem.authOptions || [],
@@ -71,6 +80,7 @@ export function AuthOptionsForm({
               DEFAULT_ACCOUNT_FACTORY_V0_6
             ? "v0.6"
             : "custom",
+      executionMode: ecosystem.smartAccountOptions?.executionMode || "EIP4337",
       customAccountFactoryAddress:
         ecosystem.smartAccountOptions?.accountFactoryAddress || "",
     },
@@ -97,6 +107,7 @@ export function AuthOptionsForm({
             .optional(),
           accountFactoryType: z.enum(["v0.6", "v0.7", "custom"]),
           customAccountFactoryAddress: z.string().optional(),
+          executionMode: z.enum(["EIP4337", "EIP7702"]),
         })
         .refine(
           (data) => {
@@ -203,6 +214,7 @@ export function AuthOptionsForm({
         defaultChainId: data.defaultChainId,
         sponsorGas: data.sponsorGas,
         accountFactoryAddress,
+        executionMode: data.executionMode,
       };
     }
 
@@ -437,26 +449,71 @@ export function AuthOptionsForm({
           />
           {form.watch("useSmartAccount") && (
             <div className="mt-1 flex flex-col gap-4">
-              <FormField
-                control={form.control}
-                name="sponsorGas"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Sponsor Gas</FormLabel>
-                      <FormDescription>
-                        Enable gas sponsorship for smart accounts
-                      </FormDescription>
-                    </div>
-                  </FormItem>
-                )}
-              />
+              <div className="flex flex-col gap-4 md:flex-row md:gap-6">
+                <FormField
+                  control={form.control}
+                  name="executionMode"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Execution Mode</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select execution mode" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="EIP4337">EIP-4337</SelectItem>
+                          <SelectItem value="EIP7702">EIP-7702</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {(() => {
+                        const originalExecutionMode =
+                          ecosystem.smartAccountOptions?.executionMode ||
+                          "EIP4337";
+                        const currentExecutionMode =
+                          form.watch("executionMode");
+                        const hasChanged =
+                          currentExecutionMode !== originalExecutionMode;
+
+                        return (
+                          <FormDescription
+                            className={hasChanged ? "text-warning-text" : ""}
+                          >
+                            {hasChanged
+                              ? "Changing execution mode will change the final user addresses when they connect to your ecosystem."
+                              : "Smart account standard (EIP-7702 is recommended)"}
+                          </FormDescription>
+                        );
+                      })()}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="sponsorGas"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center space-x-3 space-y-0 md:flex-1">
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>Sponsor Gas</FormLabel>
+                        <FormDescription>
+                          Enable gas sponsorship for smart accounts
+                        </FormDescription>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
                 name="defaultChainId"
@@ -464,7 +521,11 @@ export function AuthOptionsForm({
                   <FormItem>
                     <FormLabel>Default Chain ID</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="1" />
+                      <SingleNetworkSelector
+                        client={client}
+                        chainId={field.value}
+                        onChange={field.onChange}
+                      />
                     </FormControl>
                     <FormDescription>
                       This will be the chain ID the smart account will be
@@ -484,56 +545,63 @@ export function AuthOptionsForm({
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="accountFactoryType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Account Factory</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select account factory type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="v0.6">
-                          Default Account Factory (v0.6)
-                        </SelectItem>
-                        <SelectItem value="v0.7">
-                          Default Account Factory (v0.7)
-                        </SelectItem>
-                        <SelectItem value="custom">Custom factory</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormDescription>
-                      Choose a default account factory or select custom to enter
-                      your own address
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {form.watch("accountFactoryType") === "custom" && (
-                <FormField
-                  control={form.control}
-                  name="customAccountFactoryAddress"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Custom Account Factory Address</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="0x..." />
-                      </FormControl>
-                      <FormDescription>
-                        Enter your own smart account factory contract address
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
+              {form.watch("executionMode") === "EIP4337" && (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="accountFactoryType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Account Factory</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select account factory type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="v0.6">
+                              Default Account Factory (v0.6)
+                            </SelectItem>
+                            <SelectItem value="v0.7">
+                              Default Account Factory (v0.7)
+                            </SelectItem>
+                            <SelectItem value="custom">
+                              Custom factory
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormDescription>
+                          Choose a default account factory or select custom to
+                          enter your own address
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {form.watch("accountFactoryType") === "custom" && (
+                    <FormField
+                      control={form.control}
+                      name="customAccountFactoryAddress"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Custom Account Factory Address</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="0x..." />
+                          </FormControl>
+                          <FormDescription>
+                            Enter your own smart account factory contract
+                            address
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   )}
-                />
+                </>
               )}
             </div>
           )}

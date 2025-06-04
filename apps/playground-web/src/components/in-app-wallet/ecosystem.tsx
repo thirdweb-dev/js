@@ -8,7 +8,7 @@ const getEcosystemWallet = () => {
     process.env.NEXT_PUBLIC_IN_APP_WALLET_URL?.endsWith(".thirdweb-dev.com")
   ) {
     // dev ecosystem
-    return ecosystemWallet("ecosystem.catlovers");
+    return ecosystemWallet("ecosystem.catfans");
   }
   // prod ecosystem
   return ecosystemWallet("ecosystem.thirdweb-engs", {
