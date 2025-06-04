@@ -11,6 +11,7 @@ import {
   TriangleRightIcon,
   WalletIcon,
   WebhookIcon,
+  WrenchIcon,
 } from "lucide-react";
 
 const paySlug = "/pay";
@@ -115,6 +116,11 @@ export const sidebar: SideBar = {
       name: "Webhooks",
       href: `${paySlug}/webhooks`,
       icon: <WebhookIcon />,
+    },
+    {
+      name: "Troubleshoot",
+      href: `${paySlug}/troubleshoot`,
+      icon: <WrenchIcon />,
     },
     {
       name: "FAQs",
