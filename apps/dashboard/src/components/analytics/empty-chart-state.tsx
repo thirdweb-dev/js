@@ -1,9 +1,9 @@
 "use client";
 import { LoadingDots } from "@/components/ui/LoadingDots";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
+import { cn } from "@/lib/utils";
 import { useMemo } from "react";
 import { Area, AreaChart, Bar, BarChart } from "recharts";
-import { cn } from "../../@/lib/utils";
 
 type FakeCartData = {
   value: number;

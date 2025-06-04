@@ -15,6 +15,7 @@ import { tryCatch } from "../../../../../utils/try-catch";
 export function RenewSubscriptionButton(props: {
   teamId: string;
   getTeam: () => Promise<Team>;
+  disabled?: boolean;
 }) {
   const router = useDashboardRouter();
   const [isRoutePending, setTransition] = useTransition();
@@ -71,7 +72,7 @@ export function RenewSubscriptionButton(props: {
       variant="default"
       size="sm"
       className="gap-2"
-      disabled={showSpinner}
+      disabled={showSpinner || props.disabled}
     >
       {showSpinner ? (
         <Spinner className="size-4" />

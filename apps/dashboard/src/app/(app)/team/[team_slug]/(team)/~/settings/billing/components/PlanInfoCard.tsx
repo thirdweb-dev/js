@@ -13,6 +13,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { CancelPlanButton } from "components/settings/Account/Billing/CancelPlanModal/CancelPlanModal";
 import { BillingPricing } from "components/settings/Account/Billing/Pricing";
 import { differenceInDays, isAfter } from "date-fns";
@@ -30,6 +31,7 @@ export function PlanInfoCardUI(props: {
   getTeam: () => Promise<Team>;
   openPlanSheetButtonByDefault: boolean;
   highlightPlan: Team["billingPlan"] | undefined;
+  isOwnerAccount: boolean;
 }) {
   const { subscriptions, team, openPlanSheetButtonByDefault } = props;
   const validPlan = getValidTeamPlan(team);
@@ -112,32 +114,57 @@ export function PlanInfoCardUI(props: {
 
         {props.team.billingPlan !== "free" && (
           <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-2 bg-background"
-              onClick={() => {
-                setIsPlanSheetOpen(true);
-              }}
+            <ToolTipLabel
+              label={
+                props.isOwnerAccount
+                  ? null
+                  : "Only team owners can change plans."
+              }
             >
-              <SquarePenIcon className="size-4 text-muted-foreground" />
-              Change Plan
-            </Button>
+              <div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 bg-background"
+                  onClick={() => {
+                    setIsPlanSheetOpen(true);
+                  }}
+                  disabled={!props.isOwnerAccount}
+                >
+                  <SquarePenIcon className="size-4 text-muted-foreground" />
+                  Change Plan
+                </Button>
+              </div>
+            </ToolTipLabel>
 
-            {props.team.planCancellationDate ? (
-              <RenewSubscriptionButton
-                teamId={props.team.id}
-                getTeam={props.getTeam}
-              />
-            ) : (
-              <CancelPlanButton
-                teamId={props.team.id}
-                teamSlug={props.team.slug}
-                billingStatus={props.team.billingStatus}
-                currentPlan={props.team.billingPlan}
-                getTeam={props.getTeam}
-              />
-            )}
+            <ToolTipLabel
+              label={
+                props.isOwnerAccount
+                  ? null
+                  : props.team.planCancellationDate
+                    ? "Only team owners can renew plans."
+                    : "Only team owners can cancel plans."
+              }
+            >
+              <div>
+                {props.team.planCancellationDate ? (
+                  <RenewSubscriptionButton
+                    teamId={props.team.id}
+                    getTeam={props.getTeam}
+                    disabled={!props.isOwnerAccount}
+                  />
+                ) : (
+                  <CancelPlanButton
+                    teamId={props.team.id}
+                    teamSlug={props.team.slug}
+                    billingStatus={props.team.billingStatus}
+                    currentPlan={props.team.billingPlan}
+                    getTeam={props.getTeam}
+                    disabled={!props.isOwnerAccount}
+                  />
+                )}
+              </div>
+            </ToolTipLabel>
           </div>
         )}
       </div>
@@ -153,16 +180,28 @@ export function PlanInfoCardUI(props: {
               To unlock additional usage, upgrade your plan to Starter or
               Growth.
             </p>
+
             <div className="mt-4">
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => {
-                  setIsPlanSheetOpen(true);
-                }}
+              <ToolTipLabel
+                label={
+                  props.isOwnerAccount
+                    ? null
+                    : "Only team owners can change plans."
+                }
               >
-                Select a plan
-              </Button>
+                <div>
+                  <Button
+                    disabled={!props.isOwnerAccount}
+                    variant="default"
+                    size="sm"
+                    onClick={() => {
+                      setIsPlanSheetOpen(true);
+                    }}
+                  >
+                    Select a plan
+                  </Button>
+                </div>
+              </ToolTipLabel>
             </div>
           </div>
         ) : (
@@ -203,17 +242,28 @@ export function PlanInfoCardUI(props: {
             </Button>
 
             {/* manage team billing */}
-            <BillingPortalButton
-              teamSlug={team.slug}
-              buttonProps={{
-                variant: "outline",
-                size: "sm",
-                className: "bg-background gap-2",
-              }}
+            <ToolTipLabel
+              label={
+                props.isOwnerAccount
+                  ? null
+                  : "Only team owners can manage billing."
+              }
             >
-              <CreditCardIcon className="size-4 text-muted-foreground" />
-              Manage Billing
-            </BillingPortalButton>
+              <div>
+                <BillingPortalButton
+                  teamSlug={team.slug}
+                  buttonProps={{
+                    variant: "outline",
+                    size: "sm",
+                    className: "bg-background gap-2",
+                    disabled: !props.isOwnerAccount,
+                  }}
+                >
+                  <CreditCardIcon className="size-4 text-muted-foreground" />
+                  Manage Billing
+                </BillingPortalButton>
+              </div>
+            </ToolTipLabel>
           </div>
         </div>
       )}

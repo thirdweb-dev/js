@@ -1,5 +1,6 @@
 import { getStripeBalance } from "@/actions/stripe-actions";
 import { type Team, getTeamBySlug } from "@/api/team";
+import { getMemberById } from "@/api/team-members";
 import { getTeamSubscriptions } from "@/api/team-subscription";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { redirect } from "next/navigation";
@@ -25,15 +26,19 @@ export default async function Page(props: {
   ]);
   const pagePath = `/team/${params.team_slug}/settings/billing`;
 
-  const [account, team, authToken] = await Promise.all([
-    getValidAccount(pagePath),
+  const account = await getValidAccount(pagePath);
+
+  const [team, authToken, teamMember] = await Promise.all([
     getTeamBySlug(params.team_slug),
     getAuthToken(),
+    getMemberById(params.team_slug, account.id),
   ]);
 
-  if (!team) {
+  if (!team || !teamMember) {
     redirect("/team");
   }
+
+  const isOwnerAccount = teamMember.role === "OWNER";
 
   const subscriptions = await getTeamSubscriptions(team.slug);
 
@@ -66,6 +71,7 @@ export default async function Page(props: {
           subscriptions={subscriptions}
           openPlanSheetButtonByDefault={searchParams.showPlans === "true"}
           highlightPlan={highlightPlan}
+          isOwnerAccount={isOwnerAccount}
         />
       </div>
 
@@ -74,6 +80,7 @@ export default async function Page(props: {
         <CreditBalanceSection
           teamSlug={team.slug}
           balancePromise={getStripeBalance(team.stripeCustomerId)}
+          isOwnerAccount={isOwnerAccount}
         />
       )}
 

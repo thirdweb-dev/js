@@ -9,12 +9,14 @@ export function PlanInfoCardClient(props: {
   team: Team;
   openPlanSheetButtonByDefault: boolean;
   highlightPlan: Team["billingPlan"] | undefined;
+  isOwnerAccount: boolean;
 }) {
   return (
     <PlanInfoCardUI
       openPlanSheetButtonByDefault={props.openPlanSheetButtonByDefault}
       team={props.team}
       subscriptions={props.subscriptions}
+      isOwnerAccount={props.isOwnerAccount}
       getTeam={async () => {
         const res = await apiServerProxy<{
           result: Team;

@@ -12,8 +12,8 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { ArrowRightIcon, DollarSignIcon } from "lucide-react";
-import Link from "next/link";
 import { Suspense, use, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { ThirdwebMiniLogo } from "../../../../../../../components/ThirdwebMiniLogo";
@@ -28,11 +28,13 @@ const predefinedAmounts = [
 interface CreditBalanceSectionProps {
   balancePromise: Promise<number>;
   teamSlug: string;
+  isOwnerAccount: boolean;
 }
 
 export function CreditBalanceSection({
   balancePromise,
   teamSlug,
+  isOwnerAccount,
 }: CreditBalanceSectionProps) {
   const [selectedAmount, setSelectedAmount] = useState<string>(
     predefinedAmounts[0].value,
@@ -114,17 +116,30 @@ export function CreditBalanceSection({
               </Suspense>
             </ErrorBoundary>
 
-            <Button asChild className="w-full" size="lg">
-              <Link
-                href={`/checkout/${teamSlug}/topup?amount=${selectedAmount}`}
-                prefetch={false}
-                target="_blank"
-              >
-                <ThirdwebMiniLogo className="mr-2 h-4 w-4" />
-                Top Up With Crypto
-                <ArrowRightIcon className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            <ToolTipLabel
+              label={
+                isOwnerAccount ? null : "Only team owners can top up credits."
+              }
+            >
+              <div>
+                <Button
+                  asChild
+                  className="w-full"
+                  size="lg"
+                  disabled={!isOwnerAccount}
+                >
+                  <a
+                    href={`/checkout/${teamSlug}/topup?amount=${selectedAmount}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <ThirdwebMiniLogo className="mr-2 h-4 w-4" />
+                    Top Up With Crypto
+                    <ArrowRightIcon className="ml-2 h-4 w-4" />
+                  </a>
+                </Button>
+              </div>
+            </ToolTipLabel>
           </div>
         </div>
       </CardContent>

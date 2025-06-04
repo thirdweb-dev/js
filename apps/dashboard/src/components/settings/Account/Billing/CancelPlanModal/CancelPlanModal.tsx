@@ -26,6 +26,7 @@ export function CancelPlanButton(props: {
   currentPlan: Team["billingPlan"];
   billingStatus: Team["billingStatus"];
   getTeam: () => Promise<Team>;
+  disabled?: boolean;
 }) {
   // shortcut the sheet in case the user is in the default state
   if (props.billingStatus !== "invalidPayment" && props.currentPlan !== "pro") {
@@ -33,6 +34,7 @@ export function CancelPlanButton(props: {
       <ImmediateCancelPlanButton
         teamId={props.teamId}
         getTeam={props.getTeam}
+        disabled={props.disabled}
       />
     );
   }
@@ -40,7 +42,12 @@ export function CancelPlanButton(props: {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2 bg-background">
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-2 bg-background"
+          disabled={props.disabled}
+        >
           <CircleXIcon className="size-4 text-muted-foreground" />
           Cancel Plan
         </Button>
@@ -107,6 +114,7 @@ function ProPlanCancelPlanSheetContent() {
 function ImmediateCancelPlanButton(props: {
   teamId: string;
   getTeam: () => Promise<Team>;
+  disabled?: boolean;
 }) {
   const router = useDashboardRouter();
   const [isRoutePending, startTransition] = useTransition();
@@ -144,7 +152,7 @@ function ImmediateCancelPlanButton(props: {
       variant="outline"
       size="sm"
       className="gap-2 bg-background"
-      disabled={showPlanSpinner}
+      disabled={showPlanSpinner || props.disabled}
       asChild
     >
       <Link href={buildCancelPlanUrl({ teamId: props.teamId })} target="_blank">

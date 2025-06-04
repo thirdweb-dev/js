@@ -120,6 +120,7 @@ function Story(props: {
           getTeam={teamTeamStub}
           highlightPlan={undefined}
           openPlanSheetButtonByDefault={false}
+          isOwnerAccount={true}
         />
       </BadgeContainer>
 
@@ -133,6 +134,7 @@ function Story(props: {
           getTeam={teamTeamStub}
           highlightPlan={undefined}
           openPlanSheetButtonByDefault={false}
+          isOwnerAccount={true}
         />
       </BadgeContainer>
 
@@ -143,6 +145,7 @@ function Story(props: {
           getTeam={teamTeamStub}
           highlightPlan={undefined}
           openPlanSheetButtonByDefault={false}
+          isOwnerAccount={true}
         />
       </BadgeContainer>
 
@@ -153,6 +156,7 @@ function Story(props: {
           getTeam={teamTeamStub}
           highlightPlan={undefined}
           openPlanSheetButtonByDefault={false}
+          isOwnerAccount={true}
         />
       </BadgeContainer>
 
@@ -163,6 +167,7 @@ function Story(props: {
           getTeam={teamTeamStub}
           highlightPlan={undefined}
           openPlanSheetButtonByDefault={false}
+          isOwnerAccount={true}
         />
       </BadgeContainer>
     </div>
