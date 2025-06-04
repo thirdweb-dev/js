@@ -131,11 +131,52 @@ export async function getCryptoTopupUrl(options: {
   }
 
   const res = await fetch(
-    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamSlug}/checkout/crypto-top-up`,
+    new URL(
+      `/v1/teams/${options.teamSlug}/checkout/crypto-top-up`,
+      NEXT_PUBLIC_THIRDWEB_API_HOST,
+    ),
     {
       method: "POST",
       body: JSON.stringify({
         amountUSD: options.amountUSD,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (!res.ok) {
+    return undefined;
+  }
+
+  const json = await res.json();
+
+  if (!json.result) {
+    return undefined;
+  }
+
+  return json.result as string;
+}
+
+export async function getInvoicePaymentUrl(options: {
+  teamSlug: string;
+  invoiceId: string;
+}): Promise<string | undefined> {
+  const token = await getAuthToken();
+  if (!token) {
+    return undefined;
+  }
+  const res = await fetch(
+    new URL(
+      `/v1/teams/${options.teamSlug}/checkout/crypto-pay-invoice`,
+      NEXT_PUBLIC_THIRDWEB_API_HOST,
+    ),
+    {
+      method: "POST",
+      body: JSON.stringify({
+        invoiceId: options.invoiceId,
       }),
       headers: {
         "Content-Type": "application/json",

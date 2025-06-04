@@ -18,12 +18,15 @@ import {
   DownloadIcon,
   ReceiptIcon,
 } from "lucide-react";
+import Link from "next/link";
 import { useQueryState } from "nuqs";
 import { useTransition } from "react";
 import type Stripe from "stripe";
+import { ThirdwebMiniLogo } from "../../../../../../../components/ThirdwebMiniLogo";
 import { searchParams } from "../search-params";
 
 export function BillingHistory(props: {
+  teamSlug: string;
   invoices: Stripe.Invoice[];
   status: "all" | "past_due" | "open";
   hasMore: boolean;
@@ -61,7 +64,7 @@ export function BillingHistory(props: {
       // we treate "uncollectible" as unpaid
       case "uncollectible": {
         // if the invoice due date is in the past, we want to display it as past due
-        if (invoice.due_date && invoice.due_date < Date.now()) {
+        if (invoice.due_date && invoice.due_date * 1000 < Date.now()) {
           return <Badge variant="destructive">Past Due</Badge>;
         }
         return <Badge variant="outline">Open</Badge>;
@@ -122,19 +125,33 @@ export function BillingHistory(props: {
                 <TableCell>{getStatusBadge(invoice)}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end space-x-2">
-                    {invoice.status === "open" &&
-                      invoice.hosted_invoice_url && (
+                    {invoice.status === "open" && (
+                      <>
+                        {/* always show the crypto payment button */}
                         <Button variant="default" size="sm" asChild>
-                          <a
-                            href={invoice.hosted_invoice_url}
+                          <Link
                             target="_blank"
-                            rel="noopener noreferrer"
+                            href={`/checkout/${props.teamSlug}/invoice?invoice_id=${invoice.id}`}
                           >
-                            <CreditCardIcon className="mr-2 h-4 w-4 text-muted-foreground" />
-                            Pay Now
-                          </a>
+                            <ThirdwebMiniLogo className="mr-2 h-4 w-4" />
+                            Pay with crypto
+                          </Link>
                         </Button>
-                      )}
+                        {/* if we have a hosted invoice url, show that */}
+                        {invoice.hosted_invoice_url && (
+                          <Button variant="outline" size="sm" asChild>
+                            <a
+                              href={invoice.hosted_invoice_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <CreditCardIcon className="mr-2 h-4 w-4" />
+                              Pay with Card
+                            </a>
+                          </Button>
+                        )}
+                      </>
+                    )}
 
                     {invoice.invoice_pdf && (
                       <Button variant="ghost" size="sm" asChild>
@@ -143,7 +160,7 @@ export function BillingHistory(props: {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          <DownloadIcon className="mr-2 h-4 w-4 text-muted-foreground" />
+                          <DownloadIcon className="mr-2 h-4 w-4 " />
                           PDF
                         </a>
                       </Button>

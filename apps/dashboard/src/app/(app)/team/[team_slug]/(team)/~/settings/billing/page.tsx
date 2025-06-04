@@ -17,7 +17,6 @@ export default async function Page(props: {
   searchParams: Promise<{
     showPlans?: string | string[];
     highlight?: string | string[];
-    showCreditBalance?: string | string[];
   }>;
 }) {
   const [params, searchParams] = await Promise.all([
@@ -71,7 +70,7 @@ export default async function Page(props: {
       </div>
 
       {/* Credit Balance Section */}
-      {searchParams.showCreditBalance === "true" && team.stripeCustomerId && (
+      {team.stripeCustomerId && (
         <CreditBalanceSection
           teamSlug={team.slug}
           balancePromise={getStripeBalance(team.stripeCustomerId)}

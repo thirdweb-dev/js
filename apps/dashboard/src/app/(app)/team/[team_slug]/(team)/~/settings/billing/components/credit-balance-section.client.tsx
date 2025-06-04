@@ -16,6 +16,7 @@ import { ArrowRightIcon, DollarSignIcon } from "lucide-react";
 import Link from "next/link";
 import { Suspense, use, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { ThirdwebMiniLogo } from "../../../../../../../components/ThirdwebMiniLogo";
 
 const predefinedAmounts = [
   { value: "25", label: "$25" },
@@ -119,7 +120,8 @@ export function CreditBalanceSection({
                 prefetch={false}
                 target="_blank"
               >
-                Top Up Credits
+                <ThirdwebMiniLogo className="mr-2 h-4 w-4" />
+                Top Up With Crypto
                 <ArrowRightIcon className="ml-2 h-4 w-4" />
               </Link>
             </Button>
