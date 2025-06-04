@@ -6,6 +6,7 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import { isInsightEnabled } from "../../../insight/common.js";
 import { getOwnedTokens } from "../../../insight/get-tokens.js";
+import { toTokens } from "../../../utils/units.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { PaymentMethod } from "../machines/paymentMachine.js";
 import { useActiveWallet } from "./wallets/useActiveWallet.js";
@@ -126,31 +127,42 @@ export function usePaymentMethods(options: {
         Number.parseFloat(destinationAmount) * destinationToken.priceUsd;
       console.log("requiredDollarAmount", requiredDollarAmount);
 
-      // TODO (bridge): sort owned by priceUsd if there's a way to get it from the routes endpoint
-      //   owned.sort((a, b) => {
-      //     const aDollarBalance =
-      //       Number.parseFloat(a.balance.displayValue) * a.originToken.priceUsd;
-      //     const bDollarBalance =
-      //       Number.parseFloat(b.balance.displayValue) * b.originToken.priceUsd;
-      //     return bDollarBalance - aDollarBalance;
-      //   });
+      owned.sort((a, b) => {
+        const aDollarBalance =
+          Number.parseFloat(toTokens(a.balance, a.originToken.decimals)) *
+          a.originToken.priceUsd;
+        const bDollarBalance =
+          Number.parseFloat(toTokens(b.balance, b.originToken.decimals)) *
+          b.originToken.priceUsd;
+        return bDollarBalance - aDollarBalance;
+      });
 
       const suitableOriginTokens: OwnedTokenWithQuote[] = [];
 
       for (const b of owned) {
         if (b.originToken && b.balance > 0n) {
-          // TODO (bridge): add back in if we get priceUsd from the routes endpoint
-          //   const dollarBalance =
-          //     Number.parseFloat(toTokens(b.balance, b.originToken.decimals)) *
-          //     b.originToken.priceUsd;
-          //   if (b.originToken.priceUsd && dollarBalance < requiredDollarAmount) {
-          //     console.log(
-          //       "skipping",
-          //       b.originToken.symbol,
-          //       "because it's not enough",
-          //     );
-          //     continue;
-          //   }
+          const dollarBalance =
+            Number.parseFloat(toTokens(b.balance, b.originToken.decimals)) *
+            b.originToken.priceUsd;
+          console.log(
+            "required amount for",
+            b.originToken.symbol,
+            "is",
+            requiredDollarAmount,
+            "Price is",
+            b.originToken.priceUsd,
+            "Chain is",
+            b.originToken.chainId,
+          );
+          console.log("dollarBalance", dollarBalance);
+          if (b.originToken.priceUsd && dollarBalance < requiredDollarAmount) {
+            console.log(
+              "skipping",
+              b.originToken.symbol,
+              "because it's not enough",
+            );
+            continue;
+          }
 
           suitableOriginTokens.push({
             balance: b.balance,
@@ -163,14 +175,8 @@ export function usePaymentMethods(options: {
       console.log("suitableOriginTokens", suitableOriginTokens.length);
       console.timeEnd("routes");
 
-      // sort by popular tokens - same chain first, then all native currencies, then USDC, then USDT, then other tokens
-      const sortedSuitableOriginTokens = sortOwnedTokens(
-        suitableOriginTokens,
-        destinationToken,
-      );
-
       const transformedRoutes = [
-        ...sortedSuitableOriginTokens.map((s) => ({
+        ...suitableOriginTokens.map((s) => ({
           type: "wallet" as const,
           payerWallet: wallet,
           originToken: s.originToken,
