@@ -273,11 +273,11 @@ export const simpleBuyQuote: BridgePrepareResult = JSON.parse(
   }),
 );
 
-export const longTokenNameBuyQuote: BridgePrepareResult = JSON.parse(
+export const longTextBuyQuote: BridgePrepareResult = JSON.parse(
   stringify({
     type: "buy",
     originAmount: 1000000000000000000n, // 1 ETH
-    destinationAmount: 100000000n, // 100 USDC
+    destinationAmount: 1000394284092830482309n,
     timestamp: Date.now(),
     estimatedExecutionTimeMs: 60000,
     steps: [
@@ -303,7 +303,7 @@ export const longTokenNameBuyQuote: BridgePrepareResult = JSON.parse(
             "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
         },
         originAmount: 1000000000000000000n,
-        destinationAmount: 100000000n,
+        destinationAmount: 1000394284092830482309n,
         estimatedExecutionTimeMs: 60000,
         transactions: [
           {

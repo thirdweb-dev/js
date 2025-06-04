@@ -10,7 +10,7 @@ import {
   STORY_MOCK_WALLET,
   buyWithApprovalQuote,
   complexBuyQuote,
-  longTokenNameBuyQuote,
+  longTextBuyQuote,
   onrampWithSwapsQuote,
   simpleBuyQuote,
   simpleOnrampQuote,
@@ -220,10 +220,10 @@ export const BuySimpleLight: Story = {
   },
 };
 
-export const BuyWithLongTokenName: Story = {
+export const BuyWithLongText: Story = {
   args: {
     theme: "dark",
-    preparedQuote: longTokenNameBuyQuote,
+    preparedQuote: longTextBuyQuote,
     paymentMethod: ethCryptoPaymentMethod,
     client: storyClient,
   },

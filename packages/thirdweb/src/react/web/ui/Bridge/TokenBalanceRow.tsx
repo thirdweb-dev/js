@@ -82,7 +82,10 @@ export function TokenBalanceRow({
               whiteSpace: "nowrap",
             }}
           >
-            {`${amount} ${token.symbol}`}
+            {`${Number(amount).toLocaleString(undefined, {
+              maximumFractionDigits: 6,
+              minimumFractionDigits: 0,
+            })} ${token.symbol}`}
           </Text>
         </Container>
       </Container>
