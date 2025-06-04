@@ -49,6 +49,7 @@ export default async function Page(props: {
         <BillingFilter />
       </div>
       <BillingHistory
+        teamSlug={params.team_slug}
         invoices={invoices.data}
         hasMore={invoices.has_more}
         // fall back to "all" if the status is not set
