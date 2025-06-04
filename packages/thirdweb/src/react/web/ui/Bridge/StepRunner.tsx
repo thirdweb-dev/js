@@ -82,7 +82,7 @@ export function StepRunner({
   const {
     currentStep,
     progress,
-    isExecuting,
+    executionState,
     onrampStatus,
     error,
     start,
@@ -123,9 +123,14 @@ export function StepRunner({
     );
 
     if (stepIndex < currentStepIndex) return "completed";
-    if (stepIndex === currentStepIndex && isExecuting) return "executing";
+    if (stepIndex === currentStepIndex && executionState === "executing")
+      return "executing";
     if (stepIndex === currentStepIndex && error) return "failed";
-    if (stepIndex === currentStepIndex && !isExecuting && progress === 100)
+    if (
+      stepIndex === currentStepIndex &&
+      executionState === "idle" &&
+      progress === 100
+    )
       return "completed";
 
     return "pending";
@@ -392,11 +397,12 @@ export function StepRunner({
               Retry
             </Button>
           </Container>
-        ) : !isExecuting && progress === 0 ? (
+        ) : executionState === "idle" && progress === 0 ? (
           <Button variant="accent" fullWidth onClick={start}>
             Start Transaction
           </Button>
-        ) : isExecuting ? (
+        ) : executionState === "executing" ||
+          executionState === "auto-starting" ? (
           <Button variant="secondary" fullWidth onClick={handleCancel}>
             Cancel Transaction
           </Button>

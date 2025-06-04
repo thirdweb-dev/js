@@ -61,7 +61,7 @@ export interface StepExecutorResult {
   currentTxIndex?: number;
   progress: number; // 0–100
   onrampStatus?: "pending" | "executing" | "completed" | "failed";
-  isExecuting: boolean;
+  executionState: "idle" | "executing" | "auto-starting";
   error?: ApiError;
   start: () => void;
   cancel: () => void;
@@ -111,7 +111,9 @@ export function useStepExecutor(
   const [currentTxIndex, setCurrentTxIndex] = useState<number | undefined>(
     undefined,
   );
-  const [isExecuting, setIsExecuting] = useState(false);
+  const [executionState, setExecutionState] = useState<
+    "idle" | "executing" | "auto-starting"
+  >("idle");
   const [error, setError] = useState<ApiError | undefined>(undefined);
   const [completedTxs, setCompletedTxs] = useState<Set<number>>(new Set());
   const [onrampStatus, setOnrampStatus] = useState<
@@ -348,11 +350,11 @@ export function useStepExecutor(
 
   // Main execution function
   const execute = useCallback(async () => {
-    if (isExecuting) {
+    if (executionState !== "idle") {
       return;
     }
 
-    setIsExecuting(true);
+    setExecutionState("executing");
     setError(undefined);
     const completedStatusResults: CompletedStatusResult[] = [];
 
@@ -476,11 +478,11 @@ export function useStepExecutor(
         );
       }
     } finally {
-      setIsExecuting(false);
+      setExecutionState("idle");
       abortControllerRef.current = null;
     }
   }, [
-    isExecuting,
+    executionState,
     wallet,
     currentTxIndex,
     flatTxs,
@@ -494,17 +496,17 @@ export function useStepExecutor(
 
   // Start execution
   const start = useCallback(() => {
-    if (!isExecuting) {
+    if (executionState === "idle") {
       execute();
     }
-  }, [execute, isExecuting]);
+  }, [execute, executionState]);
 
   // Cancel execution
   const cancel = useCallback(() => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
-    setIsExecuting(false);
+    setExecutionState("idle");
     if (onrampStatus === "executing") {
       setOnrampStatus("pending");
     }
@@ -523,17 +525,18 @@ export function useStepExecutor(
   useEffect(() => {
     if (
       autoStart &&
-      !isExecuting &&
+      executionState === "idle" &&
       currentTxIndex === undefined &&
       !hasInitialized.current
     ) {
       hasInitialized.current = true;
+      setExecutionState("auto-starting");
       // add a delay to ensure the UI is ready
       setTimeout(() => {
         start();
       }, 500);
     }
-  }, [autoStart, isExecuting, currentTxIndex, start]);
+  }, [autoStart, executionState, currentTxIndex, start]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -548,7 +551,7 @@ export function useStepExecutor(
     currentStep,
     currentTxIndex,
     progress,
-    isExecuting,
+    executionState,
     onrampStatus,
     error,
     start,

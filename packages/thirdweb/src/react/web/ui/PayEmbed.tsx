@@ -436,7 +436,7 @@ export function PayEmbed(props: PayEmbedProps) {
   );
 }
 
-export function PayEmbed2(props: PayEmbedProps) {
+export function LegacyPayEmbed(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const [screen, setScreen] = useState<"buy" | "execute-tx">("buy");
   const theme = props.theme || "dark";
