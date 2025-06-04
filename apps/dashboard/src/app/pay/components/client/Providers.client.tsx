@@ -4,10 +4,10 @@ import { ThirdwebProvider } from "thirdweb/react";
 import { PHProvider } from "../../../../lib/posthog/Posthog";
 import { PostHogPageView } from "../../../../lib/posthog/PosthogPageView";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function PayProviders({ children }: { children: React.ReactNode }) {
   return (
     <ThirdwebProvider>
-      <PHProvider>
+      <PHProvider disable_session_recording={true}>
         <PostHogPageView />
         {children}
         <Toaster richColors theme="dark" />

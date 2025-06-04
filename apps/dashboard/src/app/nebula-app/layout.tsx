@@ -39,7 +39,7 @@ export default function Layout(props: {
         <link rel="icon" href="/assets/nebula/favicon.ico" />
         <PosthogHeadSetup />
       </head>
-      <PHProvider>
+      <PHProvider disable_session_recording={false}>
         <PostHogPageView />
         <body
           className={cn(

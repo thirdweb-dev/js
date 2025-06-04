@@ -63,7 +63,7 @@ export default function RootLayout({
         />
         <PosthogHeadSetup />
       </head>
-      <PHProvider>
+      <PHProvider disable_session_recording={true}>
         <PostHogPageView />
         <body
           className={cn(

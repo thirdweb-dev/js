@@ -7,10 +7,9 @@ import { useEffect } from "react";
 
 const NEXT_PUBLIC_POSTHOG_API_KEY = process.env.NEXT_PUBLIC_POSTHOG_API_KEY;
 
-export function PHProvider({
-  children,
-}: {
+export function PHProvider(props: {
   children: React.ReactNode;
+  disable_session_recording: boolean;
 }) {
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
@@ -19,10 +18,10 @@ export function PHProvider({
         api_host: "https://a.thirdweb.com",
         capture_pageview: false,
         debug: false,
-        disable_session_recording: true,
+        disable_session_recording: props.disable_session_recording,
       });
     }
-  }, []);
+  }, [props.disable_session_recording]);
 
-  return <PostHogProvider client={posthog}>{children}</PostHogProvider>;
+  return <PostHogProvider client={posthog}>{props.children}</PostHogProvider>;
 }

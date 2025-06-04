@@ -2,7 +2,7 @@ import "../../global.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
-import { Providers } from "./components/client/Providers.client";
+import { PayProviders } from "./components/client/Providers.client";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -23,7 +23,7 @@ export default async function PayLayout({
           fontSans.variable,
         )}
       >
-        <Providers>
+        <PayProviders>
           <ThemeProvider
             attribute="class"
             disableTransitionOnChange
@@ -43,7 +43,7 @@ export default async function PayLayout({
               />
             </div>
           </ThemeProvider>
-        </Providers>
+        </PayProviders>
       </body>
     </html>
   );

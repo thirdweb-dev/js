@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Inter } from "next/font/google";
 import "../../global.css";
-import { Providers } from "./components/client/Providers.client";
+import { BridgeProviders } from "./components/client/Providers.client";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -22,7 +22,7 @@ export default function BridgeLayout({
           fontSans.variable,
         )}
       >
-        <Providers>{children}</Providers>
+        <BridgeProviders>{children}</BridgeProviders>
       </body>
     </html>
   );

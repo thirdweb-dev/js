@@ -5,7 +5,7 @@ import { ThirdwebProvider } from "thirdweb/react";
 import { PHProvider } from "../../../../lib/posthog/Posthog";
 import { PostHogPageView } from "../../../../lib/posthog/PosthogPageView";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function BridgeProviders({ children }: { children: React.ReactNode }) {
   return (
     <ThirdwebProvider>
       <ThemeProvider
@@ -14,7 +14,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         enableSystem={false}
         defaultTheme="dark"
       >
-        <PHProvider>
+        <PHProvider disable_session_recording={true}>
           <PostHogPageView />
           {children}
           <Toaster richColors theme="dark" />
