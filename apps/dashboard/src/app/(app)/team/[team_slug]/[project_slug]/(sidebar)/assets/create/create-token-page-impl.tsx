@@ -21,10 +21,12 @@ import { deployERC20Contract } from "thirdweb/deploys";
 import type { ClaimConditionsInput } from "thirdweb/dist/types/utils/extensions/drops/types";
 import {
   claimTo,
+  getActiveClaimCondition,
   setClaimConditions as setClaimConditionsExtension,
   transferBatch,
 } from "thirdweb/extensions/erc20";
 import { useActiveAccount } from "thirdweb/react";
+import { pollWithTimeout } from "../../../../../../../../utils/pollWithTimeout";
 import { useAddContractToProject } from "../../hooks/project-contracts";
 import { CreateTokenAssetPageUI } from "./create-token-page.client";
 import type { CreateAssetFormValues } from "./form";
@@ -239,6 +241,17 @@ export function CreateTokenAssetPage(props: {
       client: props.client,
       address: contractAddress,
       chain,
+    });
+
+    // poll until claim conditions are set before moving on to minting
+    await pollWithTimeout({
+      shouldStop: async () => {
+        const claimConditions = await getActiveClaimCondition({
+          contract,
+        });
+        return !!claimConditions;
+      },
+      timeoutMs: 30000,
     });
 
     const totalSupply = Number(formValues.supply);
