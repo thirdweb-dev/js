@@ -40,8 +40,6 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     billingEmail: "foo@example.com",
-    growthTrialEligible: false,
-    billingPlanVersion: 1,
     canCreatePublicChains: null,
     image: null,
     isOnboarded: true,
@@ -131,10 +129,6 @@ export const teamsAndProjectsStub: Array<{ team: Team; projects: Project[] }> =
     {
       team: teamStub("2", "starter"),
       projects: [projectStub("t2p1", "team-2"), projectStub("t2p2", "team-2")],
-    },
-    {
-      team: teamStub("3", "starter_legacy"),
-      projects: [projectStub("t3p1", "team-3"), projectStub("t2p2", "team-2")],
     },
     {
       team: teamStub("3", "growth"),

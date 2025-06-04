@@ -105,7 +105,6 @@ type TeamCapabilities = {
 type TeamPlan =
   | "free"
   | "starter"
-  | "starter_legacy"
   | "growth_legacy"
   | "growth"
   | "accelerate"
@@ -119,7 +118,6 @@ export type TeamResponse = {
   image: string | null;
   billingPlan: TeamPlan;
   supportPlan: TeamPlan;
-  billingPlanVersion: number;
   createdAt: string;
   updatedAt: string | null;
   billingEmail: string | null;
@@ -133,7 +131,6 @@ export type TeamResponse = {
     | "invalidPayment"
     | "pastDue"
     | null;
-  growthTrialEligible: false;
   canCreatePublicChains: boolean | null;
   enabledScopes: ServiceName[];
   isOnboarded: boolean;

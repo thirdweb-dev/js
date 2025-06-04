@@ -49,10 +49,6 @@ function Variants(props: {
     (t) => t.team.billingPlan === "starter",
   );
 
-  const starterLegacyTeam = teamsAndProjectsStub.find(
-    (t) => t.team.billingPlan === "starter_legacy",
-  );
-
   const growthTeam = teamsAndProjectsStub.find(
     (t) => t.team.billingPlan === "growth",
   );
@@ -80,8 +76,7 @@ function Variants(props: {
     !growthLegacyTeam ||
     !accelerateTeam ||
     !scaleTeam ||
-    !proTeam ||
-    !starterLegacyTeam
+    !proTeam
   ) {
     return <div> invalid storybook stubs </div>;
   }
@@ -95,10 +90,6 @@ function Variants(props: {
 
         <BadgeContainer label="Starter Plan">
           <Variant team={starterTeam.team} type={props.type} />
-        </BadgeContainer>
-
-        <BadgeContainer label="Legacy Starter Plan">
-          <Variant team={starterLegacyTeam.team} type={props.type} />
         </BadgeContainer>
 
         <BadgeContainer label="Growth Plan">

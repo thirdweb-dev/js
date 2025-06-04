@@ -68,12 +68,7 @@ export function PlanInfoCardUI(props: {
           <div className="flex flex-col items-start gap-0.5">
             <div className="flex items-center gap-2">
               <h3 className="font-semibold text-2xl capitalize tracking-tight">
-                {validPlan === "growth_legacy"
-                  ? "Growth"
-                  : validPlan === "starter_legacy"
-                    ? "Starter"
-                    : validPlan}{" "}
-                Plan
+                {validPlan === "growth_legacy" ? "Growth" : validPlan} Plan
               </h3>
               {validPlan.includes("legacy") && (
                 <Badge variant="warning">Legacy</Badge>

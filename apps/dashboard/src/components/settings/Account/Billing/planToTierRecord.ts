@@ -4,7 +4,6 @@ import type { Team } from "@/api/team";
 export const planToTierRecordForGating: Record<Team["billingPlan"], number> = {
   free: 0,
   starter: 1,
-  starter_legacy: 2,
   growth: 3,
   accelerate: 4,
   growth_legacy: 5,
