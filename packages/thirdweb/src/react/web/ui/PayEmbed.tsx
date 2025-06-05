@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import type { Token } from "../../../bridge/index.js";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
@@ -164,8 +165,13 @@ export type PayEmbedProps = {
 type UIOptionsResult =
   | { type: "success"; data: UIOptions }
   | {
+      type: "indexing_token";
+      token: Token;
+      chain: Chain;
+    }
+  | {
       type: "unsupported_token";
-      token?: { address: string; symbol?: string; name?: string };
+      token: { address: string; symbol?: string; name?: string };
       chain: Chain;
     };
 
@@ -360,7 +366,9 @@ export function PayEmbed(props: PayEmbedProps) {
           prefillInfo.token?.address || NATIVE_TOKEN_ADDRESS,
           prefillInfo.chain.id,
         ).catch((err) =>
-          err.message.includes("not found") ? undefined : Promise.reject(err),
+          err.message.includes("not supported")
+            ? undefined
+            : Promise.reject(err),
         );
         if (!token) {
           return {
@@ -390,7 +398,9 @@ export function PayEmbed(props: PayEmbedProps) {
           paymentInfo.token?.address || NATIVE_TOKEN_ADDRESS,
           paymentInfo.chain.id,
         ).catch((err) =>
-          err.message.includes("not found") ? undefined : Promise.reject(err),
+          err.message.includes("not supported")
+            ? undefined
+            : Promise.reject(err),
         );
         if (!token) {
           return {
@@ -439,16 +449,6 @@ export function PayEmbed(props: PayEmbedProps) {
     },
   });
 
-  const handleTryDifferentToken = () => {
-    // Refetch to allow user to try again (they might have changed something)
-    bridgeDataQuery.refetch();
-  };
-
-  const handleContactSupport = () => {
-    // Open support link or modal (this could be configurable via props)
-    window.open("https://support.thirdweb.com", "_blank");
-  };
-
   let content = null;
   if (!localeQuery.data || bridgeDataQuery.isLoading) {
     content = (
@@ -465,13 +465,7 @@ export function PayEmbed(props: PayEmbedProps) {
     );
   } else if (bridgeDataQuery.data?.type === "unsupported_token") {
     // Show unsupported token screen
-    content = (
-      <UnsupportedTokenScreen
-        chain={bridgeDataQuery.data.chain}
-        onTryDifferentToken={handleTryDifferentToken}
-        onContactSupport={handleContactSupport}
-      />
-    );
+    content = <UnsupportedTokenScreen chain={bridgeDataQuery.data.chain} />;
   } else if (bridgeDataQuery.data?.type === "success") {
     // Show normal bridge orchestrator
     content = (

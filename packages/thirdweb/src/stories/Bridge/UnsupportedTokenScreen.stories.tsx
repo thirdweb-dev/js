@@ -7,10 +7,6 @@ import {
 } from "../../react/web/ui/Bridge/UnsupportedTokenScreen.js";
 import { ModalThemeWrapper } from "../utils.js";
 
-// Mock functions for story interactions
-const mockTryDifferentToken = () => console.log("Try different token clicked");
-const mockContactSupport = () => console.log("Contact support clicked");
-
 // Props interface for the wrapper component
 interface UnsupportedTokenScreenWithThemeProps
   extends UnsupportedTokenScreenProps {
@@ -44,8 +40,6 @@ const meta = {
   tags: ["autodocs"],
   args: {
     chain: defineChain(1), // Ethereum mainnet
-    onTryDifferentToken: mockTryDifferentToken,
-    onContactSupport: mockContactSupport,
     theme: "dark",
   },
   argTypes: {
@@ -54,15 +48,13 @@ const meta = {
       options: ["light", "dark"],
       description: "Theme for the component",
     },
-    onTryDifferentToken: { action: "try different token clicked" },
-    onContactSupport: { action: "contact support clicked" },
   },
 } satisfies Meta<typeof UnsupportedTokenScreenWithTheme>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const IndexingToken: Story = {
+export const TokenNotSupported: Story = {
   args: {
     theme: "dark",
     chain: defineChain(1), // Ethereum mainnet - will show indexing spinner
@@ -78,7 +70,7 @@ export const IndexingToken: Story = {
   },
 };
 
-export const IndexingTokenLight: Story = {
+export const TokenNotSupportedLight: Story = {
   args: {
     theme: "light",
     chain: defineChain(1), // Ethereum mainnet - will show indexing spinner

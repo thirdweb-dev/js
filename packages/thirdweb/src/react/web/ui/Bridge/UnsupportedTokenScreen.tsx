@@ -3,7 +3,6 @@ import { iconSize } from "../../../core/design-system/index.js";
 import { useChainMetadata } from "../../../core/hooks/others/useChainQuery.js";
 import { AccentFailIcon } from "../ConnectWallet/icons/AccentFailIcon.js";
 import { Spacer } from "../components/Spacer.js";
-import { Spinner } from "../components/Spinner.js";
 import { Container } from "../components/basic.js";
 import { Text } from "../components/text.js";
 
@@ -12,14 +11,6 @@ export interface UnsupportedTokenScreenProps {
    * The chain the token is on
    */
   chain: Chain;
-  /**
-   * Callback when user wants to try a different token
-   */
-  onTryDifferentToken: () => void;
-  /**
-   * Optional callback when user wants to contact support
-   */
-  onContactSupport?: () => void;
 }
 
 /**
@@ -69,13 +60,13 @@ export function UnsupportedTokenScreen(props: UnsupportedTokenScreenProps) {
       center="both"
       style={{ minHeight: "350px" }}
     >
-      {/* Loading Spinner */}
-      <Spinner size="xl" color="accentText" />
+      {/* Error Icon */}
+      <AccentFailIcon size={iconSize["3xl"]} />
       <Spacer y="lg" />
 
       {/* Title */}
       <Text center color="primaryText" size="lg" weight={600}>
-        Indexing Token
+        Token Not Supported
       </Text>
       <Spacer y="sm" />
 
@@ -86,8 +77,7 @@ export function UnsupportedTokenScreen(props: UnsupportedTokenScreenProps) {
         size="sm"
         style={{ maxWidth: "280px", lineHeight: 1.5 }}
       >
-        This token is being indexed by the Universal Bridge. Please check back
-        later.
+        This token or chain is not supported by the Universal Bridge.
       </Text>
     </Container>
   );
