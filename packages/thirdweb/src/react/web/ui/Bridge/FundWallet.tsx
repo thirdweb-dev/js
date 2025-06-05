@@ -311,7 +311,7 @@ export function FundWallet({
       {/* Continue Button */}
       {receiver ? (
         <Button
-          variant="accent"
+          variant="primary"
           fullWidth
           disabled={!isValidAmount}
           onClick={() => {
@@ -324,10 +324,17 @@ export function FundWallet({
             fontSize: fontSize.md,
           }}
         >
-          Continue
+          Top up {amount} {token.symbol}
         </Button>
       ) : (
-        <ConnectButton client={client} theme={theme} {...connectOptions} />
+        <ConnectButton
+          client={client}
+          theme={theme}
+          connectButton={{
+            label: `Top up ${amount} ${token.symbol}`,
+          }}
+          {...connectOptions}
+        />
       )}
 
       <Spacer y="lg" />
