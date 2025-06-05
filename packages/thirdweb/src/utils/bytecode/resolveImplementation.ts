@@ -110,7 +110,10 @@ async function getBeaconFromStorageSlot(
       position:
         "0xa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b35133d50",
     });
-    return `0x${proxyStorage.slice(-40)}`;
+    if (proxyStorage.length >= 40) {
+      return `0x${proxyStorage.slice(-40)}`;
+    }
+    return undefined;
   } catch {
     return undefined;
   }
