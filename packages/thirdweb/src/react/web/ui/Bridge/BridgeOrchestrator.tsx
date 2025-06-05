@@ -19,8 +19,8 @@ import { Container } from "../components/basic.js";
 import { DirectPayment } from "./DirectPayment.js";
 import { ErrorBanner } from "./ErrorBanner.js";
 import { FundWallet } from "./FundWallet.js";
+import { PaymentDetails } from "./PaymentDetails.js";
 import { QuoteLoader } from "./QuoteLoader.js";
-import { RoutePreview } from "./RoutePreview.js";
 import { StepRunner } from "./StepRunner.js";
 import { SuccessScreen } from "./SuccessScreen.js";
 import { PaymentSelection } from "./payment-selection/PaymentSelection.js";
@@ -40,7 +40,8 @@ export type UIOptions =
         feePayer?: "sender" | "receiver";
         metadata: {
           name: string;
-          image: string;
+          image?: string;
+          description?: string;
         };
       };
     }
@@ -257,7 +258,8 @@ export function BridgeOrchestrator({
       {state.value === "preview" &&
         state.context.selectedPaymentMethod &&
         state.context.preparedQuote && (
-          <RoutePreview
+          <PaymentDetails
+            uiOptions={uiOptions}
             client={client}
             paymentMethod={state.context.selectedPaymentMethod}
             preparedQuote={state.context.preparedQuote}

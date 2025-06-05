@@ -132,6 +132,7 @@ export const ConcertTicket: Story = {
       feePayer: "receiver",
       metadata: {
         name: "Concert Ticket - The Midnight Live",
+
         image:
           "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=500&h=300&fit=crop",
       },
@@ -174,6 +175,34 @@ export const SubscriptionService: Story = {
   },
 };
 
+export const SubscriptionServiceWithDescription: Story = {
+  args: {
+    theme: "light",
+    paymentInfo: {
+      sellerAddress: "0x9876543210987654321098765432109876543210",
+      token: USDC,
+      amount: "9.99",
+      feePayer: "sender",
+      metadata: {
+        name: "Premium Streaming Service - Monthly",
+        image:
+          "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&h=300&fit=crop",
+        description:
+          "Get unlimited access to our premium streaming service with this monthly subscription. Enjoy ad-free viewing, exclusive content, and the ability to download shows for offline viewing.",
+      },
+    },
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story:
+          "Example of a subscription service payment. Shows how the component works for recurring service payments.",
+      },
+    },
+  },
+};
+
 export const PhysicalProduct: Story = {
   args: {
     theme: "dark",
@@ -186,6 +215,32 @@ export const PhysicalProduct: Story = {
         name: "Limited Edition Sneakers",
         image:
           "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&h=300&fit=crop",
+      },
+    },
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
+    docs: {
+      description: {
+        story:
+          "Example of purchasing physical products with crypto payments. Shows how the component adapts to different product types.",
+      },
+    },
+  },
+};
+
+export const NoImage: Story = {
+  args: {
+    theme: "dark",
+    paymentInfo: {
+      sellerAddress: "0x5555666677778888999900001111222233334444",
+      token: USDC,
+      amount: "25",
+      feePayer: "receiver",
+      metadata: {
+        name: "Thirdweb Credits",
+        description:
+          "Add credits to your account for future billing cycles. Credits are non-refundable and do not expire.",
       },
     },
   },

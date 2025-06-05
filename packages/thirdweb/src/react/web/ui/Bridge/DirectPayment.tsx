@@ -13,7 +13,7 @@ import { FiatValue } from "../ConnectWallet/screens/Buy/swap/FiatValue.js";
 import type { PayEmbedConnectOptions } from "../PayEmbed.js";
 import { ChainName } from "../components/ChainName.js";
 import { Spacer } from "../components/Spacer.js";
-import { Container, Line, ModalHeader } from "../components/basic.js";
+import { Container, Line } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { Text } from "../components/text.js";
 import { ChainIcon } from "./TokenAndChain.js";
@@ -29,7 +29,8 @@ export interface DirectPaymentProps {
     feePayer?: "sender" | "receiver";
     metadata: {
       name: string;
-      image: string;
+      description?: string;
+      image?: string;
     };
   };
 
@@ -72,48 +73,65 @@ export function DirectPayment({
   const sellerAddress =
     ensName.data || shortenAddress(paymentInfo.sellerAddress);
 
-  return (
-    <Container flex="column" p="lg">
-      {/* Header with product name */}
-      <ModalHeader title={paymentInfo.metadata.name} />
-
-      <Spacer y="lg" />
-
-      {/* Product image */}
-      <div
-        style={{
-          width: "100%",
-          borderRadius: radius.lg,
-          overflow: "hidden",
-          aspectRatio: "4/3",
-          backgroundColor: theme.colors.secondaryIconColor,
-          backgroundImage: `url(${paymentInfo.metadata.image})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          border: `1px solid ${theme.colors.borderColor}`,
-        }}
+  const buyNow = (
+    <Container flex="row" gap="3xs">
+      <Text size="md" color="primaryButtonText">
+        Buy Now ·
+      </Text>
+      <FiatValue
+        tokenAmount={paymentInfo.amount}
+        token={paymentInfo.token}
+        chain={chain}
+        client={client}
+        color="primaryButtonText"
+        size="md"
       />
+    </Container>
+  );
 
-      <Spacer y="lg" />
+  return (
+    <Container flex="column">
+      {/* Product image */}
+      {paymentInfo.metadata.image && (
+        <div
+          style={{
+            width: "100%",
+            borderRadius: `${radius.md} ${radius.md} 0 0`,
+            overflow: "hidden",
+            aspectRatio: "16/9",
+            backgroundColor: theme.colors.secondaryIconColor,
+            backgroundImage: `url(${paymentInfo.metadata.image})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+      )}
+      <Container flex="column" px="lg">
+        <Spacer y="lg" />
 
-      {/* Price section */}
-      <Container
-        flex="row"
-        style={{
-          justifyContent: "space-between",
-        }}
-      >
-        <Text size="md" color="secondaryText">
-          Price
+        {/* Header with product name */}
+        <Text size="lg" color="primaryText" weight={700}>
+          {paymentInfo.metadata.name}
         </Text>
+
+        <Spacer y="xs" />
+
+        {/* Description */}
+        {paymentInfo.metadata.description && (
+          <Text size="sm" color="secondaryText">
+            {paymentInfo.metadata.description}
+          </Text>
+        )}
+
+        <Spacer y="lg" />
+
+        {/* Price section */}
         <Container
-          flex="column"
-          color="secondaryText"
+          flex="row"
+          center="y"
           gap="3xs"
           style={{
-            alignItems: "flex-end",
-            minWidth: 0,
-            overflow: "hidden",
+            justifyContent: "space-between",
           }}
         >
           <FiatValue
@@ -122,100 +140,135 @@ export function DirectPayment({
             chain={chain}
             client={client}
             color="primaryText"
-            size="md"
-            weight={600}
+            size="xl"
+            weight={700}
           />
+          <Container flex="row" gap="3xs">
+            <Text
+              size="xs"
+              color="secondaryText"
+              style={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              One-time payment
+            </Text>
+          </Container>
+        </Container>
+
+        <Spacer y="md" />
+
+        <Line />
+
+        <Spacer y="md" />
+
+        {/* Seller section */}
+        <Container
+          flex="row"
+          style={{
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text size="sm" color="secondaryText">
+            Sold by
+          </Text>
           <Text
-            size="xs"
-            color="secondaryText"
+            size="sm"
+            color="primaryText"
             style={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
+              fontFamily: "monospace",
+            }}
+          >
+            {sellerAddress}
+          </Text>
+        </Container>
+
+        <Spacer y="xs" />
+
+        <Container
+          flex="row"
+          style={{
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text size="sm" color="secondaryText">
+            Price
+          </Text>
+          <Text
+            size="sm"
+            color="primaryText"
+            style={{
+              fontFamily: "monospace",
             }}
           >
             {`${paymentInfo.amount} ${paymentInfo.token.symbol}`}
           </Text>
         </Container>
-      </Container>
 
-      <Spacer y="md" />
+        <Spacer y="xs" />
 
-      <Line />
-
-      <Spacer y="md" />
-
-      {/* Seller section */}
-      <Container
-        flex="row"
-        style={{
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Text size="sm" color="secondaryText">
-          Sold by
-        </Text>
-        <Text
-          size="sm"
-          color="primaryText"
+        {/* Network section */}
+        <Container
+          flex="row"
           style={{
-            fontFamily: "monospace",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          {sellerAddress}
-        </Text>
-      </Container>
+          <Text size="sm" color="secondaryText">
+            Network
+          </Text>
+          <Container flex="row" gap="3xs" center="y">
+            <ChainIcon chain={chain} size={"xs"} client={client} />
+            <ChainName
+              chain={chain}
+              client={client}
+              size="sm"
+              color="primaryText"
+              short
+              style={{
+                fontFamily: "monospace",
+              }}
+            />
+          </Container>
+        </Container>
 
-      <Spacer y="sm" />
+        <Spacer y="md" />
 
-      {/* Network section */}
-      <Container
-        flex="row"
-        style={{
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Text size="sm" color="secondaryText">
-          Network
-        </Text>
-        <Container flex="row" gap="3xs" center="y">
-          <ChainIcon chain={chain} size={"xs"} client={client} />
-          <ChainName
-            chain={chain}
-            client={client}
-            size="sm"
-            color="primaryText"
-            short
-          />
+        <Line />
+
+        <Spacer y="lg" />
+
+        {/* Action button */}
+        <Container flex="column">
+          {activeAccount ? (
+            <Button variant="primary" fullWidth onClick={handleContinue}>
+              {buyNow}
+            </Button>
+          ) : (
+            <ConnectButton
+              client={client}
+              theme={theme}
+              connectButton={{
+                label: buyNow,
+                style: {
+                  width: "100%",
+                },
+              }}
+              {...connectOptions}
+            />
+          )}
+
+          <Spacer y="md" />
+
+          <PoweredByThirdweb />
+          <Spacer y="md" />
         </Container>
       </Container>
-
-      <Spacer y="xl" />
-
-      {/* Action button */}
-      {activeAccount ? (
-        <Button variant="accent" fullWidth onClick={handleContinue}>
-          Buy Now
-        </Button>
-      ) : (
-        <ConnectButton
-          client={client}
-          theme={theme}
-          connectButton={{
-            label: "Buy Now",
-            style: {
-              width: "100%",
-            },
-          }}
-          {...connectOptions}
-        />
-      )}
-
-      <Spacer y="lg" />
-
-      <PoweredByThirdweb />
     </Container>
   );
 }

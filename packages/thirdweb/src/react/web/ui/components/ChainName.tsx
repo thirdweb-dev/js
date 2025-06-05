@@ -14,12 +14,13 @@ export const ChainName: React.FC<{
   color?: "primaryText" | "secondaryText";
   client: ThirdwebClient;
   short?: boolean;
+  style?: React.CSSProperties;
 }> = (props) => {
   const { name } = useChainName(props.chain);
 
   if (name) {
     return (
-      <Text size={props.size} color={props.color}>
+      <Text size={props.size} color={props.color} style={props.style}>
         {props.short ? shorterChainName(name) : name}
       </Text>
     );

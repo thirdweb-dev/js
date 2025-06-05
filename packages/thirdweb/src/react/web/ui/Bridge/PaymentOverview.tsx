@@ -8,11 +8,13 @@ import { StepConnectorArrow } from "../ConnectWallet/screens/Buy/swap/StepConnec
 import { WalletRow } from "../ConnectWallet/screens/Buy/swap/WalletRow.js";
 import { Container } from "../components/basic.js";
 import { Text } from "../components/text.js";
+import type { UIOptions } from "./BridgeOrchestrator.js";
 import { TokenBalanceRow } from "./TokenBalanceRow.js";
 
-export function RouteOverview(props: {
-  sender: string;
+export function PaymentOverview(props: {
+  uiOptions: UIOptions;
   receiver: string;
+  sender?: string;
   client: ThirdwebClient;
   paymentMethod: PaymentMethod;
   toToken: Token;
@@ -20,8 +22,13 @@ export function RouteOverview(props: {
   toAmount: string;
 }) {
   const theme = useCustomTheme();
+  const sender =
+    props.sender ||
+    (props.paymentMethod.type === "wallet"
+      ? props.paymentMethod.payerWallet.getAccount()?.address
+      : undefined);
   const isDifferentRecipient =
-    props.receiver.toLowerCase() !== props.sender.toLowerCase();
+    props.receiver.toLowerCase() !== sender?.toLowerCase();
   return (
     <Container>
       {/* Sell */}
@@ -33,21 +40,23 @@ export function RouteOverview(props: {
           border: `1px solid ${theme.colors.borderColor}`,
         }}
       >
-        <Container
-          flex="row"
-          gap="sm"
-          p="sm"
-          style={{
-            borderBottom: `1px solid ${theme.colors.borderColor}`,
-          }}
-        >
-          <WalletRow
-            address={props.sender}
-            client={props.client}
-            iconSize="md"
-            textSize="sm"
-          />
-        </Container>
+        {sender && (
+          <Container
+            flex="row"
+            gap="sm"
+            p="sm"
+            style={{
+              borderBottom: `1px solid ${theme.colors.borderColor}`,
+            }}
+          >
+            <WalletRow
+              address={sender}
+              client={props.client}
+              iconSize="md"
+              textSize="sm"
+            />
+          </Container>
+        )}
         {props.paymentMethod.type === "wallet" && (
           <TokenBalanceRow
             token={props.paymentMethod.originToken}
@@ -119,17 +128,42 @@ export function RouteOverview(props: {
             />
           </Container>
         )}
-        <TokenBalanceRow
-          token={props.toToken}
-          client={props.client}
-          amount={props.toAmount}
-          onClick={() => {}}
-          style={{
-            background: "transparent",
-            borderRadius: 0,
-            border: "none",
-          }}
-        />
+        {props.uiOptions.mode === "direct_payment" && (
+          <Container
+            flex="row"
+            gap="sm"
+            p="md"
+            center="y"
+            style={{ justifyContent: "space-between" }}
+          >
+            <Container flex="column" gap="3xs" center="y" style={{ flex: 1 }}>
+              <Text size="sm" color="primaryText" style={{ fontWeight: 600 }}>
+                {props.uiOptions.paymentInfo.metadata.name}
+              </Text>
+              {props.uiOptions.paymentInfo.metadata.description && (
+                <Text size="xs" color="secondaryText">
+                  {props.uiOptions.paymentInfo.metadata.description}
+                </Text>
+              )}
+            </Container>
+            <Text size="sm" color="secondaryText">
+              {props.uiOptions.paymentInfo.amount} {props.toToken.symbol}
+            </Text>
+          </Container>
+        )}
+        {props.uiOptions.mode === "fund_wallet" && (
+          <TokenBalanceRow
+            token={props.toToken}
+            client={props.client}
+            amount={props.toAmount}
+            onClick={() => {}}
+            style={{
+              background: "transparent",
+              borderRadius: 0,
+              border: "none",
+            }}
+          />
+        )}
       </Container>
     </Container>
   );

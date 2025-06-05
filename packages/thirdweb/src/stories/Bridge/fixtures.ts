@@ -208,6 +208,7 @@ export const onrampWithSwapsQuote: BridgePrepareResult = JSON.parse(
       onramp: "stripe",
       chainId: 1,
       tokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      sender: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
       receiver: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
       amount: 1000000000000000000n,
     },
@@ -268,7 +269,7 @@ export const simpleBuyQuote: BridgePrepareResult = JSON.parse(
       destinationTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       amount: 100000000n,
       sender: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
-      receiver: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+      receiver: "0x2247d5d238d0f9d37184d8332aE0289d1aD9991b",
     },
   }),
 );

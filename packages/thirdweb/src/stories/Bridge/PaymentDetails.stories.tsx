@@ -1,13 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import type { ThirdwebClient } from "../../client/client.js";
 import type { Theme } from "../../react/core/design-system/index.js";
-import type { BridgePrepareResult } from "../../react/core/hooks/useBridgePrepare.js";
 import type { PaymentMethod } from "../../react/core/machines/paymentMachine.js";
-import { RoutePreview } from "../../react/web/ui/Bridge/RoutePreview.js";
+import {
+  PaymentDetails,
+  type PaymentDetailsProps,
+} from "../../react/web/ui/Bridge/PaymentDetails.js";
 import { stringify } from "../../utils/json.js";
 import { ModalThemeWrapper, storyClient } from "../utils.js";
 import {
   STORY_MOCK_WALLET,
+  USDC,
   buyWithApprovalQuote,
   complexBuyQuote,
   longTextBuyQuote,
@@ -60,29 +62,23 @@ const ethCryptoPaymentMethod: PaymentMethod = JSON.parse(
 );
 
 // Props interface for the wrapper component
-interface RoutePreviewWithThemeProps {
-  preparedQuote: BridgePrepareResult;
-  paymentMethod: PaymentMethod;
-  client: ThirdwebClient;
-  onConfirm: () => void;
-  onBack: () => void;
-  onError: (error: Error) => void;
+interface PaymentDetailsWithThemeProps extends PaymentDetailsProps {
   theme: "light" | "dark" | Theme;
 }
 
 // Wrapper component to provide theme context
-const RoutePreviewWithTheme = (props: RoutePreviewWithThemeProps) => {
+const PaymentDetailsWithTheme = (props: PaymentDetailsWithThemeProps) => {
   const { theme, ...componentProps } = props;
   return (
     <ModalThemeWrapper theme={theme}>
-      <RoutePreview {...componentProps} />
+      <PaymentDetails {...componentProps} />
     </ModalThemeWrapper>
   );
 };
 
 const meta = {
-  title: "Bridge/RoutePreview",
-  component: RoutePreviewWithTheme,
+  title: "Bridge/PaymentDetails",
+  component: PaymentDetailsWithTheme,
   parameters: {
     layout: "centered",
     docs: {
@@ -99,6 +95,10 @@ const meta = {
     onBack: () => console.log("Back clicked"),
     onError: (error) => console.error("Error:", error),
     theme: "dark",
+    uiOptions: {
+      mode: "fund_wallet",
+      destinationToken: USDC,
+    },
   },
   argTypes: {
     theme: {
@@ -110,7 +110,7 @@ const meta = {
     onBack: { action: "back clicked" },
     onError: { action: "error occurred" },
   },
-} satisfies Meta<typeof RoutePreviewWithTheme>;
+} satisfies Meta<typeof PaymentDetailsWithTheme>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -139,6 +139,65 @@ export const OnrampSimpleLight: Story = {
     preparedQuote: simpleOnrampQuote,
     paymentMethod: fiatPaymentMethod,
     client: storyClient,
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story: "Simple onramp quote with no extra steps (light theme).",
+      },
+    },
+  },
+};
+
+export const OnrampSimpleDirectPayment: Story = {
+  args: {
+    theme: "dark",
+    preparedQuote: simpleOnrampQuote,
+    paymentMethod: fiatPaymentMethod,
+    client: storyClient,
+    uiOptions: {
+      mode: "direct_payment",
+      paymentInfo: {
+        sellerAddress: "0x5555666677778888999900001111222233334444",
+        token: USDC,
+        amount: "25",
+        metadata: {
+          name: "Thirdweb Credits",
+          image: "https://thirdweb.com/logo.png",
+        },
+      },
+    },
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
+    docs: {
+      description: {
+        story:
+          "Simple onramp quote with no extra steps - direct fiat to crypto.",
+      },
+    },
+  },
+};
+
+export const OnrampSimpleLightDirectPayment: Story = {
+  args: {
+    theme: "light",
+    preparedQuote: simpleOnrampQuote,
+    paymentMethod: fiatPaymentMethod,
+    client: storyClient,
+    uiOptions: {
+      mode: "direct_payment",
+      paymentInfo: {
+        sellerAddress: "0x5555666677778888999900001111222233334444",
+        token: USDC,
+        amount: "25",
+        metadata: {
+          name: "Thirdweb Credits",
+          image: "https://thirdweb.com/logo.png",
+        },
+      },
+    },
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -209,6 +268,67 @@ export const BuySimpleLight: Story = {
     preparedQuote: simpleBuyQuote,
     paymentMethod: ethCryptoPaymentMethod,
     client: storyClient,
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story: "Simple buy quote with a single transaction (light theme).",
+      },
+    },
+  },
+};
+
+export const BuySimpleDirectPayment: Story = {
+  args: {
+    theme: "dark",
+    preparedQuote: simpleBuyQuote,
+    paymentMethod: ethCryptoPaymentMethod,
+    client: storyClient,
+    uiOptions: {
+      mode: "direct_payment",
+      paymentInfo: {
+        sellerAddress: "0x5555666677778888999900001111222233334444",
+        token: USDC,
+        amount: "25",
+        feePayer: "receiver",
+        metadata: {
+          name: "Thirdweb Credits",
+          description:
+            "Add credits to your account for future billing cycles. Credits are non-refundable and do not expire.",
+        },
+      },
+    },
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
+    docs: {
+      description: {
+        story:
+          "Simple buy quote with a single transaction (no approval needed).",
+      },
+    },
+  },
+};
+
+export const BuySimpleLightDirectPayment: Story = {
+  args: {
+    theme: "light",
+    preparedQuote: simpleBuyQuote,
+    paymentMethod: ethCryptoPaymentMethod,
+    client: storyClient,
+    uiOptions: {
+      mode: "direct_payment",
+      paymentInfo: {
+        sellerAddress: "0x5555666677778888999900001111222233334444",
+        token: USDC,
+        amount: "25",
+        metadata: {
+          name: "Thirdweb Credits",
+          image: "https://thirdweb.com/logo.png",
+        },
+      },
+    },
   },
   parameters: {
     backgrounds: { default: "light" },

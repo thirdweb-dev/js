@@ -13,9 +13,14 @@ import { Spacer } from "../components/Spacer.js";
 import { Container, ModalHeader } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { Text } from "../components/text.js";
-import { RouteOverview } from "./RouteOverview.js";
+import type { UIOptions } from "./BridgeOrchestrator.js";
+import { PaymentOverview } from "./PaymentOverview.js";
 
-export interface RoutePreviewProps {
+export interface PaymentDetailsProps {
+  /**
+   * The UI mode to use
+   */
+  uiOptions: UIOptions;
   /**
    * The client to use
    */
@@ -45,14 +50,15 @@ export interface RoutePreviewProps {
   onError: (error: Error) => void;
 }
 
-export function RoutePreview({
+export function PaymentDetails({
+  uiOptions,
   client,
   paymentMethod,
   preparedQuote,
   onConfirm,
   onBack,
   onError,
-}: RoutePreviewProps) {
+}: PaymentDetailsProps) {
   const theme = useCustomTheme();
 
   const handleConfirm = () => {
@@ -137,7 +143,6 @@ export function RoutePreview({
   };
 
   const displayData = getDisplayData();
-  console.log(displayData);
 
   return (
     <Container flex="column" fullHeight p="lg">
@@ -149,11 +154,12 @@ export function RoutePreview({
         {/* Quote Summary */}
         <Container flex="column">
           {displayData.destinationToken && (
-            <RouteOverview
+            <PaymentOverview
+              uiOptions={uiOptions}
+              sender={preparedQuote.intent.sender}
               client={client}
               paymentMethod={paymentMethod}
               toToken={displayData.destinationToken}
-              sender={preparedQuote.intent.receiver}
               receiver={preparedQuote.intent.receiver}
               fromAmount={displayData.originAmount}
               toAmount={displayData.destinationAmount}
@@ -177,7 +183,7 @@ export function RoutePreview({
               </Text>
             </Container>
 
-            {preparedQuote.steps.length ? (
+            {preparedQuote.steps.length > 1 ? (
               <Container
                 flex="row"
                 gap="xs"
