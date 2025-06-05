@@ -45,7 +45,7 @@ export function RateGraph(props: {
       data={props.data
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .map((v) => ({
-          time: `${v.date}Z`,
+          time: v.date,
           averageRate: Number(Number(v.averageRate).toFixed(2)),
           peakRPS: Number(v.peakRPS),
           maxLine: props.currentRateLimit,

@@ -55,7 +55,7 @@ export function CountGraph(props: {
       data={props.data
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .map((v) => ({
-          time: `${v.date}Z`,
+          time: v.date,
           includedCount: Number(v.includedCount) + Number(v.overageCount),
           rateLimitedCount: Number(v.rateLimitedCount),
         }))}
