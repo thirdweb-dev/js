@@ -12,7 +12,7 @@ export function Stat({
         <span className="font-semibold text-2xl text-foreground leading-none">
           {value.toLocaleString()}
         </span>
-        {trend && (
+        {trend && Math.abs(trend) !== Number.POSITIVE_INFINITY && (
           // trend is rounded to 1 decimal place max
           <Badge
             className="flex-shrink-0 px-2.5 py-1 text-xs leading-[0.9]"

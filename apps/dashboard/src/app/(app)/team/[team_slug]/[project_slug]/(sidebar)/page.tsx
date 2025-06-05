@@ -230,11 +230,19 @@ function processTimeSeriesData(
 
   for (const stat of userStats) {
     const volume = volumeStats
-      .filter((v) => v.date === stat.date && v.status === "completed")
+      .filter(
+        (v) =>
+          new Date(v.date).toISOString() ===
+            new Date(stat.date).toISOString() && v.status === "completed",
+      )
       .reduce((acc, curr) => acc + curr.amountUsdCents / 100, 0);
 
     const fees = volumeStats
-      .filter((v) => v.date === stat.date && v.status === "completed")
+      .filter(
+        (v) =>
+          new Date(v.date).toISOString() ===
+            new Date(stat.date).toISOString() && v.status === "completed",
+      )
       .reduce((acc, curr) => acc + curr.developerFeeUsdCents / 100, 0);
 
     metrics.push({
@@ -340,9 +348,8 @@ async function AsyncAppHighlightsCard(props: {
 
   if (
     walletUserStatsTimeSeries.status === "fulfilled" &&
-    universalBridgeUsage.status === "fulfilled" &&
-    walletUserStatsTimeSeries.value.some((w) => w.totalUsers !== 0)
-  ) {
+    universalBridgeUsage.status === "fulfilled"
+  )
     return (
       <div>
         <AppHighlightsCard
@@ -365,7 +372,6 @@ async function AsyncAppHighlightsCard(props: {
         />
       </div>
     );
-  }
 
   return (
     <EmptyStateCard
