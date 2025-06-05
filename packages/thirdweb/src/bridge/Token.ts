@@ -158,7 +158,7 @@ export async function tokens(options: tokens.Options): Promise<tokens.Result> {
 
 export declare namespace tokens {
   /**
-   * Input parameters for {@link Bridge.tokens}.
+   * Input parameters for {@link tokens}.
    */
   type Options = {
     /** Your {@link ThirdwebClient} instance. */

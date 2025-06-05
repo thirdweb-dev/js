@@ -78,6 +78,22 @@ export const IndexingToken: Story = {
   },
 };
 
+export const IndexingTokenLight: Story = {
+  args: {
+    theme: "light",
+    chain: defineChain(1), // Ethereum mainnet - will show indexing spinner
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story:
+          "Shows the loading state when a token is being indexed by the Universal Bridge on a mainnet chain (light theme).",
+      },
+    },
+  },
+};
+
 export const TestnetNotSupported: Story = {
   args: {
     theme: "dark",
@@ -89,6 +105,22 @@ export const TestnetNotSupported: Story = {
       description: {
         story:
           "Shows the error state when trying to use the Universal Bridge on a testnet chain (Sepolia in this example).",
+      },
+    },
+  },
+};
+
+export const TestnetNotSupportedLight: Story = {
+  args: {
+    theme: "light",
+    chain: defineChain(11155111), // Sepolia testnet - will show error state
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story:
+          "Shows the error state when trying to use the Universal Bridge on a testnet chain (Sepolia in this example, light theme).",
       },
     },
   },
