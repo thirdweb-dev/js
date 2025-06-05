@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.102.5
+
+### Patch Changes
+
+- [#7282](https://github.com/thirdweb-dev/js/pull/7282) [`e3e3142`](https://github.com/thirdweb-dev/js/commit/e3e3142f7eb95291e3d617a70778534cb46a968b) Thanks [@catalyst17](https://github.com/catalyst17)! - fix implementation resolution for Beacon
+
 ## 5.102.4
 
 ### Patch Changes
