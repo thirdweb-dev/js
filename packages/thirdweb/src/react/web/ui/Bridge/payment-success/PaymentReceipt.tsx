@@ -2,25 +2,25 @@
 import { CopyIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
-import type { Token } from "../../../../bridge/types/Token.js";
-import type { ChainMetadata } from "../../../../chains/types.js";
-import { defineChain, getChainMetadata } from "../../../../chains/utils.js";
-import { shortenHex } from "../../../../utils/address.js";
-import type { WindowAdapter } from "../../../core/adapters/WindowAdapter.js";
-import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import type { Token } from "../../../../../bridge/types/Token.js";
+import type { ChainMetadata } from "../../../../../chains/types.js";
+import { defineChain, getChainMetadata } from "../../../../../chains/utils.js";
+import { shortenHex } from "../../../../../utils/address.js";
+import type { WindowAdapter } from "../../../../core/adapters/WindowAdapter.js";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
   iconSize,
   radius,
   spacing,
-} from "../../../core/design-system/index.js";
-import type { BridgePrepareResult } from "../../../core/hooks/useBridgePrepare.js";
-import type { CompletedStatusResult } from "../../../core/hooks/useStepExecutor.js";
-import { formatTokenAmount } from "../ConnectWallet/screens/formatTokenBalance.js";
-import { shorterChainName } from "../components/ChainName.js";
-import { Skeleton } from "../components/Skeleton.js";
-import { Spacer } from "../components/Spacer.js";
-import { Container, ModalHeader } from "../components/basic.js";
-import { Text } from "../components/text.js";
+} from "../../../../core/design-system/index.js";
+import type { BridgePrepareResult } from "../../../../core/hooks/useBridgePrepare.js";
+import type { CompletedStatusResult } from "../../../../core/hooks/useStepExecutor.js";
+import { formatTokenAmount } from "../../ConnectWallet/screens/formatTokenBalance.js";
+import { shorterChainName } from "../../components/ChainName.js";
+import { Skeleton } from "../../components/Skeleton.js";
+import { Spacer } from "../../components/Spacer.js";
+import { Container, ModalHeader } from "../../components/basic.js";
+import { Text } from "../../components/text.js";
 
 interface TransactionInfo {
   type: "paymentId" | "transactionHash";
@@ -291,7 +291,7 @@ function CompletedStepDetailCard({
   );
 }
 
-export interface PaymentSuccessDetailsProps {
+export interface PaymentReceitProps {
   /**
    * Prepared quote from Bridge.prepare
    */
@@ -313,12 +313,12 @@ export interface PaymentSuccessDetailsProps {
   windowAdapter: WindowAdapter;
 }
 
-export function PaymentSuccessDetails({
+export function PaymentReceipt({
   preparedQuote,
   completedStatuses,
   onBack,
   windowAdapter,
-}: PaymentSuccessDetailsProps) {
+}: PaymentReceitProps) {
   // Copy to clipboard
   const copyToClipboard = useCallback(async (text: string) => {
     try {
@@ -336,7 +336,7 @@ export function PaymentSuccessDetails({
       p="lg"
       style={{ maxHeight: "500px", minHeight: "250px", overflowY: "auto" }}
     >
-      <ModalHeader title="Payment Details" onBack={onBack} />
+      <ModalHeader title="Payment Receipt" onBack={onBack} />
 
       <Spacer y="lg" />
 

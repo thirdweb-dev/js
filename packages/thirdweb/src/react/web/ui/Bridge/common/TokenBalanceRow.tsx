@@ -1,13 +1,13 @@
 import styled from "@emotion/styled";
-import type { Token } from "../../../../bridge/index.js";
-import { getCachedChain } from "../../../../chains/utils.js";
-import type { ThirdwebClient } from "../../../../client/client.js";
-import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
-import { spacing } from "../../../core/design-system/index.js";
-import { FiatValue } from "../ConnectWallet/screens/Buy/swap/FiatValue.js";
-import { Container } from "../components/basic.js";
-import { Button } from "../components/buttons.js";
-import { Text } from "../components/text.js";
+import type { Token } from "../../../../../bridge/index.js";
+import { getCachedChain } from "../../../../../chains/utils.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
+import { spacing } from "../../../../core/design-system/index.js";
+import { FiatValue } from "../../ConnectWallet/screens/Buy/swap/FiatValue.js";
+import { Container } from "../../components/basic.js";
+import { Button } from "../../components/buttons.js";
+import { Text } from "../../components/text.js";
 import { TokenAndChain } from "./TokenAndChain.js";
 
 export function TokenBalanceRow({

@@ -1,15 +1,17 @@
-import type { Token } from "../../../../bridge/index.js";
-import type { ThirdwebClient } from "../../../../client/client.js";
-import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
-import { radius } from "../../../core/design-system/index.js";
-import type { PaymentMethod } from "../../../core/machines/paymentMachine.js";
-import { getFiatCurrencyIcon } from "../ConnectWallet/screens/Buy/fiat/currencies.js";
-import { StepConnectorArrow } from "../ConnectWallet/screens/Buy/swap/StepConnector.js";
-import { WalletRow } from "../ConnectWallet/screens/Buy/swap/WalletRow.js";
-import { Container } from "../components/basic.js";
-import { Text } from "../components/text.js";
-import type { UIOptions } from "./BridgeOrchestrator.js";
-import { TokenBalanceRow } from "./TokenBalanceRow.js";
+import type { Token } from "../../../../../bridge/index.js";
+import { defineChain } from "../../../../../chains/utils.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
+import { radius } from "../../../../core/design-system/index.js";
+import type { PaymentMethod } from "../../../../core/machines/paymentMachine.js";
+import { getFiatCurrencyIcon } from "../../ConnectWallet/screens/Buy/fiat/currencies.js";
+import { FiatValue } from "../../ConnectWallet/screens/Buy/swap/FiatValue.js";
+import { StepConnectorArrow } from "../../ConnectWallet/screens/Buy/swap/StepConnector.js";
+import { WalletRow } from "../../ConnectWallet/screens/Buy/swap/WalletRow.js";
+import { Container } from "../../components/basic.js";
+import { Text } from "../../components/text.js";
+import type { UIOptions } from "../BridgeOrchestrator.js";
+import { TokenBalanceRow } from "../common/TokenBalanceRow.js";
 
 export function PaymentOverview(props: {
   uiOptions: UIOptions;
@@ -44,7 +46,8 @@ export function PaymentOverview(props: {
           <Container
             flex="row"
             gap="sm"
-            p="sm"
+            px="md"
+            py="sm"
             style={{
               borderBottom: `1px solid ${theme.colors.borderColor}`,
             }}
@@ -115,7 +118,8 @@ export function PaymentOverview(props: {
           <Container
             flex="row"
             gap="sm"
-            p="sm"
+            px="md"
+            py="sm"
             style={{
               borderBottom: `1px solid ${theme.colors.borderColor}`,
             }}
@@ -146,9 +150,25 @@ export function PaymentOverview(props: {
                 </Text>
               )}
             </Container>
-            <Text size="sm" color="secondaryText">
-              {props.uiOptions.paymentInfo.amount} {props.toToken.symbol}
-            </Text>
+            <Container
+              flex="column"
+              gap="3xs"
+              center="y"
+              style={{ alignItems: "flex-end" }}
+            >
+              <FiatValue
+                tokenAmount={props.uiOptions.paymentInfo.amount}
+                token={props.toToken}
+                client={props.client}
+                chain={defineChain(props.toToken.chainId)}
+                weight={600}
+                color="primaryText"
+                size="sm"
+              />
+              <Text size="xs" color="secondaryText">
+                {props.uiOptions.paymentInfo.amount} {props.toToken.symbol}
+              </Text>
+            </Container>
           </Container>
         )}
         {props.uiOptions.mode === "fund_wallet" && (

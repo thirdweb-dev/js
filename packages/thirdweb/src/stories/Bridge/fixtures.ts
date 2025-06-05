@@ -12,7 +12,7 @@ export const ETH: Token = {
   address: NATIVE_TOKEN_ADDRESS,
   name: "Ethereum",
   symbol: "ETH",
-  chainId: 1,
+  chainId: 10,
   decimals: 18,
   priceUsd: 1000,
   iconUri:

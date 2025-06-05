@@ -19,11 +19,11 @@ import { Container } from "../components/basic.js";
 import { DirectPayment } from "./DirectPayment.js";
 import { ErrorBanner } from "./ErrorBanner.js";
 import { FundWallet } from "./FundWallet.js";
-import { PaymentDetails } from "./PaymentDetails.js";
 import { QuoteLoader } from "./QuoteLoader.js";
 import { StepRunner } from "./StepRunner.js";
-import { SuccessScreen } from "./SuccessScreen.js";
+import { PaymentDetails } from "./payment-details/PaymentDetails.js";
 import { PaymentSelection } from "./payment-selection/PaymentSelection.js";
+import { SuccessScreen } from "./payment-success/SuccessScreen.js";
 
 export type UIOptions =
   | {

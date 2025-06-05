@@ -1,19 +1,19 @@
 "use client";
-import type { ThirdwebClient } from "../../../../client/client.js";
-import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
-import { radius, spacing } from "../../../core/design-system/index.js";
-import type { BridgePrepareResult } from "../../../core/hooks/useBridgePrepare.js";
-import type { PaymentMethod } from "../../../core/machines/paymentMachine.js";
-import {} from "../ConnectWallet/screens/Buy/fiat/currencies.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
+import { radius, spacing } from "../../../../core/design-system/index.js";
+import type { BridgePrepareResult } from "../../../../core/hooks/useBridgePrepare.js";
+import type { PaymentMethod } from "../../../../core/machines/paymentMachine.js";
+import {} from "../../ConnectWallet/screens/Buy/fiat/currencies.js";
 import {
   formatCurrencyAmount,
   formatTokenAmount,
-} from "../ConnectWallet/screens/formatTokenBalance.js";
-import { Spacer } from "../components/Spacer.js";
-import { Container, ModalHeader } from "../components/basic.js";
-import { Button } from "../components/buttons.js";
-import { Text } from "../components/text.js";
-import type { UIOptions } from "./BridgeOrchestrator.js";
+} from "../../ConnectWallet/screens/formatTokenBalance.js";
+import { Spacer } from "../../components/Spacer.js";
+import { Container, ModalHeader } from "../../components/basic.js";
+import { Button } from "../../components/buttons.js";
+import { Text } from "../../components/text.js";
+import type { UIOptions } from "../BridgeOrchestrator.js";
 import { PaymentOverview } from "./PaymentOverview.js";
 
 export interface PaymentDetailsProps {

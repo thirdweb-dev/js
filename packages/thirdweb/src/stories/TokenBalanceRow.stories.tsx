@@ -5,7 +5,7 @@ import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { CustomThemeProvider } from "../react/core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../react/core/design-system/index.js";
-import { TokenBalanceRow } from "../react/web/ui/Bridge/TokenBalanceRow.js";
+import { TokenBalanceRow } from "../react/web/ui/Bridge/common/TokenBalanceRow.js";
 import { ETH, UNI, USDC } from "./Bridge/fixtures.js";
 import { storyClient } from "./utils.js";
 

@@ -1,24 +1,24 @@
 import { useMemo } from "react";
-import type { Token } from "../../../../bridge/index.js";
-import type { Chain } from "../../../../chains/types.js";
-import { getCachedChain } from "../../../../chains/utils.js";
-import type { ThirdwebClient } from "../../../../client/client.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
-import { resolveScheme } from "../../../../utils/ipfs.js";
-import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
-import { iconSize } from "../../../core/design-system/index.js";
+import type { Token } from "../../../../../bridge/index.js";
+import type { Chain } from "../../../../../chains/types.js";
+import { getCachedChain } from "../../../../../chains/utils.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
+import { resolveScheme } from "../../../../../utils/ipfs.js";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
+import { iconSize } from "../../../../core/design-system/index.js";
 import {
   useChainIconUrl,
   useChainMetadata,
-} from "../../../core/hooks/others/useChainQuery.js";
-import { genericTokenIcon } from "../../../core/utils/walletIcon.js";
-import { CoinsIcon } from "../ConnectWallet/icons/CoinsIcon.js";
-import { isNativeToken } from "../ConnectWallet/screens/nativeToken.js";
-import { ChainName } from "../components/ChainName.js";
-import { Img } from "../components/Img.js";
-import { Container } from "../components/basic.js";
-import { fallbackChainIcon } from "../components/fallbackChainIcon.js";
-import { Text } from "../components/text.js";
+} from "../../../../core/hooks/others/useChainQuery.js";
+import { genericTokenIcon } from "../../../../core/utils/walletIcon.js";
+import { CoinsIcon } from "../../ConnectWallet/icons/CoinsIcon.js";
+import { isNativeToken } from "../../ConnectWallet/screens/nativeToken.js";
+import { ChainName } from "../../components/ChainName.js";
+import { Img } from "../../components/Img.js";
+import { Container } from "../../components/basic.js";
+import { fallbackChainIcon } from "../../components/fallbackChainIcon.js";
+import { Text } from "../../components/text.js";
 
 export function TokenAndChain({
   token,

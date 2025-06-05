@@ -121,10 +121,11 @@ export const DirectPayment: Story = {
       paymentInfo: {
         sellerAddress: "0x1234567890123456789012345678901234567890",
         token: ETH,
-        amount: "0.1",
+        amount: "0.0001",
         feePayer: "sender",
         metadata: {
-          name: "Premium Digital Art NFT",
+          name: "Digital Art NFT",
+          description: "This is a premium digital art by a famous artist",
           image:
             "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=500&h=300&fit=crop",
         },
@@ -153,10 +154,11 @@ export const DirectPaymentLight: Story = {
       paymentInfo: {
         sellerAddress: "0x1234567890123456789012345678901234567890",
         token: USDC,
-        amount: "25.00",
+        amount: "0.1",
         feePayer: "receiver",
         metadata: {
           name: "Concert Ticket",
+          description: "Concert ticket for the upcoming show",
           image:
             "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=500&h=300&fit=crop",
         },

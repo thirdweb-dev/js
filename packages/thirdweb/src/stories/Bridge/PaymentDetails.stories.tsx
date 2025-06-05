@@ -4,7 +4,7 @@ import type { PaymentMethod } from "../../react/core/machines/paymentMachine.js"
 import {
   PaymentDetails,
   type PaymentDetailsProps,
-} from "../../react/web/ui/Bridge/PaymentDetails.js";
+} from "../../react/web/ui/Bridge/payment-details/PaymentDetails.js";
 import { stringify } from "../../utils/json.js";
 import { ModalThemeWrapper, storyClient } from "../utils.js";
 import {

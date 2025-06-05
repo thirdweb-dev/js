@@ -11,7 +11,7 @@ import { Spacer } from "../../components/Spacer.js";
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
-import { TokenAndChain } from "../TokenAndChain.js";
+import { TokenAndChain } from "../common/TokenAndChain.js";
 
 export interface TokenSelectionProps {
   paymentMethods: PaymentMethod[];
@@ -193,7 +193,7 @@ export function TokenSelection({
         flex="column"
         gap="sm"
         style={{
-          maxHeight: "60vh",
+          maxHeight: "400px",
           overflowY: "auto",
           scrollbarWidth: "none",
         }}

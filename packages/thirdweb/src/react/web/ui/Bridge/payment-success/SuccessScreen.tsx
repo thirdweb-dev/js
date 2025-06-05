@@ -1,16 +1,16 @@
 "use client";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
-import type { WindowAdapter } from "../../../core/adapters/WindowAdapter.js";
-import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
-import { iconSize } from "../../../core/design-system/index.js";
-import type { BridgePrepareResult } from "../../../core/hooks/useBridgePrepare.js";
-import type { CompletedStatusResult } from "../../../core/hooks/useStepExecutor.js";
-import { Spacer } from "../components/Spacer.js";
-import { Container, ModalHeader } from "../components/basic.js";
-import { Button } from "../components/buttons.js";
-import { Text } from "../components/text.js";
-import { PaymentSuccessDetails } from "./PaymentSuccessDetails.js";
+import type { WindowAdapter } from "../../../../core/adapters/WindowAdapter.js";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
+import { iconSize } from "../../../../core/design-system/index.js";
+import type { BridgePrepareResult } from "../../../../core/hooks/useBridgePrepare.js";
+import type { CompletedStatusResult } from "../../../../core/hooks/useStepExecutor.js";
+import { Spacer } from "../../components/Spacer.js";
+import { Container, ModalHeader } from "../../components/basic.js";
+import { Button } from "../../components/buttons.js";
+import { Text } from "../../components/text.js";
+import { PaymentReceipt } from "./PaymentReceipt.js";
 
 export interface SuccessScreenProps {
   /**
@@ -52,7 +52,7 @@ export function SuccessScreen({
 
   if (viewState === "detail") {
     return (
-      <PaymentSuccessDetails
+      <PaymentReceipt
         preparedQuote={preparedQuote}
         completedStatuses={completedStatuses}
         windowAdapter={windowAdapter}
@@ -109,7 +109,7 @@ export function SuccessScreen({
           fullWidth
           onClick={() => setViewState("detail")}
         >
-          View Transaction Details
+          View Payment Receipt
         </Button>
 
         <Button variant="accent" fullWidth onClick={onClose}>

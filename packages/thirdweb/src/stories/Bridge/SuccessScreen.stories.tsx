@@ -5,7 +5,7 @@ import type { Theme } from "../../react/core/design-system/index.js";
 import type { BridgePrepareResult } from "../../react/core/hooks/useBridgePrepare.js";
 import type { CompletedStatusResult } from "../../react/core/hooks/useStepExecutor.js";
 import { webWindowAdapter } from "../../react/web/adapters/WindowAdapter.js";
-import { SuccessScreen } from "../../react/web/ui/Bridge/SuccessScreen.js";
+import { SuccessScreen } from "../../react/web/ui/Bridge/payment-success/SuccessScreen.js";
 import { ModalThemeWrapper } from "../utils.js";
 import { simpleBuyQuote, simpleOnrampQuote } from "./fixtures.js";
 

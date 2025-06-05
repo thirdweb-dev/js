@@ -16,7 +16,7 @@ import { Spacer } from "../components/Spacer.js";
 import { Container, Line } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { Text } from "../components/text.js";
-import { ChainIcon } from "./TokenAndChain.js";
+import { ChainIcon } from "./common/TokenAndChain.js";
 
 export interface DirectPaymentProps {
   /**

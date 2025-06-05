@@ -19,7 +19,7 @@ import { Container, ModalHeader } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { Input } from "../components/formElements.js";
 import { Text } from "../components/text.js";
-import { TokenAndChain } from "./TokenAndChain.js";
+import { TokenAndChain } from "./common/TokenAndChain.js";
 
 export interface FundWalletProps {
   /**
