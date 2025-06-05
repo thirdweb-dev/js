@@ -266,7 +266,7 @@ export function DirectPayment({
           <Spacer y="md" />
 
           <PoweredByThirdweb />
-          <Spacer y="md" />
+          <Spacer y="lg" />
         </Container>
       </Container>
     </Container>

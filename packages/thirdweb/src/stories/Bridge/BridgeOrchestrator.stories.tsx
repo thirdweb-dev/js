@@ -6,7 +6,12 @@ import {
   type BridgeOrchestratorProps,
 } from "../../react/web/ui/Bridge/BridgeOrchestrator.js";
 import { ModalThemeWrapper, storyClient } from "../utils.js";
-import { ETH, USDC } from "./fixtures.js";
+import {
+  ETH,
+  USDC,
+  contractInteractionTransaction,
+  erc20Transaction,
+} from "./fixtures.js";
 
 /**
  * BridgeOrchestrator is the main orchestrator component for the Bridge payment flow.
@@ -171,6 +176,50 @@ export const DirectPaymentLight: Story = {
       description: {
         story:
           "Light theme version of direct payment mode, showing a different product example with USDC payment.",
+      },
+    },
+  },
+};
+
+/**
+ * Transaction mode showing a complex contract interaction.
+ */
+export const Transaction: Story = {
+  args: {
+    theme: "dark",
+    uiOptions: {
+      mode: "transaction",
+      transaction: contractInteractionTransaction,
+    },
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
+    docs: {
+      description: {
+        story:
+          "Transaction mode showing a complex contract interaction (claimTo function) with function name extraction from contract ABI and detailed cost breakdown.",
+      },
+    },
+  },
+};
+
+/**
+ * Transaction mode in light theme showing an ERC20 token transfer.
+ */
+export const TransactionLight: Story = {
+  args: {
+    theme: "light",
+    uiOptions: {
+      mode: "transaction",
+      transaction: erc20Transaction,
+    },
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story:
+          "Light theme version of transaction mode showing an ERC20 token transfer with proper token amount formatting and USD conversion.",
       },
     },
   },

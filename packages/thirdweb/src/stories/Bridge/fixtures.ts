@@ -1,10 +1,16 @@
 import { stringify } from "viem";
 import type { Token } from "../../bridge/index.js";
+import { baseSepolia } from "../../chains/chain-definitions/base-sepolia.js";
 import { base } from "../../chains/chain-definitions/base.js";
+import { polygon } from "../../chains/chain-definitions/polygon.js";
 import { defineChain } from "../../chains/utils.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
+import { getContract } from "../../contract/contract.js";
+import { claimTo } from "../../extensions/erc20/drops/write/claimTo.js";
+import { transfer } from "../../extensions/erc20/write/transfer.js";
 import type { BridgePrepareResult } from "../../react/core/hooks/useBridgePrepare.js";
 import { getDefaultToken } from "../../react/core/utils/defaultTokens.js";
+import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 import { storyClient } from "../utils.js";
 
@@ -554,3 +560,35 @@ export const complexBuyQuote: BridgePrepareResult = JSON.parse(
     },
   }),
 );
+
+// ========== PREPARED TRANSACTIONS FOR TRANSACTION PAYMENT ========== //
+
+// mintTo raw transaction
+export const ethTransferTransaction = prepareTransaction({
+  to: "0x87C52295891f208459F334975a3beE198fE75244",
+  data: "0x449a52f80000000000000000000000008447c7a30d18e9adf2abe362689fc994cc6a340d00000000000000000000000000000000000000000000000000038d7ea4c68000",
+  chain: baseSepolia,
+  client: storyClient,
+});
+
+// ERC20 token transaction with value
+export const erc20Transaction = transfer({
+  contract: getContract({
+    client: storyClient,
+    address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    chain: base,
+  }),
+  to: "0x2247d5d238d0f9d37184d8332aE0289d1aD9991b",
+  amount: 100,
+});
+
+// claimTo on Polygon
+export const contractInteractionTransaction = claimTo({
+  contract: getContract({
+    client: storyClient,
+    address: "0x683f91F407301b90e501492F8A26A3498D8d9638",
+    chain: polygon,
+  }),
+  to: "0x2247d5d238d0f9d37184d8332aE0289d1aD9991b",
+  quantity: "10",
+});

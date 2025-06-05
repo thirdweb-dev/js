@@ -115,9 +115,10 @@ export function FundWallet({
   };
 
   return (
-    <Container flex="column" p="lg">
+    <Container flex="column" px="lg">
+      <Spacer y="lg" />
       {/* Header */}
-      <ModalHeader title="Top up your wallet" />
+      <ModalHeader title="Top up your wallet" leftAligned />
 
       <Spacer y="xl" />
 
@@ -337,9 +338,10 @@ export function FundWallet({
         />
       )}
 
-      <Spacer y="lg" />
+      <Spacer y="md" />
 
       <PoweredByThirdweb />
+      <Spacer y="lg" />
     </Container>
   );
 }

@@ -21,6 +21,7 @@ import { ErrorBanner } from "./ErrorBanner.js";
 import { FundWallet } from "./FundWallet.js";
 import { QuoteLoader } from "./QuoteLoader.js";
 import { StepRunner } from "./StepRunner.js";
+import { TransactionPayment } from "./TransactionPayment.js";
 import { PaymentDetails } from "./payment-details/PaymentDetails.js";
 import { PaymentSelection } from "./payment-selection/PaymentSelection.js";
 import { SuccessScreen } from "./payment-success/SuccessScreen.js";
@@ -211,6 +212,15 @@ export function BridgeOrchestrator({
       {state.value === "init" && uiOptions.mode === "direct_payment" && (
         <DirectPayment
           paymentInfo={uiOptions.paymentInfo}
+          client={client}
+          onContinue={handleRequirementsResolved}
+          connectOptions={connectOptions}
+        />
+      )}
+
+      {state.value === "init" && uiOptions.mode === "transaction" && (
+        <TransactionPayment
+          transaction={uiOptions.transaction}
           client={client}
           onContinue={handleRequirementsResolved}
           connectOptions={connectOptions}
