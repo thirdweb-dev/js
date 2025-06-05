@@ -6,7 +6,7 @@ import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 import { DocLink } from "components/shared/DocLink";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 import { formatTickerNumber } from "lib/format-utils";
 import { useMemo } from "react";
 import type { EcosystemWalletStats } from "types/analytics";
@@ -169,7 +169,7 @@ export function EcosystemWalletUsersChartCard(props: {
       toolTipLabelFormatter={(_v, item) => {
         if (Array.isArray(item)) {
           const time = item[0].payload.time as number;
-          return formatDate(new Date(time), "MMM d, yyyy");
+          return format(new Date(time), "MMM d, yyyy");
         }
         return undefined;
       }}

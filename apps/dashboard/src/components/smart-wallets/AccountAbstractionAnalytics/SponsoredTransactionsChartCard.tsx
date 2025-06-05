@@ -9,7 +9,7 @@ import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import { DocLink } from "components/shared/DocLink";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useMemo } from "react";
 import type { UserOpStats } from "types/analytics";
@@ -137,7 +137,7 @@ export function SponsoredTransactionsChartCard(props: {
       toolTipLabelFormatter={(_v, item) => {
         if (Array.isArray(item)) {
           const time = item[0].payload.time as number;
-          return formatDate(new Date(time), "MMM d, yyyy");
+          return format(new Date(time), "MMM d, yyyy");
         }
         return undefined;
       }}

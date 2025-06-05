@@ -19,7 +19,7 @@ import {
   useTotalContractTransactionAnalytics,
   useTotalContractUniqueWallets,
 } from "data/analytics/hooks";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 import { useMemo, useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 
@@ -125,7 +125,7 @@ type ChartProps = {
 function toolTipLabelFormatter(_v: string, item: unknown) {
   if (Array.isArray(item)) {
     const time = item[0].payload.time as number;
-    return formatDate(new Date(time), "MMM d, yyyy");
+    return format(new Date(time), "MMM d, yyyy");
   }
   return undefined;
 }

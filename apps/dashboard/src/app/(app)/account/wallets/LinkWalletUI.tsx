@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/table";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useMutation } from "@tanstack/react-query";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 import { MinusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -106,7 +106,7 @@ export function LinkWalletUI(props: {
                   />
                 </TableCell>
                 <TableCell className="text-muted-foreground text-sm">
-                  {formatDate(wallet.createdAt, "MMM d, yyyy")}
+                  {format(wallet.createdAt, "MMM d, yyyy")}
                 </TableCell>
                 <TableCell>
                   <UnlinkButton

@@ -20,7 +20,7 @@ import {
   EmptyChartState,
   LoadingChartState,
 } from "components/analytics/empty-chart-state";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 import { useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
@@ -94,7 +94,7 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
                 axisLine={false}
                 tickMargin={20}
                 tickFormatter={(value) =>
-                  formatDate(
+                  format(
                     new Date(value),
                     props.xAxis?.sameDay ? "MMM dd, HH:mm" : "MMM dd",
                   )
