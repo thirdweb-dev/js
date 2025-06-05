@@ -21,15 +21,14 @@ import type {
 } from "types/analytics";
 import { AnalyticsHeader } from "../../../../components/Analytics/AnalyticsHeader";
 import { CombinedBarChartCard } from "../../../../components/Analytics/CombinedBarChartCard";
-import { EmptyState } from "../../../../components/Analytics/EmptyState";
 import { PieChartCard } from "../../../../components/Analytics/PieChartCard";
 
 import { getTeamBySlug } from "@/api/team";
-import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import {
   EmptyStateCard,
   EmptyStateContent,
 } from "app/(app)/team/components/Analytics/EmptyStateCard";
+import { LoadingChartState } from "components/analytics/empty-chart-state";
 import { Suspense } from "react";
 import { TotalSponsoredChartCardUI } from "../../_components/TotalSponsoredCard";
 import { TransactionsChartCardUI } from "../../_components/TransactionsCard";
@@ -76,159 +75,221 @@ export default async function TeamOverviewPage(props: {
         />
       </div>
       <div className="flex grow flex-col justify-between gap-10 md:container md:pt-8 md:pb-16">
-        <Suspense fallback={<GenericLoadingPage />}>
-          <OverviewPageContent
-            teamId={team.id}
-            range={range}
-            interval={interval}
-            searchParams={searchParams}
-          />
-        </Suspense>
+        <div className="flex grow flex-col gap-6">
+          <Suspense
+            fallback={<LoadingChartState className="h-[458px] border" />}
+          >
+            <AsyncAppHighlightsCard
+              teamId={team.id}
+              range={range}
+              interval={interval}
+              searchParams={searchParams}
+            />
+          </Suspense>
+
+          <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
+            <Suspense
+              fallback={<LoadingChartState className="h-[431px] border" />}
+            >
+              <AsyncWalletDistributionCard teamId={team.id} range={range} />
+            </Suspense>
+
+            <Suspense
+              fallback={<LoadingChartState className="h-[431px] border" />}
+            >
+              <AsyncAuthMethodDistributionCard teamId={team.id} range={range} />
+            </Suspense>
+          </div>
+
+          <Suspense
+            fallback={<LoadingChartState className="h-[458px] border" />}
+          >
+            <AsyncTransactionsChartCard
+              teamId={team.id}
+              range={range}
+              interval={interval}
+              searchParams={searchParams}
+            />
+          </Suspense>
+
+          <Suspense
+            fallback={<LoadingChartState className="h-[458px] border" />}
+          >
+            <AsyncTotalSponsoredCard
+              teamId={team.id}
+              range={range}
+              interval={interval}
+              searchParams={searchParams}
+            />
+          </Suspense>
+        </div>
       </div>
     </div>
   );
 }
 
-async function OverviewPageContent(props: {
+async function AsyncAppHighlightsCard(props: {
   teamId: string;
   range: Range;
   interval: "day" | "week";
   searchParams: SearchParams;
 }) {
-  const { teamId, range, interval, searchParams } = props;
+  const [walletUserStatsTimeSeries, universalBridgeUsage] =
+    await Promise.allSettled([
+      getWalletUsers({
+        teamId: props.teamId,
+        from: props.range.from,
+        to: props.range.to,
+        period: props.interval,
+      }),
+      getUniversalBridgeUsage({
+        teamId: props.teamId,
+        from: props.range.from,
+        to: props.range.to,
+        period: props.interval,
+      }),
+    ]);
 
-  const [
-    walletConnections,
-    walletUserStatsTimeSeries,
-    inAppWalletUsage,
-    userOpUsageTimeSeries,
-    userOpUsage,
-    clientTransactionsTimeSeries,
-    clientTransactions,
-    universalBridgeUsage,
-  ] = await Promise.all([
-    // Aggregated wallet connections
-    getWalletConnections({
-      teamId: teamId,
-      from: range.from,
-      to: range.to,
-      period: "all",
-    }),
-    // Time series data for wallet users
-    getWalletUsers({
-      teamId: teamId,
-      from: range.from,
-      to: range.to,
-      period: interval,
-    }),
-    // In-app wallet usage
-    getInAppWalletUsage({
-      teamId: teamId,
-      from: range.from,
-      to: range.to,
-      period: "all",
-    }),
-    // User operations usage
-    getUserOpUsage({
-      teamId,
-      from: range.from,
-      to: range.to,
-      period: interval,
-    }),
-    getUserOpUsage({
-      teamId,
-      from: range.from,
-      to: range.to,
-      period: "all",
-    }),
-    // Client transactions
-    getClientTransactions({
-      teamId: teamId,
-      from: range.from,
-      to: range.to,
-      period: interval,
-    }),
-    getClientTransactions({
-      teamId: teamId,
-      from: range.from,
-      to: range.to,
-      period: "all",
-    }),
-    // Universal Bridge
-    getUniversalBridgeUsage({
-      teamId: teamId,
-      from: range.from,
-      to: range.to,
-      period: interval,
-    }),
-  ]);
-
-  const isEmpty =
-    !walletUserStatsTimeSeries.some((w) => w.totalUsers !== 0) &&
-    walletConnections.length === 0 &&
-    inAppWalletUsage.length === 0 &&
-    userOpUsage.length === 0;
-
-  if (isEmpty) {
-    return <EmptyState />;
+  if (
+    walletUserStatsTimeSeries.status === "fulfilled" &&
+    universalBridgeUsage.status === "fulfilled" &&
+    walletUserStatsTimeSeries.value.some((w) => w.totalUsers !== 0)
+  ) {
+    return (
+      <div className="">
+        <AppHighlightsCard
+          userStats={walletUserStatsTimeSeries.value}
+          volumeStats={universalBridgeUsage.value}
+          searchParams={props.searchParams}
+        />
+      </div>
+    );
   }
 
   return (
-    <div className="flex grow flex-col gap-6">
-      {walletUserStatsTimeSeries.some((w) => w.totalUsers !== 0) ? (
-        <div className="">
-          <AppHighlightsCard
-            userStats={walletUserStatsTimeSeries}
-            volumeStats={universalBridgeUsage}
-            searchParams={searchParams}
-          />
-        </div>
-      ) : (
-        <EmptyStateCard
-          metric="Connect"
-          link="https://portal.thirdweb.com/connect/quickstart"
-        />
-      )}
-      <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
-        {walletConnections.length > 0 ? (
-          <WalletDistributionCard data={walletConnections} />
-        ) : (
-          <EmptyStateCard
-            metric="Connect"
-            link="https://portal.thirdweb.com/connect/quickstart"
-          />
-        )}
-        {inAppWalletUsage.length > 0 ? (
-          <AuthMethodDistributionCard data={inAppWalletUsage} />
-        ) : (
-          <EmptyStateCard
-            metric="In-App Wallets"
-            link="https://portal.thirdweb.com/typescript/v5/inAppWallet"
-          />
-        )}
-      </div>
-      {clientTransactions.length > 0 && (
-        <TransactionsChartCardUI
-          searchParams={searchParams}
-          data={clientTransactionsTimeSeries}
-          aggregatedData={clientTransactions}
-          className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
-        />
-      )}
-      {userOpUsage.length > 0 ? (
-        <TotalSponsoredChartCardUI
-          searchParams={searchParams}
-          data={userOpUsageTimeSeries}
-          aggregatedData={userOpUsage}
-          className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
-        />
-      ) : (
-        <EmptyStateCard
-          metric="Gas Sponsored"
-          link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
-        />
-      )}
-    </div>
+    <EmptyStateCard
+      metric="Connect"
+      link="https://portal.thirdweb.com/connect/quickstart"
+    />
+  );
+}
+
+async function AsyncWalletDistributionCard(props: {
+  teamId: string;
+  range: Range;
+}) {
+  const walletConnections = await getWalletConnections({
+    teamId: props.teamId,
+    from: props.range.from,
+    to: props.range.to,
+    period: "all",
+  }).catch(() => undefined);
+
+  return walletConnections && walletConnections.length > 0 ? (
+    <WalletDistributionCard data={walletConnections} />
+  ) : (
+    <EmptyStateCard
+      metric="Connect"
+      link="https://portal.thirdweb.com/connect/quickstart"
+    />
+  );
+}
+
+async function AsyncAuthMethodDistributionCard(props: {
+  teamId: string;
+  range: Range;
+}) {
+  const inAppWalletUsage = await getInAppWalletUsage({
+    teamId: props.teamId,
+    from: props.range.from,
+    to: props.range.to,
+    period: "all",
+  }).catch(() => undefined);
+
+  return inAppWalletUsage && inAppWalletUsage.length > 0 ? (
+    <AuthMethodDistributionCard data={inAppWalletUsage} />
+  ) : (
+    <EmptyStateCard
+      metric="In-App Wallets"
+      link="https://portal.thirdweb.com/typescript/v5/inAppWallet"
+    />
+  );
+}
+
+async function AsyncTransactionsChartCard(props: {
+  teamId: string;
+  range: Range;
+  interval: "day" | "week";
+  searchParams: SearchParams;
+}) {
+  const [clientTransactionsTimeSeries, clientTransactions] =
+    await Promise.allSettled([
+      getClientTransactions({
+        teamId: props.teamId,
+        from: props.range.from,
+        to: props.range.to,
+        period: props.interval,
+      }),
+      getClientTransactions({
+        teamId: props.teamId,
+        from: props.range.from,
+        to: props.range.to,
+        period: "all",
+      }),
+    ]);
+
+  return clientTransactionsTimeSeries.status === "fulfilled" &&
+    clientTransactions.status === "fulfilled" &&
+    clientTransactions.value.length > 0 ? (
+    <TransactionsChartCardUI
+      searchParams={props.searchParams}
+      data={clientTransactionsTimeSeries.value}
+      aggregatedData={clientTransactions.value}
+      className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
+    />
+  ) : (
+    <EmptyStateCard
+      metric="Transactions"
+      link="https://portal.thirdweb.com/connect/quickstart"
+    />
+  );
+}
+
+async function AsyncTotalSponsoredCard(props: {
+  teamId: string;
+  range: Range;
+  interval: "day" | "week";
+  searchParams: SearchParams;
+}) {
+  const [userOpUsageTimeSeries, userOpUsage] = await Promise.allSettled([
+    getUserOpUsage({
+      teamId: props.teamId,
+      from: props.range.from,
+      to: props.range.to,
+      period: props.interval,
+    }),
+    getUserOpUsage({
+      teamId: props.teamId,
+      from: props.range.from,
+      to: props.range.to,
+      period: "all",
+    }),
+  ]);
+
+  return userOpUsageTimeSeries.status === "fulfilled" &&
+    userOpUsage.status === "fulfilled" &&
+    userOpUsage.value.length > 0 ? (
+    <TotalSponsoredChartCardUI
+      searchParams={props.searchParams}
+      data={userOpUsageTimeSeries.value}
+      aggregatedData={userOpUsage.value}
+      className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
+    />
+  ) : (
+    <EmptyStateCard
+      metric="Gas Sponsored"
+      link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
+    />
   );
 }
 
@@ -251,11 +312,19 @@ function processTimeSeriesData(
 
   for (const stat of userStats) {
     const volume = volumeStats
-      .filter((v) => v.date === stat.date && v.status === "completed")
+      .filter(
+        (v) =>
+          new Date(v.date).toISOString() ===
+            new Date(stat.date).toISOString() && v.status === "completed",
+      )
       .reduce((acc, curr) => acc + curr.amountUsdCents / 100, 0);
 
     const fees = volumeStats
-      .filter((v) => v.date === stat.date && v.status === "completed")
+      .filter(
+        (v) =>
+          new Date(v.date).toISOString() ===
+            new Date(stat.date).toISOString() && v.status === "completed",
+      )
       .reduce((acc, curr) => acc + curr.developerFeeUsdCents / 100, 0);
 
     metrics.push({
