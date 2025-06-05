@@ -11,6 +11,7 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import {
   CheckIcon,
+  CircleAlertIcon,
   CircleIcon,
   ExternalLinkIcon,
   InfinityIcon,
@@ -40,6 +41,7 @@ import {
 } from "thirdweb/react";
 import { getClaimParams, maxUint256 } from "thirdweb/utils";
 import { tryCatch } from "utils/try-catch";
+import { ToolTipLabel } from "../../../../../../../../../../@/components/ui/tooltip";
 import { getSDKTheme } from "../../../../../../../../components/sdk-component-theme";
 import { PublicPageConnectButton } from "../../../_components/PublicPageConnectButton";
 import { getCurrencyMeta } from "../../_utils/getCurrencyMeta";
@@ -222,23 +224,23 @@ export function ClaimTokenCardUI(props: {
     },
   });
 
+  const publicPrice = {
+    pricePerTokenWei: props.claimCondition.pricePerToken,
+    currencyAddress: props.claimCondition.currency,
+    decimals: props.claimConditionCurrency.decimals,
+    symbol: props.claimConditionCurrency.symbol,
+  };
+
   const claimParamsQuery = useQuery({
     queryKey: ["claim-params", props.contract.address, account?.address],
     queryFn: async () => {
-      const defaultPricing = {
-        pricePerTokenWei: props.claimCondition.pricePerToken,
-        currencyAddress: props.claimCondition.currency,
-        decimals: props.claimConditionCurrency.decimals,
-        symbol: props.claimConditionCurrency.symbol,
-      };
-
       if (!account) {
-        return defaultPricing;
+        return publicPrice;
       }
 
       const merkleRoot = props.claimCondition.merkleRoot;
       if (!merkleRoot || merkleRoot === padHex("0x", { size: 32 })) {
-        return defaultPricing;
+        return publicPrice;
       }
 
       const claimParams = await getClaimParams({
@@ -313,6 +315,11 @@ export function ClaimTokenCardUI(props: {
     );
   }
 
+  const isShowingCustomPrice =
+    claimParamsData &&
+    (claimParamsData.pricePerTokenWei !== publicPrice.pricePerTokenWei ||
+      claimParamsData.currencyAddress !== publicPrice.currencyAddress);
+
   return (
     <div className="rounded-xl border bg-card ">
       <div className="border-b px-4 py-5 lg:px-5">
@@ -348,25 +355,22 @@ export function ClaimTokenCardUI(props: {
 
           <div className="space-y-3 rounded-lg bg-muted/50 p-3">
             {/* Price per token */}
-            <div className="flex justify-between font-medium text-sm">
-              <span>Price per token</span>
+            <div className="flex items-start justify-between font-medium text-sm">
+              <span className="flex items-center gap-2">
+                Price per token
+                {isShowingCustomPrice && (
+                  <ToolTipLabel label="Your connected wallet address is added in the allowlist and is getting a special price">
+                    <CircleAlertIcon className="size-3.5 text-muted-foreground" />
+                  </ToolTipLabel>
+                )}
+              </span>
 
-              <SkeletonContainer
-                skeletonData={`0.00 ${props.claimConditionCurrency.symbol}`}
-                loadedData={
-                  claimParamsData
-                    ? claimParamsData.pricePerTokenWei === 0n
-                      ? "FREE"
-                      : `${toTokens(
-                          claimParamsData.pricePerTokenWei,
-                          claimParamsData.decimals,
-                        )} ${claimParamsData.symbol}`
-                    : undefined
-                }
-                render={(v) => {
-                  return <span className="">{v}</span>;
-                }}
-              />
+              <div className="flex flex-col items-end gap-1">
+                {isShowingCustomPrice && (
+                  <TokenPrice data={publicPrice} strikethrough={true} />
+                )}
+                <TokenPrice data={claimParamsData} strikethrough={false} />
+              </div>
             </div>
 
             {/* Quantity */}
@@ -444,6 +448,43 @@ export function ClaimTokenCardUI(props: {
         </div>
       </div>
     </div>
+  );
+}
+
+function TokenPrice(props: {
+  strikethrough: boolean;
+  data:
+    | {
+        pricePerTokenWei: bigint;
+        decimals: number;
+        symbol: string;
+      }
+    | undefined;
+}) {
+  return (
+    <SkeletonContainer
+      skeletonData={"0.00 ETH"}
+      loadedData={
+        props.data
+          ? props.data.pricePerTokenWei === 0n
+            ? "FREE"
+            : `${toTokens(
+                props.data.pricePerTokenWei,
+                props.data.decimals,
+              )} ${props.data.symbol}`
+          : undefined
+      }
+      render={(v) => {
+        if (props.strikethrough) {
+          return (
+            <s className="font-medium text-muted-foreground text-sm line-through decoration-muted-foreground/50">
+              {v}
+            </s>
+          );
+        }
+        return <span className="font-medium text-foreground text-sm">{v}</span>;
+      }}
+    />
   );
 }
 

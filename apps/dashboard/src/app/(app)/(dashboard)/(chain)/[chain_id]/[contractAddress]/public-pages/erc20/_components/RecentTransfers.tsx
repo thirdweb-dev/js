@@ -18,7 +18,7 @@ import {
   ChevronRightIcon,
   ExternalLinkIcon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { type ThirdwebClient, type ThirdwebContract, toTokens } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import {
@@ -171,7 +171,7 @@ function RecentTransfersUI(props: {
         <Button
           variant="outline"
           size="sm"
-          disabled={props.isPending || props.data.length === 0}
+          disabled={props.isPending || props.data.length < props.rowsPerPage}
           className="gap-1.5 bg-background"
           onClick={() => props.setPage(props.page + 1)}
         >
@@ -213,7 +213,6 @@ export function RecentTransfers(props: {
 }) {
   const rowsPerPage = 10;
   const [page, setPage] = useState(0);
-  const [hasFetchedOnce, setHasFetchedOnce] = useState(false);
 
   const tokenQuery = useTokenTransfers({
     chainId: props.clientContract.chain.id,
@@ -222,18 +221,11 @@ export function RecentTransfers(props: {
     limit: rowsPerPage,
   });
 
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    if (!tokenQuery.isPending) {
-      setHasFetchedOnce(true);
-    }
-  }, [tokenQuery.isPending]);
-
   return (
     <div>
       <RecentTransfersUI
         data={tokenQuery.data ?? []}
-        isPending={tokenQuery.isPending && !hasFetchedOnce}
+        isPending={tokenQuery.isPending}
         rowsPerPage={rowsPerPage}
         client={props.clientContract.client}
         tokenMetadata={{
