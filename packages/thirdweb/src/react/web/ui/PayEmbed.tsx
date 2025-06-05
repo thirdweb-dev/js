@@ -30,6 +30,7 @@ import {
   BridgeOrchestrator,
   type UIOptions,
 } from "./Bridge/BridgeOrchestrator.js";
+import { UnsupportedTokenScreen } from "./Bridge/UnsupportedTokenScreen.js";
 import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
 import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
@@ -158,6 +159,15 @@ export type PayEmbedProps = {
    */
   paymentLinkId?: string;
 };
+
+// Enhanced UIOptions to handle unsupported token state
+type UIOptionsResult =
+  | { type: "success"; data: UIOptions }
+  | {
+      type: "unsupported_token";
+      token?: { address: string; symbol?: string; name?: string };
+      chain: Chain;
+    };
 
 /**
  * Embed a prebuilt UI for funding wallets, purchases or transactions with crypto or fiat.
@@ -320,13 +330,16 @@ export function PayEmbed(props: PayEmbedProps) {
 
   const bridgeDataQuery = useQuery({
     queryKey: ["bridgeData", props],
-    queryFn: async (): Promise<UIOptions> => {
+    queryFn: async (): Promise<UIOptionsResult> => {
       if (!props.payOptions?.mode) {
         const ETH = await getToken(props.client, NATIVE_TOKEN_ADDRESS, 1);
         return {
-          mode: "fund_wallet",
-          destinationToken: ETH,
-          initialAmount: "0.01",
+          type: "success",
+          data: {
+            mode: "fund_wallet",
+            destinationToken: ETH,
+            initialAmount: "0.01",
+          },
         };
       }
 
@@ -335,23 +348,38 @@ export function PayEmbed(props: PayEmbedProps) {
         if (!prefillInfo) {
           const ETH = await getToken(props.client, NATIVE_TOKEN_ADDRESS, 1);
           return {
-            mode: "fund_wallet",
-            destinationToken: ETH,
+            type: "success",
+            data: {
+              mode: "fund_wallet",
+              destinationToken: ETH,
+            },
           };
         }
         const token = await getToken(
           props.client,
           prefillInfo.token?.address || NATIVE_TOKEN_ADDRESS,
           prefillInfo.chain.id,
+        ).catch((err) =>
+          err.message.includes("not found") ? undefined : Promise.reject(err),
         );
         if (!token) {
-          console.error("Token not found for prefillInfo", prefillInfo);
-          throw new Error("Token not found");
+          return {
+            type: "unsupported_token",
+            token: {
+              address: prefillInfo.token?.address || NATIVE_TOKEN_ADDRESS,
+              symbol: prefillInfo.token?.symbol,
+              name: prefillInfo.token?.name,
+            },
+            chain: prefillInfo.chain,
+          };
         }
         return {
-          mode: "fund_wallet",
-          destinationToken: token,
-          initialAmount: prefillInfo.amount,
+          type: "success",
+          data: {
+            mode: "fund_wallet",
+            destinationToken: token,
+            initialAmount: prefillInfo.amount,
+          },
         };
       }
 
@@ -361,40 +389,65 @@ export function PayEmbed(props: PayEmbedProps) {
           props.client,
           paymentInfo.token?.address || NATIVE_TOKEN_ADDRESS,
           paymentInfo.chain.id,
+        ).catch((err) =>
+          err.message.includes("not found") ? undefined : Promise.reject(err),
         );
         if (!token) {
-          console.error("Token not found for paymentInfo", paymentInfo);
-          throw new Error("Token not found");
+          return {
+            type: "unsupported_token",
+            token: {
+              address: paymentInfo.token?.address || NATIVE_TOKEN_ADDRESS,
+              symbol: paymentInfo.token?.symbol,
+              name: paymentInfo.token?.name,
+            },
+            chain: paymentInfo.chain,
+          };
         }
         const amount =
           "amount" in paymentInfo
             ? paymentInfo.amount
             : toTokens(paymentInfo.amountWei, token.decimals);
         return {
-          mode: "direct_payment",
-          paymentInfo: {
-            token,
-            amount,
-            sellerAddress: paymentInfo.sellerAddress as `0x${string}`,
-            metadata: {
-              name: props.payOptions?.metadata?.name || "Direct Payment",
-              image: props.payOptions?.metadata?.image || "",
+          type: "success",
+          data: {
+            mode: "direct_payment",
+            paymentInfo: {
+              token,
+              amount,
+              sellerAddress: paymentInfo.sellerAddress as `0x${string}`,
+              metadata: {
+                name: props.payOptions?.metadata?.name || "Direct Payment",
+                image: props.payOptions?.metadata?.image || "",
+              },
+              feePayer: paymentInfo.feePayer,
             },
-            feePayer: paymentInfo.feePayer,
           },
         };
       }
 
       if (props.payOptions?.mode === "transaction") {
         return {
-          mode: "transaction",
-          transaction: props.payOptions.transaction,
+          type: "success",
+          data: {
+            mode: "transaction",
+            transaction: props.payOptions.transaction,
+          },
         };
       }
 
       throw new Error("Invalid mode");
     },
   });
+
+  const handleTryDifferentToken = () => {
+    // Refetch to allow user to try again (they might have changed something)
+    bridgeDataQuery.refetch();
+  };
+
+  const handleContactSupport = () => {
+    // Open support link or modal (this could be configurable via props)
+    window.open("https://support.thirdweb.com", "_blank");
+  };
 
   let content = null;
   if (!localeQuery.data || bridgeDataQuery.isLoading) {
@@ -410,17 +463,27 @@ export function PayEmbed(props: PayEmbedProps) {
         <Spinner size="xl" color="secondaryText" />
       </div>
     );
-  } else {
-    content = bridgeDataQuery.data ? (
+  } else if (bridgeDataQuery.data?.type === "unsupported_token") {
+    // Show unsupported token screen
+    content = (
+      <UnsupportedTokenScreen
+        chain={bridgeDataQuery.data.chain}
+        onTryDifferentToken={handleTryDifferentToken}
+        onContactSupport={handleContactSupport}
+      />
+    );
+  } else if (bridgeDataQuery.data?.type === "success") {
+    // Show normal bridge orchestrator
+    content = (
       <BridgeOrchestrator
         client={props.client}
-        uiOptions={bridgeDataQuery.data}
+        uiOptions={bridgeDataQuery.data.data}
         connectOptions={props.connectOptions}
         connectLocale={localeQuery.data}
         purchaseData={props.payOptions?.purchaseData}
         paymentLinkId={props.paymentLinkId}
       />
-    ) : null;
+    );
   }
 
   return (

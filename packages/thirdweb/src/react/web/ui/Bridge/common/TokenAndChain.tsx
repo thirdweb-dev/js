@@ -26,7 +26,7 @@ export function TokenAndChain({
   size,
   style,
 }: {
-  token: Token;
+  token: Omit<Token, "priceUsd">;
   client: ThirdwebClient;
   size: keyof typeof iconSize;
   style?: React.CSSProperties;
@@ -99,7 +99,7 @@ export function TokenAndChain({
 }
 
 export function TokenIconWithFallback(props: {
-  token: Token;
+  token: Omit<Token, "priceUsd">;
   size: keyof typeof iconSize;
   client: ThirdwebClient;
 }) {
