@@ -72,6 +72,10 @@ const meta = {
       options: ["light", "dark"],
       description: "Theme for the component",
     },
+    quickOptions: {
+      control: "object",
+      description: "Quick buy options",
+    },
     onComplete: { action: "flow completed" },
     onError: { action: "error occurred" },
     onCancel: { action: "flow cancelled" },
@@ -222,5 +226,17 @@ export const TransactionLight: Story = {
           "Light theme version of transaction mode showing an ERC20 token transfer with proper token amount formatting and USD conversion.",
       },
     },
+  },
+};
+
+export const CustomQuickOptions: Story = {
+  args: {
+    theme: "dark",
+    uiOptions: {
+      mode: "fund_wallet",
+      destinationToken: ETH,
+      initialAmount: "1",
+    },
+    quickOptions: [1, 2, 3],
   },
 };

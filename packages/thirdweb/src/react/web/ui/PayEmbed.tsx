@@ -17,6 +17,7 @@ import type { Theme } from "../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../core/hooks/auth/useSiweAuth.js";
 import type {
   ConnectButton_connectModalOptions,
+  FundWalletOptions,
   PayUIOptions,
 } from "../../core/hooks/connection/ConnectButtonProps.js";
 import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
@@ -467,6 +468,9 @@ export function PayEmbed(props: PayEmbedProps) {
         connectLocale={localeQuery.data}
         purchaseData={props.payOptions?.purchaseData}
         paymentLinkId={props.paymentLinkId}
+        quickOptions={
+          (props.payOptions as FundWalletOptions)?.prefillBuy?.quickOptions
+        }
       />
     );
   }

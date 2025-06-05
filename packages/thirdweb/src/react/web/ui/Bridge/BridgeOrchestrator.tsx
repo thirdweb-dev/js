@@ -31,6 +31,7 @@ export type UIOptions =
       mode: "fund_wallet";
       destinationToken: Token;
       initialAmount?: string;
+      quickOptions?: [number, number, number];
     }
   | {
       mode: "direct_payment";
@@ -98,6 +99,11 @@ export interface BridgeOrchestratorProps {
    * Optional payment link ID for the payment
    */
   paymentLinkId?: string;
+
+  /**
+   * Quick buy amounts
+   */
+  quickOptions?: [number, number, number];
 }
 
 export function BridgeOrchestrator({
@@ -111,6 +117,7 @@ export function BridgeOrchestrator({
   connectLocale,
   purchaseData,
   paymentLinkId,
+  quickOptions,
 }: BridgeOrchestratorProps) {
   // Initialize adapters
   const adapters = useMemo(
@@ -206,6 +213,7 @@ export function BridgeOrchestrator({
           client={client}
           onContinue={handleRequirementsResolved}
           connectOptions={connectOptions}
+          quickOptions={quickOptions ?? [5, 10, 20]}
         />
       )}
 

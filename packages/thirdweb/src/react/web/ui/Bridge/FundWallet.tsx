@@ -50,6 +50,11 @@ export interface FundWalletProps {
   onContinue: (amount: string, token: Token, receiverAddress: Address) => void;
 
   /**
+   * Quick buy amounts
+   */
+  quickOptions?: [number, number, number];
+
+  /**
    * Connect options for wallet connection
    */
   connectOptions?: PayEmbedConnectOptions;
@@ -61,6 +66,7 @@ export function FundWallet({
   receiverAddress,
   initialAmount = "",
   onContinue,
+  quickOptions,
   connectOptions,
 }: FundWalletProps) {
   const [amount, setAmount] = useState(initialAmount);
@@ -232,42 +238,21 @@ export function FundWallet({
             justifyContent: "space-evenly",
           }}
         >
-          <Button
-            variant="outline"
-            onClick={() => handleQuickAmount(5)}
-            style={{
-              padding: `${spacing.sm} ${spacing.md}`,
-              fontSize: fontSize.sm,
-              flex: 1,
-              backgroundColor: theme.colors.tertiaryBg,
-            }}
-          >
-            $5
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => handleQuickAmount(10)}
-            style={{
-              padding: `${spacing.sm} ${spacing.md}`,
-              fontSize: fontSize.sm,
-              flex: 1,
-              backgroundColor: theme.colors.tertiaryBg,
-            }}
-          >
-            $10
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => handleQuickAmount(20)}
-            style={{
-              padding: `${spacing.sm} ${spacing.md}`,
-              fontSize: fontSize.sm,
-              flex: 1,
-              backgroundColor: theme.colors.tertiaryBg,
-            }}
-          >
-            $20
-          </Button>
+          {quickOptions?.map((amount) => (
+            <Button
+              variant="outline"
+              onClick={() => handleQuickAmount(Number(amount))}
+              key={amount}
+              style={{
+                padding: `${spacing.sm} ${spacing.md}`,
+                fontSize: fontSize.sm,
+                flex: 1,
+                backgroundColor: theme.colors.tertiaryBg,
+              }}
+            >
+              ${amount}
+            </Button>
+          ))}
         </Container>
 
         <Spacer y="md" />
