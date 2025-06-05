@@ -6,12 +6,14 @@ import { type Address, getAddress } from "../../../../utils/address.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
+  iconSize,
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { ConnectButton } from "../ConnectWallet/ConnectButton.js";
 import { PoweredByThirdweb } from "../ConnectWallet/PoweredByTW.js";
+import { OutlineWalletIcon } from "../ConnectWallet/icons/OutlineWalletIcon.js";
 import { WalletRow } from "../ConnectWallet/screens/Buy/swap/WalletRow.js";
 import type { PayEmbedConnectOptions } from "../PayEmbed.js";
 import { Spacer } from "../components/Spacer.js";
@@ -120,23 +122,21 @@ export function FundWallet({
       {/* Header */}
       <ModalHeader title="Top up your wallet" leftAligned />
 
-      <Spacer y="xl" />
+      <Spacer y="lg" />
 
-      <Container
-        flex="column"
-        style={{
-          border: `1px solid ${theme.colors.borderColor}`,
-          borderRadius: radius.md,
-        }}
-      >
-        <Spacer y="lg" />
+      <Container flex="column">
         {/* Token Info */}
         <Container
           flex="row"
           center="both"
           gap="3xs"
-          px="md"
-          style={{ flexWrap: "nowrap" }}
+          p="md"
+          style={{
+            flexWrap: "nowrap",
+            border: `1px solid ${theme.colors.borderColor}`,
+            borderRadius: radius.md,
+            backgroundColor: theme.colors.tertiaryBg,
+          }}
         >
           <TokenAndChain token={token} client={client} size="xl" />
           {/* Amount Input */}
@@ -221,14 +221,13 @@ export function FundWallet({
           </Container>
         </Container>
 
-        <Spacer y="lg" />
+        <Spacer y="md" />
 
         {/* Quick Amount Buttons */}
         <Container
           flex="row"
           center="x"
           gap="xs"
-          px="md"
           style={{
             justifyContent: "space-evenly",
           }}
@@ -271,18 +270,19 @@ export function FundWallet({
           </Button>
         </Container>
 
-        <Spacer y="lg" />
+        <Spacer y="md" />
 
         <Container
           flex="row"
           gap="sm"
           px="md"
+          py="sm"
+          center="y"
+          color="secondaryText"
           style={{
-            borderTop: `1px solid ${theme.colors.borderColor}`,
-            paddingTop: spacing.md,
+            border: `1px solid ${theme.colors.borderColor}`,
             backgroundColor: theme.colors.tertiaryBg,
-            paddingBottom: spacing.md,
-            borderRadius: `0 0 ${radius.md} ${radius.md}`,
+            borderRadius: radius.md,
           }}
         >
           {receiver ? (
@@ -293,21 +293,23 @@ export function FundWallet({
               textSize="sm"
             />
           ) : (
-            <Text
-              size="sm"
-              color="secondaryText"
-              center
-              style={{
-                flex: 1,
-              }}
-            >
-              Connect your wallet to continue
-            </Text>
+            <>
+              <OutlineWalletIcon size={iconSize.md} />
+              <Text
+                size="sm"
+                color="secondaryText"
+                style={{
+                  flex: 1,
+                }}
+              >
+                No Wallet Connected
+              </Text>
+            </>
           )}
         </Container>
       </Container>
 
-      <Spacer y="xl" />
+      <Spacer y="lg" />
 
       {/* Continue Button */}
       {receiver ? (
