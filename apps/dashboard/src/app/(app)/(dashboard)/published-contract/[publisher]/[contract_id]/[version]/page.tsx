@@ -1,6 +1,5 @@
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Separator } from "@/components/ui/separator";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { SimpleGrid } from "@chakra-ui/react";
 import { fetchPublishedContractVersions } from "components/contract-components/fetch-contracts-with-versions";
@@ -9,7 +8,7 @@ import { notFound } from "next/navigation";
 import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
-import { getAuthToken } from "../../../../../api/lib/getAuthToken";
+import { getUserThirdwebClient } from "../../../../../api/lib/getAuthToken";
 import { PublishedActions } from "../../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../../components/contract-header";
 
@@ -68,9 +67,11 @@ export default async function PublishedContractPage(
     return notFound();
   }
 
-  const [authToken, account] = await Promise.all([
-    getAuthToken(),
+  const [account, client] = await Promise.all([
     getRawAccount(),
+    getUserThirdwebClient({
+      teamId: undefined,
+    }),
   ]);
 
   return (
@@ -92,10 +93,7 @@ export default async function PublishedContractPage(
           <PublishedContract
             publishedContract={publishedContract}
             isLoggedIn={!!account}
-            client={getClientThirdwebClient({
-              jwt: authToken,
-              teamId: undefined,
-            })}
+            client={client}
           />
         </SimpleGrid>
       </ChakraProviderSetup>
