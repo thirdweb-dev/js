@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import {} from "react";
 import type { Token } from "../../../bridge/index.js";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
@@ -14,19 +14,12 @@ import type { AppMetadata } from "../../../wallets/types.js";
 import type { WalletId } from "../../../wallets/wallet-types.js";
 import { CustomThemeProvider } from "../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../core/design-system/index.js";
-import {
-  type SiweAuthOptions,
-  useSiweAuth,
-} from "../../core/hooks/auth/useSiweAuth.js";
+import type { SiweAuthOptions } from "../../core/hooks/auth/useSiweAuth.js";
 import type {
   ConnectButton_connectModalOptions,
   PayUIOptions,
 } from "../../core/hooks/connection/ConnectButtonProps.js";
-import { useActiveAccount } from "../../core/hooks/wallets/useActiveAccount.js";
-import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
-import { useConnectionManager } from "../../core/providers/connection-manager.js";
 import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
-import { AutoConnect } from "../../web/ui/AutoConnect/AutoConnect.js";
 import {
   BridgeOrchestrator,
   type UIOptions,
@@ -34,8 +27,6 @@ import {
 import { UnsupportedTokenScreen } from "./Bridge/UnsupportedTokenScreen.js";
 import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
-import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
-import { ExecutingTxScreen } from "./TransactionButton/ExecutingScreen.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";
 import type { LocaleId } from "./types.js";
@@ -477,123 +468,6 @@ export function PayEmbed(props: PayEmbedProps) {
         purchaseData={props.payOptions?.purchaseData}
         paymentLinkId={props.paymentLinkId}
       />
-    );
-  }
-
-  return (
-    <CustomThemeProvider theme={theme}>
-      <EmbedContainer
-        modalSize="compact"
-        style={props.style}
-        className={props.className}
-      >
-        <DynamicHeight>{content}</DynamicHeight>
-      </EmbedContainer>
-    </CustomThemeProvider>
-  );
-}
-
-export function LegacyPayEmbed(props: PayEmbedProps) {
-  const localeQuery = useConnectLocale(props.locale || "en_US");
-  const [screen, setScreen] = useState<"buy" | "execute-tx">("buy");
-  const theme = props.theme || "dark";
-  const connectionManager = useConnectionManager();
-  const activeAccount = useActiveAccount();
-  const activeWallet = useActiveWallet();
-  const siweAuth = useSiweAuth(
-    activeWallet,
-    activeAccount,
-    props.connectOptions?.auth,
-  );
-
-  // Add props.chain and props.chains to defined chains store
-  useEffect(() => {
-    if (props.connectOptions?.chain) {
-      connectionManager.defineChains([props.connectOptions?.chain]);
-    }
-  }, [props.connectOptions?.chain, connectionManager]);
-
-  useEffect(() => {
-    if (props.connectOptions?.chains) {
-      connectionManager.defineChains(props.connectOptions?.chains);
-    }
-  }, [props.connectOptions?.chains, connectionManager]);
-
-  useEffect(() => {
-    if (props.activeWallet) {
-      connectionManager.setActiveWallet(props.activeWallet);
-    }
-  }, [props.activeWallet, connectionManager]);
-
-  let content = null;
-  const metadata =
-    props.payOptions && "metadata" in props.payOptions
-      ? props.payOptions.metadata
-      : null;
-
-  if (!localeQuery.data) {
-    content = (
-      <div
-        style={{
-          minHeight: "350px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Spinner size="xl" color="secondaryText" />
-      </div>
-    );
-  } else {
-    content = (
-      <>
-        <AutoConnect client={props.client} siweAuth={siweAuth} />
-        {screen === "buy" && (
-          <BuyScreen
-            title={metadata?.name || "Buy"}
-            isEmbed={true}
-            supportedTokens={props.supportedTokens}
-            theme={theme}
-            client={props.client}
-            connectLocale={localeQuery.data}
-            hiddenWallets={props.hiddenWallets}
-            paymentLinkId={props.paymentLinkId}
-            payOptions={
-              props.payOptions || {
-                mode: "fund_wallet",
-              }
-            }
-            onDone={() => {
-              if (props.payOptions?.mode === "transaction") {
-                setScreen("execute-tx");
-              }
-            }}
-            connectOptions={props.connectOptions}
-            onBack={undefined}
-          />
-        )}
-
-        {screen === "execute-tx" &&
-          props.payOptions?.mode === "transaction" &&
-          props.payOptions.transaction && (
-            <ExecutingTxScreen
-              tx={props.payOptions.transaction}
-              closeModal={() => {
-                setScreen("buy");
-              }}
-              onBack={() => {
-                setScreen("buy");
-              }}
-              onTxSent={(data) => {
-                props.payOptions?.onPurchaseSuccess?.({
-                  type: "transaction",
-                  chainId: data.chain.id,
-                  transactionHash: data.transactionHash,
-                });
-              }}
-            />
-          )}
-      </>
     );
   }
 

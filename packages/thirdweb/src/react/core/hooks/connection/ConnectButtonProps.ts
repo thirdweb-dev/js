@@ -78,7 +78,7 @@ export type PayUIOptions = Prettify<
           testMode?: boolean;
           prefillSource?: {
             chain: Chain;
-            token?: TokenInfo;
+            token?: Partial<TokenInfo> & { address: string };
             allowEdits?: {
               token: boolean;
               chain: boolean;
@@ -158,7 +158,7 @@ export type FundWalletOptions = {
    */
   prefillBuy?: {
     chain: Chain;
-    token?: TokenInfo;
+    token?: Partial<TokenInfo> & { address: string };
     amount?: string;
     allowEdits?: {
       amount: boolean;
