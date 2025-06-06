@@ -9,8 +9,10 @@ import type {
   PreAuthArgsType,
 } from "../../../../wallets/in-app/core/authentication/types.js";
 import type {
+  AuthOption,
   InAppWalletAuth,
   InAppWalletSocialAuth,
+  AuthOptionWithOptions,
 } from "../../../../wallets/in-app/core/wallet/types.js";
 import { preAuthenticate } from "../../../../wallets/in-app/native/auth/index.js";
 import { hasStoredPasskey } from "../../../../wallets/in-app/native/auth/passkeys.js";
@@ -91,6 +93,15 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
 
   const [inputMode, setInputMode] = useState<"email" | "phone">("email");
 
+  const hasAuthOption = useCallback((key: AuthOption) => {
+    return authOptions.find((opt) => typeof opt === 'string' ? opt === key : opt.type === key);
+  }, [authOptions]);
+
+  const getAuthOptionDefaultValue = useCallback((key: AuthOption) => {
+    const option = authOptions.find((opt) => typeof opt === 'object' && opt.type === key) as AuthOptionWithOptions | undefined;
+    return option?.defaultValue;
+  }, [authOptions]);
+
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -98,9 +109,9 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
           <SocialLogin key={auth} auth={auth} {...props} />
         ))}
       </View>
-      {authOptions.includes("email") ? (
+      {hasAuthOption("email") ? (
         inputMode === "email" ? (
-          <PreOtpLogin auth="email" {...props} />
+          <PreOtpLogin auth="email" defaultValue={getAuthOptionDefaultValue('email')} {...props} />
         ) : (
           <ThemedButtonWithIcon
             theme={theme}
@@ -110,9 +121,9 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
           />
         )
       ) : null}
-      {authOptions.includes("phone") ? (
+      {hasAuthOption("phone") ? (
         inputMode === "phone" ? (
-          <PreOtpLogin auth="phone" {...props} />
+          <PreOtpLogin auth="phone" defaultValue={getAuthOptionDefaultValue('phone')} {...props} />
         ) : (
           <ThemedButtonWithIcon
             theme={theme}
@@ -122,7 +133,7 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
           />
         )
       ) : null}
-      {authOptions.includes("passkey") ? (
+      {hasAuthOption("passkey") ? (
         <ThemedButtonWithIcon
           theme={theme}
           title="Passkey"
@@ -132,7 +143,7 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
           }}
         />
       ) : null}
-      {authOptions.includes("guest") ? <GuestLogin {...props} /> : null}
+      {hasAuthOption("guest") ? <GuestLogin {...props} /> : null}
     </View>
   );
 }
@@ -205,10 +216,11 @@ function SocialLogin(
 function PreOtpLogin(
   props: InAppWalletFormUIProps & {
     auth: PreAuthArgsType["strategy"];
+    defaultValue?: string;
   },
 ) {
-  const { theme, auth, client, setScreen, wallet } = props;
-  const [phoneOrEmail, setPhoneNumberOrEmail] = useState("");
+  const { theme, auth, client, setScreen, wallet, defaultValue = ''} = props;
+  const [phoneOrEmail, setPhoneNumberOrEmail] = useState(defaultValue);
 
   const sendCode = useMutation({
     mutationFn: async (options: {

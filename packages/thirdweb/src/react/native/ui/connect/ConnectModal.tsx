@@ -475,6 +475,7 @@ function WalletLoadingView({
   authProvider?: InAppWalletAuth;
 }) {
   const walletInfo = useWalletInfo(wallet.id);
+  const authProviderName = typeof authProvider === 'string' ? authProvider : authProvider?.type;
   return (
     <View
       style={{
@@ -491,7 +492,7 @@ function WalletLoadingView({
         animate={true}
         roundLoader={authProvider === "passkey"}
       >
-        {authProvider ? (
+        {authProviderName ? (
           <View
             style={{
               borderRadius: spacing.md,
@@ -501,7 +502,7 @@ function WalletLoadingView({
             <RNImage
               theme={theme}
               size={80}
-              data={getAuthProviderImage(authProvider)}
+              data={getAuthProviderImage(authProviderName)}
               color={theme.colors.accentButtonBg}
             />
           </View>
@@ -516,14 +517,14 @@ function WalletLoadingView({
       </WalletLoadingThumbnail>
       <Spacer size="xl" />
       <ThemedText theme={theme} type="subtitle">
-        {authProvider
-          ? `Connecting with ${capitalizeFirstLetter(authProvider)}`
+        {authProviderName
+          ? `Connecting with ${capitalizeFirstLetter(authProviderName)}`
           : "Awaiting confirmation"}
       </ThemedText>
       <Spacer size="sm" />
       <ThemedText theme={theme} type="subtext">
-        {authProvider
-          ? `Signing into your ${capitalizeFirstLetter(authProvider)} account`
+        {authProviderName
+          ? `Signing into your ${capitalizeFirstLetter(authProviderName)} account`
           : `Accept the connection request in ${walletInfo.data?.name}`}
       </ThemedText>
     </View>
