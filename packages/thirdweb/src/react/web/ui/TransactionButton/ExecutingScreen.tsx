@@ -4,6 +4,7 @@ import type { Hex } from "viem";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { formatExplorerTxUrl } from "../../../../utils/url.js";
+import type { WindowAdapter } from "../../../core/adapters/WindowAdapter.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useChainExplorers } from "../../../core/hooks/others/useChainQuery.js";
@@ -12,7 +13,7 @@ import { AccentFailIcon } from "../ConnectWallet/icons/AccentFailIcon.js";
 import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
 import { Container, ModalHeader } from "../components/basic.js";
-import { Button, ButtonLink } from "../components/buttons.js";
+import { Button } from "../components/buttons.js";
 import { Text } from "../components/text.js";
 
 export function ExecutingTxScreen(props: {
@@ -20,6 +21,7 @@ export function ExecutingTxScreen(props: {
   closeModal: () => void;
   onTxSent: (data: WaitForReceiptOptions) => void;
   onBack?: () => void;
+  windowAdapter: WindowAdapter;
 }) {
   const sendTxCore = useSendTransaction({
     payModal: false,
@@ -94,7 +96,7 @@ export function ExecutingTxScreen(props: {
         )}
       </Container>
 
-      <Spacer y="lg" />
+      <Spacer y="md" />
 
       <Text color="primaryText" center size="lg">
         {status === "loading" && "Sending transaction"}
@@ -118,24 +120,23 @@ export function ExecutingTxScreen(props: {
         <>
           {txHash && (
             <>
-              <ButtonLink
+              <Button
+                variant="secondary"
                 fullWidth
-                variant="outline"
-                href={formatExplorerTxUrl(
-                  chainExplorers.explorers[0]?.url ?? "",
-                  txHash,
-                )}
-                target="_blank"
-                as="a"
-                gap="xs"
-                style={{
-                  textDecoration: "none",
-                  color: "inherit",
+                onClick={() => {
+                  props.windowAdapter.open(
+                    formatExplorerTxUrl(
+                      chainExplorers.explorers[0]?.url ?? "",
+                      txHash,
+                    ),
+                  );
                 }}
+                gap="xs"
+                color="primaryText"
               >
                 View on Explorer
                 <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
-              </ButtonLink>
+              </Button>
               <Spacer y="sm" />
             </>
           )}
@@ -144,6 +145,39 @@ export function ExecutingTxScreen(props: {
           </Button>
         </>
       )}
+
+      {/* CSS Animations */}
+      <style>
+        {`
+          @keyframes successBounce {
+            0% {
+              transform: scale(0.3);
+              opacity: 0;
+            }
+            50% {
+              transform: scale(1.05);
+            }
+            70% {
+              transform: scale(0.9);
+            }
+            100% {
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+
+          @keyframes checkAppear {
+            0% {
+              transform: scale(0);
+              opacity: 0;
+            }
+            100% {
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+        `}
+      </style>
     </Container>
   );
 }

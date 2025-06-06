@@ -11,6 +11,7 @@ import type { PayUIOptions } from "../../../core/hooks/connection/ConnectButtonP
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
+import { webWindowAdapter } from "../../adapters/WindowAdapter.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
 import { BridgeOrchestrator } from "../Bridge/BridgeOrchestrator.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
@@ -94,6 +95,7 @@ function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
         tx={props.tx}
         closeModal={props.onClose}
         onTxSent={props.onTxSent}
+        windowAdapter={webWindowAdapter}
       />
     );
   }

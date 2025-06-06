@@ -644,7 +644,10 @@ type DirectPaymentUIOptions = Extract<UIOptions, { mode: "direct_payment" }>;
 type TransactionUIOptions = Extract<UIOptions, { mode: "transaction" }>;
 
 // UI Options for FundWallet mode
-export const FUND_WALLET_UI_OPTIONS: Record<string, FundWalletUIOptions> = {
+export const FUND_WALLET_UI_OPTIONS: Record<
+  "ethDefault" | "ethWithAmount" | "usdcDefault" | "uniLarge",
+  FundWalletUIOptions
+> = {
   ethDefault: {
     mode: "fund_wallet" as const,
     destinationToken: ETH,
@@ -679,81 +682,86 @@ export const FUND_WALLET_UI_OPTIONS: Record<string, FundWalletUIOptions> = {
 };
 
 // UI Options for DirectPayment mode
-export const DIRECT_PAYMENT_UI_OPTIONS: Record<string, DirectPaymentUIOptions> =
-  {
-    digitalArt: {
-      mode: "direct_payment" as const,
-      paymentInfo: {
-        sellerAddress: RECEIVER_ADDRESSES.seller,
-        token: ETH,
-        amount: "0.1",
-        feePayer: "sender" as const,
-      },
-      metadata: {
-        title: "Purchase Digital Art",
-        description: "Buy premium digital art NFT",
-        image: PRODUCT_METADATA.digitalArt.image,
-      },
+export const DIRECT_PAYMENT_UI_OPTIONS: Record<
+  "digitalArt" | "concertTicket" | "subscription" | "sneakers" | "credits",
+  DirectPaymentUIOptions
+> = {
+  digitalArt: {
+    mode: "direct_payment" as const,
+    paymentInfo: {
+      sellerAddress: RECEIVER_ADDRESSES.seller,
+      token: ETH,
+      amount: "0.1",
+      feePayer: "sender" as const,
     },
-    concertTicket: {
-      mode: "direct_payment" as const,
-      paymentInfo: {
-        sellerAddress: RECEIVER_ADDRESSES.primary,
-        token: USDC,
-        amount: "25.00",
-        feePayer: "receiver" as const,
-      },
-      metadata: {
-        title: "Buy Concert Ticket",
-        description: "Get your ticket for The Midnight Live",
-        image: PRODUCT_METADATA.concertTicket.image,
-      },
+    metadata: {
+      title: "Purchase Digital Art",
+      description: "Buy premium digital art NFT",
+      image: PRODUCT_METADATA.digitalArt.image,
     },
-    subscription: {
-      mode: "direct_payment" as const,
-      paymentInfo: {
-        sellerAddress: RECEIVER_ADDRESSES.subscription,
-        token: USDC,
-        amount: "9.99",
-        feePayer: "sender" as const,
-      },
-      metadata: {
-        title: "Subscribe to Premium",
-        description: PRODUCT_METADATA.subscription.description,
-        image: PRODUCT_METADATA.subscription.image,
-      },
+  },
+  concertTicket: {
+    mode: "direct_payment" as const,
+    paymentInfo: {
+      sellerAddress: RECEIVER_ADDRESSES.primary,
+      token: USDC,
+      amount: "25.00",
+      feePayer: "receiver" as const,
     },
-    sneakers: {
-      mode: "direct_payment" as const,
-      paymentInfo: {
-        sellerAddress: RECEIVER_ADDRESSES.physical,
-        token: ETH,
-        amount: "0.05",
-        feePayer: "receiver" as const,
-      },
-      metadata: {
-        title: "Buy Sneakers",
-        description: "Limited edition sneakers",
-        image: PRODUCT_METADATA.sneakers.image,
-      },
+    metadata: {
+      title: "Buy Concert Ticket",
+      description: "Get your ticket for The Midnight Live",
+      image: PRODUCT_METADATA.concertTicket.image,
     },
-    credits: {
-      mode: "direct_payment" as const,
-      paymentInfo: {
-        sellerAddress: RECEIVER_ADDRESSES.physical,
-        token: USDC,
-        amount: "25",
-        feePayer: "receiver" as const,
-      },
-      metadata: {
-        title: "Add Credits",
-        description: PRODUCT_METADATA.credits.description,
-      },
+  },
+  subscription: {
+    mode: "direct_payment" as const,
+    paymentInfo: {
+      sellerAddress: RECEIVER_ADDRESSES.subscription,
+      token: USDC,
+      amount: "9.99",
+      feePayer: "sender" as const,
     },
-  };
+    metadata: {
+      title: "Subscribe to Premium",
+      description: PRODUCT_METADATA.subscription.description,
+      image: PRODUCT_METADATA.subscription.image,
+    },
+  },
+  sneakers: {
+    mode: "direct_payment" as const,
+    paymentInfo: {
+      sellerAddress: RECEIVER_ADDRESSES.physical,
+      token: ETH,
+      amount: "0.05",
+      feePayer: "receiver" as const,
+    },
+    metadata: {
+      title: "Buy Sneakers",
+      description: "Limited edition sneakers",
+      image: PRODUCT_METADATA.sneakers.image,
+    },
+  },
+  credits: {
+    mode: "direct_payment" as const,
+    paymentInfo: {
+      sellerAddress: RECEIVER_ADDRESSES.physical,
+      token: USDC,
+      amount: "25",
+      feePayer: "receiver" as const,
+    },
+    metadata: {
+      title: "Add Credits",
+      description: PRODUCT_METADATA.credits.description,
+    },
+  },
+};
 
 // UI Options for Transaction mode
-export const TRANSACTION_UI_OPTIONS: Record<string, TransactionUIOptions> = {
+export const TRANSACTION_UI_OPTIONS: Record<
+  "ethTransfer" | "erc20Transfer" | "contractInteraction",
+  TransactionUIOptions
+> = {
   ethTransfer: {
     mode: "transaction" as const,
     transaction: ethTransferTransaction,

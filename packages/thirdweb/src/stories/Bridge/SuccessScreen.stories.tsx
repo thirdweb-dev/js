@@ -10,6 +10,7 @@ import {
 import { ModalThemeWrapper } from "../utils.js";
 import {
   FUND_WALLET_UI_OPTIONS,
+  TRANSACTION_UI_OPTIONS,
   simpleBuyQuote,
   simpleOnrampQuote,
 } from "./fixtures.js";
@@ -197,6 +198,18 @@ export const ComplexPaymentLight: Story = {
       ...mockOnrampCompletedStatuses,
       ...mockBuyCompletedStatuses,
     ],
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+  },
+};
+
+export const TransactionPayment: Story = {
+  args: {
+    theme: "light",
+    preparedQuote: simpleBuyQuote,
+    completedStatuses: mockBuyCompletedStatuses,
+    uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
   },
   parameters: {
     backgrounds: { default: "light" },

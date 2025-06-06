@@ -16,6 +16,7 @@ import { webWindowAdapter } from "../../adapters/WindowAdapter.js";
 import en from "../ConnectWallet/locale/en.js";
 import type { ConnectLocale } from "../ConnectWallet/locale/types.js";
 import type { PayEmbedConnectOptions } from "../PayEmbed.js";
+import { ExecutingTxScreen } from "../TransactionButton/ExecutingScreen.js";
 import { Container } from "../components/basic.js";
 import { DirectPayment } from "./DirectPayment.js";
 import { ErrorBanner } from "./ErrorBanner.js";
@@ -136,8 +137,18 @@ export function BridgeOrchestrator({
   // Use the payment machine hook
   const [state, send] = usePaymentMachine(adapters, uiOptions.mode);
 
-  // Handle completion
-  const handleComplete = useCallback(() => {
+  // Handle buy completion
+  const handleBuyComplete = useCallback(() => {
+    if (uiOptions.mode === "transaction") {
+      send({ type: "CONTINUE_TO_TRANSACTION" });
+    } else {
+      onComplete?.();
+      send({ type: "RESET" });
+    }
+  }, [onComplete, send, uiOptions.mode]);
+
+  // Handle post-buy transaction completion
+  const handlePostBuyTransactionComplete = useCallback(() => {
     onComplete?.();
     send({ type: "RESET" });
   }, [onComplete, send]);
@@ -320,8 +331,21 @@ export function BridgeOrchestrator({
             uiOptions={uiOptions}
             preparedQuote={state.context.preparedQuote}
             completedStatuses={state.context.completedStatuses}
-            onDone={handleComplete}
+            onDone={handleBuyComplete}
             windowAdapter={webWindowAdapter}
+          />
+        )}
+
+      {state.value === "post-buy-transaction" &&
+        uiOptions.mode === "transaction" &&
+        uiOptions.transaction && (
+          <ExecutingTxScreen
+            tx={uiOptions.transaction}
+            windowAdapter={webWindowAdapter}
+            closeModal={handlePostBuyTransactionComplete}
+            onTxSent={() => {
+              // Do nothing
+            }}
           />
         )}
     </Container>

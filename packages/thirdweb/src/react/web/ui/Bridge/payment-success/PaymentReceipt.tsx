@@ -10,6 +10,7 @@ import {
   getChainMetadata,
 } from "../../../../../chains/utils.js";
 import { shortenHex } from "../../../../../utils/address.js";
+import { formatExplorerTxUrl } from "../../../../../utils/url.js";
 import type { WindowAdapter } from "../../../../core/adapters/WindowAdapter.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
@@ -285,7 +286,9 @@ function CompletedStepDetailCard({
                 : () => {
                     const explorer = txInfo.chain.explorers?.[0];
                     if (explorer) {
-                      windowAdapter.open(`${explorer.url}/tx/${txInfo.id}`);
+                      windowAdapter.open(
+                        formatExplorerTxUrl(explorer.url, txInfo.id),
+                      );
                     }
                   }
             }

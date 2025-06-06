@@ -76,6 +76,7 @@ export type PaymentMachineEvent =
   | { type: "ROUTE_CONFIRMED" }
   | { type: "EXECUTION_COMPLETE"; completedStatuses: CompletedStatusResult[] }
   | { type: "ERROR_OCCURRED"; error: Error }
+  | { type: "CONTINUE_TO_TRANSACTION" }
   | { type: "RETRY" }
   | { type: "RESET" }
   | { type: "BACK" };
@@ -87,6 +88,7 @@ type PaymentMachineState =
   | "preview"
   | "execute"
   | "success"
+  | "post-buy-transaction"
   | "error";
 
 /**
@@ -235,6 +237,12 @@ export function usePaymentMachine(
             break;
 
           case "success":
+            if (event.type === "CONTINUE_TO_TRANSACTION")
+              return "post-buy-transaction";
+            if (event.type === "RESET") return "init";
+            break;
+
+          case "post-buy-transaction":
             if (event.type === "RESET") return "init";
             break;
 
