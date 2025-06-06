@@ -72,6 +72,36 @@ export function PaymentDetails({
   // Extract common data based on quote type
   const getDisplayData = () => {
     switch (preparedQuote.type) {
+      case "transfer": {
+        const token =
+          paymentMethod.type === "wallet"
+            ? paymentMethod.originToken
+            : undefined;
+        if (!token) {
+          // can never happen
+          onError(new Error("Invalid payment method"));
+          return {
+            originToken: undefined,
+            destinationToken: undefined,
+            originAmount: "0",
+            destinationAmount: "0",
+            estimatedTime: 0,
+          };
+        }
+        return {
+          originToken: token,
+          destinationToken: token,
+          originAmount: formatTokenAmount(
+            preparedQuote.originAmount,
+            token.decimals,
+          ),
+          destinationAmount: formatTokenAmount(
+            preparedQuote.destinationAmount,
+            token.decimals,
+          ),
+          estimatedTime: preparedQuote.estimatedExecutionTimeMs,
+        };
+      }
       case "buy": {
         const method =
           paymentMethod.type === "wallet" ? paymentMethod : undefined;
@@ -156,7 +186,10 @@ export function PaymentDetails({
           {displayData.destinationToken && (
             <PaymentOverview
               uiOptions={uiOptions}
-              sender={preparedQuote.intent.sender}
+              sender={
+                preparedQuote.intent.sender ||
+                paymentMethod.payerWallet.getAccount()?.address
+              }
               client={client}
               paymentMethod={paymentMethod}
               toToken={displayData.destinationToken}

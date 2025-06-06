@@ -1,6 +1,7 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import * as Buy from "../../../bridge/Buy.js";
+import * as Transfer from "../../../bridge/Transfer.js";
 import type { Token } from "../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { toUnits } from "../../../utils/units.js";
@@ -34,6 +35,23 @@ export function useBridgeQuote({
         destinationAmount,
         destinationToken.decimals,
       );
+
+      // if ssame token and chain, use transfer
+      if (
+        originToken.address.toLowerCase() ===
+          destinationToken.address.toLowerCase() &&
+        originToken.chainId === destinationToken.chainId
+      ) {
+        const transfer = await Transfer.prepare({
+          client,
+          chainId: originToken.chainId,
+          tokenAddress: originToken.address,
+          sender: originToken.address,
+          receiver: destinationToken.address,
+          amount: destinationAmountWei,
+        });
+        return transfer;
+      }
 
       const quote = await Buy.quote({
         originChainId: originToken.chainId,

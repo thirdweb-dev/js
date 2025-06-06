@@ -94,7 +94,15 @@ function PaymentMethodTokenRow({
           style={{ flex: 1, alignItems: "flex-end" }}
         >
           {quoteLoading ? (
-            <Skeleton width="80px" height="16px" />
+            <>
+              {/* Price amount skeleton */}
+              <Skeleton width="80px" height="16px" />
+              {/* Balance skeleton */}
+              <Container flex="row" gap="3xs">
+                <Skeleton width="50px" height="12px" />
+                <Skeleton width="40px" height="12px" />
+              </Container>
+            </>
           ) : quoteError ? (
             <Text size="sm" color="danger" style={{ fontWeight: 600 }}>
               Quote failed
@@ -114,26 +122,28 @@ function PaymentMethodTokenRow({
           ) : (
             "--.--"
           )}
-          <Container flex="row" gap="3xs">
-            <Text size="xs" color="secondaryText">
-              Balance:{" "}
-            </Text>
-            <Text
-              size="xs"
-              color={
-                !quoteLoading
-                  ? hasEnoughBalance
-                    ? "success"
-                    : "danger"
-                  : "secondaryText"
-              }
-            >
-              {formatTokenAmount(
-                paymentMethod.balance,
-                paymentMethod.originToken.decimals,
-              )}
-            </Text>
-          </Container>
+          {!quoteLoading && (
+            <Container flex="row" gap="3xs">
+              <Text size="xs" color="secondaryText">
+                Balance:{" "}
+              </Text>
+              <Text
+                size="xs"
+                color={
+                  !quoteLoading
+                    ? hasEnoughBalance
+                      ? "success"
+                      : "danger"
+                    : "secondaryText"
+                }
+              >
+                {formatTokenAmount(
+                  paymentMethod.balance,
+                  paymentMethod.originToken.decimals,
+                )}
+              </Text>
+            </Container>
+          )}
         </Container>
       </Container>
     </Button>
@@ -149,6 +159,8 @@ export function TokenSelection({
   destinationToken,
   destinationAmount,
 }: TokenSelectionProps) {
+  const theme = useCustomTheme();
+
   if (paymentMethodsLoading) {
     return (
       <>
@@ -157,9 +169,63 @@ export function TokenSelection({
         </Text>
         <Spacer y="sm" />
         <Container flex="column" gap="sm">
-          <Skeleton height="60px" />
-          <Skeleton height="60px" />
-          <Skeleton height="60px" />
+          {/* Skeleton rows matching PaymentMethodTokenRow structure */}
+          {[1, 2, 3].map((i) => (
+            <Container
+              key={i}
+              style={{
+                border: `1px solid ${theme.colors.borderColor}`,
+                borderRadius: radius.md,
+                padding: `${spacing.sm} ${spacing.md}`,
+                backgroundColor: theme.colors.tertiaryBg,
+              }}
+            >
+              <Container
+                flex="row"
+                gap="md"
+                style={{ width: "100%", alignItems: "center" }}
+              >
+                {/* Left side: Token icon and name skeleton */}
+                <Container
+                  flex="row"
+                  gap="sm"
+                  center="y"
+                  style={{ maxWidth: "50%" }}
+                >
+                  {/* Token icon skeleton */}
+                  <div
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                      backgroundColor: theme.colors.skeletonBg,
+                      borderRadius: "50%",
+                    }}
+                  />
+                  <Container flex="column" gap="3xs">
+                    {/* Token name skeleton */}
+                    <Skeleton width="60px" height="14px" />
+                    {/* Chain name skeleton */}
+                    <Skeleton width="40px" height="12px" />
+                  </Container>
+                </Container>
+
+                {/* Right side: Price and balance skeleton */}
+                <Container
+                  flex="column"
+                  gap="3xs"
+                  style={{ flex: 1, alignItems: "flex-end" }}
+                >
+                  {/* Price amount skeleton */}
+                  <Skeleton width="80px" height="16px" />
+                  {/* Balance skeleton */}
+                  <Container flex="row" gap="3xs">
+                    <Skeleton width="50px" height="12px" />
+                    <Skeleton width="40px" height="12px" />
+                  </Container>
+                </Container>
+              </Container>
+            </Container>
+          ))}
         </Container>
       </>
     );

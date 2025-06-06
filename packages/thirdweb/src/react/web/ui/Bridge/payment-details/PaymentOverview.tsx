@@ -2,7 +2,8 @@ import type { Token } from "../../../../../bridge/index.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
-import { radius } from "../../../../core/design-system/index.js";
+import { radius, spacing } from "../../../../core/design-system/index.js";
+import { useTransactionDetails } from "../../../../core/hooks/useTransactionDetails.js";
 import type { PaymentMethod } from "../../../../core/machines/paymentMachine.js";
 import { getFiatCurrencyIcon } from "../../ConnectWallet/screens/Buy/fiat/currencies.js";
 import { FiatValue } from "../../ConnectWallet/screens/Buy/swap/FiatValue.js";
@@ -184,7 +185,117 @@ export function PaymentOverview(props: {
             }}
           />
         )}
+        {props.uiOptions.mode === "transaction" && (
+          <TransactionOverViewCompact
+            uiOptions={props.uiOptions}
+            client={props.client}
+          />
+        )}
       </Container>
     </Container>
   );
 }
+
+const TransactionOverViewCompact = (props: {
+  uiOptions: Extract<UIOptions, { mode: "transaction" }>;
+  client: ThirdwebClient;
+}) => {
+  const theme = useCustomTheme();
+  const txInfo = useTransactionDetails({
+    transaction: props.uiOptions.transaction,
+    client: props.client,
+  });
+
+  if (!txInfo.data) {
+    // Skeleton loading state
+    return (
+      <Container
+        flex="row"
+        gap="sm"
+        p="md"
+        center="y"
+        style={{ justifyContent: "space-between" }}
+      >
+        <Container flex="column" gap="3xs" center="y" style={{ flex: 1 }}>
+          {/* Title skeleton */}
+          <div
+            style={{
+              width: "120px",
+              height: "16px",
+              backgroundColor: theme.colors.skeletonBg,
+              borderRadius: spacing.xs,
+            }}
+          />
+          {/* Description skeleton - only if metadata exists */}
+          {props.uiOptions.metadata?.description && (
+            <div
+              style={{
+                width: "80px",
+                height: "12px",
+                backgroundColor: theme.colors.skeletonBg,
+                borderRadius: spacing.xs,
+              }}
+            />
+          )}
+        </Container>
+        <Container
+          flex="column"
+          gap="3xs"
+          center="y"
+          style={{ alignItems: "flex-end" }}
+        >
+          {/* Function name skeleton */}
+          <div
+            style={{
+              width: "100px",
+              height: "24px",
+              backgroundColor: theme.colors.skeletonBg,
+              borderRadius: spacing.sm,
+            }}
+          />
+        </Container>
+      </Container>
+    );
+  }
+
+  return (
+    <Container
+      flex="row"
+      gap="sm"
+      p="md"
+      center="y"
+      style={{ justifyContent: "space-between" }}
+    >
+      <Container flex="column" gap="3xs" center="y" style={{ flex: 1 }}>
+        <Text size="sm" color="primaryText" style={{ fontWeight: 600 }}>
+          {props.uiOptions.metadata?.title || "Onchain Transaction"}
+        </Text>
+        {props.uiOptions.metadata?.description && (
+          <Text size="xs" color="secondaryText">
+            {props.uiOptions.metadata.description}
+          </Text>
+        )}
+      </Container>
+      <Container
+        flex="column"
+        gap="3xs"
+        center="y"
+        style={{ alignItems: "flex-end" }}
+      >
+        <Text
+          size="xs"
+          color="secondaryText"
+          style={{
+            fontFamily: "monospace",
+            textAlign: "right",
+            backgroundColor: theme.colors.secondaryButtonBg,
+            padding: `${spacing.xs} ${spacing.sm}`,
+            borderRadius: spacing.sm,
+          }}
+        >
+          {txInfo.data.functionInfo.functionName}
+        </Text>
+      </Container>
+    </Container>
+  );
+};

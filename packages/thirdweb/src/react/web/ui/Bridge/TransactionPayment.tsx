@@ -1,33 +1,18 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
-import type { AbiFunction } from "abitype";
-import { toFunctionSelector } from "viem";
 import type { Token } from "../../../../bridge/index.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
-import { getCompilerMetadata } from "../../../../contract/actions/get-compiler-metadata.js";
-import { getContract } from "../../../../contract/contract.js";
-import { decimals } from "../../../../extensions/erc20/read/decimals.js";
-import { getToken } from "../../../../pay/convert/get-token.js";
-import { encode } from "../../../../transaction/actions/encode.js";
-import { getTransactionGasCost } from "../../../../transaction/utils.js";
 import {
   type Address,
   getAddress,
   shortenAddress,
 } from "../../../../utils/address.js";
-import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
-import { toTokens } from "../../../../utils/units.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { fontSize, spacing } from "../../../core/design-system/index.js";
 import { useChainMetadata } from "../../../core/hooks/others/useChainQuery.js";
+import { useTransactionDetails } from "../../../core/hooks/useTransactionDetails.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { ConnectButton } from "../ConnectWallet/ConnectButton.js";
 import { PoweredByThirdweb } from "../ConnectWallet/PoweredByTW.js";
-import {
-  formatCurrencyAmount,
-  formatTokenAmount,
-} from "../ConnectWallet/screens/formatTokenBalance.js";
 import type { PayEmbedConnectOptions } from "../PayEmbed.js";
 import { ChainName } from "../components/ChainName.js";
 import { Spacer } from "../components/Spacer.js";
@@ -72,127 +57,10 @@ export function TransactionPayment({
   // Get chain metadata for native currency symbol
   const chainMetadata = useChainMetadata(uiOptions.transaction.chain);
 
-  // Combined query that fetches everything in parallel
-  const transactionDataQuery = useQuery({
-    queryKey: [
-      "transaction-data",
-      uiOptions.transaction.to,
-      uiOptions.transaction.chain.id,
-      uiOptions.transaction.erc20Value,
-    ],
-    queryFn: async () => {
-      // Create contract instance for metadata fetching
-      const contract = getContract({
-        client,
-        chain: uiOptions.transaction.chain,
-        address: uiOptions.transaction.to as string,
-      });
-      const [contractMetadata, value, erc20Value, transactionData] =
-        await Promise.all([
-          getCompilerMetadata(contract).catch(() => null),
-          resolvePromisedValue(uiOptions.transaction.value),
-          resolvePromisedValue(uiOptions.transaction.erc20Value),
-          encode(uiOptions.transaction).catch(() => "0x"),
-        ]);
-
-      const [tokenInfo, gasCostWei] = await Promise.all([
-        getToken(
-          client,
-          erc20Value ? erc20Value.tokenAddress : NATIVE_TOKEN_ADDRESS,
-          uiOptions.transaction.chain.id,
-        ).catch(() => null),
-        getTransactionGasCost(uiOptions.transaction).catch(() => null),
-      ]);
-
-      // Process function info from ABI if available
-      let functionInfo = {
-        functionName: "Contract Call",
-        selector: "0x",
-        description: undefined,
-      };
-
-      if (contractMetadata?.abi && transactionData.length >= 10) {
-        try {
-          const selector = transactionData.slice(0, 10) as `0x${string}`;
-          const abi = contractMetadata.abi;
-
-          // Find matching function in ABI
-          const abiItems = Array.isArray(abi) ? abi : [];
-          const functions = abiItems
-            .filter(
-              (item) =>
-                item &&
-                typeof item === "object" &&
-                "type" in item &&
-                (item as { type: string }).type === "function",
-            )
-            .map((item) => item as AbiFunction);
-
-          const matchingFunction = functions.find((fn) => {
-            return toFunctionSelector(fn) === selector;
-          });
-
-          if (matchingFunction) {
-            functionInfo = {
-              functionName: matchingFunction.name,
-              selector,
-              description: undefined, // Skip devdoc for now
-            };
-          }
-        } catch {
-          // Keep default values
-        }
-      }
-
-      const resolveDecimals = async () => {
-        if (tokenInfo) {
-          return tokenInfo.decimals;
-        }
-        if (erc20Value) {
-          return decimals({
-            contract: getContract({
-              client,
-              chain: uiOptions.transaction.chain,
-              address: erc20Value.tokenAddress,
-            }),
-          });
-        }
-        return 18;
-      };
-
-      const decimal = await resolveDecimals();
-      const costWei = erc20Value ? erc20Value.amountWei : value || 0n;
-      const nativeTokenSymbol =
-        chainMetadata.data?.nativeCurrency?.symbol || "ETH";
-      const tokenSymbol = tokenInfo?.symbol || nativeTokenSymbol;
-
-      const totalCostWei = erc20Value
-        ? erc20Value.amountWei
-        : (value || 0n) + (gasCostWei || 0n);
-      const totalCost = toTokens(totalCostWei, decimal);
-
-      const usdValue = tokenInfo?.priceUsd
-        ? Number(totalCost) * tokenInfo.priceUsd
-        : null;
-
-      return {
-        contractMetadata,
-        functionInfo,
-        usdValueDisplay: usdValue
-          ? formatCurrencyAmount("USD", usdValue)
-          : null,
-        txCostDisplay: `${formatTokenAmount(costWei, decimal)} ${tokenSymbol}`,
-        gasCostDisplay: gasCostWei
-          ? `${formatTokenAmount(gasCostWei, 18)} ${nativeTokenSymbol}`
-          : null,
-        tokenInfo,
-        costWei,
-        gasCostWei,
-        totalCost,
-        totalCostWei,
-      };
-    },
-    enabled: !!uiOptions.transaction.to && !!chainMetadata.data,
+  // Use the extracted hook for transaction details
+  const transactionDataQuery = useTransactionDetails({
+    transaction: uiOptions.transaction,
+    client,
   });
 
   const contractName =

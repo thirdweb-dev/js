@@ -10,6 +10,7 @@ import { ModalThemeWrapper, storyClient } from "../utils.js";
 import {
   DIRECT_PAYMENT_UI_OPTIONS,
   STORY_MOCK_WALLET,
+  TRANSACTION_UI_OPTIONS,
   USDC,
   buyWithApprovalQuote,
   complexBuyQuote,
@@ -378,6 +379,122 @@ export const BuyComplexLight: Story = {
       description: {
         story:
           "Complex multi-step buy quote spanning multiple chains (light theme).",
+      },
+    },
+  },
+};
+
+// ========== TRANSACTION MODE STORIES ========== //
+
+export const TransactionEthTransfer: Story = {
+  args: {
+    theme: "dark",
+    preparedQuote: simpleBuyQuote,
+    paymentMethod: ethCryptoPaymentMethod,
+    client: storyClient,
+    uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
+    docs: {
+      description: {
+        story:
+          "Transaction mode showing ETH transfer payment details with function name and contract information displayed in the PaymentDetails screen.",
+      },
+    },
+  },
+};
+
+export const TransactionEthTransferLight: Story = {
+  args: {
+    theme: "light",
+    preparedQuote: simpleBuyQuote,
+    paymentMethod: ethCryptoPaymentMethod,
+    client: storyClient,
+    uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story:
+          "Light theme version of transaction mode for ETH transfer with detailed payment overview.",
+      },
+    },
+  },
+};
+
+export const TransactionERC20Transfer: Story = {
+  args: {
+    theme: "dark",
+    preparedQuote: simpleBuyQuote,
+    paymentMethod: cryptoPaymentMethod,
+    client: storyClient,
+    uiOptions: TRANSACTION_UI_OPTIONS.erc20Transfer,
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
+    docs: {
+      description: {
+        story:
+          "Transaction mode for ERC20 token transfer showing token details and transfer function in payment preview.",
+      },
+    },
+  },
+};
+
+export const TransactionERC20TransferLight: Story = {
+  args: {
+    theme: "light",
+    preparedQuote: simpleBuyQuote,
+    paymentMethod: cryptoPaymentMethod,
+    client: storyClient,
+    uiOptions: TRANSACTION_UI_OPTIONS.erc20Transfer,
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story:
+          "Light theme version of ERC20 token transfer transaction mode with payment details.",
+      },
+    },
+  },
+};
+
+export const TransactionContractInteraction: Story = {
+  args: {
+    theme: "dark",
+    preparedQuote: simpleBuyQuote,
+    paymentMethod: ethCryptoPaymentMethod,
+    client: storyClient,
+    uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
+    docs: {
+      description: {
+        story:
+          "Transaction mode for complex contract interaction (claimTo function) showing detailed contract information and function details in payment preview.",
+      },
+    },
+  },
+};
+
+export const TransactionContractInteractionLight: Story = {
+  args: {
+    theme: "light",
+    preparedQuote: simpleBuyQuote,
+    paymentMethod: ethCryptoPaymentMethod,
+    client: storyClient,
+    uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story:
+          "Light theme version of contract interaction transaction mode with comprehensive payment details.",
       },
     },
   },

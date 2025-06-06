@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import type { Token } from "../../../../../bridge/types/Token.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { Address } from "../../../../../utils/address.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { usePaymentMethods } from "../../../../core/hooks/usePaymentMethods.js";
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
@@ -27,6 +28,11 @@ export interface PaymentSelectionProps {
    * The destination amount to bridge
    */
   destinationAmount: string;
+
+  /**
+   * The receiver address
+   */
+  receiverAddress?: Address;
 
   /**
    * ThirdwebClient for API calls
@@ -57,6 +63,11 @@ export interface PaymentSelectionProps {
    * Locale for connect UI
    */
   connectLocale: ConnectLocale;
+
+  /**
+   * Whether to include the destination token in the payment methods
+   */
+  includeDestinationToken?: boolean;
 }
 
 type Step =
@@ -69,11 +80,13 @@ export function PaymentSelection({
   destinationToken,
   client,
   destinationAmount,
+  receiverAddress,
   onPaymentMethodSelected,
   onError,
   onBack,
   connectOptions,
   connectLocale,
+  includeDestinationToken,
 }: PaymentSelectionProps) {
   const connectedWallets = useConnectedWallets();
   const activeWallet = useActiveWallet();
@@ -82,6 +95,10 @@ export function PaymentSelection({
     type: "walletSelection",
   });
 
+  const payerWallet =
+    currentStep.type === "tokenSelection"
+      ? currentStep.selectedWallet
+      : activeWallet;
   const {
     data: paymentMethods,
     isLoading: paymentMethodsLoading,
@@ -90,10 +107,11 @@ export function PaymentSelection({
     destinationToken,
     destinationAmount,
     client,
-    activeWallet:
-      currentStep.type === "tokenSelection"
-        ? currentStep.selectedWallet
-        : undefined,
+    includeDestinationToken:
+      includeDestinationToken ||
+      receiverAddress?.toLowerCase() !==
+        payerWallet?.getAccount()?.address?.toLowerCase(),
+    payerWallet,
   });
 
   // Handle error from usePaymentMethods
@@ -130,8 +148,6 @@ export function PaymentSelection({
   const handleOnrampProviderSelected = (
     provider: "coinbase" | "stripe" | "transak",
   ) => {
-    const payerWallet = activeWallet || connectedWallets[0];
-
     if (!payerWallet) {
       onError(new Error("No wallet available for fiat payment"));
       return;

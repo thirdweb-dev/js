@@ -1,9 +1,5 @@
 "use client";
-import {
-  CardStackIcon,
-  ChevronRightIcon,
-  PlusIcon,
-} from "@radix-ui/react-icons";
+import { ChevronRightIcon, PlusIcon } from "@radix-ui/react-icons";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
@@ -12,6 +8,7 @@ import {
   radius,
   spacing,
 } from "../../../../core/design-system/index.js";
+import { CreditCardIcon } from "../../ConnectWallet/icons/CreditCardIcon.js";
 import { WalletRow } from "../../ConnectWallet/screens/Buy/swap/WalletRow.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Container } from "../../components/basic.js";
@@ -103,7 +100,7 @@ export function WalletFiatSelection({
           <Container
             style={{
               borderRadius: radius.sm,
-              border: `2px dashed ${theme.colors.borderColor}`,
+              border: `1px dashed ${theme.colors.secondaryIconColor}`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -129,7 +126,7 @@ export function WalletFiatSelection({
         </Container>
       </Button>
 
-      <Spacer y="lg" />
+      <Spacer y="md" />
 
       {/* Pay with Debit Card */}
       <Text size="md" color="primaryText">
@@ -156,10 +153,9 @@ export function WalletFiatSelection({
           gap="md"
           style={{ width: "100%", alignItems: "center" }}
         >
-          <CardStackIcon
-            width={iconSize.lg}
-            height={iconSize.lg}
-            color={theme.colors.secondaryText}
+          <CreditCardIcon
+            size={iconSize.lg}
+            color={theme.colors.secondaryIconColor}
           />
           <Container flex="column" gap="3xs" style={{ flex: 1 }}>
             <Text size="sm" color="primaryText" style={{ fontWeight: 600 }}>

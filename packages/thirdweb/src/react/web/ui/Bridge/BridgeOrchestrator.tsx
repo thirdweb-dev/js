@@ -241,11 +241,13 @@ export function BridgeOrchestrator({
 
       {state.value === "methodSelection" &&
         state.context.destinationToken &&
-        state.context.destinationAmount && (
+        state.context.destinationAmount &&
+        state.context.receiverAddress && (
           <PaymentSelection
             destinationToken={state.context.destinationToken}
             client={client}
             destinationAmount={state.context.destinationAmount}
+            receiverAddress={state.context.receiverAddress}
             onPaymentMethodSelected={handlePaymentMethodSelected}
             onError={handleError}
             onBack={() => {
@@ -253,6 +255,7 @@ export function BridgeOrchestrator({
             }}
             connectOptions={connectOptions}
             connectLocale={connectLocale || en}
+            includeDestinationToken={uiOptions.mode !== "fund_wallet"}
           />
         )}
 

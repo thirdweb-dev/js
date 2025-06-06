@@ -37,11 +37,18 @@ export function usePaymentMethods(options: {
   destinationToken: Token;
   destinationAmount: string;
   client: ThirdwebClient;
-  activeWallet?: Wallet;
+  payerWallet?: Wallet;
+  includeDestinationToken?: boolean;
 }) {
-  const { destinationToken, destinationAmount, client, activeWallet } = options;
+  const {
+    destinationToken,
+    destinationAmount,
+    client,
+    payerWallet,
+    includeDestinationToken,
+  } = options;
   const localWallet = useActiveWallet(); // TODO (bridge): get all connected wallets
-  const wallet = activeWallet || localWallet;
+  const wallet = payerWallet || localWallet;
 
   const routesQuery = useQuery({
     queryKey: [
@@ -49,26 +56,30 @@ export function usePaymentMethods(options: {
       destinationToken.chainId,
       destinationToken.address,
       destinationAmount,
-      activeWallet?.getAccount()?.address,
+      payerWallet?.getAccount()?.address,
+      includeDestinationToken,
     ],
     queryFn: async (): Promise<PaymentMethod[]> => {
       if (!wallet) {
         throw new Error("No wallet connected");
       }
-      console.time("routes");
       const allRoutes = await routes({
         client,
         destinationChainId: destinationToken.chainId,
         destinationTokenAddress: destinationToken.address,
         sortBy: "popularity",
         includePrices: true,
+        maxSteps: 3,
         limit: 100, // Get top 100 most popular routes
       });
-      console.log("allRoutes", allRoutes);
+
+      const allOriginTokens = includeDestinationToken
+        ? [destinationToken, ...allRoutes.map((route) => route.originToken)]
+        : allRoutes.map((route) => route.originToken);
 
       // 1. Resolve all unique chains in the supported token map
       const uniqueChains = Array.from(
-        new Set(allRoutes.map((route) => route.originToken.chainId)),
+        new Set(allOriginTokens.map((t) => t.chainId)),
       );
 
       // 2. Check insight availability once per chain
@@ -95,9 +106,6 @@ export function usePaymentMethods(options: {
             page,
             metadata: "false",
           },
-        }).catch((err) => {
-          console.error("error fetching balances from insight", err);
-          return [];
         });
 
         if (batch.length === 0) {
@@ -107,12 +115,11 @@ export function usePaymentMethods(options: {
         // find matching origin token in allRoutes
         const tokensWithBalance = batch
           .map((b) => ({
-            originToken: allRoutes.find(
+            originToken: allOriginTokens.find(
               (t) =>
-                t.originToken.address.toLowerCase() ===
-                  b.tokenAddress.toLowerCase() &&
-                t.originToken.chainId === b.chainId,
-            )?.originToken,
+                t.address.toLowerCase() === b.tokenAddress.toLowerCase() &&
+                t.chainId === b.chainId,
+            ),
             balance: b.value,
             originAmount: 0n,
           }))
@@ -124,8 +131,8 @@ export function usePaymentMethods(options: {
 
       const requiredDollarAmount =
         Number.parseFloat(destinationAmount) * destinationToken.priceUsd;
-      console.log("requiredDollarAmount", requiredDollarAmount);
 
+      // sort by dollar balance descending
       owned.sort((a, b) => {
         const aDollarBalance =
           Number.parseFloat(toTokens(a.balance, a.originToken.decimals)) *
@@ -143,23 +150,22 @@ export function usePaymentMethods(options: {
           const dollarBalance =
             Number.parseFloat(toTokens(b.balance, b.originToken.decimals)) *
             b.originToken.priceUsd;
-          console.log(
-            "required amount for",
-            b.originToken.symbol,
-            "is",
-            requiredDollarAmount,
-            "Price is",
-            b.originToken.priceUsd,
-            "Chain is",
-            b.originToken.chainId,
-          );
-          console.log("dollarBalance", dollarBalance);
           if (b.originToken.priceUsd && dollarBalance < requiredDollarAmount) {
-            console.log(
-              "skipping",
-              b.originToken.symbol,
-              "because it's not enough",
-            );
+            continue;
+          }
+
+          if (
+            includeDestinationToken &&
+            b.originToken.address.toLowerCase() ===
+              destinationToken.address.toLowerCase() &&
+            b.originToken.chainId === destinationToken.chainId
+          ) {
+            // add same token to the front of the list
+            suitableOriginTokens.unshift({
+              balance: b.balance,
+              originAmount: 0n,
+              originToken: b.originToken,
+            });
             continue;
           }
 
@@ -170,9 +176,6 @@ export function usePaymentMethods(options: {
           });
         }
       }
-
-      console.log("suitableOriginTokens", suitableOriginTokens.length);
-      console.timeEnd("routes");
 
       const transformedRoutes = [
         ...suitableOriginTokens.map((s) => ({
