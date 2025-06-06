@@ -86,7 +86,7 @@ export function CreateWebhookModal({
     isOpen,
     thirdwebClient: client,
     chainIds,
-    addresses,
+    addresses: addresses || "",
     extractSignatures: extractEventSignatures,
     type: "event",
   });
