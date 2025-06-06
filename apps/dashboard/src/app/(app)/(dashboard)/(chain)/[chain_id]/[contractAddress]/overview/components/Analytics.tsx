@@ -7,7 +7,7 @@ import {
   useContractTransactionAnalytics,
   useContractUniqueWalletAnalytics,
 } from "data/analytics/hooks";
-import { differenceInCalendarDays, formatDate } from "date-fns";
+import { differenceInCalendarDays, format } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
@@ -200,7 +200,7 @@ export function toolTipLabelFormatterWithPrecision(precision: "day" | "hour") {
   return function toolTipLabelFormatter(_v: string, item: unknown) {
     if (Array.isArray(item)) {
       const time = item[0].payload.time as number;
-      return formatDate(
+      return format(
         new Date(time),
         precision === "day" ? "MMM d, yyyy" : "MMM d, yyyy hh:mm a",
       );

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { differenceInCalendarDays, formatDate } from "date-fns";
+import { differenceInCalendarDays, format } from "date-fns";
 import { ArrowUpIcon, InfoIcon } from "lucide-react";
 import { ArrowDownIcon } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -81,7 +81,7 @@ function getTooltipLabelFormatter(includeTimeOfDay: boolean) {
   return (_v: string, item: unknown) => {
     if (Array.isArray(item)) {
       const time = item[0].payload.time as number;
-      return formatDate(
+      return format(
         new Date(time),
         includeTimeOfDay ? "MMM d, yyyy hh:mm a" : "MMM d, yyyy",
       );

@@ -6,7 +6,7 @@ import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
 import { Button } from "@/components/ui/button";
 import type { ChartConfig } from "@/components/ui/chart";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { formatTickerNumber } from "lib/format-utils";
 import Link from "next/link";
@@ -141,7 +141,7 @@ export function TransactionsChartCardUI(props: {
       toolTipLabelFormatter={(_v, item) => {
         if (Array.isArray(item)) {
           const time = item[0].payload.time as number;
-          return formatDate(new Date(time), "MMM d, yyyy");
+          return format(new Date(time), "MMM d, yyyy");
         }
         return undefined;
       }}

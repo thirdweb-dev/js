@@ -1,5 +1,5 @@
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { format } from "date-fns/format";
+import { format } from "date-fns";
 import { resolveEns } from "lib/ens";
 import { correctAndUniqueLicenses } from "lib/licenses";
 import { getSocialProfiles } from "thirdweb/social";

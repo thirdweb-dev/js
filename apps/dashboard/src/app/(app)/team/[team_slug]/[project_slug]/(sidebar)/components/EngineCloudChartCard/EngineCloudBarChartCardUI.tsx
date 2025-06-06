@@ -6,7 +6,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 import { useMemo } from "react";
 import {
   Bar,
@@ -107,7 +107,7 @@ export function EngineCloudBarChartCardUI({
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  labelFormatter={(d) => formatDate(new Date(d), "MMM d")}
+                  labelFormatter={(d) => format(new Date(d), "MMM d")}
                   valueFormatter={(_value) => {
                     const value = typeof _value === "number" ? _value : 0;
                     return <span className="inline-flex gap-1.5">{value}</span>;

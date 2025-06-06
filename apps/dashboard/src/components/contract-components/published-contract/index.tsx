@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Divider, Flex, GridItem, List, ListItem } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
-import { format } from "date-fns/format";
+import { format } from "date-fns";
 import { correctAndUniqueLicenses } from "lib/licenses";
 import { replaceIpfsUrl } from "lib/sdk";
 import {

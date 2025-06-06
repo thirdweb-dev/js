@@ -1,7 +1,7 @@
 "use client";
 
 import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 
 export function CountGraph(props: {
   peakPercentage: number;
@@ -49,7 +49,7 @@ export function CountGraph(props: {
       }}
       hideLabel={false}
       toolTipLabelFormatter={(label) => {
-        return formatDate(label, "MMM dd, HH:mm");
+        return format(label, "MMM dd, HH:mm");
       }}
       // @ts-expect-error - sending MORE data than expected is ok
       data={props.data

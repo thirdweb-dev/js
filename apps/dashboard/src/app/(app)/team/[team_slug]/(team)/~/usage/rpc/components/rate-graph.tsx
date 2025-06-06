@@ -1,7 +1,7 @@
 "use client";
 
 import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 
 export function RateGraph(props: {
   peakPercentage: number;
@@ -57,7 +57,7 @@ export function RateGraph(props: {
       showLegend
       hideLabel={false}
       toolTipLabelFormatter={(label) => {
-        return formatDate(label, "MMM dd, HH:mm");
+        return format(label, "MMM dd, HH:mm");
       }}
       isPending={false}
     />

@@ -25,7 +25,7 @@ import {
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { LazyCreateProjectDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 import { ArrowDownNarrowWideIcon, PlusIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -207,7 +207,7 @@ export function TeamProjectsPage(props: {
                       />
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {formatDate(new Date(project.createdAt), "MMM d, yyyy")}
+                      {format(new Date(project.createdAt), "MMM d, yyyy")}
                     </TableCell>
                   </TableRow>
                 ))}

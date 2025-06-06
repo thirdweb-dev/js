@@ -257,7 +257,7 @@ function processTimeSeriesData(
   return metrics;
 }
 
-async function AsyncTotalSponsoredCard(props: {
+export async function AsyncTotalSponsoredCard(props: {
   project: Project;
   range: Range;
   interval: "day" | "week";

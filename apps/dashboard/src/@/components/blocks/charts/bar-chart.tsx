@@ -22,7 +22,7 @@ import {
   EmptyChartState,
   LoadingChartState,
 } from "components/analytics/empty-chart-state";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 import { useMemo } from "react";
 
 type ThirdwebBarChartProps<TConfig extends ChartConfig> = {
@@ -86,7 +86,7 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
                 tickLine={false}
                 axisLine={false}
                 tickMargin={10}
-                tickFormatter={(value) => formatDate(new Date(value), "MMM d")}
+                tickFormatter={(value) => format(new Date(value), "MMM d")}
               />
               <ChartTooltip
                 content={

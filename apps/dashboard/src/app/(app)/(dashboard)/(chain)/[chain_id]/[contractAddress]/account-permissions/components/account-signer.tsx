@@ -1,7 +1,7 @@
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import { Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
-import { formatDistance } from "date-fns/formatDistance";
+import { formatDistance } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";

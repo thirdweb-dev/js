@@ -40,8 +40,7 @@ import {
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Collapse, Divider, useDisclosure } from "@chakra-ui/react";
 import { ChainIconClient } from "components/icons/ChainIcon";
-import { formatDistanceToNowStrict } from "date-fns";
-import { format, formatDate } from "date-fns/format";
+import { format, formatDistanceToNowStrict } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import {
   ExternalLinkIcon,
@@ -562,7 +561,7 @@ export function TransactionCharts(props: {
       toolTipLabelFormatter={(_v, item) => {
         if (Array.isArray(item)) {
           const time = item[0].payload.time as number;
-          return formatDate(new Date(time), "MMM d, yyyy");
+          return format(new Date(time), "MMM d, yyyy");
         }
         return undefined;
       }}
