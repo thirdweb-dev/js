@@ -169,7 +169,7 @@ export type FundWalletOptions = {
       token: boolean;
       chain: boolean;
     };
-    quickOptions?: [number, number, number];
+    presetOptions?: [number, number, number];
   };
 };
 

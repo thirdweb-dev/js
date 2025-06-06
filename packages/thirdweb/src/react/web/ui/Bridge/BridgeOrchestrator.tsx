@@ -40,7 +40,7 @@ export type UIOptions = Prettify<
         mode: "fund_wallet";
         destinationToken: Token;
         initialAmount?: string;
-        quickOptions?: [number, number, number];
+        presetOptions?: [number, number, number];
       }
     | {
         mode: "direct_payment";
@@ -109,7 +109,7 @@ export interface BridgeOrchestratorProps {
   /**
    * Quick buy amounts
    */
-  quickOptions?: [number, number, number];
+  presetOptions?: [number, number, number];
 }
 
 export function BridgeOrchestrator({
@@ -123,7 +123,7 @@ export function BridgeOrchestrator({
   connectLocale,
   purchaseData,
   paymentLinkId,
-  quickOptions,
+  presetOptions,
 }: BridgeOrchestratorProps) {
   // Initialize adapters
   const adapters = useMemo(
@@ -228,7 +228,7 @@ export function BridgeOrchestrator({
           client={client}
           onContinue={handleRequirementsResolved}
           connectOptions={connectOptions}
-          quickOptions={quickOptions}
+          presetOptions={presetOptions}
         />
       )}
 

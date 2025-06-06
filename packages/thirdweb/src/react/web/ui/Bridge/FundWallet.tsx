@@ -48,7 +48,7 @@ export interface FundWalletProps {
   /**
    * Quick buy amounts
    */
-  quickOptions?: [number, number, number];
+  presetOptions?: [number, number, number];
 
   /**
    * Connect options for wallet connection
@@ -61,7 +61,7 @@ export function FundWallet({
   receiverAddress,
   uiOptions,
   onContinue,
-  quickOptions = [5, 10, 20],
+  presetOptions = [5, 10, 20],
   connectOptions,
 }: FundWalletProps) {
   const [amount, setAmount] = useState(uiOptions.initialAmount ?? "");
@@ -228,7 +228,7 @@ export function FundWallet({
         </Container>
 
         {/* Quick Amount Buttons */}
-        {quickOptions && (
+        {presetOptions && (
           <>
             <Spacer y="md" />
             <Container
@@ -239,7 +239,7 @@ export function FundWallet({
                 justifyContent: "space-evenly",
               }}
             >
-              {quickOptions?.map((amount) => (
+              {presetOptions?.map((amount) => (
                 <Button
                   variant="outline"
                   onClick={() => handleQuickAmount(Number(amount))}

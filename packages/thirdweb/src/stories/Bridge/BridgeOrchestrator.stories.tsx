@@ -72,7 +72,7 @@ const meta = {
       options: ["light", "dark"],
       description: "Theme for the component",
     },
-    quickOptions: {
+    presetOptions: {
       control: "object",
       description: "Quick buy options",
     },
@@ -187,11 +187,11 @@ export const TransactionLight: Story = {
   },
 };
 
-export const CustomQuickOptions: Story = {
+export const CustompresetOptions: Story = {
   args: {
     theme: "dark",
     uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
-    quickOptions: [1, 2, 3],
+    presetOptions: [1, 2, 3],
   },
   parameters: {
     backgrounds: { default: "dark" },

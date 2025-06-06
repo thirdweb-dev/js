@@ -480,8 +480,8 @@ export function PayEmbed(props: PayEmbedProps) {
         onComplete={() => {
           props.payOptions?.onPurchaseSuccess?.();
         }}
-        quickOptions={
-          (props.payOptions as FundWalletOptions)?.prefillBuy?.quickOptions
+        presetOptions={
+          (props.payOptions as FundWalletOptions)?.prefillBuy?.presetOptions
         }
       />
     );
