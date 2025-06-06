@@ -81,7 +81,11 @@ export function DirectPayment({
   );
 
   return (
-    <WithHeader uiOptions={uiOptions} defaultTitle="Direct Payment">
+    <WithHeader
+      uiOptions={uiOptions}
+      defaultTitle="Direct Payment"
+      client={client}
+    >
       {/* Price section */}
       <Container
         flex="row"

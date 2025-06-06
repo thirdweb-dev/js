@@ -12,6 +12,7 @@ export type PayEmbedPlaygroundOptions = {
     mode?: "fund_wallet" | "direct_payment" | "transaction";
     title: string | undefined;
     image: string | undefined;
+    description: string | undefined;
 
     // fund_wallet mode options
     buyTokenAddress: string | undefined;

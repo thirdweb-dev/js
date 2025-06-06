@@ -1,3 +1,5 @@
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import { resolveScheme } from "../../../../../utils/ipfs.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { radius } from "../../../../core/design-system/index.js";
 import { Spacer } from "../../components/Spacer.js";
@@ -9,7 +11,13 @@ export function WithHeader({
   children,
   uiOptions,
   defaultTitle,
-}: { children: React.ReactNode; uiOptions: UIOptions; defaultTitle: string }) {
+  client,
+}: {
+  children: React.ReactNode;
+  uiOptions: UIOptions;
+  defaultTitle: string;
+  client: ThirdwebClient;
+}) {
   const theme = useCustomTheme();
   return (
     <Container flex="column">
@@ -21,8 +29,11 @@ export function WithHeader({
             borderRadius: `${radius.md} ${radius.md} 0 0`,
             overflow: "hidden",
             aspectRatio: "16/9",
-            backgroundColor: theme.colors.secondaryIconColor,
-            backgroundImage: `url(${uiOptions.metadata.image})`,
+            backgroundColor: theme.colors.tertiaryBg,
+            backgroundImage: `url(${resolveScheme({
+              client,
+              uri: uiOptions.metadata.image,
+            })})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

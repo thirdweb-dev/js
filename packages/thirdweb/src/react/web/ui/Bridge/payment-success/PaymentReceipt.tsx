@@ -96,7 +96,7 @@ function useTransactionInfo(
             return {
               type: "transactionHash" as const,
               id: tx.transactionHash,
-              label: "Onchain Transaction",
+              label: "Transaction",
               chain: destinationChain,
               originToken: status.originToken,
               originChain,

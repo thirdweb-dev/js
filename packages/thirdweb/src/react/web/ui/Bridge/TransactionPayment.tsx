@@ -132,7 +132,11 @@ export function TransactionPayment({
 
   if (isLoading) {
     return (
-      <WithHeader uiOptions={uiOptions} defaultTitle="Transaction">
+      <WithHeader
+        uiOptions={uiOptions}
+        defaultTitle="Transaction"
+        client={client}
+      >
         {/* Loading Header */}
         <SkeletonHeader />
 
@@ -178,7 +182,11 @@ export function TransactionPayment({
   }
 
   return (
-    <WithHeader uiOptions={uiOptions} defaultTitle="Transaction">
+    <WithHeader
+      uiOptions={uiOptions}
+      defaultTitle="Transaction"
+      client={client}
+    >
       {/* Cost and Function Name section */}
       <Container
         flex="row"

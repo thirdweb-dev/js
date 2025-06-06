@@ -121,6 +121,7 @@ export function FundWallet({
     <WithHeader
       uiOptions={uiOptions}
       defaultTitle={`Buy ${uiOptions.destinationToken.symbol}`}
+      client={client}
     >
       <Container flex="column">
         {/* Token Info */}

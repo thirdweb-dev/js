@@ -268,7 +268,7 @@ const TransactionOverViewCompact = (props: {
     >
       <Container flex="column" gap="3xs" center="y" style={{ flex: 1 }}>
         <Text size="sm" color="primaryText" style={{ fontWeight: 600 }}>
-          {props.uiOptions.metadata?.title || "Onchain Transaction"}
+          {props.uiOptions.metadata?.title || "Transaction"}
         </Text>
         {props.uiOptions.metadata?.description && (
           <Text size="xs" color="secondaryText">

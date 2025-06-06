@@ -230,7 +230,7 @@ export function StepRunner({
     }
 
     // Fallback to step number
-    return `Step ${index + 1}: Process transaction`;
+    return "Process transaction";
   };
 
   const getOnrampDescription = (
