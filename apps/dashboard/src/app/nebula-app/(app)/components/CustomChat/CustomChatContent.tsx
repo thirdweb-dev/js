@@ -8,12 +8,11 @@ import { useCallback, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWalletConnectionStatus } from "thirdweb/react";
 import type { NebulaContext } from "../../api/chat";
-import type { NebulaUserMessage } from "../../api/types";
 import type { ExamplePrompt } from "../../data/examplePrompts";
 import { NebulaIcon } from "../../icons/NebulaIcon";
 import { ChatBar } from "../ChatBar";
-import { Chats } from "../Chats";
-import type { ChatMessage } from "../Chats";
+import { type CustomChatMessage, CustomChats } from "./CustomChats";
+import type { UserMessage, UserMessageContent } from "./CustomChats";
 
 export default function CustomChatContent(props: {
   authToken: string | undefined;
@@ -49,7 +48,7 @@ function CustomChatContentLoggedIn(props: {
   networks: NebulaContext["networks"];
 }) {
   const [userHasSubmittedMessage, setUserHasSubmittedMessage] = useState(false);
-  const [messages, setMessages] = useState<Array<ChatMessage>>([]);
+  const [messages, setMessages] = useState<Array<CustomChatMessage>>([]);
   // sessionId is initially undefined, will be set to conversationId from API after first response
   const [sessionId, setSessionId] = useState<string | undefined>(undefined);
   const [chatAbortController, setChatAbortController] = useState<
@@ -61,13 +60,15 @@ function CustomChatContentLoggedIn(props: {
   const connectionStatus = useActiveWalletConnectionStatus();
 
   const handleSendMessage = useCallback(
-    async (userMessage: NebulaUserMessage) => {
+    async (userMessage: UserMessage) => {
       const abortController = new AbortController();
       setUserHasSubmittedMessage(true);
       setIsChatStreaming(true);
       setEnableAutoScroll(true);
 
-      const textMessage = userMessage.content.find((x) => x.type === "text");
+      const textMessage = userMessage.content.find(
+        (x: UserMessageContent) => x.type === "text",
+      );
 
       trackEvent({
         category: "siwa",
@@ -80,7 +81,7 @@ function CustomChatContentLoggedIn(props: {
         ...prev,
         {
           type: "user",
-          content: userMessage.content,
+          content: userMessage.content as UserMessageContent[],
         },
         // instant loading indicator feedback to user
         {
@@ -93,7 +94,7 @@ function CustomChatContentLoggedIn(props: {
       // deep clone `userMessage` to avoid mutating the original message, its a pretty small object so JSON.parse is fine
       const messageToSend = JSON.parse(
         JSON.stringify(userMessage),
-      ) as NebulaUserMessage;
+      ) as UserMessage;
 
       try {
         setChatAbortController(abortController);
@@ -149,6 +150,70 @@ function CustomChatContentLoggedIn(props: {
     [props.authToken, props.clientId, props.teamId, sessionId, trackEvent],
   );
 
+  const handleFeedback = useCallback(
+    async (messageIndex: number, feedback: 1 | -1) => {
+      if (!sessionId) {
+        console.error("Cannot submit feedback: missing session ID");
+        return;
+      }
+
+      // Validate message exists and is of correct type
+      const message = messages[messageIndex];
+      if (!message || message.type !== "assistant") {
+        console.error("Invalid message for feedback:", messageIndex);
+        return;
+      }
+
+      // Prevent duplicate feedback
+      if (message.feedback) {
+        console.warn("Feedback already submitted for this message");
+        return;
+      }
+
+      try {
+        trackEvent({
+          category: "siwa",
+          action: "submit-feedback",
+          rating: feedback === 1 ? "good" : "bad",
+          sessionId,
+          teamId: props.teamId,
+        });
+
+        const apiUrl = process.env.NEXT_PUBLIC_SIWA_URL;
+        const response = await fetch(`${apiUrl}/v1/chat/feedback`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${props.authToken}`,
+            ...(props.teamId ? { "x-team-id": props.teamId } : {}),
+          },
+          body: JSON.stringify({
+            conversationId: sessionId,
+            feedbackRating: feedback,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        // Update the message with feedback
+        setMessages((prev) =>
+          prev.map((msg, index) =>
+            index === messageIndex && msg.type === "assistant"
+              ? { ...msg, feedback }
+              : msg,
+          ),
+        );
+      } catch (error) {
+        console.error("Failed to send feedback:", error);
+        // Optionally show user-facing error notification
+        // Consider implementing retry logic here
+      }
+    },
+    [sessionId, props.authToken, props.teamId, trackEvent, messages],
+  );
+
   const showEmptyState = !userHasSubmittedMessage && messages.length === 0;
   return (
     <div className="flex grow flex-col overflow-hidden">
@@ -158,7 +223,7 @@ function CustomChatContentLoggedIn(props: {
           examplePrompts={props.examplePrompts}
         />
       ) : (
-        <Chats
+        <CustomChats
           messages={messages}
           isChatStreaming={isChatStreaming}
           authToken={props.authToken}
@@ -169,6 +234,7 @@ function CustomChatContentLoggedIn(props: {
           setEnableAutoScroll={setEnableAutoScroll}
           useSmallText
           sendMessage={handleSendMessage}
+          onFeedback={handleFeedback}
         />
       )}
       <ChatBar
@@ -192,7 +258,15 @@ function CustomChatContentLoggedIn(props: {
         }}
         isChatStreaming={isChatStreaming}
         prefillMessage={undefined}
-        sendMessage={handleSendMessage}
+        sendMessage={(siwaUserMessage) => {
+          const userMessage: UserMessage = {
+            type: "user",
+            content: siwaUserMessage.content
+              .filter((c) => c.type === "text")
+              .map((c) => ({ type: "text", text: c.text })),
+          };
+          handleSendMessage(userMessage);
+        }}
         className="rounded-none border-x-0 border-b-0"
         allowImageUpload={false}
       />
@@ -237,7 +311,7 @@ function LoggedOutStateChatContent() {
 }
 
 function EmptyStateChatPageContent(props: {
-  sendMessage: (message: NebulaUserMessage) => void;
+  sendMessage: (message: UserMessage) => void;
   examplePrompts: { title: string; message: string }[];
 }) {
   return (
@@ -264,7 +338,7 @@ function EmptyStateChatPageContent(props: {
             size="sm"
             onClick={() =>
               props.sendMessage({
-                role: "user",
+                type: "user",
                 content: [
                   {
                     type: "text",
