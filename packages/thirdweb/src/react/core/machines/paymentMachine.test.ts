@@ -580,4 +580,112 @@ describe("PaymentMachine", () => {
     [state] = result.current;
     expect(state.context.preparedQuote).toBeUndefined(); // Should be cleared
   });
+
+  it("should handle post-buy-transaction state flow", () => {
+    const { result } = renderHook(() =>
+      usePaymentMachine(adapters, "fund_wallet"),
+    );
+
+    // Go through the complete happy path to reach success state
+    act(() => {
+      const [, send] = result.current;
+      send({
+        type: "DESTINATION_CONFIRMED",
+        destinationToken: testTokenForPayment,
+        destinationAmount: "100",
+        receiverAddress: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+      });
+    });
+
+    act(() => {
+      const [, send] = result.current;
+      send({
+        type: "PAYMENT_METHOD_SELECTED",
+        paymentMethod: {
+          type: "wallet",
+          payerWallet: TEST_IN_APP_WALLET_A,
+          originToken: testUSDCToken,
+          balance: 1000000000000000000n,
+        },
+      });
+    });
+
+    act(() => {
+      const [, send] = result.current;
+      send({
+        type: "QUOTE_RECEIVED",
+        preparedQuote: mockBuyQuote,
+      });
+    });
+
+    act(() => {
+      const [, send] = result.current;
+      send({
+        type: "ROUTE_CONFIRMED",
+      });
+    });
+
+    act(() => {
+      const [, send] = result.current;
+      send({
+        type: "EXECUTION_COMPLETE",
+        completedStatuses: [
+          {
+            type: "buy",
+            status: "COMPLETED",
+            paymentId: "test-payment-id",
+            originAmount: 1000000000000000000n,
+            destinationAmount: 100000000n,
+            originChainId: 1,
+            destinationChainId: 137,
+            originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+            destinationTokenAddress:
+              "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+            originToken: testETHToken,
+            destinationToken: testUSDCToken,
+            sender: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+            receiver: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+            transactions: [
+              {
+                chainId: 1,
+                transactionHash: "0xtest123",
+              },
+            ],
+          },
+        ],
+      });
+    });
+
+    let [state] = result.current;
+    expect(state.value).toBe("success");
+
+    // Continue to post-buy transaction
+    act(() => {
+      const [, send] = result.current;
+      send({
+        type: "CONTINUE_TO_TRANSACTION",
+      });
+    });
+
+    [state] = result.current;
+    expect(state.value).toBe("post-buy-transaction");
+
+    // Reset from post-buy-transaction should go back to init
+    act(() => {
+      const [, send] = result.current;
+      send({
+        type: "RESET",
+      });
+    });
+
+    [state] = result.current;
+    expect(state.value).toBe("init");
+    // Context should be reset to initial state with only adapters and mode
+    expect(state.context.adapters).toBe(adapters);
+    expect(state.context.mode).toBe("fund_wallet");
+    expect(state.context.destinationToken).toBeUndefined();
+    expect(state.context.selectedPaymentMethod).toBeUndefined();
+    expect(state.context.preparedQuote).toBeUndefined();
+    expect(state.context.completedStatuses).toBeUndefined();
+  });
 });

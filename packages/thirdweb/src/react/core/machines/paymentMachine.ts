@@ -200,6 +200,15 @@ export function usePaymentMachine(
                 };
               }
               break;
+
+            case "post-buy-transaction":
+              if (event.type === "RESET") {
+                return {
+                  mode: ctx.mode,
+                  adapters: ctx.adapters,
+                };
+              }
+              break;
           }
           return ctx;
         });
