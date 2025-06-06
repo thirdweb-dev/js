@@ -18,6 +18,7 @@ import {
 import { TWAutoConnect } from "./components/autoconnect";
 
 const queryClient = new QueryClient();
+const thirdwebClient = getClientThirdwebClient();
 
 export function AppRouterProviders(props: { children: React.ReactNode }) {
   return (
@@ -26,7 +27,7 @@ export function AppRouterProviders(props: { children: React.ReactNode }) {
         <SyncChainStores />
         <ThirdwebProvider>
           <SyncChainDefinitionsToConnectionManager />
-          <TWAutoConnect />
+          <TWAutoConnect client={thirdwebClient} />
           <ThemeProvider
             attribute="class"
             disableTransitionOnChange

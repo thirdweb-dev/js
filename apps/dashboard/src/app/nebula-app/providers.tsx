@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import { ThirdwebProvider, useActiveAccount } from "thirdweb/react";
 import { TWAutoConnect } from "../(app)/components/autoconnect";
 import { NebulaConnectWallet } from "./(app)/components/NebulaConnectButton";
+import { nebulaAppThirdwebClient } from "./(app)/utils/nebulaThirdwebClient";
 import { nebulaAAOptions } from "./login/account-abstraction";
 
 const queryClient = new QueryClient();
@@ -16,7 +17,10 @@ export function NebulaProviders(props: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <ThirdwebProvider>
-        <TWAutoConnect accountAbstraction={nebulaAAOptions} />
+        <TWAutoConnect
+          accountAbstraction={nebulaAAOptions}
+          client={nebulaAppThirdwebClient}
+        />
         <ThemeProvider
           attribute="class"
           disableTransitionOnChange
