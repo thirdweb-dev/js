@@ -17,6 +17,7 @@ type TeamSelectorMobileMenuButtonProps = {
   account: Pick<Account, "email" | "id"> | undefined;
   client: ThirdwebClient;
   isOnProjectPage: boolean;
+  createTeam: () => void;
 };
 
 export function TeamSelectorMobileMenuButton(
@@ -51,6 +52,7 @@ export function TeamSelectorMobileMenuButton(
             upgradeTeamLink={props.upgradeTeamLink}
             account={props.account}
             client={props.client}
+            createTeam={props.createTeam}
           />
         </DynamicHeight>
       </DialogContent>

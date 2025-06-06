@@ -67,6 +67,7 @@ export async function getTeams() {
   return null;
 }
 
+/** @deprecated */
 export async function getDefaultTeam() {
   const token = await getAuthToken();
   if (!token) {

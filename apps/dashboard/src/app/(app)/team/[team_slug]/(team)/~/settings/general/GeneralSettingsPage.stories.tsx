@@ -62,8 +62,8 @@ function ComponentVariants() {
               await new Promise((resolve) => setTimeout(resolve, 1000));
             }}
           />
-          <DeleteTeamCard enabled={true} teamName="foo" />
-          <DeleteTeamCard enabled={false} teamName="foo" />
+          <DeleteTeamCard canDelete={true} teamId="1" teamName="foo" />
+          <DeleteTeamCard canDelete={false} teamId="2" teamName="foo" />
         </div>
       </div>
     </div>
