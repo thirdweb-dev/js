@@ -54,20 +54,23 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
         <SlashSeparator />
 
         <div className="flex items-center gap-1">
-          <Link
-            href={`/team/${currentTeam.slug}`}
-            className="flex flex-row items-center gap-2 font-normal text-sm"
-          >
-            <GradientAvatar
-              id={currentTeam.id}
-              src={currentTeam.image || ""}
-              className="size-6"
-              client={props.client}
-            />
-            <span> {currentTeam.name} </span>
-            <TeamVerifiedIcon domain={currentTeam.verifiedDomain} />
+          <span className="flex flex-row items-center gap-2 font-normal text-sm">
+            <Link
+              href={`/team/${currentTeam.slug}`}
+              className="flex flex-row items-center gap-2 font-normal text-sm"
+            >
+              <GradientAvatar
+                id={currentTeam.id}
+                src={currentTeam.image || ""}
+                className="size-6"
+                client={props.client}
+              />
+              <span> {currentTeam.name} </span>
+              <TeamVerifiedIcon domain={currentTeam.verifiedDomain} />
+            </Link>
+            {/* may render its own link so has to be outside of the link */}
             <TeamPlanBadge plan={teamPlan} teamSlug={currentTeam.slug} />
-          </Link>
+          </span>
 
           <TeamAndProjectSelectorPopoverButton
             currentProject={props.currentProject}
