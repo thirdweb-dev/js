@@ -35,7 +35,7 @@ Each webhook must have either an events filter or a transactions filter (or both
     signatures: {                 // Filter by event signatures
       sig_hash: string,          // Event signature hash
       abi?: string,             // Optional ABI for data decoding
-      params?: Record<string, any> // Filter on decoded parameters
+      params?: Record<string, string | number> // Filter on decoded parameters
     }[]
   }
 }
@@ -51,7 +51,7 @@ Each webhook must have either an events filter or a transactions filter (or both
     signatures: {                 // Filter by function signatures
       sig_hash: string,          // Function signature hash
       abi?: string,             // Optional ABI for data decoding
-      params?: string[]         // Filter on decoded parameters
+      params?: Record<string, string | number> // Filter on decoded parameters
     }[]
   }
 }
@@ -105,6 +105,27 @@ And this example will filter for `Approve` function calls on Ethereum for the co
 ### Params
 
 `params` on the `signatures` object will allow you to filter based on the decoded data. Only strict equality is supported at the moment.
+
+For example, if you want to filter for `Transfer` events where the `from` address is `0x1f9840a85d5af5bf1d1762f925bdaddc4201f984`, you can use the following:
+```typescript
+{
+	...
+	"filters": {
+		"v1.events": {
+			"chain_ids": ["1"],
+			"addresses": ["0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"],
+			"signatures": [{
+				"sig_hash": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+				"abi": "{\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"}",
+				"params": {
+					"from": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+				}
+			}]
+		}
+	}
+	...
+}
+```
 
 ### Notes
 - You can specify ABIs to receive decoded event/transaction data
