@@ -252,6 +252,10 @@ export function PaymentSelection({
           <FiatProviderSelection
             client={client}
             onProviderSelected={handleOnrampProviderSelected}
+            toChainId={destinationToken.chainId}
+            toTokenAddress={destinationToken.address}
+            toAddress={receiverAddress || ""}
+            toAmount={destinationAmount}
           />
         )}
       </Container>
