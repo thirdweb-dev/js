@@ -99,6 +99,8 @@ export type PayUIOptions = Prettify<
           };
           preferredProvider?: FiatProvider;
           supportedProviders?: FiatProvider[];
+          onrampChainId?: number;
+          onrampTokenAddress?: string;
         }
       | false;
 
