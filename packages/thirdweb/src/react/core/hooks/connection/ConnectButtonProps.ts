@@ -115,7 +115,8 @@ export type PayUIOptions = Prettify<
      * Callback to be called when the user successfully completes the purchase.
      */
     onPurchaseSuccess?: (
-      info:
+      // TODO: remove this type from the callback entirely or adapt it from the new format
+      info?:
         | {
             type: "crypto";
             status: BuyWithCryptoStatus;

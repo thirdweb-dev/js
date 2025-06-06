@@ -199,7 +199,7 @@ export function StepRunner({
     }
   };
 
-  const getStepDescription = (step: RouteStep, index: number) => {
+  const getStepDescription = (step: RouteStep) => {
     const { originToken, destinationToken } = step;
 
     // If tokens are the same, it's likely a bridge operation
@@ -372,7 +372,7 @@ export function StepRunner({
                 </Container>
 
                 <Container flex="column" gap="3xs" style={{ flex: 1 }}>
-                  {getStepDescription(step, index)}
+                  {getStepDescription(step)}
                   <Text size="xs" color="secondaryText">
                     {getStepStatusText(status)}
                   </Text>

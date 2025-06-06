@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import {} from "react";
+import { useState } from "react";
 import type { Token } from "../../../bridge/index.js";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
@@ -28,6 +28,7 @@ import {
 import { UnsupportedTokenScreen } from "./Bridge/UnsupportedTokenScreen.js";
 import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
+import { ExecutingTxScreen } from "./TransactionButton/ExecutingScreen.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";
 import type { LocaleId } from "./types.js";
@@ -326,6 +327,9 @@ type UIOptionsResult =
 export function PayEmbed(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const theme = props.theme || "dark";
+  const [screen, setScreen] = useState<"main" | "transaction-execution">(
+    "main",
+  );
 
   const bridgeDataQuery = useQuery({
     queryKey: ["bridgeData", props],
@@ -465,6 +469,20 @@ export function PayEmbed(props: PayEmbedProps) {
         <Spinner size="xl" color="secondaryText" />
       </div>
     );
+  } else if (
+    screen === "transaction-execution" &&
+    bridgeDataQuery.data?.type === "success" &&
+    bridgeDataQuery.data.data.mode === "transaction"
+  ) {
+    content = (
+      <ExecutingTxScreen
+        tx={bridgeDataQuery.data.data.transaction}
+        closeModal={() => setScreen("main")}
+        onTxSent={() => {
+          props.payOptions?.onPurchaseSuccess?.();
+        }}
+      />
+    );
   } else if (bridgeDataQuery.data?.type === "unsupported_token") {
     // Show unsupported token screen
     content = <UnsupportedTokenScreen chain={bridgeDataQuery.data.chain} />;
@@ -478,6 +496,13 @@ export function PayEmbed(props: PayEmbedProps) {
         connectLocale={localeQuery.data}
         purchaseData={props.payOptions?.purchaseData}
         paymentLinkId={props.paymentLinkId}
+        onComplete={() => {
+          if (props.payOptions?.mode === "transaction") {
+            setScreen("transaction-execution");
+          } else {
+            props.payOptions?.onPurchaseSuccess?.();
+          }
+        }}
         quickOptions={
           (props.payOptions as FundWalletOptions)?.prefillBuy?.quickOptions
         }

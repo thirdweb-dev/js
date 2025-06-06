@@ -1,13 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { stringify } from "viem";
-import type { WindowAdapter } from "../../react/core/adapters/WindowAdapter.js";
 import type { Theme } from "../../react/core/design-system/index.js";
-import type { BridgePrepareResult } from "../../react/core/hooks/useBridgePrepare.js";
 import type { CompletedStatusResult } from "../../react/core/hooks/useStepExecutor.js";
 import { webWindowAdapter } from "../../react/web/adapters/WindowAdapter.js";
-import { SuccessScreen } from "../../react/web/ui/Bridge/payment-success/SuccessScreen.js";
+import {
+  SuccessScreen,
+  type SuccessScreenProps,
+} from "../../react/web/ui/Bridge/payment-success/SuccessScreen.js";
 import { ModalThemeWrapper } from "../utils.js";
-import { simpleBuyQuote, simpleOnrampQuote } from "./fixtures.js";
+import {
+  FUND_WALLET_UI_OPTIONS,
+  simpleBuyQuote,
+  simpleOnrampQuote,
+} from "./fixtures.js";
 
 const mockBuyCompletedStatuses: CompletedStatusResult[] = JSON.parse(
   stringify([
@@ -70,13 +75,8 @@ const mockOnrampCompletedStatuses: CompletedStatusResult[] = JSON.parse(
 );
 
 // Props interface for the wrapper component
-interface SuccessScreenWithThemeProps {
-  preparedQuote: BridgePrepareResult;
-  completedStatuses: CompletedStatusResult[];
-  onClose: () => void;
-  onNewPayment?: () => void;
+interface SuccessScreenWithThemeProps extends SuccessScreenProps {
   theme: "light" | "dark" | Theme;
-  windowAdapter: WindowAdapter;
 }
 
 // Wrapper component to provide theme context
@@ -105,10 +105,10 @@ const meta = {
   args: {
     preparedQuote: simpleBuyQuote,
     completedStatuses: mockBuyCompletedStatuses,
-    onClose: () => console.log("Success screen closed"),
-    onNewPayment: () => console.log("New payment started"),
+    onDone: () => console.log("Success screen closed"),
     theme: "dark",
     windowAdapter: webWindowAdapter,
+    uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
   },
   argTypes: {
     theme: {
@@ -116,8 +116,7 @@ const meta = {
       options: ["light", "dark"],
       description: "Theme for the component",
     },
-    onClose: { action: "success screen closed" },
-    onNewPayment: { action: "new payment started" },
+    onDone: { action: "success screen closed" },
   },
 } satisfies Meta<typeof SuccessScreenWithTheme>;
 

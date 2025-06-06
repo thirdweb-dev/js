@@ -10,9 +10,14 @@ import { Spacer } from "../../components/Spacer.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
+import type { UIOptions } from "../BridgeOrchestrator.js";
 import { PaymentReceipt } from "./PaymentReceipt.js";
 
 export interface SuccessScreenProps {
+  /**
+   * UI options
+   */
+  uiOptions: UIOptions;
   /**
    * Prepared quote from Bridge.prepare
    */
@@ -26,12 +31,7 @@ export interface SuccessScreenProps {
   /**
    * Called when user closes the success screen
    */
-  onClose: () => void;
-
-  /**
-   * Called when user wants to start a new payment
-   */
-  onNewPayment?: () => void;
+  onDone: () => void;
 
   /**
    * Window adapter for opening URLs
@@ -42,9 +42,10 @@ export interface SuccessScreenProps {
 type ViewState = "success" | "detail";
 
 export function SuccessScreen({
+  uiOptions,
   preparedQuote,
   completedStatuses,
-  onClose,
+  onDone,
   windowAdapter,
 }: SuccessScreenProps) {
   const theme = useCustomTheme();
@@ -112,8 +113,8 @@ export function SuccessScreen({
           View Payment Receipt
         </Button>
 
-        <Button variant="accent" fullWidth onClick={onClose}>
-          Done
+        <Button variant="accent" fullWidth onClick={onDone}>
+          {uiOptions.mode === "transaction" ? "Continue" : "Done"}
         </Button>
       </Container>
 

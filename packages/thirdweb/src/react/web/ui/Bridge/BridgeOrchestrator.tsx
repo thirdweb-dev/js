@@ -317,10 +317,10 @@ export function BridgeOrchestrator({
         state.context.preparedQuote &&
         state.context.completedStatuses && (
           <SuccessScreen
+            uiOptions={uiOptions}
             preparedQuote={state.context.preparedQuote}
             completedStatuses={state.context.completedStatuses}
-            onClose={handleComplete}
-            onNewPayment={() => send({ type: "RESET" })}
+            onDone={handleComplete}
             windowAdapter={webWindowAdapter}
           />
         )}
