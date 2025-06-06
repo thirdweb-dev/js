@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.102.6
+
+### Patch Changes
+
+- [#7296](https://github.com/thirdweb-dev/js/pull/7296) [`69bf925`](https://github.com/thirdweb-dev/js/commit/69bf925c010418ae04e231a3adf69e578cbbeecc) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Allow forcing onramp chain in buyWithFiat options
+
 ## 5.102.5
 
 ### Patch Changes
