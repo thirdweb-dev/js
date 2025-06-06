@@ -1,20 +1,24 @@
 "use client";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
   iconSize,
   radius,
   spacing,
 } from "../../../../core/design-system/index.js";
+import { Img } from "../../components/Img.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
 
 export interface FiatProviderSelectionProps {
+  client: ThirdwebClient;
   onProviderSelected: (provider: "coinbase" | "stripe" | "transak") => void;
 }
 
 export function FiatProviderSelection({
+  client,
   onProviderSelected,
 }: FiatProviderSelectionProps) {
   const theme = useCustomTheme();
@@ -24,22 +28,19 @@ export function FiatProviderSelection({
       id: "coinbase" as const,
       name: "Coinbase",
       description: "Fast and secure payments",
-      backgroundColor: theme.colors.accentText,
-      initial: "CB",
+      iconUri: "https://i.ibb.co/LDJ3Rk2t/Frame-5.png",
     },
     {
       id: "stripe" as const,
       name: "Stripe",
       description: "Trusted payment processing",
-      backgroundColor: "#635BFF",
-      initial: "S",
+      iconUri: "https://i.ibb.co/CpgQC2Lf/images-3.png",
     },
     {
       id: "transak" as const,
       name: "Transak",
       description: "Global payment solution",
-      backgroundColor: "#2B6CB0",
-      initial: "T",
+      iconUri: "https://i.ibb.co/Xx2r882p/Transak-official-symbol-1.png",
     },
   ];
 
@@ -76,27 +77,24 @@ export function FiatProviderSelection({
                   width: `${iconSize.md}px`,
                   height: `${iconSize.md}px`,
                   borderRadius: "50%",
-                  backgroundColor: provider.backgroundColor,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   padding: spacing.xs,
+                  overflow: "hidden",
                 }}
               >
-                <Text
-                  size="xs"
-                  color="primaryButtonText"
-                  style={{ fontWeight: 600 }}
-                >
-                  {provider.initial}
-                </Text>
+                <Img
+                  src={provider.iconUri}
+                  alt={provider.name}
+                  width={iconSize.md}
+                  height={iconSize.md}
+                  client={client}
+                />
               </Container>
               <Container flex="column" gap="3xs" style={{ flex: 1 }}>
                 <Text size="sm" color="primaryText" style={{ fontWeight: 600 }}>
                   {provider.name}
-                </Text>
-                <Text size="xs" color="secondaryText">
-                  {provider.description}
                 </Text>
               </Container>
             </Container>

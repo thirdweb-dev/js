@@ -250,6 +250,7 @@ export function PaymentSelection({
 
         {currentStep.type === "fiatProviderSelection" && (
           <FiatProviderSelection
+            client={client}
             onProviderSelected={handleOnrampProviderSelected}
           />
         )}
