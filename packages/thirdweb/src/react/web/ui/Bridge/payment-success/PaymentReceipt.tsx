@@ -4,7 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
 import type { Token } from "../../../../../bridge/types/Token.js";
 import type { ChainMetadata } from "../../../../../chains/types.js";
-import { defineChain, getChainMetadata } from "../../../../../chains/utils.js";
+import {
+  defineChain,
+  getCachedChain,
+  getChainMetadata,
+} from "../../../../../chains/utils.js";
 import { shortenHex } from "../../../../../utils/address.js";
 import type { WindowAdapter } from "../../../../core/adapters/WindowAdapter.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
@@ -29,6 +33,7 @@ interface TransactionInfo {
   chain: ChainMetadata;
   destinationToken?: Token;
   originToken?: Token;
+  originChain?: ChainMetadata;
   amountPaid?: string;
   amountReceived?: string;
 }
@@ -84,12 +89,17 @@ function useTransactionInfo(
           // get the last transaction hash
           const tx = status.transactions[status.transactions.length - 1];
           if (tx) {
+            const [destinationChain, originChain] = await Promise.all([
+              getChainMetadata(getCachedChain(status.destinationToken.chainId)),
+              getChainMetadata(getCachedChain(status.originToken.chainId)),
+            ]);
             return {
               type: "transactionHash" as const,
               id: tx.transactionHash,
               label: "Onchain Transaction",
-              chain: await getChainMetadata(defineChain(tx.chainId)),
+              chain: destinationChain,
               originToken: status.originToken,
+              originChain,
               destinationToken: status.destinationToken,
               amountReceived: `${formatTokenAmount(
                 status.destinationAmount,
@@ -202,6 +212,22 @@ function CompletedStepDetailCard({
           </Text>
           <Text size="sm" color="primaryText">
             {txInfo.amountPaid}
+          </Text>
+        </Container>
+      )}
+
+      {/* Origin Chain */}
+      {txInfo.originChain && (
+        <Container
+          flex="row"
+          center="y"
+          style={{ justifyContent: "space-between" }}
+        >
+          <Text size="sm" color="secondaryText">
+            Origin Chain
+          </Text>
+          <Text size="sm" color="primaryText">
+            {shorterChainName(txInfo.chain.name)}
           </Text>
         </Container>
       )}

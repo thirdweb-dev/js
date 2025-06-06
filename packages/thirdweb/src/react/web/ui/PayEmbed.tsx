@@ -220,7 +220,8 @@ type UIOptionsResult =
  *       sellerAddress: "0x...", // the wallet address of the seller
  *     },
  *     metadata: {
- *       name: "Black Hoodie (Size L)",
+ *       name: "Black Hoodie",
+ *       description: "Size L. Ships worldwide.",
  *       image: "/drip-hoodie.png",
  *     },
  *   }}
@@ -350,6 +351,7 @@ export function PayEmbed(props: PayEmbedProps) {
             data: {
               mode: "fund_wallet",
               destinationToken: ETH,
+              metadata: props.payOptions?.metadata,
             },
           };
         }
@@ -379,6 +381,10 @@ export function PayEmbed(props: PayEmbedProps) {
             mode: "fund_wallet",
             destinationToken: token,
             initialAmount: prefillInfo.amount,
+            metadata: {
+              ...props.payOptions?.metadata,
+              title: props.payOptions?.metadata?.name,
+            },
           },
         };
       }
@@ -413,14 +419,14 @@ export function PayEmbed(props: PayEmbedProps) {
           type: "success",
           data: {
             mode: "direct_payment",
+            metadata: {
+              ...props.payOptions?.metadata,
+              title: props.payOptions?.metadata?.name,
+            },
             paymentInfo: {
               token,
               amount,
               sellerAddress: paymentInfo.sellerAddress as `0x${string}`,
-              metadata: {
-                name: props.payOptions?.metadata?.name || "Direct Payment",
-                image: props.payOptions?.metadata?.image || "",
-              },
               feePayer: paymentInfo.feePayer,
             },
           },
@@ -432,6 +438,10 @@ export function PayEmbed(props: PayEmbedProps) {
           type: "success",
           data: {
             mode: "transaction",
+            metadata: {
+              ...props.payOptions?.metadata,
+              title: props.payOptions?.metadata?.name,
+            },
             transaction: props.payOptions.transaction,
           },
         };

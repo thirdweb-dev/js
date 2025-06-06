@@ -3,7 +3,7 @@ import type { Theme } from "../../react/core/design-system/index.js";
 import { FundWallet } from "../../react/web/ui/Bridge/FundWallet.js";
 import type { FundWalletProps } from "../../react/web/ui/Bridge/FundWallet.js";
 import { ModalThemeWrapper, storyClient } from "../utils.js";
-import { ETH, UNI, USDC } from "./fixtures.js";
+import { FUND_WALLET_UI_OPTIONS, RECEIVER_ADDRESSES } from "./fixtures.js";
 
 // Props interface for the wrapper component
 interface FundWalletWithThemeProps extends FundWalletProps {
@@ -28,19 +28,26 @@ const meta = {
     docs: {
       description: {
         component:
-          "FundWallet component allows users to specify the amount they want to add to their wallet. This is the first screen in the fund_wallet flow before method selection.",
+          "FundWallet component allows users to specify the amount they want to add to their wallet. This is the first screen in the fund_wallet flow before method selection.\n\n" +
+          "## Features\n" +
+          "- **Token Selection**: Choose from different tokens (ETH, USDC, UNI)\n" +
+          "- **Amount Input**: Enter custom amount or use quick options\n" +
+          "- **Receiver Address**: Optional receiver address (defaults to connected wallet)\n" +
+          "- **Quick Options**: Preset amounts for faster selection\n" +
+          "- **Theme Support**: Works with both light and dark themes\n\n" +
+          "This component now accepts uiOptions directly to configure the destination token, initial amount, and quick options.",
       },
     },
   },
   tags: ["autodocs"],
   args: {
-    token: ETH,
+    uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
     client: storyClient,
     onContinue: (amount, token, receiverAddress) => {
       console.log("Continue clicked:", { amount, token, receiverAddress });
       alert(`Continue with ${amount} ${token.symbol} to ${receiverAddress}`);
     },
-    receiverAddress: "0x2247d5d238d0f9d37184d8332aE0289d1aD9991b",
+    receiverAddress: RECEIVER_ADDRESSES.primary,
     theme: "dark",
   },
   argTypes: {
@@ -50,6 +57,12 @@ const meta = {
       description: "Theme for the component",
     },
     onContinue: { action: "continue clicked" },
+    uiOptions: {
+      description: "UI configuration for fund wallet mode",
+    },
+    receiverAddress: {
+      description: "Optional receiver address (defaults to connected wallet)",
+    },
   },
 } satisfies Meta<typeof FundWalletWithTheme>;
 
@@ -59,85 +72,126 @@ type Story = StoryObj<typeof meta>;
 export const Light: Story = {
   args: {
     theme: "light",
+    uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
     receiverAddress: undefined,
   },
   parameters: {
     backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story: "Default fund wallet interface in light theme with ETH token.",
+      },
+    },
   },
 };
 
 export const Dark: Story = {
   args: {
     theme: "dark",
+    uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
     receiverAddress: undefined,
   },
   parameters: {
     backgrounds: { default: "dark" },
+    docs: {
+      description: {
+        story: "Default fund wallet interface in dark theme with ETH token.",
+      },
+    },
   },
 };
 
 export const WithInitialAmount: Story = {
   args: {
     theme: "dark",
-    initialAmount: "0.001",
-    receiverAddress: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+    uiOptions: FUND_WALLET_UI_OPTIONS.ethWithAmount,
+    receiverAddress: RECEIVER_ADDRESSES.secondary,
   },
   parameters: {
     backgrounds: { default: "dark" },
+    docs: {
+      description: {
+        story:
+          "Fund wallet with pre-filled amount and specified receiver address.",
+      },
+    },
   },
 };
 
 export const WithInitialAmountLight: Story = {
   args: {
     theme: "light",
-    initialAmount: "0.001",
-    receiverAddress: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+    uiOptions: FUND_WALLET_UI_OPTIONS.ethWithAmount,
+    receiverAddress: RECEIVER_ADDRESSES.secondary,
   },
   parameters: {
     backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story:
+          "Light theme version with pre-filled amount and receiver address.",
+      },
+    },
   },
 };
 
-export const DifferentToken: Story = {
+export const USDCToken: Story = {
   args: {
     theme: "dark",
-    token: USDC,
-    initialAmount: "5",
+    uiOptions: FUND_WALLET_UI_OPTIONS.usdcDefault,
   },
   parameters: {
     backgrounds: { default: "dark" },
+    docs: {
+      description: {
+        story: "Fund wallet configured for USDC token with initial amount.",
+      },
+    },
   },
 };
 
-export const DifferentTokenLight: Story = {
+export const USDCTokenLight: Story = {
   args: {
     theme: "light",
-    token: USDC,
-    initialAmount: "5",
+    uiOptions: FUND_WALLET_UI_OPTIONS.usdcDefault,
   },
   parameters: {
     backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story: "Light theme version for USDC token funding.",
+      },
+    },
   },
 };
 
-export const ArbitrumChain: Story = {
+export const LargeAmount: Story = {
   args: {
     theme: "dark",
-    token: UNI,
-    initialAmount: "150000",
+    uiOptions: FUND_WALLET_UI_OPTIONS.uniLarge,
   },
   parameters: {
     backgrounds: { default: "dark" },
+    docs: {
+      description: {
+        story:
+          "Fund wallet with UNI token and large pre-filled amount to test formatting.",
+      },
+    },
   },
 };
 
-export const ArbitrumChainLight: Story = {
+export const LargeAmountLight: Story = {
   args: {
     theme: "light",
-    token: UNI,
-    initialAmount: "150000",
+    uiOptions: FUND_WALLET_UI_OPTIONS.uniLarge,
   },
   parameters: {
     backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story: "Light theme version with UNI token and large amount.",
+      },
+    },
   },
 };

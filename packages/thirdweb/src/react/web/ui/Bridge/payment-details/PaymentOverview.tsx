@@ -142,11 +142,11 @@ export function PaymentOverview(props: {
           >
             <Container flex="column" gap="3xs" center="y" style={{ flex: 1 }}>
               <Text size="sm" color="primaryText" style={{ fontWeight: 600 }}>
-                {props.uiOptions.paymentInfo.metadata.name}
+                {props.uiOptions.metadata?.title || "Payment"}
               </Text>
-              {props.uiOptions.paymentInfo.metadata.description && (
+              {props.uiOptions.metadata?.description && (
                 <Text size="xs" color="secondaryText">
-                  {props.uiOptions.paymentInfo.metadata.description}
+                  {props.uiOptions.metadata.description}
                 </Text>
               )}
             </Container>

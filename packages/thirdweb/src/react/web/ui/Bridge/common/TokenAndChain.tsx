@@ -6,13 +6,12 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import { resolveScheme } from "../../../../../utils/ipfs.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
-import { iconSize } from "../../../../core/design-system/index.js";
+import { iconSize, spacing } from "../../../../core/design-system/index.js";
 import {
   useChainIconUrl,
   useChainMetadata,
 } from "../../../../core/hooks/others/useChainQuery.js";
 import { genericTokenIcon } from "../../../../core/utils/walletIcon.js";
-import { CoinsIcon } from "../../ConnectWallet/icons/CoinsIcon.js";
 import { isNativeToken } from "../../ConnectWallet/screens/nativeToken.js";
 import { ChainName } from "../../components/ChainName.js";
 import { Img } from "../../components/Img.js";
@@ -105,6 +104,7 @@ export function TokenIconWithFallback(props: {
 }) {
   const chain = getCachedChain(props.token.chainId);
   const chainMeta = useChainMetadata(chain).data;
+  const theme = useCustomTheme();
 
   const tokenImage = useMemo(() => {
     if (
@@ -132,11 +132,25 @@ export function TokenIconWithFallback(props: {
     />
   ) : (
     <Container
-      center="both"
-      style={{ width: iconSize[props.size], height: iconSize[props.size] }}
-      color="secondaryText"
+      style={{
+        width: `${iconSize.md}px`,
+        height: `${iconSize.md}px`,
+        borderRadius: "50%",
+        backgroundColor: theme.colors.secondaryButtonBg,
+        border: `1px solid ${theme.colors.borderColor}`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: spacing.xs,
+      }}
     >
-      <CoinsIcon size={iconSize[props.size]} />
+      <Text
+        size={props.size === "xl" ? "sm" : "xs"}
+        color="secondaryText"
+        style={{ fontWeight: 600 }}
+      >
+        {props.token.symbol.slice(0, 1)}
+      </Text>
     </Container>
   );
 }

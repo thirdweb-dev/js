@@ -5,6 +5,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { Address } from "../../../../utils/address.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
+import type { Prettify } from "../../../../utils/type-utils.js";
 import type { BridgePrepareResult } from "../../../core/hooks/useBridgePrepare.js";
 import type { CompletedStatusResult } from "../../../core/hooks/useStepExecutor.js";
 import {
@@ -26,28 +27,32 @@ import { PaymentDetails } from "./payment-details/PaymentDetails.js";
 import { PaymentSelection } from "./payment-selection/PaymentSelection.js";
 import { SuccessScreen } from "./payment-success/SuccessScreen.js";
 
-export type UIOptions =
-  | {
-      mode: "fund_wallet";
-      destinationToken: Token;
-      initialAmount?: string;
-      quickOptions?: [number, number, number];
-    }
-  | {
-      mode: "direct_payment";
-      paymentInfo: {
-        sellerAddress: Address;
-        token: Token;
-        amount: string;
-        feePayer?: "sender" | "receiver";
-        metadata: {
-          name: string;
-          image?: string;
-          description?: string;
+export type UIOptions = Prettify<
+  {
+    metadata?: {
+      title?: string;
+      description?: string;
+      image?: string;
+    };
+  } & (
+    | {
+        mode: "fund_wallet";
+        destinationToken: Token;
+        initialAmount?: string;
+        quickOptions?: [number, number, number];
+      }
+    | {
+        mode: "direct_payment";
+        paymentInfo: {
+          sellerAddress: Address;
+          token: Token;
+          amount: string;
+          feePayer?: "sender" | "receiver";
         };
-      };
-    }
-  | { mode: "transaction"; transaction: PreparedTransaction };
+      }
+    | { mode: "transaction"; transaction: PreparedTransaction }
+  )
+>;
 
 export interface BridgeOrchestratorProps {
   /**
@@ -207,19 +212,18 @@ export function BridgeOrchestrator({
       {/* Render current screen based on state */}
       {state.value === "init" && uiOptions.mode === "fund_wallet" && (
         <FundWallet
-          token={uiOptions.destinationToken}
+          uiOptions={uiOptions}
           receiverAddress={receiverAddress}
-          initialAmount={uiOptions.initialAmount}
           client={client}
           onContinue={handleRequirementsResolved}
           connectOptions={connectOptions}
-          quickOptions={quickOptions ?? [5, 10, 20]}
+          quickOptions={quickOptions}
         />
       )}
 
       {state.value === "init" && uiOptions.mode === "direct_payment" && (
         <DirectPayment
-          paymentInfo={uiOptions.paymentInfo}
+          uiOptions={uiOptions}
           client={client}
           onContinue={handleRequirementsResolved}
           connectOptions={connectOptions}
@@ -228,7 +232,7 @@ export function BridgeOrchestrator({
 
       {state.value === "init" && uiOptions.mode === "transaction" && (
         <TransactionPayment
-          transaction={uiOptions.transaction}
+          uiOptions={uiOptions}
           client={client}
           onContinue={handleRequirementsResolved}
           connectOptions={connectOptions}

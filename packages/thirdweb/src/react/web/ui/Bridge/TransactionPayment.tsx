@@ -10,7 +10,6 @@ import { getContract } from "../../../../contract/contract.js";
 import { decimals } from "../../../../extensions/erc20/read/decimals.js";
 import { getToken } from "../../../../pay/convert/get-token.js";
 import { encode } from "../../../../transaction/actions/encode.js";
-import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { getTransactionGasCost } from "../../../../transaction/utils.js";
 import {
   type Address,
@@ -32,16 +31,18 @@ import {
 import type { PayEmbedConnectOptions } from "../PayEmbed.js";
 import { ChainName } from "../components/ChainName.js";
 import { Spacer } from "../components/Spacer.js";
-import { Container, Line, ModalHeader } from "../components/basic.js";
+import { Container, Line } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { Text } from "../components/text.js";
+import type { UIOptions } from "./BridgeOrchestrator.js";
 import { ChainIcon } from "./common/TokenAndChain.js";
+import { WithHeader } from "./common/WithHeader.js";
 
 export interface TransactionPaymentProps {
   /**
-   * The prepared transaction to execute
+   * UI configuration and mode
    */
-  transaction: PreparedTransaction;
+  uiOptions: Extract<UIOptions, { mode: "transaction" }>;
 
   /**
    * ThirdwebClient for blockchain interactions
@@ -60,7 +61,7 @@ export interface TransactionPaymentProps {
 }
 
 export function TransactionPayment({
-  transaction,
+  uiOptions,
   client,
   onContinue,
   connectOptions,
@@ -69,38 +70,38 @@ export function TransactionPayment({
   const activeAccount = useActiveAccount();
 
   // Get chain metadata for native currency symbol
-  const chainMetadata = useChainMetadata(transaction.chain);
+  const chainMetadata = useChainMetadata(uiOptions.transaction.chain);
 
   // Combined query that fetches everything in parallel
   const transactionDataQuery = useQuery({
     queryKey: [
       "transaction-data",
-      transaction.to,
-      transaction.chain.id,
-      transaction.erc20Value,
+      uiOptions.transaction.to,
+      uiOptions.transaction.chain.id,
+      uiOptions.transaction.erc20Value,
     ],
     queryFn: async () => {
       // Create contract instance for metadata fetching
       const contract = getContract({
         client,
-        chain: transaction.chain,
-        address: transaction.to as string,
+        chain: uiOptions.transaction.chain,
+        address: uiOptions.transaction.to as string,
       });
       const [contractMetadata, value, erc20Value, transactionData] =
         await Promise.all([
           getCompilerMetadata(contract).catch(() => null),
-          resolvePromisedValue(transaction.value),
-          resolvePromisedValue(transaction.erc20Value),
-          encode(transaction).catch(() => "0x"),
+          resolvePromisedValue(uiOptions.transaction.value),
+          resolvePromisedValue(uiOptions.transaction.erc20Value),
+          encode(uiOptions.transaction).catch(() => "0x"),
         ]);
 
       const [tokenInfo, gasCostWei] = await Promise.all([
         getToken(
           client,
           erc20Value ? erc20Value.tokenAddress : NATIVE_TOKEN_ADDRESS,
-          transaction.chain.id,
+          uiOptions.transaction.chain.id,
         ).catch(() => null),
-        getTransactionGasCost(transaction).catch(() => null),
+        getTransactionGasCost(uiOptions.transaction).catch(() => null),
       ]);
 
       // Process function info from ABI if available
@@ -151,7 +152,7 @@ export function TransactionPayment({
           return decimals({
             contract: getContract({
               client,
-              chain: transaction.chain,
+              chain: uiOptions.transaction.chain,
               address: erc20Value.tokenAddress,
             }),
           });
@@ -191,7 +192,7 @@ export function TransactionPayment({
         totalCostWei,
       };
     },
-    enabled: !!transaction.to && !!chainMetadata.data,
+    enabled: !!uiOptions.transaction.to && !!chainMetadata.data,
   });
 
   const contractName =
@@ -263,98 +264,9 @@ export function TransactionPayment({
 
   if (isLoading) {
     return (
-      <Container flex="column">
-        <Container flex="column" px="lg">
-          <Spacer y="lg" />
-
-          <ModalHeader title="Transaction" leftAligned />
-
-          <Spacer y="lg" />
-
-          {/* Loading Header */}
-          <SkeletonHeader />
-
-          <Spacer y="md" />
-
-          <Line />
-
-          <Spacer y="md" />
-
-          {/* Loading Rows */}
-          <SkeletonRow width="60%" />
-          <Spacer y="xs" />
-          <SkeletonRow width="40%" />
-          <Spacer y="xs" />
-          <SkeletonRow width="50%" />
-          <Spacer y="xs" />
-          <SkeletonRow width="45%" />
-          <Spacer y="xs" />
-          <SkeletonRow width="55%" />
-
-          <Spacer y="md" />
-
-          <Line />
-
-          <Spacer y="lg" />
-
-          {/* Loading Button */}
-          <div
-            style={{
-              width: "100%",
-              height: "48px",
-              backgroundColor: theme.colors.skeletonBg,
-              borderRadius: spacing.md,
-            }}
-          />
-
-          <Spacer y="md" />
-
-          <PoweredByThirdweb />
-          <Spacer y="md" />
-        </Container>
-      </Container>
-    );
-  }
-
-  return (
-    <Container flex="column">
-      <Container flex="column" px="lg">
-        <Spacer y="lg" />
-
-        <ModalHeader title="Transaction" leftAligned />
-
-        <Spacer y="lg" />
-
-        {/* Cost and Function Name section */}
-        <Container
-          flex="row"
-          center="y"
-          gap="3xs"
-          style={{
-            justifyContent: "space-between",
-          }}
-        >
-          {/* USD Value */}
-          <Text size="xl" color="primaryText" weight={700}>
-            {transactionDataQuery.data?.usdValueDisplay ||
-              transactionDataQuery.data?.txCostDisplay}
-          </Text>
-
-          {/* Function Name */}
-          <Text
-            size="md"
-            color="secondaryText"
-            style={{
-              fontFamily: "monospace",
-              textAlign: "right",
-              backgroundColor: theme.colors.tertiaryBg,
-              padding: `${spacing.xs} ${spacing.sm}`,
-              borderRadius: spacing.sm,
-            }}
-          >
-            {functionName}
-          </Text>
-        </Container>
+      <WithHeader uiOptions={uiOptions} defaultTitle="Transaction">
+        {/* Loading Header */}
+        <SkeletonHeader />
 
         <Spacer y="md" />
 
@@ -362,177 +274,254 @@ export function TransactionPayment({
 
         <Spacer y="md" />
 
-        {/* Contract Info */}
-        <Container
-          flex="row"
-          style={{
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Text size="sm" color="secondaryText">
-            Contract
-          </Text>
-          <Text size="sm" color="primaryText">
-            {contractName}
-          </Text>
-        </Container>
-
+        {/* Loading Rows */}
+        <SkeletonRow width="60%" />
         <Spacer y="xs" />
-
-        {/* Address */}
-        <Container
-          flex="row"
-          style={{
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Text size="sm" color="secondaryText">
-            Address
-          </Text>
-          <a
-            href={`https://thirdweb.com/${transaction.chain.id}/${transaction.to}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              color: theme.colors.accentText,
-              textDecoration: "none",
-              fontFamily: "monospace",
-              fontSize: fontSize.sm,
-            }}
-          >
-            {shortenAddress(transaction.to as string)}
-          </a>
-        </Container>
-
+        <SkeletonRow width="40%" />
         <Spacer y="xs" />
-
-        {/* Network */}
-        <Container
-          flex="row"
-          style={{
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Text size="sm" color="secondaryText">
-            Network
-          </Text>
-          <Container flex="row" gap="3xs" center="y">
-            <ChainIcon chain={transaction.chain} size="xs" client={client} />
-            <ChainName
-              chain={transaction.chain}
-              client={client}
-              size="sm"
-              color="primaryText"
-              short
-              style={{
-                fontFamily: "monospace",
-              }}
-            />
-          </Container>
-        </Container>
-
+        <SkeletonRow width="50%" />
         <Spacer y="xs" />
+        <SkeletonRow width="45%" />
+        <Spacer y="xs" />
+        <SkeletonRow width="55%" />
 
-        {/* Cost */}
-        {transactionDataQuery.data?.txCostDisplay && (
-          <>
-            <Container
-              flex="row"
-              style={{
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Text size="sm" color="secondaryText">
-                Cost
-              </Text>
-              <Text
-                size="sm"
-                color="primaryText"
-                style={{
-                  fontFamily: "monospace",
-                }}
-              >
-                {transactionDataQuery.data?.txCostDisplay}
-              </Text>
-            </Container>
-
-            <Spacer y="xs" />
-          </>
-        )}
-
-        {/* Network Fees */}
-        {transactionDataQuery.data?.gasCostDisplay && (
-          <>
-            <Container
-              flex="row"
-              style={{
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Text size="sm" color="secondaryText">
-                Network fees
-              </Text>
-              <Text
-                size="sm"
-                color="primaryText"
-                style={{
-                  fontFamily: "monospace",
-                }}
-              >
-                {transactionDataQuery.data?.gasCostDisplay}
-              </Text>
-            </Container>
-
-            <Spacer y="md" />
-          </>
-        )}
+        <Spacer y="md" />
 
         <Line />
 
         <Spacer y="lg" />
 
-        {/* Action Button */}
-        {activeAccount ? (
-          <Button
-            variant="primary"
-            fullWidth
-            onClick={() => {
-              if (transactionDataQuery.data?.tokenInfo) {
-                onContinue(
-                  transactionDataQuery.data.totalCost,
-                  transactionDataQuery.data.tokenInfo,
-                  getAddress(activeAccount.address),
-                );
-              }
-            }}
-            style={{
-              padding: `${spacing.sm} ${spacing.md}`,
-              fontSize: fontSize.md,
-            }}
-          >
-            {buttonLabel}
-          </Button>
-        ) : (
-          <ConnectButton
-            client={client}
-            theme={theme}
-            connectButton={{
-              label: buttonLabel,
-            }}
-            {...connectOptions}
-          />
-        )}
+        {/* Loading Button */}
+        <div
+          style={{
+            width: "100%",
+            height: "48px",
+            backgroundColor: theme.colors.skeletonBg,
+            borderRadius: spacing.md,
+          }}
+        />
 
         <Spacer y="md" />
 
         <PoweredByThirdweb />
-        <Spacer y="lg" />
+        <Spacer y="md" />
+      </WithHeader>
+    );
+  }
+
+  return (
+    <WithHeader uiOptions={uiOptions} defaultTitle="Transaction">
+      {/* Cost and Function Name section */}
+      <Container
+        flex="row"
+        center="y"
+        gap="3xs"
+        style={{
+          justifyContent: "space-between",
+        }}
+      >
+        {/* USD Value */}
+        <Text size="xl" color="primaryText" weight={700}>
+          {transactionDataQuery.data?.usdValueDisplay ||
+            transactionDataQuery.data?.txCostDisplay}
+        </Text>
+
+        {/* Function Name */}
+        <Text
+          size="md"
+          color="secondaryText"
+          style={{
+            fontFamily: "monospace",
+            textAlign: "right",
+            backgroundColor: theme.colors.tertiaryBg,
+            padding: `${spacing.xs} ${spacing.sm}`,
+            borderRadius: spacing.sm,
+          }}
+        >
+          {functionName}
+        </Text>
       </Container>
-    </Container>
+
+      <Spacer y="md" />
+
+      <Line />
+
+      <Spacer y="md" />
+
+      {/* Contract Info */}
+      <Container
+        flex="row"
+        style={{
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Text size="sm" color="secondaryText">
+          Contract
+        </Text>
+        <Text size="sm" color="primaryText">
+          {contractName}
+        </Text>
+      </Container>
+
+      <Spacer y="xs" />
+
+      {/* Address */}
+      <Container
+        flex="row"
+        style={{
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Text size="sm" color="secondaryText">
+          Address
+        </Text>
+        <a
+          href={`https://thirdweb.com/${uiOptions.transaction.chain.id}/${uiOptions.transaction.to}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            color: theme.colors.accentText,
+            textDecoration: "none",
+            fontFamily: "monospace",
+            fontSize: fontSize.sm,
+          }}
+        >
+          {shortenAddress(uiOptions.transaction.to as string)}
+        </a>
+      </Container>
+
+      <Spacer y="xs" />
+
+      {/* Network */}
+      <Container
+        flex="row"
+        style={{
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Text size="sm" color="secondaryText">
+          Network
+        </Text>
+        <Container flex="row" gap="3xs" center="y">
+          <ChainIcon
+            chain={uiOptions.transaction.chain}
+            size="xs"
+            client={client}
+          />
+          <ChainName
+            chain={uiOptions.transaction.chain}
+            client={client}
+            size="sm"
+            color="primaryText"
+            short
+            style={{
+              fontFamily: "monospace",
+            }}
+          />
+        </Container>
+      </Container>
+
+      <Spacer y="xs" />
+
+      {/* Cost */}
+      {transactionDataQuery.data?.txCostDisplay && (
+        <>
+          <Container
+            flex="row"
+            style={{
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Text size="sm" color="secondaryText">
+              Cost
+            </Text>
+            <Text
+              size="sm"
+              color="primaryText"
+              style={{
+                fontFamily: "monospace",
+              }}
+            >
+              {transactionDataQuery.data?.txCostDisplay}
+            </Text>
+          </Container>
+
+          <Spacer y="xs" />
+        </>
+      )}
+
+      {/* Network Fees */}
+      {transactionDataQuery.data?.gasCostDisplay && (
+        <>
+          <Container
+            flex="row"
+            style={{
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Text size="sm" color="secondaryText">
+              Network fees
+            </Text>
+            <Text
+              size="sm"
+              color="primaryText"
+              style={{
+                fontFamily: "monospace",
+              }}
+            >
+              {transactionDataQuery.data?.gasCostDisplay}
+            </Text>
+          </Container>
+
+          <Spacer y="md" />
+        </>
+      )}
+
+      <Line />
+
+      <Spacer y="lg" />
+
+      {/* Action Button */}
+      {activeAccount ? (
+        <Button
+          variant="primary"
+          fullWidth
+          onClick={() => {
+            if (transactionDataQuery.data?.tokenInfo) {
+              onContinue(
+                transactionDataQuery.data.totalCost,
+                transactionDataQuery.data.tokenInfo,
+                getAddress(activeAccount.address),
+              );
+            }
+          }}
+          style={{
+            padding: `${spacing.sm} ${spacing.md}`,
+            fontSize: fontSize.md,
+          }}
+        >
+          {buttonLabel}
+        </Button>
+      ) : (
+        <ConnectButton
+          client={client}
+          theme={theme}
+          connectButton={{
+            label: buttonLabel,
+          }}
+          {...connectOptions}
+        />
+      )}
+
+      <Spacer y="md" />
+
+      <PoweredByThirdweb />
+      <Spacer y="lg" />
+    </WithHeader>
   );
 }

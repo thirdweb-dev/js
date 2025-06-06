@@ -4,11 +4,7 @@ import {
   type TransactionPaymentProps,
 } from "../../react/web/ui/Bridge/TransactionPayment.js";
 import { ModalThemeWrapper, storyClient } from "../utils.js";
-import {
-  contractInteractionTransaction,
-  erc20Transaction,
-  ethTransferTransaction,
-} from "./fixtures.js";
+import { TRANSACTION_UI_OPTIONS } from "./fixtures.js";
 
 // Props interface for the wrapper component
 interface TransactionPaymentWithThemeProps extends TransactionPaymentProps {
@@ -38,15 +34,24 @@ const meta = {
     docs: {
       description: {
         component:
-          "Transaction payment component that displays detailed transaction information including contract details, function names, transaction costs, and network fees. Supports both native token and ERC20 token transactions.",
+          "Transaction payment component that displays detailed transaction information including contract details, function names, transaction costs, and network fees.\n\n" +
+          "## Features\n" +
+          "- **Contract Information**: Shows contract name and clickable address\n" +
+          "- **Function Detection**: Extracts function names from transaction data using ABI\n" +
+          "- **Cost Calculation**: Displays transaction value and USD equivalent\n" +
+          "- **Network Fees**: Shows estimated gas costs with token amounts\n" +
+          "- **Chain Details**: Network name and logo with proper formatting\n" +
+          "- **Skeleton Loading**: Comprehensive loading states matching final layout\n\n" +
+          "This component now accepts uiOptions directly to configure the transaction and metadata. Supports both native token and ERC20 token transactions with proper function name extraction.",
       },
     },
   },
   tags: ["autodocs"],
   args: {
-    transaction: ethTransferTransaction,
+    uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,
     client: storyClient,
-    onContinue: () => console.log("Execute transaction"),
+    onContinue: (amount, token, receiverAddress) =>
+      console.log("Execute transaction:", { amount, token, receiverAddress }),
     theme: "dark",
   },
   argTypes: {
@@ -55,7 +60,14 @@ const meta = {
       options: ["light", "dark"],
       description: "Theme for the component",
     },
-    onContinue: { action: "continue clicked" },
+    onContinue: {
+      action: "continue clicked",
+      description: "Called when user continues with the transaction",
+    },
+    uiOptions: {
+      description:
+        "UI configuration for transaction mode including prepared transaction",
+    },
   },
 } satisfies Meta<typeof TransactionPaymentWithTheme>;
 
@@ -64,7 +76,7 @@ type Story = StoryObj<typeof meta>;
 
 export const EthereumTransfer: Story = {
   args: {
-    transaction: ethTransferTransaction,
+    uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,
     theme: "dark",
   },
   parameters: {
@@ -72,7 +84,7 @@ export const EthereumTransfer: Story = {
     docs: {
       description: {
         story:
-          "Simple ETH transfer transaction showing native token value and network fees with USD conversion.",
+          "Simple ETH transfer transaction showing native token value and network fees with USD conversion. Demonstrates function name extraction from contract ABI.",
       },
     },
   },
@@ -80,7 +92,7 @@ export const EthereumTransfer: Story = {
 
 export const EthereumTransferLight: Story = {
   args: {
-    transaction: ethTransferTransaction,
+    uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,
     theme: "light",
   },
   parameters: {
@@ -96,7 +108,7 @@ export const EthereumTransferLight: Story = {
 
 export const ERC20TokenTransfer: Story = {
   args: {
-    transaction: erc20Transaction,
+    uiOptions: TRANSACTION_UI_OPTIONS.erc20Transfer,
     theme: "dark",
   },
   parameters: {
@@ -104,7 +116,7 @@ export const ERC20TokenTransfer: Story = {
     docs: {
       description: {
         story:
-          "ERC20 token transaction showing token amount, USD value, and proper formatting using real token data.",
+          "ERC20 token transaction showing token amount, USD value, and proper formatting using real token data. Displays transfer function details.",
       },
     },
   },
@@ -112,7 +124,7 @@ export const ERC20TokenTransfer: Story = {
 
 export const ERC20TokenTransferLight: Story = {
   args: {
-    transaction: erc20Transaction,
+    uiOptions: TRANSACTION_UI_OPTIONS.erc20Transfer,
     theme: "light",
   },
   parameters: {
@@ -128,7 +140,7 @@ export const ERC20TokenTransferLight: Story = {
 
 export const ContractInteraction: Story = {
   args: {
-    transaction: contractInteractionTransaction,
+    uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
     theme: "dark",
   },
   parameters: {
@@ -136,7 +148,7 @@ export const ContractInteraction: Story = {
     docs: {
       description: {
         story:
-          "Complex contract interaction showing function name extraction from ABI, cost calculation, and network details with proper currency formatting.",
+          "Complex contract interaction showing function name extraction from ABI (claimTo), cost calculation, and network details with proper currency formatting.",
       },
     },
   },
@@ -144,7 +156,7 @@ export const ContractInteraction: Story = {
 
 export const ContractInteractionLight: Story = {
   args: {
-    transaction: contractInteractionTransaction,
+    uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
     theme: "light",
   },
   parameters: {

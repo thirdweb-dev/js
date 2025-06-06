@@ -8,6 +8,7 @@ import {
 import { stringify } from "../../utils/json.js";
 import { ModalThemeWrapper, storyClient } from "../utils.js";
 import {
+  DIRECT_PAYMENT_UI_OPTIONS,
   STORY_MOCK_WALLET,
   USDC,
   buyWithApprovalQuote,
@@ -156,18 +157,7 @@ export const OnrampSimpleDirectPayment: Story = {
     preparedQuote: simpleOnrampQuote,
     paymentMethod: fiatPaymentMethod,
     client: storyClient,
-    uiOptions: {
-      mode: "direct_payment",
-      paymentInfo: {
-        sellerAddress: "0x5555666677778888999900001111222233334444",
-        token: USDC,
-        amount: "25",
-        metadata: {
-          name: "Thirdweb Credits",
-          image: "https://thirdweb.com/logo.png",
-        },
-      },
-    },
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.credits,
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -186,18 +176,7 @@ export const OnrampSimpleLightDirectPayment: Story = {
     preparedQuote: simpleOnrampQuote,
     paymentMethod: fiatPaymentMethod,
     client: storyClient,
-    uiOptions: {
-      mode: "direct_payment",
-      paymentInfo: {
-        sellerAddress: "0x5555666677778888999900001111222233334444",
-        token: USDC,
-        amount: "25",
-        metadata: {
-          name: "Thirdweb Credits",
-          image: "https://thirdweb.com/logo.png",
-        },
-      },
-    },
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.concertTicket,
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -285,20 +264,7 @@ export const BuySimpleDirectPayment: Story = {
     preparedQuote: simpleBuyQuote,
     paymentMethod: ethCryptoPaymentMethod,
     client: storyClient,
-    uiOptions: {
-      mode: "direct_payment",
-      paymentInfo: {
-        sellerAddress: "0x5555666677778888999900001111222233334444",
-        token: USDC,
-        amount: "25",
-        feePayer: "receiver",
-        metadata: {
-          name: "Thirdweb Credits",
-          description:
-            "Add credits to your account for future billing cycles. Credits are non-refundable and do not expire.",
-        },
-      },
-    },
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.digitalArt,
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -317,18 +283,7 @@ export const BuySimpleLightDirectPayment: Story = {
     preparedQuote: simpleBuyQuote,
     paymentMethod: ethCryptoPaymentMethod,
     client: storyClient,
-    uiOptions: {
-      mode: "direct_payment",
-      paymentInfo: {
-        sellerAddress: "0x5555666677778888999900001111222233334444",
-        token: USDC,
-        amount: "25",
-        metadata: {
-          name: "Thirdweb Credits",
-          image: "https://thirdweb.com/logo.png",
-        },
-      },
-    },
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.subscription,
   },
   parameters: {
     backgrounds: { default: "light" },

@@ -10,6 +10,7 @@ import { claimTo } from "../../extensions/erc20/drops/write/claimTo.js";
 import { transfer } from "../../extensions/erc20/write/transfer.js";
 import type { BridgePrepareResult } from "../../react/core/hooks/useBridgePrepare.js";
 import { getDefaultToken } from "../../react/core/utils/defaultTokens.js";
+import type { UIOptions } from "../../react/web/ui/Bridge/BridgeOrchestrator.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 import { storyClient } from "../utils.js";
@@ -592,3 +593,189 @@ export const contractInteractionTransaction = claimTo({
   to: "0x2247d5d238d0f9d37184d8332aE0289d1aD9991b",
   quantity: "10",
 });
+
+// ========== COMMON DUMMY DATA FOR STORYBOOK ========== //
+
+// Common receiver addresses for testing
+export const RECEIVER_ADDRESSES = {
+  primary: "0x2247d5d238d0f9d37184d8332aE0289d1aD9991b" as const,
+  secondary: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD" as const,
+  seller: "0x1234567890123456789012345678901234567890" as const,
+  subscription: "0x9876543210987654321098765432109876543210" as const,
+  physical: "0x5555666677778888999900001111222233334444" as const,
+};
+
+// Product metadata for direct payments
+export const PRODUCT_METADATA = {
+  digitalArt: {
+    name: "Premium Digital Art NFT",
+    image:
+      "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=500&h=300&fit=crop",
+    description: "This is a premium digital art by a famous artist",
+  },
+  concertTicket: {
+    name: "Concert Ticket - The Midnight Live",
+    image:
+      "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=500&h=300&fit=crop",
+    description: "Concert ticket for the upcoming show",
+  },
+  subscription: {
+    name: "Premium Streaming Service - Monthly",
+    image:
+      "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&h=300&fit=crop",
+    description:
+      "Get unlimited access to our premium streaming service with this monthly subscription. Enjoy ad-free viewing, exclusive content, and the ability to download shows for offline viewing.",
+  },
+  sneakers: {
+    name: "Limited Edition Sneakers",
+    image:
+      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&h=300&fit=crop",
+  },
+  credits: {
+    name: "Thirdweb Credits",
+    description:
+      "Add credits to your account for future billing cycles. Credits are non-refundable and do not expire.",
+  },
+};
+
+// Type aliases for better type safety
+type FundWalletUIOptions = Extract<UIOptions, { mode: "fund_wallet" }>;
+type DirectPaymentUIOptions = Extract<UIOptions, { mode: "direct_payment" }>;
+type TransactionUIOptions = Extract<UIOptions, { mode: "transaction" }>;
+
+// UI Options for FundWallet mode
+export const FUND_WALLET_UI_OPTIONS: Record<string, FundWalletUIOptions> = {
+  ethDefault: {
+    mode: "fund_wallet" as const,
+    destinationToken: ETH,
+    metadata: {
+      title: "Fund Wallet",
+      description: "Add funds to your wallet",
+    },
+  },
+  ethWithAmount: {
+    mode: "fund_wallet" as const,
+    destinationToken: ETH,
+    initialAmount: "0.001",
+    metadata: {
+      title: "Fund Wallet",
+      description: "Add funds to your wallet",
+    },
+  },
+  usdcDefault: {
+    mode: "fund_wallet" as const,
+    destinationToken: USDC,
+    initialAmount: "5",
+  },
+  uniLarge: {
+    mode: "fund_wallet" as const,
+    destinationToken: UNI,
+    initialAmount: "150000",
+    metadata: {
+      title: "Fund Wallet",
+      description: "Add UNI tokens to your wallet",
+    },
+  },
+};
+
+// UI Options for DirectPayment mode
+export const DIRECT_PAYMENT_UI_OPTIONS: Record<string, DirectPaymentUIOptions> =
+  {
+    digitalArt: {
+      mode: "direct_payment" as const,
+      paymentInfo: {
+        sellerAddress: RECEIVER_ADDRESSES.seller,
+        token: ETH,
+        amount: "0.1",
+        feePayer: "sender" as const,
+      },
+      metadata: {
+        title: "Purchase Digital Art",
+        description: "Buy premium digital art NFT",
+        image: PRODUCT_METADATA.digitalArt.image,
+      },
+    },
+    concertTicket: {
+      mode: "direct_payment" as const,
+      paymentInfo: {
+        sellerAddress: RECEIVER_ADDRESSES.primary,
+        token: USDC,
+        amount: "25.00",
+        feePayer: "receiver" as const,
+      },
+      metadata: {
+        title: "Buy Concert Ticket",
+        description: "Get your ticket for The Midnight Live",
+        image: PRODUCT_METADATA.concertTicket.image,
+      },
+    },
+    subscription: {
+      mode: "direct_payment" as const,
+      paymentInfo: {
+        sellerAddress: RECEIVER_ADDRESSES.subscription,
+        token: USDC,
+        amount: "9.99",
+        feePayer: "sender" as const,
+      },
+      metadata: {
+        title: "Subscribe to Premium",
+        description: PRODUCT_METADATA.subscription.description,
+        image: PRODUCT_METADATA.subscription.image,
+      },
+    },
+    sneakers: {
+      mode: "direct_payment" as const,
+      paymentInfo: {
+        sellerAddress: RECEIVER_ADDRESSES.physical,
+        token: ETH,
+        amount: "0.05",
+        feePayer: "receiver" as const,
+      },
+      metadata: {
+        title: "Buy Sneakers",
+        description: "Limited edition sneakers",
+        image: PRODUCT_METADATA.sneakers.image,
+      },
+    },
+    credits: {
+      mode: "direct_payment" as const,
+      paymentInfo: {
+        sellerAddress: RECEIVER_ADDRESSES.physical,
+        token: USDC,
+        amount: "25",
+        feePayer: "receiver" as const,
+      },
+      metadata: {
+        title: "Add Credits",
+        description: PRODUCT_METADATA.credits.description,
+      },
+    },
+  };
+
+// UI Options for Transaction mode
+export const TRANSACTION_UI_OPTIONS: Record<string, TransactionUIOptions> = {
+  ethTransfer: {
+    mode: "transaction" as const,
+    transaction: ethTransferTransaction,
+    metadata: {
+      title: "Execute Transaction",
+      description: "Review and execute transaction",
+    },
+  },
+  erc20Transfer: {
+    mode: "transaction" as const,
+    transaction: erc20Transaction,
+    metadata: {
+      title: "Token Transfer",
+      description: "Transfer ERC20 tokens",
+    },
+  },
+  contractInteraction: {
+    mode: "transaction" as const,
+    transaction: contractInteractionTransaction,
+    metadata: {
+      title: "Contract Interaction",
+      description: "Interact with smart contract",
+    },
+  },
+};

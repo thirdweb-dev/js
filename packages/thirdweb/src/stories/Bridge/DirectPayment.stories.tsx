@@ -5,7 +5,7 @@ import {
   type DirectPaymentProps,
 } from "../../react/web/ui/Bridge/DirectPayment.js";
 import { ModalThemeWrapper, storyClient } from "../utils.js";
-import { ETH, USDC } from "./fixtures.js";
+import { DIRECT_PAYMENT_UI_OPTIONS } from "./fixtures.js";
 
 // Props interface for the wrapper component
 interface DirectPaymentWithThemeProps extends DirectPaymentProps {
@@ -35,14 +35,16 @@ const meta = {
           "- **Product Display**: Shows product name, image, and pricing\n" +
           "- **Payment Details**: Token amount, network information, and seller address\n" +
           "- **Wallet Integration**: Connect button or continue with active wallet\n" +
-          "- **Responsive Design**: Adapts to different screen sizes and themes\n\n" +
-          "This component is used in the 'direct_payment' mode of BridgeOrchestrator for purchasing specific items or services.",
+          "- **Responsive Design**: Adapts to different screen sizes and themes\n" +
+          "- **Fee Configuration**: Support for sender or receiver paying fees\n\n" +
+          "This component is used in the 'direct_payment' mode of BridgeOrchestrator for purchasing specific items or services. It now accepts uiOptions directly to configure payment info and metadata.",
       },
     },
   },
   tags: ["autodocs"],
   args: {
     client: storyClient,
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.digitalArt,
     onContinue: (amount, token, receiverAddress) =>
       console.log("Continue with payment:", {
         amount,
@@ -61,9 +63,9 @@ const meta = {
       action: "continue clicked",
       description: "Called when user continues with the payment",
     },
-    paymentInfo: {
+    uiOptions: {
       description:
-        "Payment information including token, amount, seller, and metadata",
+        "UI configuration for direct payment mode including payment info and metadata",
     },
   },
 } satisfies Meta<typeof DirectPaymentWithTheme>;
@@ -74,24 +76,14 @@ type Story = StoryObj<typeof meta>;
 export const DigitalArt: Story = {
   args: {
     theme: "dark",
-    paymentInfo: {
-      sellerAddress: "0x1234567890123456789012345678901234567890",
-      token: ETH,
-      amount: "0.1",
-      feePayer: "sender",
-      metadata: {
-        name: "Premium Digital Art NFT",
-        image:
-          "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=500&h=300&fit=crop",
-      },
-    },
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.digitalArt,
   },
   parameters: {
     backgrounds: { default: "dark" },
     docs: {
       description: {
         story:
-          "Example of purchasing a digital art NFT with ETH payment. Shows the product image, pricing in ETH, and seller information.",
+          "Example of purchasing a digital art NFT with ETH payment. Shows the product image, pricing in ETH, and seller information with sender paying fees.",
       },
     },
   },
@@ -100,17 +92,7 @@ export const DigitalArt: Story = {
 export const DigitalArtLight: Story = {
   args: {
     theme: "light",
-    paymentInfo: {
-      sellerAddress: "0x1234567890123456789012345678901234567890",
-      token: ETH,
-      amount: "0.1",
-      feePayer: "sender",
-      metadata: {
-        name: "Premium Digital Art NFT",
-        image:
-          "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=500&h=300&fit=crop",
-      },
-    },
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.digitalArt,
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -125,25 +107,29 @@ export const DigitalArtLight: Story = {
 export const ConcertTicket: Story = {
   args: {
     theme: "dark",
-    paymentInfo: {
-      sellerAddress: "0x2247d5d238d0f9d37184d8332aE0289d1aD9991b",
-      token: USDC,
-      amount: "25.00",
-      feePayer: "receiver",
-      metadata: {
-        name: "Concert Ticket - The Midnight Live",
-
-        image:
-          "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=500&h=300&fit=crop",
-      },
-    },
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.concertTicket,
   },
   parameters: {
     backgrounds: { default: "dark" },
     docs: {
       description: {
         story:
-          "Example of purchasing a concert ticket with USDC payment. Shows different product type and stable token pricing.",
+          "Example of purchasing a concert ticket with USDC payment. Shows different product type, stable token pricing, and receiver paying fees.",
+      },
+    },
+  },
+};
+
+export const ConcertTicketLight: Story = {
+  args: {
+    theme: "light",
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.concertTicket,
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story: "Light theme version of the concert ticket purchase.",
       },
     },
   },
@@ -151,53 +137,31 @@ export const ConcertTicket: Story = {
 
 export const SubscriptionService: Story = {
   args: {
-    theme: "light",
-    paymentInfo: {
-      sellerAddress: "0x9876543210987654321098765432109876543210",
-      token: USDC,
-      amount: "9.99",
-      feePayer: "sender",
-      metadata: {
-        name: "Premium Streaming Service - Monthly",
-        image:
-          "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&h=300&fit=crop",
-      },
-    },
+    theme: "dark",
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.subscription,
   },
   parameters: {
-    backgrounds: { default: "light" },
+    backgrounds: { default: "dark" },
     docs: {
       description: {
         story:
-          "Example of a subscription service payment. Shows how the component works for recurring service payments.",
+          "Example of a subscription service payment with detailed description. Shows how the component works for recurring service payments with comprehensive product information.",
       },
     },
   },
 };
 
-export const SubscriptionServiceWithDescription: Story = {
+export const SubscriptionServiceLight: Story = {
   args: {
     theme: "light",
-    paymentInfo: {
-      sellerAddress: "0x9876543210987654321098765432109876543210",
-      token: USDC,
-      amount: "9.99",
-      feePayer: "sender",
-      metadata: {
-        name: "Premium Streaming Service - Monthly",
-        image:
-          "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&h=300&fit=crop",
-        description:
-          "Get unlimited access to our premium streaming service with this monthly subscription. Enjoy ad-free viewing, exclusive content, and the ability to download shows for offline viewing.",
-      },
-    },
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.subscription,
   },
   parameters: {
     backgrounds: { default: "light" },
     docs: {
       description: {
         story:
-          "Example of a subscription service payment. Shows how the component works for recurring service payments.",
+          "Light theme version of subscription service payment with full description text.",
       },
     },
   },
@@ -206,24 +170,29 @@ export const SubscriptionServiceWithDescription: Story = {
 export const PhysicalProduct: Story = {
   args: {
     theme: "dark",
-    paymentInfo: {
-      sellerAddress: "0x5555666677778888999900001111222233334444",
-      token: ETH,
-      amount: "0.05",
-      feePayer: "receiver",
-      metadata: {
-        name: "Limited Edition Sneakers",
-        image:
-          "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&h=300&fit=crop",
-      },
-    },
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.sneakers,
   },
   parameters: {
     backgrounds: { default: "dark" },
     docs: {
       description: {
         story:
-          "Example of purchasing physical products with crypto payments. Shows how the component adapts to different product types.",
+          "Example of purchasing physical products with crypto payments. Shows how the component adapts to different product types with ETH payment.",
+      },
+    },
+  },
+};
+
+export const PhysicalProductLight: Story = {
+  args: {
+    theme: "light",
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.sneakers,
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story: "Light theme version of physical product purchase.",
       },
     },
   },
@@ -232,24 +201,29 @@ export const PhysicalProduct: Story = {
 export const NoImage: Story = {
   args: {
     theme: "dark",
-    paymentInfo: {
-      sellerAddress: "0x5555666677778888999900001111222233334444",
-      token: USDC,
-      amount: "25",
-      feePayer: "receiver",
-      metadata: {
-        name: "Thirdweb Credits",
-        description:
-          "Add credits to your account for future billing cycles. Credits are non-refundable and do not expire.",
-      },
-    },
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.credits,
   },
   parameters: {
     backgrounds: { default: "dark" },
     docs: {
       description: {
         story:
-          "Example of purchasing physical products with crypto payments. Shows how the component adapts to different product types.",
+          "Example of purchasing digital credits without product image. Shows how the component handles text-only products with description fallback.",
+      },
+    },
+  },
+};
+
+export const NoImageLight: Story = {
+  args: {
+    theme: "light",
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.credits,
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story: "Light theme version of credits purchase without image.",
       },
     },
   },

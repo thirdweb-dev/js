@@ -17,28 +17,24 @@ import { OutlineWalletIcon } from "../ConnectWallet/icons/OutlineWalletIcon.js";
 import { WalletRow } from "../ConnectWallet/screens/Buy/swap/WalletRow.js";
 import type { PayEmbedConnectOptions } from "../PayEmbed.js";
 import { Spacer } from "../components/Spacer.js";
-import { Container, ModalHeader } from "../components/basic.js";
+import { Container } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { Input } from "../components/formElements.js";
 import { Text } from "../components/text.js";
+import type { UIOptions } from "./BridgeOrchestrator.js";
 import { TokenAndChain } from "./common/TokenAndChain.js";
+import { WithHeader } from "./common/WithHeader.js";
 
 export interface FundWalletProps {
   /**
-   * The destination token to fund
+   * UI configuration and mode
    */
-  token: Token;
+  uiOptions: Extract<UIOptions, { mode: "fund_wallet" }>;
 
   /**
    * The receiver address, defaults to the connected wallet address
    */
   receiverAddress?: Address;
-
-  /**
-   * Optional initial amount
-   */
-  initialAmount?: string;
-
   /**
    * ThirdwebClient for price fetching
    */
@@ -62,14 +58,13 @@ export interface FundWalletProps {
 
 export function FundWallet({
   client,
-  token,
   receiverAddress,
-  initialAmount = "",
+  uiOptions,
   onContinue,
-  quickOptions,
+  quickOptions = [5, 10, 20],
   connectOptions,
 }: FundWalletProps) {
-  const [amount, setAmount] = useState(initialAmount);
+  const [amount, setAmount] = useState(uiOptions.initialAmount ?? "");
   const theme = useCustomTheme();
   const account = useActiveAccount();
   const receiver = receiverAddress ?? account?.address;
@@ -110,11 +105,11 @@ export function FundWallet({
   };
 
   const handleQuickAmount = (usdAmount: number) => {
-    if (token.priceUsd === 0) {
+    if (uiOptions.destinationToken.priceUsd === 0) {
       return;
     }
     // Convert USD amount to token amount using token price
-    const tokenAmount = usdAmount / token.priceUsd;
+    const tokenAmount = usdAmount / uiOptions.destinationToken.priceUsd;
     // Format to reasonable decimal places (up to 6 decimals, remove trailing zeros)
     const formattedAmount = Number.parseFloat(
       tokenAmount.toFixed(6),
@@ -123,13 +118,10 @@ export function FundWallet({
   };
 
   return (
-    <Container flex="column" px="lg">
-      <Spacer y="lg" />
-      {/* Header */}
-      <ModalHeader title="Top up your wallet" leftAligned />
-
-      <Spacer y="lg" />
-
+    <WithHeader
+      uiOptions={uiOptions}
+      defaultTitle={`Buy ${uiOptions.destinationToken.symbol}`}
+    >
       <Container flex="column">
         {/* Token Info */}
         <Container
@@ -144,7 +136,11 @@ export function FundWallet({
             backgroundColor: theme.colors.tertiaryBg,
           }}
         >
-          <TokenAndChain token={token} client={client} size="xl" />
+          <TokenAndChain
+            token={uiOptions.destinationToken}
+            client={client}
+            size="xl"
+          />
           {/* Amount Input */}
           <Container
             flex="column"
@@ -221,39 +217,45 @@ export function FundWallet({
                 color="secondaryText"
                 style={{ textWrap: "nowrap" }}
               >
-                ≈ ${(Number(amount) * token.priceUsd).toFixed(2)}
+                ≈ $
+                {(Number(amount) * uiOptions.destinationToken.priceUsd).toFixed(
+                  2,
+                )}
               </Text>
             </Container>
           </Container>
         </Container>
 
-        <Spacer y="md" />
-
         {/* Quick Amount Buttons */}
-        <Container
-          flex="row"
-          center="x"
-          gap="xs"
-          style={{
-            justifyContent: "space-evenly",
-          }}
-        >
-          {quickOptions?.map((amount) => (
-            <Button
-              variant="outline"
-              onClick={() => handleQuickAmount(Number(amount))}
-              key={amount}
+        {quickOptions && (
+          <>
+            <Spacer y="md" />
+            <Container
+              flex="row"
+              center="x"
+              gap="xs"
               style={{
-                padding: `${spacing.sm} ${spacing.md}`,
-                fontSize: fontSize.sm,
-                flex: 1,
-                backgroundColor: theme.colors.tertiaryBg,
+                justifyContent: "space-evenly",
               }}
             >
-              ${amount}
-            </Button>
-          ))}
-        </Container>
+              {quickOptions?.map((amount) => (
+                <Button
+                  variant="outline"
+                  onClick={() => handleQuickAmount(Number(amount))}
+                  key={amount}
+                  style={{
+                    padding: `${spacing.sm} ${spacing.md}`,
+                    fontSize: fontSize.sm,
+                    flex: 1,
+                    backgroundColor: theme.colors.tertiaryBg,
+                  }}
+                >
+                  ${amount}
+                </Button>
+              ))}
+            </Container>
+          </>
+        )}
 
         <Spacer y="md" />
 
@@ -304,7 +306,11 @@ export function FundWallet({
           disabled={!isValidAmount}
           onClick={() => {
             if (isValidAmount) {
-              onContinue(amount, token, getAddress(receiver));
+              onContinue(
+                amount,
+                uiOptions.destinationToken,
+                getAddress(receiver),
+              );
             }
           }}
           style={{
@@ -312,14 +318,14 @@ export function FundWallet({
             fontSize: fontSize.md,
           }}
         >
-          Top up {amount} {token.symbol}
+          Buy {amount} {uiOptions.destinationToken.symbol}
         </Button>
       ) : (
         <ConnectButton
           client={client}
           theme={theme}
           connectButton={{
-            label: `Top up ${amount} ${token.symbol}`,
+            label: `Buy ${amount} ${uiOptions.destinationToken.symbol}`,
           }}
           {...connectOptions}
         />
@@ -329,6 +335,6 @@ export function FundWallet({
 
       <PoweredByThirdweb />
       <Spacer y="lg" />
-    </Container>
+    </WithHeader>
   );
 }

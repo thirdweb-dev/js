@@ -7,10 +7,9 @@ import {
 } from "../../react/web/ui/Bridge/BridgeOrchestrator.js";
 import { ModalThemeWrapper, storyClient } from "../utils.js";
 import {
-  ETH,
-  USDC,
-  contractInteractionTransaction,
-  erc20Transaction,
+  DIRECT_PAYMENT_UI_OPTIONS,
+  FUND_WALLET_UI_OPTIONS,
+  TRANSACTION_UI_OPTIONS,
 } from "./fixtures.js";
 
 /**
@@ -61,6 +60,7 @@ const meta = {
   tags: ["autodocs"],
   args: {
     client: storyClient,
+    uiOptions: FUND_WALLET_UI_OPTIONS.usdcDefault,
     onComplete: () => console.log("Bridge flow completed"),
     onError: (error) => console.error("Bridge error:", error),
     onCancel: () => console.log("Bridge flow cancelled"),
@@ -91,11 +91,7 @@ type Story = StoryObj<typeof meta>;
 export const Light: Story = {
   args: {
     theme: "light",
-    uiOptions: {
-      mode: "fund_wallet",
-      destinationToken: USDC,
-      initialAmount: "100",
-    },
+    uiOptions: FUND_WALLET_UI_OPTIONS.usdcDefault,
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -108,11 +104,7 @@ export const Light: Story = {
 export const Dark: Story = {
   args: {
     theme: "dark",
-    uiOptions: {
-      mode: "fund_wallet",
-      destinationToken: USDC,
-      initialAmount: "100",
-    },
+    uiOptions: FUND_WALLET_UI_OPTIONS.usdcDefault,
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -125,21 +117,7 @@ export const Dark: Story = {
 export const DirectPayment: Story = {
   args: {
     theme: "dark",
-    uiOptions: {
-      mode: "direct_payment",
-      paymentInfo: {
-        sellerAddress: "0x1234567890123456789012345678901234567890",
-        token: ETH,
-        amount: "0.0001",
-        feePayer: "sender",
-        metadata: {
-          name: "Digital Art NFT",
-          description: "This is a premium digital art by a famous artist",
-          image:
-            "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=500&h=300&fit=crop",
-        },
-      },
-    },
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.digitalArt,
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -158,21 +136,7 @@ export const DirectPayment: Story = {
 export const DirectPaymentLight: Story = {
   args: {
     theme: "light",
-    uiOptions: {
-      mode: "direct_payment",
-      paymentInfo: {
-        sellerAddress: "0x1234567890123456789012345678901234567890",
-        token: USDC,
-        amount: "0.1",
-        feePayer: "receiver",
-        metadata: {
-          name: "Concert Ticket",
-          description: "Concert ticket for the upcoming show",
-          image:
-            "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=500&h=300&fit=crop",
-        },
-      },
-    },
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.concertTicket,
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -191,10 +155,7 @@ export const DirectPaymentLight: Story = {
 export const Transaction: Story = {
   args: {
     theme: "dark",
-    uiOptions: {
-      mode: "transaction",
-      transaction: contractInteractionTransaction,
-    },
+    uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -213,10 +174,7 @@ export const Transaction: Story = {
 export const TransactionLight: Story = {
   args: {
     theme: "light",
-    uiOptions: {
-      mode: "transaction",
-      transaction: erc20Transaction,
-    },
+    uiOptions: TRANSACTION_UI_OPTIONS.erc20Transfer,
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -232,11 +190,16 @@ export const TransactionLight: Story = {
 export const CustomQuickOptions: Story = {
   args: {
     theme: "dark",
-    uiOptions: {
-      mode: "fund_wallet",
-      destinationToken: ETH,
-      initialAmount: "1",
-    },
+    uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
     quickOptions: [1, 2, 3],
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
+    docs: {
+      description: {
+        story:
+          "Fund wallet mode with custom quick options showing ETH with [1, 2, 3] preset amounts.",
+      },
+    },
   },
 };
