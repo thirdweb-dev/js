@@ -155,6 +155,7 @@ function Variant(props: {
         logout={() => {}}
         connectButton={<ConnectButtonStub />}
         createProject={() => {}}
+        createTeam={() => {}}
         client={storybookThirdwebClient}
         getInboxNotifications={getInboxNotificationsStub}
         markNotificationAsRead={markNotificationAsReadStub}

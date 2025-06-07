@@ -2,7 +2,6 @@ import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -25,6 +24,7 @@ export function TeamSelectionUI(props: {
   account: Pick<Account, "email" | "id" | "image"> | undefined;
   client: ThirdwebClient;
   isOnProjectPage: boolean;
+  createTeam: () => void;
 }) {
   const { setHoveredTeam, currentTeam, teamsAndProjects } = props;
   const pathname = usePathname();
@@ -127,15 +127,12 @@ export function TeamSelectionUI(props: {
 
             <li className="py-0.5">
               <Button
-                className="w-full justify-start gap-2 px-2 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:opacity-100"
+                className="w-full justify-start gap-2 px-2"
                 variant="ghost"
-                disabled
+                onClick={props.createTeam}
               >
                 <CirclePlusIcon className="size-4 text-link-foreground" />
                 Create Team
-                <Badge className="ml-auto" variant="secondary">
-                  Soon™️
-                </Badge>
               </Button>
             </li>
           </ul>

@@ -29,6 +29,7 @@ export type TeamHeaderCompProps = {
   logout: () => void;
   connectButton: React.ReactNode;
   createProject: (team: Team) => void;
+  createTeam: () => void;
   client: ThirdwebClient;
   accountAddress: string;
   getInboxNotifications: () => Promise<NotificationMetadata[]>;
@@ -78,6 +79,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
             teamsAndProjects={props.teamsAndProjects}
             focus="team-selection"
             createProject={props.createProject}
+            createTeam={props.createTeam}
             account={props.account}
             client={props.client}
           />
@@ -105,6 +107,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
                 teamsAndProjects={props.teamsAndProjects}
                 focus="project-selection"
                 createProject={props.createProject}
+                createTeam={props.createTeam}
                 account={props.account}
                 client={props.client}
               />
@@ -173,6 +176,9 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
             upgradeTeamLink={`/team/${currentTeam.slug}/settings`}
             account={props.account}
             client={props.client}
+            createTeam={() => {
+              alert("createTeam");
+            }}
           />
         </div>
 

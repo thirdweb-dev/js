@@ -1,5 +1,6 @@
 "use client";
 
+import { createTeam } from "@/actions/createTeam";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
@@ -7,6 +8,7 @@ import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { LazyCreateProjectDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import { useCallback, useState } from "react";
+import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { doLogout } from "../../login/auth-actions";
@@ -57,6 +59,14 @@ export function AccountHeader(props: {
         team,
         isOpen: true,
       }),
+    createTeam: async () => {
+      const result = await createTeam({});
+      if (!result.ok) {
+        toast.error("Failed to create team");
+        return;
+      }
+      router.push(`/team/${result.data.slug}`);
+    },
     account: props.account,
     client: props.client,
     accountAddress: props.accountAddress,
