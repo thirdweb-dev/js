@@ -699,8 +699,8 @@ const ButtonContainer = /* @__PURE__ */ StyledDiv(() => {
 const ShowAllWalletsIcon = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
-    width: `${iconSize.xl}px`,
-    height: `${iconSize.xl}px`,
+    width: `${iconSize.lg}px`,
+    height: `${iconSize.lg}px`,
     backgroundColor: theme.colors.tertiaryBg,
     border: `2px solid ${theme.colors.borderColor}`,
     borderRadius: radius.md,

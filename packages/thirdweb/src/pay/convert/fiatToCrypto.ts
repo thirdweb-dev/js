@@ -2,7 +2,7 @@ import type { Address } from "abitype";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { isAddress } from "../../utils/address.js";
-import { getTokenPrice } from "./get-token.js";
+import { getToken } from "./get-token.js";
 import type { SupportedFiatCurrency } from "./type.js";
 
 /**
@@ -72,11 +72,11 @@ export async function convertFiatToCrypto(
   if (!isAddress(to)) {
     throw new Error("Invalid `to`. Expected a valid EVM contract address");
   }
-  const price = await getTokenPrice(client, to, chain.id);
-  if (!price || price === 0) {
+  const token = await getToken(client, to, chain.id);
+  if (!token || token.priceUsd === 0) {
     throw new Error(
       `Error: Failed to fetch price for token ${to} on chainId: ${chain.id}`,
     );
   }
-  return { result: fromAmount / price };
+  return { result: fromAmount / token.priceUsd };
 }

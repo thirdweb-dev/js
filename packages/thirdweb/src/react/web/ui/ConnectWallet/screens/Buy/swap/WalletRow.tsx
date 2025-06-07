@@ -48,7 +48,7 @@ export function WalletRow(props: {
     : "";
   return (
     <Container flex="row" style={{ justifyContent: "space-between" }}>
-      <Container flex="row" center="y" gap="sm" color="secondaryText">
+      <Container flex="row" center="y" gap="md" color="secondaryText">
         {wallet ? (
           <WalletImage
             id={wallet.id}
@@ -58,13 +58,17 @@ export function WalletRow(props: {
         ) : (
           <OutlineWalletIcon size={iconSize[props.iconSize || "md"]} />
         )}
-        <Container flex="column" gap="4xs">
+        <Container flex="column" gap="3xs">
           {props.label ? (
             <Text size="xs" color="secondaryText">
               {props.label}
             </Text>
           ) : null}
-          <Text size={props.textSize || "xs"} color="primaryText">
+          <Text
+            size={props.textSize || "xs"}
+            color="primaryText"
+            style={{ fontWeight: 600, fontFamily: "monospace" }}
+          >
             {addressOrENS || shortenAddress(props.address)}
           </Text>
           {profile.isLoading ? (

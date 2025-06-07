@@ -496,6 +496,26 @@ export function LeftSection(props: {
               />
             </div>
           </div>
+
+          {/* Modal description */}
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="modal-description">Image</Label>
+            <Input
+              id="modal-description"
+              placeholder="Your own description here"
+              className="bg-card"
+              value={options.payOptions.description}
+              onChange={(e) =>
+                setOptions((v) => ({
+                  ...v,
+                  payOptions: {
+                    ...payOptions,
+                    description: e.target.value,
+                  },
+                }))
+              }
+            />
+          </div>
         </div>
       </CollapsibleSection>
 

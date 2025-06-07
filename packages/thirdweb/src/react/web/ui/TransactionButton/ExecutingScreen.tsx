@@ -1,9 +1,11 @@
-import { CheckCircledIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
+import { CheckIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Hex } from "viem";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { formatExplorerTxUrl } from "../../../../utils/url.js";
+import type { WindowAdapter } from "../../../core/adapters/WindowAdapter.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useChainExplorers } from "../../../core/hooks/others/useChainQuery.js";
 import { useSendTransaction } from "../../hooks/transaction/useSendTransaction.js";
@@ -11,7 +13,7 @@ import { AccentFailIcon } from "../ConnectWallet/icons/AccentFailIcon.js";
 import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
 import { Container, ModalHeader } from "../components/basic.js";
-import { Button, ButtonLink } from "../components/buttons.js";
+import { Button } from "../components/buttons.js";
 import { Text } from "../components/text.js";
 
 export function ExecutingTxScreen(props: {
@@ -19,6 +21,7 @@ export function ExecutingTxScreen(props: {
   closeModal: () => void;
   onTxSent: (data: WaitForReceiptOptions) => void;
   onBack?: () => void;
+  windowAdapter: WindowAdapter;
 }) {
   const sendTxCore = useSendTransaction({
     payModal: false,
@@ -29,6 +32,7 @@ export function ExecutingTxScreen(props: {
   const [status, setStatus] = useState<"loading" | "failed" | "sent">(
     "loading",
   );
+  const theme = useCustomTheme();
 
   const sendTx = useCallback(async () => {
     setStatus("loading");
@@ -67,15 +71,32 @@ export function ExecutingTxScreen(props: {
         {status === "loading" && <Spinner size="xxl" color="accentText" />}
         {status === "failed" && <AccentFailIcon size={iconSize["3xl"]} />}
         {status === "sent" && (
-          <Container color="success" flex="row" center="both">
-            <CheckCircledIcon
-              width={iconSize["3xl"]}
-              height={iconSize["3xl"]}
+          <Container
+            center="both"
+            flex="row"
+            style={{
+              width: "64px",
+              height: "64px",
+              borderRadius: "50%",
+              backgroundColor: theme.colors.tertiaryBg,
+              marginBottom: "16px",
+              border: `2px solid ${theme.colors.success}`,
+              animation: "successBounce 0.6s ease-out",
+            }}
+          >
+            <CheckIcon
+              width={iconSize.xl}
+              height={iconSize.xl}
+              color={theme.colors.success}
+              style={{
+                animation: "checkAppear 0.3s ease-out 0.3s both",
+              }}
             />
           </Container>
         )}
       </Container>
-      <Spacer y="lg" />
+
+      <Spacer y="md" />
 
       <Text color="primaryText" center size="lg">
         {status === "loading" && "Sending transaction"}
@@ -87,7 +108,7 @@ export function ExecutingTxScreen(props: {
         {status === "failed" && txError ? txError.message || "" : ""}
       </Text>
 
-      <Spacer y="xxl" />
+      <Spacer y="xl" />
 
       {status === "failed" && (
         <Button variant="accent" fullWidth onClick={sendTx}>
@@ -97,34 +118,66 @@ export function ExecutingTxScreen(props: {
 
       {status === "sent" && (
         <>
-          <Button variant="accent" fullWidth onClick={props.closeModal}>
-            Done
-          </Button>
           {txHash && (
             <>
-              <Spacer y="sm" />
-              <ButtonLink
+              <Button
+                variant="secondary"
                 fullWidth
-                variant="outline"
-                href={formatExplorerTxUrl(
-                  chainExplorers.explorers[0]?.url ?? "",
-                  txHash,
-                )}
-                target="_blank"
-                as="a"
-                gap="xs"
-                style={{
-                  textDecoration: "none",
-                  color: "inherit",
+                onClick={() => {
+                  props.windowAdapter.open(
+                    formatExplorerTxUrl(
+                      chainExplorers.explorers[0]?.url ?? "",
+                      txHash,
+                    ),
+                  );
                 }}
+                gap="xs"
+                color="primaryText"
               >
                 View on Explorer
                 <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
-              </ButtonLink>
+              </Button>
+              <Spacer y="sm" />
             </>
           )}
+          <Button variant="accent" fullWidth onClick={props.closeModal}>
+            Done
+          </Button>
         </>
       )}
+
+      {/* CSS Animations */}
+      <style>
+        {`
+          @keyframes successBounce {
+            0% {
+              transform: scale(0.3);
+              opacity: 0;
+            }
+            50% {
+              transform: scale(1.05);
+            }
+            70% {
+              transform: scale(0.9);
+            }
+            100% {
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+
+          @keyframes checkAppear {
+            0% {
+              transform: scale(0);
+              opacity: 0;
+            }
+            100% {
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+        `}
+      </style>
     </Container>
   );
 }

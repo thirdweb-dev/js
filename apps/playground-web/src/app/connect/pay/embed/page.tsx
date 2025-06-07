@@ -17,6 +17,7 @@ const defaultConnectOptions: PayEmbedPlaygroundOptions = {
     mode: "fund_wallet",
     title: "",
     image: "",
+    description: "",
     buyTokenAddress: NATIVE_TOKEN_ADDRESS,
     buyTokenAmount: "0.01",
     buyTokenChain: base,
