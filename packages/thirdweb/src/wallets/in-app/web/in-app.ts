@@ -297,6 +297,22 @@ import type { InAppWalletCreationOptions } from "../core/wallet/types.js";
  * });
  * ```
  *
+ * ### Set the default value for the email and phone auth options
+ *
+ * By default,the email and phone auth options will be empty. You can change this behavior by passing the auth option for phone or email as an object with the `defaultValue` property.
+ *
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ * const wallet = inAppWallet({
+ *  auth: {
+ *    options: [
+ *      { type: "email", defaultValue: "test@test.com" },
+ *      { type: "phone", defaultValue: "+5555555555" },
+ *    ]
+ *  }
+ * });
+ * ```
+ * 
  * @returns The created in-app wallet.
  * @wallet
  */
