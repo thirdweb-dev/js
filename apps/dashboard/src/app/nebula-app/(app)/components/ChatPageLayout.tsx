@@ -1,5 +1,8 @@
 import { cn } from "@/lib/utils";
+import { TWAutoConnect } from "../../../(app)/components/autoconnect";
+import { nebulaAAOptions } from "../../login/account-abstraction";
 import type { TruncatedSessionInfo } from "../api/types";
+import { nebulaAppThirdwebClient } from "../utils/nebulaThirdwebClient";
 import { ChatSidebar } from "./ChatSidebar";
 import { MobileNav } from "./NebulaMobileNav";
 
@@ -26,6 +29,11 @@ export function ChatPageLayout(props: {
       </aside>
 
       <MobileNav sessions={props.sessions} authToken={props.authToken} />
+
+      <TWAutoConnect
+        accountAbstraction={nebulaAAOptions}
+        client={nebulaAppThirdwebClient}
+      />
 
       {props.children}
     </div>
