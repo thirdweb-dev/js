@@ -39,7 +39,7 @@ export type WalletUser = UserStatus;
 
 export type InAppWalletSocialAuth = SocialAuthOption;
 export type InAppWalletOAuth = OAuthOption;
-export type AuthOptionWithOptions = {type: AuthOption, defaultValue: string };
+export type AuthOptionWithOptions = {type: 'email' | 'phone', defaultValue: string };
 export type InAppWalletAuth = AuthOption | AuthOptionWithOptions;
 export type { AuthOption };
 
