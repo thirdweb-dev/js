@@ -43,8 +43,8 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  *
  * Once connected, the component allows to:
  *
- * - Reolve ENS names and avatars
- * - Manage multipple connected wallets
+ * - Resolve ENS names and avatars
+ * - Manage multiple connected wallets
  * - Send and receive native tokens and ERC20 tokens
  * - View ERC20 tokens and NFTs
  * - Onramp, bridge and swap tokens
