@@ -95,6 +95,10 @@ export default async function TeamLayout(props: {
               name: "Usage",
             },
             {
+              path: `/team/${params.team_slug}/~/audit-log`,
+              name: "Audit Log",
+            },
+            {
               path: `/team/${params.team_slug}/~/settings`,
               name: "Settings",
             },
