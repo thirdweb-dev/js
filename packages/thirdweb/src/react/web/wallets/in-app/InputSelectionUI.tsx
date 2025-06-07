@@ -25,6 +25,7 @@ export function InputSelectionUI(props: {
   disabled?: boolean;
   defaultSmsCountryCode?: SupportedSmsCountry;
   allowedSmsCountryCodes?: SupportedSmsCountry[];
+  defaultValue?: string; 
 }) {
   const [countryCodeInfo, setCountryCodeInfo] = useState(
     props.defaultSmsCountryCode
@@ -35,7 +36,7 @@ export function InputSelectionUI(props: {
         ? getCountrySelector(props.allowedSmsCountryCodes[0])
         : "US +1",
   );
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(props.defaultValue || "");
   const [error, setError] = useState<string | undefined>();
   const [showError, setShowError] = useState(false);
 
