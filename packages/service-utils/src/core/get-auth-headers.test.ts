@@ -111,4 +111,14 @@ describe("getAuthHeaders", () => {
       Authorization: "Bearer test-jwt",
     });
   });
+
+  it("should return empty headers if no auth method and no serviceApiKey is provided", () => {
+    const headers = getAuthHeaders(defaultAuthData);
+    expect(headers).toEqual({});
+  });
+
+  it("should return empty headers if serviceApiKey is undefined and no other auth method is provided", () => {
+    const headers = getAuthHeaders(defaultAuthData, undefined);
+    expect(headers).toEqual({});
+  });
 });

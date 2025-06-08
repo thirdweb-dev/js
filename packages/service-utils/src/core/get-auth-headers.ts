@@ -9,8 +9,8 @@ import type { AuthorizationInput } from "./authorize/index.js";
  */
 export function getAuthHeaders(
   authData: AuthorizationInput,
-  serviceApiKey: string,
-): Record<string, string> {
+  serviceApiKey?: string,
+): HeadersInit {
   const { teamId, clientId, jwt, secretKey, incomingServiceApiKey } = authData;
 
   switch (true) {
@@ -18,26 +18,31 @@ export function getAuthHeaders(
     case !!secretKey:
       return {
         "x-secret-key": secretKey,
-      } as Record<string, string>;
+      };
 
     // 2. if we have a JWT AND either a teamId or clientId, we'll use the JWT for auth
     case !!(jwt && (teamId || clientId)):
       return {
         Authorization: `Bearer ${jwt}`,
-      } as Record<string, string>;
+      };
 
     // 3. if we have an incoming service api key, we'll use it
     case !!incomingServiceApiKey: {
       return {
         "x-service-api-key": incomingServiceApiKey,
-      } as Record<string, string>;
+      };
     }
 
-    // 4. if nothing else is present, we'll use the service api key
-    default: {
+    // 4. if we have a service api key provided by the service, use it
+    case !!serviceApiKey: {
       return {
         "x-service-api-key": serviceApiKey,
       };
+    }
+
+    // 5. otherwise leave auth headers empty
+    default: {
+      return {};
     }
   }
 }

@@ -20,7 +20,8 @@ export type CoreServiceConfig = {
   // if EXPLICITLY set to null, service will not be checked for authorization
   // this is meant for services that are not possible to be turned off by users, such as "social" and "analytics"
   serviceScope: ServiceName | null;
-  serviceApiKey: string;
+  // Optional. Some services pass through user-provided authentication (e.g. analytics) and should not have any authed access on their own.
+  serviceApiKey?: string;
   serviceAction?: string;
   useWalletAuth?: boolean;
   /**
