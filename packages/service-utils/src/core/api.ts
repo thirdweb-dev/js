@@ -27,12 +27,21 @@ export type CoreServiceConfig = {
    * The number of times to retry the auth request. Default = 3.
    */
   retryCount?: number;
+  /**
+   * Allow staff members to read data from this service for troubleshooting purposes. Default = false.
+   */
+  allowImpersonation?: boolean;
 };
 
 export type TeamAndProjectResponse = {
   authMethod: "secretKey" | "publishableKey" | "jwt" | "teamId";
   team: TeamResponse;
-  project?: ProjectResponse | null;
+  project?: ProjectResponse;
+  impersonatedBy?: {
+    id: string;
+    email: string;
+    // Omitting the full account details
+  };
 };
 
 export type ApiResponse = {
@@ -250,7 +259,7 @@ export async function fetchTeamAndProject(
   authData: AuthorizationInput,
   config: CoreServiceConfig,
 ): Promise<ApiResponse> {
-  const { apiUrl, serviceApiKey } = config;
+  const { apiUrl, serviceApiKey, allowImpersonation } = config;
   const { teamId, clientId } = authData;
 
   const url = new URL("/v2/keys/use", apiUrl);
@@ -259,6 +268,9 @@ export async function fetchTeamAndProject(
   }
   if (teamId) {
     url.searchParams.set("teamId", teamId);
+  }
+  if (allowImpersonation) {
+    url.searchParams.set("allowImpersonation", "true");
   }
 
   // compute the appropriate auth headers based on the auth data
