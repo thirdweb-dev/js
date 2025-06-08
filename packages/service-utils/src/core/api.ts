@@ -40,7 +40,7 @@ export type TeamAndProjectResponse = {
   impersonatedBy?: {
     id: string;
     email: string;
-    // Ommitting the full account details
+    // Omitting the full account details
   };
 };
 
