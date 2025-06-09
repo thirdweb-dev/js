@@ -47,7 +47,7 @@
   "dependencies": {
     "@confluentinc/kafka-javascript": "1.3.0",
     "aws4fetch": "1.0.20",
-    "zod": "3.25.24"
+    "zod": "3.25.56"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20250520.0",
