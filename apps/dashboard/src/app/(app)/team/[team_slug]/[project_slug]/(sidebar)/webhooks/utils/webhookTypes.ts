@@ -36,25 +36,53 @@ export const webhookFormSchema = z.object({
     .min(1, { message: "Select at least one chain" }),
   addresses: z
     .string()
-    .min(1, { message: "Addresses is required" })
-    .refine((val) => val.split(/[\,\s]+/).every((a) => isAddress(a.trim())), {
-      message: "Enter a valid address",
-    }),
+    .optional()
+    .refine(
+      (val) => {
+        if (val === undefined || val.trim() === "") {
+          return true;
+        }
+        return val
+          .split(/[\,\s]+/)
+          .filter(Boolean)
+          .every((a) => isAddress(a.trim()));
+      },
+      {
+        message: "Enter valid addresses (comma-separated) or leave empty",
+      },
+    ),
   fromAddresses: z
     .string()
     .optional()
     .refine(
-      (val) => !val || val.split(/[,\s]+/).every((a) => isAddress(a.trim())),
+      (val) => {
+        if (val === undefined || val.trim() === "") {
+          return true;
+        }
+        return val
+          .split(/[\,\s]+/)
+          .filter(Boolean)
+          .every((a) => isAddress(a.trim()));
+      },
       {
-        message: "Enter a valid address",
+        message: "Enter valid addresses (comma-separated) or leave empty",
       },
     ),
   toAddresses: z
     .string()
+    .optional()
     .refine(
-      (val) => !val || val.split(/[,\s]+/).every((a) => isAddress(a.trim())),
+      (val) => {
+        if (val === undefined || val.trim() === "") {
+          return true;
+        }
+        return val
+          .split(/[\,\s]+/)
+          .filter(Boolean)
+          .every((a) => isAddress(a.trim()));
+      },
       {
-        message: "Enter a valid address (comma-separated)",
+        message: "Enter valid addresses (comma-separated) or leave empty",
       },
     ),
   sigHash: z.string().optional(),
