@@ -61,6 +61,19 @@ export default async function Page(props: {
     return total + categoryTotal;
   }, 0);
 
+  // sort the categories by their sub-total
+  const sortedCategories = usagePreview.data.result.sort((a, b) => {
+    const aTotal = a.lineItems.reduce(
+      (sum, item) => sum + item.amountUsdCents,
+      0,
+    );
+    const bTotal = b.lineItems.reduce(
+      (sum, item) => sum + item.amountUsdCents,
+      0,
+    );
+    return bTotal - aTotal;
+  });
+
   return (
     <div className="flex flex-col gap-8">
       {usagePreview.data.planVersion < 5 && (
@@ -112,7 +125,7 @@ export default async function Page(props: {
       </Card>
 
       <div className="space-y-6">
-        {usagePreview.data.result.map((category, index) => (
+        {sortedCategories.map((category, index) => (
           <UsageCategoryDetails
             key={`${category.category}_${index}`}
             category={category}
