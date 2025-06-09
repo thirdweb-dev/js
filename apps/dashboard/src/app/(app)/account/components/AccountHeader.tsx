@@ -11,10 +11,6 @@ import type { ThirdwebClient } from "thirdweb";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { doLogout } from "../../login/auth-actions";
 import {
-  getInboxNotifications,
-  markNotificationAsRead,
-} from "../../team/components/NotificationButton/fetch-notifications";
-import {
   type AccountHeaderCompProps,
   AccountHeaderDesktopUI,
   AccountHeaderMobileUI,
@@ -60,8 +56,6 @@ export function AccountHeader(props: {
     account: props.account,
     client: props.client,
     accountAddress: props.accountAddress,
-    getInboxNotifications: getInboxNotifications,
-    markNotificationAsRead: markNotificationAsRead,
   };
 
   return (

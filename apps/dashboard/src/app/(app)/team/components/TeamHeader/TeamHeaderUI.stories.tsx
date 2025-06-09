@@ -138,9 +138,6 @@ function Variant(props: {
   const Comp =
     props.type === "mobile" ? TeamHeaderMobileUI : TeamHeaderDesktopUI;
 
-  const getInboxNotificationsStub = () => Promise.resolve([]);
-  const markNotificationAsReadStub = () => Promise.resolve();
-
   return (
     <div className="border-y bg-card">
       <Comp
@@ -156,8 +153,6 @@ function Variant(props: {
         connectButton={<ConnectButtonStub />}
         createProject={() => {}}
         client={storybookThirdwebClient}
-        getInboxNotifications={getInboxNotificationsStub}
-        markNotificationAsRead={markNotificationAsReadStub}
       />
     </div>
   );

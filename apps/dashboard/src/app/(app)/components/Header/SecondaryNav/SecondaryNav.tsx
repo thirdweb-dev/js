@@ -2,10 +2,7 @@ import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import Link from "next/link";
 import type React from "react";
 import type { ThirdwebClient } from "thirdweb";
-import {
-  NotificationButtonUI,
-  type NotificationMetadata,
-} from "../../../team/components/NotificationButton/NotificationButton";
+import { NotificationsButton } from "../../../../../@/components/blocks/notifications/notification-button";
 import { ResourcesDropdownButton } from "./ResourcesDropdownButton";
 import { AccountButton } from "./account-button.client";
 
@@ -15,17 +12,12 @@ export function SecondaryNav(props: {
   connectButton: React.ReactNode;
   client: ThirdwebClient;
   accountAddress: string;
-  getInboxNotifications: () => Promise<NotificationMetadata[]>;
-  markNotificationAsRead: (id: string) => Promise<void>;
 }) {
   return (
     <div className="flex items-center gap-6">
       <SecondaryNavLinks />
       <div className="flex items-center gap-3">
-        <NotificationButtonUI
-          getInboxNotifications={props.getInboxNotifications}
-          markNotificationAsRead={props.markNotificationAsRead}
-        />
+        <NotificationsButton accountId={props.account.id} />
         <AccountButton
           logout={props.logout}
           connectButton={props.connectButton}
