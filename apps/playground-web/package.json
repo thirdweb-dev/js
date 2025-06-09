@@ -52,7 +52,7 @@
   "devDependencies": {
     "@types/node": "22.14.1",
     "@types/react": "19.1.4",
-    "@types/react-dom": "19.1.5",
+    "@types/react-dom": "19.1.6",
     "autoprefixer": "^10.4.21",
     "eslint": "8.57.0",
     "eslint-config-biome": "1.9.4",
