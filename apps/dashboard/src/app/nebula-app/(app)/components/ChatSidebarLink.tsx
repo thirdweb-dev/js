@@ -61,7 +61,7 @@ export function ChatSidebarLink(props: {
       <Popover>
         <PopoverTrigger asChild>
           <Button
-            className="-translate-y-1/2 absolute top-1/2 right-1 z-10 h-auto w-auto bg-accent p-1 opacity-0 hover:bg-zinc-300 group-hover:opacity-100 dark:hover:bg-zinc-700"
+            className="-translate-y-1/2 absolute top-1/2 right-1 z-10 h-auto w-auto bg-accent p-1 opacity-100 group-hover:opacity-100 lg:opacity-0 lg:hover:bg-zinc-300 lg:dark:hover:bg-zinc-700"
             variant="ghost"
           >
             <EllipsisIcon className="size-4" />

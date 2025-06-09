@@ -78,7 +78,7 @@ export async function deleteSession(params: {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to update session");
+    throw new Error("Failed to delete session");
   }
   const data = await res.json();
 
@@ -95,7 +95,7 @@ export async function getSessions(params: {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to update session");
+    throw new Error("Failed to get sessions");
   }
   const data = await res.json();
 
@@ -113,7 +113,7 @@ export async function getSessionById(params: {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to update session");
+    throw new Error("Failed to get session by id");
   }
   const data = await res.json();
 

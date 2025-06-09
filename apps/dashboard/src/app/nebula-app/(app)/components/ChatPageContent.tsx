@@ -374,6 +374,7 @@ export function ChatPageContent(props: {
                   }}
                   allowImageUpload={true}
                   onLoginClick={undefined}
+                  session={props.session}
                 />
               </div>
             </div>

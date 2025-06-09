@@ -44,7 +44,8 @@ import {
 import { shortenAddress } from "thirdweb/utils";
 import type { Wallet } from "thirdweb/wallets";
 import type { NebulaContext } from "../api/chat";
-import type { NebulaUserMessage } from "../api/types";
+import type { NebulaUserMessage, SessionInfo } from "../api/types";
+import { ShareChatDialog } from "./ShareChatDialog";
 
 export type WalletMeta = {
   walletId: Wallet["id"];
@@ -73,6 +74,8 @@ export function ChatBar(props: {
   setActiveWallet: (wallet: WalletMeta) => void;
   isConnectingWallet: boolean;
   allowImageUpload: boolean;
+  allowShare?: boolean;
+  session?: SessionInfo;
   onLoginClick: undefined | (() => void);
   placeholder: string;
 }) {
@@ -341,6 +344,7 @@ export function ChatBar(props: {
 
             {/* right */}
             <div className="flex items-center gap-2">
+              {props.session && <ShareChatDialog session={props.session} />}
               {props.allowImageUpload ? (
                 <ImageUploadButton
                   multiple
