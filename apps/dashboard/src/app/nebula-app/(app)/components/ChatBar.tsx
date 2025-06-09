@@ -74,7 +74,6 @@ export function ChatBar(props: {
   setActiveWallet: (wallet: WalletMeta) => void;
   isConnectingWallet: boolean;
   allowImageUpload: boolean;
-  allowShare?: boolean;
   session?: SessionInfo;
   onLoginClick: undefined | (() => void);
   placeholder: string;
