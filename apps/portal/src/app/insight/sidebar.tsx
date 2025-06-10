@@ -65,7 +65,7 @@ export const sidebar: SideBar = {
       icon: <WebhookIcon />,
       links: [
         {
-          name: "Getting Started",
+          name: "Get Started",
           href: `${insightSlug}/webhooks`,
         },
         {

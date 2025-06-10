@@ -13,10 +13,10 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { CancelPlanButton } from "components/settings/Account/Billing/CancelPlanModal/CancelPlanModal";
 import { BillingPricing } from "components/settings/Account/Billing/Pricing";
-import { differenceInDays, isAfter } from "date-fns";
-import { format } from "date-fns/format";
+import { differenceInDays, format, isAfter } from "date-fns";
 import { CreditCardIcon, FileTextIcon, SquarePenIcon } from "lucide-react";
 import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
@@ -30,6 +30,7 @@ export function PlanInfoCardUI(props: {
   getTeam: () => Promise<Team>;
   openPlanSheetButtonByDefault: boolean;
   highlightPlan: Team["billingPlan"] | undefined;
+  isOwnerAccount: boolean;
 }) {
   const { subscriptions, team, openPlanSheetButtonByDefault } = props;
   const validPlan = getValidTeamPlan(team);
@@ -66,12 +67,7 @@ export function PlanInfoCardUI(props: {
           <div className="flex flex-col items-start gap-0.5">
             <div className="flex items-center gap-2">
               <h3 className="font-semibold text-2xl capitalize tracking-tight">
-                {validPlan === "growth_legacy"
-                  ? "Growth"
-                  : validPlan === "starter_legacy"
-                    ? "Starter"
-                    : validPlan}{" "}
-                Plan
+                {validPlan === "growth_legacy" ? "Growth" : validPlan} Plan
               </h3>
               {validPlan.includes("legacy") && (
                 <Badge variant="warning">Legacy</Badge>
@@ -112,32 +108,57 @@ export function PlanInfoCardUI(props: {
 
         {props.team.billingPlan !== "free" && (
           <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-2 bg-background"
-              onClick={() => {
-                setIsPlanSheetOpen(true);
-              }}
+            <ToolTipLabel
+              label={
+                props.isOwnerAccount
+                  ? null
+                  : "Only team owners can change plans."
+              }
             >
-              <SquarePenIcon className="size-4 text-muted-foreground" />
-              Change Plan
-            </Button>
+              <div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 bg-background"
+                  onClick={() => {
+                    setIsPlanSheetOpen(true);
+                  }}
+                  disabled={!props.isOwnerAccount}
+                >
+                  <SquarePenIcon className="size-4 text-muted-foreground" />
+                  Change Plan
+                </Button>
+              </div>
+            </ToolTipLabel>
 
-            {props.team.planCancellationDate ? (
-              <RenewSubscriptionButton
-                teamId={props.team.id}
-                getTeam={props.getTeam}
-              />
-            ) : (
-              <CancelPlanButton
-                teamId={props.team.id}
-                teamSlug={props.team.slug}
-                billingStatus={props.team.billingStatus}
-                currentPlan={props.team.billingPlan}
-                getTeam={props.getTeam}
-              />
-            )}
+            <ToolTipLabel
+              label={
+                props.isOwnerAccount
+                  ? null
+                  : props.team.planCancellationDate
+                    ? "Only team owners can renew plans."
+                    : "Only team owners can cancel plans."
+              }
+            >
+              <div>
+                {props.team.planCancellationDate ? (
+                  <RenewSubscriptionButton
+                    teamId={props.team.id}
+                    getTeam={props.getTeam}
+                    disabled={!props.isOwnerAccount}
+                  />
+                ) : (
+                  <CancelPlanButton
+                    teamId={props.team.id}
+                    teamSlug={props.team.slug}
+                    billingStatus={props.team.billingStatus}
+                    currentPlan={props.team.billingPlan}
+                    getTeam={props.getTeam}
+                    disabled={!props.isOwnerAccount}
+                  />
+                )}
+              </div>
+            </ToolTipLabel>
           </div>
         )}
       </div>
@@ -153,20 +174,35 @@ export function PlanInfoCardUI(props: {
               To unlock additional usage, upgrade your plan to Starter or
               Growth.
             </p>
+
             <div className="mt-4">
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => {
-                  setIsPlanSheetOpen(true);
-                }}
+              <ToolTipLabel
+                label={
+                  props.isOwnerAccount
+                    ? null
+                    : "Only team owners can change plans."
+                }
               >
-                Select a plan
-              </Button>
+                <div>
+                  <Button
+                    disabled={!props.isOwnerAccount}
+                    variant="default"
+                    size="sm"
+                    onClick={() => {
+                      setIsPlanSheetOpen(true);
+                    }}
+                  >
+                    Select a plan
+                  </Button>
+                </div>
+              </ToolTipLabel>
             </div>
           </div>
         ) : (
-          <BillingInfo subscriptions={subscriptions} />
+          <BillingInfo
+            subscriptions={subscriptions}
+            teamSlug={props.team.slug}
+          />
         )}
       </div>
 
@@ -174,8 +210,8 @@ export function PlanInfoCardUI(props: {
         <div className="flex flex-col gap-4 border-t p-4 lg:flex-row lg:items-center lg:justify-between lg:p-6">
           <p className="text-muted-foreground text-sm">
             <span>
-              Adjust your plan here to avoid unnecessary charges.{" "}
-              <br className="max-sm:hidden" /> For more details, See{" "}
+              Adjust your plan to avoid unnecessary charges.{" "}
+              <br className="max-sm:hidden" /> For more details, see{" "}
             </span>
             <span>
               <UnderlineLink
@@ -203,17 +239,28 @@ export function PlanInfoCardUI(props: {
             </Button>
 
             {/* manage team billing */}
-            <BillingPortalButton
-              teamSlug={team.slug}
-              buttonProps={{
-                variant: "outline",
-                size: "sm",
-                className: "bg-background gap-2",
-              }}
+            <ToolTipLabel
+              label={
+                props.isOwnerAccount
+                  ? null
+                  : "Only team owners can manage billing."
+              }
             >
-              <CreditCardIcon className="size-4 text-muted-foreground" />
-              Manage Billing
-            </BillingPortalButton>
+              <div>
+                <BillingPortalButton
+                  teamSlug={team.slug}
+                  buttonProps={{
+                    variant: "outline",
+                    size: "sm",
+                    className: "bg-background gap-2",
+                    disabled: !props.isOwnerAccount,
+                  }}
+                >
+                  <CreditCardIcon className="size-4 text-muted-foreground" />
+                  Manage Billing
+                </BillingPortalButton>
+              </div>
+            </ToolTipLabel>
           </div>
         </div>
       )}
@@ -223,8 +270,10 @@ export function PlanInfoCardUI(props: {
 
 function BillingInfo({
   subscriptions,
+  teamSlug,
 }: {
   subscriptions: TeamSubscription[];
+  teamSlug: string;
 }) {
   const planSubscription = subscriptions.find(
     (subscription) => subscription.type === "PLAN",
@@ -237,7 +286,7 @@ function BillingInfo({
   return (
     <div>
       {planSubscription && (
-        <SubscriptionOverview subscription={planSubscription} />
+        <SubscriptionOverview title="Plan" subscription={planSubscription} />
       )}
 
       {usageSubscription && (
@@ -245,7 +294,20 @@ function BillingInfo({
           <Separator className="my-4" />
           <SubscriptionOverview
             subscription={usageSubscription}
-            title="On-Demand Charges"
+            title={
+              <div className="flex items-center">
+                <h5 className="mr-1 font-medium text-base">Usage</h5>{" "}
+                <span className="text-muted-foreground text-sm">
+                  -{" "}
+                  <Link
+                    className="hover:underline"
+                    href={`/team/${teamSlug}/~/usage`}
+                  >
+                    View Breakdown
+                  </Link>
+                </span>
+              </div>
+            }
           />
         </>
       )}
@@ -255,7 +317,7 @@ function BillingInfo({
 
 function SubscriptionOverview(props: {
   subscription: TeamSubscription;
-  title?: string;
+  title?: string | React.ReactNode;
 }) {
   const { subscription } = props;
 
@@ -263,9 +325,12 @@ function SubscriptionOverview(props: {
     <div>
       <div className="flex items-center justify-between gap-6">
         <div>
-          {props.title && (
-            <h5 className="font-medium text-base">{props.title}</h5>
-          )}
+          {props.title &&
+            (typeof props.title === "string" ? (
+              <h5 className="font-medium text-base">{props.title}</h5>
+            ) : (
+              props.title
+            ))}
           <p className="text-muted-foreground text-sm">
             {format(
               new Date(props.subscription.currentPeriodStart),

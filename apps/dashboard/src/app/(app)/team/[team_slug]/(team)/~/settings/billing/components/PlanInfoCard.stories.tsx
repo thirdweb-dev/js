@@ -24,12 +24,6 @@ export const Free: Story = {
   },
 };
 
-export const StarterLegacy: Story = {
-  args: {
-    plan: "starter_legacy",
-  },
-};
-
 export const Starter: Story = {
   args: {
     plan: "starter",
@@ -120,6 +114,7 @@ function Story(props: {
           getTeam={teamTeamStub}
           highlightPlan={undefined}
           openPlanSheetButtonByDefault={false}
+          isOwnerAccount={true}
         />
       </BadgeContainer>
 
@@ -133,6 +128,7 @@ function Story(props: {
           getTeam={teamTeamStub}
           highlightPlan={undefined}
           openPlanSheetButtonByDefault={false}
+          isOwnerAccount={true}
         />
       </BadgeContainer>
 
@@ -143,6 +139,7 @@ function Story(props: {
           getTeam={teamTeamStub}
           highlightPlan={undefined}
           openPlanSheetButtonByDefault={false}
+          isOwnerAccount={true}
         />
       </BadgeContainer>
 
@@ -153,6 +150,7 @@ function Story(props: {
           getTeam={teamTeamStub}
           highlightPlan={undefined}
           openPlanSheetButtonByDefault={false}
+          isOwnerAccount={true}
         />
       </BadgeContainer>
 
@@ -163,6 +161,7 @@ function Story(props: {
           getTeam={teamTeamStub}
           highlightPlan={undefined}
           openPlanSheetButtonByDefault={false}
+          isOwnerAccount={true}
         />
       </BadgeContainer>
     </div>

@@ -33,7 +33,6 @@ function Variants() {
 
   const plans: Team["billingPlan"][] = [
     "free",
-    "starter_legacy",
     "starter",
     "growth_legacy",
     "growth",

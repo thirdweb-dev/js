@@ -45,17 +45,35 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, disabled, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
+
+    // "button" elements automatically handle the `disabled` attribute.
+    // For non-button elements rendered via `asChild` (e.g. <a>), we still want
+    // to visually convey the disabled state and prevent user interaction.
+    // We do that by conditionally adding the same utility classes that the
+    // `disabled:` pseudo-variant would normally apply and by setting
+    // `aria-disabled` for accessibility.
+    const disabledClass = disabled ? "pointer-events-none opacity-50" : "";
+
     const btnOnlyProps =
       Comp === "button"
-        ? { type: props.type || ("button" as const) }
+        ? {
+            type:
+              (props as React.ButtonHTMLAttributes<HTMLButtonElement>).type ||
+              ("button" as const),
+          }
         : undefined;
 
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(
+          buttonVariants({ variant, size, className }),
+          disabledClass,
+        )}
         ref={ref}
+        aria-disabled={disabled ? true : undefined}
+        disabled={disabled}
         {...props}
         {...btnOnlyProps}
       />

@@ -15,7 +15,7 @@ import {
 } from "@3rdweb-sdk/react/hooks/useEmbeddedWallets";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
-import { format } from "date-fns/format";
+import { format } from "date-fns";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import Papa from "papaparse";
 import { useCallback, useMemo, useState } from "react";

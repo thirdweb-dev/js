@@ -47,13 +47,7 @@ export async function createWebhook(props: {
   secret?: string;
 }) {
   const authToken = await getAuthToken();
-  console.log(
-    "UB_BASE_URL",
-    UB_BASE_URL,
-    props.clientId,
-    props.teamId,
-    authToken,
-  );
+
   const res = await fetch(`${UB_BASE_URL}/v1/developer/webhooks`, {
     method: "POST",
     body: JSON.stringify({

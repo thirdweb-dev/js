@@ -46,7 +46,7 @@ export default async function AccountLayout(props: {
         />
         {props.children}
       </div>
-      <TWAutoConnect />
+      <TWAutoConnect client={client} />
       <AppFooter />
     </div>
   );

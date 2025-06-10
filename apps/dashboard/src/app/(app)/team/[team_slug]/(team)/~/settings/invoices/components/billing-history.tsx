@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -18,7 +19,6 @@ import {
   DownloadIcon,
   ReceiptIcon,
 } from "lucide-react";
-import Link from "next/link";
 import { useQueryState } from "nuqs";
 import { useTransition } from "react";
 import type Stripe from "stripe";
@@ -30,6 +30,7 @@ export function BillingHistory(props: {
   invoices: Stripe.Invoice[];
   status: "all" | "past_due" | "open";
   hasMore: boolean;
+  isOwnerAccount: boolean;
 }) {
   const [isLoading, startTransition] = useTransition();
   const [cursor, setCursor] = useQueryState(
@@ -128,27 +129,58 @@ export function BillingHistory(props: {
                     {invoice.status === "open" && (
                       <>
                         {/* always show the crypto payment button */}
-                        <Button variant="default" size="sm" asChild>
-                          <Link
-                            target="_blank"
-                            href={`/checkout/${props.teamSlug}/invoice?invoice_id=${invoice.id}`}
-                          >
-                            <ThirdwebMiniLogo className="mr-2 h-4 w-4" />
-                            Pay with crypto
-                          </Link>
-                        </Button>
+                        <ToolTipLabel
+                          label={
+                            props.isOwnerAccount
+                              ? null
+                              : "Only team owners can pay invoices."
+                          }
+                        >
+                          <div>
+                            <Button
+                              variant="default"
+                              size="sm"
+                              asChild
+                              disabled={!props.isOwnerAccount}
+                            >
+                              <a
+                                target="_blank"
+                                href={`/checkout/${props.teamSlug}/invoice?invoice_id=${invoice.id}`}
+                                rel="noopener noreferrer"
+                              >
+                                <ThirdwebMiniLogo className="mr-2 h-4 w-4" />
+                                Pay with crypto
+                              </a>
+                            </Button>
+                          </div>
+                        </ToolTipLabel>
                         {/* if we have a hosted invoice url, show that */}
                         {invoice.hosted_invoice_url && (
-                          <Button variant="outline" size="sm" asChild>
-                            <a
-                              href={invoice.hosted_invoice_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <CreditCardIcon className="mr-2 h-4 w-4" />
-                              Pay with Card
-                            </a>
-                          </Button>
+                          <ToolTipLabel
+                            label={
+                              props.isOwnerAccount
+                                ? null
+                                : "Only team owners can pay invoices."
+                            }
+                          >
+                            <div>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                asChild
+                                disabled={!props.isOwnerAccount}
+                              >
+                                <a
+                                  href={invoice.hosted_invoice_url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <CreditCardIcon className="mr-2 h-4 w-4" />
+                                  Pay with Card
+                                </a>
+                              </Button>
+                            </div>
+                          </ToolTipLabel>
                         )}
                       </>
                     )}

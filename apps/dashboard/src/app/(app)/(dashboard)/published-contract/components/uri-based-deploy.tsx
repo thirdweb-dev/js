@@ -1,10 +1,9 @@
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { CustomContractForm } from "components/contract-components/contract-deploy-form/custom-contract";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
-import { getAuthToken } from "../../../api/lib/getAuthToken";
+import { getUserThirdwebClient } from "../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../login/loginRedirect";
 
 type DeployFormForUriProps = {
@@ -21,9 +20,14 @@ export async function DeployFormForUri(props: DeployFormForUriProps) {
     return <div>Could not fetch metadata</div>;
   }
 
-  const [authToken, teams] = await Promise.all([getAuthToken(), getTeams()]);
+  const [teams, client] = await Promise.all([
+    getTeams(),
+    getUserThirdwebClient({
+      teamId: undefined,
+    }),
+  ]);
 
-  if (!teams || !authToken) {
+  if (!teams) {
     loginRedirect(pathname);
   }
 
@@ -43,11 +47,6 @@ export async function DeployFormForUri(props: DeployFormForUriProps) {
     })),
   );
 
-  const client = getClientThirdwebClient({
-    jwt: authToken,
-    teamId: undefined,
-  });
-
   // TODO: remove the `ChakraProviderSetup` wrapper once the form is updated to no longer use chakra
   return (
     <ChakraProviderSetup>
@@ -55,7 +54,7 @@ export async function DeployFormForUri(props: DeployFormForUriProps) {
         metadata={contractMetadata}
         metadataNoFee={contractMetadataNoFee}
         modules={modules?.filter((m) => m !== null)}
-        isLoggedIn={!!authToken}
+        isLoggedIn={true}
         teamsAndProjects={teamsAndProjects}
         client={client}
       />

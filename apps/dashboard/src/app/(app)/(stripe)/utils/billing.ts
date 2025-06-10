@@ -7,11 +7,14 @@ import { getAuthToken } from "../../api/lib/getAuthToken";
 export async function getBillingCheckoutUrl(options: {
   teamSlug: string;
   sku: Exclude<ProductSKU, null>;
-}): Promise<string | undefined> {
+}) {
   const token = await getAuthToken();
 
   if (!token) {
-    return undefined;
+    return {
+      status: "error",
+      error: "You are not logged in",
+    } as const;
   }
 
   const res = await fetch(
@@ -29,16 +32,43 @@ export async function getBillingCheckoutUrl(options: {
     },
   );
   if (!res.ok) {
-    console.error("Failed to create checkout link", await res.json());
-    return undefined;
+    const text = await res.text();
+    console.error("Failed to create checkout link", text, res.status);
+    switch (res.status) {
+      case 402: {
+        return {
+          status: "error",
+          error:
+            "You have outstanding invoices, please pay these first before re-subscribing.",
+        } as const;
+      }
+      case 429: {
+        return {
+          status: "error",
+          error: "Too many requests, please try again later.",
+        } as const;
+      }
+      default: {
+        return {
+          status: "error",
+          error: "An unknown error occurred, please try again later.",
+        } as const;
+      }
+    }
   }
 
   const json = await res.json();
   if (!json.result) {
-    return undefined;
+    return {
+      status: "error",
+      error: "An unknown error occurred, please try again later.",
+    } as const;
   }
 
-  return json.result as string;
+  return {
+    status: "success",
+    data: json.result as string,
+  } as const;
 }
 
 export async function getPlanCancelUrl(options: {

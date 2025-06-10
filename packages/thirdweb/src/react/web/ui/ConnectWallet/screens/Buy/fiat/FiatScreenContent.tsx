@@ -112,6 +112,8 @@ export function FiatScreenContent(props: {
           fromAddress: payer.account.address,
           paymentLinkId: paymentLinkId,
           preferredProvider: preferredProvider ?? supportedProviders[0],
+          onrampChainId: buyWithFiatOptions?.onrampChainId,
+          onrampTokenAddress: buyWithFiatOptions?.onrampTokenAddress,
         }
       : undefined,
   );

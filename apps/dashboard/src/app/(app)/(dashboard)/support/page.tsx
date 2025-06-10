@@ -2,15 +2,14 @@ import { getTeams } from "@/api/team";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpenIcon, ChevronRightIcon } from "lucide-react";
+import { HomeIcon, WalletIcon } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
-import accountIcon from "../../../../../public/assets/support/account.svg";
-import contractsIcon from "../../../../../public/assets/support/contracts.png";
-import engineIcon from "../../../../../public/assets/support/engine.png";
-import miscIcon from "../../../../../public/assets/support/misc.svg";
-import connectIcon from "../../../../../public/assets/support/wallets.png";
+import { EngineIcon } from "../../(dashboard)/(chain)/components/server/icons/EngineIcon";
+import { InsightIcon } from "../../(dashboard)/(chain)/components/server/icons/InsightIcon";
+import { PayIcon } from "../../(dashboard)/(chain)/components/server/icons/PayIcon";
 import { CustomChatButton } from "../../../nebula-app/(app)/components/CustomChat/CustomChatButton";
+import { NebulaIcon } from "../../../nebula-app/(app)/icons/NebulaIcon";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,
@@ -24,97 +23,41 @@ export const metadata: Metadata = {
 };
 const HELP_PRODUCTS = [
   {
-    title: "Connect",
-    icon: connectIcon,
-    viewAllUrl: "https://support.thirdweb.com/wallets/dwWCB7ZD5sNcHEAj4rFFui",
-    helpArticles: [
-      {
-        title: "Account Abstraction FAQ",
-        url: "https://support.thirdweb.com/wallets/dwWCB7ZD5sNcHEAj4rFFui/smart-wallet-faqs/64y68nzTQkUZw6r6FryFgK",
-      },
-      {
-        title: "In-App Wallet FAQ",
-        url: "https://support.thirdweb.com/wallets/dwWCB7ZD5sNcHEAj4rFFui/embedded-wallet-faqs/rhkKeknMUEdyDbRPnLFz1s",
-      },
-    ],
+    title: "Playground",
+    icon: HomeIcon,
+    viewAllUrl:
+      "https://playground.thirdweb.com/connect/sign-in/button?tab=code",
+    description: "Try out our interactive playground to get started",
   },
   {
-    title: "Contracts",
-    icon: contractsIcon,
-    viewAllUrl:
-      "https://support.thirdweb.com/smart-contracts/rtHYyzspnPaHmmANmJQz1k/",
-    helpArticles: [
-      {
-        title: "Contract Verification",
-        url: "https://support.thirdweb.com/how-to/vGcHXQ7tHXuSJf7jaL2y5Q/how-to-verify-a-contract-using-thirdweb-sdk/cTwpMSQveggnMSwXGRKzXv",
-      },
-      {
-        title: "Batch Upload Troubleshooting",
-        url: "https://support.thirdweb.com/smart-contracts/rtHYyzspnPaHmmANmJQz1k/batch-upload-troubleshooting/5WMQFqfaUTU1C8NM8FtJ2X",
-      },
-      {
-        title: "Contract Verification with Blockscout API",
-        url: "https://support.thirdweb.com/other-faqs/tFbbEYCSbJ1GTeXoPs4QFw/blockscout-api-contract-verification/qpa9r79QkgH31HFsvGissC",
-      },
-    ],
+    title: "Connect",
+    icon: WalletIcon,
+    viewAllUrl: "https://portal.thirdweb.com/connect",
+    description: "Wallets, auth, and onchain interactions",
+  },
+  {
+    title: "Universal Bridge",
+    icon: PayIcon,
+    viewAllUrl: "https://portal.thirdweb.com/pay",
+    description: "Bridge and onramp tokens on any chain",
   },
   {
     title: "Engine",
-    icon: engineIcon,
-    viewAllUrl:
-      "https://support.thirdweb.com/infrastructure/eRgkLPBdL1WJJLzAbuWrPZ",
-    helpArticles: [
-      {
-        title: "Storage FAQ",
-        url: "https://support.thirdweb.com/other-faqs/tFbbEYCSbJ1GTeXoPs4QFw/storage-faqs/8nhnidc5B9K5js9pU2RBwa",
-      },
-      {
-        title: "RPC Edge FAQ",
-        url: "https://support.thirdweb.com/other-faqs/tFbbEYCSbJ1GTeXoPs4QFw/rpc-edge-faqs/r3kJ3PK2UHUDJ1LWfM8a2D",
-      },
-      {
-        title: "Add Custom RPC to your app",
-        url: "https://support.thirdweb.com/how-to/vGcHXQ7tHXuSJf7jaL2y5Q/how-to-add-a-custom-rpc-url-into-your-front-end-backend-or-dashboard/gWYPf4QhPd9M2qzuMnMf7o",
-      },
-    ],
+    icon: EngineIcon,
+    viewAllUrl: "https://portal.thirdweb.com/engine/v3",
+    description: "Reliable transactions and monitoring",
   },
   {
-    title: "Account",
-    icon: accountIcon,
-    viewAllUrl: "https://portal.thirdweb.com/account",
-    helpArticles: [
-      {
-        title: "Manage billing",
-        url: "https://portal.thirdweb.com/account/billing/manage-billing",
-      },
-      {
-        title: "Upgrade plans",
-        url: "https://portal.thirdweb.com/account/billing/upgrade-plan",
-      },
-      {
-        title: "Account Info",
-        url: "https://portal.thirdweb.com/account/billing/account-info",
-      },
-    ],
+    title: "Insight",
+    icon: InsightIcon,
+    viewAllUrl: "https://portal.thirdweb.com/insight",
+    description: "Blockchain data queries and transformations",
   },
   {
-    title: "Misc",
-    icon: miscIcon,
-    viewAllUrl: "https://support.thirdweb.com/",
-    helpArticles: [
-      {
-        title: "Troubleshooting error messages",
-        url: "https://support.thirdweb.com/troubleshooting-errors/7Y1BqKNvtLdBv5fZkRZZB3",
-      },
-      {
-        title: "Add EVM to thirdweb chainlist",
-        url: "https://support.thirdweb.com/other-faqs/tFbbEYCSbJ1GTeXoPs4QFw/how-to-add-your-evm-chain-to-thirdweb%E2%80%99s-chainlist-/3HMqrwyxXUFxQYaudDJffT",
-      },
-      {
-        title: "API Keys",
-        url: "https://portal.thirdweb.com/account/api-keys",
-      },
-    ],
+    title: "Nebula",
+    icon: NebulaIcon,
+    viewAllUrl: "https://portal.thirdweb.com/nebula",
+    description: "API interface for LLMs",
   },
 ] as const;
 
@@ -179,19 +122,13 @@ export default async function SupportPage() {
         </header>
       </div>
       <section className="container flex flex-col gap-6">
-        <h2 className="font-bold text-3xl">Knowledge base</h2>
+        <h2 className="font-bold text-3xl">Learning Resources</h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
           {HELP_PRODUCTS.map((product) => (
             <Card className="relative col-span-1 bg-card" key={product.title}>
               <CardHeader className="flex flex-row items-center justify-between gap-2">
                 <div className="flex flex-row items-center gap-2">
-                  {product.icon && (
-                    <Image
-                      src={product.icon}
-                      alt={product.title}
-                      className="size-5"
-                    />
-                  )}
+                  {product.icon && <product.icon className="size-5" />}
                   <CardTitle className="text-xl">{product.title}</CardTitle>
                 </div>
                 <Button
@@ -201,27 +138,18 @@ export default async function SupportPage() {
                   className="absolute top-4 right-2 flex flex-row gap-1 px-2 text-muted-foreground text-sm hover:text-foreground"
                 >
                   <Link href={product.viewAllUrl} target="_blank">
-                    <span>View All</span>
+                    <span>View</span>
                     <ChevronRightIcon className="size-4" />
                   </Link>
                 </Button>
               </CardHeader>
 
-              <CardContent>
-                <ul className="flex flex-col gap-1">
-                  {product.helpArticles.map((article) => (
-                    <li key={article.title}>
-                      <Link
-                        href={article.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-muted-foreground text-sm hover:text-foreground"
-                      >
-                        {article.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+              <CardContent key={product.description}>
+                {product.description && (
+                  <p className="mb-2 text-muted-foreground text-sm">
+                    {product.description}
+                  </p>
+                )}
               </CardContent>
             </Card>
           ))}

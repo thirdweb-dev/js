@@ -16,8 +16,7 @@ import {
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { NEXT_PUBLIC_DASHBOARD_UPLOAD_SERVER } from "@/constants/public-envs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { formatDistance } from "date-fns/formatDistance";
+import { format, formatDistance } from "date-fns";
 import { PinOffIcon } from "lucide-react";
 import { useState } from "react";
 import { useActiveAccount } from "thirdweb/react";

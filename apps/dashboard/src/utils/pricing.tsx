@@ -3,7 +3,7 @@ import type { Team } from "@/api/team";
 type SelectivePlans = Exclude<
   Team["billingPlan"],
   // we will never show cards for these plans - so exclude it
-  "accelerate" | "growth_legacy" | "free" | "starter_legacy"
+  "accelerate" | "growth_legacy" | "free"
 >;
 
 export const TEAM_PLANS: Record<

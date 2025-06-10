@@ -1,5 +1,4 @@
-import { format } from "date-fns/format";
-import { isValid } from "date-fns/isValid";
+import { format, isValid } from "date-fns";
 
 const DATE_TIME_LOCAL_FORMAT = "yyyy-MM-dd HH:mm";
 

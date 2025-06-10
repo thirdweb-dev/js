@@ -2,7 +2,7 @@
 
 import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 import { SkeletonContainer } from "@/components/ui/skeleton";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 import {
   ActivityIcon,
   MessageCircleQuestionIcon,
@@ -173,7 +173,7 @@ export function NebulaAnalyticsDashboardUI(props: {
 function toolTipLabelFormatter(_v: string, item: unknown) {
   if (Array.isArray(item)) {
     const time = item[0].payload.time as number;
-    return formatDate(new Date(time), "MMM d, yyyy");
+    return format(new Date(time), "MMM d, yyyy");
   }
   return undefined;
 }

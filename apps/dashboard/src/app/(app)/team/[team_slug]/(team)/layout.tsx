@@ -1,9 +1,11 @@
 import { getProjects } from "@/api/projects";
-import { getTeams } from "@/api/team";
+import { getTeamBySlug, getTeams } from "@/api/team";
 import { AppFooter } from "@/components/blocks/app-footer";
+import { Button } from "@/components/ui/button";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { siwaExamplePrompts } from "../../../(dashboard)/support/page";
 import { CustomChatButton } from "../../../../nebula-app/(app)/components/CustomChat/CustomChatButton";
@@ -20,23 +22,16 @@ export default async function TeamLayout(props: {
 }) {
   const params = await props.params;
 
-  const [accountAddress, account, teams, authToken] = await Promise.all([
+  const [accountAddress, account, teams, authToken, team] = await Promise.all([
     getAuthTokenWalletAddress(),
     getValidAccount(`/team/${params.team_slug}`),
     getTeams(),
     getAuthToken(),
+    getTeamBySlug(params.team_slug),
   ]);
 
-  if (!teams || !accountAddress || !authToken) {
+  if (!teams || !accountAddress || !authToken || !team) {
     redirect("/login");
-  }
-
-  const team = teams.find(
-    (t) => t.slug === decodeURIComponent(params.team_slug),
-  );
-
-  if (!team) {
-    redirect("/team");
   }
 
   const teamsAndProjects = await Promise.all(
@@ -53,6 +48,21 @@ export default async function TeamLayout(props: {
 
   return (
     <div className="flex h-full grow flex-col">
+      {!teams.some((t) => t.slug === team.slug) && (
+        <div className="bg-warning-text">
+          <div className="container flex items-center justify-between py-4">
+            <div className="flex flex-col gap-2">
+              <p className="font-bold text-white text-xl">👀 STAFF MODE 👀</p>
+              <p className="text-sm text-white">
+                You can only view this team, not take any actions.
+              </p>
+            </div>
+            <Button variant="default" asChild>
+              <Link href="/team/~">Leave Staff Mode</Link>
+            </Button>
+          </div>
+        </div>
+      )}
       <AnnouncementBanner />
       <div className="bg-card">
         <TeamHeaderLoggedIn
@@ -83,6 +93,10 @@ export default async function TeamLayout(props: {
             {
               path: `/team/${params.team_slug}/~/usage`,
               name: "Usage",
+            },
+            {
+              path: `/team/${params.team_slug}/~/audit-log`,
+              name: "Audit Log",
             },
             {
               path: `/team/${params.team_slug}/~/settings`,

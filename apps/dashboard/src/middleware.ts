@@ -52,7 +52,11 @@ export async function middleware(request: NextRequest) {
     (subdomain === "nebula" || subdomain.startsWith("nebula---"))
   ) {
     // preserve search params when redirecting to /login page
-    if (!nebulaAuthCookie && paths[0] !== "login") {
+    if (
+      !nebulaAuthCookie &&
+      paths[0] !== "login" &&
+      paths[0] !== "move-funds"
+    ) {
       return redirect(request, "/login", {
         searchParams: request.nextUrl.searchParams.toString(),
       });

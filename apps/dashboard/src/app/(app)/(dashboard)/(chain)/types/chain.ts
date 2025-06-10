@@ -8,7 +8,6 @@ export type ChainSupportedService =
   | "nebula"
   | "pay"
   | "rpc-edge"
-  | "chainsaw"
   | "insight";
 
 export type ChainService = {

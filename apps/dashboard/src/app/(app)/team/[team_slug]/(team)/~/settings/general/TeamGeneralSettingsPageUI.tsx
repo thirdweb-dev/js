@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteTeam } from "@/actions/deleteTeam";
 import type { Team } from "@/api/team";
 import type { VerifiedDomainResponse } from "@/api/verified-domain";
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
@@ -35,7 +36,6 @@ export function TeamGeneralSettingsPageUI(props: {
   client: ThirdwebClient;
   leaveTeam: () => Promise<void>;
 }) {
-  const hasPermissionToDelete = false; // TODO
   return (
     <div className="flex flex-col gap-8">
       <TeamNameFormControl
@@ -60,8 +60,9 @@ export function TeamGeneralSettingsPageUI(props: {
 
       <LeaveTeamCard teamName={props.team.name} leaveTeam={props.leaveTeam} />
       <DeleteTeamCard
-        enabled={hasPermissionToDelete}
+        teamId={props.team.id}
         teamName={props.team.name}
+        canDelete={props.isOwnerAccount}
       />
     </div>
   );
@@ -293,7 +294,8 @@ export function LeaveTeamCard(props: {
 }
 
 export function DeleteTeamCard(props: {
-  enabled: boolean;
+  canDelete: boolean;
+  teamId: string;
   teamName: string;
 }) {
   const router = useDashboardRouter();
@@ -301,12 +303,12 @@ export function DeleteTeamCard(props: {
   const description =
     "Permanently remove your team and all of its contents from the thirdweb platform. This action is not reversible - please continue with caution.";
 
-  // TODO
-  const deleteTeam = useMutation({
+  const deleteTeamAndRedirect = useMutation({
     mutationFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      console.log("Deleting team");
-      throw new Error("Not implemented");
+      const result = await deleteTeam({ teamId: props.teamId });
+      if (result.status === "error") {
+        throw new Error(result.errorMessage);
+      }
     },
     onSuccess: () => {
       router.push("/team");
@@ -314,21 +316,21 @@ export function DeleteTeamCard(props: {
   });
 
   function handleDelete() {
-    const promise = deleteTeam.mutateAsync();
+    const promise = deleteTeamAndRedirect.mutateAsync();
     toast.promise(promise, {
-      success: "Team deleted successfully",
+      success: "Team deleted",
       error: "Failed to delete team",
     });
   }
 
-  if (props.enabled) {
+  if (props.canDelete) {
     return (
       <DangerSettingCard
         title={title}
         description={description}
         buttonLabel={title}
         buttonOnClick={handleDelete}
-        isPending={deleteTeam.isPending}
+        isPending={deleteTeamAndRedirect.isPending}
         confirmationDialog={{
           title: `Are you sure you want to delete team "${props.teamName}" ?`,
           description: description,

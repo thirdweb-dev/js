@@ -3,12 +3,20 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { DecimalInput } from "@/components/ui/decimal-input";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
-import { CheckIcon, CircleIcon, ExternalLinkIcon, XIcon } from "lucide-react";
+import {
+  CheckIcon,
+  CircleAlertIcon,
+  CircleIcon,
+  ExternalLinkIcon,
+  InfinityIcon,
+  XIcon,
+} from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useState } from "react";
@@ -31,8 +39,9 @@ import {
   useActiveWallet,
   useSendTransaction,
 } from "thirdweb/react";
-import { getClaimParams } from "thirdweb/utils";
+import { getClaimParams, maxUint256 } from "thirdweb/utils";
 import { tryCatch } from "utils/try-catch";
+import { ToolTipLabel } from "../../../../../../../../../../@/components/ui/tooltip";
 import { getSDKTheme } from "../../../../../../../../components/sdk-component-theme";
 import { PublicPageConnectButton } from "../../../_components/PublicPageConnectButton";
 import { getCurrencyMeta } from "../../_utils/getCurrencyMeta";
@@ -40,6 +49,11 @@ import { getCurrencyMeta } from "../../_utils/getCurrencyMeta";
 type ActiveClaimCondition = Awaited<ReturnType<typeof getActiveClaimCondition>>;
 
 // TODO UI improvements - show how many tokens connected wallet can claim at max
+
+const compactNumberFormatter = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+  maximumFractionDigits: 10,
+});
 
 export function ClaimTokenCardUI(props: {
   contract: ThirdwebContract;
@@ -210,23 +224,23 @@ export function ClaimTokenCardUI(props: {
     },
   });
 
+  const publicPrice = {
+    pricePerTokenWei: props.claimCondition.pricePerToken,
+    currencyAddress: props.claimCondition.currency,
+    decimals: props.claimConditionCurrency.decimals,
+    symbol: props.claimConditionCurrency.symbol,
+  };
+
   const claimParamsQuery = useQuery({
     queryKey: ["claim-params", props.contract.address, account?.address],
     queryFn: async () => {
-      const defaultPricing = {
-        pricePerTokenWei: props.claimCondition.pricePerToken,
-        currencyAddress: props.claimCondition.currency,
-        decimals: props.claimConditionCurrency.decimals,
-        symbol: props.claimConditionCurrency.symbol,
-      };
-
       if (!account) {
-        return defaultPricing;
+        return publicPrice;
       }
 
       const merkleRoot = props.claimCondition.merkleRoot;
       if (!merkleRoot || merkleRoot === padHex("0x", { size: 32 })) {
-        return defaultPricing;
+        return publicPrice;
       }
 
       const claimParams = await getClaimParams({
@@ -301,10 +315,17 @@ export function ClaimTokenCardUI(props: {
     );
   }
 
+  const isShowingCustomPrice =
+    claimParamsData &&
+    (claimParamsData.pricePerTokenWei !== publicPrice.pricePerTokenWei ||
+      claimParamsData.currencyAddress !== publicPrice.currencyAddress);
+
   return (
     <div className="rounded-xl border bg-card ">
       <div className="border-b px-4 py-5 lg:px-5">
-        <h2 className="font-bold text-lg">Buy {props.symbol}</h2>
+        <h2 className="font-semibold text-lg tracking-tight">
+          Buy {props.symbol}
+        </h2>
         <p className="text-muted-foreground text-sm">
           Buy tokens from the primary sale
         </p>
@@ -320,32 +341,36 @@ export function ClaimTokenCardUI(props: {
               id="token-amount"
               symbol={props.symbol}
             />
-            {/* <p className="text-xs text-muted-foreground">Maximum purchasable: {tokenData.maxPurchasable} tokens</p> */}
           </div>
+
+          <div className="h-4" />
+
+          <SupplyRemaining
+            supplyClaimed={props.claimCondition.supplyClaimed}
+            maxClaimableSupply={props.claimCondition.maxClaimableSupply}
+            decimals={props.decimals}
+          />
 
           <div className="h-4" />
 
           <div className="space-y-3 rounded-lg bg-muted/50 p-3">
             {/* Price per token */}
-            <div className="flex justify-between font-medium text-sm">
-              <span>Price per token</span>
+            <div className="flex items-start justify-between font-medium text-sm">
+              <span className="flex items-center gap-2">
+                Price per token
+                {isShowingCustomPrice && (
+                  <ToolTipLabel label="Your connected wallet address is added in the allowlist and is getting a special price">
+                    <CircleAlertIcon className="size-3.5 text-muted-foreground" />
+                  </ToolTipLabel>
+                )}
+              </span>
 
-              <SkeletonContainer
-                skeletonData={`0.00 ${props.claimConditionCurrency.symbol}`}
-                loadedData={
-                  claimParamsData
-                    ? claimParamsData.pricePerTokenWei === 0n
-                      ? "FREE"
-                      : `${toTokens(
-                          claimParamsData.pricePerTokenWei,
-                          claimParamsData.decimals,
-                        )} ${claimParamsData.symbol}`
-                    : undefined
-                }
-                render={(v) => {
-                  return <span className="">{v}</span>;
-                }}
-              />
+              <div className="flex flex-col items-end gap-1">
+                {isShowingCustomPrice && (
+                  <TokenPrice data={publicPrice} strikethrough={true} />
+                )}
+                <TokenPrice data={claimParamsData} strikethrough={false} />
+              </div>
             </div>
 
             {/* Quantity */}
@@ -426,6 +451,95 @@ export function ClaimTokenCardUI(props: {
   );
 }
 
+function TokenPrice(props: {
+  strikethrough: boolean;
+  data:
+    | {
+        pricePerTokenWei: bigint;
+        decimals: number;
+        symbol: string;
+      }
+    | undefined;
+}) {
+  return (
+    <SkeletonContainer
+      skeletonData={"0.00 ETH"}
+      loadedData={
+        props.data
+          ? props.data.pricePerTokenWei === 0n
+            ? "FREE"
+            : `${toTokens(
+                props.data.pricePerTokenWei,
+                props.data.decimals,
+              )} ${props.data.symbol}`
+          : undefined
+      }
+      render={(v) => {
+        if (props.strikethrough) {
+          return (
+            <s className="font-medium text-muted-foreground text-sm line-through decoration-muted-foreground/50">
+              {v}
+            </s>
+          );
+        }
+        return <span className="font-medium text-foreground text-sm">{v}</span>;
+      }}
+    />
+  );
+}
+
+function SupplyRemaining(props: {
+  supplyClaimed: bigint;
+  maxClaimableSupply: bigint;
+  decimals: number;
+}) {
+  const isMaxClaimableSupplyUnlimited = props.maxClaimableSupply === maxUint256;
+  const supplyClaimedTokenNumber = Number(
+    toTokens(props.supplyClaimed, props.decimals),
+  );
+
+  // if there is unlimited supply - show many are claimed
+  if (isMaxClaimableSupplyUnlimited) {
+    return (
+      <p className="flex items-center justify-between gap-2">
+        <span className="font-medium text-sm">Supply Claimed</span>
+        <span className="flex items-center gap-1 font-bold text-sm">
+          {compactNumberFormatter.format(supplyClaimedTokenNumber)} /{" "}
+          <InfinityIcon className="size-4" aria-label="Unlimited" />
+        </span>
+      </p>
+    );
+  }
+
+  const maxClaimableSupplyTokenNumber = Number(
+    toTokens(props.maxClaimableSupply, props.decimals),
+  );
+
+  const soldPercentage = isMaxClaimableSupplyUnlimited
+    ? 0
+    : (supplyClaimedTokenNumber / maxClaimableSupplyTokenNumber) * 100;
+
+  const supplyRemainingTokenNumber =
+    maxClaimableSupplyTokenNumber - supplyClaimedTokenNumber;
+
+  // else - show supply remaining
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <span className="font-medium text-sm">Supply Remaining</span>
+        <span className="font-bold text-sm">
+          {compactNumberFormatter.format(supplyRemainingTokenNumber)} /{" "}
+          {compactNumberFormatter.format(maxClaimableSupplyTokenNumber)}
+        </span>
+      </div>
+      <Progress value={soldPercentage} className="h-2.5" />
+      <p className="font-medium text-muted-foreground text-xs">
+        {soldPercentage.toFixed(1)}% Sold
+      </p>
+    </div>
+  );
+}
+
 type Status = "idle" | "pending" | "success" | "error";
 
 const statusToIcon: Record<Status, React.FC<{ className: string }>> = {
@@ -472,7 +586,7 @@ function PriceInput(props: {
         className="!text-2xl h-auto truncate bg-muted/50 pr-14 font-bold"
       />
       {props.symbol && (
-        <div className="-translate-y-1/2 absolute top-1/2 right-4 font-semibold text-base text-muted-foreground">
+        <div className="-translate-y-1/2 absolute top-1/2 right-3 font-medium text-muted-foreground text-sm">
           {props.symbol}
         </div>
       )}

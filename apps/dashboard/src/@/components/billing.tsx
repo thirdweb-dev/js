@@ -84,12 +84,13 @@ export function BillingPortalButton(props: {
         props.buttonProps?.onClick?.(e);
       }}
     >
-      <Link
+      <a
         href={buildBillingPortalUrl({ teamSlug: props.teamSlug })}
         target="_blank"
+        rel="noreferrer"
       >
         {props.children}
-      </Link>
+      </a>
     </Button>
   );
 }

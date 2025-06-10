@@ -26,8 +26,7 @@ import {
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useQuery } from "@tanstack/react-query";
-import { formatDistanceToNowStrict } from "date-fns";
-import { format } from "date-fns/format";
+import { format, formatDistanceToNowStrict } from "date-fns";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { SendIcon } from "lucide-react";
 import Link from "next/link";

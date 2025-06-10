@@ -32,6 +32,7 @@ type TransactionButtonProps = Omit<ButtonProps, "variant"> & {
   isLoggedIn: boolean;
   checkBalance?: boolean;
   client: ThirdwebClient;
+  disableNoFundsPopup?: boolean;
 };
 
 export const TransactionButton: React.FC<TransactionButtonProps> = ({
@@ -43,6 +44,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   isLoggedIn,
   checkBalance,
   client,
+  disableNoFundsPopup,
   ...restButtonProps
 }) => {
   const activeWallet = useActiveWallet();
@@ -68,6 +70,9 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
       <PopoverTrigger asChild>
         <MismatchButton
           client={client}
+          disableNoFundsPopup={
+            disableNoFundsPopup === undefined ? false : disableNoFundsPopup
+          }
           isPending={isPending}
           variant={variant || "primary"}
           isLoggedIn={isLoggedIn}

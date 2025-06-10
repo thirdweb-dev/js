@@ -202,6 +202,10 @@ export async function promptNebula(params: {
         break;
       }
 
+      case "ping": {
+        break;
+      }
+
       default: {
         console.warn("unhandled event", event);
       }
@@ -297,5 +301,9 @@ type ChatStreamedEvent =
     }
   | {
       event: "error";
+      data: string;
+    }
+  | {
+      event: "ping";
       data: string;
     };

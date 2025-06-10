@@ -192,7 +192,6 @@ const billingPlanToSkuMap: Record<Team["billingPlan"], ProductSKU | undefined> =
     accelerate: undefined,
     free: undefined,
     growth_legacy: undefined,
-    starter_legacy: undefined,
   };
 
 type FeatureItemProps = {

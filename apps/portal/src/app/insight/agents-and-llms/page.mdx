@@ -342,6 +342,44 @@ async function safeApiCall() {
 }
 ```
 
+## Webhooks
+
+Webhooks are a powerful tool for building event-driven AI agents that can react to on-chain activity in real-time. By subscribing to specific blockchain events or transactions, your agent can receive notifications and trigger automated workflows.
+
+### Use Cases for AI Agents
+
+- **Real-time Monitoring**: An agent can monitor for specific events (e.g., a large transfer to a whale wallet) and trigger alerts or other actions.
+- **Automated Workflows**: When a specific on-chain action occurs (e.g., a new NFT is minted), an agent can automatically kick off a downstream process, like updating a database or sending a notification.
+- **Data Aggregation**: Use webhooks to feed on-chain data into a vector database or other data store for later analysis by an LLM.
+
+### Getting Started with Webhooks
+
+To get started, you can create and manage webhooks through the Insight API. For detailed instructions, refer to the [Managing Webhooks documentation](/insight/webhooks/managing-webhooks).
+
+### Filtering Events
+
+Insight's webhooks feature a powerful filtering system that lets you subscribe to only the events and transactions you care about. For example, you can create a single webhook that notifies your agent of both ERC-20 and ERC-721 `Transfer` events by providing multiple ABIs in the filter.
+
+```typescript
+{
+  "v1.events": {
+    "chain_ids": ["1"],
+    "signatures": [
+      {
+        "sig_hash": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+        "abi": "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"}]"
+      }
+    ]
+  }
+}
+```
+
+For more advanced filtering options, see the [Filtering documentation](/insight/webhooks/filtering).
+
+### Understanding the Payload
+
+When a webhook is triggered, it sends a payload to your specified endpoint. This payload contains the event or transaction data that your agent will need to process. To learn more about the structure of this payload, see the [Payload documentation](/insight/webhooks/payload).
+
 ## API Reference
 
 ### Events API

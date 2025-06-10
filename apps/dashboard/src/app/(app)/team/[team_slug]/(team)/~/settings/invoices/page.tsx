@@ -1,5 +1,6 @@
 import { getTeamInvoices } from "@/actions/stripe-actions";
 import { getTeamBySlug } from "@/api/team";
+import { getMemberById } from "@/api/team-members";
 import { redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
@@ -20,15 +21,18 @@ export default async function Page(props: {
 
   const pagePath = `/team/${params.team_slug}/settings/invoices`;
 
-  const [, team] = await Promise.all([
-    // only called to verify login status etc
-    getValidAccount(pagePath),
+  const account = await getValidAccount(pagePath);
+
+  const [team, teamMember] = await Promise.all([
     getTeamBySlug(params.team_slug),
+    getMemberById(params.team_slug, account.id),
   ]);
 
   if (!team) {
     redirect("/team");
   }
+
+  const isOwnerAccount = teamMember?.role === "OWNER";
 
   const invoices = await getTeamInvoices(team, {
     cursor: searchParams.cursor ?? undefined,
@@ -54,6 +58,7 @@ export default async function Page(props: {
         hasMore={invoices.has_more}
         // fall back to "all" if the status is not set
         status={searchParams.status ?? "all"}
+        isOwnerAccount={isOwnerAccount}
       />
     </div>
   );

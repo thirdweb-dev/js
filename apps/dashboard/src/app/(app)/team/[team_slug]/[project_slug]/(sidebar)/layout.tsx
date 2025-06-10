@@ -1,8 +1,10 @@
-import { getProjects } from "@/api/projects";
-import { getTeams } from "@/api/team";
+import { getProject, getProjects } from "@/api/projects";
+import { getTeamBySlug, getTeams } from "@/api/team";
+import { Button } from "@/components/ui/button";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { siwaExamplePrompts } from "../../../../(dashboard)/support/page";
 import { CustomChatButton } from "../../../../../nebula-app/(app)/components/CustomChat/CustomChatButton";
@@ -21,20 +23,19 @@ export default async function ProjectLayout(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
 }) {
   const params = await props.params;
-  const [accountAddress, teams, account, authToken] = await Promise.all([
-    getAuthTokenWalletAddress(),
-    getTeams(),
-    getValidAccount(`/team/${params.team_slug}/${params.project_slug}`),
-    getAuthToken(),
-  ]);
+  const [accountAddress, teams, account, authToken, team, project] =
+    await Promise.all([
+      getAuthTokenWalletAddress(),
+      getTeams(),
+      getValidAccount(`/team/${params.team_slug}/${params.project_slug}`),
+      getAuthToken(),
+      getTeamBySlug(params.team_slug),
+      getProject(params.team_slug, params.project_slug),
+    ]);
 
   if (!teams || !accountAddress || !authToken) {
     redirect("/login");
   }
-
-  const team = teams.find(
-    (t) => t.slug === decodeURIComponent(params.team_slug),
-  );
 
   if (!team) {
     redirect("/team");
@@ -46,10 +47,6 @@ export default async function ProjectLayout(props: {
       projects: await getProjects(team.slug),
     })),
   );
-
-  const project = teamsAndProjects
-    .find((t) => t.team.slug === decodeURIComponent(params.team_slug))
-    ?.projects.find((p) => p.slug === params.project_slug);
 
   if (!project) {
     // not a valid project, redirect back to team page
@@ -65,6 +62,21 @@ export default async function ProjectLayout(props: {
   return (
     <SidebarProvider>
       <div className="flex h-dvh min-w-0 grow flex-col">
+        {!teams.some((t) => t.slug === team.slug) && (
+          <div className="bg-warning-text">
+            <div className="container flex items-center justify-between py-4">
+              <div className="flex flex-col gap-2">
+                <p className="font-bold text-white text-xl">👀 STAFF MODE 👀</p>
+                <p className="text-sm text-white">
+                  You can only view this team, not take any actions.
+                </p>
+              </div>
+              <Button variant="default" asChild>
+                <Link href="/team/~">Leave Staff Mode</Link>
+              </Button>
+            </div>
+          </div>
+        )}
         <div className="sticky top-0 z-10 border-border border-b bg-card">
           <AnnouncementBanner />
           <TeamHeaderLoggedIn

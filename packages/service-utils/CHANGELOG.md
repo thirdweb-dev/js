@@ -1,5 +1,14 @@
 # @thirdweb-dev/service-utils
 
+## 0.9.12
+
+### Patch Changes
+
+- [#7276](https://github.com/thirdweb-dev/js/pull/7276) [`42236d4`](https://github.com/thirdweb-dev/js/commit/42236d43a860e1d8b6b1f518bf6aa12bcf56b0ac) Thanks [@jnsdls](https://github.com/jnsdls)! - remove:
+  - `starter_legacy` plan type
+  - `billingPlanVersion` field
+  - `growthTrialEligible` field
+
 ## 0.9.11
 
 ### Patch Changes

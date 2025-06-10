@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { BASE_URL } from "@/constants/env-utils";
 import { useMutation } from "@tanstack/react-query";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 import { EllipsisIcon, MailIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -167,12 +167,12 @@ function InviteRow(props: {
           </p>
           <div className="flex flex-col gap-1 text-muted-foreground text-xs lg:flex-row lg:items-center lg:gap-2">
             <span>
-              Invited on {formatDate(props.invite.createdAt, "MMM d, yyyy")}
+              Invited on {format(props.invite.createdAt, "MMM d, yyyy")}
             </span>
             <div className="hidden size-1 rounded-full bg-muted-foreground/50 lg:block" />
             <span>
               Invitation expires on{" "}
-              {formatDate(props.invite.expiresAt, "MMM d, yyyy")}
+              {format(props.invite.expiresAt, "MMM d, yyyy")}
             </span>
           </div>
         </div>

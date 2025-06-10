@@ -87,6 +87,7 @@ type MistmatchButtonProps = React.ComponentProps<typeof Button> & {
   isPending: boolean;
   checkBalance?: boolean;
   client: ThirdwebClient;
+  disableNoFundsPopup: boolean;
 };
 
 export const MismatchButton = forwardRef<
@@ -98,6 +99,7 @@ export const MismatchButton = forwardRef<
     isLoggedIn,
     isPending,
     checkBalance = true,
+    disableNoFundsPopup,
     ...buttonProps
   } = props;
   const account = useActiveAccount();
@@ -162,6 +164,7 @@ export const MismatchButton = forwardRef<
   }
 
   const isBalanceRequired =
+    !disableNoFundsPopup &&
     checkBalance &&
     (wallet.id === "smart" ? false : !GAS_FREE_CHAINS.includes(txChainId));
 
@@ -175,6 +178,7 @@ export const MismatchButton = forwardRef<
     (!showSwitchChainPopover && txChainBalance.isPending && isBalanceRequired);
 
   const showSpinner = isPending || switchNetworkMutation.isPending;
+  const showNoFundsPopup = notEnoughBalance && !disableNoFundsPopup;
 
   return (
     <>
@@ -196,7 +200,7 @@ export const MismatchButton = forwardRef<
             className={cn("gap-2 disabled:opacity-100", buttonProps.className)}
             disabled={disabled}
             type={
-              showSwitchChainPopover || notEnoughBalance
+              showSwitchChainPopover || showNoFundsPopup
                 ? "button"
                 : buttonProps.type
             }
@@ -208,7 +212,7 @@ export const MismatchButton = forwardRef<
                 return;
               }
 
-              if (notEnoughBalance) {
+              if (notEnoughBalance && !props.disableNoFundsPopup) {
                 trackEvent({
                   category: "no-funds",
                   action: "popover",

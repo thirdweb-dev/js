@@ -100,6 +100,9 @@ export type GetBuyWithFiatQuoteParams = {
    * @hidden
    */
   paymentLinkId?: string;
+
+  onrampChainId?: number;
+  onrampTokenAddress?: string;
 };
 
 /**
@@ -326,7 +329,8 @@ export async function getBuyWithFiatQuote(
       purchaseData: params.purchaseData,
       currency: params.fromCurrencySymbol,
       maxSteps: 2,
-      onrampTokenAddress: NATIVE_TOKEN_ADDRESS, // force onramp to native token to avoid missing gas issues
+      onrampTokenAddress: params.onrampTokenAddress ?? NATIVE_TOKEN_ADDRESS, // force onramp to native token to avoid missing gas issues
+      onrampChainId: params.onrampChainId,
       paymentLinkId: params.paymentLinkId,
     });
 

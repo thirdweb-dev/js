@@ -28,7 +28,7 @@ import {
   useEngineNotificationChannels,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { type UseMutationResult, useMutation } from "@tanstack/react-query";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 import { EllipsisVerticalIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -201,7 +201,7 @@ function EngineAlertsTableUI(props: {
                 </TableCell>
 
                 <TableCell className="text-muted-foreground">
-                  {formatDate(
+                  {format(
                     new Date(notificationChannel.createdAt),
                     "MMM dd, yyyy",
                   )}
