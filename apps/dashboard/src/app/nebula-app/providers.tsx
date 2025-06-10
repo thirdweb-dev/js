@@ -6,16 +6,16 @@ import { ThemeProvider, useTheme } from "next-themes";
 import { useMemo } from "react";
 import { Toaster } from "sonner";
 import { ThirdwebProvider, useActiveAccount } from "thirdweb/react";
+import { MiniAppProvider } from "./(app)/_farcaster/miniapp-provider";
 import { NebulaConnectWallet } from "./(app)/components/NebulaConnectButton";
-import { MiniAppProvider } from "@neynar/react";
 
 const queryClient = new QueryClient();
 
 export function NebulaProviders(props: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <MiniAppProvider analyticsEnabled={true}>
       <ThirdwebProvider>
+        <MiniAppProvider>
           <ThemeProvider
             attribute="class"
             disableTransitionOnChange
@@ -27,8 +27,8 @@ export function NebulaProviders(props: { children: React.ReactNode }) {
               {props.children}
             </SanctionedAddressesChecker>
           </ThemeProvider>
-        </ThirdwebProvider>
-      </MiniAppProvider>
+        </MiniAppProvider>
+      </ThirdwebProvider>
     </QueryClientProvider>
   );
 }

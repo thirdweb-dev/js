@@ -22,6 +22,7 @@ export default async function Page(props: {
   ]);
 
   if (!authToken || !accountAddress) {
+    console.log("redirecting to login");
     loginRedirect();
   }
 
