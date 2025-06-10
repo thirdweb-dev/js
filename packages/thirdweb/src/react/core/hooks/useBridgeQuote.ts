@@ -4,15 +4,19 @@ import * as Buy from "../../../bridge/Buy.js";
 import * as Transfer from "../../../bridge/Transfer.js";
 import type { Token } from "../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import { toUnits } from "../../../utils/units.js";
+import { checksumAddress } from "../../../utils/address.js";
 
 export interface UseBridgeQuoteParams {
   originToken: Token;
   destinationToken: Token;
-  destinationAmount: string;
+  destinationAmount: bigint;
   client: ThirdwebClient;
   enabled?: boolean;
 }
+
+export type BridgeQuoteResult = NonNullable<
+  ReturnType<typeof useBridgeQuote>["data"]
+>;
 
 export function useBridgeQuote({
   originToken,
@@ -28,18 +32,13 @@ export function useBridgeQuote({
       originToken.address,
       destinationToken.chainId,
       destinationToken.address,
-      destinationAmount,
+      destinationAmount.toString(),
     ],
     queryFn: async () => {
-      const destinationAmountWei = toUnits(
-        destinationAmount,
-        destinationToken.decimals,
-      );
-
       // if ssame token and chain, use transfer
       if (
-        originToken.address.toLowerCase() ===
-          destinationToken.address.toLowerCase() &&
+        checksumAddress(originToken.address) ===
+        checksumAddress(destinationToken.address) &&
         originToken.chainId === destinationToken.chainId
       ) {
         const transfer = await Transfer.prepare({
@@ -48,17 +47,18 @@ export function useBridgeQuote({
           tokenAddress: originToken.address,
           sender: originToken.address,
           receiver: destinationToken.address,
-          amount: destinationAmountWei,
+          amount: destinationAmount,
         });
         return transfer;
       }
 
+      console.log("AMOUNT", destinationAmount);
       const quote = await Buy.quote({
         originChainId: originToken.chainId,
         originTokenAddress: originToken.address,
         destinationChainId: destinationToken.chainId,
         destinationTokenAddress: destinationToken.address,
-        amount: destinationAmountWei,
+        amount: destinationAmount,
         client,
       });
 

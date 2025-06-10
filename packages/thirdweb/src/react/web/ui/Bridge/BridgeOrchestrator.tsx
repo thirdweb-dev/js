@@ -6,7 +6,10 @@ import type { PreparedTransaction } from "../../../../transaction/prepare-transa
 import type { Address } from "../../../../utils/address.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
-import type { BridgePrepareResult } from "../../../core/hooks/useBridgePrepare.js";
+import type {
+  BridgePrepareRequest,
+  BridgePrepareResult,
+} from "../../../core/hooks/useBridgePrepare.js";
 import type { CompletedStatusResult } from "../../../core/hooks/useStepExecutor.js";
 import {
   type PaymentMethod,
@@ -37,20 +40,20 @@ export type UIOptions = Prettify<
     };
   } & (
     | {
-        mode: "fund_wallet";
-        destinationToken: Token;
-        initialAmount?: string;
-        presetOptions?: [number, number, number];
-      }
+      mode: "fund_wallet";
+      destinationToken: Token;
+      initialAmount?: string;
+      presetOptions?: [number, number, number];
+    }
     | {
-        mode: "direct_payment";
-        paymentInfo: {
-          sellerAddress: Address;
-          token: Token;
-          amount: string;
-          feePayer?: "sender" | "receiver";
-        };
-      }
+      mode: "direct_payment";
+      paymentInfo: {
+        sellerAddress: Address;
+        token: Token;
+        amount: string;
+        feePayer?: "sender" | "receiver";
+      };
+    }
     | { mode: "transaction"; transaction: PreparedTransaction }
   )
 >;
@@ -172,8 +175,8 @@ export function BridgeOrchestrator({
 
   // Handle quote received
   const handleQuoteReceived = useCallback(
-    (preparedQuote: BridgePrepareResult) => {
-      send({ type: "QUOTE_RECEIVED", preparedQuote });
+    (quote: BridgePrepareResult, request: BridgePrepareRequest) => {
+      send({ type: "QUOTE_RECEIVED", quote, request });
     },
     [send],
   );
@@ -293,12 +296,12 @@ export function BridgeOrchestrator({
 
       {state.value === "preview" &&
         state.context.selectedPaymentMethod &&
-        state.context.preparedQuote && (
+        state.context.quote && (
           <PaymentDetails
             uiOptions={uiOptions}
             client={client}
             paymentMethod={state.context.selectedPaymentMethod}
-            preparedQuote={state.context.preparedQuote}
+            preparedQuote={state.context.quote}
             onConfirm={handleRouteConfirmed}
             onBack={() => {
               send({ type: "BACK" });
@@ -308,10 +311,11 @@ export function BridgeOrchestrator({
         )}
 
       {state.value === "execute" &&
-        state.context.preparedQuote &&
+        state.context.quote &&
+        state.context.request &&
         state.context.selectedPaymentMethod?.payerWallet && (
           <StepRunner
-            preparedQuote={state.context.preparedQuote}
+            request={state.context.request}
             wallet={state.context.selectedPaymentMethod?.payerWallet}
             client={client}
             autoStart={true}
@@ -325,11 +329,11 @@ export function BridgeOrchestrator({
         )}
 
       {state.value === "success" &&
-        state.context.preparedQuote &&
+        state.context.quote &&
         state.context.completedStatuses && (
           <SuccessScreen
             uiOptions={uiOptions}
-            preparedQuote={state.context.preparedQuote}
+            preparedQuote={state.context.quote}
             completedStatuses={state.context.completedStatuses}
             onDone={handleBuyComplete}
             windowAdapter={webWindowAdapter}

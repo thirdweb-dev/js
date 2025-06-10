@@ -17,6 +17,7 @@ import { Container, ModalHeader } from "../../components/basic.js";
 import { FiatProviderSelection } from "./FiatProviderSelection.js";
 import { TokenSelection } from "./TokenSelection.js";
 import { WalletFiatSelection } from "./WalletFiatSelection.js";
+import { toUnits } from "../../../../../utils/units.js";
 
 export interface PaymentSelectionProps {
   /**
@@ -110,7 +111,7 @@ export function PaymentSelection({
     includeDestinationToken:
       includeDestinationToken ||
       receiverAddress?.toLowerCase() !==
-        payerWallet?.getAccount()?.address?.toLowerCase(),
+      payerWallet?.getAccount()?.address?.toLowerCase(),
     payerWallet,
   });
 
@@ -244,7 +245,10 @@ export function PaymentSelection({
             onPaymentMethodSelected={handlePaymentMethodSelected}
             onBack={handleBackToWalletSelection}
             destinationToken={destinationToken}
-            destinationAmount={destinationAmount}
+            destinationAmount={toUnits(
+              destinationAmount,
+              destinationToken.decimals,
+            )}
           />
         )}
 

@@ -5,6 +5,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import { toUnits } from "../../../../utils/units.js";
 import {
+  type BridgePrepareRequest,
   type BridgePrepareResult,
   type UseBridgePrepareParams,
   useBridgePrepare,
@@ -49,7 +50,10 @@ export interface QuoteLoaderProps {
   /**
    * Called when a quote is successfully received
    */
-  onQuoteReceived: (preparedQuote: BridgePrepareResult) => void;
+  onQuoteReceived: (
+    preparedQuote: BridgePrepareResult,
+    request: BridgePrepareRequest,
+  ) => void;
 
   /**
    * Called when an error occurs
@@ -92,26 +96,25 @@ export function QuoteLoader({
 }: QuoteLoaderProps) {
   // For now, we'll use a simple buy operation
   // This will be expanded to handle different bridge types based on the payment method
-  const prepareQuery = useBridgePrepare(
-    getBridgeParams({
-      paymentMethod,
-      amount,
-      destinationToken,
-      receiver,
-      sender,
-      client,
-      purchaseData,
-      paymentLinkId,
-      feePayer,
-    }),
-  );
+  const request: BridgePrepareRequest = getBridgeParams({
+    paymentMethod,
+    amount,
+    destinationToken,
+    receiver,
+    sender,
+    client,
+    purchaseData,
+    paymentLinkId,
+    feePayer,
+  });
+  const prepareQuery = useBridgePrepare(request);
 
   // Handle successful quote
   useEffect(() => {
     if (prepareQuery.data) {
-      onQuoteReceived(prepareQuery.data);
+      onQuoteReceived(prepareQuery.data, request);
     }
-  }, [prepareQuery.data, onQuoteReceived]);
+  }, [prepareQuery.data, onQuoteReceived, request]);
 
   // Handle errors
   useEffect(() => {
@@ -177,7 +180,7 @@ function getBridgeParams(args: {
       if (
         paymentMethod.originToken.chainId === destinationToken.chainId &&
         paymentMethod.originToken.address.toLowerCase() ===
-          destinationToken.address.toLowerCase()
+        destinationToken.address.toLowerCase()
       ) {
         return {
           type: "transfer",

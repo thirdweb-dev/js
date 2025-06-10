@@ -37,14 +37,15 @@ export async function saveSnapshot(
         destinationToken: context.destinationToken,
         destinationAmount: context.destinationAmount,
         selectedPaymentMethod: context.selectedPaymentMethod,
-        preparedQuote: context.preparedQuote,
+        quote: context.quote,
+        request: context.request,
         completedStatuses: context.completedStatuses,
         currentError: context.currentError
           ? {
-              name: context.currentError.name,
-              message: context.currentError.message,
-              stack: context.currentError.stack,
-            }
+            name: context.currentError.name,
+            message: context.currentError.message,
+            stack: context.currentError.stack,
+          }
           : undefined,
         retryState: context.retryState,
       },

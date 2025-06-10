@@ -9,11 +9,13 @@ import { getContract } from "../../contract/contract.js";
 import { claimTo } from "../../extensions/erc20/drops/write/claimTo.js";
 import { transfer } from "../../extensions/erc20/write/transfer.js";
 import type { BridgePrepareResult } from "../../react/core/hooks/useBridgePrepare.js";
+import type { BridgePrepareRequest } from "../../react/core/hooks/useBridgePrepare.js";
 import { getDefaultToken } from "../../react/core/utils/defaultTokens.js";
 import type { UIOptions } from "../../react/web/ui/Bridge/BridgeOrchestrator.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 import { storyClient } from "../utils.js";
+import { toWei } from "../../utils/units.js";
 
 export const ETH: Token = {
   address: NATIVE_TOKEN_ADDRESS,
@@ -67,9 +69,9 @@ const createStoryMockWallet = (): Wallet => {
     getChain: async () => defineChain(1),
     autoConnect: async () => mockAccount,
     connect: async () => mockAccount,
-    disconnect: async () => {},
-    switchChain: async () => {},
-    subscribe: () => () => {},
+    disconnect: async () => { },
+    switchChain: async () => { },
+    subscribe: () => () => { },
     getConfig: () => ({}),
   } as unknown as Wallet;
 };
@@ -561,6 +563,17 @@ export const complexBuyQuote: BridgePrepareResult = JSON.parse(
     },
   }),
 );
+export const simpleBuyRequest: BridgePrepareRequest = {
+  type: "buy",
+  originChainId: 1,
+  originTokenAddress: NATIVE_TOKEN_ADDRESS,
+  destinationChainId: 10,
+  destinationTokenAddress: NATIVE_TOKEN_ADDRESS,
+  amount: toWei("0.01"),
+  sender: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+  receiver: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+  client: storyClient,
+};
 
 // ========== PREPARED TRANSACTIONS FOR TRANSACTION PAYMENT ========== //
 

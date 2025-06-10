@@ -12,7 +12,6 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
-import type { BridgePrepareResult } from "../../../core/hooks/useBridgePrepare.js";
 import {
   type CompletedStatusResult,
   useStepExecutor,
@@ -23,12 +22,10 @@ import { Spinner } from "../components/Spinner.js";
 import { Container, ModalHeader } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { Text } from "../components/text.js";
+import type { BridgePrepareRequest } from "../../../core/hooks/useBridgePrepare.js";
 
 export interface StepRunnerProps {
-  /**
-   * The prepared quote
-   */
-  preparedQuote: BridgePrepareResult;
+  request: BridgePrepareRequest;
 
   /**
    * Wallet instance for executing transactions
@@ -67,7 +64,7 @@ export interface StepRunnerProps {
 }
 
 export function StepRunner({
-  preparedQuote,
+  request,
   wallet,
   client,
   windowAdapter,
@@ -84,12 +81,13 @@ export function StepRunner({
     progress,
     executionState,
     onrampStatus,
+    steps,
     error,
     start,
     cancel,
     retry,
   } = useStepExecutor({
-    preparedQuote,
+    request,
     wallet,
     client,
     windowAdapter,
@@ -113,14 +111,12 @@ export function StepRunner({
   const getStepStatus = (
     stepIndex: number,
   ): "pending" | "executing" | "completed" | "failed" => {
-    if (!currentStep) {
+    if (!currentStep || !steps) {
       // Not started yet
       return stepIndex === 0 ? (error ? "failed" : "pending") : "pending";
     }
 
-    const currentStepIndex = preparedQuote.steps.findIndex(
-      (step) => step === currentStep,
-    );
+    const currentStepIndex = steps.findIndex((step) => step === currentStep);
 
     if (stepIndex < currentStepIndex) return "completed";
     if (stepIndex === currentStepIndex && executionState === "executing")
@@ -210,7 +206,7 @@ export function StepRunner({
             Bridge {originToken.symbol} to{" "}
           </Text>
           <ChainName
-            chain={getDestinationChain(preparedQuote)}
+            chain={getDestinationChain(request)}
             size="sm"
             client={client}
             short
@@ -235,12 +231,6 @@ export function StepRunner({
         Process transaction
       </Text>
     );
-  };
-
-  const getOnrampDescription = (
-    preparedQuote: Extract<BridgePrepareResult, { type: "onramp" }>,
-  ) => {
-    return `Buy ${preparedQuote.destinationToken.symbol}`;
   };
 
   const getStepStatusText = (
@@ -307,7 +297,7 @@ export function StepRunner({
 
         {/* Steps List */}
         <Container flex="column" gap="sm">
-          {preparedQuote.type === "onramp" && onrampStatus ? (
+          {request.type === "onramp" && onrampStatus ? (
             <Container
               flex="row"
               gap="md"
@@ -336,7 +326,7 @@ export function StepRunner({
 
               <Container flex="column" gap="3xs" style={{ flex: 1 }}>
                 <Text size="sm" color="primaryText">
-                  {getOnrampDescription(preparedQuote)}
+                  TEST
                 </Text>
                 <Text size="xs" color="secondaryText">
                   {getStepStatusText(onrampStatus)}
@@ -344,7 +334,7 @@ export function StepRunner({
               </Container>
             </Container>
           ) : null}
-          {preparedQuote.steps.map((step, index) => {
+          {steps?.map((step, index) => {
             const status = getStepStatus(index);
 
             return (
@@ -416,15 +406,15 @@ export function StepRunner({
   );
 }
 
-function getDestinationChain(preparedQuote: BridgePrepareResult): Chain {
-  switch (preparedQuote.type) {
+function getDestinationChain(request: BridgePrepareRequest): Chain {
+  switch (request.type) {
     case "onramp":
-      return defineChain(preparedQuote.destinationToken.chainId);
+      return defineChain(request.chainId);
     case "buy":
     case "sell":
-      return defineChain(preparedQuote.intent.destinationChainId);
+      return defineChain(request.destinationChainId);
     case "transfer":
-      return defineChain(preparedQuote.intent.chainId);
+      return defineChain(request.chainId);
     default:
       throw new Error("Invalid quote type");
   }

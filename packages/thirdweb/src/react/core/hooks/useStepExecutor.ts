@@ -11,7 +11,13 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
 import type { Account, Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { WindowAdapter } from "../adapters/WindowAdapter.js";
-import type { BridgePrepareResult } from "./useBridgePrepare.js";
+import {
+  useBridgePrepare,
+  type BridgePrepareRequest,
+  type BridgePrepareResult,
+} from "./useBridgePrepare.js";
+import { useQuery } from "@tanstack/react-query";
+import { stringify } from "../../../utils/json.js";
 
 /**
  * Type for completed status results from Bridge.status and Onramp.status
@@ -21,16 +27,16 @@ export type CompletedStatusResult =
   | ({ type: "sell" } & Extract<Status, { status: "COMPLETED" }>)
   | ({ type: "transfer" } & Extract<Status, { status: "COMPLETED" }>)
   | ({ type: "onramp" } & Extract<
-      OnrampStatus.Result,
-      { status: "COMPLETED" }
-    >);
+    OnrampStatus.Result,
+    { status: "COMPLETED" }
+  >);
 
 /**
  * Options for the step executor hook
  */
 export interface StepExecutorOptions {
   /** Prepared quote returned by Bridge.prepare */
-  preparedQuote: BridgePrepareResult;
+  request: BridgePrepareRequest;
   /** Wallet instance providing getAccount() & sendTransaction */
   wallet: Wallet;
   /** Window adapter for opening on-ramp URLs (web / RN) */
@@ -61,7 +67,8 @@ export interface StepExecutorResult {
   currentTxIndex?: number;
   progress: number; // 0–100
   onrampStatus?: "pending" | "executing" | "completed" | "failed";
-  executionState: "idle" | "executing" | "auto-starting";
+  executionState: "fetching" | "idle" | "executing" | "auto-starting";
+  steps?: RouteStep[];
   error?: ApiError;
   start: () => void;
   cancel: () => void;
@@ -93,7 +100,7 @@ export function useStepExecutor(
   options: StepExecutorOptions,
 ): StepExecutorResult {
   const {
-    preparedQuote,
+    request,
     wallet,
     windowAdapter,
     client,
@@ -101,10 +108,12 @@ export function useStepExecutor(
     onComplete,
   } = options;
 
+  const { data: preparedQuote, isLoading } = useBridgePrepare(request);
+
   // Flatten all transactions upfront
   const flatTxs = useMemo(
-    () => flattenRouteSteps(preparedQuote.steps),
-    [preparedQuote.steps],
+    () => (preparedQuote?.steps ? flattenRouteSteps(preparedQuote.steps) : []),
+    [preparedQuote?.steps],
   );
 
   // State management
@@ -112,28 +121,46 @@ export function useStepExecutor(
     undefined,
   );
   const [executionState, setExecutionState] = useState<
-    "idle" | "executing" | "auto-starting"
+    "fetching" | "idle" | "executing" | "auto-starting"
   >("idle");
   const [error, setError] = useState<ApiError | undefined>(undefined);
   const [completedTxs, setCompletedTxs] = useState<Set<number>>(new Set());
   const [onrampStatus, setOnrampStatus] = useState<
     "pending" | "executing" | "completed" | "failed" | undefined
-  >(preparedQuote.type === "onramp" ? "pending" : undefined);
+  >(preparedQuote?.type === "onramp" ? "pending" : undefined);
+
+  useQuery({
+    queryKey: [
+      "bridge-quote-execution-state",
+      stringify(preparedQuote?.steps),
+      isLoading,
+    ],
+    queryFn: async () => {
+      if (!isLoading) {
+        setExecutionState("idle");
+      } else {
+        setExecutionState("fetching");
+      }
+      return executionState;
+    },
+  });
 
   // Cancellation tracking
   const abortControllerRef = useRef<AbortController | null>(null);
 
   // Get current step based on current tx index
   const currentStep = useMemo(() => {
+    if (typeof preparedQuote?.steps === "undefined") return undefined;
     if (currentTxIndex === undefined) {
       return undefined;
     }
     const tx = flatTxs[currentTxIndex];
     return tx ? preparedQuote.steps[tx._stepIndex] : undefined;
-  }, [currentTxIndex, flatTxs, preparedQuote.steps]);
+  }, [currentTxIndex, flatTxs, preparedQuote?.steps]);
 
   // Calculate progress including onramp step
   const progress = useMemo(() => {
+    if (typeof preparedQuote?.type === "undefined") return 0;
     const totalSteps =
       flatTxs.length + (preparedQuote.type === "onramp" ? 1 : 0);
     if (totalSteps === 0) {
@@ -142,7 +169,7 @@ export function useStepExecutor(
     const completedSteps =
       completedTxs.size + (onrampStatus === "completed" ? 1 : 0);
     return Math.round((completedSteps / totalSteps) * 100);
-  }, [completedTxs.size, flatTxs.length, preparedQuote.type, onrampStatus]);
+  }, [completedTxs.size, flatTxs.length, preparedQuote?.type, onrampStatus]);
 
   // Exponential backoff polling utility
   const poller = useCallback(
@@ -181,6 +208,9 @@ export function useStepExecutor(
       completedStatusResults: CompletedStatusResult[],
       abortSignal: AbortSignal,
     ) => {
+      if (typeof preparedQuote?.type === "undefined") {
+        throw new Error("No quote generated. This is unexpected.");
+      }
       const { prepareTransaction } = await import(
         "../../../transaction/prepare-transaction.js"
       );
@@ -229,10 +259,14 @@ export function useStepExecutor(
           return { completed: true };
         }
 
+        if (statusResult.status === "FAILED") {
+          throw new Error("Payment failed");
+        }
+
         return { completed: false };
       }, abortSignal);
     },
-    [poller, preparedQuote.type],
+    [poller, preparedQuote?.type],
   );
 
   // Execute batch transactions
@@ -243,6 +277,9 @@ export function useStepExecutor(
       completedStatusResults: CompletedStatusResult[],
       abortSignal: AbortSignal,
     ) => {
+      if (typeof preparedQuote?.type === "undefined") {
+        throw new Error("No quote generated. This is unexpected.");
+      }
       if (!account.sendBatchTransaction) {
         throw new Error("Account does not support batch transactions");
       }
@@ -303,10 +340,14 @@ export function useStepExecutor(
           return { completed: true };
         }
 
+        if (statusResult.status === "FAILED") {
+          throw new Error("Payment failed");
+        }
+
         return { completed: false };
       }, abortSignal);
     },
-    [poller, preparedQuote.type],
+    [poller, preparedQuote?.type],
   );
 
   // Execute onramp step
@@ -350,6 +391,9 @@ export function useStepExecutor(
 
   // Main execution function
   const execute = useCallback(async () => {
+    if (typeof preparedQuote?.type === "undefined") {
+      throw new Error("No quote generated. This is unexpected.");
+    }
     if (executionState !== "idle") {
       return;
     }
@@ -552,6 +596,7 @@ export function useStepExecutor(
     currentTxIndex,
     progress,
     executionState,
+    steps: preparedQuote?.steps,
     onrampStatus,
     error,
     start,

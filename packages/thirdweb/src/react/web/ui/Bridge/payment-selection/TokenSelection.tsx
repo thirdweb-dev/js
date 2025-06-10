@@ -20,14 +20,14 @@ export interface TokenSelectionProps {
   onPaymentMethodSelected: (paymentMethod: PaymentMethod) => void;
   onBack: () => void;
   destinationToken: Token;
-  destinationAmount: string;
+  destinationAmount: bigint;
 }
 
 // Individual payment method token row component
 interface PaymentMethodTokenRowProps {
   paymentMethod: PaymentMethod & { type: "wallet" };
   destinationToken: Token;
-  destinationAmount: string;
+  destinationAmount: bigint;
   client: ThirdwebClient;
   onPaymentMethodSelected: (paymentMethod: PaymentMethod) => void;
 }

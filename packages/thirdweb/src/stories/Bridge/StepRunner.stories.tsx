@@ -2,18 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { WindowAdapter } from "../../react/core/adapters/WindowAdapter.js";
 import type { Theme } from "../../react/core/design-system/index.js";
-import type { BridgePrepareResult } from "../../react/core/hooks/useBridgePrepare.js";
+import type { BridgePrepareRequest } from "../../react/core/hooks/useBridgePrepare.js";
 import type { CompletedStatusResult } from "../../react/core/hooks/useStepExecutor.js";
 import { StepRunner } from "../../react/web/ui/Bridge/StepRunner.js";
 import type { Wallet } from "../../wallets/interfaces/wallet.js";
 import { ModalThemeWrapper, storyClient } from "../utils.js";
-import {
-  STORY_MOCK_WALLET,
-  complexBuyQuote,
-  onrampWithSwapsQuote,
-  simpleBuyQuote,
-  simpleOnrampQuote,
-} from "./fixtures.js";
+import { STORY_MOCK_WALLET, simpleBuyRequest } from "./fixtures.js";
 
 // Mock window adapter
 const mockWindowAdapter: WindowAdapter = {
@@ -24,7 +18,7 @@ const mockWindowAdapter: WindowAdapter = {
 
 // Props interface for the wrapper component
 interface StepRunnerWithThemeProps {
-  preparedQuote: BridgePrepareResult;
+  request: BridgePrepareRequest;
   wallet: Wallet;
   client: ThirdwebClient;
   windowAdapter: WindowAdapter;
@@ -100,7 +94,7 @@ type Story = StoryObj<typeof meta>;
 export const Light: Story = {
   args: {
     theme: "light",
-    preparedQuote: simpleBuyQuote,
+    request: simpleBuyRequest,
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -110,69 +104,9 @@ export const Light: Story = {
 export const Dark: Story = {
   args: {
     theme: "dark",
-    preparedQuote: simpleBuyQuote,
+    request: simpleBuyRequest,
   },
   parameters: {
     backgrounds: { default: "dark" },
-  },
-};
-
-export const MultipleSteps: Story = {
-  args: {
-    theme: "dark",
-    preparedQuote: complexBuyQuote,
-  },
-  parameters: {
-    backgrounds: { default: "dark" },
-  },
-};
-
-export const MultipleStepsLight: Story = {
-  args: {
-    theme: "light",
-    preparedQuote: complexBuyQuote,
-  },
-  parameters: {
-    backgrounds: { default: "light" },
-  },
-};
-
-export const SimpleOnramp: Story = {
-  args: {
-    theme: "dark",
-    preparedQuote: simpleOnrampQuote,
-  },
-  parameters: {
-    backgrounds: { default: "dark" },
-  },
-};
-
-export const SimpleOnrampLight: Story = {
-  args: {
-    theme: "light",
-    preparedQuote: simpleOnrampQuote,
-  },
-  parameters: {
-    backgrounds: { default: "light" },
-  },
-};
-
-export const ComplexOnramp: Story = {
-  args: {
-    theme: "dark",
-    preparedQuote: onrampWithSwapsQuote,
-  },
-  parameters: {
-    backgrounds: { default: "dark" },
-  },
-};
-
-export const ComplexOnrampLight: Story = {
-  args: {
-    theme: "light",
-    preparedQuote: onrampWithSwapsQuote,
-  },
-  parameters: {
-    backgrounds: { default: "light" },
   },
 };
