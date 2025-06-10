@@ -58,18 +58,16 @@ export default async function CheckoutPage(props: {
       break;
     }
     default: {
-      const billingUrl = await getBillingCheckoutUrl({
+      const response = await getBillingCheckoutUrl({
         teamSlug: params.team_slug,
         sku: decodeURIComponent(params.sku) as Exclude<ProductSKU, null>,
       });
 
-      if (!billingUrl) {
-        return (
-          <StripeRedirectErrorPage errorMessage="Failed to load checkout page" />
-        );
+      if (response.status === "error") {
+        return <StripeRedirectErrorPage errorMessage={response.error} />;
       }
 
-      redirect(billingUrl);
+      redirect(response.data);
       break;
     }
   }
