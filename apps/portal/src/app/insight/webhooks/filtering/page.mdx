@@ -30,12 +30,12 @@ Each webhook must have either an events filter or a transactions filter (or both
 ```typescript
 {
   "v1.events": {
-    chain_ids: string[],          // Filter by specific chains
-    addresses: string[],          // Filter by contract addresses
-    signatures: {                 // Filter by event signatures
-      sig_hash: string,          // Event signature hash
-      abi?: string,             // Optional ABI for data decoding
-      params?: Record<string, string | number> // Filter on decoded parameters
+    chain_ids: string[],                        // Filter by specific chains
+    addresses: string[],                        // Filter by contract addresses
+    signatures: {                               // Filter by event signatures
+      sig_hash: string,                         // Event signature hash
+      abi?: string,                             // Optional: A single ABI object or an array of ABI objects as a string for data decoding
+      params?: Record<string, string | number>  // Filter on decoded parameters
     }[]
   }
 }
@@ -45,13 +45,13 @@ Each webhook must have either an events filter or a transactions filter (or both
 ```typescript
 {
   "v1.transactions": {
-    chain_ids: string[],          // Filter by specific chains
-    from_addresses: string[],     // Filter by sender addresses
-    to_addresses: string[],       // Filter by recipient addresses
-    signatures: {                 // Filter by function signatures
-      sig_hash: string,          // Function signature hash
-      abi?: string,             // Optional ABI for data decoding
-      params?: Record<string, string | number> // Filter on decoded parameters
+    chain_ids: string[],                        // Filter by specific chains
+    from_addresses: string[],                   // Filter by sender addresses
+    to_addresses: string[],                     // Filter by recipient addresses
+    signatures: {                               // Filter by function signatures
+      sig_hash: string,                         // Function signature hash
+      abi?: string,                             // Optional: A single ABI object or an array of ABI objects as a string for data decoding
+      params?: Record<string, string | number>  // Filter on decoded parameters
     }[]
   }
 }
@@ -78,6 +78,34 @@ The following example will filter for `Transfer` events on Ethereum for the cont
       ],
     },
   },
+  ...
+}
+```
+
+### Supporting Multiple Event ABIs
+
+In some cases, different token standards use the same event signature. For example, both ERC-20 and ERC-721 standards have a `Transfer` event. The ERC-20 `Transfer(address,address,uint256)` event has a non-indexed `value` parameter, while the ERC-721 `Transfer(address,address,uint256)` has an indexed `tokenId` parameter.
+
+To support these scenarios, you can provide an array of ABIs in the `abi` field. This allows the webhook to attempt decoding with each ABI until one succeeds.
+
+The `abi` field accepts a string that can be either a single JSON object `"{}"` or a JSON array of objects `'[{},{}]'`.
+
+Here is an example of a webhook that filters for both ERC-20 and ERC-721 `Transfer` events across all contracts on the Ethereum mainnet:
+
+```typescript
+{
+  ...
+  "filters": {
+    "v1.events": {
+      "chain_ids": ["1"],
+      "signatures": [
+        {
+          "sig_hash": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "abi": "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"}]"
+        }
+      ]
+    }
+  }
   ...
 }
 ```
