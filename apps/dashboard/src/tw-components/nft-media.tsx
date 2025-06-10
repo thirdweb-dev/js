@@ -27,13 +27,13 @@ export const NFTMediaWithEmptyState: React.FC<{
           height: props.height,
         }}
         className={cn(
-          "grid flex-shrink-0 place-items-center overflow-hidden rounded-lg border border-border object-contain",
+          "grid h-full flex-shrink-0 place-items-center overflow-hidden rounded-lg border border-border object-contain",
           props.className,
         )}
       >
-        <div className="flex flex-col items-center gap-1">
-          <ImageIcon className="size-6" />
-          <span className="font-semibold text-sm">No Media</span>
+        <div className="flex flex-col items-center gap-2">
+          <ImageIcon className="size-8 text-muted-foreground" />
+          <span className="text-muted-foreground">No Media</span>
         </div>
       </div>
     );
@@ -45,7 +45,7 @@ export const NFTMediaWithEmptyState: React.FC<{
         height: props.height,
       }}
       className={cn(
-        "flex-shrink-0 overflow-hidden rounded-lg object-contain",
+        "flex-shrink-0 overflow-hidden rounded-lg object-contain ",
         props.className,
       )}
     >

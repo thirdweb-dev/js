@@ -1,5 +1,4 @@
 "use client";
-import { Img } from "@/components/blocks/Img";
 import {
   type MultiStepState,
   MultiStepStatus,
@@ -13,24 +12,33 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { ChainIconClient } from "components/icons/ChainIcon";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useAllChainsData } from "hooks/chains/allChains";
 import {
   ArrowRightIcon,
   ArrowUpFromLineIcon,
   ImageOffIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWallet } from "thirdweb/react";
-import { parseError } from "../../../../../../../../../utils/errorParser";
-import { StepCard } from "../create-token-card";
+import { parseError } from "utils/errorParser";
+import { ChainOverview } from "../../_common/chain-overview";
+import { FilePreview } from "../../_common/file-preview";
+import { StepCard } from "../../_common/step-card";
+import type { CreateAssetFormValues } from "../_common/form";
+import { getTokenLaunchTrackingData } from "../_common/tracking";
 import type { CreateTokenFunctions } from "../create-token-page.client";
 import { TokenDistributionBarChart } from "../distribution/token-distribution";
-import type { CreateAssetFormValues } from "../form";
-import { getLaunchTrackingData } from "../tracking";
+
+const stepIds = {
+  "deploy-contract": "deploy-contract",
+  "set-claim-conditions": "set-claim-conditions",
+  "mint-tokens": "mint-tokens",
+  "airdrop-tokens": "airdrop-tokens",
+} as const;
+
+type StepId = keyof typeof stepIds;
 
 export function LaunchTokenStatus(props: {
   createTokenFunctions: CreateTokenFunctions;
@@ -43,130 +51,159 @@ export function LaunchTokenStatus(props: {
 }) {
   const formValues = props.values;
   const { createTokenFunctions } = props;
-  const [steps, setSteps] = useState<MultiStepState[]>([]);
+  const [steps, setSteps] = useState<MultiStepState<StepId>[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [contractLink, setContractLink] = useState<string | null>(null);
   const activeWallet = useActiveWallet();
   const walletRequiresApproval = activeWallet?.id !== "inApp";
   const trackEvent = useTrack();
 
-  async function handleSubmitClick() {
-    function launchTracking(
-      params:
-        | {
-            type: "attempt" | "success";
-          }
-        | {
-            type: "error";
-            errorMessage: string;
-          },
-    ) {
-      trackEvent(
-        getLaunchTrackingData({
-          chainId: Number(formValues.chain),
-          airdropEnabled: formValues.airdropEnabled,
-          saleEnabled: formValues.saleEnabled,
-          ...params,
-        }),
-      );
-    }
+  function updateStatus(
+    index: number,
+    newStatus: MultiStepState<StepId>["status"],
+  ) {
+    setSteps((prev) => {
+      return [
+        ...prev.slice(0, index),
+        { ...prev[index], status: newStatus },
+        ...prev.slice(index + 1),
+      ] as MultiStepState<StepId>[];
+    });
+  }
 
+  function launchTracking(
+    params:
+      | {
+          type: "attempt" | "success";
+        }
+      | {
+          type: "error";
+          errorMessage: string;
+        },
+  ) {
+    trackEvent(
+      getTokenLaunchTrackingData({
+        chainId: Number(formValues.chain),
+        airdropEnabled: formValues.airdropEnabled,
+        saleEnabled: formValues.saleEnabled,
+        ...params,
+      }),
+    );
+  }
+
+  async function handleSubmitClick() {
     launchTracking({
       type: "attempt",
     });
 
-    function updateStatus(index: number, newStatus: MultiStepState["status"]) {
-      setSteps((prev) => {
-        return [
-          ...prev.slice(0, index),
-          { ...prev[index], status: newStatus },
-          ...prev.slice(index + 1),
-        ] as MultiStepState[];
-      });
-    }
-
-    function createSequenceExecutorFn(
-      index: number,
-      executeFn: (values: CreateAssetFormValues) => Promise<void>,
-    ) {
-      return async () => {
-        updateStatus(index, { type: "pending" });
-        try {
-          await executeFn(formValues);
-          updateStatus(index, { type: "completed" });
-          // start next one
-          const nextStep = initialSteps[index + 1];
-          if (nextStep) {
-            // do not use await next step
-            nextStep.execute();
-          } else {
-            launchTracking({
-              type: "success",
-            });
-            props.onLaunchSuccess();
-          }
-        } catch (error) {
-          updateStatus(index, { type: "error", message: parseError(error) });
-          launchTracking({
-            type: "error",
-            errorMessage:
-              error instanceof Error ? error.message : "Unknown error",
-          });
-          console.error(error);
-        }
-      };
-    }
-
-    const initialSteps: MultiStepState[] = [
+    const initialSteps: MultiStepState<StepId>[] = [
       {
         label: "Deploy contract",
+        id: stepIds["deploy-contract"],
         status: { type: "idle" },
-        execute: createSequenceExecutorFn(0, async (values) => {
-          const result = await createTokenFunctions.deployContract(values);
-          setContractLink(
-            `/team/${props.teamSlug}/${props.projectSlug}/contract/${values.chain}/${result.contractAddress}`,
-          );
-        }),
       },
       {
         label: "Set claim conditions",
+        id: stepIds["set-claim-conditions"],
         status: { type: "idle" },
-        execute: createSequenceExecutorFn(
-          1,
-          createTokenFunctions.setClaimConditions,
-        ),
       },
       {
         label: "Mint tokens",
+        id: stepIds["mint-tokens"],
         status: { type: "idle" },
-        execute: createSequenceExecutorFn(2, createTokenFunctions.mintTokens),
       },
     ];
 
     if (formValues.airdropEnabled && formValues.airdropAddresses.length > 0) {
       initialSteps.push({
         label: "Airdrop tokens",
+        id: stepIds["airdrop-tokens"],
         status: { type: "idle" },
-        execute: createSequenceExecutorFn(
-          3,
-          createTokenFunctions.airdropTokens,
-        ),
       });
     }
 
     setSteps(initialSteps);
     setIsModalOpen(true);
-
-    // start sequence
-    initialSteps[0]?.execute();
+    executeSteps(initialSteps, 0);
   }
 
   const isComplete = steps.every((step) => step.status.type === "completed");
   const isPending = steps.some((step) => step.status.type === "pending");
 
+  async function executeStep(stepId: StepId) {
+    if (stepId === "deploy-contract") {
+      const result = await createTokenFunctions.deployContract(formValues);
+      setContractLink(
+        `/team/${props.teamSlug}/${props.projectSlug}/contract/${formValues.chain}/${result.contractAddress}`,
+      );
+    } else if (stepId === "set-claim-conditions") {
+      await createTokenFunctions.setClaimConditions(formValues);
+    } else if (stepId === "mint-tokens") {
+      await createTokenFunctions.mintTokens(formValues);
+    } else if (stepId === "airdrop-tokens") {
+      await createTokenFunctions.airdropTokens(formValues);
+    }
+  }
+
+  async function executeSteps(
+    steps: MultiStepState<StepId>[],
+    startIndex: number,
+  ) {
+    for (let i = startIndex; i < steps.length; i++) {
+      const currentStep = steps[i];
+      if (!currentStep) {
+        return;
+      }
+
+      try {
+        updateStatus(i, {
+          type: "pending",
+        });
+
+        await executeStep(currentStep.id);
+
+        updateStatus(i, {
+          type: "completed",
+        });
+      } catch (error) {
+        const parsedError = parseError(error);
+
+        updateStatus(i, {
+          type: "error",
+          message: parsedError,
+        });
+
+        launchTracking({
+          type: "error",
+          errorMessage:
+            typeof parsedError === "string" ? parsedError : "Unknown error",
+        });
+
+        throw error;
+      }
+    }
+
+    launchTracking({
+      type: "success",
+    });
+    props.onLaunchSuccess();
+  }
+
+  async function handleRetry(step: MultiStepState<StepId>) {
+    const startIndex = steps.findIndex((s) => s.id === step.id);
+    if (startIndex === -1) {
+      return;
+    }
+
+    await executeSteps(steps, startIndex);
+  }
+
   return (
     <StepCard
-      page="launch"
+      tracking={{
+        page: "launch",
+        contractType: "DropERC20",
+      }}
       title="Launch Coin"
       prevButton={{
         onClick: props.onPrevious,
@@ -192,7 +229,16 @@ export function LaunchTokenStatus(props: {
       {/* Token info */}
       <div className="flex flex-col gap-6 border-b border-dashed px-4 py-6 pb-6 md:px-6 lg:flex-row">
         <OverviewField name="Image" className="shrink-0">
-          <RenderFileImage file={formValues.image} />
+          <FilePreview
+            client={props.client}
+            srcOrFile={formValues.image}
+            className="size-24 rounded-lg border object-cover"
+            fallback={
+              <div className="flex items-center justify-center bg-muted/50">
+                <ImageOffIcon className="size-5 text-muted-foreground" />
+              </div>
+            }
+          />
         </OverviewField>
 
         <div className="flex grow flex-col gap-4 ">
@@ -249,7 +295,7 @@ export function LaunchTokenStatus(props: {
               )}
             </DialogHeader>
 
-            <MultiStepStatus steps={steps} />
+            <MultiStepStatus steps={steps} onRetry={handleRetry} />
           </div>
 
           <div className="mt-2 flex justify-between gap-4 border-border border-t bg-card p-6">
@@ -288,35 +334,6 @@ const compactNumberFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 10,
 });
 
-function RenderFileImage(props: {
-  file: File | undefined;
-}) {
-  const [objectUrl, setObjectUrl] = useState<string>("");
-
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    if (props.file) {
-      const url = URL.createObjectURL(props.file);
-      setObjectUrl(url);
-      return () => URL.revokeObjectURL(url);
-    } else {
-      setObjectUrl("");
-    }
-  }, [props.file]);
-
-  return (
-    <Img
-      src={objectUrl}
-      className="size-24 rounded-lg border object-cover"
-      fallback={
-        <div className="flex items-center justify-center bg-muted/50">
-          <ImageOffIcon className="size-5 text-muted-foreground" />
-        </div>
-      }
-    />
-  );
-}
-
 function OverviewField(props: {
   name: string;
   children: React.ReactNode;
@@ -334,25 +351,4 @@ function OverviewFieldValue(props: {
   value: string;
 }) {
   return <p className="text-foreground text-sm">{props.value}</p>;
-}
-
-function ChainOverview(props: {
-  chainId: string;
-  client: ThirdwebClient;
-}) {
-  const { idToChain } = useAllChainsData();
-  const chainMetadata = idToChain.get(Number(props.chainId));
-
-  return (
-    <div className="flex items-center gap-2">
-      <ChainIconClient
-        className="size-3.5"
-        client={props.client}
-        src={chainMetadata?.icon?.url || ""}
-      />
-      <p className="text-foreground text-sm">
-        {chainMetadata?.name || `Chain ${props.chainId}`}
-      </p>
-    </div>
-  );
 }

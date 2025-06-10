@@ -2,7 +2,6 @@ import {
   Box,
   Flex,
   FormControl,
-  Image,
   Input,
   Tab,
   TabList,
@@ -15,8 +14,6 @@ import { compare, validate } from "compare-versions";
 import { FileInput } from "components/shared/FileInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { SelectOption } from "core-ui/batch-upload/lazy-mint-form/select-option";
-import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
-import { replaceIpfsUrl } from "lib/sdk";
 import { useFormContext } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import type { ExtendedMetadata } from "thirdweb/utils";
@@ -44,7 +41,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
   client,
 }) => {
   const form = useFormContext<ExtendedMetadata>();
-  const logoUrl = useImageFileOrUrl(form.watch("logo"));
+  const logoUrl = form.watch("logo");
 
   const handleVersionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -97,19 +94,11 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
           <Box width="141px">
             <FileInput
               accept={{ "image/*": [] }}
+              client={client}
               value={logoUrl}
               // @ts-expect-error - we upload the file later this is fine
               setValue={(file) => form.setValue("logo", file)}
               className="rounded border border-border transition-all duration-200"
-              renderPreview={(fileUrl) => (
-                <Image
-                  alt=""
-                  w="100%"
-                  h="100%"
-                  src={replaceIpfsUrl(fileUrl, client)}
-                  borderRadius="full"
-                />
-              )}
               helperText="Image"
             />
           </Box>

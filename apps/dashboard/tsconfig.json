@@ -19,7 +19,8 @@
     "noUncheckedIndexedAccess": true,
     "paths": {
       "tw-components": ["tw-components"],
-      "tw-components/*": ["tw-components/*"]
+      "tw-components/*": ["tw-components/*"],
+      "@app/*": ["app/(app)/*"]
     },
     "plugins": [
       {

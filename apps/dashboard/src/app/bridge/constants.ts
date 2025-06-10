@@ -18,7 +18,6 @@ import { setThirdwebDomains } from "thirdweb/utils";
 
 function getBridgeThirdwebClient() {
   if (getVercelEnv() !== "production") {
-    console.log("Setting domains for bridge app", THIRDWEB_BRIDGE_URL);
     // if not on production: run this when creating a client to set the domains
     setThirdwebDomains({
       rpc: THIRDWEB_RPC_DOMAIN,

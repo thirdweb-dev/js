@@ -14,7 +14,6 @@ import {
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
@@ -31,6 +30,10 @@ import {
 } from "tw-components";
 import type { NFTMetadataInputLimited } from "types/modified-types";
 import { parseAttributes } from "utils/parseAttributes";
+import {
+  getUploadedNFTMediaMeta,
+  handleNFTMediaUpload,
+} from "../../modules/components/nft/handleNFTMediaUpload";
 
 const SHARED_METADATA_FORM_ID = "shared-metadata-form";
 
@@ -42,75 +45,20 @@ export const SharedMetadataForm: React.FC<{
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const form = useForm<NFTMetadataInputLimited>();
   const {
     setValue,
     register,
-    watch,
     handleSubmit,
     formState: { errors, isDirty },
-  } = useForm<NFTMetadataInputLimited>();
+  } = form;
 
   const setFile = (file: File) => {
-    if (file.type.includes("image")) {
-      // image files
-      setValue("image", file);
-      if (watch("external_url") instanceof File) {
-        setValue("external_url", undefined);
-      }
-      if (watch("animation_url") instanceof File) {
-        setValue("animation_url", undefined);
-      }
-    } else if (
-      ["audio", "video", "text/html", "model/*"].some((type: string) =>
-        file.type.includes(type),
-      ) ||
-      file.name?.endsWith(".glb") ||
-      file.name?.endsWith(".usdz") ||
-      file.name?.endsWith(".gltf") ||
-      file.name.endsWith(".obj")
-    ) {
-      // audio, video, html, and glb (3d) files
-      setValue("animation_url", file);
-      if (watch("external_url") instanceof File) {
-        setValue("external_url", undefined);
-      }
-    } else if (
-      ["text", "application/pdf"].some((type: string) =>
-        file.type?.includes(type),
-      )
-    ) {
-      // text and pdf files
-      setValue("external_url", file);
-      if (watch("animation_url") instanceof File) {
-        setValue("animation_url", undefined);
-      }
-    }
+    handleNFTMediaUpload({ file, form });
   };
 
-  const imageUrl = useImageFileOrUrl(watch("image") as File | string);
-  const animationUrlFormValue = watch("animation_url");
-  const imageUrlFormValue = watch("image");
-  const mediaFileUrl =
-    watch("animation_url") instanceof File
-      ? watch("animation_url")
-      : watch("external_url") instanceof File
-        ? watch("external_url")
-        : watch("image") instanceof File
-          ? imageUrl
-          : undefined;
-
-  const mediaFileError =
-    watch("animation_url") instanceof File
-      ? errors?.animation_url
-      : watch("external_url") instanceof File
-        ? errors?.external_url
-        : watch("image") instanceof File
-          ? errors?.image
-          : undefined;
-
-  const showCoverImageUpload =
-    watch("animation_url") instanceof File ||
-    watch("external_url") instanceof File;
+  const { media, image, mediaFileError, showCoverImageUpload, animation_url } =
+    getUploadedNFTMediaMeta(form);
 
   const setSharedMetaNotifications = useTxNotifications(
     "Shared metadata updated successfully",
@@ -185,7 +133,8 @@ export const SharedMetadataForm: React.FC<{
           <div>
             <FileInput
               previewMaxWidth="200px"
-              value={mediaFileUrl as File | string}
+              value={media}
+              client={contract.client}
               showUploadButton
               showPreview={true}
               setValue={setFile}
@@ -206,9 +155,10 @@ export const SharedMetadataForm: React.FC<{
           <FormControl isInvalid={!!errors.image}>
             <FormLabel>Cover Image</FormLabel>
             <FileInput
+              client={contract.client}
               previewMaxWidth="200px"
               accept={{ "image/*": [] }}
-              value={imageUrl}
+              value={image}
               showUploadButton
               setValue={(file) => setValue("image", file)}
               className="shrink-0 rounded border border-border transition-all"
@@ -237,45 +187,42 @@ export const SharedMetadataForm: React.FC<{
               <Heading size="subtitle.md">Advanced Options</Heading>
               <AccordionIcon />
             </AccordionButton>
-            <AccordionPanel className="flex flex-col gap-6 px-0">
-              <FormControl isInvalid={!!errors.image}>
-                <FormLabel>Image URL</FormLabel>
-                <Input
-                  value={
-                    typeof imageUrlFormValue === "string"
-                      ? imageUrlFormValue
-                      : ""
-                  }
-                  onChange={(e) => {
-                    setValue("image", e.target.value);
-                  }}
-                />
-                <FormHelperText>
-                  If you already have your NFT image pre-uploaded, you can set
-                  the URL or URI here.
-                </FormHelperText>
-                <FormErrorMessage>{errors?.image?.message}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={!!errors.animation_url}>
-                <FormLabel>Animation URL</FormLabel>
-                <Input
-                  value={
-                    typeof animationUrlFormValue === "string"
-                      ? animationUrlFormValue
-                      : ""
-                  }
-                  onChange={(e) => {
-                    setValue("animation_url", e.target.value);
-                  }}
-                />
-                <FormHelperText>
-                  If you already have your NFT Animation URL pre-uploaded, you
-                  can set the URL or URI here.
-                </FormHelperText>
-                <FormErrorMessage>
-                  {errors?.animation_url?.message}
-                </FormErrorMessage>
-              </FormControl>
+            <AccordionPanel className="!px-0 flex flex-col gap-6">
+              {!(image instanceof File) && (
+                <FormControl isInvalid={!!errors.image}>
+                  <FormLabel>Image URL</FormLabel>
+                  <Input
+                    value={image}
+                    onChange={(e) => {
+                      setValue("image", e.target.value);
+                    }}
+                  />
+                  <FormHelperText>
+                    If you already have your NFT image pre-uploaded, you can set
+                    the URL or URI here.
+                  </FormHelperText>
+                  <FormErrorMessage>{errors?.image?.message}</FormErrorMessage>
+                </FormControl>
+              )}
+
+              {!(animation_url instanceof File) && (
+                <FormControl isInvalid={!!errors.animation_url}>
+                  <FormLabel>Animation URL</FormLabel>
+                  <Input
+                    value={animation_url}
+                    onChange={(e) => {
+                      setValue("animation_url", e.target.value);
+                    }}
+                  />
+                  <FormHelperText>
+                    If you already have your NFT Animation URL pre-uploaded, you
+                    can set the URL or URI here.
+                  </FormHelperText>
+                  <FormErrorMessage>
+                    {errors?.animation_url?.message}
+                  </FormErrorMessage>
+                </FormControl>
+              )}
             </AccordionPanel>
           </AccordionItem>
         </Accordion>

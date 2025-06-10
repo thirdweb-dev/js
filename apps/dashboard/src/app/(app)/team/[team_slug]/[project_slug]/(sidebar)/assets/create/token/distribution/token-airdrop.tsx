@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import { DropZone } from "@/components/blocks/drop-zone/drop-zone";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
@@ -27,18 +28,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { useCsvUpload } from "hooks/useCsvUpload";
 import {
-  ArrowDownToLineIcon,
   ArrowRightIcon,
   ArrowUpFromLineIcon,
   CircleAlertIcon,
   FileTextIcon,
   RotateCcwIcon,
-  UploadIcon,
   XIcon,
 } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import type { TokenDistributionForm } from "../form";
+import { DownloadFileButton } from "../../_common/download-file-button";
+import type { TokenDistributionForm } from "../_common/form";
 
 type AirdropAddressInput = {
   address: string;
@@ -240,16 +240,7 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
 }) => {
   const [textInput, setTextInput] = useState("");
 
-  const {
-    normalizeQuery,
-    getInputProps,
-    getRootProps,
-    rawData,
-    noCsv,
-    reset,
-    removeInvalid,
-    processData,
-  } = useCsvUpload<AirdropAddressInput>({
+  const csvUpload = useCsvUpload<AirdropAddressInput>({
     csvParser: (items: AirdropAddressInput[]) => {
       return items
         .map(({ address, quantity }) => ({
@@ -261,17 +252,15 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
     client,
   });
 
-  const normalizeData = normalizeQuery.data;
+  const normalizeData = csvUpload.normalizeQuery.data;
 
-  // Handle text input - directly process the parsed data
   const handleTextSubmit = () => {
     if (!textInput.trim()) return;
-
     const parsedData = parseTextInput(textInput);
-    processData(parsedData);
+    csvUpload.processData(parsedData);
   };
 
-  if (!normalizeData && rawData.length > 0) {
+  if (csvUpload.normalizeQuery.isPending) {
     return (
       <div className="flex h-[300px] w-full grow items-center justify-center rounded-lg border border-border">
         <Spinner className="size-10" />
@@ -293,7 +282,7 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
   };
 
   const handleReset = () => {
-    reset();
+    csvUpload.reset();
     setTextInput("");
   };
 
@@ -301,9 +290,9 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
     <div className="flex w-full grow flex-col gap-6 overflow-hidden">
       {normalizeData &&
       normalizeData.result.length > 0 &&
-      rawData.length > 0 ? (
+      csvUpload.rawData.length > 0 ? (
         <div className="flex grow flex-col overflow-hidden outline">
-          {normalizeQuery.data.invalidFound && (
+          {csvUpload.normalizeQuery.data.invalidFound && (
             <p className="mb-3 text-red-500 text-sm">
               Invalid addresses found. Please remove them before continuing.
             </p>
@@ -317,10 +306,10 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
               <RotateCcwIcon className="mr-2 size-4" />
               Reset
             </Button>
-            {normalizeQuery.data.invalidFound ? (
+            {csvUpload.normalizeQuery.data.invalidFound ? (
               <Button
                 onClick={() => {
-                  removeInvalid();
+                  csvUpload.removeInvalid();
                 }}
               >
                 <XIcon className="mr-2 size-4" />
@@ -334,64 +323,26 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 overflow-y-auto">
           {/* CSV Upload Section - First */}
           <div className="space-y-4">
             <CSVFormatDetails />
 
-            <div className="relative w-full">
-              <div
-                className={cn(
-                  "flex h-[180px] cursor-pointer items-center justify-center rounded-md border border-dashed bg-card hover:border-active-border",
-                  noCsv &&
-                    "border-red-500 bg-red-200/30 text-red-500 hover:border-red-600 dark:border-red-900 dark:bg-red-900/30 dark:hover:border-red-800",
-                )}
-                {...getRootProps()}
-              >
-                <input {...getInputProps()} accept=".csv" />
-                <div className="flex flex-col items-center justify-center gap-3">
-                  {!noCsv && (
-                    <div className="flex flex-col items-center">
-                      <div className="mb-3 flex size-11 items-center justify-center rounded-full border bg-card">
-                        <UploadIcon className="size-5" />
-                      </div>
-                      <h2 className="mb-0.5 text-center font-medium text-lg">
-                        Upload CSV File
-                      </h2>
-                      <p className="text-center font-medium text-muted-foreground text-sm">
-                        Drag and drop your file or click here to upload
-                      </p>
-                    </div>
-                  )}
-
-                  {noCsv && (
-                    <div className="flex flex-col items-center">
-                      <div className="mb-3 flex size-11 items-center justify-center rounded-full border border-red-500 bg-red-200/50 text-red-500 dark:border-red-900 dark:bg-red-900/30 dark:text-foreground">
-                        <XIcon className="size-5" />
-                      </div>
-                      <h2 className="mb-0.5 text-center font-medium text-foreground text-lg">
-                        Invalid CSV
-                      </h2>
-                      <p className="text-balance text-center text-sm">
-                        Your CSV does not contain the "address" & "quantity"
-                        columns
-                      </p>
-
-                      <Button
-                        className="relative z-50 mt-4"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          reset();
-                        }}
-                      >
-                        Remove Invalid CSV
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+            <DropZone
+              accept=".csv"
+              isError={csvUpload.noCsv}
+              title={csvUpload.noCsv ? "Invalid CSV" : "Upload CSV File"}
+              description={
+                csvUpload.noCsv
+                  ? "Your CSV does not contain the 'address' & 'quantity' columns"
+                  : "Drag and drop your file or click here to upload"
+              }
+              onDrop={csvUpload.setFiles}
+              resetButton={{
+                label: "Remove Invalid CSV",
+                onClick: handleReset,
+              }}
+            />
           </div>
 
           {/* Divider */}
@@ -418,7 +369,8 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
               </p>
               <div className="space-y-3">
                 <Textarea
-                  placeholder={`0x314ab97b76e39d63c78d5c86c2daf8eaa306b182 3.141592
+                  placeholder={`\
+0x314ab97b76e39d63c78d5c86c2daf8eaa306b182 3.141592
 thirdweb.eth,2.7182
 0x141ca95b6177615fb1417cf70e930e102bf8f384=1.41421`}
                   value={textInput}
@@ -467,43 +419,20 @@ function CSVFormatDetails() {
         </li>
       </ul>
 
-      <DownloadExampleCSVButton />
+      <DownloadFileButton
+        fileContent={exampleCSV}
+        fileNameWithExtension="airdrop.csv"
+        label="Download Example CSV"
+        fileFormat="text/csv"
+      />
     </div>
   );
 }
 
-function DownloadExampleCSVButton() {
-  return (
-    <Button
-      size="sm"
-      onClick={() => {
-        const link = document.createElement("a");
-        const exampleData = [
-          {
-            address: "0x000000000000000000000000000000000000dEaD",
-            quantity: "2",
-          },
-          {
-            address: "thirdweb.eth",
-            quantity: "1",
-          },
-        ];
-
-        const csv = `address,quantity\n${exampleData
-          .map((o) => `${o.address},${o.quantity}`)
-          .join("\n")}`;
-
-        const blob = new Blob([csv], { type: "text/csv" });
-        link.href = URL.createObjectURL(blob);
-        link.download = "airdrop.csv";
-        link.click();
-      }}
-    >
-      <ArrowDownToLineIcon className="mr-2 size-4" />
-      Download Example CSV
-    </Button>
-  );
-}
+const exampleCSV = `\
+address,quantity
+0x000000000000000000000000000000000000dEaD,2
+thirdweb.eth,1`;
 
 function AirdropTable(props: {
   data: AirdropAddressInput[];

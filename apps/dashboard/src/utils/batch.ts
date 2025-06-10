@@ -22,7 +22,7 @@ export const csvMimeTypes = [
   "text/tab-separated-values",
 ];
 
-const jsonMimeTypes = [
+export const jsonMimeTypes = [
   "application/json",
   "application/x-json",
   "application/ld+json",
@@ -102,8 +102,9 @@ const getAcceptedFiles = async (acceptedFiles: File[]) => {
   return { csv, json, images, videos };
 };
 
-// biome-ignore lint/suspicious/noExplicitAny: FIXME
-const removeEmptyKeysFromObject = (obj: any) => {
+function removeEmptyKeysFromObject<T extends Record<string, unknown>>(
+  obj: T,
+): T {
   // biome-ignore lint/complexity/noForEach: FIXME
   Object.keys(obj).forEach((key) => {
     if (obj[key] === "" || obj[key] === null || obj[key] === undefined) {
@@ -111,7 +112,7 @@ const removeEmptyKeysFromObject = (obj: any) => {
     }
   });
   return obj;
-};
+}
 
 const convertToOsStandard = (obj: NFTInput["attributes"]) => {
   const attributes = Object.entries(obj || {}).map(([trait_type, value]) => ({

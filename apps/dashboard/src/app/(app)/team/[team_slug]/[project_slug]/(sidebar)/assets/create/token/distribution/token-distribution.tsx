@@ -8,11 +8,11 @@ import {
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import type { ThirdwebClient } from "thirdweb";
-import { StepCard } from "../create-token-card";
+import { StepCard } from "../../_common/step-card";
 import type {
   TokenDistributionForm,
   TokenDistributionFormValues,
-} from "../form";
+} from "../_common/form";
 import { TokenAirdropSection } from "./token-airdrop";
 import { TokenSaleSection } from "./token-sale";
 
@@ -33,7 +33,10 @@ export function TokenDistributionFieldset(props: {
       <form onSubmit={form.handleSubmit(props.onNext)}>
         <StepCard
           title="Coin Distribution"
-          page="distribution"
+          tracking={{
+            page: "distribution",
+            contractType: "DropERC20",
+          }}
           prevButton={{
             onClick: props.onPrevious,
           }}

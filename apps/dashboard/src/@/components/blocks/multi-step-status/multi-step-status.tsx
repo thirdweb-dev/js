@@ -10,21 +10,23 @@ import {
 import { DynamicHeight } from "../../ui/DynamicHeight";
 import { Spinner } from "../../ui/Spinner/Spinner";
 
-export type MultiStepState = {
+export type MultiStepState<T extends string> = {
+  id: T;
   status:
     | {
         type: "idle" | "pending" | "completed";
       }
     | {
         type: "error";
-        message: string | React.ReactNode;
+        message: React.ReactNode;
       };
   label: string;
-  execute: () => Promise<void>;
+  description?: string;
 };
 
-export function MultiStepStatus(props: {
-  steps: MultiStepState[];
+export function MultiStepStatus<T extends string>(props: {
+  steps: MultiStepState<T>[];
+  onRetry: (step: MultiStepState<T>) => void;
 }) {
   return (
     <DynamicHeight>
@@ -55,6 +57,15 @@ export function MultiStepStatus(props: {
                 {step.label}
               </p>
 
+              {/* show description when this step is active */}
+              {(step.status.type === "pending" ||
+                step.status.type === "error") &&
+                step.description && (
+                  <p className="text-muted-foreground text-sm">
+                    {step.description}
+                  </p>
+                )}
+
               {step.status.type === "error" && (
                 <div className="mt-1 space-y-2">
                   <p className="mb-1 text-red-500 text-sm">
@@ -64,7 +75,7 @@ export function MultiStepStatus(props: {
                     variant="destructive"
                     size="sm"
                     className="gap-2"
-                    onClick={() => step.execute()}
+                    onClick={() => props.onRetry(step)}
                   >
                     <RefreshCwIcon className="size-4" />
                     Retry

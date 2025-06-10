@@ -221,11 +221,11 @@ function TeamAvatarFormControl(props: {
         </div>
         <FileInput
           accept={{ "image/*": [] }}
-          value={teamAvatar}
+          value={teamAvatar || teamAvatarUrl}
           setValue={setTeamAvatar}
           className="w-20 rounded-full lg:w-28"
           disableHelperText
-          fileUrl={teamAvatarUrl}
+          client={props.client}
         />
       </div>
     </SettingsCard>

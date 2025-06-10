@@ -6,6 +6,7 @@ export function DecimalInput(props: {
   id?: string;
   className?: string;
   placeholder?: string;
+  disabled?: boolean;
 }) {
   return (
     <Input
@@ -15,6 +16,7 @@ export function DecimalInput(props: {
       className={props.className}
       inputMode="decimal"
       placeholder={props.placeholder}
+      disabled={props.disabled}
       onChange={(e) => {
         const number = Number(e.target.value);
         // ignore if string becomes invalid number

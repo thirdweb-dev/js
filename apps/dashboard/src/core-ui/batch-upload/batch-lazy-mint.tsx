@@ -14,7 +14,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
-import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { ChevronLeftIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -249,6 +248,7 @@ export const BatchLazyMint: ComponentWithChildren<
           <SelectReveal
             form={form}
             canCreateDelayedRevealBatch={props.canCreateDelayedRevealBatch}
+            client={props.client}
           />
           {form.watch("revealType") && (
             <>
@@ -301,15 +301,18 @@ export const BatchLazyMint: ComponentWithChildren<
 interface SelectRevealProps {
   form: ReturnType<typeof useBatchLazyMintForm>;
   canCreateDelayedRevealBatch: boolean;
+  client: ThirdwebClient;
 }
 
 const SelectReveal: React.FC<SelectRevealProps> = ({
   form,
+  client,
   canCreateDelayedRevealBatch,
 }) => {
   const [show, setShow] = useState(false);
 
-  const imageUrl = useImageFileOrUrl(form.watch("placeHolder.image"));
+  const imageUrl = form.watch("placeHolder.image");
+
   return (
     <Flex flexDir="column">
       <Flex
@@ -413,6 +416,7 @@ const SelectReveal: React.FC<SelectRevealProps> = ({
                 <FormLabel>Image</FormLabel>
                 <div className="w-auto md:w-[350px]">
                   <FileInput
+                    client={client}
                     accept={{ "image/*": [] }}
                     value={imageUrl}
                     showUploadButton

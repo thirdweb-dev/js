@@ -14,7 +14,6 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { CommonContractSchema } from "constants/schemas";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { useMemo } from "react";
@@ -224,9 +223,10 @@ export const SettingsMetadata = ({
               >
                 <FormLabel>Image</FormLabel>
                 <FileInput
+                  client={contract.client}
                   isDisabled={metadata.isPending || sendTransaction.isPending}
                   accept={{ "image/*": [] }}
-                  value={useImageFileOrUrl(watch("image"))}
+                  value={watch("image")}
                   setValue={(file) =>
                     setValue("image", file, {
                       shouldTouch: true,

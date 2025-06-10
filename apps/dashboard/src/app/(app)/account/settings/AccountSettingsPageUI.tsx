@@ -137,12 +137,12 @@ function AccountAvatarFormControl(props: {
           </p>
         </div>
         <FileInput
+          client={props.client}
           accept={{ "image/*": [] }}
-          value={avatar}
+          value={avatar || accountAvatarUrl}
           setValue={setAvatar}
           className="w-20 rounded-full lg:w-28"
           disableHelperText
-          fileUrl={accountAvatarUrl}
         />
       </div>
     </SettingsCard>

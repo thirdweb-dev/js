@@ -43,6 +43,7 @@ export const IconUpload: React.FC<{
 
   return (
     <FileInput
+      client={client}
       setValue={handleIconUpload}
       accept={{ "image/*": [] }}
       className="flex items-center"

@@ -1,20 +1,6 @@
 import type { UseFormReturn } from "react-hook-form";
-import { isAddress } from "thirdweb";
 import * as z from "zod";
-
-const addressSchema = z.string().refine(
-  (value) => {
-    if (isAddress(value)) {
-      return true;
-    }
-    return false;
-  },
-  {
-    message: "Invalid address",
-  },
-);
-
-const urlSchema = z.string().url();
+import { addressSchema, socialUrlsSchema } from "../../_common/schema";
 
 export const tokenInfoFormSchema = z.object({
   // info fieldset
@@ -25,25 +11,8 @@ export const tokenInfoFormSchema = z.object({
     .max(10, "Symbol must be 10 characters or less"),
   chain: z.string().min(1, "Chain is required"),
   description: z.string().optional(),
-  image: z.any().optional(),
-  socialUrls: z.array(
-    z.object({
-      platform: z.string(),
-      url: z.string().refine(
-        (val) => {
-          if (val === "") {
-            return true;
-          }
-
-          const url = val.startsWith("http") ? val : `https://${val}`;
-          return urlSchema.safeParse(url);
-        },
-        {
-          message: "Invalid URL",
-        },
-      ),
-    }),
-  ),
+  image: z.instanceof(File).optional(),
+  socialUrls: socialUrlsSchema,
 });
 
 export const tokenDistributionFormSchema = z.object({
