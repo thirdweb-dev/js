@@ -18,6 +18,7 @@ export type AccountHeaderCompProps = {
   connectButton: React.ReactNode;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   createProject: (team: Team) => void;
+  createTeam: () => void;
   account: Pick<Account, "email" | "id" | "image">;
   client: ThirdwebClient;
   accountAddress: string;
@@ -59,6 +60,7 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
               teamsAndProjects={props.teamsAndProjects}
               focus="team-selection"
               createProject={props.createProject}
+              createTeam={props.createTeam}
               account={props.account}
               client={props.client}
             />
@@ -110,6 +112,7 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
               upgradeTeamLink={undefined}
               account={props.account}
               client={props.client}
+              createTeam={props.createTeam}
             />
           )}
         </div>

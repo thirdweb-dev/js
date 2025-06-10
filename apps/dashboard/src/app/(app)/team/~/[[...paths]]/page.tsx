@@ -38,7 +38,13 @@ export default async function Page(props: {
     })
     .join("&");
 
+  // if the teams.length is ever 0, redirect to the account page (where the user can create a team then)
+  if (teams.length === 0) {
+    redirect("/account");
+  }
+
   // if there is a single team, redirect to the team page directly
+
   if (teams.length === 1 && teams[0]) {
     redirect(
       createTeamLink({

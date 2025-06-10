@@ -59,6 +59,7 @@ function Variants(props: {
               accountAddress={accountAddressStub}
               connectButton={<ConnectButtonStub />}
               createProject={() => {}}
+              createTeam={() => {}}
               account={{
                 id: "foo",
                 email: "foo@example.com",
