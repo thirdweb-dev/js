@@ -302,7 +302,7 @@ function TokenRow(props: {
           )}
           <TokenProvider
             client={props.client}
-            address={props.address}
+            address={props.address.toLowerCase()}
             chain={chain}
           >
             <ToolTipLabel
