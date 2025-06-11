@@ -7,6 +7,7 @@ import { useMemo } from "react";
 import { Toaster } from "sonner";
 import { ThirdwebProvider, useActiveAccount } from "thirdweb/react";
 import { MiniAppProvider } from "./(app)/_farcaster/miniapp-provider";
+import MinikitProvider from "./(app)/_worldcoin/minikit-provider";
 import { NebulaConnectWallet } from "./(app)/components/NebulaConnectButton";
 
 const queryClient = new QueryClient();
@@ -16,17 +17,19 @@ export function NebulaProviders(props: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <ThirdwebProvider>
         <MiniAppProvider>
-          <ThemeProvider
-            attribute="class"
-            disableTransitionOnChange
-            enableSystem={false}
-            defaultTheme="light"
-          >
-            <ToasterSetup />
-            <SanctionedAddressesChecker>
-              {props.children}
-            </SanctionedAddressesChecker>
-          </ThemeProvider>
+          <MinikitProvider>
+            <ThemeProvider
+              attribute="class"
+              disableTransitionOnChange
+              enableSystem={false}
+              defaultTheme="light"
+            >
+              <ToasterSetup />
+              <SanctionedAddressesChecker>
+                {props.children}
+              </SanctionedAddressesChecker>
+            </ThemeProvider>
+          </MinikitProvider>
         </MiniAppProvider>
       </ThirdwebProvider>
     </QueryClientProvider>
