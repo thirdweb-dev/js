@@ -148,11 +148,7 @@ export function StepRunner({
         return <Spinner size="sm" color={"accentButtonText"} />;
       case "failed":
         return (
-          <Cross1Icon
-            width={iconSize.sm}
-            height={iconSize.sm}
-            color={theme.colors.primaryText}
-          />
+          <Cross1Icon width={iconSize.sm} height={iconSize.sm} color="white" />
         );
       default:
         return (

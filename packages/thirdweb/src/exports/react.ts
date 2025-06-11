@@ -135,6 +135,10 @@ export {
   type BuyWidgetProps,
 } from "../react/web/ui/Bridge/BuyWidget.js";
 export {
+  CheckoutWidget,
+  type CheckoutWidgetProps,
+} from "../react/web/ui/Bridge/CheckoutWidget.js";
+export {
   PayEmbed,
   type PayEmbedProps,
   type PayEmbedConnectOptions,
