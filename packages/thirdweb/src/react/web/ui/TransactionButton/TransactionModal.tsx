@@ -125,6 +125,13 @@ function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
       onComplete={() => {
         setScreen("execute-tx");
       }}
+      onError={(_error) => {}}
+      onCancel={props.onClose}
+      connectOptions={undefined}
+      receiverAddress={undefined}
+      purchaseData={undefined}
+      paymentLinkId={undefined}
+      presetOptions={undefined}
     />
   );
 }

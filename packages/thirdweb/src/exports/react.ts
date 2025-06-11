@@ -131,6 +131,10 @@ export type { AutoConnectProps } from "../wallets/connection/types.js";
 export type { SiweAuthOptions } from "../react/core/hooks/auth/useSiweAuth.js";
 
 export {
+  BuyWidget,
+  type BuyWidgetProps,
+} from "../react/web/ui/Bridge/BuyWidget.js";
+export {
   PayEmbed,
   type PayEmbedProps,
   type PayEmbedConnectOptions,

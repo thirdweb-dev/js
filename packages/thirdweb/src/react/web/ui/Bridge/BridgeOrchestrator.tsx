@@ -40,20 +40,20 @@ export type UIOptions = Prettify<
     };
   } & (
     | {
-      mode: "fund_wallet";
-      destinationToken: Token;
-      initialAmount?: string;
-      presetOptions?: [number, number, number];
-    }
+        mode: "fund_wallet";
+        destinationToken: Token;
+        initialAmount?: string;
+        presetOptions?: [number, number, number];
+      }
     | {
-      mode: "direct_payment";
-      paymentInfo: {
-        sellerAddress: Address;
-        token: Token;
-        amount: string;
-        feePayer?: "sender" | "receiver";
-      };
-    }
+        mode: "direct_payment";
+        paymentInfo: {
+          sellerAddress: Address;
+          token: Token;
+          amount: string;
+          feePayer?: "sender" | "receiver";
+        };
+      }
     | { mode: "transaction"; transaction: PreparedTransaction }
   )
 >;
@@ -67,7 +67,7 @@ export interface BridgeOrchestratorProps {
   /**
    * The receiver address, defaults to the connected wallet address
    */
-  receiverAddress?: Address;
+  receiverAddress: Address | undefined;
 
   /**
    * ThirdwebClient for blockchain interactions
@@ -77,42 +77,42 @@ export interface BridgeOrchestratorProps {
   /**
    * Called when the flow is completed successfully
    */
-  onComplete?: () => void;
+  onComplete: () => void;
 
   /**
    * Called when the flow encounters an error
    */
-  onError?: (error: Error) => void;
+  onError: (error: Error) => void;
 
   /**
    * Called when the user cancels the flow
    */
-  onCancel?: () => void;
+  onCancel: () => void;
 
   /**
    * Connect options for wallet connection
    */
-  connectOptions?: PayEmbedConnectOptions;
+  connectOptions: PayEmbedConnectOptions | undefined;
 
   /**
    * Locale for connect UI
    */
-  connectLocale?: ConnectLocale;
+  connectLocale: ConnectLocale | undefined;
 
   /**
    * Optional purchase data for the payment
    */
-  purchaseData?: object;
+  purchaseData: object | undefined;
 
   /**
    * Optional payment link ID for the payment
    */
-  paymentLinkId?: string;
+  paymentLinkId: string | undefined;
 
   /**
    * Quick buy amounts
    */
-  presetOptions?: [number, number, number];
+  presetOptions: [number, number, number] | undefined;
 }
 
 export function BridgeOrchestrator({
