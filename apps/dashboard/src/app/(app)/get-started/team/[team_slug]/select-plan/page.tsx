@@ -1,9 +1,8 @@
-import { getTeamBySlug } from "@/api/team";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { type Team, getTeamBySlug } from "@/api/team";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { TeamOnboardingLayout } from "../../../../login/onboarding/onboarding-layout";
-import { InviteTeamMembers } from "../../../../login/onboarding/team-onboarding/team-onboarding";
+import { PlanSelector } from "./_components/plan-selector";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string }>;
@@ -18,14 +17,23 @@ export default async function Page(props: {
     notFound();
   }
 
-  const client = getClientThirdwebClient({
-    jwt: authToken,
-    teamId: team.id,
-  });
+  // const client = getClientThirdwebClient({
+  //   jwt: authToken,
+  //   teamId: team.id,
+  // });
+
+  async function getTeam() {
+    "use server";
+    const resolvedTeam = await getTeamBySlug(params.team_slug);
+    if (!resolvedTeam) {
+      return team as Team;
+    }
+    return resolvedTeam;
+  }
 
   return (
-    <TeamOnboardingLayout currentStep={3}>
-      <InviteTeamMembers team={team} client={client} />
+    <TeamOnboardingLayout currentStep={2}>
+      <PlanSelector team={team} getTeam={getTeam} />
     </TeamOnboardingLayout>
   );
 }
