@@ -11,6 +11,7 @@ type imgElementProps = React.DetailedHTMLProps<
   skeleton?: React.ReactNode;
   fallback?: React.ReactNode;
   src: string | undefined;
+  containerClassName?: string;
 };
 
 export function Img(props: imgElementProps) {
@@ -23,7 +24,8 @@ export function Img(props: imgElementProps) {
       : props.src === ""
         ? "fallback"
         : _status;
-  const { className, fallback, skeleton, ...restProps } = props;
+  const { className, fallback, skeleton, containerClassName, ...restProps } =
+    props;
   const defaultSkeleton = <div className="animate-pulse bg-accent" />;
   const defaultFallback = <div className="bg-accent" />;
   const imgRef = useRef<HTMLImageElement>(null);
@@ -47,7 +49,7 @@ export function Img(props: imgElementProps) {
   }, []);
 
   return (
-    <div className="relative shrink-0">
+    <div className={cn("relative shrink-0", containerClassName)}>
       <img
         {...restProps}
         // avoid setting empty src string to prevent request to the entire page

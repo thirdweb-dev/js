@@ -11,7 +11,7 @@ export const TEAM_PLANS: Record<
   {
     title: string;
     isStartingPriceOnly?: boolean;
-    price: string | number;
+    price: number;
     subTitle: string | null;
     trialPeriodDays: number;
     description: string;

@@ -305,6 +305,7 @@ export function PaymentLinkForm() {
                     </Label>
                     <div className="w-full">
                       <FileInput
+                        client={payAppThirdwebClient}
                         accept={{ "image/*": [] }}
                         setValue={handleImageUpload}
                         value={image || imageUri}
@@ -313,7 +314,6 @@ export function PaymentLinkForm() {
                         isDisabledText="Uploading..."
                         selectOrUpload="Upload"
                         helperText="image"
-                        fileUrl={imageUri}
                       />
                     </div>
                   </div>

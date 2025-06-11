@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ImportModal } from "components/contract-components/import-contract/modal";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -34,18 +33,17 @@ export function Cards(props: {
       <CardLink
         title="Create Coin"
         description="Launch your own ERC-20 coin"
-        href={`/team/${props.teamSlug}/${props.projectSlug}/assets/create`}
+        href={`/team/${props.teamSlug}/${props.projectSlug}/assets/create/token`}
         icon={CoinsIcon}
         trackingLabel="create-token"
       />
 
       <CardLink
         title="Create NFT Collection"
-        description="Launch your own ERC-721 NFT collection"
-        href={undefined}
+        description="Launch your own NFT collection"
+        href={`/team/${props.teamSlug}/${props.projectSlug}/assets/create/nft`}
         icon={ImagesIcon}
         trackingLabel="create-nft"
-        badge="Coming Soon"
       />
 
       <CardLink
@@ -69,7 +67,6 @@ function CardLink(props: {
   onClick?: () => void;
   icon: React.FC<{ className?: string }>;
   trackingLabel: string;
-  badge?: string;
 }) {
   const { onClick } = props;
   const isClickable = !!onClick || !!props.href;
@@ -110,17 +107,6 @@ function CardLink(props: {
           <props.icon className="size-5 text-muted-foreground" />
         </div>
       </div>
-
-      {props.badge && (
-        <div className="absolute top-4 right-4">
-          <Badge
-            variant="outline"
-            className="border-dashed py-1 text-muted-foreground"
-          >
-            {props.badge}
-          </Badge>
-        </div>
-      )}
 
       <h3 className="mb-0.5 font-semibold text-lg tracking-tight">
         {props.href ? (

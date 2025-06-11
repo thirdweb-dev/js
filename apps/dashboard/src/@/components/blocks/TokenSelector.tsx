@@ -159,6 +159,17 @@ export function TokenSelector(props: {
     ? `${props.selectedToken.chainId}:${props.selectedToken.address}`
     : undefined;
 
+  // if selected value is not in options, add it
+  if (
+    selectedValue &&
+    !options.find((option) => option.value === selectedValue)
+  ) {
+    options.push({
+      label: props.selectedToken?.address || "Unknown",
+      value: selectedValue,
+    });
+  }
+
   return (
     <SelectWithSearch
       searchPlaceholder="Search by name or symbol"
@@ -175,7 +186,7 @@ export function TokenSelector(props: {
       showCheck={props.showCheck}
       placeholder={
         tokensQuery.isPending
-          ? "Loading Tokens..."
+          ? "Loading Tokens"
           : props.placeholder || "Select Token"
       }
       overrideSearchFn={searchFn}

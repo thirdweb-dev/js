@@ -16,45 +16,34 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export const AllStates: Story = {
   args: {
+    onRetry: () => {},
     steps: [
       {
         status: { type: "completed" },
         label: "Connect Wallet",
-        execute: async () => {
-          await sleep(1000);
-        },
+        id: "connect-wallet",
       },
       {
         status: { type: "pending" },
         label: "Sign Message",
-        execute: async () => {
-          await sleep(1000);
-        },
+        id: "sign-message",
       },
       {
         status: { type: "error", message: "This is an error message" },
         label: "Approve Transaction",
-        execute: async () => {
-          await sleep(1000);
-        },
+        id: "approve-transaction",
       },
       {
         status: { type: "idle" },
         label: "Confirm Transaction",
-        execute: async () => {
-          await sleep(1000);
-        },
+        id: "confirm-transaction",
       },
       {
         status: { type: "idle" },
         label: "Finalize",
-        execute: async () => {
-          await sleep(1000);
-        },
+        id: "finalize",
       },
     ],
   },

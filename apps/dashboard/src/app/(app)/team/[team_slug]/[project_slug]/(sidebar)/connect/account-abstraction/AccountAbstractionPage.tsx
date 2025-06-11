@@ -110,7 +110,7 @@ function GasCreditAlert(props: {
             target="_blank"
             label="superchain-landing"
             category={TRACKING_CATEGORY}
-            href="https://thirdweb.com/grant/superchain"
+            href="https://thirdweb.com/superchain"
           >
             Learn More
           </TrackedUnderlineLink>

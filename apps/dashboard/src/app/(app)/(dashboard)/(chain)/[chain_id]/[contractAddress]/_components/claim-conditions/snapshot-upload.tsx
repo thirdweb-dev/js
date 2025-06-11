@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { useCsvUpload } from "hooks/useCsvUpload";
 import { CircleAlertIcon, DownloadIcon, UploadIcon } from "lucide-react";
 import { useRef } from "react";
+import { useDropzone } from "react-dropzone";
 import type { Column } from "react-table";
 import { type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import { CsvDataTable } from "../csv-data-table";
@@ -52,23 +53,18 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
   onClose,
   client,
 }) => {
-  const {
-    normalizeQuery,
-    getInputProps,
-    getRootProps,
-    isDragActive,
-    rawData,
-    noCsv,
-    reset,
-    removeInvalid,
-  } = useCsvUpload<SnapshotAddressInput>({
+  const csvUpload = useCsvUpload<SnapshotAddressInput>({
     csvParser,
     defaultRawData: value,
     client,
   });
 
+  const dropzone = useDropzone({
+    onDrop: csvUpload.setFiles,
+  });
+
   const paginationPortalRef = useRef<HTMLDivElement>(null);
-  const normalizeData = normalizeQuery.data;
+  const normalizeData = csvUpload.normalizeQuery.data;
 
   if (!normalizeData) {
     return (
@@ -152,11 +148,11 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
 
   return (
     <div className="flex flex-col gap-6">
-      {rawData.length > 0 ? (
+      {csvUpload.rawData.length > 0 ? (
         <div>
           <CsvDataTable<SnapshotAddressInput>
             portalRef={paginationPortalRef}
-            data={normalizeQuery.data.result}
+            data={csvUpload.normalizeQuery.data.result}
             columns={columns}
           />
         </div>
@@ -166,23 +162,27 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
             <div
               className={cn(
                 "flex h-full cursor-pointer rounded-md border border-border hover:border-primary",
-                noCsv ? "bg-red-200" : "bg-background",
+                csvUpload.noCsv ? "bg-red-200" : "bg-background",
               )}
-              {...getRootProps()}
+              {...dropzone.getRootProps()}
             >
-              <input {...getInputProps()} />
+              <input {...dropzone.getInputProps()} />
               <div className="!m-auto flex flex-col">
                 <UploadIcon
                   className={cn(
                     "mx-auto mb-2 size-8",
-                    noCsv ? "text-red-500" : "text-gray-600",
+                    csvUpload.noCsv ? "text-red-500" : "text-gray-600",
                   )}
                 />
-                {isDragActive ? (
+                {dropzone.isDragActive ? (
                   <p>Drop the files here</p>
                 ) : (
-                  <p className={noCsv ? "text-red-500" : "text-gray-600"}>
-                    {noCsv
+                  <p
+                    className={
+                      csvUpload.noCsv ? "text-red-500" : "text-gray-600"
+                    }
+                  >
+                    {csvUpload.noCsv
                       ? `No valid CSV file found, make sure your CSV includes the "address" column.`
                       : "Drag & Drop a CSV file here"}
                   </p>
@@ -294,20 +294,20 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
           <div className="mt-4 flex w-full flex-row items-center gap-2 md:mt-0 md:w-auto">
             <Button
               className="w-full rounded-md md:w-auto"
-              disabled={isDisabled || rawData.length === 0}
+              disabled={isDisabled || csvUpload.rawData.length === 0}
               onClick={() => {
-                reset();
+                csvUpload.reset();
               }}
             >
               Reset
             </Button>
-            {normalizeQuery.data?.invalidFound ? (
+            {csvUpload.normalizeQuery.data?.invalidFound ? (
               <Button
                 className="w-full rounded-md md:w-auto"
                 variant="primary"
-                disabled={isDisabled || rawData.length === 0}
+                disabled={isDisabled || csvUpload.rawData.length === 0}
                 onClick={() => {
-                  removeInvalid();
+                  csvUpload.removeInvalid();
                 }}
               >
                 Remove invalid
@@ -317,7 +317,7 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
                 className="w-full rounded-md md:w-auto"
                 variant="primary"
                 onClick={onSave}
-                disabled={isDisabled || rawData.length === 0}
+                disabled={isDisabled || csvUpload.rawData.length === 0}
               >
                 Next
               </Button>

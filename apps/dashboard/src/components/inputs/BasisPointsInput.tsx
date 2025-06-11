@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { PercentIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -44,9 +45,12 @@ export const BasisPointsInput: React.FC<BasisPointsInputProps> = ({
   return (
     <div className="flex overflow-hidden rounded-lg border border-border ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
       <Input
-        className="rounded-r-none border-none focus-visible:ring-0 focus-visible:ring-offset-0"
         value={stringValue}
         {...restInputProps}
+        className={cn(
+          "rounded-r-none border-none focus-visible:ring-0 focus-visible:ring-offset-0",
+          restInputProps.className,
+        )}
         onChange={(e) => setStringValue(e.target.value)}
         onBlur={(e) => {
           const val = e.target.value;

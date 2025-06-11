@@ -717,7 +717,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
           {Object.keys(formDeployParams).length > 0 && (
             <>
               {/* Contract Metadata */}
-              {hasContractURI && <ContractMetadataFieldset form={form} />}
+              {hasContractURI && (
+                <ContractMetadataFieldset form={form} client={client} />
+              )}
 
               {/* Primary Sale */}
               {hasPrimarySale && (

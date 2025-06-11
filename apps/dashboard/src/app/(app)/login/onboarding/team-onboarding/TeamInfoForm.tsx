@@ -18,6 +18,7 @@ import { ArrowRightIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import { useDebounce } from "use-debounce";
 import { z } from "zod";
 import {
@@ -46,6 +47,7 @@ export function TeamInfoFormUI(props: {
   onComplete: (updatedTeam: Team) => void;
   isTeamSlugAvailable: (slug: string) => Promise<boolean>;
   teamSlug: string;
+  client: ThirdwebClient;
 }) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -159,6 +161,7 @@ export function TeamInfoFormUI(props: {
                   <div className="h-3" />
                   <FormControl>
                     <FileInput
+                      client={props.client}
                       accept={{ "image/*": [] }}
                       value={value}
                       setValue={(file) => onChange(file)}

@@ -230,7 +230,7 @@ export function AuthOptionsForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit, (errors) => {
-          console.log(errors);
+          console.error(errors);
         })}
         className="flex flex-col gap-8"
       >

@@ -52,7 +52,7 @@ export function getTokenStepTrackingData(
 }
 
 // example: asset.launch.attempt
-export function getLaunchTrackingData(
+export function getTokenLaunchTrackingData(
   params: {
     chainId: number;
     airdropEnabled: boolean;
@@ -85,13 +85,14 @@ export function getLaunchTrackingData(
 
 // example: asset.info-page.next-click
 export function getStepCardTrackingData(params: {
-  step: "info" | "distribution" | "launch";
+  step: string;
   click: "prev" | "next";
+  contractType: "DropERC20" | "NFTCollection";
 }) {
   return {
     category: "asset",
     action: `${params.step}-page`,
     label: `${params.click}-click`,
-    contractType: "DropERC20",
+    contractType: params.contractType,
   };
 }

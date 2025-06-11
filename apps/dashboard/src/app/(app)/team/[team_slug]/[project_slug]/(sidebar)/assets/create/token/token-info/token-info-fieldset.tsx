@@ -2,23 +2,15 @@
 
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
-import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { FileInput } from "components/shared/FileInput";
-import { PlusIcon, Trash2Icon } from "lucide-react";
-import { useFieldArray } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
-import { StepCard } from "./create-token-card";
-import type { TokenInfoForm } from "./form";
+import { SocialUrlsFieldset } from "../../_common/SocialUrls";
+import { StepCard } from "../../_common/step-card";
+import type { TokenInfoForm } from "../_common/form";
 
 export function TokenInfoFieldset(props: {
   client: ThirdwebClient;
@@ -31,7 +23,10 @@ export function TokenInfoFieldset(props: {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(props.onNext)}>
         <StepCard
-          page="info"
+          tracking={{
+            page: "info",
+            contractType: "DropERC20",
+          }}
           title="Coin Information"
           prevButton={undefined}
           nextButton={{
@@ -47,6 +42,7 @@ export function TokenInfoFieldset(props: {
             >
               <FileInput
                 accept={{ "image/*": [] }}
+                client={props.client}
                 value={form.watch("image")}
                 setValue={(file) =>
                   form.setValue("image", file, {
@@ -128,94 +124,9 @@ export function TokenInfoFieldset(props: {
             </div>
           </div>
 
-          <SocialUrls form={form} />
+          <SocialUrlsFieldset form={form} />
         </StepCard>
       </form>
     </Form>
-  );
-}
-
-function SocialUrls(props: {
-  form: TokenInfoForm;
-}) {
-  const { form } = props;
-
-  const { fields, append, remove } = useFieldArray({
-    name: "socialUrls",
-    control: form.control,
-  });
-
-  return (
-    <div className="border-t border-dashed px-4 py-6 lg:px-6">
-      <h2 className="mb-2 font-medium text-sm">Social URLs</h2>
-
-      {fields.length > 0 && (
-        <div className="mb-5 space-y-4">
-          {fields.map((field, index) => (
-            <div
-              key={field.id}
-              className="flex gap-3 max-sm:mb-6 max-sm:border-b max-sm:border-dashed max-sm:pb-6"
-            >
-              <div className="flex flex-1 flex-col gap-3 lg:flex-row">
-                <FormField
-                  control={form.control}
-                  name={`socialUrls.${index}.platform`}
-                  render={({ field }) => (
-                    <FormItem className="lg:max-w-[140px]">
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="Platform"
-                          aria-label="Platform"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name={`socialUrls.${index}.url`}
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="https://..."
-                          aria-label="Platform URL"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                onClick={() => remove(index)}
-              >
-                <Trash2Icon className="h-4 w-4" />
-                <span className="sr-only">Remove</span>
-              </Button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <Button
-        type="button"
-        size="sm"
-        variant="outline"
-        onClick={() => append({ platform: "", url: "" })}
-        className="gap-2"
-      >
-        <PlusIcon className="size-4" />
-        Add Social URL
-      </Button>
-    </div>
   );
 }

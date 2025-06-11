@@ -6,7 +6,7 @@ import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { DecimalInput } from "@/components/ui/decimal-input";
 import { Switch } from "@/components/ui/switch";
 import type { ThirdwebClient } from "thirdweb";
-import type { TokenDistributionForm } from "../form";
+import type { TokenDistributionForm } from "../_common/form";
 
 export function TokenSaleSection(props: {
   form: TokenDistributionForm;

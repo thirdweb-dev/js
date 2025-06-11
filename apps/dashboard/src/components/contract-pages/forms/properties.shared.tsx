@@ -23,6 +23,7 @@ import {
   type WatchObserver,
   useFieldArray,
 } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { Button, FormErrorMessage, FormLabel } from "tw-components";
 
 type OptionalPropertiesInput = {
@@ -41,6 +42,7 @@ interface IPropertiesFormControlProps<
   register: UseFormRegister<TFieldValues>;
   errors: FieldErrors;
   setValue: UseFormSetValue<TFieldValues>;
+  client: ThirdwebClient;
 }
 
 export const PropertiesFormControl = <
@@ -51,6 +53,7 @@ export const PropertiesFormControl = <
   watch,
   errors,
   setValue,
+  client,
 }: React.PropsWithChildren<IPropertiesFormControlProps<TFieldValues>>) => {
   const { fields, append, remove, replace } = useFieldArray({
     control,
@@ -140,6 +143,7 @@ export const PropertiesFormControl = <
                     <InputRightElement>
                       <Tooltip label="Upload file" shouldWrapChildren>
                         <FileInput
+                          client={client}
                           setValue={(file) => {
                             setValue(
                               `attributes.${index}.value` as Path<TFieldValues>,

@@ -8,16 +8,16 @@ import {
   type ThirdwebClient,
   getAddress,
 } from "thirdweb";
-import { TokenDistributionFieldset } from "./distribution/token-distribution";
 import {
   type CreateAssetFormValues,
   type TokenDistributionFormValues,
   type TokenInfoFormValues,
   tokenDistributionFormSchema,
   tokenInfoFormSchema,
-} from "./form";
+} from "./_common/form";
+import { TokenDistributionFieldset } from "./distribution/token-distribution";
 import { LaunchTokenStatus } from "./launch/launch-token";
-import { TokenInfoFieldset } from "./token-info-fieldset";
+import { TokenInfoFieldset } from "./token-info/token-info-fieldset";
 
 export type CreateTokenFunctions = {
   deployContract: (values: CreateAssetFormValues) => Promise<{

@@ -505,11 +505,11 @@ function ProjectImageSetting(props: {
         </div>
         <FileInput
           accept={{ "image/*": [] }}
-          value={projectAvatar}
+          value={projectAvatar || projectAvatarUrl}
           setValue={setProjectAvatar}
+          client={props.client}
           className="w-20 rounded-full lg:w-28"
           disableHelperText
-          fileUrl={projectAvatarUrl}
         />
       </div>
     </SettingsCard>

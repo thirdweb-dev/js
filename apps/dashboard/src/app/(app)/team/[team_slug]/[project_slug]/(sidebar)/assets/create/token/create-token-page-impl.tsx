@@ -26,14 +26,15 @@ import {
   transferBatch,
 } from "thirdweb/extensions/erc20";
 import { useActiveAccount } from "thirdweb/react";
-import { pollWithTimeout } from "../../../../../../../../utils/pollWithTimeout";
-import { useAddContractToProject } from "../../hooks/project-contracts";
-import { CreateTokenAssetPageUI } from "./create-token-page.client";
-import type { CreateAssetFormValues } from "./form";
+import { parseError } from "utils/errorParser";
+import { pollWithTimeout } from "utils/pollWithTimeout";
+import { useAddContractToProject } from "../../../hooks/project-contracts";
+import type { CreateAssetFormValues } from "./_common/form";
 import {
   getTokenDeploymentTrackingData,
   getTokenStepTrackingData,
-} from "./tracking";
+} from "./_common/tracking";
+import { CreateTokenAssetPageUI } from "./create-token-page.client";
 
 export function CreateTokenAssetPage(props: {
   accountAddress: string;
@@ -136,12 +137,15 @@ export function CreateTokenAssetPage(props: {
         contractAddress: contractAddress,
       };
     } catch (e) {
+      const parsedError = parseError(e);
+      const errorMessage =
+        typeof parsedError === "string" ? parsedError : "Unknown error";
       trackEvent(
         getTokenStepTrackingData({
           action: "deploy",
           chainId: Number(formValues.chain),
           status: "error",
-          errorMessage: e instanceof Error ? e.message : "Unknown error",
+          errorMessage,
         }),
       );
 
@@ -149,7 +153,7 @@ export function CreateTokenAssetPage(props: {
         getTokenDeploymentTrackingData({
           type: "error",
           chainId: Number(formValues.chain),
-          errorMessage: e instanceof Error ? e.message : "Unknown error",
+          errorMessage,
         }),
       );
       throw e;
@@ -409,7 +413,7 @@ export function CreateTokenAssetPage(props: {
       projectSlug={props.projectSlug}
       onLaunchSuccess={() => {
         revalidatePathAction(
-          `/team/${props.teamId}/project/${props.projectId}/assets`,
+          `/team/${props.teamSlug}/project/${props.projectId}/assets`,
           "page",
         );
       }}
