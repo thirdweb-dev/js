@@ -368,6 +368,12 @@ async function redirects() {
       destination: "/learn/guides",
       permanent: false,
     },
+    // redirect to /grant/superchain to /superchain
+    {
+      source: "/grant/superchain",
+      destination: "/superchain",
+      permanent: false,
+    },
 
     ...legacyDashboardToTeamRedirects,
   ];
