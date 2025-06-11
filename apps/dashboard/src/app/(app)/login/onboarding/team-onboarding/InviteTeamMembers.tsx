@@ -49,7 +49,8 @@ export function InviteTeamMembersUI(props: {
     await pollWithTimeout({
       shouldStop: async () => {
         const team = await props.getTeam();
-        const isNonFreePlan = team.billingPlan !== "free";
+        const isNonFreePlan =
+          team.billingPlan !== "free" && team.billingPlan !== "starter";
 
         if (isNonFreePlan) {
           props.trackEvent({
@@ -233,8 +234,8 @@ function InviteModalContent(props: {
           Choose a plan
         </SheetTitle>
         <SheetDescription className="text-left leading-relaxed">
-          Get started with the free Starter plan or upgrade to Growth plan for
-          increased limits and advanced features.{" "}
+          Upgrade to the Growth plan to unlock team members and advanced
+          features.{" "}
           <UnderlineLink href="https://thirdweb.com/pricing" target="_blank">
             Learn more about pricing
           </UnderlineLink>
