@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useState } from "react";
 import { mobileViewport, storybookThirdwebClient } from "stories/utils";
 import { AccountSettingsPageUI } from "./AccountSettingsPageUI";

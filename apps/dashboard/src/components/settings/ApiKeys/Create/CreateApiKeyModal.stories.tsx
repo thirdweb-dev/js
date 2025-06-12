@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useState } from "react";
 import { CreateProjectDialogUI, type CreateProjectPrefillOptions } from ".";
 import { projectStub } from "../../../../stories/stubs";

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { teamStub } from "stories/stubs";
 import { storybookThirdwebClient } from "stories/utils";
 import {

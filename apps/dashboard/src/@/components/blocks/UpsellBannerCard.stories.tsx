@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { ArrowRightIcon, RocketIcon, StarIcon } from "lucide-react";
 import { BadgeContainer } from "../../../stories/utils";
 import { UpsellBannerCard } from "./UpsellBannerCard";

@@ -1,5 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useMutation } from "@tanstack/react-query";
 import type { TransactionError } from "contexts/error-handler";
 import { useState } from "react";

@@ -1,5 +1,5 @@
 import type { LinkedWallet } from "@/api/linked-wallets";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import {
   BadgeContainer,
   mobileViewport,
