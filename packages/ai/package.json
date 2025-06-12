@@ -25,7 +25,8 @@
   },
   "files": ["dist/*", "src/*"],
   "dependencies": {
-    "@hey-api/client-fetch": "0.10.0"
+    "@hey-api/client-fetch": "0.10.0",
+    "thirdweb": "workspace:*"
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "0.67.5",

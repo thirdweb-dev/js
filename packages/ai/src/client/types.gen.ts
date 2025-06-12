@@ -1059,24 +1059,24 @@ export type WalletTransaction = {
 
 export type WalletType = "eoa" | "server" | "eip4337" | "eip7702";
 
-export type GetSessionListSessionListGetData = {
+export type DeprecatedGetSessionsData = {
   body?: never;
   path?: never;
   query?: never;
   url: "/session/list";
 };
 
-export type GetSessionListSessionListGetResponses = {
+export type DeprecatedGetSessionsResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelListSessionList;
 };
 
-export type GetSessionListSessionListGetResponse =
-  GetSessionListSessionListGetResponses[keyof GetSessionListSessionListGetResponses];
+export type DeprecatedGetSessionsResponse =
+  DeprecatedGetSessionsResponses[keyof DeprecatedGetSessionsResponses];
 
-export type DeleteSessionSessionSessionIdDeleteData = {
+export type DeprecatedDeleteSessionData = {
   body?: never;
   path: {
     session_id: string;
@@ -1085,27 +1085,27 @@ export type DeleteSessionSessionSessionIdDeleteData = {
   url: "/session/{session_id}";
 };
 
-export type DeleteSessionSessionSessionIdDeleteErrors = {
+export type DeprecatedDeleteSessionErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type DeleteSessionSessionSessionIdDeleteError =
-  DeleteSessionSessionSessionIdDeleteErrors[keyof DeleteSessionSessionSessionIdDeleteErrors];
+export type DeprecatedDeleteSessionError =
+  DeprecatedDeleteSessionErrors[keyof DeprecatedDeleteSessionErrors];
 
-export type DeleteSessionSessionSessionIdDeleteResponses = {
+export type DeprecatedDeleteSessionResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelSessionDeleteResponse;
 };
 
-export type DeleteSessionSessionSessionIdDeleteResponse =
-  DeleteSessionSessionSessionIdDeleteResponses[keyof DeleteSessionSessionSessionIdDeleteResponses];
+export type DeprecatedDeleteSessionResponse =
+  DeprecatedDeleteSessionResponses[keyof DeprecatedDeleteSessionResponses];
 
-export type GetSessionSessionSessionIdGetData = {
+export type DeprecatedGetSessionData = {
   body?: never;
   path: {
     session_id: string;
@@ -1114,27 +1114,27 @@ export type GetSessionSessionSessionIdGetData = {
   url: "/session/{session_id}";
 };
 
-export type GetSessionSessionSessionIdGetErrors = {
+export type DeprecatedGetSessionErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type GetSessionSessionSessionIdGetError =
-  GetSessionSessionSessionIdGetErrors[keyof GetSessionSessionSessionIdGetErrors];
+export type DeprecatedGetSessionError =
+  DeprecatedGetSessionErrors[keyof DeprecatedGetSessionErrors];
 
-export type GetSessionSessionSessionIdGetResponses = {
+export type DeprecatedGetSessionResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelSession;
 };
 
-export type GetSessionSessionSessionIdGetResponse =
-  GetSessionSessionSessionIdGetResponses[keyof GetSessionSessionSessionIdGetResponses];
+export type DeprecatedGetSessionResponse =
+  DeprecatedGetSessionResponses[keyof DeprecatedGetSessionResponses];
 
-export type UpdateSessionSessionSessionIdPutData = {
+export type DeprecatedUpdateSessionData = {
   body: UpdateSessionParams;
   path: {
     session_id: string;
@@ -1143,54 +1143,54 @@ export type UpdateSessionSessionSessionIdPutData = {
   url: "/session/{session_id}";
 };
 
-export type UpdateSessionSessionSessionIdPutErrors = {
+export type DeprecatedUpdateSessionErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type UpdateSessionSessionSessionIdPutError =
-  UpdateSessionSessionSessionIdPutErrors[keyof UpdateSessionSessionSessionIdPutErrors];
+export type DeprecatedUpdateSessionError =
+  DeprecatedUpdateSessionErrors[keyof DeprecatedUpdateSessionErrors];
 
-export type UpdateSessionSessionSessionIdPutResponses = {
+export type DeprecatedUpdateSessionResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelSession;
 };
 
-export type UpdateSessionSessionSessionIdPutResponse =
-  UpdateSessionSessionSessionIdPutResponses[keyof UpdateSessionSessionSessionIdPutResponses];
+export type DeprecatedUpdateSessionResponse =
+  DeprecatedUpdateSessionResponses[keyof DeprecatedUpdateSessionResponses];
 
-export type CreateSessionSessionPostData = {
+export type DeprecatedCreateSessionData = {
   body: CreateSessionParams;
   path?: never;
   query?: never;
   url: "/session";
 };
 
-export type CreateSessionSessionPostErrors = {
+export type DeprecatedCreateSessionErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type CreateSessionSessionPostError =
-  CreateSessionSessionPostErrors[keyof CreateSessionSessionPostErrors];
+export type DeprecatedCreateSessionError =
+  DeprecatedCreateSessionErrors[keyof DeprecatedCreateSessionErrors];
 
-export type CreateSessionSessionPostResponses = {
+export type DeprecatedCreateSessionResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelSession;
 };
 
-export type CreateSessionSessionPostResponse =
-  CreateSessionSessionPostResponses[keyof CreateSessionSessionPostResponses];
+export type DeprecatedCreateSessionResponse =
+  DeprecatedCreateSessionResponses[keyof DeprecatedCreateSessionResponses];
 
-export type ClearSessionSessionSessionIdClearPostData = {
+export type DeprecatedClearSessionData = {
   body?: never;
   path: {
     session_id: string;
@@ -1199,256 +1199,252 @@ export type ClearSessionSessionSessionIdClearPostData = {
   url: "/session/{session_id}/clear";
 };
 
-export type ClearSessionSessionSessionIdClearPostErrors = {
+export type DeprecatedClearSessionErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type ClearSessionSessionSessionIdClearPostError =
-  ClearSessionSessionSessionIdClearPostErrors[keyof ClearSessionSessionSessionIdClearPostErrors];
+export type DeprecatedClearSessionError =
+  DeprecatedClearSessionErrors[keyof DeprecatedClearSessionErrors];
 
-export type ClearSessionSessionSessionIdClearPostResponses = {
+export type DeprecatedClearSessionResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelSession;
 };
 
-export type ClearSessionSessionSessionIdClearPostResponse =
-  ClearSessionSessionSessionIdClearPostResponses[keyof ClearSessionSessionSessionIdClearPostResponses];
+export type DeprecatedClearSessionResponse =
+  DeprecatedClearSessionResponses[keyof DeprecatedClearSessionResponses];
 
-export type ChatChatPostData = {
+export type DeprecatedChatData = {
   body: ChatParamsSingleMessage | ChatParamsMultiMessages;
   path?: never;
   query?: never;
   url: "/chat";
 };
 
-export type ChatChatPostErrors = {
+export type DeprecatedChatErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type ChatChatPostError = ChatChatPostErrors[keyof ChatChatPostErrors];
+export type DeprecatedChatError =
+  DeprecatedChatErrors[keyof DeprecatedChatErrors];
 
-export type ChatChatPostResponses = {
+export type DeprecatedChatResponses = {
   /**
    * Successful Response
    */
   200: ChatResponse;
 };
 
-export type ChatChatPostResponse =
-  ChatChatPostResponses[keyof ChatChatPostResponses];
+export type DeprecatedChatResponse =
+  DeprecatedChatResponses[keyof DeprecatedChatResponses];
 
-export type ChatCompletionsChatCompletionsPostData = {
+export type DeprecatedChatCompletionsData = {
   body: CompletionParams;
   path?: never;
   query?: never;
   url: "/chat/completions";
 };
 
-export type ChatCompletionsChatCompletionsPostErrors = {
+export type DeprecatedChatCompletionsErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type ChatCompletionsChatCompletionsPostError =
-  ChatCompletionsChatCompletionsPostErrors[keyof ChatCompletionsChatCompletionsPostErrors];
+export type DeprecatedChatCompletionsError =
+  DeprecatedChatCompletionsErrors[keyof DeprecatedChatCompletionsErrors];
 
-export type ChatCompletionsChatCompletionsPostResponses = {
+export type DeprecatedChatCompletionsResponses = {
   /**
    * Successful Response
    */
   200: CompletionResponse;
 };
 
-export type ChatCompletionsChatCompletionsPostResponse =
-  ChatCompletionsChatCompletionsPostResponses[keyof ChatCompletionsChatCompletionsPostResponses];
+export type DeprecatedChatCompletionsResponse =
+  DeprecatedChatCompletionsResponses[keyof DeprecatedChatCompletionsResponses];
 
-export type ExecuteExecutePostData = {
+export type DeprecatedExecuteData = {
   body: ChatParamsSingleMessage | ChatParamsMultiMessages;
   path?: never;
   query?: never;
   url: "/execute";
 };
 
-export type ExecuteExecutePostErrors = {
+export type DeprecatedExecuteErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type ExecuteExecutePostError =
-  ExecuteExecutePostErrors[keyof ExecuteExecutePostErrors];
+export type DeprecatedExecuteError =
+  DeprecatedExecuteErrors[keyof DeprecatedExecuteErrors];
 
-export type ExecuteExecutePostResponses = {
+export type DeprecatedExecuteResponses = {
   /**
    * Successful Response
    */
   200: ChatResponse;
 };
 
-export type ExecuteExecutePostResponse =
-  ExecuteExecutePostResponses[keyof ExecuteExecutePostResponses];
+export type DeprecatedExecuteResponse =
+  DeprecatedExecuteResponses[keyof DeprecatedExecuteResponses];
 
-export type FeedbackFeedbackPostData = {
+export type FeedbackData = {
   body: FeedbackParams;
   path?: never;
   query?: never;
   url: "/feedback";
 };
 
-export type FeedbackFeedbackPostErrors = {
+export type FeedbackErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type FeedbackFeedbackPostError =
-  FeedbackFeedbackPostErrors[keyof FeedbackFeedbackPostErrors];
+export type FeedbackError = FeedbackErrors[keyof FeedbackErrors];
 
-export type FeedbackFeedbackPostResponses = {
+export type FeedbackResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelFeedback;
 };
 
-export type FeedbackFeedbackPostResponse =
-  FeedbackFeedbackPostResponses[keyof FeedbackFeedbackPostResponses];
+export type FeedbackResponse = FeedbackResponses[keyof FeedbackResponses];
 
-export type GetModelsModelsGetData = {
+export type GetModelsData = {
   body?: never;
   path?: never;
   query?: never;
   url: "/models";
 };
 
-export type GetModelsModelsGetResponses = {
+export type GetModelsResponses = {
   /**
    * Successful Response
    */
   200: ModelResponse;
 };
 
-export type GetModelsModelsGetResponse =
-  GetModelsModelsGetResponses[keyof GetModelsModelsGetResponses];
+export type GetModelsResponse = GetModelsResponses[keyof GetModelsResponses];
 
-export type GetDelegatePayloadAuthDelegatePayloadPostData = {
+export type GetAuthDelegatePayloadData = {
   body: GetPayloadParams;
   path?: never;
   query?: never;
   url: "/auth/delegate/payload";
 };
 
-export type GetDelegatePayloadAuthDelegatePayloadPostErrors = {
+export type GetAuthDelegatePayloadErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type GetDelegatePayloadAuthDelegatePayloadPostError =
-  GetDelegatePayloadAuthDelegatePayloadPostErrors[keyof GetDelegatePayloadAuthDelegatePayloadPostErrors];
+export type GetAuthDelegatePayloadError =
+  GetAuthDelegatePayloadErrors[keyof GetAuthDelegatePayloadErrors];
 
-export type GetDelegatePayloadAuthDelegatePayloadPostResponses = {
+export type GetAuthDelegatePayloadResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelGetPayloadResponse;
 };
 
-export type GetDelegatePayloadAuthDelegatePayloadPostResponse =
-  GetDelegatePayloadAuthDelegatePayloadPostResponses[keyof GetDelegatePayloadAuthDelegatePayloadPostResponses];
+export type GetAuthDelegatePayloadResponse =
+  GetAuthDelegatePayloadResponses[keyof GetAuthDelegatePayloadResponses];
 
-export type LoginDelegateAuthDelegateLoginPostData = {
+export type AuthDelegateLoginData = {
   body: LoginParams;
   path?: never;
   query?: never;
   url: "/auth/delegate/login";
 };
 
-export type LoginDelegateAuthDelegateLoginPostErrors = {
+export type AuthDelegateLoginErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type LoginDelegateAuthDelegateLoginPostError =
-  LoginDelegateAuthDelegateLoginPostErrors[keyof LoginDelegateAuthDelegateLoginPostErrors];
+export type AuthDelegateLoginError =
+  AuthDelegateLoginErrors[keyof AuthDelegateLoginErrors];
 
-export type LoginDelegateAuthDelegateLoginPostResponses = {
+export type AuthDelegateLoginResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelLoginResponse;
 };
 
-export type LoginDelegateAuthDelegateLoginPostResponse =
-  LoginDelegateAuthDelegateLoginPostResponses[keyof LoginDelegateAuthDelegateLoginPostResponses];
+export type AuthDelegateLoginResponse =
+  AuthDelegateLoginResponses[keyof AuthDelegateLoginResponses];
 
-export type VerifyAuthAuthVerifyGetData = {
+export type VerifyAuthData = {
   body?: never;
   path?: never;
   query?: never;
   url: "/auth/verify";
 };
 
-export type VerifyAuthAuthVerifyGetResponses = {
+export type VerifyAuthResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelVerifyJwtResponse;
 };
 
-export type VerifyAuthAuthVerifyGetResponse =
-  VerifyAuthAuthVerifyGetResponses[keyof VerifyAuthAuthVerifyGetResponses];
+export type VerifyAuthResponse = VerifyAuthResponses[keyof VerifyAuthResponses];
 
-export type GetUserUserGetData = {
+export type GetUserData = {
   body?: never;
   path?: never;
   query?: never;
   url: "/user";
 };
 
-export type GetUserUserGetResponses = {
+export type GetUserResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelUserResponse;
 };
 
-export type GetUserUserGetResponse =
-  GetUserUserGetResponses[keyof GetUserUserGetResponses];
+export type GetUserResponse = GetUserResponses[keyof GetUserResponses];
 
-export type GetUserWalletsUserWalletsGetData = {
+export type GetUserWalletsData = {
   body?: never;
   path?: never;
   query?: never;
   url: "/user/wallets";
 };
 
-export type GetUserWalletsUserWalletsGetResponses = {
+export type GetUserWalletsResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelListUserWalletResponse;
 };
 
-export type GetUserWalletsUserWalletsGetResponse =
-  GetUserWalletsUserWalletsGetResponses[keyof GetUserWalletsUserWalletsGetResponses];
+export type GetUserWalletsResponse =
+  GetUserWalletsResponses[keyof GetUserWalletsResponses];
 
-export type DeleteUserWalletUserWalletWalletIdDeleteData = {
+export type DeleteUserWalletData = {
   body?: never;
   path: {
     wallet_id: string;
@@ -1457,24 +1453,24 @@ export type DeleteUserWalletUserWalletWalletIdDeleteData = {
   url: "/user/wallet/{wallet_id}";
 };
 
-export type DeleteUserWalletUserWalletWalletIdDeleteErrors = {
+export type DeleteUserWalletErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type DeleteUserWalletUserWalletWalletIdDeleteError =
-  DeleteUserWalletUserWalletWalletIdDeleteErrors[keyof DeleteUserWalletUserWalletWalletIdDeleteErrors];
+export type DeleteUserWalletError =
+  DeleteUserWalletErrors[keyof DeleteUserWalletErrors];
 
-export type DeleteUserWalletUserWalletWalletIdDeleteResponses = {
+export type DeleteUserWalletResponses = {
   /**
    * Successful Response
    */
   200: unknown;
 };
 
-export type GetUserWalletUserWalletWalletIdGetData = {
+export type GetUserWalletData = {
   body?: never;
   path: {
     wallet_id: string;
@@ -1483,27 +1479,26 @@ export type GetUserWalletUserWalletWalletIdGetData = {
   url: "/user/wallet/{wallet_id}";
 };
 
-export type GetUserWalletUserWalletWalletIdGetErrors = {
+export type GetUserWalletErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type GetUserWalletUserWalletWalletIdGetError =
-  GetUserWalletUserWalletWalletIdGetErrors[keyof GetUserWalletUserWalletWalletIdGetErrors];
+export type GetUserWalletError = GetUserWalletErrors[keyof GetUserWalletErrors];
 
-export type GetUserWalletUserWalletWalletIdGetResponses = {
+export type GetUserWalletResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelUserWalletResponse;
 };
 
-export type GetUserWalletUserWalletWalletIdGetResponse =
-  GetUserWalletUserWalletWalletIdGetResponses[keyof GetUserWalletUserWalletWalletIdGetResponses];
+export type GetUserWalletResponse =
+  GetUserWalletResponses[keyof GetUserWalletResponses];
 
-export type PutUserWalletUserWalletWalletIdPutData = {
+export type UpdateUserWalletData = {
   body: UpdateUserWalletParams;
   path: {
     wallet_id: string;
@@ -1512,65 +1507,64 @@ export type PutUserWalletUserWalletWalletIdPutData = {
   url: "/user/wallet/{wallet_id}";
 };
 
-export type PutUserWalletUserWalletWalletIdPutErrors = {
+export type UpdateUserWalletErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type PutUserWalletUserWalletWalletIdPutError =
-  PutUserWalletUserWalletWalletIdPutErrors[keyof PutUserWalletUserWalletWalletIdPutErrors];
+export type UpdateUserWalletError =
+  UpdateUserWalletErrors[keyof UpdateUserWalletErrors];
 
-export type PutUserWalletUserWalletWalletIdPutResponses = {
+export type UpdateUserWalletResponses = {
   /**
    * Successful Response
    */
   200: unknown;
 };
 
-export type PostUserWalletUserWalletPostData = {
+export type CreateUserWalletData = {
   body: CreateUserWalletParams;
   path?: never;
   query?: never;
   url: "/user/wallet";
 };
 
-export type PostUserWalletUserWalletPostErrors = {
+export type CreateUserWalletErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type PostUserWalletUserWalletPostError =
-  PostUserWalletUserWalletPostErrors[keyof PostUserWalletUserWalletPostErrors];
+export type CreateUserWalletError =
+  CreateUserWalletErrors[keyof CreateUserWalletErrors];
 
-export type PostUserWalletUserWalletPostResponses = {
+export type CreateUserWalletResponses = {
   /**
    * Successful Response
    */
   200: unknown;
 };
 
-export type GetAgentsAgentsGetData = {
+export type GetAgentsData = {
   body?: never;
   path?: never;
   query?: never;
   url: "/agents";
 };
 
-export type GetAgentsAgentsGetResponses = {
+export type GetAgentsResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelListAgentListResponse;
 };
 
-export type GetAgentsAgentsGetResponse =
-  GetAgentsAgentsGetResponses[keyof GetAgentsAgentsGetResponses];
+export type GetAgentsResponse = GetAgentsResponses[keyof GetAgentsResponses];
 
-export type DeleteAgentAgentAgentIdDeleteData = {
+export type DeleteAgentData = {
   body?: never;
   path: {
     agent_id: string;
@@ -1579,27 +1573,26 @@ export type DeleteAgentAgentAgentIdDeleteData = {
   url: "/agent/{agent_id}";
 };
 
-export type DeleteAgentAgentAgentIdDeleteErrors = {
+export type DeleteAgentErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type DeleteAgentAgentAgentIdDeleteError =
-  DeleteAgentAgentAgentIdDeleteErrors[keyof DeleteAgentAgentAgentIdDeleteErrors];
+export type DeleteAgentError = DeleteAgentErrors[keyof DeleteAgentErrors];
 
-export type DeleteAgentAgentAgentIdDeleteResponses = {
+export type DeleteAgentResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelUuid;
 };
 
-export type DeleteAgentAgentAgentIdDeleteResponse =
-  DeleteAgentAgentAgentIdDeleteResponses[keyof DeleteAgentAgentAgentIdDeleteResponses];
+export type DeleteAgentResponse =
+  DeleteAgentResponses[keyof DeleteAgentResponses];
 
-export type GetAgentAgentAgentIdGetData = {
+export type GetAgentData = {
   body?: never;
   path: {
     agent_id: string;
@@ -1608,27 +1601,25 @@ export type GetAgentAgentAgentIdGetData = {
   url: "/agent/{agent_id}";
 };
 
-export type GetAgentAgentAgentIdGetErrors = {
+export type GetAgentErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type GetAgentAgentAgentIdGetError =
-  GetAgentAgentAgentIdGetErrors[keyof GetAgentAgentAgentIdGetErrors];
+export type GetAgentError = GetAgentErrors[keyof GetAgentErrors];
 
-export type GetAgentAgentAgentIdGetResponses = {
+export type GetAgentResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelAgentResponse;
 };
 
-export type GetAgentAgentAgentIdGetResponse =
-  GetAgentAgentAgentIdGetResponses[keyof GetAgentAgentAgentIdGetResponses];
+export type GetAgentResponse = GetAgentResponses[keyof GetAgentResponses];
 
-export type UpdateAgentAgentAgentIdPutData = {
+export type UpdateAgentData = {
   body: UpdateAgentHandlerParams;
   path: {
     agent_id: string;
@@ -1637,54 +1628,52 @@ export type UpdateAgentAgentAgentIdPutData = {
   url: "/agent/{agent_id}";
 };
 
-export type UpdateAgentAgentAgentIdPutErrors = {
+export type UpdateAgentErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type UpdateAgentAgentAgentIdPutError =
-  UpdateAgentAgentAgentIdPutErrors[keyof UpdateAgentAgentAgentIdPutErrors];
+export type UpdateAgentError = UpdateAgentErrors[keyof UpdateAgentErrors];
 
-export type UpdateAgentAgentAgentIdPutResponses = {
+export type UpdateAgentResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelAgentResponse;
 };
 
-export type UpdateAgentAgentAgentIdPutResponse =
-  UpdateAgentAgentAgentIdPutResponses[keyof UpdateAgentAgentAgentIdPutResponses];
+export type UpdateAgentResponse =
+  UpdateAgentResponses[keyof UpdateAgentResponses];
 
-export type CreateAgentAgentPostData = {
+export type CreateAgentData = {
   body: CreateAgentHandlerParams;
   path?: never;
   query?: never;
   url: "/agent";
 };
 
-export type CreateAgentAgentPostErrors = {
+export type CreateAgentErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type CreateAgentAgentPostError =
-  CreateAgentAgentPostErrors[keyof CreateAgentAgentPostErrors];
+export type CreateAgentError = CreateAgentErrors[keyof CreateAgentErrors];
 
-export type CreateAgentAgentPostResponses = {
+export type CreateAgentResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelAgentResponse;
 };
 
-export type CreateAgentAgentPostResponse =
-  CreateAgentAgentPostResponses[keyof CreateAgentAgentPostResponses];
+export type CreateAgentResponse =
+  CreateAgentResponses[keyof CreateAgentResponses];
 
-export type DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteData = {
+export type DeleteAgentTriggerData = {
   body?: never;
   path: {
     agent_id: string;
@@ -1694,27 +1683,27 @@ export type DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteData = {
   url: "/agent/{agent_id}/trigger/{trigger_id}";
 };
 
-export type DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteErrors = {
+export type DeleteAgentTriggerErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteError =
-  DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteErrors[keyof DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteErrors];
+export type DeleteAgentTriggerError =
+  DeleteAgentTriggerErrors[keyof DeleteAgentTriggerErrors];
 
-export type DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteResponses = {
+export type DeleteAgentTriggerResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelUuid;
 };
 
-export type DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteResponse =
-  DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteResponses[keyof DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteResponses];
+export type DeleteAgentTriggerResponse =
+  DeleteAgentTriggerResponses[keyof DeleteAgentTriggerResponses];
 
-export type GetAgentTriggerAgentAgentIdTriggerTriggerIdGetData = {
+export type GetAgentTriggerData = {
   body?: never;
   path: {
     agent_id: string;
@@ -1724,27 +1713,27 @@ export type GetAgentTriggerAgentAgentIdTriggerTriggerIdGetData = {
   url: "/agent/{agent_id}/trigger/{trigger_id}";
 };
 
-export type GetAgentTriggerAgentAgentIdTriggerTriggerIdGetErrors = {
+export type GetAgentTriggerErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type GetAgentTriggerAgentAgentIdTriggerTriggerIdGetError =
-  GetAgentTriggerAgentAgentIdTriggerTriggerIdGetErrors[keyof GetAgentTriggerAgentAgentIdTriggerTriggerIdGetErrors];
+export type GetAgentTriggerError =
+  GetAgentTriggerErrors[keyof GetAgentTriggerErrors];
 
-export type GetAgentTriggerAgentAgentIdTriggerTriggerIdGetResponses = {
+export type GetAgentTriggerResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelAgentTriggerResponse;
 };
 
-export type GetAgentTriggerAgentAgentIdTriggerTriggerIdGetResponse =
-  GetAgentTriggerAgentAgentIdTriggerTriggerIdGetResponses[keyof GetAgentTriggerAgentAgentIdTriggerTriggerIdGetResponses];
+export type GetAgentTriggerResponse =
+  GetAgentTriggerResponses[keyof GetAgentTriggerResponses];
 
-export type UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutData = {
+export type UpdateAgentTriggerData = {
   body: UpdateAgentTriggerParams;
   path: {
     agent_id: string;
@@ -1754,27 +1743,27 @@ export type UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutData = {
   url: "/agent/{agent_id}/trigger/{trigger_id}";
 };
 
-export type UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutErrors = {
+export type UpdateAgentTriggerErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutError =
-  UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutErrors[keyof UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutErrors];
+export type UpdateAgentTriggerError =
+  UpdateAgentTriggerErrors[keyof UpdateAgentTriggerErrors];
 
-export type UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutResponses = {
+export type UpdateAgentTriggerResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelAgentTriggerResponse;
 };
 
-export type UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutResponse =
-  UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutResponses[keyof UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutResponses];
+export type UpdateAgentTriggerResponse =
+  UpdateAgentTriggerResponses[keyof UpdateAgentTriggerResponses];
 
-export type CreateAgentTriggerAgentAgentIdTriggerPostData = {
+export type CreateAgentTriggerData = {
   body: CreateAgentTriggerParams;
   path: {
     agent_id: string;
@@ -1783,27 +1772,27 @@ export type CreateAgentTriggerAgentAgentIdTriggerPostData = {
   url: "/agent/{agent_id}/trigger";
 };
 
-export type CreateAgentTriggerAgentAgentIdTriggerPostErrors = {
+export type CreateAgentTriggerErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type CreateAgentTriggerAgentAgentIdTriggerPostError =
-  CreateAgentTriggerAgentAgentIdTriggerPostErrors[keyof CreateAgentTriggerAgentAgentIdTriggerPostErrors];
+export type CreateAgentTriggerError =
+  CreateAgentTriggerErrors[keyof CreateAgentTriggerErrors];
 
-export type CreateAgentTriggerAgentAgentIdTriggerPostResponses = {
+export type CreateAgentTriggerResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelAgentTriggerResponse;
 };
 
-export type CreateAgentTriggerAgentAgentIdTriggerPostResponse =
-  CreateAgentTriggerAgentAgentIdTriggerPostResponses[keyof CreateAgentTriggerAgentAgentIdTriggerPostResponses];
+export type CreateAgentTriggerResponse =
+  CreateAgentTriggerResponses[keyof CreateAgentTriggerResponses];
 
-export type DeleteAgentToolAgentAgentIdToolToolIdDeleteData = {
+export type DeleteAgentToolData = {
   body?: never;
   path: {
     agent_id: string;
@@ -1813,27 +1802,27 @@ export type DeleteAgentToolAgentAgentIdToolToolIdDeleteData = {
   url: "/agent/{agent_id}/tool/{tool_id}";
 };
 
-export type DeleteAgentToolAgentAgentIdToolToolIdDeleteErrors = {
+export type DeleteAgentToolErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type DeleteAgentToolAgentAgentIdToolToolIdDeleteError =
-  DeleteAgentToolAgentAgentIdToolToolIdDeleteErrors[keyof DeleteAgentToolAgentAgentIdToolToolIdDeleteErrors];
+export type DeleteAgentToolError =
+  DeleteAgentToolErrors[keyof DeleteAgentToolErrors];
 
-export type DeleteAgentToolAgentAgentIdToolToolIdDeleteResponses = {
+export type DeleteAgentToolResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelUuid;
 };
 
-export type DeleteAgentToolAgentAgentIdToolToolIdDeleteResponse =
-  DeleteAgentToolAgentAgentIdToolToolIdDeleteResponses[keyof DeleteAgentToolAgentAgentIdToolToolIdDeleteResponses];
+export type DeleteAgentToolResponse =
+  DeleteAgentToolResponses[keyof DeleteAgentToolResponses];
 
-export type GetAgentToolAgentAgentIdToolToolIdGetData = {
+export type GetAgentToolData = {
   body?: never;
   path: {
     agent_id: string;
@@ -1843,27 +1832,26 @@ export type GetAgentToolAgentAgentIdToolToolIdGetData = {
   url: "/agent/{agent_id}/tool/{tool_id}";
 };
 
-export type GetAgentToolAgentAgentIdToolToolIdGetErrors = {
+export type GetAgentToolErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type GetAgentToolAgentAgentIdToolToolIdGetError =
-  GetAgentToolAgentAgentIdToolToolIdGetErrors[keyof GetAgentToolAgentAgentIdToolToolIdGetErrors];
+export type GetAgentToolError = GetAgentToolErrors[keyof GetAgentToolErrors];
 
-export type GetAgentToolAgentAgentIdToolToolIdGetResponses = {
+export type GetAgentToolResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelAgentToolResponse;
 };
 
-export type GetAgentToolAgentAgentIdToolToolIdGetResponse =
-  GetAgentToolAgentAgentIdToolToolIdGetResponses[keyof GetAgentToolAgentAgentIdToolToolIdGetResponses];
+export type GetAgentToolResponse =
+  GetAgentToolResponses[keyof GetAgentToolResponses];
 
-export type UpdateAgentToolAgentAgentIdToolToolIdPutData = {
+export type UpdateAgentToolData = {
   body: UpdateAgentToolParams;
   path: {
     agent_id: string;
@@ -1873,27 +1861,27 @@ export type UpdateAgentToolAgentAgentIdToolToolIdPutData = {
   url: "/agent/{agent_id}/tool/{tool_id}";
 };
 
-export type UpdateAgentToolAgentAgentIdToolToolIdPutErrors = {
+export type UpdateAgentToolErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type UpdateAgentToolAgentAgentIdToolToolIdPutError =
-  UpdateAgentToolAgentAgentIdToolToolIdPutErrors[keyof UpdateAgentToolAgentAgentIdToolToolIdPutErrors];
+export type UpdateAgentToolError =
+  UpdateAgentToolErrors[keyof UpdateAgentToolErrors];
 
-export type UpdateAgentToolAgentAgentIdToolToolIdPutResponses = {
+export type UpdateAgentToolResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelAgentToolResponse;
 };
 
-export type UpdateAgentToolAgentAgentIdToolToolIdPutResponse =
-  UpdateAgentToolAgentAgentIdToolToolIdPutResponses[keyof UpdateAgentToolAgentAgentIdToolToolIdPutResponses];
+export type UpdateAgentToolResponse =
+  UpdateAgentToolResponses[keyof UpdateAgentToolResponses];
 
-export type CreateAgentToolAgentAgentIdToolPostData = {
+export type CreateAgentToolData = {
   body: CreateAgentToolParams;
   path: {
     agent_id: string;
@@ -1902,27 +1890,27 @@ export type CreateAgentToolAgentAgentIdToolPostData = {
   url: "/agent/{agent_id}/tool";
 };
 
-export type CreateAgentToolAgentAgentIdToolPostErrors = {
+export type CreateAgentToolErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type CreateAgentToolAgentAgentIdToolPostError =
-  CreateAgentToolAgentAgentIdToolPostErrors[keyof CreateAgentToolAgentAgentIdToolPostErrors];
+export type CreateAgentToolError =
+  CreateAgentToolErrors[keyof CreateAgentToolErrors];
 
-export type CreateAgentToolAgentAgentIdToolPostResponses = {
+export type CreateAgentToolResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelAgentToolResponse;
 };
 
-export type CreateAgentToolAgentAgentIdToolPostResponse =
-  CreateAgentToolAgentAgentIdToolPostResponses[keyof CreateAgentToolAgentAgentIdToolPostResponses];
+export type CreateAgentToolResponse =
+  CreateAgentToolResponses[keyof CreateAgentToolResponses];
 
-export type GetAgentWalletsAgentAgentIdWalletsGetData = {
+export type GetAgentWalletsData = {
   body?: never;
   path: {
     agent_id: string;
@@ -1931,27 +1919,27 @@ export type GetAgentWalletsAgentAgentIdWalletsGetData = {
   url: "/agent/{agent_id}/wallets";
 };
 
-export type GetAgentWalletsAgentAgentIdWalletsGetErrors = {
+export type GetAgentWalletsErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type GetAgentWalletsAgentAgentIdWalletsGetError =
-  GetAgentWalletsAgentAgentIdWalletsGetErrors[keyof GetAgentWalletsAgentAgentIdWalletsGetErrors];
+export type GetAgentWalletsError =
+  GetAgentWalletsErrors[keyof GetAgentWalletsErrors];
 
-export type GetAgentWalletsAgentAgentIdWalletsGetResponses = {
+export type GetAgentWalletsResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelListAgentWalletResponse;
 };
 
-export type GetAgentWalletsAgentAgentIdWalletsGetResponse =
-  GetAgentWalletsAgentAgentIdWalletsGetResponses[keyof GetAgentWalletsAgentAgentIdWalletsGetResponses];
+export type GetAgentWalletsResponse =
+  GetAgentWalletsResponses[keyof GetAgentWalletsResponses];
 
-export type GetAgentWalletAgentAgentIdWalletWalletIdGetData = {
+export type GetAgentWalletData = {
   body?: never;
   path: {
     agent_id: string;
@@ -1961,27 +1949,27 @@ export type GetAgentWalletAgentAgentIdWalletWalletIdGetData = {
   url: "/agent/{agent_id}/wallet/{wallet_id}";
 };
 
-export type GetAgentWalletAgentAgentIdWalletWalletIdGetErrors = {
+export type GetAgentWalletErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type GetAgentWalletAgentAgentIdWalletWalletIdGetError =
-  GetAgentWalletAgentAgentIdWalletWalletIdGetErrors[keyof GetAgentWalletAgentAgentIdWalletWalletIdGetErrors];
+export type GetAgentWalletError =
+  GetAgentWalletErrors[keyof GetAgentWalletErrors];
 
-export type GetAgentWalletAgentAgentIdWalletWalletIdGetResponses = {
+export type GetAgentWalletResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelAgentWalletResponse;
 };
 
-export type GetAgentWalletAgentAgentIdWalletWalletIdGetResponse =
-  GetAgentWalletAgentAgentIdWalletWalletIdGetResponses[keyof GetAgentWalletAgentAgentIdWalletWalletIdGetResponses];
+export type GetAgentWalletResponse =
+  GetAgentWalletResponses[keyof GetAgentWalletResponses];
 
-export type GetConversationsConversationsGetData = {
+export type GetConversationsData = {
   body?: never;
   path?: never;
   query?: {
@@ -1990,27 +1978,27 @@ export type GetConversationsConversationsGetData = {
   url: "/conversations";
 };
 
-export type GetConversationsConversationsGetErrors = {
+export type GetConversationsErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type GetConversationsConversationsGetError =
-  GetConversationsConversationsGetErrors[keyof GetConversationsConversationsGetErrors];
+export type GetConversationsError =
+  GetConversationsErrors[keyof GetConversationsErrors];
 
-export type GetConversationsConversationsGetResponses = {
+export type GetConversationsResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelListConversationListResponse;
 };
 
-export type GetConversationsConversationsGetResponse =
-  GetConversationsConversationsGetResponses[keyof GetConversationsConversationsGetResponses];
+export type GetConversationsResponse =
+  GetConversationsResponses[keyof GetConversationsResponses];
 
-export type DeleteConversationConversationConversationIdDeleteData = {
+export type DeleteConversationData = {
   body?: never;
   path: {
     conversation_id: string;
@@ -2019,27 +2007,27 @@ export type DeleteConversationConversationConversationIdDeleteData = {
   url: "/conversation/{conversation_id}";
 };
 
-export type DeleteConversationConversationConversationIdDeleteErrors = {
+export type DeleteConversationErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type DeleteConversationConversationConversationIdDeleteError =
-  DeleteConversationConversationConversationIdDeleteErrors[keyof DeleteConversationConversationConversationIdDeleteErrors];
+export type DeleteConversationError =
+  DeleteConversationErrors[keyof DeleteConversationErrors];
 
-export type DeleteConversationConversationConversationIdDeleteResponses = {
+export type DeleteConversationResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelUuid;
 };
 
-export type DeleteConversationConversationConversationIdDeleteResponse =
-  DeleteConversationConversationConversationIdDeleteResponses[keyof DeleteConversationConversationConversationIdDeleteResponses];
+export type DeleteConversationResponse =
+  DeleteConversationResponses[keyof DeleteConversationResponses];
 
-export type GetConversationConversationConversationIdGetData = {
+export type GetConversationData = {
   body?: never;
   path: {
     conversation_id: string;
@@ -2048,27 +2036,27 @@ export type GetConversationConversationConversationIdGetData = {
   url: "/conversation/{conversation_id}";
 };
 
-export type GetConversationConversationConversationIdGetErrors = {
+export type GetConversationErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type GetConversationConversationConversationIdGetError =
-  GetConversationConversationConversationIdGetErrors[keyof GetConversationConversationConversationIdGetErrors];
+export type GetConversationError =
+  GetConversationErrors[keyof GetConversationErrors];
 
-export type GetConversationConversationConversationIdGetResponses = {
+export type GetConversationResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelConversationResponse;
 };
 
-export type GetConversationConversationConversationIdGetResponse =
-  GetConversationConversationConversationIdGetResponses[keyof GetConversationConversationConversationIdGetResponses];
+export type GetConversationResponse =
+  GetConversationResponses[keyof GetConversationResponses];
 
-export type UpdateConversationConversationConversationIdPutData = {
+export type UpdateConversationData = {
   body: UpdateConversationHandlerParams;
   path: {
     conversation_id: string;
@@ -2077,117 +2065,111 @@ export type UpdateConversationConversationConversationIdPutData = {
   url: "/conversation/{conversation_id}";
 };
 
-export type UpdateConversationConversationConversationIdPutErrors = {
+export type UpdateConversationErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type UpdateConversationConversationConversationIdPutError =
-  UpdateConversationConversationConversationIdPutErrors[keyof UpdateConversationConversationConversationIdPutErrors];
+export type UpdateConversationError =
+  UpdateConversationErrors[keyof UpdateConversationErrors];
 
-export type UpdateConversationConversationConversationIdPutResponses = {
+export type UpdateConversationResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelConversationResponse;
 };
 
-export type UpdateConversationConversationConversationIdPutResponse =
-  UpdateConversationConversationConversationIdPutResponses[keyof UpdateConversationConversationConversationIdPutResponses];
+export type UpdateConversationResponse =
+  UpdateConversationResponses[keyof UpdateConversationResponses];
 
-export type CreateConversationConversationPostData = {
+export type CreateConversationData = {
   body: CreateConversationHandlerParams;
   path?: never;
   query?: never;
   url: "/conversation";
 };
 
-export type CreateConversationConversationPostErrors = {
+export type CreateConversationErrors = {
   /**
    * Validation Error
    */
   422: HttpValidationError;
 };
 
-export type CreateConversationConversationPostError =
-  CreateConversationConversationPostErrors[keyof CreateConversationConversationPostErrors];
+export type CreateConversationError =
+  CreateConversationErrors[keyof CreateConversationErrors];
 
-export type CreateConversationConversationPostResponses = {
+export type CreateConversationResponses = {
   /**
    * Successful Response
    */
   200: ResponseModelConversationResponse;
 };
 
-export type CreateConversationConversationPostResponse =
-  CreateConversationConversationPostResponses[keyof CreateConversationConversationPostResponses];
+export type CreateConversationResponse =
+  CreateConversationResponses[keyof CreateConversationResponses];
 
-export type CreateConversationMessageConversationConversationIdMessagePostData =
-  {
-    body: CreateMessageHandlerParams;
-    path: {
-      conversation_id: string;
-    };
-    query?: never;
-    url: "/conversation/{conversation_id}/message";
+export type CreateConversationMessageData = {
+  body: CreateMessageHandlerParams;
+  path: {
+    conversation_id: string;
   };
+  query?: never;
+  url: "/conversation/{conversation_id}/message";
+};
 
-export type CreateConversationMessageConversationConversationIdMessagePostErrors =
-  {
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
+export type CreateConversationMessageErrors = {
+  /**
+   * Validation Error
+   */
+  422: HttpValidationError;
+};
+
+export type CreateConversationMessageError =
+  CreateConversationMessageErrors[keyof CreateConversationMessageErrors];
+
+export type CreateConversationMessageResponses = {
+  /**
+   * Successful Response
+   */
+  200: ResponseModelConversationMessageResponse;
+};
+
+export type CreateConversationMessageResponse =
+  CreateConversationMessageResponses[keyof CreateConversationMessageResponses];
+
+export type UpdateConversationMessageData = {
+  body: UpdateMessageHandlerParams;
+  path: {
+    conversation_id: string;
+    message_id: string;
   };
+  query?: never;
+  url: "/conversation/{conversation_id}/message/{message_id}";
+};
 
-export type CreateConversationMessageConversationConversationIdMessagePostError =
-  CreateConversationMessageConversationConversationIdMessagePostErrors[keyof CreateConversationMessageConversationConversationIdMessagePostErrors];
+export type UpdateConversationMessageErrors = {
+  /**
+   * Validation Error
+   */
+  422: HttpValidationError;
+};
 
-export type CreateConversationMessageConversationConversationIdMessagePostResponses =
-  {
-    /**
-     * Successful Response
-     */
-    200: ResponseModelConversationMessageResponse;
-  };
+export type UpdateConversationMessageError =
+  UpdateConversationMessageErrors[keyof UpdateConversationMessageErrors];
 
-export type CreateConversationMessageConversationConversationIdMessagePostResponse =
-  CreateConversationMessageConversationConversationIdMessagePostResponses[keyof CreateConversationMessageConversationConversationIdMessagePostResponses];
+export type UpdateConversationMessageResponses = {
+  /**
+   * Successful Response
+   */
+  200: ResponseModelConversationMessageResponse;
+};
 
-export type UpdateConversationMessageConversationConversationIdMessageMessageIdPutData =
-  {
-    body: UpdateMessageHandlerParams;
-    path: {
-      conversation_id: string;
-      message_id: string;
-    };
-    query?: never;
-    url: "/conversation/{conversation_id}/message/{message_id}";
-  };
-
-export type UpdateConversationMessageConversationConversationIdMessageMessageIdPutErrors =
-  {
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-  };
-
-export type UpdateConversationMessageConversationConversationIdMessageMessageIdPutError =
-  UpdateConversationMessageConversationConversationIdMessageMessageIdPutErrors[keyof UpdateConversationMessageConversationConversationIdMessageMessageIdPutErrors];
-
-export type UpdateConversationMessageConversationConversationIdMessageMessageIdPutResponses =
-  {
-    /**
-     * Successful Response
-     */
-    200: ResponseModelConversationMessageResponse;
-  };
-
-export type UpdateConversationMessageConversationConversationIdMessageMessageIdPutResponse =
-  UpdateConversationMessageConversationConversationIdMessageMessageIdPutResponses[keyof UpdateConversationMessageConversationConversationIdMessageMessageIdPutResponses];
+export type UpdateConversationMessageResponse =
+  UpdateConversationMessageResponses[keyof UpdateConversationMessageResponses];
 
 export type ClientOptions = {
   baseUrl: "http://localhost:4242" | (string & {});

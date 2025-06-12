@@ -7,123 +7,123 @@ import type {
 } from "@hey-api/client-fetch";
 import { client as _heyApiClient } from "./client.gen.js";
 import type {
-  ChatChatPostData,
-  ChatChatPostError,
-  ChatChatPostResponse,
-  ChatCompletionsChatCompletionsPostData,
-  ChatCompletionsChatCompletionsPostError,
-  ChatCompletionsChatCompletionsPostResponse,
-  ClearSessionSessionSessionIdClearPostData,
-  ClearSessionSessionSessionIdClearPostError,
-  ClearSessionSessionSessionIdClearPostResponse,
-  CreateAgentAgentPostData,
-  CreateAgentAgentPostError,
-  CreateAgentAgentPostResponse,
-  CreateAgentToolAgentAgentIdToolPostData,
-  CreateAgentToolAgentAgentIdToolPostError,
-  CreateAgentToolAgentAgentIdToolPostResponse,
-  CreateAgentTriggerAgentAgentIdTriggerPostData,
-  CreateAgentTriggerAgentAgentIdTriggerPostError,
-  CreateAgentTriggerAgentAgentIdTriggerPostResponse,
-  CreateConversationConversationPostData,
-  CreateConversationConversationPostError,
-  CreateConversationConversationPostResponse,
-  CreateConversationMessageConversationConversationIdMessagePostData,
-  CreateConversationMessageConversationConversationIdMessagePostError,
-  CreateConversationMessageConversationConversationIdMessagePostResponse,
-  CreateSessionSessionPostData,
-  CreateSessionSessionPostError,
-  CreateSessionSessionPostResponse,
-  DeleteAgentAgentAgentIdDeleteData,
-  DeleteAgentAgentAgentIdDeleteError,
-  DeleteAgentAgentAgentIdDeleteResponse,
-  DeleteAgentToolAgentAgentIdToolToolIdDeleteData,
-  DeleteAgentToolAgentAgentIdToolToolIdDeleteError,
-  DeleteAgentToolAgentAgentIdToolToolIdDeleteResponse,
-  DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteData,
-  DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteError,
-  DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteResponse,
-  DeleteConversationConversationConversationIdDeleteData,
-  DeleteConversationConversationConversationIdDeleteError,
-  DeleteConversationConversationConversationIdDeleteResponse,
-  DeleteSessionSessionSessionIdDeleteData,
-  DeleteSessionSessionSessionIdDeleteError,
-  DeleteSessionSessionSessionIdDeleteResponse,
-  DeleteUserWalletUserWalletWalletIdDeleteData,
-  DeleteUserWalletUserWalletWalletIdDeleteError,
-  ExecuteExecutePostData,
-  ExecuteExecutePostError,
-  ExecuteExecutePostResponse,
-  FeedbackFeedbackPostData,
-  FeedbackFeedbackPostError,
-  FeedbackFeedbackPostResponse,
-  GetAgentAgentAgentIdGetData,
-  GetAgentAgentAgentIdGetError,
-  GetAgentAgentAgentIdGetResponse,
-  GetAgentToolAgentAgentIdToolToolIdGetData,
-  GetAgentToolAgentAgentIdToolToolIdGetError,
-  GetAgentToolAgentAgentIdToolToolIdGetResponse,
-  GetAgentTriggerAgentAgentIdTriggerTriggerIdGetData,
-  GetAgentTriggerAgentAgentIdTriggerTriggerIdGetError,
-  GetAgentTriggerAgentAgentIdTriggerTriggerIdGetResponse,
-  GetAgentWalletAgentAgentIdWalletWalletIdGetData,
-  GetAgentWalletAgentAgentIdWalletWalletIdGetError,
-  GetAgentWalletAgentAgentIdWalletWalletIdGetResponse,
-  GetAgentWalletsAgentAgentIdWalletsGetData,
-  GetAgentWalletsAgentAgentIdWalletsGetError,
-  GetAgentWalletsAgentAgentIdWalletsGetResponse,
-  GetAgentsAgentsGetData,
-  GetAgentsAgentsGetResponse,
-  GetConversationConversationConversationIdGetData,
-  GetConversationConversationConversationIdGetError,
-  GetConversationConversationConversationIdGetResponse,
-  GetConversationsConversationsGetData,
-  GetConversationsConversationsGetError,
-  GetConversationsConversationsGetResponse,
-  GetDelegatePayloadAuthDelegatePayloadPostData,
-  GetDelegatePayloadAuthDelegatePayloadPostError,
-  GetDelegatePayloadAuthDelegatePayloadPostResponse,
-  GetModelsModelsGetData,
-  GetModelsModelsGetResponse,
-  GetSessionListSessionListGetData,
-  GetSessionListSessionListGetResponse,
-  GetSessionSessionSessionIdGetData,
-  GetSessionSessionSessionIdGetError,
-  GetSessionSessionSessionIdGetResponse,
-  GetUserUserGetData,
-  GetUserUserGetResponse,
-  GetUserWalletUserWalletWalletIdGetData,
-  GetUserWalletUserWalletWalletIdGetError,
-  GetUserWalletUserWalletWalletIdGetResponse,
-  GetUserWalletsUserWalletsGetData,
-  GetUserWalletsUserWalletsGetResponse,
-  LoginDelegateAuthDelegateLoginPostData,
-  LoginDelegateAuthDelegateLoginPostError,
-  LoginDelegateAuthDelegateLoginPostResponse,
-  PostUserWalletUserWalletPostData,
-  PostUserWalletUserWalletPostError,
-  PutUserWalletUserWalletWalletIdPutData,
-  PutUserWalletUserWalletWalletIdPutError,
-  UpdateAgentAgentAgentIdPutData,
-  UpdateAgentAgentAgentIdPutError,
-  UpdateAgentAgentAgentIdPutResponse,
-  UpdateAgentToolAgentAgentIdToolToolIdPutData,
-  UpdateAgentToolAgentAgentIdToolToolIdPutError,
-  UpdateAgentToolAgentAgentIdToolToolIdPutResponse,
-  UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutData,
-  UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutError,
-  UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutResponse,
-  UpdateConversationConversationConversationIdPutData,
-  UpdateConversationConversationConversationIdPutError,
-  UpdateConversationConversationConversationIdPutResponse,
-  UpdateConversationMessageConversationConversationIdMessageMessageIdPutData,
-  UpdateConversationMessageConversationConversationIdMessageMessageIdPutError,
-  UpdateConversationMessageConversationConversationIdMessageMessageIdPutResponse,
-  UpdateSessionSessionSessionIdPutData,
-  UpdateSessionSessionSessionIdPutError,
-  UpdateSessionSessionSessionIdPutResponse,
-  VerifyAuthAuthVerifyGetData,
-  VerifyAuthAuthVerifyGetResponse,
+  AuthDelegateLoginData,
+  AuthDelegateLoginError,
+  AuthDelegateLoginResponse,
+  CreateAgentData,
+  CreateAgentError,
+  CreateAgentResponse,
+  CreateAgentToolData,
+  CreateAgentToolError,
+  CreateAgentToolResponse,
+  CreateAgentTriggerData,
+  CreateAgentTriggerError,
+  CreateAgentTriggerResponse,
+  CreateConversationData,
+  CreateConversationError,
+  CreateConversationMessageData,
+  CreateConversationMessageError,
+  CreateConversationMessageResponse,
+  CreateConversationResponse,
+  CreateUserWalletData,
+  CreateUserWalletError,
+  DeleteAgentData,
+  DeleteAgentError,
+  DeleteAgentResponse,
+  DeleteAgentToolData,
+  DeleteAgentToolError,
+  DeleteAgentToolResponse,
+  DeleteAgentTriggerData,
+  DeleteAgentTriggerError,
+  DeleteAgentTriggerResponse,
+  DeleteConversationData,
+  DeleteConversationError,
+  DeleteConversationResponse,
+  DeleteUserWalletData,
+  DeleteUserWalletError,
+  DeprecatedChatCompletionsData,
+  DeprecatedChatCompletionsError,
+  DeprecatedChatCompletionsResponse,
+  DeprecatedChatData,
+  DeprecatedChatError,
+  DeprecatedChatResponse,
+  DeprecatedClearSessionData,
+  DeprecatedClearSessionError,
+  DeprecatedClearSessionResponse,
+  DeprecatedCreateSessionData,
+  DeprecatedCreateSessionError,
+  DeprecatedCreateSessionResponse,
+  DeprecatedDeleteSessionData,
+  DeprecatedDeleteSessionError,
+  DeprecatedDeleteSessionResponse,
+  DeprecatedExecuteData,
+  DeprecatedExecuteError,
+  DeprecatedExecuteResponse,
+  DeprecatedGetSessionData,
+  DeprecatedGetSessionError,
+  DeprecatedGetSessionResponse,
+  DeprecatedGetSessionsData,
+  DeprecatedGetSessionsResponse,
+  DeprecatedUpdateSessionData,
+  DeprecatedUpdateSessionError,
+  DeprecatedUpdateSessionResponse,
+  FeedbackData,
+  FeedbackError,
+  FeedbackResponse,
+  GetAgentData,
+  GetAgentError,
+  GetAgentResponse,
+  GetAgentToolData,
+  GetAgentToolError,
+  GetAgentToolResponse,
+  GetAgentTriggerData,
+  GetAgentTriggerError,
+  GetAgentTriggerResponse,
+  GetAgentWalletData,
+  GetAgentWalletError,
+  GetAgentWalletResponse,
+  GetAgentWalletsData,
+  GetAgentWalletsError,
+  GetAgentWalletsResponse,
+  GetAgentsData,
+  GetAgentsResponse,
+  GetAuthDelegatePayloadData,
+  GetAuthDelegatePayloadError,
+  GetAuthDelegatePayloadResponse,
+  GetConversationData,
+  GetConversationError,
+  GetConversationResponse,
+  GetConversationsData,
+  GetConversationsError,
+  GetConversationsResponse,
+  GetModelsData,
+  GetModelsResponse,
+  GetUserData,
+  GetUserResponse,
+  GetUserWalletData,
+  GetUserWalletError,
+  GetUserWalletResponse,
+  GetUserWalletsData,
+  GetUserWalletsResponse,
+  UpdateAgentData,
+  UpdateAgentError,
+  UpdateAgentResponse,
+  UpdateAgentToolData,
+  UpdateAgentToolError,
+  UpdateAgentToolResponse,
+  UpdateAgentTriggerData,
+  UpdateAgentTriggerError,
+  UpdateAgentTriggerResponse,
+  UpdateConversationData,
+  UpdateConversationError,
+  UpdateConversationMessageData,
+  UpdateConversationMessageError,
+  UpdateConversationMessageResponse,
+  UpdateConversationResponse,
+  UpdateUserWalletData,
+  UpdateUserWalletError,
+  VerifyAuthData,
+  VerifyAuthResponse,
 } from "./types.gen.js";
 
 export type Options<
@@ -146,13 +146,11 @@ export type Options<
 /**
  * Get Session List
  */
-export const getSessionListSessionListGet = <
-  ThrowOnError extends boolean = false,
->(
-  options?: Options<GetSessionListSessionListGetData, ThrowOnError>,
+export const deprecatedGetSessions = <ThrowOnError extends boolean = false>(
+  options?: Options<DeprecatedGetSessionsData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetSessionListSessionListGetResponse,
+    DeprecatedGetSessionsResponse,
     unknown,
     ThrowOnError
   >({
@@ -170,14 +168,12 @@ export const getSessionListSessionListGet = <
 /**
  * Delete Session
  */
-export const deleteSessionSessionSessionIdDelete = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<DeleteSessionSessionSessionIdDeleteData, ThrowOnError>,
+export const deprecatedDeleteSession = <ThrowOnError extends boolean = false>(
+  options: Options<DeprecatedDeleteSessionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteSessionSessionSessionIdDeleteResponse,
-    DeleteSessionSessionSessionIdDeleteError,
+    DeprecatedDeleteSessionResponse,
+    DeprecatedDeleteSessionError,
     ThrowOnError
   >({
     security: [
@@ -194,14 +190,12 @@ export const deleteSessionSessionSessionIdDelete = <
 /**
  * Get Session
  */
-export const getSessionSessionSessionIdGet = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<GetSessionSessionSessionIdGetData, ThrowOnError>,
+export const deprecatedGetSession = <ThrowOnError extends boolean = false>(
+  options: Options<DeprecatedGetSessionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetSessionSessionSessionIdGetResponse,
-    GetSessionSessionSessionIdGetError,
+    DeprecatedGetSessionResponse,
+    DeprecatedGetSessionError,
     ThrowOnError
   >({
     security: [
@@ -218,14 +212,12 @@ export const getSessionSessionSessionIdGet = <
 /**
  * Update Session
  */
-export const updateSessionSessionSessionIdPut = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<UpdateSessionSessionSessionIdPutData, ThrowOnError>,
+export const deprecatedUpdateSession = <ThrowOnError extends boolean = false>(
+  options: Options<DeprecatedUpdateSessionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    UpdateSessionSessionSessionIdPutResponse,
-    UpdateSessionSessionSessionIdPutError,
+    DeprecatedUpdateSessionResponse,
+    DeprecatedUpdateSessionError,
     ThrowOnError
   >({
     security: [
@@ -246,12 +238,12 @@ export const updateSessionSessionSessionIdPut = <
 /**
  * Create Session
  */
-export const createSessionSessionPost = <ThrowOnError extends boolean = false>(
-  options: Options<CreateSessionSessionPostData, ThrowOnError>,
+export const deprecatedCreateSession = <ThrowOnError extends boolean = false>(
+  options: Options<DeprecatedCreateSessionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    CreateSessionSessionPostResponse,
-    CreateSessionSessionPostError,
+    DeprecatedCreateSessionResponse,
+    DeprecatedCreateSessionError,
     ThrowOnError
   >({
     security: [
@@ -272,14 +264,12 @@ export const createSessionSessionPost = <ThrowOnError extends boolean = false>(
 /**
  * Clear Session
  */
-export const clearSessionSessionSessionIdClearPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<ClearSessionSessionSessionIdClearPostData, ThrowOnError>,
+export const deprecatedClearSession = <ThrowOnError extends boolean = false>(
+  options: Options<DeprecatedClearSessionData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    ClearSessionSessionSessionIdClearPostResponse,
-    ClearSessionSessionSessionIdClearPostError,
+    DeprecatedClearSessionResponse,
+    DeprecatedClearSessionError,
     ThrowOnError
   >({
     security: [
@@ -297,12 +287,12 @@ export const clearSessionSessionSessionIdClearPost = <
  * Chat
  * Process a chat message and return the response
  */
-export const chatChatPost = <ThrowOnError extends boolean = false>(
-  options: Options<ChatChatPostData, ThrowOnError>,
+export const deprecatedChat = <ThrowOnError extends boolean = false>(
+  options: Options<DeprecatedChatData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    ChatChatPostResponse,
-    ChatChatPostError,
+    DeprecatedChatResponse,
+    DeprecatedChatError,
     ThrowOnError
   >({
     security: [
@@ -324,14 +314,12 @@ export const chatChatPost = <ThrowOnError extends boolean = false>(
  * Chat Completions
  * Process a chat message and return the response
  */
-export const chatCompletionsChatCompletionsPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<ChatCompletionsChatCompletionsPostData, ThrowOnError>,
+export const deprecatedChatCompletions = <ThrowOnError extends boolean = false>(
+  options: Options<DeprecatedChatCompletionsData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    ChatCompletionsChatCompletionsPostResponse,
-    ChatCompletionsChatCompletionsPostError,
+    DeprecatedChatCompletionsResponse,
+    DeprecatedChatCompletionsError,
     ThrowOnError
   >({
     security: [
@@ -353,12 +341,12 @@ export const chatCompletionsChatCompletionsPost = <
  * Execute
  * Process an execute request and return the response
  */
-export const executeExecutePost = <ThrowOnError extends boolean = false>(
-  options: Options<ExecuteExecutePostData, ThrowOnError>,
+export const deprecatedExecute = <ThrowOnError extends boolean = false>(
+  options: Options<DeprecatedExecuteData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    ExecuteExecutePostResponse,
-    ExecuteExecutePostError,
+    DeprecatedExecuteResponse,
+    DeprecatedExecuteError,
     ThrowOnError
   >({
     security: [
@@ -380,12 +368,12 @@ export const executeExecutePost = <ThrowOnError extends boolean = false>(
  * Feedback
  * Process a feedback request and return the response
  */
-export const feedbackFeedbackPost = <ThrowOnError extends boolean = false>(
-  options: Options<FeedbackFeedbackPostData, ThrowOnError>,
+export const feedback = <ThrowOnError extends boolean = false>(
+  options: Options<FeedbackData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    FeedbackFeedbackPostResponse,
-    FeedbackFeedbackPostError,
+    FeedbackResponse,
+    FeedbackError,
     ThrowOnError
   >({
     security: [
@@ -407,11 +395,11 @@ export const feedbackFeedbackPost = <ThrowOnError extends boolean = false>(
  * Get Models
  * Get all models
  */
-export const getModelsModelsGet = <ThrowOnError extends boolean = false>(
-  options?: Options<GetModelsModelsGetData, ThrowOnError>,
+export const getModels = <ThrowOnError extends boolean = false>(
+  options?: Options<GetModelsData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetModelsModelsGetResponse,
+    GetModelsResponse,
     unknown,
     ThrowOnError
   >({
@@ -430,14 +418,12 @@ export const getModelsModelsGet = <ThrowOnError extends boolean = false>(
  * Get Delegate Payload
  * Get a delegate payload
  */
-export const getDelegatePayloadAuthDelegatePayloadPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<GetDelegatePayloadAuthDelegatePayloadPostData, ThrowOnError>,
+export const getAuthDelegatePayload = <ThrowOnError extends boolean = false>(
+  options: Options<GetAuthDelegatePayloadData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    GetDelegatePayloadAuthDelegatePayloadPostResponse,
-    GetDelegatePayloadAuthDelegatePayloadPostError,
+    GetAuthDelegatePayloadResponse,
+    GetAuthDelegatePayloadError,
     ThrowOnError
   >({
     security: [
@@ -459,14 +445,12 @@ export const getDelegatePayloadAuthDelegatePayloadPost = <
  * Login Delegate
  * Login with SIWE
  */
-export const loginDelegateAuthDelegateLoginPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<LoginDelegateAuthDelegateLoginPostData, ThrowOnError>,
+export const authDelegateLogin = <ThrowOnError extends boolean = false>(
+  options: Options<AuthDelegateLoginData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    LoginDelegateAuthDelegateLoginPostResponse,
-    LoginDelegateAuthDelegateLoginPostError,
+    AuthDelegateLoginResponse,
+    AuthDelegateLoginError,
     ThrowOnError
   >({
     security: [
@@ -488,11 +472,11 @@ export const loginDelegateAuthDelegateLoginPost = <
  * Verify Auth
  * Verify a delegate payload
  */
-export const verifyAuthAuthVerifyGet = <ThrowOnError extends boolean = false>(
-  options?: Options<VerifyAuthAuthVerifyGetData, ThrowOnError>,
+export const verifyAuth = <ThrowOnError extends boolean = false>(
+  options?: Options<VerifyAuthData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    VerifyAuthAuthVerifyGetResponse,
+    VerifyAuthResponse,
     unknown,
     ThrowOnError
   >({
@@ -511,11 +495,11 @@ export const verifyAuthAuthVerifyGet = <ThrowOnError extends boolean = false>(
  * Get User
  * Get the current user
  */
-export const getUserUserGet = <ThrowOnError extends boolean = false>(
-  options?: Options<GetUserUserGetData, ThrowOnError>,
+export const getUser = <ThrowOnError extends boolean = false>(
+  options?: Options<GetUserData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetUserUserGetResponse,
+    GetUserResponse,
     unknown,
     ThrowOnError
   >({
@@ -534,13 +518,11 @@ export const getUserUserGet = <ThrowOnError extends boolean = false>(
  * Get User Wallets
  * Get all user wallets
  */
-export const getUserWalletsUserWalletsGet = <
-  ThrowOnError extends boolean = false,
->(
-  options?: Options<GetUserWalletsUserWalletsGetData, ThrowOnError>,
+export const getUserWallets = <ThrowOnError extends boolean = false>(
+  options?: Options<GetUserWalletsData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetUserWalletsUserWalletsGetResponse,
+    GetUserWalletsResponse,
     unknown,
     ThrowOnError
   >({
@@ -559,14 +541,12 @@ export const getUserWalletsUserWalletsGet = <
  * Delete User Wallet
  * Delete a user wallet
  */
-export const deleteUserWalletUserWalletWalletIdDelete = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<DeleteUserWalletUserWalletWalletIdDeleteData, ThrowOnError>,
+export const deleteUserWallet = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteUserWalletData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).delete<
     unknown,
-    DeleteUserWalletUserWalletWalletIdDeleteError,
+    DeleteUserWalletError,
     ThrowOnError
   >({
     security: [
@@ -584,14 +564,12 @@ export const deleteUserWalletUserWalletWalletIdDelete = <
  * Get User Wallet
  * Get a user wallet
  */
-export const getUserWalletUserWalletWalletIdGet = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<GetUserWalletUserWalletWalletIdGetData, ThrowOnError>,
+export const getUserWallet = <ThrowOnError extends boolean = false>(
+  options: Options<GetUserWalletData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetUserWalletUserWalletWalletIdGetResponse,
-    GetUserWalletUserWalletWalletIdGetError,
+    GetUserWalletResponse,
+    GetUserWalletError,
     ThrowOnError
   >({
     security: [
@@ -609,14 +587,12 @@ export const getUserWalletUserWalletWalletIdGet = <
  * Put User Wallet
  * Update a user wallet
  */
-export const putUserWalletUserWalletWalletIdPut = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<PutUserWalletUserWalletWalletIdPutData, ThrowOnError>,
+export const updateUserWallet = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateUserWalletData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
     unknown,
-    PutUserWalletUserWalletWalletIdPutError,
+    UpdateUserWalletError,
     ThrowOnError
   >({
     security: [
@@ -638,14 +614,12 @@ export const putUserWalletUserWalletWalletIdPut = <
  * Post User Wallet
  * Create a user wallet
  */
-export const postUserWalletUserWalletPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<PostUserWalletUserWalletPostData, ThrowOnError>,
+export const createUserWallet = <ThrowOnError extends boolean = false>(
+  options: Options<CreateUserWalletData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
     unknown,
-    PostUserWalletUserWalletPostError,
+    CreateUserWalletError,
     ThrowOnError
   >({
     security: [
@@ -667,11 +641,11 @@ export const postUserWalletUserWalletPost = <
  * Get Agents
  * Get all agents
  */
-export const getAgentsAgentsGet = <ThrowOnError extends boolean = false>(
-  options?: Options<GetAgentsAgentsGetData, ThrowOnError>,
+export const getAgents = <ThrowOnError extends boolean = false>(
+  options?: Options<GetAgentsData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetAgentsAgentsGetResponse,
+    GetAgentsResponse,
     unknown,
     ThrowOnError
   >({
@@ -690,14 +664,12 @@ export const getAgentsAgentsGet = <ThrowOnError extends boolean = false>(
  * Delete Agent
  * Delete an agent
  */
-export const deleteAgentAgentAgentIdDelete = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<DeleteAgentAgentAgentIdDeleteData, ThrowOnError>,
+export const deleteAgent = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteAgentData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteAgentAgentAgentIdDeleteResponse,
-    DeleteAgentAgentAgentIdDeleteError,
+    DeleteAgentResponse,
+    DeleteAgentError,
     ThrowOnError
   >({
     security: [
@@ -715,12 +687,12 @@ export const deleteAgentAgentAgentIdDelete = <
  * Get Agent
  * Get an agent
  */
-export const getAgentAgentAgentIdGet = <ThrowOnError extends boolean = false>(
-  options: Options<GetAgentAgentAgentIdGetData, ThrowOnError>,
+export const getAgent = <ThrowOnError extends boolean = false>(
+  options: Options<GetAgentData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetAgentAgentAgentIdGetResponse,
-    GetAgentAgentAgentIdGetError,
+    GetAgentResponse,
+    GetAgentError,
     ThrowOnError
   >({
     security: [
@@ -738,14 +710,12 @@ export const getAgentAgentAgentIdGet = <ThrowOnError extends boolean = false>(
  * Update Agent
  * Update an agent
  */
-export const updateAgentAgentAgentIdPut = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<UpdateAgentAgentAgentIdPutData, ThrowOnError>,
+export const updateAgent = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateAgentData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    UpdateAgentAgentAgentIdPutResponse,
-    UpdateAgentAgentAgentIdPutError,
+    UpdateAgentResponse,
+    UpdateAgentError,
     ThrowOnError
   >({
     security: [
@@ -767,12 +737,12 @@ export const updateAgentAgentAgentIdPut = <
  * Create Agent
  * Create an agent
  */
-export const createAgentAgentPost = <ThrowOnError extends boolean = false>(
-  options: Options<CreateAgentAgentPostData, ThrowOnError>,
+export const createAgent = <ThrowOnError extends boolean = false>(
+  options: Options<CreateAgentData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    CreateAgentAgentPostResponse,
-    CreateAgentAgentPostError,
+    CreateAgentResponse,
+    CreateAgentError,
     ThrowOnError
   >({
     security: [
@@ -794,17 +764,12 @@ export const createAgentAgentPost = <ThrowOnError extends boolean = false>(
  * Delete Agent Trigger
  * Delete an agent trigger
  */
-export const deleteAgentTriggerAgentAgentIdTriggerTriggerIdDelete = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteData,
-    ThrowOnError
-  >,
+export const deleteAgentTrigger = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteAgentTriggerData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteResponse,
-    DeleteAgentTriggerAgentAgentIdTriggerTriggerIdDeleteError,
+    DeleteAgentTriggerResponse,
+    DeleteAgentTriggerError,
     ThrowOnError
   >({
     security: [
@@ -822,17 +787,12 @@ export const deleteAgentTriggerAgentAgentIdTriggerTriggerIdDelete = <
  * Get Agent Trigger
  * Get an agent trigger
  */
-export const getAgentTriggerAgentAgentIdTriggerTriggerIdGet = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    GetAgentTriggerAgentAgentIdTriggerTriggerIdGetData,
-    ThrowOnError
-  >,
+export const getAgentTrigger = <ThrowOnError extends boolean = false>(
+  options: Options<GetAgentTriggerData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetAgentTriggerAgentAgentIdTriggerTriggerIdGetResponse,
-    GetAgentTriggerAgentAgentIdTriggerTriggerIdGetError,
+    GetAgentTriggerResponse,
+    GetAgentTriggerError,
     ThrowOnError
   >({
     security: [
@@ -850,17 +810,12 @@ export const getAgentTriggerAgentAgentIdTriggerTriggerIdGet = <
  * Update Agent Trigger
  * Update an agent trigger
  */
-export const updateAgentTriggerAgentAgentIdTriggerTriggerIdPut = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutData,
-    ThrowOnError
-  >,
+export const updateAgentTrigger = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateAgentTriggerData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutResponse,
-    UpdateAgentTriggerAgentAgentIdTriggerTriggerIdPutError,
+    UpdateAgentTriggerResponse,
+    UpdateAgentTriggerError,
     ThrowOnError
   >({
     security: [
@@ -882,14 +837,12 @@ export const updateAgentTriggerAgentAgentIdTriggerTriggerIdPut = <
  * Create Agent Trigger
  * Create an agent trigger
  */
-export const createAgentTriggerAgentAgentIdTriggerPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<CreateAgentTriggerAgentAgentIdTriggerPostData, ThrowOnError>,
+export const createAgentTrigger = <ThrowOnError extends boolean = false>(
+  options: Options<CreateAgentTriggerData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    CreateAgentTriggerAgentAgentIdTriggerPostResponse,
-    CreateAgentTriggerAgentAgentIdTriggerPostError,
+    CreateAgentTriggerResponse,
+    CreateAgentTriggerError,
     ThrowOnError
   >({
     security: [
@@ -911,17 +864,12 @@ export const createAgentTriggerAgentAgentIdTriggerPost = <
  * Delete Agent Tool
  * Delete an agent tool
  */
-export const deleteAgentToolAgentAgentIdToolToolIdDelete = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    DeleteAgentToolAgentAgentIdToolToolIdDeleteData,
-    ThrowOnError
-  >,
+export const deleteAgentTool = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteAgentToolData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteAgentToolAgentAgentIdToolToolIdDeleteResponse,
-    DeleteAgentToolAgentAgentIdToolToolIdDeleteError,
+    DeleteAgentToolResponse,
+    DeleteAgentToolError,
     ThrowOnError
   >({
     security: [
@@ -939,14 +887,12 @@ export const deleteAgentToolAgentAgentIdToolToolIdDelete = <
  * Get Agent Tool
  * Get an agent tool
  */
-export const getAgentToolAgentAgentIdToolToolIdGet = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<GetAgentToolAgentAgentIdToolToolIdGetData, ThrowOnError>,
+export const getAgentTool = <ThrowOnError extends boolean = false>(
+  options: Options<GetAgentToolData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetAgentToolAgentAgentIdToolToolIdGetResponse,
-    GetAgentToolAgentAgentIdToolToolIdGetError,
+    GetAgentToolResponse,
+    GetAgentToolError,
     ThrowOnError
   >({
     security: [
@@ -964,14 +910,12 @@ export const getAgentToolAgentAgentIdToolToolIdGet = <
  * Update Agent Tool
  * Update an agent tool
  */
-export const updateAgentToolAgentAgentIdToolToolIdPut = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<UpdateAgentToolAgentAgentIdToolToolIdPutData, ThrowOnError>,
+export const updateAgentTool = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateAgentToolData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    UpdateAgentToolAgentAgentIdToolToolIdPutResponse,
-    UpdateAgentToolAgentAgentIdToolToolIdPutError,
+    UpdateAgentToolResponse,
+    UpdateAgentToolError,
     ThrowOnError
   >({
     security: [
@@ -993,14 +937,12 @@ export const updateAgentToolAgentAgentIdToolToolIdPut = <
  * Create Agent Tool
  * Create an agent tool
  */
-export const createAgentToolAgentAgentIdToolPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<CreateAgentToolAgentAgentIdToolPostData, ThrowOnError>,
+export const createAgentTool = <ThrowOnError extends boolean = false>(
+  options: Options<CreateAgentToolData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    CreateAgentToolAgentAgentIdToolPostResponse,
-    CreateAgentToolAgentAgentIdToolPostError,
+    CreateAgentToolResponse,
+    CreateAgentToolError,
     ThrowOnError
   >({
     security: [
@@ -1022,14 +964,12 @@ export const createAgentToolAgentAgentIdToolPost = <
  * Get Agent Wallets
  * Get all agent wallets
  */
-export const getAgentWalletsAgentAgentIdWalletsGet = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<GetAgentWalletsAgentAgentIdWalletsGetData, ThrowOnError>,
+export const getAgentWallets = <ThrowOnError extends boolean = false>(
+  options: Options<GetAgentWalletsData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetAgentWalletsAgentAgentIdWalletsGetResponse,
-    GetAgentWalletsAgentAgentIdWalletsGetError,
+    GetAgentWalletsResponse,
+    GetAgentWalletsError,
     ThrowOnError
   >({
     security: [
@@ -1047,17 +987,12 @@ export const getAgentWalletsAgentAgentIdWalletsGet = <
  * Get Agent Wallet
  * Get an agent wallet
  */
-export const getAgentWalletAgentAgentIdWalletWalletIdGet = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    GetAgentWalletAgentAgentIdWalletWalletIdGetData,
-    ThrowOnError
-  >,
+export const getAgentWallet = <ThrowOnError extends boolean = false>(
+  options: Options<GetAgentWalletData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetAgentWalletAgentAgentIdWalletWalletIdGetResponse,
-    GetAgentWalletAgentAgentIdWalletWalletIdGetError,
+    GetAgentWalletResponse,
+    GetAgentWalletError,
     ThrowOnError
   >({
     security: [
@@ -1075,14 +1010,12 @@ export const getAgentWalletAgentAgentIdWalletWalletIdGet = <
  * Get Conversations
  * Get all conversations
  */
-export const getConversationsConversationsGet = <
-  ThrowOnError extends boolean = false,
->(
-  options?: Options<GetConversationsConversationsGetData, ThrowOnError>,
+export const getConversations = <ThrowOnError extends boolean = false>(
+  options?: Options<GetConversationsData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetConversationsConversationsGetResponse,
-    GetConversationsConversationsGetError,
+    GetConversationsResponse,
+    GetConversationsError,
     ThrowOnError
   >({
     security: [
@@ -1100,17 +1033,12 @@ export const getConversationsConversationsGet = <
  * Delete Conversation
  * Delete a conversation
  */
-export const deleteConversationConversationConversationIdDelete = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    DeleteConversationConversationConversationIdDeleteData,
-    ThrowOnError
-  >,
+export const deleteConversation = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteConversationData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteConversationConversationConversationIdDeleteResponse,
-    DeleteConversationConversationConversationIdDeleteError,
+    DeleteConversationResponse,
+    DeleteConversationError,
     ThrowOnError
   >({
     security: [
@@ -1128,17 +1056,12 @@ export const deleteConversationConversationConversationIdDelete = <
  * Get Conversation
  * Get a conversation
  */
-export const getConversationConversationConversationIdGet = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    GetConversationConversationConversationIdGetData,
-    ThrowOnError
-  >,
+export const getConversation = <ThrowOnError extends boolean = false>(
+  options: Options<GetConversationData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetConversationConversationConversationIdGetResponse,
-    GetConversationConversationConversationIdGetError,
+    GetConversationResponse,
+    GetConversationError,
     ThrowOnError
   >({
     security: [
@@ -1156,17 +1079,12 @@ export const getConversationConversationConversationIdGet = <
  * Update Conversation
  * Update a conversation
  */
-export const updateConversationConversationConversationIdPut = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    UpdateConversationConversationConversationIdPutData,
-    ThrowOnError
-  >,
+export const updateConversation = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateConversationData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).put<
-    UpdateConversationConversationConversationIdPutResponse,
-    UpdateConversationConversationConversationIdPutError,
+    UpdateConversationResponse,
+    UpdateConversationError,
     ThrowOnError
   >({
     security: [
@@ -1188,14 +1106,12 @@ export const updateConversationConversationConversationIdPut = <
  * Create Conversation
  * Create a conversation
  */
-export const createConversationConversationPost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<CreateConversationConversationPostData, ThrowOnError>,
+export const createConversation = <ThrowOnError extends boolean = false>(
+  options: Options<CreateConversationData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    CreateConversationConversationPostResponse,
-    CreateConversationConversationPostError,
+    CreateConversationResponse,
+    CreateConversationError,
     ThrowOnError
   >({
     security: [
@@ -1217,17 +1133,12 @@ export const createConversationConversationPost = <
  * Create Conversation Message
  * Create a message for a conversation
  */
-export const createConversationMessageConversationConversationIdMessagePost = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<
-    CreateConversationMessageConversationConversationIdMessagePostData,
-    ThrowOnError
-  >,
+export const createConversationMessage = <ThrowOnError extends boolean = false>(
+  options: Options<CreateConversationMessageData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    CreateConversationMessageConversationConversationIdMessagePostResponse,
-    CreateConversationMessageConversationConversationIdMessagePostError,
+    CreateConversationMessageResponse,
+    CreateConversationMessageError,
     ThrowOnError
   >({
     security: [
@@ -1249,29 +1160,25 @@ export const createConversationMessageConversationConversationIdMessagePost = <
  * Update Conversation Message
  * Update a message for a conversation
  */
-export const updateConversationMessageConversationConversationIdMessageMessageIdPut =
-  <ThrowOnError extends boolean = false>(
-    options: Options<
-      UpdateConversationMessageConversationConversationIdMessageMessageIdPutData,
-      ThrowOnError
-    >,
-  ) => {
-    return (options.client ?? _heyApiClient).put<
-      UpdateConversationMessageConversationConversationIdMessageMessageIdPutResponse,
-      UpdateConversationMessageConversationConversationIdMessageMessageIdPutError,
-      ThrowOnError
-    >({
-      security: [
-        {
-          name: "x-secret-key",
-          type: "apiKey",
-        },
-      ],
-      url: "/conversation/{conversation_id}/message/{message_id}",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options?.headers,
+export const updateConversationMessage = <ThrowOnError extends boolean = false>(
+  options: Options<UpdateConversationMessageData, ThrowOnError>,
+) => {
+  return (options.client ?? _heyApiClient).put<
+    UpdateConversationMessageResponse,
+    UpdateConversationMessageError,
+    ThrowOnError
+  >({
+    security: [
+      {
+        name: "x-secret-key",
+        type: "apiKey",
       },
-    });
-  };
+    ],
+    url: "/conversation/{conversation_id}/message/{message_id}",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers,
+    },
+  });
+};

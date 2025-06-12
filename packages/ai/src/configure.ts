@@ -1,4 +1,5 @@
 import type { Config } from "@hey-api/client-fetch";
+import type { ThirdwebClient } from "thirdweb";
 import { client } from "./client/client.gen.js";
 
 export type NebulaClientOptions = {
@@ -16,6 +17,20 @@ export function configure(
     },
     bodySerializer: stringify,
     ...(options.override ?? {}),
+  });
+}
+
+export function configureWithClient(
+  twClient: ThirdwebClient,
+  override?: Config,
+) {
+  client.setConfig({
+    headers: {
+      ...(twClient.clientId && { "x-client-id": twClient.clientId }),
+      ...(twClient.secretKey && { "x-secret-key": twClient.secretKey }),
+    },
+    bodySerializer: stringify,
+    ...(override ?? {}),
   });
 }
 
