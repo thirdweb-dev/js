@@ -8,7 +8,7 @@ import { type Input, nebulaFetch } from "./common.js";
  *
  * @param input - The input for the transaction.
  * @returns The transaction hash.
- * @beta This API is in early access and might change in the future.
+ * @deprecated This API is deprecated. Please use `@thirdweb-dev/ai` instead.
  * @nebula
  *
  * @example

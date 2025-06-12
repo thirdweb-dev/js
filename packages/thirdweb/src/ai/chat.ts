@@ -5,7 +5,7 @@ import { type Input, type Output, nebulaFetch } from "./common.js";
  *
  * @param input - The input for the chat.
  * @returns The chat response.
- * @beta This API is in early access and might change in the future.
+ * @deprecated This API is deprecated. Please use `@thirdweb-dev/ai` instead.
  * @nebula
  *
  * @example
