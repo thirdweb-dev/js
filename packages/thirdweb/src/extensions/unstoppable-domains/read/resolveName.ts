@@ -59,7 +59,7 @@ export async function resolveName(
       });
 
       // Note: if the given wallet address does not have any UD name, `reverseNameOf` will return an empty string
-      // This can still happen if you have transfered a domain to a new address, and forgot to set up the Reverse Resolution on the new address
+      // This can still happen if you have transferred a domain to a new address, and forgot to set up the Reverse Resolution on the new address
       const domain = await reverseNameOf({ contract, addr: address });
       if (!domain) {
         throw new Error(
