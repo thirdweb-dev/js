@@ -46,6 +46,18 @@ import type { Wallet } from "thirdweb/wallets";
 import type { NebulaContext } from "../api/chat";
 import type { NebulaUserMessage } from "../api/types";
 
+// Dummy agent data - replace with real data when API is available
+const availableAgents = [
+  { id: "trader", name: "Trader", description: "Trading and DeFi operations" },
+  {
+    id: "research",
+    name: "Research",
+    description: "Market analysis and research",
+  },
+  { id: "copycat", name: "Copycat", description: "Copy trading strategies" },
+  { id: "portfolio", name: "Portfolio", description: "Portfolio management" },
+];
+
 export type WalletMeta = {
   walletId: Wallet["id"];
   address: string;
@@ -268,6 +280,7 @@ export function ChatBar(props: {
                             walletAddress: walletMeta.address,
                             chainIds: props.context?.chainIds || [],
                             networks: props.context?.networks || null,
+                            agentId: props.context?.agentId || null,
                           });
                         }}
                       />
@@ -321,6 +334,7 @@ export function ChatBar(props: {
                         walletAddress: props.context?.walletAddress || null,
                         chainIds: values.map((x) => x.toString()),
                         networks: props.context?.networks || null,
+                        agentId: props.context?.agentId || null,
                       });
                     }}
                     priorityChains={[
@@ -334,6 +348,18 @@ export function ChatBar(props: {
                       80094, // berachain mainnet
                       10, // optimism
                     ]}
+                  />
+
+                  <AgentSelector
+                    selectedAgentId={props.context?.agentId || null}
+                    onChange={(agentId) => {
+                      props.setContext({
+                        walletAddress: props.context?.walletAddress || null,
+                        chainIds: props.context?.chainIds || [],
+                        networks: props.context?.networks || null,
+                        agentId: agentId,
+                      });
+                    }}
                   />
                 </div>
               )}
@@ -715,5 +741,106 @@ function CopyButton(props: { address: string }) {
         <CopyIcon className="size-3" />
       )}
     </Button>
+  );
+}
+
+function AgentSelector(props: {
+  selectedAgentId: string | null;
+  onChange: (agentId: string | null) => void;
+}) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          className="h-auto w-full p-0 hover:bg-transparent"
+        >
+          {props.selectedAgentId ? (
+            <AgentBadge agentId={props.selectedAgentId} />
+          ) : (
+            <Badge
+              variant="outline"
+              className="flex h-auto gap-1 px-2 py-1.5 hover:bg-accent"
+            >
+              Select Agent
+              <ChevronDownIcon className="size-3 text-muted-foreground" />
+            </Badge>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-72" align="start" side="top">
+        <div className="space-y-2">
+          <div className="text-sm font-medium">Select Agent</div>
+          <div className="space-y-1">
+            <Button
+              variant="ghost"
+              className="w-full justify-start h-auto p-2"
+              onClick={() => props.onChange(null)}
+            >
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center">
+                  <div className="w-2 h-2 rounded-full bg-muted-foreground" />
+                </div>
+                <div className="text-left">
+                  <div className="font-medium text-sm">No Agent</div>
+                  <div className="text-xs text-muted-foreground">
+                    Use default Nebula AI
+                  </div>
+                </div>
+              </div>
+            </Button>
+            {availableAgents.map((agent) => (
+              <Button
+                key={agent.id}
+                variant="ghost"
+                className="w-full justify-start h-auto p-2"
+                onClick={() => props.onChange(agent.id)}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center text-xs">
+                    {agent.name[0]}
+                  </div>
+                  <div className="text-left">
+                    <div className="font-medium text-sm">{agent.name}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {agent.description}
+                    </div>
+                  </div>
+                </div>
+              </Button>
+            ))}
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function AgentBadge(props: { agentId: string }) {
+  const agent = availableAgents.find((a) => a.id === props.agentId);
+
+  if (!agent) {
+    return (
+      <Badge
+        variant="outline"
+        className="flex h-auto gap-1 px-2 py-1.5 hover:bg-accent"
+      >
+        Unknown Agent
+        <ChevronDownIcon className="size-3 text-muted-foreground" />
+      </Badge>
+    );
+  }
+
+  return (
+    <Badge
+      variant="outline"
+      className="flex h-auto gap-1 px-2 py-1.5 hover:bg-accent"
+    >
+      <div className="w-4 h-4 rounded-full bg-muted flex items-center justify-center text-xs">
+        {agent.name[0]}
+      </div>
+      {agent.name}
+      <ChevronDownIcon className="size-3 text-muted-foreground" />
+    </Badge>
   );
 }
