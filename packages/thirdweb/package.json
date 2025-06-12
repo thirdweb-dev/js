@@ -358,7 +358,7 @@
     "react-native-quick-crypto": "0.7.14",
     "react-native-svg": "15.12.0",
     "rimraf": "6.0.1",
-    "sharp": "^0.33.5",
+    "sharp": "^0.34.2",
     "size-limit": "11.2.0",
     "storybook": "8.6.14",
     "typedoc": "0.27.9",
