@@ -139,7 +139,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
     }
     if (isErc1155) {
       cols.push({
-        Header: "Supply",
+        Header: "Circulating Supply",
         accessor: (row) => row,
         Cell: (cell: CellProps<NFT, number>) => {
           if (cell.row.original.type === "ERC1155") {

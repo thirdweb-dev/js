@@ -278,7 +278,6 @@ function SendFunds(props: {
     activeAccount: Account;
   }) {
     const { tokens, chain, receiverAddress } = params;
-    toast.loading(`Sending ${tokens.length} Tokens`);
 
     const transactions = tokens.map(({ token, amount }) => {
       return getTokenTransferTransaction({
@@ -289,18 +288,19 @@ function SendFunds(props: {
       });
     });
 
-    try {
-      await sendBatchTransactions.mutateAsync(transactions);
-      toast.success("Tokens sent successfully", {
-        duration: 10000,
-      });
-    } catch (e) {
-      toast.error("Failed to send tokens", {
-        description: parseError(e),
-        duration: 10000,
-      });
-      console.error(e);
-    }
+    const txPromise = sendBatchTransactions.mutateAsync(transactions);
+    toast.promise(txPromise, {
+      loading: `Sending ${tokens.length} tokens`,
+      success: `${tokens.length} tokens sent successfully`,
+      error: (result) => {
+        return {
+          message: "Failed to send tokens. Please try again",
+          description: parseError(result),
+        };
+      },
+    });
+
+    await txPromise;
   }
 
   async function handleSingleSubmit(params: {
@@ -321,36 +321,36 @@ function SendFunds(props: {
           receiverAddress,
         });
 
-        toast.loading(`Sending Token ${token.name}`);
-        await sendAndConfirmTransaction.mutateAsync(tx);
+        const txPromise = sendAndConfirmTransaction.mutateAsync(tx);
 
-        toast.success(`${token.name} sent successfully`, {
-          duration: 10000,
+        toast.promise(txPromise, {
+          loading: `Sending Token ${token.name}`,
+          success: `${token.name} sent successfully`,
+          error: (result) => {
+            return {
+              message: `Failed to send ${token.name}. Please try again`,
+              description: parseError(result),
+            };
+          },
         });
+
+        await txPromise;
+
         queryClient.invalidateQueries({
           queryKey: ["walletBalance"],
         });
 
         successCount++;
-      } catch (e) {
-        toast.error(`Failed to send ${token.name}`, {
-          description: parseError(e),
-          duration: 10000,
-        });
+      } catch {
+        // no op
       }
     }
 
     if (tokens.length > 1) {
       if (successCount === tokens.length) {
-        toast.success("All tokens sent successfully", {
-          id: "batch-send",
-          duration: 10000,
-        });
+        toast.success("All tokens sent successfully");
       } else {
-        toast.error(`Failed to send ${tokens.length - successCount} tokens`, {
-          id: "batch-send",
-          duration: 10000,
-        });
+        toast.error(`Failed to send ${tokens.length - successCount} tokens`);
       }
     }
   }
@@ -374,20 +374,24 @@ function SendFunds(props: {
     // eslint-disable-next-line no-restricted-syntax
     const chain = defineChain(values.chainId);
 
-    if (activeAccount.sendBatchTransaction) {
-      await handleBatchSubmit({
-        tokens: validTokens,
-        chain,
-        activeAccount,
-        receiverAddress: values.receiverAddress,
-      });
-    } else {
-      await handleSingleSubmit({
-        tokens: validTokens,
-        chain,
-        activeAccount,
-        receiverAddress: values.receiverAddress,
-      });
+    try {
+      if (activeAccount.sendBatchTransaction) {
+        await handleBatchSubmit({
+          tokens: validTokens,
+          chain,
+          activeAccount,
+          receiverAddress: values.receiverAddress,
+        });
+      } else {
+        await handleSingleSubmit({
+          tokens: validTokens,
+          chain,
+          activeAccount,
+          receiverAddress: values.receiverAddress,
+        });
+      }
+    } catch {
+      // no op
     }
 
     queryClient.invalidateQueries({

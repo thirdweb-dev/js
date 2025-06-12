@@ -16,7 +16,6 @@ import { CheckoutButton } from "../billing";
 
 type PricingCardCta = {
   hint?: string;
-
   onClick?: () => void;
 } & (
   | {
@@ -58,11 +57,16 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   activeTrialEndsAt,
 }) => {
   const plan = TEAM_PLANS[billingPlan];
-  const isCustomPrice = typeof plan.price === "string";
 
   const trackEvent = useTrack();
   const remainingTrialDays =
     (activeTrialEndsAt ? remainingDays(activeTrialEndsAt) : 0) || 0;
+
+  // if the team has just signed up and has not subscribed yet, and the billing plan is growth, then they get a 7 day trial
+  const has7DayTrial =
+    remainingTrialDays === 0 &&
+    billingStatus === "noPayment" &&
+    billingPlan === "growth";
 
   const handleCTAClick = () => {
     cta?.onClick?.();
@@ -97,6 +101,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
               {plan.title}
             </h3>
             {current && <Badge className="capitalize">Current plan</Badge>}
+            {has7DayTrial && <Badge variant="success">7 Day Free Trial</Badge>}
           </div>
           <p className="max-w-[320px] text-muted-foreground text-sm">
             {plan.description}
@@ -108,15 +113,23 @@ export const PricingCard: React.FC<PricingCardProps> = ({
           {plan.isStartingPriceOnly && (
             <span className="text-muted-foreground text-xs">Starting at</span>
           )}
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-2xl text-foreground tracking-tight">
-              ${plan.price.toLocaleString()}
-            </span>
-
-            {!isCustomPrice && (
+          {has7DayTrial ? (
+            <div className="flex flex-col items-start gap-0">
+              <span className="font-bold text-2xl text-foreground tracking-tight">
+                7 days free
+              </span>
+              <span className="text-muted-foreground text-sm">
+                Then ${plan.price.toLocaleString()} / month
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-2xl text-foreground tracking-tight">
+                ${plan.price.toLocaleString()}
+              </span>
               <span className="text-muted-foreground">/ month</span>
-            )}
-          </div>
+            </div>
+          )}
 
           {remainingTrialDays > 0 && (
             <p className="text-muted-foreground text-sm">
@@ -155,7 +168,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
               teamSlug={teamSlug}
               sku={billingPlanToSkuMap[billingPlan]}
             >
-              {cta.label}
+              {has7DayTrial ? "Start 7 Day Free Trial" : cta.label}
             </CheckoutButton>
           )}
 
@@ -166,7 +179,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
               asChild
             >
               <Link href={cta.href} target="_blank" onClick={handleCTAClick}>
-                {cta.label}
+                {has7DayTrial ? "Start 7 Day Free Trial" : cta.label}
               </Link>
             </Button>
           )}

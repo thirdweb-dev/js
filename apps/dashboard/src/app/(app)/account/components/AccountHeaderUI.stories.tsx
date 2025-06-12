@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { teamsAndProjectsStub } from "stories/stubs";
 import {
   BadgeContainer,
@@ -59,13 +59,12 @@ function Variants(props: {
               accountAddress={accountAddressStub}
               connectButton={<ConnectButtonStub />}
               createProject={() => {}}
+              createTeam={() => {}}
               account={{
                 id: "foo",
                 email: "foo@example.com",
               }}
               client={storybookThirdwebClient}
-              getInboxNotifications={() => Promise.resolve([])}
-              markNotificationAsRead={() => Promise.resolve()}
             />
           </div>
         </BadgeContainer>

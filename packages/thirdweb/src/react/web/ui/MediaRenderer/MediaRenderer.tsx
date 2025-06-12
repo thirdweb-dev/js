@@ -87,7 +87,7 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
     );
 
     if (!mediaInfoIsFetched || !src) {
-      return <div style={style} />;
+      return <div style={style} className={className} />;
     }
 
     if (mediaInfo.mimeType) {

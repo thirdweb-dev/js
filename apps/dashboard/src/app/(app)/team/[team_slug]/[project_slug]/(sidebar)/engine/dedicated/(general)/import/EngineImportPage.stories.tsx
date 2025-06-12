@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { EngineImportCardUI } from "./EngineImportPage";
 
 const meta: Meta<typeof EngineImportCardUI> = {

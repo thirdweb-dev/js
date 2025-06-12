@@ -22,7 +22,6 @@ async function fetchAnalytics(
   init?: RequestInit,
 ): Promise<Response> {
   const token = await getAuthToken();
-
   if (!token) {
     throw new Error("You are not authorized to perform this action");
   }
@@ -48,22 +47,11 @@ async function fetchAnalytics(
       decodeURIComponent(value),
     );
   }
-  // client id DEBUG OVERRIDE
-  // analyticsServiceUrl.searchParams.delete("projectId");
-  // analyticsServiceUrl.searchParams.delete("teamId");
-  // analyticsServiceUrl.searchParams.append(
-  //   "teamId",
-  //   "team_cm0lde33r02344w129k5hm2xz",
-  // );
-  // analyticsServiceUrl.searchParams.append(
-  //   "projectId",
-  //   "prj_cm4rqwx9b002qrnsnr37wqpo6",
-  // );
 
   return fetch(analyticsServiceUrl, {
     ...init,
     headers: {
-      "content-type": "application/json",
+      Authorization: `Bearer ${token}`,
       ...init?.headers,
     },
   });
@@ -99,7 +87,6 @@ export async function getWalletConnections(
     `v2/sdk/wallet-connects?${searchParams.toString()}`,
     {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
     },
   );
 
@@ -123,7 +110,6 @@ export async function getInAppWalletUsage(
     `v2/wallet/connects?${searchParams.toString()}`,
     {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
     },
   );
 
@@ -147,7 +133,6 @@ export async function getUserOpUsage(
     `v2/bundler/usage?${searchParams.toString()}`,
     {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
     },
   );
 
@@ -205,7 +190,6 @@ export async function getClientTransactions(
     `v2/sdk/contract-transactions?${searchParams.toString()}`,
     {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
     },
   );
 
@@ -229,7 +213,6 @@ export async function getRpcMethodUsage(
     `v2/rpc/evm-methods?${searchParams.toString()}`,
     {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
     },
   );
 
@@ -250,7 +233,6 @@ export async function getWalletUsers(
     `v2/sdk/wallet-connects/users?${searchParams.toString()}`,
     {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
     },
   );
 
@@ -287,7 +269,6 @@ export async function isProjectActive(params: {
     `v2/active-usage?${searchParams.toString()}`,
     {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
     },
   );
 
@@ -357,9 +338,6 @@ export async function getEcosystemWalletUsage(args: {
     `v2/wallet/connects?${searchParams.toString()}`,
     {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
     },
   );
 
@@ -386,9 +364,6 @@ export async function getUniversalBridgeUsage(args: {
   const searchParams = buildSearchParams(args);
   const res = await fetchAnalytics(`v2/universal?${searchParams.toString()}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
   if (res?.status !== 200) {
@@ -415,9 +390,6 @@ export async function getUniversalBridgeWalletUsage(args: {
     `v2/universal/wallets?${searchParams.toString()}`,
     {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
     },
   );
 
@@ -441,7 +413,6 @@ export async function getEngineCloudMethodUsage(
     `v2/engine-cloud/requests?${searchParams.toString()}`,
     {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
     },
   );
 

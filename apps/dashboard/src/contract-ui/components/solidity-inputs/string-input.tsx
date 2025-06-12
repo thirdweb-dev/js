@@ -46,6 +46,7 @@ export const SolidityStringInput: React.FC<SolidityInputWithTypeProps> = ({
       {showButton && (
         <div className="absolute inset-y-0 right-0 flex items-center pr-1">
           <IpfsUploadButton
+            client={client}
             onUpload={(uri) => {
               if (functionName) {
                 if (functionName === "updateBatchBaseURI") {

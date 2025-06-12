@@ -1,5 +1,6 @@
 "use client";
 
+import { createTeam } from "@/actions/createTeam";
 import type { Team } from "@/api/team";
 import type { TeamAccountRole } from "@/api/team-members";
 import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
@@ -10,10 +11,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { EllipsisIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { TeamPlanBadge } from "../../components/TeamPlanBadge";
 import { getValidTeamPlan } from "../../team/components/TeamHeader/getValidTeamPlan";
@@ -26,6 +28,7 @@ export function AccountTeamsUI(props: {
   }[];
   client: ThirdwebClient;
 }) {
+  const router = useDashboardRouter();
   const [teamSearchValue, setTeamSearchValue] = useState("");
   const teamsToShow = !teamSearchValue
     ? props.teamsWithRole
@@ -34,6 +37,22 @@ export function AccountTeamsUI(props: {
           .toLowerCase()
           .includes(teamSearchValue.toLowerCase());
       });
+
+  const createTeamAndRedirect = () => {
+    toast.promise(
+      createTeam().then((res) => {
+        if (res.status === "error") {
+          throw new Error(res.errorMessage);
+        }
+        router.push(`/team/${res.data.slug}`);
+      }),
+      {
+        loading: "Creating team",
+        success: "Team created",
+        error: "Failed to create team",
+      },
+    );
+  };
 
   return (
     <div>
@@ -45,12 +64,10 @@ export function AccountTeamsUI(props: {
           </p>
         </div>
 
-        <ToolTipLabel label="Coming Soon">
-          <Button disabled className="gap-2 max-sm:w-full">
-            <PlusIcon className="size-4" />
-            Create Team
-          </Button>
-        </ToolTipLabel>
+        <Button className="gap-2 max-sm:w-full" onClick={createTeamAndRedirect}>
+          <PlusIcon className="size-4" />
+          Create Team
+        </Button>
       </div>
 
       <div className="h-4" />

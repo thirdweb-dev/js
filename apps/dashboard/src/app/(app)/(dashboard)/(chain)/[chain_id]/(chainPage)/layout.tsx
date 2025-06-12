@@ -14,16 +14,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import {
+  getAuthToken,
+  getAuthTokenWalletAddress,
+} from "@app/api/lib/getAuthToken";
 import { ChevronDownIcon, TicketCheckIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { mapV4ChainToV5Chain } from "../../../../../../contexts/map-chains";
 import { NebulaChatButton } from "../../../../../nebula-app/(app)/components/FloatingChat/FloatingChat";
-import {
-  getAuthToken,
-  getAuthTokenWalletAddress,
-} from "../../../../api/lib/getAuthToken";
 import { TeamHeader } from "../../../../team/components/TeamHeader/team-header";
 import { StarButton } from "../../components/client/star-button";
 import { getChain, getChainMetadata } from "../../utils";

@@ -67,7 +67,7 @@ type UploadReturnType<TFiles extends UploadableFile[]> = TFiles extends {
 export async function upload<const TFiles extends UploadableFile[]>(
   options: UploadOptions<TFiles>,
 ): Promise<UploadReturnType<TFiles>> {
-  // deal with the differnt file types
+  // deal with the different file types
 
   // if there are no files, return an empty array immediately
   if (options.files.length === 0) {
@@ -112,7 +112,7 @@ export async function upload<const TFiles extends UploadableFile[]>(
     });
   }
 
-  // end deal with the differnt file types
+  // end deal with the different file types
   const form_ = new FormData();
 
   const { fileNames, form } = buildFormData(form_, uris, options);

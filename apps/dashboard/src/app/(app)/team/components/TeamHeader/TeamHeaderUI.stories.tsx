@@ -1,7 +1,7 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { Button } from "@/components/ui/button";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { teamsAndProjectsStub } from "stories/stubs";
 import {
   BadgeContainer,
@@ -138,9 +138,6 @@ function Variant(props: {
   const Comp =
     props.type === "mobile" ? TeamHeaderMobileUI : TeamHeaderDesktopUI;
 
-  const getInboxNotificationsStub = () => Promise.resolve([]);
-  const markNotificationAsReadStub = () => Promise.resolve();
-
   return (
     <div className="border-y bg-card">
       <Comp
@@ -155,9 +152,8 @@ function Variant(props: {
         logout={() => {}}
         connectButton={<ConnectButtonStub />}
         createProject={() => {}}
+        createTeam={() => {}}
         client={storybookThirdwebClient}
-        getInboxNotifications={getInboxNotificationsStub}
-        markNotificationAsRead={markNotificationAsReadStub}
       />
     </div>
   );

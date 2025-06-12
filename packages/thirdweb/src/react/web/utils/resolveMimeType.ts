@@ -12,9 +12,12 @@ export async function resolveMimeType(url?: string) {
     return mimeType;
   }
 
-  const res = await fetch(url, {
-    method: "HEAD",
-  });
+  const res = url.startsWith("blob:")
+    ? await fetch(url)
+    : await fetch(url, {
+        method: "HEAD",
+      });
+
   if (res.ok && res.headers.has("content-type")) {
     return res.headers.get("content-type") || undefined;
   }

@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import pLimit from "p-limit";
 import Papa from "papaparse";
 import { useCallback, useState } from "react";
-import { type DropzoneOptions, useDropzone } from "react-dropzone";
 import { type ThirdwebClient, ZERO_ADDRESS, isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import { csvMimeTypes } from "utils/batch";
@@ -103,8 +102,9 @@ export function useCsvUpload<
     setRawData([]);
     setNoCsv(false);
   }, []);
-  const onDrop = useCallback<Required<DropzoneOptions>["onDrop"]>(
-    (acceptedFiles) => {
+
+  const setFiles = useCallback(
+    (acceptedFiles: File[]) => {
       setNoCsv(false);
       const csv = acceptedFiles.find(
         (f) => csvMimeTypes.includes(f.type) || f.name?.endsWith(".csv"),
@@ -130,9 +130,6 @@ export function useCsvUpload<
     },
     [props.csvParser],
   );
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-  });
 
   const normalizeQuery = useQuery({
     queryKey: ["snapshot-check-isAddress", rawData],
@@ -177,9 +174,7 @@ export function useCsvUpload<
 
   return {
     normalizeQuery,
-    getInputProps,
-    getRootProps,
-    isDragActive,
+    setFiles,
     rawData,
     noCsv,
     reset,

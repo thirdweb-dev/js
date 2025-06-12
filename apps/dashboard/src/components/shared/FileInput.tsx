@@ -1,16 +1,15 @@
-/* eslint-disable @next/next/no-img-element */
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
-import { EyeIcon, FilePlusIcon, ImageIcon, UploadIcon } from "lucide-react";
-import Link from "next/link";
-import { useCallback } from "react";
+import { FilePreview } from "@app/team/[team_slug]/[project_slug]/(sidebar)/assets/create/_common/file-preview";
+import { FilePlusIcon, UploadIcon } from "lucide-react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   type Accept,
   type DropEvent,
   type FileRejection,
   useDropzone,
 } from "react-dropzone";
+import type { ThirdwebClient } from "thirdweb";
 
 interface IFileInputProps {
   accept?: Accept;
@@ -27,7 +26,7 @@ interface IFileInputProps {
   children?: React.ReactNode;
   className?: string;
   disableHelperText?: boolean;
-  fileUrl?: string;
+  client: ThirdwebClient;
 }
 
 export const FileInput: React.FC<IFileInputProps> = ({
@@ -37,15 +36,14 @@ export const FileInput: React.FC<IFileInputProps> = ({
   showUploadButton,
   value,
   children,
-  renderPreview,
   helperText,
   selectOrUpload = "Select",
   isDisabledText = "Upload Disabled",
   showPreview = true,
   className,
   previewMaxWidth,
+  client,
   disableHelperText,
-  fileUrl: fileUrlFallback,
 }) => {
   const onDrop = useCallback<
     <T extends File>(
@@ -61,14 +59,10 @@ export const FileInput: React.FC<IFileInputProps> = ({
     },
     [setValue],
   );
-  const { getRootProps, getInputProps, open } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept,
   });
-
-  const file: File | null =
-    typeof window !== "undefined" && value instanceof File ? value : null;
-  const fileUrl = useImageFileOrUrl(value) || fileUrlFallback || "";
 
   const helperTextOrFile = helperText
     ? helperText
@@ -78,27 +72,16 @@ export const FileInput: React.FC<IFileInputProps> = ({
       ? "image"
       : "file";
 
-  // Don't display non image file types
-  const noDisplay = file && !file.type.includes("image");
+  const createdBlobUrl = useRef<string | null>(null);
 
-  const fileType = file
-    ? file.type.includes("image")
-      ? "Image"
-      : file.type.includes("audio")
-        ? "Audio"
-        : file.type.includes("video")
-          ? "Video"
-          : file.type.includes("csv")
-            ? "CSV"
-            : file.type.includes("text") || file.type.includes("pdf")
-              ? "Text"
-              : file.type.includes("model") ||
-                  file.name.endsWith(".glb") ||
-                  file.name.endsWith(".usdz") ||
-                  file.name.endsWith(".obj")
-                ? "3D Model"
-                : "Media"
-    : null;
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    return () => {
+      if (createdBlobUrl.current) {
+        URL.revokeObjectURL(createdBlobUrl.current);
+      }
+    };
+  }, []);
 
   if (children) {
     return (
@@ -139,25 +122,17 @@ export const FileInput: React.FC<IFileInputProps> = ({
             className={cn(
               "relative cursor-pointer overflow-hidden",
               "flex w-full items-center justify-center border border-border hover:bg-accent hover:ring-2 hover:ring-ring",
-              fileUrl ? "bg-transparent" : "bg-card",
+              value ? "bg-transparent" : "bg-card",
               className,
             )}
           >
-            {noDisplay ? (
-              <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                <ImageIcon className="size-6" />
-                <p className="text-sm">{fileType} uploaded</p>
-              </div>
-            ) : fileUrl ? (
-              renderPreview ? (
-                renderPreview(fileUrl)
-              ) : (
-                <img
-                  alt=""
-                  className="absolute top-0 left-0 h-full w-full object-contain"
-                  src={fileUrl}
-                />
-              )
+            {value ? (
+              <FilePreview
+                srcOrFile={value}
+                client={client}
+                className="h-full w-full"
+                imgContainerClassName="h-full w-full"
+              />
             ) : (
               <div className="flex flex-col items-center gap-2.5 text-muted-foreground">
                 <div className="flex items-center justify-center rounded-full border border-border bg-background p-3">
@@ -173,32 +148,12 @@ export const FileInput: React.FC<IFileInputProps> = ({
           </div>
         ))}
 
-      {showUploadButton || noDisplay ? (
+      {showUploadButton ? (
         <div className="flex flex-col gap-2">
           {showUploadButton && (
-            <Button
-              onClick={open}
-              variant="outline"
-              disabled={isDisabled}
-              className="gap-2"
-            >
+            <Button variant="outline" disabled={isDisabled} className="gap-2">
               <FilePlusIcon className="size-4" /> {selectOrUpload}{" "}
               {helperTextOrFile}
-            </Button>
-          )}
-          {noDisplay && (
-            <Button
-              variant="outline"
-              className="gap-2"
-              asChild
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <Link href={fileUrl} target="_blank" className="no-underline">
-                <EyeIcon className="size-4" />
-                View File
-              </Link>
             </Button>
           )}
         </div>

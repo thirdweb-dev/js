@@ -40,7 +40,8 @@ module.exports = [
   "/community/ambassadors",
   "/community/startup-program",
   // -- grants --
-  "/grant/superchain",
+  "/grants",
+  "/superchain",
   // -- templates --
   "/templates",
   "/templates/:template_slug",

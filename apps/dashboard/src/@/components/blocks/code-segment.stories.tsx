@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useState } from "react";
 import { BadgeContainer } from "stories/utils";
 import { type CodeEnvironment, CodeSegment } from "./code-segment.client";

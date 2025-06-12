@@ -1,12 +1,8 @@
 import { CodeClient } from "@/components/ui/code/code.client";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
-  Box,
-  type BoxProps,
   Flex,
   IconButton,
-  Image,
-  type ImageProps,
   Portal,
   Select,
   Table,
@@ -17,8 +13,6 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
-import { replaceIpfsUrl } from "lib/sdk";
 import {
   ChevronFirstIcon,
   ChevronLastIcon,
@@ -29,34 +23,8 @@ import { useMemo } from "react";
 import { type Column, usePagination, useTable } from "react-table";
 import type { ThirdwebClient } from "thirdweb";
 import type { NFTInput } from "thirdweb/utils";
+import { FilePreview } from "../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/assets/create/_common/file-preview";
 
-const FileImage: React.FC<
-  ImageProps & {
-    client: ThirdwebClient;
-  }
-> = ({ src, client, ...props }) => {
-  const img = useImageFileOrUrl(
-    typeof src === "string" && src.startsWith("ipfs://")
-      ? replaceIpfsUrl(src, client)
-      : src,
-  );
-  return <Image alt="" {...props} src={img} />;
-};
-
-const FileVideo: React.FC<
-  BoxProps &
-    Omit<React.ComponentProps<"video">, "ref" | "src"> & {
-      src: string | File;
-      client: ThirdwebClient;
-    }
-> = ({ src, client, ...props }) => {
-  const video = useImageFileOrUrl(
-    typeof src === "string" && src.startsWith("ipfs://")
-      ? replaceIpfsUrl(src, client)
-      : src,
-  );
-  return <Box as="video" {...props} src={video} />;
-};
 interface BatchTableProps {
   data: NFTInput[];
   portalRef: React.RefObject<HTMLDivElement | null>;
@@ -84,12 +52,9 @@ export const BatchTable: React.FC<BatchTableProps> = ({
         Header: "Image",
         accessor: (row) => row.image,
         Cell: ({ cell: { value } }: { cell: { value?: string } }) => (
-          <FileImage
-            flexShrink={0}
-            boxSize={24}
-            objectFit="contain"
-            src={value}
-            alt=""
+          <FilePreview
+            className="size-24 shrink-0 rounded-lg object-contain"
+            srcOrFile={value}
             client={client}
           />
         ),
@@ -98,15 +63,9 @@ export const BatchTable: React.FC<BatchTableProps> = ({
         Header: "Animation Url",
         accessor: (row) => row.animation_url,
         Cell: ({ cell: { value } }: { cell: { value?: string } }) => (
-          <FileVideo
-            flexShrink={0}
-            boxSize={24}
-            objectFit="contain"
-            src={value || ""}
-            autoPlay
-            playsInline
-            muted
-            loop
+          <FilePreview
+            className="size-24 shrink-0 rounded-lg"
+            srcOrFile={value}
             client={client}
           />
         ),
@@ -177,7 +136,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
   // Render the UI for your table
   return (
     <Flex flexGrow={1} overflow="auto">
-      <TableContainer maxW="100%">
+      <TableContainer maxW="100%" className="w-full">
         <Table {...getTableProps()}>
           <Thead>
             {headerGroups.map((headerGroup, index) => (

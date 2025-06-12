@@ -238,11 +238,11 @@ export type MinimalWalletInfo = {
 /**
  * @internal
  */
-const ALL_MINIMAL_WALLET_INFOS = <const>${JSON.stringify(
+const ALL_MINIMAL_WALLET_INFOS = ${JSON.stringify(
       [...walletInfos, ...customWalletInfos],
       null,
       2,
-    )} satisfies MinimalWalletInfo[];
+    )} as const satisfies MinimalWalletInfo[];
 
 export default ALL_MINIMAL_WALLET_INFOS;
 `,

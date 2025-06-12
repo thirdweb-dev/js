@@ -319,6 +319,46 @@ async function safeApiCall() {
 }
 ```
 
+## Webhooks
+
+Webhooks allow you to receive notifications when specific blockchain events or transactions occur. This enables you to build event-driven AI agents that can react to on-chain activity in real-time.
+
+### Use Cases for AI Agents
+
+- **Real-time Monitoring**: An agent can monitor for specific events (e.g., a large transfer to a whale wallet) and trigger alerts or other actions.
+- **Automated Workflows**: When a specific on-chain action occurs (e.g., a new NFT is minted), an agent can automatically kick off a downstream process, like updating a database or sending a notification.
+- **Data Aggregation**: Use webhooks to feed on-chain data into a vector database or other data store for later analysis by an LLM.
+
+### Creating a Webhook
+
+Webhooks are created and managed via the Insight API. You can find more details in the [Managing Webhooks documentation](/insight/webhooks/managing-webhooks).
+
+### Filtering
+
+You can create powerful filters to specify exactly which events or transactions you want to be notified about.
+
+For example, to receive a notification for both ERC-20 and ERC-721 `Transfer` events, you can use a filter like this:
+
+```typescript
+{
+  "v1.events": {
+    "chain_ids": ["1"],
+    "signatures": [
+      {
+        "sig_hash": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+        "abi": "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"}]"
+      }
+    ]
+  }
+}
+```
+
+This allows an agent to monitor multiple token standards with a single webhook. For more on filtering, see the [Filtering documentation](/insight/webhooks/filtering).
+
+### Payload
+
+The webhook payload contains the event or transaction data. Your agent will need to parse this payload to extract the relevant information. See the [Payload documentation](/insight/webhooks/payload) for details on the payload structure.
+
 ## API Reference
 
 ### Events API

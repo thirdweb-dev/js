@@ -6,6 +6,7 @@ import { Link } from "@chakra-ui/react";
 import { useCsvUpload } from "hooks/useCsvUpload";
 import { CircleAlertIcon, UploadIcon } from "lucide-react";
 import { useMemo, useRef } from "react";
+import { useDropzone } from "react-dropzone";
 import type { Column } from "react-table";
 import { type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import { Button, Heading, Text } from "tw-components";
@@ -36,19 +37,14 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
   onClose,
   client,
 }) => {
-  const {
-    normalizeQuery,
-    getInputProps,
-    getRootProps,
-    isDragActive,
-    rawData,
-    noCsv,
-    reset,
-    removeInvalid,
-  } = useCsvUpload<AirdropAddressInput>({ csvParser, client });
+  const csvUpload = useCsvUpload<AirdropAddressInput>({ csvParser, client });
+  const dropzone = useDropzone({
+    onDrop: csvUpload.setFiles,
+  });
+
   const paginationPortalRef = useRef<HTMLDivElement>(null);
 
-  const normalizeData = normalizeQuery.data;
+  const normalizeData = csvUpload.normalizeQuery.data;
 
   const columns = useMemo(() => {
     return [
@@ -107,11 +103,11 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
 
   return (
     <div className="flex w-full flex-col gap-6">
-      {normalizeData.result.length && rawData.length > 0 ? (
+      {normalizeData.result.length && csvUpload.rawData.length > 0 ? (
         <>
           <CsvDataTable<AirdropAddressInput>
             portalRef={paginationPortalRef}
-            data={normalizeQuery.data.result}
+            data={csvUpload.normalizeQuery.data.result}
             columns={columns}
           />
           <div className="mt-4 flex flex-col justify-between md:mt-0">
@@ -119,21 +115,21 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
             <div className="mt-3 ml-auto flex w-full flex-row gap-2 md:w-auto">
               <Button
                 borderRadius="md"
-                disabled={rawData.length === 0}
+                disabled={csvUpload.rawData.length === 0}
                 onClick={() => {
-                  reset();
+                  csvUpload.reset();
                 }}
                 w={{ base: "100%", md: "auto" }}
               >
                 Reset
               </Button>
-              {normalizeQuery.data.invalidFound ? (
+              {csvUpload.normalizeQuery.data.invalidFound ? (
                 <Button
                   borderRadius="md"
                   colorScheme="primary"
-                  disabled={rawData.length === 0}
+                  disabled={csvUpload.rawData.length === 0}
                   onClick={() => {
-                    removeInvalid();
+                    csvUpload.removeInvalid();
                   }}
                   w={{ base: "100%", md: "auto" }}
                 >
@@ -145,7 +141,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                   colorScheme="primary"
                   onClick={onSave}
                   w={{ base: "100%", md: "auto" }}
-                  isDisabled={rawData.length === 0}
+                  isDisabled={csvUpload.rawData.length === 0}
                 >
                   Next
                 </Button>
@@ -159,18 +155,18 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
             <div
               className={cn(
                 "flex h-full cursor-pointer items-center justify-center rounded-md border border-border hover:border-primary",
-                noCsv ? "bg-red-200" : "bg-background",
+                csvUpload.noCsv ? "bg-red-200" : "bg-background",
               )}
-              {...getRootProps()}
+              {...dropzone.getRootProps()}
             >
-              <input {...getInputProps()} />
+              <input {...dropzone.getInputProps()} />
               <div className="flex flex-col p-6">
                 <UploadIcon
                   className={cn("mx-auto mb-2 size-4 text-gray-500", {
-                    "text-red-500": noCsv,
+                    "text-red-500": csvUpload.noCsv,
                   })}
                 />
-                {isDragActive ? (
+                {dropzone.isDragActive ? (
                   <Heading as={Text} size="label.md">
                     Drop the files here
                   </Heading>
@@ -178,9 +174,9 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                   <Heading
                     as={Text}
                     size="label.md"
-                    color={noCsv ? "red.500" : "gray.600"}
+                    color={csvUpload.noCsv ? "red.500" : "gray.600"}
                   >
-                    {noCsv
+                    {csvUpload.noCsv
                       ? `No valid CSV file found, make sure your CSV includes the "address" & "quantity" column.`
                       : "Drag & Drop a CSV file here"}
                   </Heading>

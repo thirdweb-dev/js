@@ -2,17 +2,18 @@ import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { FileInput } from "components/shared/FileInput";
-import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import type { ThirdwebClient } from "thirdweb";
 import { Fieldset } from "./common";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 
 interface ContractMetadataFieldsetProps {
   form: CustomContractDeploymentForm;
+  client: ThirdwebClient;
 }
 
 export const ContractMetadataFieldset: React.FC<
   ContractMetadataFieldsetProps
-> = ({ form }) => {
+> = ({ form, client }) => {
   return (
     <Fieldset legend="Contract Metadata">
       <div className="flex flex-col gap-6 md:grid md:grid-cols-[200px_1fr]">
@@ -25,8 +26,9 @@ export const ContractMetadataFieldset: React.FC<
           isRequired={false}
         >
           <FileInput
+            client={client}
             accept={{ "image/*": [] }}
-            value={useImageFileOrUrl(form.watch("contractMetadata.image"))}
+            value={form.watch("contractMetadata.image")}
             setValue={(file) =>
               form.setValue("contractMetadata.image", file, {
                 shouldTouch: true,

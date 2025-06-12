@@ -12,7 +12,6 @@ export function SourcesAccordion({
   sources,
   abi,
 }: { sources: SourceFile[]; abi?: Abi }) {
-  console.log({ sources });
   return (
     <Accordion type="multiple" className="w-full">
       {abi && (

@@ -22,6 +22,7 @@ type TeamSwitcherProps = {
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   focus: "project-selection" | "team-selection";
   createProject: (team: Team) => void;
+  createTeam: () => void;
   account: Pick<Account, "email" | "id"> | undefined;
   client: ThirdwebClient;
 };
@@ -100,6 +101,10 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
               }
               account={props.account}
               client={props.client}
+              createTeam={() => {
+                setOpen(false);
+                props.createTeam();
+              }}
             />
 
             {/* Right */}

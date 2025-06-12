@@ -17,7 +17,6 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { PropertiesFormControl } from "components/contract-pages/forms/properties.shared";
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
@@ -34,6 +33,10 @@ import {
 } from "tw-components";
 import type { NFTMetadataInputLimited } from "types/modified-types";
 import { parseAttributes } from "utils/parseAttributes";
+import {
+  getUploadedNFTMediaMeta,
+  handleNFTMediaUpload,
+} from "../../modules/components/nft/handleNFTMediaUpload";
 
 const LAZY_MINT_FORM_ID = "nft-lazy-mint-form";
 
@@ -54,6 +57,8 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
   const address = useActiveAccount()?.address;
   const sendAndConfirmTx = useSendAndConfirmTransaction();
 
+  const form = useForm<NFTMetadataInputLimited>();
+
   const {
     setValue,
     control,
@@ -61,75 +66,20 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
     watch,
     handleSubmit,
     formState: { errors, isDirty },
-  } = useForm<NFTMetadataInputLimited>();
+  } = form;
 
   const setFile = (file: File) => {
-    if (file.type.includes("image")) {
-      // image files
-      setValue("image", file);
-      if (watch("external_url") instanceof File) {
-        setValue("external_url", undefined);
-      }
-      if (watch("animation_url") instanceof File) {
-        setValue("animation_url", undefined);
-      }
-    } else if (
-      ["audio", "video", "text/html", "model/*"].some((type: string) =>
-        file.type.includes(type),
-      ) ||
-      file.name?.endsWith(".glb") ||
-      file.name?.endsWith(".usdz") ||
-      file.name?.endsWith(".gltf") ||
-      file.name.endsWith(".obj")
-    ) {
-      // audio, video, html, and glb (3d) files
-      setValue("animation_url", file);
-      if (watch("external_url") instanceof File) {
-        setValue("external_url", undefined);
-      }
-    } else if (
-      ["text", "application/pdf"].some((type: string) =>
-        file.type?.includes(type),
-      )
-    ) {
-      // text and pdf files
-      setValue("external_url", file);
-      if (watch("animation_url") instanceof File) {
-        setValue("animation_url", undefined);
-      }
-    }
+    handleNFTMediaUpload({ file, form });
   };
 
-  const imageUrl = useImageFileOrUrl(watch("image") as File | string);
-  const animationUrlFormValue = watch("animation_url");
-  const imageUrlFormValue = watch("image");
-
-  const mediaFileUrl =
-    watch("animation_url") instanceof File
-      ? watch("animation_url")
-      : watch("external_url") instanceof File
-        ? watch("external_url")
-        : watch("image") instanceof File
-          ? imageUrl
-          : undefined;
-
-  const mediaFileError =
-    watch("animation_url") instanceof File
-      ? errors?.animation_url
-      : watch("external_url") instanceof File
-        ? errors?.external_url
-        : watch("image") instanceof File
-          ? errors?.image
-          : undefined;
-
-  const externalUrl = watch("external_url");
-  const externalIsTextFile =
-    externalUrl instanceof File &&
-    (externalUrl.type.includes("text") || externalUrl.type.includes("pdf"));
-
-  const showCoverImageUpload =
-    watch("animation_url") instanceof File ||
-    watch("external_url") instanceof File;
+  const {
+    media,
+    image,
+    mediaFileError,
+    showCoverImageUpload,
+    animation_url,
+    external_url,
+  } = getUploadedNFTMediaMeta(form);
 
   const lazyMintNotifications = useTxNotifications(
     "NFT lazy minted successfully",
@@ -184,7 +134,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
         })}
       >
         <div className="flex flex-col gap-2">
-          <Heading size="subtitle.md">Metadata</Heading>
+          <Heading size="subtitle.md">Metadata </Heading>
           <Divider />
         </div>
         <FormControl isRequired isInvalid={!!errors.name}>
@@ -197,13 +147,14 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
           <div>
             <FileInput
               previewMaxWidth="200px"
-              value={mediaFileUrl as File | string}
+              value={media}
               showUploadButton
               showPreview={true}
               setValue={setFile}
               className="rounded border border-border transition-all duration-200"
               selectOrUpload="Upload"
               helperText="Media"
+              client={contract.client}
             />
           </div>
           <FormHelperText>
@@ -219,8 +170,9 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
             <FormLabel>Cover Image</FormLabel>
             <FileInput
               previewMaxWidth="200px"
+              client={contract.client}
               accept={{ "image/*": [] }}
-              value={imageUrl}
+              value={image}
               showUploadButton
               setValue={(file) => setValue("image", file)}
               className="rounded border border-border transition-all"
@@ -245,6 +197,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
           control={control}
           register={register}
           setValue={setValue}
+          client={contract.client}
         />
         <Accordion
           allowToggle={!(errors.background_color || errors.external_url)}
@@ -270,7 +223,8 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
                   {errors?.background_color?.message}
                 </FormErrorMessage>
               </FormControl>
-              {!externalIsTextFile && (
+
+              {!(external_url instanceof File) && (
                 <FormControl isInvalid={!!errors.external_url}>
                   <FormLabel>
                     External URL <OpenSeaPropertyBadge />
@@ -286,47 +240,45 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
                   </FormErrorMessage>
                 </FormControl>
               )}
-              <FormControl isInvalid={!!errors.image}>
-                <FormLabel>Image URL</FormLabel>
-                <Input
-                  {...register("image")}
-                  value={
-                    typeof imageUrlFormValue === "string"
-                      ? imageUrlFormValue
-                      : ""
-                  }
-                  onChange={(e) => {
-                    setValue("image", e.target.value);
-                  }}
-                />
-                <FormHelperText>
-                  If you already have your NFT image pre-uploaded to a URL, you
-                  can specify it here instead of uploading the media file
-                </FormHelperText>
-                <FormErrorMessage>{errors?.image?.message}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={!!errors.animation_url}>
-                <FormLabel>Animation URL</FormLabel>
-                <Input
-                  {...register("animation_url")}
-                  value={
-                    typeof animationUrlFormValue === "string"
-                      ? animationUrlFormValue
-                      : ""
-                  }
-                  onChange={(e) => {
-                    setValue("animation_url", e.target.value);
-                  }}
-                />
-                <FormHelperText>
-                  If you already have your NFT Animation URL pre-uploaded to a
-                  URL, you can specify it here instead of uploading the media
-                  file
-                </FormHelperText>
-                <FormErrorMessage>
-                  {errors?.animation_url?.message}
-                </FormErrorMessage>
-              </FormControl>
+
+              {!(image instanceof File) && (
+                <FormControl isInvalid={!!errors.image}>
+                  <FormLabel>Image URL</FormLabel>
+                  <Input
+                    {...register("image")}
+                    value={image}
+                    onChange={(e) => {
+                      setValue("image", e.target.value);
+                    }}
+                  />
+                  <FormHelperText>
+                    If you already have your NFT image pre-uploaded to a URL,
+                    you can specify it here instead of uploading the media file
+                  </FormHelperText>
+                  <FormErrorMessage>{errors?.image?.message}</FormErrorMessage>
+                </FormControl>
+              )}
+
+              {!(animation_url instanceof File) && (
+                <FormControl isInvalid={!!errors.animation_url}>
+                  <FormLabel>Animation URL</FormLabel>
+                  <Input
+                    {...register("animation_url")}
+                    value={animation_url}
+                    onChange={(e) => {
+                      setValue("animation_url", e.target.value);
+                    }}
+                  />
+                  <FormHelperText>
+                    If you already have your NFT Animation URL pre-uploaded to a
+                    URL, you can specify it here instead of uploading the media
+                    file
+                  </FormHelperText>
+                  <FormErrorMessage>
+                    {errors?.animation_url?.message}
+                  </FormErrorMessage>
+                </FormControl>
+              )}
             </AccordionPanel>
           </AccordionItem>
         </Accordion>

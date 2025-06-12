@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { teamStub } from "stories/stubs";
-import { storybookLog } from "stories/utils";
+import { storybookLog, storybookThirdwebClient } from "stories/utils";
 import { TeamOnboardingLayout } from "../onboarding-layout";
 import { TeamInfoFormUI } from "./TeamInfoForm";
 
@@ -35,6 +35,7 @@ function Story(props: {
   return (
     <TeamOnboardingLayout currentStep={1}>
       <TeamInfoFormUI
+        client={storybookThirdwebClient}
         onComplete={() => {
           storybookLog("onComplete");
         }}

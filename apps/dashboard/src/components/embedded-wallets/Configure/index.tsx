@@ -446,8 +446,9 @@ function AppImageFormControl(props: {
     <div className="flex">
       <div className="relative">
         <FileInput
+          client={props.client}
           accept={{ "image/*": [] }}
-          value={image}
+          value={image || resolveUrl}
           setValue={async (v) => {
             try {
               setImage(v);
@@ -462,7 +463,6 @@ function AppImageFormControl(props: {
           }}
           className="w-24 rounded-full bg-background lg:w-28"
           disableHelperText
-          fileUrl={resolveUrl}
         />
 
         {uploadImage.isPending && (

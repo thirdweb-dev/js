@@ -1,5 +1,5 @@
 import type { Team } from "@/api/team";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { addDays } from "date-fns";
 import { teamStub, teamSubscriptionsStub } from "stories/stubs";
 import { BadgeContainer } from "stories/utils";

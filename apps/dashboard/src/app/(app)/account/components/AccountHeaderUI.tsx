@@ -5,13 +5,10 @@ import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import Link from "next/link";
 import type { ThirdwebClient } from "thirdweb";
+import { NotificationsButton } from "../../../../@/components/blocks/notifications/notification-button";
 import { SecondaryNav } from "../../components/Header/SecondaryNav/SecondaryNav";
 import { MobileBurgerMenuButton } from "../../components/MobileBurgerMenuButton";
 import { ThirdwebMiniLogo } from "../../components/ThirdwebMiniLogo";
-import {
-  NotificationButtonUI,
-  type NotificationMetadata,
-} from "../../team/components/NotificationButton/NotificationButton";
 import { TeamAndProjectSelectorPopoverButton } from "../../team/components/TeamHeader/TeamAndProjectSelectorPopoverButton";
 import { TeamSelectorMobileMenuButton } from "../../team/components/TeamHeader/TeamSelectorMobileMenuButton";
 
@@ -21,11 +18,10 @@ export type AccountHeaderCompProps = {
   connectButton: React.ReactNode;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   createProject: (team: Team) => void;
+  createTeam: () => void;
   account: Pick<Account, "email" | "id" | "image">;
   client: ThirdwebClient;
   accountAddress: string;
-  getInboxNotifications: () => Promise<NotificationMetadata[]>;
-  markNotificationAsRead: (id: string) => Promise<void>;
 };
 
 export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
@@ -64,6 +60,7 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
               teamsAndProjects={props.teamsAndProjects}
               focus="team-selection"
               createProject={props.createProject}
+              createTeam={props.createTeam}
               account={props.account}
               client={props.client}
             />
@@ -77,8 +74,6 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
         connectButton={props.connectButton}
         client={props.client}
         accountAddress={props.accountAddress}
-        getInboxNotifications={props.getInboxNotifications}
-        markNotificationAsRead={props.markNotificationAsRead}
       />
     </header>
   );
@@ -117,16 +112,14 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
               upgradeTeamLink={undefined}
               account={props.account}
               client={props.client}
+              createTeam={props.createTeam}
             />
           )}
         </div>
       </div>
 
       <div className="flex items-center gap-3">
-        <NotificationButtonUI
-          getInboxNotifications={props.getInboxNotifications}
-          markNotificationAsRead={props.markNotificationAsRead}
-        />
+        <NotificationsButton accountId={props.account.id} />
 
         <MobileBurgerMenuButton
           type="loggedIn"

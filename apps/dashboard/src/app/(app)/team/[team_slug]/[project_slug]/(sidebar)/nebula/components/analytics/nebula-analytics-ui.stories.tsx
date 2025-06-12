@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { subDays } from "date-fns";
 import type { NebulaAnalyticsDataItem } from "./fetch-nebula-analytics";
 import { NebulaAnalyticsDashboardUI } from "./nebula-analytics-ui";

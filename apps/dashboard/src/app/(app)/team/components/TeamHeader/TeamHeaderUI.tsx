@@ -6,14 +6,11 @@ import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import Link from "next/link";
 import type { ThirdwebClient } from "thirdweb";
+import { NotificationsButton } from "../../../../../@/components/blocks/notifications/notification-button";
 import { SecondaryNav } from "../../../components/Header/SecondaryNav/SecondaryNav";
 import { MobileBurgerMenuButton } from "../../../components/MobileBurgerMenuButton";
 import { TeamPlanBadge } from "../../../components/TeamPlanBadge";
 import { ThirdwebMiniLogo } from "../../../components/ThirdwebMiniLogo";
-import {
-  NotificationButtonUI,
-  type NotificationMetadata,
-} from "../NotificationButton/NotificationButton";
 import { ProjectSelectorMobileMenuButton } from "./ProjectSelectorMobileMenuButton";
 import { TeamAndProjectSelectorPopoverButton } from "./TeamAndProjectSelectorPopoverButton";
 import { TeamSelectorMobileMenuButton } from "./TeamSelectorMobileMenuButton";
@@ -29,10 +26,9 @@ export type TeamHeaderCompProps = {
   logout: () => void;
   connectButton: React.ReactNode;
   createProject: (team: Team) => void;
+  createTeam: () => void;
   client: ThirdwebClient;
   accountAddress: string;
-  getInboxNotifications: () => Promise<NotificationMetadata[]>;
-  markNotificationAsRead: (id: string) => Promise<void>;
 };
 
 export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
@@ -78,6 +74,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
             teamsAndProjects={props.teamsAndProjects}
             focus="team-selection"
             createProject={props.createProject}
+            createTeam={props.createTeam}
             account={props.account}
             client={props.client}
           />
@@ -105,6 +102,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
                 teamsAndProjects={props.teamsAndProjects}
                 focus="project-selection"
                 createProject={props.createProject}
+                createTeam={props.createTeam}
                 account={props.account}
                 client={props.client}
               />
@@ -119,8 +117,6 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
         connectButton={props.connectButton}
         client={props.client}
         accountAddress={props.accountAddress}
-        getInboxNotifications={props.getInboxNotifications}
-        markNotificationAsRead={props.markNotificationAsRead}
       />
     </header>
   );
@@ -173,6 +169,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
             upgradeTeamLink={`/team/${currentTeam.slug}/settings`}
             account={props.account}
             client={props.client}
+            createTeam={props.createTeam}
           />
         </div>
 
@@ -202,10 +199,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
       </div>
 
       <div className="flex items-center gap-3">
-        <NotificationButtonUI
-          getInboxNotifications={props.getInboxNotifications}
-          markNotificationAsRead={props.markNotificationAsRead}
-        />
+        <NotificationsButton accountId={props.account.id} />
 
         <MobileBurgerMenuButton
           type="loggedIn"

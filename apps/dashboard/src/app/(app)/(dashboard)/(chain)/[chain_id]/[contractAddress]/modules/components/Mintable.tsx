@@ -397,7 +397,11 @@ function MintNFTSection(props: {
             <div className="flex flex-col gap-6 lg:flex-row">
               {/* Left */}
               <div className="shrink-0 lg:w-[300px]">
-                <NFTMediaFormGroup form={form} previewMaxWidth="300px" />
+                <NFTMediaFormGroup
+                  form={form}
+                  previewMaxWidth="300px"
+                  client={props.client}
+                />
               </div>
 
               {/* Right */}

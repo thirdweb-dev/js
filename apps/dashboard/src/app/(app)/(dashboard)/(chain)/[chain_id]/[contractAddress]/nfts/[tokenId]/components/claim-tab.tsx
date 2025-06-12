@@ -10,6 +10,7 @@ import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
+import { parseError } from "utils/errorParser";
 
 interface ClaimTabProps {
   contract: ThirdwebContract;
@@ -67,7 +68,12 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
           toast.promise(promise, {
             loading: "Claiming NFT",
             success: "NFT claimed successfully",
-            error: "Failed to claim NFT",
+            error: (error) => {
+              return {
+                message: "Failed to claim NFT",
+                description: parseError(error),
+              };
+            },
           });
           trackEvent({
             category: "nft",

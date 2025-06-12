@@ -49,6 +49,7 @@ import {
   useSwitchActiveWalletChain,
   useWalletBalance,
 } from "thirdweb/react";
+import { parseError } from "utils/errorParser";
 import { z } from "zod";
 
 function formatTime(seconds: number) {
@@ -234,7 +235,12 @@ export function FaucetButton({
     const claimPromise = claimMutation.mutateAsync(values.turnstileToken);
     toast.promise(claimPromise, {
       success: `${amount} ${chain.nativeCurrency.symbol} sent successfully`,
-      error: `Failed to claim ${amount} ${chain.nativeCurrency.symbol}`,
+      error: (err) => {
+        return {
+          message: `Failed to claim ${amount} ${chain.nativeCurrency.symbol}`,
+          description: parseError(err),
+        };
+      },
     });
   };
 

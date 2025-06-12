@@ -60,7 +60,7 @@ function TransactionsLayout(props: {
               </div>
             </div>
             <Link href={`${engineBaseSlug}/dedicated`}>
-              <Button variant="outline">View dedicated engines</Button>
+              <Button variant="outline">View Dedicated Engine</Button>
             </Link>
           </div>
         </div>
