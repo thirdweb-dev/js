@@ -98,7 +98,7 @@ const universalBridgeSidebarLinks: SidebarLink = {
       href: "/connect/pay/fund-wallet",
     },
     {
-      name: "Commerce",
+      name: "Checkout",
       href: "/connect/pay/commerce",
     },
     {

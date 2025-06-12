@@ -5,8 +5,6 @@ import type { Token } from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
-import { getToken } from "../../../../pay/convert/get-token.js";
-import { toTokens } from "../../../../utils/units.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
@@ -25,8 +23,12 @@ import { Spinner } from "../components/Spinner.js";
 import type { LocaleId } from "../types.js";
 import { checksumAddress, type Address } from "../../../../utils/address.js";
 import { stringify } from "../../../../utils/json.js";
+import {
+  prepareTransaction,
+  type PreparedTransaction,
+} from "../../../../transaction/prepare-transaction.js";
 
-export type BuyWidgetProps = {
+export type TransactionWidgetProps = {
   supportedTokens?: SupportedTokens;
   /**
    * A client is the entry point to the thirdweb SDK.
@@ -53,7 +55,7 @@ export type BuyWidgetProps = {
    */
   locale?: LocaleId;
   /**
-   * Set the theme for the `BuyWidget` component. By default it is set to `"dark"`
+   * Set the theme for the `TransactionWidget` component. By default it is set to `"dark"`
    *
    * theme can be set to either `"dark"`, `"light"` or a custom theme object.
    * You can also import [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
@@ -70,18 +72,18 @@ export type BuyWidgetProps = {
    * })
    *
    * function Example() {
-   *  return <BuyWidget client={client} theme={customTheme} />
+   *  return <TransactionWidget client={client} theme={customTheme} />
    * }
    * ```
    */
   theme?: "light" | "dark" | Theme;
 
   /**
-   * Customize the options for "Connect" Button showing in the BuyWidget UI when the user is not connected to a wallet.
+   * Customize the options for "Connect" Button showing in the TransactionWidget UI when the user is not connected to a wallet.
    *
-   * Refer to the [`BuyWidgetConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/BuyWidgetConnectOptions) type for more details.
+   * Refer to the [`TransactionWidgetConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/TransactionWidgetConnectOptions) type for more details.
    */
-  connectOptions?: BuyWidgetConnectOptions;
+  connectOptions?: TransactionWidgetConnectOptions;
 
   /**
    * All wallet IDs included in this array will be hidden from wallet selection when connected.
@@ -89,7 +91,7 @@ export type BuyWidgetProps = {
   hiddenWallets?: WalletId[];
 
   /**
-   * The wallet that should be pre-selected in the BuyWidget UI.
+   * The wallet that should be pre-selected in the TransactionWidget UI.
    */
   activeWallet?: Wallet;
 
@@ -98,24 +100,34 @@ export type BuyWidgetProps = {
   className?: string;
 
   /**
-   * The chain the accepted token is on.
-   */
-  chain: Chain;
-
-  /**
-   * Address of the token to buy. Leave undefined for the native token, or use 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE.
+   * The token address needed to complete this transaction. Leave undefined if no token is required.
    */
   tokenAddress?: Address;
 
   /**
-   * The amount to buy **(in wei)**.
+   * The price of the item **(in wei)**.
    */
-  amount: bigint;
+  amount?: bigint;
 
   /**
-   * The title to display in the widget.
+   * A title for the transaction.
    */
   title?: string;
+
+  /**
+   * The transaction description.
+   */
+  description?: string;
+
+  /**
+   * An image URL to show on the widget, such as an NFT image.
+   */
+  image?: string;
+
+  /**
+   * Whether the user or the seller pays the protocol fees. Defaults to the user.
+   */
+  feePayer?: "user" | "seller";
 
   /**
    * Preset fiat amounts to display in the UI. Defaults to [5, 10, 20].
@@ -143,6 +155,11 @@ export type BuyWidgetProps = {
   onCancel?: () => void;
 
   /**
+   * Arbitrary data to be included in the returned status and webhook events.
+   */
+  transaction: PreparedTransaction;
+
+  /**
    * @hidden
    */
   paymentLinkId?: string;
@@ -152,29 +169,35 @@ export type BuyWidgetProps = {
 type UIOptionsResult =
   | { type: "success"; data: UIOptions }
   | {
-    type: "indexing_token";
-    token: Token;
-    chain: Chain;
-  }
+      type: "indexing_token";
+      token: Token;
+      chain: Chain;
+    }
   | {
-    type: "unsupported_token";
-    tokenAddress: Address;
-    chain: Chain;
-  };
+      type: "unsupported_token";
+      tokenAddress: Address;
+      chain: Chain;
+    };
 
 /**
  * Widget a prebuilt UI for purchasing a specific token.
  *
- * @param props - Props of type [`BuyWidgetProps`](https://portal.thirdweb.com/references/typescript/v5/BuyWidgetProps) to configure the BuyWidget component.
+ * @param props - Props of type [`TransactionWidgetProps`](https://portal.thirdweb.com/references/typescript/v5/TransactionWidgetProps) to configure the TransactionWidget component.
  *
  * @example
  * ### Default configuration
  *
- * By default, the `BuyWidget` component will allows users to fund their wallets with crypto or fiat on any of the supported chains..
+ * By default, the `TransactionWidget` component will allows users to fund their wallets with crypto or fiat on any of the supported chains..
  *
  * ```tsx
- * <BuyWidget
+ * <TransactionWidget
  *   client={client}
+ *   transaction={prepareTransaction({
+ *     to: "0x...",
+ *     chain: ethereum,
+ *     client: client,
+ *     value: toUnits("0.001", 18),
+ *   })}
  *  />
  * ```
  *
@@ -183,19 +206,31 @@ type UIOptionsResult =
  * You can use `disableOnramps` to prevent the use of onramps in the widget.
  *
  * ```tsx
- * <BuyWidget
+ * <TransactionWidget
  *   client={client}
+ *   transaction={prepareTransaction({
+ *     to: "0x...",
+ *     chain: ethereum,
+ *     client: client,
+ *     value: toUnits("0.001", 18),
+ *   })}
  *   disableOnramps
  *  />
  * ```
  *
  * ### Customize the UI
  *
- * You can customize the UI of the `BuyWidget` component by passing a custom theme object to the `theme` prop.
+ * You can customize the UI of the `TransactionWidget` component by passing a custom theme object to the `theme` prop.
  *
  * ```tsx
- * <BuyWidget
+ * <TransactionWidget
  *   client={client}
+ *   transaction={prepareTransaction({
+ *     to: "0x...",
+ *     chain: ethereum,
+ *     client: client,
+ *     value: toUnits("0.001", 18),
+ *   })}
  *   theme={darkTheme({
  *     colors: {
  *       modalBg: "red",
@@ -208,22 +243,34 @@ type UIOptionsResult =
  *
  * ### Update the Title
  *
- * You can update the title of the widget by passing a `title` prop to the `BuyWidget` component.
+ * You can update the title of the widget by passing a `title` prop to the `TransactionWidget` component.
  *
  * ```tsx
- * <BuyWidget
+ * <TransactionWidget
+ *   transaction={prepareTransaction({
+ *     to: "0x...",
+ *     chain: ethereum,
+ *     client: client,
+ *     value: toUnits("0.001", 18),
+ *   })}
  *   client={client}
- *   title="Buy ETH"
+ *   title="Transaction ETH"
  * />
  * ```
  *
  * ### Configure the wallet connection
  *
- * You can customize the wallet connection flow by passing a `connectOptions` object to the `BuyWidget` component.
+ * You can customize the wallet connection flow by passing a `connectOptions` object to the `TransactionWidget` component.
  *
  * ```tsx
- * <BuyWidget
+ * <TransactionWidget
  *   client={client}
+ *   transaction={prepareTransaction({
+ *     to: "0x...",
+ *     chain: ethereum,
+ *     client: client,
+ *     value: toUnits("0.001", 18),
+ *   })}
  *   connectOptions={{
  *     connectModal: {
  *       size: 'compact',
@@ -233,63 +280,42 @@ type UIOptionsResult =
  * />
  * ```
  *
- * Refer to the [`BuyWidgetConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/BuyWidgetConnectOptions) type for more details.
+ * Refer to the [`TransactionWidgetConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/TransactionWidgetConnectOptions) type for more details.
  *
  * @bridge
  * @beta
  * @react
  * @buyCrypto
  */
-export function BuyWidget(props: BuyWidgetProps) {
+export function TransactionWidget(props: TransactionWidgetProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const theme = props.theme || "dark";
 
   const bridgeDataQuery = useQuery({
     queryKey: ["bridgeData", stringify(props)],
     queryFn: async (): Promise<UIOptionsResult> => {
-      if (
-        !props.tokenAddress ||
-        checksumAddress(props.tokenAddress) ===
-        checksumAddress(NATIVE_TOKEN_ADDRESS)
-      ) {
-        const ETH = await getToken(
-          props.client,
-          NATIVE_TOKEN_ADDRESS,
-          props.chain.id,
-        );
-        return {
-          type: "success",
-          data: {
-            mode: "fund_wallet",
-            destinationToken: ETH,
-            initialAmount: toTokens(props.amount, ETH.decimals),
-          },
-        };
-      }
+      const transaction = prepareTransaction({
+        ...props.transaction,
+        erc20Value: props.amount
+          ? {
+              amountWei: props.amount,
+              tokenAddress: checksumAddress(
+                props.tokenAddress || NATIVE_TOKEN_ADDRESS,
+              ),
+            }
+          : props.transaction.erc20Value,
+      });
 
-      const token = await getToken(
-        props.client,
-        props.tokenAddress,
-        props.chain.id,
-      ).catch((err) =>
-        err.message.includes("not supported") ? undefined : Promise.reject(err),
-      );
-      if (!token) {
-        return {
-          type: "unsupported_token",
-          tokenAddress: props.tokenAddress,
-          chain: props.chain,
-        };
-      }
       return {
         type: "success",
         data: {
-          mode: "fund_wallet",
-          destinationToken: token,
-          initialAmount: toTokens(props.amount, token.decimals),
+          mode: "transaction",
           metadata: {
             title: props.title,
+            description: props.description,
+            image: props.image,
           },
+          transaction,
         },
       };
     },
@@ -351,11 +377,11 @@ export function BuyWidget(props: BuyWidgetProps) {
 }
 
 /**
- * Connection options for the `BuyWidget` component
+ * Connection options for the `TransactionWidget` component
  *
  * @example
  * ```tsx
- * <BuyWidget client={client} connectOptions={{
+ * <TransactionWidget client={client} connectOptions={{
  *    connectModal: {
  *      size: 'compact',
  *      title: "Sign in",
@@ -364,7 +390,7 @@ export function BuyWidget(props: BuyWidgetProps) {
  * />
  * ```
  */
-export type BuyWidgetConnectOptions = {
+export type TransactionWidgetConnectOptions = {
   /**
    * Configurations for the `ConnectButton`'s Modal that is shown for connecting a wallet
    * Refer to the [`ConnectButton_connectModalOptions`](https://portal.thirdweb.com/references/typescript/v5/ConnectButton_connectModalOptions) type for more details
@@ -406,10 +432,10 @@ export type BuyWidgetConnectOptions = {
    * ```
    */
   autoConnect?:
-  | {
-    timeout: number;
-  }
-  | boolean;
+    | {
+        timeout: number;
+      }
+    | boolean;
 
   /**
    * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.

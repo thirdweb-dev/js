@@ -1,58 +1,37 @@
 "use client";
 import { use, useState } from "react";
 import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
-import { base } from "thirdweb/chains";
-import type { PayEmbedPlaygroundOptions } from "../components/types";
+import { arbitrum } from "thirdweb/chains";
+import type { BridgeComponentsPlaygroundOptions } from "../components/types";
 import { LeftSection } from "./LeftSection";
 import { RightSection } from "./RightSection";
+import { checksumAddress } from "thirdweb/utils";
 
 // NOTE: Only set the values that are actually the default values used by PayEmbed component
-const defaultConnectOptions: PayEmbedPlaygroundOptions = {
+const defaultConnectOptions: BridgeComponentsPlaygroundOptions = {
   theme: {
     type: "dark",
     darkColorOverrides: {},
     lightColorOverrides: {},
   },
   payOptions: {
-    mode: "fund_wallet",
+    widget: "buy",
     title: "",
     image: "",
     description: "",
-    buyTokenAddress: NATIVE_TOKEN_ADDRESS,
-    buyTokenAmount: "0.01",
-    buyTokenChain: base,
-    sellerAddress: "",
+    buyTokenAddress: checksumAddress(NATIVE_TOKEN_ADDRESS),
+    buyTokenAmount: "0.002",
+    buyTokenChain: arbitrum,
+    sellerAddress: "0x0000000000000000000000000000000000000000",
     transactionData: "",
-    buyTokenInfo: undefined,
-    buyWithCrypto: true,
-    buyWithFiat: true,
-  },
-  connectOptions: {
-    walletIds: [
-      "io.metamask",
-      "com.coinbase.wallet",
-      "me.rainbow",
-      "io.rabby",
-      "io.zerion.wallet",
-    ],
-    modalTitle: undefined,
-    modalTitleIcon: undefined,
-    localeId: "en_US",
-    enableAuth: false,
-    termsOfServiceLink: undefined,
-    privacyPolicyLink: undefined,
-    enableAccountAbstraction: false,
-    buttonLabel: undefined,
-    ShowThirdwebBranding: true,
-    requireApproval: false,
   },
 };
 
-export default function PayEmbedPlayground(props: {
+export default function BridgeComponentsPlayground(props: {
   searchParams: Promise<{ tab: string }>;
 }) {
   const searchParams = use(props.searchParams);
-  const [options, setOptions] = useState<PayEmbedPlaygroundOptions>(
+  const [options, setOptions] = useState<BridgeComponentsPlaygroundOptions>(
     defaultConnectOptions,
   );
 

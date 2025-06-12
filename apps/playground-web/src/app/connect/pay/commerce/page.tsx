@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   metadataBase,
-  title: "Integrate Fiat & Cross-Chain Crypto Payments | thirdweb Pay",
+  title: "Integrate Fiat & Cross-Chain Crypto Payments | Universal Bridge",
   description:
     "The easiest way for users to transact in your app. Onramp users in clicks and generate revenue for each user transaction. Integrate for free.",
 };
@@ -34,7 +34,7 @@ function BuyMerch() {
   return (
     <CodeExample
       header={{
-        title: "Commerce",
+        title: "Checkout",
         description: (
           <>
             Take payments from Fiat or Crypto directly to your seller wallet.
@@ -60,7 +60,7 @@ function BuyMerch() {
         seller="0xEb0effdFB4dC5b3d5d3aC6ce29F3ED213E95d675"
         feePayer="seller"
         name="Black Hoodie"
-        description="Size L. Ships worldwide."
+        description="Size L | Ships worldwide."
       />
           );
         };`}

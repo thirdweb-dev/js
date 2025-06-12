@@ -1,44 +1,26 @@
-import type { Chain } from "thirdweb";
-import type { LocaleId, ThemeOverrides, TokenInfo } from "thirdweb/react";
-import type { WalletId } from "thirdweb/wallets";
+import type { Address, Chain } from "thirdweb";
+import type { ThemeOverrides } from "thirdweb/react";
 
-export type PayEmbedPlaygroundOptions = {
+export type BridgeComponentsPlaygroundOptions = {
   theme: {
     type: "dark" | "light";
     darkColorOverrides: ThemeOverrides["colors"];
     lightColorOverrides: ThemeOverrides["colors"];
   };
   payOptions: {
-    mode?: "fund_wallet" | "direct_payment" | "transaction";
+    widget?: "buy" | "checkout" | "transaction";
     title: string | undefined;
     image: string | undefined;
     description: string | undefined;
 
-    // fund_wallet mode options
-    buyTokenAddress: string | undefined;
-    buyTokenAmount: string | undefined;
-    buyTokenChain: Chain | undefined;
-    buyTokenInfo?: TokenInfo;
-    buyWithCrypto?: boolean;
-    buyWithFiat?: boolean;
+    buyTokenAddress: Address;
+    buyTokenAmount: string;
+    buyTokenChain: Chain;
 
     // direct_payment mode options
-    sellerAddress?: string;
+    sellerAddress: Address;
 
     // transaction mode options
     transactionData?: string; // Simplified for demo; could be more complex in real implementation
-  };
-  connectOptions: {
-    walletIds: WalletId[];
-    modalTitle: string | undefined;
-    modalTitleIcon: string | undefined;
-    localeId: LocaleId;
-    enableAuth: boolean;
-    enableAccountAbstraction: boolean;
-    termsOfServiceLink: string | undefined;
-    privacyPolicyLink: string | undefined;
-    buttonLabel: string | undefined;
-    ShowThirdwebBranding: boolean;
-    requireApproval: boolean;
   };
 };
