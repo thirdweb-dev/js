@@ -143,6 +143,10 @@ export {
   type TransactionWidgetProps,
 } from "../react/web/ui/Bridge/TransactionWidget.js";
 export {
+  useBridgeRoutes,
+  type UseBridgeRoutesParams,
+} from "../react/core/hooks/useBridgeRoutes.js";
+export {
   PayEmbed,
   type PayEmbedProps,
   type PayEmbedConnectOptions,

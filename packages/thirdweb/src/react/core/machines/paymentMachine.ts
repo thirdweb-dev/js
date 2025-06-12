@@ -4,11 +4,11 @@ import type { Address } from "../../../utils/address.js";
 import type { AsyncStorage } from "../../../utils/storage/AsyncStorage.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { WindowAdapter } from "../adapters/WindowAdapter.js";
-import type { CompletedStatusResult } from "../hooks/useStepExecutor.js";
 import type {
   BridgePrepareRequest,
   BridgePrepareResult,
 } from "../hooks/useBridgePrepare.js";
+import type { CompletedStatusResult } from "../hooks/useStepExecutor.js";
 
 /**
  * Payment modes supported by BridgeEmbed
@@ -20,17 +20,17 @@ export type PaymentMode = "fund_wallet" | "direct_payment" | "transaction";
  */
 export type PaymentMethod =
   | {
-    type: "wallet";
-    payerWallet: Wallet;
-    originToken: Token;
-    balance: bigint;
-  }
+      type: "wallet";
+      payerWallet: Wallet;
+      originToken: Token;
+      balance: bigint;
+    }
   | {
-    type: "fiat";
-    payerWallet: Wallet;
-    currency: string;
-    onramp: "stripe" | "coinbase" | "transak";
-  };
+      type: "fiat";
+      payerWallet: Wallet;
+      currency: string;
+      onramp: "stripe" | "coinbase" | "transak";
+    };
 
 /**
  * Payment machine context - holds all flow state data
@@ -70,17 +70,17 @@ export interface PaymentMachineContext {
  */
 export type PaymentMachineEvent =
   | {
-    type: "DESTINATION_CONFIRMED";
-    destinationToken: Token;
-    destinationAmount: string;
-    receiverAddress: Address;
-  }
+      type: "DESTINATION_CONFIRMED";
+      destinationToken: Token;
+      destinationAmount: string;
+      receiverAddress: Address;
+    }
   | { type: "PAYMENT_METHOD_SELECTED"; paymentMethod: PaymentMethod }
   | {
-    type: "QUOTE_RECEIVED";
-    quote: BridgePrepareResult;
-    request: BridgePrepareRequest;
-  }
+      type: "QUOTE_RECEIVED";
+      quote: BridgePrepareResult;
+      request: BridgePrepareRequest;
+    }
   | { type: "ROUTE_CONFIRMED" }
   | { type: "EXECUTION_COMPLETE"; completedStatuses: CompletedStatusResult[] }
   | { type: "ERROR_OCCURRED"; error: Error }

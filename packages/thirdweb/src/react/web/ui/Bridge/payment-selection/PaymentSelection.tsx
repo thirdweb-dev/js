@@ -4,6 +4,7 @@ import type { Token } from "../../../../../bridge/types/Token.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Address } from "../../../../../utils/address.js";
+import { toUnits } from "../../../../../utils/units.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { usePaymentMethods } from "../../../../core/hooks/usePaymentMethods.js";
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
@@ -17,7 +18,6 @@ import { Container, ModalHeader } from "../../components/basic.js";
 import { FiatProviderSelection } from "./FiatProviderSelection.js";
 import { TokenSelection } from "./TokenSelection.js";
 import { WalletFiatSelection } from "./WalletFiatSelection.js";
-import { toUnits } from "../../../../../utils/units.js";
 
 export interface PaymentSelectionProps {
   /**
@@ -111,7 +111,7 @@ export function PaymentSelection({
     includeDestinationToken:
       includeDestinationToken ||
       receiverAddress?.toLowerCase() !==
-      payerWallet?.getAccount()?.address?.toLowerCase(),
+        payerWallet?.getAccount()?.address?.toLowerCase(),
     payerWallet,
   });
 

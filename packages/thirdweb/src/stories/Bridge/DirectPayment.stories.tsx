@@ -45,12 +45,7 @@ const meta = {
   args: {
     client: storyClient,
     uiOptions: DIRECT_PAYMENT_UI_OPTIONS.digitalArt,
-    onContinue: (amount, token, receiverAddress) =>
-      console.log("Continue with payment:", {
-        amount,
-        token,
-        receiverAddress,
-      }),
+    onContinue: (_amount, _token, _receiverAddress) => {},
     theme: "dark",
   },
   argTypes: {

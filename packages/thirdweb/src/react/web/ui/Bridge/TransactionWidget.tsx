@@ -5,6 +5,12 @@ import type { Token } from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
+import {
+  type PreparedTransaction,
+  prepareTransaction,
+} from "../../../../transaction/prepare-transaction.js";
+import { type Address, checksumAddress } from "../../../../utils/address.js";
+import { stringify } from "../../../../utils/json.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
@@ -14,19 +20,13 @@ import type { Theme } from "../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButton_connectModalOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
-import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
-import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
 import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
 import { DynamicHeight } from "../components/DynamicHeight.js";
 import { Spinner } from "../components/Spinner.js";
 import type { LocaleId } from "../types.js";
-import { checksumAddress, type Address } from "../../../../utils/address.js";
-import { stringify } from "../../../../utils/json.js";
-import {
-  prepareTransaction,
-  type PreparedTransaction,
-} from "../../../../transaction/prepare-transaction.js";
+import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
+import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
 
 export type TransactionWidgetProps = {
   supportedTokens?: SupportedTokens;

@@ -61,9 +61,9 @@ const meta = {
   args: {
     client: storyClient,
     uiOptions: FUND_WALLET_UI_OPTIONS.usdcDefault,
-    onComplete: () => console.log("Bridge flow completed"),
+    onComplete: () => {},
     onError: (error) => console.error("Bridge error:", error),
-    onCancel: () => console.log("Bridge flow cancelled"),
+    onCancel: () => {},
     theme: "dark",
   },
   argTypes: {

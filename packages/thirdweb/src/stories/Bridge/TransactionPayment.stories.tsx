@@ -50,8 +50,7 @@ const meta = {
   args: {
     uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,
     client: storyClient,
-    onContinue: (amount, token, receiverAddress) =>
-      console.log("Execute transaction:", { amount, token, receiverAddress }),
+    onContinue: (_amount, _token, _receiverAddress) => {},
     theme: "dark",
   },
   argTypes: {

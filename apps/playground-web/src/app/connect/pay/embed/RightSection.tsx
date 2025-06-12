@@ -1,8 +1,8 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { type Address, getContract, toWei } from "thirdweb";
-import { arbitrum, base } from "thirdweb/chains";
+import { getContract, toUnits } from "thirdweb";
+import { base } from "thirdweb/chains";
 import { claimTo } from "thirdweb/extensions/erc1155";
 import {
   BuyWidget,
@@ -17,6 +17,8 @@ import { THIRDWEB_CLIENT } from "../../../../lib/client";
 import { cn } from "../../../../lib/utils";
 import { CodeGen } from "../components/CodeGen";
 import type { BridgeComponentsPlaygroundOptions } from "../components/types";
+import { useQuery } from "@tanstack/react-query";
+import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 
 const nftContract = getContract({
   address: "0xf0d0CBf84005Dd4eC81364D1f5D7d896Bd53D1B8",
@@ -41,6 +43,18 @@ export function RightSection(props: {
   }
 
   const account = useActiveAccount();
+  const { data: tokenData } = useQuery({
+    queryKey: ["token", props.options.payOptions.buyTokenAddress],
+    queryFn: () =>
+      getCurrencyMetadata({
+        contract: getContract({
+          address: props.options.payOptions.buyTokenAddress,
+          chain: props.options.payOptions.buyTokenChain,
+          client: THIRDWEB_CLIENT,
+        }),
+      }),
+    enabled: !!props.options.payOptions.buyTokenAddress,
+  });
 
   const themeObj =
     props.options.theme.type === "dark"
@@ -60,7 +74,10 @@ export function RightSection(props: {
         title={props.options.payOptions.title}
         tokenAddress={props.options.payOptions.buyTokenAddress}
         chain={props.options.payOptions.buyTokenChain}
-        amount={toWei(props.options.payOptions.buyTokenAmount)}
+        amount={toUnits(
+          props.options.payOptions.buyTokenAmount,
+          tokenData?.decimals || 18,
+        )}
       />
     );
   }
@@ -73,7 +90,10 @@ export function RightSection(props: {
         name={props.options.payOptions.title}
         tokenAddress={props.options.payOptions.buyTokenAddress}
         chain={props.options.payOptions.buyTokenChain}
-        amount={toWei(props.options.payOptions.buyTokenAmount)}
+        amount={toUnits(
+          props.options.payOptions.buyTokenAmount,
+          tokenData?.decimals || 18,
+        )}
         seller={props.options.payOptions.sellerAddress}
         presetOptions={[1, 2, 3]}
         purchaseData={{

@@ -11,9 +11,7 @@ import { STORY_MOCK_WALLET, simpleBuyRequest } from "./fixtures.js";
 
 // Mock window adapter
 const mockWindowAdapter: WindowAdapter = {
-  open: async (url: string) => {
-    console.log(`Mock opening URL: ${url}`);
-  },
+  open: async (_url: string) => {},
 };
 
 // Props interface for the wrapper component
@@ -70,10 +68,9 @@ const meta = {
     wallet: STORY_MOCK_WALLET,
     client: storyClient,
     windowAdapter: mockWindowAdapter,
-    onComplete: (completedStatuses: CompletedStatusResult[]) =>
-      console.log("Execution completed", completedStatuses),
+    onComplete: (_completedStatuses: CompletedStatusResult[]) => {},
     onError: (error: Error) => console.error("Error:", error),
-    onCancel: () => console.log("Execution cancelled"),
+    onCancel: () => {},
     theme: "dark",
   },
   argTypes: {

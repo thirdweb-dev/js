@@ -22,6 +22,7 @@ import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
 import { useConnectionManager } from "../../core/providers/connection-manager.js";
 import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
 import { AutoConnect } from "../../web/ui/AutoConnect/AutoConnect.js";
+import { webWindowAdapter } from "../adapters/WindowAdapter.js";
 import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
 import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
@@ -29,7 +30,6 @@ import { ExecutingTxScreen } from "./TransactionButton/ExecutingScreen.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";
 import type { LocaleId } from "./types.js";
-import { webWindowAdapter } from "../adapters/WindowAdapter.js";
 
 /**
  * Props of [`PayEmbed`](https://portal.thirdweb.com/references/typescript/v5/PayEmbed) component

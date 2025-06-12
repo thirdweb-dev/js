@@ -13,9 +13,9 @@ import type { BridgePrepareRequest } from "../../react/core/hooks/useBridgePrepa
 import { getDefaultToken } from "../../react/core/utils/defaultTokens.js";
 import type { UIOptions } from "../../react/web/ui/Bridge/BridgeOrchestrator.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
+import { toWei } from "../../utils/units.js";
 import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 import { storyClient } from "../utils.js";
-import { toWei } from "../../utils/units.js";
 
 export const ETH: Token = {
   address: NATIVE_TOKEN_ADDRESS,
@@ -69,9 +69,9 @@ const createStoryMockWallet = (): Wallet => {
     getChain: async () => defineChain(1),
     autoConnect: async () => mockAccount,
     connect: async () => mockAccount,
-    disconnect: async () => { },
-    switchChain: async () => { },
-    subscribe: () => () => { },
+    disconnect: async () => {},
+    switchChain: async () => {},
+    subscribe: () => () => {},
     getConfig: () => ({}),
   } as unknown as Wallet;
 };
@@ -575,38 +575,6 @@ export const simpleBuyRequest: BridgePrepareRequest = {
   client: storyClient,
 };
 
-// ========== PREPARED TRANSACTIONS FOR TRANSACTION PAYMENT ========== //
-
-// mintTo raw transaction
-export const ethTransferTransaction = prepareTransaction({
-  to: "0x87C52295891f208459F334975a3beE198fE75244",
-  data: "0x449a52f80000000000000000000000008447c7a30d18e9adf2abe362689fc994cc6a340d00000000000000000000000000000000000000000000000000038d7ea4c68000",
-  chain: baseSepolia,
-  client: storyClient,
-});
-
-// ERC20 token transaction with value
-export const erc20Transaction = transfer({
-  contract: getContract({
-    client: storyClient,
-    address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-    chain: base,
-  }),
-  to: "0x2247d5d238d0f9d37184d8332aE0289d1aD9991b",
-  amount: 100,
-});
-
-// claimTo on Polygon
-export const contractInteractionTransaction = claimTo({
-  contract: getContract({
-    client: storyClient,
-    address: "0x683f91F407301b90e501492F8A26A3498D8d9638",
-    chain: polygon,
-  }),
-  to: "0x2247d5d238d0f9d37184d8332aE0289d1aD9991b",
-  quantity: "10",
-});
-
 // ========== COMMON DUMMY DATA FOR STORYBOOK ========== //
 
 // Common receiver addresses for testing
@@ -616,39 +584,6 @@ export const RECEIVER_ADDRESSES = {
   seller: "0x1234567890123456789012345678901234567890" as const,
   subscription: "0x9876543210987654321098765432109876543210" as const,
   physical: "0x5555666677778888999900001111222233334444" as const,
-};
-
-// Product metadata for direct payments
-export const PRODUCT_METADATA = {
-  digitalArt: {
-    name: "Premium Digital Art NFT",
-    image:
-      "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=500&h=300&fit=crop",
-    description: "This is a premium digital art by a famous artist",
-  },
-  concertTicket: {
-    name: "Concert Ticket - The Midnight Live",
-    image:
-      "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=500&h=300&fit=crop",
-    description: "Concert ticket for the upcoming show",
-  },
-  subscription: {
-    name: "Premium Streaming Service - Monthly",
-    image:
-      "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&h=300&fit=crop",
-    description:
-      "Get unlimited access to our premium streaming service with this monthly subscription. Enjoy ad-free viewing, exclusive content, and the ability to download shows for offline viewing.",
-  },
-  sneakers: {
-    name: "Limited Edition Sneakers",
-    image:
-      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&h=300&fit=crop",
-  },
-  credits: {
-    name: "Thirdweb Credits",
-    description:
-      "Add credits to your account for future billing cycles. Credits are non-refundable and do not expire.",
-  },
 };
 
 // Type aliases for better type safety

@@ -33,9 +33,9 @@ export function WalletRow(props: {
   );
   const email =
     wallet &&
-      (wallet.id === "inApp" ||
-        isEcosystemWallet(wallet) ||
-        isSmartWallet(wallet))
+    (wallet.id === "inApp" ||
+      isEcosystemWallet(wallet) ||
+      isSmartWallet(wallet))
       ? profile.data?.find((p) => !!p.details.email)?.details.email
       : undefined;
   const walletInfo = useWalletInfo(wallet?.id);

@@ -54,9 +54,7 @@ const meta = {
     token: ETH,
     chain: ethereum,
     amount: dummyBalanceETH,
-    onClick: (token: Token) => {
-      console.log("Token selected:", token.symbol);
-    },
+    onClick: (_token: Token) => {},
     theme: "dark",
   },
   argTypes: {

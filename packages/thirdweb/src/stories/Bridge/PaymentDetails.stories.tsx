@@ -93,8 +93,8 @@ const meta = {
   tags: ["autodocs"],
   args: {
     preparedQuote: simpleOnrampQuote,
-    onConfirm: () => console.log("Route confirmed"),
-    onBack: () => console.log("Back clicked"),
+    onConfirm: () => {},
+    onBack: () => {},
     onError: (error) => console.error("Error:", error),
     theme: "dark",
     uiOptions: {

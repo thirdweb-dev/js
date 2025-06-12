@@ -6,6 +6,8 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import { getToken } from "../../../../pay/convert/get-token.js";
+import { type Address, checksumAddress } from "../../../../utils/address.js";
+import { stringify } from "../../../../utils/json.js";
 import { toTokens } from "../../../../utils/units.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
@@ -16,15 +18,13 @@ import type { Theme } from "../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButton_connectModalOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
-import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
-import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
 import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
 import { DynamicHeight } from "../components/DynamicHeight.js";
 import { Spinner } from "../components/Spinner.js";
 import type { LocaleId } from "../types.js";
-import { checksumAddress, type Address } from "../../../../utils/address.js";
-import { stringify } from "../../../../utils/json.js";
+import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
+import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
 
 export type BuyWidgetProps = {
   supportedTokens?: SupportedTokens;
@@ -152,41 +152,48 @@ export type BuyWidgetProps = {
 type UIOptionsResult =
   | { type: "success"; data: UIOptions }
   | {
-    type: "indexing_token";
-    token: Token;
-    chain: Chain;
-  }
+      type: "indexing_token";
+      token: Token;
+      chain: Chain;
+    }
   | {
-    type: "unsupported_token";
-    tokenAddress: Address;
-    chain: Chain;
-  };
+      type: "unsupported_token";
+      tokenAddress: Address;
+      chain: Chain;
+    };
 
 /**
- * Widget a prebuilt UI for purchasing a specific token.
+ * Widget is a prebuilt UI for purchasing a specific token.
  *
  * @param props - Props of type [`BuyWidgetProps`](https://portal.thirdweb.com/references/typescript/v5/BuyWidgetProps) to configure the BuyWidget component.
  *
  * @example
- * ### Default configuration
+ * ### Basic usage
  *
- * By default, the `BuyWidget` component will allows users to fund their wallets with crypto or fiat on any of the supported chains..
+ * The `BuyWidget` component requires `client`, `chain`, and `amount` props to function.
  *
  * ```tsx
+ * import { ethereum } from "thirdweb/chains";
+ * import { toWei } from "thirdweb";
+ *
  * <BuyWidget
  *   client={client}
- *  />
+ *   chain={ethereum}
+ *   amount={toWei("0.1")}
+ * />
  * ```
  *
- * ### Enable/Disable payment methods
+ * ### Buy a specific token
  *
- * You can use `disableOnramps` to prevent the use of onramps in the widget.
+ * You can specify a token to purchase by passing the `tokenAddress` prop.
  *
  * ```tsx
  * <BuyWidget
  *   client={client}
- *   disableOnramps
- *  />
+ *   chain={ethereum}
+ *   amount={toWei("100")}
+ *   tokenAddress="0xA0b86a33E6417E4df2057B2d3C6d9F7cc11b0a70"
+ * />
  * ```
  *
  * ### Customize the UI
@@ -196,6 +203,8 @@ type UIOptionsResult =
  * ```tsx
  * <BuyWidget
  *   client={client}
+ *   chain={ethereum}
+ *   amount={toWei("0.1")}
  *   theme={darkTheme({
  *     colors: {
  *       modalBg: "red",
@@ -213,6 +222,8 @@ type UIOptionsResult =
  * ```tsx
  * <BuyWidget
  *   client={client}
+ *   chain={ethereum}
+ *   amount={toWei("0.1")}
  *   title="Buy ETH"
  * />
  * ```
@@ -224,6 +235,8 @@ type UIOptionsResult =
  * ```tsx
  * <BuyWidget
  *   client={client}
+ *   chain={ethereum}
+ *   amount={toWei("0.1")}
  *   connectOptions={{
  *     connectModal: {
  *       size: 'compact',
@@ -250,7 +263,7 @@ export function BuyWidget(props: BuyWidgetProps) {
       if (
         !props.tokenAddress ||
         checksumAddress(props.tokenAddress) ===
-        checksumAddress(NATIVE_TOKEN_ADDRESS)
+          checksumAddress(NATIVE_TOKEN_ADDRESS)
       ) {
         const ETH = await getToken(
           props.client,
@@ -406,10 +419,10 @@ export type BuyWidgetConnectOptions = {
    * ```
    */
   autoConnect?:
-  | {
-    timeout: number;
-  }
-  | boolean;
+    | {
+        timeout: number;
+      }
+    | boolean;
 
   /**
    * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.

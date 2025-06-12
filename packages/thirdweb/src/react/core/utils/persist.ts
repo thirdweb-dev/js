@@ -42,10 +42,10 @@ export async function saveSnapshot(
         completedStatuses: context.completedStatuses,
         currentError: context.currentError
           ? {
-            name: context.currentError.name,
-            message: context.currentError.message,
-            stack: context.currentError.stack,
-          }
+              name: context.currentError.name,
+              message: context.currentError.message,
+              stack: context.currentError.stack,
+            }
           : undefined,
         retryState: context.retryState,
       },

@@ -18,6 +18,7 @@ import { cn } from "../../../../lib/utils";
 import { CollapsibleSection } from "../../sign-in/components/CollapsibleSection";
 import { ColorFormGroup } from "../../sign-in/components/ColorFormGroup";
 import type { BridgeComponentsPlaygroundOptions } from "../components/types";
+import { Address, isAddress } from "thirdweb";
 
 export function LeftSection(props: {
   options: BridgeComponentsPlaygroundOptions;
@@ -134,8 +135,20 @@ export function LeftSection(props: {
                         <Input
                           id="token-address"
                           placeholder="0x..."
-                          value={tokenAddress}
-                          onChange={(e) => setTokenAddress(e.target.value)}
+                          value={payOptions.buyTokenAddress}
+                          onChange={(e) => {
+                            const addressCheck = isAddress(e.target.value);
+                            if (!addressCheck) {
+                              return;
+                            }
+                            setOptions((v) => ({
+                              ...v,
+                              payOptions: {
+                                ...v.payOptions,
+                                buyTokenAddress: e.target.value as Address,
+                              },
+                            }));
+                          }}
                           className={cn("bg-card")}
                         />
                       </div>
@@ -155,15 +168,19 @@ export function LeftSection(props: {
                     placeholder="0x..."
                     className="bg-card"
                     value={payOptions.sellerAddress || ""}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      const addressCheck = isAddress(e.target.value);
+                      if (!addressCheck) {
+                        return;
+                      }
                       setOptions((v) => ({
                         ...v,
                         payOptions: {
                           ...v.payOptions,
-                          sellerAddress: e.target.value,
+                          sellerAddress: e.target.value as Address,
                         },
-                      }))
-                    }
+                      }));
+                    }}
                   />
                 </div>
 

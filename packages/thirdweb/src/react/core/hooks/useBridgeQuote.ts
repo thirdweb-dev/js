@@ -38,7 +38,7 @@ export function useBridgeQuote({
       // if ssame token and chain, use transfer
       if (
         checksumAddress(originToken.address) ===
-        checksumAddress(destinationToken.address) &&
+          checksumAddress(destinationToken.address) &&
         originToken.chainId === destinationToken.chainId
       ) {
         const transfer = await Transfer.prepare({
@@ -51,8 +51,6 @@ export function useBridgeQuote({
         });
         return transfer;
       }
-
-      console.log("AMOUNT", destinationAmount);
       const quote = await Buy.quote({
         originChainId: originToken.chainId,
         originTokenAddress: originToken.address,

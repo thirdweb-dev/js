@@ -28,7 +28,7 @@ export const ModalThemeWrapper = (props: {
   );
 };
 
-export const ModalWrapper = (props: { children: React.ReactNode }) => {
+const ModalWrapper = (props: { children: React.ReactNode }) => {
   const theme = useCustomTheme();
   return (
     <div
