@@ -4,13 +4,7 @@ import type { AddMiniAppResult } from "@farcaster/frame-core/dist/actions/AddMin
 import type { FrameContext } from "@farcaster/frame-core/dist/context";
 import { sdk } from "@farcaster/frame-sdk";
 import { useQuery } from "@tanstack/react-query";
-import {
-  type ReactNode,
-  createContext,
-  useCallback,
-  useContext,
-  useState,
-} from "react";
+import { type ReactNode, createContext, useCallback, useState } from "react";
 import { base } from "thirdweb/chains";
 import { useConnect } from "thirdweb/react";
 import { EIP1193 } from "thirdweb/wallets";
@@ -128,12 +122,4 @@ export function MiniAppProvider({
       {children}
     </MiniAppContext.Provider>
   );
-}
-
-export function useMiniApp() {
-  const context = useContext(MiniAppContext);
-  if (context === undefined) {
-    throw new Error("useMiniApp must be used within a MiniAppProvider");
-  }
-  return context;
 }
