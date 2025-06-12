@@ -40,7 +40,7 @@ export function TeamInfoForm(props: {
       teamSlug={props.teamSlug}
       client={props.client}
       onComplete={(updatedTeam) => {
-        router.replace(`/get-started/team/${updatedTeam.slug}/add-members`);
+        router.replace(`/get-started/team/${updatedTeam.slug}/select-plan`);
       }}
       updateTeam={async (data) => {
         const teamValue: Partial<Team> = {
