@@ -5,7 +5,7 @@ export const reservedScreens = {
   showAll: "showAll",
 };
 
-export const modalMaxWidthCompact = "360px";
+export const modalMaxWidthCompact = "400px";
 
 const wideModalWidth = 730;
 export const modalMaxWidthWide = `${wideModalWidth}px`;

@@ -131,6 +131,7 @@ export async function routes(options: routes.Options): Promise<routes.Result> {
     sortBy,
     limit,
     offset,
+    includePrices,
   } = options;
 
   const clientFetch = getClientFetch(client);
@@ -159,6 +160,9 @@ export async function routes(options: routes.Options): Promise<routes.Result> {
   if (sortBy) {
     url.searchParams.set("sortBy", sortBy);
   }
+  if (includePrices) {
+    url.searchParams.set("includePrices", includePrices.toString());
+  }
 
   const response = await clientFetch(url.toString());
   if (!response.ok) {
@@ -185,6 +189,7 @@ export declare namespace routes {
     transactionHash?: ox__Hex.Hex;
     sortBy?: "popularity";
     maxSteps?: number;
+    includePrices?: boolean;
     limit?: number;
     offset?: number;
   };

@@ -56,7 +56,6 @@ function BuyOnchainAsset() {
       code={`import { claimTo } from "thirdweb/extensions/erc1155";
           import { PayEmbed, useActiveAccount } from "thirdweb/react";
 
-
         function App() {
           const account = useActiveAccount();
           const { data: nft } = useReadContract(getNFT, {
@@ -64,21 +63,20 @@ function BuyOnchainAsset() {
             tokenId: 0n,
           });
 
-
           return (
-            <PayEmbed
-              client={client}
-              payOptions={{
-                mode: "transaction",
-                transaction: claimTo({
-                  contract: nftContract,
-                  quantity: 1n,
-                  tokenId: 0n,
-                  to: account?.address,
-                }),
-                metadata: nft?.metadata,
-              }}
-            />
+        <TransactionWidget
+          client={THIRDWEB_CLIENT}
+          theme={theme === "light" ? "light" : "dark"}
+          transaction={claimTo({
+            contract: nftContract,
+            quantity: 1n,
+            tokenId: 2n,
+            to: account?.address || "",
+          })}
+          title={nft?.metadata?.name}
+          description={nft?.metadata?.description}
+          image={nft?.metadata?.image}
+        />
           );
         };`}
       lang="tsx"

@@ -1,13 +1,12 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { getContract } from "thirdweb";
-import { prepareTransaction } from "thirdweb";
+import { getContract, prepareTransaction } from "thirdweb";
 import { base, baseSepolia, polygon } from "thirdweb/chains";
 import { transfer } from "thirdweb/extensions/erc20";
 import { claimTo, getNFT } from "thirdweb/extensions/erc1155";
 import {
-  PayEmbed,
+  TransactionWidget,
   TransactionButton,
   getDefaultToken,
   useActiveAccount,
@@ -45,20 +44,18 @@ export function PayTransactionPreview() {
       <StyledConnectButton />
       <div className="h-10" />
       {account && (
-        <PayEmbed
+        <TransactionWidget
           client={THIRDWEB_CLIENT}
           theme={theme === "light" ? "light" : "dark"}
-          payOptions={{
-            mode: "transaction",
-            transaction: claimTo({
-              contract: nftContract,
-              quantity: 1n,
-              tokenId: 2n,
-              to: account?.address || "",
-            }),
-            metadata: nft?.metadata,
-            buyWithFiat: false,
-          }}
+          transaction={claimTo({
+            contract: nftContract,
+            quantity: 1n,
+            tokenId: 2n,
+            to: account?.address || "",
+          })}
+          title={nft?.metadata?.name}
+          description={nft?.metadata?.description}
+          image={nft?.metadata?.image}
         />
       )}
     </>

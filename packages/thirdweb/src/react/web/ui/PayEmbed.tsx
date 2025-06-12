@@ -29,6 +29,7 @@ import { ExecutingTxScreen } from "./TransactionButton/ExecutingScreen.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";
 import type { LocaleId } from "./types.js";
+import { webWindowAdapter } from "../adapters/WindowAdapter.js";
 
 /**
  * Props of [`PayEmbed`](https://portal.thirdweb.com/references/typescript/v5/PayEmbed) component
@@ -404,6 +405,7 @@ export function PayEmbed(props: PayEmbedProps) {
                   transactionHash: data.transactionHash,
                 });
               }}
+              windowAdapter={webWindowAdapter}
             />
           )}
       </>
