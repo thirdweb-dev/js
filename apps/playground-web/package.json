@@ -60,7 +60,7 @@
     "eslint-plugin-react-compiler": "19.0.0-beta-e993439-20250405",
     "knip": "5.60.2",
     "postcss": "8.5.3",
-    "tailwindcss": "3.4.17",
+    "tailwindcss": "4.1.10",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.8.3"
   }
