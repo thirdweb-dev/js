@@ -1,6 +1,6 @@
 import { getStripeBalance } from "@/actions/stripe-actions";
 import { type Team, getTeamBySlug } from "@/api/team";
-import { getMemberById } from "@/api/team-members";
+import { getMemberByAccountId } from "@/api/team-members";
 import { getTeamSubscriptions } from "@/api/team-subscription";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { redirect } from "next/navigation";
@@ -31,7 +31,7 @@ export default async function Page(props: {
   const [team, authToken, teamMember] = await Promise.all([
     getTeamBySlug(params.team_slug),
     getAuthToken(),
-    getMemberById(params.team_slug, account.id),
+    getMemberByAccountId(params.team_slug, account.id),
   ]);
 
   if (!team || !teamMember) {

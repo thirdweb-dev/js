@@ -1,10 +1,9 @@
-import { getTeamBySlug } from "@/api/team";
+import { getTeamBySlug, hasToCompleteTeamOnboarding } from "@/api/team";
 import { PosthogIdentifierServer } from "components/wallets/PosthogIdentifierServer";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { getAuthToken } from "../../api/lib/getAuthToken";
 import { EnsureValidConnectedWalletLoginServer } from "../../components/EnsureValidConnectedWalletLogin/EnsureValidConnectedWalletLoginServer";
-import { isTeamOnboardingComplete } from "../../login/onboarding/isOnboardingRequired";
 import { SaveLastVisitedTeamPage } from "../components/last-visited-page/SaveLastVisitedPage";
 import {
   PastDueBanner,
@@ -16,8 +15,11 @@ export default async function RootTeamLayout(props: {
   params: Promise<{ team_slug: string }>;
 }) {
   const { team_slug } = await props.params;
-  const authToken = await getAuthToken();
-  const team = await getTeamBySlug(team_slug).catch(() => null);
+
+  const [authToken, team] = await Promise.all([
+    getAuthToken(),
+    getTeamBySlug(team_slug).catch(() => null),
+  ]);
 
   if (!team) {
     redirect("/team");
@@ -27,7 +29,7 @@ export default async function RootTeamLayout(props: {
     redirect("/login");
   }
 
-  if (!isTeamOnboardingComplete(team)) {
+  if (await hasToCompleteTeamOnboarding(team, `/team/${team_slug}`)) {
     redirect(`/get-started/team/${team.slug}`);
   }
 
