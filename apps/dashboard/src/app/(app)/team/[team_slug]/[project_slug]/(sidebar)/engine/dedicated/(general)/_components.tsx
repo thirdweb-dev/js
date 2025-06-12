@@ -1,4 +1,3 @@
-import type { Team } from "@/api/team";
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ArrowRightIcon, DownloadIcon, ExternalLinkIcon } from "lucide-react";
@@ -75,15 +74,14 @@ function EngineInfoSection(props: { team_slug: string; project_slug: string }) {
 }
 
 export function EngineFooterCard(props: {
-  teamPlan: Team["billingPlan"];
-  team_slug: string;
-  project_slug: string;
+  teamSlug: string;
+  projectSlug: string;
 }) {
   return (
     <div className="relative rounded-lg border p-6">
       <EngineInfoSection
-        team_slug={props.team_slug}
-        project_slug={props.project_slug}
+        team_slug={props.teamSlug}
+        project_slug={props.projectSlug}
       />
     </div>
   );

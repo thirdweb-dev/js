@@ -5,8 +5,8 @@ const meta = {
   title: "Engine/EngineFooterCard",
   component: EngineFooterCard,
   args: {
-    team_slug: "demo-team",
-    project_slug: "demo-project",
+    teamSlug: "demo-team",
+    projectSlug: "demo-project",
   },
   decorators: [
     (Story) => (
@@ -20,26 +20,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Growth: Story = {
-  args: {
-    teamPlan: "growth",
-  },
-};
+export const Growth: Story = {};
 
-export const Accelerate: Story = {
-  args: {
-    teamPlan: "accelerate",
-  },
-};
+export const Scale: Story = {};
 
-export const Scale: Story = {
-  args: {
-    teamPlan: "scale",
-  },
-};
-
-export const Pro: Story = {
-  args: {
-    teamPlan: "pro",
-  },
-};
+export const Pro: Story = {};

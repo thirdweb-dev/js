@@ -1,5 +1,6 @@
 import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
 import type { Meta, StoryObj } from "@storybook/react";
+import { teamStub } from "../../../../../../../../../../stories/stubs";
 import { EngineInstancesTableUI } from "./engine-instances-table";
 
 const meta: Meta<typeof Story> = {
@@ -109,7 +110,7 @@ export const NoInstancesProPlan: Story = {
   args: {
     instances: [],
     engineLinkPrefix: "/team/test/engine",
-    teamPlan: "pro",
+    team: teamStub("1", "pro"),
   },
 };
 
@@ -117,7 +118,7 @@ export const NoInstancesGrowthPlan: Story = {
   args: {
     instances: [],
     engineLinkPrefix: "/team/test/engine",
-    teamPlan: "growth",
+    team: teamStub("2", "growth"),
   },
 };
 
@@ -127,7 +128,7 @@ export const NoInstancesAcceleratePlan: Story = {
   args: {
     instances: [],
     engineLinkPrefix: "/team/test/engine",
-    teamPlan: "accelerate",
+    team: teamStub("3", "accelerate"),
   },
 };
 
