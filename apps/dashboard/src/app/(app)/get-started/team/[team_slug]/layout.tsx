@@ -1,7 +1,10 @@
 import { getProjects } from "@/api/projects";
 import { getTeamBySlug, getTeams } from "@/api/team";
 import { AppFooter } from "@/components/blocks/app-footer";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { differenceInDays } from "date-fns";
+import { InfoIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import {
@@ -32,6 +35,10 @@ export default async function Layout(props: {
     notFound();
   }
 
+  // show the banner only if the team was created more than 3 days ago
+  const shouldShowOnboardingBanner =
+    differenceInDays(new Date(), new Date(team.createdAt)) > 3;
+
   // Note:
   // Do not check that team is already onboarded or not and redirect away from /get-started pages
   // because the team is marked as onboarded in the first step- instead of after completing all the steps
@@ -60,6 +67,21 @@ export default async function Layout(props: {
           teamsAndProjects={teamsAndProjects}
         />
       </div>
+      {shouldShowOnboardingBanner && (
+        <div className="container mt-10">
+          <Alert variant="info">
+            <InfoIcon className="size-5" />
+            <AlertTitle>Finish setting up your team</AlertTitle>
+            <AlertDescription>
+              Your team predates our latest onboarding flow, so a few steps
+              might still be pending.
+              <br />
+              Completing this updated guide takes less than a minute and ensures
+              everything is set up correctly.
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
       {props.children}
       <AppFooter />
     </div>

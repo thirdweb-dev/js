@@ -1,6 +1,6 @@
 import { getTeamInvoices } from "@/actions/stripe-actions";
 import { getTeamBySlug } from "@/api/team";
-import { getMemberById } from "@/api/team-members";
+import { getMemberByAccountId } from "@/api/team-members";
 import { redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
@@ -25,7 +25,7 @@ export default async function Page(props: {
 
   const [team, teamMember] = await Promise.all([
     getTeamBySlug(params.team_slug),
-    getMemberById(params.team_slug, account.id),
+    getMemberByAccountId(params.team_slug, account.id),
   ]);
 
   if (!team) {
