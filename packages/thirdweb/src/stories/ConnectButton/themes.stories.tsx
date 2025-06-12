@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ConnectButton } from "../../react/web/ui/ConnectWallet/ConnectButton.js";
 import { storyClient } from "../utils.js";
 

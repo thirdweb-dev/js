@@ -1,5 +1,5 @@
 import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { teamStub } from "../../../../../../../../../../stories/stubs";
 import { EngineInstancesTableUI } from "./engine-instances-table";
 
