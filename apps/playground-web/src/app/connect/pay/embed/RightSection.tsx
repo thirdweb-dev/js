@@ -1,8 +1,10 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { getContract, toUnits } from "thirdweb";
 import { base } from "thirdweb/chains";
+import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc1155";
 import {
   BuyWidget,
@@ -17,8 +19,6 @@ import { THIRDWEB_CLIENT } from "../../../../lib/client";
 import { cn } from "../../../../lib/utils";
 import { CodeGen } from "../components/CodeGen";
 import type { BridgeComponentsPlaygroundOptions } from "../components/types";
-import { useQuery } from "@tanstack/react-query";
-import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 
 const nftContract = getContract({
   address: "0xf0d0CBf84005Dd4eC81364D1f5D7d896Bd53D1B8",
@@ -59,11 +59,11 @@ export function RightSection(props: {
   const themeObj =
     props.options.theme.type === "dark"
       ? darkTheme({
-        colors: props.options.theme.darkColorOverrides,
-      })
+          colors: props.options.theme.darkColorOverrides,
+        })
       : lightTheme({
-        colors: props.options.theme.lightColorOverrides,
-      });
+          colors: props.options.theme.lightColorOverrides,
+        });
 
   let embed: React.ReactNode;
   if (props.options.payOptions.widget === "buy") {

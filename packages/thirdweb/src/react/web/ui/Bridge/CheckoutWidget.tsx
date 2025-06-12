@@ -372,7 +372,7 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
  * />
  * ```
  */
-export type CheckoutWidgetConnectOptions = {
+type CheckoutWidgetConnectOptions = {
   /**
    * Configurations for the `ConnectButton`'s Modal that is shown for connecting a wallet
    * Refer to the [`ConnectButton_connectModalOptions`](https://portal.thirdweb.com/references/typescript/v5/ConnectButton_connectModalOptions) type for more details

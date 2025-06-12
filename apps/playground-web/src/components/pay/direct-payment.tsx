@@ -1,8 +1,8 @@
 "use client";
-import { CheckoutWidget } from "thirdweb/react";
-import { THIRDWEB_CLIENT } from "../../lib/client";
 import { toUnits } from "thirdweb";
 import { base } from "thirdweb/chains";
+import { CheckoutWidget } from "thirdweb/react";
+import { THIRDWEB_CLIENT } from "../../lib/client";
 
 export function BuyMerchPreview() {
   return (

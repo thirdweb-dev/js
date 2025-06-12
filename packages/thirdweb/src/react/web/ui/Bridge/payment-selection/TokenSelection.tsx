@@ -13,7 +13,7 @@ import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
 import { TokenAndChain } from "../common/TokenAndChain.js";
 
-export interface TokenSelectionProps {
+interface TokenSelectionProps {
   paymentMethods: PaymentMethod[];
   paymentMethodsLoading: boolean;
   client: ThirdwebClient;

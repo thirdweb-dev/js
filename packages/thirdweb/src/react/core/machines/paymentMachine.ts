@@ -13,7 +13,7 @@ import type { CompletedStatusResult } from "../hooks/useStepExecutor.js";
 /**
  * Payment modes supported by BridgeEmbed
  */
-export type PaymentMode = "fund_wallet" | "direct_payment" | "transaction";
+type PaymentMode = "fund_wallet" | "direct_payment" | "transaction";
 
 /**
  * Payment method types with their required data
@@ -68,7 +68,7 @@ export interface PaymentMachineContext {
 /**
  * Events that can be sent to the payment machine
  */
-export type PaymentMachineEvent =
+type PaymentMachineEvent =
   | {
       type: "DESTINATION_CONFIRMED";
       destinationToken: Token;

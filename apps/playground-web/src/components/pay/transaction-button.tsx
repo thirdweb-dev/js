@@ -6,8 +6,8 @@ import { base, baseSepolia, polygon } from "thirdweb/chains";
 import { transfer } from "thirdweb/extensions/erc20";
 import { claimTo, getNFT } from "thirdweb/extensions/erc1155";
 import {
-  TransactionWidget,
   TransactionButton,
+  TransactionWidget,
   getDefaultToken,
   useActiveAccount,
   useReadContract,

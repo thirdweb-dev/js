@@ -15,7 +15,7 @@ import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
 
-export interface WalletFiatSelectionProps {
+interface WalletFiatSelectionProps {
   connectedWallets: Wallet[];
   client: ThirdwebClient;
   onWalletSelected: (wallet: Wallet) => void;

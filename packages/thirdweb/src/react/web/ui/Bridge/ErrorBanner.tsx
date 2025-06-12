@@ -7,7 +7,7 @@ import { Container } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { Text } from "../components/text.js";
 
-export interface ErrorBannerProps {
+interface ErrorBannerProps {
   /**
    * The error to display
    */

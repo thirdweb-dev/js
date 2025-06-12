@@ -13,12 +13,12 @@ import {
 import Link from "next/link";
 import type React from "react";
 import { useState } from "react";
+import { type Address, isAddress } from "thirdweb";
 import { defineChain } from "thirdweb/chains";
 import { cn } from "../../../../lib/utils";
 import { CollapsibleSection } from "../../sign-in/components/CollapsibleSection";
 import { ColorFormGroup } from "../../sign-in/components/ColorFormGroup";
 import type { BridgeComponentsPlaygroundOptions } from "../components/types";
-import { Address, isAddress } from "thirdweb";
 
 export function LeftSection(props: {
   options: BridgeComponentsPlaygroundOptions;

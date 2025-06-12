@@ -4,7 +4,7 @@ import { isRetryable, mapBridgeError } from "../errors/mapBridgeError.js";
 /**
  * Parameters for the useBridgeError hook
  */
-export interface UseBridgeErrorParams {
+interface UseBridgeErrorParams {
   /**
    * The error to process. Can be an ApiError or generic Error.
    */
@@ -14,7 +14,7 @@ export interface UseBridgeErrorParams {
 /**
  * Result returned by the useBridgeError hook
  */
-export interface UseBridgeErrorResult {
+interface UseBridgeErrorResult {
   /**
    * The mapped/normalized error, null if no error provided
    */

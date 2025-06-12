@@ -24,7 +24,7 @@ import { Container, ModalHeader } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { Text } from "../components/text.js";
 
-export interface StepRunnerProps {
+interface StepRunnerProps {
   request: BridgePrepareRequest;
 
   /**

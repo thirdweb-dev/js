@@ -2,10 +2,10 @@
 import { use, useState } from "react";
 import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { arbitrum } from "thirdweb/chains";
+import { checksumAddress } from "thirdweb/utils";
 import type { BridgeComponentsPlaygroundOptions } from "../components/types";
 import { LeftSection } from "./LeftSection";
 import { RightSection } from "./RightSection";
-import { checksumAddress } from "thirdweb/utils";
 
 // NOTE: Only set the values that are actually the default values used by PayEmbed component
 const defaultConnectOptions: BridgeComponentsPlaygroundOptions = {

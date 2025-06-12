@@ -320,7 +320,7 @@ function CompletedStepDetailCard({
   );
 }
 
-export interface PaymentReceitProps {
+interface PaymentReceitProps {
   /**
    * Prepared quote from Bridge.prepare
    */

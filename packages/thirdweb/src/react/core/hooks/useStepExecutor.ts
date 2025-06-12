@@ -52,7 +52,7 @@ export interface StepExecutorOptions {
 /**
  * Internal flattened transaction type
  */
-export interface FlattenedTx extends RouteTransaction {
+interface FlattenedTx extends RouteTransaction {
   /** Index in flat array */
   _index: number;
   /** Parent step index */
@@ -62,7 +62,7 @@ export interface FlattenedTx extends RouteTransaction {
 /**
  * Public return type of useStepExecutor
  */
-export interface StepExecutorResult {
+interface StepExecutorResult {
   currentStep?: RouteStep;
   currentTxIndex?: number;
   progress: number; // 0–100
