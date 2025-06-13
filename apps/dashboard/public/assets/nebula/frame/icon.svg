@@ -1,0 +1,16 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="512" fill="#232323" />
+  
+  <!-- Outer ring -->
+  <circle cx="512" cy="512" r="400" fill="none" stroke="#5204BF" stroke-width="40" />
+  
+  <!-- Letter "N" for Nebula -->
+  <path d="M350 700V324L674 700V324" stroke="#F213A4" fill="none" stroke-width="60" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Small dot accents -->
+  <circle cx="350" cy="324" r="25" fill="#2663EB" />
+  <circle cx="674" cy="324" r="25" fill="#2663EB" />
+  <circle cx="350" cy="700" r="25" fill="#0A91B3" />
+  <circle cx="674" cy="700" r="25" fill="#0A91B3" />
+</svg> 

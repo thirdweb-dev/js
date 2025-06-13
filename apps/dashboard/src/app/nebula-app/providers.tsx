@@ -6,6 +6,7 @@ import { ThemeProvider, useTheme } from "next-themes";
 import { useMemo } from "react";
 import { Toaster } from "sonner";
 import { ThirdwebProvider, useActiveAccount } from "thirdweb/react";
+import { MiniAppProvider } from "./(app)/_farcaster/miniapp-provider";
 import { NebulaConnectWallet } from "./(app)/components/NebulaConnectButton";
 
 const queryClient = new QueryClient();
@@ -14,17 +15,19 @@ export function NebulaProviders(props: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <ThirdwebProvider>
-        <ThemeProvider
-          attribute="class"
-          disableTransitionOnChange
-          enableSystem={false}
-          defaultTheme="light"
-        >
-          <ToasterSetup />
-          <SanctionedAddressesChecker>
-            {props.children}
-          </SanctionedAddressesChecker>
-        </ThemeProvider>
+        <MiniAppProvider>
+          <ThemeProvider
+            attribute="class"
+            disableTransitionOnChange
+            enableSystem={false}
+            defaultTheme="light"
+          >
+            <ToasterSetup />
+            <SanctionedAddressesChecker>
+              {props.children}
+            </SanctionedAddressesChecker>
+          </ThemeProvider>
+        </MiniAppProvider>
       </ThirdwebProvider>
     </QueryClientProvider>
   );

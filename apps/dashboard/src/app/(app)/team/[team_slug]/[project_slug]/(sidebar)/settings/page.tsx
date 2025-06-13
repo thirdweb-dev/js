@@ -1,6 +1,6 @@
 import { getProject } from "@/api/projects";
 import { getTeams } from "@/api/team";
-import { getMemberById } from "@/api/team-members";
+import { getMemberByAccountId } from "@/api/team-members";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { notFound, redirect } from "next/navigation";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
@@ -37,7 +37,7 @@ export default async function Page(props: {
 
   const teamsWithRole = await Promise.all(
     teams.map(async (team) => {
-      const member = await getMemberById(team.slug, account.id);
+      const member = await getMemberByAccountId(team.slug, account.id);
 
       if (!member) {
         notFound();

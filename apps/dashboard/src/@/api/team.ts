@@ -3,8 +3,10 @@ import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { API_SERVER_SECRET } from "@/constants/server-envs";
 import type { TeamResponse } from "@thirdweb-dev/service-utils";
 import { cookies } from "next/headers";
+import { getValidAccount } from "../../app/(app)/account/settings/getAccount";
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
 import { LAST_USED_TEAM_ID } from "../../constants/cookies";
+import { getMemberByAccountId } from "./team-members";
 
 export type Team = TeamResponse & { stripeCustomerId: string | null };
 
@@ -102,4 +104,24 @@ export async function getLastVisitedTeam() {
   }
 
   return null;
+}
+
+export async function hasToCompleteTeamOnboarding(
+  team: Team,
+  pagePath: string,
+) {
+  // if the team is already onboarded, we don't need to check anything else here
+  if (team.isOnboarded) {
+    return false;
+  }
+  const account = await getValidAccount(pagePath);
+  const teamMember = await getMemberByAccountId(team.slug, account.id);
+
+  // if the team member is not an owner (or we cannot find them), they cannot complete onboarding anyways
+  if (teamMember?.role !== "OWNER") {
+    return false;
+  }
+
+  // if we get here the team is not onboarded and the team member is an owner, so we need to show the onboarding page
+  return true;
 }

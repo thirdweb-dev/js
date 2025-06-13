@@ -1,5 +1,5 @@
 import { getTeamBySlug } from "@/api/team";
-import { getMemberById } from "@/api/team-members";
+import { getMemberByAccountId } from "@/api/team-members";
 import { checkDomainVerification } from "@/api/verified-domain";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { notFound } from "next/navigation";
@@ -19,7 +19,7 @@ export default async function Page(props: {
 
   const [team, teamMember, token, initialVerification] = await Promise.all([
     getTeamBySlug(params.team_slug),
-    getMemberById(params.team_slug, account.id),
+    getMemberByAccountId(params.team_slug, account.id),
     getAuthToken(),
     checkDomainVerification(params.team_slug),
   ]);

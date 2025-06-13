@@ -1,0 +1,27 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#232323" />
+  
+  <!-- Decorative elements -->
+  <circle cx="300" cy="315" r="200" fill="none" stroke="#5204BF" stroke-width="20" opacity="0.7" />
+  <circle cx="900" cy="315" r="200" fill="none" stroke="#2663EB" stroke-width="20" opacity="0.7" />
+  
+  <!-- AskNebula Logo in center -->
+  <g transform="translate(500, 230)">
+    <!-- Logo background -->
+    <circle cx="100" cy="100" r="100" fill="#232323" stroke="#5204BF" stroke-width="10" />
+    
+    <!-- Letter "N" -->
+    <path d="M60 150V50L140 150V50" stroke="#F213A4" fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+    
+    <!-- Small dots -->
+    <circle cx="60" cy="50" r="6" fill="#2663EB" />
+    <circle cx="140" cy="50" r="6" fill="#2663EB" />
+    <circle cx="60" cy="150" r="6" fill="#0A91B3" />
+    <circle cx="140" cy="150" r="6" fill="#0A91B3" />
+  </g>
+  
+  <!-- Text -->
+  <text x="600" y="500" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle">AskNebula</text>
+  <text x="600" y="560" font-family="Arial, sans-serif" font-size="24" fill="#737373" text-anchor="middle">Your Web3 AI Assistant</text>
+</svg> 
