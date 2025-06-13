@@ -1,9 +1,6 @@
 import "../../global.css";
 import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import { PHProvider } from "lib/posthog/Posthog";
-import { PosthogHeadSetup } from "lib/posthog/PosthogHeadSetup";
-import { PostHogPageView } from "lib/posthog/PosthogPageView";
 import type { Metadata } from "next";
 import PlausibleProvider from "next-plausible";
 import { Inter } from "next/font/google";
@@ -61,26 +58,19 @@ export default function RootLayout({
           customDomain="https://pl.thirdweb.com"
           selfHosted
         />
-        <PosthogHeadSetup />
       </head>
-      <PHProvider disable_session_recording={true}>
-        <PostHogPageView />
-        <body
-          className={cn(
-            "bg-background font-sans antialiased",
-            fontSans.variable,
-          )}
-        >
-          <AppRouterProviders>{children}</AppRouterProviders>
-          <DashboardRouterTopProgressBar />
-          <NextTopLoader
-            color="hsl(var(--foreground))"
-            height={3}
-            shadow={false}
-            showSpinner={false}
-          />
-        </body>
-      </PHProvider>
+      <body
+        className={cn("bg-background font-sans antialiased", fontSans.variable)}
+      >
+        <AppRouterProviders>{children}</AppRouterProviders>
+        <DashboardRouterTopProgressBar />
+        <NextTopLoader
+          color="hsl(var(--foreground))"
+          height={3}
+          shadow={false}
+          showSpinner={false}
+        />
+      </body>
     </html>
   );
 }

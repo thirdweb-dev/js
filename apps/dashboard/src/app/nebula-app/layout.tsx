@@ -3,9 +3,6 @@ import "../../global.css";
 import "./nebula-global.css";
 import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import { PHProvider } from "lib/posthog/Posthog";
-import { PosthogHeadSetup } from "lib/posthog/PosthogHeadSetup";
-import { PostHogPageView } from "lib/posthog/PosthogPageView";
 import { Inter } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { NebulaProviders } from "./providers";
@@ -37,26 +34,19 @@ export default function Layout(props: {
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/assets/nebula/favicon.ico" />
-        <PosthogHeadSetup />
       </head>
-      <PHProvider disable_session_recording={false}>
-        <PostHogPageView />
-        <body
-          className={cn(
-            "bg-background font-sans antialiased",
-            fontSans.variable,
-          )}
-        >
-          <NebulaProviders>{props.children}</NebulaProviders>
-          <DashboardRouterTopProgressBar />
-          <NextTopLoader
-            color="hsl(var(--foreground))"
-            height={3}
-            shadow={false}
-            showSpinner={false}
-          />
-        </body>
-      </PHProvider>
+      <body
+        className={cn("bg-background font-sans antialiased", fontSans.variable)}
+      >
+        <NebulaProviders>{props.children}</NebulaProviders>
+        <DashboardRouterTopProgressBar />
+        <NextTopLoader
+          color="hsl(var(--foreground))"
+          height={3}
+          shadow={false}
+          showSpinner={false}
+        />
+      </body>
     </html>
   );
 }

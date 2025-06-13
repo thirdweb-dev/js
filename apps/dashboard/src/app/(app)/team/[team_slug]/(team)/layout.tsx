@@ -46,9 +46,11 @@ export default async function TeamLayout(props: {
     teamId: team.id,
   });
 
+  const isStaffMode = !teams.some((t) => t.slug === team.slug);
+
   return (
     <div className="flex h-full grow flex-col">
-      {!teams.some((t) => t.slug === team.slug) && (
+      {isStaffMode && (
         <div className="bg-warning-text">
           <div className="container flex items-center justify-between py-4">
             <div className="flex flex-col gap-2">
@@ -63,6 +65,7 @@ export default async function TeamLayout(props: {
           </div>
         </div>
       )}
+
       <AnnouncementBanner />
       <div className="bg-card">
         <TeamHeaderLoggedIn
