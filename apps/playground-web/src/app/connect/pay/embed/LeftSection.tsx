@@ -137,10 +137,6 @@ export function LeftSection(props: {
                           placeholder="0x..."
                           value={payOptions.buyTokenAddress}
                           onChange={(e) => {
-                            const addressCheck = isAddress(e.target.value);
-                            if (!addressCheck) {
-                              return;
-                            }
                             setOptions((v) => ({
                               ...v,
                               payOptions: {
@@ -169,10 +165,6 @@ export function LeftSection(props: {
                     className="bg-card"
                     value={payOptions.sellerAddress || ""}
                     onChange={(e) => {
-                      const addressCheck = isAddress(e.target.value);
-                      if (!addressCheck) {
-                        return;
-                      }
                       setOptions((v) => ({
                         ...v,
                         payOptions: {

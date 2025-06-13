@@ -6,7 +6,11 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import { getToken } from "../../../../pay/convert/get-token.js";
-import { type Address, checksumAddress } from "../../../../utils/address.js";
+import {
+  type Address,
+  checksumAddress,
+  isAddress,
+} from "../../../../utils/address.js";
 import { stringify } from "../../../../utils/json.js";
 import { toTokens } from "../../../../utils/units.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -262,8 +266,9 @@ export function BuyWidget(props: BuyWidgetProps) {
     queryFn: async (): Promise<UIOptionsResult> => {
       if (
         !props.tokenAddress ||
-        checksumAddress(props.tokenAddress) ===
-          checksumAddress(NATIVE_TOKEN_ADDRESS)
+        (isAddress(props.tokenAddress) &&
+          checksumAddress(props.tokenAddress) ===
+            checksumAddress(NATIVE_TOKEN_ADDRESS))
       ) {
         const ETH = await getToken(
           props.client,
@@ -284,9 +289,9 @@ export function BuyWidget(props: BuyWidgetProps) {
         props.client,
         props.tokenAddress,
         props.chain.id,
-      ).catch((err) =>
-        err.message.includes("not supported") ? undefined : Promise.reject(err),
-      );
+      ).catch((err) => {
+        err.message.includes("not supported") ? undefined : Promise.reject(err);
+      });
       if (!token) {
         return {
           type: "unsupported_token",
