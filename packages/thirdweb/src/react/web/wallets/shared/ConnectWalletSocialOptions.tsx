@@ -136,9 +136,9 @@ export const ConnectWalletSocialOptions = (
     ? (ecosystemAuthOptions ?? defaultAuthOptions)
     : (wallet.getConfig()?.auth?.options ?? defaultAuthOptions);
 
-  const emailIndex = authOptions.indexOf("email");
+  const emailIndex = authOptions.findIndex((o) => typeof o === 'string' ? o === 'email' : o.type === 'email');
   const isEmailEnabled = emailIndex !== -1;
-  const phoneIndex = authOptions.indexOf("phone");
+  const phoneIndex = authOptions.findIndex((o) => typeof o === "string" ? o === "phone" : o.type === "phone");
   const isPhoneEnabled = phoneIndex !== -1;
   const socialLogins: SocialAuthOption[] = authOptions.filter((o) =>
     socialAuthOptions.includes(o as SocialAuthOption),
@@ -410,6 +410,7 @@ export const ConnectWalletSocialOptions = (
             disabled={props.disabled}
             emptyErrorMessage={emptyErrorMessage}
             submitButtonText={locale.submitEmail}
+            defaultValue={typeof authOptions[emailIndex] === 'object' ? authOptions[emailIndex].defaultValue : undefined}
           />
         ) : (
           <WalletTypeRowButton
@@ -454,6 +455,7 @@ export const ConnectWalletSocialOptions = (
             allowedSmsCountryCodes={
               wallet.getConfig()?.auth?.allowedSmsCountryCodes
             }
+            defaultValue={typeof authOptions[phoneIndex] === 'object' ? authOptions[phoneIndex].defaultValue : undefined}
           />
         ) : (
           <WalletTypeRowButton
