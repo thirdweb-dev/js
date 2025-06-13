@@ -54,6 +54,7 @@
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
     "autoprefixer": "^10.4.21",
+    "babel-plugin-react-compiler": "19.1.0-rc.2",
     "eslint": "8.57.0",
     "eslint-config-biome": "1.9.4",
     "eslint-config-next": "15.3.3",

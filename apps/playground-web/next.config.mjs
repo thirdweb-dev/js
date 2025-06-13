@@ -45,6 +45,7 @@ const nextConfig = {
     webpackBuildWorker: true,
     webpackMemoryOptimizations: true,
     serverSourceMaps: false,
+    reactCompiler: true,
   },
   async headers() {
     return [

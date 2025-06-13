@@ -54,6 +54,7 @@ const nextConfig = {
     webpackBuildWorker: true,
     webpackMemoryOptimizations: true,
     serverSourceMaps: false,
+    reactCompiler: true,
   },
   webpack: (config) => {
     config.externals.push("pino-pretty", "lokijs", "encoding");

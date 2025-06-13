@@ -55,6 +55,7 @@ const nextConfig = {
     webpackBuildWorker: true,
     webpackMemoryOptimizations: true,
     serverSourceMaps: false,
+    reactCompiler: true,
   },
   pageExtensions: ["mdx", "tsx", "ts"],
   redirects,
