@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#171B20" />
+  
+  <!-- Logo -->
+  <g transform="translate(100, 150) scale(0.6)">
+    <circle cx="100" cy="100" r="100" fill="#F213A4" />
+    <circle cx="100" cy="100" r="15" fill="white" />
+    <circle cx="40" cy="60" r="20" fill="white" />
+    <circle cx="160" cy="60" r="20" fill="white" />
+    <path d="M40 60 Q 100 160 160 60" stroke="white" stroke-width="15" fill="transparent" />
+  </g>
+  
+  <!-- Text -->
+  <text x="280" y="200" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="white">AskNebula</text>
+  <text x="280" y="270" font-family="Arial, sans-serif" font-size="36" fill="#737373">Web3 AI Assistant</text>
+  
+  <!-- Description -->
+  <text x="280" y="350" font-family="Arial, sans-serif" font-size="28" fill="white">Ask questions about your web3 activity</text>
+  <text x="280" y="390" font-family="Arial, sans-serif" font-size="28" fill="white">Get AI-powered insights about your wallet</text>
+  <text x="280" y="430" font-family="Arial, sans-serif" font-size="28" fill="white">Explore blockchain data through natural language</text>
+</svg> 

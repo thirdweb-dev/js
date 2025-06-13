@@ -29,7 +29,8 @@ const securityHeaders = [
   },
   {
     key: "X-Frame-Options",
-    value: "SAMEORIGIN",
+    // allow farcaster.xyz as a frame ancestor for the browser mini app
+    value: "frame-ancestors 'self' https://farcaster.xyz; default 'self'",
   },
   {
     key: "Referrer-Policy",
