@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useTrack } from "hooks/analytics/useTrack";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -54,7 +53,6 @@ function CustomChatContentLoggedIn(props: {
   const [chatAbortController, setChatAbortController] = useState<
     AbortController | undefined
   >();
-  const trackEvent = useTrack();
   const [isChatStreaming, setIsChatStreaming] = useState(false);
   const [enableAutoScroll, setEnableAutoScroll] = useState(false);
   const connectionStatus = useActiveWalletConnectionStatus();
@@ -65,17 +63,6 @@ function CustomChatContentLoggedIn(props: {
       setUserHasSubmittedMessage(true);
       setIsChatStreaming(true);
       setEnableAutoScroll(true);
-
-      const textMessage = userMessage.content.find(
-        (x: UserMessageContent) => x.type === "text",
-      );
-
-      trackEvent({
-        category: "siwa",
-        action: "send-message",
-        message: textMessage?.text,
-        sessionId: sessionId,
-      });
 
       setMessages((prev) => [
         ...prev,
@@ -147,7 +134,7 @@ function CustomChatContentLoggedIn(props: {
         setEnableAutoScroll(false);
       }
     },
-    [props.authToken, props.clientId, props.teamId, sessionId, trackEvent],
+    [props.authToken, props.clientId, props.teamId, sessionId],
   );
 
   const handleFeedback = useCallback(
@@ -171,14 +158,6 @@ function CustomChatContentLoggedIn(props: {
       }
 
       try {
-        trackEvent({
-          category: "siwa",
-          action: "submit-feedback",
-          rating: feedback === 1 ? "good" : "bad",
-          sessionId,
-          teamId: props.teamId,
-        });
-
         const apiUrl = process.env.NEXT_PUBLIC_SIWA_URL;
         const response = await fetch(`${apiUrl}/v1/chat/feedback`, {
           method: "POST",
@@ -211,7 +190,7 @@ function CustomChatContentLoggedIn(props: {
         // Consider implementing retry logic here
       }
     },
-    [sessionId, props.authToken, props.teamId, trackEvent, messages],
+    [sessionId, props.authToken, props.teamId, messages],
   );
 
   const showEmptyState = !userHasSubmittedMessage && messages.length === 0;

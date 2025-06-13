@@ -17,7 +17,6 @@ import {
   type ApiKeyPayConfigValidationSchema,
   apiKeyPayConfigValidationSchema,
 } from "components/settings/ApiKeys/validations";
-import { useTrack } from "hooks/analytics/useTrack";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -29,8 +28,6 @@ interface PayConfigProps {
   fees: Fee;
 }
 
-const TRACKING_CATEGORY = "pay";
-
 export const PayConfig: React.FC<PayConfigProps> = (props) => {
   const form = useForm<ApiKeyPayConfigValidationSchema>({
     resolver: zodResolver(apiKeyPayConfigValidationSchema),
@@ -39,8 +36,6 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
       developerFeeBPS: props.fees.feeBps ? props.fees.feeBps / 100 : 0,
     },
   });
-
-  const trackEvent = useTrack();
 
   const updateFeeMutation = useMutation({
     mutationFn: async (values: {
@@ -66,24 +61,10 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
         {
           onSuccess: () => {
             toast.success("Fee sharing updated");
-            trackEvent({
-              category: TRACKING_CATEGORY,
-              action: "configuration-update",
-              label: "success",
-              data: {
-                payoutAddress,
-              },
-            });
           },
           onError: (err) => {
             toast.error("Failed to update fee sharing");
             console.error(err);
-            trackEvent({
-              category: TRACKING_CATEGORY,
-              action: "configuration-update",
-              label: "error",
-              error: err,
-            });
           },
         },
       );

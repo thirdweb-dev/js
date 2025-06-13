@@ -16,7 +16,6 @@ import {
   Select,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CirclePlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -47,7 +46,6 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
     instanceUrl,
     authToken,
   });
-  const trackEvent = useTrack();
   const form = useForm<CreateWebhookInput>();
 
   const { onSuccess, onError } = useTxNotifications(
@@ -78,22 +76,10 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
               onSuccess: () => {
                 onSuccess();
                 onClose();
-                trackEvent({
-                  category: "engine",
-                  action: "create-webhook",
-                  label: "success",
-                  instance: instanceUrl,
-                });
               },
               onError: (error) => {
                 onError(error);
-                trackEvent({
-                  category: "engine",
-                  action: "create-webhook",
-                  label: "error",
-                  instance: instanceUrl,
-                  error,
-                });
+                console.error(error);
               },
             });
           })}

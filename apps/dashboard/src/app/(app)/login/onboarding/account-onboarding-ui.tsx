@@ -1,6 +1,5 @@
 "use client";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import type { TrackingParams } from "hooks/analytics/useTrack";
 import { useState } from "react";
 import { LinkWalletPrompt } from "./LinkWalletPrompt/LinkWalletPrompt";
 import { LoginOrSignup } from "./LoginOrSignup/LoginOrSignup";
@@ -27,7 +26,6 @@ type AccountOnboardingScreen =
 type AccountOnboardingProps = {
   onComplete: (param: { account: Account }) => void;
   accountAddress: string;
-  trackEvent: (params: TrackingParams) => void;
   verifyEmail: (params: {
     confirmationToken: string;
   }) => Promise<{ account: Account }>;
@@ -56,7 +54,6 @@ export function AccountOnboardingUI(props: AccountOnboardingProps) {
       {screen.id === "login-or-signup" && (
         <LoginOrSignup
           loginOrSignup={props.loginOrSignup}
-          trackEvent={props.trackEvent}
           onRequestSent={(params) => {
             if (params.isExistingEmail) {
               setScreen({
@@ -79,7 +76,6 @@ export function AccountOnboardingUI(props: AccountOnboardingProps) {
         <LinkWalletPrompt
           accountAddress={props.accountAddress}
           requestLinkWallet={props.requestLinkWallet}
-          trackEvent={props.trackEvent}
           onLinkWalletRequestSent={() => {
             setScreen({
               id: "link-wallet-verify-email",
@@ -97,7 +93,6 @@ export function AccountOnboardingUI(props: AccountOnboardingProps) {
           accountAddress={props.accountAddress}
           verifyEmail={props.verifyEmail}
           resendConfirmationEmail={props.resendEmailConfirmation}
-          trackEvent={props.trackEvent}
           onEmailConfirmed={props.onComplete}
           onBack={() => setScreen(screen.backScreen)}
           email={screen.email}
@@ -109,7 +104,6 @@ export function AccountOnboardingUI(props: AccountOnboardingProps) {
           accountAddress={props.accountAddress}
           verifyEmail={props.verifyEmail}
           resendConfirmationEmail={props.resendEmailConfirmation}
-          trackEvent={props.trackEvent}
           onEmailConfirmed={props.onComplete}
           onBack={() => setScreen(screen.backScreen)}
           email={screen.email}

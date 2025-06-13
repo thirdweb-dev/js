@@ -26,7 +26,6 @@ import type {
 } from "app/(app)/(dashboard)/(chain)/types/chain";
 import { getSDKTheme } from "app/(app)/components/sdk-component-theme";
 import { LOCAL_NODE_PKEY } from "constants/misc";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { ExternalLinkIcon, UnplugIcon } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -124,7 +123,6 @@ export const MismatchButton = forwardRef<
     networksMismatch && wallet && !canSwitchNetworkWithoutConfirmation(wallet);
 
   const [isMismatchPopoverOpen, setIsMismatchPopoverOpen] = useState(false);
-  const trackEvent = useTrack();
 
   const chainId = activeWalletChain?.id;
 
@@ -213,11 +211,6 @@ export const MismatchButton = forwardRef<
               }
 
               if (notEnoughBalance && !props.disableNoFundsPopup) {
-                trackEvent({
-                  category: "no-funds",
-                  action: "popover",
-                  label: "evm",
-                });
                 setDialog("no-funds");
                 return;
               }
@@ -272,11 +265,6 @@ export const MismatchButton = forwardRef<
               <NoFundsDialogContent
                 chain={txChain}
                 openPayModal={() => {
-                  trackEvent({
-                    category: "pay",
-                    action: "buy",
-                    label: "attempt",
-                  });
                   setDialog("pay");
                 }}
                 onCloseModal={() => setDialog(undefined)}
@@ -291,37 +279,6 @@ export const MismatchButton = forwardRef<
                 theme={getSDKTheme(theme === "dark" ? "dark" : "light")}
                 className="!w-auto"
                 payOptions={{
-                  onPurchaseSuccess(info) {
-                    if (
-                      info.type === "crypto" &&
-                      info.status.status !== "NOT_FOUND"
-                    ) {
-                      trackEvent({
-                        category: "pay",
-                        action: "buy",
-                        label: "success",
-                        type: info.type,
-                        chainId: info.status.quote.toToken.chainId,
-                        tokenAddress: info.status.quote.toToken.tokenAddress,
-                        amount: info.status.quote.toAmount,
-                      });
-                    }
-
-                    if (
-                      info.type === "fiat" &&
-                      info.status.status !== "NOT_FOUND"
-                    ) {
-                      trackEvent({
-                        category: "pay",
-                        action: "buy",
-                        label: "success",
-                        type: info.type,
-                        chainId: info.status.quote.toToken.chainId,
-                        tokenAddress: info.status.quote.toToken.tokenAddress,
-                        amount: info.status.quote.estimatedToTokenAmount,
-                      });
-                    }
-                  },
                   prefillBuy: {
                     amount: "0.01",
                     chain: txChain,

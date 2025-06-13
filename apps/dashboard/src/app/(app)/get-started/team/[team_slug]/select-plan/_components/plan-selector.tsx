@@ -1,11 +1,11 @@
 "use client";
 
+import { reportPlanSelectSkipped, reportPlanSelected } from "@/analytics/track";
 import type { Team } from "@/api/team";
 import { PricingCard } from "@/components/blocks/pricing-card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useTrack } from "hooks/analytics/useTrack";
 import Link from "next/link";
 import { pollWithTimeout } from "utils/pollWithTimeout";
 import { useStripeRedirectEvent } from "../../../../../(stripe)/stripe-redirect/stripeRedirectChannel";
@@ -14,7 +14,6 @@ export function PlanSelector(props: {
   team: Team;
   getTeam: () => Promise<Team>;
 }) {
-  const trackEvent = useTrack();
   const router = useDashboardRouter();
 
   useStripeRedirectEvent(async () => {
@@ -25,12 +24,6 @@ export function PlanSelector(props: {
         const isNonFreePlan = team.billingPlan !== "free";
 
         if (isNonFreePlan) {
-          trackEvent({
-            category: "teamOnboarding",
-            action: "upgradePlan",
-            label: "success",
-            plan: team.billingPlan,
-          });
           router.replace(`/get-started/team/${props.team.slug}/add-members`);
         }
 
@@ -49,12 +42,7 @@ export function PlanSelector(props: {
         label: "Get Started",
         type: "checkout",
         onClick() {
-          trackEvent({
-            category: "teamOnboarding",
-            action: "selectPlan",
-            label: "attempt",
-            plan: "starter",
-          });
+          reportPlanSelected({ planSKU: "starter" });
         },
       }}
       getTeam={props.getTeam}
@@ -71,12 +59,7 @@ export function PlanSelector(props: {
         label: "Get Started",
         type: "checkout",
         onClick() {
-          trackEvent({
-            category: "teamOnboarding",
-            action: "selectPlan",
-            label: "attempt",
-            plan: "growth",
-          });
+          reportPlanSelected({ planSKU: "growth" });
         },
       }}
       highlighted
@@ -94,12 +77,7 @@ export function PlanSelector(props: {
         label: "Get started",
         type: "checkout",
         onClick() {
-          trackEvent({
-            category: "teamOnboarding",
-            action: "selectPlan",
-            label: "attempt",
-            plan: "scale",
-          });
+          reportPlanSelected({ planSKU: "scale" });
         },
       }}
       getTeam={props.getTeam}
@@ -116,12 +94,7 @@ export function PlanSelector(props: {
         label: "Get started",
         type: "checkout",
         onClick() {
-          trackEvent({
-            category: "teamOnboarding",
-            action: "selectPlan",
-            label: "attempt",
-            plan: "pro",
-          });
+          reportPlanSelected({ planSKU: "pro" });
         },
       }}
       getTeam={props.getTeam}
@@ -147,11 +120,7 @@ export function PlanSelector(props: {
           className="self-center text-muted-foreground"
           asChild
           onClick={() => {
-            trackEvent({
-              category: "teamOnboarding",
-              action: "selectPlan",
-              label: "skip",
-            });
+            reportPlanSelectSkipped();
           }}
         >
           <Link

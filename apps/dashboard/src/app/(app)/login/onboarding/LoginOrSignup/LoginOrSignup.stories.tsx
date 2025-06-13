@@ -62,9 +62,6 @@ function Story(props: {
             throw new Error("email address already exists");
           }
         }}
-        trackEvent={(params) => {
-          storybookLog("trackEvent", params);
-        }}
       />
     </AccountOnboardingLayout>
   );

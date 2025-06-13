@@ -8,7 +8,6 @@ import { SkeletonContainer } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import {
   CheckIcon,
   CircleAlertIcon,
@@ -34,11 +33,7 @@ import {
   type getActiveClaimCondition,
   getApprovalForTransaction,
 } from "thirdweb/extensions/erc20";
-import {
-  useActiveAccount,
-  useActiveWallet,
-  useSendTransaction,
-} from "thirdweb/react";
+import { useActiveAccount, useSendTransaction } from "thirdweb/react";
 import { getClaimParams, maxUint256 } from "thirdweb/utils";
 import { tryCatch } from "utils/try-catch";
 import { ToolTipLabel } from "../../../../../../../../../../@/components/ui/tooltip";
@@ -69,9 +64,8 @@ export function ClaimTokenCardUI(props: {
 }) {
   const [quantity, setQuantity] = useState("1");
   const account = useActiveAccount();
-  const activeWallet = useActiveWallet();
+
   const { theme } = useTheme();
-  const trackEvent = useTrack();
   const sendClaimTx = useSendTransaction({
     payModal: {
       theme: getSDKTheme(theme === "light" ? "light" : "dark"),
@@ -83,32 +77,6 @@ export function ClaimTokenCardUI(props: {
         txHash: string;
       }
   >(undefined);
-
-  function trackAssetBuy(
-    params:
-      | {
-          type: "attempt" | "success";
-        }
-      | {
-          type: "error";
-          errorMessage: string;
-        },
-  ) {
-    trackEvent({
-      category: "asset",
-      action: "buy",
-      label: params.type,
-      contractType: "DropERC20",
-      accountAddress: account?.address,
-      walletId: activeWallet?.id,
-      chainId: props.contract.chain.id,
-      ...(params.type === "error"
-        ? {
-            errorMessage: params.errorMessage,
-          }
-        : {}),
-    });
-  }
 
   const [stepsUI, setStepsUI] = useState<
     | undefined
@@ -124,10 +92,6 @@ export function ClaimTokenCardUI(props: {
         toast.error("Wallet is not connected");
         return;
       }
-
-      trackAssetBuy({
-        type: "attempt",
-      });
 
       setStepsUI(undefined);
 
@@ -162,11 +126,6 @@ export function ClaimTokenCardUI(props: {
             claim: "idle",
           });
 
-          trackAssetBuy({
-            type: "error",
-            errorMessage: approveTxResult.error.message,
-          });
-
           console.error(approveTxResult.error);
           toast.error("Failed to approve spending", {
             description: approveTxResult.error.message,
@@ -197,11 +156,6 @@ export function ClaimTokenCardUI(props: {
           claim: "error",
         });
 
-        trackAssetBuy({
-          type: "error",
-          errorMessage: claimTxResult.error.message,
-        });
-
         console.error(claimTxResult.error);
         toast.error("Failed to buy tokens", {
           description: claimTxResult.error.message,
@@ -212,10 +166,6 @@ export function ClaimTokenCardUI(props: {
       setStepsUI({
         approve: approveTx ? "success" : undefined,
         claim: "success",
-      });
-
-      trackAssetBuy({
-        type: "success",
       });
 
       setSuccessScreen({

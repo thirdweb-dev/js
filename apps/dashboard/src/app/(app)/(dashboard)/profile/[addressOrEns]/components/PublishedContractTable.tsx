@@ -12,7 +12,6 @@ import {
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import type { PublishedContractDetails } from "components/contract-components/hooks";
-import { useTrack } from "hooks/analytics/useTrack";
 import { replaceDeployerAddress } from "lib/publisher-utils";
 import { replaceIpfsUrl } from "lib/sdk";
 import { ShieldCheckIcon } from "lucide-react";
@@ -44,7 +43,6 @@ function convertContractDataToRowData(
 
 export function PublishedContractTable(props: PublishedContractTableProps) {
   const { contractDetails, footer, publisherEnsName } = props;
-  const trackEvent = useTrack();
   const rows = useMemo(
     () => contractDetails.map(convertContractDataToRowData),
     [contractDetails],
@@ -123,11 +121,6 @@ export function PublishedContractTable(props: PublishedContractTableProps) {
                     target="_blank"
                     onClick={(e) => {
                       e.stopPropagation();
-                      trackEvent({
-                        category: "visit-audit",
-                        action: "click",
-                        label: cell.value.audit,
-                      });
                     }}
                   >
                     <ShieldCheckIcon className="size-5 text-success-text" />
@@ -141,7 +134,7 @@ export function PublishedContractTable(props: PublishedContractTableProps) {
     ];
 
     return cols;
-  }, [trackEvent, publisherEnsName, props.client]);
+  }, [publisherEnsName, props.client]);
 
   const tableInstance = useTable({
     columns: tableColumns,

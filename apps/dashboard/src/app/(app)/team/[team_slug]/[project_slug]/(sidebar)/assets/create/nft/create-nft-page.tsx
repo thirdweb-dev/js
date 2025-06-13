@@ -1,6 +1,5 @@
 "use client";
 import { revalidatePathAction } from "@/actions/revalidate";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useRef } from "react";
 import {
   type ThirdwebClient,
@@ -22,13 +21,8 @@ import {
 } from "thirdweb/extensions/erc1155";
 import { useActiveAccount } from "thirdweb/react";
 import { maxUint256 } from "thirdweb/utils";
-import { parseError } from "utils/errorParser";
 import { useAddContractToProject } from "../../../hooks/project-contracts";
 import type { CreateNFTCollectionAllValues } from "./_common/form";
-import {
-  getNFTDeploymentTrackingData,
-  getNFTStepTrackingData,
-} from "./_common/tracking";
 import { CreateNFTPageUI } from "./create-nft-page-ui";
 
 export function CreateNFTPage(props: {
@@ -40,7 +34,6 @@ export function CreateNFTPage(props: {
   projectId: string;
 }) {
   const activeAccount = useActiveAccount();
-  const trackEvent = useTrack();
   const addContractToProject = useAddContractToProject();
   const contractAddressRef = useRef<string | undefined>(undefined);
 
@@ -86,119 +79,59 @@ export function CreateNFTPage(props: {
     // eslint-disable-next-line no-restricted-syntax
     const chain = defineChain(Number(collectionInfo.chain));
 
-    trackEvent(
-      getNFTStepTrackingData({
-        action: "deploy",
-        ercType,
-        chainId: Number(collectionInfo.chain),
-        status: "attempt",
-      }),
-    );
+    let contractAddress: string;
 
-    trackEvent(
-      getNFTDeploymentTrackingData({
-        ercType,
-        type: "attempt",
-        chainId: Number(collectionInfo.chain),
-      }),
-    );
-
-    try {
-      let contractAddress: string;
-
-      if (ercType === "erc721") {
-        contractAddress = await deployERC721Contract({
-          account: activeAccount,
-          client: props.client,
-          chain: chain,
-          type: "DropERC721",
-          params: {
-            name: collectionInfo.name,
-            symbol: collectionInfo.symbol,
-            description: collectionInfo.description,
-            image: collectionInfo.image,
-            social_urls: transformSocialUrls(collectionInfo.socialUrls),
-            saleRecipient: sales.primarySaleRecipient,
-            royaltyRecipient: sales.royaltyRecipient,
-            royaltyBps: BigInt(sales.royaltyBps),
-          },
-        });
-      } else {
-        contractAddress = await deployERC1155Contract({
-          account: activeAccount,
-          client: props.client,
-          chain: chain,
-          type: "DropERC1155",
-          params: {
-            name: collectionInfo.name,
-            symbol: collectionInfo.symbol,
-            description: collectionInfo.description,
-            image: collectionInfo.image,
-            social_urls: transformSocialUrls(collectionInfo.socialUrls),
-            saleRecipient: sales.primarySaleRecipient,
-            royaltyRecipient: sales.royaltyRecipient,
-            royaltyBps: BigInt(sales.royaltyBps),
-          },
-        });
-      }
-
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "deploy",
-          ercType,
-          chainId: Number(collectionInfo.chain),
-          status: "success",
-        }),
-      );
-
-      trackEvent(
-        getNFTDeploymentTrackingData({
-          ercType,
-          type: "success",
-          chainId: Number(collectionInfo.chain),
-        }),
-      );
-
-      contractAddressRef.current = contractAddress;
-
-      // add contract to project in background
-      addContractToProject.mutateAsync({
-        teamId: props.teamId,
-        projectId: props.projectId,
-        contractAddress: contractAddress,
-        chainId: collectionInfo.chain,
-        deploymentType: "asset",
-        contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
+    if (ercType === "erc721") {
+      contractAddress = await deployERC721Contract({
+        account: activeAccount,
+        client: props.client,
+        chain: chain,
+        type: "DropERC721",
+        params: {
+          name: collectionInfo.name,
+          symbol: collectionInfo.symbol,
+          description: collectionInfo.description,
+          image: collectionInfo.image,
+          social_urls: transformSocialUrls(collectionInfo.socialUrls),
+          saleRecipient: sales.primarySaleRecipient,
+          royaltyRecipient: sales.royaltyRecipient,
+          royaltyBps: BigInt(sales.royaltyBps),
+        },
       });
-
-      return {
-        contractAddress,
-      };
-    } catch (error) {
-      const parsedError = parseError(error);
-      const errorMessage =
-        typeof parsedError === "string" ? parsedError : "Unknown error";
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "deploy",
-          ercType,
-          chainId: Number(collectionInfo.chain),
-          status: "error",
-          errorMessage,
-        }),
-      );
-
-      trackEvent(
-        getNFTDeploymentTrackingData({
-          ercType,
-          type: "error",
-          chainId: Number(collectionInfo.chain),
-          errorMessage,
-        }),
-      );
-
-      throw error;
+    } else {
+      contractAddress = await deployERC1155Contract({
+        account: activeAccount,
+        client: props.client,
+        chain: chain,
+        type: "DropERC1155",
+        params: {
+          name: collectionInfo.name,
+          symbol: collectionInfo.symbol,
+          description: collectionInfo.description,
+          image: collectionInfo.image,
+          social_urls: transformSocialUrls(collectionInfo.socialUrls),
+          saleRecipient: sales.primarySaleRecipient,
+          royaltyRecipient: sales.royaltyRecipient,
+          royaltyBps: BigInt(sales.royaltyBps),
+        },
+      });
     }
+
+    contractAddressRef.current = contractAddress;
+
+    // add contract to project in background
+    addContractToProject.mutateAsync({
+      teamId: props.teamId,
+      projectId: props.projectId,
+      contractAddress: contractAddress,
+      chainId: collectionInfo.chain,
+      deploymentType: "asset",
+      contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
+    });
+
+    return {
+      contractAddress,
+    };
   }
 
   async function handleLazyMintNFTs(params: {
@@ -218,46 +151,10 @@ export function CreateNFTPage(props: {
       nfts: formValues.nfts,
     });
 
-    trackEvent(
-      getNFTStepTrackingData({
-        action: "lazy-mint",
-        ercType,
-        chainId: Number(formValues.collectionInfo.chain),
-        status: "attempt",
-      }),
-    );
-
-    try {
-      await sendAndConfirmTransaction({
-        account: activeAccount,
-        transaction,
-      });
-
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "lazy-mint",
-          ercType,
-          chainId: Number(formValues.collectionInfo.chain),
-          status: "success",
-        }),
-      );
-    } catch (error) {
-      const parsedError = parseError(error);
-      const errorMessage =
-        typeof parsedError === "string" ? parsedError : "Unknown error";
-
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "lazy-mint",
-          ercType,
-          chainId: Number(formValues.collectionInfo.chain),
-          status: "error",
-          errorMessage,
-        }),
-      );
-
-      throw error;
-    }
+    await sendAndConfirmTransaction({
+      account: activeAccount,
+      transaction,
+    });
   }
 
   async function handleSetClaimConditionsERC721(params: {
@@ -289,46 +186,10 @@ export function CreateNFTPage(props: {
       ],
     });
 
-    trackEvent(
-      getNFTStepTrackingData({
-        action: "claim-conditions",
-        ercType: "erc721",
-        chainId: Number(formValues.collectionInfo.chain),
-        status: "attempt",
-      }),
-    );
-
-    try {
-      await sendAndConfirmTransaction({
-        account: activeAccount,
-        transaction,
-      });
-
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "claim-conditions",
-          ercType: "erc721",
-          chainId: Number(formValues.collectionInfo.chain),
-          status: "success",
-        }),
-      );
-    } catch (error) {
-      const parsedError = parseError(error);
-      const errorMessage =
-        typeof parsedError === "string" ? parsedError : "Unknown error";
-
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "claim-conditions",
-          ercType: "erc721",
-          chainId: Number(formValues.collectionInfo.chain),
-          status: "error",
-          errorMessage,
-        }),
-      );
-
-      throw error;
-    }
+    await sendAndConfirmTransaction({
+      account: activeAccount,
+      transaction,
+    });
   }
 
   async function handleSetClaimConditionsERC1155(params: {
@@ -391,46 +252,10 @@ export function CreateNFTPage(props: {
       data: encodedTransactions,
     });
 
-    trackEvent(
-      getNFTStepTrackingData({
-        action: "claim-conditions",
-        ercType: "erc1155",
-        chainId: Number(values.collectionInfo.chain),
-        status: "attempt",
-      }),
-    );
-
-    try {
-      await sendAndConfirmTransaction({
-        transaction: tx,
-        account: activeAccount,
-      });
-
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "claim-conditions",
-          ercType: "erc1155",
-          chainId: Number(values.collectionInfo.chain),
-          status: "success",
-        }),
-      );
-    } catch (error) {
-      const parsedError = parseError(error);
-      const errorMessage =
-        typeof parsedError === "string" ? parsedError : "Unknown error";
-
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "claim-conditions",
-          ercType: "erc1155",
-          chainId: Number(values.collectionInfo.chain),
-          status: "error",
-          errorMessage,
-        }),
-      );
-
-      throw error;
-    }
+    await sendAndConfirmTransaction({
+      transaction: tx,
+      account: activeAccount,
+    });
   }
 
   return (

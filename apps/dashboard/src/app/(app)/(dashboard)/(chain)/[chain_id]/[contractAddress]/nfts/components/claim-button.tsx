@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/sheet";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { GemIcon } from "lucide-react";
 import { useState } from "react";
@@ -37,7 +36,6 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
   contract,
   isLoggedIn,
 }) => {
-  const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const { register, handleSubmit, formState, setValue } = useForm({
     defaultValues: { amount: "1", to: address },
@@ -116,11 +114,6 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
             type="submit"
             onClick={handleSubmit(async (d) => {
               try {
-                trackEvent({
-                  category: "nft",
-                  action: "claim",
-                  label: "attempt",
-                });
                 if (!account) {
                   return toast.error("No account detected");
                 }
@@ -159,20 +152,10 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
 
                 await sendAndConfirmTx.mutateAsync(transaction, {
                   onSuccess: () => {
-                    trackEvent({
-                      category: "nft",
-                      action: "claim",
-                      label: "success",
-                    });
                     setOpen(false);
                   },
                   onError: (error) => {
-                    trackEvent({
-                      category: "nft",
-                      action: "claim",
-                      label: "error",
-                      error,
-                    });
+                    console.error(error);
                   },
                 });
 
@@ -180,12 +163,6 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
               } catch (error) {
                 console.error(error);
                 claimNFTNotifications.onError(error);
-                trackEvent({
-                  category: "nft",
-                  action: "claim",
-                  label: "error",
-                  error,
-                });
               }
             })}
           >

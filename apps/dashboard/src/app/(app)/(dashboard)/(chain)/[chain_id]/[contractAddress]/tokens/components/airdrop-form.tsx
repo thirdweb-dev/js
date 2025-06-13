@@ -1,7 +1,6 @@
 "use client";
 
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleCheckIcon, UploadIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useState } from "react";
@@ -29,7 +28,6 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
   }>({
     defaultValues: { addresses: [] },
   });
-  const trackEvent = useTrack();
   const sendTransaction = useSendAndConfirmTransaction();
   const addresses = watch("addresses");
   const [airdropFormOpen, setAirdropFormOpen] = useState(false);
@@ -48,12 +46,6 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
         <form
           onSubmit={handleSubmit(async (data) => {
             try {
-              trackEvent({
-                category: "token",
-                action: "airdrop",
-                label: "attempt",
-                contractAddress: contract.address,
-              });
               const tx = transferBatch({
                 contract,
                 batch: data.addresses
@@ -65,25 +57,12 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
               });
               await sendTransaction.mutateAsync(tx, {
                 onSuccess: () => {
-                  trackEvent({
-                    category: "token",
-                    action: "airdrop",
-                    label: "success",
-                    contract_address: contract.address,
-                  });
                   // Close the sheet/modal on success
                   if (toggle) {
                     toggle(false);
                   }
                 },
                 onError: (error) => {
-                  trackEvent({
-                    category: "token",
-                    action: "airdrop",
-                    label: "success",
-                    contract_address: contract.address,
-                    error,
-                  });
                   console.error(error);
                 },
               });

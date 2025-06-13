@@ -1,4 +1,3 @@
-import { useTrack } from "hooks/analytics/useTrack";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import {
@@ -7,17 +6,6 @@ import {
   addRecentlyUsedChainId,
 } from "../../stores/chainStores";
 import { ConfigureNetworkForm } from "./ConfigureNetworkForm";
-
-function useChainConfigTrack() {
-  const trackEvent = useTrack();
-  return (action: "add" | "update", chain: StoredChain) => {
-    trackEvent({
-      category: "chain_configuration",
-      chain,
-      action,
-    });
-  };
-}
 
 interface ConfigureNetworksProps {
   onNetworkConfigured?: (chain: StoredChain) => void;
@@ -29,7 +17,6 @@ interface ConfigureNetworksProps {
 }
 
 export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
-  const trackChainConfig = useChainConfigTrack();
   const { editChain } = props;
 
   const handleSubmit = (chain: StoredChain) => {
@@ -41,14 +28,12 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
         props.onNetworkAdded(chain);
       }
 
-      trackChainConfig("add", chain);
       toast.success("Network Added Successfully");
     } else {
       if (props.onNetworkConfigured) {
         props.onNetworkConfigured(chain);
       }
 
-      trackChainConfig("update", chain);
       toast.success("Network Updated Successfully");
     }
   };

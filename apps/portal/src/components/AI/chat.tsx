@@ -7,7 +7,6 @@ import { AutoResizeTextarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { MessageCircleIcon } from "lucide-react";
 import { ArrowUpIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
-import { usePostHog } from "posthog-js/react";
 import {
   type ChangeEvent,
   type KeyboardEvent,
@@ -65,7 +64,6 @@ export function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const lastMessageRef = useRef<HTMLDivElement>(null);
-  const posthog = usePostHog();
   const [conversationId, setConversationId] = useState<string | undefined>(
     undefined,
   );
@@ -73,11 +71,6 @@ export function Chat() {
   const handleSendMessage = useCallback(
     async (content: string) => {
       if (!content.trim()) return;
-
-      posthog?.capture("siwa.send-message", {
-        sessionId: conversationId,
-        message: content,
-      });
 
       const userMessage: Message = {
         id: Date.now().toString(),
@@ -130,7 +123,7 @@ export function Chat() {
         );
       }
     },
-    [conversationId, posthog],
+    [conversationId],
   );
 
   useEffect(() => {

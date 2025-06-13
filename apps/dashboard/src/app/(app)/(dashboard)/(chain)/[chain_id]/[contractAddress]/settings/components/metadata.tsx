@@ -13,7 +13,6 @@ import type { ExtensionDetectedState } from "components/buttons/ExtensionDetecte
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { CommonContractSchema } from "constants/schemas";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { useMemo } from "react";
@@ -70,7 +69,6 @@ export const SettingsMetadata = ({
   detectedState: ExtensionDetectedState;
   isLoggedIn: boolean;
 }) => {
-  const trackEvent = useTrack();
   const metadata = useReadContract(getContractMetadata, { contract });
   const sendTransaction = useSendAndConfirmTransaction();
 
@@ -167,12 +165,6 @@ export const SettingsMetadata = ({
             {},
           );
 
-          trackEvent({
-            category: "settings",
-            action: "set-metadata",
-            label: "attempt",
-          });
-
           const tx = setContractMetadata({
             contract,
             ...data,
@@ -181,20 +173,10 @@ export const SettingsMetadata = ({
 
           sendTransaction.mutate(tx, {
             onSuccess: () => {
-              trackEvent({
-                category: "settings",
-                action: "set-metadata",
-                label: "success",
-              });
               onSuccess();
             },
             onError: (error) => {
-              trackEvent({
-                category: "settings",
-                action: "set-metadata",
-                label: "error",
-                error,
-              });
+              console.error(error);
               onError(error);
             },
           });

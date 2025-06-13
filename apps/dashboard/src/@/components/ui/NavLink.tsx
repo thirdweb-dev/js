@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useTrack } from "hooks/analytics/useTrack";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -19,13 +18,14 @@ export type NavButtonProps = {
 };
 
 export function NavLink(props: React.PropsWithChildren<NavButtonProps>) {
-  const track = useTrack();
   const pathname = usePathname();
   const isActive = pathname
     ? props.exactMatch
       ? pathname === props.href
       : pathname.startsWith(props.href)
     : false;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const track = (..._args: unknown[]) => {};
   return (
     <Link
       href={props.href}

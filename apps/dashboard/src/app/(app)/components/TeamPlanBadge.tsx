@@ -3,7 +3,6 @@
 import type { Team } from "@/api/team";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useDashboardRouter } from "../../../@/lib/DashboardRouter";
 
 const teamPlanToBadgeVariant: Record<
@@ -39,7 +38,6 @@ export function TeamPlanBadge(props: {
   postfix?: string;
 }) {
   const router = useDashboardRouter();
-  const track = useTrack();
 
   function handleNavigateToBilling(e: React.MouseEvent | React.KeyboardEvent) {
     if (props.plan !== "free") {
@@ -47,11 +45,6 @@ export function TeamPlanBadge(props: {
     }
     e.stopPropagation();
     e.preventDefault();
-    track({
-      category: "billing",
-      action: "show_plans",
-      label: "team_badge",
-    });
     router.push(`/team/${props.teamSlug}/~/settings/billing?showPlans=true`);
   }
 

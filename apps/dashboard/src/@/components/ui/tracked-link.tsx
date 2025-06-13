@@ -1,6 +1,5 @@
 "use client";
 
-import { useTrack } from "hooks/analytics/useTrack";
 import Link from "next/link";
 import type React from "react";
 import { cn } from "../../lib/utils";
@@ -12,7 +11,8 @@ export type TrackedLinkProps = React.ComponentProps<typeof Link> & {
 };
 
 export function TrackedLinkTW(props: TrackedLinkProps) {
-  const trackEvent = useTrack();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const trackEvent = (..._args: unknown[]) => {};
   const { category, label, trackingProps, ...restProps } = props;
 
   return (
@@ -27,7 +27,8 @@ export function TrackedLinkTW(props: TrackedLinkProps) {
 }
 
 export function TrackedUnderlineLink(props: TrackedLinkProps) {
-  const trackEvent = useTrack();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const trackEvent = (..._args: unknown[]) => {};
   const { category, label, trackingProps, ...restProps } = props;
 
   return (

@@ -36,7 +36,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { EngineBackendWalletOptions } from "lib/engine";
 import { useV5DashboardChain } from "lib/v5-adapter";
@@ -319,7 +318,6 @@ const EditModal = ({
     instanceUrl,
     authToken,
   });
-  const trackEvent = useTrack();
 
   const [label, setLabel] = useState(backendWallet.label ?? "");
 
@@ -332,21 +330,9 @@ const EditModal = ({
       {
         onSuccess: () => {
           disclosure.onClose();
-          trackEvent({
-            category: "engine",
-            action: "update-backend-wallet",
-            label: "success",
-            instance: instanceUrl,
-          });
         },
         onError: (error) => {
-          trackEvent({
-            category: "engine",
-            action: "update-backend-wallet",
-            label: "error",
-            instance: instanceUrl,
-            error,
-          });
+          console.error(error);
         },
       },
     );
@@ -642,7 +628,6 @@ function DeleteModal({
     instanceUrl,
     authToken,
   });
-  const trackEvent = useTrack();
 
   const isLocalWallet =
     backendWallet.type === "local" || backendWallet.type === "smart:local";
@@ -654,21 +639,9 @@ function DeleteModal({
       {
         onSuccess: () => {
           disclosure.onClose();
-          trackEvent({
-            category: "engine",
-            action: "delete-backend-wallet",
-            label: "success",
-            instance: instanceUrl,
-          });
         },
         onError: (error) => {
-          trackEvent({
-            category: "engine",
-            action: "delete-backend-wallet",
-            label: "error",
-            instance: instanceUrl,
-            error,
-          });
+          console.error(error);
         },
       },
     );

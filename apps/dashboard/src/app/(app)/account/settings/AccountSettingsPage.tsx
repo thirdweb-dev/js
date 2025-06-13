@@ -2,6 +2,7 @@
 import { confirmEmailWithOTP } from "@/actions/confirmEmail";
 import { apiServerProxy } from "@/actions/proxies";
 import { updateAccount } from "@/actions/updateAccount";
+import * as analytics from "@/analytics/dashboard.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebClient } from "thirdweb";
@@ -46,6 +47,7 @@ export function AccountSettingsPage(props: {
           }}
           onAccountDeleted={async () => {
             await doLogout();
+            analytics.reset();
             if (activeWallet) {
               disconnect(activeWallet);
             }

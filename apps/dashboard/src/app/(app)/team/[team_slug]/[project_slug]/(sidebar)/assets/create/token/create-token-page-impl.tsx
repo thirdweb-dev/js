@@ -4,7 +4,6 @@ import {
   DEFAULT_FEE_BPS_NEW,
   DEFAULT_FEE_RECIPIENT,
 } from "constants/addresses";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import { useRef } from "react";
@@ -26,14 +25,9 @@ import {
   transferBatch,
 } from "thirdweb/extensions/erc20";
 import { useActiveAccount } from "thirdweb/react";
-import { parseError } from "utils/errorParser";
 import { pollWithTimeout } from "utils/pollWithTimeout";
 import { useAddContractToProject } from "../../../hooks/project-contracts";
 import type { CreateAssetFormValues } from "./_common/form";
-import {
-  getTokenDeploymentTrackingData,
-  getTokenStepTrackingData,
-} from "./_common/tracking";
 import { CreateTokenAssetPageUI } from "./create-token-page.client";
 
 export function CreateTokenAssetPage(props: {
@@ -48,28 +42,12 @@ export function CreateTokenAssetPage(props: {
   const { idToChain } = useAllChainsData();
   const addContractToProject = useAddContractToProject();
   const contractAddressRef = useRef<string | undefined>(undefined);
-  const trackEvent = useTrack();
 
   async function deployContract(formValues: CreateAssetFormValues) {
     if (!account) {
       toast.error("No Connected Wallet");
       throw new Error("No Connected Wallet");
     }
-
-    trackEvent(
-      getTokenStepTrackingData({
-        action: "deploy",
-        chainId: Number(formValues.chain),
-        status: "attempt",
-      }),
-    );
-
-    trackEvent(
-      getTokenDeploymentTrackingData({
-        type: "attempt",
-        chainId: Number(formValues.chain),
-      }),
-    );
 
     const socialUrls = formValues.socialUrls.reduce(
       (acc, url) => {
@@ -81,83 +59,45 @@ export function CreateTokenAssetPage(props: {
       {} as Record<string, string>,
     );
 
-    try {
-      const contractAddress = await deployERC20Contract({
-        account,
-        // eslint-disable-next-line no-restricted-syntax
-        chain: defineDashboardChain(
-          Number(formValues.chain),
-          idToChain.get(Number(formValues.chain)),
-        ),
-        client: props.client,
-        type: "DropERC20",
-        params: {
-          // metadata
-          name: formValues.name,
-          description: formValues.description,
-          symbol: formValues.symbol,
-          image: formValues.image,
-          // platform fees
-          platformFeeBps: BigInt(DEFAULT_FEE_BPS_NEW),
-          platformFeeRecipient: DEFAULT_FEE_RECIPIENT,
-          // primary sale
-          saleRecipient: account.address,
-          social_urls: socialUrls,
-        },
-      });
+    const contractAddress = await deployERC20Contract({
+      account,
+      // eslint-disable-next-line no-restricted-syntax
+      chain: defineDashboardChain(
+        Number(formValues.chain),
+        idToChain.get(Number(formValues.chain)),
+      ),
+      client: props.client,
+      type: "DropERC20",
+      params: {
+        // metadata
+        name: formValues.name,
+        description: formValues.description,
+        symbol: formValues.symbol,
+        image: formValues.image,
+        // platform fees
+        platformFeeBps: BigInt(DEFAULT_FEE_BPS_NEW),
+        platformFeeRecipient: DEFAULT_FEE_RECIPIENT,
+        // primary sale
+        saleRecipient: account.address,
+        social_urls: socialUrls,
+      },
+    });
 
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "deploy",
-          chainId: Number(formValues.chain),
-          status: "success",
-        }),
-      );
+    // add contract to project in background
+    addContractToProject.mutateAsync({
+      teamId: props.teamId,
+      projectId: props.projectId,
+      contractAddress: contractAddress,
+      chainId: formValues.chain,
+      deploymentType: "asset",
+      contractType: "DropERC20",
+    });
 
-      trackEvent(
-        getTokenDeploymentTrackingData({
-          type: "success",
-          chainId: Number(formValues.chain),
-        }),
-      );
+    contractAddressRef.current = contractAddress;
 
-      // add contract to project in background
-      addContractToProject.mutateAsync({
-        teamId: props.teamId,
-        projectId: props.projectId,
-        contractAddress: contractAddress,
-        chainId: formValues.chain,
-        deploymentType: "asset",
-        contractType: "DropERC20",
-      });
-
-      contractAddressRef.current = contractAddress;
-
-      return {
-        contractAddress: contractAddress,
-      };
-    } catch (e) {
-      const parsedError = parseError(e);
-      const errorMessage =
-        typeof parsedError === "string" ? parsedError : "Unknown error";
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "deploy",
-          chainId: Number(formValues.chain),
-          status: "error",
-          errorMessage,
-        }),
-      );
-
-      trackEvent(
-        getTokenDeploymentTrackingData({
-          type: "error",
-          chainId: Number(formValues.chain),
-          errorMessage,
-        }),
-      );
-      throw e;
-    }
+    return {
+      contractAddress: contractAddress,
+    };
   }
 
   async function airdropTokens(formValues: CreateAssetFormValues) {
@@ -183,46 +123,18 @@ export function CreateTokenAssetPage(props: {
       chain,
     });
 
-    trackEvent(
-      getTokenStepTrackingData({
-        action: "airdrop",
-        chainId: Number(formValues.chain),
-        status: "attempt",
-      }),
-    );
+    const airdropTx = transferBatch({
+      contract,
+      batch: formValues.airdropAddresses.map((recipient) => ({
+        to: recipient.address,
+        amount: recipient.quantity,
+      })),
+    });
 
-    try {
-      const airdropTx = transferBatch({
-        contract,
-        batch: formValues.airdropAddresses.map((recipient) => ({
-          to: recipient.address,
-          amount: recipient.quantity,
-        })),
-      });
-
-      await sendAndConfirmTransaction({
-        transaction: airdropTx,
-        account,
-      });
-
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "airdrop",
-          chainId: Number(formValues.chain),
-          status: "success",
-        }),
-      );
-    } catch (e) {
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "airdrop",
-          chainId: Number(formValues.chain),
-          status: "error",
-          errorMessage: e instanceof Error ? e.message : "Unknown error",
-        }),
-      );
-      throw e;
-    }
+    await sendAndConfirmTransaction({
+      transaction: airdropTx,
+      account,
+    });
   }
 
   async function mintTokens(formValues: CreateAssetFormValues) {
@@ -266,44 +178,16 @@ export function CreateTokenAssetPage(props: {
     const ownerAndAirdropPercent = 100 - salePercent;
     const ownerSupplyTokens = (totalSupply * ownerAndAirdropPercent) / 100;
 
-    trackEvent(
-      getTokenStepTrackingData({
-        action: "mint",
-        chainId: Number(formValues.chain),
-        status: "attempt",
-      }),
-    );
+    const claimTx = claimTo({
+      contract,
+      to: account.address,
+      quantity: ownerSupplyTokens.toString(),
+    });
 
-    try {
-      const claimTx = claimTo({
-        contract,
-        to: account.address,
-        quantity: ownerSupplyTokens.toString(),
-      });
-
-      await sendAndConfirmTransaction({
-        transaction: claimTx,
-        account,
-      });
-
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "mint",
-          chainId: Number(formValues.chain),
-          status: "success",
-        }),
-      );
-    } catch (e) {
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "mint",
-          chainId: Number(formValues.chain),
-          status: "error",
-          errorMessage: e instanceof Error ? e.message : "Unknown error",
-        }),
-      );
-      throw e;
-    }
+    await sendAndConfirmTransaction({
+      transaction: claimTx,
+      account,
+    });
   }
 
   async function setClaimConditions(formValues: CreateAssetFormValues) {
@@ -371,38 +255,10 @@ export function CreateTokenAssetPage(props: {
       phases,
     });
 
-    trackEvent(
-      getTokenStepTrackingData({
-        action: "claim-conditions",
-        chainId: Number(formValues.chain),
-        status: "attempt",
-      }),
-    );
-
-    try {
-      await sendAndConfirmTransaction({
-        transaction: preparedTx,
-        account,
-      });
-
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "claim-conditions",
-          chainId: Number(formValues.chain),
-          status: "success",
-        }),
-      );
-    } catch (e) {
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "claim-conditions",
-          chainId: Number(formValues.chain),
-          status: "error",
-          errorMessage: e instanceof Error ? e.message : "Unknown error",
-        }),
-      );
-      throw e;
-    }
+    await sendAndConfirmTransaction({
+      transaction: preparedTx,
+      account,
+    });
   }
 
   return (

@@ -15,7 +15,6 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CirclePlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -36,7 +35,7 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
     instanceUrl,
     authToken,
   });
-  const trackEvent = useTrack();
+
   const form = useForm<EngineAdmin>({
     defaultValues: {
       permissions: "ADMIN",
@@ -73,22 +72,9 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
               onSuccess: () => {
                 onSuccess();
                 onClose();
-                trackEvent({
-                  category: "engine",
-                  action: "add-admin",
-                  label: "success",
-                  instance: instanceUrl,
-                });
               },
               onError: (error) => {
                 onError(error);
-                trackEvent({
-                  category: "engine",
-                  action: "add-admin",
-                  label: "error",
-                  instance: instanceUrl,
-                  error,
-                });
               },
             });
           })}

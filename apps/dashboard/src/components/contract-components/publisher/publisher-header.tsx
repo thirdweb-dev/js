@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { replaceDeployerAddress } from "lib/publisher-utils";
 import Link from "next/link";
 import { type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
@@ -16,8 +15,6 @@ import {
 import { shortenIfAddress } from "utils/usedapp-external";
 import { useEns } from "../hooks";
 
-const TRACKING_CATEGORY = "releaser-header";
-
 interface PublisherHeaderProps {
   wallet: string;
   client: ThirdwebClient;
@@ -30,7 +27,6 @@ export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
     client,
     addressOrEnsName: wallet,
   });
-  const trackEvent = useTrack();
 
   return (
     <div className="flex w-full flex-col gap-4">
@@ -56,13 +52,6 @@ export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
             href={replaceDeployerAddress(
               `/${ensQuery.data?.ensName || wallet}`,
             )}
-            onClick={() =>
-              trackEvent({
-                category: TRACKING_CATEGORY,
-                action: "click",
-                label: "releaser-name",
-              })
-            }
           >
             <AccountName
               className="font-medium"
@@ -86,16 +75,7 @@ export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
       </AccountProvider>
 
       <Button variant="outline" asChild className="bg-card">
-        <Link
-          href={replaceDeployerAddress(`/${wallet}`)}
-          onClick={() =>
-            trackEvent({
-              category: TRACKING_CATEGORY,
-              action: "click",
-              label: "view-all-contracts",
-            })
-          }
-        >
+        <Link href={replaceDeployerAddress(`/${wallet}`)}>
           View all contracts
         </Link>
       </Button>

@@ -6,7 +6,6 @@ import {
   useDelegateMutation,
 } from "@3rdweb-sdk/react/hooks/useVote";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
@@ -20,7 +19,6 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({
   contract,
   isLoggedIn,
 }) => {
-  const trackEvent = useTrack();
   const account = useActiveAccount();
   const tokensDelegatedQuery = useReadContract(tokensDelegated, {
     contract,
@@ -45,20 +43,8 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({
         onClick={() => {
           toast.promise(
             delegateMutation.mutateAsync(contract, {
-              onSuccess: () => {
-                trackEvent({
-                  category: "vote",
-                  action: "delegate",
-                  label: "success",
-                });
-              },
               onError: (error) => {
-                trackEvent({
-                  category: "vote",
-                  action: "delegate",
-                  label: "error",
-                  error,
-                });
+                console.error(error);
               },
             }),
             {

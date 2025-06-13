@@ -62,9 +62,6 @@ function Story(props: {
     <TeamOnboardingLayout currentStep={2}>
       <InviteTeamMembersUI
         client={storybookThirdwebClient}
-        trackEvent={(params) => {
-          storybookLog("trackEvent", params);
-        }}
         getTeam={async () => {
           return teamStub("foo", props.plan);
         }}

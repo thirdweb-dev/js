@@ -8,7 +8,6 @@ import {
   DASHBOARD_ENGINE_RELAYER_URL,
   DASHBOARD_FORWARDER_ADDRESS,
 } from "constants/misc";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { ChevronFirstIcon } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -38,7 +37,6 @@ export function ContractPublishForm(props: {
   const [fieldsetToShow, setFieldsetToShow] = useState<
     "landing" | "factory" | "contractParams" | "implParams" | "networks"
   >("landing");
-  const trackEvent = useTrack();
 
   const router = useDashboardRouter();
   const { onSuccess, onError } = useTxNotifications(
@@ -217,13 +215,6 @@ export function ContractPublishForm(props: {
               {},
             );
 
-            trackEvent({
-              category: "publish",
-              action: "click",
-              label: "attempt",
-              release_id: `${ensNameOrAddress}/${props.publishMetadata.name}`,
-            });
-
             const metadata = {
               ...data,
               networksForDeployment: {
@@ -271,14 +262,6 @@ export function ContractPublishForm(props: {
             sendTx.mutate(tx, {
               onSuccess: async () => {
                 onSuccess();
-                trackEvent({
-                  category: "publish",
-                  action: "click",
-                  label: "success",
-                  release_id: `${ensNameOrAddress}/${props.publishMetadata.name}`,
-                  version: data.version,
-                  type: data.deployType,
-                });
                 await props.onPublishSuccess().catch((err) => {
                   console.error("Failed to run onPublishSuccess", err);
                 });
@@ -289,13 +272,6 @@ export function ContractPublishForm(props: {
               onError: (err) => {
                 console.error("Failed to publish contract", err);
                 onError(err);
-                trackEvent({
-                  category: "publish",
-                  action: "click",
-                  label: "error",
-                  release_id: `${ensNameOrAddress}/${props.publishMetadata.name}`,
-                  is_factory: data.isDeployableViaFactory,
-                });
               },
             });
           })}

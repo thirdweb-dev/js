@@ -17,7 +17,6 @@ import {
   AddToProjectSelector,
   type MinimalTeamsAndProjects,
 } from "components/contract-components/contract-deploy-form/add-to-project-card";
-import { useTrack } from "hooks/analytics/useTrack";
 import { CodeIcon, PlusIcon } from "lucide-react";
 import { CircleAlertIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
@@ -28,8 +27,6 @@ import type { Chain, ThirdwebClient } from "thirdweb";
 import { useAddContractToProject } from "../../../../../team/[team_slug]/[project_slug]/(sidebar)/hooks/project-contracts";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../_utils/contract-page-path";
-
-const TRACKING_CATEGORY = "add_to_dashboard_upsell";
 
 type AddToDashboardCardProps = {
   contractAddress: string;
@@ -143,7 +140,6 @@ function AddToProjectModalContent(props: {
   contractAddress: string;
   client: ThirdwebClient;
 }) {
-  const trackEvent = useTrack();
   const addContractToProject = useAddContractToProject();
 
   const [importSelection, setImportSelection] = useState({
@@ -159,12 +155,6 @@ function AddToProjectModalContent(props: {
     teamId: string;
     projectId: string;
   }) {
-    trackEvent({
-      category: TRACKING_CATEGORY,
-      action: "add-to-dashboard",
-      label: "attempt",
-      contractAddress: props.contractAddress,
-    });
     addContractToProject.mutate(
       {
         contractAddress: props.contractAddress,
@@ -177,12 +167,6 @@ function AddToProjectModalContent(props: {
       {
         onSuccess: () => {
           toast.success("Contract added to the project successfully");
-          trackEvent({
-            category: TRACKING_CATEGORY,
-            action: "add-to-dashboard",
-            label: "success",
-            contractAddress: props.contractAddress,
-          });
         },
         onError: (err) => {
           if (err.message.includes("PROJECT_CONTRACT_ALREADY_EXISTS")) {
@@ -190,13 +174,6 @@ function AddToProjectModalContent(props: {
           } else {
             toast.error("Failed to import contract");
           }
-          trackEvent({
-            category: TRACKING_CATEGORY,
-            action: "add-to-dashboard",
-            label: "error",
-            contractAddress: props.contractAddress,
-            error: err,
-          });
         },
       },
     );

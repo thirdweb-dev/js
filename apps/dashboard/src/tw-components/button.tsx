@@ -10,7 +10,6 @@ import {
   forwardRef,
   useButtonGroup,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useClipboard } from "hooks/useClipboard";
 import { CheckIcon, CopyIcon, ExternalLinkIcon } from "lucide-react";
 import { forwardRef as reactForwardRef } from "react";
@@ -130,7 +129,8 @@ interface TrackedLinkButtonProps extends LinkButtonProps {
 
 export const TrackedLinkButton = forwardRef<TrackedLinkButtonProps, "button">(
   ({ category, label, ...restButtonProps }, ref) => {
-    const trackEvent = useTrack();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const trackEvent = (..._args: unknown[]) => {};
     return (
       <LinkButton
         ref={ref}
@@ -157,7 +157,8 @@ interface TrackedIconButtonProps extends IconButtonProps {
 
 const TrackedIconButton = forwardRef<TrackedIconButtonProps, "button">(
   ({ category, label, trackingProps, ...restButtonProps }, ref) => {
-    const trackEvent = useTrack();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const trackEvent = (..._args: unknown[]) => {};
     return (
       <IconButton
         className="text-muted-foreground"

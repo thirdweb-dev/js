@@ -1,18 +1,19 @@
 "use client";
 
 import { createTeam } from "@/actions/createTeam";
+import * as analytics from "@/analytics/dashboard.client";
+import { TeamIdentifier } from "@/analytics/dashboard.client";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { LazyCreateProjectDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { doLogout } from "../../../login/auth-actions";
-
 import {
   type TeamHeaderCompProps,
   TeamHeaderDesktopUI,
@@ -38,6 +39,7 @@ export function TeamHeaderLoggedIn(props: {
     // log out the user
     try {
       await doLogout();
+      analytics.reset();
       if (activeWallet) {
         disconnect(activeWallet);
       }
@@ -81,8 +83,18 @@ export function TeamHeaderLoggedIn(props: {
     accountAddress: props.accountAddress,
   };
 
+  const isStaffMode = useMemo(
+    () =>
+      !props.teamsAndProjects.some(
+        (team) => team.team.id === props.currentTeam.id,
+      ),
+    [props.teamsAndProjects, props.currentTeam.id],
+  );
+
   return (
     <div>
+      {/* do NOT identify as the team in staff mode */}
+      {!isStaffMode && <TeamIdentifier teamId={props.currentTeam.id} />}
       <TeamHeaderDesktopUI {...headerProps} className="max-lg:hidden" />
       <TeamHeaderMobileUI {...headerProps} className="lg:hidden" />
 

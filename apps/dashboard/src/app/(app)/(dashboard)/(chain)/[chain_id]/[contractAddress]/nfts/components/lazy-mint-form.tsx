@@ -16,7 +16,6 @@ import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { PropertiesFormControl } from "components/contract-pages/forms/properties.shared";
 import { FileInput } from "components/shared/FileInput";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
@@ -53,7 +52,6 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
   setOpen,
   isLoggedIn,
 }) => {
-  const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const sendAndConfirmTx = useSendAndConfirmTransaction();
 
@@ -97,11 +95,6 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
             return;
           }
           try {
-            trackEvent({
-              category: "nft",
-              action: "lazy-mint",
-              label: "attempt",
-            });
             const nfts = [parseAttributes(data)];
             const transaction = isErc721
               ? lazyMint721({ contract, nfts })
@@ -109,20 +102,10 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
 
             await sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
-                trackEvent({
-                  category: "nft",
-                  action: "lazy-mint",
-                  label: "success",
-                });
                 setOpen(false);
               },
               onError: (error) => {
-                trackEvent({
-                  category: "nft",
-                  action: "lazy-mint",
-                  label: "error",
-                  error,
-                });
+                console.error(error);
               },
             });
 

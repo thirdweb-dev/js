@@ -31,7 +31,6 @@ import { DialogDescription } from "@radix-ui/react-dialog";
 import { useMutation } from "@tanstack/react-query";
 import type { ProjectService } from "@thirdweb-dev/service-utils";
 import { SERVICES } from "@thirdweb-dev/service-utils";
-import { useTrack } from "hooks/analytics/useTrack";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -166,7 +165,6 @@ function CreateProjectForm(props: {
   }) => void;
 }) {
   const [showAlert, setShowAlert] = useState<"no-domain" | "any-domain">();
-  const trackEvent = useTrack();
   const createProject = useMutation({
     mutationFn: props.createProject,
   });
@@ -214,30 +212,13 @@ function CreateProjectForm(props: {
       }),
     };
 
-    trackEvent({
-      category: "api-keys",
-      action: "create",
-      label: "attempt",
-    });
-
     createProject.mutate(formattedValues, {
       onSuccess: (data) => {
         props.onProjectCreated(data);
         toast.success("Project created successfully");
-        trackEvent({
-          category: "api-keys",
-          action: "create",
-          label: "success",
-        });
       },
-      onError: (err) => {
+      onError: () => {
         toast.error("Failed to create a project");
-        trackEvent({
-          category: "api-keys",
-          action: "create",
-          label: "error",
-          error: err,
-        });
       },
     });
   }

@@ -12,7 +12,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import {
   ArrowRightIcon,
   ArrowUpFromLineIcon,
@@ -27,7 +26,6 @@ import { ChainOverview } from "../../_common/chain-overview";
 import { FilePreview } from "../../_common/file-preview";
 import { StepCard } from "../../_common/step-card";
 import type { CreateAssetFormValues } from "../_common/form";
-import { getTokenLaunchTrackingData } from "../_common/tracking";
 import type { CreateTokenFunctions } from "../create-token-page.client";
 import { TokenDistributionBarChart } from "../distribution/token-distribution";
 
@@ -56,7 +54,6 @@ export function LaunchTokenStatus(props: {
   const [contractLink, setContractLink] = useState<string | null>(null);
   const activeWallet = useActiveWallet();
   const walletRequiresApproval = activeWallet?.id !== "inApp";
-  const trackEvent = useTrack();
 
   function updateStatus(
     index: number,
@@ -71,31 +68,7 @@ export function LaunchTokenStatus(props: {
     });
   }
 
-  function launchTracking(
-    params:
-      | {
-          type: "attempt" | "success";
-        }
-      | {
-          type: "error";
-          errorMessage: string;
-        },
-  ) {
-    trackEvent(
-      getTokenLaunchTrackingData({
-        chainId: Number(formValues.chain),
-        airdropEnabled: formValues.airdropEnabled,
-        saleEnabled: formValues.saleEnabled,
-        ...params,
-      }),
-    );
-  }
-
   async function handleSubmitClick() {
-    launchTracking({
-      type: "attempt",
-    });
-
     const initialSteps: MultiStepState<StepId>[] = [
       {
         label: "Deploy contract",
@@ -173,19 +146,10 @@ export function LaunchTokenStatus(props: {
           message: parsedError,
         });
 
-        launchTracking({
-          type: "error",
-          errorMessage:
-            typeof parsedError === "string" ? parsedError : "Unknown error",
-        });
-
         throw error;
       }
     }
 
-    launchTracking({
-      type: "success",
-    });
     props.onLaunchSuccess();
   }
 

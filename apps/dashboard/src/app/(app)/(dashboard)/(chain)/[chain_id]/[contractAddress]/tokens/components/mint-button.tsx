@@ -1,5 +1,6 @@
 "use client";
 
+import { reportTokenMinted } from "@/analytics/track";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -12,7 +13,6 @@ import {
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -47,7 +47,6 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
     contract,
   });
   const sendAndConfirmTransaction = useSendAndConfirmTransaction();
-  const trackEvent = useTrack();
   const form = useForm({ defaultValues: { amount: "0" } });
   return (
     <MinterOnly contract={contract}>
@@ -70,11 +69,6 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
               if (!address) {
                 return toast.error("No wallet connected");
               }
-              trackEvent({
-                category: "token",
-                action: "mint",
-                label: "attempt",
-              });
               const transaction = ERC20Ext.mintTo({
                 contract,
                 amount: d.amount,
@@ -84,22 +78,13 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
                 transaction,
                 {
                   onSuccess: () => {
-                    trackEvent({
-                      category: "token",
-                      action: "mint",
-                      label: "success",
+                    reportTokenMinted({
+                      address: contract.address,
+                      chainId: contract.chain.id,
+                      quantity: d.amount,
                     });
                     form.reset({ amount: "0" });
                     setOpen(false);
-                  },
-                  onError: (error) => {
-                    trackEvent({
-                      category: "token",
-                      action: "mint",
-                      label: "error",
-                      error,
-                    });
-                    console.error(error);
                   },
                 },
               );

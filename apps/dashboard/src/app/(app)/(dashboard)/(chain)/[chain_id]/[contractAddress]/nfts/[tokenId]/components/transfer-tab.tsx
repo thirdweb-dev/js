@@ -4,7 +4,6 @@ import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoading
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
@@ -30,7 +29,6 @@ const TransferTab: React.FC<TransferTabProps> = ({
 }) => {
   const account = useActiveAccount();
 
-  const trackEvent = useTrack();
   const form = useForm<{ to: string; amount: string }>({
     defaultValues: { to: "", amount: "1" },
   });
@@ -56,11 +54,6 @@ const TransferTab: React.FC<TransferTabProps> = ({
     <div className="flex w-full flex-col gap-2">
       <form
         onSubmit={form.handleSubmit((data) => {
-          trackEvent({
-            category: "nft",
-            action: "transfer",
-            label: "attempt",
-          });
           const transaction = isErc1155
             ? safeTransferFrom({
                 contract,
@@ -78,21 +71,11 @@ const TransferTab: React.FC<TransferTabProps> = ({
               });
           sendTxAndConfirm.mutate(transaction, {
             onSuccess: () => {
-              trackEvent({
-                category: "nft",
-                action: "transfer",
-                label: "success",
-              });
               onSuccess();
               form.reset();
             },
             onError: (error) => {
-              trackEvent({
-                category: "nft",
-                action: "transfer",
-                label: "error",
-                error,
-              });
+              console.error(error);
               onError(error);
             },
           });

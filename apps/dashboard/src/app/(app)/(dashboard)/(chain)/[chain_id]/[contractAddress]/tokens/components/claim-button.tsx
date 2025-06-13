@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/sheet";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { GemIcon } from "lucide-react";
 import { useState } from "react";
@@ -40,7 +39,6 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const sendAndConfirmTransaction = useSendAndConfirmTransaction();
-  const trackEvent = useTrack();
   const account = useActiveAccount();
   const form = useForm({
     defaultValues: { amount: "0", to: account?.address },
@@ -107,11 +105,7 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
                     "Need to specify an address to receive tokens",
                   );
                 }
-                trackEvent({
-                  category: "token",
-                  action: "claim",
-                  label: "attempt",
-                });
+
                 if (!account) {
                   return toast.error("No account detected");
                 }
@@ -147,21 +141,10 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
 
                 await sendAndConfirmTransaction.mutateAsync(transaction, {
                   onSuccess: () => {
-                    trackEvent({
-                      category: "token",
-                      action: "claim",
-                      label: "success",
-                    });
                     form.reset({ amount: "0", to: account?.address });
                     setOpen(false);
                   },
                   onError: (error) => {
-                    trackEvent({
-                      category: "token",
-                      action: "claim",
-                      label: "error",
-                      error,
-                    });
                     console.error(error);
                   },
                 });
@@ -170,12 +153,6 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
               } catch (error) {
                 console.error(error);
                 claimTokensNotifications.onError(error);
-                trackEvent({
-                  category: "token",
-                  action: "claim",
-                  label: "error",
-                  error,
-                });
               }
             })}
           >

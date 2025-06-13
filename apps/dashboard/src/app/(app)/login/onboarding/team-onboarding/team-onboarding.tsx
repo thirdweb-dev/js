@@ -3,7 +3,6 @@ import { apiServerProxy } from "@/actions/proxies";
 import { sendTeamInvites } from "@/actions/sendTeamInvite";
 import type { Team } from "@/api/team";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useTrack } from "hooks/analytics/useTrack";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { upload } from "thirdweb/storage";
@@ -17,7 +16,7 @@ export function TeamInfoForm(props: {
   teamSlug: string;
 }) {
   const router = useDashboardRouter();
-  const trackEvent = useTrack();
+
   return (
     <TeamInfoFormUI
       isTeamSlugAvailable={async (slug) => {
@@ -48,12 +47,6 @@ export function TeamInfoForm(props: {
           slug: data.slug,
         };
 
-        trackEvent({
-          category: "teamOnboarding",
-          action: "updateTeam",
-          label: "attempt",
-        });
-
         if (data.image) {
           try {
             teamValue.image = await upload({
@@ -72,20 +65,8 @@ export function TeamInfoForm(props: {
         });
 
         if (!res.ok) {
-          trackEvent({
-            category: "teamOnboarding",
-            action: "updateTeam",
-            label: "error",
-          });
-
           throw new Error(res.error);
         }
-
-        trackEvent({
-          category: "teamOnboarding",
-          action: "updateTeam",
-          label: "success",
-        });
 
         return res.data;
       }}
@@ -98,11 +79,9 @@ export function InviteTeamMembers(props: {
   client: ThirdwebClient;
 }) {
   const router = useDashboardRouter();
-  const trackEvent = useTrack();
 
   return (
     <InviteTeamMembersUI
-      trackEvent={trackEvent}
       client={props.client}
       onComplete={() => {
         router.replace(`/team/${props.team.slug}`);
@@ -128,26 +107,9 @@ export function InviteTeamMembers(props: {
           invites: params,
         });
 
-        trackEvent({
-          category: "teamOnboarding",
-          action: "inviteTeamMembers",
-          label: "attempt",
-        });
-
         if (!res.ok) {
-          trackEvent({
-            category: "teamOnboarding",
-            action: "inviteTeamMembers",
-            label: "error",
-          });
           throw new Error(res.errorMessage);
         }
-
-        trackEvent({
-          category: "teamOnboarding",
-          action: "inviteTeamMembers",
-          label: "success",
-        });
 
         return {
           results: res.results,

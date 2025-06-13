@@ -5,9 +5,8 @@ import {
   type LinkProps as ChakraLinkProps,
   forwardRef,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
 import _NextLink, { type LinkProps as _NextLinkProps } from "next/link";
-import { forwardRef as reactForwardRef, useCallback } from "react";
+import { forwardRef as reactForwardRef } from "react";
 
 type ChakraNextLinkProps = Omit<ChakraLinkProps, "as"> &
   Omit<_NextLinkProps, "as">;
@@ -69,11 +68,12 @@ interface TrackedLinkProps extends LinkProps {
  */
 export const TrackedLink = reactForwardRef<HTMLAnchorElement, TrackedLinkProps>(
   ({ category, label, trackingProps, ...props }, ref) => {
-    const trackEvent = useTrack();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const trackEvent = (..._args: unknown[]) => {};
 
-    const onClick = useCallback(() => {
+    const onClick = () => {
       trackEvent({ category, action: "click", label, ...trackingProps });
-    }, [trackEvent, category, label, trackingProps]);
+    };
 
     return <Link ref={ref} onClick={onClick} {...props} />;
   },

@@ -3,6 +3,6 @@
   "next": true,
   "ignore": ["src/components/ui/**", "src/app/insight/utils.ts"],
   "project": ["src/**"],
-  "ignoreDependencies": ["server-only"],
+  "ignoreDependencies": ["server-only", "posthog-node"],
   "ignoreBinaries": ["biome"]
 }

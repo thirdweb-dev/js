@@ -1,5 +1,6 @@
 "use client";
 
+import { reportTokenTransferred } from "@/analytics/track";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -12,7 +13,6 @@ import {
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { useTrack } from "hooks/analytics/useTrack";
 import { SendIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -44,7 +44,6 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
     address: address || "",
     queryOptions: { enabled: !!address },
   });
-  const trackEvent = useTrack();
   const form = useForm({ defaultValues: { amount: "0", to: "" } });
   const hasBalance = tokenBalanceQuery.data && tokenBalanceQuery.data > 0n;
   const decimalsQuery = useReadContract(ERC20Ext.decimals, { contract });
@@ -110,11 +109,6 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
             type="submit"
             disabled={!form.formState.isDirty}
             onClick={form.handleSubmit((d) => {
-              trackEvent({
-                category: "token",
-                action: "transfer",
-                label: "attempt",
-              });
               const transaction = ERC20Ext.transfer({
                 contract,
                 amount: d.amount,
@@ -122,22 +116,14 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
               });
               const promise = sendConfirmation.mutateAsync(transaction, {
                 onSuccess: () => {
-                  trackEvent({
-                    category: "token",
-                    action: "transfer",
-                    label: "success",
+                  reportTokenTransferred({
+                    address: contract.address,
+                    chainId: contract.chain.id,
+                    quantity: d.amount,
+                    to: d.to,
                   });
                   form.reset({ amount: "0", to: "" });
                   setOpen(false);
-                },
-                onError: (error) => {
-                  trackEvent({
-                    category: "token",
-                    action: "transfer",
-                    label: "error",
-                    error,
-                  });
-                  console.error(error);
                 },
               });
               toast.promise(promise, {

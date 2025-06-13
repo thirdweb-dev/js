@@ -1,5 +1,6 @@
 "use client";
 
+import { reportTokenBurned } from "@/analytics/track";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -11,7 +12,6 @@ import {
 } from "@/components/ui/sheet";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { FlameIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -53,7 +53,6 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
   const hasBalance = tokenBalanceQuery.data && tokenBalanceQuery.data > 0n;
   const [open, setOpen] = useState(false);
   const sendConfirmation = useSendAndConfirmTransaction();
-  const trackEvent = useTrack();
   const form = useForm({ defaultValues: { amount: "0" } });
   const decimalsQuery = useReadContract(ERC20Ext.decimals, { contract });
 
@@ -107,13 +106,6 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
             disabled={!form.formState.isDirty}
             onClick={form.handleSubmit((data) => {
               if (address) {
-                trackEvent({
-                  category: "token",
-                  action: "burn",
-                  label: "attempt",
-                });
-
-                // TODO: burn should be updated to take amount / amountWei (v6?)
                 const tx = ERC20Ext.burn({
                   contract,
                   asyncParams: async () => {
@@ -128,22 +120,13 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
 
                 const promise = sendConfirmation.mutateAsync(tx, {
                   onSuccess: () => {
-                    trackEvent({
-                      category: "token",
-                      action: "burn",
-                      label: "success",
+                    reportTokenBurned({
+                      address: contract.address,
+                      chainId: contract.chain.id,
+                      quantity: data.amount,
                     });
                     form.reset({ amount: "0" });
                     setOpen(false);
-                  },
-                  onError: (error) => {
-                    trackEvent({
-                      category: "token",
-                      action: "burn",
-                      label: "error",
-                      error,
-                    });
-                    console.error(error);
                   },
                 });
                 toast.promise(promise, {

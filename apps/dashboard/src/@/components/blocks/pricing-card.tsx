@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { RenewSubscriptionButton } from "components/settings/Account/Billing/renew-subscription/renew-subscription-button";
-import { useTrack } from "hooks/analytics/useTrack";
 import { CheckIcon, DollarSignIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
@@ -58,7 +57,6 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 }) => {
   const plan = TEAM_PLANS[billingPlan];
 
-  const trackEvent = useTrack();
   const remainingTrialDays =
     (activeTrialEndsAt ? remainingDays(activeTrialEndsAt) : 0) || 0;
 
@@ -70,11 +68,6 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
   const handleCTAClick = () => {
     cta?.onClick?.();
-    trackEvent({
-      category: "account",
-      label: `${billingPlan}Plan`,
-      action: "click",
-    });
   };
 
   return (

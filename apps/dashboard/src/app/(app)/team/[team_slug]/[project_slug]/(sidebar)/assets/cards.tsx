@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { ImportModal } from "components/contract-components/import-contract/modal";
-import { useTrack } from "hooks/analytics/useTrack";
+
 import { ArrowDownToLineIcon, CoinsIcon, ImagesIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -70,15 +70,9 @@ function CardLink(props: {
 }) {
   const { onClick } = props;
   const isClickable = !!onClick || !!props.href;
-  const trackEvent = useTrack();
 
   function handleClick() {
     if (onClick) {
-      trackEvent({
-        category: "assets-landing-page",
-        action: "click",
-        label: props.trackingLabel,
-      });
       onClick();
     }
   }

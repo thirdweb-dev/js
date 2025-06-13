@@ -1,11 +1,14 @@
 "use client";
 
+import {
+  reportAccountWalletLinkRequested,
+  reportAccountWalletLinked,
+} from "@/analytics/track";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useMutation } from "@tanstack/react-query";
-import type { TrackingParams } from "hooks/analytics/useTrack";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
+import Link from "next/link";
 import { toast } from "sonner";
 import { shortenString } from "utils/usedapp-external";
 
@@ -14,7 +17,6 @@ export function LinkWalletPrompt(props: {
   accountAddress: string;
   onBack: () => void;
   requestLinkWallet: (email: string) => Promise<void>;
-  trackEvent: (params: TrackingParams) => void;
   onLinkWalletRequestSent: () => void;
 }) {
   const requestLinkWallet = useMutation({
@@ -22,35 +24,19 @@ export function LinkWalletPrompt(props: {
   });
 
   function handleLinkWalletRequest() {
-    props.trackEvent({
-      category: "account",
-      action: "linkWallet",
-      label: "attempt",
-      data: {
-        email: props.email,
-      },
+    reportAccountWalletLinkRequested({
+      email: props.email,
     });
 
     requestLinkWallet.mutate(props.email, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         props.onLinkWalletRequestSent();
-        props.trackEvent({
-          category: "account",
-          action: "linkWallet",
-          label: "success",
-          data,
-        });
+        reportAccountWalletLinked();
       },
       onError: (err) => {
         const error = err as Error;
         console.error(error);
         toast.error("Failed to send link wallet request");
-        props.trackEvent({
-          category: "account",
-          action: "linkWallet",
-          label: "error",
-          error,
-        });
       },
     });
   }
@@ -72,15 +58,13 @@ export function LinkWalletPrompt(props: {
           <p>
             You can link your wallet with this account to access it. <br />{" "}
             Multiple wallets can be linked to the same account.{" "}
-            <TrackedLinkTW
+            <Link
               href="https://portal.thirdweb.com/account/billing/account-info"
-              category="account"
-              label="learn-wallet-linking"
-              target="_blank"
               className="underline decoration-muted-foreground/50 decoration-dotted underline-offset-[5px] hover:text-foreground hover:decoration-foreground hover:decoration-solid"
+              target="_blank"
             >
               Learn more about wallet linking
-            </TrackedLinkTW>
+            </Link>
           </p>
         </div>
 

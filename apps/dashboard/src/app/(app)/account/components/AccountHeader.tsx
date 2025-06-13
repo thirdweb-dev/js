@@ -1,6 +1,8 @@
 "use client";
 
 import { createTeam } from "@/actions/createTeam";
+import * as analytics from "@/analytics/dashboard.client";
+import { AccountIdentifier } from "@/analytics/dashboard.client";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
@@ -35,6 +37,7 @@ export function AccountHeader(props: {
   const logout = useCallback(async () => {
     try {
       await doLogout();
+      analytics.reset();
       if (wallet) {
         disconnect(wallet);
       }
@@ -77,6 +80,7 @@ export function AccountHeader(props: {
 
   return (
     <div>
+      <AccountIdentifier account={props.account} />
       <AccountHeaderDesktopUI {...headerProps} className="max-lg:hidden" />
       <AccountHeaderMobileUI {...headerProps} className="lg:hidden" />
 

@@ -2,7 +2,6 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useTrack } from "hooks/analytics/useTrack";
 import { CircleCheckIcon, CircleXIcon } from "lucide-react";
 import { ExternalLinkIcon } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -127,8 +126,6 @@ export function useTxSetup() {
     },
   });
 
-  const trackEvent = useTrack();
-
   const sendTx = useCallback(
     async (
       tx: PreparedTransaction,
@@ -136,23 +133,11 @@ export function useTxSetup() {
     ) => {
       let txHash: string | undefined;
 
-      trackEvent({
-        category: "nebula",
-        action: "execute_transaction",
-        label: "attempt",
-      });
-
       try {
         // submit transaction
         setStatus({ type: "sending" });
         const submittedReceipt = await sendTransaction.mutateAsync(tx);
         txHash = submittedReceipt.transactionHash;
-
-        trackEvent({
-          category: "nebula",
-          action: "execute_transaction",
-          label: "sent",
-        });
 
         // wait for receipt
         setStatus({
@@ -168,12 +153,6 @@ export function useTxSetup() {
         });
 
         onTxSettled?.(txHash);
-
-        trackEvent({
-          category: "nebula",
-          action: "execute_transaction",
-          label: "confirmed",
-        });
       } catch (e) {
         console.error(e);
         if (txHash) {
@@ -185,7 +164,7 @@ export function useTxSetup() {
         });
       }
     },
-    [sendTransaction, trackEvent],
+    [sendTransaction],
   );
 
   return {

@@ -21,7 +21,6 @@ import {
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -143,7 +142,6 @@ const EditModal = ({
     instanceUrl,
     authToken,
   });
-  const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully updated admin",
     "Failed to update admin",
@@ -162,22 +160,9 @@ const EditModal = ({
         onSuccess: () => {
           onSuccess();
           disclosure.onClose();
-          trackEvent({
-            category: "engine",
-            action: "update-admin",
-            label: "success",
-            instance: instanceUrl,
-          });
         },
         onError: (error) => {
           onError(error);
-          trackEvent({
-            category: "engine",
-            action: "update-admin",
-            label: "error",
-            instance: instanceUrl,
-            error,
-          });
         },
       },
     );
@@ -235,7 +220,6 @@ const RemoveModal = ({
     instanceUrl,
     authToken,
   });
-  const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully removed admin",
     "Failed to remove admin",
@@ -250,22 +234,9 @@ const RemoveModal = ({
         onSuccess: () => {
           onSuccess();
           disclosure.onClose();
-          trackEvent({
-            category: "engine",
-            action: "revoke-admin",
-            label: "success",
-            instance: instanceUrl,
-          });
         },
         onError: (error) => {
           onError(error);
-          trackEvent({
-            category: "engine",
-            action: "revoke-admin",
-            label: "error",
-            instance: instanceUrl,
-            error,
-          });
         },
       },
     );

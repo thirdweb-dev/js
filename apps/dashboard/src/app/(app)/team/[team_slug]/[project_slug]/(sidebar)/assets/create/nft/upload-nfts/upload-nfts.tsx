@@ -1,9 +1,7 @@
 import { TabButtons } from "@/components/ui/tabs";
-import { useTrack } from "hooks/analytics/useTrack";
 import type { ThirdwebClient } from "thirdweb";
 import { StepCard } from "../../_common/step-card";
-import { getStepCardTrackingData } from "../../token/_common/tracking";
-import { nftCreationPages } from "../_common/pages";
+
 import { BatchUploadNFTs } from "./batch-upload/batch-upload-nfts";
 import type {
   NFTMetadataWithPrice,
@@ -29,27 +27,11 @@ export function UploadNFTsFieldset(props: {
   nftData: NFTData;
   setNFTData: (nftData: NFTData) => void;
 }) {
-  const trackEvent = useTrack();
-
   function handleNextClick() {
-    trackEvent(
-      getStepCardTrackingData({
-        step: nftCreationPages["upload-assets"],
-        click: "next",
-        contractType: "NFTCollection",
-      }),
-    );
     props.onNext();
   }
 
   function handlePrevClick() {
-    trackEvent(
-      getStepCardTrackingData({
-        step: nftCreationPages["upload-assets"],
-        click: "prev",
-        contractType: "NFTCollection",
-      }),
-    );
     props.onPrev();
   }
 

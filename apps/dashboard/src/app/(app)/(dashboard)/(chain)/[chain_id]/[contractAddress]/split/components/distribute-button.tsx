@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { useSplitDistributeFunds } from "@3rdweb-sdk/react/hooks/useSplit";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
@@ -25,7 +24,6 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
   isLoggedIn,
   ...restButtonProps
 }) => {
-  const trackEvent = useTrack();
   const validBalances = balances.filter(
     (item) => item.balance !== "0" && item.balance !== "0.0",
   );
@@ -55,19 +53,9 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
     mutation.mutate(undefined, {
       onSuccess: () => {
         onSuccess();
-        trackEvent({
-          category: "split",
-          action: "distribute",
-          label: "success",
-        });
       },
       onError: (error) => {
-        trackEvent({
-          category: "split",
-          action: "distribute",
-          label: "error",
-          error,
-        });
+        console.error(error);
         onError(error);
       },
     });

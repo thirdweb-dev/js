@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { useTrack } from "hooks/analytics/useTrack";
 import { ArrowRightIcon, ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -72,7 +71,6 @@ function FloatingChatContentLoggedIn(props: {
   const [chatAbortController, setChatAbortController] = useState<
     AbortController | undefined
   >();
-  const trackEvent = useTrack();
   const [isChatStreaming, setIsChatStreaming] = useState(false);
   const [enableAutoScroll, setEnableAutoScroll] = useState(false);
   const connectionStatus = useActiveWalletConnectionStatus();
@@ -105,17 +103,6 @@ function FloatingChatContentLoggedIn(props: {
       setUserHasSubmittedMessage(true);
       setIsChatStreaming(true);
       setEnableAutoScroll(true);
-
-      const textMessage = userMessage.content.find((x) => x.type === "text");
-
-      trackEvent({
-        category: "floating_nebula",
-        action: "send",
-        label: "message",
-        message: textMessage?.text,
-        page: props.pageType,
-        sessionId: sessionId,
-      });
 
       setMessages((prev) => [
         ...prev,
@@ -187,8 +174,6 @@ function FloatingChatContentLoggedIn(props: {
       sessionId,
       props.nebulaParams?.messagePrefix,
       userHasSubmittedMessage,
-      trackEvent,
-      props.pageType,
     ],
   );
 

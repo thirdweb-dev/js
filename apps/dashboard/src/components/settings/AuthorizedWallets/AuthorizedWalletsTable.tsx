@@ -8,7 +8,6 @@ import {
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useState } from "react";
 import { toast } from "sonner";
 import { isAddress } from "thirdweb/utils";
@@ -27,7 +26,6 @@ const columnHelper = createColumnHelper<AuthorizedWallet>();
 export const AuthorizedWalletsTable: ComponentWithChildren<
   AuthorizedWalletsTableProps
 > = ({ authorizedWallets, isPending, isFetched }) => {
-  const trackEvent = useTrack();
   const { mutateAsync: revokeAccess } = useRevokeAuthorizedWallet();
   const [revokeAuthorizedWalletId, setRevokeAuthorizedWalletId] = useState<
     string | undefined
@@ -96,29 +94,13 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
     if (!revokeAuthorizedWalletId) {
       return;
     }
-    trackEvent({
-      category: "account-settings",
-      action: "revoke-access-to-device",
-      label: "attempt",
-    });
     try {
       await revokeAccess({
         authorizedWalletId: revokeAuthorizedWalletId,
       });
-      trackEvent({
-        category: "account-settings",
-        action: "revoke-access-to-device",
-        label: "success",
-      });
       toast.success("The selected device has been revoked.");
     } catch (error) {
       console.error(error);
-      trackEvent({
-        category: "account-settings",
-        action: "revoke-access-to-device",
-        label: "error",
-        error,
-      });
       toast.error("Something went wrong while revoking the device", {
         description:
           "Please visit our support site: https://thirdweb.com/support",

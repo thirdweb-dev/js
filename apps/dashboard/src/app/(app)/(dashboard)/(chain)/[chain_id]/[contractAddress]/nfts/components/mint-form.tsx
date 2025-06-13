@@ -1,5 +1,6 @@
 "use client";
 
+import { reportNFTMinted } from "@/analytics/track";
 import {
   Accordion,
   AccordionButton,
@@ -15,7 +16,6 @@ import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { PropertiesFormControl } from "components/contract-pages/forms/properties.shared";
 import { FileInput } from "components/shared/FileInput";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
@@ -53,7 +53,6 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
   setOpen,
   isLoggedIn,
 }) => {
-  const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const form = useForm<
     NFTMetadataInputLimited & {
@@ -107,11 +106,6 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
               animation_url: data.animation_url,
             };
 
-            trackEvent({
-              category: "nft",
-              action: "mint",
-              label: "attempt",
-            });
             const nft = parseAttributes(dataWithCustom);
             const transaction = isErc721
               ? erc721MintTo({ contract, to: address, nft })
@@ -123,21 +117,12 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                 });
             await sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
-                trackEvent({
-                  category: "nft",
-                  action: "mint",
-                  label: "success",
+                reportNFTMinted({
+                  address: contract.address,
+                  chainId: contract.chain.id,
+                  tokenId: undefined,
                 });
                 setOpen(false);
-              },
-              // biome-ignore lint/suspicious/noExplicitAny: FIXME
-              onError: (error: any) => {
-                trackEvent({
-                  category: "nft",
-                  action: "mint",
-                  label: "error",
-                  error,
-                });
               },
             });
 

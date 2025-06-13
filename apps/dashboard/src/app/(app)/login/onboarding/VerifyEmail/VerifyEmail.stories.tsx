@@ -76,9 +76,6 @@ function Story(props: {
         onBack={() => {
           storybookLog("onBack");
         }}
-        trackEvent={(params) => {
-          storybookLog("trackEvent", params);
-        }}
       />
     </AccountOnboardingLayout>
   );

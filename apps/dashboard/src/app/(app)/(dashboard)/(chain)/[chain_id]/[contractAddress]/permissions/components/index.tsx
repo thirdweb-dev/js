@@ -7,7 +7,6 @@ import {
   createSetAllRoleMembersTx,
   getAllRoleMembers,
 } from "contract-ui/hooks/permissions";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -31,7 +30,6 @@ export function Permissions({
   contract: ThirdwebContract;
   isLoggedIn: boolean;
 }) {
-  const trackEvent = useTrack();
   const account = useActiveAccount();
   const allRoleMembers = useReadContract(getAllRoleMembers, {
     contract,
@@ -70,11 +68,6 @@ export function Permissions({
             onError(new Error("Wallet not connected!"));
             return;
           }
-          trackEvent({
-            category: "permissions",
-            action: "set-permissions",
-            label: "attempt",
-          });
           const tx = createSetAllRoleMembersTx({
             account,
             contract,
@@ -82,21 +75,11 @@ export function Permissions({
           });
           sendTx.mutate(tx, {
             onSuccess: () => {
-              trackEvent({
-                category: "permissions",
-                action: "set-permissions",
-                label: "success",
-              });
               form.reset(d);
               onSuccess();
             },
             onError: (error) => {
-              trackEvent({
-                category: "permissions",
-                action: "set-permissions",
-                label: "error",
-                error,
-              });
+              console.error(error);
               onError(error);
             },
           });

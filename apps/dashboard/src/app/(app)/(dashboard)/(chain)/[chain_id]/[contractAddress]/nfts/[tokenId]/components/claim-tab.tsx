@@ -2,7 +2,6 @@
 
 import { Flex, FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
@@ -23,7 +22,6 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
   tokenId,
   isLoggedIn,
 }) => {
-  const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const form = useForm<{ to: string; amount: string }>({
     defaultValues: { amount: "1", to: address },
@@ -36,11 +34,6 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
       direction="column"
       as="form"
       onSubmit={form.handleSubmit(async (data) => {
-        trackEvent({
-          category: "nft",
-          action: "claim",
-          label: "attempt",
-        });
         if (!account) {
           return toast.error("No account detected");
         }
@@ -75,20 +68,9 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
               };
             },
           });
-          trackEvent({
-            category: "nft",
-            action: "claim",
-            label: "success",
-          });
           form.reset();
         } catch (error) {
           console.error(error);
-          trackEvent({
-            category: "nft",
-            action: "claim",
-            label: "error",
-            error,
-          });
         }
       })}
     >

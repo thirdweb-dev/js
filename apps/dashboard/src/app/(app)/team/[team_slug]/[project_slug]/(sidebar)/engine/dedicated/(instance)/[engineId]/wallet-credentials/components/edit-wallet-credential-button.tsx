@@ -3,7 +3,6 @@ import {
   type WalletCredential,
   useEngineUpdateWalletCredential,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { useTrack } from "hooks/analytics/useTrack";
 import { PencilIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -20,7 +19,6 @@ export const EditWalletCredentialButton: React.FC<
   EditWalletCredentialButtonProps
 > = ({ credential, instanceUrl, authToken }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const trackEvent = useTrack();
   const updateCredential = useEngineUpdateWalletCredential({
     instanceUrl,
     authToken,
@@ -35,23 +33,10 @@ export const EditWalletCredentialButton: React.FC<
     toast.promise(promise, {
       success: () => {
         setIsOpen(false);
-        trackEvent({
-          category: "engine",
-          action: "update-wallet-credential",
-          label: "success",
-          type: data.type,
-        });
         return "Wallet credential updated successfully";
       },
       error: (error) => {
         console.log(error);
-        trackEvent({
-          category: "engine",
-          action: "update-wallet-credential",
-          label: "error",
-          type: data.type,
-          error,
-        });
         return "Failed to update wallet credential";
       },
     });
@@ -63,10 +48,6 @@ export const EditWalletCredentialButton: React.FC<
         variant="ghost"
         size="icon"
         onClick={() => {
-          trackEvent({
-            category: "engine",
-            action: "open-edit-wallet-credential",
-          });
           setIsOpen(true);
         }}
         className="size-8"

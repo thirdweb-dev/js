@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ImportModal } from "components/contract-components/import-contract/modal";
-import { useTrack } from "hooks/analytics/useTrack";
 import { ArrowUpRightIcon, DownloadIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
@@ -13,7 +12,6 @@ export function DeployViaCLIOrImportCard(props: {
   projectId: string;
   client: ThirdwebClient;
 }) {
-  const trackEvent = useTrack();
   const [importModalOpen, setImportModalOpen] = useState(false);
 
   return (
@@ -59,11 +57,6 @@ export function DeployViaCLIOrImportCard(props: {
           className="gap-2 bg-background"
           onClick={() => {
             setImportModalOpen(true);
-            trackEvent({
-              category: "contracts-banner",
-              action: "click",
-              label: "import-contract",
-            });
           }}
         >
           <DownloadIcon className="size-4" />

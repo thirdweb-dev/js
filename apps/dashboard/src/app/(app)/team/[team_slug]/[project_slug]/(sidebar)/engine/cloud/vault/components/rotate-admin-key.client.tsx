@@ -17,7 +17,6 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { rotateServiceAccount } from "@thirdweb-dev/vault-sdk";
-import { useTrack } from "hooks/analytics/useTrack";
 import {
   CheckIcon,
   CircleAlertIcon,
@@ -39,15 +38,9 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
   const [keysConfirmed, setKeysConfirmed] = useState(false);
   const [keysDownloaded, setKeysDownloaded] = useState(false);
   const router = useDashboardRouter();
-  const trackEvent = useTrack();
 
   const rotateAdminKeyMutation = useMutation({
     mutationFn: async () => {
-      trackEvent({
-        category: "engine-cloud",
-        action: "rotate_admin_key",
-      });
-
       const vaultClient = await initVaultClient();
       const rotationCode = props.project.services.find(
         (service) => service.name === "engineCloud",

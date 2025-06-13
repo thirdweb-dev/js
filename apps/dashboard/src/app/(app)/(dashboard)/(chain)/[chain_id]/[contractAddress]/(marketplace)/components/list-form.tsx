@@ -1,3 +1,4 @@
+import { reportListingCreated } from "@/analytics/track";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -15,8 +16,6 @@ import {
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { isAlchemySupported } from "lib/wallet/nfts/isAlchemySupported";
 import { isMoralisSupported } from "lib/wallet/nfts/isMoralisSupported";
@@ -107,10 +106,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   mode,
   isInsightSupported,
 }) => {
-  const trackEvent = useTrack();
   const chainId = contract.chain.id;
-  const { idToChain } = useAllChainsData();
-  const network = idToChain.get(chainId);
   const [isFormLoading, setIsFormLoading] = useState(false);
 
   const isSupportedChain =
@@ -368,7 +364,15 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
             });
 
             await sendAndConfirmTx.mutateAsync(transaction, {
-              onSuccess: () => setOpen(false),
+              onSuccess: () => {
+                reportListingCreated({
+                  marketplaceAddress: contract.address,
+                  chainId: contract.chain.id,
+                  assetAddress: _selectedContract.address,
+                  assetTokenId: selectedTokenId.toString(),
+                });
+                setOpen(false);
+              },
             });
 
             listingNotifications.onSuccess();
@@ -418,22 +422,16 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
 
             await sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
-                trackEvent({
-                  category: "marketplace",
-                  action: "add-listing",
-                  label: "success",
-                  network,
+                reportListingCreated({
+                  marketplaceAddress: contract.address,
+                  chainId: contract.chain.id,
+                  assetAddress: _selectedContract.address,
+                  assetTokenId: selectedTokenId.toString(),
                 });
                 setOpen(false);
               },
-              onError: (error) => {
-                trackEvent({
-                  category: "marketplace",
-                  action: "add-listing",
-                  label: "error",
-                  network,
-                  error,
-                });
+              onError: () => {
+                // No error handling needed for auction
               },
             });
             auctionNotifications.onSuccess();

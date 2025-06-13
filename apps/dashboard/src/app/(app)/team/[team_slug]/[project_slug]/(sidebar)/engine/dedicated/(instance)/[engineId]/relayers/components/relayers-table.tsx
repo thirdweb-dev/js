@@ -25,7 +25,6 @@ import {
 import { createColumnHelper } from "@tanstack/react-table";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { PencilIcon, Trash2Icon } from "lucide-react";
@@ -230,7 +229,6 @@ const EditModal = ({
     authToken,
   });
   const { idToChain } = useAllChainsData();
-  const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully updated relayer",
     "Failed to update relayer",
@@ -259,22 +257,10 @@ const EditModal = ({
       onSuccess: () => {
         onSuccess();
         disclosure.onClose();
-        trackEvent({
-          category: "engine",
-          action: "update-relayer",
-          label: "success",
-          instance: instanceUrl,
-        });
       },
       onError: (error) => {
         onError(error);
-        trackEvent({
-          category: "engine",
-          action: "update-relayer",
-          label: "error",
-          instance: instanceUrl,
-          error,
-        });
+        console.error(error);
       },
     });
   };
@@ -371,7 +357,6 @@ const RemoveModal = ({
     instanceUrl,
     authToken,
   });
-  const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully removed relayer",
     "Failed to remove relayer",
@@ -385,22 +370,10 @@ const RemoveModal = ({
         onSuccess: () => {
           onSuccess();
           disclosure.onClose();
-          trackEvent({
-            category: "engine",
-            action: "revoke-relayer",
-            label: "success",
-            instance: instanceUrl,
-          });
         },
         onError: (error) => {
           onError(error);
-          trackEvent({
-            category: "engine",
-            action: "revoke-relayer",
-            label: "error",
-            instance: instanceUrl,
-            error,
-          });
+          console.error(error);
         },
       },
     );

@@ -1,4 +1,5 @@
 "use client";
+import { reportContractDeployed } from "@/analytics/track";
 import {
   Accordion,
   AccordionContent,
@@ -21,7 +22,6 @@ import {
 } from "constants/addresses";
 import { ZERO_FEE_CHAINS } from "constants/fee-config";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { replaceTemplateValues } from "lib/deployment/template-values";
 import {
@@ -144,13 +144,6 @@ function checkTwPublisher(publisher: string | undefined) {
   }
 }
 
-function rewriteTwPublisher(publisher: string | undefined) {
-  if (checkTwPublisher(publisher)) {
-    return "deployer.thirdweb.eth";
-  }
-  return publisher;
-}
-
 export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   metadata,
   metadataNoFee,
@@ -204,7 +197,6 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
     "Successfully deployed contract",
     "Failed to deploy contract",
   );
-  const trackEvent = useTrack();
 
   const constructorParams =
     metadata.abi.find((a) => a.type === "constructor")?.inputs || [];
@@ -638,21 +630,6 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               },
             ];
 
-            const publisherAnalyticsData = metadata.publisher
-              ? {
-                  publisherAndContractName: `${rewriteTwPublisher(metadata.publisher)}/${metadata.name}`,
-                }
-              : {};
-
-            trackEvent({
-              category: "custom-contract",
-              action: "deploy",
-              label: "attempt",
-              ...publisherAnalyticsData,
-              chainId: walletChain.id,
-              metadataUri: metadata.metadataUri,
-            });
-
             deployStatusModal.setViewContractLink("");
             deployStatusModal.open(steps);
             try {
@@ -668,14 +645,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 }),
               );
 
-              trackEvent({
-                category: "custom-contract",
-                action: "deploy",
-                label: "success",
-                ...publisherAnalyticsData,
-                contractAddress: contractAddr,
+              reportContractDeployed({
+                address: contractAddr,
                 chainId: walletChain.id,
-                metadataUri: metadata.metadataUri,
               });
               deployStatusModal.nextStep();
               deployStatusModal.setViewContractLink(
@@ -701,15 +673,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             } catch (e) {
               onError(e);
               console.error("failed to deploy contract", e);
-              trackEvent({
-                category: "custom-contract",
-                action: "deploy",
-                label: "error",
-                ...publisherAnalyticsData,
-                chainId: walletChain.id,
-                metadataUri: metadata.metadataUri,
-                error: e,
-              });
+
               deployStatusModal.close();
             }
           })}

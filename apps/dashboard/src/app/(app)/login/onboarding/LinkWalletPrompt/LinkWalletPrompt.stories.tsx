@@ -54,9 +54,6 @@ function Story(props: {
         onBack={() => {
           storybookLog("onBack");
         }}
-        trackEvent={(params) => {
-          storybookLog("trackEvent", params);
-        }}
         accountAddress="0x1234567890123456789012345678901234567890"
       />
     </AccountOnboardingLayout>

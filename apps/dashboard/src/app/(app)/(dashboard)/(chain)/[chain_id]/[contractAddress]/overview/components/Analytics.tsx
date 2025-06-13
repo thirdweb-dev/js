@@ -8,7 +8,6 @@ import {
   useContractUniqueWalletAnalytics,
 } from "data/analytics/hooks";
 import { differenceInCalendarDays, format } from "date-fns";
-import { useTrack } from "hooks/analytics/useTrack";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -32,7 +31,6 @@ export function ContractAnalyticsOverviewCard(props: {
   chainSlug: string;
   projectMeta: ProjectMeta | undefined;
 }) {
-  const trackEvent = useTrack();
   const [startDate] = useState(
     (() => {
       const date = new Date();
@@ -84,13 +82,6 @@ export function ContractAnalyticsOverviewCard(props: {
             className="gap-2 bg-background text-muted-foreground"
             size="sm"
             variant="outline"
-            onClick={() => {
-              trackEvent({
-                category: props.trackingCategory,
-                action: "click",
-                label: "view_all_analytics",
-              });
-            }}
           >
             <Link href={analyticsPath}>
               <span>View All</span>
