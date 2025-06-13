@@ -48,9 +48,14 @@ export async function middleware(request: NextRequest) {
   // nebula.thirdweb.com -> render page at app/nebula-app
   // on vercel preview, the format is nebula---thirdweb-www-git-<branch-name>.thirdweb-preview.com
   if (
-    subdomain &&
-    (subdomain === "nebula" || subdomain.startsWith("nebula---"))
+    (subdomain &&
+      (subdomain === "nebula" || subdomain.startsWith("nebula---"))) ||
+    host?.includes("ngrok")
   ) {
+    // ignore well-known paths when served under nebula
+    if (paths[0] === ".well-known") {
+      return NextResponse.next();
+    }
     // preserve search params when redirecting to /login page
     if (
       !nebulaAuthCookie &&

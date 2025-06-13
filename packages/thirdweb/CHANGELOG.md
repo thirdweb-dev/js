@@ -1,5 +1,12 @@
 # thirdweb
 
+## 5.102.7
+
+### Patch Changes
+
+- [#7315](https://github.com/thirdweb-dev/js/pull/7315) [`99d6b3b`](https://github.com/thirdweb-dev/js/commit/99d6b3b151c2af6f0df41513eff44931362d6b11) Thanks [@MananTank](https://github.com/MananTank)! - - Add support for blob urls in `MediaRenderer` component
+  - Fix `className` prop not set in loading state of `MediaRenderer` component
+
 ## 5.102.6
 
 ### Patch Changes

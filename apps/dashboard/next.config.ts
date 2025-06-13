@@ -16,6 +16,7 @@ const ContentSecurityPolicy = `
   connect-src * data: blob:;
   worker-src 'self' blob:;
   block-all-mixed-content;
+  frame-ancestors 'self' https://farcaster.xyz https://*.farcaster.xyz;
 `;
 
 const securityHeaders = [

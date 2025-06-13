@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+// import type { Metadata } from "next";
 import "../../global.css";
 import "./nebula-global.css";
 import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
@@ -15,14 +15,34 @@ const title =
 const description =
   "The most powerful AI for interacting with the blockchain, with real-time access to EVM chains and their data";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  openGraph: {
+export async function generateMetadata() {
+  const appUrl =
+    process.env.NEXT_PUBLIC_APP_URL || "http://nebula---localhost:3000";
+  return {
     title,
     description,
-  },
-};
+    openGraph: {
+      title,
+      description,
+    },
+    other: {
+      "fc:frame": JSON.stringify({
+        version: "next",
+        imageUrl: `${appUrl}/assets/nebula/frame/frame.png`,
+        button: {
+          title: "Start Chatting",
+          action: {
+            type: "launch_frame",
+            name: "Nebula",
+            url: appUrl,
+            splashImageUrl: `${appUrl}/assets/nebula/frame/ask-nebula-pfp.png`,
+            splashBackgroundColor: "#0f172a",
+          },
+        },
+      }),
+    },
+  };
+}
 
 const fontSans = Inter({
   subsets: ["latin"],
