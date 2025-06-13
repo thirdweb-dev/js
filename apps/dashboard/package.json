@@ -56,7 +56,6 @@
     "@thirdweb-dev/vault-sdk": "workspace:*",
     "@vercel/functions": "2.1.0",
     "@vercel/og": "^0.6.8",
-    "@worldcoin/minikit-js": "^1.9.5",
     "abitype": "1.0.8",
     "chakra-react-select": "^4.7.6",
     "class-variance-authority": "^0.7.1",
