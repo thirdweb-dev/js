@@ -3,17 +3,18 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useAgents } from "hooks/agents/useAgents";
 import {
-  SearchIcon,
-  PlusIcon,
-  ChevronLeftIcon,
-  TrendingUpIcon,
-  BrainCircuitIcon,
-  CodeIcon,
   BarChartIcon,
+  BrainCircuitIcon,
+  ChevronLeftIcon,
+  CodeIcon,
   GraduationCapIcon,
   PaletteIcon,
+  PlusIcon,
   RocketIcon,
+  SearchIcon,
+  TrendingUpIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -101,6 +102,9 @@ export function NebulaAgentsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Top Picks");
 
+  const { agents } = useAgents();
+  console.log(agents);
+
   return (
     <div className="flex h-full flex-col overflow-y-auto">
       {/* Header */}
@@ -119,7 +123,7 @@ export function NebulaAgentsPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/agents/my-agents"
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="text-muted-foreground text-sm hover:text-foreground"
             >
               My Agents
             </Link>
@@ -134,37 +138,37 @@ export function NebulaAgentsPage() {
       <div className="flex-1 px-6 py-6">
         <div className="mx-auto max-w-6xl space-y-8">
           {/* Hero Section */}
-          <div className="text-center space-y-4">
+          <div className="space-y-4 text-center">
             <div className="flex justify-center">
               <div className="relative">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                  <BrainCircuitIcon className="w-8 h-8 text-white" />
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
+                  <BrainCircuitIcon className="h-8 w-8 text-white" />
                 </div>
               </div>
             </div>
 
-            <h2 className="text-3xl font-semibold">Agents</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <h2 className="font-semibold text-3xl">Agents</h2>
+            <p className="mx-auto max-w-2xl text-muted-foreground">
               Discover and create custom versions of Nebula that combine
               instructions, extra knowledge, and any combination of skills.
             </p>
           </div>
 
           {/* Search */}
-          <div className="max-w-2xl mx-auto">
+          <div className="mx-auto max-w-2xl">
             <div className="relative">
-              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search Agents"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-12"
+                className="h-12 pl-10"
               />
             </div>
           </div>
 
           {/* Category Tabs */}
-          <div className="flex flex-wrap gap-2 justify-center">
+          <div className="flex flex-wrap justify-center gap-2">
             {categories.map((category) => (
               <Button
                 key={category.name}
@@ -187,28 +191,28 @@ export function NebulaAgentsPage() {
           {/* Featured Section */}
           <div className="space-y-4">
             <div>
-              <h3 className="font-semibold text-lg mb-1">Featured</h3>
-              <p className="text-sm text-muted-foreground">
+              <h3 className="mb-1 font-semibold text-lg">Featured</h3>
+              <p className="text-muted-foreground text-sm">
                 Curated top picks from this week
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {featuredAgents.map((agent) => (
                 <Card
                   key={agent.id}
-                  className="p-5 hover:shadow-lg transition-shadow cursor-pointer"
+                  className="cursor-pointer p-5 transition-shadow hover:shadow-lg"
                 >
                   <div className="flex gap-4">
-                    <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-2xl shrink-0">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-muted text-2xl">
                       {agent.icon}
                     </div>
                     <div className="flex-1 space-y-1">
                       <h4 className="font-medium">Agent {agent.id}</h4>
-                      <p className="text-sm text-muted-foreground line-clamp-2">
+                      <p className="line-clamp-2 text-muted-foreground text-sm">
                         {agent.description}
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-muted-foreground text-xs">
                         By {agent.creator}
                       </p>
                     </div>
@@ -221,30 +225,30 @@ export function NebulaAgentsPage() {
           {/* Trending Section */}
           <div className="space-y-4">
             <div>
-              <h3 className="font-semibold text-lg mb-1">Trending</h3>
-              <p className="text-sm text-muted-foreground">
+              <h3 className="mb-1 font-semibold text-lg">Trending</h3>
+              <p className="text-muted-foreground text-sm">
                 Most popular Agents by our community
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {trendingAgents.map((agent) => (
                 <div
                   key={agent.id}
-                  className="flex items-center gap-4 p-4 rounded-lg hover:bg-accent transition-colors cursor-pointer"
+                  className="flex cursor-pointer items-center gap-4 rounded-lg p-4 transition-colors hover:bg-accent"
                 >
-                  <div className="text-2xl font-bold text-muted-foreground w-8">
+                  <div className="w-8 font-bold text-2xl text-muted-foreground">
                     {agent.rank}
                   </div>
-                  <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-2xl shrink-0">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-muted text-2xl">
                     {agent.icon}
                   </div>
                   <div className="flex-1 space-y-1">
                     <h4 className="font-medium text-sm">{agent.name}</h4>
-                    <p className="text-xs text-muted-foreground line-clamp-1">
+                    <p className="line-clamp-1 text-muted-foreground text-xs">
                       {agent.description}
                     </p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-muted-foreground text-xs">
                       By {agent.creator}
                     </p>
                   </div>

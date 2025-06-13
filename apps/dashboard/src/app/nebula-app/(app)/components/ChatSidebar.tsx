@@ -9,14 +9,14 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import {
+  BotIcon,
+  CalendarClockIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   FileCode2Icon,
   LogOutIcon,
   PlusIcon,
   SettingsIcon,
-  BotIcon,
-  CalendarClockIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -114,29 +114,26 @@ export function ChatSidebar(props: {
       )}
 
       {/* Agents and Tasks Links */}
-      <div className="border-t border-dashed px-4 py-4 space-y-1">
+      <div className="mt-auto space-y-1 border-t border-dashed px-4 py-2">
         <Link
           href="/agents"
-          className="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-accent transition-colors"
+          className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent"
         >
-          <BotIcon className="w-5 h-5 text-muted-foreground" />
+          <BotIcon className="h-5 w-5 text-muted-foreground" />
           <span>Agents</span>
         </Link>
         <Link
           href="/tasks"
-          className="flex items-center gap-3 px-3 py-2 text-sm rounded-lg hover:bg-accent transition-colors"
+          className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent"
         >
-          <CalendarClockIcon className="w-5 h-5 text-muted-foreground" />
+          <CalendarClockIcon className="h-5 w-5 text-muted-foreground" />
           <span>Tasks</span>
         </Link>
       </div>
 
       {/* This div takes up remaining space to push wallet details to bottom */}
-      <div className="flex-1" />
-
-      <div className="mt-auto">
-        <WalletDetails />
-      </div>
+      {/* <div className="flex-1" /> */}
+      <WalletDetails />
 
       <div className="flex items-center justify-center gap-2 border-t px-4 py-3">
         <SidebarIconLink
@@ -171,7 +168,7 @@ export function ChatSidebar(props: {
 
 function WalletDetails() {
   const [tab, setTab] = useState<"assets" | "transactions">("assets");
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   return (
     <DynamicHeight transition="height 220ms ease">
       <div className="flex items-center justify-between gap-2 border-t px-2 py-1.5">
@@ -181,7 +178,7 @@ function WalletDetails() {
           size="sm"
           className={cn(
             "h-auto w-auto p-1.5 transition-transform duration-300",
-            isExpanded ? "rotate-180" : ""
+            isExpanded ? "rotate-180" : "",
           )}
           onClick={() => setIsExpanded(!isExpanded)}
         >
