@@ -29,7 +29,6 @@ export const config = {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  // console.log(pathname);
 
   // nebula subdomain handling
   const host = request.headers.get("host");
