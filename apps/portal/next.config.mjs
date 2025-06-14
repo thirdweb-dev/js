@@ -70,6 +70,24 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: "/_ph/static/:path*",
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+      },
+      {
+        source: "/_ph/:path*",
+        destination: "https://us.i.posthog.com/:path*",
+      },
+      {
+        source: "/_ph/decide",
+        destination: "https://us.i.posthog.com/decide",
+      },
+    ];
+  },
+  // This is required to support PostHog trailing slash API requests
+  skipTrailingSlashRedirect: true,
 };
 
 export default withMDX(nextConfig);

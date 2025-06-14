@@ -1,5 +1,4 @@
 import { getTeamBySlug, hasToCompleteTeamOnboarding } from "@/api/team";
-import { PosthogIdentifierServer } from "components/wallets/PosthogIdentifierServer";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { getAuthToken } from "../../api/lib/getAuthToken";
@@ -59,9 +58,6 @@ export default async function RootTeamLayout(props: {
 
       <Suspense fallback={null}>
         <EnsureValidConnectedWalletLoginServer />
-      </Suspense>
-      <Suspense fallback={null}>
-        <PosthogIdentifierServer />
       </Suspense>
     </div>
   );

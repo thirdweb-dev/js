@@ -13,6 +13,7 @@
     "@thirdweb-dev/service-utils",
     "@thirdweb-dev/vault-sdk",
     "@types/color",
-    "fast-xml-parser"
+    "fast-xml-parser",
+    "posthog-node"
   ]
 }

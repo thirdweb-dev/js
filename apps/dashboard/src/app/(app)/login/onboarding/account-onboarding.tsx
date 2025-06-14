@@ -1,5 +1,6 @@
 "use client";
 
+import * as analytics from "@/analytics/dashboard.client";
 import {
   resendEmailClient,
   updateAccountClient,
@@ -27,6 +28,7 @@ function AccountOnboarding(props: {
           disconnect(activeWallet);
         }
         await doLogout();
+        analytics.reset();
         props.onLogout();
       }}
       accountAddress={props.accountAddress}
