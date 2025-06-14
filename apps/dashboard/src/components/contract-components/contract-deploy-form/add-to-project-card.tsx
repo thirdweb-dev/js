@@ -20,7 +20,7 @@ import type { ThirdwebClient } from "thirdweb";
 import { Fieldset } from "./common";
 
 export type MinimalTeam = Pick<Team, "id" | "name" | "image" | "slug">;
-export type MinimalProject = Pick<Project, "id" | "name" | "image">;
+export type MinimalProject = Pick<Project, "id" | "name" | "image" | "slug">;
 
 export type TeamAndProjectSelection = {
   team: MinimalTeam | undefined;

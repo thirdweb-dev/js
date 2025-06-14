@@ -8,7 +8,7 @@ import { ContractHeaderUI } from "./_components/ContractHeader";
 import { BuyTokenEmbed } from "./_components/PayEmbedSection";
 import { TokenStats } from "./_components/PriceChart";
 import { RecentTransfers } from "./_components/RecentTransfers";
-import { ClaimTokenCardUI } from "./_components/claim-tokens/claim-tokens-ui";
+import { TokenDropClaim } from "./_components/claim-tokens/claim-tokens-ui";
 import { ContractAnalyticsOverview } from "./_components/contract-analytics/contract-analytics";
 import { getCurrencyMeta } from "./_utils/getCurrencyMeta";
 
@@ -149,7 +149,7 @@ function BuyEmbed(props: {
   }
 
   return (
-    <ClaimTokenCardUI
+    <TokenDropClaim
       contract={props.clientContract}
       decimals={props.tokenDecimals}
       name={props.tokenName}

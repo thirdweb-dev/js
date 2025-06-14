@@ -43,6 +43,7 @@ export async function DeployFormForUri(props: DeployFormForUriProps) {
         id: x.id,
         name: x.name,
         image: x.image,
+        slug: x.slug,
       })),
     })),
   );

@@ -73,12 +73,12 @@ function CardLink(props: {
   const trackEvent = useTrack();
 
   function handleClick() {
+    trackEvent({
+      category: "assets-landing-page",
+      action: "click",
+      label: props.trackingLabel,
+    });
     if (onClick) {
-      trackEvent({
-        category: "assets-landing-page",
-        action: "click",
-        label: props.trackingLabel,
-      });
       onClick();
     }
   }
@@ -92,15 +92,11 @@ function CardLink(props: {
       onClick={handleClick}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
-      onKeyDown={
-        onClick
-          ? (e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                handleClick();
-              }
-            }
-          : undefined
-      }
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          handleClick();
+        }
+      }}
     >
       <div className="mb-4 flex">
         <div className="flex items-center justify-center rounded-full border p-2.5">

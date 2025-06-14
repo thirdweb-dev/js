@@ -24,6 +24,7 @@ export function WalletAddress(props: {
   className?: string;
   iconClassName?: string;
   client: ThirdwebClient;
+  preventOpenOnFocus?: boolean;
 }) {
   // default back to zero address if no address provided
   const address = useMemo(() => props.address || ZERO_ADDRESS, [props.address]);
@@ -64,7 +65,10 @@ export function WalletAddress(props: {
 
   return (
     <HoverCard>
-      <HoverCardTrigger asChild>
+      <HoverCardTrigger
+        asChild
+        tabIndex={props.preventOpenOnFocus ? -1 : undefined}
+      >
         <Button
           onClick={(e) => e.stopPropagation()}
           variant="link"

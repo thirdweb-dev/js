@@ -5,6 +5,8 @@ import { redirectToContractLandingPage } from "../../../../../../team/[team_slug
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 import { getContractPageParamsInfo } from "../../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../../_utils/getContractPageMetadata";
+import { shouldRenderNewPublicPage } from "../../_utils/newPublicPage";
+import { NFTPublicPage } from "../../public-pages/nft/nft-page";
 import { TokenIdPageClient } from "./TokenIdPage.client";
 import { TokenIdPage } from "./token-id";
 
@@ -38,6 +40,22 @@ export async function SharedNFTTokenPage(props: {
         subpath: "/nfts",
       }),
     );
+  }
+
+  // public /nfts/[tokenId] page
+  if (!props.projectMeta) {
+    const meta = await shouldRenderNewPublicPage(info.serverContract);
+    if (meta && (meta.type === "erc721" || meta.type === "erc1155")) {
+      return (
+        <NFTPublicPage
+          serverContract={info.serverContract}
+          clientContract={info.clientContract}
+          chainMetadata={info.chainMetadata}
+          tokenId={props.tokenId}
+          type={meta.type}
+        />
+      );
+    }
   }
 
   const { clientContract, serverContract, isLocalhostChain } = info;

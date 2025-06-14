@@ -29,8 +29,8 @@ export type NFTMetadata = {
   animation_url?: string;
   external_url?: string;
   background_color?: string;
-  properties?: Record<string, unknown>;
-  attributes?: Record<string, unknown>;
+  properties?: Record<string, unknown> | Array<Record<string, unknown>>;
+  attributes?: Record<string, unknown> | Array<Record<string, unknown>>;
   image_url?: string;
 } & Record<string, unknown>;
 

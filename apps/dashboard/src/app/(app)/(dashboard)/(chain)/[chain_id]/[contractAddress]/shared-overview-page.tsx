@@ -13,6 +13,7 @@ import { ContractOverviewPage } from "./overview/ContractOverviewPage";
 import { PublishedBy } from "./overview/components/published-by.server";
 import { ContractOverviewPageClient } from "./overview/contract-overview-page.client";
 import { ERC20PublicPage } from "./public-pages/erc20/erc20";
+import { NFTPublicPage } from "./public-pages/nft/nft-page";
 
 export async function SharedContractOverviewPage(props: {
   contractAddress: string;
@@ -99,6 +100,20 @@ function RenderNewPublicContractPage(props: {
         />
       );
     }
+
+    case "erc1155":
+    case "erc721": {
+      return (
+        <NFTPublicPage
+          serverContract={props.serverContract}
+          clientContract={props.clientContract}
+          chainMetadata={props.chainMetadata}
+          type={props.type}
+          tokenId={undefined}
+        />
+      );
+    }
+
     default: {
       return null;
     }
