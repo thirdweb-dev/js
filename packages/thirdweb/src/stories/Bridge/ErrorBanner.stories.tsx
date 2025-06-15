@@ -45,8 +45,8 @@ const meta = {
   tags: ["autodocs"],
   args: {
     error: mockNetworkError,
-    onRetry: () => console.log("Retry clicked"),
-    onCancel: () => console.log("Cancel clicked"),
+    onRetry: () => {},
+    onCancel: () => {},
     theme: "dark",
   },
   argTypes: {

@@ -20,7 +20,7 @@ import {
 } from "../../web/ui/ConnectWallet/screens/formatTokenBalance.js";
 import { useChainMetadata } from "./others/useChainQuery.js";
 
-export interface TransactionDetails {
+interface TransactionDetails {
   contractMetadata: CompilerMetadata | null;
   functionInfo: {
     functionName: string;
@@ -37,7 +37,7 @@ export interface TransactionDetails {
   totalCostWei: bigint;
 }
 
-export interface UseTransactionDetailsOptions {
+interface UseTransactionDetailsOptions {
   transaction: PreparedTransaction;
   client: ThirdwebClient;
 }

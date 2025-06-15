@@ -27,7 +27,7 @@ export function BadgeContainer(props: {
   );
 }
 
-export function mobileViewport(
+function mobileViewport(
   key: "iphone14" | "iphone14promax" | "ipad11p" | "ipad12p",
 ) {
   return {

@@ -106,7 +106,7 @@ const meta = {
   args: {
     preparedQuote: simpleBuyQuote,
     completedStatuses: mockBuyCompletedStatuses,
-    onDone: () => console.log("Success screen closed"),
+    onDone: () => {},
     theme: "dark",
     windowAdapter: webWindowAdapter,
     uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,

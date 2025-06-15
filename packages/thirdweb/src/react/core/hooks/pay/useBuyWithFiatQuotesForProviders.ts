@@ -8,7 +8,7 @@ import { toUnits } from "../../../../utils/units.js";
 /**
  * @internal
  */
-export type UseBuyWithFiatQuotesForProvidersParams = {
+type UseBuyWithFiatQuotesForProvidersParams = {
   /**
    * A client is the entry point to the thirdweb SDK.
    */
@@ -38,7 +38,7 @@ export type UseBuyWithFiatQuotesForProvidersParams = {
 /**
  * @internal
  */
-export type OnrampQuoteQueryOptions = Omit<
+type OnrampQuoteQueryOptions = Omit<
   UseQueryOptions<Awaited<ReturnType<typeof prepareOnramp>>>,
   "queryFn" | "queryKey" | "enabled"
 >;
@@ -46,7 +46,7 @@ export type OnrampQuoteQueryOptions = Omit<
 /**
  * @internal
  */
-export type UseBuyWithFiatQuotesForProvidersResult = {
+type UseBuyWithFiatQuotesForProvidersResult = {
   data: Awaited<ReturnType<typeof prepareOnramp>> | undefined;
   isLoading: boolean;
   error: Error | null;

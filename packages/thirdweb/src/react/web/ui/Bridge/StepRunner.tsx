@@ -12,6 +12,7 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
+import type { BridgePrepareRequest } from "../../../core/hooks/useBridgePrepare.js";
 import {
   type CompletedStatusResult,
   useStepExecutor,
@@ -22,9 +23,8 @@ import { Spinner } from "../components/Spinner.js";
 import { Container, ModalHeader } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { Text } from "../components/text.js";
-import type { BridgePrepareRequest } from "../../../core/hooks/useBridgePrepare.js";
 
-export interface StepRunnerProps {
+interface StepRunnerProps {
   request: BridgePrepareRequest;
 
   /**

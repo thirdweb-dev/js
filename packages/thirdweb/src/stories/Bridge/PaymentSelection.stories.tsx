@@ -43,8 +43,7 @@ const meta = {
   args: {
     destinationToken: USDC,
     client: storyClient,
-    onPaymentMethodSelected: (paymentMethod) =>
-      console.log("Payment method selected:", paymentMethod),
+    onPaymentMethodSelected: (_paymentMethod) => {},
     onError: (error) => console.error("Error:", error),
     theme: "dark",
     destinationAmount: "1",
@@ -116,7 +115,7 @@ export const Dark: Story = {
 export const WithBackButton: Story = {
   args: {
     theme: "dark",
-    onBack: () => console.log("Back clicked"),
+    onBack: () => {},
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -132,7 +131,7 @@ export const WithBackButton: Story = {
 export const WithBackButtonLight: Story = {
   args: {
     theme: "light",
-    onBack: () => console.log("Back clicked"),
+    onBack: () => {},
   },
   parameters: {
     backgrounds: { default: "light" },

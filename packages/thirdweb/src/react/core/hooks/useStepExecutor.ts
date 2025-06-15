@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { status as OnrampStatus } from "../../../bridge/OnrampStatus.js";
 import { ApiError } from "../../../bridge/types/Errors.js";
@@ -9,15 +10,14 @@ import type { Status } from "../../../bridge/types/Status.js";
 import { getCachedChain } from "../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
+import { stringify } from "../../../utils/json.js";
 import type { Account, Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { WindowAdapter } from "../adapters/WindowAdapter.js";
 import {
-  useBridgePrepare,
   type BridgePrepareRequest,
   type BridgePrepareResult,
+  useBridgePrepare,
 } from "./useBridgePrepare.js";
-import { useQuery } from "@tanstack/react-query";
-import { stringify } from "../../../utils/json.js";
 
 /**
  * Type for completed status results from Bridge.status and Onramp.status
@@ -27,14 +27,14 @@ export type CompletedStatusResult =
   | ({ type: "sell" } & Extract<Status, { status: "COMPLETED" }>)
   | ({ type: "transfer" } & Extract<Status, { status: "COMPLETED" }>)
   | ({ type: "onramp" } & Extract<
-    OnrampStatus.Result,
-    { status: "COMPLETED" }
-  >);
+      OnrampStatus.Result,
+      { status: "COMPLETED" }
+    >);
 
 /**
  * Options for the step executor hook
  */
-export interface StepExecutorOptions {
+interface StepExecutorOptions {
   /** Prepared quote returned by Bridge.prepare */
   request: BridgePrepareRequest;
   /** Wallet instance providing getAccount() & sendTransaction */
@@ -52,7 +52,7 @@ export interface StepExecutorOptions {
 /**
  * Internal flattened transaction type
  */
-export interface FlattenedTx extends RouteTransaction {
+interface FlattenedTx extends RouteTransaction {
   /** Index in flat array */
   _index: number;
   /** Parent step index */
@@ -62,7 +62,7 @@ export interface FlattenedTx extends RouteTransaction {
 /**
  * Public return type of useStepExecutor
  */
-export interface StepExecutorResult {
+interface StepExecutorResult {
   currentStep?: RouteStep;
   currentTxIndex?: number;
   progress: number; // 0–100

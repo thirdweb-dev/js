@@ -16,7 +16,7 @@ import { Spinner } from "../components/Spinner.js";
 import { Container } from "../components/basic.js";
 import { Text } from "../components/text.js";
 
-export interface QuoteLoaderProps {
+interface QuoteLoaderProps {
   /**
    * The destination token to bridge to
    */
@@ -180,7 +180,7 @@ function getBridgeParams(args: {
       if (
         paymentMethod.originToken.chainId === destinationToken.chainId &&
         paymentMethod.originToken.address.toLowerCase() ===
-        destinationToken.address.toLowerCase()
+          destinationToken.address.toLowerCase()
       ) {
         return {
           type: "transfer",

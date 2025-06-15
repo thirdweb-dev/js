@@ -3,19 +3,10 @@ import type { Action } from "../../../bridge/types/BridgeAction.js";
 import type { RouteStep } from "../../../bridge/types/Route.js";
 import { defineChain } from "../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import {
-  buyWithApprovalQuote,
-  complexBuyQuote,
-  onrampWithSwapsQuote,
-  simpleBuyQuote,
-  simpleOnrampQuote,
-} from "../../../stories/Bridge/fixtures.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { WindowAdapter } from "../adapters/WindowAdapter.js";
 import type { BridgePrepareResult } from "./useBridgePrepare.js";
-import type { StepExecutorOptions } from "./useStepExecutor.js";
-import { flattenRouteSteps, useStepExecutor } from "./useStepExecutor.js";
-import { toWei } from "src/utils/units.js";
+import { flattenRouteSteps } from "./useStepExecutor.js";
 
 // Mock React hooks
 vi.mock("react", async () => {
@@ -88,11 +79,14 @@ const mockClient: ThirdwebClient = {
   secretKey: undefined,
 } as ThirdwebClient;
 
-const mockWindowAdapter: WindowAdapter = {
+const _mockWindowAdapter: WindowAdapter = {
   open: vi.fn(),
 };
 
-const createMockWallet = (hasAccount = true, supportsBatch = false): Wallet => {
+const _createMockWallet = (
+  hasAccount = true,
+  supportsBatch = false,
+): Wallet => {
   const mockAccount = hasAccount
     ? {
         address: "0x1234567890123456789012345678901234567890",
@@ -181,7 +175,7 @@ const createMockRouteSteps = (
   return steps;
 };
 
-const createMockBuyQuote = (steps: RouteStep[]): BridgePrepareResult => ({
+const _createMockBuyQuote = (steps: RouteStep[]): BridgePrepareResult => ({
   type: "buy",
   originAmount: 1000000000000000000n,
   destinationAmount: 999000000000000000n,
@@ -253,6 +247,4 @@ describe("useStepExecutor", () => {
       expect(flattened).toHaveLength(0);
     });
   });
-
-  
 });

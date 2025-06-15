@@ -6,17 +6,13 @@ import type { Token } from "../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { checksumAddress } from "../../../utils/address.js";
 
-export interface UseBridgeQuoteParams {
+interface UseBridgeQuoteParams {
   originToken: Token;
   destinationToken: Token;
   destinationAmount: bigint;
   client: ThirdwebClient;
   enabled?: boolean;
 }
-
-export type BridgeQuoteResult = NonNullable<
-  ReturnType<typeof useBridgeQuote>["data"]
->;
 
 export function useBridgeQuote({
   originToken,
@@ -38,7 +34,7 @@ export function useBridgeQuote({
       // if ssame token and chain, use transfer
       if (
         checksumAddress(originToken.address) ===
-        checksumAddress(destinationToken.address) &&
+          checksumAddress(destinationToken.address) &&
         originToken.chainId === destinationToken.chainId
       ) {
         const transfer = await Transfer.prepare({
@@ -51,8 +47,6 @@ export function useBridgeQuote({
         });
         return transfer;
       }
-
-      console.log("AMOUNT", destinationAmount);
       const quote = await Buy.quote({
         originChainId: originToken.chainId,
         originTokenAddress: originToken.address,

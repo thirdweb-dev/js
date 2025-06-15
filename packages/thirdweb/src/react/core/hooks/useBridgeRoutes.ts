@@ -30,6 +30,7 @@ export type UseBridgeRoutesParams = RoutesTypes.Options & {
  *   originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
  * });
  * ```
+ * @internal
  */
 export function useBridgeRoutes(params: UseBridgeRoutesParams) {
   const { enabled = true, ...routeParams } = params;

@@ -44,7 +44,6 @@ const meta = {
     uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
     client: storyClient,
     onContinue: (amount, token, receiverAddress) => {
-      console.log("Continue clicked:", { amount, token, receiverAddress });
       alert(`Continue with ${amount} ${token.symbol} to ${receiverAddress}`);
     },
     receiverAddress: RECEIVER_ADDRESSES.primary,

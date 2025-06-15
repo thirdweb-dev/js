@@ -97,7 +97,7 @@ export function TokenAndChain({
   );
 }
 
-export function TokenIconWithFallback(props: {
+function TokenIconWithFallback(props: {
   token: Omit<Token, "priceUsd">;
   size: keyof typeof iconSize;
   client: ThirdwebClient;
