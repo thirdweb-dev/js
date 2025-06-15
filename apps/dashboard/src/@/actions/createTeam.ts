@@ -1,7 +1,8 @@
 "use server";
 import "server-only";
 
-import { randomBytes } from "node:crypto";
+// biome-ignore lint/style/useNodejsImportProtocol: breaks storybook if it's `node:` prefixed
+import { randomBytes } from "crypto";
 import type { Team } from "@/api/team";
 import { format } from "date-fns";
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";

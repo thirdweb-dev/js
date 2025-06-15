@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { BadgeContainer } from "stories/utils";
 import type { RpcMethodStats } from "types/analytics";
 import { RpcMethodBarChartCardUI } from "./RpcMethodBarChartCardUI";

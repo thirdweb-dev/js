@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { storybookThirdwebClient } from "stories/utils";
 import { getContract } from "thirdweb";
 import { baseSepolia } from "thirdweb/chains";

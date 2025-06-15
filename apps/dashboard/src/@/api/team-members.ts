@@ -33,7 +33,7 @@ export async function getMembers(teamSlug: string) {
   }
 
   const teamsRes = await fetch(
-    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamSlug}/members`,
+    new URL(`/v1/teams/${teamSlug}/members`, NEXT_PUBLIC_THIRDWEB_API_HOST),
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -48,7 +48,10 @@ export async function getMembers(teamSlug: string) {
   return undefined;
 }
 
-export async function getMemberById(teamSlug: string, memberId: string) {
+export async function getMemberByAccountId(
+  teamSlug: string,
+  accountId: string,
+) {
   const token = await getAuthToken();
 
   if (!token) {
@@ -56,7 +59,10 @@ export async function getMemberById(teamSlug: string, memberId: string) {
   }
 
   const res = await fetch(
-    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamSlug}/members/${memberId}`,
+    new URL(
+      `/v1/teams/${teamSlug}/members/${accountId}`,
+      NEXT_PUBLIC_THIRDWEB_API_HOST,
+    ),
     {
       headers: {
         Authorization: `Bearer ${token}`,

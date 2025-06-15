@@ -6,6 +6,7 @@ import {
   BoxIcon,
   LogOutIcon,
   MailIcon,
+  RocketIcon,
   UserIcon,
   UsersIcon,
 } from "lucide-react";
@@ -77,16 +78,22 @@ const teamOnboardingSteps: OnboardingStep[] = [
     number: 1,
   },
   {
+    icon: RocketIcon,
+    title: "Plan Selection",
+    description: "Choose a plan that fits your needs",
+    number: 2,
+  },
+  {
     icon: UsersIcon,
     title: "Team Members",
     description: "Invite members to your team",
-    number: 2,
+    number: 3,
   },
 ];
 
 export function TeamOnboardingLayout(props: {
   children: React.ReactNode;
-  currentStep: 1 | 2;
+  currentStep: 1 | 2 | 3;
 }) {
   return (
     <OnboardingLayout
@@ -116,11 +123,9 @@ function OnboardingLayout(props: {
           {props.cta}
         </div>
       </div>
-      <div className="container flex grow flex-col gap-10 xl:flex-row">
+      <div className="container flex grow flex-col gap-8 xl:flex-row xl:gap-10">
         {/* Left */}
-        <div className="flex w-full max-w-[850px] flex-col py-8">
-          {props.children}
-        </div>
+        <div className="flex w-full flex-col py-8">{props.children}</div>
 
         {/* Right  */}
         <div className="hidden shrink-0 grow flex-col xl:flex">

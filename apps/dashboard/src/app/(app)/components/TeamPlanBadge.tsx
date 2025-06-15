@@ -4,7 +4,7 @@ import type { Team } from "@/api/team";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useTrack } from "hooks/analytics/useTrack";
-import Link from "next/link";
+import { useDashboardRouter } from "../../../@/lib/DashboardRouter";
 
 const teamPlanToBadgeVariant: Record<
   Team["billingPlan"],
@@ -38,33 +38,37 @@ export function TeamPlanBadge(props: {
   className?: string;
   postfix?: string;
 }) {
-  const badge = (
+  const router = useDashboardRouter();
+  const track = useTrack();
+
+  function handleNavigateToBilling(e: React.MouseEvent | React.KeyboardEvent) {
+    if (props.plan !== "free") {
+      return;
+    }
+    e.stopPropagation();
+    e.preventDefault();
+    track({
+      category: "billing",
+      action: "show_plans",
+      label: "team_badge",
+    });
+    router.push(`/team/${props.teamSlug}/~/settings/billing?showPlans=true`);
+  }
+
+  return (
     <Badge
       variant={teamPlanToBadgeVariant[props.plan]}
       className={cn("px-1.5 capitalize", props.className)}
+      role={props.plan === "free" ? "button" : undefined}
+      tabIndex={props.plan === "free" ? 0 : undefined}
+      onClick={handleNavigateToBilling}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          handleNavigateToBilling(e);
+        }
+      }}
     >
       {`${getTeamPlanBadgeLabel(props.plan)}${props.postfix || ""}`}
     </Badge>
   );
-
-  const track = useTrack();
-
-  if (props.plan === "free") {
-    return (
-      <Link
-        href={`/team/${props.teamSlug}/~/settings/billing?showPlans=true`}
-        onClick={() => {
-          track({
-            category: "billing",
-            action: "show_plans",
-            label: "team_badge",
-          });
-        }}
-      >
-        {badge}
-      </Link>
-    );
-  }
-
-  return badge;
 }

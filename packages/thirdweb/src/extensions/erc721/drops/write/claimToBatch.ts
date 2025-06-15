@@ -101,7 +101,7 @@ async function getClaimToBatchParams(
  * For identical addresses that stays next to each other in the array,
  * we can combine them into one transaction _without altering the claiming order_
  *
- * For exampple, this structure:
+ * For example, this structure:
  * [
  *   {
  *     to: "0xabc",

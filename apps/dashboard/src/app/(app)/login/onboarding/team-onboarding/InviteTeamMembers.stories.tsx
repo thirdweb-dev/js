@@ -1,5 +1,5 @@
 import type { Team } from "@/api/team";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { teamStub } from "stories/stubs";
 import { storybookLog, storybookThirdwebClient } from "stories/utils";
 import { TeamOnboardingLayout } from "../onboarding-layout";
