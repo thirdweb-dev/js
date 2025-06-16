@@ -300,6 +300,7 @@ const contractTypeToAssetTypeRecord: Record<string, string | undefined> = {
   DropERC20: "Coin",
   DropERC721: "NFT Collection",
   DropERC1155: "NFT Collection",
+  ERC20Asset: "Coin",
 };
 
 const NetworkFilterCell = React.memo(function NetworkFilterCell({

@@ -2,36 +2,28 @@
 import { useRef } from "react";
 import { toast } from "sonner";
 import {
-  getAddress,
+  defineChain,
   getContract,
-  NATIVE_TOKEN_ADDRESS,
   sendAndConfirmTransaction,
   type ThirdwebClient,
-  toUnits,
+  toWei,
 } from "thirdweb";
-import { deployERC20Contract } from "thirdweb/deploys";
-import type { ClaimConditionsInput } from "thirdweb/dist/types/utils/extensions/drops/types";
 import {
-  claimTo,
-  getActiveClaimCondition,
-  setClaimConditions as setClaimConditionsExtension,
-  transferBatch,
-} from "thirdweb/extensions/erc20";
+  createToken,
+  distributeToken,
+  getDeployedEntrypointERC20,
+} from "thirdweb/assets";
+import { approve } from "thirdweb/extensions/erc20";
 import { useActiveAccount } from "thirdweb/react";
 import { revalidatePathAction } from "@/actions/revalidate";
 import {
   reportAssetCreationFailed,
   reportContractDeployed,
 } from "@/analytics/report";
-import {
-  DEFAULT_FEE_BPS_NEW,
-  DEFAULT_FEE_RECIPIENT,
-} from "@/constants/addresses";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useAddContractToProject } from "@/hooks/project-contracts";
 import { defineDashboardChain } from "@/lib/defineDashboardChain";
 import { parseError } from "@/utils/errorParser";
-import { pollWithTimeout } from "@/utils/pollWithTimeout";
 import type { CreateAssetFormValues } from "./_common/form";
 import { CreateTokenAssetPageUI } from "./create-token-page.client";
 
@@ -65,35 +57,40 @@ export function CreateTokenAssetPage(props: {
     );
 
     try {
-      const contractAddress = await deployERC20Contract({
+      const salePercent = Number(formValues.saleAllocationPercentage);
+      const saleAmount = Number(formValues.supply) * (salePercent / 100);
+
+      const contractAddress = await createToken({
         account,
         // eslint-disable-next-line no-restricted-syntax
-        chain: defineDashboardChain(
-          Number(formValues.chain),
-          idToChain.get(Number(formValues.chain)),
-        ),
+        chain: defineChain(Number(formValues.chain)),
         client: props.client,
+        launchConfig:
+          formValues.saleMode === "public-market" && saleAmount !== 0
+            ? {
+                config: {
+                  amount: BigInt(saleAmount),
+                  fee: Number(formValues.publicMarket.tradingFees) * 10000, // TODO - fix in SDK
+                  // initialTick (floorPrice) : disabled for now
+                }, // public
+                kind: "pool",
+              }
+            : undefined,
         params: {
           description: formValues.description,
           image: formValues.image,
-          // metadata
+          maxSupply: BigInt(formValues.supply),
           name: formValues.name,
-          // platform fees
-          platformFeeBps: BigInt(DEFAULT_FEE_BPS_NEW),
-          platformFeeRecipient: DEFAULT_FEE_RECIPIENT,
-          // primary sale
-          saleRecipient: account.address,
           social_urls: socialUrls,
           symbol: formValues.symbol,
         },
-        type: "DropERC20",
       });
 
       // add contract to project in background
       addContractToProject.mutateAsync({
         chainId: formValues.chain,
         contractAddress: contractAddress,
-        contractType: "DropERC20",
+        contractType: "ERC20Asset",
         deploymentType: "asset",
         projectId: props.projectId,
         teamId: props.teamId,
@@ -104,7 +101,7 @@ export function CreateTokenAssetPage(props: {
         chainId: Number(formValues.chain),
         contractName: "DropERC20",
         deploymentType: "asset",
-        publisher: "deployer.thirdweb.eth",
+        publisher: account.address,
       });
 
       contractAddressRef.current = contractAddress;
@@ -146,19 +143,62 @@ export function CreateTokenAssetPage(props: {
       idToChain.get(Number(formValues.chain)),
     );
 
-    const contract = getContract({
+    const tokenContract = getContract({
       address: contractAddress,
       chain,
       client: props.client,
     });
 
+    const totalAmountToAirdrop = formValues.airdropAddresses.reduce(
+      (acc, recipient) => acc + BigInt(recipient.quantity),
+      0n,
+    );
+
+    // approve entrypoint to spend tokens
+
     try {
-      const airdropTx = transferBatch({
-        batch: formValues.airdropAddresses.map((recipient) => ({
-          amount: recipient.quantity,
-          to: recipient.address,
+      const entrypoint = await getDeployedEntrypointERC20({
+        chain,
+        client: props.client,
+      });
+
+      if (!entrypoint) {
+        throw new Error("Entrypoint not found");
+      }
+
+      const approvalTx = approve({
+        amountWei: toWei(totalAmountToAirdrop.toString()),
+        contract: tokenContract,
+        spender: entrypoint.address,
+      });
+
+      await sendAndConfirmTransaction({
+        account,
+        transaction: approvalTx,
+      });
+    } catch (e) {
+      const errorMessage = parseError(e);
+
+      reportAssetCreationFailed({
+        assetType: "coin",
+        contractType: "DropERC20",
+        error: errorMessage,
+        step: "airdrop-tokens",
+      });
+
+      throw e;
+    }
+
+    try {
+      const airdropTx = await distributeToken({
+        // eslint-disable-next-line no-restricted-syntax
+        chain,
+        client: props.client,
+        contents: formValues.airdropAddresses.map((recipient) => ({
+          amount: BigInt(recipient.quantity),
+          recipient: recipient.address,
         })),
-        contract,
+        tokenAddress: contractAddress,
       });
 
       await sendAndConfirmTransaction({
@@ -179,157 +219,6 @@ export function CreateTokenAssetPage(props: {
     }
   }
 
-  async function mintTokens(formValues: CreateAssetFormValues) {
-    const contractAddress = contractAddressRef.current;
-    if (!contractAddress) {
-      throw new Error("No contract address");
-    }
-
-    if (!account) {
-      throw new Error("No connected account");
-    }
-
-    // eslint-disable-next-line no-restricted-syntax
-    const chain = defineDashboardChain(
-      Number(formValues.chain),
-      idToChain.get(Number(formValues.chain)),
-    );
-
-    const contract = getContract({
-      address: contractAddress,
-      chain,
-      client: props.client,
-    });
-
-    // poll until claim conditions are set before moving on to minting
-    await pollWithTimeout({
-      shouldStop: async () => {
-        const claimConditions = await getActiveClaimCondition({
-          contract,
-        });
-        return !!claimConditions;
-      },
-      timeoutMs: 30000,
-    });
-
-    const totalSupply = Number(formValues.supply);
-    const salePercent = formValues.saleEnabled
-      ? Number(formValues.saleAllocationPercentage)
-      : 0;
-
-    const ownerAndAirdropPercent = 100 - salePercent;
-    const ownerSupplyTokens = (totalSupply * ownerAndAirdropPercent) / 100;
-
-    try {
-      const claimTx = claimTo({
-        contract,
-        quantity: ownerSupplyTokens.toString(),
-        to: account.address,
-      });
-
-      await sendAndConfirmTransaction({
-        account,
-        transaction: claimTx,
-      });
-    } catch (e) {
-      const errorMessage = parseError(e);
-      console.error(e);
-
-      reportAssetCreationFailed({
-        assetType: "coin",
-        contractType: "DropERC20",
-        error: errorMessage,
-        step: "mint-tokens",
-      });
-
-      throw e;
-    }
-  }
-
-  async function setClaimConditions(formValues: CreateAssetFormValues) {
-    const contractAddress = contractAddressRef.current;
-
-    if (!contractAddress) {
-      throw new Error("No contract address");
-    }
-
-    if (!account) {
-      throw new Error("No connected account");
-    }
-
-    // eslint-disable-next-line no-restricted-syntax
-    const chain = defineDashboardChain(
-      Number(formValues.chain),
-      idToChain.get(Number(formValues.chain)),
-    );
-
-    const contract = getContract({
-      address: contractAddress,
-      chain,
-      client: props.client,
-    });
-
-    const salePercent = formValues.saleEnabled
-      ? Number(formValues.saleAllocationPercentage)
-      : 0;
-
-    const totalSupply = Number(formValues.supply);
-    const totalSupplyWei = toUnits(totalSupply.toString(), 18);
-
-    const phases: ClaimConditionsInput[] = [
-      {
-        currencyAddress:
-          getAddress(formValues.saleTokenAddress) ===
-          getAddress(NATIVE_TOKEN_ADDRESS)
-            ? undefined
-            : formValues.saleTokenAddress,
-        maxClaimablePerWallet: formValues.saleEnabled ? undefined : 0n,
-        maxClaimableSupply: totalSupplyWei,
-        metadata: {
-          name:
-            formValues.saleEnabled && salePercent > 0
-              ? "Coin Sale phase"
-              : "Only Owner phase",
-        },
-        overrideList: [
-          {
-            address: account.address,
-            maxClaimable: "unlimited",
-            price: "0",
-          },
-        ],
-        price:
-          formValues.saleEnabled && salePercent > 0
-            ? formValues.salePrice
-            : "0",
-        startTime: new Date(),
-      },
-    ];
-
-    const preparedTx = setClaimConditionsExtension({
-      contract,
-      phases,
-    });
-
-    try {
-      await sendAndConfirmTransaction({
-        account,
-        transaction: preparedTx,
-      });
-    } catch (e) {
-      const errorMessage = parseError(e);
-      console.error(e);
-
-      reportAssetCreationFailed({
-        assetType: "coin",
-        contractType: "DropERC20",
-        error: errorMessage,
-        step: "set-claim-conditions",
-      });
-      throw e;
-    }
-  }
-
   return (
     <CreateTokenAssetPageUI
       accountAddress={props.accountAddress}
@@ -337,8 +226,6 @@ export function CreateTokenAssetPage(props: {
       createTokenFunctions={{
         airdropTokens,
         deployContract,
-        mintTokens,
-        setClaimConditions,
       }}
       onLaunchSuccess={() => {
         revalidatePathAction(

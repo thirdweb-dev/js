@@ -98,6 +98,7 @@ export function TabButtons(props: {
   shadowColor?: string;
   tabIconClassName?: string;
   hideBottomLine?: boolean;
+  bottomLineClassName?: string;
 }) {
   const { containerRef, lineRef, activeTabRef } =
     useUnderline<HTMLButtonElement>();
@@ -106,7 +107,12 @@ export function TabButtons(props: {
     <div className={cn("relative", props.containerClassName)}>
       {/* Bottom line */}
       {!props.hideBottomLine && (
-        <div className="absolute right-0 bottom-0 left-0 h-[1px] bg-border" />
+        <div
+          className={cn(
+            "absolute right-0 bottom-0 left-0 h-[1px] bg-border",
+            props.bottomLineClassName,
+          )}
+        />
       )}
 
       <ScrollShadow

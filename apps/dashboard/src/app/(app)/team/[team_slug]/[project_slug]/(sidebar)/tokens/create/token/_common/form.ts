@@ -15,6 +15,16 @@ export const tokenInfoFormSchema = z.object({
     .max(10, "Symbol must be 10 characters or less"),
 });
 
+const priceAmountSchema = z.string().refine(
+  (value) => {
+    const number = Number(value);
+    return !Number.isNaN(number) && number >= 0;
+  },
+  {
+    message: "Must be number larger than or equal to 0",
+  },
+);
+
 export const tokenDistributionFormSchema = z.object({
   airdropAddresses: z.array(
     z.object({
@@ -24,6 +34,13 @@ export const tokenDistributionFormSchema = z.object({
   ),
   // UI states
   airdropEnabled: z.boolean(),
+  directSale: z.object({
+    currencyAddress: addressSchema,
+    priceAmount: priceAmountSchema,
+  }),
+  publicMarket: z.object({
+    tradingFees: z.enum(["0.01", "0.05", "0.3", "1"]),
+  }),
   saleAllocationPercentage: z.string().refine(
     (value) => {
       const number = Number(value);
@@ -36,17 +53,7 @@ export const tokenDistributionFormSchema = z.object({
       message: "Must be a number between 0 and 100",
     },
   ),
-  saleEnabled: z.boolean(),
-  salePrice: z.string().refine(
-    (value) => {
-      const number = Number(value);
-      return !Number.isNaN(number) && number >= 0;
-    },
-    {
-      message: "Must be number larger than or equal to 0",
-    },
-  ),
-  saleTokenAddress: z.string(),
+  saleMode: z.enum(["direct-sale", "public-market", "disabled"]),
   supply: z.string().min(1, "Supply is required"),
 });
 

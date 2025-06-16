@@ -79,16 +79,6 @@ export function LaunchTokenStatus(props: {
         label: "Deploy contract",
         status: { type: "idle" },
       },
-      {
-        id: stepIds["set-claim-conditions"],
-        label: "Set claim conditions",
-        status: { type: "idle" },
-      },
-      {
-        id: stepIds["mint-tokens"],
-        label: "Mint tokens",
-        status: { type: "idle" },
-      },
     ];
 
     if (formValues.airdropEnabled && formValues.airdropAddresses.length > 0) {
@@ -113,10 +103,6 @@ export function LaunchTokenStatus(props: {
       setContractLink(
         `/team/${props.teamSlug}/${props.projectSlug}/contract/${formValues.chain}/${result.contractAddress}`,
       );
-    } else if (stepId === "set-claim-conditions") {
-      await createTokenFunctions.setClaimConditions(formValues);
-    } else if (stepId === "mint-tokens") {
-      await createTokenFunctions.mintTokens(formValues);
     } else if (stepId === "airdrop-tokens") {
       await createTokenFunctions.airdropTokens(formValues);
     }
