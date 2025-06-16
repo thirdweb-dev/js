@@ -171,6 +171,7 @@ async function getTeamsAndProjectsIfLoggedIn() {
           id: x.id,
           name: x.name,
           image: x.image,
+          slug: x.slug,
         })),
       })),
     );

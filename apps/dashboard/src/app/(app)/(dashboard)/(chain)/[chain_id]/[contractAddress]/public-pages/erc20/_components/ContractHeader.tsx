@@ -41,6 +41,7 @@ export function ContractHeaderUI(props: {
   chainMetadata: ChainMetadata;
   clientContract: ThirdwebContract;
   socialUrls: object;
+  imageClassName?: string;
 }) {
   const socialUrls = useMemo(() => {
     const socialUrlsValue: { name: string; href: string }[] = [];
@@ -67,7 +68,10 @@ export function ContractHeaderUI(props: {
     <div className="flex flex-col items-start gap-4 border-b border-dashed py-8 lg:flex-row lg:items-center">
       {props.image && (
         <Img
-          className="size-20 shrink-0 rounded-full border bg-muted"
+          className={cn(
+            "size-20 shrink-0 rounded-full border bg-muted",
+            props.imageClassName,
+          )}
           src={
             props.image
               ? resolveSchemeWithErrorHandler({

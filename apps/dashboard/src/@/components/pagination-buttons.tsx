@@ -19,6 +19,7 @@ export const PaginationButtons = (props: {
   activePage: number;
   totalPages: number;
   onPageClick: (page: number) => void;
+  className?: string;
 }) => {
   const { activePage, totalPages, onPageClick: setPage } = props;
   const [inputHasError, setInputHasError] = useState(false);
@@ -40,11 +41,37 @@ export const PaginationButtons = (props: {
     }
   }
 
+  // if only two pages, show "prev" and "next"
+  if (totalPages === 2) {
+    return (
+      <Pagination className={props.className}>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              disabled={activePage === 1}
+              onClick={() => {
+                setPage(activePage - 1);
+              }}
+            />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext
+              disabled={activePage === totalPages}
+              onClick={() => {
+                setPage(activePage + 1);
+              }}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    );
+  }
+
   // just render all the page buttons directly
   if (totalPages <= 6) {
     const pages = [...Array(totalPages)].map((_, i) => i + 1);
     return (
-      <Pagination>
+      <Pagination className={props.className}>
         <PaginationContent>
           {pages.map((page) => (
             <PaginationItem key={page}>
@@ -64,7 +91,7 @@ export const PaginationButtons = (props: {
   }
 
   return (
-    <Pagination>
+    <Pagination className={props.className}>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious

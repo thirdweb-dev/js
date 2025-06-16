@@ -3,7 +3,7 @@ import { storybookThirdwebClient } from "stories/utils";
 import { getContract } from "thirdweb";
 import { baseSepolia } from "thirdweb/chains";
 import { ThirdwebProvider } from "thirdweb/react";
-import { ClaimTokenCardUI } from "./claim-tokens-ui";
+import { TokenDropClaim } from "./claim-tokens-ui";
 
 const meta = {
   title: "ERC20/ClaimTokenCardUI",
@@ -59,7 +59,7 @@ const mockClaimCondition = {
 
 function Story() {
   return (
-    <ClaimTokenCardUI
+    <TokenDropClaim
       contract={mockContract}
       name="Example Token"
       symbol="EXP"
