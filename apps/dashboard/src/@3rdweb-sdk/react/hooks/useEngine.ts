@@ -70,15 +70,25 @@ export type BackendWallet = {
 export function useEngineBackendWallets(params: {
   instanceUrl: string;
   authToken: string;
+  limit?: number;
+  page?: number;
 }) {
   const { instanceUrl, authToken } = params;
   return useQuery({
-    queryKey: [...engineKeys.backendWallets(instanceUrl), authToken],
+    queryKey: [
+      ...engineKeys.backendWallets(instanceUrl),
+      authToken,
+      params.limit,
+      params.page,
+    ],
     queryFn: async () => {
-      const res = await fetch(`${instanceUrl}backend-wallet/get-all?limit=50`, {
-        method: "GET",
-        headers: getEngineRequestHeaders(authToken),
-      });
+      const res = await fetch(
+        `${instanceUrl}backend-wallet/get-all?limit=${params.limit ?? 1000}&page=${params.page ?? 1}`,
+        {
+          method: "GET",
+          headers: getEngineRequestHeaders(authToken),
+        },
+      );
 
       const json = await res.json();
 

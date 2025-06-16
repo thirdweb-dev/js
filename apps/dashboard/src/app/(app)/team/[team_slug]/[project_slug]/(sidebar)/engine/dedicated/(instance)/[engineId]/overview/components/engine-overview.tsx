@@ -1,12 +1,14 @@
 "use client";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import { Button } from "@/components/ui/button";
 import { TrackedUnderlineLink } from "@/components/ui/tracked-link";
 import {
   type EngineInstance,
   useEngineBackendWallets,
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWalletChain } from "thirdweb/react";
@@ -62,15 +64,24 @@ function BackendWalletsSection(props: {
   const activeWalletChain = useActiveWalletChain();
   const [_chainId, setChainId] = useState<number>();
   const chainId = _chainId || activeWalletChain?.id || 1;
+  const pageSize = 10;
+  const [page, setPage] = useState(1);
 
   const backendWallets = useEngineBackendWallets({
     instanceUrl: instance.url,
     authToken,
+    limit: pageSize,
+    page,
   });
+
   const { data: walletConfig } = useEngineWalletConfig({
     instanceUrl: instance.url,
     authToken,
   });
+
+  const disableNextButton = (backendWallets.data?.length || 0) < pageSize;
+  const disablePreviousButton = page === 1;
+  const showPagination = !disableNextButton || !disablePreviousButton;
 
   return (
     <section className="rounded-lg border border-border bg-card">
@@ -151,6 +162,30 @@ function BackendWalletsSection(props: {
         chainId={chainId}
         client={props.client}
       />
+
+      {showPagination && (
+        <div className="flex justify-end gap-3 border-t px-4 py-5">
+          <Button
+            variant="outline"
+            disabled={disablePreviousButton || backendWallets.isPending}
+            className="gap-2"
+            onClick={() => setPage(page - 1)}
+          >
+            <ArrowLeftIcon className="h-4 w-4" />
+            Previous
+          </Button>
+
+          <Button
+            variant="outline"
+            disabled={disableNextButton || backendWallets.isPending}
+            className="gap-2"
+            onClick={() => setPage(page + 1)}
+          >
+            Next
+            <ArrowRightIcon className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
     </section>
   );
 }
