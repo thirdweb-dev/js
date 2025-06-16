@@ -258,7 +258,6 @@ type UIOptionsResult =
  * @bridge
  * @beta
  * @react
- * @buyCrypto
  */
 export function CheckoutWidget(props: CheckoutWidgetProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");

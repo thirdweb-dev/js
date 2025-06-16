@@ -285,7 +285,6 @@ type UIOptionsResult =
  * @bridge
  * @beta
  * @react
- * @buyCrypto
  */
 export function TransactionWidget(props: TransactionWidgetProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
