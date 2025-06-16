@@ -10,7 +10,6 @@
   "project": ["src/**"],
   "ignoreBinaries": ["only-allow", "biome"],
   "ignoreDependencies": [
-    "@storybook/blocks",
     "@thirdweb-dev/service-utils",
     "@thirdweb-dev/vault-sdk",
     "@types/color",

@@ -1,5 +1,5 @@
 import type { Team } from "@/api/team";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { projectStub } from "../../../stories/stubs";
 import { storybookThirdwebClient } from "../../../stories/utils";
 import { InAppWalletSettingsUI } from "./index";

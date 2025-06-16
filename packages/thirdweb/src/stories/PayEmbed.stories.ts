@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { PayEmbed } from "../react/web/ui/PayEmbed.js";
 import { storyClient } from "./utils.js";
 

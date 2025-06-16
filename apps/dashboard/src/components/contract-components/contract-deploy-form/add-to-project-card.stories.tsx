@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useState } from "react";
 import {
   BadgeContainer,
@@ -47,6 +47,7 @@ function teamsAndProjectsStub(teamCount: number, projectCount: number) {
         id: `project_${i + 1}_${j + 1}`,
         name: `Project ${i + 1}_${j + 1}`,
         image: `https://picsum.photos/200?random=${i}`,
+        slug: `project-${i + 1}-${j + 1}`,
       });
     }
 

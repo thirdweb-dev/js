@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { projectStub } from "stories/stubs";
 import { ProjectFTUX } from "./ProjectFTUX";
 

@@ -1,6 +1,7 @@
 "use client";
 
 import type { Team } from "@/api/team";
+import { CheckoutButton } from "@/components/billing";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
@@ -10,9 +11,20 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +40,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {} from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Table,
@@ -39,6 +52,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import {
@@ -56,9 +70,13 @@ import { useTrack } from "hooks/analytics/useTrack";
 import {
   CheckIcon,
   CircleAlertIcon,
+  DatabaseIcon,
+  InfinityIcon,
   InfoIcon,
   PencilIcon,
+  ShieldCheckIcon,
   Trash2Icon,
+  WalletIcon,
 } from "lucide-react";
 import { MoreHorizontalIcon } from "lucide-react";
 import { ArrowRightIcon } from "lucide-react";
@@ -80,20 +98,18 @@ type RemovedEngineFromDashboard = (
 ) => Promise<void>;
 
 export function EngineInstancesTable(props: {
-  teamSlug: string;
+  team: Team;
   projectSlug: string;
   instances: EngineInstance[];
   engineLinkPrefix: string;
-  teamPlan: Team["billingPlan"];
 }) {
   const router = useDashboardRouter();
 
   return (
     <EngineInstancesTableUI
-      teamPlan={props.teamPlan}
+      team={props.team}
       instances={props.instances}
       engineLinkPrefix={props.engineLinkPrefix}
-      teamSlug={props.teamSlug}
       projectSlug={props.projectSlug}
       deleteCloudHostedEngine={async (params) => {
         await deleteCloudHostedEngine(params);
@@ -111,28 +127,116 @@ export function EngineInstancesTable(props: {
   );
 }
 
+function DedicatedEngineSubscriptionButton(props: { team: Team }) {
+  const [open, setOpen] = useState(false);
+  const isMobile = useIsMobile();
+
+  const trigger = (
+    <Button>
+      <DatabaseIcon className="mr-2 size-4" />
+      Deploy Dedicated Engine
+    </Button>
+  );
+
+  const title = (
+    <div className="flex flex-row items-center gap-2">
+      <div className="grid size-8 place-items-center rounded-full bg-warning-text">
+        <DatabaseIcon className="size-4 text-white" />
+      </div>
+      <span className="font-semibold text-lg">Dedicated Engine</span>
+    </div>
+  );
+
+  const content = (
+    <div className="flex flex-col items-start justify-center gap-4 px-4 md:px-0">
+      <ul className="flex flex-col gap-1 self-start text-muted-foreground text-sm">
+        <li className="flex items-center gap-2">
+          <ShieldCheckIcon className="size-4 text-foreground" />
+          Isolated environment
+        </li>
+        <li className="flex items-center gap-2">
+          <WalletIcon className="size-4 text-foreground" />
+          EOA or Smart Wallets
+        </li>
+        <li className="flex items-center gap-2">
+          <InfinityIcon className="size-4 text-foreground" />
+          No usage limits or charges
+        </li>
+      </ul>
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerTrigger asChild>{trigger}</DrawerTrigger>
+        <DrawerContent className="max-h-[90vh]">
+          <DrawerHeader>
+            <DrawerTitle>{title}</DrawerTitle>
+            <DrawerDescription>
+              Instantly deploy a dedicated engine instance for your team.
+            </DrawerDescription>
+          </DrawerHeader>
+          {content}
+          <DrawerFooter>
+            <CheckoutButton
+              billingStatus={props.team.billingStatus}
+              teamSlug={props.team.slug}
+              sku="product:engine_standard"
+            >
+              Deploy Now · $299 / month
+            </CheckoutButton>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>
+            Instantly deploy a dedicated engine instance for your team.
+          </DialogDescription>
+        </DialogHeader>
+        {content}
+        <DialogFooter>
+          <CheckoutButton
+            billingStatus={props.team.billingStatus}
+            teamSlug={props.team.slug}
+            sku="product:engine_standard"
+          >
+            Deploy Now · $299 / month
+          </CheckoutButton>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export function EngineInstancesTableUI(props: {
   instances: EngineInstance[];
   engineLinkPrefix: string;
   deleteCloudHostedEngine: DeletedCloudHostedEngine;
   editEngineInstance: EditedEngineInstance;
   removeEngineFromDashboard: RemovedEngineFromDashboard;
-  teamPlan: Team["billingPlan"];
-  teamSlug: string;
+  team: Team;
   projectSlug: string;
 }) {
   return (
-    <div className="flex grow flex-col">
-      <h2 className="mb-4 font-semibold text-2xl tracking-tight">
-        Engine Instances
-      </h2>
+    <div className="flex grow flex-col gap-2">
+      <div className="mb-4 flex flex-row items-center justify-between text-center">
+        <h2 className="font-semibold text-2xl tracking-tight">
+          Engine Instances
+        </h2>
+        <DedicatedEngineSubscriptionButton team={props.team} />
+      </div>
 
       {props.instances.length === 0 ? (
-        <EmptyEngineState
-          teamPlan={props.teamPlan}
-          teamSlug={props.teamSlug}
-          projectSlug={props.projectSlug}
-        />
+        <EmptyEngineState team={props.team} projectSlug={props.projectSlug} />
       ) : (
         <TableContainer>
           <Table>
@@ -147,7 +251,7 @@ export function EngineInstancesTableUI(props: {
               {props.instances.map((instance) => (
                 <EngineInstanceRow
                   key={instance.id}
-                  teamIdOrSlug={props.teamSlug}
+                  teamIdOrSlug={props.team.slug}
                   instance={instance}
                   engineLinkPrefix={props.engineLinkPrefix}
                   deleteCloudHostedEngine={props.deleteCloudHostedEngine}
@@ -813,8 +917,7 @@ function DeleteEngineSubscriptionModalContent(props: {
 }
 
 function EmptyEngineState(props: {
-  teamPlan: Team["billingPlan"];
-  teamSlug: string;
+  team: Team;
   projectSlug: string;
 }) {
   const [selectedTab, setSelectedTab] = useState<
@@ -833,94 +936,85 @@ function EmptyEngineState(props: {
         instance.
       </p>
 
-      {props.teamPlan !== "accelerate" && props.teamPlan !== "scale" && (
-        <>
-          <div className="w-full max-w-md">
-            <div className="mx-auto max-w-sm">
-              <div className="grid grid-cols-2 gap-1 rounded-lg border p-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={cn(selectedTab === "cloud-hosted" && "bg-accent")}
-                  onClick={() => setSelectedTab("cloud-hosted")}
-                >
-                  Managed
-                </Button>
+      <>
+        <div className="w-full max-w-md">
+          <div className="mx-auto max-w-sm">
+            <div className="grid grid-cols-2 gap-1 rounded-lg border p-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(selectedTab === "cloud-hosted" && "bg-accent")}
+                onClick={() => setSelectedTab("cloud-hosted")}
+              >
+                Managed
+              </Button>
 
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(selectedTab === "self-hosted" && "bg-accent")}
+                onClick={() => setSelectedTab("self-hosted")}
+              >
+                Self-hosted
+              </Button>
+            </div>
+          </div>
+
+          <div className="h-5" />
+
+          {selectedTab === "self-hosted" && (
+            <div className="flex flex-col text-center">
+              <h3 className="mb-0.5 font-semibold text-base">
+                Self-Hosted Engine
+              </h3>
+              <p className="text-muted-foreground text-sm">
+                Add engine instance running on your own infrastructure.
+              </p>
+              <div className="h-4" />
+              <div className="mt-auto">
                 <Button
-                  variant="ghost"
+                  className="w-full gap-2"
+                  variant="default"
                   size="sm"
-                  className={cn(selectedTab === "self-hosted" && "bg-accent")}
-                  onClick={() => setSelectedTab("self-hosted")}
+                  asChild
                 >
-                  Self-hosted
+                  <Link
+                    href={`/team/${props.team.slug}/${props.projectSlug}/engine/dedicated/import`}
+                  >
+                    Import self-hosted Engine
+                    <ArrowRightIcon size={16} />
+                  </Link>
                 </Button>
               </div>
             </div>
+          )}
 
-            <div className="h-5" />
-
-            {selectedTab === "self-hosted" && (
-              <div className="flex flex-col text-center">
-                <h3 className="mb-0.5 font-semibold text-base">
-                  Self-Hosted Engine
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  Add engine instance running on your own infrastructure.
-                </p>
-                <div className="h-4" />
-                <div className="mt-auto">
-                  <Button
-                    className="w-full gap-2"
-                    variant="default"
-                    size="sm"
-                    asChild
-                  >
-                    <Link
-                      href={`/team/${props.teamSlug}/${props.projectSlug}/engine/dedicated/import`}
-                    >
-                      Import self-hosted Engine
-                      <ArrowRightIcon size={16} />
-                    </Link>
-                  </Button>
-                </div>
+          {selectedTab === "cloud-hosted" && (
+            <div className="flex flex-col text-center">
+              <h3 className="mb-0.5 font-semibold text-base">Managed Engine</h3>
+              <p className="text-muted-foreground text-sm">
+                Deploy a managed engine instance to your team. <br /> We
+                recommend using Engine Cloud in most cases.
+              </p>
+              <div className="h-4" />
+              <div className="mt-auto">
+                <DedicatedEngineSubscriptionButton team={props.team} />
               </div>
-            )}
+            </div>
+          )}
+        </div>
 
-            {selectedTab === "cloud-hosted" && (
-              <div className="flex flex-col text-center">
-                <h3 className="mb-0.5 font-semibold text-base">
-                  Managed Engine
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  Contact us to add a managed engine instance to your team.{" "}
-                  <br /> We recommend using Engine Cloud in most cases
-                </p>
-                <div className="h-4" />
-                <div className="mt-auto">
-                  <Button className="w-full gap-2" size="sm" asChild>
-                    <Link href={"/contact-us"} target="_blank">
-                      Contact Us
-                      <ArrowRightIcon size={16} />
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="mt-4 text-center text-muted-foreground text-sm">
-            Need help getting started? <br className="lg:hidden" />
-            <Link
-              href="https://portal.thirdweb.com/engine"
-              target="_blank"
-              className="text-foreground hover:underline"
-            >
-              View documentation
-            </Link>
-          </div>
-        </>
-      )}
+        <div className="mt-4 text-center text-muted-foreground text-sm">
+          Need help getting started? <br className="lg:hidden" />
+          <Link
+            href="https://portal.thirdweb.com/engine"
+            target="_blank"
+            className="text-foreground hover:underline"
+          >
+            View documentation
+          </Link>
+        </div>
+      </>
     </div>
   );
 }

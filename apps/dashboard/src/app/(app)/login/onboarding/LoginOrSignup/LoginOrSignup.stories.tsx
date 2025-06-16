@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { storybookLog } from "stories/utils";
 import { AccountOnboardingLayout } from "../onboarding-layout";
 import { LoginOrSignup } from "./LoginOrSignup";

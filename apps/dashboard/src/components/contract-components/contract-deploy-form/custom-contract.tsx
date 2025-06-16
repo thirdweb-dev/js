@@ -678,9 +678,15 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 metadataUri: metadata.metadataUri,
               });
               deployStatusModal.nextStep();
-              deployStatusModal.setViewContractLink(
-                `/${walletChain.id}/${contractAddr}`,
-              );
+              if (importSelection.team && importSelection.project) {
+                deployStatusModal.setViewContractLink(
+                  `/team/${importSelection.team.slug}/${importSelection.project.slug}/contract/${walletChain.id}/${contractAddr}`,
+                );
+              } else {
+                deployStatusModal.setViewContractLink(
+                  `/${walletChain.id}/${contractAddr}`,
+                );
+              }
 
               // if the contract should be added to a project
               if (

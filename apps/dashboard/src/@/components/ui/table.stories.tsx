@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import Link from "next/link";
 import { BadgeContainer } from "../../../stories/utils";
 import { cn } from "../../lib/utils";

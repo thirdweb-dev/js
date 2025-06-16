@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { randomLorem } from "stories/stubs";
 import { ThirdwebProvider } from "thirdweb/react";
 import type { TruncatedSessionInfo } from "../api/types";

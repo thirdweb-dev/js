@@ -17,7 +17,8 @@ export function getNFTStepTrackingData(
   return {
     category: "asset",
     action: params.action,
-    contractType: params.ercType === "erc721" ? "DropERC721" : "DropERC1155",
+    contractType: "NFTCollection",
+    ercType: params.ercType,
     label: params.status,
     chainId: params.chainId,
     ...(params.status === "error"

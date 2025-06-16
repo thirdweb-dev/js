@@ -2,7 +2,7 @@ import type {
   CreateNotificationChannelInput,
   EngineNotificationChannel,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useMutation } from "@tanstack/react-query";
 import {
   createEngineAlertRuleStub,

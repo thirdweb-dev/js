@@ -24,7 +24,7 @@ export default async function Page(props: {
   });
 
   return (
-    <TeamOnboardingLayout currentStep={2}>
+    <TeamOnboardingLayout currentStep={3}>
       <InviteTeamMembers team={team} client={client} />
     </TeamOnboardingLayout>
   );

@@ -6,7 +6,7 @@ export const ZKSYNC_IMPLEMENTATIONS: Record<number, Record<string, string>> = {
     MarketplaceV3: "0x8b0DBCf5b7D01eBB0F24525CE8AB72F16CE4F8C8",
   },
   [324]: {
-    MarketplaceV3: "0x88e7F2bEf0a23073b7Cc2c79D307Dbd9138Fa79c",
+    MarketplaceV3: "0xFD5663B3Ed316aEB79c9b5c4A242172273cA3395",
   },
   [11124]: {
     MarketplaceV3: "0x2dA4Dd326A6482679547071be21f74685d730504",
@@ -18,10 +18,16 @@ export const ZKSYNC_IMPLEMENTATIONS: Record<number, Record<string, string>> = {
     MarketplaceV3: "0x9EB0830B0b10010F2a53383517A7D0B75531Bb1b",
   },
   [2741]: {
-    MarketplaceV3: "0x4b14569c7B79DBe686Ac3Ba5996131E7EDaB7a93",
+    MarketplaceV3: "0x9Fdf34f552cdA8E2B0cD64e2EddcB732a5Ff8455",
   },
   [232]: {
     MarketplaceV3: "0x9742f5ac11958cFAd151eBF0Fc31302fA409036E",
+  },
+  [531050104]: {
+    MarketplaceV3: "0x292c324920d4120F928dA6f04548442fa10B8B0f",
+  },
+  [50104]: {
+    MarketplaceV3: "0x292c324920d4120F928dA6f04548442fa10B8B0f",
   },
 };
 
@@ -33,4 +39,6 @@ export const ZKSYNC_WETH: Record<number, string> = {
   [555271]: "0xb0b8b267d44c64BA6dD1Daf442949887c85199f6",
   [2741]: "0x3439153EB7AF838Ad19d56E1571FBD09333C2809",
   [232]: "0xE5ecd226b3032910CEaa43ba92EE8232f8237553",
+  [531050104]: "0x9B7EA63EF5062661570afe548e3AD691D5652527",
+  [50104]: "0x2b1A859dE6A55c553520D7780Bc5805712B128F9",
 };

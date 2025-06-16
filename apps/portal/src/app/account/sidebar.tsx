@@ -2,38 +2,35 @@ const accountSlug = "/account";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 
 export const sidebar: SideBar = {
-  name: "Account",
+  name: "Teams & Accounts",
   links: [
     {
-      name: "Create Account",
-      href: `${accountSlug}/create-account`,
-    },
-    {
-      name: "Link Accounts",
-      href: `${accountSlug}/link-accounts`,
-    },
-    {
-      name: "Billing",
+      name: "Account",
       links: [
+        {
+          name: "Create Account",
+          href: `${accountSlug}/create-account`,
+        },
+        {
+          name: "Link Accounts",
+          href: `${accountSlug}/link-accounts`,
+        },
+      ],
+    },
+    {
+      name: "Teams",
+      links: [
+        {
+          name: "Manage Teams",
+          href: `${accountSlug}/teams/manage-teams`,
+        },
+        {
+          name: "Manage Team Members",
+          href: `${accountSlug}/teams/manage-team-members`,
+        },
         {
           name: "Manage Billing",
           href: `${accountSlug}/billing/manage-billing`,
-        },
-        {
-          name: "View Usage",
-          href: `${accountSlug}/billing/view-usage`,
-        },
-        {
-          name: "Credits",
-          href: `${accountSlug}/billing/credits`,
-        },
-        {
-          name: "Upgrade Plan",
-          href: `${accountSlug}/billing/upgrade-plan`,
-        },
-        {
-          name: "Manage Team",
-          href: `${accountSlug}/billing/manage-team`,
         },
       ],
     },

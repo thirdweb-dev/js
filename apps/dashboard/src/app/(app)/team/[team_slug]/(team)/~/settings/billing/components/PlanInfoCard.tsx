@@ -300,7 +300,7 @@ function BillingInfo({
                 <span className="text-muted-foreground text-sm">
                   -{" "}
                   <Link
-                    className="hover:underline"
+                    className="underline decoration-dotted underline-offset-2 hover:decoration-solid"
                     href={`/team/${teamSlug}/~/usage`}
                   >
                     View Breakdown
@@ -332,15 +332,11 @@ function SubscriptionOverview(props: {
               props.title
             ))}
           <p className="text-muted-foreground text-sm">
-            {format(
-              new Date(props.subscription.currentPeriodStart),
-              "MMMM dd yyyy",
-            )}{" "}
-            -{" "}
+            Your next billing period begins{" "}
             {format(
               new Date(props.subscription.currentPeriodEnd),
-              "MMMM dd yyyy",
-            )}{" "}
+              "MMMM dd, yyyy",
+            )}
           </p>
         </div>
 
