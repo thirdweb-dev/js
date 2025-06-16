@@ -13,7 +13,7 @@ import {
 import Link from "next/link";
 import type React from "react";
 import { useState } from "react";
-import { type Address, isAddress } from "thirdweb";
+import type { Address } from "thirdweb";
 import { defineChain } from "thirdweb/chains";
 import { cn } from "../../../../lib/utils";
 import { CollapsibleSection } from "../../sign-in/components/CollapsibleSection";

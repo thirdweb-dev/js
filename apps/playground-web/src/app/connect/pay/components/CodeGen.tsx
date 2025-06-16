@@ -1,10 +1,10 @@
+import { THIRDWEB_CLIENT } from "@/lib/client";
+import { useQuery } from "@tanstack/react-query";
 import { Suspense, lazy } from "react";
+import { defineChain, getContract, toUnits } from "thirdweb";
+import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { CodeLoading } from "../../../../components/code/code.client";
 import type { BridgeComponentsPlaygroundOptions } from "./types";
-import { useQuery } from "@tanstack/react-query";
-import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
-import { defineChain, getContract, toUnits } from "thirdweb";
-import { THIRDWEB_CLIENT } from "@/lib/client";
 
 const CodeClient = lazy(
   () => import("../../../../components/code/code.client"),
@@ -13,41 +13,7 @@ const CodeClient = lazy(
 export function CodeGen(props: {
   options: BridgeComponentsPlaygroundOptions;
 }) {
-  return (
-    <div className="flex w-full grow flex-col">
-      <Suspense fallback={<CodeLoading />}>
-        <CodeClient
-          code={getCode(props.options)}
-          lang="tsx"
-          loader={<CodeLoading />}
-          className="grow"
-        />
-      </Suspense>
-    </div>
-  );
-}
-
-function getCode(options: BridgeComponentsPlaygroundOptions) {
-  const imports = {
-    react: ["PayEmbed"] as string[],
-    thirdweb: [] as string[],
-    wallets: [] as string[],
-    chains: [] as string[],
-  };
-
-  // Check if we have a custom chain (not base chain which has id 8453)
-  const isCustomChain =
-    options.payOptions.buyTokenChain &&
-    options.payOptions.buyTokenChain.id !== 8453;
-
-  if (isCustomChain) {
-    // Add defineChain to imports if using a custom chain
-    imports.thirdweb.push("defineChain");
-  } else {
-    // Otherwise use the base chain
-    imports.chains.push("base");
-  }
-
+  const { options } = props;
   const { data: amount } = useQuery({
     queryKey: [
       "amount",
@@ -71,6 +37,41 @@ function getCode(options: BridgeComponentsPlaygroundOptions) {
       return toUnits(options.payOptions.buyTokenAmount, token.decimals);
     },
   });
+
+  return (
+    <div className="flex w-full grow flex-col">
+      <Suspense fallback={<CodeLoading />}>
+        <CodeClient
+          code={getCode(props.options, amount)}
+          lang="tsx"
+          loader={<CodeLoading />}
+          className="grow"
+        />
+      </Suspense>
+    </div>
+  );
+}
+
+function getCode(options: BridgeComponentsPlaygroundOptions, amount?: bigint) {
+  const imports = {
+    react: ["PayEmbed"] as string[],
+    thirdweb: [] as string[],
+    wallets: [] as string[],
+    chains: [] as string[],
+  };
+
+  // Check if we have a custom chain (not base chain which has id 8453)
+  const isCustomChain =
+    options.payOptions.buyTokenChain &&
+    options.payOptions.buyTokenChain.id !== 8453;
+
+  if (isCustomChain) {
+    // Add defineChain to imports if using a custom chain
+    imports.thirdweb.push("defineChain");
+  } else {
+    // Otherwise use the base chain
+    imports.chains.push("base");
+  }
 
   imports.wallets.push("createWallet");
 
@@ -103,15 +104,16 @@ function Example() {
     <${componentName}
       client={client}
       chain={defineChain(${options.payOptions.buyTokenChain.id})}
-      amount={${amount}n}${options.payOptions.buyTokenAddress ? `\n\t  token="${options.payOptions.buyTokenAddress}"` : ""}${options.payOptions.sellerAddress ? `\n\t  seller="${options.payOptions.sellerAddress}"` : ""}${options.payOptions.title ? `\n\t  ${options.payOptions.widget === "checkout" ? "name" : "title"}="${options.payOptions.title}"` : ""}${options.payOptions.image ? `\n\t  image="${options.payOptions.image}"` : ""}${options.payOptions.description ? `\n\t  description="${options.payOptions.description}"` : ""}${options.payOptions.widget === "transaction"
-      ? `\n\t  transaction={claimTo({
+      amount={${amount}n}${options.payOptions.buyTokenAddress ? `\n\t  token="${options.payOptions.buyTokenAddress}"` : ""}${options.payOptions.sellerAddress ? `\n\t  seller="${options.payOptions.sellerAddress}"` : ""}${options.payOptions.title ? `\n\t  ${options.payOptions.widget === "checkout" ? "name" : "title"}="${options.payOptions.title}"` : ""}${options.payOptions.image ? `\n\t  image="${options.payOptions.image}"` : ""}${options.payOptions.description ? `\n\t  description="${options.payOptions.description}"` : ""}${
+        options.payOptions.widget === "transaction"
+          ? `\n\t  transaction={claimTo({
         contract: nftContract,
         quantity: 1n,
         tokenId: 2n,
         to: account?.address || "",
       })}`
-      : ""
-    }
+          : ""
+      }
     />
   );
 }`;
