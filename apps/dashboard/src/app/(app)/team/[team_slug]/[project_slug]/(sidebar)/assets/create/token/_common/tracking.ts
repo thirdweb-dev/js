@@ -16,7 +16,7 @@ export function getTokenDeploymentTrackingData(
     category: "custom-contract",
     action: "deploy",
     label: params.type,
-    publisherAndContractName: "deployer.thirdweb.eth/DropERC20",
+    publisherAndContractName: "deployer.thirdweb.eth/ERC20Asset",
     chainId: params.chainId,
     deploymentType: "asset",
   };
@@ -40,7 +40,7 @@ export function getTokenStepTrackingData(
   return {
     category: "asset",
     action: params.action,
-    contractType: "DropERC20",
+    contractType: "ERC20Asset",
     label: params.status,
     chainId: params.chainId,
     ...(params.status === "error"
@@ -56,7 +56,7 @@ export function getTokenLaunchTrackingData(
   params: {
     chainId: number;
     airdropEnabled: boolean;
-    saleEnabled: boolean;
+    saleMode: "disabled" | "direct-sale" | "public-market";
   } & (
     | {
         type: "attempt" | "success";
@@ -71,10 +71,10 @@ export function getTokenLaunchTrackingData(
     category: "asset",
     action: "launch",
     label: params.type,
-    contractType: "DropERC20",
+    contractType: "ERC20Asset",
     chainId: params.chainId,
     airdropEnabled: params.airdropEnabled,
-    saleEnabled: params.saleEnabled,
+    saleMode: params.saleMode,
     ...(params.type === "error"
       ? {
           errorMessage: params.errorMessage,
@@ -87,7 +87,7 @@ export function getTokenLaunchTrackingData(
 export function getStepCardTrackingData(params: {
   step: string;
   click: "prev" | "next";
-  contractType: "DropERC20" | "NFTCollection";
+  contractType: "ERC20Asset" | "NFTCollection";
 }) {
   return {
     category: "asset",

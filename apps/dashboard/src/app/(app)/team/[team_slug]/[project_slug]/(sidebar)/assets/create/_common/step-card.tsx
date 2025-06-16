@@ -7,7 +7,7 @@ export function StepCard(props: {
   title: string;
   tracking: {
     page: string;
-    contractType: "DropERC20" | "NFTCollection";
+    contractType: "ERC20Asset" | "NFTCollection";
   };
   prevButton:
     | undefined
@@ -42,7 +42,7 @@ export function StepCard(props: {
       {props.children}
 
       {(props.prevButton || props.nextButton) && (
-        <div className="flex justify-end gap-3 border-t p-6">
+        <div className="flex justify-end gap-3 border-t p-4 md:p-6">
           {props.prevButton && (
             <Button
               variant="outline"

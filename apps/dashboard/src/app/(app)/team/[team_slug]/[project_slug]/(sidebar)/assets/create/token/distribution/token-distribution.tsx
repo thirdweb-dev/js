@@ -35,7 +35,7 @@ export function TokenDistributionFieldset(props: {
           title="Coin Distribution"
           tracking={{
             page: "distribution",
-            contractType: "DropERC20",
+            contractType: "ERC20Asset",
           }}
           prevButton={{
             onClick: props.onPrevious,

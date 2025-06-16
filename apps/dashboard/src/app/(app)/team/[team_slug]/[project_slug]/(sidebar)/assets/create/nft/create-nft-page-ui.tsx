@@ -8,7 +8,7 @@ import {
   type ThirdwebClient,
   getAddress,
 } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
+import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import {
   type CreateNFTCollectionFunctions,
   type NFTCollectionInfoFormValues,
@@ -148,14 +148,15 @@ export function CreateNFTPageUI(props: {
 }
 
 function useNFTCollectionInfoForm() {
+  const activeChain = useActiveWalletChain();
   return useForm<NFTCollectionInfoFormValues>({
     resolver: zodResolver(nftCollectionInfoFormSchema),
-    values: {
+    defaultValues: {
       name: "",
       description: "",
       symbol: "",
       image: undefined,
-      chain: "1",
+      chain: activeChain?.id.toString() || "1",
       socialUrls: [
         {
           platform: "Website",
