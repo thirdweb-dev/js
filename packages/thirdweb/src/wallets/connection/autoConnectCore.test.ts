@@ -118,7 +118,7 @@ describe("useAutoConnectCore", () => {
       props: {
         wallets: [wallet],
         client: TEST_CLIENT,
-        onTimeout: () => console.info("TIMEOUTTED"),
+        onTimeout: () => {},
         timeout: 0,
       },
       createWalletFn: (id: WalletId) =>

@@ -4,7 +4,8 @@
     "src/exports/**",
     "scripts/**/*.{ts,mjs}",
     "src/cli/bin.ts",
-    "src/transaction/actions/send-batch-transaction.ts"
+    "src/transaction/actions/send-batch-transaction.ts",
+    "src/react/core/hooks/useBridgeRoutes.ts"
   ],
   "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs"],
   "ignore": ["src/**/__generated__/**", "**/*.bench.ts"],

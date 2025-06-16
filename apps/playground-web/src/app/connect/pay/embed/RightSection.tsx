@@ -70,15 +70,19 @@ export function RightSection(props: {
             (props.options.payOptions.mode === "transaction"
               ? "Transaction"
               : props.options.payOptions.mode === "direct_payment"
-                ? "Purchase"
+                ? "Product Name"
                 : "Buy Crypto"),
+          description:
+            props.options.payOptions.description || "Your own description here",
           image:
             props.options.payOptions.image ||
-            `https://placehold.co/600x400/${
-              props.options.theme.type === "dark"
-                ? "1d1d23/7c7a85"
-                : "f2eff3/6f6d78"
-            }?text=Your%20Product%20Here&font=roboto`,
+            props.options.payOptions.mode === "direct_payment"
+              ? `https://placehold.co/600x400/${
+                  props.options.theme.type === "dark"
+                    ? "1d1d23/7c7a85"
+                    : "f2eff3/6f6d78"
+                }?text=Your%20Product%20Here&font=roboto`
+              : undefined,
         },
 
         // Mode-specific options

@@ -591,7 +591,7 @@ describe("Details Modal", () => {
     const { container } = render(
       <AccountProvider address={VITALIK_WALLET} client={client}>
         <NetworkSwitcherButton
-          setScreen={(scr) => console.log(scr)}
+          setScreen={(_scr) => {}}
           disableSwitchChain={false}
           displayBalanceToken={undefined}
           client={client}
@@ -616,7 +616,7 @@ describe("Details Modal", () => {
     const { container } = render(
       <AccountProvider address={VITALIK_WALLET} client={client}>
         <NetworkSwitcherButton
-          setScreen={(scr) => console.log(scr)}
+          setScreen={(_scr) => {}}
           disableSwitchChain={false}
           displayBalanceToken={undefined}
           client={client}

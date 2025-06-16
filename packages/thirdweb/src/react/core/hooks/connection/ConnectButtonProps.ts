@@ -25,40 +25,42 @@ import type {
 } from "../../utils/defaultTokens.js";
 import type { SiweAuthOptions } from "../auth/useSiweAuth.js";
 
-export type PaymentInfo = {
-  /**
-   * The chain to receive the payment on.
-   */
-  chain: Chain;
-  /**
-   * The address of the seller wallet to receive the payment on.
-   */
-  sellerAddress: string;
-  /**
-   * Optional ERC20 token to receive the payment on.
-   * If not provided, the native token will be used.
-   */
-  token?: TokenInfo;
-  /**
-   * For direct transfers, specify who will pay the transfer fee. Can be "sender" or "receiver".
-   */
-  feePayer?: "sender" | "receiver";
-} & (
-  | {
-      /**
-       * The amount of tokens to receive in ETH or tokens.
-       * ex: 0.1 ETH or 100 USDC
-       */
-      amount: string;
-    }
-  | {
-      /**
-       * The amount of tokens to receive in wei.
-       * ex: 1000000000000000000 wei
-       */
-      amountWei: bigint;
-    }
-);
+export type PaymentInfo = Prettify<
+  {
+    /**
+     * The chain to receive the payment on.
+     */
+    chain: Chain;
+    /**
+     * The address of the seller wallet to receive the payment on.
+     */
+    sellerAddress: string;
+    /**
+     * Optional ERC20 token to receive the payment on.
+     * If not provided, the native token will be used.
+     */
+    token?: Partial<TokenInfo> & { address: string };
+    /**
+     * For direct transfers, specify who will pay the transfer fee. Can be "sender" or "receiver".
+     */
+    feePayer?: "sender" | "receiver";
+  } & (
+    | {
+        /**
+         * The amount of tokens to receive in ETH or tokens.
+         * ex: 0.1 ETH or 100 USDC
+         */
+        amount: string;
+      }
+    | {
+        /**
+         * The amount of tokens to receive in wei.
+         * ex: 1000000000000000000 wei
+         */
+        amountWei: bigint;
+      }
+  )
+>;
 
 export type PayUIOptions = Prettify<
   {
@@ -78,7 +80,7 @@ export type PayUIOptions = Prettify<
           testMode?: boolean;
           prefillSource?: {
             chain: Chain;
-            token?: TokenInfo;
+            token?: Partial<TokenInfo> & { address: string };
             allowEdits?: {
               token: boolean;
               chain: boolean;
@@ -115,7 +117,8 @@ export type PayUIOptions = Prettify<
      * Callback to be called when the user successfully completes the purchase.
      */
     onPurchaseSuccess?: (
-      info:
+      // TODO: remove this type from the callback entirely or adapt it from the new format
+      info?:
         | {
             type: "crypto";
             status: BuyWithCryptoStatus;
@@ -135,6 +138,7 @@ export type PayUIOptions = Prettify<
      */
     metadata?: {
       name?: string;
+      description?: string;
       image?: string;
     };
 
@@ -160,13 +164,14 @@ export type FundWalletOptions = {
    */
   prefillBuy?: {
     chain: Chain;
-    token?: TokenInfo;
+    token?: Partial<TokenInfo> & { address: string };
     amount?: string;
     allowEdits?: {
       amount: boolean;
       token: boolean;
       chain: boolean;
     };
+    presetOptions?: [number, number, number];
   };
 };
 

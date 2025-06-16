@@ -70,7 +70,7 @@ export type SendTransactionPayModalConfig =
        * Callback to be called when the user successfully completes the purchase.
        */
       onPurchaseSuccess?: (
-        info:
+        info?:
           | {
               type: "crypto";
               status: BuyWithCryptoStatus;
