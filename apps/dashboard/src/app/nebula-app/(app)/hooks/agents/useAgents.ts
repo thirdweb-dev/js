@@ -1,12 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAgents } from "@thirdweb-dev/ai";
+import { getAgents, getNebulaClient } from "@thirdweb-dev/ai";
 
-export const useAgents = () => {
+type UseAgentsProps = {
+  authToken: string;
+};
+
+export const useAgents = ({ authToken }: UseAgentsProps) => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["getAgents"],
     queryFn: async () => {
       try {
-        const { data: agents } = await getAgents();
+        const client = getNebulaClient("http://localhost:4242", {
+          authToken: authToken,
+        });
+        const { data: agents } = await getAgents({
+          client,
+        });
 
         return agents || [];
       } catch (error) {

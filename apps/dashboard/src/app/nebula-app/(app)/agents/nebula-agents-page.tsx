@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAgents } from "hooks/agents/useAgents";
 import {
   BarChartIcon,
   BrainCircuitIcon,
@@ -102,9 +101,6 @@ export function NebulaAgentsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Top Picks");
 
-  const { agents } = useAgents();
-  console.log(agents);
-
   return (
     <div className="flex h-full flex-col overflow-y-auto">
       {/* Header */}
@@ -121,12 +117,6 @@ export function NebulaAgentsPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Link
-              href="/agents/my-agents"
-              className="text-muted-foreground text-sm hover:text-foreground"
-            >
-              My Agents
-            </Link>
             <Button size="sm" variant="default" asChild>
               <Link href="/agents/create">Create</Link>
             </Button>
