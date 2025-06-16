@@ -34,7 +34,7 @@ export type CompletedStatusResult =
 /**
  * Options for the step executor hook
  */
-export interface StepExecutorOptions {
+interface StepExecutorOptions {
   /** Prepared quote returned by Bridge.prepare */
   request: BridgePrepareRequest;
   /** Wallet instance providing getAccount() & sendTransaction */
@@ -78,7 +78,7 @@ interface StepExecutorResult {
 /**
  * Flatten RouteStep[] into a linear list of transactions preserving ordering & indices.
  */
-export function flattenRouteSteps(steps: RouteStep[]): FlattenedTx[] {
+function flattenRouteSteps(steps: RouteStep[]): FlattenedTx[] {
   const out: FlattenedTx[] = [];
   steps.forEach((step, stepIdx) => {
     step.transactions?.forEach((tx, _txIdx) => {
