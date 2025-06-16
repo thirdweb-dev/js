@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useMutation } from "@tanstack/react-query";
+import Fuse from "fuse.js";
 import { EllipsisIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -41,13 +42,21 @@ export function ManageMembersSection(props: {
   const [role, setRole] = useState<RoleFilterValue>("ALL ROLES");
   const [sortBy, setSortBy] = useState<MemberSortId>("date");
 
+  const membersIndex = useMemo(() => {
+    return new Fuse(props.members, {
+      keys: [
+        { name: "account.name", weight: 2 },
+        { name: "account.email", weight: 1 },
+      ],
+      threshold: 0.3,
+    });
+  }, [props.members]);
+
   const membersToShow = useMemo(() => {
     let value = props.members;
 
     if (searchTerm) {
-      value = value.filter((m) =>
-        m.account.name.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
+      value = membersIndex.search(searchTerm).map((result) => result.item);
     }
 
     value = value.filter((m) => !deletedMembersIds.includes(m.accountId));
@@ -76,7 +85,14 @@ export function ManageMembersSection(props: {
     }
 
     return value;
-  }, [role, props.members, sortBy, deletedMembersIds, searchTerm]);
+  }, [
+    role,
+    props.members,
+    sortBy,
+    deletedMembersIds,
+    searchTerm,
+    membersIndex,
+  ]);
 
   if (!props.userHasEditPermission) {
     topSection = (
