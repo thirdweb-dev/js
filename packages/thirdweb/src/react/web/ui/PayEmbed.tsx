@@ -1,32 +1,31 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import type { Token } from "../../../bridge/index.js";
+import { useEffect, useState } from "react";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
-import { getToken } from "../../../pay/convert/get-token.js";
-import { toTokens } from "../../../utils/units.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../wallets/types.js";
 import type { WalletId } from "../../../wallets/wallet-types.js";
 import { CustomThemeProvider } from "../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../core/design-system/index.js";
-import type { SiweAuthOptions } from "../../core/hooks/auth/useSiweAuth.js";
+import {
+  type SiweAuthOptions,
+  useSiweAuth,
+} from "../../core/hooks/auth/useSiweAuth.js";
 import type {
   ConnectButton_connectModalOptions,
-  FundWalletOptions,
   PayUIOptions,
 } from "../../core/hooks/connection/ConnectButtonProps.js";
+import { useActiveAccount } from "../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
+import { useConnectionManager } from "../../core/providers/connection-manager.js";
 import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
-import {
-  BridgeOrchestrator,
-  type UIOptions,
-} from "./Bridge/BridgeOrchestrator.js";
-import { UnsupportedTokenScreen } from "./Bridge/UnsupportedTokenScreen.js";
+import { AutoConnect } from "../../web/ui/AutoConnect/AutoConnect.js";
 import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
+import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
+import { ExecutingTxScreen } from "./TransactionButton/ExecutingScreen.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";
 import type { LocaleId } from "./types.js";
@@ -152,20 +151,6 @@ export type PayEmbedProps = {
   paymentLinkId?: string;
 };
 
-// Enhanced UIOptions to handle unsupported token state
-type UIOptionsResult =
-  | { type: "success"; data: UIOptions }
-  | {
-      type: "indexing_token";
-      token: Token;
-      chain: Chain;
-    }
-  | {
-      type: "unsupported_token";
-      token: { address: string; symbol?: string; name?: string };
-      chain: Chain;
-    };
-
 /**
  * Embed a prebuilt UI for funding wallets, purchases or transactions with crypto or fiat.
  *
@@ -219,8 +204,7 @@ type UIOptionsResult =
  *       sellerAddress: "0x...", // the wallet address of the seller
  *     },
  *     metadata: {
- *       name: "Black Hoodie",
- *       description: "Size L. Ships worldwide.",
+ *       name: "Black Hoodie (Size L)",
  *       image: "/drip-hoodie.png",
  *     },
  *   }}
@@ -324,134 +308,43 @@ type UIOptionsResult =
  */
 export function PayEmbed(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
+  const [screen, setScreen] = useState<"buy" | "execute-tx">("buy");
   const theme = props.theme || "dark";
+  const connectionManager = useConnectionManager();
+  const activeAccount = useActiveAccount();
+  const activeWallet = useActiveWallet();
+  const siweAuth = useSiweAuth(
+    activeWallet,
+    activeAccount,
+    props.connectOptions?.auth,
+  );
 
-  const bridgeDataQuery = useQuery({
-    queryKey: ["bridgeData", props],
-    queryFn: async (): Promise<UIOptionsResult> => {
-      if (!props.payOptions?.mode) {
-        const ETH = await getToken(props.client, NATIVE_TOKEN_ADDRESS, 1);
-        return {
-          type: "success",
-          data: {
-            mode: "fund_wallet",
-            destinationToken: ETH,
-            initialAmount: "0.01",
-          },
-        };
-      }
+  // Add props.chain and props.chains to defined chains store
+  useEffect(() => {
+    if (props.connectOptions?.chain) {
+      connectionManager.defineChains([props.connectOptions?.chain]);
+    }
+  }, [props.connectOptions?.chain, connectionManager]);
 
-      if (props.payOptions?.mode === "fund_wallet") {
-        const prefillInfo = props.payOptions?.prefillBuy;
-        if (!prefillInfo) {
-          const ETH = await getToken(props.client, NATIVE_TOKEN_ADDRESS, 1);
-          return {
-            type: "success",
-            data: {
-              mode: "fund_wallet",
-              destinationToken: ETH,
-              metadata: props.payOptions?.metadata,
-            },
-          };
-        }
-        const token = await getToken(
-          props.client,
-          prefillInfo.token?.address || NATIVE_TOKEN_ADDRESS,
-          prefillInfo.chain.id,
-        ).catch((err) =>
-          err.message.includes("not supported")
-            ? undefined
-            : Promise.reject(err),
-        );
-        if (!token) {
-          return {
-            type: "unsupported_token",
-            token: {
-              address: prefillInfo.token?.address || NATIVE_TOKEN_ADDRESS,
-              symbol: prefillInfo.token?.symbol,
-              name: prefillInfo.token?.name,
-            },
-            chain: prefillInfo.chain,
-          };
-        }
-        return {
-          type: "success",
-          data: {
-            mode: "fund_wallet",
-            destinationToken: token,
-            initialAmount: prefillInfo.amount,
-            metadata: {
-              ...props.payOptions?.metadata,
-              title: props.payOptions?.metadata?.name,
-            },
-          },
-        };
-      }
+  useEffect(() => {
+    if (props.connectOptions?.chains) {
+      connectionManager.defineChains(props.connectOptions?.chains);
+    }
+  }, [props.connectOptions?.chains, connectionManager]);
 
-      if (props.payOptions?.mode === "direct_payment") {
-        const paymentInfo = props.payOptions.paymentInfo;
-        const token = await getToken(
-          props.client,
-          paymentInfo.token?.address || NATIVE_TOKEN_ADDRESS,
-          paymentInfo.chain.id,
-        ).catch((err) =>
-          err.message.includes("not supported")
-            ? undefined
-            : Promise.reject(err),
-        );
-        if (!token) {
-          return {
-            type: "unsupported_token",
-            token: {
-              address: paymentInfo.token?.address || NATIVE_TOKEN_ADDRESS,
-              symbol: paymentInfo.token?.symbol,
-              name: paymentInfo.token?.name,
-            },
-            chain: paymentInfo.chain,
-          };
-        }
-        const amount =
-          "amount" in paymentInfo
-            ? paymentInfo.amount
-            : toTokens(paymentInfo.amountWei, token.decimals);
-        return {
-          type: "success",
-          data: {
-            mode: "direct_payment",
-            metadata: {
-              ...props.payOptions?.metadata,
-              title: props.payOptions?.metadata?.name,
-            },
-            paymentInfo: {
-              token,
-              amount,
-              sellerAddress: paymentInfo.sellerAddress as `0x${string}`,
-              feePayer: paymentInfo.feePayer,
-            },
-          },
-        };
-      }
-
-      if (props.payOptions?.mode === "transaction") {
-        return {
-          type: "success",
-          data: {
-            mode: "transaction",
-            metadata: {
-              ...props.payOptions?.metadata,
-              title: props.payOptions?.metadata?.name,
-            },
-            transaction: props.payOptions.transaction,
-          },
-        };
-      }
-
-      throw new Error("Invalid mode");
-    },
-  });
+  useEffect(() => {
+    if (props.activeWallet) {
+      connectionManager.setActiveWallet(props.activeWallet);
+    }
+  }, [props.activeWallet, connectionManager]);
 
   let content = null;
-  if (!localeQuery.data || bridgeDataQuery.isLoading) {
+  const metadata =
+    props.payOptions && "metadata" in props.payOptions
+      ? props.payOptions.metadata
+      : null;
+
+  if (!localeQuery.data) {
     content = (
       <div
         style={{
@@ -464,26 +357,56 @@ export function PayEmbed(props: PayEmbedProps) {
         <Spinner size="xl" color="secondaryText" />
       </div>
     );
-  } else if (bridgeDataQuery.data?.type === "unsupported_token") {
-    // Show unsupported token screen
-    content = <UnsupportedTokenScreen chain={bridgeDataQuery.data.chain} />;
-  } else if (bridgeDataQuery.data?.type === "success") {
-    // Show normal bridge orchestrator
+  } else {
     content = (
-      <BridgeOrchestrator
-        client={props.client}
-        uiOptions={bridgeDataQuery.data.data}
-        connectOptions={props.connectOptions}
-        connectLocale={localeQuery.data}
-        purchaseData={props.payOptions?.purchaseData}
-        paymentLinkId={props.paymentLinkId}
-        onComplete={() => {
-          props.payOptions?.onPurchaseSuccess?.();
-        }}
-        presetOptions={
-          (props.payOptions as FundWalletOptions)?.prefillBuy?.presetOptions
-        }
-      />
+      <>
+        <AutoConnect client={props.client} siweAuth={siweAuth} />
+        {screen === "buy" && (
+          <BuyScreen
+            title={metadata?.name || "Buy"}
+            isEmbed={true}
+            supportedTokens={props.supportedTokens}
+            theme={theme}
+            client={props.client}
+            connectLocale={localeQuery.data}
+            hiddenWallets={props.hiddenWallets}
+            paymentLinkId={props.paymentLinkId}
+            payOptions={
+              props.payOptions || {
+                mode: "fund_wallet",
+              }
+            }
+            onDone={() => {
+              if (props.payOptions?.mode === "transaction") {
+                setScreen("execute-tx");
+              }
+            }}
+            connectOptions={props.connectOptions}
+            onBack={undefined}
+          />
+        )}
+
+        {screen === "execute-tx" &&
+          props.payOptions?.mode === "transaction" &&
+          props.payOptions.transaction && (
+            <ExecutingTxScreen
+              tx={props.payOptions.transaction}
+              closeModal={() => {
+                setScreen("buy");
+              }}
+              onBack={() => {
+                setScreen("buy");
+              }}
+              onTxSent={(data) => {
+                props.payOptions?.onPurchaseSuccess?.({
+                  type: "transaction",
+                  chainId: data.chain.id,
+                  transactionHash: data.transactionHash,
+                });
+              }}
+            />
+          )}
+      </>
     );
   }
 

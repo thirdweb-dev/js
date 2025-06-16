@@ -125,7 +125,7 @@ describe("useAutoConnectCore", () => {
           {
             wallets: [wallet],
             client: TEST_CLIENT,
-            onTimeout: () => {},
+            onTimeout: () => console.info("TIMEOUTTED"),
             timeout: 0,
           },
           (id: WalletId) =>

@@ -158,7 +158,7 @@ export async function tokens(options: tokens.Options): Promise<tokens.Result> {
 
 export declare namespace tokens {
   /**
-   * Input parameters for {@link tokens}.
+   * Input parameters for {@link Bridge.tokens}.
    */
   type Options = {
     /** Your {@link ThirdwebClient} instance. */
@@ -181,85 +181,4 @@ export declare namespace tokens {
    * The result returned from {@link Bridge.tokens}.
    */
   type Result = Token[];
-}
-
-/**
- * Adds a token to the Universal Bridge for indexing.
- *
- * This function requests the Universal Bridge to index a specific token on a given chain.
- * Once indexed, the token will be available for cross-chain operations.
- *
- * @example
- * ```typescript
- * import { Bridge } from "thirdweb";
- *
- * // Add a token for indexing
- * const result = await Bridge.add({
- *   client: thirdwebClient,
- *   chainId: 1,
- *   tokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC
- * });
- * ```
- *
- * @param options - The options for adding a token.
- * @param options.client - Your thirdweb client.
- * @param options.chainId - The chain ID where the token is deployed.
- * @param options.tokenAddress - The contract address of the token to add.
- *
- * @returns A promise that resolves when the token has been successfully submitted for indexing.
- *
- * @throws Will throw an error if there is an issue adding the token.
- * @bridge
- * @beta
- */
-export async function add(options: add.Options): Promise<add.Result> {
-  const { client, chainId, tokenAddress } = options;
-
-  const clientFetch = getClientFetch(client);
-  const url = `${getThirdwebBaseUrl("bridge")}/v1/tokens`;
-
-  const requestBody = {
-    chainId,
-    tokenAddress,
-  };
-
-  const response = await clientFetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(requestBody),
-  });
-
-  if (!response.ok) {
-    const errorJson = await response.json();
-    throw new ApiError({
-      code: errorJson.code || "UNKNOWN_ERROR",
-      message: errorJson.message || response.statusText,
-      correlationId: errorJson.correlationId || undefined,
-      statusCode: response.status,
-    });
-  }
-
-  const { data }: { data: Token } = await response.json();
-  return data;
-}
-
-export declare namespace add {
-  /**
-   * Input parameters for {@link add}.
-   */
-  type Options = {
-    /** Your {@link ThirdwebClient} instance. */
-    client: ThirdwebClient;
-    /** The chain ID where the token is deployed. */
-    chainId: number;
-    /** The contract address of the token to add. */
-    tokenAddress: string;
-  };
-
-  /**
-   * The result returned from {@link Bridge.add}.
-   */
-  type Result = Token;
 }

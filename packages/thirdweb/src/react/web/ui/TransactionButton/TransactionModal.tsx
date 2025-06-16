@@ -11,10 +11,9 @@ import type { PayUIOptions } from "../../../core/hooks/connection/ConnectButtonP
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
-import { webWindowAdapter } from "../../adapters/WindowAdapter.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
-import { BridgeOrchestrator } from "../Bridge/BridgeOrchestrator.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
+import { LazyBuyScreen } from "../ConnectWallet/screens/Buy/LazyBuyScreen.js";
 import { Modal } from "../components/Modal.js";
 import type { LocaleId } from "../types.js";
 import { DepositScreen } from "./DepositScreen.js";
@@ -95,7 +94,6 @@ function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
         tx={props.tx}
         closeModal={props.onClose}
         onTxSent={props.onTxSent}
-        windowAdapter={webWindowAdapter}
       />
     );
   }
@@ -115,16 +113,19 @@ function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
   }
 
   return (
-    <BridgeOrchestrator
+    <LazyBuyScreen
+      title={props.title}
+      isEmbed={false}
       client={props.client}
-      uiOptions={{
-        mode: "transaction",
-        transaction: props.tx,
-      }}
+      onBack={props.onBack}
+      supportedTokens={props.supportedTokens}
       connectLocale={localeQuery.data}
-      onComplete={() => {
+      theme={typeof props.theme === "string" ? props.theme : props.theme.type}
+      payOptions={props.payOptions}
+      onDone={() => {
         setScreen("execute-tx");
       }}
+      connectOptions={undefined}
     />
   );
 }

@@ -20,7 +20,6 @@ export function BuyMerchPreview() {
           },
           metadata: {
             name: "Black Hoodie (Size L)",
-            description: "Size L. Ships worldwide.",
             image: "/drip-hoodie.png",
           },
         }}

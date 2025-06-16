@@ -293,7 +293,7 @@ export const MismatchButton = forwardRef<
                 payOptions={{
                   onPurchaseSuccess(info) {
                     if (
-                      info?.type === "crypto" &&
+                      info.type === "crypto" &&
                       info.status.status !== "NOT_FOUND"
                     ) {
                       trackEvent({
@@ -308,7 +308,7 @@ export const MismatchButton = forwardRef<
                     }
 
                     if (
-                      info?.type === "fiat" &&
+                      info.type === "fiat" &&
                       info.status.status !== "NOT_FOUND"
                     ) {
                       trackEvent({

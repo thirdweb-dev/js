@@ -168,9 +168,10 @@ export function DepositScreen(props: {
           style={{
             justifyContent: "space-between",
             padding: spacing.sm,
-            borderRadius: `${radius.md} ${radius.md} 0 0`,
+            marginBottom: spacing.sm,
+            borderRadius: spacing.md,
+            backgroundColor: theme.colors.tertiaryBg,
             border: `1px solid ${theme.colors.borderColor}`,
-            borderBottom: "none",
           }}
         >
           {activeAccount && (
@@ -222,13 +223,7 @@ export function DepositScreen(props: {
             />
           </Container>
           <Container flex="row" center="x" gap="xs">
-            <Text
-              color="primaryText"
-              size="md"
-              style={{
-                fontFamily: "monospace",
-              }}
-            >
+            <Text color="primaryText" size="md">
               {address ? shortenAddress(address) : ""}
             </Text>
             <CopyIcon
@@ -291,7 +286,7 @@ const WalletAddressContainer = /* @__PURE__ */ StyledButton((_) => {
     display: "flex",
     justifyContent: "space-between",
     border: `1px solid ${theme.colors.borderColor}`,
-    borderRadius: `0 0 ${radius.md} ${radius.md}`,
+    borderRadius: radius.lg,
     transition: "border-color 200ms ease",
     "&:hover": {
       borderColor: theme.colors.accentText,

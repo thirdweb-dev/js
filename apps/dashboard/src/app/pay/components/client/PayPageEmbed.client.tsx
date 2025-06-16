@@ -63,7 +63,7 @@ export function PayPageEmbed({
           onPurchaseSuccess: (result) => {
             if (!redirectUri) return;
             const url = new URL(redirectUri);
-            switch (result?.type) {
+            switch (result.type) {
               case "crypto": {
                 url.searchParams.set("status", result.status.status);
                 if (

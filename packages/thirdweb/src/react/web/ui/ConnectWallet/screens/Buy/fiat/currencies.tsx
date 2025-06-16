@@ -99,14 +99,6 @@ export function getFiatIcon(
     />
   );
 }
-
-export function getFiatCurrencyIcon(props: {
-  currency: string;
-  size: keyof typeof iconSize;
-}): React.ReactNode {
-  return getFiatIcon(getCurrencyMeta(props.currency), props.size);
-}
-
 const UnknownCurrencyIcon: IconFC = (props) => {
   return <RadiobuttonIcon width={props.size} height={props.size} />;
 };

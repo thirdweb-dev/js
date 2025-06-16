@@ -44,8 +44,8 @@ export function PayModalButton(props: {
           payOptions={{
             onPurchaseSuccess(info) {
               if (
-                info?.type === "crypto" &&
-                info?.status.status !== "NOT_FOUND"
+                info.type === "crypto" &&
+                info.status.status !== "NOT_FOUND"
               ) {
                 trackEvent({
                   category: "pay",
@@ -58,7 +58,7 @@ export function PayModalButton(props: {
                 });
               }
 
-              if (info?.type === "fiat" && info.status.status !== "NOT_FOUND") {
+              if (info.type === "fiat" && info.status.status !== "NOT_FOUND") {
                 trackEvent({
                   category: "pay",
                   action: "buy",

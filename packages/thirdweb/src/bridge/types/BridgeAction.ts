@@ -1,1 +1,1 @@
-export type Action = "approval" | "transfer" | "buy" | "sell" | "fee";
+export type Action = "approval" | "transfer" | "buy" | "sell";

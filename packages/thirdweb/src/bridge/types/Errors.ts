@@ -1,5 +1,3 @@
-import { stringify } from "../../utils/json.js";
-
 type ErrorCode =
   | "INVALID_INPUT"
   | "ROUTE_NOT_FOUND"
@@ -23,14 +21,5 @@ export class ApiError extends Error {
     this.code = args.code;
     this.correlationId = args.correlationId;
     this.statusCode = args.statusCode;
-  }
-
-  override toString() {
-    return stringify({
-      code: this.code,
-      message: this.message,
-      statusCode: this.statusCode,
-      correlationId: this.correlationId,
-    });
   }
 }
