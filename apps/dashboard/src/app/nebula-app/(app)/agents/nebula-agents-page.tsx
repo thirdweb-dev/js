@@ -6,38 +6,6 @@ import { useState } from "react";
 import { useAgents } from "../hooks/agents/useAgents";
 
 // Dummy data for agents
-const featuredAgents = [
-  {
-    id: 1,
-    name: "Research Assistant",
-    description:
-      "Do hours worth of research, analyze papers & extract insights in minutes",
-    creator: "agent.com",
-    icon: "📚",
-  },
-  {
-    id: 2,
-    name: "Math Tutor",
-    description: "Access computation, math, curated knowledge & real-time data",
-    creator: "agent.com",
-    icon: "🧮",
-  },
-  {
-    id: 3,
-    name: "Video Generator",
-    description:
-      "AI video maker powered by VideoAgent. Generate and edit videos",
-    creator: "agent.com",
-    icon: "🎬",
-  },
-  {
-    id: 4,
-    name: "Code Assistant",
-    description: "Effortlessly design anything: media posts and more",
-    creator: "agent.com",
-    icon: "💻",
-  },
-];
 
 export function NebulaAgentsPage({ authToken }: { authToken: string }) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -87,9 +55,6 @@ export function NebulaAgentsPage({ authToken }: { authToken: string }) {
                 <div className="flex gap-4">
                   <div className="flex-1 space-y-1">
                     <h4 className="font-medium">Agent {agent.name}</h4>
-                    <p className="line-clamp-2 text-muted-foreground text-sm">
-                      {agent.description}
-                    </p>
                   </div>
                 </div>
               </Card>
