@@ -19,7 +19,7 @@ export default async function CreateAgentPageRoute() {
 
   return (
     <Suspense fallback={<GenericLoadingPage className="border-none" />}>
-      <CreateAgentPage />
+      <CreateAgentPage authToken={authToken} />
     </Suspense>
   );
 }

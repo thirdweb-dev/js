@@ -19,7 +19,7 @@ export default async function AgentsPage() {
 
   return (
     <Suspense fallback={<GenericLoadingPage className="border-none" />}>
-      <NebulaAgentsPage />
+      <NebulaAgentsPage authToken={authToken} />
     </Suspense>
   );
 }

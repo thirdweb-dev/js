@@ -17,7 +17,7 @@ export const useAgents = ({ authToken }: UseAgentsProps) => {
           client,
         });
 
-        return agents || [];
+        return agents?.result || [];
       } catch (error) {
         console.error("[useAgents] Error fetching agents", error);
         return [];
@@ -26,7 +26,7 @@ export const useAgents = ({ authToken }: UseAgentsProps) => {
   });
 
   return {
-    agents: data,
+    agents: data || [],
     isLoading,
     error,
   };
