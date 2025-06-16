@@ -1,13 +1,12 @@
-import { add, tokens } from "../../bridge/Token.js";
-import type { Token } from "../../bridge/types/Token.js";
+import { tokens } from "../../bridge/Token.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { withCache } from "../../utils/promise/withCache.js";
 
-export async function getToken(
+export async function getTokenPrice(
   client: ThirdwebClient,
   tokenAddress: string,
   chainId: number,
-): Promise<Token> {
+) {
   return withCache(
     async () => {
       const result = await tokens({
@@ -15,19 +14,7 @@ export async function getToken(
         tokenAddress,
         chainId,
       });
-      const token = result[0];
-      if (!token) {
-        // Attempt to add the token
-        const tokenResult = await add({
-          client,
-          chainId,
-          tokenAddress,
-        }).catch(() => {
-          throw new Error("Token not supported");
-        });
-        return tokenResult;
-      }
-      return token;
+      return result[0]?.priceUsd;
     },
     {
       cacheKey: `get-token-price-${tokenAddress}-${chainId}`,

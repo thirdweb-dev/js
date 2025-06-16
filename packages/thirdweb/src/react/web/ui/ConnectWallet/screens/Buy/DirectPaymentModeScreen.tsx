@@ -90,9 +90,7 @@ export function DirectPaymentModeScreen(props: {
 
   const token: TokenInfo = paymentInfo.token
     ? {
-        name: paymentInfo.token.name || chainData.nativeCurrency.name,
-        symbol: paymentInfo.token.symbol || chainData.nativeCurrency.symbol,
-        address: paymentInfo.token.address || NATIVE_TOKEN_ADDRESS,
+        ...paymentInfo.token,
         icon:
           paymentInfo.token?.icon ||
           supportedDestinations

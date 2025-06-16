@@ -24,10 +24,7 @@ import type {
 } from "../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
 import { invalidateWalletBalance } from "../../../../../core/providers/invalidateWalletBalance.js";
-import type {
-  SupportedTokens,
-  TokenInfo,
-} from "../../../../../core/utils/defaultTokens.js";
+import type { SupportedTokens } from "../../../../../core/utils/defaultTokens.js";
 import { ErrorState } from "../../../../wallets/shared/ErrorState.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
@@ -542,7 +539,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                   toChain={toChain}
                   toToken={toToken}
                   fromChain={fromChain}
-                  fromToken={fromToken as TokenInfo}
+                  fromToken={fromToken}
                   showFromTokenSelector={() => {
                     setScreen({
                       id: "select-from-token",

@@ -19,4 +19,4 @@ export type PayOnChainTransactionDetails = {
 
 export type FiatProvider = (typeof FiatProviders)[number];
 
-export const FiatProviders = ["coinbase", "stripe", "transak"] as const;
+export const FiatProviders = ["COINBASE", "STRIPE", "TRANSAK"] as const;

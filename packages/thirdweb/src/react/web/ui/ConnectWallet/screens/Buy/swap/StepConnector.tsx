@@ -19,7 +19,6 @@ export function StepConnectorArrow() {
       <Container
         flex="row"
         center="both"
-        color="primaryText"
         style={{
           borderRadius: "100%",
           width: "30px",

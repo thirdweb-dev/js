@@ -63,8 +63,7 @@ function BuyMerch() {
                   sellerAddress: "0xEb0effdFB4dC5b3d5d3aC6ce29F3ED213E95d675",
                 },
                 metadata: {
-                  name: "Black Hoodie",
-                  description: "Size L. Ships worldwide.",
+                  name: "Black Hoodie (Size L)",
                   image: "/drip-hoodie.png",
                 },
               }}

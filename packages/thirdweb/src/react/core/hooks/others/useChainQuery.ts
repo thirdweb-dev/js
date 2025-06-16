@@ -137,7 +137,7 @@ export function useChainExplorers(chain?: Chain) {
 
 function getQueryOptions(chain?: Chain) {
   return {
-    queryKey: ["chain", chain?.id],
+    queryKey: ["chain", chain],
     enabled: !!chain,
     staleTime: 1000 * 60 * 60, // 1 hour
   } as const;

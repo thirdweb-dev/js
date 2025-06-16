@@ -291,9 +291,9 @@ export async function getBuyWithFiatQuote(
       provider?: FiatProvider,
     ): "stripe" | "coinbase" | "transak" => {
       switch (provider) {
-        case "stripe":
+        case "STRIPE":
           return "stripe";
-        case "transak":
+        case "TRANSAK":
           return "transak";
         default: // default to coinbase when undefined or any other value
           return "coinbase";
