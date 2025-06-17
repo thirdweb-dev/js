@@ -1,12 +1,12 @@
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
+import { ClientOnly } from "@/components/blocks/client-only";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { DefaultFactoriesSection } from "components/smart-wallets/AccountFactories";
 import { FactoryContracts } from "components/smart-wallets/AccountFactories/factory-contracts";
 import { PlusIcon } from "lucide-react";

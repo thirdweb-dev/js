@@ -62,7 +62,6 @@
     "compare-versions": "^6.1.0",
     "date-fns": "4.1.0",
     "fast-xml-parser": "^5.2.5",
-    "fetch-event-stream": "0.1.5",
     "flat": "^6.0.1",
     "framer-motion": "12.17.0",
     "fuse.js": "7.1.0",

@@ -41,7 +41,7 @@ export type GetWalletBalanceResult = GetBalanceResult;
  */
 export async function getWalletBalance(
   options: GetWalletBalanceOptions,
-): Promise<GetWalletBalanceResult> {
+): Promise<GetBalanceResult> {
   const { address, client, chain, tokenAddress } = options;
   // erc20 case
   if (tokenAddress) {

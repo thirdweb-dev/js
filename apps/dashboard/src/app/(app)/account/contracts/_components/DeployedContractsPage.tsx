@@ -1,5 +1,5 @@
+import { ClientOnly } from "@/components/blocks/client-only";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { ContractTable } from "components/contract-components/tables/contract-table";
 import { Suspense } from "react";
 import type { ThirdwebClient } from "thirdweb";

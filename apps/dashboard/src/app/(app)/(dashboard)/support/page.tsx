@@ -5,11 +5,11 @@ import { BookOpenIcon, ChevronRightIcon } from "lucide-react";
 import { HomeIcon, WalletIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { NebulaIcon } from "../(chain)/components/server/icons/NebulaIcon";
 import { EngineIcon } from "../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 import { InsightIcon } from "../../(dashboard)/(chain)/components/server/icons/InsightIcon";
 import { PayIcon } from "../../(dashboard)/(chain)/components/server/icons/PayIcon";
-import { CustomChatButton } from "../../../nebula-app/(app)/components/CustomChat/CustomChatButton";
-import { NebulaIcon } from "../../../nebula-app/(app)/icons/NebulaIcon";
+import { CustomChatButton } from "../../../../components/CustomChat/CustomChatButton";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,

@@ -1,6 +1,7 @@
 "use client";
 
 import { getRawAccountAction } from "@/actions/getAccount";
+import { ClientOnly } from "@/components/blocks/client-only";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { ToggleThemeButton } from "@/components/color-mode-toggle";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -8,7 +9,6 @@ import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Turnstile } from "@marsidev/react-turnstile";
-import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { isVercel } from "lib/vercel-utils";
 import { useTheme } from "next-themes";
 import Link from "next/link";

@@ -181,9 +181,6 @@ importers:
       fast-xml-parser:
         specifier: ^5.2.5
         version: 5.2.5
-      fetch-event-stream:
-        specifier: 0.1.5
-        version: 0.1.5
       flat:
         specifier: ^6.0.1
         version: 6.0.1

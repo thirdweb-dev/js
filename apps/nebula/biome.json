@@ -1,0 +1,15 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
+  "extends": ["../../biome.json"],
+  "overrides": [
+    {
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noImportantInKeyframe": "off"
+          }
+        }
+      }
+    }
+  ]
+}
