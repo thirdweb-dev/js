@@ -17,7 +17,7 @@ export function CustomMediaRenderer(props: MediaRendererProps) {
 
   return (
     <div
-      className="relative"
+      className="relative z-0"
       onLoad={() => {
         if (props.src) {
           setLoadedSrc(props.src);
