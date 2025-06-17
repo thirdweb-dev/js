@@ -123,7 +123,7 @@ function UBFooter() {
             href: "https://playground.thirdweb.com/connect/pay/fund-wallet",
           },
           {
-            label: "Commerce",
+            label: "Checkout",
             href: "https://playground.thirdweb.com/connect/pay/commerce",
           },
           {

@@ -20,6 +20,7 @@ Welcome, AI copilots! This guide captures the coding standards, architectural de
 - Biome governs formatting and linting; its rules live in biome.json.
 - Run pnpm biome check --apply before committing.
 - Avoid editor‑specific configs; rely on the shared settings.
+- make sure everything builds after each file change by running `pnpm build`
 
 ⸻
 
@@ -39,7 +40,8 @@ Welcome, AI copilots! This guide captures the coding standards, architectural de
 - Co‑locate tests: foo.ts ↔ foo.test.ts.
 - Use real function invocations with stub data; avoid brittle mocks.
 - For network interactions, use Mock Service Worker (MSW) to intercept fetch/HTTP calls, mocking only scenarios that are hard to reproduce.
-- Keep tests deterministic and side‑effect free; Jest is pre‑configured.
+- Keep tests deterministic and side‑effect free; Vitest is pre‑configured.
+- to run the tests: `cd packages thirdweb & pnpm test:dev <filename>`
 
 ⸻
 

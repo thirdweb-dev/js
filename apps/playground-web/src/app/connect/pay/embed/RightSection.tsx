@@ -1,11 +1,15 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { ZERO_ADDRESS, getContract } from "thirdweb";
+import { getContract, toUnits } from "thirdweb";
 import { base } from "thirdweb/chains";
+import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc1155";
 import {
-  PayEmbed,
+  BuyWidget,
+  CheckoutWidget,
+  TransactionWidget,
   darkTheme,
   lightTheme,
   useActiveAccount,
@@ -14,7 +18,7 @@ import { Button } from "../../../../components/ui/button";
 import { THIRDWEB_CLIENT } from "../../../../lib/client";
 import { cn } from "../../../../lib/utils";
 import { CodeGen } from "../components/CodeGen";
-import type { PayEmbedPlaygroundOptions } from "../components/types";
+import type { BridgeComponentsPlaygroundOptions } from "../components/types";
 
 const nftContract = getContract({
   address: "0xf0d0CBf84005Dd4eC81364D1f5D7d896Bd53D1B8",
@@ -25,7 +29,7 @@ const nftContract = getContract({
 type Tab = "ui" | "code";
 
 export function RightSection(props: {
-  options: PayEmbedPlaygroundOptions;
+  options: BridgeComponentsPlaygroundOptions;
   tab?: string;
 }) {
   const pathname = usePathname();
@@ -39,6 +43,18 @@ export function RightSection(props: {
   }
 
   const account = useActiveAccount();
+  const { data: tokenData } = useQuery({
+    queryKey: ["token", props.options.payOptions.buyTokenAddress],
+    queryFn: () =>
+      getCurrencyMetadata({
+        contract: getContract({
+          address: props.options.payOptions.buyTokenAddress,
+          chain: props.options.payOptions.buyTokenChain,
+          client: THIRDWEB_CLIENT,
+        }),
+      }),
+    enabled: !!props.options.payOptions.buyTokenAddress,
+  });
 
   const themeObj =
     props.options.theme.type === "dark"
@@ -49,98 +65,64 @@ export function RightSection(props: {
           colors: props.options.theme.lightColorOverrides,
         });
 
-  const embed = (
-    <PayEmbed
-      client={THIRDWEB_CLIENT}
-      theme={themeObj}
-      // locale={connectOptions.localeId}
-      connectOptions={{
-        accountAbstraction: props.options.connectOptions
-          .enableAccountAbstraction
-          ? {
-              chain: props.options.payOptions.buyTokenChain || base,
-              sponsorGas: true,
-            }
-          : undefined,
-      }}
-      payOptions={{
-        metadata: {
-          name:
-            props.options.payOptions.title ||
-            (props.options.payOptions.mode === "transaction"
-              ? "Transaction"
-              : props.options.payOptions.mode === "direct_payment"
-                ? "Purchase"
-                : "Buy Crypto"),
+  let embed: React.ReactNode;
+  if (props.options.payOptions.widget === "buy") {
+    embed = (
+      <BuyWidget
+        client={THIRDWEB_CLIENT}
+        theme={themeObj}
+        title={props.options.payOptions.title}
+        tokenAddress={props.options.payOptions.buyTokenAddress}
+        chain={props.options.payOptions.buyTokenChain}
+        amount={toUnits(
+          props.options.payOptions.buyTokenAmount,
+          tokenData?.decimals || 18,
+        )}
+      />
+    );
+  }
+
+  if (props.options.payOptions.widget === "checkout") {
+    embed = (
+      <CheckoutWidget
+        client={THIRDWEB_CLIENT}
+        theme={themeObj}
+        name={props.options.payOptions.title}
+        tokenAddress={props.options.payOptions.buyTokenAddress}
+        chain={props.options.payOptions.buyTokenChain}
+        amount={toUnits(
+          props.options.payOptions.buyTokenAmount,
+          tokenData?.decimals || 18,
+        )}
+        seller={props.options.payOptions.sellerAddress}
+        presetOptions={[1, 2, 3]}
+        purchaseData={{
+          name: "Black Hoodie",
+          description: "Size L | Ships worldwide.",
           image:
-            props.options.payOptions.image ||
-            `https://placehold.co/600x400/${
-              props.options.theme.type === "dark"
-                ? "1d1d23/7c7a85"
-                : "f2eff3/6f6d78"
-            }?text=Your%20Product%20Here&font=roboto`,
-        },
+            "https://placehold.co/600x400/1d1d23/7c7a85?text=Your%20Product%20Here&font=roboto",
+        }}
+      />
+    );
+  }
 
-        // Mode-specific options
-        // biome-ignore lint/suspicious/noExplicitAny: union type
-        mode: (props.options.payOptions.mode as any) || "fund_wallet",
-
-        // Only include buyWithCrypto and buyWithFiat when they're false
-        ...(props.options.payOptions.buyWithCrypto === false
-          ? { buyWithCrypto: false }
-          : {}),
-        ...(props.options.payOptions.buyWithFiat === false
-          ? { buyWithFiat: false }
-          : {}),
-
-        ...(props.options.payOptions.mode === "fund_wallet" ||
-        !props.options.payOptions.mode
-          ? {
-              // Fund wallet mode options
-              prefillBuy: {
-                chain: props.options.payOptions.buyTokenChain || base,
-                amount: props.options.payOptions.buyTokenAmount || "0.01",
-                ...(props.options.payOptions.buyTokenInfo
-                  ? {
-                      token: props.options.payOptions.buyTokenInfo,
-                    }
-                  : {}),
-              },
-            }
-          : {}),
-
-        ...(props.options.payOptions.mode === "direct_payment"
-          ? {
-              // Direct payment mode options
-              paymentInfo: {
-                chain: props.options.payOptions.buyTokenChain || base,
-                sellerAddress:
-                  props.options.payOptions.sellerAddress ||
-                  "0x0000000000000000000000000000000000000000",
-                amount: props.options.payOptions.buyTokenAmount || "0.01",
-                ...(props.options.payOptions.buyTokenInfo
-                  ? {
-                      token: props.options.payOptions.buyTokenInfo,
-                    }
-                  : {}),
-              },
-            }
-          : {}),
-
-        ...(props.options.payOptions.mode === "transaction"
-          ? {
-              // Transaction mode options (simplified for demo)
-              transaction: claimTo({
-                contract: nftContract,
-                quantity: 1n,
-                tokenId: 2n,
-                to: account?.address || ZERO_ADDRESS,
-              }),
-            }
-          : {}),
-      }}
-    />
-  );
+  if (props.options.payOptions.widget === "transaction") {
+    embed = (
+      <TransactionWidget
+        client={THIRDWEB_CLIENT}
+        theme={themeObj}
+        transaction={claimTo({
+          contract: nftContract,
+          quantity: 1n,
+          tokenId: 2n,
+          to: account?.address || "",
+        })}
+        title={props.options.payOptions.title}
+        description={props.options.payOptions.description}
+        image={props.options.payOptions.image}
+      />
+    );
+  }
 
   return (
     <div className="flex shrink-0 flex-col gap-4 xl:sticky xl:top-0 xl:max-h-[100vh] xl:w-[764px]">

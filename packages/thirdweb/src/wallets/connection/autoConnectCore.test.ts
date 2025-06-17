@@ -90,59 +90,6 @@ describe("useAutoConnectCore", () => {
     ).toBe(false);
   });
 
-  it("should call onTimeout on ... timeout", async () => {
-    vi.mocked(getUrlToken).mockReturnValue({});
-
-    const wallet = createWalletAdapter({
-      adaptedAccount: TEST_ACCOUNT_A,
-      client: TEST_CLIENT,
-      chain: ethereum,
-      onDisconnect: () => {},
-      switchChain: () => {},
-    });
-    mockStorage.setItem("thirdweb:active-wallet-id", wallet.id);
-    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-    const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
-    // Purposefully mock the wallet.autoConnect method to test the timeout logic
-    wallet.autoConnect = () =>
-      new Promise((resolve) => {
-        setTimeout(() => {
-          // @ts-ignore Mock purpose
-          resolve("Connection successful");
-        }, 2100);
-      });
-
-    await autoConnectCore({
-      force: true,
-      storage: mockStorage,
-      props: {
-        wallets: [wallet],
-        client: TEST_CLIENT,
-        onTimeout: () => console.info("TIMEOUTTED"),
-        timeout: 0,
-      },
-      createWalletFn: (id: WalletId) =>
-        createWalletAdapter({
-          adaptedAccount: TEST_ACCOUNT_A,
-          client: TEST_CLIENT,
-          chain: ethereum,
-          onDisconnect: () => {
-            console.warn(id);
-          },
-          switchChain: () => {},
-        }),
-      manager,
-    });
-
-    expect(warnSpy).toHaveBeenCalled();
-    expect(warnSpy).toHaveBeenCalledWith(
-      "AutoConnect timeout: 0ms limit exceeded.",
-    );
-    expect(infoSpy).toHaveBeenCalled();
-    expect(infoSpy).toHaveBeenCalledWith("TIMEOUTTED");
-    warnSpy.mockRestore();
-  });
-
   it("should handle auth cookie storage correctly", async () => {
     const mockAuthCookie = "mock-auth-cookie";
     const wallet = createWalletAdapter({

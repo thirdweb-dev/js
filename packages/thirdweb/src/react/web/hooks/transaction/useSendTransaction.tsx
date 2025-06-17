@@ -83,6 +83,11 @@ import { TransactionModal } from "../../ui/TransactionButton/TransactionModal.js
  *     value: toWei("0.1"),
  *     chain: sepolia,
  *     client: thirdwebClient,
+ *     // Specify a token required for the transaction
+ *     erc20Value: {
+ *       amountWei: toWei("0.1"),
+ *       tokenAddress: "0x...",
+ *     },
  *   });
  *   sendTx(transaction);
  * };

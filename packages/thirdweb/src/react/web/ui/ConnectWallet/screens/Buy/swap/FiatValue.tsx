@@ -43,7 +43,13 @@ export function FiatValue(
 
   return cryptoToFiatQuery.data?.result ? (
     <Text {...props}>
-      ${formatNumber(cryptoToFiatQuery.data.result, 2).toFixed(2)}
+      $
+      {Number(
+        formatNumber(cryptoToFiatQuery.data.result, 2).toFixed(2),
+      ).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}
     </Text>
   ) : null;
 }

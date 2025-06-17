@@ -42,7 +42,8 @@ export function PayModalButton(props: {
           theme={getSDKTheme(theme === "dark" ? "dark" : "light")}
           className="!w-auto"
           payOptions={{
-            onPurchaseSuccess(info) {
+            // biome-ignore lint/suspicious/noExplicitAny: false positive
+            onPurchaseSuccess(info: any) {
               if (
                 info.type === "crypto" &&
                 info.status.status !== "NOT_FOUND"
