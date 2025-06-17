@@ -49,6 +49,22 @@ const baseNextConfig: NextConfig = {
     taint: true,
   },
   serverExternalPackages: ["pino-pretty"],
+  async rewrites() {
+    return [
+      {
+        source: "/_ph/static/:path*",
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+      },
+      {
+        source: "/_ph/:path*",
+        destination: "https://us.i.posthog.com/:path*",
+      },
+      {
+        source: "/_ph/decide",
+        destination: "https://us.i.posthog.com/decide",
+      },
+    ];
+  },
   async headers() {
     return [
       {

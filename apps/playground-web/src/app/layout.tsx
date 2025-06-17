@@ -7,9 +7,6 @@ import { AppSidebar } from "./AppSidebar";
 import { Providers } from "./providers";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
-import { PHProvider } from "../lib/posthog/Posthog";
-import { PosthogHeadSetup } from "../lib/posthog/PosthogHeadSetup";
-import { PostHogPageView } from "../lib/posthog/PosthogPageView";
 import { MobileHeader } from "./MobileHeader";
 import { getSidebarLinks } from "./navLinks";
 
@@ -46,35 +43,31 @@ export default async function RootLayout({
           data-domain="playground.thirdweb.com"
           data-api="https://pl.thirdweb.com/api/event"
         />
-        <PosthogHeadSetup />
       </head>
 
-      <PHProvider>
-        <PostHogPageView />
-        <body
-          className={cn(
-            "bg-background font-sans antialiased ",
-            sansFont.variable,
-            monoFont.variable,
-          )}
-        >
-          <NextTopLoader
-            color="hsl(var(--foreground))"
-            height={2}
-            shadow={false}
-            showSpinner={false}
-          />
-          <MobileHeader links={sidebarLinks} />
-          <div className="flex flex-col lg:h-dvh lg:flex-row">
-            <AppSidebar links={sidebarLinks} />
-            <div className="flex grow flex-col lg:overflow-auto">
-              <div className="relative grow">
-                <Providers>{children}</Providers>
-              </div>
+      <body
+        className={cn(
+          "bg-background font-sans antialiased ",
+          sansFont.variable,
+          monoFont.variable,
+        )}
+      >
+        <NextTopLoader
+          color="hsl(var(--foreground))"
+          height={2}
+          shadow={false}
+          showSpinner={false}
+        />
+        <MobileHeader links={sidebarLinks} />
+        <div className="flex flex-col lg:h-dvh lg:flex-row">
+          <AppSidebar links={sidebarLinks} />
+          <div className="flex grow flex-col lg:overflow-auto">
+            <div className="relative grow">
+              <Providers>{children}</Providers>
             </div>
           </div>
-        </body>
-      </PHProvider>
+        </div>
+      </body>
     </html>
   );
 }

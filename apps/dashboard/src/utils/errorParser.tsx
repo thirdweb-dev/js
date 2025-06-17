@@ -1,5 +1,4 @@
 import Link from "next/link";
-import posthog from "posthog-js";
 
 import type { JSX } from "react";
 
@@ -63,7 +62,6 @@ export function parseError(error: unknown): string | JSX.Element {
 
   // everything that falls through here should be logged and sent to posthog
   console.error("unknown error", error);
-  posthog.capture("unknown_error", { error });
   // worst case scenario send a generic error message back
   return UNKNOWN_ERROR_MESSAGE;
 }

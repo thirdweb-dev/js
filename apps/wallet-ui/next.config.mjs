@@ -55,6 +55,22 @@ const nextConfig = {
     webpackMemoryOptimizations: true,
     serverSourceMaps: false,
   },
+  async rewrites() {
+    return [
+      {
+        source: "/_ph/static/:path*",
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+      },
+      {
+        source: "/_ph/:path*",
+        destination: "https://us.i.posthog.com/:path*",
+      },
+      {
+        source: "/_ph/decide",
+        destination: "https://us.i.posthog.com/decide",
+      },
+    ];
+  },
   webpack: (config) => {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
