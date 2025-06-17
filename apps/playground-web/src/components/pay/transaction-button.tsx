@@ -40,25 +40,20 @@ export function PayTransactionPreview() {
   });
 
   return (
-    <>
-      <StyledConnectButton />
-      <div className="h-10" />
-      {account && (
-        <TransactionWidget
-          client={THIRDWEB_CLIENT}
-          theme={theme === "light" ? "light" : "dark"}
-          transaction={claimTo({
-            contract: nftContract,
-            quantity: 1n,
-            tokenId: 2n,
-            to: account?.address || "",
-          })}
-          title={nft?.metadata?.name}
-          description={nft?.metadata?.description}
-          image={nft?.metadata?.image}
-        />
-      )}
-    </>
+    <TransactionWidget
+      client={THIRDWEB_CLIENT}
+      theme={theme === "light" ? "light" : "dark"}
+      transaction={claimTo({
+        contract: nftContract,
+        quantity: 1n,
+        tokenId: 2n,
+        to: account?.address || "",
+      })}
+      amount={100n}
+      title={nft?.metadata?.name}
+      description={nft?.metadata?.description}
+      image={nft?.metadata?.image}
+    />
   );
 }
 
