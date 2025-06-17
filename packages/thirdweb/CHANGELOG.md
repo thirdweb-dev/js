@@ -1,5 +1,98 @@
 # thirdweb
 
+## 5.103.0
+
+### Minor Changes
+
+- [#7354](https://github.com/thirdweb-dev/js/pull/7354) [`ed81006`](https://github.com/thirdweb-dev/js/commit/ed81006741adb43a98c428029ca6907b7e20ac55) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds new components BuyWidget, CheckoutWidget, and TransactionWidget
+
+  ## BuyWidget
+
+  A component that allows users to purchase tokens or NFTs directly within your application.
+
+  ### Example:
+
+  ```tsx
+  import { BuyWidget } from "thirdweb/react";
+
+  function App() {
+    return (
+      <BuyWidget
+        client={client}
+        chain={chain}
+        tokenAddress="0x..." // Token or NFT contract address
+        recipient="0x..." // Optional: recipient address
+        theme="light" // Optional: "light" or "dark"
+      />
+    );
+  }
+  ```
+
+  ## CheckoutWidget
+
+  A comprehensive checkout experience for purchasing digital assets with multiple payment options.
+
+  ### Example:
+
+  ```tsx
+  import { CheckoutWidget } from "thirdweb/react";
+
+  function App() {
+    return (
+      <CheckoutWidget
+        client={client}
+        chain={chain}
+        items={[
+          {
+            tokenAddress: "0x...",
+            tokenId: "1", // For NFTs
+            quantity: "1",
+          },
+        ]}
+        onSuccess={(result) => console.log("Purchase successful:", result)}
+        theme="dark" // Optional: "light" or "dark"
+      />
+    );
+  }
+  ```
+
+  ## TransactionWidget
+
+  A widget for executing arbitrary blockchain transactions with a user-friendly interface.
+
+  ### Example:
+
+  ```tsx
+  import { TransactionWidget } from "thirdweb/react";
+  import { prepareContractCall } from "thirdweb";
+
+  function App() {
+    const transaction = prepareContractCall({
+      contract: myContract,
+      method: "transfer",
+      params: [recipientAddress, amount],
+    });
+
+    return (
+      <TransactionWidget
+        client={client}
+        transaction={transaction}
+        onSuccess={(result) => console.log("Transaction successful:", result)}
+        onError={(error) => console.error("Transaction failed:", error)}
+        theme="light" // Optional: "light" or "dark"
+      />
+    );
+  }
+  ```
+
+### Patch Changes
+
+- [#7315](https://github.com/thirdweb-dev/js/pull/7315) [`99d6b3b`](https://github.com/thirdweb-dev/js/commit/99d6b3b151c2af6f0df41513eff44931362d6b11) Thanks [@MananTank](https://github.com/MananTank)! - - Add support for blob urls in `MediaRenderer` component
+
+  - Fix `className` prop not set in loading state of `MediaRenderer` component
+
+- [#7332](https://github.com/thirdweb-dev/js/pull/7332) [`913ea98`](https://github.com/thirdweb-dev/js/commit/913ea98d23799f5716ece819b1493b405187c70e) Thanks [@MananTank](https://github.com/MananTank)! - Fix `NFTMetadata` type
+
 ## 5.102.6
 
 ### Patch Changes
