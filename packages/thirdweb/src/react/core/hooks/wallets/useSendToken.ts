@@ -3,12 +3,14 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
 import { resolveAddress } from "../../../../extensions/ens/resolve-address.js";
 import { transfer } from "../../../../extensions/erc20/write/transfer.js";
+import { estimateGas } from "../../../../transaction/actions/estimate-gas.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
 import { waitForReceipt } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../../../../transaction/prepare-transaction.js";
 import { isAddress } from "../../../../utils/address.js";
 import { isValidENSName } from "../../../../utils/ens/isValidENSName.js";
 import { toWei } from "../../../../utils/units.js";
+import { getWalletBalance } from "../../../../wallets/utils/getWalletBalance.js";
 import { invalidateWalletBalance } from "../../providers/invalidateWalletBalance.js";
 import { useActiveWallet } from "./useActiveWallet.js";
 
@@ -85,13 +87,24 @@ export function useSendToken(client: ThirdwebClient) {
           to,
           value: toWei(amount),
         });
+        const gasEstimate = await estimateGas({
+          transaction: sendNativeTokenTx,
+          account,
+        });
+        const balance = await getWalletBalance({
+          address: account.address,
+          chain: activeChain,
+          client,
+        });
+        if (toWei(amount) + gasEstimate > balance.value) {
+          throw new Error("Insufficient balance for transfer amount and gas");
+        }
 
-        return sendTransaction({
+        return await sendTransaction({
           transaction: sendNativeTokenTx,
           account,
         });
       }
-
       // erc20 token transfer
       else {
         const contract = getContract({
@@ -106,7 +119,7 @@ export function useSendToken(client: ThirdwebClient) {
           to,
         });
 
-        return sendTransaction({
+        return await sendTransaction({
           transaction: tx,
           account,
         });
@@ -121,6 +134,7 @@ export function useSendToken(client: ThirdwebClient) {
           transactionHash: data.transactionHash,
           client,
           chain: data.chain,
+          maxBlocksWaitTime: 10_000,
         });
       }
       invalidateWalletBalance(queryClient);
