@@ -1,4 +1,4 @@
-import { ClientOnly } from "components/ClientOnly/ClientOnly";
+import { ClientOnly } from "@/components/blocks/client-only";
 import type { Metadata } from "next";
 import { UnixTimeConverter } from "./components/UnixTimeConverter";
 

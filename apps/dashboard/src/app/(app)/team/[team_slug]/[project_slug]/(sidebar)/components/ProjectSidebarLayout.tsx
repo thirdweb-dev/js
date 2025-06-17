@@ -13,9 +13,9 @@ import {
 import { ContractIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/ContractIcon";
 import { EngineIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 import { InsightIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/InsightIcon";
+import { NebulaIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/NebulaIcon";
 import { PayIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/PayIcon";
 import { SmartAccountIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/SmartAccountIcon";
-import { NebulaIcon } from "../../../../../../nebula-app/(app)/icons/NebulaIcon";
 
 export function ProjectSidebarLayout(props: {
   layoutPath: string;

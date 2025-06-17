@@ -1,3 +1,4 @@
+import { ClientOnly } from "@/components/blocks/client-only";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,7 +11,6 @@ import { moduleToBase64 } from "app/(app)/(dashboard)/published-contract/utils/m
 import { replaceDeployerAddress } from "lib/publisher-utils";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
-import { ClientOnly } from "../../ClientOnly/ClientOnly";
 import { fetchPublishedContractVersion } from "../../contract-components/fetch-contracts-with-versions";
 import { ContractPublisher } from "../publisher";
 

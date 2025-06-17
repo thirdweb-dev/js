@@ -1,8 +1,8 @@
 "use client";
 
-import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import "./swagger-ui.css";
 import "swagger-ui-react/swagger-ui.css";
+import { ClientOnly } from "@/components/blocks/client-only";
 import dynamic from "next/dynamic";
 
 const SwaggerUI = dynamic(() => import("swagger-ui-react"), { ssr: false });
