@@ -213,7 +213,7 @@ async function redirects() {
     {
       source: "/cli/login",
       destination:
-        "https://support.thirdweb.com/troubleshooting-errors/7Y1BqKNvtLdBv5fZkRZZB3/issue-linking-device-on-the-authorization-page-via-thirdweb-cli/cn9LRA3ax7XCP6uxwRYdvx",
+        "https://portal.thirdweb.com/knowledge-base/onchain-common-errors/thirdweb-cli/device-link-error",
       permanent: false,
     },
 
