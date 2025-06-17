@@ -2,10 +2,10 @@
 
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { ClientOnly } from "@/components/blocks/client-only";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { FileInput } from "components/shared/FileInput";
 import type { ThirdwebClient } from "thirdweb";
 import { SocialUrlsFieldset } from "../../_common/SocialUrls";

@@ -1,11 +1,11 @@
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
+import { ClientOnly } from "@/components/blocks/client-only";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { ClientOnly } from "../../../../../../../components/ClientOnly/ClientOnly";
 import { ContractTable } from "../../../../../../../components/contract-components/tables/contract-table";
 import { getSortedDeployedContracts } from "../../../../../account/contracts/_components/getSortedDeployedContracts";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
