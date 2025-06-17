@@ -44,7 +44,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.status", () => {
   it("should handle successful status with chain", async () => {
     const result = await status({
       transactionHash:
-        "0x7bedc4693e899fe81a22dac11301e77a12a6e772834bba5b698baf3ebcf86f7a",
+        "0x06ac91479b3ea4c6507f9b7bff1f2d5f553253fa79af9a7db3755563b60f7dfb",
       chain: defineChain(8453),
       client: TEST_CLIENT,
     });

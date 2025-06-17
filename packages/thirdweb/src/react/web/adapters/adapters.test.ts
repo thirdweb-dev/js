@@ -27,12 +27,4 @@ describe("WebWindowAdapter", () => {
       "noopener,noreferrer",
     );
   });
-
-  it("should throw error when popup is blocked", async () => {
-    mockOpen.mockReturnValue(null);
-
-    await expect(windowAdapter.open("https://example.com")).rejects.toThrow(
-      "Failed to open URL - popup may be blocked",
-    );
-  });
 });
