@@ -6,9 +6,6 @@ import { isProd } from "./env-utils";
 const experimental_taintUniqueValue =
   _experimental_taintUniqueValue || (() => {});
 
-// Make sure to taint the server only envs here with experimental_taintUniqueValue ONLY if they contain a UNIQUE sensitive value
-// if an env has a generic value that may appear naturally in client components - do not taint it
-
 export const DASHBOARD_THIRDWEB_SECRET_KEY =
   process.env.DASHBOARD_SECRET_KEY || "";
 

@@ -15,6 +15,16 @@ export const tokenInfoFormSchema = z.object({
   socialUrls: socialUrlsSchema,
 });
 
+const priceAmountSchema = z.string().refine(
+  (value) => {
+    const number = Number(value);
+    return !Number.isNaN(number) && number >= 0;
+  },
+  {
+    message: "Must be number larger than or equal to 0",
+  },
+);
+
 export const tokenDistributionFormSchema = z.object({
   supply: z.string().min(1, "Supply is required"),
   saleAllocationPercentage: z.string().refine(
@@ -29,16 +39,13 @@ export const tokenDistributionFormSchema = z.object({
       message: "Must be a number between 0 and 100",
     },
   ),
-  saleTokenAddress: z.string(),
-  salePrice: z.string().refine(
-    (value) => {
-      const number = Number(value);
-      return !Number.isNaN(number) && number >= 0;
-    },
-    {
-      message: "Must be number larger than or equal to 0",
-    },
-  ),
+  directSale: z.object({
+    priceAmount: priceAmountSchema,
+    currencyAddress: addressSchema,
+  }),
+  publicMarket: z.object({
+    tradingFees: z.enum(["0.01", "0.05", "0.3", "1"]),
+  }),
   airdropAddresses: z.array(
     z.object({
       address: addressSchema,
@@ -47,7 +54,7 @@ export const tokenDistributionFormSchema = z.object({
   ),
   // UI states
   airdropEnabled: z.boolean(),
-  saleEnabled: z.boolean(),
+  saleMode: z.enum(["direct-sale", "public-market", "disabled"]),
 });
 
 export type TokenDistributionForm = UseFormReturn<

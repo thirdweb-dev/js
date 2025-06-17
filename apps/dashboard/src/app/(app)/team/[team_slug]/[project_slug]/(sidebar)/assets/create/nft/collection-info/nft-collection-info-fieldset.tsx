@@ -4,6 +4,7 @@ import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { FileInput } from "components/shared/FileInput";
@@ -95,7 +96,7 @@ export function NFTCollectionInfoFieldset(props: {
                 htmlFor="chain"
                 errorMessage={form.formState.errors.chain?.message}
               >
-                <ClientOnly ssr={null}>
+                <ClientOnly ssr={<Skeleton className="h-10" />}>
                   <SingleNetworkSelector
                     className="bg-background"
                     client={props.client}

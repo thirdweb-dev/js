@@ -85,7 +85,7 @@ export function LaunchTokenStatus(props: {
       getTokenLaunchTrackingData({
         chainId: Number(formValues.chain),
         airdropEnabled: formValues.airdropEnabled,
-        saleEnabled: formValues.saleEnabled,
+        saleMode: formValues.saleMode,
         ...params,
       }),
     );
@@ -100,16 +100,6 @@ export function LaunchTokenStatus(props: {
       {
         label: "Deploy contract",
         id: stepIds["deploy-contract"],
-        status: { type: "idle" },
-      },
-      {
-        label: "Set claim conditions",
-        id: stepIds["set-claim-conditions"],
-        status: { type: "idle" },
-      },
-      {
-        label: "Mint tokens",
-        id: stepIds["mint-tokens"],
         status: { type: "idle" },
       },
     ];
@@ -136,10 +126,6 @@ export function LaunchTokenStatus(props: {
       setContractLink(
         `/team/${props.teamSlug}/${props.projectSlug}/contract/${formValues.chain}/${result.contractAddress}`,
       );
-    } else if (stepId === "set-claim-conditions") {
-      await createTokenFunctions.setClaimConditions(formValues);
-    } else if (stepId === "mint-tokens") {
-      await createTokenFunctions.mintTokens(formValues);
     } else if (stepId === "airdrop-tokens") {
       await createTokenFunctions.airdropTokens(formValues);
     }
@@ -202,7 +188,7 @@ export function LaunchTokenStatus(props: {
     <StepCard
       tracking={{
         page: "launch",
-        contractType: "DropERC20",
+        contractType: "ERC20Asset",
       }}
       title="Launch Coin"
       prevButton={{

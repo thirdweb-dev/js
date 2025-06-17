@@ -294,6 +294,7 @@ export function ContractTableUI(props: {
 
 const contractTypeToAssetTypeRecord: Record<string, string | undefined> = {
   DropERC20: "Coin",
+  ERC20Asset: "Coin",
   DropERC721: "NFT Collection",
   DropERC1155: "NFT Collection",
 };

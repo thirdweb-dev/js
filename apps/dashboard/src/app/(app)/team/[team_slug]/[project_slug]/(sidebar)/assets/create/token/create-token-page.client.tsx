@@ -8,6 +8,7 @@ import {
   type ThirdwebClient,
   getAddress,
 } from "thirdweb";
+import { useActiveWalletChain } from "thirdweb/react";
 import {
   type CreateAssetFormValues,
   type TokenDistributionFormValues,
@@ -23,8 +24,6 @@ export type CreateTokenFunctions = {
   deployContract: (values: CreateAssetFormValues) => Promise<{
     contractAddress: string;
   }>;
-  setClaimConditions: (values: CreateAssetFormValues) => Promise<void>;
-  mintTokens: (values: CreateAssetFormValues) => Promise<void>;
   airdropTokens: (values: CreateAssetFormValues) => Promise<void>;
 };
 
@@ -41,15 +40,16 @@ export function CreateTokenAssetPageUI(props: {
   const [step, setStep] = useState<"token-info" | "distribution" | "launch">(
     "token-info",
   );
+  const activeChain = useActiveWalletChain();
 
   const tokenInfoForm = useForm<TokenInfoFormValues>({
     resolver: zodResolver(tokenInfoFormSchema),
-    values: {
+    defaultValues: {
       name: "",
       description: "",
       symbol: "",
       image: undefined,
-      chain: "1",
+      chain: activeChain?.id.toString() || "1",
       socialUrls: [
         {
           platform: "Website",
@@ -66,13 +66,18 @@ export function CreateTokenAssetPageUI(props: {
 
   const tokenDistributionForm = useForm<TokenDistributionFormValues>({
     resolver: zodResolver(tokenDistributionFormSchema),
-    values: {
+    defaultValues: {
       // sale fieldset
       saleAllocationPercentage: "0",
-      saleTokenAddress: checksummedNativeTokenAddress,
-      salePrice: "0.1",
+      directSale: {
+        priceAmount: "0.1",
+        currencyAddress: checksummedNativeTokenAddress,
+      },
+      publicMarket: {
+        tradingFees: "1",
+      },
       supply: "1000000",
-      saleEnabled: false,
+      saleMode: "disabled",
       // airdrop
       airdropEnabled: false,
       airdropAddresses: [],
@@ -87,7 +92,7 @@ export function CreateTokenAssetPageUI(props: {
           onChainUpdated={() => {
             // if the chain is updated, set the sale token address to the native token address
             tokenDistributionForm.setValue(
-              "saleTokenAddress",
+              "directSale.currencyAddress",
               checksummedNativeTokenAddress,
             );
           }}

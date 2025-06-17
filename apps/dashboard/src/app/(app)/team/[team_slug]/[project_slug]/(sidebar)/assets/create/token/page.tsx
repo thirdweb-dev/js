@@ -1,12 +1,12 @@
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { redirect } from "next/navigation";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,
-} from "../../../../../../../api/lib/getAuthToken";
-import { loginRedirect } from "../../../../../../../login/loginRedirect";
+} from "@app/api/lib/getAuthToken";
+import { loginRedirect } from "@app/login/loginRedirect";
+import { redirect } from "next/navigation";
 import { CreateAssetPageHeader } from "../_common/PageHeader";
 import { CreateTokenAssetPage } from "./create-token-page-impl";
 
