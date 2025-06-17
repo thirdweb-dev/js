@@ -239,11 +239,6 @@ async function redirects() {
       permanent: false,
     },
     {
-      source: "/build",
-      destination: "/contracts/modular-contracts",
-      permanent: false,
-    },
-    {
       source: "/ui-components",
       destination: "/sdk",
       permanent: false,
@@ -319,28 +314,10 @@ async function redirects() {
       destination: "/templates/:slug",
       permanent: false,
     },
-    // redirect /account-abstraction to /connect/account-abstraction
-    {
-      source: "/account-abstraction",
-      destination: "/connect/account-abstraction",
-      permanent: false,
-    },
-    // redirect /connect/pay to /connect/universal-bridge
+    // redirect /connect/pay to /universal-bridge
     {
       source: "/connect/pay",
-      destination: "/connect/universal-bridge",
-      permanent: false,
-    },
-    // redirect /auth to /connect/auth
-    {
-      source: "/auth",
-      destination: "/connect/auth",
-      permanent: false,
-    },
-    // redirect /in-app-wallets to /connect/in-app-wallets
-    {
-      source: "/in-app-wallets",
-      destination: "/connect/in-app-wallets",
+      destination: "/universal-bridge",
       permanent: false,
     },
     // PREVIOUS CAMPAIGNS
@@ -372,6 +349,37 @@ async function redirects() {
     {
       source: "/grant/superchain",
       destination: "/superchain",
+      permanent: false,
+    },
+    // connect -> build redirects
+    {
+      source: "/connect",
+      destination: "/wallets",
+      permanent: false,
+    },
+    {
+      source: "/connect/account-abstraction",
+      destination: "/account-abstraction",
+      permanent: false,
+    },
+    {
+      source: "/connect/universal-bridge",
+      destination: "/universal-bridge",
+      permanent: false,
+    },
+    {
+      source: "/connect/auth",
+      destination: "/auth",
+      permanent: false,
+    },
+    {
+      source: "/connect/in-app-wallets",
+      destination: "/in-app-wallets",
+      permanent: false,
+    },
+    {
+      source: "/engine",
+      destination: "/transactions",
       permanent: false,
     },
 
