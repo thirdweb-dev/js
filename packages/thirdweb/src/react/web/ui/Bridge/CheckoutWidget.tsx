@@ -198,17 +198,6 @@ type UIOptionsResult =
  *  />
  * ```
  *
- * ### Enable/Disable payment methods
- *
- * You can use `disableOnramps` to prevent the use of onramps in the widget.
- *
- * ```tsx
- * <CheckoutWidget
- *   client={client}
- *   disableOnramps
- *  />
- * ```
- *
  * ### Customize the UI
  *
  * You can customize the UI of the `CheckoutWidget` component by passing a custom theme object to the `theme` prop.

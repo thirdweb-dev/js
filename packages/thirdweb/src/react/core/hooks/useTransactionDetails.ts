@@ -57,7 +57,7 @@ export function useTransactionDetails({
       "transaction-details",
       transaction.to,
       transaction.chain.id,
-      transaction.erc20Value,
+      transaction.erc20Value?.toString(),
     ],
     queryFn: async (): Promise<TransactionDetails> => {
       // Create contract instance for metadata fetching

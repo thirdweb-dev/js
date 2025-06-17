@@ -201,23 +201,6 @@ type UIOptionsResult =
  *  />
  * ```
  *
- * ### Enable/Disable payment methods
- *
- * You can use `disableOnramps` to prevent the use of onramps in the widget.
- *
- * ```tsx
- * <TransactionWidget
- *   client={client}
- *   transaction={prepareTransaction({
- *     to: "0x...",
- *     chain: ethereum,
- *     client: client,
- *     value: toUnits("0.001", 18),
- *   })}
- *   disableOnramps
- *  />
- * ```
- *
  * ### Customize the UI
  *
  * You can customize the UI of the `TransactionWidget` component by passing a custom theme object to the `theme` prop.
