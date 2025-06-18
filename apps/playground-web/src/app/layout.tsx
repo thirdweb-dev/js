@@ -36,7 +36,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const sidebarLinks = await getSidebarLinks();
+  const sidebarLinks = getSidebarLinks();
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
