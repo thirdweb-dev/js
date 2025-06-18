@@ -33,6 +33,7 @@ interface TransactionInfo {
   label: string;
   chain: ChainMetadata;
   destinationToken?: Token;
+  destinationChain?: ChainMetadata;
   originToken?: Token;
   originChain?: ChainMetadata;
   amountPaid?: string;
@@ -102,6 +103,7 @@ function useTransactionInfo(
               originToken: status.originToken,
               originChain,
               destinationToken: status.destinationToken,
+              destinationChain,
               amountReceived: `${formatTokenAmount(
                 status.destinationAmount,
                 status.destinationToken.decimals,
@@ -228,7 +230,7 @@ function CompletedStepDetailCard({
             Origin Chain
           </Text>
           <Text size="sm" color="primaryText">
-            {shorterChainName(txInfo.chain.name)}
+            {shorterChainName(txInfo.originChain.name)}
           </Text>
         </Container>
       )}

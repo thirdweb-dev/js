@@ -105,7 +105,7 @@ export function LeftSection(props: {
                     <Label htmlFor="fund-wallet-chain-id">Chain ID</Label>
                     <Input
                       id="fund-wallet-chain-id"
-                      type="number"
+                      type="text"
                       placeholder="1 (Ethereum)"
                       className="bg-card"
                       value={payOptions.buyTokenChain?.id || ""}
