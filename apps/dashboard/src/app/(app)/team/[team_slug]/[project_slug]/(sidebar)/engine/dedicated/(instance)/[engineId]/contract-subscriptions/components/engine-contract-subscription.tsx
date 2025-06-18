@@ -1,13 +1,13 @@
 "use client";
 
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { useEngineContractSubscription } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex, FormControl, Switch } from "@chakra-ui/react";
 import { useState } from "react";
-import { FormLabel, Heading, Text, TrackedLink } from "tw-components";
+import type { ThirdwebClient } from "thirdweb";
+import { FormLabel, Heading, Text } from "tw-components";
 import { AddContractSubscriptionButton } from "./add-contract-subscription-button";
 import { ContractSubscriptionTable } from "./contract-subscriptions-table";
-
-import type { ThirdwebClient } from "thirdweb";
 interface EngineContractSubscriptionsProps {
   instanceUrl: string;
   authToken: string;
@@ -30,15 +30,14 @@ export const EngineContractSubscriptions: React.FC<
           <Heading size="title.md">Contract Subscriptions</Heading>
           <Text>
             Subscribe to event logs and transaction receipts on any contract.{" "}
-            <TrackedLink
+            <UnderlineLink
               href="https://portal.thirdweb.com/engine/features/contract-subscriptions"
               color="primary.500"
-              isExternal
-              category="engine"
-              label="learn-more-contract-subscriptions"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Learn more about contract subscriptions
-            </TrackedLink>
+            </UnderlineLink>
             .
           </Text>
         </Flex>

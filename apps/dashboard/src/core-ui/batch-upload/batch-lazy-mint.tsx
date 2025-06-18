@@ -1,5 +1,6 @@
 "use client";
 
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import {
   Alert,
@@ -28,7 +29,6 @@ import {
   FormLabel,
   Heading,
   Text,
-  TrackedLink,
 } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
 import { processInputData, shuffleData } from "utils/batch";
@@ -281,14 +281,14 @@ export const BatchLazyMint: ComponentWithChildren<
                 {props.children}
               </div>
               <Text size="body.sm" mt={2}>
-                <TrackedLink
+                <UnderlineLink
+                  rel="noopener noreferrer"
                   href="https://support.thirdweb.com/dashboard/n5evQ4EfEjEifczEQaZ1hL/batch-upload-troubleshooting/5WMQFqfaUTU1C8NM8FtJ2X"
-                  isExternal
-                  category="batch-upload"
-                  label="issues"
+                  target="_blank"
+                  className="text-primary-500"
                 >
                   Experiencing issues uploading your files?
-                </TrackedLink>
+                </UnderlineLink>
               </Text>
             </>
           )}

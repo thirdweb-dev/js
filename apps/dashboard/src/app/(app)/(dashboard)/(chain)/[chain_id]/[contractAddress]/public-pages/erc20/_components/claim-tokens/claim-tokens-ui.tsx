@@ -293,6 +293,7 @@ export function TokenDropClaim(props: {
             href={`${explorerUrl}/tx/${successScreen.txHash}`}
             target="_blank"
             className="gap-1.5"
+            rel="noopener noreferrer"
           >
             View Transaction{" "}
             <ExternalLinkIcon className="size-3.5 text-muted-foreground" />

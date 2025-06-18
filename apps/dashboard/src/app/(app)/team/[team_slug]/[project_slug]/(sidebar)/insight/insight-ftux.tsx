@@ -45,14 +45,10 @@ export function InsightFTUX(props: {
         {
           label: "Try on Playground",
           href: "https://playground.thirdweb.com/insight",
-          trackingLabel: "playground",
-          category: "insight-ftux",
         },
         {
           label: "View Docs",
           href: "https://portal.thirdweb.com/insight",
-          trackingLabel: "docs",
-          category: "insight-ftux",
         },
       ]}
     >

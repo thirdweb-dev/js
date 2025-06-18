@@ -3,7 +3,6 @@ import { FooterLinksSection } from "../../components/footer/FooterLinksSection";
 export function AAFooter() {
   return (
     <FooterLinksSection
-      trackingCategory="account-abstraction"
       left={{
         title: "Documentation",
         links: [

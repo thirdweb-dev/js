@@ -16,7 +16,6 @@ const meta: Meta<typeof PermissionsTableUI> = {
   ],
   args: {
     viewMoreLink: "#",
-    trackingCategory: "test-category",
     members: [],
     isPending: false,
   },

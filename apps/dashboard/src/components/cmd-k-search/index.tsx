@@ -22,7 +22,6 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ChainIconClient } from "components/icons/ChainIcon";
-import { useTrack } from "hooks/analytics/useTrack";
 import { type TrendingContract, fetchTopContracts } from "lib/search";
 import { ArrowRightIcon, CommandIcon, SearchIcon, XIcon } from "lucide-react";
 import Link from "next/link";
@@ -30,7 +29,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { useDebounce } from "use-debounce";
 import { shortenIfAddress } from "utils/usedapp-external";
-const TRACKING_CATEGORY = "any_contract_search";
 
 const typesenseApiKey =
   process.env.NEXT_PUBLIC_TYPESENSE_CONTRACT_API_KEY || "";
@@ -38,18 +36,10 @@ const typesenseApiKey =
 function contractTypesenseSearchQuery(
   searchQuery: string,
   queryClient: QueryClient,
-  trackEvent: ReturnType<typeof useTrack>,
 ) {
   return queryOptions({
     queryKey: ["typesense-contract-search", { search: searchQuery }],
     queryFn: async () => {
-      trackEvent({
-        category: TRACKING_CATEGORY,
-        action: "query",
-        label: "attempt",
-        searchQuery,
-      });
-
       return fetchTopContracts({
         query: searchQuery,
         perPage: 10,
@@ -67,7 +57,6 @@ export const CmdKSearchModal = (props: {
   client: ThirdwebClient;
 }) => {
   const { open, setOpen } = props;
-  const trackEvent = useTrack();
   const queryClient = useQueryClient();
 
   // legitimate use-case
@@ -89,7 +78,7 @@ export const CmdKSearchModal = (props: {
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
   const typesenseSearchQuery = useQuery(
-    contractTypesenseSearchQuery(debouncedSearchValue, queryClient, trackEvent),
+    contractTypesenseSearchQuery(debouncedSearchValue, queryClient),
   );
 
   const data = useMemo(() => {
@@ -154,13 +143,7 @@ export const CmdKSearchModal = (props: {
           router.push(
             `/${result.chainMetadata.chainId}/${result.contractAddress}`,
           );
-          trackEvent({
-            category: TRACKING_CATEGORY,
-            action: "select_contract",
-            input_mode: "keyboard",
-            chainId: result.chainMetadata.chainId,
-            contract_address: result.contractAddress,
-          });
+
           handleClose();
         }
       } else if (e.key === "ArrowDown") {
@@ -180,7 +163,7 @@ export const CmdKSearchModal = (props: {
     };
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
-  }, [activeIndex, data, handleClose, open, router, trackEvent]);
+  }, [activeIndex, data, handleClose, open, router]);
 
   return (
     <Dialog
@@ -249,13 +232,6 @@ export const CmdKSearchModal = (props: {
                           isActive={idx === activeIndex}
                           onClick={() => {
                             handleClose();
-                            trackEvent({
-                              category: TRACKING_CATEGORY,
-                              action: "select_contract",
-                              input_mode: "click",
-                              chainId: result.chainMetadata.chainId,
-                              contract_address: result.contractAddress,
-                            });
                           }}
                           onMouseEnter={() => setActiveIndex(idx)}
                         />

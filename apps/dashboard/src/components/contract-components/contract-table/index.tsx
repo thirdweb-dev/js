@@ -69,6 +69,7 @@ export async function DeployableContractTable(
                 <TableCell>
                   <Link
                     target="_blank"
+                    rel="noopener noreferrer"
                     href={`/contracts/${context}/${encodeURIComponent(metadata.contractId)}`}
                     className="text-left text-muted-foreground before:absolute before:inset-0"
                   >

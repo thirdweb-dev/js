@@ -147,6 +147,7 @@ export function TransactionDetailsUI({
                         <Link
                           href={`${explorer.url}/tx/${transactionHash}`}
                           target="_blank"
+                          rel="noopener noreferrer"
                           onClick={(e) => {
                             e.stopPropagation();
                           }}

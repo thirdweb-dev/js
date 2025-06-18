@@ -108,8 +108,9 @@ function EngineLegacyBannerUI(props: {
 
           <Button variant="outline" asChild size="sm">
             <Link
-              href={"https://portal.thirdweb.com/engine/v3"}
+              href="https://portal.thirdweb.com/engine/v3"
               target="_blank"
+              rel="noopener noreferrer"
               className="gap-2 bg-background"
             >
               Learn More <ExternalLinkIcon className="size-4" />

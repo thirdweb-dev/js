@@ -199,6 +199,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
                               client,
                             )}
                             target="_blank"
+                            rel="noopener noreferrer"
                             className="text-link-foreground hover:text-foreground"
                           >
                             View Audit Report
@@ -250,6 +251,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
             <Link
               href="https://portal.thirdweb.com/contracts/publish/overview"
               target="_blank"
+              rel="noopener noreferrer"
             >
               Learn more about Publish{" "}
               <ExternalLinkIcon className="size-4 text-muted-foreground" />

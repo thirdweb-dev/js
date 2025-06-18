@@ -3,7 +3,6 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { Form, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
   type EngineInstance,
   type SetWalletConfigInput,
@@ -13,6 +12,7 @@ import {
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 interface KmsAwsConfigProps {
@@ -95,15 +95,14 @@ export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({
         </p>
         <p className="text-muted-foreground">
           For help and more advanced use cases,{" "}
-          <TrackedLinkTW
+          <Link
             target="_blank"
+            rel="noopener noreferrer"
             href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
-            label="learn-more"
-            category="engine"
             className="text-link-foreground hover:text-foreground"
           >
             learn more about using AWS KMS wallets
-          </TrackedLinkTW>
+          </Link>
           .
         </p>
 

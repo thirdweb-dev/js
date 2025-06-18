@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ArrowRightIcon, DownloadIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -9,16 +8,10 @@ export function ImportEngineLink(props: {
 }) {
   return (
     <Button asChild variant="outline" size="sm" className="gap-2 bg-card">
-      <TrackedLinkTW
-        href={`${props.engineLinkPrefix}/import`}
-        category="engine"
-        trackingProps={{
-          action: "import",
-        }}
-      >
+      <Link href={`${props.engineLinkPrefix}/import`}>
         <DownloadIcon className="size-3" />
         {props.label}
-      </TrackedLinkTW>
+      </Link>
     </Button>
   );
 }
@@ -48,6 +41,7 @@ function EngineInfoSection(props: { team_slug: string; project_slug: string }) {
             href="https://portal.thirdweb.com/engine"
             className="gap-2"
             target="_blank"
+            rel="noopener noreferrer"
           >
             Learn More
             <ExternalLinkIcon className="size-3 text-muted-foreground" />
@@ -55,18 +49,10 @@ function EngineInfoSection(props: { team_slug: string; project_slug: string }) {
         </Button>
 
         <Button size="sm" asChild variant="outline">
-          <TrackedLinkTW
-            href={`${engineLinkPrefix}/sandbox`}
-            className="gap-2"
-            category="engine"
-            label="click-try-demo"
-            trackingProps={{
-              action: "try-demo",
-            }}
-          >
+          <Link href={`${engineLinkPrefix}/sandbox`} className="gap-2">
             Try Demo Engine
             <ArrowRightIcon className="size-3 text-muted-foreground" />
-          </TrackedLinkTW>
+          </Link>
         </Button>
       </div>
     </div>

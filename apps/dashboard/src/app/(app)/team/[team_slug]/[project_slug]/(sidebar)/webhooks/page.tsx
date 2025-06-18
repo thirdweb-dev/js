@@ -4,7 +4,7 @@ import {
   getWebhooks,
 } from "@/api/insight/webhooks";
 import { getProject } from "@/api/projects";
-import { TrackedUnderlineLink } from "@/components/ui/tracked-link";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
@@ -68,15 +68,13 @@ export default async function WebhooksPage({
           <p className="text-muted-foreground text-sm">
             Create and manage webhooks to get notified about blockchain events,
             transactions and more.{" "}
-            <TrackedUnderlineLink
-              category="webhooks"
-              label="learn-more"
+            <UnderlineLink
               target="_blank"
               rel="noopener noreferrer"
               href="https://portal.thirdweb.com/insight/webhooks"
             >
               Learn more about webhooks.
-            </TrackedUnderlineLink>
+            </UnderlineLink>
           </p>
         </div>
       </div>

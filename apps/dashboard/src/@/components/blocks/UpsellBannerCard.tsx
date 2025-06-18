@@ -1,8 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import type React from "react";
 
 const ACCENT = {
@@ -103,15 +103,16 @@ export function UpsellBannerCard(props: UpsellBannerCardProps) {
             color.btn,
           )}
         >
-          <TrackedLinkTW
+          <Link
             href={props.cta.link}
-            category={props.trackingCategory}
-            label={props.trackingLabel}
             target={props.cta.target}
+            rel={
+              props.cta.target === "_blank" ? "noopener noreferrer" : undefined
+            }
           >
             {props.cta.text}
             {props.cta.icon && <span className="ml-2">{props.cta.icon}</span>}
-          </TrackedLinkTW>
+          </Link>
         </Button>
       </div>
     </div>

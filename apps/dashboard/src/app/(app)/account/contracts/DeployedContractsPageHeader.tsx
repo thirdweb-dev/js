@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ImportModal } from "components/contract-components/import-contract/modal";
 import { useTrack } from "hooks/analytics/useTrack";
 import { DownloadIcon, PlusIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 
@@ -52,14 +52,10 @@ export function DeployedContractsPageHeader(props: {
             Import contract
           </Button>
           <Button asChild className="gap-2">
-            <TrackedLinkTW
-              href="/explore"
-              category="contracts"
-              label="deploy-contract"
-            >
+            <Link href="/explore">
               <PlusIcon className="size-4" />
               Deploy contract
-            </TrackedLinkTW>
+            </Link>
           </Button>
         </div>
       </div>

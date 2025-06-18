@@ -20,6 +20,7 @@ export const SourcesPanel: React.FC<SourcesPanelProps> = ({ sources, abi }) => {
             <UnderlineLink
               href="https://portal.thirdweb.com/contracts/deploy/overview"
               target="_blank"
+              rel="noopener noreferrer"
             >
               thirdweb CLI v0.5+
             </UnderlineLink>

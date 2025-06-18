@@ -7,7 +7,6 @@ import { getSDKTheme } from "app/(app)/components/sdk-component-theme";
 import { LazyConfigureNetworkModal } from "components/configure-networks/LazyConfigureNetworkModal";
 import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTheme } from "next-themes";
 import Image from "next/image";
@@ -261,18 +260,17 @@ function ConnectWalletWelcomeScreen(props: {
         </div>
       </div>
 
-      <TrackedAnchorLink
+      <Link
         className="text-center font-semibold opacity-70 hover:no-underline hover:opacity-100"
         target="_blank"
-        category="custom-connect-wallet"
-        label="new-to-wallets"
+        rel="noopener noreferrer"
         href="https://blog.thirdweb.com/web3-wallet/"
         style={{
           color: fontColor,
         }}
       >
         New to Wallets?
-      </TrackedAnchorLink>
+      </Link>
     </div>
   );
 }
@@ -303,38 +301,5 @@ export function useCustomConnectModal() {
       });
     },
     [connect, theme],
-  );
-}
-
-/**
- * A link component extends the `Link` component and adds tracking.
- */
-function TrackedAnchorLink(props: {
-  category: string;
-  label?: string;
-  trackingProps?: Record<string, string>;
-  href: string;
-  target?: string;
-  children: React.ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
-}) {
-  const trackEvent = useTrack();
-  const { category, label, trackingProps } = props;
-
-  const onClick = useCallback(() => {
-    trackEvent({ category, action: "click", label, ...trackingProps });
-  }, [trackEvent, category, label, trackingProps]);
-
-  return (
-    <Link
-      onClick={onClick}
-      target={props.target}
-      href={props.href}
-      className={props.className}
-      style={props.style}
-    >
-      {props.children}
-    </Link>
   );
 }

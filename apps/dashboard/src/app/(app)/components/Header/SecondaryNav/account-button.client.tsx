@@ -95,6 +95,7 @@ export function AccountButton(props: {
             <Link
               href={`/${ensQuery.data?.ensName || props.accountAddress}`}
               target="_blank"
+              rel="noopener noreferrer"
             >
               My Wallet
             </Link>

@@ -166,7 +166,7 @@ export default async function ProjectShowcasePage(props: {
                         <Link
                           href={project.case_study}
                           target="_blank"
-                          // onClick={(e) => e.stopPropagation()}
+                          rel="noopener noreferrer"
                         >
                           <Button variant="outline" size="sm">
                             <FileTextIcon className="mr-2 h-4 w-4" /> Case Study

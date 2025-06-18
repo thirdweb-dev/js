@@ -214,6 +214,7 @@ function ImportForm(props: {
               <Link
                 href={`/${chainSlug}/${addContractToProject.data.result.contractAddress}`}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 View Contract <ExternalLinkIcon className="size-4" />
               </Link>

@@ -19,6 +19,7 @@ export function ClaimChainSection() {
             className="gap-2"
             href="https://share.hsforms.com/1qAViW3U5SoKbabNhRZy4Kgea58c"
             target="_blank"
+            rel="noopener noreferrer"
           >
             <span>Claim Chain</span>
             <ExternalLinkIcon className="-mt-[3px] size-4" />

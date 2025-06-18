@@ -78,6 +78,7 @@ export function PieChartCard({
                   <Link
                     href={link}
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="text-muted-foreground text-xs hover:text-link-foreground"
                   >
                     {label}

@@ -1,5 +1,5 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { TrackedUnderlineLink } from "@/components/ui/tracked-link";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
 import { Grid2x2XIcon } from "lucide-react";
 
@@ -54,15 +54,14 @@ export function SettingDetectedState({
               This contract does not implement the required extension for{" "}
               <span className="text-foreground">{metadata.name}</span>
             </p>
-            <TrackedUnderlineLink
-              category="contract-settings"
-              label="metadata-extension"
+            <UnderlineLink
               href={metadata.portalLink}
               target="_blank"
+              rel="noopener noreferrer"
               className="text-muted-foreground text-sm"
             >
               Learn how to enable this extension
-            </TrackedUnderlineLink>
+            </UnderlineLink>
           </div>
         </div>
       )}

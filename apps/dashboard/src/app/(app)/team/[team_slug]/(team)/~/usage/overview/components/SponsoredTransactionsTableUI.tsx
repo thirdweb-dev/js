@@ -299,6 +299,7 @@ function TransactionHashCell(props: { hash: string; chainId: string }) {
         <Link
           href={`${explorerUrl}/tx/${props.hash}`}
           target="_blank"
+          rel="noopener noreferrer"
           className="-translate-x-2 gap-2 font-mono"
         >
           {txHashToShow}
@@ -337,6 +338,7 @@ function ChainCell(props: { chainId: string; client: ThirdwebClient }) {
       />
       <Link
         target="_blank"
+        rel="noopener noreferrer"
         href={`/${chain ? chain.slug : props.chainId}`}
         className="before:absolute before:inset-0 hover:underline hover:underline-offset-4"
       >
@@ -374,6 +376,7 @@ function ProjectCell(props: {
         href={`/team/${props.teamSlug}/${props.project.slug}`}
         className="before:absolute before:inset-0 hover:underline hover:underline-offset-4"
         target="_blank"
+        rel="noopener noreferrer"
       >
         {props.project.name}
       </Link>

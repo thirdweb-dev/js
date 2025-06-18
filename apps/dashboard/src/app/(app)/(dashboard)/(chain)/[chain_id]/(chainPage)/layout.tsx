@@ -176,8 +176,8 @@ export default async function ChainPageLayout(props: {
                     mapV4ChainToV5Chain(chain)
                   }
                 />
-                <Button variant="primary">
-                  <Link href="/team" target="_blank">
+                <Button variant="primary" asChild>
+                  <Link href="/team" target="_blank" rel="noopener noreferrer">
                     Get started
                   </Link>
                 </Button>

@@ -29,14 +29,22 @@ export function NebulaAnalyticsPage(props: {
 
           <div className="flex gap-3">
             <Button variant="outline" className="gap-2 bg-card" asChild>
-              <Link href="https://nebula.thirdweb.com" target="_blank">
+              <Link
+                href="https://nebula.thirdweb.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <MessageSquareQuoteIcon className="size-4 text-muted-foreground" />
                 Playground
               </Link>
             </Button>
 
             <Button variant="outline" className="gap-2 bg-card" asChild>
-              <Link href="https://portal.thirdweb.com/nebula" target="_blank">
+              <Link
+                href="https://portal.thirdweb.com/nebula"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <FileCode2Icon className="size-4 text-muted-foreground" />
                 API Reference
               </Link>

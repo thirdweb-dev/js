@@ -2,7 +2,6 @@ import type { Project } from "@/api/projects";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CodeServer } from "@/components/ui/code/code.server";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { DotNetIcon } from "components/icons/brand-icons/DotNetIcon";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
@@ -14,6 +13,7 @@ import {
   CircleAlertIcon,
   ExternalLinkIcon,
 } from "lucide-react";
+import Link from "next/link";
 import { ContractIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/ContractIcon";
 import { EngineIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 import { InsightIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/InsightIcon";
@@ -115,6 +115,7 @@ function IntegrationCodeExamples(props: {
               <UnderlineLink
                 href="https://portal.thirdweb.com/unity/v5/thirdwebmanager"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 Thirdweb Manager prefab
               </UnderlineLink>
@@ -124,6 +125,7 @@ function IntegrationCodeExamples(props: {
                 <UnderlineLink
                   target="_blank"
                   href={`/team/${props.teamSlug}/${props.project.slug}/settings`}
+                  rel="noopener noreferrer"
                 >
                   Project settings
                 </UnderlineLink>
@@ -168,6 +170,7 @@ function IntegrationCodeExamples(props: {
               <UnderlineLink
                 href="https://portal.thirdweb.com/unreal-engine/getting-started"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 thirdweb plugin settings
               </UnderlineLink>
@@ -177,6 +180,7 @@ function IntegrationCodeExamples(props: {
                 <UnderlineLink
                   target="_blank"
                   href={`/team/${props.teamSlug}/${props.project.slug}/settings`}
+                  rel="noopener noreferrer"
                 >
                   Project settings
                 </UnderlineLink>
@@ -307,14 +311,9 @@ function ProductCard(props: {
         <props.icon className="size-5 text-muted-foreground" />
       </div>
       <h3 className="mb-0.5 font-semibold text-lg tracking-tight">
-        <TrackedLinkTW
-          href={props.href}
-          className="before:absolute before:inset-0"
-          category="project-ftux"
-          label={props.trackingLabel}
-        >
+        <Link href={props.href} className="before:absolute before:inset-0">
           {props.title}
-        </TrackedLinkTW>
+        </Link>
       </h3>
       <p className="text-muted-foreground text-sm">{props.description}</p>
     </div>
@@ -396,15 +395,14 @@ function SDKCard(props: SDKCardProps) {
       </div>
       <div className="flex flex-col gap-0.5">
         <p className="font-medium text-base">
-          <TrackedLinkTW
+          <Link
             href={props.href}
             className="before:absolute before:inset-0"
             target="_blank"
-            category="project-ftux"
-            label={props.trackingLabel}
+            rel="noopener noreferrer"
           >
             {props.name}
-          </TrackedLinkTW>
+          </Link>
         </p>
         <p className="inline-flex items-center gap-1.5 text-muted-foreground text-xs">
           View Docs
@@ -451,15 +449,14 @@ function StarterKitsSection() {
     <section>
       <div className="mb-3 flex items-center justify-between gap-2">
         <h2 className="font-semibold text-xl tracking-tight">Starter Kits</h2>
-        <TrackedLinkTW
+        <Link
           href="https://github.com/thirdweb-example"
           target="_blank"
-          category="project-ftux"
-          label="view_all_templates"
+          rel="noopener noreferrer"
           className="inline-flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground"
         >
           View all <ChevronRightIcon className="size-3" />
-        </TrackedLinkTW>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -484,15 +481,14 @@ function StarterKitCard(props: StartedKitCardProps) {
       </div>
 
       <div className="flex flex-col gap-0.5">
-        <TrackedLinkTW
+        <Link
           href={props.href}
           target="_blank"
-          category="project-ftux"
-          label={props.trackingLabel}
+          rel="noopener noreferrer"
           className="before:absolute before:inset-0"
         >
           {props.name}
-        </TrackedLinkTW>
+        </Link>
         <p className="inline-flex items-center gap-1.5 text-muted-foreground text-xs">
           View Repo
           <ExternalLinkIcon className="size-3" />

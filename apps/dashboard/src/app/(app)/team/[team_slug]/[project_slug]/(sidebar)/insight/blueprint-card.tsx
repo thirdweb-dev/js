@@ -39,6 +39,7 @@ export function BlueprintCard() {
               <Link
                 href="https://portal.thirdweb.com/insight/blueprints"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 Docs <ExternalLinkIcon className="size-4" />
               </Link>
@@ -81,7 +82,11 @@ export function BlueprintCard() {
       {/* Playground link */}
       <div className="border-t p-4 lg:p-6">
         <Button className="w-full gap-2" asChild>
-          <Link href="https://playground.thirdweb.com/insight" target="_blank">
+          <Link
+            href="https://playground.thirdweb.com/insight"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Try Insight blueprints in the playground
             <ExternalLinkIcon className="size-4" />
           </Link>

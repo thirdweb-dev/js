@@ -13,9 +13,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { getAllRoleMembers } from "contract-ui/hooks/permissions";
 import { ArrowRightIcon } from "lucide-react";
+import Link from "next/link";
 import { useMemo } from "react";
 import {
   type ThirdwebClient,
@@ -28,7 +28,6 @@ import { buildContractPagePath } from "../../_utils/contract-page-path";
 
 export function PermissionsTable(props: {
   contract: ThirdwebContract;
-  trackingCategory: string;
   chainSlug: string;
   projectMeta: ProjectMeta | undefined;
 }) {
@@ -68,7 +67,6 @@ export function PermissionsTable(props: {
       members={members}
       isPending={allRoleMembers.isPending}
       viewMoreLink={permissionsHref}
-      trackingCategory={props.trackingCategory}
       client={props.contract.client}
     />
   );
@@ -76,7 +74,6 @@ export function PermissionsTable(props: {
 
 export function PermissionsTableUI(props: {
   viewMoreLink: string;
-  trackingCategory: string;
   members: { member: string; roles: string[] }[];
   isPending: boolean;
   client: ThirdwebClient;
@@ -87,14 +84,12 @@ export function PermissionsTableUI(props: {
       <div className="flex w-full items-center justify-between border-b px-6 py-4">
         <h2 className="font-semibold text-xl tracking-tight">Permissions</h2>
         <Button asChild variant="outline" size="sm" className="bg-background">
-          <TrackedLinkTW
-            category={props.trackingCategory}
-            label="view_all_permissions"
+          <Link
             href={props.viewMoreLink}
             className="flex items-center gap-2 text-muted-foreground text-sm"
           >
             View all <ArrowRightIcon className="size-4" />
-          </TrackedLinkTW>
+          </Link>
         </Button>
       </div>
 

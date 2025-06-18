@@ -10,7 +10,6 @@ import {
   forwardRef,
   useButtonGroup,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useClipboard } from "hooks/useClipboard";
 import { CheckIcon, CopyIcon, ExternalLinkIcon } from "lucide-react";
 import { forwardRef as reactForwardRef } from "react";
@@ -123,66 +122,11 @@ export const LinkButton = reactForwardRef<HTMLButtonElement, LinkButtonProps>(
 
 LinkButton.displayName = "LinkButton";
 
-interface TrackedLinkButtonProps extends LinkButtonProps {
-  category: string;
-  label?: string;
-}
-
-export const TrackedLinkButton = forwardRef<TrackedLinkButtonProps, "button">(
-  ({ category, label, ...restButtonProps }, ref) => {
-    const trackEvent = useTrack();
-    return (
-      <LinkButton
-        ref={ref}
-        onClick={() =>
-          trackEvent({
-            category,
-            action: "click",
-            label,
-          })
-        }
-        {...restButtonProps}
-      />
-    );
-  },
-);
-
-TrackedLinkButton.displayName = "TrackedLinkButton";
-
-interface TrackedIconButtonProps extends IconButtonProps {
-  category: string;
-  label?: string;
-  trackingProps?: Record<string, string>;
-}
-
-const TrackedIconButton = forwardRef<TrackedIconButtonProps, "button">(
-  ({ category, label, trackingProps, ...restButtonProps }, ref) => {
-    const trackEvent = useTrack();
-    return (
-      <IconButton
-        className="text-muted-foreground"
-        ref={ref}
-        onClick={() =>
-          trackEvent({
-            category,
-            action: "click",
-            label,
-            ...trackingProps,
-          })
-        }
-        {...restButtonProps}
-      />
-    );
-  },
-);
-
-TrackedIconButton.displayName = "TrackedIconButton";
-
-interface TrackedCopyButtonProps extends TrackedIconButtonProps {
+interface Legacy_CopyButtonProps extends IconButtonProps {
   value: string;
 }
 
-export const TrackedCopyButton = forwardRef<TrackedCopyButtonProps, "button">(
+export const Legacy_CopyButton = forwardRef<Legacy_CopyButtonProps, "button">(
   ({ value, ...restButtonProps }, ref) => {
     const { onCopy, hasCopied } = useClipboard(value);
 
@@ -193,7 +137,7 @@ export const TrackedCopyButton = forwardRef<TrackedCopyButtonProps, "button">(
     };
 
     return (
-      <TrackedIconButton
+      <IconButton
         ref={ref}
         borderRadius="md"
         variant="ghost"
@@ -209,4 +153,4 @@ export const TrackedCopyButton = forwardRef<TrackedCopyButtonProps, "button">(
   },
 );
 
-TrackedCopyButton.displayName = "TrackedCopyButton";
+Legacy_CopyButton.displayName = "Legacy_CopyButton";

@@ -7,7 +7,7 @@ import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { siwaExamplePrompts } from "../../../(dashboard)/support/page";
+import { siwaExamplePrompts } from "../../../(dashboard)/support/definitions";
 import { CustomChatButton } from "../../../../../components/CustomChat/CustomChatButton";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import {

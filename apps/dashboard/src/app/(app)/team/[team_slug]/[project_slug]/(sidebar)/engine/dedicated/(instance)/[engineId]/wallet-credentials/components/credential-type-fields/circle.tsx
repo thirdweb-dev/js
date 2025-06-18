@@ -30,6 +30,7 @@ export const CircleCredentialFields: React.FC<CircleCredentialFieldsProps> = ({
             <Link
               href="https://developers.circle.com/w3s/entity-secret-management"
               target="_blank"
+              rel="noopener noreferrer"
               className="text-link-foreground hover:text-foreground"
             >
               Learn more about entity secret management

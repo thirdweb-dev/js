@@ -3,13 +3,13 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
   type EngineInstance,
   type SetWalletConfigInput,
   useEngineSetWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useTrack } from "hooks/analytics/useTrack";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -76,15 +76,14 @@ export const CircleConfig: React.FC<CircleConfigProps> = ({
           sufficient permissions. Created wallets are stored in your AWS
           account. Configure your Circle API Key to use Circle wallets. Learn
           more about{" "}
-          <TrackedLinkTW
+          <Link
             href="https://portal.thirdweb.com/engine/features/backend-wallets#circle-wallet"
             target="_blank"
-            label="learn-more"
-            category="engine"
+            rel="noopener noreferrer"
             className="text-link-foreground hover:text-foreground"
           >
             how to get an API Key
-          </TrackedLinkTW>
+          </Link>
           .
         </p>
       </div>

@@ -302,7 +302,11 @@ function DeleteAccountCard(props: {
                         size="sm"
                         className="gap-2"
                       >
-                        <Link href="/support/create-ticket" target="_blank">
+                        <Link
+                          href="/support/create-ticket"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           Contact Support
                           <ExternalLinkIcon className="size-4" />
                         </Link>

@@ -1,8 +1,8 @@
 "use client";
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Button } from "@/components/ui/button";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useMutation } from "@tanstack/react-query";
 import type { TrackingParams } from "hooks/analytics/useTrack";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
@@ -72,15 +72,13 @@ export function LinkWalletPrompt(props: {
           <p>
             You can link your wallet with this account to access it. <br />{" "}
             Multiple wallets can be linked to the same account.{" "}
-            <TrackedLinkTW
+            <UnderlineLink
               href="https://portal.thirdweb.com/account/billing/account-info"
-              category="account"
-              label="learn-wallet-linking"
               target="_blank"
-              className="underline decoration-muted-foreground/50 decoration-dotted underline-offset-[5px] hover:text-foreground hover:decoration-foreground hover:decoration-solid"
+              rel="noopener noreferrer"
             >
               Learn more about wallet linking
-            </TrackedLinkTW>
+            </UnderlineLink>
           </p>
         </div>
 

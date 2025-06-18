@@ -9,11 +9,6 @@ export type SidebarBaseLink = {
   label: React.ReactNode;
   exactMatch?: boolean;
   icon?: React.FC<{ className?: string }>;
-  tracking?: {
-    category: string;
-    action: string;
-    label: string;
-  };
 };
 
 export type SidebarLink =

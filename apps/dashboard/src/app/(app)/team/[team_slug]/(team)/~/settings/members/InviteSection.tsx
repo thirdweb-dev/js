@@ -119,6 +119,7 @@ export function InviteSection(props: {
           <Link
             href="https://thirdweb.com/pricing"
             target="_blank"
+            rel="noopener noreferrer"
             className="text-link-foreground hover:text-foreground"
           >
             View plans <ExternalLinkIcon className="inline size-3" />
@@ -155,6 +156,7 @@ export function InviteSection(props: {
           <Link
             href="https://thirdweb.com/pricing"
             target="_blank"
+            rel="noopener noreferrer"
             className="text-link-foreground hover:text-foreground"
           >
             View pricing <ExternalLinkIcon className="inline size-3" />

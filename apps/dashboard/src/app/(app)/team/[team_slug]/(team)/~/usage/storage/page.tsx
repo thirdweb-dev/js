@@ -76,6 +76,7 @@ function CLISection() {
         <Link
           href="https://portal.thirdweb.com/cli/upload"
           target="_blank"
+          rel="noopener noreferrer"
           className="text-foreground hover:underline"
         >
           Learn more about thirdweb CLI

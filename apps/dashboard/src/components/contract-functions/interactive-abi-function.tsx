@@ -1,5 +1,6 @@
 "use client";
 
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Badge } from "@/components/ui/badge";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
@@ -41,7 +42,6 @@ import {
   FormLabel,
   Heading,
   Text,
-  TrackedLink,
 } from "tw-components";
 
 function formatResponseData(data: unknown): {
@@ -480,17 +480,16 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
               {formattedResponseData.type === "text" &&
                 formattedResponseData.data.startsWith("ipfs://") && (
                   <Text size="label.sm">
-                    <TrackedLink
+                    <UnderlineLink
                       href={replaceIpfsUrl(
                         formattedResponseData.data,
                         contract.client,
                       )}
-                      isExternal
-                      category="contract-explorer"
-                      label="open-in-gateway"
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
                       Open in gateway
-                    </TrackedLink>
+                    </UnderlineLink>
                   </Text>
                 )}
               {/* Same with the logic above but this time it's applied to traditional urls */}
@@ -500,6 +499,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
                 <Link
                   href={formattedResponseData.data}
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="mt-1 inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
                 >
                   Open link

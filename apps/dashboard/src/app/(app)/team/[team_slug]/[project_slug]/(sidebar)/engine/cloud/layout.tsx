@@ -53,6 +53,7 @@ function TransactionsLayout(props: {
                 <Link
                   href={`${NEXT_PUBLIC_ENGINE_CLOUD_URL}/reference`} // TODO: change this
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="max-w-full truncate py-1 text-muted-foreground"
                 >
                   {NEXT_PUBLIC_ENGINE_CLOUD_URL}

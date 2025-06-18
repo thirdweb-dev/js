@@ -974,7 +974,12 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                     />
 
                     <Button asChild variant="outline">
-                      <Link href="/chainlist" className="gap-3" target="_blank">
+                      <Link
+                        href="/chainlist"
+                        className="gap-3"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         View all chains
                         <ExternalLinkIcon className="size-4 bg-background text-muted-foreground" />
                       </Link>

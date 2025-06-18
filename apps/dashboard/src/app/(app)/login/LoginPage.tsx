@@ -94,6 +94,7 @@ export function LoginAndOnboardingPage(props: {
                 href="https://portal.thirdweb.com/"
                 className="px-2 text-muted-foreground text-sm hover:text-foreground"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 Docs
               </Link>
@@ -102,6 +103,7 @@ export function LoginAndOnboardingPage(props: {
                 href="/support"
                 target="_blank"
                 className="px-2 text-muted-foreground text-sm hover:text-foreground"
+                rel="noopener noreferrer"
               >
                 Support
               </Link>
@@ -110,6 +112,7 @@ export function LoginAndOnboardingPage(props: {
                 target="_blank"
                 href="https://feedback.thirdweb.com"
                 className="px-2 text-muted-foreground text-sm hover:text-foreground"
+                rel="noopener noreferrer"
               >
                 Feedback
               </Link>

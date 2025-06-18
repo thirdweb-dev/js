@@ -26,6 +26,7 @@ export default async function PublishMultipleContractsPage(props: {
         <Link
           className="text-link-foreground hover:text-foreground"
           target="_blank"
+          rel="noopener noreferrer"
           href="https://portal.thirdweb.com/contracts/publish/overview"
         >
           Learn more about publishing your contracts.

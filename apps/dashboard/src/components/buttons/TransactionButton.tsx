@@ -179,6 +179,7 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
                 CHAIN_ID_TO_GNOSIS[chainId as keyof typeof CHAIN_ID_TO_GNOSIS]
               }:${address}/transactions/queue`}
               target="_blank"
+              rel="noopener noreferrer"
             >
               Go To Safe <ExternalLinkIcon className="size-4" />
             </Link>

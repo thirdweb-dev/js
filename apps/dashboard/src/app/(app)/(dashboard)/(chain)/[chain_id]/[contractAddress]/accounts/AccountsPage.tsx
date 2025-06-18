@@ -2,7 +2,7 @@
 
 import { ButtonGroup, Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
-import { Heading, TrackedLinkButton } from "tw-components";
+import { Heading, LinkButton } from "tw-components";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { AccountsCount } from "./components/accounts-count";
 import { AccountsTable } from "./components/accounts-table";
@@ -33,15 +33,13 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
           gap={2}
           w="inherit"
         >
-          <TrackedLinkButton
-            category="smart-wallet"
+          <LinkButton
             variant="solid"
-            label="docs-factory-page"
             href="https://portal.thirdweb.com/wallets/smart-wallet/get-started#3-connect-smart-wallets-in-your-application"
             isExternal
           >
             View Documentation
-          </TrackedLinkButton>
+          </LinkButton>
           <CreateAccountButton contract={contract} isLoggedIn={isLoggedIn} />
         </ButtonGroup>
       </Flex>

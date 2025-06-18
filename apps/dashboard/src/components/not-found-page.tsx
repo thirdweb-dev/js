@@ -1,4 +1,4 @@
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import Link from "next/link";
 
 export function NotFoundPage() {
   return (
@@ -21,32 +21,20 @@ export function NotFoundPage() {
           <div>
             <p className="text-center text-muted-foreground text-xl leading-7">
               Find live content on our{" "}
-              <TrackedLinkTW
-                category="page-not-found"
-                label="homepage"
-                href="/home"
-                className="text-foreground hover:underline"
-              >
+              <Link href="/home" className="text-foreground hover:underline">
                 homepage
-              </TrackedLinkTW>
+              </Link>
               ,{" "}
-              <TrackedLinkTW
-                category="page-not-found"
-                label="dashboard"
-                href="/team"
-                className="text-foreground hover:underline"
-              >
+              <Link href="/team" className="text-foreground hover:underline">
                 dashboard
-              </TrackedLinkTW>{" "}
+              </Link>{" "}
               or{" "}
-              <TrackedLinkTW
-                category="page-not-found"
-                label="portal"
+              <Link
                 href="https://portal.thirdweb.com"
                 className="text-foreground hover:underline"
               >
                 developer portal
-              </TrackedLinkTW>
+              </Link>
               .
             </p>
           </div>

@@ -39,6 +39,7 @@ export function SecondaryNavLinks() {
         href="https://portal.thirdweb.com"
         className="text-muted-foreground text-sm hover:text-foreground"
         target="_blank"
+        rel="noopener noreferrer"
       >
         Docs
       </Link>
@@ -47,6 +48,7 @@ export function SecondaryNavLinks() {
         target="_blank"
         href="/support"
         className="text-muted-foreground text-sm hover:text-foreground"
+        rel="noopener noreferrer"
       >
         Support
       </Link>
@@ -55,6 +57,7 @@ export function SecondaryNavLinks() {
         target="_blank"
         href="https://feedback.thirdweb.com"
         className="text-muted-foreground text-sm hover:text-foreground"
+        rel="noopener noreferrer"
       >
         Feedback
       </Link>

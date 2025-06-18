@@ -236,7 +236,11 @@ function InviteModalContent(props: {
         <SheetDescription className="text-left leading-relaxed">
           Upgrade to the Growth plan to unlock team members and advanced
           features.{" "}
-          <UnderlineLink href="https://thirdweb.com/pricing" target="_blank">
+          <UnderlineLink
+            href="https://thirdweb.com/pricing"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Learn more about pricing
           </UnderlineLink>
         </SheetDescription>

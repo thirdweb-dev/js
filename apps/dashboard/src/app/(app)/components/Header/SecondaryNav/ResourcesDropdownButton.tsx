@@ -39,6 +39,7 @@ export function ResourcesDropdownButton() {
             <Link
               href="https://playground.thirdweb.com/"
               target="_blank"
+              rel="noopener noreferrer"
               className="w-full p-1"
             >
               Playground

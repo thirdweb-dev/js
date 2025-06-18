@@ -70,17 +70,29 @@ export function AppFooter(props: AppFooterProps) {
           </div>
           <div className="flex flex-row gap-3">
             <Button size="icon" variant="ghost" asChild className="size-9">
-              <Link href="https://github.com/thirdweb-dev" target="_blank">
+              <Link
+                href="https://github.com/thirdweb-dev"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <GithubIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
             <Button size="icon" variant="ghost" asChild className="size-9">
-              <Link href="https://www.tiktok.com/@thirdweb" target="_blank">
+              <Link
+                href="https://www.tiktok.com/@thirdweb"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <TiktokIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
             <Button size="icon" variant="ghost" asChild className="size-9">
-              <Link href="https://www.instagram.com/thirdweb/" target="_blank">
+              <Link
+                href="https://www.instagram.com/thirdweb/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <InstagramIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
@@ -93,17 +105,29 @@ export function AppFooter(props: AppFooterProps) {
               </Link>
             </Button>
             <Button size="icon" variant="ghost" asChild className="size-9">
-              <Link href="https://www.youtube.com/@thirdweb_" target="_blank">
+              <Link
+                href="https://www.youtube.com/@thirdweb_"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <YoutubeIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
             <Button size="icon" variant="ghost" asChild className="size-9">
-              <Link href="https://www.reddit.com/r/thirdweb/" target="_blank">
+              <Link
+                href="https://www.reddit.com/r/thirdweb/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <RedditIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
             <Button size="icon" variant="ghost" asChild className="size-9">
-              <Link href="https://x.com/thirdweb" target="_blank">
+              <Link
+                href="https://x.com/thirdweb"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <XIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>

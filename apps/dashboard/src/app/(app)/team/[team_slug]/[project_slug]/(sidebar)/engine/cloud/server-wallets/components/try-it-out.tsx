@@ -79,6 +79,7 @@ export function TryItOut() {
                         href="https://portal.thirdweb.com/references/typescript/v5/functions#extensions"
                         className="text-blue-500"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         extension functions
                       </Link>
@@ -89,6 +90,7 @@ export function TryItOut() {
                         href="https://portal.thirdweb.com/references/typescript/v5/prepareContractCall"
                         className="text-blue-500"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         prepareContractCall
                       </Link>{" "}
@@ -100,6 +102,7 @@ export function TryItOut() {
                         href="https://portal.thirdweb.com/references/typescript/v5/Account"
                         className="text-blue-500"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         account
                       </Link>{" "}
@@ -145,6 +148,7 @@ export function TryItOut() {
                 href="https://www.npmjs.com/package/@thirdweb-dev/engine"
                 className="text-blue-500"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 NPM
               </Link>

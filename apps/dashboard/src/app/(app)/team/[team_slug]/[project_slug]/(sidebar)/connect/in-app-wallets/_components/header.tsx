@@ -1,5 +1,4 @@
-import { TrackedUnderlineLink } from "@/components/ui/tracked-link";
-import { TRACKING_CATEGORY } from "../_constants";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 
 export async function InAppWalletsHeader() {
   return (
@@ -11,14 +10,13 @@ export async function InAppWalletsHeader() {
         A wallet infrastructure that enables apps to create, manage, and control
         their users wallets. <br /> Email login, social login, and
         bring-your-own auth supported.{" "}
-        <TrackedUnderlineLink
+        <UnderlineLink
           target="_blank"
           href="https://portal.thirdweb.com/connect/in-app-wallet/overview"
-          label="learn-more"
-          category={TRACKING_CATEGORY}
+          rel="noopener noreferrer"
         >
           Learn more
-        </TrackedUnderlineLink>
+        </UnderlineLink>
       </p>
     </div>
   );

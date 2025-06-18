@@ -2,9 +2,9 @@
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { useTransition } from "react";
 import { useStripeRedirectEvent } from "../../../../(stripe)/stripe-redirect/stripeRedirectChannel";
 
@@ -54,17 +54,9 @@ function BillingAlertBanner(props: {
             "border border-red-600 bg-red-100 text-red-800 hover:bg-red-200 dark:border-red-700 dark:bg-red-900 dark:text-red-100 dark:hover:bg-red-800",
         )}
       >
-        <TrackedLinkTW
-          href={`/team/${props.teamSlug}/~/settings/invoices`}
-          category="billingBanner"
-          label={
-            props.variant === "warning"
-              ? "pastDue_viewInvoices"
-              : "serviceCutoff_payNow"
-          }
-        >
+        <Link href={`/team/${props.teamSlug}/~/settings/invoices`}>
           {props.ctaLabel}
-        </TrackedLinkTW>
+        </Link>
       </Button>
     </div>
   );

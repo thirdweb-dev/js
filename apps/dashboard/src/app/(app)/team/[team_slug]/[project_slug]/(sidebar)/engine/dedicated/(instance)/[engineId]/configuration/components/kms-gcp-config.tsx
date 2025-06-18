@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Form, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
   type EngineInstance,
   type SetWalletConfigInput,
@@ -14,6 +13,7 @@ import {
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 interface KmsGcpConfigProps {
@@ -99,15 +99,14 @@ export const KmsGcpConfig: React.FC<KmsGcpConfigProps> = ({
         </p>
         <p className="text-muted-foreground">
           For help and more advanced use cases,{" "}
-          <TrackedLinkTW
+          <Link
             target="_blank"
+            rel="noopener noreferrer"
             href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
-            label="learn-more"
-            category="engine"
             className="text-link-foreground hover:text-foreground"
           >
             learn more about using Google Cloud KMS wallets
-          </TrackedLinkTW>
+          </Link>
           .
         </p>
 

@@ -1,5 +1,5 @@
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { TrackedUnderlineLink } from "@/components/ui/tracked-link";
 import { CircleAlertIcon } from "lucide-react";
 
 export const SmartWalletsBillingAlert = (props: {
@@ -11,13 +11,9 @@ export const SmartWalletsBillingAlert = (props: {
       <AlertTitle>Account Abstraction on Mainnet</AlertTitle>
       <AlertDescription>
         To enable AA on mainnet chains,{" "}
-        <TrackedUnderlineLink
-          href={`/team/${props.teamSlug}/~/settings/billing`}
-          category="api_keys"
-          label="smart_wallets_missing_billing"
-        >
+        <UnderlineLink href={`/team/${props.teamSlug}/~/settings/billing`}>
           subscribe to a billing plan.
-        </TrackedUnderlineLink>
+        </UnderlineLink>
       </AlertDescription>
     </Alert>
   );

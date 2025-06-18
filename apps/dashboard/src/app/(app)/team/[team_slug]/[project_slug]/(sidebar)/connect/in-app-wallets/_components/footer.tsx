@@ -3,7 +3,6 @@ import { FooterLinksSection } from "../../../components/footer/FooterLinksSectio
 export function InAppWalletsFooter() {
   return (
     <FooterLinksSection
-      trackingCategory="in-app-wallets"
       left={{
         title: "Documentation",
         links: [

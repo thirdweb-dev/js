@@ -294,6 +294,7 @@ export const CreateBackendWalletButton: React.FC<
                                 <Link
                                   href="https://developers.circle.com/w3s/sandbox-vs-production"
                                   target="_blank"
+                                  rel="noopener noreferrer"
                                   className="text-link-foreground hover:text-foreground"
                                 >
                                   Learn more

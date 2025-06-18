@@ -2,8 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { CodeServer } from "@/components/ui/code/code.server";
 import { TabButtons } from "@/components/ui/tabs";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 export function PayEmbedFTUX(props: { clientId: string }) {
@@ -66,16 +66,15 @@ export function PayEmbedFTUX(props: { clientId: string }) {
       <div className="flex flex-col gap-3 border-t p-4 lg:flex-row lg:items-center lg:justify-between lg:p-6">
         <div className="flex gap-3">
           <Button asChild variant="outline" size="sm">
-            <TrackedLinkTW
+            <Link
               href="https://portal.thirdweb.com/pay"
               target="_blank"
+              rel="noopener noreferrer"
               className="gap-2"
-              category="pay-ftux"
-              label="docs"
             >
               View Docs
               <ExternalLinkIcon className="size-4 text-muted-foreground" />
-            </TrackedLinkTW>
+            </Link>
           </Button>
         </div>
       </div>

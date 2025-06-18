@@ -15,7 +15,6 @@ const meta: Meta<typeof LatestEventsUI> = {
     allEvents: [],
     autoUpdate: false,
     eventsHref: "/ethereum/0x123456789/events",
-    trackingCategory: "test-category",
   },
 };
 

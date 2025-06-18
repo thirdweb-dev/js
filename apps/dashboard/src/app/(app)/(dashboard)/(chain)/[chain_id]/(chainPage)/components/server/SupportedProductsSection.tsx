@@ -35,6 +35,7 @@ export function SupportedProductsSection(props: {
                     href={product.link}
                     className="before:absolute before:inset-0"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {product.name}
                   </Link>

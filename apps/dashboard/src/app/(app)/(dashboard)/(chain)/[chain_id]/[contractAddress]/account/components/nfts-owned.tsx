@@ -42,7 +42,6 @@ export const NftsOwned: React.FC<NftsOwnedProps> = ({
       }))}
       allNfts
       isPending={isWalletNFTsLoading}
-      trackingCategory="account_nfts_owned"
     />
   ) : isWalletNFTsLoading ? null : error ? (
     <p>Failed to fetch NFTs for this account: {error}</p>

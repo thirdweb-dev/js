@@ -572,7 +572,12 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                 <p className="text-orange-800 dark:text-orange-900">
                   There are no NFTs owned by this wallet. You need NFTs to
                   create a listing. You can create NFTs with thirdweb.{" "}
-                  <Link href="/explore/nft" color="blue.600" target="_blank">
+                  <Link
+                    href="/explore/nft"
+                    color="blue.600"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Explore NFT contracts
                   </Link>
                   .

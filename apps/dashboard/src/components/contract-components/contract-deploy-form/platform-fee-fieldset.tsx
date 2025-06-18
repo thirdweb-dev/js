@@ -83,6 +83,7 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
             platform operations and improvements.{" "}
             <Link
               target="_blank"
+              rel="noopener noreferrer"
               className="text-blue-500 underline"
               href={"https://thirdweb.com/pricing"}
             >
@@ -95,6 +96,7 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
             support ongoing platform operations and improvements.{" "}
             <Link
               target="_blank"
+              rel="noopener noreferrer"
               className="text-blue-500 underline"
               href={"https://thirdweb.com/pricing"}
             >
