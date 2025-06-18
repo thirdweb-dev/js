@@ -1,6 +1,7 @@
 "use client";
 
 import { getRawAccountAction } from "@/actions/getAccount";
+import { resetAnalytics } from "@/analytics/reset";
 import { ClientOnly } from "@/components/blocks/client-only";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { ToggleThemeButton } from "@/components/color-mode-toggle";
@@ -313,7 +314,10 @@ function CustomConnectEmbed(props: {
                 throw e;
               }
             },
-            doLogout,
+            doLogout: async () => {
+              await doLogout();
+              resetAnalytics();
+            },
             isLoggedIn: async (x) => {
               const isLoggedInResult = await isLoggedIn(x);
               if (isLoggedInResult) {

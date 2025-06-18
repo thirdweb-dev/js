@@ -110,6 +110,11 @@ module.exports = {
             message:
               'This is likely a mistake. If you really want to import this - postfix the imported name with Icon. Example - "LinkIcon"',
           },
+          {
+            name: "posthog-js",
+            message:
+              'Import "posthog-js" directly only within the analytics helpers ("src/@/analytics/*"). Use the exported helpers from "@/analytics/track" elsewhere.',
+          },
         ],
       },
     ],
@@ -135,6 +140,13 @@ module.exports = {
     // disable restricted imports in tw-components
     {
       files: "src/tw-components/**/*",
+      rules: {
+        "no-restricted-imports": ["off"],
+      },
+    },
+    // allow direct PostHog imports inside analytics helpers
+    {
+      files: "src/@/analytics/**/*",
       rules: {
         "no-restricted-imports": ["off"],
       },

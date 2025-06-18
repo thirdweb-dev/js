@@ -1,6 +1,7 @@
 "use client";
 
 import { createTeam } from "@/actions/createTeam";
+import { resetAnalytics } from "@/analytics/reset";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
@@ -35,6 +36,7 @@ export function AccountHeader(props: {
   const logout = useCallback(async () => {
     try {
       await doLogout();
+      resetAnalytics();
       if (wallet) {
         disconnect(wallet);
       }
