@@ -51,7 +51,7 @@ export async function getOwnedTokens(args: {
 
   const defaultQueryOptions: GetV1TokensData["query"] = {
     owner_address: ownerAddress,
-    chain_id: chains.map((chain) => chain.id),
+    chain_id: chains.length > 0 ? chains.map((chain) => chain.id) : [1],
     include_native: "true",
     include_spam: "false",
     metadata: "true",
