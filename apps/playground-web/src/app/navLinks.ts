@@ -3,7 +3,7 @@ import { insightBlueprints } from "./insight/insightBlueprints";
 
 const staticSidebarLinks: SidebarLink[] = [
   {
-    name: "Connect",
+    name: "Wallets",
     isCollapsible: false,
     links: [
       {
@@ -113,7 +113,7 @@ const universalBridgeSidebarLinks: SidebarLink = {
 };
 
 const engineSidebarLinks: SidebarLink = {
-  name: "Engine",
+  name: "Transactions",
   isCollapsible: false,
   expanded: false,
   links: [
