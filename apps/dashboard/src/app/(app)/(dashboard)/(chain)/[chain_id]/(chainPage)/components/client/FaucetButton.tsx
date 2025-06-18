@@ -224,7 +224,7 @@ export function FaucetButton({
           "Faucet is empty right now"}
 
         {canClaimFaucetQuery.data.type === "paid-plan-required" &&
-          "Faucet is only available on Starter, Growth and Pro plans."}
+          "Faucets require a paid plan"}
       </Button>
     );
   }
