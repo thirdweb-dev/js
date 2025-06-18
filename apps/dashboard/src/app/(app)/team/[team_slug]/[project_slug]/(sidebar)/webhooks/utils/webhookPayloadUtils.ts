@@ -1,3 +1,4 @@
+import { keccak256, toFunctionSelector } from "thirdweb/utils";
 import type { WebhookFormValues } from "./webhookTypes";
 
 export function parseAddresses(addresses: string | undefined): string[] {
@@ -33,8 +34,10 @@ export function buildEventWebhookPayload(
   const eventSignatures = [];
   if (data.sigHash) {
     eventSignatures.push({
-      sig_hash: data.sigHash,
-      abi: data.sigHashAbi,
+      sig_hash: data.sigHash.startsWith("0x")
+        ? data.sigHash
+        : keccak256(new TextEncoder().encode(data.sigHash)),
+      abi: data.sigHashAbi || data.abi,
       params: {},
     });
   }
@@ -57,8 +60,10 @@ export function buildTransactionWebhookPayload(
   const txSignatures = [];
   if (data.sigHash) {
     txSignatures.push({
-      sig_hash: data.sigHash,
-      abi: data.sigHashAbi,
+      sig_hash: data.sigHash.startsWith("0x")
+        ? data.sigHash
+        : toFunctionSelector(data.sigHash),
+      abi: data.sigHashAbi || data.abi,
       params: {},
     });
   }

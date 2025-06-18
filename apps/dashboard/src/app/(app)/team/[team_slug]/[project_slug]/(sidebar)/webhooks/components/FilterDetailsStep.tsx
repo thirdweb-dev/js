@@ -1,6 +1,7 @@
 "use client";
 
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { SignatureSelector } from "@/components/blocks/SignatureSelector";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,15 +13,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import {} from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import { truncateMiddle } from "../utils/abiUtils";
@@ -48,74 +43,6 @@ interface FilterDetailsStepProps {
   client: ThirdwebClient;
 }
 
-interface SignatureDropdownProps {
-  signatures: Array<{ name: string; signature: string; abi?: string }>;
-  value: string;
-  onChange: (val: string) => void;
-  setAbi: (abi: string) => void;
-  buttonLabel: string;
-  secondaryTextFormatter: (sig: { name: string; signature: string }) => string;
-  disabled?: boolean;
-}
-
-function SignatureDropdown({
-  signatures,
-  value,
-  onChange,
-  setAbi,
-  buttonLabel,
-  secondaryTextFormatter,
-  disabled,
-}: SignatureDropdownProps) {
-  const [open, setOpen] = useState(false);
-  return (
-    <Popover modal open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          className={cn(
-            "h-10 w-full rounded-md border bg-background px-3 py-2 text-left text-sm focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50",
-            !value && "text-muted-foreground",
-          )}
-          disabled={disabled}
-        >
-          {value
-            ? signatures.find((sig) => sig.signature === value)?.name || ""
-            : buttonLabel}
-        </button>
-      </PopoverTrigger>
-      <PopoverContent
-        className="max-h-60 w-[--radix-popover-trigger-width] overflow-y-auto p-0"
-        align="start"
-      >
-        <ul className="divide-y divide-border">
-          {signatures.map((sig) => (
-            <li key={sig.signature}>
-              <button
-                type="button"
-                className={cn(
-                  "w-full px-4 py-2 text-left text-sm hover:bg-accent focus:bg-accent",
-                  value === sig.signature && "bg-accent",
-                )}
-                onClick={() => {
-                  onChange(sig.signature);
-                  setAbi(sig.abi || "");
-                  setOpen(false);
-                }}
-              >
-                <div className="font-medium">{sig.name}</div>
-                <div className="text-muted-foreground text-xs">
-                  {secondaryTextFormatter(sig)}
-                </div>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
 export function FilterDetailsStep({
   form,
   eventSignatures,
@@ -141,6 +68,20 @@ export function FilterDetailsStep({
     ? form.watch("chainIds").map(Number)
     : [];
   const contractAddresses = form.watch("addresses") || "";
+
+  // --- Custom signature detection logic ---
+  const sigHash = form.watch("sigHash") || "";
+  const knownEventSignatures = eventSignatures.map((sig) => sig.signature);
+  const knownFunctionSignatures = functionSignatures.map(
+    (sig) => sig.signature,
+  );
+  const isCustomSignature =
+    (watchFilterType === "event" &&
+      sigHash &&
+      !knownEventSignatures.includes(sigHash)) ||
+    (watchFilterType === "transaction" &&
+      sigHash &&
+      !knownFunctionSignatures.includes(sigHash));
 
   return (
     <>
@@ -369,28 +310,47 @@ export function FilterDetailsStep({
                 {watchFilterType === "event" &&
                 Object.keys(fetchedAbis).length > 0 &&
                 eventSignatures.length > 0 ? (
-                  <SignatureDropdown
-                    signatures={eventSignatures}
+                  <SignatureSelector
+                    options={eventSignatures.map((sig) => ({
+                      label: truncateMiddle(sig.name, 30, 15),
+                      value: sig.signature,
+                      abi: sig.abi,
+                    }))}
                     value={field.value || ""}
-                    onChange={field.onChange}
+                    onChange={(val) => {
+                      field.onChange(val);
+                      // If custom signature, clear ABI field
+                      const known = eventSignatures.map((sig) => sig.signature);
+                      if (val && !known.includes(val)) {
+                        form.setValue("abi", "");
+                      }
+                    }}
                     setAbi={(abi) => form.setValue("sigHashAbi", abi)}
-                    buttonLabel="Select an event signature"
-                    secondaryTextFormatter={(sig) =>
-                      `Signature: ${truncateMiddle(sig.signature, 6, 4)}`
-                    }
+                    placeholder="Select or enter an event signature"
+                    className="block w-full max-w-90 overflow-hidden text-ellipsis"
                   />
                 ) : watchFilterType === "transaction" &&
                   Object.keys(fetchedTxAbis).length > 0 &&
                   functionSignatures.length > 0 ? (
-                  <SignatureDropdown
-                    signatures={functionSignatures}
+                  <SignatureSelector
+                    options={functionSignatures.map((sig) => ({
+                      label: sig.name,
+                      value: sig.signature,
+                      abi: sig.abi,
+                    }))}
                     value={field.value || ""}
-                    onChange={field.onChange}
+                    onChange={(val) => {
+                      field.onChange(val);
+                      // If custom signature, clear ABI field
+                      const known = functionSignatures.map(
+                        (sig) => sig.signature,
+                      );
+                      if (val && !known.includes(val)) {
+                        form.setValue("abi", "");
+                      }
+                    }}
                     setAbi={(abi) => form.setValue("sigHashAbi", abi)}
-                    buttonLabel="Select a function signature"
-                    secondaryTextFormatter={(sig) =>
-                      `Selector: ${sig.signature}`
-                    }
+                    placeholder="Select or enter a function signature"
                   />
                 ) : (
                   <Input
@@ -416,74 +376,60 @@ export function FilterDetailsStep({
         {/* ABI Field */}
         <FormField
           control={form.control}
-          name="abi"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <div className="flex items-center justify-between text-xs">
-                <FormLabel>ABI (optional)</FormLabel>
-                <p className="text-muted-foreground">
-                  {watchFilterType === "event"
-                    ? "Enter the ABI of the contract or event"
-                    : "Enter the ABI of the contract or function"}
-                </p>
-              </div>
-              <FormControl>
-                {(watchFilterType === "event" &&
+          name="sigHashAbi"
+          render={({ field }) => {
+            let showFetchedAbi = false;
+            if (!isCustomSignature) {
+              if (
+                (watchFilterType === "event" &&
                   Object.keys(fetchedAbis).length > 0) ||
                 (watchFilterType === "transaction" &&
-                  Object.keys(fetchedTxAbis).length > 0) ? (
-                  <div className="space-y-2 rounded-md border bg-primary/5 p-3">
-                    <div className="flex items-center">
-                      <Badge className="border-green-200 bg-green-100 text-green-800">
-                        ✓ ABI Automatically Fetched
-                      </Badge>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="ml-auto h-7 text-xs"
-                        onClick={async () => {
-                          try {
-                            if (watchFilterType === "event") {
-                              await Promise.all(
-                                selectedChainIds.flatMap((chainId) =>
-                                  contractAddresses
-                                    .split(/[,\s]+/)
-                                    .map((a) => a.trim())
-                                    .filter(Boolean)
-                                    .map((address) =>
-                                      queryClient.resetQueries({
-                                        queryKey: [
-                                          "abis",
-                                          String(chainId),
-                                          address,
-                                          watchFilterType,
-                                        ],
-                                        exact: true,
-                                      }),
-                                    ),
-                                ),
-                              );
-
-                              // Reset event-specific form values
-                              form.setValue("addresses", "");
-                              // Reset signature hash
-                              form.setValue("sigHash", "");
-                              form.setValue("sigHashAbi", "");
-                            } else if (watchFilterType === "transaction") {
-                              // Reset for all chainId/address pairs concurrently
-                              const resetPromises: Promise<void>[] = [];
-                              for (const chainId of selectedChainIds) {
-                                for (const address of (
-                                  form.watch("toAddresses") || ""
-                                )
-                                  .split(/[,\s]+/)
-                                  .map((a) => a.trim())
-                                  .filter(Boolean)) {
-                                  resetPromises.push(
-                                    (async () => {
-                                      try {
-                                        await queryClient.resetQueries({
+                  Object.keys(fetchedTxAbis).length > 0)
+              ) {
+                showFetchedAbi = true;
+              }
+            }
+            return (
+              <FormItem className="flex flex-col">
+                <div className="flex items-center justify-between text-xs">
+                  <FormLabel>ABI (optional)</FormLabel>
+                  <p className="text-muted-foreground">
+                    {watchFilterType === "event"
+                      ? "Enter the ABI of the contract or event"
+                      : "Enter the ABI of the contract or function"}
+                  </p>
+                </div>
+                <FormControl>
+                  {!showFetchedAbi ? (
+                    <Textarea
+                      placeholder={"[{...}]"}
+                      className="font-mono"
+                      rows={2}
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  ) : (
+                    <div className="space-y-2 rounded-md border bg-primary/5 p-3">
+                      <div className="flex items-center">
+                        <Badge className="border-green-200 bg-green-100 text-green-800">
+                          ✓ ABI Automatically Fetched
+                        </Badge>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="ml-auto h-7 text-xs"
+                          onClick={async () => {
+                            try {
+                              if (watchFilterType === "event") {
+                                await Promise.all(
+                                  selectedChainIds.flatMap((chainId) =>
+                                    contractAddresses
+                                      .split(/[,"\s]+/)
+                                      .map((a) => a.trim())
+                                      .filter(Boolean)
+                                      .map((address) =>
+                                        queryClient.resetQueries({
                                           queryKey: [
                                             "abis",
                                             String(chainId),
@@ -491,52 +437,77 @@ export function FilterDetailsStep({
                                             watchFilterType,
                                           ],
                                           exact: true,
-                                        });
-                                      } catch (err) {
-                                        console.error(
-                                          "Failed to reset query for tx ABI",
-                                          chainId,
-                                          address,
-                                          err,
-                                        );
-                                      }
-                                    })(),
-                                  );
-                                }
-                              }
-                              await Promise.all(resetPromises);
+                                        }),
+                                      ),
+                                  ),
+                                );
 
-                              // Reset transaction-specific form values
-                              form.setValue("toAddresses", "");
-                              // Reset signature hash
-                              form.setValue("sigHash", "");
-                              form.setValue("sigHashAbi", "");
+                                // Reset event-specific form values
+                                form.setValue("addresses", "");
+                                // Reset signature hash
+                                form.setValue("sigHash", "");
+                                form.setValue("sigHashAbi", "");
+                              } else if (watchFilterType === "transaction") {
+                                // Reset for all chainId/address pairs concurrently
+                                const resetPromises: Promise<void>[] = [];
+                                for (const chainId of selectedChainIds) {
+                                  for (const address of (
+                                    form.watch("toAddresses") || ""
+                                  )
+                                    .split(/[,"\s]+/)
+                                    .map((a) => a.trim())
+                                    .filter(Boolean)) {
+                                    resetPromises.push(
+                                      (async () => {
+                                        try {
+                                          await queryClient.resetQueries({
+                                            queryKey: [
+                                              "abis",
+                                              String(chainId),
+                                              address,
+                                              watchFilterType,
+                                            ],
+                                            exact: true,
+                                          });
+                                        } catch (err) {
+                                          console.error(
+                                            "Failed to reset query for tx ABI",
+                                            chainId,
+                                            address,
+                                            err,
+                                          );
+                                        }
+                                      })(),
+                                    );
+                                  }
+                                }
+                                await Promise.all(resetPromises);
+
+                                // Reset transaction-specific form values
+                                form.setValue("toAddresses", "");
+                                // Reset signature hash
+                                form.setValue("sigHash", "");
+                                form.setValue("sigHashAbi", "");
+                              }
+                            } catch (err) {
+                              console.error("Error during ABI reset:", err);
                             }
-                          } catch (err) {
-                            console.error("Error during ABI reset:", err);
-                          }
-                        }}
-                      >
-                        Reset
-                      </Button>
+                          }}
+                        >
+                          Reset
+                        </Button>
+                      </div>
+                      <p className="text-muted-foreground text-xs">
+                        ABIs have been automatically fetched for the contracts
+                        you specified.
+                      </p>
                     </div>
-                    <p className="text-muted-foreground text-xs">
-                      ABIs have been automatically fetched for the contracts you
-                      specified.
-                    </p>
-                  </div>
-                ) : (
-                  <Textarea
-                    placeholder={"[{...}]"}
-                    className="font-mono"
-                    rows={2}
-                    {...field}
-                  />
-                )}
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+                  )}
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
         />
       </div>
 

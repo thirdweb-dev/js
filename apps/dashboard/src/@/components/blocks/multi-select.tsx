@@ -53,6 +53,7 @@ interface MultiSelectProps
   align?: "center" | "start" | "end";
   side?: "left" | "right" | "top" | "bottom";
   showSelectedValuesInModal?: boolean;
+  customSearchInput?: React.ReactNode;
 }
 
 export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
@@ -69,6 +70,7 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
       searchPlaceholder,
       popoverContentClassName,
       showSelectedValuesInModal = false,
+      customSearchInput,
       ...props
     },
     ref,
@@ -233,15 +235,19 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
         >
           {/* Search */}
           <div className="relative">
-            <Input
-              placeholder={searchPlaceholder || "Search"}
-              value={searchValue}
-              // do not focus on the input when the popover opens to avoid opening the keyboard
-              tabIndex={-1}
-              onChange={(e) => setSearchValue(e.target.value)}
-              className="!h-auto rounded-b-none border-0 border-border border-b py-4 pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
-              onKeyDown={handleInputKeyDown}
-            />
+            {customSearchInput ? (
+              customSearchInput
+            ) : (
+              <Input
+                placeholder={searchPlaceholder || "Search"}
+                value={searchValue}
+                // do not focus on the input when the popover opens to avoid opening the keyboard
+                tabIndex={-1}
+                onChange={(e) => setSearchValue(e.target.value)}
+                className="!h-auto rounded-b-none border-0 border-border border-b py-4 pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
+                onKeyDown={handleInputKeyDown}
+              />
+            )}
             <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-4 size-4 text-muted-foreground" />
           </div>
 
