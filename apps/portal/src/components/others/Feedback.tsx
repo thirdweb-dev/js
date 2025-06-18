@@ -1,5 +1,6 @@
 "use client";
 
+import { reportFeedback } from "@/analytics/report";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { BadgeCheckIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
@@ -20,6 +21,7 @@ export function Feedback() {
             className="gap-2 bg-card"
             onClick={() => {
               setIsSubmitted(true);
+              reportFeedback({ helpful: true });
             }}
           >
             Yes
@@ -54,6 +56,7 @@ export function Feedback() {
                 <Button
                   onClick={() => {
                     setIsSubmitted(true);
+                    reportFeedback({ helpful: false, feedback });
                   }}
                 >
                   Submit

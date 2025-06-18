@@ -30,7 +30,7 @@ export function parseErrorToMessage(error: unknown): string | JSX.Element {
   );
 }
 
-export function parseError(error: unknown): string | JSX.Element {
+export function parseError(error: unknown): string {
   // if the error is a straight string just return it
   if (typeof error === "string") {
     return error;
@@ -82,19 +82,11 @@ function isErrorWithCode(error: unknown): error is ErrorWithCode {
   return (error as ErrorWithCode)?.code !== undefined;
 }
 
-function parseErrorCode(
-  error: ErrorWithCode,
-): string | JSX.Element | undefined {
+function parseErrorCode(error: ErrorWithCode): string | undefined {
   switch (error.code) {
     case "CALL_EXCEPTION": {
       if (error.reason) {
-        return (
-          <>
-            The following error happened on the underlying Smart Contract:
-            <br />
-            <strong>{error.reason}</strong>
-          </>
-        );
+        return `The following error happened on the underlying Smart Contract: ${error.reason}`;
       }
       return "An error occurred on the underlying Smart Contract.";
     }

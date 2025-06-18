@@ -76,7 +76,7 @@ export function InviteSection(props: {
   inviteTeamMembers: InviteTeamMembersFn;
   customCTASection?: React.ReactNode;
   className?: string;
-  onInviteSuccess?: () => void;
+  onInviteSuccess?: (successCount: number) => void;
   shouldHideInviteButton?: boolean;
   recommendedMembers: RecommendedMember[];
   client: ThirdwebClient;
@@ -219,7 +219,9 @@ export function InviteSection(props: {
           );
 
           if (props.onInviteSuccess) {
-            props.onInviteSuccess();
+            props.onInviteSuccess(
+              data.inviteStatuses.filter((r) => r === "fulfilled").length,
+            );
           }
         }
       },

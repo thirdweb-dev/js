@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  reportOnboardingMembersInvited,
+  reportOnboardingMembersSkipped,
+  reportOnboardingMembersUpsellButtonClicked,
+  reportOnboardingMembersUpsellPlanSelected,
+} from "@/analytics/report";
 import type { Team } from "@/api/team";
 import { PricingCard } from "@/components/blocks/pricing-card";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -14,7 +20,6 @@ import {
 } from "@/components/ui/sheet";
 import { TabButtons } from "@/components/ui/tabs";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import type { TrackingParams } from "hooks/analytics/useTrack";
 import { ArrowRightIcon, CircleArrowUpIcon } from "lucide-react";
 import { useState, useTransition } from "react";
 import type { ThirdwebClient } from "thirdweb";
@@ -30,14 +35,13 @@ export function InviteTeamMembersUI(props: {
   inviteTeamMembers: InviteTeamMembersFn;
   onComplete: () => void;
   getTeam: () => Promise<Team>;
-  trackEvent: (params: TrackingParams) => void;
   client: ThirdwebClient;
 }) {
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useDashboardRouter();
   const [isPollingTeam, setIsPollingTeam] = useState(false);
-  const [hasSentInvites, setHasSentInvites] = useState(false);
+  const [successCount, setSuccessCount] = useState(0);
 
   const showSpinner = isPollingTeam || isPending;
 
@@ -52,15 +56,6 @@ export function InviteTeamMembersUI(props: {
         const isNonFreePlan =
           team.billingPlan !== "free" && team.billingPlan !== "starter";
 
-        if (isNonFreePlan) {
-          props.trackEvent({
-            category: "teamOnboarding",
-            action: "upgradePlan",
-            label: "success",
-            plan: team.billingPlan,
-          });
-        }
-
         return isNonFreePlan;
       },
       timeoutMs: 5000,
@@ -73,6 +68,8 @@ export function InviteTeamMembersUI(props: {
     });
   });
 
+  const hasSentInvites = successCount > 0;
+
   return (
     <div className="relative flex grow flex-col">
       <Sheet open={showPlanModal} onOpenChange={setShowPlanModal}>
@@ -80,7 +77,6 @@ export function InviteTeamMembersUI(props: {
           <InviteModalContent
             billingStatus={props.team.billingStatus}
             teamSlug={props.team.slug}
-            trackEvent={props.trackEvent}
             getTeam={props.getTeam}
             teamId={props.team.id}
           />
@@ -91,7 +87,9 @@ export function InviteTeamMembersUI(props: {
         inviteTeamMembers={props.inviteTeamMembers}
         team={props.team}
         userHasEditPermission={true}
-        onInviteSuccess={() => setHasSentInvites(true)}
+        onInviteSuccess={(count) =>
+          setSuccessCount((prevCount) => prevCount + count)
+        }
         shouldHideInviteButton={hasSentInvites}
         client={props.client}
         // its a new team, there's no recommended members
@@ -106,11 +104,7 @@ export function InviteTeamMembersUI(props: {
                 className="gap-2"
                 onClick={() => {
                   setShowPlanModal(true);
-                  props.trackEvent({
-                    category: "teamOnboarding",
-                    action: "upgradePlan",
-                    label: "openModal",
-                  });
+                  reportOnboardingMembersUpsellButtonClicked();
                 }}
               >
                 <CircleArrowUpIcon className="size-4" />
@@ -121,11 +115,11 @@ export function InviteTeamMembersUI(props: {
             <Button
               onClick={() => {
                 props.onComplete();
-                if (!hasSentInvites) {
-                  props.trackEvent({
-                    category: "teamOnboarding",
-                    action: "inviteTeamMembers",
-                    label: "skip",
+                if (successCount === 0) {
+                  reportOnboardingMembersSkipped();
+                } else {
+                  reportOnboardingMembersInvited({
+                    count: successCount,
                   });
                 }
               }}
@@ -152,7 +146,6 @@ export function InviteTeamMembersUI(props: {
 function InviteModalContent(props: {
   teamSlug: string;
   billingStatus: Team["billingStatus"];
-  trackEvent: (params: TrackingParams) => void;
   getTeam: () => Promise<Team>;
   teamId: string;
 }) {
@@ -169,10 +162,7 @@ function InviteModalContent(props: {
         label: "Get Started",
         type: "checkout",
         onClick() {
-          props.trackEvent({
-            category: "teamOnboarding",
-            action: "upgradePlan",
-            label: "attempt",
+          reportOnboardingMembersUpsellPlanSelected({
             plan: "growth",
           });
         },
@@ -192,10 +182,7 @@ function InviteModalContent(props: {
         label: "Get started",
         type: "checkout",
         onClick() {
-          props.trackEvent({
-            category: "teamOnboarding",
-            action: "upgradePlan",
-            label: "attempt",
+          reportOnboardingMembersUpsellPlanSelected({
             plan: "scale",
           });
         },
@@ -214,10 +201,7 @@ function InviteModalContent(props: {
         label: "Get started",
         type: "checkout",
         onClick() {
-          props.trackEvent({
-            category: "teamOnboarding",
-            action: "upgradePlan",
-            label: "attempt",
+          reportOnboardingMembersUpsellPlanSelected({
             plan: "pro",
           });
         },

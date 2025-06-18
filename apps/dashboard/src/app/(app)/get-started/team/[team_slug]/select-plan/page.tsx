@@ -17,11 +17,6 @@ export default async function Page(props: {
     notFound();
   }
 
-  // const client = getClientThirdwebClient({
-  //   jwt: authToken,
-  //   teamId: team.id,
-  // });
-
   async function getTeam() {
     "use server";
     const resolvedTeam = await getTeamBySlug(params.team_slug);

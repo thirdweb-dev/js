@@ -104,6 +104,41 @@ Welcome, AI copilots! This guide captures the coding standards, architectural de
   -- Configure staleTime / cacheTime based on freshness requirements (default ≥ 60 s).
   -- Keep tokens secret by calling internal API routes or server actions.
 
+  6.5 Analytics Event Reporting
+
+- **When to create a new event**  
+  -- Only add events that answer a clear product or business question.  
+  -- Check `src/@/analytics/report.ts` first; avoid duplicates.
+
+- **Naming conventions**  
+  -- **Event name**: human-readable phrase in the form `<subject> <verb>` (e.g. "contract deployed").  
+  -- **Reporting function**: `report<Subject><Verb>` (PascalCase).  
+  -- All reporting helpers currently live in the shared `report.ts` file.
+
+- **Boilerplate template**  
+  -- Add a JSDoc header explaining **Why** the event exists and **Who** owns it (`@username`).  
+  -- Accept a single typed `properties` object and forward it unchanged to `posthog.capture`.  
+  -- Example:
+
+```ts
+/**
+ * ### Why do we need to report this event?
+ * - Tracks number of contracts deployed
+ *
+ * ### Who is responsible for this event?
+ * @jnsdls
+ */
+export function reportContractDeployed(properties: {
+  address: string;
+  chainId: number;
+}) {
+  posthog.capture("contract deployed", properties);
+}
+```
+
+- **Client-side only**: never import `posthog-js` in server components.  
+- **Housekeeping**: Inform **#eng-core-services** before renaming or removing an existing event.
+
 ⸻
 
 7. Performance & Bundle Size
