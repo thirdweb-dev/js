@@ -1,8 +1,8 @@
 "use client";
 import { revalidatePathAction } from "@/actions/revalidate";
 import {
+  reportAssetCreationFailed,
   reportContractDeployed,
-  reportCreateAssetStepStatus,
 } from "@/analytics/report";
 import { useRef } from "react";
 import {
@@ -87,13 +87,6 @@ export function CreateNFTPage(props: {
     // eslint-disable-next-line no-restricted-syntax
     const chain = defineChain(Number(collectionInfo.chain));
 
-    reportCreateAssetStepStatus({
-      assetType: "NFT",
-      step: "deploy-contract",
-      status: "attempted",
-      contractType,
-    });
-
     try {
       let contractAddress: string;
 
@@ -133,13 +126,6 @@ export function CreateNFTPage(props: {
         });
       }
 
-      reportCreateAssetStepStatus({
-        assetType: "NFT",
-        step: "deploy-contract",
-        status: "successful",
-        contractType,
-      });
-
       reportContractDeployed({
         address: contractAddress,
         chainId: Number(collectionInfo.chain),
@@ -165,13 +151,13 @@ export function CreateNFTPage(props: {
       };
     } catch (error) {
       const errorMessage = parseError(error);
-      console.error(error);
-      reportCreateAssetStepStatus({
-        assetType: "NFT",
-        step: "deploy-contract",
-        status: "failed",
-        error: errorMessage,
+      console.error(errorMessage);
+
+      reportAssetCreationFailed({
+        assetType: "nft",
         contractType,
+        error: errorMessage,
+        step: "deploy-contract",
       });
 
       throw error;
@@ -197,35 +183,20 @@ export function CreateNFTPage(props: {
       nfts: formValues.nfts,
     });
 
-    reportCreateAssetStepStatus({
-      assetType: "NFT",
-      step: "lazy-mint-nfts",
-      status: "attempted",
-      contractType,
-    });
-
     try {
       await sendAndConfirmTransaction({
         account: activeAccount,
         transaction,
       });
-
-      reportCreateAssetStepStatus({
-        assetType: "NFT",
-        step: "lazy-mint-nfts",
-        status: "successful",
-        contractType,
-      });
     } catch (error) {
       const errorMessage = parseError(error);
       console.error(error);
 
-      reportCreateAssetStepStatus({
-        assetType: "NFT",
-        step: "lazy-mint-nfts",
-        status: "failed",
-        error: errorMessage,
+      reportAssetCreationFailed({
+        assetType: "nft",
         contractType,
+        error: errorMessage,
+        step: "mint-nfts",
       });
 
       throw error;
@@ -261,35 +232,20 @@ export function CreateNFTPage(props: {
       ],
     });
 
-    reportCreateAssetStepStatus({
-      assetType: "NFT",
-      step: "set-claim-conditions",
-      status: "attempted",
-      contractType: "DropERC721",
-    });
-
     try {
       await sendAndConfirmTransaction({
         account: activeAccount,
         transaction,
       });
-
-      reportCreateAssetStepStatus({
-        assetType: "NFT",
-        step: "set-claim-conditions",
-        status: "successful",
-        contractType: "DropERC721",
-      });
     } catch (error) {
       const errorMessage = parseError(error);
       console.error(errorMessage);
 
-      reportCreateAssetStepStatus({
-        assetType: "NFT",
-        step: "set-claim-conditions",
-        status: "failed",
-        error: errorMessage,
+      reportAssetCreationFailed({
+        assetType: "nft",
         contractType: "DropERC721",
+        error: errorMessage,
+        step: "set-claim-conditions",
       });
 
       throw error;
@@ -356,35 +312,20 @@ export function CreateNFTPage(props: {
       data: encodedTransactions,
     });
 
-    reportCreateAssetStepStatus({
-      assetType: "NFT",
-      step: "set-claim-conditions",
-      status: "attempted",
-      contractType: "DropERC1155",
-    });
-
     try {
       await sendAndConfirmTransaction({
         transaction: tx,
         account: activeAccount,
       });
-
-      reportCreateAssetStepStatus({
-        assetType: "NFT",
-        step: "set-claim-conditions",
-        status: "successful",
-        contractType: "DropERC1155",
-      });
     } catch (error) {
       const errorMessage = parseError(error);
-      console.error(error);
+      console.error(errorMessage);
 
-      reportCreateAssetStepStatus({
-        assetType: "NFT",
-        step: "set-claim-conditions",
-        status: "failed",
-        error: errorMessage,
+      reportAssetCreationFailed({
+        assetType: "nft",
         contractType: "DropERC1155",
+        error: errorMessage,
+        step: "set-claim-conditions",
       });
 
       throw error;

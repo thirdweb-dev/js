@@ -189,6 +189,7 @@ export function reportFaucetUsed(properties: {
     chainId: properties.chainId,
   });
 }
+
 // ----------------------------
 // CHAIN CONFIGURATION
 // ----------------------------
@@ -222,140 +223,161 @@ export function reportChainConfigurationAdded(properties: {
 // ASSETS
 // ----------------------------
 
-type StatusWithError =
-  | {
-      status: "successful" | "attempted";
-    }
-  | {
-      status: "failed";
-      error: string;
-    };
-
 type AssetContractType = "DropERC20" | "DropERC1155" | "DropERC721";
 
 /**
  * ### Why do we need to report this event?
- * - To track asset buy statuses (successful, failed, attempted) in the new asset pages
+ * - To track number of successful asset purchases from the asset page
+ * - To track which asset and contract types are being purchased the most
  *
  * ### Who is responsible for this event?
  * @MananTank
- *
  */
-export function reportAssetBuy(
-  properties: {
-    chainId: number;
-    assetType: "NFT" | "Coin";
-    contractType: AssetContractType;
-  } & StatusWithError,
-) {
-  // Example: asset buy NFT successful
-  posthog.capture(`asset buy ${properties.assetType} ${properties.status}`, {
+export function reportAssetBuySuccessful(properties: {
+  chainId: number;
+  contractType: AssetContractType;
+  assetType: "nft" | "coin";
+}) {
+  posthog.capture("asset buy successful", {
     chainId: properties.chainId,
     contractType: properties.contractType,
-    ...(properties.status === "failed" && {
-      error: properties.error,
-    }),
+    assetType: properties.assetType,
   });
 }
 
 /**
  * ### Why do we need to report this event?
- * - To track the CTA card clicks on the assets page
+ * - To track number of failed asset purchases from the asset page
+ * - To track the errors that users encounter when trying to purchase an asset
  *
  * ### Who is responsible for this event?
  * @MananTank
- *
  */
-export function reportAssetsPageCardClick(properties: {
-  label: "create-nft-collection" | "import-asset" | "create-coin";
+export function reportAssetBuyFailed(properties: {
+  chainId: number;
+  contractType: AssetContractType;
+  assetType: "nft" | "coin";
+  error: string;
 }) {
-  // Example: asset page card create-nft-collection clicked
-  posthog.capture(`assets page card ${properties.label} clicked`);
+  posthog.capture("asset buy failed", {
+    chainId: properties.chainId,
+    contractType: properties.contractType,
+    assetType: properties.assetType,
+    error: properties.error,
+  });
+}
+
+// Assets Landing Page ----------------------------
+
+/**
+ * ### Why do we need to report this event?
+ * - To track number of asset creation started from the assets page
+ * - To track which asset types are being created the most
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportAssetCreationStarted(properties: {
+  assetType: "nft" | "coin";
+}) {
+  posthog.capture("asset creation started", {
+    assetType: properties.assetType,
+  });
 }
 
 /**
  * ### Why do we need to report this event?
- * - To track the steps that users are going through in asset creation flow
+ * - To track number of assets imported successfully from the assets page
  *
  * ### Who is responsible for this event?
  * @MananTank
- *
  */
-export function reportCreateAssetStepNextClicked(
+export function reportAssetImportSuccessful() {
+  posthog.capture("asset import successful");
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track number of asset import started in the assets page
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportAssetImportStarted() {
+  posthog.capture("asset import started");
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track the steps users are configuring in the asset creation to understand if there are any drop-offs
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportAssetCreationStepConfigured(
   properties:
     | {
-        assetType: "NFT";
-        page: "collection-info" | "upload-assets" | "sales-settings";
+        assetType: "nft";
+        step: "collection-info" | "upload-assets" | "sales-settings";
       }
     | {
-        assetType: "Coin";
-        page: "coin-info" | "token-distribution" | "launch-coin";
+        assetType: "coin";
+        step: "coin-info" | "token-distribution" | "launch-coin";
       },
 ) {
-  // Example: create asset NFT collection-info next clicked
-  posthog.capture(
-    `create asset ${properties.assetType} ${properties.page} next clicked`,
-  );
+  posthog.capture("asset creation step configured", {
+    assetType: properties.assetType,
+    step: properties.step,
+  });
 }
 
 /**
  * ### Why do we need to report this event?
- * - To track the status of each step of the create asset flow
+ * - To track number of successful asset creations
+ * - To track which asset types are being created the most
  *
  * ### Who is responsible for this event?
  * @MananTank
- *
  */
-export function reportCreateAssetStepStatus(
-  properties: (
+export function reportAssetCreationSuccessful(properties: {
+  assetType: "nft" | "coin";
+  contractType: AssetContractType;
+}) {
+  posthog.capture("asset creation successful", {
+    assetType: properties.assetType,
+    contractType: properties.contractType,
+  });
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track number of failed asset creations
+ * - To track the errors that users encounter when trying to create an asset
+ * - To track the step that is failing in the asset creation
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportAssetCreationFailed(
+  properties: { contractType: AssetContractType; error: string } & (
     | {
-        assetType: "NFT";
-        step: "deploy-contract" | "lazy-mint-nfts" | "set-claim-conditions";
+        assetType: "nft";
+        step: "deploy-contract" | "mint-nfts" | "set-claim-conditions";
       }
     | {
-        assetType: "Coin";
+        assetType: "coin";
         step:
           | "deploy-contract"
           | "set-claim-conditions"
           | "mint-tokens"
           | "airdrop-tokens";
       }
-  ) &
-    StatusWithError & {
-      contractType: AssetContractType;
-    },
+  ),
 ) {
-  // Example: create asset NFT deploy-contract successful
-  posthog.capture(
-    `create asset ${properties.assetType} ${properties.step} ${properties.status}`,
-    {
-      ...(properties.status === "failed" && {
-        error: properties.error,
-      }),
-      contractType: properties.contractType,
-    },
-  );
-}
-
-/**
- * ### Why do we need to report this event?
- * - To track the status of create asset as a whole (successful, failed, attempted)
- *
- * ### Who is responsible for this event?
- * @MananTank
- *
- */
-export function reportCreateAssetStatus(
-  properties: {
-    assetType: "NFT" | "Coin";
-    contractType: AssetContractType;
-  } & StatusWithError,
-) {
-  // Example: create asset NFT successful
-  posthog.capture(`create asset ${properties.assetType} ${properties.status}`, {
-    ...(properties.status === "failed" && {
-      error: properties.error,
-    }),
+  posthog.capture("asset creation failed", {
+    assetType: properties.assetType,
     contractType: properties.contractType,
+    error: properties.error,
+    step: properties.step,
   });
 }

@@ -1,6 +1,10 @@
 "use client";
 
-import { reportAssetsPageCardClick } from "@/analytics/report";
+import {
+  reportAssetCreationStarted,
+  reportAssetImportStarted,
+  reportAssetImportSuccessful,
+} from "@/analytics/report";
 import { cn } from "@/lib/utils";
 import { ImportModal } from "components/contract-components/import-contract/modal";
 import { ArrowDownToLineIcon, CoinsIcon, ImagesIcon } from "lucide-react";
@@ -28,31 +32,42 @@ export function Cards(props: {
         teamId={props.teamId}
         projectId={props.projectId}
         type="asset"
+        onSuccess={() => {
+          reportAssetImportSuccessful();
+        }}
       />
 
       <CardLink
         title="Create Coin"
-        trackingLabel="create-coin"
         description="Launch your own ERC-20 coin"
         href={`/team/${props.teamSlug}/${props.projectSlug}/assets/create/token`}
         icon={CoinsIcon}
+        onClick={() => {
+          reportAssetCreationStarted({
+            assetType: "coin",
+          });
+        }}
       />
 
       <CardLink
         title="Create NFT Collection"
-        trackingLabel="create-nft-collection"
         description="Launch your own NFT collection"
         href={`/team/${props.teamSlug}/${props.projectSlug}/assets/create/nft`}
         icon={ImagesIcon}
+        onClick={() => {
+          reportAssetCreationStarted({
+            assetType: "nft",
+          });
+        }}
       />
 
       <CardLink
         title="Import Existing Asset"
-        trackingLabel="import-asset"
         description="Import tokens or NFTs you own to the project"
         href={undefined}
         icon={ArrowDownToLineIcon}
         onClick={() => {
+          reportAssetImportStarted();
           setImportModalOpen(true);
         }}
       />
@@ -66,18 +81,9 @@ function CardLink(props: {
   href: string | undefined;
   onClick?: () => void;
   icon: React.FC<{ className?: string }>;
-  trackingLabel: "create-nft-collection" | "import-asset" | "create-coin";
 }) {
   const { onClick } = props;
   const isClickable = !!onClick || !!props.href;
-
-  function handleClick() {
-    reportAssetsPageCardClick({
-      label: props.trackingLabel,
-    });
-
-    onClick?.();
-  }
 
   return (
     <div
@@ -85,12 +91,12 @@ function CardLink(props: {
         "relative flex flex-col rounded-lg border bg-card p-4",
         isClickable && "cursor-pointer hover:border-active-border ",
       )}
-      onClick={handleClick}
+      onClick={onClick}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
-          handleClick();
+          onClick?.();
         }
       }}
     >

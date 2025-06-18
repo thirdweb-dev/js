@@ -1,5 +1,9 @@
 "use client";
-import { reportAssetBuy } from "@/analytics/report";
+
+import {
+  reportAssetBuyFailed,
+  reportAssetBuySuccessful,
+} from "@/analytics/report";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { DecimalInput } from "@/components/ui/decimal-input";
@@ -84,41 +88,12 @@ export function TokenDropClaim(props: {
       }
   >(undefined);
 
-  function report(
-    params:
-      | {
-          status: "attempted" | "successful";
-        }
-      | {
-          status: "failed";
-          errorMessage: string;
-        },
-  ) {
-    reportAssetBuy({
-      chainId: props.contract.chain.id,
-      assetType: "Coin",
-      contractType: "DropERC20",
-      ...(params.status === "failed"
-        ? {
-            status: "failed",
-            error: params.errorMessage,
-          }
-        : {
-            status: "attempted",
-          }),
-    });
-  }
-
   const approveAndClaim = useMutation({
     mutationFn: async () => {
       if (!account) {
         toast.error("Wallet is not connected");
         return;
       }
-
-      report({
-        status: "attempted",
-      });
 
       setStepsUI(undefined);
 
@@ -157,9 +132,11 @@ export function TokenDropClaim(props: {
 
           const errorMessage = parseError(approveTxResult.error);
 
-          report({
-            status: "failed",
-            errorMessage,
+          reportAssetBuyFailed({
+            chainId: props.contract.chain.id,
+            contractType: "DropERC20",
+            assetType: "coin",
+            error: errorMessage,
           });
 
           toast.error("Failed to approve spending", {
@@ -193,9 +170,11 @@ export function TokenDropClaim(props: {
           claim: "error",
         });
 
-        report({
-          status: "failed",
-          errorMessage,
+        reportAssetBuyFailed({
+          chainId: props.contract.chain.id,
+          contractType: "DropERC20",
+          assetType: "coin",
+          error: errorMessage,
         });
 
         toast.error("Failed to buy tokens", {
@@ -204,8 +183,10 @@ export function TokenDropClaim(props: {
         return;
       }
 
-      report({
-        status: "successful",
+      reportAssetBuySuccessful({
+        chainId: props.contract.chain.id,
+        contractType: "DropERC20",
+        assetType: "coin",
       });
 
       setStepsUI({

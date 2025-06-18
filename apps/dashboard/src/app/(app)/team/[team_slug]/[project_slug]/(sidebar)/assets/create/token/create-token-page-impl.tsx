@@ -1,8 +1,8 @@
 "use client";
 import { revalidatePathAction } from "@/actions/revalidate";
 import {
+  reportAssetCreationFailed,
   reportContractDeployed,
-  reportCreateAssetStepStatus,
 } from "@/analytics/report";
 import {
   DEFAULT_FEE_BPS_NEW,
@@ -54,13 +54,6 @@ export function CreateTokenAssetPage(props: {
       throw new Error("No Connected Wallet");
     }
 
-    reportCreateAssetStepStatus({
-      assetType: "Coin",
-      step: "deploy-contract",
-      status: "attempted",
-      contractType: "DropERC20",
-    });
-
     const socialUrls = formValues.socialUrls.reduce(
       (acc, url) => {
         if (url.url && url.platform) {
@@ -106,13 +99,6 @@ export function CreateTokenAssetPage(props: {
         contractType: "DropERC20",
       });
 
-      reportCreateAssetStepStatus({
-        assetType: "Coin",
-        step: "deploy-contract",
-        status: "successful",
-        contractType: "DropERC20",
-      });
-
       reportContractDeployed({
         address: contractAddress,
         chainId: Number(formValues.chain),
@@ -131,12 +117,11 @@ export function CreateTokenAssetPage(props: {
       const errorMessage =
         typeof parsedError === "string" ? parsedError : "Unknown error";
 
-      reportCreateAssetStepStatus({
-        assetType: "Coin",
-        step: "deploy-contract",
-        status: "failed",
-        error: errorMessage,
+      reportAssetCreationFailed({
+        assetType: "coin",
         contractType: "DropERC20",
+        error: errorMessage,
+        step: "deploy-contract",
       });
 
       console.error(errorMessage);
@@ -167,13 +152,6 @@ export function CreateTokenAssetPage(props: {
       chain,
     });
 
-    reportCreateAssetStepStatus({
-      assetType: "Coin",
-      step: "airdrop-tokens",
-      status: "attempted",
-      contractType: "DropERC20",
-    });
-
     try {
       const airdropTx = transferBatch({
         contract,
@@ -187,23 +165,15 @@ export function CreateTokenAssetPage(props: {
         transaction: airdropTx,
         account,
       });
-
-      reportCreateAssetStepStatus({
-        assetType: "Coin",
-        step: "airdrop-tokens",
-        status: "successful",
-        contractType: "DropERC20",
-      });
     } catch (e) {
       console.error(e);
       const errorMessage = parseError(e);
 
-      reportCreateAssetStepStatus({
-        assetType: "Coin",
-        step: "airdrop-tokens",
-        status: "failed",
-        error: errorMessage,
+      reportAssetCreationFailed({
+        assetType: "coin",
         contractType: "DropERC20",
+        error: errorMessage,
+        step: "airdrop-tokens",
       });
       throw e;
     }
@@ -218,13 +188,6 @@ export function CreateTokenAssetPage(props: {
     if (!account) {
       throw new Error("No connected account");
     }
-
-    reportCreateAssetStepStatus({
-      assetType: "Coin",
-      step: "mint-tokens",
-      status: "attempted",
-      contractType: "DropERC20",
-    });
 
     // eslint-disable-next-line no-restricted-syntax
     const chain = defineDashboardChain(
@@ -268,23 +231,15 @@ export function CreateTokenAssetPage(props: {
         transaction: claimTx,
         account,
       });
-
-      reportCreateAssetStepStatus({
-        assetType: "Coin",
-        step: "mint-tokens",
-        status: "successful",
-        contractType: "DropERC20",
-      });
     } catch (e) {
       const errorMessage = parseError(e);
       console.error(e);
 
-      reportCreateAssetStepStatus({
-        assetType: "Coin",
-        step: "mint-tokens",
-        status: "failed",
-        error: errorMessage,
+      reportAssetCreationFailed({
+        assetType: "coin",
         contractType: "DropERC20",
+        error: errorMessage,
+        step: "mint-tokens",
       });
 
       throw e;
@@ -351,13 +306,6 @@ export function CreateTokenAssetPage(props: {
       },
     ];
 
-    reportCreateAssetStepStatus({
-      assetType: "Coin",
-      step: "set-claim-conditions",
-      status: "attempted",
-      contractType: "DropERC20",
-    });
-
     const preparedTx = setClaimConditionsExtension({
       contract,
       phases,
@@ -368,23 +316,15 @@ export function CreateTokenAssetPage(props: {
         transaction: preparedTx,
         account,
       });
-
-      reportCreateAssetStepStatus({
-        assetType: "Coin",
-        step: "set-claim-conditions",
-        status: "successful",
-        contractType: "DropERC20",
-      });
     } catch (e) {
       const errorMessage = parseError(e);
       console.error(e);
 
-      reportCreateAssetStepStatus({
-        assetType: "Coin",
-        step: "set-claim-conditions",
-        status: "failed",
-        error: errorMessage,
+      reportAssetCreationFailed({
+        assetType: "coin",
         contractType: "DropERC20",
+        error: errorMessage,
+        step: "set-claim-conditions",
       });
       throw e;
     }

@@ -39,6 +39,7 @@ type ImportModalProps = {
   projectId: string;
   client: ThirdwebClient;
   type: "contract" | "asset";
+  onSuccess?: () => void;
 };
 
 export const ImportModal: React.FC<ImportModalProps> = (props) => {
@@ -69,6 +70,7 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
           projectId={props.projectId}
           client={props.client}
           type={props.type}
+          onSuccess={props.onSuccess}
         />
       </DialogContent>
     </Dialog>
@@ -96,6 +98,7 @@ function ImportForm(props: {
   projectId: string;
   client: ThirdwebClient;
   type: "contract" | "asset";
+  onSuccess?: () => void;
 }) {
   const router = useDashboardRouter();
   const activeChainId = useActiveWalletChain()?.id;
@@ -162,6 +165,7 @@ function ImportForm(props: {
                 onSuccess: () => {
                   router.refresh();
                   toast.success("Contract imported successfully");
+                  props.onSuccess?.();
                 },
                 onError: (err) => {
                   console.error(err);

@@ -1,5 +1,8 @@
 "use client";
-import { reportAssetBuy } from "@/analytics/report";
+import {
+  reportAssetBuyFailed,
+  reportAssetBuySuccessful,
+} from "@/analytics/report";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import type { NFT } from "thirdweb";
@@ -28,41 +31,12 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
   const sendAndConfirmTx = useSendAndConfirmTransaction();
   const account = useActiveAccount();
 
-  function report(
-    params:
-      | {
-          status: "attempted" | "successful";
-        }
-      | {
-          status: "failed";
-          errorMessage: string;
-        },
-  ) {
-    reportAssetBuy({
-      chainId: props.contract.chain.id,
-      assetType: "NFT",
-      contractType: "DropERC721",
-      ...(params.status === "failed"
-        ? {
-            status: "failed",
-            error: params.errorMessage,
-          }
-        : {
-            status: "attempted",
-          }),
-    });
-  }
-
   const handleSubmit = async (form: BuyNFTDropForm) => {
     const nftAmountToClaim = form.getValues("amount");
     try {
       if (!account) {
         return toast.error("No account detected");
       }
-
-      report({
-        status: "attempted",
-      });
 
       const transaction = claimTo({
         contract: props.contract,
@@ -98,9 +72,11 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
           console.error(err);
           const errorMessage = parseError(err);
 
-          report({
-            status: "failed",
-            errorMessage,
+          reportAssetBuyFailed({
+            chainId: props.contract.chain.id,
+            contractType: "DropERC721",
+            assetType: "nft",
+            error: errorMessage,
           });
 
           return;
@@ -123,8 +99,10 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
       try {
         await claimTxPromise;
 
-        report({
-          status: "successful",
+        reportAssetBuySuccessful({
+          chainId: props.contract.chain.id,
+          contractType: "DropERC721",
+          assetType: "nft",
         });
 
         props.onSuccess?.();
@@ -132,9 +110,11 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
         console.error(err);
         const errorMessage = parseError(err);
 
-        report({
-          status: "failed",
-          errorMessage,
+        reportAssetBuyFailed({
+          chainId: props.contract.chain.id,
+          contractType: "DropERC721",
+          assetType: "nft",
+          error: errorMessage,
         });
 
         return;
@@ -146,9 +126,11 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
       toast.error("Failed to buy NFTs", {
         description: errorMessage,
       });
-      report({
-        status: "failed",
-        errorMessage,
+      reportAssetBuyFailed({
+        chainId: props.contract.chain.id,
+        contractType: "DropERC721",
+        assetType: "nft",
+        error: errorMessage,
       });
     }
   };

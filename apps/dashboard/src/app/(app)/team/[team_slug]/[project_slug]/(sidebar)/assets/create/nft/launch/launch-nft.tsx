@@ -1,6 +1,6 @@
 "use client";
 
-import { reportCreateAssetStatus } from "@/analytics/report";
+import { reportAssetCreationFailed } from "@/analytics/report";
 import { MultiStepStatus } from "@/components/blocks/multi-step-status/multi-step-status";
 import type { MultiStepState } from "@/components/blocks/multi-step-status/multi-step-status";
 import { WalletAddress } from "@/components/blocks/wallet-address";
@@ -81,12 +81,6 @@ export function LaunchNFT(props: {
   }
 
   async function handleSubmitClick() {
-    reportCreateAssetStatus({
-      assetType: "NFT",
-      status: "attempted",
-      contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
-    });
-
     const initialSteps: MultiStepState<StepId>[] = [
       {
         label: "Deploy contract",
@@ -217,22 +211,16 @@ export function LaunchNFT(props: {
           message: errorMessage,
         });
 
-        reportCreateAssetStatus({
-          assetType: "NFT",
-          status: "failed",
+        reportAssetCreationFailed({
+          assetType: "nft",
           contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
           error: errorMessage,
+          step: currentStep.id,
         });
 
         throw error;
       }
     }
-
-    reportCreateAssetStatus({
-      assetType: "NFT",
-      status: "successful",
-      contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
-    });
 
     props.onLaunchSuccess();
     batchesProcessedRef.current = 0;

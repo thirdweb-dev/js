@@ -1,5 +1,8 @@
 "use client";
-import { reportCreateAssetStatus } from "@/analytics/report";
+import {
+  reportAssetCreationFailed,
+  reportAssetCreationSuccessful,
+} from "@/analytics/report";
 import {
   type MultiStepState,
   MultiStepStatus,
@@ -70,12 +73,6 @@ export function LaunchTokenStatus(props: {
   }
 
   async function handleSubmitClick() {
-    reportCreateAssetStatus({
-      assetType: "Coin",
-      status: "attempted",
-      contractType: "DropERC20",
-    });
-
     const initialSteps: MultiStepState<StepId>[] = [
       {
         label: "Deploy contract",
@@ -148,11 +145,11 @@ export function LaunchTokenStatus(props: {
       } catch (error) {
         const errorMessage = parseError(error);
 
-        reportCreateAssetStatus({
-          assetType: "Coin",
-          status: "failed",
+        reportAssetCreationFailed({
+          assetType: "coin",
           contractType: "DropERC20",
           error: errorMessage,
+          step: currentStep.id,
         });
 
         updateStatus(i, {
@@ -164,9 +161,8 @@ export function LaunchTokenStatus(props: {
       }
     }
 
-    reportCreateAssetStatus({
-      assetType: "Coin",
-      status: "successful",
+    reportAssetCreationSuccessful({
+      assetType: "coin",
       contractType: "DropERC20",
     });
 

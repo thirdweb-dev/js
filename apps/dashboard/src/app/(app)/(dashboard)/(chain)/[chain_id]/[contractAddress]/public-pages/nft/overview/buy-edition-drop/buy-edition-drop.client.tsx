@@ -1,6 +1,9 @@
 "use client";
 
-import { reportAssetBuy } from "@/analytics/report";
+import {
+  reportAssetBuyFailed,
+  reportAssetBuySuccessful,
+} from "@/analytics/report";
 import {
   Form,
   FormControl,
@@ -70,40 +73,11 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
     enabled: true,
   });
 
-  function report(
-    params:
-      | {
-          status: "attempted" | "successful";
-        }
-      | {
-          status: "failed";
-          errorMessage: string;
-        },
-  ) {
-    reportAssetBuy({
-      chainId: props.contract.chain.id,
-      assetType: "NFT",
-      contractType: "DropERC1155",
-      ...(params.status === "failed"
-        ? {
-            status: "failed",
-            error: params.errorMessage,
-          }
-        : {
-            status: "attempted",
-          }),
-    });
-  }
-
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
       if (!account) {
         return toast.error("No account detected");
       }
-
-      report({
-        status: "attempted",
-      });
 
       const transaction = claimTo({
         contract: props.contract,
@@ -139,9 +113,11 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
         } catch (err) {
           const errorMessage = parseError(err);
 
-          report({
-            status: "failed",
-            errorMessage,
+          reportAssetBuyFailed({
+            chainId: props.contract.chain.id,
+            contractType: "DropERC1155",
+            assetType: "nft",
+            error: errorMessage,
           });
 
           console.error(errorMessage);
@@ -165,8 +141,10 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
       try {
         await claimTxPromise;
 
-        report({
-          status: "successful",
+        reportAssetBuySuccessful({
+          chainId: props.contract.chain.id,
+          contractType: "DropERC1155",
+          assetType: "nft",
         });
 
         props.onSuccess?.();
@@ -178,9 +156,11 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
         console.error(err);
         const errorMessage = parseError(err);
 
-        report({
-          status: "failed",
-          errorMessage,
+        reportAssetBuyFailed({
+          chainId: props.contract.chain.id,
+          contractType: "DropERC1155",
+          assetType: "nft",
+          error: errorMessage,
         });
 
         return;
@@ -193,9 +173,11 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
         description: errorMessage,
       });
 
-      report({
-        status: "failed",
-        errorMessage,
+      reportAssetBuyFailed({
+        chainId: props.contract.chain.id,
+        contractType: "DropERC1155",
+        assetType: "nft",
+        error: errorMessage,
       });
     }
   });
