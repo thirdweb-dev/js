@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.103.1
+
+### Patch Changes
+
+- [#7360](https://github.com/thirdweb-dev/js/pull/7360) [`78b9c8e`](https://github.com/thirdweb-dev/js/commit/78b9c8e334948e212e28cca3509572be7d24a77a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix setting explicit amount on TransactionWidget
+
+- [#7358](https://github.com/thirdweb-dev/js/pull/7358) [`55baa99`](https://github.com/thirdweb-dev/js/commit/55baa997f0ea2a20dff43bad56e1c2486ba1aa03) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix etherlink transfers when too little funds
+
 ## 5.103.0
 
 ### Minor Changes
