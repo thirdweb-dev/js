@@ -815,9 +815,13 @@ function openAPIV3ParamToZodFormSchema(
         }
 
         if (itemSchema) {
-          return isRequired
+          const arraySchema = isRequired
             ? z.array(itemSchema).min(1, { message: "Required" })
-            : z.array(itemSchema).optional();
+            : z.array(itemSchema);
+          const arrayOrSingleItemSchema = z.union([arraySchema, itemSchema]);
+          return isRequired
+            ? arrayOrSingleItemSchema
+            : arrayOrSingleItemSchema.optional();
         }
       }
       break;
