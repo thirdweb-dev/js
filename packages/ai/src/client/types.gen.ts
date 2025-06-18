@@ -156,7 +156,7 @@ export type AgentActionSignTransaction = {
 
 export type AgentActionSignTransactionData = {
   chainId: number;
-  function: string;
+  function?: string | null;
   to: string;
   value: string;
   data: string;
@@ -315,7 +315,7 @@ export type AgentWalletResponse = {
     | ({
         type: "eip4337";
       } & WalletDataEip4337);
-  transactions: Array<WalletTransaction>;
+  transactions?: Array<WalletTransaction>;
   created_at: string;
   updated_at: string;
 };
