@@ -20,7 +20,7 @@ export const useAgent = ({ authToken, agentId }: UseAgentProps) => {
         },
       });
 
-      return agent;
+      return agent?.result;
     },
   });
 

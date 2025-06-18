@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronLeftIcon } from "lucide-react";
 import Link from "next/link";
@@ -28,12 +29,20 @@ const CreateAgentForm = z.object({
 export function CreateAgentPage({ authToken }: { authToken: string }) {
   const form = useForm<z.infer<typeof CreateAgentForm>>({
     resolver: zodResolver(CreateAgentForm),
+    defaultValues: {
+      name: "",
+      description: "",
+      prompt: "",
+    },
   });
+  const router = useDashboardRouter();
 
   const { mutateAsync: createAgent, isPending } = useCreateAgent({ authToken });
 
-  const handleCreate = async (data: z.infer<typeof CreateAgentForm>) => {
-    const { error } = await createAgent({
+  const handleCreate = async (
+    data: z.infer<typeof CreateAgentForm>,
+  ): Promise<void> => {
+    const { data: agentData, error } = await createAgent({
       name: data.name,
       description: data.description,
       prompts: [
@@ -43,8 +52,10 @@ export function CreateAgentPage({ authToken }: { authToken: string }) {
         },
       ],
     });
-    if (!error) {
+    if (!error && agentData) {
       toast.success("Agent created successfully");
+      // navigate to the agent page
+      router.push(`/agents/${agentData.result.id}`);
     } else {
       toast.error("Failed to create agent");
     }
