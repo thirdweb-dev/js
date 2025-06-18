@@ -17,12 +17,9 @@ import {
   type RouteDiscoveryValidationSchema,
   routeDiscoveryValidationSchema,
 } from "components/settings/ApiKeys/validations";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
-
-const TRACKING_CATEGORY = "token_discovery";
 
 export const RouteDiscovery = ({
   project,
@@ -38,8 +35,6 @@ export const RouteDiscovery = ({
       tokenAddress: undefined,
     },
   });
-
-  const trackEvent = useTrack();
 
   const submitDiscoveryMutation = useMutation({
     mutationFn: async (values: {
@@ -65,35 +60,16 @@ export const RouteDiscovery = ({
           tokenAddress,
         },
         {
-          onSuccess: (data) => {
+          onSuccess: () => {
             toast.success("Token submitted successfully!", {
               description:
                 "Thank you for your submission. Contact support if your token doesn't appear after some time.",
-            });
-            trackEvent({
-              category: TRACKING_CATEGORY,
-              action: "token-discovery-submit",
-              label: "success",
-              data: {
-                tokenAddress,
-                tokenCount: data?.length || 0,
-              },
             });
           },
           onError: () => {
             toast.error("Token submission failed!", {
               description:
                 "Please double check the network and token address. If issues persist, please reach out to our support team.",
-            });
-
-            // Get appropriate error message
-            const errorMessage = "An unknown error occurred";
-
-            trackEvent({
-              category: TRACKING_CATEGORY,
-              action: "token-discovery-submit",
-              label: "error",
-              error: errorMessage,
             });
           },
         },

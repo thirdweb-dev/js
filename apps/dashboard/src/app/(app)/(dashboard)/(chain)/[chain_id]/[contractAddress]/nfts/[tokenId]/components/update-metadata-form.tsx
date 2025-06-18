@@ -14,7 +14,6 @@ import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { PropertiesFormControl } from "components/contract-pages/forms/properties.shared";
 import { FileInput } from "components/shared/FileInput";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { type Dispatch, type SetStateAction, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -65,7 +64,6 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
   setOpen,
   isLoggedIn,
 }) => {
-  const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
 
   const transformedQueryData = useMemo(() => {
@@ -126,11 +124,6 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
           toast.error("Please connect your wallet to update metadata.");
           return;
         }
-        trackEvent({
-          category: "nft",
-          action: "update-metadata",
-          label: "attempt",
-        });
 
         try {
           const newMetadata = parseAttributes({
@@ -166,21 +159,10 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
                 });
           await sendAndConfirmTx.mutateAsync(transaction, {
             onSuccess: () => {
-              trackEvent({
-                category: "nft",
-                action: "update-metadata",
-                label: "success",
-              });
               setOpen(false);
             },
-            // biome-ignore lint/suspicious/noExplicitAny: FIXME
-            onError: (error: any) => {
-              trackEvent({
-                category: "nft",
-                action: "update-metadata",
-                label: "error",
-                error,
-              });
+            onError: (error) => {
+              console.error(error);
             },
           });
 

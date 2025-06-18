@@ -12,7 +12,6 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { FormControl, Input, Select } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { EyeIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -36,7 +35,6 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
   const batchesQuery = useReadContract(getBatchesToReveal, {
     contract,
   });
-  const trackEvent = useTrack();
 
   const sendTxMutation = useSendAndConfirmTransaction();
 
@@ -85,12 +83,6 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
             className="mt-10 flex flex-col gap-6"
             id={REVEAL_FORM_ID}
             onSubmit={handleSubmit((data) => {
-              trackEvent({
-                category: "nft",
-                action: "batch-upload-reveal",
-                label: "attempt",
-              });
-
               const tx = reveal({
                 contract,
                 batchId: BigInt(data.batchId),
@@ -99,20 +91,10 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
 
               const promise = sendTxMutation.mutateAsync(tx, {
                 onSuccess: () => {
-                  trackEvent({
-                    category: "nft",
-                    action: "batch-upload-reveal",
-                    label: "success",
-                  });
                   setOpen(false);
                 },
                 onError: (error) => {
                   console.error(error);
-                  trackEvent({
-                    category: "nft",
-                    action: "batch-upload-reveal",
-                    label: "error",
-                  });
                 },
               });
 

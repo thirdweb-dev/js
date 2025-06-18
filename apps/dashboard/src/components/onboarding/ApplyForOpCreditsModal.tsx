@@ -10,7 +10,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { type Account, accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { ArrowRightIcon, CircleAlertIcon } from "lucide-react";
 import { useState } from "react";
@@ -178,7 +177,6 @@ function ApplyOpCreditsButton(props: {
   validTeamPlan: Team["billingPlan"];
   account: Account;
 }) {
-  const trackEvent = useTrack();
   const {
     hasAppliedForOpGrant,
     hasValidPaymentMethod,
@@ -195,13 +193,6 @@ function ApplyOpCreditsButton(props: {
           disabled={!hasValidPaymentMethod || hasAppliedForOpGrant}
           className="gap-2"
           size="sm"
-          onClick={() => {
-            trackEvent({
-              category: "op-sponsorship",
-              action: "modal",
-              label: "view-form",
-            });
-          }}
         >
           {hasAppliedForOpGrant ? (
             "Already applied"

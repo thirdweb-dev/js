@@ -7,7 +7,6 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { AddressOrEnsSchema, BasisPointsSchema } from "constants/schemas";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import type { ThirdwebContract } from "thirdweb";
@@ -65,7 +64,6 @@ export const SettingsRoyalties = ({
   detectedState: ExtensionDetectedState;
   isLoggedIn: boolean;
 }) => {
-  const trackEvent = useTrack();
   const query = useReadContract(getDefaultRoyaltyInfo, {
     contract,
   });
@@ -93,11 +91,6 @@ export const SettingsRoyalties = ({
       <Flex
         as="form"
         onSubmit={form.handleSubmit((d) => {
-          trackEvent({
-            category: "settings",
-            action: "set-royalty",
-            label: "attempt",
-          });
           const transaction = setDefaultRoyaltyInfo({
             contract,
             royaltyRecipient: d.fee_recipient,
@@ -105,21 +98,11 @@ export const SettingsRoyalties = ({
           });
           mutation.mutate(transaction, {
             onSuccess: () => {
-              trackEvent({
-                category: "settings",
-                action: "set-royalty",
-                label: "success",
-              });
               form.reset(d);
               onSuccess();
             },
             onError: (error) => {
-              trackEvent({
-                category: "settings",
-                action: "set-royalty",
-                label: "error",
-                error,
-              });
+              console.error(error);
               onError(error);
             },
           });

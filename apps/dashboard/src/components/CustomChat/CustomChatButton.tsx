@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
 import { cn } from "@/lib/utils";
-import { useTrack } from "hooks/analytics/useTrack";
 import { MessageCircleIcon, XIcon } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { createThirdwebClient } from "thirdweb";
@@ -30,17 +29,12 @@ export function CustomChatButton(props: {
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
   const closeModal = useCallback(() => setIsOpen(false), []);
   const ref = useRef<HTMLDivElement>(null);
-  const trackEvent = useTrack();
 
   return (
     <>
       {/* Inline Button (not floating) */}
       <Button
         onClick={() => {
-          trackEvent({
-            category: "siwa",
-            action: "open-chat",
-          });
           setIsOpen(true);
           setHasBeenOpened(true);
         }}

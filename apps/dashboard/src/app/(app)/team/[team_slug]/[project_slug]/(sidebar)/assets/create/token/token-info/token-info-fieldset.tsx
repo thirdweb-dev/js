@@ -23,10 +23,6 @@ export function TokenInfoFieldset(props: {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(props.onNext)}>
         <StepCard
-          tracking={{
-            page: "info",
-            contractType: "DropERC20",
-          }}
           title="Coin Information"
           prevButton={undefined}
           nextButton={{

@@ -1,4 +1,5 @@
 "use client";
+import { reportAssetBuy } from "@/analytics/report";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { DecimalInput } from "@/components/ui/decimal-input";
@@ -7,7 +8,6 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import {
   CheckIcon,
   CircleAlertIcon,
@@ -32,12 +32,9 @@ import {
   type getActiveClaimCondition,
   getApprovalForTransaction,
 } from "thirdweb/extensions/erc20";
-import {
-  useActiveAccount,
-  useActiveWallet,
-  useSendTransaction,
-} from "thirdweb/react";
+import { useActiveAccount, useSendTransaction } from "thirdweb/react";
 import { getClaimParams } from "thirdweb/utils";
+import { parseError } from "utils/errorParser";
 import { tryCatch } from "utils/try-catch";
 import { getSDKTheme } from "../../../../../../../../components/sdk-component-theme";
 import { PublicPageConnectButton } from "../../../_components/PublicPageConnectButton";
@@ -63,46 +60,21 @@ export function TokenDropClaim(props: {
 }) {
   const [quantity, setQuantity] = useState("1");
   const account = useActiveAccount();
-  const activeWallet = useActiveWallet();
+
   const { theme } = useTheme();
-  const trackEvent = useTrack();
+
   const sendClaimTx = useSendTransaction({
     payModal: {
       theme: getSDKTheme(theme === "light" ? "light" : "dark"),
     },
   });
+
   const [successScreen, setSuccessScreen] = useState<
     | undefined
     | {
         txHash: string;
       }
   >(undefined);
-
-  function trackAssetBuy(
-    params:
-      | {
-          type: "attempt" | "success";
-        }
-      | {
-          type: "error";
-          errorMessage: string;
-        },
-  ) {
-    trackEvent({
-      category: "asset",
-      action: "buy",
-      label: params.type,
-      contractType: "DropERC20",
-      accountAddress: account?.address,
-      walletId: activeWallet?.id,
-      chainId: props.contract.chain.id,
-      ...(params.type === "error"
-        ? {
-            errorMessage: params.errorMessage,
-          }
-        : {}),
-    });
-  }
 
   const [stepsUI, setStepsUI] = useState<
     | undefined
@@ -112,6 +84,31 @@ export function TokenDropClaim(props: {
       }
   >(undefined);
 
+  function report(
+    params:
+      | {
+          status: "attempted" | "successful";
+        }
+      | {
+          status: "failed";
+          errorMessage: string;
+        },
+  ) {
+    reportAssetBuy({
+      chainId: props.contract.chain.id,
+      assetType: "Coin",
+      contractType: "DropERC20",
+      ...(params.status === "failed"
+        ? {
+            status: "failed",
+            error: params.errorMessage,
+          }
+        : {
+            status: "attempted",
+          }),
+    });
+  }
+
   const approveAndClaim = useMutation({
     mutationFn: async () => {
       if (!account) {
@@ -119,8 +116,8 @@ export function TokenDropClaim(props: {
         return;
       }
 
-      trackAssetBuy({
-        type: "attempt",
+      report({
+        status: "attempted",
       });
 
       setStepsUI(undefined);
@@ -151,19 +148,22 @@ export function TokenDropClaim(props: {
         );
 
         if (approveTxResult.error) {
+          console.error(approveTxResult.error);
+
           setStepsUI({
             approve: "error",
             claim: "idle",
           });
 
-          trackAssetBuy({
-            type: "error",
-            errorMessage: approveTxResult.error.message,
+          const errorMessage = parseError(approveTxResult.error);
+
+          report({
+            status: "failed",
+            errorMessage,
           });
 
-          console.error(approveTxResult.error);
           toast.error("Failed to approve spending", {
-            description: approveTxResult.error.message,
+            description: errorMessage,
           });
           return;
         }
@@ -186,30 +186,31 @@ export function TokenDropClaim(props: {
 
       const claimTxResult = await tryCatch(sendAndConfirm());
       if (claimTxResult.error) {
+        console.error(claimTxResult.error);
+        const errorMessage = parseError(claimTxResult.error);
         setStepsUI({
           approve: approveTx ? "success" : undefined,
           claim: "error",
         });
 
-        trackAssetBuy({
-          type: "error",
-          errorMessage: claimTxResult.error.message,
+        report({
+          status: "failed",
+          errorMessage,
         });
 
-        console.error(claimTxResult.error);
         toast.error("Failed to buy tokens", {
-          description: claimTxResult.error.message,
+          description: errorMessage,
         });
         return;
       }
 
+      report({
+        status: "successful",
+      });
+
       setStepsUI({
         approve: approveTx ? "success" : undefined,
         claim: "success",
-      });
-
-      trackAssetBuy({
-        type: "success",
       });
 
       setSuccessScreen({

@@ -6,7 +6,6 @@ import type { ThirdwebClient } from "thirdweb";
 import { SolidityInput } from "../../../../../../../../../../contract-ui/components/solidity-inputs";
 import { StepCard } from "../../_common/step-card";
 import type { NFTSalesSettingsFormValues } from "../_common/form";
-import { nftCreationPages } from "../_common/pages";
 
 export function SalesSettings(props: {
   onNext: () => void;
@@ -25,10 +24,6 @@ export function SalesSettings(props: {
         })}
       >
         <StepCard
-          tracking={{
-            page: nftCreationPages["sales-settings"],
-            contractType: "NFTCollection",
-          }}
           title="Sales and Fees"
           prevButton={{
             onClick: props.onPrev,

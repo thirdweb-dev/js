@@ -122,7 +122,6 @@ export const MismatchButton = forwardRef<
     networksMismatch && wallet && !canSwitchNetworkWithoutConfirmation(wallet);
 
   const [isMismatchPopoverOpen, setIsMismatchPopoverOpen] = useState(false);
-  // const trackEvent = useTrack();
 
   const chainId = activeWalletChain?.id;
 

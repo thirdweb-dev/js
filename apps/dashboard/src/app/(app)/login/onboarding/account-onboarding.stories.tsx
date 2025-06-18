@@ -47,9 +47,6 @@ function Story(props: {
         storybookLog("onComplete");
       }}
       accountAddress=""
-      trackEvent={(params) => {
-        storybookLog("trackEvent", params);
-      }}
       loginOrSignup={async () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         if (props.loginOrSignupType === "error-email-exists") {

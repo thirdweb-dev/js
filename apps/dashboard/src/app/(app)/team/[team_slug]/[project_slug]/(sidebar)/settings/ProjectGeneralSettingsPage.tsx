@@ -55,7 +55,6 @@ import {
 } from "components/settings/ApiKeys/validations";
 import { FileInput } from "components/shared/FileInput";
 import { format } from "date-fns";
-import { useTrack } from "hooks/analytics/useTrack";
 import {
   CircleAlertIcon,
   ExternalLinkIcon,
@@ -225,7 +224,7 @@ export function ProjectGeneralSettingsPageUI(props: {
   };
 
   const { project } = props;
-  const trackEvent = useTrack();
+
   const router = useDashboardRouter();
   const updateProject = useMutation({
     mutationFn: props.updateProject,
@@ -305,31 +304,15 @@ export function ProjectGeneralSettingsPageUI(props: {
       services,
     };
 
-    trackEvent({
-      category: "api-keys",
-      action: "edit",
-      label: "attempt",
-    });
-
     updateProject.mutate(projectValues, {
       onSuccess: () => {
         toast.success("Project updated successfully");
-        trackEvent({
-          category: "api-keys",
-          action: "edit",
-          label: "success",
-        });
 
         props.onKeyUpdated?.();
       },
       onError: (err) => {
         toast.error("Failed to update project");
-        trackEvent({
-          category: "api-keys",
-          action: "edit",
-          label: "error",
-          error: err,
-        });
+        console.error(err);
       },
     });
   });
@@ -949,38 +932,19 @@ function DeleteProject(props: {
   deleteProject: DeleteProject;
   onDeleteSuccessful: () => void;
 }) {
-  const trackEvent = useTrack();
-
   const deleteProject = useMutation({
     mutationFn: props.deleteProject,
   });
 
   const handleRevoke = () => {
-    trackEvent({
-      category: "api-keys",
-      action: "revoke",
-      label: "attempt",
-    });
-
     deleteProject.mutate(undefined, {
       onSuccess: () => {
         toast.success("Project deleted successfully");
         props.onDeleteSuccessful();
-        trackEvent({
-          category: "api-keys",
-          action: "revoke",
-          label: "success",
-        });
       },
       onError: (err) => {
-        // onError(err);
         toast.error("Failed to delete project");
-        trackEvent({
-          category: "api-keys",
-          action: "revoke",
-          label: "error",
-          error: err,
-        });
+        console.error(err);
       },
     });
   };

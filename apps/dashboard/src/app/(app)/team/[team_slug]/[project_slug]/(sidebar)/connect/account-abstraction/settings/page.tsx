@@ -57,7 +57,6 @@ export default async function Page(props: {
       <AccountAbstractionSettingsPage
         client={client}
         bundlerService={bundlerService}
-        trackingCategory="account-abstraction-project-settings"
         project={project}
         teamId={team.id}
         teamSlug={team.slug}

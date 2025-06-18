@@ -1,5 +1,6 @@
 "use client";
 
+import { reportCreateAssetStepNextClicked } from "@/analytics/report";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -94,6 +95,10 @@ export function CreateTokenAssetPageUI(props: {
           client={props.client}
           form={tokenInfoForm}
           onNext={() => {
+            reportCreateAssetStepNextClicked({
+              assetType: "Coin",
+              page: "coin-info",
+            });
             setStep("distribution");
           }}
         />
@@ -110,6 +115,10 @@ export function CreateTokenAssetPageUI(props: {
             setStep("token-info");
           }}
           onNext={() => {
+            reportCreateAssetStepNextClicked({
+              assetType: "Coin",
+              page: "token-distribution",
+            });
             setStep("launch");
           }}
         />

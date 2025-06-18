@@ -1,5 +1,6 @@
 "use client";
 
+import { reportCreateAssetStatus } from "@/analytics/report";
 import { MultiStepStatus } from "@/components/blocks/multi-step-status/multi-step-status";
 import type { MultiStepState } from "@/components/blocks/multi-step-status/multi-step-status";
 import { WalletAddress } from "@/components/blocks/wallet-address";
@@ -14,7 +15,6 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import {
   ArrowRightIcon,
   ArrowUpFromLineIcon,
@@ -32,7 +32,6 @@ import type {
   CreateNFTCollectionAllValues,
   CreateNFTCollectionFunctions,
 } from "../_common/form";
-import { getNFTLaunchTrackingData } from "../_common/tracking";
 
 const stepIds = {
   "deploy-contract": "deploy-contract",
@@ -57,7 +56,6 @@ export function LaunchNFT(props: {
   const activeWallet = useActiveWallet();
   const walletRequiresApproval = activeWallet?.id !== "inApp";
   const [contractLink, setContractLink] = useState<string | null>(null);
-  const trackEvent = useTrack();
 
   function updateStatus(
     index: number,
@@ -82,28 +80,11 @@ export function LaunchNFT(props: {
     });
   }
 
-  function launchTracking(
-    params:
-      | {
-          type: "attempt" | "success";
-        }
-      | {
-          type: "error";
-          errorMessage: string;
-        },
-  ) {
-    trackEvent(
-      getNFTLaunchTrackingData({
-        chainId: Number(formValues.collectionInfo.chain),
-        ercType: ercType,
-        ...params,
-      }),
-    );
-  }
-
   async function handleSubmitClick() {
-    launchTracking({
-      type: "attempt",
+    reportCreateAssetStatus({
+      assetType: "NFT",
+      status: "attempted",
+      contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
     });
 
     const initialSteps: MultiStepState<StepId>[] = [
@@ -228,26 +209,31 @@ export function LaunchNFT(props: {
           type: "completed",
         });
       } catch (error) {
-        const parsedError = parseError(error);
+        console.error(error);
+        const errorMessage = parseError(error);
 
         updateStatus(i, {
           type: "error",
-          message: parsedError,
+          message: errorMessage,
         });
 
-        launchTracking({
-          type: "error",
-          errorMessage:
-            typeof parsedError === "string" ? parsedError : "Unknown error",
+        reportCreateAssetStatus({
+          assetType: "NFT",
+          status: "failed",
+          contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
+          error: errorMessage,
         });
 
         throw error;
       }
     }
 
-    launchTracking({
-      type: "success",
+    reportCreateAssetStatus({
+      assetType: "NFT",
+      status: "successful",
+      contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
     });
+
     props.onLaunchSuccess();
     batchesProcessedRef.current = 0;
   }
@@ -288,10 +274,6 @@ export function LaunchNFT(props: {
 
   return (
     <StepCard
-      tracking={{
-        page: "launch",
-        contractType: "NFTCollection",
-      }}
       title="Launch NFT"
       prevButton={{
         onClick: props.onPrevious,

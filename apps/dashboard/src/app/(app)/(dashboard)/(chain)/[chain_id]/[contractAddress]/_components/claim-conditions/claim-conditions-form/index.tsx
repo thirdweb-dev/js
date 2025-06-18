@@ -17,7 +17,6 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleHelpIcon, PlusIcon } from "lucide-react";
 import { Fragment, createContext, useContext, useMemo, useState } from "react";
@@ -204,7 +203,6 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
   // if neither 1155 or 20 then it's 721
   const isErc721 = !isErc20 && !isErc1155;
   const walletAddress = useActiveAccount()?.address;
-  const trackEvent = useTrack();
 
   const isAdmin = useIsAdmin(contract);
   const [openSnapshotIndex, setOpenSnapshotIndex] = useState(-1);
@@ -359,13 +357,6 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
   });
 
   const handleFormSubmit = form.handleSubmit(async (d) => {
-    const category = isErc20 ? "token" : "nft";
-
-    trackEvent({
-      category,
-      action: "set-claim-conditions",
-      label: "attempt",
-    });
     if (isErc20 && !tokenDecimals.data) {
       return toast.error(
         `Could not fetch token decimals for contract ${contract.address}`,
@@ -385,11 +376,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
         d.phases,
       );
       await sendTx.mutateAsync(tx);
-      trackEvent({
-        category,
-        action: "set-claim-conditions",
-        label: "success",
-      });
+
       saveClaimPhaseNotification.onSuccess();
 
       const newPhases = d.phases.map((phase) => ({
@@ -401,11 +388,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
       form.setValue("phases", newPhases);
     } catch (error) {
       console.error(error);
-      trackEvent({
-        category,
-        action: "set-claim-conditions",
-        label: "error",
-      });
+
       if (error instanceof ZodError) {
         // biome-ignore lint/complexity/noForEach: FIXME
         error.errors.forEach((e) => {

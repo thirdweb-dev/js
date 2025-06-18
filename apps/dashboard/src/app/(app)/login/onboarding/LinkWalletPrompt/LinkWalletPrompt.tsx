@@ -4,7 +4,6 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
-import type { TrackingParams } from "hooks/analytics/useTrack";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { toast } from "sonner";
 import { shortenString } from "utils/usedapp-external";
@@ -14,7 +13,6 @@ export function LinkWalletPrompt(props: {
   accountAddress: string;
   onBack: () => void;
   requestLinkWallet: (email: string) => Promise<void>;
-  trackEvent: (params: TrackingParams) => void;
   onLinkWalletRequestSent: () => void;
 }) {
   const requestLinkWallet = useMutation({
@@ -22,35 +20,14 @@ export function LinkWalletPrompt(props: {
   });
 
   function handleLinkWalletRequest() {
-    props.trackEvent({
-      category: "account",
-      action: "linkWallet",
-      label: "attempt",
-      data: {
-        email: props.email,
-      },
-    });
-
     requestLinkWallet.mutate(props.email, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         props.onLinkWalletRequestSent();
-        props.trackEvent({
-          category: "account",
-          action: "linkWallet",
-          label: "success",
-          data,
-        });
       },
       onError: (err) => {
         const error = err as Error;
         console.error(error);
         toast.error("Failed to send link wallet request");
-        props.trackEvent({
-          category: "account",
-          action: "linkWallet",
-          label: "error",
-          error,
-        });
       },
     });
   }

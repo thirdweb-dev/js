@@ -52,7 +52,6 @@ function Story(props: {
     >
       <VerifyEmail
         title="Custom Title"
-        trackingAction="customAction"
         accountAddress="0x1234567890123456789012345678901234567890"
         verifyEmail={async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -75,9 +74,6 @@ function Story(props: {
         }}
         onBack={() => {
           storybookLog("onBack");
-        }}
-        trackEvent={(params) => {
-          storybookLog("trackEvent", params);
         }}
       />
     </AccountOnboardingLayout>

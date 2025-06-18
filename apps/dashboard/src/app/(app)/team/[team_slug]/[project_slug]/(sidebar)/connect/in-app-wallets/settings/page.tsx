@@ -41,7 +41,6 @@ export default async function Page(props: {
     <InAppWalletSettingsPage
       project={project}
       teamId={team.id}
-      trackingCategory="in-app-wallet-project-settings"
       teamSlug={team_slug}
       teamPlan={getValidTeamPlan(team)}
       client={client}

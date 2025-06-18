@@ -64,7 +64,6 @@ function Variants(props: {
           }}
           teamSlug="bar"
           isUpdating={false}
-          trackingCategory="foo"
           updateApiKey={() => {}}
           smsCountryTiers={{
             // scaffold some countries to play around with the UI

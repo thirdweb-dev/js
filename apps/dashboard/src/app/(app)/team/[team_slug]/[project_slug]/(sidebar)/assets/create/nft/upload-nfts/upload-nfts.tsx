@@ -1,9 +1,6 @@
 import { TabButtons } from "@/components/ui/tabs";
-import { useTrack } from "hooks/analytics/useTrack";
 import type { ThirdwebClient } from "thirdweb";
 import { StepCard } from "../../_common/step-card";
-import { getStepCardTrackingData } from "../../token/_common/tracking";
-import { nftCreationPages } from "../_common/pages";
 import { BatchUploadNFTs } from "./batch-upload/batch-upload-nfts";
 import type {
   NFTMetadataWithPrice,
@@ -29,37 +26,8 @@ export function UploadNFTsFieldset(props: {
   nftData: NFTData;
   setNFTData: (nftData: NFTData) => void;
 }) {
-  const trackEvent = useTrack();
-
-  function handleNextClick() {
-    trackEvent(
-      getStepCardTrackingData({
-        step: nftCreationPages["upload-assets"],
-        click: "next",
-        contractType: "NFTCollection",
-      }),
-    );
-    props.onNext();
-  }
-
-  function handlePrevClick() {
-    trackEvent(
-      getStepCardTrackingData({
-        step: nftCreationPages["upload-assets"],
-        click: "prev",
-        contractType: "NFTCollection",
-      }),
-    );
-    props.onPrev();
-  }
-
   return (
-    <StepCard
-      title="Upload NFTs"
-      tracking={{ page: "upload-nfts", contractType: "NFTCollection" }}
-      prevButton={undefined}
-      nextButton={undefined}
-    >
+    <StepCard title="Upload NFTs" prevButton={undefined} nextButton={undefined}>
       <TabButtons
         containerClassName="pt-2 px-4 md:px-6"
         tabClassName="!text-sm"
@@ -83,8 +51,8 @@ export function UploadNFTsFieldset(props: {
 
       {props.nftData.type === "multiple" && (
         <BatchUploadNFTs
-          onNext={handleNextClick}
-          onPrev={handlePrevClick}
+          onNext={props.onNext}
+          onPrev={props.onPrev}
           client={props.client}
           results={props.nftData.nfts}
           setResults={(results) =>
@@ -100,8 +68,8 @@ export function UploadNFTsFieldset(props: {
       {props.nftData.type === "single" && (
         <SingleUploadNFT
           client={props.client}
-          onNext={handleNextClick}
-          onPrev={handlePrevClick}
+          onNext={props.onNext}
+          onPrev={props.onPrev}
           chainId={props.chainId}
           nftData={props.nftData.nft}
           setNFTData={(nft) =>

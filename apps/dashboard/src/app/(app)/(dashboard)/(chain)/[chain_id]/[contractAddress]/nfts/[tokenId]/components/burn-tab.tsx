@@ -2,7 +2,6 @@
 
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import type { ThirdwebContract } from "thirdweb";
@@ -29,7 +28,7 @@ interface BurnTabProps {
 
 const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId, isLoggedIn }) => {
   const account = useActiveAccount();
-  const trackEvent = useTrack();
+
   const {
     register,
     handleSubmit,
@@ -58,11 +57,6 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId, isLoggedIn }) => {
     <div className="flex w-full flex-col gap-2">
       <form
         onSubmit={handleSubmit((data) => {
-          trackEvent({
-            category: "nft",
-            action: "burn",
-            label: "attempt",
-          });
           const transaction = isErc721
             ? burn721({ contract, tokenId: BigInt(tokenId) })
             : burn1155({
@@ -73,11 +67,6 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId, isLoggedIn }) => {
               });
           mutate(transaction, {
             onSuccess: () => {
-              trackEvent({
-                category: "nft",
-                action: "burn",
-                label: "success",
-              });
               onSuccess();
               if (contract) {
                 invalidateContractQuery({
@@ -88,12 +77,6 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId, isLoggedIn }) => {
               reset();
             },
             onError: (error) => {
-              trackEvent({
-                category: "nft",
-                action: "burn",
-                label: "error",
-                error,
-              });
               onError(error);
             },
           });

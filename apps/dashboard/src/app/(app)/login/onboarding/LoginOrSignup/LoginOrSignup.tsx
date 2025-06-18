@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { TabButtons } from "@/components/ui/tabs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import type { TrackingParams } from "hooks/analytics/useTrack";
 import { ArrowRightIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -30,7 +29,6 @@ export function LoginOrSignup(props: {
     subscribeToUpdates?: true;
     name?: string;
   }) => Promise<void>;
-  trackEvent: (params: TrackingParams) => void;
 }) {
   const [tab, setTab] = useState<"signup" | "login">("signup");
   const loginOrSignup = useMutation({
@@ -43,16 +41,10 @@ export function LoginOrSignup(props: {
     name?: string;
   }) {
     loginOrSignup.mutate(values, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         props.onRequestSent({
           email: values.email,
           isExistingEmail: false,
-        });
-        props.trackEvent({
-          category: "onboarding",
-          action: "update",
-          label: "success",
-          data,
         });
       },
       onError: (error) => {
@@ -69,13 +61,6 @@ export function LoginOrSignup(props: {
         }
 
         console.error(error);
-        props.trackEvent({
-          category: "account",
-          action: "update",
-          label: "error",
-          error: error.message,
-          fromOnboarding: true,
-        });
       },
     });
   }

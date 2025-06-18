@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type ThirdwebContract, isAddress } from "thirdweb";
@@ -38,7 +37,6 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({
   tokenId,
   isLoggedIn,
 }) => {
-  const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
 
   const form = useForm<z.input<typeof mintAdditionalSupplyFormSchema>>({
@@ -52,11 +50,6 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({
   const sendAndConfirmTx = useSendAndConfirmTransaction();
 
   function onSubmit(values: z.input<typeof mintAdditionalSupplyFormSchema>) {
-    trackEvent({
-      category: "nft",
-      action: "mint-supply",
-      label: "attempt",
-    });
     const transaction = mintAdditionalSupplyTo({
       contract,
       to: values.to,
@@ -65,20 +58,7 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({
     });
     const promise = sendAndConfirmTx.mutateAsync(transaction, {
       onSuccess: () => {
-        trackEvent({
-          category: "nft",
-          action: "mint-supply",
-          label: "success",
-        });
         form.reset();
-      },
-      onError: (error) => {
-        trackEvent({
-          category: "nft",
-          action: "mint-supply",
-          label: "error",
-          error,
-        });
       },
     });
     toast.promise(promise, {

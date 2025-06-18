@@ -5,7 +5,6 @@ import { Textarea } from "@/components/ui/textarea";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { Select as ChakraSelect } from "chakra-react-select";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
@@ -65,8 +64,6 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
     values: transformedQueryData,
   });
 
-  const trackEvent = useTrack();
-
   const { onSuccess, onError } = useTxNotifications(
     "We have received your application and will notify you if you are selected.",
     "Something went wrong, please try again.",
@@ -84,32 +81,14 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
           value: (data as any)[key],
         }));
 
-        trackEvent({
-          category: "op-sponsorship",
-          action: "apply",
-          label: "attempt",
-        });
-
         try {
           const response = await applyOpSponsorship({
             fields,
           });
 
           if (!response.ok) {
-            trackEvent({
-              category: "op-sponsorship",
-              action: "apply",
-              label: "error",
-              error: "form-submission-failed",
-            });
             throw new Error("Form submission failed");
           }
-
-          trackEvent({
-            category: "op-sponsorship",
-            action: "apply",
-            label: "success",
-          });
 
           onSuccess();
           onClose();
@@ -117,12 +96,6 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
 
           form.reset();
         } catch (error) {
-          trackEvent({
-            category: "op-sponsorship",
-            action: "apply",
-            label: "error",
-            error: (error as Error).message,
-          });
           onError(error);
         }
       })}

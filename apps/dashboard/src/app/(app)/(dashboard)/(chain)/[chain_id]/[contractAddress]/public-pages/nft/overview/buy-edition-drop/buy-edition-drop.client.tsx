@@ -1,5 +1,6 @@
 "use client";
 
+import { reportAssetBuy } from "@/analytics/report";
 import {
   Form,
   FormControl,
@@ -14,7 +15,6 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { CircleAlertIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,11 +22,7 @@ import { type ThirdwebContract, toTokens } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc1155";
-import {
-  useActiveAccount,
-  useActiveWallet,
-  useSendAndConfirmTransaction,
-} from "thirdweb/react";
+import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { parseError } from "utils/errorParser";
 import * as z from "zod";
 import { PublicPageConnectButton } from "../../../_components/PublicPageConnectButton";
@@ -49,7 +45,6 @@ type BuyEditionDropProps = {
 };
 
 export function BuyEditionDrop(props: BuyEditionDropProps) {
-  const trackEvent = useTrack();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -60,7 +55,7 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
   const nftAmountToClaim = Number(form.watch("amount"));
   const sendAndConfirmTx = useSendAndConfirmTransaction();
   const account = useActiveAccount();
-  const activeWallet = useActiveWallet();
+
   const queryClient = useQueryClient();
 
   const {
@@ -75,42 +70,40 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
     enabled: true,
   });
 
-  function trackAssetBuy(
+  function report(
     params:
       | {
-          type: "attempt" | "success";
+          status: "attempted" | "successful";
         }
       | {
-          type: "error";
+          status: "failed";
           errorMessage: string;
         },
   ) {
-    trackEvent({
-      category: "asset",
-      action: "buy",
-      label: params.type,
-      contractType: "NFTCollection",
-      ercType: "erc1155",
-      accountAddress: account?.address,
-      walletId: activeWallet?.id,
+    reportAssetBuy({
       chainId: props.contract.chain.id,
-      ...(params.type === "error"
+      assetType: "NFT",
+      contractType: "DropERC1155",
+      ...(params.status === "failed"
         ? {
-            errorMessage: params.errorMessage,
+            status: "failed",
+            error: params.errorMessage,
           }
-        : {}),
+        : {
+            status: "attempted",
+          }),
     });
   }
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
-      trackAssetBuy({
-        type: "attempt",
-      });
-
       if (!account) {
         return toast.error("No account detected");
       }
+
+      report({
+        status: "attempted",
+      });
 
       const transaction = claimTo({
         contract: props.contract,
@@ -145,11 +138,13 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
           await approveTxPromise;
         } catch (err) {
           const errorMessage = parseError(err);
-          trackAssetBuy({
-            type: "error",
-            errorMessage:
-              typeof errorMessage === "string" ? errorMessage : "Unknown error",
+
+          report({
+            status: "failed",
+            errorMessage,
           });
+
+          console.error(errorMessage);
           return;
         }
       }
@@ -170,8 +165,8 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
       try {
         await claimTxPromise;
 
-        trackAssetBuy({
-          type: "success",
+        report({
+          status: "successful",
         });
 
         props.onSuccess?.();
@@ -180,24 +175,27 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
           queryKey: [ASSET_PAGE_ERC1155_QUERIES_ROOT_KEY],
         });
       } catch (err) {
+        console.error(err);
         const errorMessage = parseError(err);
-        trackAssetBuy({
-          type: "error",
-          errorMessage:
-            typeof errorMessage === "string" ? errorMessage : "Unknown error",
+
+        report({
+          status: "failed",
+          errorMessage,
         });
+
         return;
       }
     } catch (err) {
+      console.error(err);
       const errorMessage = parseError(err);
+
       toast.error("Failed to buy NFTs", {
-        description:
-          typeof errorMessage === "string" ? errorMessage : undefined,
+        description: errorMessage,
       });
-      trackAssetBuy({
-        type: "error",
-        errorMessage:
-          typeof errorMessage === "string" ? errorMessage : "Unknown error",
+
+      report({
+        status: "failed",
+        errorMessage,
       });
     }
   });

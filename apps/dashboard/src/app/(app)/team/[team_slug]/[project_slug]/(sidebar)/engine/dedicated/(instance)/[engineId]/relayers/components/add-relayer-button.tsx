@@ -20,7 +20,6 @@ import {
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CirclePlusIcon } from "lucide-react";
@@ -95,7 +94,6 @@ const AddModal = ({
     authToken,
   });
   const { idToChain } = useAllChainsData();
-  const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Relayer created successfully.",
     "Failed to create relayer.",
@@ -120,22 +118,10 @@ const AddModal = ({
       onSuccess: () => {
         onSuccess();
         disclosure.onClose();
-        trackEvent({
-          category: "engine",
-          action: "create-relayer",
-          label: "success",
-          instance: instanceUrl,
-        });
       },
       onError: (error) => {
         onError(error);
-        trackEvent({
-          category: "engine",
-          action: "create-relayer",
-          label: "error",
-          instance: instanceUrl,
-          error,
-        });
+        console.error(error);
       },
     });
   };

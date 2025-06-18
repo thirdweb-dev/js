@@ -1,10 +1,13 @@
 "use client";
 import { revalidatePathAction } from "@/actions/revalidate";
 import {
+  reportContractDeployed,
+  reportCreateAssetStepStatus,
+} from "@/analytics/report";
+import {
   DEFAULT_FEE_BPS_NEW,
   DEFAULT_FEE_RECIPIENT,
 } from "constants/addresses";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import { useRef } from "react";
@@ -30,10 +33,6 @@ import { parseError } from "utils/errorParser";
 import { pollWithTimeout } from "utils/pollWithTimeout";
 import { useAddContractToProject } from "../../../hooks/project-contracts";
 import type { CreateAssetFormValues } from "./_common/form";
-import {
-  getTokenDeploymentTrackingData,
-  getTokenStepTrackingData,
-} from "./_common/tracking";
 import { CreateTokenAssetPageUI } from "./create-token-page.client";
 
 export function CreateTokenAssetPage(props: {
@@ -48,7 +47,6 @@ export function CreateTokenAssetPage(props: {
   const { idToChain } = useAllChainsData();
   const addContractToProject = useAddContractToProject();
   const contractAddressRef = useRef<string | undefined>(undefined);
-  const trackEvent = useTrack();
 
   async function deployContract(formValues: CreateAssetFormValues) {
     if (!account) {
@@ -56,20 +54,12 @@ export function CreateTokenAssetPage(props: {
       throw new Error("No Connected Wallet");
     }
 
-    trackEvent(
-      getTokenStepTrackingData({
-        action: "deploy",
-        chainId: Number(formValues.chain),
-        status: "attempt",
-      }),
-    );
-
-    trackEvent(
-      getTokenDeploymentTrackingData({
-        type: "attempt",
-        chainId: Number(formValues.chain),
-      }),
-    );
+    reportCreateAssetStepStatus({
+      assetType: "Coin",
+      step: "deploy-contract",
+      status: "attempted",
+      contractType: "DropERC20",
+    });
 
     const socialUrls = formValues.socialUrls.reduce(
       (acc, url) => {
@@ -106,21 +96,6 @@ export function CreateTokenAssetPage(props: {
         },
       });
 
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "deploy",
-          chainId: Number(formValues.chain),
-          status: "success",
-        }),
-      );
-
-      trackEvent(
-        getTokenDeploymentTrackingData({
-          type: "success",
-          chainId: Number(formValues.chain),
-        }),
-      );
-
       // add contract to project in background
       addContractToProject.mutateAsync({
         teamId: props.teamId,
@@ -129,6 +104,21 @@ export function CreateTokenAssetPage(props: {
         chainId: formValues.chain,
         deploymentType: "asset",
         contractType: "DropERC20",
+      });
+
+      reportCreateAssetStepStatus({
+        assetType: "Coin",
+        step: "deploy-contract",
+        status: "successful",
+        contractType: "DropERC20",
+      });
+
+      reportContractDeployed({
+        address: contractAddress,
+        chainId: Number(formValues.chain),
+        publisher: "deployer.thirdweb.eth",
+        contractName: "DropERC20",
+        deploymentType: "asset",
       });
 
       contractAddressRef.current = contractAddress;
@@ -140,22 +130,16 @@ export function CreateTokenAssetPage(props: {
       const parsedError = parseError(e);
       const errorMessage =
         typeof parsedError === "string" ? parsedError : "Unknown error";
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "deploy",
-          chainId: Number(formValues.chain),
-          status: "error",
-          errorMessage,
-        }),
-      );
 
-      trackEvent(
-        getTokenDeploymentTrackingData({
-          type: "error",
-          chainId: Number(formValues.chain),
-          errorMessage,
-        }),
-      );
+      reportCreateAssetStepStatus({
+        assetType: "Coin",
+        step: "deploy-contract",
+        status: "failed",
+        error: errorMessage,
+        contractType: "DropERC20",
+      });
+
+      console.error(errorMessage);
       throw e;
     }
   }
@@ -183,13 +167,12 @@ export function CreateTokenAssetPage(props: {
       chain,
     });
 
-    trackEvent(
-      getTokenStepTrackingData({
-        action: "airdrop",
-        chainId: Number(formValues.chain),
-        status: "attempt",
-      }),
-    );
+    reportCreateAssetStepStatus({
+      assetType: "Coin",
+      step: "airdrop-tokens",
+      status: "attempted",
+      contractType: "DropERC20",
+    });
 
     try {
       const airdropTx = transferBatch({
@@ -205,22 +188,23 @@ export function CreateTokenAssetPage(props: {
         account,
       });
 
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "airdrop",
-          chainId: Number(formValues.chain),
-          status: "success",
-        }),
-      );
+      reportCreateAssetStepStatus({
+        assetType: "Coin",
+        step: "airdrop-tokens",
+        status: "successful",
+        contractType: "DropERC20",
+      });
     } catch (e) {
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "airdrop",
-          chainId: Number(formValues.chain),
-          status: "error",
-          errorMessage: e instanceof Error ? e.message : "Unknown error",
-        }),
-      );
+      console.error(e);
+      const errorMessage = parseError(e);
+
+      reportCreateAssetStepStatus({
+        assetType: "Coin",
+        step: "airdrop-tokens",
+        status: "failed",
+        error: errorMessage,
+        contractType: "DropERC20",
+      });
       throw e;
     }
   }
@@ -234,6 +218,13 @@ export function CreateTokenAssetPage(props: {
     if (!account) {
       throw new Error("No connected account");
     }
+
+    reportCreateAssetStepStatus({
+      assetType: "Coin",
+      step: "mint-tokens",
+      status: "attempted",
+      contractType: "DropERC20",
+    });
 
     // eslint-disable-next-line no-restricted-syntax
     const chain = defineDashboardChain(
@@ -266,14 +257,6 @@ export function CreateTokenAssetPage(props: {
     const ownerAndAirdropPercent = 100 - salePercent;
     const ownerSupplyTokens = (totalSupply * ownerAndAirdropPercent) / 100;
 
-    trackEvent(
-      getTokenStepTrackingData({
-        action: "mint",
-        chainId: Number(formValues.chain),
-        status: "attempt",
-      }),
-    );
-
     try {
       const claimTx = claimTo({
         contract,
@@ -286,22 +269,24 @@ export function CreateTokenAssetPage(props: {
         account,
       });
 
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "mint",
-          chainId: Number(formValues.chain),
-          status: "success",
-        }),
-      );
+      reportCreateAssetStepStatus({
+        assetType: "Coin",
+        step: "mint-tokens",
+        status: "successful",
+        contractType: "DropERC20",
+      });
     } catch (e) {
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "mint",
-          chainId: Number(formValues.chain),
-          status: "error",
-          errorMessage: e instanceof Error ? e.message : "Unknown error",
-        }),
-      );
+      const errorMessage = parseError(e);
+      console.error(e);
+
+      reportCreateAssetStepStatus({
+        assetType: "Coin",
+        step: "mint-tokens",
+        status: "failed",
+        error: errorMessage,
+        contractType: "DropERC20",
+      });
+
       throw e;
     }
   }
@@ -366,18 +351,17 @@ export function CreateTokenAssetPage(props: {
       },
     ];
 
+    reportCreateAssetStepStatus({
+      assetType: "Coin",
+      step: "set-claim-conditions",
+      status: "attempted",
+      contractType: "DropERC20",
+    });
+
     const preparedTx = setClaimConditionsExtension({
       contract,
       phases,
     });
-
-    trackEvent(
-      getTokenStepTrackingData({
-        action: "claim-conditions",
-        chainId: Number(formValues.chain),
-        status: "attempt",
-      }),
-    );
 
     try {
       await sendAndConfirmTransaction({
@@ -385,22 +369,23 @@ export function CreateTokenAssetPage(props: {
         account,
       });
 
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "claim-conditions",
-          chainId: Number(formValues.chain),
-          status: "success",
-        }),
-      );
+      reportCreateAssetStepStatus({
+        assetType: "Coin",
+        step: "set-claim-conditions",
+        status: "successful",
+        contractType: "DropERC20",
+      });
     } catch (e) {
-      trackEvent(
-        getTokenStepTrackingData({
-          action: "claim-conditions",
-          chainId: Number(formValues.chain),
-          status: "error",
-          errorMessage: e instanceof Error ? e.message : "Unknown error",
-        }),
-      );
+      const errorMessage = parseError(e);
+      console.error(e);
+
+      reportCreateAssetStepStatus({
+        assetType: "Coin",
+        step: "set-claim-conditions",
+        status: "failed",
+        error: errorMessage,
+        contractType: "DropERC20",
+      });
       throw e;
     }
   }

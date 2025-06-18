@@ -27,7 +27,6 @@ import {
   useEngineImportBackendWallet,
   useHasEngineFeature,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import {
   EngineBackendWalletOptions,
@@ -64,7 +63,7 @@ export const ImportBackendWalletButton: React.FC<
     "Wallet imported successfully.",
     "Failed to import wallet.",
   );
-  const trackEvent = useTrack();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [walletType, setWalletType] = useState<EngineBackendWalletType>(
     walletConfig.type,
@@ -90,24 +89,10 @@ export const ImportBackendWalletButton: React.FC<
         onSuccess();
         setIsModalOpen(false);
         form.reset();
-        trackEvent({
-          category: "engine",
-          action: "import-backend-wallet",
-          label: "success",
-          type: walletConfig?.type,
-          instance: instance.url,
-        });
       },
       onError: (error) => {
         onError(error);
-        trackEvent({
-          category: "engine",
-          action: "import-backend-wallet",
-          label: "error",
-          type: walletConfig?.type,
-          instance: instance.url,
-          error,
-        });
+        console.error(error);
       },
     });
   };

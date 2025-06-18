@@ -25,7 +25,6 @@ import {
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { CirclePlusIcon } from "lucide-react";
@@ -102,7 +101,7 @@ const AddModal = ({
     instanceUrl,
     authToken,
   });
-  const trackEvent = useTrack();
+
   const { onSuccess, onError } = useTxNotifications(
     "Created Contract Subscription.",
     "Failed to create Contract Subscription.",
@@ -137,22 +136,10 @@ const AddModal = ({
       onSuccess: () => {
         onSuccess();
         disclosure.onClose();
-        trackEvent({
-          category: "engine",
-          action: "add-contract-subscription",
-          label: "success",
-          instance: instanceUrl,
-        });
       },
       onError: (error) => {
         onError(error);
-        trackEvent({
-          category: "engine",
-          action: "add-contract-subscription",
-          label: "error",
-          instance: instanceUrl,
-          error,
-        });
+        console.error(error);
       },
     });
   };

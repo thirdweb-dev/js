@@ -33,10 +33,6 @@ export function TokenDistributionFieldset(props: {
       <form onSubmit={form.handleSubmit(props.onNext)}>
         <StepCard
           title="Coin Distribution"
-          tracking={{
-            page: "distribution",
-            contractType: "DropERC20",
-          }}
           prevButton={{
             onClick: props.onPrevious,
           }}

@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-// import { useTrack } from "hooks/analytics/useTrack";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -19,7 +18,6 @@ export type NavButtonProps = {
 };
 
 export function NavLink(props: React.PropsWithChildren<NavButtonProps>) {
-  // const track = useTrack();
   const pathname = usePathname();
   const isActive = pathname
     ? props.exactMatch
@@ -34,14 +32,6 @@ export function NavLink(props: React.PropsWithChildren<NavButtonProps>) {
       prefetch={false}
       onClick={() => {
         props.onClick?.();
-        // if (props.tracking) {
-        //   track({
-        //     category: props.tracking.category,
-        //     action: props.tracking.action,
-        //     label: props.tracking.label,
-        //     url: props.href,
-        //   });
-        // }
       }}
     >
       {props.children}

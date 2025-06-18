@@ -20,7 +20,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import type { ProjectBundlerService } from "@thirdweb-dev/service-utils";
 import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { TrashIcon } from "lucide-react";
 import { useMemo } from "react";
@@ -34,7 +33,6 @@ import { z } from "zod";
 type AccountAbstractionSettingsPageProps = {
   bundlerService: ProjectBundlerService;
   project: Project;
-  trackingCategory: string;
   teamId: string;
   teamSlug: string;
   validTeamPlan: Team["billingPlan"];
@@ -93,8 +91,6 @@ const aaSettingsFormSchema = z.object({
 export function AccountAbstractionSettingsPage(
   props: AccountAbstractionSettingsPageProps,
 ) {
-  const { trackingCategory } = props;
-  const trackEvent = useTrack();
   const updateProject = useMutation({
     mutationFn: async (projectValues: Partial<Project>) => {
       await updateProjectClient(
@@ -247,11 +243,6 @@ export function AccountAbstractionSettingsPage(
                   : null,
               limits,
             };
-          trackEvent({
-            category: trackingCategory,
-            action: "update-sponsorship-rules",
-            label: "attempt",
-          });
 
           const newServices = props.project.services.map((service) => {
             if (service.name === "bundler") {
@@ -272,23 +263,8 @@ export function AccountAbstractionSettingsPage(
               services: newServices,
             },
             {
-              onSuccess: () => {
-                trackEvent({
-                  category: trackingCategory,
-                  action: "update-sponsorship-rules",
-                  label: "success",
-                });
-                onSuccess();
-              },
-              onError: (error) => {
-                onError(error);
-                trackEvent({
-                  category: trackingCategory,
-                  action: "update-sponsorship-rules",
-                  label: "error",
-                  error,
-                });
-              },
+              onSuccess,
+              onError,
             },
           );
         })}

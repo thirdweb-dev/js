@@ -18,7 +18,6 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CirclePlusIcon } from "lucide-react";
 import { useState } from "react";
@@ -71,7 +70,6 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
     instanceUrl,
     authToken,
   });
-  const trackEvent = useTrack();
 
   const { onSuccess, onError } = useTxNotifications(
     "Public key added successfully.",
@@ -87,23 +85,12 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
       });
 
       onSuccess();
-      trackEvent({
-        category: "engine",
-        action: "add-keypair",
-        label: "success",
-        instance: instanceUrl,
-      });
+
       setPublicKey("");
       onClose();
     } catch (error) {
       onError(error);
-      trackEvent({
-        category: "engine",
-        action: "add-keypair",
-        label: "error",
-        instance: instanceUrl,
-        error,
-      });
+      console.error(error);
     }
   };
 

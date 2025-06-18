@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/sheet";
 import { FormControl, Textarea } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -37,7 +36,7 @@ export const ProposalButton: React.FC<VoteButtonProps> = ({
     handleSubmit,
     formState: { errors },
   } = useForm<{ description: string }>();
-  const trackEvent = useTrack();
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -66,21 +65,10 @@ export const ProposalButton: React.FC<VoteButtonProps> = ({
             toast.promise(
               sendTx.mutateAsync(tx, {
                 onSuccess: () => {
-                  trackEvent({
-                    category: "vote",
-                    action: "create-proposal",
-                    label: "success",
-                  });
                   setOpen(false);
                 },
                 onError: (error) => {
                   console.error(error);
-                  trackEvent({
-                    category: "vote",
-                    action: "create-proposal",
-                    label: "error",
-                    error,
-                  });
                 },
               }),
               {

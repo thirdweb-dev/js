@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { RenewSubscriptionButton } from "components/settings/Account/Billing/renew-subscription/renew-subscription-button";
-import { useTrack } from "hooks/analytics/useTrack";
 import { CheckIcon, DollarSignIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
@@ -58,7 +57,6 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 }) => {
   const plan = TEAM_PLANS[billingPlan];
 
-  const trackEvent = useTrack();
   const remainingTrialDays =
     (activeTrialEndsAt ? remainingDays(activeTrialEndsAt) : 0) || 0;
 
@@ -67,15 +65,6 @@ export const PricingCard: React.FC<PricingCardProps> = ({
     remainingTrialDays === 0 &&
     billingStatus === "noPayment" &&
     billingPlan === "growth";
-
-  const handleCTAClick = () => {
-    cta?.onClick?.();
-    trackEvent({
-      category: "account",
-      label: `${billingPlan}Plan`,
-      action: "click",
-    });
-  };
 
   return (
     <div
@@ -163,7 +152,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
               buttonProps={{
                 variant: highlighted ? "default" : "outline",
                 className: highlighted ? undefined : "bg-background",
-                onClick: handleCTAClick,
+                onClick: cta.onClick,
               }}
               teamSlug={teamSlug}
               sku={billingPlanToSkuMap[billingPlan]}
@@ -181,7 +170,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
               <Link
                 href={cta.href}
                 target="_blank"
-                onClick={handleCTAClick}
+                onClick={cta.onClick}
                 rel="noopener noreferrer"
               >
                 {has7DayTrial ? "Start 7 Day Free Trial" : cta.label}

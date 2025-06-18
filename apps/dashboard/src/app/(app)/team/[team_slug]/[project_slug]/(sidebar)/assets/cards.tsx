@@ -1,8 +1,8 @@
 "use client";
 
+import { reportAssetsPageCardClick } from "@/analytics/report";
 import { cn } from "@/lib/utils";
 import { ImportModal } from "components/contract-components/import-contract/modal";
-import { useTrack } from "hooks/analytics/useTrack";
 import { ArrowDownToLineIcon, CoinsIcon, ImagesIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -32,26 +32,26 @@ export function Cards(props: {
 
       <CardLink
         title="Create Coin"
+        trackingLabel="create-coin"
         description="Launch your own ERC-20 coin"
         href={`/team/${props.teamSlug}/${props.projectSlug}/assets/create/token`}
         icon={CoinsIcon}
-        trackingLabel="create-token"
       />
 
       <CardLink
         title="Create NFT Collection"
+        trackingLabel="create-nft-collection"
         description="Launch your own NFT collection"
         href={`/team/${props.teamSlug}/${props.projectSlug}/assets/create/nft`}
         icon={ImagesIcon}
-        trackingLabel="create-nft"
       />
 
       <CardLink
         title="Import Existing Asset"
+        trackingLabel="import-asset"
         description="Import tokens or NFTs you own to the project"
         href={undefined}
         icon={ArrowDownToLineIcon}
-        trackingLabel="import-asset"
         onClick={() => {
           setImportModalOpen(true);
         }}
@@ -66,21 +66,17 @@ function CardLink(props: {
   href: string | undefined;
   onClick?: () => void;
   icon: React.FC<{ className?: string }>;
-  trackingLabel: string;
+  trackingLabel: "create-nft-collection" | "import-asset" | "create-coin";
 }) {
   const { onClick } = props;
   const isClickable = !!onClick || !!props.href;
-  const trackEvent = useTrack();
 
   function handleClick() {
-    trackEvent({
-      category: "assets-landing-page",
-      action: "click",
+    reportAssetsPageCardClick({
       label: props.trackingLabel,
     });
-    if (onClick) {
-      onClick();
-    }
+
+    onClick?.();
   }
 
   return (

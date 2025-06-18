@@ -6,7 +6,6 @@ import {
   type Account,
   useUpdateNotifications,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
 
@@ -20,7 +19,6 @@ export const Notifications: React.FC<NotificationsProps> = ({ account }) => {
     updates: account.notificationPreferences?.updates || "none",
   });
 
-  const trackEvent = useTrack();
   const updateMutation = useUpdateNotifications();
 
   const { onSuccess, onError } = useTxNotifications(
@@ -36,26 +34,8 @@ export const Notifications: React.FC<NotificationsProps> = ({ account }) => {
     setPreferences(newPreferences);
 
     updateMutation.mutate(newPreferences, {
-      onSuccess: (data) => {
-        onSuccess();
-
-        trackEvent({
-          category: "notifications",
-          action: "update",
-          label: "success",
-          data,
-        });
-      },
-      onError: (error) => {
-        onError(error);
-
-        trackEvent({
-          category: "notifications",
-          action: "update",
-          label: "error",
-          error,
-        });
-      },
+      onSuccess,
+      onError,
     });
   };
 

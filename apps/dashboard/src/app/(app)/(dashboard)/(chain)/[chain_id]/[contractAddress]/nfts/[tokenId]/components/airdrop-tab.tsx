@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { UploadIcon } from "lucide-react";
 import { useState } from "react";
@@ -45,7 +44,6 @@ const AirdropTab: React.FC<AirdropTabProps> = ({
   }>({
     defaultValues: { addresses: [] },
   });
-  const trackEvent = useTrack();
   const sendAndConfirmTx = useSendAndConfirmTransaction();
   const addresses = watch("addresses");
   const [open, setOpen] = useState(false);
@@ -59,13 +57,6 @@ const AirdropTab: React.FC<AirdropTabProps> = ({
       <form
         onSubmit={handleSubmit(async (_data) => {
           try {
-            trackEvent({
-              category: "nft",
-              action: "airdrop",
-              label: "attempt",
-              contract_address: contract.address,
-              token_id: tokenId,
-            });
             const totalOwned = await balanceOf({
               contract,
               tokenId: BigInt(tokenId),
@@ -92,24 +83,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({
             const transaction = multicall({ contract, data });
             await sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
-                trackEvent({
-                  category: "nft",
-                  action: "airdrop",
-                  label: "success",
-                  contract_address: contract.address,
-                  token_id: tokenId,
-                });
                 reset();
-              },
-              onError: (error) => {
-                trackEvent({
-                  category: "nft",
-                  action: "airdrop",
-                  label: "success",
-                  contract_address: contract.address,
-                  token_id: tokenId,
-                  error,
-                });
               },
             });
 

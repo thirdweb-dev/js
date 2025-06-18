@@ -7,7 +7,6 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { AddressOrEnsSchema, BasisPointsSchema } from "constants/schemas";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import type { ThirdwebContract } from "thirdweb";
@@ -51,7 +50,6 @@ export const SettingsPlatformFees = ({
   detectedState: ExtensionDetectedState;
   isLoggedIn: boolean;
 }) => {
-  const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const sendAndConfirmTx = useSendAndConfirmTransaction();
   const platformFeesQuery = useReadContract(getPlatformFeeInfo, { contract });
@@ -80,11 +78,6 @@ export const SettingsPlatformFees = ({
       <Flex
         as="form"
         onSubmit={form.handleSubmit((data) => {
-          trackEvent({
-            category: "settings",
-            action: "set-platform-fees",
-            label: "attempt",
-          });
           const transaction = setPlatformFeeInfo({
             contract,
             platformFeeRecipient: data.platform_fee_recipient,
@@ -92,21 +85,11 @@ export const SettingsPlatformFees = ({
           });
           sendAndConfirmTx.mutate(transaction, {
             onSuccess: () => {
-              trackEvent({
-                category: "settings",
-                action: "set-platform-fees",
-                label: "success",
-              });
               form.reset(data);
               onSuccess();
             },
             onError: (error) => {
-              trackEvent({
-                category: "settings",
-                action: "set-platform-fees",
-                label: "error",
-                error,
-              });
+              console.error(error);
               onError(error);
             },
           });

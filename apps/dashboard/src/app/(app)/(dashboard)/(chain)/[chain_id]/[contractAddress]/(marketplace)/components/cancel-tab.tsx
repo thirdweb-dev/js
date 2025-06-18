@@ -1,7 +1,5 @@
 "use client";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useAllChainsData } from "hooks/chains/allChains";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { cancelAuction, cancelListing } from "thirdweb/extensions/marketplace";
@@ -20,9 +18,6 @@ export const CancelTab: React.FC<CancelTabProps> = ({
   isAuction,
   isLoggedIn,
 }) => {
-  const trackEvent = useTrack();
-  const { idToChain } = useAllChainsData();
-  const network = idToChain.get(contract.chain.id);
   const transaction = isAuction
     ? cancelAuction({ contract, auctionId: BigInt(id) })
     : cancelListing({ contract, listingId: BigInt(id) });
@@ -36,28 +31,8 @@ export const CancelTab: React.FC<CancelTabProps> = ({
         transactionCount={1}
         isPending={cancelQuery.isPending}
         onClick={() => {
-          trackEvent({
-            category: "marketplace",
-            action: "cancel-listing",
-            label: "attempt",
-          });
           const promise = cancelQuery.mutateAsync(transaction, {
-            onSuccess: () => {
-              trackEvent({
-                category: "marketplace",
-                action: "cancel-listing",
-                label: "success",
-                network,
-              });
-            },
             onError: (error) => {
-              trackEvent({
-                category: "marketplace",
-                action: "cancel-listing",
-                label: "error",
-                network,
-                error,
-              });
               console.error(error);
             },
           });
