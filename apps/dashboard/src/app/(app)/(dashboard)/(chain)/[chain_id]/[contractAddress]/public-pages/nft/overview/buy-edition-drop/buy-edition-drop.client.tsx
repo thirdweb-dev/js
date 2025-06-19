@@ -184,7 +184,7 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
 
   return (
     <Form {...form}>
-      <form className="space-y-5" onSubmit={handleSubmit}>
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <FormField
           control={form.control}
           name="amount"
@@ -215,7 +215,7 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
                       }
                     }
                   }}
-                  className="!text-2xl h-auto bg-muted/50 font-bold"
+                  className="bg-muted/50"
                 />
               </FormControl>
               <FormMessage />
