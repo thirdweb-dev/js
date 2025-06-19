@@ -111,6 +111,21 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
         console.error(
           "Encountered an unsupported media type. 3D model support was removed in v5.92.0. To add a 3D model to your app, use @google/model-viewer and use the ModelViewer component.",
         );
+
+        // show poster
+        if (possiblePosterSrc.mimeType?.startsWith("image/")) {
+          return (
+            <ImageRenderer
+              style={mergedStyle}
+              src={possiblePosterSrc.url}
+              alt={alt}
+              ref={ref as unknown as React.ForwardedRef<HTMLImageElement>}
+              className={className}
+              height={height}
+              width={width}
+            />
+          );
+        }
       }
 
       //  video

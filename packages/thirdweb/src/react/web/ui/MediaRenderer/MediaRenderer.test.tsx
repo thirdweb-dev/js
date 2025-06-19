@@ -14,6 +14,11 @@ import {
   mergeRefs,
 } from "./MediaRenderer.js";
 
+const three3dModelLink =
+  "https://i2.seadn.io/matic/0x2953399124f0cbb46d2cbacd8a89cf0599974963/bd1801876c5cf1302484e225c72959/49bd1801876c5cf1302484e225c72959.glb";
+const imageLink =
+  "https://i.seadn.io/gae/r_b9GB0iYA39ichUlKdFLeG4UliK7YXi9SsM0Xdvm6pNDChYbN5E7Fxop1MdJCbmNvSlbER73YiA9WY1JbhEfkuIktoHfN9UlEZy4A?auto=format&dpr=1&w=1000";
+
 describe("MediaRenderer", () => {
   it("should render nothing if no src provided", () => {
     render(<MediaRenderer client={TEST_CLIENT} />);
@@ -27,14 +32,9 @@ describe("MediaRenderer", () => {
     }, 1000);
   });
 
-  it("should render a plain image", () => {
-    render(
-      <MediaRenderer
-        client={TEST_CLIENT}
-        src="https://i.seadn.io/gae/r_b9GB0iYA39ichUlKdFLeG4UliK7YXi9SsM0Xdvm6pNDChYbN5E7Fxop1MdJCbmNvSlbER73YiA9WY1JbhEfkuIktoHfN9UlEZy4A?auto=format&dpr=1&w=1000"
-      />,
-    );
-    waitFor(() => {
+  it("should render a plain image", async () => {
+    render(<MediaRenderer client={TEST_CLIENT} src={imageLink} />);
+    await waitFor(() => {
       expect(screen.getByRole("img")).toBeInTheDocument();
     });
   });
@@ -220,6 +220,19 @@ describe("MediaRenderer", () => {
       fireEvent.click(playButton);
 
       expect(iframe).toHaveAttribute("src", "https://example.com/video");
+    });
+  });
+
+  it("should render poster image for 3d models", async () => {
+    render(
+      <MediaRenderer
+        client={TEST_CLIENT}
+        src={three3dModelLink}
+        poster={imageLink}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.getByRole("img")).toBeInTheDocument();
     });
   });
 });
