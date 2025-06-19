@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import posthog from "posthog-js";
 
 const NEXT_PUBLIC_POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;

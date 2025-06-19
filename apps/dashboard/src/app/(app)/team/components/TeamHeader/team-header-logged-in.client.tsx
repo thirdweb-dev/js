@@ -1,6 +1,9 @@
 "use client";
 
 import { createTeam } from "@/actions/createTeam";
+import { useIdentifyAccount } from "@/analytics/hooks/identify-account";
+import { useIdentifyTeam } from "@/analytics/hooks/identify-team";
+import { resetAnalytics } from "@/analytics/reset";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
@@ -12,7 +15,6 @@ import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { doLogout } from "../../../login/auth-actions";
-
 import {
   type TeamHeaderCompProps,
   TeamHeaderDesktopUI,
@@ -27,6 +29,16 @@ export function TeamHeaderLoggedIn(props: {
   accountAddress: string;
   client: ThirdwebClient;
 }) {
+  // identify the account
+  useIdentifyAccount({
+    accountId: props.account.id,
+    email: props.account.email,
+  });
+
+  // identify the team
+  useIdentifyTeam({
+    teamId: props.currentTeam.id,
+  });
   const [createProjectDialogState, setCreateProjectDialogState] = useState<
     { team: Team; isOpen: true } | { isOpen: false }
   >({ isOpen: false });
@@ -38,6 +50,7 @@ export function TeamHeaderLoggedIn(props: {
     // log out the user
     try {
       await doLogout();
+      resetAnalytics();
       if (activeWallet) {
         disconnect(activeWallet);
       }

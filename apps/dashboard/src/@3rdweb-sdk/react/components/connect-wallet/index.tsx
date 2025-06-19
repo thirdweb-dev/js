@@ -1,5 +1,6 @@
 "use client";
 
+import { resetAnalytics } from "@/analytics/reset";
 import { Button } from "@/components/ui/button";
 import { useStore } from "@/lib/reactive";
 import { getSDKTheme } from "app/(app)/components/sdk-component-theme";
@@ -156,6 +157,7 @@ export const CustomConnectWallet = (props: {
         onDisconnect={async () => {
           try {
             await doLogout();
+            resetAnalytics();
           } catch (err) {
             console.error("Failed to log out", err);
           }
