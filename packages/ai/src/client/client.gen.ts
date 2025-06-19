@@ -23,6 +23,6 @@ export type CreateClientConfig<T extends DefaultClientOptions = ClientOptions> =
 
 export const client = createClient(
   createConfig<ClientOptions>({
-    baseUrl: "http://localhost:4242",
+    baseUrl: "https://nebula-api.thirdweb-dev.com",
   }),
 );

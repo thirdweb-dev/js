@@ -2289,5 +2289,5 @@ export type GetRegistryAgentsResponse =
   GetRegistryAgentsResponses[keyof GetRegistryAgentsResponses];
 
 export type ClientOptions = {
-  baseUrl: "http://localhost:4242" | (string & {});
+  baseUrl: "https://nebula-api.thirdweb-dev.com" | (string & {});
 };
