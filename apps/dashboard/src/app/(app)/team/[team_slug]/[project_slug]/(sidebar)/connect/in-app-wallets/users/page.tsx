@@ -4,7 +4,6 @@ import { InAppWalletUsersPageContent } from "components/embedded-wallets/Users";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../login/loginRedirect";
-import { TRACKING_CATEGORY } from "../_constants";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -33,7 +32,6 @@ export default async function Page(props: {
   return (
     <InAppWalletUsersPageContent
       projectClientId={project.publishableKey}
-      trackingCategory={TRACKING_CATEGORY}
       authToken={authToken}
       client={client}
     />

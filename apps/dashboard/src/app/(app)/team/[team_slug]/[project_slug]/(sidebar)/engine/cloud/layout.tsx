@@ -35,12 +35,12 @@ function TransactionsLayout(props: {
           <div className="flex flex-row items-center justify-between">
             <div className="flex flex-col">
               <h1 className="mb-0.5 flex items-center gap-2 font-semibold text-3xl tracking-tight">
-                Engine{" "}
+                Transactions{" "}
                 <Badge
                   variant="success"
                   className="mt-0.5 flex items-center gap-2 text-sm"
                 >
-                  <EngineIcon className="size-4" /> Cloud
+                  <EngineIcon className="size-4" /> Engine Cloud
                 </Badge>
                 <Badge
                   variant="outline"
@@ -84,10 +84,6 @@ function TransactionsLayout(props: {
             {
               name: "Server Wallets",
               path: `${engineLayoutSlug}/server-wallets`,
-            },
-            {
-              name: "Vault",
-              path: `${engineLayoutSlug}/vault`,
             },
           ]}
         />

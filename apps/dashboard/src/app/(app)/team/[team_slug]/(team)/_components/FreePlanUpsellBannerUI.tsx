@@ -24,8 +24,6 @@ export function FreePlanUpsellBannerUI(props: {
           props.highlightPlan || "growth"
         }`,
       }}
-      trackingCategory="billingBanner"
-      trackingLabel="freePlan_viewPlans"
       icon={<RocketIcon className="size-5" />}
       accentColor="green"
     />

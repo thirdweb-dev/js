@@ -53,9 +53,9 @@ export default async function Page(props: {
         />
 
         <div className="mt-10 mb-3">
-          <h2 className="font-semibold text-2xl tracking-tight">Your assets</h2>
+          <h2 className="font-semibold text-2xl tracking-tight">Your Tokens</h2>
           <p className="text-muted-foreground">
-            List of all assets created or imported into this project
+            List of all tokens created or imported into this project
           </p>
         </div>
 
@@ -79,7 +79,7 @@ function AssetsHeader() {
     <div className="border-b">
       <div className="container max-w-7xl py-10">
         <h1 className="font-semibold text-2xl tracking-tight lg:text-3xl">
-          Assets
+          Tokens
         </h1>
         <p className="text-muted-foreground">
           Create and Manage tokens for your project

@@ -2,18 +2,18 @@
 import { FullWidthSidebarLayout } from "@/components/blocks/SidebarLayout";
 import { Badge } from "@/components/ui/badge";
 import {
+  ArrowLeftRightIcon,
   BellIcon,
   BookTextIcon,
   BoxIcon,
   CoinsIcon,
   HomeIcon,
+  LockIcon,
   SettingsIcon,
   WalletIcon,
 } from "lucide-react";
 import { ContractIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/ContractIcon";
-import { EngineIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 import { InsightIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/InsightIcon";
-import { NebulaIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/NebulaIcon";
 import { PayIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/PayIcon";
 import { SmartAccountIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/SmartAccountIcon";
 
@@ -33,7 +33,7 @@ export function ProjectSidebarLayout(props: {
           icon: HomeIcon,
         },
         {
-          label: "In-App Wallets",
+          label: "Wallets",
           href: `${layoutPath}/connect/in-app-wallets`,
           icon: WalletIcon,
         },
@@ -53,18 +53,18 @@ export function ProjectSidebarLayout(props: {
           icon: ContractIcon,
         },
         {
-          href: `${layoutPath}/assets`,
+          href: `${layoutPath}/tokens`,
           label: (
             <span className="flex items-center gap-2">
-              Assets <Badge>New</Badge>
+              Tokens <Badge>New</Badge>
             </span>
           ),
           icon: CoinsIcon,
         },
         {
           href: `${layoutPath}/engine`,
-          label: "Engine",
-          icon: EngineIcon,
+          label: "Transactions",
+          icon: ArrowLeftRightIcon,
         },
         {
           href: `${layoutPath}/insight`,
@@ -72,10 +72,12 @@ export function ProjectSidebarLayout(props: {
           icon: InsightIcon,
         },
         {
-          href: `${layoutPath}/nebula`,
-          label: "Nebula",
-          icon: NebulaIcon,
+          href: `${layoutPath}/vault`,
+          label: "Vault",
+          icon: LockIcon,
         },
+      ]}
+      footerSidebarLinks={[
         {
           href: `${layoutPath}/webhooks`,
           label: (
@@ -85,8 +87,6 @@ export function ProjectSidebarLayout(props: {
           ),
           icon: BellIcon,
         },
-      ]}
-      footerSidebarLinks={[
         {
           href: `${layoutPath}/settings`,
           label: "Project Settings",

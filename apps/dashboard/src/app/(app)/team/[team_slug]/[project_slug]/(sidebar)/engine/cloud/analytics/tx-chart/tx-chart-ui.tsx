@@ -185,7 +185,7 @@ function EmptyChartContent(props: {
               variant="primary"
               onClick={() => {
                 router.push(
-                  `/team/${props.teamSlug}/${props.project.slug}/engine/cloud/vault`,
+                  `/team/${props.teamSlug}/${props.project.slug}/vault`,
                 );
               }}
             >

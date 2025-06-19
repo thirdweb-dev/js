@@ -1,5 +1,4 @@
 "use client";
-
 import type { Project } from "@/api/projects";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -9,71 +8,71 @@ import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
-import { rotateServiceAccount } from "@thirdweb-dev/vault-sdk";
+import { createServiceAccount } from "@thirdweb-dev/vault-sdk";
 import {
   CheckIcon,
-  CircleAlertIcon,
   DownloadIcon,
   Loader2Icon,
-  RefreshCcwIcon,
+  UserLockIcon,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { storeUserAccessToken } from "../../engine/cloud/analytics/utils";
 import {
   createManagementAccessToken,
   createWalletAccessToken,
   initVaultClient,
   maskSecret,
-} from "../../lib/vault.client";
+} from "../../engine/cloud/lib/vault.client";
 
-export default function RotateAdminKeyButton(props: { project: Project }) {
+export function CreateVaultAccountButton(props: {
+  project: Project;
+  onUserAccessTokenCreated?: (userAccessToken: string) => void;
+}) {
   const [modalOpen, setModalOpen] = useState(false);
   const [keysConfirmed, setKeysConfirmed] = useState(false);
   const [keysDownloaded, setKeysDownloaded] = useState(false);
   const router = useDashboardRouter();
 
-  const rotateAdminKeyMutation = useMutation({
+  const initialiseProjectWithVaultMutation = useMutation({
     mutationFn: async () => {
+      setModalOpen(true);
+
       const vaultClient = await initVaultClient();
-      const rotationCode = props.project.services.find(
-        (service) => service.name === "engineCloud",
-      )?.rotationCode;
 
-      if (!rotationCode) {
-        throw new Error("Rotation code not found");
-      }
-
-      const rotateServiceAccountRes = await rotateServiceAccount({
+      const serviceAccount = await createServiceAccount({
         client: vaultClient,
         request: {
-          auth: {
-            rotationCode,
+          options: {
+            metadata: {
+              projectId: props.project.id,
+              teamId: props.project.teamId,
+              purpose: "Thirdweb Project Server Wallet Service Account",
+            },
           },
         },
       });
 
-      if (rotateServiceAccountRes.error) {
-        throw new Error(rotateServiceAccountRes.error.message);
+      if (!serviceAccount.success) {
+        throw new Error("Failed to create service account");
       }
 
-      // need to recreate the management access token with the new admin key
       const managementAccessTokenPromise = createManagementAccessToken({
         project: props.project,
-        adminKey: rotateServiceAccountRes.data.newAdminKey,
-        rotationCode: rotateServiceAccountRes.data.newRotationCode,
+        adminKey: serviceAccount.data.adminKey,
+        rotationCode: serviceAccount.data.rotationCode,
         vaultClient,
       });
 
       const userAccesTokenPromise = createWalletAccessToken({
         project: props.project,
-        adminKey: rotateServiceAccountRes.data.newAdminKey,
+        adminKey: serviceAccount.data.adminKey,
         vaultClient,
       });
 
@@ -86,27 +85,38 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
         throw new Error("Failed to create access token");
       }
 
+      // save in local storage in case the user refreshes the page during FTUX
+      storeUserAccessToken(
+        props.project.id,
+        userAccessTokenRes.data.accessToken,
+      );
+      props.onUserAccessTokenCreated?.(userAccessTokenRes.data.accessToken);
+
       return {
-        success: true,
-        adminKey: rotateServiceAccountRes.data.newAdminKey,
+        serviceAccount: serviceAccount.data,
         userAccessToken: userAccessTokenRes.data,
       };
     },
     onError: (error) => {
       toast.error(error.message);
+      setModalOpen(false);
     },
   });
 
+  const handleCreateServerWallet = async () => {
+    await initialiseProjectWithVaultMutation.mutateAsync();
+  };
+
   const handleDownloadKeys = () => {
-    if (!rotateAdminKeyMutation.data) {
+    if (!initialiseProjectWithVaultMutation.data) {
       return;
     }
 
-    const fileContent = `Project:\n${props.project.name} (${props.project.publishableKey})\n\nVault Admin Key:\n${rotateAdminKeyMutation.data.adminKey}\n\nVault Access Token:\n${rotateAdminKeyMutation.data.userAccessToken.accessToken}\n`;
+    const fileContent = `Project:\n${props.project.name} (${props.project.publishableKey})\n\nVault Admin Key:\n${initialiseProjectWithVaultMutation.data.serviceAccount.adminKey}\n\nVault Access Token:\n${initialiseProjectWithVaultMutation.data.userAccessToken.accessToken}\n`;
     const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    const filename = `${props.project.name}-vault-keys-rotated.txt`;
+    const filename = `${props.project.name}-vault-keys.txt`;
     link.href = url;
     link.download = filename;
     document.body.appendChild(link); // Required for Firefox
@@ -128,24 +138,27 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
     setModalOpen(false);
     setKeysConfirmed(false);
     setKeysDownloaded(false);
+    initialiseProjectWithVaultMutation.reset();
     // invalidate the page to force a reload
-    rotateAdminKeyMutation.reset();
     router.refresh();
   };
 
-  const isLoading = rotateAdminKeyMutation.isPending;
+  const isLoading = initialiseProjectWithVaultMutation.isPending;
 
   return (
     <>
       <Button
-        variant="outline"
-        onClick={() => setModalOpen(true)}
+        variant={"primary"}
+        onClick={handleCreateServerWallet}
         disabled={isLoading}
-        className="h-auto gap-2 rounded-lg bg-background px-4 py-3"
+        className="flex flex-row items-center gap-2"
       >
-        {isLoading && <Loader2Icon className="size-4 animate-spin" />}
-        {!isLoading && <RefreshCcwIcon className="size-4" />}
-        Rotate Admin Key
+        {isLoading ? (
+          <Loader2Icon className="size-4 animate-spin" />
+        ) : (
+          <UserLockIcon className="size-4" />
+        )}
+        {"Create Vault Admin Account"}
       </Button>
 
       <Dialog open={modalOpen} onOpenChange={handleCloseModal} modal={true}>
@@ -153,10 +166,10 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
           className="overflow-hidden p-0"
           dialogCloseClassName={cn(!keysConfirmed && "hidden")}
         >
-          {rotateAdminKeyMutation.isPending ? (
+          {initialiseProjectWithVaultMutation.isPending ? (
             <>
               <DialogHeader className="p-6">
-                <DialogTitle>Generating new keys...</DialogTitle>
+                <DialogTitle>Generating your Vault management keys</DialogTitle>
               </DialogHeader>
               <div className="flex flex-col items-center justify-center gap-4 p-10">
                 <Spinner className="size-8" />
@@ -165,48 +178,54 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
                 </p>
               </div>
             </>
-          ) : rotateAdminKeyMutation.data ? (
+          ) : initialiseProjectWithVaultMutation.data ? (
             <div>
               <DialogHeader className="p-6">
-                <DialogTitle>New Vault Keys</DialogTitle>
+                <DialogTitle>Save your Vault Admin Key</DialogTitle>
+                <p className="text-muted-foreground text-sm">
+                  You'll need this key to create server wallets and access
+                  tokens.
+                </p>
               </DialogHeader>
 
               <div className="space-y-6 p-6 pt-0">
                 <div className="space-y-4">
                   <div>
-                    <h3 className="mb-2 font-medium text-sm">
-                      New Vault Admin Key
-                    </h3>
                     <div className="flex flex-col gap-2">
                       <CopyTextButton
-                        textToCopy={rotateAdminKeyMutation.data.adminKey}
+                        textToCopy={
+                          initialiseProjectWithVaultMutation.data.serviceAccount
+                            .adminKey
+                        }
                         className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
                         textToShow={maskSecret(
-                          rotateAdminKeyMutation.data.adminKey,
+                          initialiseProjectWithVaultMutation.data.serviceAccount
+                            .adminKey,
                         )}
                         copyIconPosition="right"
                         tooltip="Copy Admin Key"
                       />
                       <p className="text-muted-foreground text-xs">
-                        This key is used to create or revoke your access tokens.
+                        Download this key to your local machine or a password
+                        manager.
                       </p>
                     </div>
                   </div>
 
-                  <div>
+                  {/* <div>
                     <h3 className="mb-2 font-medium text-sm">
-                      New Vault Access Token
+                      Vault Access Token
                     </h3>
                     <div className="flex flex-col gap-2 ">
                       <CopyTextButton
                         textToCopy={
-                          rotateAdminKeyMutation.data.userAccessToken
-                            .accessToken
+                          initialiseProjectWithVaultMutation.data
+                            .userAccessToken.accessToken
                         }
                         className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
                         textToShow={maskSecret(
-                          rotateAdminKeyMutation.data.userAccessToken
-                            .accessToken,
+                          initialiseProjectWithVaultMutation.data
+                            .userAccessToken.accessToken,
                         )}
                         copyIconPosition="right"
                         tooltip="Copy Vault Access Token"
@@ -217,10 +236,10 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
                         with your admin key.
                       </p>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <Alert variant="destructive">
-                  <AlertTitle>Secure your keys</AlertTitle>
+                  <AlertTitle>Secure your admin key</AlertTitle>
                   <AlertDescription>
                     These keys will not be displayed again. Store them securely
                     as they provide access to your server wallets.
@@ -233,7 +252,7 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
                       className="flex h-auto items-center gap-2 p-0 text-sm text-success-text"
                     >
                       <DownloadIcon className="size-4" />
-                      {keysDownloaded ? "Keys Downloaded" : "Download Keys"}
+                      {keysDownloaded ? "Key Downloaded" : "Download Admin Key"}
                     </Button>
                     {keysDownloaded && (
                       <span className="text-success-text text-xs">
@@ -247,7 +266,7 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
                       checked={keysConfirmed}
                       onCheckedChange={(v) => setKeysConfirmed(!!v)}
                     />
-                    I confirm that I've securely stored these keys
+                    I confirm that I've securely stored my admin key
                   </CheckboxWithLabel>
                 </Alert>
               </div>
@@ -256,63 +275,13 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
                 <Button
                   onClick={handleCloseModal}
                   disabled={!keysConfirmed}
-                  variant="primary"
+                  variant={"primary"}
                 >
                   Close
                 </Button>
               </div>
             </div>
-          ) : (
-            <>
-              <DialogHeader className="px-6 pt-6">
-                <DialogTitle>Rotate your Vault admin key</DialogTitle>
-                <DialogDescription>
-                  This action will generate a new Vault admin key and rotation
-                  code.{" "}
-                </DialogDescription>
-              </DialogHeader>
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-4 px-6">
-                  <p className="text-md text-primary-foreground">
-                    Revoke your current keys and generates new ones.
-                  </p>
-                  <Alert variant="destructive">
-                    <CircleAlertIcon className="size-5" />
-                    <AlertTitle>Important</AlertTitle>
-                    <AlertDescription>
-                      This action will invalidate your current admin key and all
-                      existing access tokens. You will need to update your
-                      backend to use these new access tokens.
-                    </AlertDescription>
-                  </Alert>
-                </div>
-                <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setModalOpen(false);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    onClick={() => rotateAdminKeyMutation.mutate()}
-                    disabled={rotateAdminKeyMutation.isPending}
-                  >
-                    {rotateAdminKeyMutation.isPending ? (
-                      <>
-                        <Loader2Icon className="mr-2 size-4 animate-spin" />
-                        Rotating...
-                      </>
-                    ) : (
-                      "Rotate Admin Key"
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </>
-          )}
+          ) : null}
         </DialogContent>
       </Dialog>
     </>

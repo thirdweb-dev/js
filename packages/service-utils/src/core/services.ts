@@ -39,7 +39,7 @@ export const SERVICE_DEFINITIONS = {
   },
   embeddedWallets: {
     name: "embeddedWallets",
-    title: "In-App Wallets",
+    title: "Wallets",
     description: "E-mail and social login wallets for easy web3 onboarding",
     // all actions allowed
     actions: [],
@@ -76,7 +76,7 @@ export const SERVICE_DEFINITIONS = {
   },
   engineCloud: {
     name: "engineCloud",
-    title: "Engine Cloud",
+    title: "Transactions",
     description:
       "Transaction API and Server wallets with high transaction throughput and low latency",
     // all actions allowed

@@ -9,15 +9,15 @@ import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import {
+  ArrowLeftRightIcon,
   ChevronRightIcon,
   CircleAlertIcon,
   ExternalLinkIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { ContractIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/ContractIcon";
-import { EngineIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 import { InsightIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/InsightIcon";
-import { NebulaIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/NebulaIcon";
+import { PayIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/PayIcon";
 import { ClientIDSection } from "./ClientIDSection";
 import { IntegrateAPIKeyCodeTabs } from "./IntegrateAPIKeyCodeTabs";
 import { SecretKeySection } from "./SecretKeySection";
@@ -233,15 +233,13 @@ function ProductsSection(props: {
     description: string;
     href: string;
     icon: React.FC<{ className?: string }>;
-    trackingLabel: string;
   }> = [
     {
-      title: "Engine",
+      title: "Transactions",
       description:
         "Scale your application with a backend server to read, write, and deploy contracts at production-grade.",
-      href: `/team/${props.teamSlug}/${props.projectSlug}/engine`,
-      icon: EngineIcon,
-      trackingLabel: "engine",
+      href: `/team/${props.teamSlug}/${props.projectSlug}/transactions`,
+      icon: ArrowLeftRightIcon,
     },
     {
       title: "Contracts",
@@ -249,7 +247,6 @@ function ProductsSection(props: {
         "Deploy your own contracts or leverage existing solutions for onchain implementation",
       href: `/team/${props.teamSlug}/${props.projectSlug}/contracts`,
       icon: ContractIcon,
-      trackingLabel: "contracts",
     },
     {
       title: "Insight",
@@ -257,15 +254,13 @@ function ProductsSection(props: {
         "Add indexing capabilities to retrieve real-time onchain data",
       href: `/team/${props.teamSlug}/${props.projectSlug}/insight`,
       icon: InsightIcon,
-      trackingLabel: "insight",
     },
     {
-      title: "Nebula",
+      title: "Universal Bridge",
       description:
-        "Integrate a blockchain AI model to improve your users insight into your application and the blockchain",
-      href: `/team/${props.teamSlug}/${props.projectSlug}/nebula`,
-      icon: NebulaIcon,
-      trackingLabel: "nebula",
+        "Bridge, swap, and purchase cryptocurrencies with any fiat options or tokens via cross-chain routing",
+      href: `/team/${props.teamSlug}/${props.projectSlug}/universal-bridge`,
+      icon: PayIcon,
     },
   ];
 
@@ -290,7 +285,6 @@ function ProductsSection(props: {
             description={product.description}
             href={product.href}
             icon={product.icon}
-            trackingLabel={product.trackingLabel}
           />
         ))}
       </section>
@@ -303,7 +297,6 @@ function ProductCard(props: {
   description: string;
   href: string;
   icon: React.FC<{ className?: string }>;
-  trackingLabel: string;
 }) {
   return (
     <div className="relative flex flex-col rounded-lg border bg-card p-4 hover:border-active-border">

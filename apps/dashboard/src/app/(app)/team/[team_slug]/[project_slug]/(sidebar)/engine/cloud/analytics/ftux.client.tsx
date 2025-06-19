@@ -5,9 +5,9 @@ import { type Step, StepsCard } from "components/dashboard/StepsCard";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { CreateVaultAccountButton } from "../../../vault/components/create-vault-account.client";
 import CreateServerWallet from "../server-wallets/components/create-server-wallet.client";
 import type { Wallet } from "../server-wallets/wallet-table/types";
-import CreateVaultAccountButton from "../vault/components/create-vault-account.client";
 import { SendTestTransaction } from "./send-test-tx.client";
 import { deleteUserAccessToken } from "./utils";
 

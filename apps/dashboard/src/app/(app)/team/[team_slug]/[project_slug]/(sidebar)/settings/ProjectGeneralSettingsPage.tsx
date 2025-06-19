@@ -761,7 +761,7 @@ function EnabledServicesSetting(props: {
             return (
               <div
                 key={service.name}
-                className="flex items-start justify-between gap-6 border-border border-t py-5"
+                className="flex items-start justify-between gap-6 border-t border-dashed py-5"
               >
                 {/* Left */}
                 <div className="flex flex-col gap-4">
@@ -780,7 +780,7 @@ function EnabledServicesSetting(props: {
                         asChild
                         size="sm"
                         variant="outline"
-                        className="min-w-32 justify-between gap-2"
+                        className="h-auto justify-between gap-2 rounded-full bg-background py-1"
                       >
                         <Link href={configurationLink}>
                           Configure

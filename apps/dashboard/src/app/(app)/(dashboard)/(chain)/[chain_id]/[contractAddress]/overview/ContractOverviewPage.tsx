@@ -53,8 +53,6 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
               target: "_blank",
               link: `/${chainSlug}/${contract.address}`,
             }}
-            trackingCategory="erc20-contract"
-            trackingLabel="view-asset-page"
             accentColor="blue"
           />
         )}

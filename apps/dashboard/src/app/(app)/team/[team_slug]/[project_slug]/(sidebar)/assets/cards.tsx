@@ -62,8 +62,8 @@ export function Cards(props: {
       />
 
       <CardLink
-        title="Import Existing Asset"
-        description="Import tokens or NFTs you own to the project"
+        title="Import Existing Token"
+        description="Import coins or NFTs you own to the project"
         href={undefined}
         icon={ArrowDownToLineIcon}
         onClick={() => {

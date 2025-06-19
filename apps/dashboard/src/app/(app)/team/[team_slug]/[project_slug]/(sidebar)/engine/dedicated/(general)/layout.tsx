@@ -25,12 +25,12 @@ export default async function Layout(props: {
           <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
             <div className="flex flex-col gap-2">
               <h1 className="flex items-center gap-2 font-semibold text-3xl tracking-tight">
-                Engine{" "}
+                Transactions{" "}
                 <Badge
                   variant="warning"
                   className="flex items-center gap-2 text-sm"
                 >
-                  <DatabaseIcon className="size-4" /> Dedicated
+                  <DatabaseIcon className="size-4" /> Dedicated Engine
                 </Badge>
               </h1>
               <p className="flex flex-col text-muted-foreground text-sm">

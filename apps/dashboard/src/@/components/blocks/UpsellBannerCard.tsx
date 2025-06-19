@@ -44,8 +44,6 @@ type UpsellBannerCardProps = {
     target?: "_blank";
     link: string;
   };
-  trackingCategory: string;
-  trackingLabel: string;
   accentColor?: keyof typeof ACCENT;
   icon?: React.ReactNode;
 };

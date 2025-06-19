@@ -86,9 +86,7 @@ export default function CreateServerWallet(props: {
 
   const handleCreateServerWallet = async () => {
     if (!props.managementAccessToken) {
-      router.push(
-        `/team/${props.teamSlug}/${props.project.slug}/engine/cloud/vault`,
-      );
+      router.push(`/team/${props.teamSlug}/${props.project.slug}/vault`);
     } else {
       await createEoaMutation.mutateAsync({
         managementAccessToken: props.managementAccessToken,
@@ -106,9 +104,7 @@ export default function CreateServerWallet(props: {
         onClick={() =>
           props.managementAccessToken
             ? setModalOpen(true)
-            : router.push(
-                `/team/${props.teamSlug}/${props.project.slug}/engine/cloud/vault`,
-              )
+            : router.push(`/team/${props.teamSlug}/${props.project.slug}/vault`)
         }
         className="flex flex-row items-center gap-2"
       >

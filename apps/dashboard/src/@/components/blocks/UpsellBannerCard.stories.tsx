@@ -15,8 +15,6 @@ function Story() {
             icon: <ArrowRightIcon className="size-4" />,
             link: "#",
           }}
-          trackingCategory="storybook"
-          trackingLabel="green"
           icon={<RocketIcon className="size-5" />}
           accentColor="green"
         />
@@ -31,8 +29,6 @@ function Story() {
             icon: <ArrowRightIcon className="size-4" />,
             link: "#",
           }}
-          trackingCategory="storybook"
-          trackingLabel="blue"
           icon={<StarIcon className="size-5" />}
           accentColor="blue"
         />
@@ -47,8 +43,6 @@ function Story() {
             icon: <ArrowRightIcon className="size-4" />,
             link: "#",
           }}
-          trackingCategory="storybook"
-          trackingLabel="purple"
           accentColor="purple"
         />
       </BadgeContainer>
