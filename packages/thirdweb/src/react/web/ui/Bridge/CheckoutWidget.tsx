@@ -8,7 +8,6 @@ import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import { getToken } from "../../../../pay/convert/get-token.js";
 import { type Address, checksumAddress } from "../../../../utils/address.js";
 import { stringify } from "../../../../utils/json.js";
-import { toTokens } from "../../../../utils/units.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
@@ -108,9 +107,9 @@ export type CheckoutWidgetProps = {
   tokenAddress?: Address;
 
   /**
-   * The price of the item **(in wei)**.
+   * The price of the item **(as a decimal string)**, e.g. "1.5" for 1.5 tokens.
    */
-  amount: bigint;
+  amount: string;
 
   /**
    * The wallet address or ENS funds will be paid to.
@@ -172,15 +171,15 @@ export type CheckoutWidgetProps = {
 type UIOptionsResult =
   | { type: "success"; data: UIOptions }
   | {
-      type: "indexing_token";
-      token: Token;
-      chain: Chain;
-    }
+    type: "indexing_token";
+    token: Token;
+    chain: Chain;
+  }
   | {
-      type: "unsupported_token";
-      tokenAddress: Address;
-      chain: Chain;
-    };
+    type: "unsupported_token";
+    tokenAddress: Address;
+    chain: Chain;
+  };
 
 /**
  * Widget a prebuilt UI for purchasing a specific token.
@@ -282,7 +281,7 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
           },
           paymentInfo: {
             token,
-            amount: toTokens(props.amount, token.decimals),
+            amount: props.amount,
             sellerAddress: props.seller,
             feePayer: props.feePayer === "seller" ? "receiver" : "sender", // User is sender, seller is receiver
           },
@@ -402,10 +401,10 @@ type CheckoutWidgetConnectOptions = {
    * ```
    */
   autoConnect?:
-    | {
-        timeout: number;
-      }
-    | boolean;
+  | {
+    timeout: number;
+  }
+  | boolean;
 
   /**
    * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.

@@ -12,7 +12,6 @@ import {
   isAddress,
 } from "../../../../utils/address.js";
 import { stringify } from "../../../../utils/json.js";
-import { toTokens } from "../../../../utils/units.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
@@ -112,9 +111,9 @@ export type BuyWidgetProps = {
   tokenAddress?: Address;
 
   /**
-   * The amount to buy **(in wei)**.
+   * The amount to buy **(as a decimal string)**, e.g. "1.5" for 1.5 tokens.
    */
-  amount: bigint;
+  amount: string;
 
   /**
    * The title to display in the widget.
@@ -156,15 +155,15 @@ export type BuyWidgetProps = {
 type UIOptionsResult =
   | { type: "success"; data: UIOptions }
   | {
-      type: "indexing_token";
-      token: Token;
-      chain: Chain;
-    }
+    type: "indexing_token";
+    token: Token;
+    chain: Chain;
+  }
   | {
-      type: "unsupported_token";
-      tokenAddress: Address;
-      chain: Chain;
-    };
+    type: "unsupported_token";
+    tokenAddress: Address;
+    chain: Chain;
+  };
 
 /**
  * Widget is a prebuilt UI for purchasing a specific token.
@@ -178,12 +177,11 @@ type UIOptionsResult =
  *
  * ```tsx
  * import { ethereum } from "thirdweb/chains";
- * import { toWei } from "thirdweb";
  *
  * <BuyWidget
  *   client={client}
  *   chain={ethereum}
- *   amount={toWei("0.1")}
+ *   amount="0.1"
  * />
  * ```
  *
@@ -195,7 +193,7 @@ type UIOptionsResult =
  * <BuyWidget
  *   client={client}
  *   chain={ethereum}
- *   amount={toWei("100")}
+ *   amount="100"
  *   tokenAddress="0xA0b86a33E6417E4df2057B2d3C6d9F7cc11b0a70"
  * />
  * ```
@@ -208,7 +206,7 @@ type UIOptionsResult =
  * <BuyWidget
  *   client={client}
  *   chain={ethereum}
- *   amount={toWei("0.1")}
+ *   amount="0.1"
  *   theme={darkTheme({
  *     colors: {
  *       modalBg: "red",
@@ -227,7 +225,7 @@ type UIOptionsResult =
  * <BuyWidget
  *   client={client}
  *   chain={ethereum}
- *   amount={toWei("0.1")}
+ *   amount="0.1"
  *   title="Buy ETH"
  * />
  * ```
@@ -240,7 +238,7 @@ type UIOptionsResult =
  * <BuyWidget
  *   client={client}
  *   chain={ethereum}
- *   amount={toWei("0.1")}
+ *   amount="0.1"
  *   connectOptions={{
  *     connectModal: {
  *       size: 'compact',
@@ -267,7 +265,7 @@ export function BuyWidget(props: BuyWidgetProps) {
         !props.tokenAddress ||
         (isAddress(props.tokenAddress) &&
           checksumAddress(props.tokenAddress) ===
-            checksumAddress(NATIVE_TOKEN_ADDRESS))
+          checksumAddress(NATIVE_TOKEN_ADDRESS))
       ) {
         const ETH = await getToken(
           props.client,
@@ -279,7 +277,7 @@ export function BuyWidget(props: BuyWidgetProps) {
           data: {
             mode: "fund_wallet",
             destinationToken: ETH,
-            initialAmount: toTokens(props.amount, ETH.decimals),
+            initialAmount: props.amount,
           },
         };
       }
@@ -303,7 +301,7 @@ export function BuyWidget(props: BuyWidgetProps) {
         data: {
           mode: "fund_wallet",
           destinationToken: token,
-          initialAmount: toTokens(props.amount, token.decimals),
+          initialAmount: props.amount,
           metadata: {
             title: props.title,
           },
@@ -423,10 +421,10 @@ type BuyWidgetConnectOptions = {
    * ```
    */
   autoConnect?:
-    | {
-        timeout: number;
-      }
-    | boolean;
+  | {
+    timeout: number;
+  }
+  | boolean;
 
   /**
    * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.

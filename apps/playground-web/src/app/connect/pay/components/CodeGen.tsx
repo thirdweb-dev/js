@@ -1,8 +1,4 @@
-import { THIRDWEB_CLIENT } from "@/lib/client";
-import { useQuery } from "@tanstack/react-query";
 import { Suspense, lazy } from "react";
-import { defineChain, getContract, toUnits } from "thirdweb";
-import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { CodeLoading } from "../../../../components/code/code.client";
 import type { BridgeComponentsPlaygroundOptions } from "./types";
 
@@ -13,36 +9,11 @@ const CodeClient = lazy(
 export function CodeGen(props: {
   options: BridgeComponentsPlaygroundOptions;
 }) {
-  const { options } = props;
-  const { data: amount } = useQuery({
-    queryKey: [
-      "amount",
-      options.payOptions.buyTokenAmount,
-      options.payOptions.buyTokenChain,
-      options.payOptions.buyTokenAddress,
-    ],
-    queryFn: async () => {
-      if (!options.payOptions.buyTokenAmount) {
-        return;
-      }
-      const contract = getContract({
-        chain: defineChain(options.payOptions.buyTokenChain.id),
-        address: options.payOptions.buyTokenAddress,
-        client: THIRDWEB_CLIENT,
-      });
-      const token = await getCurrencyMetadata({
-        contract,
-      });
-
-      return toUnits(options.payOptions.buyTokenAmount, token.decimals);
-    },
-  });
-
   return (
     <div className="flex w-full grow flex-col">
       <Suspense fallback={<CodeLoading />}>
         <CodeClient
-          code={getCode(props.options, amount)}
+          code={getCode(props.options)}
           lang="tsx"
           loader={<CodeLoading />}
           className="grow"
@@ -52,7 +23,7 @@ export function CodeGen(props: {
   );
 }
 
-function getCode(options: BridgeComponentsPlaygroundOptions, amount?: bigint) {
+function getCode(options: BridgeComponentsPlaygroundOptions) {
   const imports = {
     react: ["PayEmbed"] as string[],
     thirdweb: [] as string[],
@@ -104,7 +75,7 @@ function Example() {
     <${componentName}
       client={client}
       chain={defineChain(${options.payOptions.buyTokenChain.id})}
-      amount={${amount}n}${options.payOptions.buyTokenAddress ? `\n\t  token="${options.payOptions.buyTokenAddress}"` : ""}${options.payOptions.sellerAddress ? `\n\t  seller="${options.payOptions.sellerAddress}"` : ""}${options.payOptions.title ? `\n\t  ${options.payOptions.widget === "checkout" ? "name" : "title"}="${options.payOptions.title}"` : ""}${options.payOptions.image ? `\n\t  image="${options.payOptions.image}"` : ""}${options.payOptions.description ? `\n\t  description="${options.payOptions.description}"` : ""}${
+      amount="${options.payOptions.buyTokenAmount}"${options.payOptions.buyTokenAddress ? `\n\t  token="${options.payOptions.buyTokenAddress}"` : ""}${options.payOptions.sellerAddress ? `\n\t  seller="${options.payOptions.sellerAddress}"` : ""}${options.payOptions.title ? `\n\t  ${options.payOptions.widget === "checkout" ? "name" : "title"}="${options.payOptions.title}"` : ""}${options.payOptions.image ? `\n\t  image="${options.payOptions.image}"` : ""}${options.payOptions.description ? `\n\t  description="${options.payOptions.description}"` : ""}${
         options.payOptions.widget === "transaction"
           ? `\n\t  transaction={claimTo({
         contract: nftContract,
