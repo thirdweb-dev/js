@@ -3,6 +3,7 @@
 import { Img } from "@/components/blocks/Img";
 import { CustomMediaRenderer } from "@/components/blocks/media-renderer";
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -12,6 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
+import { TabButtons } from "@/components/ui/tabs";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import {
   BoxIcon,
@@ -162,10 +164,33 @@ function TokenInfoUI(props: {
     enabled: props.type === "erc1155",
   });
 
-  const isClaimable = !claimCondition.data
-    ? undefined
-    : claimCondition.data.supplyClaimed <
-      claimCondition.data.maxClaimableSupply;
+  const [tab, setTab] = useState<"traits" | "buy">("traits");
+
+  const noClaimConditionSet = !claimCondition.isPending && !claimCondition.data;
+
+  const isClaimable = noClaimConditionSet
+    ? false
+    : !claimCondition.data
+      ? undefined
+      : claimCondition.data.supplyClaimed <
+        claimCondition.data.maxClaimableSupply;
+
+  const attributesUI =
+    attributes.length > 0 ? (
+      <div className="grid grid-cols-2 gap-2 lg:grid-cols-3">
+        {attributes.map((attribute) => (
+          <TraitCard
+            key={`${attribute.trait_type}-${attribute.value}`}
+            trait_type={attribute.trait_type}
+            value={attribute.value}
+          />
+        ))}
+      </div>
+    ) : (
+      <div className="border-t border-dashed pt-4">
+        <p className="text-muted-foreground text-sm">No Traits</p>
+      </div>
+    );
 
   return (
     <div className="grid grid-cols-1 items-center lg:grid-cols-[500px_1fr]">
@@ -186,162 +211,186 @@ function TokenInfoUI(props: {
 
       {/* right / bottom */}
       <ScrollShadow scrollableClassName="lg:max-h-[calc(100dvh-60px)]">
-        <div className="space-y-4 p-4 max-sm:pt-0">
-          <div className="space-y-2">
-            {/* title */}
-            <SkeletonContainer
-              loadedData={props.data?.metadata.name}
-              skeletonData="NFTCollection #0"
-              render={(title) => (
-                <h2 className="font-bold text-3xl tracking-tight">{title}</h2>
+        <DynamicHeight>
+          <div className="space-y-4 p-4 max-sm:pt-0">
+            <div className="space-y-2">
+              {/* title */}
+              <SkeletonContainer
+                loadedData={props.data?.metadata.name}
+                skeletonData="NFTCollection #0"
+                render={(title) => (
+                  <h2 className="font-bold text-3xl tracking-tight">{title}</h2>
+                )}
+              />
+
+              {/* description */}
+              {props.data ? (
+                props.data.metadata.description ? (
+                  <p className="line-clamp-3 text-muted-foreground text-sm">
+                    {props.data.metadata.description}
+                  </p>
+                ) : null
+              ) : (
+                <Skeleton className="h-14 w-full" />
               )}
-            />
-
-            {/* description */}
-            {props.data ? (
-              props.data.metadata.description ? (
-                <p className="line-clamp-3 text-muted-foreground text-sm">
-                  {props.data.metadata.description}
-                </p>
-              ) : null
-            ) : (
-              <Skeleton className="h-14 w-full" />
-            )}
-          </div>
-
-          {/* collection + owner */}
-          <div className="flex flex-col gap-3 border-y border-dashed py-4 lg:flex-row lg:items-center lg:[&>*:not(:first-child)]:border-l lg:[&>*:not(:first-child)]:pl-3 ">
-            <div className="flex items-center gap-1.5">
-              <Img
-                src={
-                  props.collectionMetadata.image
-                    ? resolveSchemeWithErrorHandler({
-                        client: props.contract.client,
-                        uri: props.collectionMetadata.image,
-                      }) || ""
-                    : ""
-                }
-                alt={props.collectionMetadata.name}
-                fallback={
-                  <BoxIcon className="size-3.5 text-muted-foreground" />
-                }
-                className="size-3.5 rounded-lg"
-              />
-              <span className="text-foreground text-sm ">
-                {props.collectionMetadata.name}
-              </span>
             </div>
 
-            {!props.data ? (
-              <Skeleton className="h-4 w-36" />
-            ) : props.data?.owner ? (
-              <div className="flex shrink-0 items-center gap-1.5 text-sm">
-                <WalletIcon className="size-3.5 text-muted-foreground" />
-                <span className="text-muted-foreground">Owned by</span>
-                <WalletAddress
-                  address={props.data.owner}
-                  client={props.contract.client}
-                  iconClassName="hidden"
-                  className="h-auto py-0 text-sm"
-                  preventOpenOnFocus
+            {/* collection + owner */}
+            <div className="flex flex-col gap-3 border-y border-dashed py-4 lg:flex-row lg:items-center lg:[&>*:not(:first-child)]:border-l lg:[&>*:not(:first-child)]:pl-3 ">
+              <div className="flex items-center gap-1.5">
+                <Img
+                  src={
+                    props.collectionMetadata.image
+                      ? resolveSchemeWithErrorHandler({
+                          client: props.contract.client,
+                          uri: props.collectionMetadata.image,
+                        }) || ""
+                      : ""
+                  }
+                  alt={props.collectionMetadata.name}
+                  fallback={
+                    <BoxIcon className="size-3.5 text-muted-foreground" />
+                  }
+                  className="size-3.5 rounded-lg"
                 />
+                <span className="text-foreground text-sm ">
+                  {props.collectionMetadata.name}
+                </span>
               </div>
-            ) : (
-              <div className="flex items-center gap-1.5 text-sm">
-                {isClaimable === false ? (
-                  <CircleSlashIcon className="size-3.5" />
-                ) : (
-                  <ShoppingCartIcon className="size-3.5" />
-                )}
 
-                {props.type === "erc721" ? (
-                  <span>Available For Purchase</span>
-                ) : isClaimable === undefined ? (
-                  <Skeleton className="h-4 w-36" />
-                ) : (
-                  <span>
-                    {isClaimable
-                      ? "Available For Purchase"
-                      : "No supply left for purchase"}
-                  </span>
+              {!props.data ? (
+                <Skeleton className="h-4 w-36" />
+              ) : props.data?.owner ? (
+                <div className="flex shrink-0 items-center gap-1.5 text-sm">
+                  <WalletIcon className="size-3.5 text-muted-foreground" />
+                  <span className="text-muted-foreground">Owned by</span>
+                  <WalletAddress
+                    address={props.data.owner}
+                    client={props.contract.client}
+                    iconClassName="hidden"
+                    className="h-auto py-0 text-sm"
+                    preventOpenOnFocus
+                  />
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5 text-sm">
+                  {isClaimable === false ? (
+                    <CircleSlashIcon className="size-3.5" />
+                  ) : (
+                    <ShoppingCartIcon className="size-3.5" />
+                  )}
+
+                  {props.type === "erc721" ? (
+                    <span>Available For Purchase</span>
+                  ) : isClaimable === undefined ? (
+                    <Skeleton className="h-4 w-36" />
+                  ) : (
+                    <span>
+                      {noClaimConditionSet
+                        ? "Not available for purchase"
+                        : isClaimable
+                          ? "Available For Purchase"
+                          : "No supply left for purchase"}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* badges */}
+            <div className="flex flex-wrap gap-2">
+              <Badge
+                variant="outline"
+                className="bg-muted/50 py-1 font-normal text-muted-foreground"
+              >
+                {props.type === "erc721" ? "ERC721" : "ERC1155"}
+              </Badge>
+
+              <Badge
+                variant="outline"
+                className="bg-muted/50 py-1 font-normal text-muted-foreground"
+              >
+                Token #{props.tokenId}
+              </Badge>
+
+              <Badge
+                variant="outline"
+                className="flex items-center gap-2 bg-muted/50 px-1.5 py-1 font-normal text-muted-foreground"
+              >
+                <Img
+                  src={
+                    props.chainMetadata.icon?.url
+                      ? resolveSchemeWithErrorHandler({
+                          client: props.contract.client,
+                          uri: props.chainMetadata.icon?.url,
+                        })
+                      : ""
+                  }
+                  alt={props.chainMetadata.name}
+                  className="size-3 rounded-full"
+                />
+                <span className="text-muted-foreground text-xs">
+                  {props.chainMetadata.name}
+                </span>
+              </Badge>
+            </div>
+
+            {/* ERC1155 */}
+            {props.type === "erc1155" && (
+              <div className="border-t border-dashed pt-2">
+                <TabButtons
+                  tabClassName="!text-sm"
+                  tabs={[
+                    {
+                      name: "Traits",
+                      onClick: () => setTab("traits"),
+                      isActive: tab === "traits",
+                    },
+                    {
+                      name: "Buy NFT",
+                      onClick: () => setTab("buy"),
+                      isActive: tab === "buy",
+                    },
+                  ]}
+                />
+
+                <div className="h-2" />
+                {tab === "traits" && attributesUI}
+                {tab === "buy" && (
+                  <div>
+                    {isClaimable === false ? (
+                      <div className="flex flex-col gap-2">
+                        <p className="text-muted-foreground text-sm">
+                          Not available for purchase
+                        </p>
+                      </div>
+                    ) : (
+                      <BuyEditionDrop
+                        contract={props.contract}
+                        tokenId={props.tokenId}
+                        chainMetadata={props.chainMetadata}
+                      />
+                    )}
+                  </div>
                 )}
               </div>
             )}
-          </div>
 
-          {/* badges */}
-          <div className="flex flex-wrap gap-2">
-            <Badge
-              variant="outline"
-              className="bg-muted/50 py-1 font-normal text-muted-foreground"
-            >
-              {props.type === "erc721" ? "ERC721" : "ERC1155"}
-            </Badge>
-
-            <Badge
-              variant="outline"
-              className="bg-muted/50 py-1 font-normal text-muted-foreground"
-            >
-              Token #{props.tokenId}
-            </Badge>
-
-            <Badge
-              variant="outline"
-              className="flex items-center gap-2 bg-muted/50 px-1.5 py-1 font-normal text-muted-foreground"
-            >
-              <Img
-                src={
-                  props.chainMetadata.icon?.url
-                    ? resolveSchemeWithErrorHandler({
-                        client: props.contract.client,
-                        uri: props.chainMetadata.icon?.url,
-                      })
-                    : ""
-                }
-                alt={props.chainMetadata.name}
-                className="size-3 rounded-full"
-              />
-              <span className="text-muted-foreground text-xs">
-                {props.chainMetadata.name}
-              </span>
-            </Badge>
-          </div>
-
-          {/* attributes */}
-          {attributes.length > 0 && (
-            <div className="border-t border-dashed pt-4">
-              <h3 className="mb-2 flex items-center gap-2 font-medium text-sm">
-                Traits
-                <span className="text-muted-foreground text-sm">
-                  {attributes.length}
-                </span>
-              </h3>
-              <div className="grid grid-cols-2 gap-2 lg:grid-cols-3">
-                {attributes.map((attribute) => (
-                  <TraitCard
-                    key={`${attribute.trait_type}-${attribute.value}`}
-                    trait_type={attribute.trait_type}
-                    value={attribute.value}
-                  />
-                ))}
+            {props.type === "erc721" && (
+              <div>
+                <div className="border-t border-dashed pt-4">
+                  <h3 className="mb-2 flex items-center gap-2 font-medium text-sm">
+                    Traits
+                    <span className="text-muted-foreground text-sm">
+                      {attributes.length}
+                    </span>
+                  </h3>
+                  {attributesUI}
+                </div>
               </div>
-            </div>
-          )}
-
-          {/* ERC1155 */}
-          {props.type === "erc1155" && isClaimable !== false && (
-            <div className="space-y-1.5 border-t border-dashed pt-4">
-              <h3 className="font-semibold text-base text-foreground">
-                Buy NFT
-              </h3>
-              <BuyEditionDrop
-                contract={props.contract}
-                tokenId={props.tokenId}
-                chainMetadata={props.chainMetadata}
-              />
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </DynamicHeight>
       </ScrollShadow>
     </div>
   );

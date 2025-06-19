@@ -282,6 +282,18 @@ function RenderClaimConditionInfo(props: {
     enabled: !props.isSkeleton,
   });
 
+  const noClaimConditionSet = !claimCondition.isPending && !claimCondition.data;
+
+  if (noClaimConditionSet) {
+    return (
+      <div>
+        <p className="text-muted-foreground text-sm">
+          Not available for purchase
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-start gap-0.5">
       <div className="flex items-center gap-1.5">
