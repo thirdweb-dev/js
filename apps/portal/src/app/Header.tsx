@@ -333,7 +333,7 @@ export function Header() {
 
       {/* Mobile menu */}
       {showBurgerMenu && (
-        <div className="fixed inset-0 top-sticky-top-height z-50 overflow-auto bg-card p-6 xl:hidden">
+        <div className="fixed inset-0 top-sticky-top-height z-[50] overflow-auto bg-card p-6 xl:hidden">
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4">
               <h3 className="font-semibold text-lg">Products</h3>

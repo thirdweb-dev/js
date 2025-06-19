@@ -147,6 +147,18 @@ const baseNextConfig: NextConfig = {
   async rewrites() {
     return [
       {
+        source: "/_ph/static/:path*",
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+      },
+      {
+        source: "/_ph/:path*",
+        destination: "https://us.i.posthog.com/:path*",
+      },
+      {
+        source: "/_ph/decide",
+        destination: "https://us.i.posthog.com/decide",
+      },
+      {
         source: "/thirdweb.eth",
         destination: "/deployer.thirdweb.eth",
       },

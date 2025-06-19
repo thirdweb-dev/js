@@ -3,12 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { BadgeCheckIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
-import posthog from "posthog-js";
 import { useState } from "react";
 
 export function Feedback() {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const feedbackEvent = "Portal Feedback";
   const [feedback, setFeedback] = useState("");
 
   if (!isSubmitted) {
@@ -22,9 +20,6 @@ export function Feedback() {
             className="gap-2 bg-card"
             onClick={() => {
               setIsSubmitted(true);
-              posthog.capture(feedbackEvent, {
-                response: "yes",
-              });
             }}
           >
             Yes
@@ -33,15 +28,7 @@ export function Feedback() {
 
           <Dialog>
             <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="gap-2 bg-card"
-                onClick={() => {
-                  posthog.capture(feedbackEvent, {
-                    response: "no",
-                  });
-                }}
-              >
+              <Button variant="outline" className="gap-2 bg-card">
                 No
                 <ThumbsDownIcon className="size-4 text-muted-foreground" />
               </Button>
@@ -67,9 +54,6 @@ export function Feedback() {
                 <Button
                   onClick={() => {
                     setIsSubmitted(true);
-                    posthog.capture("Portal Feedback", {
-                      feedback: feedback,
-                    });
                   }}
                 >
                   Submit

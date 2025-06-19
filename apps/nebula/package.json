@@ -41,6 +41,7 @@
     "next": "15.3.3",
     "next-themes": "^0.4.6",
     "nextjs-toploader": "^1.6.12",
+    "posthog-js": "1.252.0",
     "prettier": "3.5.3",
     "react": "19.1.0",
     "react-children-utilities": "^2.10.0",
