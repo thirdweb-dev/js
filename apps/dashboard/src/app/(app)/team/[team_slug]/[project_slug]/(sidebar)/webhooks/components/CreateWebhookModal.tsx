@@ -19,7 +19,7 @@ import { FilterDetailsStep } from "./FilterDetailsStep";
 import ReviewStep from "./ReviewStep";
 
 import { createWebhook } from "@/api/insight/webhooks";
-import { XIcon } from "lucide-react";
+import { PlusIcon, XIcon } from "lucide-react";
 import type { ThirdwebClient } from "thirdweb";
 import { useAbiMultiFetch } from "../hooks/useAbiProcessing";
 import { useTestWebhook } from "../hooks/useTestWebhook";
@@ -45,7 +45,7 @@ interface CreateWebhookModalProps {
   client: ThirdwebClient;
 }
 
-export function CreateWebhookModal({
+export function CreateContractWebhookButton({
   projectClientId,
   supportedChainIds,
   client,
@@ -224,7 +224,10 @@ export function CreateWebhookModal({
   return (
     <Dialog open={isOpen}>
       <DialogTrigger asChild>
-        <Button onClick={handleOpenModal}>New Webhook</Button>
+        <Button onClick={handleOpenModal} className="gap-1.5" size="sm">
+          <PlusIcon className="size-4" />
+          Create Webhook
+        </Button>
       </DialogTrigger>
 
       <DialogContent
