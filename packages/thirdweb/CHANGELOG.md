@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.103.2
+
+### Patch Changes
+
+- [#7371](https://github.com/thirdweb-dev/js/pull/7371) [`3dbf9e1`](https://github.com/thirdweb-dev/js/commit/3dbf9e16fdff04eb36e9bb757a2b136f2b8001dc) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix typo in payment confirmation widget
+
 ## 5.103.1
 
 ### Patch Changes

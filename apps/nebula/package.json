@@ -1,6 +1,6 @@
 {
   "name": "nebula",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
