@@ -83,3 +83,5 @@ export { soneiumMinato } from "../chains/chain-definitions/soneium-minato.js";
 export { treasure } from "../chains/chain-definitions/treasure.js";
 export { treasureTopaz } from "../chains/chain-definitions/treasureTopaz.js";
 export { monadTestnet } from "../chains/chain-definitions/monad-testnet.js";
+export { berachain } from "../chains/chain-definitions/berachain.js";
+export { berachainBepolia } from "../chains/chain-definitions/berachain-bepolia.js";
