@@ -219,7 +219,7 @@ export function ProjectGeneralSettingsPageUI(props: {
   const paths = {
     aaConfig: `${projectLayout}/account-abstraction/settings`,
     inAppConfig: `${projectLayout}/wallets/settings`,
-    payConfig: `${projectLayout}/connect/universal-bridge/settings`,
+    payConfig: `${projectLayout}/universal-bridge/settings`,
     afterDeleteRedirectTo: `/team/${props.teamSlug}`,
   };
 

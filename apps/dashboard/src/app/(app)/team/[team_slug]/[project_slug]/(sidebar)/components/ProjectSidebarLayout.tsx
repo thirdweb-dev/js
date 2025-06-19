@@ -43,7 +43,7 @@ export function ProjectSidebarLayout(props: {
           icon: SmartAccountIcon,
         },
         {
-          href: `${layoutPath}/connect/universal-bridge`,
+          href: `${layoutPath}/universal-bridge`,
           icon: PayIcon,
           label: "Universal Bridge",
         },

@@ -2,11 +2,11 @@ import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getFees } from "@/api/universal-bridge/developer";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { getAuthToken } from "@app/api/lib/getAuthToken";
+import { loginRedirect } from "@app/login/loginRedirect";
 import { PayConfig } from "components/pay/PayConfig";
 import { RouteDiscovery } from "components/pay/RouteDiscovery";
 import { redirect } from "next/navigation";
-import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
-import { loginRedirect } from "../../../../../../../login/loginRedirect";
 
 export default async function Page(props: {
   params: Promise<{
@@ -24,7 +24,7 @@ export default async function Page(props: {
 
   if (!authToken) {
     loginRedirect(
-      `/team/${team_slug}/${project_slug}/connect/universal-bridge/settings`,
+      `/team/${team_slug}/${project_slug}/universal-bridge/settings`,
     );
   }
 
@@ -63,7 +63,7 @@ export default async function Page(props: {
   });
 
   return (
-    <div className="flex flex-col p-5">
+    <div className="flex flex-col">
       <PayConfig
         project={project}
         teamId={team.id}

@@ -1,6 +1,8 @@
 import { getProject } from "@/api/projects";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { getAuthToken } from "@app/api/lib/getAuthToken";
+import { loginRedirect } from "@app/login/loginRedirect";
 import { PayAnalytics } from "components/pay/PayAnalytics/PayAnalytics";
 import { PayAnalyticsFilter } from "components/pay/PayAnalytics/components/PayAnalyticsFilter";
 import { getUniversalBridgeFiltersFromSearchParams } from "lib/time";
@@ -10,8 +12,6 @@ import {
   ResponsiveSearchParamsProvider,
   ResponsiveSuspense,
 } from "responsive-rsc";
-import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
-import { loginRedirect } from "../../../../../../login/loginRedirect";
 
 export default async function Page(props: {
   params: Promise<{
@@ -30,7 +30,7 @@ export default async function Page(props: {
 
   if (!authToken) {
     loginRedirect(
-      `/team/${params.team_slug}/${params.project_slug}/connect/universal-bridge`,
+      `/team/${params.team_slug}/${params.project_slug}/universal-bridge`,
     );
   }
 

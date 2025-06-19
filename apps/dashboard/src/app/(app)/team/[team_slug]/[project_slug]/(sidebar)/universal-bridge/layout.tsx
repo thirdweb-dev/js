@@ -2,7 +2,7 @@ import { getProject } from "@/api/projects";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { redirect } from "next/navigation";
-import { FooterLinksSection } from "../../components/footer/FooterLinksSection";
+import { FooterLinksSection } from "../components/footer/FooterLinksSection";
 
 export default async function Layout(props: {
   params: Promise<{
@@ -18,7 +18,7 @@ export default async function Layout(props: {
     redirect(`/team/${params.team_slug}`);
   }
 
-  const payLayoutPath = `/team/${params.team_slug}/${params.project_slug}/connect/universal-bridge`;
+  const payLayoutPath = `/team/${params.team_slug}/${params.project_slug}/universal-bridge`;
 
   return (
     <div className="flex grow flex-col">
