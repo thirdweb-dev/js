@@ -5,12 +5,14 @@ import type { Token } from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
+import { getToken } from "../../../../pay/convert/get-token.js";
 import {
   type PreparedTransaction,
   prepareTransaction,
 } from "../../../../transaction/prepare-transaction.js";
 import { type Address, checksumAddress } from "../../../../utils/address.js";
 import { stringify } from "../../../../utils/json.js";
+import { toUnits } from "../../../../utils/units.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
@@ -105,9 +107,9 @@ export type TransactionWidgetProps = {
   tokenAddress?: Address;
 
   /**
-   * The price of the item **(in wei)**.
+   * The price of the item **(as a decimal string)**, e.g. "1.5" for 1.5 tokens.
    */
-  amount?: bigint;
+  amount?: string;
 
   /**
    * A title for the transaction.
@@ -196,8 +198,8 @@ type UIOptionsResult =
  *     to: "0x...",
  *     chain: ethereum,
  *     client: client,
- *     value: toUnits("0.001", 18),
  *   })}
+ *   amount="0.1"
  *  />
  * ```
  *
@@ -276,16 +278,26 @@ export function TransactionWidget(props: TransactionWidgetProps) {
   const bridgeDataQuery = useQuery({
     queryKey: ["bridgeData", stringify(props)],
     queryFn: async (): Promise<UIOptionsResult> => {
+      let erc20Value = props.transaction.erc20Value;
+
+      if (props.amount) {
+        // Get token decimals for conversion
+        const tokenAddress = props.tokenAddress || NATIVE_TOKEN_ADDRESS;
+        const token = await getToken(
+          props.client,
+          checksumAddress(tokenAddress),
+          props.transaction.chain.id,
+        );
+
+        erc20Value = {
+          amountWei: toUnits(props.amount, token.decimals),
+          tokenAddress: checksumAddress(tokenAddress),
+        };
+      }
+
       const transaction = prepareTransaction({
         ...props.transaction,
-        erc20Value: props.amount
-          ? {
-              amountWei: props.amount,
-              tokenAddress: checksumAddress(
-                props.tokenAddress || NATIVE_TOKEN_ADDRESS,
-              ),
-            }
-          : props.transaction.erc20Value,
+        erc20Value,
       });
 
       return {

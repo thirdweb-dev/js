@@ -1,8 +1,6 @@
 "use client";
 import { use, useState } from "react";
-import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { arbitrum } from "thirdweb/chains";
-import { checksumAddress } from "thirdweb/utils";
 import type { BridgeComponentsPlaygroundOptions } from "../components/types";
 import { LeftSection } from "./LeftSection";
 import { RightSection } from "./RightSection";
@@ -19,7 +17,7 @@ const defaultConnectOptions: BridgeComponentsPlaygroundOptions = {
     title: "",
     image: "",
     description: "",
-    buyTokenAddress: checksumAddress(NATIVE_TOKEN_ADDRESS),
+    buyTokenAddress: undefined,
     buyTokenAmount: "0.002",
     buyTokenChain: arbitrum,
     sellerAddress: "0x0000000000000000000000000000000000000000",

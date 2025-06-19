@@ -1,10 +1,8 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { getContract, toUnits } from "thirdweb";
+import { getContract } from "thirdweb";
 import { base } from "thirdweb/chains";
-import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc1155";
 import {
   BuyWidget,
@@ -43,18 +41,6 @@ export function RightSection(props: {
   }
 
   const account = useActiveAccount();
-  const { data: tokenData } = useQuery({
-    queryKey: ["token", props.options.payOptions.buyTokenAddress],
-    queryFn: () =>
-      getCurrencyMetadata({
-        contract: getContract({
-          address: props.options.payOptions.buyTokenAddress,
-          chain: props.options.payOptions.buyTokenChain,
-          client: THIRDWEB_CLIENT,
-        }),
-      }),
-    enabled: !!props.options.payOptions.buyTokenAddress,
-  });
 
   const themeObj =
     props.options.theme.type === "dark"
@@ -74,10 +60,7 @@ export function RightSection(props: {
         title={props.options.payOptions.title}
         tokenAddress={props.options.payOptions.buyTokenAddress}
         chain={props.options.payOptions.buyTokenChain}
-        amount={toUnits(
-          props.options.payOptions.buyTokenAmount,
-          tokenData?.decimals || 18,
-        )}
+        amount={props.options.payOptions.buyTokenAmount}
       />
     );
   }
@@ -90,10 +73,7 @@ export function RightSection(props: {
         name={props.options.payOptions.title}
         tokenAddress={props.options.payOptions.buyTokenAddress}
         chain={props.options.payOptions.buyTokenChain}
-        amount={toUnits(
-          props.options.payOptions.buyTokenAmount,
-          tokenData?.decimals || 18,
-        )}
+        amount={props.options.payOptions.buyTokenAmount}
         seller={props.options.payOptions.sellerAddress}
         presetOptions={[1, 2, 3]}
         purchaseData={{
