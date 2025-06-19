@@ -113,6 +113,7 @@ export const validTeamResponse: TeamResponse = {
   },
   planCancellationDate: null,
   unthreadCustomerId: null,
+  dedicatedSupportChannel: null,
 };
 
 export const validTeamAndProjectResponse: TeamAndProjectResponse = {

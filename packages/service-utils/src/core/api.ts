@@ -147,6 +147,10 @@ export type TeamResponse = {
   unthreadCustomerId: string | null;
   planCancellationDate: string | null;
   verifiedDomain: string | null;
+  dedicatedSupportChannel: {
+    type: "slack" | "telegram";
+    name: string;
+  } | null;
 };
 
 export type ProjectSecretKey = {
