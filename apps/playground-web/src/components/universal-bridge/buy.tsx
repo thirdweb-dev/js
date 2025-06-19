@@ -2,7 +2,7 @@
 
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { useTheme } from "next-themes";
-import { NATIVE_TOKEN_ADDRESS, toWei } from "thirdweb";
+import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { arbitrum } from "thirdweb/chains";
 import { BuyWidget } from "thirdweb/react";
 
@@ -18,7 +18,7 @@ export function StyledBuyWidgetPreview() {
         title="Get Funds"
         tokenAddress={NATIVE_TOKEN_ADDRESS}
         chain={arbitrum}
-        amount={toWei("0.002")}
+        amount={"0.1"}
       />
     </div>
   );

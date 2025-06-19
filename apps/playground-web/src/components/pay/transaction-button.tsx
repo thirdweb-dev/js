@@ -49,7 +49,7 @@ export function PayTransactionPreview() {
         tokenId: 2n,
         to: account?.address || "",
       })}
-      amount={100n}
+      amount={"0.1"}
       title={nft?.metadata?.name}
       description={nft?.metadata?.description}
       image={nft?.metadata?.image}
