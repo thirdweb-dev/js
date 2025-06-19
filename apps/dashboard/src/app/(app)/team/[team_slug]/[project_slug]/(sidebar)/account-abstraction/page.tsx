@@ -2,6 +2,7 @@ import { getUserOpUsage } from "@/api/analytics";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { getAuthToken } from "@app/api/lib/getAuthToken";
 import {
   type Range,
   getLastNDaysRange,
@@ -10,7 +11,6 @@ import { AccountAbstractionAnalytics } from "components/smart-wallets/AccountAbs
 import { AccountAbstractionSummary } from "components/smart-wallets/AccountAbstractionAnalytics/AccountAbstractionSummary";
 import { notFound, redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
-import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import { searchParamLoader } from "./search-params";
 
 interface PageParams {

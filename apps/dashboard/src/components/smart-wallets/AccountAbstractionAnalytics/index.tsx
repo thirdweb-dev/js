@@ -1,4 +1,6 @@
 "use client";
+import { SponsoredTransactionsTable } from "@app/team/[team_slug]/(team)/~/usage/overview/components/SponsoredTransactionsTable";
+import { searchParams } from "@app/team/[team_slug]/[project_slug]/(sidebar)/account-abstraction/search-params";
 import {
   DateRangeSelector,
   type Range,
@@ -10,8 +12,6 @@ import { useQueryState } from "nuqs";
 import { useTransition } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { UserOpStats } from "types/analytics";
-import { SponsoredTransactionsTable } from "../../../app/(app)/team/[team_slug]/(team)/~/usage/overview/components/SponsoredTransactionsTable";
-import { searchParams } from "../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/connect/account-abstraction/search-params";
 import { SponsoredTransactionsChartCard } from "./SponsoredTransactionsChartCard";
 import { TotalSponsoredChartCard } from "./TotalSponsoredChartCard";
 

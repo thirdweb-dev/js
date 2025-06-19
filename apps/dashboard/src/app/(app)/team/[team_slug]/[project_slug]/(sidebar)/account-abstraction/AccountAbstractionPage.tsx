@@ -17,7 +17,7 @@ export function AccountAbstractionLayout(props: {
   children: React.ReactNode;
   hasSmartWalletsWithoutBilling: boolean;
 }) {
-  const smartWalletsLayoutSlug = `/team/${props.teamSlug}/${props.projectSlug}/connect/account-abstraction`;
+  const smartWalletsLayoutSlug = `/team/${props.teamSlug}/${props.projectSlug}/account-abstraction`;
 
   return (
     <div className="flex grow flex-col">

@@ -1,4 +1,4 @@
-import { FooterLinksSection } from "../../components/footer/FooterLinksSection";
+import { FooterLinksSection } from "../components/footer/FooterLinksSection";
 
 export function AAFooter() {
   return (

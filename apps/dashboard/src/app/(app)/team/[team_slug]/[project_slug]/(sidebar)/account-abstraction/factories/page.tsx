@@ -6,6 +6,9 @@ import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Button } from "@/components/ui/button";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { getSortedDeployedContracts } from "@app/account/contracts/_components/getSortedDeployedContracts";
+import { getAuthToken } from "@app/api/lib/getAuthToken";
+import { loginRedirect } from "@app/login/loginRedirect";
 import { DefaultFactoriesSection } from "components/smart-wallets/AccountFactories";
 import { FactoryContracts } from "components/smart-wallets/AccountFactories/factory-contracts";
 import { PlusIcon } from "lucide-react";
@@ -14,9 +17,6 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { type ThirdwebClient, defineChain, getContract } from "thirdweb";
 import { getCompilerMetadata } from "thirdweb/contract";
-import { getSortedDeployedContracts } from "../../../../../../../account/contracts/_components/getSortedDeployedContracts";
-import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
-import { loginRedirect } from "../../../../../../../login/loginRedirect";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -31,7 +31,7 @@ export default async function Page(props: {
 
   if (!authToken) {
     loginRedirect(
-      `/team/${params.team_slug}/${params.project_slug}/connect/account-abstraction/factories`,
+      `/team/${params.team_slug}/${params.project_slug}/account-abstraction/factories`,
     );
   }
 

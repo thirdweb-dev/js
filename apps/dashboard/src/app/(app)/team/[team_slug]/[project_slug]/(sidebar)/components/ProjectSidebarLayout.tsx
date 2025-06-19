@@ -39,7 +39,7 @@ export function ProjectSidebarLayout(props: {
         },
         {
           label: "Account Abstraction",
-          href: `${layoutPath}/connect/account-abstraction`,
+          href: `${layoutPath}/account-abstraction`,
           icon: SmartAccountIcon,
         },
         {

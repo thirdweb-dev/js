@@ -4,11 +4,11 @@ import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { getAuthToken } from "@app/api/lib/getAuthToken";
+import { getValidTeamPlan } from "@app/team/components/TeamHeader/getValidTeamPlan";
 import { AccountAbstractionSettingsPage } from "components/smart-wallets/SponsorshipPolicies";
 import { CircleAlertIcon } from "lucide-react";
 import { redirect } from "next/navigation";
-import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
-import { getValidTeamPlan } from "../../../../../../components/TeamHeader/getValidTeamPlan";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
