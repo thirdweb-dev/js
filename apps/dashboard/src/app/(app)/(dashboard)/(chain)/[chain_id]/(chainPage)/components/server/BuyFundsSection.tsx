@@ -56,6 +56,7 @@ export function BuyFundsSection(props: {
             href="https://portal.thirdweb.com/connect/pay/overview"
             className="inline-flex items-center gap-1.5 text-muted-foreground text-sm hover:text-foreground"
             target="_blank"
+            rel="noopener noreferrer"
           >
             Learn more about Universal Bridge
             <ExternalLinkIcon className="size-3" />

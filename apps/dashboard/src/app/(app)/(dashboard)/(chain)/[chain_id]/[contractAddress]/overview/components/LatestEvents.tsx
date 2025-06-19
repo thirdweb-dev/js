@@ -13,7 +13,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
   type InternalTransaction,
   useActivity,
@@ -26,7 +25,6 @@ import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_sl
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 
 export function LatestEvents(props: {
-  trackingCategory: string;
   contract: ThirdwebContract;
   chainSlug: string;
   projectMeta: ProjectMeta | undefined;
@@ -46,7 +44,6 @@ export function LatestEvents(props: {
       allEvents={allEvents}
       autoUpdate={autoUpdate}
       eventsHref={eventsHref}
-      trackingCategory={props.trackingCategory}
     />
   );
 }
@@ -55,7 +52,6 @@ export function LatestEventsUI(props: {
   allEvents: Pick<InternalTransaction, "transactionHash" | "events">[];
   autoUpdate: boolean;
   eventsHref: string;
-  trackingCategory: string;
 }) {
   const { allEvents, autoUpdate, eventsHref } = props;
   return (
@@ -80,14 +76,12 @@ export function LatestEventsUI(props: {
           )}
         </div>
         <Button asChild variant="outline" size="sm" className="bg-background">
-          <TrackedLinkTW
-            category={props.trackingCategory}
-            label="view_all_events"
+          <Link
             href={eventsHref}
             className="flex items-center gap-2 text-muted-foreground text-sm"
           >
             View all <ArrowRightIcon className="size-4" />
-          </TrackedLinkTW>
+          </Link>
         </Button>
       </div>
 

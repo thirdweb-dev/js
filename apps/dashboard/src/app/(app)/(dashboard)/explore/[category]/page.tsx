@@ -75,7 +75,7 @@ export default async function ExploreCategoryPage(
         </p>
         <div className="h-10" />
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-          {category.contracts.map((publishedContractId, idx) => {
+          {category.contracts.map((publishedContractId) => {
             const publisher: string | undefined = Array.isArray(
               publishedContractId,
             )
@@ -107,10 +107,6 @@ export default async function ExploreCategoryPage(
                   contractId={contractId}
                   titleOverride={overrides?.title}
                   descriptionOverride={overrides?.description}
-                  tracking={{
-                    source: category.id,
-                    itemIndex: `${idx}`,
-                  }}
                   isBeta={category.isBeta}
                   modules={
                     modules?.length

@@ -41,7 +41,7 @@ export function DefaultFactoriesSection() {
           <UnderlineLink
             href="https://playground.thirdweb.com/connect/account-abstraction/connect"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
             Learn how to use these in your apps
           </UnderlineLink>

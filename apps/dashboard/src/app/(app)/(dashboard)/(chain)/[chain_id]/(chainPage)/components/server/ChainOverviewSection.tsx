@@ -18,6 +18,7 @@ export function ChainOverviewSection(props: { chain: ChainMetadata }) {
             <Link
               href={chain.infoURL}
               target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 hover:text-link-foreground"
             >
               {new URL(chain.infoURL).hostname}

@@ -1,6 +1,4 @@
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
-
-const TRACKING_CATEGORY = "storage";
+import Link from "next/link";
 
 const links = [
   {
@@ -46,13 +44,14 @@ function LinkSectionCard(props: {
         {props.links.map((link) => {
           return (
             <li key={link.url}>
-              <TrackedLinkTW
+              <Link
                 href={link.url}
-                category={TRACKING_CATEGORY}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-block text-muted-foreground hover:text-foreground"
               >
                 {link.title}
-              </TrackedLinkTW>
+              </Link>
             </li>
           );
         })}

@@ -20,6 +20,7 @@ export const SettingsGasCreditsPage = (props: {
             Apply to the Optimism Superchain App Accelerator.{" "}
             <UnderlineLink
               target="_blank"
+              rel="noopener noreferrer"
               href="https://blog.thirdweb.com/accelerating-the-superchain-with-optimism/"
             >
               Learn More

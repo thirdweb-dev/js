@@ -11,12 +11,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { CircleAlertIcon, DownloadIcon, ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -120,16 +120,15 @@ export function EngineImportCardUI(props: {
 
               <div className="h-4" />
 
-              <TrackedLinkTW
+              <Link
                 className="flex items-center justify-between gap-2 rounded-lg border border-border bg-card p-3 text-sm hover:bg-accent"
                 href="https://portal.thirdweb.com/infrastructure/engine/get-started"
                 target="_blank"
-                category="engine"
-                label="clicked-self-host-instructions"
+                rel="noopener noreferrer"
               >
                 Get help setting up Engine for free
                 <ExternalLinkIcon className="size-4 text-muted-foreground" />
-              </TrackedLinkTW>
+              </Link>
             </div>
 
             <div className="mt-6 flex flex-col gap-4">

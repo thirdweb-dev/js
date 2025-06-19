@@ -14,6 +14,7 @@ import {
   getAuthToken,
   getAuthTokenWalletAddress,
 } from "../../api/lib/getAuthToken";
+import { siwaExamplePrompts } from "./definitions";
 
 export const metadata: Metadata = {
   title: "thirdweb Support",
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
     title: "thirdweb Support",
   },
 };
+
 const HELP_PRODUCTS = [
   {
     title: "Playground",
@@ -60,14 +62,6 @@ const HELP_PRODUCTS = [
     description: "API interface for LLMs",
   },
 ] as const;
-
-export const siwaExamplePrompts = [
-  "How do I add in-app wallet with sign in with google to my react app?",
-  "How do I send a transaction in Unity?",
-  "What does this contract revert error mean?",
-  "I see thirdweb support id in my console log, can you help me?",
-  "Here is my code, can you tell me why I'm seeing this error?",
-];
 
 export default async function SupportPage() {
   const [authToken, accountAddress] = await Promise.all([
@@ -112,7 +106,7 @@ export default async function SupportPage() {
               <Link
                 href="/support/create-ticket"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="text-muted-foreground text-sm hover:underline"
               >
                 Open a support case

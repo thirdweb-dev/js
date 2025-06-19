@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ImportModal } from "components/contract-components/import-contract/modal";
 import { useTrack } from "hooks/analytics/useTrack";
 import { ArrowUpRightIcon, DownloadIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 
@@ -44,15 +44,14 @@ export function DeployViaCLIOrImportCard(props: {
           className="gap-2 bg-background lg:px-10"
           asChild
         >
-          <TrackedLinkTW
+          <Link
             href="https://portal.thirdweb.com/contracts/deploy/overview"
             target="_blank"
-            category="contracts-banner"
-            label="deploy-via-cli"
+            rel="noopener noreferrer"
           >
             Deploy via CLI
             <ArrowUpRightIcon className="size-4" />
-          </TrackedLinkTW>
+          </Link>
         </Button>
         <Button
           variant="outline"

@@ -122,7 +122,11 @@ function CreateVaultAccountStep(props: {
         project={props.project}
         onUserAccessTokenCreated={props.onUserAccessTokenCreated}
       />
-      <Link href="https://portal.thirdweb.com/engine/vault" target="_blank">
+      <Link
+        href="https://portal.thirdweb.com/engine/vault"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <Button variant="outline">Learn more about Vault</Button>
       </Link>
     </div>

@@ -4,8 +4,8 @@ import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SkeletonContainer } from "@/components/ui/skeleton";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ArrowRightIcon } from "lucide-react";
+import Link from "next/link";
 import { useMemo } from "react";
 import {
   type ThirdwebClient,
@@ -45,13 +45,11 @@ type ListingData =
 
 type ListingCardsSectionProps = {
   contract: ThirdwebContract;
-  trackingCategory: string;
   chainSlug: string;
   projectMeta: ProjectMeta | undefined;
 };
 
 const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
-  trackingCategory,
   contract,
   chainSlug,
   projectMeta,
@@ -106,13 +104,9 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
           size="sm"
           className="gap-2 bg-background text-muted-foreground"
         >
-          <TrackedLinkTW
-            category={trackingCategory}
-            label="view_all_direct_listings"
-            href={directListingsHref}
-          >
+          <Link href={directListingsHref}>
             View all <ArrowRightIcon className="size-4" />
-          </TrackedLinkTW>
+          </Link>
         </Button>
       </div>
 
@@ -120,7 +114,6 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
         <ListingCards
           listings={listings}
           isPending={listingsQuery.isPending}
-          trackingCategory={trackingCategory}
           chainSlug={chainSlug}
           contractAddress={contract.address}
           projectMeta={projectMeta}
@@ -132,7 +125,6 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
 };
 
 const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
-  trackingCategory,
   contract,
   chainSlug,
   projectMeta,
@@ -187,13 +179,9 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
           size="sm"
           className="gap-2 bg-background text-muted-foreground"
         >
-          <TrackedLinkTW
-            category={trackingCategory}
-            label="view_all_english_auctions"
-            href={englishAuctionsHref}
-          >
+          <Link href={englishAuctionsHref}>
             View all <ArrowRightIcon className="size-4" />
-          </TrackedLinkTW>
+          </Link>
         </Button>
       </div>
       <div className="p-6">
@@ -201,7 +189,6 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
           client={contract.client}
           listings={auctions}
           isPending={auctionsQuery.isPending}
-          trackingCategory={trackingCategory}
           chainSlug={chainSlug}
           contractAddress={contract.address}
           projectMeta={projectMeta}
@@ -213,7 +200,6 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
 
 interface MarketplaceDetailsVersionProps {
   contract: ThirdwebContract;
-  trackingCategory: string;
   hasEnglishAuctions: boolean;
   hasDirectListings: boolean;
   chainSlug: string;
@@ -222,7 +208,6 @@ interface MarketplaceDetailsVersionProps {
 
 export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
   contract,
-  trackingCategory,
   hasDirectListings,
   hasEnglishAuctions,
   chainSlug,
@@ -239,7 +224,6 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
       {hasDirectListings && (
         <DirectListingCards
           contract={contract}
-          trackingCategory={trackingCategory}
           chainSlug={chainSlug}
           projectMeta={projectMeta}
         />
@@ -248,7 +232,6 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
       {hasEnglishAuctions && (
         <EnglishAuctionCards
           contract={contract}
-          trackingCategory={trackingCategory}
           chainSlug={chainSlug}
           projectMeta={projectMeta}
         />
@@ -294,7 +277,6 @@ const dummyMetadata: (idx: number) => ListingData = (idx) => ({
 interface ListingCardsProps {
   listings: ListingData[];
   isPending: boolean;
-  trackingCategory: string;
   isMarketplaceV1?: boolean;
   chainSlug: string;
   contractAddress: string;
@@ -305,7 +287,6 @@ const ListingCards: React.FC<ListingCardsProps> = ({
   listings,
   isPending,
   isMarketplaceV1,
-  trackingCategory,
   chainSlug,
   contractAddress,
   projectMeta,
@@ -361,8 +342,7 @@ const ListingCards: React.FC<ListingCardsProps> = ({
               loadedData={isPending ? undefined : listing.asset.metadata.name}
               skeletonData="Listing Title"
               render={(v) => (
-                <TrackedLinkTW
-                  category={trackingCategory}
+                <Link
                   className="before:absolute before:inset-0"
                   href={
                     listing.type === "direct-listing"
@@ -371,7 +351,7 @@ const ListingCards: React.FC<ListingCardsProps> = ({
                   }
                 >
                   {v}
-                </TrackedLinkTW>
+                </Link>
               )}
             />
 

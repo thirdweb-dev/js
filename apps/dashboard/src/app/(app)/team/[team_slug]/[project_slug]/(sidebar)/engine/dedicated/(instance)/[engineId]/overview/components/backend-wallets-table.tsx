@@ -118,6 +118,7 @@ const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
   return (
     <Link
       target="_blank"
+      rel="noopener noreferrer"
       href={`${explorer.url}/address/${address}`}
       className="inline-flex items-center gap-2.5 rounded-lg px-2 py-1 text-muted-foreground hover:bg-muted hover:text-foreground"
     >

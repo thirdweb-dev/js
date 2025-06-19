@@ -456,6 +456,7 @@ function TxHashCell(props: { transaction: Transaction }) {
       <Link
         href={`${explorer.url}/tx/${transactionHash}`}
         target="_blank"
+        rel="noopener noreferrer"
         onClick={(e) => {
           e.stopPropagation();
         }}

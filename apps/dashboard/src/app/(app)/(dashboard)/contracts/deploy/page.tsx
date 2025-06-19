@@ -26,6 +26,7 @@ export default async function DeployMultipleContractsPage(props: {
         <Link
           className="text-link-foreground hover:text-foreground"
           target="_blank"
+          rel="noopener noreferrer"
           href="https://portal.thirdweb.com/contracts/deploy/overview"
         >
           Learn more about deploying your contracts.

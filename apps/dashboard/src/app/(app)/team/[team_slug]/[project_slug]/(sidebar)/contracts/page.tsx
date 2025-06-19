@@ -56,7 +56,6 @@ function ContractsFooter() {
     <div className="border-t">
       <div className="container max-w-7xl">
         <FooterLinksSection
-          trackingCategory="contracts"
           left={{
             title: "Documentation",
             links: [

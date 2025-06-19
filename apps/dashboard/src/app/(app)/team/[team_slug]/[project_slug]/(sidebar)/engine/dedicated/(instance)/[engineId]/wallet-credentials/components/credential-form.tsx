@@ -18,8 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { Dialog } from "@radix-ui/react-dialog";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { CircleCredentialFields } from "./credential-type-fields/circle";
 import {
@@ -78,15 +78,14 @@ export const CredentialForm = ({
               <DialogHeader className="mb-4">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogDescription>
-                  <TrackedLinkTW
+                  <Link
                     href="https://portal.thirdweb.com/engine/features/wallet-credentials"
                     target="_blank"
-                    label="learn-more"
-                    category="engine"
+                    rel="noopener noreferrer"
                     className="text-link-foreground hover:text-foreground"
                   >
                     Learn more about wallet credentials
-                  </TrackedLinkTW>
+                  </Link>
                 </DialogDescription>
               </DialogHeader>
 

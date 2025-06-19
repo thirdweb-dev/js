@@ -5,9 +5,8 @@ import {
   type LinkProps as ChakraLinkProps,
   forwardRef,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
 import _NextLink, { type LinkProps as _NextLinkProps } from "next/link";
-import { forwardRef as reactForwardRef, useCallback } from "react";
+import { forwardRef as reactForwardRef } from "react";
 
 type ChakraNextLinkProps = Omit<ChakraLinkProps, "as"> &
   Omit<_NextLinkProps, "as">;
@@ -57,26 +56,3 @@ export const Link = reactForwardRef<HTMLAnchorElement, LinkProps>(
 );
 
 Link.displayName = "Link";
-
-interface TrackedLinkProps extends LinkProps {
-  category: string;
-  label?: string;
-  trackingProps?: Record<string, string>;
-}
-
-/**
- * A link component extends the `Link` component and adds tracking.
- */
-export const TrackedLink = reactForwardRef<HTMLAnchorElement, TrackedLinkProps>(
-  ({ category, label, trackingProps, ...props }, ref) => {
-    const trackEvent = useTrack();
-
-    const onClick = useCallback(() => {
-      trackEvent({ category, action: "click", label, ...trackingProps });
-    }, [trackEvent, category, label, trackingProps]);
-
-    return <Link ref={ref} onClick={onClick} {...props} />;
-  },
-);
-
-TrackedLink.displayName = "TrackedLink";

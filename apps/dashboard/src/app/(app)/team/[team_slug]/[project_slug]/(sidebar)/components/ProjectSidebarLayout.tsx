@@ -23,12 +23,6 @@ export function ProjectSidebarLayout(props: {
 }) {
   const { layoutPath, children } = props;
 
-  const tracking = (label: string) => ({
-    category: "project-sidebar",
-    action: "click",
-    label,
-  });
-
   return (
     <FullWidthSidebarLayout
       contentSidebarLinks={[
@@ -37,31 +31,26 @@ export function ProjectSidebarLayout(props: {
           exactMatch: true,
           label: "Overview",
           icon: HomeIcon,
-          tracking: tracking("overview"),
         },
         {
           label: "In-App Wallets",
           href: `${layoutPath}/connect/in-app-wallets`,
           icon: WalletIcon,
-          tracking: tracking("in-app-wallets"),
         },
         {
           label: "Account Abstraction",
           href: `${layoutPath}/connect/account-abstraction`,
           icon: SmartAccountIcon,
-          tracking: tracking("account-abstraction"),
         },
         {
           href: `${layoutPath}/connect/universal-bridge`,
           icon: PayIcon,
           label: "Universal Bridge",
-          tracking: tracking("universal-bridge"),
         },
         {
           href: `${layoutPath}/contracts`,
           label: "Contracts",
           icon: ContractIcon,
-          tracking: tracking("contracts"),
         },
         {
           href: `${layoutPath}/assets`,
@@ -71,25 +60,21 @@ export function ProjectSidebarLayout(props: {
             </span>
           ),
           icon: CoinsIcon,
-          tracking: tracking("assets"),
         },
         {
           href: `${layoutPath}/engine`,
           label: "Engine",
           icon: EngineIcon,
-          tracking: tracking("engine"),
         },
         {
           href: `${layoutPath}/insight`,
           label: "Insight",
           icon: InsightIcon,
-          tracking: tracking("insight"),
         },
         {
           href: `${layoutPath}/nebula`,
           label: "Nebula",
           icon: NebulaIcon,
-          tracking: tracking("nebula"),
         },
         {
           href: `${layoutPath}/webhooks`,
@@ -99,7 +84,6 @@ export function ProjectSidebarLayout(props: {
             </span>
           ),
           icon: BellIcon,
-          tracking: tracking("webhooks"),
         },
       ]}
       footerSidebarLinks={[
@@ -107,7 +91,6 @@ export function ProjectSidebarLayout(props: {
           href: `${layoutPath}/settings`,
           label: "Project Settings",
           icon: SettingsIcon,
-          tracking: tracking("project-settings"),
         },
         {
           separator: true,
@@ -116,13 +99,11 @@ export function ProjectSidebarLayout(props: {
           href: "https://portal.thirdweb.com",
           label: "Documentation",
           icon: BookTextIcon,
-          tracking: tracking("documentation"),
         },
         {
           href: "https://playground.thirdweb.com/connect/sign-in/button",
           label: "Playground",
           icon: BoxIcon,
-          tracking: tracking("playground"),
         },
       ]}
     >

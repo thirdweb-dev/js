@@ -116,6 +116,7 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
               <Link
                 href="https://portal.thirdweb.com/connect/pay/fee-sharing"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="text-link-foreground hover:text-foreground"
               >
                 Learn more.

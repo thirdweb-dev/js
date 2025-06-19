@@ -1,5 +1,4 @@
 "use client";
-import { useTrack } from "hooks/analytics/useTrack";
 import { FileTextIcon } from "lucide-react";
 import Link from "next/link";
 import type { ChainMetadata } from "thirdweb/chains";
@@ -7,7 +6,6 @@ import { SectionTitle } from "../server/SectionTitle";
 
 export default function NextSteps(props: { chain: ChainMetadata }) {
   const { chain } = props;
-  const trackEvent = useTrack();
 
   return (
     <section>
@@ -23,14 +21,7 @@ export default function NextSteps(props: { chain: ChainMetadata }) {
                 }
                 className="before:absolute before:inset-0"
                 target="_blank"
-                onClick={() =>
-                  trackEvent({
-                    category: "nextSteps",
-                    action: "click-inapp",
-                    label: "success",
-                    chain_id: chain.chainId,
-                  })
-                }
+                rel="noopener noreferrer"
               >
                 Create a login for {chain.name}
               </Link>

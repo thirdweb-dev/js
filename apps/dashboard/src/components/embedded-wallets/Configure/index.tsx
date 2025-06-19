@@ -20,7 +20,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
 import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
@@ -34,6 +33,7 @@ import {
 } from "components/settings/ApiKeys/validations";
 import { useTrack } from "hooks/analytics/useTrack";
 import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import Link from "next/link";
 import type React from "react";
 import { useState } from "react";
 import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
@@ -54,8 +54,6 @@ type InAppWalletSettingsPageProps = {
   smsCountryTiers: SMSCountryTiers;
   client: ThirdwebClient;
 };
-
-const TRACKING_CATEGORY = "embedded-wallet";
 
 type UpdateAPIKeyTrackingData = {
   hasCustomBranding: boolean;
@@ -545,15 +543,14 @@ function JSONWebTokenFields(props: {
         description={
           <>
             Optionally allow users to authenticate with a custom JWT.{" "}
-            <TrackedLinkTW
+            <Link
               target="_blank"
+              rel="noopener noreferrer"
               href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-jwt-auth-server"
-              label="learn-more"
-              category={TRACKING_CATEGORY}
               className="text-link-foreground hover:text-foreground"
             >
               Learn more
-            </TrackedLinkTW>
+            </Link>
           </>
         }
       >
@@ -638,15 +635,14 @@ function AuthEndpointFields(props: {
           <>
             Optionally allow users to authenticate with any arbitrary payload
             that you provide.{" "}
-            <TrackedLinkTW
+            <Link
               target="_blank"
+              rel="noopener noreferrer"
               href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-auth-server"
-              label="learn-more"
-              category={TRACKING_CATEGORY}
               className="text-link-foreground hover:text-foreground"
             >
               Learn more
-            </TrackedLinkTW>
+            </Link>
           </>
         }
       >

@@ -67,6 +67,7 @@ async function EcosystemLandingPage(props: {
             <Link
               href="https://portal.thirdweb.com/connect/ecosystems/overview"
               target="_blank"
+              rel="noopener noreferrer"
               className="flex flex-row gap-2"
             >
               Documentation

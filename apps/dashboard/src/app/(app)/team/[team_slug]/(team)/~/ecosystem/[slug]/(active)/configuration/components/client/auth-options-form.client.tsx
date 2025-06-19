@@ -534,7 +534,7 @@ export function AuthOptionsForm({
                         href={`https://${ecosystem.slug}.ecosystem.thirdweb.com`}
                         className="text-link-foreground"
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                       >
                         ecosystem page
                       </a>

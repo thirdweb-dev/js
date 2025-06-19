@@ -33,6 +33,7 @@ export default async function Layout(props: {
             tokens via cross-chain routing.{" "}
             <UnderlineLink
               target="_blank"
+              rel="noopener noreferrer"
               href="https://portal.thirdweb.com/pay"
             >
               Learn more
@@ -80,7 +81,6 @@ export default async function Layout(props: {
 function UBFooter() {
   return (
     <FooterLinksSection
-      trackingCategory="universal-bridge"
       left={{
         title: "Documentation",
         links: [

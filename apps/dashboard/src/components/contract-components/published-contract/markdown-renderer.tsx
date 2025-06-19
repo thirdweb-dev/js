@@ -11,7 +11,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { onlyText } from "react-children-utilities";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -96,11 +97,12 @@ export const MarkdownRenderer: React.FC<{
           ),
 
           a: (props) => (
-            <Link
+            <UnderlineLink
               href={props.href ?? "#"}
               target="_blank"
+              rel="noopener noreferrer"
               {...cleanedProps(props)}
-              className="mt-4 underline decoration-muted-foreground/50 decoration-dotted underline-offset-[5px] hover:text-foreground hover:decoration-foreground hover:decoration-solid"
+              className="mt-4"
             />
           ),
 

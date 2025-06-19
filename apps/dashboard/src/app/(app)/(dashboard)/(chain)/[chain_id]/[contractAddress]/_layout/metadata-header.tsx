@@ -144,7 +144,7 @@ function BadgeLink(props: {
       asChild
       className="!h-auto gap-2 rounded-lg bg-card px-3 py-1.5 text-xs capitalize"
     >
-      <Link href={props.href} target="_blank">
+      <Link href={props.href} target="_blank" rel="noopener noreferrer">
         {props.name}
         <ExternalLinkIcon className="size-3 text-muted-foreground" />
       </Link>

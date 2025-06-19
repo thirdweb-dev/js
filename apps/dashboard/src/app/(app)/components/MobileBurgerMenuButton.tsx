@@ -113,6 +113,7 @@ export function MobileBurgerMenuButton(
                 <Link
                   href={`/${ensQuery.data?.ensName || props.accountAddress}`}
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center gap-2 py-1 text-base text-muted-foreground hover:text-foreground"
                 >
                   <WalletIcon className="size-4" />
@@ -158,6 +159,7 @@ export function MobileBurgerMenuButton(
             <Link
               href="https://playground.thirdweb.com/"
               target="_blank"
+              rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground "
             >
               Playground
@@ -183,6 +185,7 @@ export function MobileBurgerMenuButton(
               <Link
                 target="_blank"
                 href="https://portal.thirdweb.com"
+                rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground "
               >
                 Docs
@@ -190,6 +193,7 @@ export function MobileBurgerMenuButton(
 
               <Link
                 target="_blank"
+                rel="noopener noreferrer"
                 href="/support"
                 className="text-muted-foreground hover:text-foreground "
               >
@@ -198,6 +202,7 @@ export function MobileBurgerMenuButton(
 
               <Link
                 target="_blank"
+                rel="noopener noreferrer"
                 href="https://feedback.thirdweb.com"
                 className="text-muted-foreground hover:text-foreground"
               >

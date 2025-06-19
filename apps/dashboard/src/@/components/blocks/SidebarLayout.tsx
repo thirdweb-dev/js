@@ -123,7 +123,6 @@ function RenderSidebarGroup(props: {
                   className="flex items-center gap-2 text-muted-foreground text-sm hover:bg-accent"
                   activeClassName="text-foreground bg-accent"
                   exactMatch={link.exactMatch}
-                  tracking={link.tracking}
                   onClick={() => {
                     sidebar.setOpenMobile(false);
                   }}

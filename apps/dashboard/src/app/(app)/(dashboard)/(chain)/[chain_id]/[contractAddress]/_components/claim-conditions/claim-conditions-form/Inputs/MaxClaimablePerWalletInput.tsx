@@ -43,6 +43,7 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
           <Link
             className="text-blue-500"
             target="_blank"
+            rel="noopener noreferrer"
             href="https://portal.thirdweb.com/contracts/design/Drop#sybil-attacks"
           >
             Learn more

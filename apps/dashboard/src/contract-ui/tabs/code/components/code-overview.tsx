@@ -3,6 +3,7 @@ import {
   type CodeEnvironment,
   CodeSegment,
 } from "@/components/blocks/code-segment.client";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import {
   Alert,
   AlertDescription,
@@ -37,7 +38,7 @@ import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import { useActiveAccount } from "thirdweb/react";
 import { toFunctionSelector } from "thirdweb/utils";
-import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
+import { Button, Card, Heading, Link, Text } from "tw-components";
 
 interface CodeOverviewProps {
   abi?: Abi;
@@ -649,15 +650,14 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                 <AlertDescription>
                   The recommended way to use account factories is to integrate
                   the{" "}
-                  <TrackedLink
-                    isExternal
+                  <UnderlineLink
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary-500"
                     href="https://portal.thirdweb.com/connect/account-abstraction/overview"
-                    category="accounts-page"
-                    label="wallet-sdk"
-                    color="primary.500"
                   >
                     Connect SDK
-                  </TrackedLink>{" "}
+                  </UnderlineLink>{" "}
                   in your applications. This will ensure account contracts are
                   deployed for your users only when they need it.
                 </AlertDescription>
@@ -709,17 +709,16 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
             {environment === "react-native" || environment === "unity" ? (
               <Text>
                 Install the latest version of the SDK. <br />
-                <TrackedLink
-                  color="primary.500"
+                <UnderlineLink
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary-500"
                   href={`https://portal.thirdweb.com/${environment}`}
-                  isExternal
-                  category="code-tab"
-                  label={environment}
                 >
                   Learn how in the{" "}
                   {environment === "react-native" ? "React Native" : "Unity"}{" "}
                   documentation
-                </TrackedLink>
+                </UnderlineLink>
                 .
               </Text>
             ) : (

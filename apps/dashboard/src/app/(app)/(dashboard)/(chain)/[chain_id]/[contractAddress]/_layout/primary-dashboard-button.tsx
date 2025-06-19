@@ -86,6 +86,7 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
         <Link
           href={`/${contractInfo.chainSlug}/${contractAddress}`}
           target="_blank"
+          rel="noopener noreferrer"
           className="gap-2"
         >
           View Asset Page <ExternalLinkIcon className="size-3.5" />

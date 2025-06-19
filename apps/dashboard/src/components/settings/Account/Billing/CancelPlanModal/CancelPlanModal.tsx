@@ -84,6 +84,7 @@ function UnpaidInvoicesWarning({ teamSlug }: { teamSlug: string }) {
         <Link
           href={`/team/${teamSlug}/~/settings/invoices?status=open`}
           target="_blank"
+          rel="noopener noreferrer"
         >
           See Invoices
         </Link>

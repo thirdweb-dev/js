@@ -3,6 +3,7 @@
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Box,
@@ -25,13 +26,7 @@ import { TrashIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { type ThirdwebClient, isAddress } from "thirdweb";
-import {
-  Button,
-  FormErrorMessage,
-  FormLabel,
-  Text,
-  TrackedLink,
-} from "tw-components";
+import { Button, FormErrorMessage, FormLabel, Text } from "tw-components";
 import { joinWithComma, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
@@ -192,13 +187,14 @@ export function AccountAbstractionSettingsPage(
         <Flex flexDir="column" gap={2}>
           <Text>
             Configure the rules for your sponsored transactions.{" "}
-            <TrackedLink
-              category={trackingCategory}
+            <UnderlineLink
               href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules"
-              color="primary.500"
+              target="_blank"
+              className="text-primary-500"
+              rel="noopener noreferrer"
             >
               View documentation
-            </TrackedLink>
+            </UnderlineLink>
             .
           </Text>
         </Flex>
@@ -378,14 +374,14 @@ export function AccountAbstractionSettingsPage(
                 <Text>
                   Only sponsor transactions on the specified chains. <br /> By
                   default, transactions can be sponsored on any of the{" "}
-                  <TrackedLink
-                    color="primary.500"
-                    isExternal
-                    category={trackingCategory}
+                  <UnderlineLink
                     href="https://portal.thirdweb.com/wallets/smart-wallet/infrastructure#supported-chains"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary-500"
                   >
                     supported chains.
-                  </TrackedLink>
+                  </UnderlineLink>
                 </Text>
               </div>
 
@@ -560,13 +556,14 @@ export function AccountAbstractionSettingsPage(
                   and decide whether it should be sponsored or not. <br /> This
                   gives you fine grained control and lets you build your own
                   rules.{" "}
-                  <TrackedLink
-                    category={trackingCategory}
+                  <UnderlineLink
                     href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules#setting-up-a-server-verifier"
-                    color="primary.500"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary-500"
                   >
                     View server verifier documentation
-                  </TrackedLink>
+                  </UnderlineLink>
                   .
                 </Text>
               </div>

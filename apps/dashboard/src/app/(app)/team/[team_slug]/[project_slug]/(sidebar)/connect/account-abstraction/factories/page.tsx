@@ -4,12 +4,12 @@ import { ClientOnly } from "@/components/blocks/client-only";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Button } from "@/components/ui/button";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { DefaultFactoriesSection } from "components/smart-wallets/AccountFactories";
 import { FactoryContracts } from "components/smart-wallets/AccountFactories/factory-contracts";
 import { PlusIcon } from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { type ThirdwebClient, defineChain, getContract } from "thirdweb";
@@ -17,8 +17,6 @@ import { getCompilerMetadata } from "thirdweb/contract";
 import { getSortedDeployedContracts } from "../../../../../../../account/contracts/_components/getSortedDeployedContracts";
 import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../login/loginRedirect";
-
-const trackingCategory = "smart-wallet";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -85,7 +83,7 @@ function YourFactoriesSection(props: {
             <UnderlineLink
               href="https://portal.thirdweb.com/connect/account-abstraction/factories"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               Learn more{" "}
             </UnderlineLink>
@@ -93,15 +91,10 @@ function YourFactoriesSection(props: {
         </div>
 
         <Button variant="default" asChild size="sm">
-          <TrackedLinkTW
-            category={trackingCategory}
-            label="create-factory"
-            href="/explore/smart-wallet"
-            className="gap-2 text-sm"
-          >
+          <Link href="/explore/smart-wallet" className="gap-2 text-sm">
             <PlusIcon className="size-3" />
             Deploy Account Factory
-          </TrackedLinkTW>
+          </Link>
         </Button>
       </div>
 

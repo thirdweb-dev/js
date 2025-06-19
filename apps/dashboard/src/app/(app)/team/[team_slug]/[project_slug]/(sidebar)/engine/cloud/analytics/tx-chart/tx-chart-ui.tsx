@@ -174,6 +174,7 @@ function EmptyChartContent(props: {
               href="https://portal.thirdweb.com/vault"
               target="_blank"
               className="underline"
+              rel="noopener noreferrer"
             >
               Vault admin account
             </Link>

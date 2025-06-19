@@ -63,7 +63,11 @@ export function EmptyState() {
       </div>
       <div className="flex gap-2">
         <Button variant="primary" asChild className="min-w-36">
-          <Link href="https://portal.thirdweb.com/connect" target="_blank">
+          <Link
+            href="https://portal.thirdweb.com/connect"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             View Docs <ArrowRightIcon className="ml-2 h-4 w-auto" />
           </Link>
         </Button>

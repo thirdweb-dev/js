@@ -73,6 +73,7 @@ function Header() {
             <Link
               href="/support"
               target="_blank"
+              rel="noopener noreferrer"
               className="px-2 text-muted-foreground text-sm hover:text-foreground"
             >
               Support

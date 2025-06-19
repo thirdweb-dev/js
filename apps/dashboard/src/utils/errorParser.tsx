@@ -5,7 +5,12 @@ import type { JSX } from "react";
 const PLEASE_REACH_OUT_MESSAGE = (
   <span>
     If you believe this is incorrect or the error persists, please visit our{" "}
-    <Link className="font-semibold underline" target="_blank" href="/support">
+    <Link
+      className="font-semibold underline"
+      target="_blank"
+      href="/support"
+      rel="noopener noreferrer"
+    >
       support site
     </Link>
     .

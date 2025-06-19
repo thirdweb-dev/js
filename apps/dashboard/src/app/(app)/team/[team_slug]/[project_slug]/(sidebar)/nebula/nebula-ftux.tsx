@@ -38,14 +38,10 @@ export function NebulaFTUX(props: {
         {
           label: "Try on Playground",
           href: "https://nebula.thirdweb.com/",
-          trackingLabel: "playground",
-          category: "nebula-ftux",
         },
         {
           label: "View Docs",
           href: "https://portal.thirdweb.com/nebula",
-          trackingLabel: "docs",
-          category: "nebula-ftux",
         },
       ]}
     >

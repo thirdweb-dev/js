@@ -37,9 +37,9 @@ import {
   Button,
   FormHelperText,
   FormLabel,
+  Legacy_CopyButton,
   LinkButton,
   Text,
-  TrackedCopyButton,
 } from "tw-components";
 import { type AddModalInput, parseAddressListRaw } from "./add-relayer-button";
 
@@ -146,13 +146,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
       cell: (cell) => {
         const id = cell.getValue();
         const url = `${instanceUrl}relayer/${id}`;
-        return (
-          <TrackedCopyButton
-            value={url}
-            category="engine"
-            aria-label="Copy to clipboard"
-          />
-        );
+        return <Legacy_CopyButton value={url} aria-label="Copy to clipboard" />;
       },
     }),
   ];

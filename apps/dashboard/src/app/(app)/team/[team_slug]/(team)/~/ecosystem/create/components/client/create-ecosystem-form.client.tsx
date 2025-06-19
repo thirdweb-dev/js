@@ -180,6 +180,7 @@ export function CreateEcosystemForm(props: {
                   <Link
                     className="text-primary"
                     target="_blank"
+                    rel="noopener noreferrer"
                     href="https://portal.thirdweb.com/connect/ecosystems/ecosystem-permissions"
                   >
                     Learn more about ecosystem permissions

@@ -38,6 +38,7 @@ export async function Changelog() {
       <Link
         href="https://blog.thirdweb.com/changelog?utm_source=thirdweb&utm_campaign=changelog"
         target="_blank"
+        rel="noopener noreferrer"
         className="flex items-center gap-2 pl-5 text-foreground text-sm hover:underline"
       >
         View More <ArrowRightIcon className="size-4" />

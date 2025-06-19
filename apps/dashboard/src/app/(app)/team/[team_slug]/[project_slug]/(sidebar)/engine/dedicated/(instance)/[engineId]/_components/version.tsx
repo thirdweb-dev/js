@@ -21,7 +21,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
   type EngineInstance,
   useEngineGetDeploymentPublicConfiguration,
@@ -30,6 +29,7 @@ import {
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { formatDistanceToNow } from "date-fns";
 import { CircleArrowUpIcon, TriangleAlertIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import invariant from "tiny-invariant";
@@ -139,15 +139,14 @@ const ChangeVersionModal = (props: {
             </DialogTitle>
             <DialogDescription>
               View the{" "}
-              <TrackedLinkTW
+              <Link
                 href="https://github.com/thirdweb-dev/engine/releases"
-                category="engine"
-                label="clicked-engine-releases"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="text-link-foreground hover:text-foreground"
               >
                 latest changelog
-              </TrackedLinkTW>
+              </Link>
               .
             </DialogDescription>
           </DialogHeader>
@@ -226,15 +225,14 @@ const ChangeVersionModal = (props: {
 
           {currentVersion.startsWith("v") && (
             <div>
-              <TrackedLinkTW
+              <Link
                 href={`https://github.com/thirdweb-dev/engine/compare/${currentVersion}...${selectedVersion}`}
-                category="engine"
-                label="clicked-engine-releases"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="text-link-foreground hover:text-foreground"
               >
                 View changes: {currentVersion} &rarr; {selectedVersion}
-              </TrackedLinkTW>
+              </Link>
             </div>
           )}
 

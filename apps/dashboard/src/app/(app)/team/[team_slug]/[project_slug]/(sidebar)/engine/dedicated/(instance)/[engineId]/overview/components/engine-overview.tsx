@@ -2,7 +2,6 @@
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Button } from "@/components/ui/button";
-import { TrackedUnderlineLink } from "@/components/ui/tracked-link";
 import {
   type EngineInstance,
   useEngineBackendWallets,
@@ -104,14 +103,13 @@ function BackendWalletsSection(props: {
               Configuration
             </UnderlineLink>{" "}
             tab, or{" "}
-            <TrackedUnderlineLink
+            <UnderlineLink
               href="https://portal.thirdweb.com/engine/v2/configure-wallets/server-wallet"
               target="_blank"
-              label="learn-more"
-              category="engine"
+              rel="noopener noreferrer"
             >
               learn more about server wallets.
-            </TrackedUnderlineLink>
+            </UnderlineLink>
           </p>
         </div>
 

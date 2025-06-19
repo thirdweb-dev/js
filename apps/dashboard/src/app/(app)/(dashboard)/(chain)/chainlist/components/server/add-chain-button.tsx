@@ -8,6 +8,7 @@ export function AddYourChainButton(props: { className?: string }) {
       <Link
         href="https://share.hsforms.com/1XDi-ieM9Rl6oIkn7ynK6Lgea58c"
         target="_blank"
+        rel="noopener noreferrer"
         className="flex items-center gap-2"
       >
         <PlusIcon className="size-4" />

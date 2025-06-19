@@ -217,6 +217,7 @@ export function PlanInfoCardUI(props: {
               <UnderlineLink
                 href="https://portal.thirdweb.com/account/billing/manage-billing"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="underline underline-offset-2 hover:text-foreground"
               >
                 {" "}

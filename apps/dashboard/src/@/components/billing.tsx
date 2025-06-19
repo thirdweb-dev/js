@@ -39,6 +39,7 @@ export function CheckoutButton(props: {
       >
         <Link
           target="_blank"
+          rel="noopener noreferrer"
           href={buildCheckoutUrl({
             teamSlug: props.teamSlug,
             sku: props.sku,
@@ -87,7 +88,7 @@ export function BillingPortalButton(props: {
       <a
         href={buildBillingPortalUrl({ teamSlug: props.teamSlug })}
         target="_blank"
-        rel="noreferrer"
+        rel="noopener noreferrer"
       >
         {props.children}
       </a>

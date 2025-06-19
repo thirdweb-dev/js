@@ -25,6 +25,7 @@ export function ContractRow({ category }: ContractRowProps) {
             {category.learnMore && (
               <Link
                 target="_blank"
+                rel="noopener noreferrer"
                 href={category.learnMore}
                 className="inline text-link-foreground"
               >
@@ -48,7 +49,7 @@ export function ContractRow({ category }: ContractRowProps) {
       <div className="h-5" />
 
       <div className="relative z-0 grid grid-cols-1 gap-4 md:grid-cols-3">
-        {category.contracts.slice(0, 6).map((publishedContractId, idx) => {
+        {category.contracts.slice(0, 6).map((publishedContractId) => {
           const publisher: string | undefined = Array.isArray(
             publishedContractId,
           )
@@ -79,10 +80,6 @@ export function ContractRow({ category }: ContractRowProps) {
                 contractId={contractId}
                 titleOverride={overrides?.title}
                 descriptionOverride={overrides?.description}
-                tracking={{
-                  source: category.id,
-                  itemIndex: `${idx}`,
-                }}
                 isBeta={category.isBeta}
                 modules={
                   modules?.length

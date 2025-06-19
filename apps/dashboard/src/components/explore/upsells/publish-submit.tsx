@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import Image from "next/image";
+import Link from "next/link";
 import exploreFeatureImage from "../../../../public/assets/landingpage/explore-featured.png";
 import heroIcon1 from "../../../../public/assets/product-pages/publish/hero-icon-1.png";
 import heroIcon2 from "../../../../public/assets/product-pages/publish/hero-icon-2.png";
@@ -43,25 +43,19 @@ export const PublishUpsellCard: React.FC = () => {
 
         <div className="mt-auto flex gap-2 pt-4">
           <Button asChild>
-            <TrackedLinkTW
-              category="publish_upsell"
-              label="contact_us"
-              href="/contact-us"
-              target="_blank"
-            >
+            <Link href="/contact-us" target="_blank" rel="noopener noreferrer">
               Get In Touch
-            </TrackedLinkTW>
+            </Link>
           </Button>
 
           <Button asChild variant="outline">
-            <TrackedLinkTW
-              category="publish_upsell"
-              label="learn_more"
+            <Link
               target="_blank"
+              rel="noopener noreferrer"
               href="https://portal.thirdweb.com/contracts/publish/overview"
             >
               Learn More
-            </TrackedLinkTW>
+            </Link>
           </Button>
         </div>
       </div>

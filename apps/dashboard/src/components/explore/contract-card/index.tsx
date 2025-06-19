@@ -2,7 +2,6 @@ import { ClientOnly } from "@/components/blocks/client-only";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
@@ -20,10 +19,6 @@ interface ContractCardProps {
   titleOverride?: string;
   descriptionOverride?: string;
   version?: string;
-  tracking?: {
-    source: string;
-    itemIndex: `${number}`;
-  };
   isBeta: boolean | undefined;
   // for modular contracts to show the modules in the card
   // publisher and moduleId are required
@@ -85,7 +80,6 @@ export async function ContractCard({
   titleOverride,
   descriptionOverride,
   version = "latest",
-  tracking,
   modules = [],
   isBeta,
 }: ContractCardProps) {
@@ -119,6 +113,7 @@ export async function ContractCard({
             <>
               <Link
                 target="_blank"
+                rel="noopener noreferrer"
                 className="relative z-1 flex items-center gap-1 font-medium text-sm text-success-text hover:underline"
                 href={auditLink}
               >
@@ -150,7 +145,7 @@ export async function ContractCard({
 
       {/* Title */}
       <h3 className="font-semibold text-lg tracking-tight">
-        <TrackedLinkTW
+        <Link
           className="cursor-pointer before:absolute before:inset-0 before:z-0"
           href={getContractUrl({
             publisher,
@@ -159,21 +154,13 @@ export async function ContractCard({
             modules,
             titleOverride,
           })}
-          category="contract_card"
-          label={contractId}
-          trackingProps={{
-            publisher,
-            contractId,
-            version,
-            ...(tracking || {}),
-          }}
         >
           {(
             titleOverride ||
             publishedContractResult.displayName ||
             publishedContractResult.name
           ).replace("[Beta]", "")}
-        </TrackedLinkTW>
+        </Link>
       </h3>
 
       {/* Desc */}

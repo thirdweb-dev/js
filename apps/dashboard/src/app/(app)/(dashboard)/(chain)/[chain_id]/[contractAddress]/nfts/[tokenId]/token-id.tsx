@@ -371,7 +371,7 @@ function IPFSLinkGroup(props: {
             asChild
             className="size-[34px] rounded-full bg-card p-0 text-muted-foreground"
           >
-            <Link href={httpLink} target="_blank">
+            <Link href={httpLink} target="_blank" rel="noopener noreferrer">
               <ExternalLinkIcon className="size-3" />
             </Link>
           </Button>

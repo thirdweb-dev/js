@@ -41,7 +41,12 @@ export function EmptyStateContent({
       </div>
       {link && (
         <Button asChild variant="primary" size="sm" className="mt-4">
-          <Link href={link} target="_blank" className="text-sm">
+          <Link
+            href={link}
+            target="_blank"
+            className="text-sm"
+            rel="noopener noreferrer"
+          >
             Configure {metric}
           </Link>
         </Button>

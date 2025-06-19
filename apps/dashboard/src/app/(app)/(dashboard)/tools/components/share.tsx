@@ -11,7 +11,12 @@ export const ShareButton = ({
 }) => {
   return (
     <Button asChild variant="outline">
-      <Link href={href} className="items-center gap-2" target="_blank">
+      <Link
+        href={href}
+        className="items-center gap-2"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         {cta} <ExternalLinkIcon className="size-3 text-muted-foreground" />
       </Link>
     </Button>

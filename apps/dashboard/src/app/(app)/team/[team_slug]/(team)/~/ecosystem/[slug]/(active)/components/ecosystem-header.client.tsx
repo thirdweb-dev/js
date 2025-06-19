@@ -392,7 +392,7 @@ export function EcosystemHeader(props: {
                       <Link
                         href={`https://${ecosystem.slug}.ecosystem.thirdweb.com`}
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                       >
                         {`${ecosystem.slug}.ecosystem.thirdweb.com`}
                         <ExternalLinkIcon className="size-3" />

@@ -1,5 +1,5 @@
 import { SkeletonContainer } from "@/components/ui/skeleton";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import Link from "next/link";
 import { useMemo } from "react";
 import { type NFT, type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
@@ -28,7 +28,6 @@ const dummyMetadata: (idx: number) => NFTWithContract = (idx) => ({
 
 interface NFTCardsProps {
   nfts: Array<NFTWithContract>;
-  trackingCategory: string;
   isPending: boolean;
   allNfts?: boolean;
   projectMeta: ProjectMeta | undefined;
@@ -37,7 +36,6 @@ interface NFTCardsProps {
 
 export const NFTCards: React.FC<NFTCardsProps> = ({
   nfts,
-  trackingCategory,
   isPending,
   allNfts,
   projectMeta,
@@ -91,9 +89,7 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
                 render={(v) => {
                   return (
                     <h2 className="font-semibold tracking-tight">
-                      <TrackedLinkTW
-                        category={trackingCategory}
-                        label="view_nft"
+                      <Link
                         href={buildContractPagePath({
                           projectMeta,
                           chainIdOrSlug: token.chainId.toString(),
@@ -103,7 +99,7 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
                         className="before:absolute before:inset-0"
                       >
                         {v.name}
-                      </TrackedLinkTW>
+                      </Link>
                     </h2>
                   );
                 }}

@@ -231,6 +231,7 @@ export function ContractTableUI(props: {
                         <Link
                           href={`/${contract.chainId}/${contract.contractAddress}`}
                           target="_blank"
+                          rel="noopener noreferrer"
                           className="-translate-x-2 relative z-10 flex items-center gap-1.5 text-muted-foreground"
                         >
                           View <ExternalLinkIcon className="size-3" />
@@ -268,7 +269,11 @@ export function ContractTableUI(props: {
               )}
               {props.variant === "contract" && (
                 <Button variant="outline" asChild className="bg-background">
-                  <Link href="/explore" target="_blank">
+                  <Link
+                    href="/explore"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Discover Contracts
                     <ExternalLinkIcon className="ml-2 size-4" />
                   </Link>

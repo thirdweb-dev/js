@@ -158,6 +158,7 @@ function PartnerRow(props: {
                 <Link
                   href={`https://${props.ecosystem.slug}.ecosystem.thirdweb.com`}
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="text-primary"
                 >
                   {props.ecosystem.slug.split(".")[1]}.ecosystem.thirdweb.com

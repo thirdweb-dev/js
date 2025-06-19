@@ -1,8 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { TabButtons } from "@/components/ui/tabs";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 export function WaitingForIntegrationCard(props: {
@@ -14,8 +14,6 @@ export function WaitingForIntegrationCard(props: {
   ctas: {
     label: string;
     href: string;
-    trackingLabel: string;
-    category: string;
   }[];
   children?: React.ReactNode;
 }) {
@@ -47,17 +45,16 @@ export function WaitingForIntegrationCard(props: {
         <div className="flex gap-3">
           {props.ctas.map((cta) => (
             <Button asChild key={cta.label} variant="outline" size="sm">
-              <TrackedLinkTW
+              <Link
                 href={cta.href}
                 key={cta.label}
                 target="_blank"
+                rel="noopener noreferrer"
                 className="gap-2"
-                category={cta.category}
-                label={cta.trackingLabel}
               >
                 {cta.label}
                 <ExternalLinkIcon className="size-4 text-muted-foreground" />
-              </TrackedLinkTW>
+              </Link>
             </Button>
           ))}
         </div>

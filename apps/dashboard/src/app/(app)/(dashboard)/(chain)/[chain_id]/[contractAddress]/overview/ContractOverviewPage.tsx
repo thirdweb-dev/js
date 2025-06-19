@@ -26,8 +26,6 @@ interface ContractOverviewPageProps {
   projectMeta: ProjectMeta | undefined;
 }
 
-const TRACKING_CATEGORY = "contract_overview";
-
 export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
   contract,
   isErc1155,
@@ -75,7 +73,6 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
           <ContractAnalyticsOverviewCard
             contractAddress={contract.address}
             chainId={contract.chain.id}
-            trackingCategory={TRACKING_CATEGORY}
             chainSlug={chainSlug}
             projectMeta={projectMeta}
           />
@@ -85,7 +82,6 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
           <MarketplaceDetails
             contract={contract}
             projectMeta={projectMeta}
-            trackingCategory={TRACKING_CATEGORY}
             hasEnglishAuctions={hasEnglishAuctions}
             hasDirectListings={hasDirectListings}
             chainSlug={chainSlug}
@@ -95,7 +91,6 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
         {(isErc1155 || isErc721) && (
           <NFTDetails
             contract={contract}
-            trackingCategory={TRACKING_CATEGORY}
             isErc721={isErc721}
             chainSlug={chainSlug}
             projectMeta={projectMeta}
@@ -106,7 +101,6 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
 
         <LatestEvents
           contract={contract}
-          trackingCategory={TRACKING_CATEGORY}
           chainSlug={chainSlug}
           projectMeta={projectMeta}
         />
@@ -114,14 +108,12 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
         {isPermissionsEnumerable && (
           <PermissionsTable
             contract={contract}
-            trackingCategory={TRACKING_CATEGORY}
             chainSlug={chainSlug}
             projectMeta={projectMeta}
           />
         )}
 
         <BuildYourApp
-          trackingCategory={TRACKING_CATEGORY}
           chainSlug={chainSlug}
           contractAddress={contract.address}
           projectMeta={projectMeta}

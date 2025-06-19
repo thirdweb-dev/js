@@ -15,7 +15,7 @@ import { useMemo, useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { getAccounts, totalAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
-import { Text, TrackedCopyButton } from "tw-components";
+import { Legacy_CopyButton, Text } from "tw-components";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 
@@ -27,9 +27,8 @@ const columns = [
     cell: (info) => (
       <Flex gap={2} align="center">
         <Text fontFamily="mono">{info.getValue()}</Text>
-        <TrackedCopyButton
+        <Legacy_CopyButton
           value={info.getValue()}
-          category="accounts"
           aria-label="Copy account address"
           colorScheme="primary"
         />

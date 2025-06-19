@@ -1009,6 +1009,7 @@ function EmptyEngineState(props: {
           <Link
             href="https://portal.thirdweb.com/engine"
             target="_blank"
+            rel="noopener noreferrer"
             className="text-foreground hover:underline"
           >
             View documentation

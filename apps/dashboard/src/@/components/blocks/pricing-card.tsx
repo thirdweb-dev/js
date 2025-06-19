@@ -178,7 +178,12 @@ export const PricingCard: React.FC<PricingCardProps> = ({
               className={highlighted ? undefined : "bg-background"}
               asChild
             >
-              <Link href={cta.href} target="_blank" onClick={handleCTAClick}>
+              <Link
+                href={cta.href}
+                target="_blank"
+                onClick={handleCTAClick}
+                rel="noopener noreferrer"
+              >
                 {has7DayTrial ? "Start 7 Day Free Trial" : cta.label}
               </Link>
             </Button>

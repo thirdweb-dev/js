@@ -28,7 +28,6 @@ function getDateKey(date: Date, precision: "day" | "hour") {
 export function ContractAnalyticsOverviewCard(props: {
   contractAddress: string;
   chainId: number;
-  trackingCategory: string;
   chainSlug: string;
   projectMeta: ProjectMeta | undefined;
 }) {
@@ -86,7 +85,7 @@ export function ContractAnalyticsOverviewCard(props: {
             variant="outline"
             onClick={() => {
               trackEvent({
-                category: props.trackingCategory,
+                category: "contract_overview",
                 action: "click",
                 label: "view_all_analytics",
               });

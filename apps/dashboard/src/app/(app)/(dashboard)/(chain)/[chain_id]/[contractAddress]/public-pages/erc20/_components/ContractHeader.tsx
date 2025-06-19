@@ -189,7 +189,7 @@ function BadgeLink(props: {
       asChild
       className="!h-auto gap-2 rounded-full bg-card px-3 py-1.5 text-xs capitalize"
     >
-      <Link href={props.href} target="_blank">
+      <Link href={props.href} target="_blank" rel="noopener noreferrer">
         {props.name}
         <ExternalLinkIcon className="size-3 text-muted-foreground/70" />
       </Link>
@@ -212,7 +212,12 @@ function SocialLink(props: {
           props.icon && "rounded-full p-1.5",
         )}
       >
-        <Link href={props.href} target="_blank" className="capitalize">
+        <Link
+          href={props.href}
+          target="_blank"
+          className="capitalize"
+          rel="noopener noreferrer"
+        >
           {props.icon ? <props.icon className="size-4" /> : props.name}
           {!props.icon && (
             <ExternalLinkIcon className="size-3 text-muted-foreground/70" />

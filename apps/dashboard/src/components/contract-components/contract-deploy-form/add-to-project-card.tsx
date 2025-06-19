@@ -86,6 +86,7 @@ export function AddToProjectCardUI(props: TeamAndProjectSelectorProps) {
                 href={`/team/${selectedTeam.team.slug}`}
                 className="inline-flex items-center gap-2"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 Create Project <ExternalLinkIcon className="size-3.5" />
               </UnderlineLink>

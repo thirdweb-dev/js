@@ -19,7 +19,6 @@ export default function Layout(props: {
 function NebulaFooter() {
   return (
     <FooterLinksSection
-      trackingCategory="nebula"
       left={{
         title: "Documentation",
         links: [

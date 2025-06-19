@@ -1,17 +1,13 @@
 "use client";
 
 import { DismissibleAlert } from "@/components/blocks/dismissible-alert";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Button } from "@/components/ui/button";
 import { TabPathLinks } from "@/components/ui/tabs";
-import {
-  TrackedLinkTW,
-  TrackedUnderlineLink,
-} from "@/components/ui/tracked-link";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { ArrowRightIcon } from "lucide-react";
+import Link from "next/link";
 import { AAFooter } from "./AAFooterSection";
-
-const TRACKING_CATEGORY = "smart-wallet";
 
 export function AccountAbstractionLayout(props: {
   projectSlug: string;
@@ -36,14 +32,13 @@ export function AccountAbstractionLayout(props: {
             <p className="text-muted-foreground text-sm">
               Integrate ERC-4337 compliant smart accounts for gasless
               sponsorships and more. <br className="lg:hidden" />
-              <TrackedUnderlineLink
+              <UnderlineLink
                 target="_blank"
-                label="docs-wallets"
-                category={TRACKING_CATEGORY}
+                rel="noopener noreferrer"
                 href="https://portal.thirdweb.com/wallets/smart-wallet"
               >
                 Learn more about Account Abstraction
-              </TrackedUnderlineLink>
+              </UnderlineLink>
             </p>
           </div>
           {props.hasSmartWalletsWithoutBilling && (
@@ -106,14 +101,13 @@ function GasCreditAlert(props: {
       description={
         <>
           Redeem credits towards gas Sponsorship. <br className="lg:hidden" />
-          <TrackedUnderlineLink
+          <UnderlineLink
             target="_blank"
-            label="superchain-landing"
-            category={TRACKING_CATEGORY}
             href="https://thirdweb.com/superchain"
+            rel="noopener noreferrer"
           >
             Learn More
-          </TrackedUnderlineLink>
+          </UnderlineLink>
           <div className="mt-4 flex items-center gap-4">
             <Button
               asChild
@@ -121,15 +115,13 @@ function GasCreditAlert(props: {
               size="sm"
               className="bg-background"
             >
-              <TrackedLinkTW
+              <Link
                 href={`/team/${props.teamSlug}/~/settings/credits`}
                 target="_blank"
                 className="gap-2"
-                category={TRACKING_CATEGORY}
-                label="claim-credits"
               >
                 Claim your credits <ArrowRightIcon className="size-4" />
-              </TrackedLinkTW>
+              </Link>
             </Button>
           </div>
         </>

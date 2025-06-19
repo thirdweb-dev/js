@@ -151,7 +151,7 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
             )}
 
             <Button variant="primary" asChild className="py-2 text-sm">
-              <Link href="/support" target="_blank">
+              <Link href="/support" target="_blank" rel="noopener noreferrer">
                 Visit support site
               </Link>
             </Button>

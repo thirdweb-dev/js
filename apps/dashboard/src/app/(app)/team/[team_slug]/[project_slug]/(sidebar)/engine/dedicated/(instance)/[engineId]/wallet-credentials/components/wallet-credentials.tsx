@@ -67,6 +67,7 @@ export const WalletCredentialsSection: React.FC<WalletCredentialsProps> = ({
             <Link
               href="https://portal.thirdweb.com/engine/features/wallet-credentials"
               target="_blank"
+              rel="noopener noreferrer"
             >
               Learn more about wallet credentials.
             </Link>

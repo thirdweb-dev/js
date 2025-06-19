@@ -23,6 +23,7 @@ export function ExplorersSection(props: {
               <Link
                 href={explorer.url}
                 target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-muted-foreground text-sm before:absolute before:inset-0 before:z-0"
               >
                 {explorer.url.endsWith("/")
