@@ -696,6 +696,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               const parsedError = parseError(e);
               reportContractDeployFailed({
                 errorMessage: parsedError,
+                chainId: walletChain.id,
+                publisher: rewriteTwPublisher(metadata.publisher),
+                contractName: metadata.name,
               });
 
               deployStatusModal.close();

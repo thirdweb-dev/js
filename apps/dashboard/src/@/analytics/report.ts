@@ -37,6 +37,9 @@ export function reportContractDeployed(properties: {
  */
 export function reportContractDeployFailed(properties: {
   errorMessage: string;
+  chainId: number;
+  publisher: string | undefined;
+  contractName: string | undefined;
 }) {
   posthog.capture("contract deploy failed", properties);
 }
