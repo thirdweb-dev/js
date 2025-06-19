@@ -1,6 +1,5 @@
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
-
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import {
   getAuthToken,
@@ -9,7 +8,7 @@ import {
 import { loginRedirect } from "@app/login/loginRedirect";
 import { redirect } from "next/navigation";
 import { CreateAssetPageHeader } from "../_common/PageHeader";
-import { CreateNFTPage } from "./create-nft-page";
+import { CreateTokenAssetPage } from "./create-token-page-impl";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -25,7 +24,7 @@ export default async function Page(props: {
 
   if (!authToken || !accountAddress) {
     loginRedirect(
-      `/team/${params.team_slug}/${params.project_slug}/assets/create/nft`,
+      `/team/${params.team_slug}/${params.project_slug}/tokens/create/token`,
     );
   }
 
@@ -45,18 +44,18 @@ export default async function Page(props: {
   return (
     <div className="flex grow flex-col">
       <CreateAssetPageHeader
-        title="Create NFT Collection"
-        description="Launch an NFT collection for your project"
         teamSlug={params.team_slug}
         projectSlug={params.project_slug}
+        title="Create Coin"
+        description="Launch an ERC-20 coin for your project"
         containerClassName="container max-w-5xl"
       />
       <div className="container max-w-5xl pt-8 pb-32">
-        <CreateNFTPage
-          accountAddress={accountAddress}
-          client={client}
+        <CreateTokenAssetPage
           teamSlug={params.team_slug}
           projectSlug={params.project_slug}
+          accountAddress={accountAddress}
+          client={client}
           teamId={team.id}
           projectId={project.id}
         />

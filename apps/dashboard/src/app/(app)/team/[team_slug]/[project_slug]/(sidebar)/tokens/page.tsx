@@ -24,7 +24,7 @@ export default async function Page(props: {
   ]);
 
   if (!authToken) {
-    loginRedirect(`/team/${params.team_slug}/${params.project_slug}/assets`);
+    loginRedirect(`/team/${params.team_slug}/${params.project_slug}/tokens`);
   }
 
   if (!team) {

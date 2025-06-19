@@ -40,7 +40,7 @@ export function Cards(props: {
       <CardLink
         title="Create Coin"
         description="Launch your own ERC-20 coin"
-        href={`/team/${props.teamSlug}/${props.projectSlug}/assets/create/token`}
+        href={`/team/${props.teamSlug}/${props.projectSlug}/tokens/create/token`}
         icon={CoinsIcon}
         onClick={() => {
           reportAssetCreationStarted({
@@ -52,7 +52,7 @@ export function Cards(props: {
       <CardLink
         title="Create NFT Collection"
         description="Launch your own NFT collection"
-        href={`/team/${props.teamSlug}/${props.projectSlug}/assets/create/nft`}
+        href={`/team/${props.teamSlug}/${props.projectSlug}/tokens/create/nft`}
         icon={ImagesIcon}
         onClick={() => {
           reportAssetCreationStarted({

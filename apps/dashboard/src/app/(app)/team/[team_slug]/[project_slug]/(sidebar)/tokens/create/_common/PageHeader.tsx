@@ -24,9 +24,9 @@ export function CreateAssetPageHeader(props: {
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link
-                  href={`/team/${props.teamSlug}/${props.projectSlug}/assets`}
+                  href={`/team/${props.teamSlug}/${props.projectSlug}/tokens`}
                 >
-                  Assets
+                  Tokens
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>

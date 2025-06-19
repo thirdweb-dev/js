@@ -1,14 +1,15 @@
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
+
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { redirect } from "next/navigation";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,
-} from "../../../../../../../api/lib/getAuthToken";
-import { loginRedirect } from "../../../../../../../login/loginRedirect";
+} from "@app/api/lib/getAuthToken";
+import { loginRedirect } from "@app/login/loginRedirect";
+import { redirect } from "next/navigation";
 import { CreateAssetPageHeader } from "../_common/PageHeader";
-import { CreateTokenAssetPage } from "./create-token-page-impl";
+import { CreateNFTPage } from "./create-nft-page";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -24,7 +25,7 @@ export default async function Page(props: {
 
   if (!authToken || !accountAddress) {
     loginRedirect(
-      `/team/${params.team_slug}/${params.project_slug}/assets/create/token`,
+      `/team/${params.team_slug}/${params.project_slug}/tokens/create/nft`,
     );
   }
 
@@ -44,18 +45,18 @@ export default async function Page(props: {
   return (
     <div className="flex grow flex-col">
       <CreateAssetPageHeader
+        title="Create NFT Collection"
+        description="Launch an NFT collection for your project"
         teamSlug={params.team_slug}
         projectSlug={params.project_slug}
-        title="Create Coin"
-        description="Launch an ERC-20 coin for your project"
         containerClassName="container max-w-5xl"
       />
       <div className="container max-w-5xl pt-8 pb-32">
-        <CreateTokenAssetPage
-          teamSlug={params.team_slug}
-          projectSlug={params.project_slug}
+        <CreateNFTPage
           accountAddress={accountAddress}
           client={client}
+          teamSlug={params.team_slug}
+          projectSlug={params.project_slug}
           teamId={team.id}
           projectId={project.id}
         />

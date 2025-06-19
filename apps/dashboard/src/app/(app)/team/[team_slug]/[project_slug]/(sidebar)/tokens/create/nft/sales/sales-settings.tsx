@@ -37,7 +37,7 @@ export function SalesSettings(props: {
               <h3 className="font-semibold text-base"> Primary Sales</h3>
               <p className="text-muted-foreground text-sm">
                 Set the wallet address that should receive the revenue from
-                initial sales of the assets
+                initial sales of the tokens
               </p>
             </div>
             <FormFieldSetup
@@ -60,7 +60,7 @@ export function SalesSettings(props: {
               <h3 className="font-semibold text-base">Royalties</h3>
               <p className="text-muted-foreground text-sm">
                 Set the wallet address should receive the revenue from royalties
-                earned from secondary sales of the assets
+                earned from secondary sales of the tokens
               </p>
             </div>
             <div className="flex flex-col gap-4 md:flex-row">
@@ -72,7 +72,7 @@ export function SalesSettings(props: {
                 helperText={
                   <>
                     The wallet address that should receive the revenue from
-                    royalties earned from secondary sales of the assets.
+                    royalties earned from secondary sales of the tokens.
                   </>
                 }
               >

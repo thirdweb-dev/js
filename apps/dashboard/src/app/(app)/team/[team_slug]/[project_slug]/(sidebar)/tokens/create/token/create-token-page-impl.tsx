@@ -338,7 +338,7 @@ export function CreateTokenAssetPage(props: {
       projectSlug={props.projectSlug}
       onLaunchSuccess={() => {
         revalidatePathAction(
-          `/team/${props.teamSlug}/project/${props.projectId}/assets`,
+          `/team/${props.teamSlug}/project/${props.projectId}/tokens`,
           "page",
         );
       }}

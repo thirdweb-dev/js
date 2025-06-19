@@ -337,7 +337,7 @@ export function CreateNFTPage(props: {
       {...props}
       onLaunchSuccess={() => {
         revalidatePathAction(
-          `/team/${props.teamSlug}/project/${props.projectSlug}/assets`,
+          `/team/${props.teamSlug}/project/${props.projectSlug}/tokens`,
           "page",
         );
       }}
