@@ -34,7 +34,7 @@ export function ProjectSidebarLayout(props: {
         },
         {
           label: "Wallets",
-          href: `${layoutPath}/connect/in-app-wallets`,
+          href: `${layoutPath}/wallets`,
           icon: WalletIcon,
         },
         {

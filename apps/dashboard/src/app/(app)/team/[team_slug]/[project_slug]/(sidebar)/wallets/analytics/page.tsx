@@ -10,7 +10,5 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
   // Default to the users tab
-  redirect(
-    `/team/${params.team_slug}/${params.project_slug}/connect/in-app-wallets`,
-  );
+  redirect(`/team/${params.team_slug}/${params.project_slug}/wallets`);
 }

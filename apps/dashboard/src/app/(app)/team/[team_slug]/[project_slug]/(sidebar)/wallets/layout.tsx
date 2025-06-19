@@ -33,17 +33,17 @@ export default async function Layout(props: {
           links={[
             {
               name: "Analytics",
-              path: `/team/${team_slug}/${project_slug}/connect/in-app-wallets`,
+              path: `/team/${team_slug}/${project_slug}/wallets`,
               exactMatch: true,
             },
             {
               name: "Users",
-              path: `/team/${team_slug}/${project_slug}/connect/in-app-wallets/users`,
+              path: `/team/${team_slug}/${project_slug}/wallets/users`,
               exactMatch: true,
             },
             {
               name: "Settings",
-              path: `/team/${team_slug}/${project_slug}/connect/in-app-wallets/settings`,
+              path: `/team/${team_slug}/${project_slug}/wallets/settings`,
               exactMatch: true,
             },
           ]}
