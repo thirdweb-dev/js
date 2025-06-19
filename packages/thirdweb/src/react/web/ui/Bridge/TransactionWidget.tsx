@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import type { Token } from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
+import { getToken } from "../../../../pay/convert/get-token.js";
 import {
   type PreparedTransaction,
   prepareTransaction,
@@ -11,7 +13,6 @@ import {
 import { type Address, checksumAddress } from "../../../../utils/address.js";
 import { stringify } from "../../../../utils/json.js";
 import { toUnits } from "../../../../utils/units.js";
-import { getToken } from "../../../../pay/convert/get-token.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
@@ -28,7 +29,6 @@ import { Spinner } from "../components/Spinner.js";
 import type { LocaleId } from "../types.js";
 import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
 import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 
 export type TransactionWidgetProps = {
   supportedTokens?: SupportedTokens;
@@ -171,15 +171,15 @@ export type TransactionWidgetProps = {
 type UIOptionsResult =
   | { type: "success"; data: UIOptions }
   | {
-    type: "indexing_token";
-    token: Token;
-    chain: Chain;
-  }
+      type: "indexing_token";
+      token: Token;
+      chain: Chain;
+    }
   | {
-    type: "unsupported_token";
-    tokenAddress: Address;
-    chain: Chain;
-  };
+      type: "unsupported_token";
+      tokenAddress: Address;
+      chain: Chain;
+    };
 
 /**
  * Widget a prebuilt UI for purchasing a specific token.
@@ -426,10 +426,10 @@ type TransactionWidgetConnectOptions = {
    * ```
    */
   autoConnect?:
-  | {
-    timeout: number;
-  }
-  | boolean;
+    | {
+        timeout: number;
+      }
+    | boolean;
 
   /**
    * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.

@@ -171,15 +171,15 @@ export type CheckoutWidgetProps = {
 type UIOptionsResult =
   | { type: "success"; data: UIOptions }
   | {
-    type: "indexing_token";
-    token: Token;
-    chain: Chain;
-  }
+      type: "indexing_token";
+      token: Token;
+      chain: Chain;
+    }
   | {
-    type: "unsupported_token";
-    tokenAddress: Address;
-    chain: Chain;
-  };
+      type: "unsupported_token";
+      tokenAddress: Address;
+      chain: Chain;
+    };
 
 /**
  * Widget a prebuilt UI for purchasing a specific token.
@@ -401,10 +401,10 @@ type CheckoutWidgetConnectOptions = {
    * ```
    */
   autoConnect?:
-  | {
-    timeout: number;
-  }
-  | boolean;
+    | {
+        timeout: number;
+      }
+    | boolean;
 
   /**
    * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.
