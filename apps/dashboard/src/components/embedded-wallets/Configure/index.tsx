@@ -31,7 +31,6 @@ import {
   type ApiKeyEmbeddedWalletsValidationSchema,
   apiKeyEmbeddedWalletsValidationSchema,
 } from "components/settings/ApiKeys/validations";
-import { useTrack } from "hooks/analytics/useTrack";
 import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
@@ -46,7 +45,6 @@ import { FileInput } from "../../shared/FileInput";
 import CountrySelector from "./sms-country-select/country-selector";
 
 type InAppWalletSettingsPageProps = {
-  trackingCategory: string;
   project: Project;
   teamId: string;
   teamSlug: string;
@@ -74,38 +72,14 @@ export function InAppWalletSettingsPage(props: InAppWalletSettingsPageProps) {
     },
   });
 
-  const { trackingCategory } = props;
-  const trackEvent = useTrack();
-
-  function handleUpdateProject(
-    projectValues: Partial<Project>,
-    trackingData: UpdateAPIKeyTrackingData,
-  ) {
-    trackEvent({
-      category: trackingCategory,
-      action: "configuration-update",
-      label: "attempt",
-    });
-
+  function handleUpdateProject(projectValues: Partial<Project>) {
     updateProject.mutate(projectValues, {
       onSuccess: () => {
         toast.success("In-App Wallet API Key configuration updated");
-        trackEvent({
-          category: trackingCategory,
-          action: "configuration-update",
-          label: "success",
-          data: trackingData,
-        });
       },
       onError: (err) => {
         toast.error("Failed to update an API Key");
         console.error(err);
-        trackEvent({
-          category: trackingCategory,
-          action: "configuration-update",
-          label: "error",
-          error: err,
-        });
       },
     });
   }

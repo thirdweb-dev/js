@@ -19,7 +19,6 @@ import {
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
@@ -135,7 +134,7 @@ const RemoveModal = ({
     instanceUrl,
     authToken,
   });
-  const trackEvent = useTrack();
+
   const { onSuccess, onError } = useTxNotifications(
     "Successfully removed public key",
     "Failed to remove public key",
@@ -148,22 +147,10 @@ const RemoveModal = ({
         onSuccess: () => {
           onSuccess();
           disclosure.onClose();
-          trackEvent({
-            category: "engine",
-            action: "remove-keypair",
-            label: "success",
-            instance: instanceUrl,
-          });
         },
         onError: (error) => {
           onError(error);
-          trackEvent({
-            category: "engine",
-            action: "remove-keypair",
-            label: "error",
-            instance: instanceUrl,
-            error,
-          });
+          console.error(error);
         },
       },
     );

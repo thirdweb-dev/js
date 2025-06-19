@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { useEngineCreateWalletCredential } from "@3rdweb-sdk/react/hooks/useEngine";
-import { useTrack } from "hooks/analytics/useTrack";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -16,7 +15,6 @@ export const CreateWalletCredentialButton: React.FC<
   CreateWalletCredentialButtonProps
 > = ({ instanceUrl, authToken }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const trackEvent = useTrack();
 
   const createCredential = useEngineCreateWalletCredential({
     instanceUrl,
@@ -29,22 +27,10 @@ export const CreateWalletCredentialButton: React.FC<
     toast.promise(promise, {
       success: () => {
         setIsOpen(false);
-        trackEvent({
-          category: "engine",
-          action: "create-wallet-credential",
-          label: "success",
-          type: data.type,
-        });
         return "Wallet credential created successfully";
       },
       error: (error) => {
-        trackEvent({
-          category: "engine",
-          action: "create-wallet-credential",
-          label: "error",
-          type: data.type,
-          error,
-        });
+        console.error(error);
         return "Failed to create wallet credential";
       },
     });
@@ -54,10 +40,6 @@ export const CreateWalletCredentialButton: React.FC<
     <>
       <Button
         onClick={() => {
-          trackEvent({
-            category: "engine",
-            action: "open-create-wallet-credential",
-          });
           setIsOpen(true);
         }}
       >

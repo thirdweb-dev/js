@@ -15,7 +15,6 @@ import {
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { Loader2Icon, LockIcon } from "lucide-react";
 import { useState } from "react";
@@ -47,7 +46,7 @@ export function SendTestTransaction(props: {
   const queryClient = useQueryClient();
   const [hasSentTx, setHasSentTx] = useState(false);
   const router = useDashboardRouter();
-  const trackEvent = useTrack();
+
   const chainsQuery = useAllChainsData();
 
   const userAccessToken =
@@ -77,11 +76,6 @@ export function SendTestTransaction(props: {
       accessToken: string;
       chainId: number;
     }) => {
-      trackEvent({
-        category: "engine-cloud",
-        action: "send_test_tx",
-      });
-
       const response = await engineCloudProxy({
         pathname: "/v1/write/transaction",
         method: "POST",

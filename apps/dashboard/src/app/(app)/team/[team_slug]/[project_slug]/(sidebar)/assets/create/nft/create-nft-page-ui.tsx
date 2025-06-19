@@ -1,5 +1,6 @@
 "use client";
 
+import { reportAssetCreationStepConfigured } from "@/analytics/report";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -86,6 +87,10 @@ export function CreateNFTPageUI(props: {
           client={props.client}
           form={nftCollectionInfoForm}
           onNext={() => {
+            reportAssetCreationStepConfigured({
+              assetType: "nft",
+              step: "collection-info",
+            });
             setStep(nftCreationPages["upload-assets"]);
           }}
         />
@@ -96,6 +101,10 @@ export function CreateNFTPageUI(props: {
           nftData={nftData}
           setNFTData={setNFTData}
           onNext={() => {
+            reportAssetCreationStepConfigured({
+              assetType: "nft",
+              step: "upload-assets",
+            });
             setStep(nftCreationPages["sales-settings"]);
           }}
           onPrev={() => {
@@ -111,6 +120,10 @@ export function CreateNFTPageUI(props: {
           form={nftSalesSettingsForm}
           client={props.client}
           onNext={() => {
+            reportAssetCreationStepConfigured({
+              assetType: "nft",
+              step: "sales-settings",
+            });
             setStep(nftCreationPages["launch-nft"]);
           }}
           onPrev={() => {

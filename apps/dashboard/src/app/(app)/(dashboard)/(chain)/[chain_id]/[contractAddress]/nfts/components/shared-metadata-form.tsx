@@ -13,7 +13,6 @@ import {
 } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
@@ -42,7 +41,6 @@ export const SharedMetadataForm: React.FC<{
   setOpen: Dispatch<SetStateAction<boolean>>;
   isLoggedIn: boolean;
 }> = ({ contract, setOpen, isLoggedIn }) => {
-  const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const sendAndConfirmTx = useSendAndConfirmTransaction();
   const form = useForm<NFTMetadataInputLimited>();
@@ -82,11 +80,6 @@ export const SharedMetadataForm: React.FC<{
             animation_url: data.animation_url,
           };
 
-          trackEvent({
-            category: "nft",
-            action: "set-shared-metadata",
-            label: "attempt",
-          });
           try {
             const transaction = setSharedMetadata({
               contract,
@@ -94,21 +87,10 @@ export const SharedMetadataForm: React.FC<{
             });
             await sendAndConfirmTx.mutateAsync(transaction, {
               onSuccess: () => {
-                trackEvent({
-                  category: "nft",
-                  action: "set-shared-metadata",
-                  label: "success",
-                });
                 setOpen(false);
               },
-              // biome-ignore lint/suspicious/noExplicitAny: FIXME
-              onError: (error: any) => {
-                trackEvent({
-                  category: "nft",
-                  action: "set-shared-metadata",
-                  label: "error",
-                  error,
-                });
+              onError: (error) => {
+                console.error(error);
               },
             });
 

@@ -10,7 +10,6 @@ import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import type { TrackingParams } from "hooks/analytics/useTrack";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { ArrowLeftIcon, RotateCcwIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -28,10 +27,8 @@ type VerifyEmailProps = {
     confirmationToken: string;
   }) => Promise<{ account: Account }>;
   resendConfirmationEmail: () => Promise<void>;
-  trackEvent: (params: TrackingParams) => void;
   accountAddress: string;
   title: string;
-  trackingAction: string;
 };
 
 export function VerifyEmail(props: VerifyEmailProps) {
@@ -51,30 +48,13 @@ export function VerifyEmail(props: VerifyEmailProps) {
   });
 
   const handleSubmit = form.handleSubmit((values) => {
-    props.trackEvent({
-      category: "account",
-      action: props.trackingAction,
-      label: "attempt",
-    });
-
     verifyEmail.mutate(values, {
       onSuccess: (response) => {
         props.onEmailConfirmed(response);
-        props.trackEvent({
-          category: "account",
-          action: props.trackingAction,
-          label: "success",
-        });
       },
       onError: (error) => {
         console.error(error);
         toast.error("Invalid confirmation code");
-        props.trackEvent({
-          category: "account",
-          action: props.trackingAction,
-          label: "error",
-          error: error.message,
-        });
       },
     });
   });
@@ -83,29 +63,13 @@ export function VerifyEmail(props: VerifyEmailProps) {
     form.setValue("confirmationToken", "");
     verifyEmail.reset();
 
-    props.trackEvent({
-      category: "account",
-      action: "resendEmailConfirmation",
-      label: "attempt",
-    });
-
     resendConfirmationEmail.mutate(undefined, {
       onSuccess: () => {
         toast.success("Verification code sent");
-        props.trackEvent({
-          category: "account",
-          action: "resendEmailConfirmation",
-          label: "success",
-        });
       },
       onError: (error) => {
+        console.error(error);
         toast.error("Failed to send verification code");
-        props.trackEvent({
-          category: "account",
-          action: "resendEmailConfirmation",
-          label: "error",
-          error,
-        });
       },
     });
   }
@@ -195,23 +159,11 @@ export function VerifyEmail(props: VerifyEmailProps) {
 export function LinkWalletVerifyEmail(
   props: Omit<VerifyEmailProps, "title" | "trackingAction">,
 ) {
-  return (
-    <VerifyEmail
-      {...props}
-      title="Link Wallet"
-      trackingAction="confirmLinkWallet"
-    />
-  );
+  return <VerifyEmail {...props} title="Link Wallet" />;
 }
 
 export function SignupVerifyEmail(
   props: Omit<VerifyEmailProps, "title" | "trackingAction">,
 ) {
-  return (
-    <VerifyEmail
-      {...props}
-      title="Verify Email"
-      trackingAction="confirmEmail"
-    />
-  );
+  return <VerifyEmail {...props} title="Verify Email" />;
 }

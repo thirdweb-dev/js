@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/sheet";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { BatchLazyMint } from "core-ui/batch-upload/batch-lazy-mint";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { FileStackIcon } from "lucide-react";
 import { useState } from "react";
@@ -32,7 +31,6 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
   isErc721,
   isLoggedIn,
 }) => {
-  const trackEvent = useTrack();
   const [open, setOpen] = useState(false);
 
   const nextTokenIdToMintQuery = useReadContract(
@@ -71,13 +69,6 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
             client={contract.client}
             chainId={contract.chain.id}
             onSubmit={async ({ revealType, data }) => {
-              // nice, we can set up everything the same for both the only thing that changes is the action string
-              const action = `batch-upload-${revealType}` as const;
-              trackEvent({
-                category: "nft",
-                action,
-                label: "attempt",
-              });
               try {
                 const tx = (() => {
                   switch (true) {
@@ -112,20 +103,10 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
 
                 await sendTxMutation.mutateAsync(tx);
 
-                trackEvent({
-                  category: "nft",
-                  action,
-                  label: "success",
-                });
                 txNotifications.onSuccess();
                 setOpen(false);
               } catch (error) {
-                trackEvent({
-                  category: "nft",
-                  action,
-                  label: "error",
-                  error,
-                });
+                console.error(error);
                 txNotifications.onError(error);
               }
             }}

@@ -1,14 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { useTrack } from "hooks/analytics/useTrack";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
-import { getStepCardTrackingData } from "../token/_common/tracking";
 
 export function StepCard(props: {
   title: string;
-  tracking: {
-    page: string;
-    contractType: "DropERC20" | "NFTCollection";
-  };
   prevButton:
     | undefined
     | {
@@ -31,7 +25,6 @@ export function StepCard(props: {
       };
   children: React.ReactNode;
 }) {
-  const trackEvent = useTrack();
   const nextButton = props.nextButton;
   return (
     <div className="rounded-lg border bg-card">
@@ -49,13 +42,6 @@ export function StepCard(props: {
               className="gap-2"
               onClick={() => {
                 props.prevButton?.onClick();
-                trackEvent(
-                  getStepCardTrackingData({
-                    step: props.tracking.page,
-                    contractType: props.tracking.contractType,
-                    click: "prev",
-                  }),
-                );
               }}
             >
               <ArrowLeftIcon className="size-4" />
@@ -70,14 +56,6 @@ export function StepCard(props: {
               type="submit"
               disabled={nextButton.disabled}
               onClick={() => {
-                trackEvent(
-                  getStepCardTrackingData({
-                    step: props.tracking.page,
-                    contractType: props.tracking.contractType,
-                    click: "next",
-                  }),
-                );
-
                 if (nextButton.type === "click") {
                   nextButton.onClick();
                 }

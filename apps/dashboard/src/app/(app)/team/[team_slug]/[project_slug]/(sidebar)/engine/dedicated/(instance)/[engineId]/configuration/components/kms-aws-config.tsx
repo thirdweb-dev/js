@@ -10,7 +10,6 @@ import {
   useEngineWalletConfig,
   useHasEngineFeature,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -36,7 +35,7 @@ export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({
     instance.url,
     "HETEROGENEOUS_WALLET_TYPES",
   );
-  const trackEvent = useTrack();
+
   const { onSuccess, onError } = useTxNotifications(
     "Configuration set successfully.",
     "Failed to set configuration.",
@@ -62,22 +61,9 @@ export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({
     setAwsKmsConfig(data, {
       onSuccess: () => {
         onSuccess();
-        trackEvent({
-          category: "engine",
-          action: "set-wallet-config",
-          type: "aws-kms",
-          label: "success",
-        });
       },
       onError: (error) => {
         onError(error);
-        trackEvent({
-          category: "engine",
-          action: "set-wallet-config",
-          type: "aws-kms",
-          label: "error",
-          error,
-        });
       },
     });
   };

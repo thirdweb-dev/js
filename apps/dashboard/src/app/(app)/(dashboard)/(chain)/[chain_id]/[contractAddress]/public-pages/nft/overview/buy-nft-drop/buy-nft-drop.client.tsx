@@ -1,16 +1,15 @@
 "use client";
-import { useTrack } from "hooks/analytics/useTrack";
+import {
+  reportAssetBuyFailed,
+  reportAssetBuySuccessful,
+} from "@/analytics/report";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import type { NFT } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo, getNFT } from "thirdweb/extensions/erc721";
-import {
-  useActiveAccount,
-  useActiveWallet,
-  useSendAndConfirmTransaction,
-} from "thirdweb/react";
+import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { getClaimParams } from "thirdweb/utils";
 import { parseError } from "utils/errorParser";
 import { getCurrencyMeta } from "../../../erc20/_utils/getCurrencyMeta";
@@ -29,45 +28,12 @@ export type BuyNFTDropProps = Omit<
 >;
 
 export function BuyNFTDrop(props: BuyNFTDropProps) {
-  const trackEvent = useTrack();
   const sendAndConfirmTx = useSendAndConfirmTransaction();
   const account = useActiveAccount();
-  const activeWallet = useActiveWallet();
-
-  function trackAssetBuy(
-    params:
-      | {
-          type: "attempt" | "success";
-        }
-      | {
-          type: "error";
-          errorMessage: string;
-        },
-  ) {
-    trackEvent({
-      category: "asset",
-      action: "buy",
-      label: params.type,
-      contractType: "NFTCollection",
-      ercType: "erc721",
-      accountAddress: account?.address,
-      walletId: activeWallet?.id,
-      chainId: props.contract.chain.id,
-      ...(params.type === "error"
-        ? {
-            errorMessage: params.errorMessage,
-          }
-        : {}),
-    });
-  }
 
   const handleSubmit = async (form: BuyNFTDropForm) => {
     const nftAmountToClaim = form.getValues("amount");
     try {
-      trackAssetBuy({
-        type: "attempt",
-      });
-
       if (!account) {
         return toast.error("No account detected");
       }
@@ -103,12 +69,16 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
         try {
           await approveTxPromise;
         } catch (err) {
+          console.error(err);
           const errorMessage = parseError(err);
-          trackAssetBuy({
-            type: "error",
-            errorMessage:
-              typeof errorMessage === "string" ? errorMessage : "Unknown error",
+
+          reportAssetBuyFailed({
+            chainId: props.contract.chain.id,
+            contractType: "DropERC721",
+            assetType: "nft",
+            error: errorMessage,
           });
+
           return;
         }
       }
@@ -129,30 +99,38 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
       try {
         await claimTxPromise;
 
-        trackAssetBuy({
-          type: "success",
+        reportAssetBuySuccessful({
+          chainId: props.contract.chain.id,
+          contractType: "DropERC721",
+          assetType: "nft",
         });
 
         props.onSuccess?.();
       } catch (err) {
+        console.error(err);
         const errorMessage = parseError(err);
-        trackAssetBuy({
-          type: "error",
-          errorMessage:
-            typeof errorMessage === "string" ? errorMessage : "Unknown error",
+
+        reportAssetBuyFailed({
+          chainId: props.contract.chain.id,
+          contractType: "DropERC721",
+          assetType: "nft",
+          error: errorMessage,
         });
+
         return;
       }
     } catch (err) {
+      console.error(err);
       const errorMessage = parseError(err);
+
       toast.error("Failed to buy NFTs", {
-        description:
-          typeof errorMessage === "string" ? errorMessage : undefined,
+        description: errorMessage,
       });
-      trackAssetBuy({
-        type: "error",
-        errorMessage:
-          typeof errorMessage === "string" ? errorMessage : "Unknown error",
+      reportAssetBuyFailed({
+        chainId: props.contract.chain.id,
+        contractType: "DropERC721",
+        assetType: "nft",
+        error: errorMessage,
       });
     }
   };

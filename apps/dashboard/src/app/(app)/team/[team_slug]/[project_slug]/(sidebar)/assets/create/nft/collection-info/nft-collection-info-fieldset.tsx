@@ -12,7 +12,6 @@ import type { ThirdwebClient } from "thirdweb";
 import { SocialUrlsFieldset } from "../../_common/SocialUrls";
 import { StepCard } from "../../_common/step-card";
 import type { NFTCollectionInfoFormValues } from "../_common/form";
-import { nftCreationPages } from "../_common/pages";
 
 export function NFTCollectionInfoFieldset(props: {
   client: ThirdwebClient;
@@ -25,10 +24,6 @@ export function NFTCollectionInfoFieldset(props: {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(props.onNext)}>
         <StepCard
-          tracking={{
-            page: nftCreationPages["collection-info"],
-            contractType: "NFTCollection",
-          }}
           title="Collection Info"
           prevButton={undefined}
           nextButton={{

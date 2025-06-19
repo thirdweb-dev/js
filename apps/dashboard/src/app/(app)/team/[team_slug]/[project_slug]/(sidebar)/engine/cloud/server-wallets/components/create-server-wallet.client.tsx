@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useMutation } from "@tanstack/react-query";
 import { createEoa } from "@thirdweb-dev/vault-sdk";
-import { useTrack } from "hooks/analytics/useTrack";
 import { Loader2Icon, WalletIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -27,7 +26,6 @@ export default function CreateServerWallet(props: {
   const router = useDashboardRouter();
   const [label, setLabel] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const trackEvent = useTrack();
 
   const createEoaMutation = useMutation({
     mutationFn: async ({
@@ -37,11 +35,6 @@ export default function CreateServerWallet(props: {
       managementAccessToken: string;
       label: string;
     }) => {
-      trackEvent({
-        category: "engine-cloud",
-        action: "create_server_wallet",
-      });
-
       const vaultClient = await initVaultClient();
 
       const eoa = await createEoa({

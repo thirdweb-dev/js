@@ -66,7 +66,6 @@ import {
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { useTrack } from "hooks/analytics/useTrack";
 import {
   CheckIcon,
   CircleAlertIcon,
@@ -426,7 +425,6 @@ function EngineActionsDropdown(props: {
   onEdit: (instance: EngineInstance) => void;
   onRemove: (instance: EngineInstance) => void;
 }) {
-  const trackEvent = useTrack();
   const canDelete =
     props.instance.status === "paymentFailed" ||
     props.instance.status === "deploymentFailed" ||
@@ -444,11 +442,6 @@ function EngineActionsDropdown(props: {
         <DropdownMenuItem
           className="gap-2"
           onClick={() => {
-            trackEvent({
-              category: "engine",
-              action: "edit",
-              label: "open-modal",
-            });
             props.onEdit(props.instance);
           }}
         >
@@ -462,11 +455,6 @@ function EngineActionsDropdown(props: {
             className="gap-2 text-destructive"
             disabled={!canDelete}
             onClick={() => {
-              trackEvent({
-                category: "engine",
-                action: "remove",
-                label: "open-modal",
-              });
               props.onRemove(props.instance);
             }}
           >

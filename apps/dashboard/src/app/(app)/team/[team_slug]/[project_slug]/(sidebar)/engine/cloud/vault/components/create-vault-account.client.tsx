@@ -15,7 +15,6 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { createServiceAccount } from "@thirdweb-dev/vault-sdk";
-import { useTrack } from "hooks/analytics/useTrack";
 import { CheckIcon, DownloadIcon, Loader2Icon, LockIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -35,16 +34,10 @@ export default function CreateVaultAccountButton(props: {
   const [keysConfirmed, setKeysConfirmed] = useState(false);
   const [keysDownloaded, setKeysDownloaded] = useState(false);
   const router = useDashboardRouter();
-  const trackEvent = useTrack();
 
   const initialiseProjectWithVaultMutation = useMutation({
     mutationFn: async () => {
       setModalOpen(true);
-
-      trackEvent({
-        category: "engine-cloud",
-        action: "create_vault_account",
-      });
 
       const vaultClient = await initVaultClient();
 

@@ -11,7 +11,6 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CirclePlusIcon } from "lucide-react";
 import { useState } from "react";
@@ -32,7 +31,7 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
     instanceUrl,
     authToken,
   });
-  const trackEvent = useTrack();
+
   const [hasStoredToken, setHasStoredToken] = useState<boolean>(false);
 
   const { onSuccess, onError } = useTxNotifications(
@@ -47,24 +46,12 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
           createAccessToken(undefined, {
             onSuccess: (response) => {
               onSuccess();
-              trackEvent({
-                category: "engine",
-                action: "create-access-token",
-                label: "success",
-                instance: instanceUrl,
-              });
               setAccessToken(response.accessToken);
               onOpen();
             },
             onError: (error) => {
               onError(error);
-              trackEvent({
-                category: "engine",
-                action: "create-access-token",
-                label: "error",
-                instance: instanceUrl,
-                error,
-              });
+              console.error(error);
             },
           });
         }}

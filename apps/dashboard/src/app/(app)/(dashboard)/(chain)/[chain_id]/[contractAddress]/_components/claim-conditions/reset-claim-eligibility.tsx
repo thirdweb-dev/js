@@ -3,7 +3,6 @@
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleHelpIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
@@ -27,8 +26,6 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
   isLoggedIn,
   isMultiphase,
 }) => {
-  const trackEvent = useTrack();
-
   const sendTxMutation = useSendAndConfirmTransaction();
 
   const txNotification = useTxNotifications(
@@ -37,14 +34,6 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
   );
 
   const handleResetClaimEligibility = () => {
-    const category = isErc20 ? "token" : "nft";
-
-    trackEvent({
-      category,
-      action: "reset-claim-conditions",
-      label: "attempt",
-    });
-
     const tx = (() => {
       switch (true) {
         // erc 20
@@ -69,20 +58,9 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
     sendTxMutation.mutate(tx, {
       onSuccess: () => {
         txNotification.onSuccess();
-        trackEvent({
-          category,
-          action: "reset-claim-conditions",
-          label: "success",
-        });
       },
       onError: (error) => {
         txNotification.onError(error);
-        trackEvent({
-          category,
-          action: "reset-claim-conditions",
-          label: "error",
-          error,
-        });
       },
     });
   };

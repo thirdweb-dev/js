@@ -1,6 +1,9 @@
 "use client";
 import { revalidatePathAction } from "@/actions/revalidate";
-import { useTrack } from "hooks/analytics/useTrack";
+import {
+  reportAssetCreationFailed,
+  reportContractDeployed,
+} from "@/analytics/report";
 import { useRef } from "react";
 import {
   type ThirdwebClient,
@@ -25,10 +28,6 @@ import { maxUint256 } from "thirdweb/utils";
 import { parseError } from "utils/errorParser";
 import { useAddContractToProject } from "../../../hooks/project-contracts";
 import type { CreateNFTCollectionAllValues } from "./_common/form";
-import {
-  getNFTDeploymentTrackingData,
-  getNFTStepTrackingData,
-} from "./_common/tracking";
 import { CreateNFTPageUI } from "./create-nft-page-ui";
 
 export function CreateNFTPage(props: {
@@ -40,7 +39,7 @@ export function CreateNFTPage(props: {
   projectId: string;
 }) {
   const activeAccount = useActiveAccount();
-  const trackEvent = useTrack();
+
   const addContractToProject = useAddContractToProject();
   const contractAddressRef = useRef<string | undefined>(undefined);
 
@@ -78,6 +77,8 @@ export function CreateNFTPage(props: {
   }) {
     const { values: formValues, ercType } = params;
     const { collectionInfo, sales } = formValues;
+    const contractType =
+      ercType === "erc721" ? ("DropERC721" as const) : ("DropERC1155" as const);
 
     if (!activeAccount) {
       throw new Error("Wallet is not connected");
@@ -85,23 +86,6 @@ export function CreateNFTPage(props: {
 
     // eslint-disable-next-line no-restricted-syntax
     const chain = defineChain(Number(collectionInfo.chain));
-
-    trackEvent(
-      getNFTStepTrackingData({
-        action: "deploy",
-        ercType,
-        chainId: Number(collectionInfo.chain),
-        status: "attempt",
-      }),
-    );
-
-    trackEvent(
-      getNFTDeploymentTrackingData({
-        ercType,
-        type: "attempt",
-        chainId: Number(collectionInfo.chain),
-      }),
-    );
 
     try {
       let contractAddress: string;
@@ -142,22 +126,13 @@ export function CreateNFTPage(props: {
         });
       }
 
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "deploy",
-          ercType,
-          chainId: Number(collectionInfo.chain),
-          status: "success",
-        }),
-      );
-
-      trackEvent(
-        getNFTDeploymentTrackingData({
-          ercType,
-          type: "success",
-          chainId: Number(collectionInfo.chain),
-        }),
-      );
+      reportContractDeployed({
+        address: contractAddress,
+        chainId: Number(collectionInfo.chain),
+        publisher: "deployer.thirdweb.eth",
+        contractName: contractType,
+        deploymentType: "asset",
+      });
 
       contractAddressRef.current = contractAddress;
 
@@ -175,27 +150,15 @@ export function CreateNFTPage(props: {
         contractAddress,
       };
     } catch (error) {
-      const parsedError = parseError(error);
-      const errorMessage =
-        typeof parsedError === "string" ? parsedError : "Unknown error";
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "deploy",
-          ercType,
-          chainId: Number(collectionInfo.chain),
-          status: "error",
-          errorMessage,
-        }),
-      );
+      const errorMessage = parseError(error);
+      console.error(errorMessage);
 
-      trackEvent(
-        getNFTDeploymentTrackingData({
-          ercType,
-          type: "error",
-          chainId: Number(collectionInfo.chain),
-          errorMessage,
-        }),
-      );
+      reportAssetCreationFailed({
+        assetType: "nft",
+        contractType,
+        error: errorMessage,
+        step: "deploy-contract",
+      });
 
       throw error;
     }
@@ -206,6 +169,8 @@ export function CreateNFTPage(props: {
     ercType: "erc721" | "erc1155";
   }) {
     const { formValues, ercType } = params;
+    const contractType =
+      ercType === "erc721" ? ("DropERC721" as const) : ("DropERC1155" as const);
 
     const { contract, activeAccount } = getContractAndAccount({
       chain: formValues.collectionInfo.chain,
@@ -218,43 +183,21 @@ export function CreateNFTPage(props: {
       nfts: formValues.nfts,
     });
 
-    trackEvent(
-      getNFTStepTrackingData({
-        action: "lazy-mint",
-        ercType,
-        chainId: Number(formValues.collectionInfo.chain),
-        status: "attempt",
-      }),
-    );
-
     try {
       await sendAndConfirmTransaction({
         account: activeAccount,
         transaction,
       });
-
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "lazy-mint",
-          ercType,
-          chainId: Number(formValues.collectionInfo.chain),
-          status: "success",
-        }),
-      );
     } catch (error) {
-      const parsedError = parseError(error);
-      const errorMessage =
-        typeof parsedError === "string" ? parsedError : "Unknown error";
+      const errorMessage = parseError(error);
+      console.error(error);
 
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "lazy-mint",
-          ercType,
-          chainId: Number(formValues.collectionInfo.chain),
-          status: "error",
-          errorMessage,
-        }),
-      );
+      reportAssetCreationFailed({
+        assetType: "nft",
+        contractType,
+        error: errorMessage,
+        step: "mint-nfts",
+      });
 
       throw error;
     }
@@ -289,43 +232,21 @@ export function CreateNFTPage(props: {
       ],
     });
 
-    trackEvent(
-      getNFTStepTrackingData({
-        action: "claim-conditions",
-        ercType: "erc721",
-        chainId: Number(formValues.collectionInfo.chain),
-        status: "attempt",
-      }),
-    );
-
     try {
       await sendAndConfirmTransaction({
         account: activeAccount,
         transaction,
       });
-
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "claim-conditions",
-          ercType: "erc721",
-          chainId: Number(formValues.collectionInfo.chain),
-          status: "success",
-        }),
-      );
     } catch (error) {
-      const parsedError = parseError(error);
-      const errorMessage =
-        typeof parsedError === "string" ? parsedError : "Unknown error";
+      const errorMessage = parseError(error);
+      console.error(errorMessage);
 
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "claim-conditions",
-          ercType: "erc721",
-          chainId: Number(formValues.collectionInfo.chain),
-          status: "error",
-          errorMessage,
-        }),
-      );
+      reportAssetCreationFailed({
+        assetType: "nft",
+        contractType: "DropERC721",
+        error: errorMessage,
+        step: "set-claim-conditions",
+      });
 
       throw error;
     }
@@ -391,43 +312,21 @@ export function CreateNFTPage(props: {
       data: encodedTransactions,
     });
 
-    trackEvent(
-      getNFTStepTrackingData({
-        action: "claim-conditions",
-        ercType: "erc1155",
-        chainId: Number(values.collectionInfo.chain),
-        status: "attempt",
-      }),
-    );
-
     try {
       await sendAndConfirmTransaction({
         transaction: tx,
         account: activeAccount,
       });
-
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "claim-conditions",
-          ercType: "erc1155",
-          chainId: Number(values.collectionInfo.chain),
-          status: "success",
-        }),
-      );
     } catch (error) {
-      const parsedError = parseError(error);
-      const errorMessage =
-        typeof parsedError === "string" ? parsedError : "Unknown error";
+      const errorMessage = parseError(error);
+      console.error(errorMessage);
 
-      trackEvent(
-        getNFTStepTrackingData({
-          action: "claim-conditions",
-          ercType: "erc1155",
-          chainId: Number(values.collectionInfo.chain),
-          status: "error",
-          errorMessage,
-        }),
-      );
+      reportAssetCreationFailed({
+        assetType: "nft",
+        contractType: "DropERC1155",
+        error: errorMessage,
+        step: "set-claim-conditions",
+      });
 
       throw error;
     }

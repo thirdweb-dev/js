@@ -8,7 +8,6 @@ import {
   type SetWalletConfigInput,
   useEngineSetWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { useTrack } from "hooks/analytics/useTrack";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -26,7 +25,6 @@ export const CircleConfig: React.FC<CircleConfigProps> = ({
     instanceUrl: instance.url,
     authToken,
   });
-  const trackEvent = useTrack();
 
   const defaultValues: SetWalletConfigInput = {
     type: "circle" as const,
@@ -46,24 +44,12 @@ export const CircleConfig: React.FC<CircleConfigProps> = ({
     setCircleConfig(data, {
       onSuccess: () => {
         toast.success("Configuration set successfully");
-        trackEvent({
-          category: "engine",
-          action: "set-wallet-config",
-          type: "circle",
-          label: "success",
-        });
       },
       onError: (error) => {
         toast.error("Failed to set configuration", {
           description: error.message,
         });
-        trackEvent({
-          category: "engine",
-          action: "set-wallet-config",
-          type: "circle",
-          label: "error",
-          error,
-        });
+        console.error(error);
       },
     });
   };

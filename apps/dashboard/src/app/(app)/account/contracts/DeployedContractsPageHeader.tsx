@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ImportModal } from "components/contract-components/import-contract/modal";
-import { useTrack } from "hooks/analytics/useTrack";
+
 import { DownloadIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -14,7 +14,6 @@ export function DeployedContractsPageHeader(props: {
   client: ThirdwebClient;
 }) {
   const [importModalOpen, setImportModalOpen] = useState(false);
-  const trackEvent = useTrack();
 
   return (
     <div className="border-b">
@@ -40,11 +39,6 @@ export function DeployedContractsPageHeader(props: {
             className="gap-2 bg-card"
             variant="outline"
             onClick={() => {
-              trackEvent({
-                action: "click",
-                category: "contracts",
-                label: "import-contract",
-              });
               setImportModalOpen(true);
             }}
           >

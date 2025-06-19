@@ -1,4 +1,5 @@
 "use client";
+import { reportFaucetUsed } from "@/analytics/report";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
@@ -29,7 +30,6 @@ import { Turnstile } from "@marsidev/react-turnstile";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CanClaimResponseType } from "app/(app)/api/testnet-faucet/can-claim/CanClaimResponseType";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
-import { useTrack } from "hooks/analytics/useTrack";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -95,17 +95,11 @@ export function FaucetButton({
     chain: definedChain,
     client,
   });
-  const trackEvent = useTrack();
+
   const queryClient = useQueryClient();
 
   const claimMutation = useMutation({
     mutationFn: async (turnstileToken: string) => {
-      trackEvent({
-        category: "faucet",
-        action: "claim",
-        label: "attempt",
-        chain_id: chainId,
-      });
       const response = await fetch("/api/testnet-faucet/claim", {
         method: "POST",
         headers: {
@@ -124,20 +118,8 @@ export function FaucetButton({
       }
     },
     onSuccess: () => {
-      trackEvent({
-        category: "faucet",
-        action: "claim",
-        label: "success",
-        chain_id: chainId,
-      });
-    },
-    onError: (error) => {
-      trackEvent({
-        category: "faucet",
-        action: "claim",
-        label: "error",
-        chain_id: chainId,
-        errorMsg: error instanceof Error ? error.message : "Unknown error",
+      reportFaucetUsed({
+        chainId,
       });
     },
     onSettled: () => {
@@ -223,8 +205,9 @@ export function FaucetButton({
         {canClaimFaucetQuery.data.type === "unsupported-chain" &&
           "Faucet is empty right now"}
 
+        {/* TODO: add an upsell path here to subscribe to one of these plans */}
         {canClaimFaucetQuery.data.type === "paid-plan-required" &&
-          "Faucet is only available on Starter, Growth and Pro plans."}
+          "Faucet is only available on Starter, Growth, Scale and Pro plans."}
       </Button>
     );
   }

@@ -20,7 +20,6 @@ import {
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -156,7 +155,7 @@ const EditModal = ({
     instanceUrl,
     authToken,
   });
-  const trackEvent = useTrack();
+
   const { onSuccess, onError } = useTxNotifications(
     "Successfully updated access token",
     "Failed to update access token",
@@ -174,22 +173,10 @@ const EditModal = ({
         onSuccess: () => {
           onSuccess();
           disclosure.onClose();
-          trackEvent({
-            category: "engine",
-            action: "update-access-token",
-            label: "success",
-            instance: instanceUrl,
-          });
         },
         onError: (error) => {
           onError(error);
-          trackEvent({
-            category: "engine",
-            action: "update-access-token",
-            label: "error",
-            instance: instanceUrl,
-            error,
-          });
+          console.error(error);
         },
       },
     );
@@ -247,7 +234,7 @@ const RemoveModal = ({
     instanceUrl,
     authToken,
   });
-  const trackEvent = useTrack();
+
   const { onSuccess, onError } = useTxNotifications(
     "Successfully deleted access token",
     "Failed to delete access token",
@@ -262,22 +249,10 @@ const RemoveModal = ({
         onSuccess: () => {
           onSuccess();
           disclosure.onClose();
-          trackEvent({
-            category: "engine",
-            action: "revoke-access-token",
-            label: "success",
-            instance: instanceUrl,
-          });
         },
         onError: (error) => {
           onError(error);
-          trackEvent({
-            category: "engine",
-            action: "revoke-access-token",
-            label: "error",
-            instance: instanceUrl,
-            error,
-          });
+          console.error(error);
         },
       },
     );

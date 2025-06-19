@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import type { Account, BillingCredit } from "@3rdweb-sdk/react/hooks/useApi";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { formatDistance } from "date-fns";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { CircleAlertIcon } from "lucide-react";
 import Image from "next/image";
@@ -28,8 +27,6 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
   client,
   teamSlug,
 }) => {
-  const trackEvent = useTrack();
-
   const [hasAppliedForOpGrant] = useLocalStorage(
     `appliedForOpGrant-${twAccount.id}`,
     false,
@@ -134,11 +131,6 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
             <Link
               href={`/team/${teamSlug}/~/settings/credits`}
               onClick={() => {
-                trackEvent({
-                  category: "op-sponsorship",
-                  action: "click",
-                  label: "apply-now",
-                });
                 if (onClickApply) {
                   onClickApply();
                 }

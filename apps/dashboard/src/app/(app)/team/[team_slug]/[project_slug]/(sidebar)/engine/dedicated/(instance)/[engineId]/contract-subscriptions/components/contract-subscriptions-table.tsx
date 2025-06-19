@@ -25,7 +25,6 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useV5DashboardChain } from "lib/v5-adapter";
@@ -358,7 +357,7 @@ const RemoveModal = ({
       instanceUrl,
       authToken,
     });
-  const trackEvent = useTrack();
+
   const { onSuccess, onError } = useTxNotifications(
     "Successfully removed contract subscription.",
     "Failed to remove contract subscription.",
@@ -375,22 +374,10 @@ const RemoveModal = ({
         onSuccess: () => {
           onSuccess();
           disclosure.onClose();
-          trackEvent({
-            category: "engine",
-            action: "remove-contract-subscription",
-            label: "success",
-            instance: instanceUrl,
-          });
         },
         onError: (error) => {
           onError(error);
-          trackEvent({
-            category: "engine",
-            action: "remove-contract-subscription",
-            label: "error",
-            instance: instanceUrl,
-            error,
-          });
+          console.error(error);
         },
       },
     );

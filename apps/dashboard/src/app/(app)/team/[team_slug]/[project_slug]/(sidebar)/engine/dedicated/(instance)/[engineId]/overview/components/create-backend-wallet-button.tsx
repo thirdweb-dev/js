@@ -27,7 +27,6 @@ import {
   useHasEngineFeature,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Dialog } from "@radix-ui/react-dialog";
-import { useTrack } from "hooks/analytics/useTrack";
 import {
   EngineBackendWalletOptions,
   type EngineBackendWalletType,
@@ -64,7 +63,6 @@ export const CreateBackendWalletButton: React.FC<
     instanceUrl: instance.url,
     authToken,
   });
-  const trackEvent = useTrack();
 
   const form = useForm<CreateBackendWalletInput>({
     defaultValues: { type: walletConfig.type },
@@ -74,21 +72,9 @@ export const CreateBackendWalletButton: React.FC<
     const promise = createWallet.mutateAsync(data, {
       onSuccess: () => {
         setIsOpen(false);
-        trackEvent({
-          category: "engine",
-          action: "create-backend-wallet",
-          label: "success",
-          instance: instance.url,
-        });
       },
       onError: (error) => {
-        trackEvent({
-          category: "engine",
-          action: "create-backend-wallet",
-          label: "error",
-          instance: instance.url,
-          error,
-        });
+        console.error(error);
       },
     });
 

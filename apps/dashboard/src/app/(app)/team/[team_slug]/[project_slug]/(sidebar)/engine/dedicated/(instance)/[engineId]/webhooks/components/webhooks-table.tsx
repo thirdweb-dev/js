@@ -25,7 +25,6 @@ import {
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format, formatDistanceToNowStrict } from "date-fns";
-import { useTrack } from "hooks/analytics/useTrack";
 import { MailQuestionIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -192,7 +191,6 @@ function DeleteWebhookModal({
     authToken,
     instanceUrl,
   });
-  const trackEvent = useTrack();
 
   const onDelete = () => {
     const promise = deleteWebhook.mutateAsync(
@@ -200,21 +198,9 @@ function DeleteWebhookModal({
       {
         onSuccess: () => {
           disclosure.onClose();
-          trackEvent({
-            category: "engine",
-            action: "delete-webhook",
-            label: "success",
-            instance: instanceUrl,
-          });
         },
         onError: (error) => {
-          trackEvent({
-            category: "engine",
-            action: "delete-webhook",
-            label: "error",
-            instance: instanceUrl,
-            error,
-          });
+          console.error(error);
         },
       },
     );

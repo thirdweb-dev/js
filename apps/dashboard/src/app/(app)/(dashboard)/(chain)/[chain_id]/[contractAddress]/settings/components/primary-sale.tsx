@@ -6,7 +6,7 @@ import type { ExtensionDetectedState } from "components/buttons/ExtensionDetecte
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { AddressOrEnsSchema } from "constants/schemas";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { useTrack } from "hooks/analytics/useTrack";
+
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -44,7 +44,7 @@ export const SettingsPrimarySale = ({
   isLoggedIn: boolean;
 }) => {
   const address = useActiveAccount()?.address;
-  const trackEvent = useTrack();
+
   const query = useReadContract(primarySaleRecipient, {
     contract,
   });
@@ -72,11 +72,6 @@ export const SettingsPrimarySale = ({
       <Flex
         as="form"
         onSubmit={form.handleSubmit((d) => {
-          trackEvent({
-            category: "settings",
-            action: "set-primary-sale",
-            label: "attempt",
-          });
           const saleRecipient = d.primary_sale_recipient;
           if (!saleRecipient) {
             return toast.error(
@@ -90,21 +85,11 @@ export const SettingsPrimarySale = ({
           // if we switch back to mutateAsync then *need* to catch errors
           mutation.mutate(transaction, {
             onSuccess: () => {
-              trackEvent({
-                category: "settings",
-                action: "set-primary-sale",
-                label: "success",
-              });
               form.reset({ primary_sale_recipient: saleRecipient });
               onSuccess();
             },
             onError: (error) => {
-              trackEvent({
-                category: "settings",
-                action: "set-primary-sale",
-                label: "error",
-                error,
-              });
+              console.error(error);
               onError(error);
             },
           });
