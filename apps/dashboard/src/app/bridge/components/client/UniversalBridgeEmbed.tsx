@@ -22,10 +22,10 @@ export function UniversalBridgeEmbed({
         prefillBuy:
           chainId && token
             ? {
-              chain,
-              token,
-              amount,
-            }
+                chain,
+                token,
+                amount,
+              }
             : undefined,
       }}
       theme={getSDKTheme(theme === "light" ? "light" : "dark")}

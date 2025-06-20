@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
+import type { Address } from "../../../utils/address.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../wallets/types.js";
@@ -22,16 +23,15 @@ import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
 import { useConnectionManager } from "../../core/providers/connection-manager.js";
 import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
 import { AutoConnect } from "../../web/ui/AutoConnect/AutoConnect.js";
+import { BuyWidget } from "./Bridge/BuyWidget.js";
+import { CheckoutWidget } from "./Bridge/CheckoutWidget.js";
+import { TransactionWidget } from "./Bridge/TransactionWidget.js";
 import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
 import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";
 import type { LocaleId } from "./types.js";
-import { BuyWidget } from "./Bridge/BuyWidget.js";
-import type { Address } from "../../../utils/address.js";
-import { CheckoutWidget } from "./Bridge/CheckoutWidget.js";
-import { TransactionWidget } from "./Bridge/TransactionWidget.js";
 
 /**
  * Props of [`PayEmbed`](https://portal.thirdweb.com/references/typescript/v5/PayEmbed) component

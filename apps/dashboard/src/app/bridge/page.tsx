@@ -54,10 +54,10 @@ export default async function BridgePage({
           token={
             symbol && decimals && tokenName
               ? {
-                address: tokenAddress as Address,
-                name: tokenName,
-                symbol,
-              }
+                  address: tokenAddress as Address,
+                  name: tokenName,
+                  symbol,
+                }
               : undefined
           }
           amount={amount as string}
