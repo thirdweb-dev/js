@@ -19,9 +19,10 @@ import { SmartAccountIcon } from "../../../../../(dashboard)/(chain)/components/
 
 export function ProjectSidebarLayout(props: {
   layoutPath: string;
+  engineLinkType: "cloud" | "dedicated";
   children: React.ReactNode;
 }) {
-  const { layoutPath, children } = props;
+  const { layoutPath, engineLinkType, children } = props;
 
   return (
     <FullWidthSidebarLayout
@@ -43,7 +44,7 @@ export function ProjectSidebarLayout(props: {
           icon: SmartAccountIcon,
         },
         {
-          href: `${layoutPath}/connect/universal-bridge`,
+          href: `${layoutPath}/universal-bridge`,
           icon: PayIcon,
           label: "Universal Bridge",
         },
@@ -62,9 +63,18 @@ export function ProjectSidebarLayout(props: {
           icon: CoinsIcon,
         },
         {
-          href: `${layoutPath}/engine`,
+          href:
+            engineLinkType === "cloud"
+              ? `${layoutPath}/transactions`
+              : `${layoutPath}/engine/dedicated`,
           label: "Transactions",
           icon: ArrowLeftRightIcon,
+          isActive: (pathname) => {
+            return (
+              pathname.startsWith(`${layoutPath}/transactions`) ||
+              pathname.startsWith(`${layoutPath}/engine/dedicated`)
+            );
+          },
         },
         {
           href: `${layoutPath}/insight`,

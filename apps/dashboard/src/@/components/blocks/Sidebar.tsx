@@ -9,6 +9,7 @@ export type SidebarBaseLink = {
   label: React.ReactNode;
   exactMatch?: boolean;
   icon?: React.FC<{ className?: string }>;
+  isActive?: (pathname: string) => boolean;
 };
 
 export type SidebarLink =

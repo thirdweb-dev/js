@@ -11,15 +11,18 @@ export type NavButtonProps = {
   href: string;
   exactMatch?: boolean;
   onClick?: () => void;
+  isActive?: (pathname: string) => boolean;
 };
 
 export function NavLink(props: React.PropsWithChildren<NavButtonProps>) {
   const pathname = usePathname();
-  const isActive = pathname
-    ? props.exactMatch
-      ? pathname === props.href
-      : pathname.startsWith(props.href)
-    : false;
+  const isActive = props.isActive
+    ? props.isActive(pathname)
+    : pathname
+      ? props.exactMatch
+        ? pathname === props.href
+        : pathname.startsWith(props.href)
+      : false;
   return (
     <Link
       href={props.href}

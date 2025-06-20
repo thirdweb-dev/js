@@ -439,7 +439,7 @@ function AppHighlightsCard({
         <EmptyStateContent
           metric="Fees"
           description="Your app hasn't collected any fees yet."
-          link={`/team/${params.team_slug}/${params.project_slug}/connect/universal-bridge/settings`}
+          link={`/team/${params.team_slug}/${params.project_slug}/universal-bridge/settings`}
         />
       ),
     },

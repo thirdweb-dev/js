@@ -23,13 +23,13 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { storeUserAccessToken } from "../../engine/cloud/analytics/utils";
+import { storeUserAccessToken } from "../../transactions/analytics/utils";
 import {
   createManagementAccessToken,
   createWalletAccessToken,
   initVaultClient,
   maskSecret,
-} from "../../engine/cloud/lib/vault.client";
+} from "../../transactions/lib/vault.client";
 
 export function CreateVaultAccountButton(props: {
   project: Project;
