@@ -41,7 +41,6 @@ export function buyFromListing(
   options: BaseTransactionOptions<BuyFromListingParams>,
 ) {
   return BuyFromListing.buyFromListing({
-    contract: options.contract,
     asyncParams: async () => {
       const listing = await GetListing.getListing({
         contract: options.contract,
@@ -58,25 +57,26 @@ export function buyFromListing(
       }
 
       return {
-        listingId: options.listingId,
-        quantity: options.quantity,
         buyFor: options.recipient,
         currency: listing.currencyContractAddress,
         expectedTotalPrice: listing.pricePerToken * options.quantity,
+        listingId: options.listingId,
         overrides: {
-          value: isNativeTokenAddress(listing.currencyContractAddress)
-            ? listing.pricePerToken * options.quantity
-            : 0n,
-          extraGas: 50_000n, // add extra gas to account for router call
           erc20Value: isNativeTokenAddress(listing.currencyContractAddress)
             ? undefined
             : {
                 amountWei: listing.pricePerToken * options.quantity,
                 tokenAddress: listing.currencyContractAddress,
               },
+          extraGas: 50_000n, // add extra gas to account for router call
+          value: isNativeTokenAddress(listing.currencyContractAddress)
+            ? listing.pricePerToken * options.quantity
+            : 0n,
         },
+        quantity: options.quantity,
       };
     },
+    contract: options.contract,
   });
 }
 

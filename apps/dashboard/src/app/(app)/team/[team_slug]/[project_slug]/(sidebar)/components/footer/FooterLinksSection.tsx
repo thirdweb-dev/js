@@ -41,26 +41,20 @@ function FooterSection(props: FooterSectionProps) {
       <h3 className="mb-2.5 font-medium">{props.title}</h3>
       <div className="flex flex-col gap-2.5">
         {props.links.map((link) => (
-          <FooterLink key={link.label} href={link.href} label={link.label} />
+          <FooterLink href={link.href} key={link.label} label={link.label} />
         ))}
       </div>
     </div>
   );
 }
 
-function FooterLink({
-  href,
-  label,
-}: {
-  href: string;
-  label: string;
-}) {
+function FooterLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
       className="flex items-start gap-2 text-balance text-muted-foreground text-sm hover:text-foreground"
+      href={href}
+      rel="noopener noreferrer"
+      target="_blank"
     >
       <LinkIcon className="mt-1 size-3 shrink-0 opacity-70" />
       {label}

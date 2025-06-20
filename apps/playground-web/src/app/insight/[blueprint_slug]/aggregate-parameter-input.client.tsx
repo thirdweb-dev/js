@@ -1,5 +1,8 @@
 "use client";
 
+import { InfoIcon, SearchIcon } from "lucide-react";
+import { useMemo, useState } from "react";
+import type { ControllerRenderProps } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -10,9 +13,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
-import { InfoIcon, SearchIcon } from "lucide-react";
-import { useMemo, useState } from "react";
-import type { ControllerRenderProps } from "react-hook-form";
 
 interface Preset {
   id: string;
@@ -176,10 +176,10 @@ const BLOCKS_PRESETS: Preset[] = [
 ];
 
 const ENDPOINT_SPECIFIC_PRESETS: Record<string, Preset[]> = {
+  "/v1/blocks": BLOCKS_PRESETS,
+  "/v1/events": EVENTS_PRESETS,
   "/v1/transactions": GENERAL_TRANSACTIONS_PRESETS,
   "/v1/wallets/{wallet_address}/transactions": WALLET_TRANSACTIONS_PRESETS,
-  "/v1/events": EVENTS_PRESETS,
-  "/v1/blocks": BLOCKS_PRESETS,
   // Add more endpoint paths and their specific presets here
 };
 
@@ -263,18 +263,18 @@ export function AggregateParameterInput({
 
   return (
     <div className="relative w-full">
-      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+      <Popover onOpenChange={setIsPopoverOpen} open={isPopoverOpen}>
         <PopoverTrigger asChild>
           <Button
-            variant="ghost"
             className="-ml-1 w-full justify-start border-0 border-none bg-transparent font-mono text-muted-foreground shadow-none hover:bg-transparent hover:text-muted-foreground focus:ring-0 focus:ring-offset-0"
+            variant="ghost"
           >
             <span className="truncate">{getButtonText()}</span>
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-[calc(100vw-2rem)] p-0 sm:w-[32rem]"
           align="center"
+          className="w-[calc(100vw-2rem)] p-0 sm:w-[32rem]"
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
           <div className="space-y-4 p-4">
@@ -288,12 +288,11 @@ export function AggregateParameterInput({
                 )}
               </div>
               <Textarea
-                id="aggregate-textarea"
-                placeholder={placeholder}
-                value={(value as string) || ""}
-                onChange={handleTextareaChange}
                 className="min-h-[100px] font-mono text-sm"
+                onChange={handleTextareaChange}
+                placeholder={placeholder}
                 spellCheck={false}
+                value={(value as string) || ""}
               />
             </div>
 
@@ -302,11 +301,11 @@ export function AggregateParameterInput({
                 <div className="relative w-full">
                   <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
-                    type="search"
-                    placeholder="Search presets..."
                     className="h-8 pl-8 text-sm"
-                    value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search presets..."
+                    type="search"
+                    value={searchTerm}
                   />
                 </div>
               </div>
@@ -315,21 +314,21 @@ export function AggregateParameterInput({
                 {filteredPresets.length > 0 ? (
                   <div className="divide-y">
                     {filteredPresets.map((preset) => (
-                      <div key={preset.id} className="p-3 hover:bg-accent/50">
+                      <div className="p-3 hover:bg-accent/50" key={preset.id}>
                         <div className="flex items-start space-x-3">
                           <Checkbox
-                            id={preset.id}
                             checked={selectedPresets.includes(preset.id)}
+                            className="mt-1 h-4 w-4 rounded"
+                            id={preset.id}
                             onCheckedChange={() =>
                               handlePresetToggle(preset.id)
                             }
-                            className="mt-1 h-4 w-4 rounded"
                           />
                           <div className="flex-1 space-y-1">
                             <div className="flex items-center">
                               <Label
-                                htmlFor={preset.id}
                                 className="cursor-pointer font-medium text-sm leading-none"
+                                htmlFor={preset.id}
                               >
                                 {preset.label}
                               </Label>

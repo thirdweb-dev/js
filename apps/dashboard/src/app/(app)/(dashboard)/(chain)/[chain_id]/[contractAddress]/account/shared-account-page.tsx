@@ -13,8 +13,8 @@ export async function SharedContractAccountPage(props: {
   isLoggedIn: boolean;
 }) {
   const info = await getContractPageParamsInfo({
-    contractAddress: props.contractAddress,
     chainIdOrSlug: props.chainIdOrSlug,
+    contractAddress: props.contractAddress,
     teamId: props.projectMeta?.teamId,
   });
 
@@ -25,8 +25,8 @@ export async function SharedContractAccountPage(props: {
   if (info.isLocalhostChain) {
     return (
       <AccountPageClient
-        contract={info.clientContract}
         chainMetadata={info.chainMetadata}
+        contract={info.clientContract}
         isLoggedIn={props.isLoggedIn}
         projectMeta={props.projectMeta}
       />
@@ -47,10 +47,10 @@ export async function SharedContractAccountPage(props: {
 
   return (
     <AccountPage
-      contract={info.clientContract}
       chainMetadata={info.chainMetadata}
-      isLoggedIn={props.isLoggedIn}
+      contract={info.clientContract}
       isInsightSupported={isInsightSupported}
+      isLoggedIn={props.isLoggedIn}
       projectMeta={props.projectMeta}
     />
   );

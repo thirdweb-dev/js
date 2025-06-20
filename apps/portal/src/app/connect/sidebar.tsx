@@ -1,6 +1,6 @@
+import { ExternalLinkIcon } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import { DotNetIcon, ReactIcon, TypeScriptIcon, UnityIcon } from "@/icons";
-import { ExternalLinkIcon } from "lucide-react";
 import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
 
 // TODO: move the following two slugs to walletSlug with updated docs
@@ -11,273 +11,271 @@ const aAslug = "/connect/account-abstraction";
 const authSlug = "/connect/auth";
 
 export const sidebar: SideBar = {
-  name: "Connect",
   links: [
     { separator: true },
     {
-      name: "Introduction",
       href: "/connect",
+      name: "Introduction",
     },
     {
-      name: "Why thirdweb?",
       href: "/connect/why-thirdweb",
+      name: "Why thirdweb?",
     },
     {
-      name: "Playground",
       href: "https://playground.thirdweb.com/",
       icon: <ExternalLinkIcon />,
+      name: "Playground",
     },
     {
-      name: "Templates",
       href: "https://thirdweb.com/templates",
       icon: <ExternalLinkIcon />,
+      name: "Templates",
     },
     { separator: true },
     // Connect\
     {
-      name: "Onboard Users",
       expanded: true,
       isCollapsible: false,
       links: [
         {
-          name: "Overview",
           href: `${walletSlug}/overview`,
+          name: "Overview",
         },
         {
-          name: "Security",
           href: `${walletSlug}/security`,
+          name: "Security",
         },
         {
-          name: "Get Started",
           href: `${walletSlug}/get-started`,
+          name: "Get Started",
         },
         {
-          name: "External Wallets",
           href: `${walletSlug}/sign-in-methods/external-wallets`,
+          name: "External Wallets",
         },
         {
-          name: "In-App Wallets",
           links: [
             {
-              name: "Sign-In Methods",
               href: `${walletSlug}/sign-in-methods/configure`,
+              name: "Sign-In Methods",
             },
             {
-              name: "Fetch Users",
               href: `${walletSlug}/get-users`,
+              name: "Fetch Users",
             },
             {
-              name: "Pregenerate Wallets",
               href: `${walletSlug}/pregenerate-wallets`,
+              name: "Pregenerate Wallets",
             },
             {
-              name: "Guest Mode",
               href: `${walletSlug}/sign-in-methods/guest`,
+              name: "Guest Mode",
             },
             {
-              name: "FAQ",
               href: `${walletSlug}/in-app-wallet/faq`,
+              name: "FAQ",
             },
             {
-              name: "Custom Authentication",
               links: [
                 {
-                  name: "Overview",
                   href: `${inAppSlug}/custom-auth/overview`,
+                  name: "Overview",
                 },
                 {
-                  name: "Configuration",
                   href: `${inAppSlug}/custom-auth/configuration`,
+                  name: "Configuration",
                 },
                 {
-                  name: "Integration guides",
                   links: [
                     {
-                      name: "Custom auth server (OIDC Auth)",
                       href: `${inAppSlug}/custom-auth/custom-jwt-auth-server`,
+                      name: "Custom auth server (OIDC Auth)",
                     },
                     {
-                      name: "Custom auth server (Generic Auth)",
                       href: `${inAppSlug}/custom-auth/custom-auth-server`,
+                      name: "Custom auth server (Generic Auth)",
                     },
                     {
-                      name: "Firebase Auth",
                       href: `${inAppSlug}/custom-auth/firebase-auth`,
+                      name: "Firebase Auth",
                     },
                   ],
+                  name: "Integration guides",
                 },
               ],
+              name: "Custom Authentication",
             },
           ],
+          name: "In-App Wallets",
         },
         {
-          name: "Ecosystem Wallets",
           links: [
             {
-              name: "Set-up",
               href: `${walletSlug}/ecosystem/set-up`,
+              name: "Set-up",
             },
             {
-              name: "Ecosystem Portal",
               href: `${walletSlug}/ecosystem/portal`,
+              name: "Ecosystem Portal",
             },
             {
-              name: "Managing Ecosystem Permissions",
               href: `${walletSlug}/ecosystem/permissions`,
+              name: "Managing Ecosystem Permissions",
             },
             {
-              name: "Integrating with Partners",
               href: `${walletSlug}/ecosystem/integrating-partners`,
+              name: "Integrating with Partners",
             },
             {
-              name: "Register with WalletConnect",
               href: `${walletSlug}/ecosystem/register-walletconnect`,
+              name: "Register with WalletConnect",
             },
             {
-              name: "FAQ",
               href: `${walletSlug}/ecosystem/faq`,
+              name: "FAQ",
             },
           ],
+          name: "Ecosystem Wallets",
         },
         //Account abstraction
         {
-          name: "Account Abstraction",
           links: [
             {
-              name: "Overview",
               href: `${aAslug}/overview`,
+              name: "Overview",
             },
             {
-              name: "How it Works",
               href: `${aAslug}/how-it-works`,
+              name: "How it Works",
             },
             {
-              name: "Get Started",
               links: [
                 {
-                  name: "TypeScript",
                   href: "/typescript/v5/account-abstraction/get-started",
                   icon: <TypeScriptIcon />,
+                  name: "TypeScript",
                 },
                 {
-                  name: "React",
                   href: "/react/v5/account-abstraction/get-started",
                   icon: <ReactIcon />,
+                  name: "React",
                 },
                 {
-                  name: "React Native",
                   // TODO - add react-native dedicated page
                   href: "/react/v5/account-abstraction/get-started",
                   icon: <ReactIcon />,
+                  name: "React Native",
                 },
                 {
-                  name: "Dotnet",
                   href: "/dotnet/wallets/providers/account-abstraction",
                   icon: <DotNetIcon />,
+                  name: "Dotnet",
                 },
                 {
-                  name: "Unity",
                   href: "/unity/wallets/providers/account-abstraction",
                   icon: <UnityIcon />,
+                  name: "Unity",
                 },
               ],
+              name: "Get Started",
             },
             {
-              name: "ERC-20 Paymaster",
               href: `${aAslug}/erc-20-paymaster`,
+              name: "ERC-20 Paymaster",
             },
             {
-              name: "Account Factories",
               href: `${aAslug}/factories`,
+              name: "Account Factories",
             },
             {
-              name: "Bundler & Paymaster",
               href: `${aAslug}/infrastructure`,
+              name: "Bundler & Paymaster",
             },
             {
-              name: "Sponsorship rules",
               href: `${aAslug}/sponsorship-rules`,
+              name: "Sponsorship rules",
             },
             {
-              name: "API Reference",
               href: `${aAslug}/api`,
+              name: "API Reference",
             },
             {
-              name: "FAQs",
               href: `${aAslug}/faq`,
+              name: "FAQs",
             },
           ],
+          name: "Account Abstraction",
         },
         {
-          name: "Web3 Onboard",
           links: [
             {
-              name: "Overview",
               href: `${walletSlug}/web3-onboard/overview`,
+              name: "Overview",
             },
             {
-              name: "Migration Guide",
               href: `${walletSlug}/web3-onboard/migration-guide`,
+              name: "Migration Guide",
             },
           ],
+          name: "Web3 Onboard",
         },
         {
-          name: "Migrate to thirdweb",
           href: `${walletSlug}/migrate-to-thirdweb`,
+          name: "Migrate to thirdweb",
         },
         {
-          name: "FAQ",
           href: `${walletSlug}/faq`,
+          name: "FAQ",
         },
       ],
+      name: "Onboard Users",
     },
     { separator: true },
     // User identity
     {
-      name: "User Identity",
       isCollapsible: false,
       links: [
         // Auth
         // TODO move to TS reference
         {
-          name: "Sign In with Ethereum",
           links: [
             {
-              name: "Get Started",
               href: `${authSlug}`,
+              name: "Get Started",
             },
             {
-              name: "Frameworks",
-              isCollapsible: true,
               expanded: false,
+              isCollapsible: true,
               links: [
                 {
-                  name: "Next.js",
                   href: `${authSlug}/frameworks/next`,
+                  name: "Next.js",
                 },
                 {
-                  name: "React + Express",
                   href: `${authSlug}/frameworks/react-express`,
+                  name: "React + Express",
                 },
               ],
+              name: "Frameworks",
             },
             {
-              name: "Deploying to Production",
               href: `${authSlug}/deploying-to-production`,
+              name: "Deploying to Production",
             },
           ],
+          name: "Sign In with Ethereum",
         },
         {
-          name: "Get User Profiles",
           href: `${walletSlug}/user-management/get-user-profiles`,
+          name: "Get User Profiles",
         },
         {
-          name: "Link Multiple Identities",
           href: `${walletSlug}/user-management/link-multiple-identity`,
+          name: "Link Multiple Identities",
         },
         {
-          name: "Export Private Keys",
           href: `${walletSlug}/user-management/export-private-key`,
+          name: "Export Private Keys",
         },
         // TODO:
         // {
@@ -285,45 +283,47 @@ export const sidebar: SideBar = {
         //   href: `${walletSlug}/user-management/deleting-user-details`,
         // },
       ],
+      name: "User Identity",
     },
     { separator: true },
     // Blockchain API
     // TODO Overview page?
     {
-      name: "API References",
       isCollapsible: false,
       links: [
         {
-          name: "TypeScript",
           href: "/typescript/v5",
           icon: <TypeScriptIcon />,
+          name: "TypeScript",
         },
         {
-          name: "React",
           href: "/react/v5",
           icon: <ReactIcon />,
+          name: "React",
         },
         {
-          name: "React Native",
           href: "/react-native/v5",
           icon: <ReactIcon />,
+          name: "React Native",
         },
         {
-          name: "Dotnet",
           href: "/dotnet",
           icon: <DotNetIcon />,
+          name: "Dotnet",
         },
         {
-          name: "Unity",
           href: "/unity",
           icon: <UnityIcon />,
+          name: "Unity",
         },
         {
-          name: "Unreal Engine",
           href: "/unreal-engine",
           icon: <UnrealEngineIcon />,
+          name: "Unreal Engine",
         },
       ],
+      name: "API References",
     },
   ],
+  name: "Connect",
 };

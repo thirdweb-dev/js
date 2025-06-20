@@ -2,8 +2,8 @@ import type { Chain } from "../../../chains/types.js";
 import type { Account, Wallet } from "../../interfaces/wallet.js";
 import { disconnectWalletConnectSession } from "./index.js";
 import { getSessions, saveSession } from "./session-store.js";
-import type { WalletConnectClient } from "./types.js";
 import type {
+  WalletConnectClient,
   WalletConnectSession,
   WalletConnectSessionProposalEvent,
 } from "./types.js";
@@ -31,9 +31,9 @@ export async function onSessionProposal(options: {
   }
   const session = await acceptSessionProposal({
     account,
-    walletConnectClient,
-    sessionProposal: event,
     chains,
+    sessionProposal: event,
+    walletConnectClient,
   });
 
   await saveSession(session);
@@ -51,7 +51,10 @@ export async function onSessionProposal(options: {
 export async function disconnectExistingSessions({
   walletConnectClient,
   origin,
-}: { walletConnectClient: WalletConnectClient; origin: string }) {
+}: {
+  walletConnectClient: WalletConnectClient;
+  origin: string;
+}) {
   const sessions = await getSessions();
   for (const session of sessions) {
     if (session.origin === origin) {
@@ -98,13 +101,13 @@ export async function acceptSessionProposal({
         ]),
       ),
     ],
-    methods: [
-      ...(sessionProposal.params.requiredNamespaces?.eip155?.methods ?? []),
-      ...(sessionProposal.params.optionalNamespaces?.eip155?.methods ?? []),
-    ],
     events: [
       ...(sessionProposal.params.requiredNamespaces?.eip155?.events ?? []),
       ...(sessionProposal.params.optionalNamespaces?.eip155?.events ?? []),
+    ],
+    methods: [
+      ...(sessionProposal.params.requiredNamespaces?.eip155?.methods ?? []),
+      ...(sessionProposal.params.optionalNamespaces?.eip155?.methods ?? []),
     ],
   };
   const approval = await walletConnectClient.approve({
@@ -112,15 +115,15 @@ export async function acceptSessionProposal({
     namespaces: {
       eip155: {
         accounts: namespaces.chains,
-        methods: namespaces.methods,
         events: namespaces.events,
+        methods: namespaces.methods,
       },
     },
   });
 
   const session = await approval.acknowledged();
   return {
-    topic: session.topic,
     origin: sessionProposal.verifyContext?.verified?.origin || "Unknown origin",
+    topic: session.topic,
   };
 }

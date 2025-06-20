@@ -1,9 +1,7 @@
 import fsPromises from "node:fs/promises";
-import process from "node:process";
-import { fileURLToPath } from "node:url";
-
 import path from "node:path";
-import { URL } from "node:url";
+import process from "node:process";
+import { fileURLToPath, URL } from "node:url";
 
 const toPath = (urlOrPath: string | URL) =>
   urlOrPath instanceof URL ? fileURLToPath(urlOrPath) : urlOrPath;

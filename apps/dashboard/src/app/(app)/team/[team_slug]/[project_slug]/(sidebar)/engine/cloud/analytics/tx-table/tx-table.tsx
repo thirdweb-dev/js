@@ -1,8 +1,8 @@
 "use client";
 
+import type { ThirdwebClient } from "thirdweb";
 import { engineCloudProxy } from "@/actions/proxies";
 import type { Project } from "@/api/projects";
-import type { ThirdwebClient } from "thirdweb";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
 import { TransactionsTableUI } from "./tx-table-ui";
 import type { TransactionsResponse } from "./types";
@@ -15,16 +15,16 @@ export function TransactionsTable(props: {
 }) {
   return (
     <TransactionsTableUI
+      client={props.client}
       getData={async ({ page }) => {
         return await getTransactions({
-          project: props.project,
           page,
+          project: props.project,
         });
       }}
       project={props.project}
-      wallets={props.wallets}
       teamSlug={props.teamSlug}
-      client={props.client}
+      wallets={props.wallets}
     />
   );
 }
@@ -38,17 +38,17 @@ async function getTransactions({
 }) {
   const transactions = await engineCloudProxy<{ result: TransactionsResponse }>(
     {
-      pathname: "/v1/transactions/search",
-      method: "POST",
+      body: JSON.stringify({
+        limit: 20,
+        page,
+      }),
       headers: {
         "Content-Type": "application/json",
-        "x-team-id": project.teamId,
         "x-client-id": project.publishableKey,
+        "x-team-id": project.teamId,
       },
-      body: JSON.stringify({
-        page,
-        limit: 20,
-      }),
+      method: "POST",
+      pathname: "/v1/transactions/search",
     },
   );
 

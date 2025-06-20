@@ -41,7 +41,7 @@ type AutoConnectCoreProps = {
   force?: boolean;
 };
 
-let lastAutoConnectionResultPromise: Promise<boolean> | undefined = undefined;
+let lastAutoConnectionResultPromise: Promise<boolean> | undefined;
 
 /**
  * @internal
@@ -89,7 +89,6 @@ const _autoConnectCore = async ({
   const wallet = wallets.find((w) => w.id === urlToken?.walletId);
   if (urlToken?.authCookie && wallet) {
     const clientStorage = new ClientScopedStorage({
-      storage,
       clientId: props.client.clientId,
       ecosystem: isEcosystemWallet(wallet)
         ? {
@@ -97,6 +96,7 @@ const _autoConnectCore = async ({
             partnerId: wallet.getConfig()?.partnerId,
           }
         : undefined,
+      storage,
     });
     await clientStorage.saveAuthCookie(urlToken.authCookie);
   }
@@ -130,14 +130,14 @@ const _autoConnectCore = async ({
     manager.activeWalletConnectionStatusStore.setValue("connecting"); // only set connecting status if we are connecting the last active EOA
     await timeoutPromise(
       handleWalletConnection({
-        wallet: activeWallet,
+        authResult: urlToken?.authResult,
         client: props.client,
         lastConnectedChain,
-        authResult: urlToken?.authResult,
+        wallet: activeWallet,
       }),
       {
-        ms: timeout,
         message: `AutoConnect timeout: ${timeout}ms limit exceeded.`,
+        ms: timeout,
       },
     ).catch((err) => {
       console.warn(err.message);
@@ -151,8 +151,8 @@ const _autoConnectCore = async ({
       const connectedWallet = await (connectOverride
         ? connectOverride(activeWallet)
         : manager.connect(activeWallet, {
-            client: props.client,
             accountAbstraction: props.accountAbstraction,
+            client: props.client,
           }));
       if (connectedWallet) {
         autoConnected = true;
@@ -181,10 +181,10 @@ const _autoConnectCore = async ({
   for (const wallet of otherWallets) {
     try {
       await handleWalletConnection({
-        wallet,
+        authResult: urlToken?.authResult,
         client: props.client,
         lastConnectedChain,
-        authResult: urlToken?.authResult,
+        wallet,
       });
       manager.addConnectedWallet(wallet);
     } catch {
@@ -196,10 +196,10 @@ const _autoConnectCore = async ({
   const isIAW =
     activeWallet &&
     isInAppSigner({
-      wallet: activeWallet,
       connectedWallets: activeWallet
         ? [activeWallet, ...otherWallets]
         : otherWallets,
+      wallet: activeWallet,
     });
   if (
     isIAW &&
@@ -225,8 +225,8 @@ export async function handleWalletConnection(props: {
   lastConnectedChain: Chain | undefined;
 }) {
   return props.wallet.autoConnect({
-    client: props.client,
-    chain: props.lastConnectedChain,
     authResult: props.authResult,
+    chain: props.lastConnectedChain,
+    client: props.client,
   });
 }

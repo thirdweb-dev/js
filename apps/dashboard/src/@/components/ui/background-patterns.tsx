@@ -1,8 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export function DotsBackgroundPattern(props: {
-  className?: string;
-}) {
+export function DotsBackgroundPattern(props: { className?: string }) {
   return (
     <div
       className={cn(

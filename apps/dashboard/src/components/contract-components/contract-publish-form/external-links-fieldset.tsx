@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 import { ExternalLinksInput } from "./external-links-input";
 
 export const ExternalLinksFieldset = () => {
   const form = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
-    name: "externalLinks",
     control: form.control,
+    name: "externalLinks",
   });
 
   // FIXME: all of this logic needs to be reworked
@@ -36,13 +36,10 @@ export const ExternalLinksFieldset = () => {
       </div>
       <div className="flex flex-col gap-4">
         {fields.map((item, index) => (
-          <ExternalLinksInput key={item.id} remove={remove} index={index} />
+          <ExternalLinksInput index={index} key={item.id} remove={remove} />
         ))}
         <div>
           <Button
-            type="button"
-            size="sm"
-            variant="outline"
             className="gap-2"
             onClick={() =>
               append({
@@ -50,6 +47,9 @@ export const ExternalLinksFieldset = () => {
                 url: "",
               })
             }
+            size="sm"
+            type="button"
+            variant="outline"
           >
             <PlusIcon className="size-5" />
             Add Resource

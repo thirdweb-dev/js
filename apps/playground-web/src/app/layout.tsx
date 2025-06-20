@@ -1,8 +1,8 @@
-import { metadataBase } from "@/lib/constants";
-import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Fira_Code, Inter } from "next/font/google";
 import Script from "next/script";
+import { metadataBase } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 import { AppSidebar } from "./AppSidebar";
 import { Providers } from "./providers";
 import "./globals.css";
@@ -23,9 +23,9 @@ const monoFont = Fira_Code({
 });
 
 export const metadata: Metadata = {
+  description: "thirdweb playground",
   metadataBase,
   title: "thirdweb playground",
-  description: "thirdweb playground",
 };
 
 export default async function RootLayout({
@@ -38,10 +38,10 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <Script
-          src="https://thirdweb.com/js/pl.js"
-          defer
-          data-domain="playground.thirdweb.com"
           data-api="https://pl.thirdweb.com/api/event"
+          data-domain="playground.thirdweb.com"
+          defer
+          src="https://thirdweb.com/js/pl.js"
         />
       </head>
 

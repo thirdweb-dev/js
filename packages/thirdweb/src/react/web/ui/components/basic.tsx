@@ -1,7 +1,7 @@
 "use client";
 import type { CSSObject } from "@emotion/react";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
-import { type Theme, spacing } from "../../../core/design-system/index.js";
+import { spacing, type Theme } from "../../../core/design-system/index.js";
 import {
   fadeInAnimation,
   floatDownAnimation,
@@ -22,11 +22,11 @@ export const ScreenBottomContainer = /* @__PURE__ */ StyledDiv((_) => {
 });
 
 export const noScrollBar = /* @__PURE__ */ {
-  scrollbarWidth: "none",
   "&::-webkit-scrollbar": {
-    width: 0,
     display: "none",
+    width: 0,
   },
+  scrollbarWidth: "none",
 } satisfies CSSObject;
 
 /**
@@ -41,8 +41,8 @@ export function ModalHeader(props: {
   return (
     <div
       style={{
-        display: "flex",
         alignItems: "center",
+        display: "flex",
         justifyContent: props.leftAligned ? "flex-start" : "center",
         position: "relative",
       }}
@@ -51,13 +51,13 @@ export function ModalHeader(props: {
         <BackButton
           onClick={onBack}
           style={{
-            position: "absolute",
             left: 0,
+            position: "absolute",
             top: 0,
           }}
         />
       )}
-      <Container flex="row" gap="xs" center="both">
+      <Container center="both" flex="row" gap="xs">
         {typeof title === "string" ? <ModalTitle>{title}</ModalTitle> : title}
       </Container>
     </div>
@@ -67,8 +67,8 @@ export function ModalHeader(props: {
 export const Line = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
-    height: "1px",
     background: theme.colors.separatorLine,
+    height: "1px",
   };
 });
 
@@ -163,11 +163,11 @@ export function Container(props: {
 
   return (
     <Box
-      data-scrolly={props.scrollY}
-      data-animate={props.animate}
       bg={props.bg}
-      color={props.color}
       borderColor={props.borderColor}
+      color={props.color}
+      data-animate={props.animate}
+      data-scrolly={props.scrollY}
       style={{
         ...styles,
         ...props.style,
@@ -187,26 +187,26 @@ type BoxProps = {
 const Box = /* @__PURE__ */ StyledDiv<BoxProps>((props) => {
   const theme = useCustomTheme();
   return {
-    color: props.color ? theme.colors[props.color] : "inherit",
-    background: props.bg ? theme.colors[props.bg] : undefined,
-    borderColor: props.borderColor
-      ? theme.colors[props.borderColor]
-      : undefined,
     "&[data-animate='fadein']": {
-      opacity: 0,
       animation: `${fadeInAnimation} 350ms ease forwards`,
-    },
-    "&[data-animate='floatup']": {
       opacity: 0,
-      animation: `${floatUpAnimation} 350ms ease forwards`,
     },
     "&[data-animate='floatdown']": {
-      opacity: 0,
       animation: `${floatDownAnimation} 350ms ease forwards`,
+      opacity: 0,
+    },
+    "&[data-animate='floatup']": {
+      animation: `${floatUpAnimation} 350ms ease forwards`,
+      opacity: 0,
     },
     "&[data-scrolly='true']": {
       overflowY: "auto",
       ...noScrollBar,
     },
+    background: props.bg ? theme.colors[props.bg] : undefined,
+    borderColor: props.borderColor
+      ? theme.colors[props.borderColor]
+      : undefined,
+    color: props.color ? theme.colors[props.color] : "inherit",
   };
 });

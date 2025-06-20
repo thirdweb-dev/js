@@ -8,8 +8,8 @@ import {
   TEST_ACCOUNT_C,
 } from "../../../../test/src/test-wallets.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { getWalletBalance } from "../../../wallets/utils/getWalletBalance.js";
@@ -21,24 +21,24 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularDropERC20", () => {
   let contract: ThirdwebContract;
   beforeAll(async () => {
     const address = await deployModularContract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       core: "ERC20",
-      params: {
-        name: "TestDropERC20",
-        contractURI: TEST_CONTRACT_URI,
-      },
       modules: [
         ClaimableERC20.module({
           primarySaleRecipient: TEST_ACCOUNT_A.address,
         }),
       ],
+      params: {
+        contractURI: TEST_CONTRACT_URI,
+        name: "TestDropERC20",
+      },
     });
     contract = getContract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       address,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
   }, 120000);
 
@@ -51,35 +51,35 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularDropERC20", () => {
     // should throw
     await expect(
       sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
         transaction: ClaimableERC20.mint({
           contract,
           quantity: "0.1",
           to: TEST_ACCOUNT_A.address,
         }),
-        account: TEST_ACCOUNT_A,
       }),
     ).rejects.toThrowError(/ClaimableOutOfTimeWindow/);
   });
 
   it("should claim tokens with claim conditions", async () => {
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: ClaimableERC20.setClaimCondition({
         contract,
         maxClaimableSupply: "1",
         pricePerToken: "0.1",
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     // should throw if claiming more than supply
     await expect(
       sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
         transaction: ClaimableERC20.mint({
           contract,
           quantity: "10",
           to: TEST_ACCOUNT_A.address,
         }),
-        account: TEST_ACCOUNT_A,
       }),
     ).rejects.toThrowError(/ClaimableOutOfSupply/);
 
@@ -93,12 +93,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularDropERC20", () => {
     expect(balance.value).toBe(0n);
 
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: ClaimableERC20.mint({
         contract,
         quantity: "0.1",
         to: TEST_ACCOUNT_A.address,
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     balance = await getWalletBalance({
@@ -112,35 +112,35 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularDropERC20", () => {
 
   it("should claim tokens with allowlist", async () => {
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: ClaimableERC20.setClaimCondition({
+        allowList: [TEST_ACCOUNT_A.address, TEST_ACCOUNT_B.address],
         contract,
         maxClaimableSupply: "1",
         pricePerToken: "0.1",
-        allowList: [TEST_ACCOUNT_A.address, TEST_ACCOUNT_B.address],
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     // should throw if not in allowlist
     await expect(
       sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_C,
         transaction: ClaimableERC20.mint({
           contract,
           quantity: "0.1",
           to: TEST_ACCOUNT_C.address,
         }),
-        account: TEST_ACCOUNT_C,
       }),
     ).rejects.toThrowError(/ClaimableNotInAllowlist/);
 
     // can claim to address in allowlist (regardless of sender)
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_C,
       transaction: ClaimableERC20.mint({
         contract,
         quantity: 0.2,
         to: TEST_ACCOUNT_B.address,
       }),
-      account: TEST_ACCOUNT_C,
     });
 
     const balance = await getWalletBalance({
@@ -154,34 +154,34 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularDropERC20", () => {
 
   it("should claim tokens with max per wallet", async () => {
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: ClaimableERC20.setClaimCondition({
         contract,
+        maxClaimablePerWallet: "0.1",
         maxClaimableSupply: "1",
         pricePerToken: "0.1",
-        maxClaimablePerWallet: "0.1",
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     // should throw if max per wallet is reached
     await expect(
       sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_C,
         transaction: ClaimableERC20.mint({
           contract,
           quantity: "0.12",
           to: TEST_ACCOUNT_C.address,
         }),
-        account: TEST_ACCOUNT_C,
       }),
     ).rejects.toThrowError(/ClaimableMaxMintPerWalletExceeded/);
 
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_C,
       transaction: ClaimableERC20.mint({
         contract,
         quantity: "0.05",
         to: TEST_ACCOUNT_C.address,
       }),
-      account: TEST_ACCOUNT_C,
     });
 
     const balance = await getWalletBalance({

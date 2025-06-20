@@ -1,25 +1,25 @@
 export const fontWeights = {
-  display: 800,
-  title: 700,
-  subtitle: 500,
-  label: 600,
   body: 400,
+  display: 800,
+  label: 600,
+  subtitle: 500,
+  title: 700,
 } as const;
 
 export const lineHeights = {
-  display: 1.2,
-  title: 1.125,
-  subtitle: 1.6,
-  label: 1,
   body: 1.6,
+  display: 1.2,
+  label: 1,
+  subtitle: 1.6,
+  title: 1.125,
 } as const;
 
 export const letterSpacings = {
-  display: -1.5,
-  title: 0.15,
-  subtitle: 0.1,
-  label: "initial",
   body: "initial",
+  display: -1.5,
+  label: "initial",
+  subtitle: 0.1,
+  title: 0.15,
 } as const;
 
 type TypographyBase = "display" | "title" | "subtitle" | "label" | "body";

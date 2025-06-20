@@ -29,17 +29,29 @@ const supplySchema = z.string().refine(
 );
 
 export const nftWithPriceSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  description: z.string().optional(),
-  image: z.string().or(z.instanceof(File)).optional(),
   animation_url: z.string().or(z.instanceof(File)).optional(),
-  external_url: z.string().or(z.instanceof(File)).optional(),
+  attributes: z
+    .array(z.object({ trait_type: z.string(), value: z.string() }))
+    .transform((value) => {
+      if (!value) {
+        return value;
+      }
+
+      return value.filter((item) => {
+        return item.trait_type && item.value;
+      });
+    })
+    .optional(),
   background_color: z
     .string()
     .optional()
     .refine((val) => !val || /^#[0-9A-Fa-f]{6}$/.test(val), {
       message: "Must be a valid hex color (e.g., #FF0000)",
     }),
+  description: z.string().optional(),
+  external_url: z.string().or(z.instanceof(File)).optional(),
+  image: z.string().or(z.instanceof(File)).optional(),
+  name: z.string().min(1, { message: "Name is required" }),
   price_amount: priceAmountSchema,
   price_currency: z.string().refine(
     (value) => {
@@ -53,16 +65,4 @@ export const nftWithPriceSchema = z.object({
     },
   ),
   supply: supplySchema,
-  attributes: z
-    .array(z.object({ trait_type: z.string(), value: z.string() }))
-    .transform((value) => {
-      if (!value) {
-        return value;
-      }
-
-      return value.filter((item) => {
-        return item.trait_type && item.value;
-      });
-    })
-    .optional(),
 });

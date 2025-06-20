@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "TokensStaked" event.
@@ -34,7 +34,7 @@ export type TokensStakedEventFilters = Partial<{
  */
 export function tokensStakedEvent(filters: TokensStakedEventFilters = {}) {
   return prepareEvent({
-    signature: "event TokensStaked(address indexed staker, uint256 amount)",
     filters,
+    signature: "event TokensStaked(address indexed staker, uint256 amount)",
   });
 }

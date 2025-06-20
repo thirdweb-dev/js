@@ -1,7 +1,7 @@
-import { Label } from "@/components/ui/label";
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import { AsteriskIcon, InfoIcon } from "lucide-react";
 import type React from "react";
+import { Label } from "@/components/ui/label";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 
 export function FormFieldSetup(props: {
   htmlFor?: string;

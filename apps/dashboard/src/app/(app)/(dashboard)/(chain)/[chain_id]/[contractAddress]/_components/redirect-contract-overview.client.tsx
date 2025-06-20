@@ -1,8 +1,8 @@
 "use client";
 
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useEffect, useRef } from "react";
 import type { ThirdwebContract } from "thirdweb";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../_utils/contract-page-path";
 import { LoadingPage } from "./page-skeletons";
@@ -21,9 +21,9 @@ export function RedirectToContractOverview(props: {
     }
     redirected.current = true;
     const landingPage = buildContractPagePath({
-      projectMeta: props.projectMeta,
       chainIdOrSlug: props.contract.chain.id.toString(),
       contractAddress: props.contract.address,
+      projectMeta: props.projectMeta,
     });
 
     router.replace(landingPage);

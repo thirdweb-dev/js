@@ -1,6 +1,6 @@
 "use server";
 import { defineDashboardChain } from "lib/defineDashboardChain";
-import { ZERO_ADDRESS, isAddress, toTokens } from "thirdweb";
+import { isAddress, toTokens, ZERO_ADDRESS } from "thirdweb";
 import { getWalletBalance } from "thirdweb/wallets";
 import { MORALIS_API_KEY } from "../constants/server-envs";
 import { serverThirdwebClient } from "../constants/thirdweb-client.server";
@@ -43,12 +43,12 @@ export async function getTokenBalancesFromMoralis(params: {
     });
     return [
       {
-        token_address: ZERO_ADDRESS,
-        symbol: balance.symbol,
-        name: "Native Token",
-        decimals: balance.decimals,
         balance: balance.value.toString(),
+        decimals: balance.decimals,
         display_balance: toTokens(balance.value, balance.decimals),
+        name: "Native Token",
+        symbol: balance.symbol,
+        token_address: ZERO_ADDRESS,
       },
     ];
   };
@@ -59,10 +59,10 @@ export async function getTokenBalancesFromMoralis(params: {
     const tokenBalanceEndpoint = `https://deep-index.moralis.io/api/v2/${_address}/erc20?chain=${_chain}`;
 
     const resp = await fetch(tokenBalanceEndpoint, {
-      method: "GET",
       headers: {
         "x-api-key": MORALIS_API_KEY,
       },
+      method: "GET",
     });
 
     if (!resp.ok) {
@@ -83,7 +83,7 @@ export async function getTokenBalancesFromMoralis(params: {
   ]);
 
   return {
-    error: undefined,
     data: [...nativeBalance, ...tokenBalances],
+    error: undefined,
   };
 }

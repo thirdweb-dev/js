@@ -1,11 +1,11 @@
 "use client";
 
-import { Toaster } from "@/components/ui/sonner";
-import { isSanctionedAddress } from "@/data/eth-sanctioned-addresses";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { useMemo } from "react";
 import { ThirdwebProvider, useActiveAccount } from "thirdweb/react";
+import { Toaster } from "@/components/ui/sonner";
+import { isSanctionedAddress } from "@/data/eth-sanctioned-addresses";
 import { NebulaConnectWallet } from "./(app)/components/NebulaConnectButton";
 
 const queryClient = new QueryClient();
@@ -16,9 +16,9 @@ export function NebulaProviders(props: { children: React.ReactNode }) {
       <ThirdwebProvider>
         <ThemeProvider
           attribute="class"
+          defaultTheme="light"
           disableTransitionOnChange
           enableSystem={false}
-          defaultTheme="light"
         >
           <Toaster richColors />
           <SanctionedAddressesChecker>

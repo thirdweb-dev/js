@@ -1,6 +1,5 @@
 "use client";
 
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   tokensDelegated,
   useDelegateMutation,
@@ -9,6 +8,7 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 
 interface VoteButtonProps {
   contract: ThirdwebContract;
@@ -21,8 +21,8 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({
 }) => {
   const account = useActiveAccount();
   const tokensDelegatedQuery = useReadContract(tokensDelegated, {
-    contract,
     account,
+    contract,
     queryOptions: {
       enabled: !!account,
     },
@@ -38,8 +38,7 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({
       <TransactionButton
         client={contract.client}
         isLoggedIn={isLoggedIn}
-        txChainID={contract.chain.id}
-        transactionCount={1}
+        isPending={delegateMutation.isPending}
         onClick={() => {
           toast.promise(
             delegateMutation.mutateAsync(contract, {
@@ -48,13 +47,14 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({
               },
             }),
             {
+              error: "Error delegating tokens",
               loading: "Delegating tokens...",
               success: "Tokens delegated",
-              error: "Error delegating tokens",
             },
           );
         }}
-        isPending={delegateMutation.isPending}
+        transactionCount={1}
+        txChainID={contract.chain.id}
       >
         Delegate Tokens
       </TransactionButton>

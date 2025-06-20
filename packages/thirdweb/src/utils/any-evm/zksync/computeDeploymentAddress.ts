@@ -20,9 +20,9 @@ export function computeDeploymentAddress(
     : keccakId("thirdweb");
 
   return create2Address({
-    sender: options.create2FactoryAddress,
     bytecodeHash: options.bytecodeHash,
-    salt: saltHash,
     input: options.encodedArgs,
+    salt: saltHash,
+    sender: options.create2FactoryAddress,
   });
 }

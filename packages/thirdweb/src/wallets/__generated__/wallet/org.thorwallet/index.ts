@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "org.thorwallet",
-  name: "THORWallet",
-  homepage: "https://www.thorwallet.org/",
-  image_id: "45165bea-fdae-454e-7caa-31681f255200",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/ch/app/thorwallet-defi-wallet/id1592064324",
     android:
       "https://play.google.com/store/apps/details?id=defisuisse.thorwallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/ch/app/thorwallet-defi-wallet/id1592064324",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "thorwallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.thorwallet.org/",
+  id: "org.thorwallet",
+  image_id: "45165bea-fdae-454e-7caa-31681f255200",
+  mobile: {
+    native: "thorwallet://",
+    universal: null,
+  },
+  name: "THORWallet",
+  rdns: null,
 } as const;

@@ -1,15 +1,24 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
+import { ChainIconClient } from "components/icons/ChainIcon";
+import { NetworkSelectDropdown } from "components/selects/NetworkSelectDropdown";
+import { useAllChainsData } from "hooks/chains/allChains";
+import { EllipsisVerticalIcon, ExternalLinkIcon, XIcon } from "lucide-react";
+import Link from "next/link";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import { PaginationButtons } from "@/components/pagination-buttons";
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import {
   Table,
@@ -21,16 +30,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { useMutation } from "@tanstack/react-query";
-import { ChainIconClient } from "components/icons/ChainIcon";
-import { NetworkSelectDropdown } from "components/selects/NetworkSelectDropdown";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { EllipsisVerticalIcon, ExternalLinkIcon, XIcon } from "lucide-react";
-import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import React from "react";
-import { toast } from "sonner";
-import type { ThirdwebClient } from "thirdweb";
 import type { ProjectContract } from "../../../app/(app)/account/contracts/_components/getProjectContracts";
 import { removeContractFromProject } from "../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/hooks/project-contracts";
 import {
@@ -55,19 +54,19 @@ export function ContractTable(props: {
 }) {
   return (
     <ContractTableUI
-      variant={props.variant}
-      contracts={props.contracts}
       client={props.client}
+      contracts={props.contracts}
       pageSize={props.pageSize}
-      teamSlug={props.teamSlug}
       projectSlug={props.projectSlug}
       removeContractFromProject={async (contractId) => {
         await removeContractFromProject({
-          teamId: props.teamId,
-          projectId: props.projectId,
           contractId,
+          projectId: props.projectId,
+          teamId: props.teamId,
         });
       }}
+      teamSlug={props.teamSlug}
+      variant={props.variant}
     />
   );
 }
@@ -147,11 +146,11 @@ export function ContractTableUI(props: {
               <TableHead>Type</TableHead>
               <TableHead className="tracking-normal">
                 <NetworkFilterCell
-                  client={props.client}
-                  chainIds={uniqueChainIds}
                   chainId={
                     filters.chainId ? filters.chainId.toString() : undefined
                   }
+                  chainIds={uniqueChainIds}
+                  client={props.client}
                   setChainId={(chainId) => {
                     setFilters({
                       ...filters,
@@ -174,18 +173,18 @@ export function ContractTableUI(props: {
             {paginatedContracts.map((contract) => {
               return (
                 <TableRow
+                  className="cursor-pointer hover:bg-accent/50"
                   key={contract.id}
                   linkBox
-                  className="cursor-pointer hover:bg-accent/50"
                 >
                   <TableCell>
                     <ContractNameCell
                       chainId={contract.chainId}
+                      client={props.client}
                       contractAddress={contract.contractAddress}
                       linkOverlay
-                      teamSlug={props.teamSlug}
                       projectSlug={props.projectSlug}
-                      client={props.client}
+                      teamSlug={props.teamSlug}
                     />
                   </TableCell>
 
@@ -201,8 +200,8 @@ export function ContractTableUI(props: {
                     ) : (
                       <ContractTypeCell
                         chainId={contract.chainId}
-                        contractAddress={contract.contractAddress}
                         client={props.client}
+                        contractAddress={contract.contractAddress}
                       />
                     )}
                   </TableCell>
@@ -217,22 +216,22 @@ export function ContractTableUI(props: {
                   {props.variant === "contract" && (
                     <TableCell>
                       <CopyAddressButton
-                        copyIconPosition="left"
                         address={contract.contractAddress}
-                        variant="ghost"
                         className="-translate-x-2 relative z-10"
+                        copyIconPosition="left"
+                        variant="ghost"
                       />
                     </TableCell>
                   )}
 
                   {props.variant === "asset" && (
                     <TableCell>
-                      <Button variant="ghost" asChild size="sm">
+                      <Button asChild size="sm" variant="ghost">
                         <Link
-                          href={`/${contract.chainId}/${contract.contractAddress}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
                           className="-translate-x-2 relative z-10 flex items-center gap-1.5 text-muted-foreground"
+                          href={`/${contract.chainId}/${contract.contractAddress}`}
+                          rel="noopener noreferrer"
+                          target="_blank"
                         >
                           View <ExternalLinkIcon className="size-3" />
                         </Link>
@@ -243,14 +242,14 @@ export function ContractTableUI(props: {
                   <TableCell>
                     <ContractActionsCell
                       contractId={contract.id}
-                      removeContractFromProject={
-                        props.removeContractFromProject
-                      }
                       onContractRemoved={() => {
                         setDeletedContractIds((v) => {
                           return [...v, contract.id];
                         });
                       }}
+                      removeContractFromProject={
+                        props.removeContractFromProject
+                      }
                     />
                   </TableCell>
                 </TableRow>
@@ -268,11 +267,11 @@ export function ContractTableUI(props: {
                 <p className="mb-3">No contracts found</p>
               )}
               {props.variant === "contract" && (
-                <Button variant="outline" asChild className="bg-background">
+                <Button asChild className="bg-background" variant="outline">
                   <Link
                     href="/explore"
-                    target="_blank"
                     rel="noopener noreferrer"
+                    target="_blank"
                   >
                     Discover Contracts
                     <ExternalLinkIcon className="ml-2 size-4" />
@@ -320,11 +319,11 @@ const NetworkFilterCell = React.memo(function NetworkFilterCell({
 
   return (
     <NetworkSelectDropdown
-      useCleanChainName={true}
+      client={client}
       enabledChainIds={chainIds}
       onSelect={(chain) => setSelectedChain(chain)}
       selectedChain={selectedChain}
-      client={client}
+      useCleanChainName={true}
     />
   );
 });
@@ -342,19 +341,19 @@ const ChainNameCell = React.memo(function ChainNameCell(props: {
     <div className="flex items-center gap-2">
       <ChainIconClient
         className="size-5"
-        src={data?.icon?.url}
         client={props.client}
+        src={data?.icon?.url}
       />
       <SkeletonContainer
         loadedData={data ? cleanedChainName : undefined}
-        skeletonData={`Chain ID ${props.chainId}`}
         render={(v) => {
           return <p className="text-muted-foreground text-sm">{v}</p>;
         }}
+        skeletonData={`Chain ID ${props.chainId}`}
       />
 
       {data?.testnet && (
-        <Badge variant="outline" className="text-muted-foreground">
+        <Badge className="text-muted-foreground" variant="outline">
           Testnet
         </Badge>
       )}
@@ -371,10 +370,10 @@ const ContractActionsCell = React.memo(function ContractActionsCell(props: {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          size="icon"
-          variant="ghost"
           className="relative z-10"
           onClick={(e) => e.stopPropagation()}
+          size="icon"
+          variant="ghost"
         >
           <EllipsisVerticalIcon className="size-4" />
         </Button>
@@ -383,8 +382,8 @@ const ContractActionsCell = React.memo(function ContractActionsCell(props: {
       <DropdownMenuContent onClick={(e) => e.stopPropagation()}>
         <RemoveContractButton
           contractId={props.contractId}
-          removeContractFromProject={props.removeContractFromProject}
           onContractRemoved={props.onContractRemoved}
+          removeContractFromProject={props.removeContractFromProject}
         />
       </DropdownMenuContent>
     </DropdownMenu>
@@ -402,21 +401,21 @@ function RemoveContractButton(props: {
 
   return (
     <Button
-      variant="ghost"
+      className="justify-start gap-2"
+      disabled={removeMutation.isPending}
       onClick={(e) => {
         e.stopPropagation();
         removeMutation.mutateAsync(props.contractId, {
+          onError: () => {
+            toast.error("Failed to remove contract");
+          },
           onSuccess: () => {
             props.onContractRemoved?.();
             toast.success("Contract removed successfully");
           },
-          onError: () => {
-            toast.error("Failed to remove contract");
-          },
         });
       }}
-      disabled={removeMutation.isPending}
-      className="justify-start gap-2"
+      variant="ghost"
     >
       {removeMutation.isPending ? (
         <Spinner className="size-4" />

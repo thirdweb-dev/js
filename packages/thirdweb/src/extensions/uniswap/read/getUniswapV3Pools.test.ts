@@ -18,12 +18,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("uniswap.getUniswapV3Pool", () => {
     expect(pools).toMatchInlineSnapshot(`
       [
         {
-          "poolAddress": "0x88051B0eea095007D3bEf21aB287Be961f3d8598",
-          "poolFee": 3000,
-        },
-        {
           "poolAddress": "0x584eC2562b937C4AC0452184D8d83346382B5D3a",
           "poolFee": 10000,
+        },
+        {
+          "poolAddress": "0x88051B0eea095007D3bEf21aB287Be961f3d8598",
+          "poolFee": 3000,
         },
       ]
     `);

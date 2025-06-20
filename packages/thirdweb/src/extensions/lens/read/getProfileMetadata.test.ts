@@ -13,7 +13,7 @@ const client = TEST_CLIENT;
 
 describe("lens/getProfileMetadata", () => {
   it("should return a profile object or null for valid profileId", async () => {
-    const profile = await getProfileMetadata({ profileId, client });
+    const profile = await getProfileMetadata({ client, profileId });
 
     // Although there is a profile, the metadata of that profile might still be "missing"
     // if user hasn't set up any metadata like avatar, coverPicture, name, bio etc.
@@ -24,19 +24,19 @@ describe("lens/getProfileMetadata", () => {
     // As of Jul 2024 Lens has about 465k profiles | So trying to get profile of a max-unit256 profileId should return nothing
     // gotta be a very long before this number is reached so we should be safe
     const profile = await getProfileMetadata({
-      profileId: MAX_UINT256,
       client,
+      profileId: MAX_UINT256,
     });
     expect(profile === null).toBe(true);
   });
 
   it("should work with overrides", async () => {
     const profile = await getProfileMetadata({
-      profileId,
       client,
       overrides: {
         lensHubAddress: "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d",
       },
+      profileId,
     });
     expect(typeof profile).toBe("object");
   });

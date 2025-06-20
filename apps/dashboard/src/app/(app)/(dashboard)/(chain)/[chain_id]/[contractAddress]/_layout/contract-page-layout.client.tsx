@@ -20,12 +20,12 @@ export function ContractPageLayoutClient(props: {
 }) {
   const metadataQuery = useContractPageMetadata(props.contract);
   const headerMetadataQuery = useQuery({
-    queryKey: ["getContractMetadataHeaderData", props.contract],
     queryFn: async () => {
       return await getContractMetadataHeaderData(props.contract);
     },
-    retry: false,
+    queryKey: ["getContractMetadataHeaderData", props.contract],
     refetchOnWindowFocus: false,
+    retry: false,
   });
 
   if (metadataQuery.isPending) {
@@ -46,9 +46,9 @@ export function ContractPageLayoutClient(props: {
   return (
     <ContractPageLayout
       {...props}
-      sidebarLinks={sidebarLinks}
       dashboardContractMetadata={headerMetadataQuery.data?.contractMetadata}
       externalLinks={headerMetadataQuery.data?.externalLinks}
+      sidebarLinks={sidebarLinks}
     />
   );
 }

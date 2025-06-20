@@ -6,9 +6,9 @@ describe("mapBridgeError", () => {
   it("should return the same error for INVALID_INPUT", () => {
     const error = new ApiError({
       code: "INVALID_INPUT",
+      correlationId: "test-correlation-id",
       message: "Invalid input provided",
       statusCode: 400,
-      correlationId: "test-correlation-id",
     });
 
     const result = mapBridgeError(error);
@@ -23,9 +23,9 @@ describe("mapBridgeError", () => {
   it("should return the same error for INTERNAL_SERVER_ERROR", () => {
     const error = new ApiError({
       code: "INTERNAL_SERVER_ERROR",
+      correlationId: "internal-error-id",
       message: "Internal server error occurred",
       statusCode: 500,
-      correlationId: "internal-error-id",
     });
 
     const result = mapBridgeError(error);
@@ -56,9 +56,9 @@ describe("mapBridgeError", () => {
   it("should return the same error for AMOUNT_TOO_LOW", () => {
     const error = new ApiError({
       code: "AMOUNT_TOO_LOW",
+      correlationId: "amount-validation-id",
       message: "Amount is below minimum threshold",
       statusCode: 400,
-      correlationId: "amount-validation-id",
     });
 
     const result = mapBridgeError(error);

@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { decodeAbiParameters } from "viem";
-import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the "getAllValidOffers" function.
@@ -17,60 +17,60 @@ export type GetAllValidOffersParams = {
 export const FN_SELECTOR = "0x91940b3e" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_startId",
+    type: "uint256",
   },
   {
-    type: "uint256",
     name: "_endId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple[]",
-    name: "offers",
     components: [
       {
-        type: "uint256",
         name: "offerId",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "tokenId",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "quantity",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "totalPrice",
-      },
-      {
         type: "uint256",
+      },
+      {
         name: "expirationTimestamp",
+        type: "uint256",
       },
       {
-        type: "address",
         name: "offeror",
+        type: "address",
       },
       {
-        type: "address",
         name: "assetContract",
-      },
-      {
         type: "address",
+      },
+      {
         name: "currency",
+        type: "address",
       },
       {
-        type: "uint8",
         name: "tokenType",
+        type: "uint8",
       },
       {
-        type: "uint8",
         name: "status",
+        type: "uint8",
       },
     ],
+    name: "offers",
+    type: "tuple[]",
   },
 ] as const;
 

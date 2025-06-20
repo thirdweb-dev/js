@@ -1,14 +1,11 @@
 import { Container } from "../components/basic.js";
-import { Link } from "../components/text.js";
-import { Text } from "../components/text.js";
+import { Link, Text } from "../components/text.js";
 import { ThirdwebTextIcon } from "./icons/ThirdwebTextIcon.js";
 
 /**
  * @internal
  */
-export function PoweredByThirdweb(props: {
-  link?: string;
-}) {
+export function PoweredByThirdweb(props: { link?: string }) {
   const link =
     props.link ||
     "https://playground.thirdweb.com/connect/sign-in/button?utm_source=cw_text";
@@ -16,12 +13,12 @@ export function PoweredByThirdweb(props: {
     <Link
       color="secondaryText"
       hoverColor="primaryText"
-      target="_blank"
       href={link}
+      target="_blank"
     >
       <Container
-        flex="row"
         center="both"
+        flex="row"
         style={{
           color: "currentColor",
           gap: 4,
@@ -29,10 +26,10 @@ export function PoweredByThirdweb(props: {
       >
         <Text
           size="xs"
-          weight={600}
           style={{
             color: "currentColor",
           }}
+          weight={600}
         >
           Powered by
         </Text>

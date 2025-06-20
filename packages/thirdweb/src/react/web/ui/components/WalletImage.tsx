@@ -54,10 +54,10 @@ export function WalletImage(props: {
         const lastAuthProvider = await getLastAuthProvider(storage);
         image = lastAuthProvider
           ? {
-              uri: getSocialIcon(lastAuthProvider),
               authProvider: lastAuthProvider as AuthOption,
+              uri: getSocialIcon(lastAuthProvider),
             }
-          : { uri: "", authProvider: "wallet" };
+          : { authProvider: "wallet", uri: "" };
       } else {
         const mipdImage = getInstalledWalletProviders().find(
           (x) => x.info.rdns === activeEOAId,
@@ -78,47 +78,47 @@ export function WalletImage(props: {
   }, [props.id, activeWallet]);
 
   if (image?.authProvider === "email") {
-    return <EmailIcon size={props.size} color={theme.colors.accentText} />;
+    return <EmailIcon color={theme.colors.accentText} size={props.size} />;
   }
 
   if (image?.authProvider === "phone") {
-    return <PhoneIcon size={props.size} color={theme.colors.accentText} />;
+    return <PhoneIcon color={theme.colors.accentText} size={props.size} />;
   }
 
   if (image?.authProvider === "passkey") {
     return (
-      <FingerPrintIcon size={props.size} color={theme.colors.accentText} />
+      <FingerPrintIcon color={theme.colors.accentText} size={props.size} />
     );
   }
 
   if (image?.authProvider === "wallet") {
     return (
-      <OutlineWalletIcon size={props.size} color={theme.colors.accentText} />
+      <OutlineWalletIcon color={theme.colors.accentText} size={props.size} />
     );
   }
 
   if (image?.authProvider === "guest") {
-    return <GuestIcon size={props.size} color={theme.colors.accentText} />;
+    return <GuestIcon color={theme.colors.accentText} size={props.size} />;
   }
 
   if (image?.uri) {
     return (
       <Img
-        src={image.uri}
-        width={props.size}
+        client={props.client}
         height={props.size}
         loading="eager"
-        client={props.client}
+        src={image.uri}
         style={{
           borderRadius: radius.md,
           ...props.style,
         }}
+        width={props.size}
       />
     );
   }
 
   return (
-    <WalletImageQuery id={props.id} size={props.size} client={props.client} />
+    <WalletImageQuery client={props.client} id={props.id} size={props.size} />
   );
 }
 
@@ -133,9 +133,9 @@ function WalletImageQuery(props: {
     return (
       <Img
         client={props.client}
+        height={props.size}
         src={genericWalletIcon}
         width={props.size}
-        height={props.size}
       />
     );
   }

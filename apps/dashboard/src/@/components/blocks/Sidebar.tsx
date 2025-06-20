@@ -65,12 +65,12 @@ export function RenderSidebarLinks(props: { links: SidebarLink[] }) {
         const isExternal = link.href.startsWith("http");
         return (
           <NavLink
+            activeClassName="text-foreground bg-accent"
+            className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent"
+            exactMatch={link.exactMatch}
+            href={link.href}
             // biome-ignore lint/suspicious/noArrayIndexKey: items won't be reordered
             key={i}
-            href={link.href}
-            className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent"
-            activeClassName="text-foreground bg-accent"
-            exactMatch={link.exactMatch}
           >
             {link.icon && <link.icon className="size-4" />}
             {link.label}

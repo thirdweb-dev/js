@@ -1,13 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { ArrowRightIcon, MessageSquareXIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -18,6 +9,15 @@ import {
   useConnectedWallets,
   useSetActiveWallet,
 } from "thirdweb/react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { type NebulaContext, promptNebula } from "../api/chat";
 import { createSession, updateSession } from "../api/session";
 import type {
@@ -66,8 +66,8 @@ export function ChatPageContent(props: {
         contextRes?.chain_ids ||
         props.initialParams?.chainIds.map((x) => x.toString()) ||
         [],
-      walletAddress: contextRes?.wallet_address || props.accountAddress || null,
       networks: "mainnet",
+      walletAddress: contextRes?.wallet_address || props.accountAddress || null,
     };
 
     return value;
@@ -104,9 +104,9 @@ export function ChatPageContent(props: {
         const lastUsedChainIds = getLastUsedChainIds();
         if (lastUsedChainIds) {
           return {
+            chainIds: lastUsedChainIds,
             networks: _contextFilters?.networks || null,
             walletAddress: _contextFilters?.walletAddress || null,
-            chainIds: lastUsedChainIds,
           };
         }
       } catch {
@@ -144,12 +144,12 @@ export function ChatPageContent(props: {
       setMessages((prev) => [
         ...prev,
         {
-          type: "user",
           content: message.content,
+          type: "user",
         },
         {
-          type: "presence",
           texts: [],
+          type: "presence",
         },
       ]);
 
@@ -166,7 +166,7 @@ export function ChatPageContent(props: {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         setMessages((prev) => [
           ...prev.slice(0, -1),
-          { type: "assistant", text: interceptedReply, request_id: undefined },
+          { request_id: undefined, text: interceptedReply, type: "assistant" },
         ]);
 
         return;
@@ -194,9 +194,9 @@ export function ChatPageContent(props: {
           const prevValue = newSessionsStore.getValue();
           newSessionsStore.setValue([
             {
+              created_at: new Date().toISOString(),
               id: currentSessionId,
               title: firstTextMessage,
-              created_at: new Date().toISOString(),
               updated_at: new Date().toISOString(),
             },
             ...prevValue,
@@ -207,12 +207,12 @@ export function ChatPageContent(props: {
 
         await handleNebulaPrompt({
           abortController,
+          authToken: props.authToken,
+          contextFilters: contextFilters,
           message: message,
           sessionId: currentSessionId,
-          authToken: props.authToken,
-          setMessages,
-          contextFilters: contextFilters,
           setContextFilters,
+          setMessages,
         });
       } catch (error) {
         if (abortController.signal.aborted) {
@@ -249,13 +249,13 @@ export function ChatPageContent(props: {
     ) {
       hasDoneAutoPrompt.current = true;
       handleSendMessage({
-        role: "user",
         content: [
           {
-            type: "text",
             text: props.initialParams.q,
+            type: "text",
           },
         ],
+        role: "user",
       });
     }
   }, [props.initialParams?.q, messages.length, handleSendMessage]);
@@ -280,8 +280,8 @@ export function ChatPageContent(props: {
     if (sessionId) {
       await updateSession({
         authToken: props.authToken,
-        sessionId,
         contextFilters: values,
+        sessionId,
       });
     }
   };
@@ -298,8 +298,8 @@ export function ChatPageContent(props: {
   return (
     <div className="flex grow flex-col overflow-hidden">
       <WalletDisconnectedDialog
-        open={showConnectModal}
         onOpenChange={setShowConnectModal}
+        open={showConnectModal}
       />
 
       <div className="flex grow overflow-hidden">
@@ -307,16 +307,16 @@ export function ChatPageContent(props: {
           {showEmptyState ? (
             <div className="fade-in-0 container flex max-w-[800px] grow animate-in flex-col justify-center">
               <EmptyStateChatPageContent
-                onLoginClick={undefined}
-                showAurora={true}
-                isConnectingWallet={connectionStatus === "connecting"}
-                sendMessage={handleSendMessage}
-                prefillMessage={props.initialParams?.q}
-                context={contextFilters}
-                setContext={setContextFilters}
-                connectedWallets={connectedWalletsMeta}
-                setActiveWallet={handleSetActiveWallet}
                 allowImageUpload={true}
+                connectedWallets={connectedWalletsMeta}
+                context={contextFilters}
+                isConnectingWallet={connectionStatus === "connecting"}
+                onLoginClick={undefined}
+                prefillMessage={props.initialParams?.q}
+                sendMessage={handleSendMessage}
+                setActiveWallet={handleSetActiveWallet}
+                setContext={setContextFilters}
+                showAurora={true}
               />
             </div>
           ) : (
@@ -339,41 +339,41 @@ export function ChatPageContent(props: {
 
               {messages.length > 0 && (
                 <Chats
-                  messages={messages}
-                  isChatStreaming={isChatStreaming}
                   authToken={props.authToken}
-                  sessionId={sessionId}
                   className="min-w-0 pt-6 pb-32"
                   client={props.client}
                   enableAutoScroll={enableAutoScroll}
-                  setEnableAutoScroll={setEnableAutoScroll}
+                  isChatStreaming={isChatStreaming}
+                  messages={messages}
                   sendMessage={handleSendMessage}
+                  sessionId={sessionId}
+                  setEnableAutoScroll={setEnableAutoScroll}
                 />
               )}
 
               <div className="container max-w-[800px]">
                 <ChatBar
-                  placeholder="Ask Nebula"
-                  isConnectingWallet={connectionStatus === "connecting"}
-                  showContextSelector={true}
-                  connectedWallets={connectedWalletsMeta}
-                  setActiveWallet={handleSetActiveWallet}
-                  client={props.client}
-                  prefillMessage={undefined}
-                  sendMessage={handleSendMessage}
-                  isChatStreaming={isChatStreaming}
                   abortChatStream={() => {
                     chatAbortController?.abort();
                     setChatAbortController(undefined);
                     setIsChatStreaming(false);
                   }}
+                  allowImageUpload={true}
+                  client={props.client}
+                  connectedWallets={connectedWalletsMeta}
                   context={contextFilters}
+                  isChatStreaming={isChatStreaming}
+                  isConnectingWallet={connectionStatus === "connecting"}
+                  onLoginClick={undefined}
+                  placeholder="Ask Nebula"
+                  prefillMessage={undefined}
+                  sendMessage={handleSendMessage}
+                  setActiveWallet={handleSetActiveWallet}
                   setContext={(v) => {
                     setContextFilters(v);
                     handleUpdateContextFilters(v);
                   }}
-                  allowImageUpload={true}
-                  onLoginClick={undefined}
+                  showContextSelector={true}
                 />
               </div>
             </div>
@@ -393,7 +393,7 @@ function WalletDisconnectedDialog(props: {
   onOpenChange: (value: boolean) => void;
 }) {
   return (
-    <Dialog open={props.open} onOpenChange={props.onOpenChange}>
+    <Dialog onOpenChange={props.onOpenChange} open={props.open}>
       <DialogContent className="p-0">
         <div className="p-6">
           <DialogHeader>
@@ -409,7 +409,7 @@ function WalletDisconnectedDialog(props: {
             <Button variant="outline">Cancel</Button>
           </DialogClose>
           <Button asChild>
-            <Link href="/login" className="gap-2">
+            <Link className="gap-2" href="/login">
               Connect Wallet
               <ArrowRightIcon className="size-4" />
             </Link>
@@ -472,9 +472,8 @@ async function handleNebulaPrompt(params: {
 
   await promptNebula({
     abortController,
-    message,
-    sessionId,
     authToken,
+    context: contextFilters,
     handleStream(res) {
       if (abortController.signal.aborted) {
         return;
@@ -492,9 +491,9 @@ async function handleNebulaPrompt(params: {
             return [
               ...prevMessages,
               {
-                type: "image",
                 data: res.data,
                 request_id: res.request_id,
+                type: "image",
               },
             ];
           });
@@ -516,9 +515,9 @@ async function handleNebulaPrompt(params: {
               return [
                 ...prev.slice(0, -1),
                 {
+                  request_id: requestIdForMessage,
                   text: lastMessage.text + res.data.v,
                   type: "assistant",
-                  request_id: requestIdForMessage,
                 },
               ];
             }
@@ -527,9 +526,9 @@ async function handleNebulaPrompt(params: {
             return [
               ...prev,
               {
+                request_id: requestIdForMessage,
                 text: res.data.v,
                 type: "assistant",
-                request_id: requestIdForMessage,
               },
             ];
           });
@@ -545,8 +544,8 @@ async function handleNebulaPrompt(params: {
               return [
                 ...prev.slice(0, -1),
                 {
-                  type: "presence",
                   texts: [...lastMessage.texts, res.data.data],
+                  type: "presence",
                 },
               ];
             }
@@ -565,10 +564,10 @@ async function handleNebulaPrompt(params: {
                 return [
                   ...prevMessages,
                   {
-                    type: "action",
-                    subtype: res.type,
                     data: res.data,
                     request_id: res.request_id,
+                    subtype: res.type,
+                    type: "action",
                   },
                 ];
               });
@@ -579,10 +578,10 @@ async function handleNebulaPrompt(params: {
                 return [
                   ...prevMessages,
                   {
-                    type: "action",
-                    subtype: res.type,
                     data: res.data,
                     request_id: res.request_id,
+                    subtype: res.type,
+                    type: "action",
                   },
                 ];
               });
@@ -595,8 +594,8 @@ async function handleNebulaPrompt(params: {
         case "context": {
           setContextFilters({
             chainIds: res.data.chain_ids.map((x) => x.toString()),
-            walletAddress: res.data.wallet_address,
             networks: res.data.networks,
+            walletAddress: res.data.wallet_address,
           });
           return;
         }
@@ -616,7 +615,8 @@ async function handleNebulaPrompt(params: {
         }
       }
     },
-    context: contextFilters,
+    message,
+    sessionId,
   });
 
   // if the stream ends without any delta or tx events - we have nothing to show
@@ -675,18 +675,18 @@ function parseHistoryToMessages(history: NebulaSessionHistoryMessage[]) {
           if (content.type === "sign_transaction") {
             const txData = JSON.parse(content.data);
             messages.push({
-              type: "action",
-              subtype: "sign_transaction",
               data: txData,
               request_id: content.request_id,
+              subtype: "sign_transaction",
+              type: "action",
             });
           } else if (content.type === "sign_swap") {
             const swapData = JSON.parse(content.data);
             messages.push({
-              type: "action",
-              subtype: "sign_swap",
               data: swapData,
               request_id: content.request_id,
+              subtype: "sign_swap",
+              type: "action",
             });
           }
         } catch (e) {
@@ -707,9 +707,9 @@ function parseHistoryToMessages(history: NebulaSessionHistoryMessage[]) {
         };
 
         messages.push({
-          type: "image",
           data: content.data,
           request_id: content.request_id,
+          type: "image",
         });
         break;
       }
@@ -720,8 +720,8 @@ function parseHistoryToMessages(history: NebulaSessionHistoryMessage[]) {
             typeof message.content === "string"
               ? [
                   {
-                    type: "text",
                     text: message.content,
+                    type: "text",
                   },
                 ]
               : message.content,
@@ -732,9 +732,9 @@ function parseHistoryToMessages(history: NebulaSessionHistoryMessage[]) {
 
       case "assistant": {
         messages.push({
+          request_id: undefined,
           text: message.content,
           type: message.role,
-          request_id: undefined,
         });
       }
     }

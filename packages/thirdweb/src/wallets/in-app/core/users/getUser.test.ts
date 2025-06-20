@@ -41,16 +41,16 @@ describe("getUser", () => {
 
   it("should call the correct URL with email", async () => {
     mockFetch.mockResolvedValueOnce({
-      ok: true,
       json: async () => [
         {
+          createdAt: "2023-01-01T00:00:00Z",
+          email: "test@test.com",
+          linkedAccounts: [],
           userId: "user1",
           walletAddress: "0x123",
-          email: "test@test.com",
-          createdAt: "2023-01-01T00:00:00Z",
-          linkedAccounts: [],
         },
       ],
+      ok: true,
     });
 
     const result = await getUser({
@@ -62,26 +62,26 @@ describe("getUser", () => {
       "https://embedded-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details?queryBy=email&email=test%40test.com",
     );
     expect(result).toEqual({
+      createdAt: "2023-01-01T00:00:00Z",
+      email: "test@test.com",
+      profiles: [],
       userId: "user1",
       walletAddress: "0x123",
-      email: "test@test.com",
-      createdAt: "2023-01-01T00:00:00Z",
-      profiles: [],
     });
   });
 
   it("should call the correct URL with phone", async () => {
     mockFetch.mockResolvedValueOnce({
-      ok: true,
       json: async () => [
         {
-          userId: "user1",
-          walletAddress: "0x123",
-          phone: "+1234567890",
           createdAt: "2023-01-01T00:00:00Z",
           linkedAccounts: [],
+          phone: "+1234567890",
+          userId: "user1",
+          walletAddress: "0x123",
         },
       ],
+      ok: true,
     });
 
     const result = await getUser({
@@ -93,32 +93,32 @@ describe("getUser", () => {
       "https://embedded-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details?queryBy=phone&phone=%2B1234567890",
     );
     expect(result).toEqual({
+      createdAt: "2023-01-01T00:00:00Z",
+      phone: "+1234567890",
+      profiles: [],
       userId: "user1",
       walletAddress: "0x123",
-      phone: "+1234567890",
-      createdAt: "2023-01-01T00:00:00Z",
-      profiles: [],
     });
   });
 
   it("should call the correct URL with id", async () => {
     mockFetch.mockResolvedValueOnce({
-      ok: true,
       json: async () => [
         {
-          userId: "user1",
-          walletAddress: "0x123",
           createdAt: "2023-01-01T00:00:00Z",
           linkedAccounts: [
             {
-              type: "id",
               details: {
                 id: "0x456",
               },
+              type: "id",
             },
           ],
+          userId: "user1",
+          walletAddress: "0x123",
         },
       ],
+      ok: true,
     });
 
     const result = await getUser({
@@ -130,38 +130,38 @@ describe("getUser", () => {
       "https://embedded-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details?queryBy=id&id=user1",
     );
     expect(result).toEqual({
-      userId: "user1",
-      walletAddress: "0x123",
       createdAt: "2023-01-01T00:00:00Z",
       profiles: [
         {
-          type: "id",
           details: {
             id: "0x456",
           },
+          type: "id",
         },
       ],
+      userId: "user1",
+      walletAddress: "0x123",
     });
   });
 
   it("should call the correct URL with externalWalletAddress", async () => {
     mockFetch.mockResolvedValueOnce({
-      ok: true,
       json: async () => [
         {
-          userId: "user1",
-          walletAddress: "0x123",
           createdAt: "2023-01-01T00:00:00Z",
           linkedAccounts: [
             {
-              type: "siwe",
               details: {
                 address: "0x456",
               },
+              type: "siwe",
             },
           ],
+          userId: "user1",
+          walletAddress: "0x123",
         },
       ],
+      ok: true,
     });
 
     const result = await getUser({
@@ -173,17 +173,17 @@ describe("getUser", () => {
       "https://embedded-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details?queryBy=externalWalletAddress&externalWalletAddress=0x456",
     );
     expect(result).toEqual({
-      userId: "user1",
-      walletAddress: "0x123",
       createdAt: "2023-01-01T00:00:00Z",
       profiles: [
         {
-          type: "wallet",
           details: {
             address: "0x456",
           },
+          type: "wallet",
         },
       ],
+      userId: "user1",
+      walletAddress: "0x123",
     });
   });
 
@@ -205,8 +205,8 @@ describe("getUser", () => {
 
   it("should return null if no user is found", async () => {
     mockFetch.mockResolvedValueOnce({
-      ok: true,
       json: async () => [],
+      ok: true,
     });
 
     const result = await getUser({

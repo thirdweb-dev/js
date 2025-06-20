@@ -1,4 +1,3 @@
-import type { SideBar } from "@/components/Layouts/DocLayout";
 import {
   AlbumIcon,
   ArrowLeftRightIcon,
@@ -13,119 +12,120 @@ import {
   WebhookIcon,
   WrenchIcon,
 } from "lucide-react";
+import type { SideBar } from "@/components/Layouts/DocLayout";
 
 const paySlug = "/pay";
 
 export const sidebar: SideBar = {
-  name: "Universal Bridge",
   links: [
     {
-      name: "Overview",
       href: `${paySlug}`,
       icon: <WalletIcon />,
+      name: "Overview",
     },
     {
-      name: "Supported Routes",
       href: "https://thirdweb.com/routes",
       icon: <ArrowLeftRightIcon />,
+      name: "Supported Routes",
     },
     {
-      name: "Onramp Providers",
       href: `${paySlug}/onramp-providers`,
       icon: <TriangleRightIcon />,
+      name: "Onramp Providers",
     },
     {
-      name: "Service Fees",
       href: `${paySlug}/fees`,
       icon: <CircleDollarSignIcon />,
+      name: "Service Fees",
     },
     {
-      name: "Get Started",
       href: `${paySlug}/get-started`,
       icon: <RocketIcon />,
       links: [
         {
-          name: "Installation",
           href: `${paySlug}/get-started#installation`,
+          name: "Installation",
         },
         {
-          name: "Recipes",
           href: `${paySlug}/get-started#recipes`,
+          name: "Recipes",
         },
       ],
+      name: "Get Started",
     },
     {
-      name: "Tutorials",
-      isCollapsible: true,
       icon: <AlbumIcon />,
-      links: [
-        {
-          name: "Cross-Chain Swapping",
-          href: `${paySlug}/guides/cross-chain-swapping`,
-        },
-        {
-          name: "Swap with Smart Accounts",
-          href: `${paySlug}/guides/smart-accounts`,
-        },
-        {
-          name: "Fiat Onramp",
-          href: `${paySlug}/guides/onramp-integration`,
-        },
-        {
-          name: "NFT Checkout",
-          href: `${paySlug}/guides/nft-checkout`,
-        },
-      ],
-    },
-    {
-      name: "Customization",
       isCollapsible: true,
-      icon: <PaletteIcon />,
       links: [
         {
-          name: "ConnectButton",
-          href: `${paySlug}/customization/connectbutton`,
+          href: `${paySlug}/guides/cross-chain-swapping`,
+          name: "Cross-Chain Swapping",
         },
         {
-          name: "PayEmbed",
-          href: `${paySlug}/customization/payembed`,
+          href: `${paySlug}/guides/smart-accounts`,
+          name: "Swap with Smart Accounts",
         },
         {
-          name: "useSendTransaction",
-          href: `${paySlug}/customization/send-transaction`,
+          href: `${paySlug}/guides/onramp-integration`,
+          name: "Fiat Onramp",
+        },
+        {
+          href: `${paySlug}/guides/nft-checkout`,
+          name: "NFT Checkout",
         },
       ],
+      name: "Tutorials",
     },
     {
-      name: "API Reference",
+      icon: <PaletteIcon />,
+      isCollapsible: true,
+      links: [
+        {
+          href: `${paySlug}/customization/connectbutton`,
+          name: "ConnectButton",
+        },
+        {
+          href: `${paySlug}/customization/payembed`,
+          name: "PayEmbed",
+        },
+        {
+          href: `${paySlug}/customization/send-transaction`,
+          name: "useSendTransaction",
+        },
+      ],
+      name: "Customization",
+    },
+    {
       href: "https://bridge.thirdweb.com/reference",
       icon: <BracesIcon />,
+      name: "API Reference",
     },
     {
-      name: "SDK Reference",
       href: "/typescript/v5/buy/quote",
       icon: <CodeIcon />,
       links: [
         {
-          name: "TypeScript SDK",
           href: "/typescript/v5/buy/quote",
+          name: "TypeScript SDK",
         },
       ],
+      name: "SDK Reference",
     },
     {
-      name: "Webhooks",
       href: `${paySlug}/webhooks`,
       icon: <WebhookIcon />,
+      name: "Webhooks",
     },
     {
-      name: "Troubleshoot",
       href: `${paySlug}/troubleshoot`,
       icon: <WrenchIcon />,
+      name: "Troubleshoot",
     },
     {
-      name: "FAQs",
       href: `${paySlug}/faqs`,
       icon: <MessageCircleQuestionIcon />,
+      name: "FAQs",
     },
   ],
+  name: "Universal Bridge",
 };

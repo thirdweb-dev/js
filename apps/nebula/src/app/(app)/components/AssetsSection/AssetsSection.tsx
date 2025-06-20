@@ -1,17 +1,12 @@
 "use client";
-import { ChainIconClient } from "@/components/blocks/ChainIcon";
-import { Skeleton } from "@/components/ui/skeleton";
-import { isProd } from "@/constants/env-utils";
-import { nebulaAppThirdwebClient } from "@/constants/nebula-client";
-import { useAllChainsData } from "@/hooks/chains";
 import { useQuery } from "@tanstack/react-query";
 import { XIcon } from "lucide-react";
 import Link from "next/link";
 import {
-  NATIVE_TOKEN_ADDRESS,
-  type ThirdwebClient,
   defineChain,
   getAddress,
+  NATIVE_TOKEN_ADDRESS,
+  type ThirdwebClient,
   toTokens,
 } from "thirdweb";
 import {
@@ -22,6 +17,11 @@ import {
   useActiveWalletChain,
 } from "thirdweb/react";
 import { getWalletBalance } from "thirdweb/wallets";
+import { ChainIconClient } from "@/components/blocks/ChainIcon";
+import { Skeleton } from "@/components/ui/skeleton";
+import { isProd } from "@/constants/env-utils";
+import { nebulaAppThirdwebClient } from "@/constants/nebula-client";
+import { useAllChainsData } from "@/hooks/chains";
 
 export type AssetBalance = {
   chain_id: number;
@@ -53,15 +53,15 @@ export function AssetsSectionUI(props: {
       {!props.isPending &&
         props.data.map((asset) => (
           <AssetItem
-            key={`${asset.chain_id}-${asset.token_address}`}
             asset={asset}
             client={props.client}
+            key={`${asset.chain_id}-${asset.token_address}`}
           />
         ))}
 
       {props.isPending &&
         new Array(10).fill(null).map((_, index) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+          // biome-ignore lint/suspicious/noArrayIndexKey: for the placeholder this is explicitly the key
           <SkeletonAssetItem key={index} />
         ))}
     </div>
@@ -80,10 +80,7 @@ function SkeletonAssetItem() {
   );
 }
 
-function AssetItem(props: {
-  asset: AssetBalance;
-  client: ThirdwebClient;
-}) {
+function AssetItem(props: { asset: AssetBalance; client: ThirdwebClient }) {
   const { idToChain } = useAllChainsData();
   const chainMeta = idToChain.get(props.asset.chain_id);
   const isNativeToken = props.asset.token_address === NATIVE_TOKEN_ADDRESS;
@@ -91,21 +88,21 @@ function AssetItem(props: {
   return (
     <TokenProvider
       address={props.asset.token_address}
-      client={props.client}
-      // eslint-disable-next-line no-restricted-syntax
       chain={defineChain(props.asset.chain_id)}
+      // eslint-disable-next-line no-restricted-syntax
+      client={props.client}
     >
       <div className="relative flex h-[48px] items-center gap-2.5 rounded-lg px-2 py-1 hover:bg-accent">
         <div className="relative">
           <TokenIcon
             className="size-8 rounded-full border"
-            loadingComponent={
+            fallbackComponent={
               <Blobbie
                 address={props.asset.token_address}
                 className="size-8 rounded-full"
               />
             }
-            fallbackComponent={
+            loadingComponent={
               <Blobbie
                 address={props.asset.token_address}
                 className="size-8 rounded-full"
@@ -115,8 +112,8 @@ function AssetItem(props: {
           {!isNativeToken && (
             <div className="-right-0.5 -bottom-0.5 absolute rounded-full border bg-background p-0.5">
               <ChainIconClient
-                client={props.client}
                 className="size-3.5"
+                client={props.client}
                 src={chainMeta?.icon?.url || ""}
               />
             </div>
@@ -125,13 +122,13 @@ function AssetItem(props: {
 
         <div className="flex min-w-0 flex-col text-sm">
           <Link
+            className="truncate font-medium before:absolute before:inset-0"
             href={
               isNativeToken
                 ? `https://thirdweb.com/${props.asset.chain_id}`
                 : `https://thirdweb.com/${props.asset.chain_id}/${props.asset.token_address}`
             }
             target="_blank"
-            className="truncate font-medium before:absolute before:inset-0"
           >
             {props.asset.name}
           </Link>
@@ -145,14 +142,12 @@ function AssetItem(props: {
   );
 }
 
-export function AssetsSection(props: {
-  client: ThirdwebClient;
-}) {
+export function AssetsSection(props: { client: ThirdwebClient }) {
   const account = useActiveAccount();
   const activeChain = useActiveWalletChain();
 
   const assetsQuery = useQuery({
-    queryKey: ["v1/tokens/erc20", account?.address, activeChain?.id],
+    enabled: !!account && !!activeChain,
     queryFn: async () => {
       if (!account || !activeChain) {
         return [];
@@ -211,11 +206,10 @@ export function AssetsSection(props: {
         return 0;
       });
     },
-    enabled: !!account && !!activeChain,
+    queryKey: ["v1/tokens/erc20", account?.address, activeChain?.id],
   });
 
   const nativeBalances = useQuery({
-    queryKey: ["getWalletBalance", account?.address, activeChain?.id],
     queryFn: async () => {
       if (!account || !activeChain) {
         return [];
@@ -226,10 +220,10 @@ export function AssetsSection(props: {
       const result = await Promise.allSettled(
         chains.map((chain) =>
           getWalletBalance({
+            address: account.address,
             // eslint-disable-next-line no-restricted-syntax
             chain: defineChain(chain),
             client: props.client,
-            address: account.address,
           }),
         ),
       );
@@ -237,15 +231,16 @@ export function AssetsSection(props: {
       return result
         .filter((r) => r.status === "fulfilled")
         .map((r) => ({
-          chain_id: r.value.chainId,
-          token_address: r.value.tokenAddress,
           balance: r.value.value.toString(),
+          chain_id: r.value.chainId,
+          decimals: r.value.decimals,
           name: r.value.name,
           symbol: r.value.symbol,
-          decimals: r.value.decimals,
+          token_address: r.value.tokenAddress,
         }))
         .filter((x) => x.balance !== "0") as AssetBalance[];
     },
+    queryKey: ["getWalletBalance", account?.address, activeChain?.id],
   });
 
   const isPending = assetsQuery.isPending || nativeBalances.isPending;
@@ -253,6 +248,6 @@ export function AssetsSection(props: {
   const data = [...(nativeBalances.data ?? []), ...(assetsQuery.data ?? [])];
 
   return (
-    <AssetsSectionUI data={data} isPending={isPending} client={props.client} />
+    <AssetsSectionUI client={props.client} data={data} isPending={isPending} />
   );
 }

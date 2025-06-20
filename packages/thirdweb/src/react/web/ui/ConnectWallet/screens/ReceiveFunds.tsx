@@ -8,12 +8,12 @@ import {
 } from "../../../../core/design-system/index.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import { shortenString } from "../../../../core/utils/addresses.js";
+import { Container, ModalHeader } from "../../components/basic.js";
 import { CopyIcon } from "../../components/CopyIcon.js";
 import { QRCode } from "../../components/QRCode.js";
 import { Spacer } from "../../components/Spacer.js";
-import { WalletImage } from "../../components/WalletImage.js";
-import { Container, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
+import { WalletImage } from "../../components/WalletImage.js";
 import { StyledButton } from "../../design-system/elements.js";
 import { useClipboard } from "../../hooks/useCopyClipboard.js";
 import type { ConnectLocale } from "../locale/types.js";
@@ -36,23 +36,23 @@ export function ReceiveFunds(props: {
 
   return (
     <Container p="lg">
-      <ModalHeader title={locale.title} onBack={props.onBack} />
+      <ModalHeader onBack={props.onBack} title={locale.title} />
 
       <Spacer y="xl" />
 
-      <Container flex="row" center="x">
+      <Container center="x" flex="row">
         <QRCode
-          qrCodeUri={address}
-          size={310}
           QRIcon={
             props.walletId && (
               <WalletImage
+                client={client}
                 id={props.walletId}
                 size={iconSize.xxl}
-                client={client}
               />
             )
           }
+          qrCodeUri={address}
+          size={310}
         />
       </Container>
       <Spacer y="xl" />
@@ -62,19 +62,19 @@ export function ReceiveFunds(props: {
           {shortenString(address || "")}
         </Text>
         <CopyIcon
+          hasCopied={hasCopied}
           text={address || ""}
           tip="Copy address"
-          hasCopied={hasCopied}
         />
       </WalletAddressContainer>
 
       <Spacer y="lg" />
 
       <Text
-        multiline
-        center
         balance
+        center
         className="receive_fund_screen_instruction"
+        multiline
       >
         {locale.instruction}
       </Text>
@@ -85,18 +85,18 @@ export function ReceiveFunds(props: {
 const WalletAddressContainer = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
-    all: "unset",
-    width: "100%",
-    boxSizing: "border-box",
-    cursor: "pointer",
-    padding: spacing.md,
-    display: "flex",
-    justifyContent: "space-between",
-    border: `1px solid ${theme.colors.borderColor}`,
-    borderRadius: radius.md,
-    transition: "border-color 200ms ease",
     "&:hover": {
       borderColor: theme.colors.accentText,
     },
+    all: "unset",
+    border: `1px solid ${theme.colors.borderColor}`,
+    borderRadius: radius.md,
+    boxSizing: "border-box",
+    cursor: "pointer",
+    display: "flex",
+    justifyContent: "space-between",
+    padding: spacing.md,
+    transition: "border-color 200ms ease",
+    width: "100%",
   };
 });

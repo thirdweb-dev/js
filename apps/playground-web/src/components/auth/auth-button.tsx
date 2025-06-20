@@ -1,5 +1,7 @@
 "use client";
 
+import { ConnectButton } from "thirdweb/react";
+import { createWallet, inAppWallet } from "thirdweb/wallets";
 import {
   generatePayload,
   isLoggedIn,
@@ -7,18 +9,23 @@ import {
   logout,
 } from "@/app/connect/auth/server/actions/auth";
 import { THIRDWEB_CLIENT } from "@/lib/client";
-import { ConnectButton } from "thirdweb/react";
-import { createWallet, inAppWallet } from "thirdweb/wallets";
 
 export function AuthButton() {
   return (
     <ConnectButton
+      auth={{
+        doLogin: (params) => login(params),
+        doLogout: () => logout(),
+        getLoginPayload: ({ address }) =>
+          generatePayload({ address, chainId: 84532 }),
+        isLoggedIn: (address) => isLoggedIn(address),
+      }}
       client={THIRDWEB_CLIENT}
       wallets={[
         inAppWallet({
           auth: {
-            options: ["google", "telegram", "github"],
             mode: "redirect",
+            options: ["google", "telegram", "github"],
           },
         }),
         createWallet("io.metamask"),
@@ -27,13 +34,6 @@ export function AuthButton() {
         createWallet("io.rabby"),
         createWallet("io.zerion.wallet"),
       ]}
-      auth={{
-        isLoggedIn: (address) => isLoggedIn(address),
-        doLogin: (params) => login(params),
-        getLoginPayload: ({ address }) =>
-          generatePayload({ address, chainId: 84532 }),
-        doLogout: () => logout(),
-      }}
     />
   );
 }

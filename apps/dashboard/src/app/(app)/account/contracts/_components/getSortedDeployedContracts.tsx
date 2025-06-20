@@ -1,7 +1,7 @@
 import { fetchChainWithLocalOverrides } from "../../../../../utils/fetchChainWithLocalOverrides";
 import {
-  type ProjectContract,
   getProjectContracts,
+  type ProjectContract,
 } from "./getProjectContracts";
 
 export async function getSortedDeployedContracts(params: {
@@ -12,10 +12,10 @@ export async function getSortedDeployedContracts(params: {
   deploymentType: string | undefined;
 }) {
   const contracts = await getProjectContracts({
-    teamId: params.teamId,
-    projectId: params.projectId,
     authToken: params.authToken,
     deploymentType: params.deploymentType,
+    projectId: params.projectId,
+    teamId: params.teamId,
   });
 
   const chainIds = Array.from(new Set(contracts.map((c) => c.chainId)));

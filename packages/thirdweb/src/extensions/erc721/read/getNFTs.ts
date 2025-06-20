@@ -106,8 +106,8 @@ async function getNFTsFromInsight(
 
   const [result, supplyInfo] = await Promise.all([
     getContractNFTs({
-      client: contract.client,
       chains: [contract.chain],
+      client: contract.client,
       contractAddress: contract.address,
       includeOwners: options.includeOwners ?? false,
       queryOptions: {
@@ -158,8 +158,8 @@ async function getNFTsFromRPC(
     promises.push(
       getNFT({
         ...options,
-        tokenId: i,
         includeOwner: options.includeOwners ?? false,
+        tokenId: i,
         useIndexer: false,
       }),
     );
@@ -195,7 +195,7 @@ async function getSupplyInfo(options: BaseTransactionOptions<GetNFTsParams>) {
   });
 
   return {
-    startTokenId: startTokenId_,
     maxSupply,
+    startTokenId: startTokenId_,
   };
 }

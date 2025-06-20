@@ -8,10 +8,10 @@ import type { BuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto
 import { iconSize } from "../../../../../../core/design-system/index.js";
 import { useBuyWithCryptoStatus } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
 import { invalidateWalletBalance } from "../../../../../../core/providers/invalidateWalletBalance.js";
-import { Spacer } from "../../../../components/Spacer.js";
-import { Spinner } from "../../../../components/Spinner.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
+import { Spacer } from "../../../../components/Spacer.js";
+import { Spinner } from "../../../../components/Spinner.js";
 import { Text } from "../../../../components/text.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
 import { SwapTxDetailsTable } from "../pay-transactions/SwapDetailsScreen.js";
@@ -35,9 +35,9 @@ export function SwapStatusScreen(props: {
   const [showDetails, setShowDetails] = useState(false);
 
   const swapStatus = useBuyWithCryptoStatus({
+    chainId: props.fromChain.id,
     client: props.client,
     transactionHash: props.swapTxHash,
-    chainId: props.fromChain.id,
   });
 
   let uiStatus: UIStatus = "pending";
@@ -81,15 +81,15 @@ export function SwapStatusScreen(props: {
   const swapDetails =
     swapStatus.data && swapStatus.data.status !== "NOT_FOUND" ? (
       <SwapTxDetailsTable
+        client={props.client}
         status={swapStatus.data}
         type="status"
-        client={props.client}
       />
     ) : props.quote ? (
       <SwapTxDetailsTable
-        type="quote"
-        quote={props.quote}
         client={props.client}
+        quote={props.quote}
+        type="quote"
       />
     ) : null;
 
@@ -98,8 +98,8 @@ export function SwapStatusScreen(props: {
       <Container animate="fadein">
         <Container p="lg">
           <ModalHeader
-            title={"Transaction Details"}
             onBack={() => setShowDetails(false)}
+            title={"Transaction Details"}
           />
           <Spacer y="xl" />
           {swapDetails}
@@ -111,16 +111,16 @@ export function SwapStatusScreen(props: {
   return (
     <Container animate="fadein">
       <Container p="lg">
-        <ModalHeader title={props.title} onBack={props.onBack} />
+        <ModalHeader onBack={props.onBack} title={props.title} />
         <Spacer y="sm" />
 
         {uiStatus === "success" && (
           <>
             <Spacer y="md" />
-            <Container color="success" flex="column" center="x">
+            <Container center="x" color="success" flex="column">
               <CheckCircledIcon
-                width={iconSize["3xl"]}
                 height={iconSize["3xl"]}
+                width={iconSize["3xl"]}
               />
               <Spacer y="sm" />
               <Text color="primaryText" size="lg">
@@ -130,14 +130,14 @@ export function SwapStatusScreen(props: {
 
             <Spacer y="xl" />
             <Button
-              variant="outline"
               fullWidth
               onClick={() => setShowDetails(true)}
+              variant="outline"
             >
               View transaction details
             </Button>
             <Spacer y="sm" />
-            <Button variant="accent" fullWidth onClick={props.onDone}>
+            <Button fullWidth onClick={props.onDone} variant="accent">
               {props.transactionMode ? "Continue Transaction" : "Done"}
             </Button>
           </>
@@ -148,14 +148,14 @@ export function SwapStatusScreen(props: {
           swapStatus.data?.destination && (
             <>
               <Spacer y="lg" />
-              <Container color="success" flex="column" center="x">
+              <Container center="x" color="success" flex="column">
                 <AccentFailIcon size={iconSize["3xl"]} />
                 <Spacer y="xl" />
                 <Text color="primaryText" size="lg">
                   Incomplete
                 </Text>
                 <Spacer y="sm" />
-                <Text size="sm" color="danger">
+                <Text color="danger" size="sm">
                   Expected {swapStatus.data.quote.toToken.symbol}, Got{" "}
                   {swapStatus.data.destination.token.symbol} instead
                 </Text>
@@ -169,7 +169,7 @@ export function SwapStatusScreen(props: {
             <Spacer y="xxl" />
 
             <Container flex="column">
-              <Container flex="column" center="both">
+              <Container center="both" flex="column">
                 <AccentFailIcon size={iconSize["3xl"]} />
                 <Spacer y="xl" />
                 <Text color="primaryText" size="lg">
@@ -184,16 +184,16 @@ export function SwapStatusScreen(props: {
 
               <Spacer y="xl" />
               <Button
-                variant="outline"
                 fullWidth
                 onClick={() => setShowDetails(true)}
+                variant="outline"
               >
                 View transaction details
               </Button>
 
               <Spacer y="sm" />
 
-              <Button variant="accent" fullWidth onClick={props.onTryAgain}>
+              <Button fullWidth onClick={props.onTryAgain} variant="accent">
                 Try Again
               </Button>
             </Container>
@@ -203,16 +203,16 @@ export function SwapStatusScreen(props: {
         {uiStatus === "pending" && (
           <>
             <Spacer y="xl" />
-            <Container flex="column" animate="fadein" center="both">
+            <Container animate="fadein" center="both" flex="column">
               <div
                 style={{
-                  position: "relative",
-                  display: "flex",
                   alignItems: "center",
+                  display: "flex",
                   justifyContent: "center",
+                  position: "relative",
                 }}
               >
-                <Spinner size="3xl" color="accentText" />
+                <Spinner color="accentText" size="3xl" />
               </div>
               <Spacer y="lg" />
               <Text color="primaryText" size="lg">

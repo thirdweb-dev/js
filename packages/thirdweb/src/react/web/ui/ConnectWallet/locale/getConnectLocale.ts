@@ -41,11 +41,11 @@ export async function getConnectLocale(localeId: LocaleId) {
  */
 export function useConnectLocale(localeId: LocaleId) {
   return useQuery({
-    queryKey: ["connect-locale", localeId],
     queryFn: async () => {
       return getConnectLocale(localeId);
     },
-    refetchOnWindowFocus: false,
+    queryKey: ["connect-locale", localeId],
     refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 }

@@ -1,12 +1,12 @@
 "use client";
 
-import { normalizeTimeISOString } from "@/lib/time";
 import { DateRangeSelector } from "components/analytics/date-range-selector";
 import { IntervalSelector } from "components/analytics/interval-selector";
 import {
   useResponsiveSearchParams,
   useSetResponsiveSearchParams,
 } from "responsive-rsc";
+import { normalizeTimeISOString } from "@/lib/time";
 import { getTxAnalyticsFiltersFromSearchParams } from "../lib/utils";
 
 export function TransactionAnalyticsFilter() {
@@ -15,15 +15,15 @@ export function TransactionAnalyticsFilter() {
 
   const { range, interval } = getTxAnalyticsFiltersFromSearchParams({
     from: responsiveSearchParams.from,
-    to: responsiveSearchParams.to,
     interval: responsiveSearchParams.interval,
+    to: responsiveSearchParams.to,
   });
 
   return (
     <div className="no-scrollbar flex items-center gap-3 max-sm:overflow-auto">
       <DateRangeSelector
-        range={range}
         popoverAlign="end"
+        range={range}
         setRange={(newRange) => {
           setResponsiveSearchParams((v) => {
             return {

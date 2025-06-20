@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import {} from "../../react/core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../react/core/design-system/index.js";
 import {
   BridgeOrchestrator,
@@ -36,10 +35,30 @@ const BridgeOrchestratorWithTheme = (
 };
 
 const meta = {
-  title: "Bridge/BridgeOrchestrator",
+  args: {
+    client: storyClient,
+    onCancel: () => {},
+    onComplete: () => {},
+    onError: (error) => console.error("Bridge error:", error),
+    theme: "dark",
+    uiOptions: FUND_WALLET_UI_OPTIONS.usdcDefault,
+  },
+  argTypes: {
+    onCancel: { action: "flow cancelled" },
+    onComplete: { action: "flow completed" },
+    onError: { action: "error occurred" },
+    presetOptions: {
+      control: "object",
+      description: "Quick buy options",
+    },
+    theme: {
+      control: "select",
+      description: "Theme for the component",
+      options: ["light", "dark"],
+    },
+  },
   component: BridgeOrchestratorWithTheme,
   parameters: {
-    layout: "fullscreen",
     docs: {
       description: {
         component:
@@ -56,30 +75,10 @@ const meta = {
           "Each state can transition to the **Error** state, which provides retry functionality.",
       },
     },
+    layout: "fullscreen",
   },
   tags: ["autodocs"],
-  args: {
-    client: storyClient,
-    uiOptions: FUND_WALLET_UI_OPTIONS.usdcDefault,
-    onComplete: () => {},
-    onError: (error) => console.error("Bridge error:", error),
-    onCancel: () => {},
-    theme: "dark",
-  },
-  argTypes: {
-    theme: {
-      control: "select",
-      options: ["light", "dark"],
-      description: "Theme for the component",
-    },
-    presetOptions: {
-      control: "object",
-      description: "Quick buy options",
-    },
-    onComplete: { action: "flow completed" },
-    onError: { action: "error occurred" },
-    onCancel: { action: "flow cancelled" },
-  },
+  title: "Bridge/BridgeOrchestrator",
 } satisfies Meta<typeof BridgeOrchestratorWithTheme>;
 
 export default meta;
@@ -90,17 +89,17 @@ type Story = StoryObj<typeof meta>;
  */
 export const Light: Story = {
   args: {
-    theme: "light",
-    uiOptions: FUND_WALLET_UI_OPTIONS.usdcDefault,
-    presetOptions: undefined,
+    connectLocale: undefined,
+    connectOptions: undefined,
+    onCancel: undefined,
     onComplete: undefined,
     onError: undefined,
-    onCancel: undefined,
-    receiverAddress: undefined,
-    connectOptions: undefined,
-    connectLocale: undefined,
-    purchaseData: undefined,
     paymentLinkId: undefined,
+    presetOptions: undefined,
+    purchaseData: undefined,
+    receiverAddress: undefined,
+    theme: "light",
+    uiOptions: FUND_WALLET_UI_OPTIONS.usdcDefault,
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -112,17 +111,17 @@ export const Light: Story = {
  */
 export const Dark: Story = {
   args: {
-    theme: "dark",
-    uiOptions: FUND_WALLET_UI_OPTIONS.usdcDefault,
-    presetOptions: undefined,
+    connectLocale: undefined,
+    connectOptions: undefined,
+    onCancel: undefined,
     onComplete: undefined,
     onError: undefined,
-    onCancel: undefined,
-    receiverAddress: undefined,
-    connectOptions: undefined,
-    connectLocale: undefined,
-    purchaseData: undefined,
     paymentLinkId: undefined,
+    presetOptions: undefined,
+    purchaseData: undefined,
+    receiverAddress: undefined,
+    theme: "dark",
+    uiOptions: FUND_WALLET_UI_OPTIONS.usdcDefault,
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -134,17 +133,17 @@ export const Dark: Story = {
  */
 export const DirectPayment: Story = {
   args: {
-    theme: "dark",
-    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.digitalArt,
-    presetOptions: undefined,
+    connectLocale: undefined,
+    connectOptions: undefined,
+    onCancel: undefined,
     onComplete: undefined,
     onError: undefined,
-    onCancel: undefined,
-    receiverAddress: undefined,
-    connectOptions: undefined,
-    connectLocale: undefined,
-    purchaseData: undefined,
     paymentLinkId: undefined,
+    presetOptions: undefined,
+    purchaseData: undefined,
+    receiverAddress: undefined,
+    theme: "dark",
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.digitalArt,
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -162,17 +161,17 @@ export const DirectPayment: Story = {
  */
 export const DirectPaymentLight: Story = {
   args: {
-    theme: "light",
-    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.concertTicket,
-    presetOptions: undefined,
+    connectLocale: undefined,
+    connectOptions: undefined,
+    onCancel: undefined,
     onComplete: undefined,
     onError: undefined,
-    onCancel: undefined,
-    receiverAddress: undefined,
-    connectOptions: undefined,
-    connectLocale: undefined,
-    purchaseData: undefined,
     paymentLinkId: undefined,
+    presetOptions: undefined,
+    purchaseData: undefined,
+    receiverAddress: undefined,
+    theme: "light",
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.concertTicket,
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -190,17 +189,17 @@ export const DirectPaymentLight: Story = {
  */
 export const Transaction: Story = {
   args: {
-    theme: "dark",
-    uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
-    presetOptions: undefined,
+    connectLocale: undefined,
+    connectOptions: undefined,
+    onCancel: undefined,
     onComplete: undefined,
     onError: undefined,
-    onCancel: undefined,
-    receiverAddress: undefined,
-    connectOptions: undefined,
-    connectLocale: undefined,
-    purchaseData: undefined,
     paymentLinkId: undefined,
+    presetOptions: undefined,
+    purchaseData: undefined,
+    receiverAddress: undefined,
+    theme: "dark",
+    uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -218,17 +217,17 @@ export const Transaction: Story = {
  */
 export const TransactionLight: Story = {
   args: {
-    theme: "light",
-    uiOptions: TRANSACTION_UI_OPTIONS.erc20Transfer,
-    presetOptions: undefined,
+    connectLocale: undefined,
+    connectOptions: undefined,
+    onCancel: undefined,
     onComplete: undefined,
     onError: undefined,
-    onCancel: undefined,
-    receiverAddress: undefined,
-    connectOptions: undefined,
-    connectLocale: undefined,
-    purchaseData: undefined,
     paymentLinkId: undefined,
+    presetOptions: undefined,
+    purchaseData: undefined,
+    receiverAddress: undefined,
+    theme: "light",
+    uiOptions: TRANSACTION_UI_OPTIONS.erc20Transfer,
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -243,17 +242,17 @@ export const TransactionLight: Story = {
 
 export const CustompresetOptions: Story = {
   args: {
-    theme: "dark",
-    uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
-    presetOptions: [1, 2, 3],
+    connectLocale: undefined,
+    connectOptions: undefined,
+    onCancel: undefined,
     onComplete: undefined,
     onError: undefined,
-    onCancel: undefined,
-    receiverAddress: undefined,
-    connectOptions: undefined,
-    connectLocale: undefined,
-    purchaseData: undefined,
     paymentLinkId: undefined,
+    presetOptions: [1, 2, 3],
+    purchaseData: undefined,
+    receiverAddress: undefined,
+    theme: "dark",
+    uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
   },
   parameters: {
     backgrounds: { default: "dark" },

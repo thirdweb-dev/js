@@ -9,12 +9,12 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useAddConnectedWallet } from "../../../core/hooks/wallets/useAddConnectedWallet.js";
+import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import AllWalletsUI from "../../ui/ConnectWallet/Modal/AllWalletsUI.js";
 import { WalletSelector } from "../../ui/ConnectWallet/WalletSelector.js";
-import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
+import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { WalletImage } from "../../ui/components/WalletImage.js";
-import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { ErrorState } from "../shared/ErrorState.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
 import { LoadingState } from "../shared/LoadingState.js";
@@ -67,18 +67,18 @@ export function WalletAuth(props: {
     try {
       if (props.isLinking) {
         await linkProfile({
+          chain: props.chain || wallet.getChain() || defineChain(1),
           client: props.client,
+          ecosystem,
           strategy: "wallet",
           wallet: walletToLink,
-          chain: props.chain || wallet.getChain() || defineChain(1),
-          ecosystem,
         });
       } else {
         await wallet.connect({
+          chain: props.chain || walletToLink.getChain() || defineChain(1),
           client: props.client,
           strategy: "wallet",
           wallet: walletToLink,
-          chain: props.chain || walletToLink.getChain() || defineChain(1),
         });
       }
       addConnectedWallet(walletToLink);
@@ -94,74 +94,74 @@ export function WalletAuth(props: {
       return (
         <Suspense fallback={<LoadingScreen />}>
           <AllWalletsUI
+            client={props.client}
+            connectLocale={props.locale}
+            disableSelectionDataReset={true}
             onBack={() => setShowAll(false)}
             onSelect={async (newWallet) => {
               login(newWallet);
               setShowAll(false);
             }}
-            client={props.client}
-            connectLocale={props.locale}
             recommendedWallets={undefined}
-            specifiedWallets={[]}
             size={props.size}
-            disableSelectionDataReset={true}
+            specifiedWallets={[]}
           />
         </Suspense>
       );
     }
     return (
       <WalletSelector
-        title={props.locale.connectAWallet}
-        wallets={getDefaultWallets()}
-        selectWallet={async (newWallet) => {
-          login(newWallet);
+        chain={wallet.getChain()}
+        chains={[]}
+        client={props.client}
+        connectLocale={props.locale}
+        disableSelectionDataReset={true}
+        done={() => {}}
+        goBack={back}
+        hideHeader={false}
+        meta={props.meta || {}}
+        modalHeader={{
+          onBack: back,
+          title: props.isLinking
+            ? props.inAppLocale.linkWallet
+            : props.inAppLocale.signInWithWallet,
         }}
         onShowAll={() => {
           setShowAll(true);
         }}
-        done={() => {}}
-        goBack={back}
-        setModalVisibility={() => {}}
-        client={props.client}
-        connectLocale={props.locale}
-        hideHeader={false}
         recommendedWallets={undefined}
-        chain={wallet.getChain()}
-        showAllWallets={true}
-        chains={[]}
-        size={props.size}
-        meta={props.meta || {}}
-        walletConnect={props.walletConnect}
-        modalHeader={{
-          title: props.isLinking
-            ? props.inAppLocale.linkWallet
-            : props.inAppLocale.signInWithWallet,
-          onBack: back,
+        selectWallet={async (newWallet) => {
+          login(newWallet);
         }}
+        setModalVisibility={() => {}}
+        showAllWallets={true}
+        size={props.size}
+        title={props.locale.connectAWallet}
+        walletConnect={props.walletConnect}
         walletIdsToHide={["inApp"]}
-        disableSelectionDataReset={true}
+        wallets={getDefaultWallets()}
       />
     );
   }
 
   return (
-    <Container animate="fadein" fullHeight flex="column">
+    <Container animate="fadein" flex="column" fullHeight>
       <Container p="lg">
         <ModalHeader
+          onBack={back}
           title={
             props.isLinking
               ? props.inAppLocale.linkWallet
               : props.inAppLocale.signInWithWallet
           }
-          onBack={back}
         />
       </Container>
 
       <Container
-        px={props.size === "wide" ? "xxl" : "lg"}
+        center="y"
         expand
         flex="column"
-        center="y"
+        px={props.size === "wide" ? "xxl" : "lg"}
       >
         <div>
           {status === "error" ? (
@@ -178,19 +178,17 @@ export function WalletAuth(props: {
               <Spacer y="lg" />
             </>
           ) : (
-            <>
-              <LoadingState
-                title="Sign in with your wallet"
-                subtitle="A pop-up prompt will appear to sign-in and verify your wallet"
-                icon={
-                  <WalletImage
-                    id={walletToConnect.current.id ?? ""}
-                    size={iconSize.xl}
-                    client={props.client}
-                  />
-                }
-              />
-            </>
+            <LoadingState
+              icon={
+                <WalletImage
+                  client={props.client}
+                  id={walletToConnect.current.id ?? ""}
+                  size={iconSize.xl}
+                />
+              }
+              subtitle="A pop-up prompt will appear to sign-in and verify your wallet"
+              title="Sign in with your wallet"
+            />
           )}
         </div>
       </Container>

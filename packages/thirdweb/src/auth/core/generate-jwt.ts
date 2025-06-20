@@ -28,11 +28,10 @@ export function generateJWT(options: AuthOptions) {
     const now = Date.now();
 
     return await encodeJWT({
+      account: options.adminAccount,
       payload: {
-        iss: options.adminAccount.address,
-        sub: payload.address,
         aud: payload.domain,
-        nbf: new Date(payload.invalid_before || now),
+        ctx: context || {},
         exp: new Date(
           now +
             (options.jwt?.expirationTimeSeconds ||
@@ -40,11 +39,12 @@ export function generateJWT(options: AuthOptions) {
               1000,
         ),
         iat: new Date(),
+        iss: options.adminAccount.address,
         // if there is a jwtID generator, use it to generate a unique JWT ID
         jti: await options.jwt?.jwtId?.generate?.(),
-        ctx: context || {},
+        nbf: new Date(payload.invalid_before || now),
+        sub: payload.address,
       },
-      account: options.adminAccount,
     });
   };
 }

@@ -1,8 +1,8 @@
 import "server-only";
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
-import { API_SERVER_SECRET } from "@/constants/server-envs";
 import type { TeamResponse } from "@thirdweb-dev/service-utils";
 import { cookies } from "next/headers";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
+import { API_SERVER_SECRET } from "@/constants/server-envs";
 import { getValidAccount } from "../../app/(app)/account/settings/getAccount";
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
 import { LAST_USED_TEAM_ID } from "../../constants/cookies";

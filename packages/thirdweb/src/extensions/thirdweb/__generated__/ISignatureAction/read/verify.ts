@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { decodeAbiParameters } from "viem";
-import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the "verify" function.
@@ -26,40 +26,40 @@ export type VerifyParams = {
 export const FN_SELECTOR = "0xc4376dd7" as const;
 const FN_INPUTS = [
   {
-    type: "tuple",
-    name: "req",
     components: [
       {
-        type: "uint128",
         name: "validityStartTimestamp",
-      },
-      {
         type: "uint128",
+      },
+      {
         name: "validityEndTimestamp",
+        type: "uint128",
       },
       {
-        type: "bytes32",
         name: "uid",
+        type: "bytes32",
       },
       {
-        type: "bytes",
         name: "data",
+        type: "bytes",
       },
     ],
+    name: "req",
+    type: "tuple",
   },
   {
-    type: "bytes",
     name: "signature",
+    type: "bytes",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "bool",
     name: "success",
+    type: "bool",
   },
   {
-    type: "address",
     name: "signer",
+    type: "address",
   },
 ] as const;
 

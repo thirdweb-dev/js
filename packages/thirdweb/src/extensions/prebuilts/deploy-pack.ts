@@ -6,8 +6,8 @@ import {
   getOrDeployInfraContract,
   getOrDeployInfraForPublishedContract,
 } from "../../contract/deployment/utils/bootstrap.js";
-import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
+import { upload } from "../../storage/upload.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import { initialize } from "./__generated__/Pack/write/initialize.js";
@@ -81,41 +81,41 @@ export async function deployPackContract(options: DeployPackContractOptions) {
   const { chain, client, account, params } = options;
   const [WETH, forwarder] = await Promise.all([
     getOrDeployInfraContract({
+      account,
       chain,
       client,
-      account,
       contractId: "WETH9",
     }),
     getOrDeployInfraContract({
+      account,
       chain,
       client,
-      account,
       contractId: "ForwarderEOAOnly",
     }),
   ]);
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
+      account,
       chain,
       client,
-      account,
-      contractId: "Pack",
       constructorParams: {
         nativeTokenWrapper: WETH.address,
         trustedForwarder: forwarder.address,
       },
+      contractId: "Pack",
     });
   const initializeTransaction = await getInitializeTransaction({
+    accountAddress: account.address,
+    chain,
     client,
     implementationContract,
     params,
-    accountAddress: account.address,
-    chain,
   });
 
   return deployViaAutoFactory({
-    client,
-    chain,
     account,
+    chain,
+    client,
     cloneFactoryContract,
     initializeTransaction,
   });
@@ -138,12 +138,12 @@ async function getInitializeTransaction(options: {
       client,
       files: [
         {
-          name: params.name,
           description: params.description,
-          symbol: params.symbol || "",
-          image: params.image,
           external_link: params.external_link,
+          image: params.image,
+          name: params.name,
           social_urls: params.social_urls,
+          symbol: params.symbol || "",
         },
       ],
     })) ||
@@ -165,12 +165,12 @@ async function getInitializeTransaction(options: {
   }
   return initialize({
     contract: implementationContract,
-    name: params.name,
-    symbol: params.symbol || "",
-    defaultAdmin: params.defaultAdmin || accountAddress,
-    royaltyRecipient: params.royaltyRecipient || accountAddress,
     contractURI,
-    trustedForwarders: params.trustedForwarders || [],
+    defaultAdmin: params.defaultAdmin || accountAddress,
+    name: params.name,
     royaltyBps,
+    royaltyRecipient: params.royaltyRecipient || accountAddress,
+    symbol: params.symbol || "",
+    trustedForwarders: params.trustedForwarders || [],
   });
 }

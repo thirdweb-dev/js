@@ -227,11 +227,11 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
   const meta = useMemo(() => {
     return {
       privacyPolicyUrl: props.privacyPolicyUrl,
+      requireApproval: props.requireApproval,
       showThirdwebBranding: props.showThirdwebBranding !== false,
       termsOfServiceUrl: props.termsOfServiceUrl,
       title: undefined,
       titleIconUrl: undefined,
-      requireApproval: props.requireApproval,
     };
   }, [
     props.privacyPolicyUrl,
@@ -245,18 +245,18 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
 
   const autoConnectComp = props.autoConnect !== false && (
     <AutoConnect
-      chain={preferredChain}
-      appMetadata={props.appMetadata}
-      client={props.client}
-      siweAuth={siweAuth}
-      wallets={wallets}
       accountAbstraction={props.accountAbstraction}
+      appMetadata={props.appMetadata}
+      chain={preferredChain}
+      client={props.client}
+      onConnect={props.onConnect}
+      siweAuth={siweAuth}
       timeout={
         typeof props.autoConnect === "boolean"
           ? undefined
           : props.autoConnect?.timeout
       }
-      onConnect={props.onConnect}
+      wallets={wallets}
     />
   );
 
@@ -275,28 +275,28 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
     }
 
     return (
-      <WalletUIStatesProvider theme={props.theme} isOpen={true}>
+      <WalletUIStatesProvider isOpen={true} theme={props.theme}>
         <ConnectEmbedContent
-          auth={props.auth}
           accountAbstraction={props.accountAbstraction}
+          auth={props.auth}
           chain={preferredChain}
           chains={props.chains}
+          className={props.className}
           client={props.client}
           connectLocale={localeQuery.data}
-          size={modalSize}
-          meta={meta}
           header={props.header}
+          hiddenWallets={props.hiddenWallets}
           localeId={props.locale || "en_US"}
+          meta={meta}
+          modalSize={modalSize}
           onConnect={props.onConnect}
           recommendedWallets={props.recommendedWallets}
           showAllWallets={props.showAllWallets}
+          size={modalSize}
+          style={props.style}
           walletConnect={props.walletConnect}
           wallets={wallets}
-          className={props.className}
-          modalSize={modalSize}
-          style={props.style}
           welcomeScreen={props.welcomeScreen}
-          hiddenWallets={props.hiddenWallets}
         />
         {autoConnectComp}
       </WalletUIStatesProvider>
@@ -351,8 +351,8 @@ const ConnectEmbedContent = (props: {
   // const requiresSignIn = false;
   const screenSetup = useSetupScreen({
     size: props.size,
-    welcomeScreen: undefined,
     wallets: props.wallets,
+    welcomeScreen: undefined,
   });
   const { setScreen, initialScreen, screen } = screenSetup;
   const activeWallet = useActiveWallet();
@@ -385,21 +385,14 @@ const ConnectEmbedContent = (props: {
   } else {
     content = (
       <ConnectModalContent
-        shouldSetActive={true}
-        screenSetup={screenSetup}
-        isOpen={true}
-        onClose={() => {
-          setScreen(initialScreen);
-        }}
-        setModalVisibility={() => {
-          // no op
-        }}
         accountAbstraction={props.accountAbstraction}
         auth={props.auth}
         chain={props.chain}
         chains={props.chains}
         client={props.client}
         connectLocale={props.connectLocale}
+        hideHeader={!props.header}
+        isOpen={true}
         meta={{
           ...props.meta,
           title:
@@ -409,24 +402,31 @@ const ConnectEmbedContent = (props: {
               ? props.header.titleIcon
               : undefined,
         }}
-        size={props.size}
-        welcomeScreen={props.welcomeScreen}
-        hideHeader={!props.header}
+        modalHeader={undefined}
+        onClose={() => {
+          setScreen(initialScreen);
+        }}
         onConnect={props.onConnect}
         recommendedWallets={props.recommendedWallets}
+        screenSetup={screenSetup}
+        setModalVisibility={() => {
+          // no op
+        }}
+        shouldSetActive={true}
         showAllWallets={props.showAllWallets}
+        size={props.size}
         walletConnect={props.walletConnect}
-        wallets={props.wallets}
-        modalHeader={undefined}
         walletIdsToHide={props.hiddenWallets}
+        wallets={props.wallets}
+        welcomeScreen={props.welcomeScreen}
       />
     );
   }
 
   return (
     <EmbedContainer
-      modalSize={modalSize}
       className={props.className}
+      modalSize={modalSize}
       style={props.style}
     >
       {modalSize === "wide" ? (
@@ -444,23 +444,23 @@ export const EmbedContainer = /* @__PURE__ */ StyledDiv<{
   const { modalSize } = props;
   const theme = useCustomTheme();
   return {
-    color: theme.colors.primaryText,
-    background: theme.colors.modalBg,
-    height: modalSize === "compact" ? "auto" : wideModalMaxHeight,
-    width: modalSize === "compact" ? modalMaxWidthCompact : modalMaxWidthWide,
-    boxSizing: "border-box",
-    position: "relative",
-    lineHeight: "normal",
-    borderRadius: radius.xl,
-    border: `1px solid ${theme.colors.borderColor}`,
-    overflow: "hidden",
-    fontFamily: theme.fontFamily,
+    "& *": {
+      boxSizing: "border-box",
+    },
     "& *::selection": {
       backgroundColor: theme.colors.selectedTextBg,
       color: theme.colors.selectedTextColor,
     },
-    "& *": {
-      boxSizing: "border-box",
-    },
+    background: theme.colors.modalBg,
+    border: `1px solid ${theme.colors.borderColor}`,
+    borderRadius: radius.xl,
+    boxSizing: "border-box",
+    color: theme.colors.primaryText,
+    fontFamily: theme.fontFamily,
+    height: modalSize === "compact" ? "auto" : wideModalMaxHeight,
+    lineHeight: "normal",
+    overflow: "hidden",
+    position: "relative",
+    width: modalSize === "compact" ? modalMaxWidthCompact : modalMaxWidthWide,
   };
 });

@@ -1,6 +1,5 @@
 import type { ThirdwebClient } from "../../client/client.js";
-import { hexToBigInt } from "../../utils/encoding/hex.js";
-import { hexToNumber } from "../../utils/encoding/hex.js";
+import { hexToBigInt, hexToNumber } from "../../utils/encoding/hex.js";
 import { isCoinbaseSDKWallet } from "../coinbase/coinbase-web.js";
 import { isInAppWallet } from "../in-app/core/wallet/index.js";
 import { getInjectedProvider } from "../injected/index.js";
@@ -65,7 +64,7 @@ export async function getCallsStatus({
     const { inAppWalletGetCallsStatus } = await import(
       "../in-app/core/eip5972/in-app-wallet-calls.js"
     );
-    return inAppWalletGetCallsStatus({ wallet, client, id });
+    return inAppWalletGetCallsStatus({ client, id, wallet });
   }
 
   if (isWalletConnect(wallet)) {
@@ -120,8 +119,8 @@ export async function getCallsStatus({
           gasUsed: hexToBigInt(receipt.gasUsed),
           status: receiptStatuses[receipt.status as "0x0" | "0x1"],
         })) ?? [],
-      statusCode,
       status,
+      statusCode,
       version,
     };
   } catch (error) {

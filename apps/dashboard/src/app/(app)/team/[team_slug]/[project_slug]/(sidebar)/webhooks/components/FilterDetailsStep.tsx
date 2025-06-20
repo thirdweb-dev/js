@@ -1,8 +1,10 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
+import type { UseFormReturn } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { SignatureSelector } from "@/components/blocks/SignatureSelector";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,11 +15,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {} from "@/components/ui/popover";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { useQueryClient } from "@tanstack/react-query";
-import type { UseFormReturn } from "react-hook-form";
-import type { ThirdwebClient } from "thirdweb";
 import { truncateMiddle } from "../utils/abiUtils";
 import type {
   AbiData,
@@ -112,12 +111,12 @@ export function FilterDetailsStep({
               </div>
               <FormControl>
                 <MultiNetworkSelector
+                  chainIds={supportedChainIds}
+                  client={client}
+                  onChange={(chainIds) => field.onChange(chainIds.map(String))}
                   selectedChainIds={
                     Array.isArray(field.value) ? field.value.map(Number) : []
                   }
-                  onChange={(chainIds) => field.onChange(chainIds.map(String))}
-                  client={client}
-                  chainIds={supportedChainIds}
                 />
               </FormControl>
               <FormMessage />
@@ -158,8 +157,8 @@ export function FilterDetailsStep({
                         {Object.keys(fetchedAbis).length > 0 && (
                           <div className="flex items-center gap-2">
                             <Badge
-                              variant="outline"
                               className="border-green-200 bg-green-50 text-green-700"
+                              variant="outline"
                             >
                               ✓ {Object.keys(fetchedAbis).length} ABI
                               {Object.keys(fetchedAbis).length !== 1 ? "s" : ""}{" "}
@@ -171,8 +170,8 @@ export function FilterDetailsStep({
                         {Object.keys(abiErrors).length > 0 && (
                           <div className="flex items-center gap-2">
                             <Badge
-                              variant="outline"
                               className="border-red-200 bg-red-50 text-red-700"
+                              variant="outline"
                             >
                               ✗ {Object.keys(abiErrors).length} error
                               {Object.keys(abiErrors).length !== 1 ? "s" : ""}
@@ -204,9 +203,9 @@ export function FilterDetailsStep({
                   </div>
                   <FormControl>
                     <Input
+                      onChange={field.onChange}
                       placeholder="0x1234..."
                       value={field.value ?? ""}
-                      onChange={field.onChange}
                     />
                   </FormControl>
                   <FormMessage />
@@ -226,9 +225,9 @@ export function FilterDetailsStep({
                   <FormControl>
                     <div className="space-y-2">
                       <Input
+                        onChange={field.onChange}
                         placeholder="0x1234..."
                         value={field.value || ""}
-                        onChange={field.onChange}
                       />
 
                       {/* ABI fetch status */}
@@ -249,8 +248,8 @@ export function FilterDetailsStep({
                           {Object.keys(fetchedTxAbis).length > 0 && (
                             <div className="flex items-center gap-2">
                               <Badge
-                                variant="outline"
                                 className="border-green-200 bg-green-50 text-green-700"
+                                variant="outline"
                               >
                                 ✓ {Object.keys(fetchedTxAbis).length} ABI
                                 {Object.keys(fetchedTxAbis).length !== 1
@@ -264,8 +263,8 @@ export function FilterDetailsStep({
                           {Object.keys(txAbiErrors).length > 0 && (
                             <div className="flex items-center gap-2">
                               <Badge
-                                variant="outline"
                                 className="border-red-200 bg-red-50 text-red-700"
+                                variant="outline"
                               >
                                 ⚠️ {Object.keys(txAbiErrors).length} error
                                 {Object.keys(txAbiErrors).length !== 1
@@ -311,12 +310,7 @@ export function FilterDetailsStep({
                 Object.keys(fetchedAbis).length > 0 &&
                 eventSignatures.length > 0 ? (
                   <SignatureSelector
-                    options={eventSignatures.map((sig) => ({
-                      label: truncateMiddle(sig.name, 30, 15),
-                      value: sig.signature,
-                      abi: sig.abi,
-                    }))}
-                    value={field.value || ""}
+                    className="block w-full max-w-90 overflow-hidden text-ellipsis"
                     onChange={(val) => {
                       field.onChange(val);
                       // If custom signature, clear ABI field
@@ -325,20 +319,19 @@ export function FilterDetailsStep({
                         form.setValue("abi", "");
                       }
                     }}
-                    setAbi={(abi) => form.setValue("sigHashAbi", abi)}
+                    options={eventSignatures.map((sig) => ({
+                      abi: sig.abi,
+                      label: truncateMiddle(sig.name, 30, 15),
+                      value: sig.signature,
+                    }))}
                     placeholder="Select or enter an event signature"
-                    className="block w-full max-w-90 overflow-hidden text-ellipsis"
+                    setAbi={(abi) => form.setValue("sigHashAbi", abi)}
+                    value={field.value || ""}
                   />
                 ) : watchFilterType === "transaction" &&
                   Object.keys(fetchedTxAbis).length > 0 &&
                   functionSignatures.length > 0 ? (
                   <SignatureSelector
-                    options={functionSignatures.map((sig) => ({
-                      label: sig.name,
-                      value: sig.signature,
-                      abi: sig.abi,
-                    }))}
-                    value={field.value || ""}
                     onChange={(val) => {
                       field.onChange(val);
                       // If custom signature, clear ABI field
@@ -349,22 +342,28 @@ export function FilterDetailsStep({
                         form.setValue("abi", "");
                       }
                     }}
-                    setAbi={(abi) => form.setValue("sigHashAbi", abi)}
+                    options={functionSignatures.map((sig) => ({
+                      abi: sig.abi,
+                      label: sig.name,
+                      value: sig.signature,
+                    }))}
                     placeholder="Select or enter a function signature"
+                    setAbi={(abi) => form.setValue("sigHashAbi", abi)}
+                    value={field.value || ""}
                   />
                 ) : (
                   <Input
+                    disabled={
+                      (watchFilterType === "event" && isFetchingEventAbi) ||
+                      (watchFilterType === "transaction" && isFetchingTxAbi)
+                    }
+                    onChange={field.onChange}
                     placeholder={
                       watchFilterType === "event"
                         ? "Fetching event signatures..."
                         : "Fetching function signatures..."
                     }
                     value={field.value}
-                    onChange={field.onChange}
-                    disabled={
-                      (watchFilterType === "event" && isFetchingEventAbi) ||
-                      (watchFilterType === "transaction" && isFetchingTxAbi)
-                    }
                   />
                 )}
               </FormControl>
@@ -402,11 +401,11 @@ export function FilterDetailsStep({
                 <FormControl>
                   {!showFetchedAbi ? (
                     <Textarea
-                      placeholder={"[{...}]"}
                       className="font-mono"
+                      onChange={field.onChange}
+                      placeholder={"[{...}]"}
                       rows={2}
                       value={field.value}
-                      onChange={field.onChange}
                     />
                   ) : (
                     <div className="space-y-2 rounded-md border bg-primary/5 p-3">
@@ -415,9 +414,6 @@ export function FilterDetailsStep({
                           ✓ ABI Automatically Fetched
                         </Badge>
                         <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
                           className="ml-auto h-7 text-xs"
                           onClick={async () => {
                             try {
@@ -430,13 +426,13 @@ export function FilterDetailsStep({
                                       .filter(Boolean)
                                       .map((address) =>
                                         queryClient.resetQueries({
+                                          exact: true,
                                           queryKey: [
                                             "abis",
                                             String(chainId),
                                             address,
                                             watchFilterType,
                                           ],
-                                          exact: true,
                                         }),
                                       ),
                                   ),
@@ -461,13 +457,13 @@ export function FilterDetailsStep({
                                       (async () => {
                                         try {
                                           await queryClient.resetQueries({
+                                            exact: true,
                                             queryKey: [
                                               "abis",
                                               String(chainId),
                                               address,
                                               watchFilterType,
                                             ],
-                                            exact: true,
                                           });
                                         } catch (err) {
                                           console.error(
@@ -493,6 +489,9 @@ export function FilterDetailsStep({
                               console.error("Error during ABI reset:", err);
                             }
                           }}
+                          size="sm"
+                          type="button"
+                          variant="ghost"
                         >
                           Reset
                         </Button>
@@ -513,14 +512,14 @@ export function FilterDetailsStep({
 
       <div className="flex justify-between pt-4">
         <Button
+          disabled={isLoading}
+          onClick={goToPreviousStep}
           type="button"
           variant="outline"
-          onClick={goToPreviousStep}
-          disabled={isLoading}
         >
           Back
         </Button>
-        <Button type="button" onClick={goToNextStep} disabled={isLoading}>
+        <Button disabled={isLoading} onClick={goToNextStep} type="button">
           Next
         </Button>
       </div>

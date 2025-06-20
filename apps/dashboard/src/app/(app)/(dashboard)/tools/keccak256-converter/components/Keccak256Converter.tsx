@@ -1,39 +1,41 @@
 "use client";
 
+import { useId, useState } from "react";
+import { keccakId } from "thirdweb/utils";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
-import { keccakId } from "thirdweb/utils";
 import { ShareButton } from "../../components/share";
 
 export const Keccak256Converter = () => {
   const [rawString, setRawString] = useState("MINTER_ROLE");
   const keccak256Hash = keccakId(rawString);
 
+  const rawStringId = useId();
+
   return (
     <div className="space-y-24">
       <div className="space-y-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Label htmlFor="raw-string-input" className="min-w-64 text-xl">
+          <Label className="min-w-64 text-xl" htmlFor={rawStringId}>
             Input String
           </Label>
           <Input
-            id="raw-string-input"
-            value={rawString}
-            onChange={(e) => setRawString(e.target.value)}
             className="p-6 text-xl"
+            id={rawStringId}
+            onChange={(e) => setRawString(e.target.value)}
+            value={rawString}
           />
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Label className="min-w-64 text-xl">Keccak-256 Hash</Label>
           <CopyTextButton
-            textToShow={keccak256Hash}
-            textToCopy={keccak256Hash}
-            tooltip="Copy"
-            copyIconPosition="right"
             className="overflow-auto font-mono text-xl"
+            copyIconPosition="right"
+            textToCopy={keccak256Hash}
+            textToShow={keccak256Hash}
+            tooltip="Copy"
           />
         </div>
 
@@ -49,10 +51,10 @@ export const Keccak256Converter = () => {
         <p>
           Or use the{" "}
           <a
-            href="https://portal.thirdweb.com/typescript/v5"
-            target="_blank"
-            rel="noopener noreferrer"
             className="underline"
+            href="https://portal.thirdweb.com/typescript/v5"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             Connect SDK
           </a>
@@ -60,11 +62,11 @@ export const Keccak256Converter = () => {
         </p>
         <div>
           <CopyTextButton
-            textToShow={`keccakId("${rawString}")`}
-            textToCopy={`keccakId("${rawString}")`}
-            tooltip="Copy"
-            copyIconPosition="right"
             className="font-mono"
+            copyIconPosition="right"
+            textToCopy={`keccakId("${rawString}")`}
+            textToShow={`keccakId("${rawString}")`}
+            tooltip="Copy"
           />
         </div>
       </Card>

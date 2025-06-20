@@ -17,10 +17,10 @@ import * as SessionStore from "./session-store.js";
 import type { WalletConnectClient } from "./types.js";
 
 const TEST_METADATA = {
-  name: "test",
-  url: "https://test.com",
   description: "test",
   logoUrl: "https://test.com/favicon.ico",
+  name: "test",
+  url: "https://test.com",
 };
 const URI_MOCK =
   "wc:a34fc4c6f0db6277f7883c325629a8363eab950933e15caac9e6c7408a82541e@2?expiryTimestamp=1717021490&relay-protocol=irn&symKey=00626dec650109ed09de73bc9364589a3c14a77e57598417fe27f44062904b77";
@@ -30,16 +30,16 @@ const DEFAULT_METADATA = getDefaultAppMetadata();
 const listeners: Record<string, (_event?: unknown) => Promise<void>> = {};
 
 const signClientMock = {
-  on: vi.fn((event, listener) => {
-    listeners[event] = listener;
-  }),
-  respond: vi.fn(),
-  disconnect: vi.fn(),
   core: {
     pairing: {
       pair: vi.fn(),
     },
   },
+  disconnect: vi.fn(),
+  on: vi.fn((event, listener) => {
+    listeners[event] = listener;
+  }),
+  respond: vi.fn(),
 } as unknown as WalletConnectClient;
 
 const signClientInitMock = vi
@@ -71,19 +71,19 @@ describe("createWalletConnectClient", () => {
 
   it("creates a client with provided metadata", async () => {
     const client = await createWalletConnectClient({
-      projectId: "test",
       appMetadata: TEST_METADATA,
       client: TEST_CLIENT,
+      projectId: "test",
       wallet: TEST_IN_APP_WALLET_A,
     });
     expect(signClientInitMock).toHaveBeenCalledWith({
-      projectId: "test",
       metadata: {
-        name: TEST_METADATA.name,
-        url: TEST_METADATA.url,
         description: TEST_METADATA.description,
         icons: [TEST_METADATA.logoUrl],
+        name: TEST_METADATA.name,
+        url: TEST_METADATA.url,
       },
+      projectId: "test",
     });
     expect(client).toEqual(signClientMock);
     expect(signClientMock.on).toHaveBeenCalledWith(
@@ -110,13 +110,13 @@ describe("createWalletConnectClient", () => {
       wallet: TEST_IN_APP_WALLET_A,
     });
     expect(signClientInitMock).toHaveBeenCalledWith({
-      projectId: DEFAULT_PROJECT_ID,
       metadata: {
-        name: DEFAULT_METADATA.name,
-        url: DEFAULT_METADATA.url,
         description: DEFAULT_METADATA.description,
         icons: [DEFAULT_METADATA.logoUrl],
+        name: DEFAULT_METADATA.name,
+        url: DEFAULT_METADATA.url,
       },
+      projectId: DEFAULT_PROJECT_ID,
     });
     expect(client).toEqual(signClientMock);
   });
@@ -141,8 +141,8 @@ describe("createWalletConnectClient", () => {
     const onDisconnect = vi.fn();
     await createWalletConnectClient({
       client: TEST_CLIENT,
-      wallet: TEST_IN_APP_WALLET_A,
       onDisconnect,
+      wallet: TEST_IN_APP_WALLET_A,
     });
 
     await listeners.session_delete?.({ topic: "test" });
@@ -157,8 +157,8 @@ describe("createWalletConnectClient", () => {
 
       await createWalletConnectClient({
         client: TEST_CLIENT,
-        wallet: TEST_IN_APP_WALLET_A,
         onError,
+        wallet: TEST_IN_APP_WALLET_A,
       });
 
       await listeners.session_proposal?.();
@@ -173,8 +173,8 @@ describe("createWalletConnectClient", () => {
 
       await createWalletConnectClient({
         client: TEST_CLIENT,
-        wallet: TEST_IN_APP_WALLET_A,
         onError,
+        wallet: TEST_IN_APP_WALLET_A,
       });
 
       await listeners.session_request?.();
@@ -188,8 +188,8 @@ describe("createWalletConnectClient", () => {
 describe("createWalletConnectSession", () => {
   it("sends a session_proposal event", async () => {
     createWalletConnectSession({
-      walletConnectClient: signClientMock,
       uri: URI_MOCK,
+      walletConnectClient: signClientMock,
     });
 
     expect(signClientMock.core.pairing.pair).toHaveBeenCalledWith({
@@ -201,10 +201,10 @@ describe("createWalletConnectSession", () => {
 describe("disconnectWalletConnectSession", () => {
   it("disconnects a session", async () => {
     await disconnectWalletConnectSession({
-      walletConnectClient: signClientMock,
       session: {
         topic: "test",
       },
+      walletConnectClient: signClientMock,
     });
 
     expect(removeSession).toHaveBeenCalled();
@@ -213,10 +213,10 @@ describe("disconnectWalletConnectSession", () => {
   it("removes session anyway if disconnect throws", async () => {
     signClientMock.disconnect = vi.fn().mockRejectedValue(new Error("test"));
     await disconnectWalletConnectSession({
-      walletConnectClient: signClientMock,
       session: {
         topic: "test",
       },
+      walletConnectClient: signClientMock,
     });
     expect(removeSession).toHaveBeenCalled();
   });

@@ -57,8 +57,9 @@ export function useSiweAuth(
   const queryClient = useQueryClient();
 
   const isLoggedInQuery = useQuery({
-    queryKey: ["siwe_auth", "isLoggedIn", activeAccount?.address],
     enabled: requiresAuth && !!activeAccount?.address,
+    gcTime: 0,
+    placeholderData: false,
     queryFn: () => {
       // these cases should never be hit but just in case...
       if (!authOptions || !activeAccount?.address) {
@@ -66,13 +67,11 @@ export function useSiweAuth(
       }
       return authOptions.isLoggedIn(activeAccount.address);
     },
-    gcTime: 0,
-    placeholderData: false,
+    queryKey: ["siwe_auth", "isLoggedIn", activeAccount?.address],
     refetchOnWindowFocus: false,
   });
 
   const loginMutation = useMutation({
-    mutationKey: ["siwe_auth", "login", activeAccount?.address],
     mutationFn: async () => {
       if (!authOptions) {
         throw new Error("No auth options provided");
@@ -104,12 +103,13 @@ export function useSiweAuth(
       }
 
       const signedPayload = await signLoginPayload({
-        payload,
         account: activeAccount,
+        payload,
       });
 
       return await authOptions.doLogin(signedPayload);
     },
+    mutationKey: ["siwe_auth", "login", activeAccount?.address],
     onSuccess: () => {
       return queryClient.invalidateQueries({
         queryKey: ["siwe_auth", "isLoggedIn"],
@@ -118,7 +118,6 @@ export function useSiweAuth(
   });
 
   const logoutMutation = useMutation({
-    mutationKey: ["siwe_auth", "logout", activeAccount?.address],
     mutationFn: async () => {
       if (!authOptions) {
         throw new Error("No auth options provided");
@@ -126,6 +125,7 @@ export function useSiweAuth(
 
       return await authOptions.doLogout();
     },
+    mutationKey: ["siwe_auth", "logout", activeAccount?.address],
     onSuccess: () => {
       return queryClient.invalidateQueries({
         queryKey: ["siwe_auth", "isLoggedIn"],
@@ -134,20 +134,19 @@ export function useSiweAuth(
   });
 
   return {
-    // is auth even enabled
-    requiresAuth,
-
     // login
     doLogin: loginMutation.mutateAsync,
-    isLoggingIn: loginMutation.isPending,
 
     // logout
     doLogout: logoutMutation.mutateAsync,
-    isLoggingOut: logoutMutation.isPending,
+    isLoading: isLoggedInQuery.isFetching,
 
     // checking if logged in
     isLoggedIn: isLoggedInQuery.data,
-    isLoading: isLoggedInQuery.isFetching,
+    isLoggingIn: loginMutation.isPending,
+    isLoggingOut: logoutMutation.isPending,
     isPending: isLoggedInQuery.isPending,
+    // is auth even enabled
+    requiresAuth,
   };
 }

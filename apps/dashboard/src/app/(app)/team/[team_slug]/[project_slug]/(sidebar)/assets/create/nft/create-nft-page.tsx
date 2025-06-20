@@ -1,16 +1,11 @@
 "use client";
-import { revalidatePathAction } from "@/actions/revalidate";
-import {
-  reportAssetCreationFailed,
-  reportContractDeployed,
-} from "@/analytics/report";
 import { useRef } from "react";
 import {
-  type ThirdwebClient,
   defineChain,
   encode,
   getContract,
   sendAndConfirmTransaction,
+  type ThirdwebClient,
 } from "thirdweb";
 import { deployERC721Contract, deployERC1155Contract } from "thirdweb/deploys";
 import { multicall } from "thirdweb/extensions/common";
@@ -26,6 +21,11 @@ import {
 import { useActiveAccount } from "thirdweb/react";
 import { maxUint256 } from "thirdweb/utils";
 import { parseError } from "utils/errorParser";
+import { revalidatePathAction } from "@/actions/revalidate";
+import {
+  reportAssetCreationFailed,
+  reportContractDeployed,
+} from "@/analytics/report";
 import { useAddContractToProject } from "../../../hooks/project-contracts";
 import type { CreateNFTCollectionAllValues } from "./_common/form";
 import { CreateNFTPageUI } from "./create-nft-page-ui";
@@ -43,9 +43,7 @@ export function CreateNFTPage(props: {
   const addContractToProject = useAddContractToProject();
   const contractAddressRef = useRef<string | undefined>(undefined);
 
-  function getContractAndAccount(params: {
-    chain: string;
-  }) {
+  function getContractAndAccount(params: { chain: string }) {
     if (!activeAccount) {
       throw new Error("Wallet is not connected");
     }
@@ -93,57 +91,57 @@ export function CreateNFTPage(props: {
       if (ercType === "erc721") {
         contractAddress = await deployERC721Contract({
           account: activeAccount,
-          client: props.client,
           chain: chain,
-          type: "DropERC721",
+          client: props.client,
           params: {
-            name: collectionInfo.name,
-            symbol: collectionInfo.symbol,
             description: collectionInfo.description,
             image: collectionInfo.image,
-            social_urls: transformSocialUrls(collectionInfo.socialUrls),
-            saleRecipient: sales.primarySaleRecipient,
-            royaltyRecipient: sales.royaltyRecipient,
+            name: collectionInfo.name,
             royaltyBps: BigInt(sales.royaltyBps),
+            royaltyRecipient: sales.royaltyRecipient,
+            saleRecipient: sales.primarySaleRecipient,
+            social_urls: transformSocialUrls(collectionInfo.socialUrls),
+            symbol: collectionInfo.symbol,
           },
+          type: "DropERC721",
         });
       } else {
         contractAddress = await deployERC1155Contract({
           account: activeAccount,
-          client: props.client,
           chain: chain,
-          type: "DropERC1155",
+          client: props.client,
           params: {
-            name: collectionInfo.name,
-            symbol: collectionInfo.symbol,
             description: collectionInfo.description,
             image: collectionInfo.image,
-            social_urls: transformSocialUrls(collectionInfo.socialUrls),
-            saleRecipient: sales.primarySaleRecipient,
-            royaltyRecipient: sales.royaltyRecipient,
+            name: collectionInfo.name,
             royaltyBps: BigInt(sales.royaltyBps),
+            royaltyRecipient: sales.royaltyRecipient,
+            saleRecipient: sales.primarySaleRecipient,
+            social_urls: transformSocialUrls(collectionInfo.socialUrls),
+            symbol: collectionInfo.symbol,
           },
+          type: "DropERC1155",
         });
       }
 
       reportContractDeployed({
         address: contractAddress,
         chainId: Number(collectionInfo.chain),
-        publisher: "deployer.thirdweb.eth",
         contractName: contractType,
         deploymentType: "asset",
+        publisher: "deployer.thirdweb.eth",
       });
 
       contractAddressRef.current = contractAddress;
 
       // add contract to project in background
       addContractToProject.mutateAsync({
-        teamId: props.teamId,
-        projectId: props.projectId,
-        contractAddress: contractAddress,
         chainId: collectionInfo.chain,
-        deploymentType: "asset",
+        contractAddress: contractAddress,
         contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
+        deploymentType: "asset",
+        projectId: props.projectId,
+        teamId: props.teamId,
       });
 
       return {
@@ -220,14 +218,14 @@ export function CreateNFTPage(props: {
       contract,
       phases: [
         {
-          startTime: new Date(),
           currencyAddress: firstNFT.price_currency,
-          maxClaimablePerWallet: maxUint256, // unlimited
-          price: firstNFT.price_amount,
+          maxClaimablePerWallet: maxUint256,
           maxClaimableSupply: maxUint256, // unlimited
           metadata: {
             name: "Public phase",
           },
+          price: firstNFT.price_amount, // unlimited
+          startTime: new Date(),
         },
       ],
     });
@@ -270,8 +268,8 @@ export function CreateNFTPage(props: {
     // fetch nfts
     const fetchedNFTs = await getNFTs1155({
       contract,
-      start: batch.startIndex,
       count: batch.count,
+      start: batch.startIndex,
     });
 
     const transactions = nfts.map((uploadedNFT, i) => {
@@ -287,19 +285,19 @@ export function CreateNFTPage(props: {
 
       return setClaimConditions1155({
         contract,
-        tokenId: fetchedNFT.id,
         phases: [
           {
-            startTime: new Date(),
             currencyAddress: uploadedNFT.price_currency,
-            maxClaimablePerWallet: maxUint256, // unlimited
-            price: uploadedNFT.price_amount,
-            maxClaimableSupply: BigInt(uploadedNFT.supply),
+            maxClaimablePerWallet: maxUint256,
+            maxClaimableSupply: BigInt(uploadedNFT.supply), // unlimited
             metadata: {
               name: "Public phase",
             },
+            price: uploadedNFT.price_amount,
+            startTime: new Date(),
           },
         ],
+        tokenId: fetchedNFT.id,
       });
     });
 
@@ -314,8 +312,8 @@ export function CreateNFTPage(props: {
 
     try {
       await sendAndConfirmTransaction({
-        transaction: tx,
         account: activeAccount,
+        transaction: tx,
       });
     } catch (error) {
       const errorMessage = parseError(error);
@@ -335,41 +333,18 @@ export function CreateNFTPage(props: {
   return (
     <CreateNFTPageUI
       {...props}
-      onLaunchSuccess={() => {
-        revalidatePathAction(
-          `/team/${props.teamSlug}/project/${props.projectSlug}/assets`,
-          "page",
-        );
-      }}
       createNFTFunctions={{
-        erc1155: {
-          lazyMintNFTs: (formValues) => {
-            return handleLazyMintNFTs({
-              formValues,
-              ercType: "erc1155",
-            });
-          },
-          deployContract: (formValues) => {
-            return handleContractDeploy({
-              values: formValues,
-              ercType: "erc1155",
-            });
-          },
-          setClaimConditions: async (params) => {
-            return handleSetClaimConditionsERC1155(params);
-          },
-        },
         erc721: {
           deployContract: (formValues) => {
             return handleContractDeploy({
-              values: formValues,
               ercType: "erc721",
+              values: formValues,
             });
           },
           lazyMintNFTs: (formValues) => {
             return handleLazyMintNFTs({
-              formValues,
               ercType: "erc721",
+              formValues,
             });
           },
 
@@ -379,6 +354,29 @@ export function CreateNFTPage(props: {
             });
           },
         },
+        erc1155: {
+          deployContract: (formValues) => {
+            return handleContractDeploy({
+              ercType: "erc1155",
+              values: formValues,
+            });
+          },
+          lazyMintNFTs: (formValues) => {
+            return handleLazyMintNFTs({
+              ercType: "erc1155",
+              formValues,
+            });
+          },
+          setClaimConditions: async (params) => {
+            return handleSetClaimConditionsERC1155(params);
+          },
+        },
+      }}
+      onLaunchSuccess={() => {
+        revalidatePathAction(
+          `/team/${props.teamSlug}/project/${props.projectSlug}/assets`,
+          "page",
+        );
       }}
     />
   );

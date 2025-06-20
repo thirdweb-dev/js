@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "world.fncy",
-  name: "Fncy Mobile Wallet",
-  homepage: "https://fncy.world",
-  image_id: "c1c8d374-dff3-419c-96af-3515d0192100",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/fncy-blockchain-platform/id1613707166",
     android:
       "https://play.google.com/store/apps/details?id=com.metaverse.world.cube&hl=en_US&pli=1",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/fncy-blockchain-platform/id1613707166",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "metaCubeWallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://fncy.world",
+  id: "world.fncy",
+  image_id: "c1c8d374-dff3-419c-96af-3515d0192100",
+  mobile: {
+    native: "metaCubeWallet://",
+    universal: null,
+  },
+  name: "Fncy Mobile Wallet",
+  rdns: null,
 } as const;

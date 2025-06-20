@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.socios.app",
-  name: "Socios.com - Wallet & Tokens",
-  homepage: "https://app.socios.com",
-  image_id: "eb55679f-9462-45e2-e0ec-dfb851f9e700",
   app: {
-    browser: "https://app.socios.com",
-    ios: "https://apps.apple.com/app/id1464868277",
     android: "https://play.google.com/store/apps/details?id=com.socios&hl=en",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://app.socios.com",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/app/id1464868277",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "socios-mob://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://app.socios.com",
   },
+  homepage: "https://app.socios.com",
+  id: "com.socios.app",
+  image_id: "eb55679f-9462-45e2-e0ec-dfb851f9e700",
+  mobile: {
+    native: "socios-mob://",
+    universal: null,
+  },
+  name: "Socios.com - Wallet & Tokens",
+  rdns: null,
 } as const;

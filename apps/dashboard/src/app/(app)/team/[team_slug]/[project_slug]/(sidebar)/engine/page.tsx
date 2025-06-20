@@ -1,5 +1,5 @@
-import { getProject } from "@/api/projects";
 import { redirect } from "next/navigation";
+import { getProject } from "@/api/projects";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { getEngineInstances } from "./dedicated/_utils/getEngineInstances";
 

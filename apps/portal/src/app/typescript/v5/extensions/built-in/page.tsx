@@ -1,4 +1,4 @@
-import { TBody, Table, Td, Th, Tr } from "@/components/Document/Table";
+import { Table, TBody, Td, Th, Tr } from "@/components/Document/Table";
 import {
   DocLink,
   Heading,
@@ -26,8 +26,8 @@ export default async function ExtensionPage() {
 
   const overrides: Record<string, { name?: string; description?: string }> = {
     common: {
-      name: "Common",
       description: "Common contract extensions",
+      name: "Common",
     },
     erc20: { description: "ERC20 token standard extensions" },
     erc721: { description: "ERC721 token standard extensions" },
@@ -39,7 +39,7 @@ export default async function ExtensionPage() {
   };
   return (
     <>
-      <Heading level={1} id="built-in-extensions">
+      <Heading anchorId="built-in-extensions" level={1}>
         Built-in extensions for common standards
       </Heading>
       <Paragraph>

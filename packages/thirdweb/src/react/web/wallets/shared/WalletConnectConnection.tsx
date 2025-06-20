@@ -46,8 +46,6 @@ export const WalletConnectConnection: React.FC<{
         chain: props.chain,
         client: props.client,
         walletConnect: {
-          projectId: props.walletConnect?.projectId,
-          showQrModal: false,
           onDisplayUri(uri) {
             const preferNative =
               walletInfo.mobile.native || walletInfo.mobile.universal;
@@ -82,6 +80,8 @@ export const WalletConnectConnection: React.FC<{
             }
           },
           optionalChains: props.chains,
+          projectId: props.walletConnect?.projectId,
+          showQrModal: false,
         },
       })
       .then(() => {
@@ -114,38 +114,38 @@ export const WalletConnectConnection: React.FC<{
   if (isMobile()) {
     return (
       <ConnectingScreen
+        client={props.client}
+        errorConnecting={errorConnecting}
         locale={{
+          failed: locale.connectionScreen.failed,
           getStartedLink: locale.getStartedLink,
+          inProgress: locale.connectionScreen.inProgress,
           instruction: locale.connectionScreen.instruction,
           tryAgain: locale.connectionScreen.retry,
-          inProgress: locale.connectionScreen.inProgress,
-          failed: locale.connectionScreen.failed,
         }}
         onBack={onBack}
-        walletName={walletInfo.name}
-        walletId={wallet.id}
-        errorConnecting={errorConnecting}
-        onRetry={connect}
         onGetStarted={onGetStarted}
-        client={props.client}
+        onRetry={connect}
         size={props.size}
+        walletId={wallet.id}
+        walletName={walletInfo.name}
       />
     );
   }
 
   return (
     <ScanScreen
-      qrScanInstruction={locale.scanScreen.instruction}
-      onBack={onBack}
-      onGetStarted={onGetStarted}
-      qrCodeUri={qrCodeUri}
-      walletName={walletInfo.name}
-      walletId={wallet.id}
-      getStartedLink={locale.getStartedLink}
-      error={errorConnecting}
-      onRetry={connect}
       client={props.client}
       connectModalSize={props.size}
+      error={errorConnecting}
+      getStartedLink={locale.getStartedLink}
+      onBack={onBack}
+      onGetStarted={onGetStarted}
+      onRetry={connect}
+      qrCodeUri={qrCodeUri}
+      qrScanInstruction={locale.scanScreen.instruction}
+      walletId={wallet.id}
+      walletName={walletInfo.name}
     />
   );
 };
@@ -195,9 +195,9 @@ export const WalletConnectStandaloneConnection: React.FC<{
         .connect({
           chain: props.chain,
           client: props.client,
+          optionalChains: props.chains,
           projectId: props.walletConnect?.projectId,
           showQrModal: true,
-          optionalChains: props.chains,
         })
         .then(() => {
           wcModalClosed = true;
@@ -215,12 +215,10 @@ export const WalletConnectStandaloneConnection: React.FC<{
         .connect({
           chain: props.chain,
           client: props.client,
-          projectId: props.walletConnect?.projectId,
-          showQrModal: false,
           onDisplayUri(uri) {
             const platformUris = {
-              ios: walletInfo.mobile.native || "",
               android: walletInfo.mobile.universal || "",
+              ios: walletInfo.mobile.native || "",
               other: walletInfo.mobile.universal || "",
             };
 
@@ -242,6 +240,8 @@ export const WalletConnectStandaloneConnection: React.FC<{
             }
           },
           optionalChains: props.chains,
+          projectId: props.walletConnect?.projectId,
+          showQrModal: false,
         })
         .then(() => {
           done();
@@ -275,36 +275,36 @@ export const WalletConnectStandaloneConnection: React.FC<{
   if (isMobile()) {
     return (
       <ConnectingScreen
+        client={props.client}
+        errorConnecting={errorConnecting}
         locale={{
+          failed: locale.connectionScreen.failed,
           getStartedLink: locale.getStartedLink,
+          inProgress: locale.connectionScreen.inProgress,
           instruction: locale.connectionScreen.instruction,
           tryAgain: locale.connectionScreen.retry,
-          inProgress: locale.connectionScreen.inProgress,
-          failed: locale.connectionScreen.failed,
         }}
         onBack={onBack}
-        walletName={walletInfo.name}
-        walletId={wallet.id}
-        errorConnecting={errorConnecting}
         onRetry={connect}
-        client={props.client}
         size={props.size}
+        walletId={wallet.id}
+        walletName={walletInfo.name}
       />
     );
   }
 
   return (
     <ScanScreen
-      qrScanInstruction={locale.scanScreen.instruction}
-      onBack={onBack}
-      qrCodeUri={qrCodeUri}
-      walletName={walletInfo.name}
-      walletId={wallet.id}
-      getStartedLink={locale.getStartedLink}
-      error={errorConnecting}
-      onRetry={connect}
       client={props.client}
       connectModalSize={props.size}
+      error={errorConnecting}
+      getStartedLink={locale.getStartedLink}
+      onBack={onBack}
+      onRetry={connect}
+      qrCodeUri={qrCodeUri}
+      qrScanInstruction={locale.scanScreen.instruction}
+      walletId={wallet.id}
+      walletName={walletInfo.name}
     />
   );
 };

@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "URI" event.
@@ -34,7 +34,7 @@ export type URIEventFilters = Partial<{
  */
 export function uRIEvent(filters: URIEventFilters = {}) {
   return prepareEvent({
-    signature: "event URI(string _value, uint256 indexed tokenId)",
     filters,
+    signature: "event URI(string _value, uint256 indexed tokenId)",
   });
 }

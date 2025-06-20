@@ -10,8 +10,8 @@ export async function EcosystemCreatePage(props: {
       <main className="container max-w-5xl py-20">
         <div className="flex flex-col rounded-lg border bg-card lg:flex-row">
           <CreateEcosystemForm
-            teamSlug={props.teamSlug}
             teamId={props.teamId}
+            teamSlug={props.teamSlug}
           />
           <EcosystemWalletPricingCard />
         </div>

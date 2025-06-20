@@ -8,16 +8,16 @@ import {
 
 describe("Thirdweb Domains", () => {
   const defaultDomains = {
+    analytics: "c.thirdweb.com",
+    bridge: "bridge.thirdweb.com",
+    bundler: "bundler.thirdweb.com",
+    engineCloud: "engine.thirdweb.com",
+    inAppWallet: "embedded-wallet.thirdweb.com",
+    insight: "insight.thirdweb.com",
+    pay: "pay.thirdweb.com",
     rpc: "rpc.thirdweb.com",
     social: "social.thirdweb.com",
-    inAppWallet: "embedded-wallet.thirdweb.com",
-    pay: "pay.thirdweb.com",
     storage: "storage.thirdweb.com",
-    bundler: "bundler.thirdweb.com",
-    analytics: "c.thirdweb.com",
-    insight: "insight.thirdweb.com",
-    engineCloud: "engine.thirdweb.com",
-    bridge: "bridge.thirdweb.com",
   };
 
   beforeEach(() => {
@@ -34,14 +34,14 @@ describe("Thirdweb Domains", () => {
   describe("setThirdwebDomains", () => {
     it("should override specific domains while keeping others as default", () => {
       setThirdwebDomains({
-        rpc: "custom.rpc.com",
         analytics: "custom.analytics.com",
+        rpc: "custom.rpc.com",
       });
 
       expect(getThirdwebDomains()).toEqual({
         ...defaultDomains,
-        rpc: "custom.rpc.com",
         analytics: "custom.analytics.com",
+        rpc: "custom.rpc.com",
       });
     });
 

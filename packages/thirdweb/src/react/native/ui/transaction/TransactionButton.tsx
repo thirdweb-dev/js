@@ -28,19 +28,7 @@ import { ThemedSpinner } from "../components/spinner.js";
  * @transaction
  */
 export function TransactionButton(props: TransactionButtonProps) {
-  const {
-    children,
-    transaction,
-    onTransactionSent,
-    onTransactionConfirmed,
-    onError,
-    onClick,
-    gasless,
-    payModal,
-    disabled,
-    unstyled,
-    ...buttonProps
-  } = props;
+  const { children, gasless, payModal, disabled, ...buttonProps } = props;
   const account = useActiveAccount();
   const sendTransaction = useSendTransaction({ gasless, payModal });
   const { mutate: handleClick, isPending } = useTransactionButtonMutation(
@@ -52,22 +40,22 @@ export function TransactionButton(props: TransactionButtonProps) {
   return (
     <ThemedButton
       disabled={!account || disabled || isPending}
-      variant="primary"
       onPress={() => handleClick()}
       style={buttonProps.style as StyleProp<ViewStyle>}
       theme={theme}
+      variant="primary"
     >
       <View style={{ opacity: isPending ? 0 : 1 }}>{children}</View>
       {isPending && (
         <View
           style={{
-            position: "absolute",
+            alignItems: "center",
+            bottom: 0,
             flex: 1,
             justifyContent: "center",
-            alignItems: "center",
-            top: 0,
-            bottom: 0,
             margin: "auto",
+            position: "absolute",
+            top: 0,
           }}
         >
           <ThemedSpinner color={theme.colors.primaryButtonText} />

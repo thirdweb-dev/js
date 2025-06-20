@@ -9,18 +9,18 @@ const teamPlanToBadgeVariant: Record<
   Team["billingPlan"],
   BadgeProps["variant"]
 > = {
-  // gray
-  free: "secondary",
-  // yellow
-  starter: "warning",
-
-  growth_legacy: "warning",
   // green
   accelerate: "success",
+  // gray
+  free: "secondary",
   growth: "success",
-  scale: "success",
+
+  growth_legacy: "warning",
   // blue
   pro: "default",
+  scale: "success",
+  // yellow
+  starter: "warning",
 };
 
 export function getTeamPlanBadgeLabel(plan: Team["billingPlan"]) {
@@ -50,16 +50,16 @@ export function TeamPlanBadge(props: {
 
   return (
     <Badge
-      variant={teamPlanToBadgeVariant[props.plan]}
       className={cn("px-1.5 capitalize", props.className)}
-      role={props.plan === "free" ? "button" : undefined}
-      tabIndex={props.plan === "free" ? 0 : undefined}
       onClick={handleNavigateToBilling}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           handleNavigateToBilling(e);
         }
       }}
+      role={props.plan === "free" ? "button" : undefined}
+      tabIndex={props.plan === "free" ? 0 : undefined}
+      variant={teamPlanToBadgeVariant[props.plan]}
     >
       {`${getTeamPlanBadgeLabel(props.plan)}${props.postfix || ""}`}
     </Badge>

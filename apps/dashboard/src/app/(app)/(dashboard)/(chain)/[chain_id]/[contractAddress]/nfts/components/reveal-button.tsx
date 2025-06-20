@@ -1,14 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { FormControl, Input, Select } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -20,6 +11,15 @@ import type { ThirdwebContract } from "thirdweb";
 import { getBatchesToReveal, reveal } from "thirdweb/extensions/erc721";
 import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
 import { FormErrorMessage, FormLabel } from "tw-components";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 
 interface NFTRevealButtonProps {
   contract: ThirdwebContract;
@@ -60,7 +60,7 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
   if (allBatchesRevealed) {
     return (
       <ToolTipLabel label="All batches are revealed">
-        <Button variant="primary" className="gap-2" disabled>
+        <Button className="gap-2" disabled variant="primary">
           <EyeIcon className="size-4" /> Reveal NFTs
         </Button>
       </ToolTipLabel>
@@ -69,9 +69,9 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
 
   return (
     <MinterOnly contract={contract}>
-      <Sheet open={open} onOpenChange={setOpen}>
+      <Sheet onOpenChange={setOpen} open={open}>
         <SheetTrigger asChild>
-          <Button variant="primary" className="gap-2">
+          <Button className="gap-2" variant="primary">
             <EyeIcon className="size-4" /> Reveal NFTs
           </Button>
         </SheetTrigger>
@@ -84,35 +84,35 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
             id={REVEAL_FORM_ID}
             onSubmit={handleSubmit((data) => {
               const tx = reveal({
-                contract,
                 batchId: BigInt(data.batchId),
+                contract,
                 password: data.password,
               });
 
               const promise = sendTxMutation.mutateAsync(tx, {
-                onSuccess: () => {
-                  setOpen(false);
-                },
                 onError: (error) => {
                   console.error(error);
+                },
+                onSuccess: () => {
+                  setOpen(false);
                 },
               });
 
               toast.promise(promise, {
+                error: "Failed to reveal batch",
                 loading: "Revealing batch",
                 success: "Batch revealed successfully",
-                error: "Failed to reveal batch",
               });
             })}
           >
-            <FormControl isRequired isInvalid={!!errors.password} mr={4}>
+            <FormControl isInvalid={!!errors.password} isRequired mr={4}>
               <FormLabel>Select a batch</FormLabel>
               <Select {...register("batchId")} autoFocus>
                 {batchesQuery.data.map((batch) => (
                   <option
+                    disabled={batch.batchUri === "0x"}
                     key={batch.batchId.toString()}
                     value={batch.batchId.toString()}
-                    disabled={batch.batchUri === "0x"}
                   >
                     {batch.placeholderMetadata?.name ||
                       batch.batchId.toString()}{" "}
@@ -122,7 +122,7 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
               </Select>
               <FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
             </FormControl>
-            <FormControl isRequired isInvalid={!!errors.password} mr={4}>
+            <FormControl isInvalid={!!errors.password} isRequired mr={4}>
               <FormLabel>Password</FormLabel>
               <Input
                 {...register("password")}
@@ -136,13 +136,13 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
           <div className="mt-4 flex justify-end">
             <TransactionButton
               client={contract.client}
-              isLoggedIn={isLoggedIn}
-              txChainID={contract.chain.id}
-              transactionCount={1}
-              isPending={sendTxMutation.isPending}
-              form={REVEAL_FORM_ID}
-              type="submit"
               disabled={!isDirty}
+              form={REVEAL_FORM_ID}
+              isLoggedIn={isLoggedIn}
+              isPending={sendTxMutation.isPending}
+              transactionCount={1}
+              txChainID={contract.chain.id}
+              type="submit"
             >
               Reveal NFTs
             </TransactionButton>

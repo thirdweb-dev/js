@@ -22,10 +22,10 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
   return (
     <Flex direction="column" gap={6}>
       <Flex
-        direction={{ base: "column", md: "row" }}
-        justify="space-between"
         align={{ base: "left", md: "center" }}
+        direction={{ base: "column", md: "row" }}
         gap={4}
+        justify="space-between"
       >
         <Heading size="title.sm">Accounts</Heading>
         <ButtonGroup
@@ -34,9 +34,9 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
           w="inherit"
         >
           <LinkButton
-            variant="solid"
             href="https://portal.thirdweb.com/wallets/smart-wallet/get-started#3-connect-smart-wallets-in-your-application"
             isExternal
+            variant="solid"
           >
             View Documentation
           </LinkButton>

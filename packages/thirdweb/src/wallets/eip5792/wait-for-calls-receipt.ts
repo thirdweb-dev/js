@@ -5,6 +5,7 @@ import type { Prettify } from "../../utils/type-utils.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import { getCallsStatus } from "./get-calls-status.js";
 import type { GetCallsStatusResponse } from "./types.js";
+
 const DEFAULT_MAX_BLOCKS_WAIT_TIME = 100;
 
 const map = new Map<string, Promise<GetCallsStatusResponse>>();
@@ -69,8 +70,8 @@ export function waitForCallsReceipt(
     let blocksWaited = -1;
 
     const unwatch = watchBlockNumber({
-      client: client,
       chain: chain,
+      client: client,
       onNewBlockNumber: async () => {
         blocksWaited++;
         if (blocksWaited >= maxBlocksWaitTime) {
@@ -82,9 +83,9 @@ export function waitForCallsReceipt(
         }
         try {
           const result = await getCallsStatus({
-            wallet,
             client,
             id,
+            wallet,
           });
           if (result.status === "success" || result.status === "failure") {
             // stop the polling

@@ -1,10 +1,10 @@
 "use client";
 
+import Link from "next/link";
+import { useState } from "react";
 import { ToggleThemeButton } from "@/components/color-mode-toggle";
 import { Button } from "@/components/ui/button";
 import { NebulaIcon } from "@/icons/NebulaIcon";
-import Link from "next/link";
-import { useState } from "react";
 import { EmptyStateChatPageContent } from "../(app)/components/EmptyStateChatPageContent";
 import { NebulaLoginPage } from "./NebulaConnectEmbedLogin";
 
@@ -57,23 +57,23 @@ export function NebulaLoggedOutStatePage(props: {
             <ToggleThemeButton />
 
             <Link
-              href="https://thirdweb.com/support"
               className="hidden text-muted-foreground text-sm hover:text-foreground lg:block"
+              href="https://thirdweb.com/support"
               target="_blank"
             >
               Support
             </Link>
 
             <Link
-              href="https://portal.thirdweb.com/"
               className="hidden text-muted-foreground text-sm hover:text-foreground lg:block"
+              href="https://portal.thirdweb.com/"
               target="_blank"
             >
               Docs
             </Link>
 
             {showPage === "welcome" && (
-              <Button size="sm" onClick={() => setShowPage("connect")}>
+              <Button onClick={() => setShowPage("connect")} size="sm">
                 Sign in
               </Button>
             )}
@@ -88,25 +88,18 @@ export function NebulaLoggedOutStatePage(props: {
       {showPage === "welcome" && (
         <div className="container relative flex max-w-[800px] grow flex-col justify-center overflow-hidden rounded-lg pb-6">
           <EmptyStateChatPageContent
-            showAurora={false}
             allowImageUpload={false}
+            connectedWallets={[]}
+            context={{
+              chainIds: chainIds.map((x) => x.toString()),
+              networks: null,
+              walletAddress: null,
+            }}
             isConnectingWallet={false}
             onLoginClick={() => {
               setShowPage("connect");
             }}
             prefillMessage={props.params.q}
-            context={{
-              walletAddress: null,
-              chainIds: chainIds.map((x) => x.toString()),
-              networks: null,
-            }}
-            setContext={(v) => {
-              if (v?.chainIds) {
-                setChainIds(v.chainIds.map(Number));
-              }
-            }}
-            connectedWallets={[]}
-            setActiveWallet={() => {}}
             sendMessage={(msg) => {
               const textMessage = msg.content.find((x) => x.type === "text");
               if (textMessage) {
@@ -114,6 +107,13 @@ export function NebulaLoggedOutStatePage(props: {
               }
               setShowPage("connect");
             }}
+            setActiveWallet={() => {}}
+            setContext={(v) => {
+              if (v?.chainIds) {
+                setChainIds(v.chainIds.map(Number));
+              }
+            }}
+            showAurora={false}
           />
         </div>
       )}

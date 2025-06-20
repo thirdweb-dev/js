@@ -1,6 +1,6 @@
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
 import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
@@ -93,23 +93,23 @@ export async function deployVoteContract(options: DeployVoteContractOptions) {
   const { chain, client, account, params } = options;
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
+      account,
       chain,
       client,
-      account,
       contractId: "VoteERC20",
     });
   const initializeTransaction = await getInitializeTransaction({
+    accountAddress: account.address,
+    chain,
     client,
     implementationContract,
     params,
-    accountAddress: account.address,
-    chain,
   });
 
   return deployViaAutoFactory({
-    client,
-    chain,
     account,
+    chain,
+    client,
     cloneFactoryContract,
     initializeTransaction,
   });
@@ -159,8 +159,8 @@ async function getInitializeTransaction(options: {
 
   const tokenErc20Contract = getContract({
     address: tokenAddress,
-    client,
     chain,
+    client,
   });
 
   /**
@@ -187,12 +187,12 @@ async function getInitializeTransaction(options: {
       client,
       files: [
         {
-          name,
           description,
-          symbol,
-          image,
           external_link,
+          image,
+          name,
           social_urls,
+          symbol,
         },
       ],
     })) ||
@@ -200,14 +200,14 @@ async function getInitializeTransaction(options: {
 
   return initialize({
     contract: implementationContract,
-    name,
-    token: tokenAddress,
+    contractURI,
     // Make sure the final value passed to `initialProposalThreshold` is in wei
     initialProposalThreshold: initialProposalThresholdInWei,
     initialVoteQuorumFraction,
     initialVotingDelay: BigInt(initialVotingDelay || 0),
     initialVotingPeriod: BigInt(initialVotingPeriod),
-    contractURI,
+    name,
+    token: tokenAddress,
     trustedForwarders: params.trustedForwarders || [],
   });
 }

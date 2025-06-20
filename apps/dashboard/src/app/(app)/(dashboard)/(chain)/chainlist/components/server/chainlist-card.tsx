@@ -1,8 +1,8 @@
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CircleAlertIcon, TicketCheckIcon } from "lucide-react";
 import Link from "next/link";
 import type { JSX } from "react";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChainIcon } from "../../../components/server/chain-icon";
 import type { ChainSupportedService } from "../../../types/chain";
 import { getChainMetadata } from "../../../utils";
@@ -35,7 +35,7 @@ export async function ChainListCard({
       <Card className="h-full w-full transition-colors hover:border-active-border">
         <CardHeader className="flex flex-row items-center justify-between p-4">
           <div className="flex flex-row items-center gap-2">
-            <ChainIcon iconUrl={iconUrl} className="size-6" />
+            <ChainIcon className="size-6" iconUrl={iconUrl} />
             <Link
               className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0 before:content-['']"
               href={`/${chainSlug}`}
@@ -57,12 +57,12 @@ export async function ChainListCard({
                 </th>
                 <td className="text-right">
                   <CopyTextButton
+                    className="relative z-10 inline-flex translate-x-2 py-0.5 text-base"
+                    copyIconPosition="left"
                     textToCopy={chainId.toString()}
                     textToShow={chainId.toString()}
                     tooltip="Copy Chain ID"
-                    className="relative z-10 inline-flex translate-x-2 py-0.5 text-base"
                     variant="ghost"
-                    copyIconPosition="left"
                   />
                 </td>
               </tr>

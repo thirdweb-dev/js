@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.bitpay",
-  name: "BitPay Wallet",
-  homepage: "https://bitpay.com/wallet",
-  image_id: "553e8fff-37c9-4a62-5bfe-02ff22e1e200",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/bitpay-bitcoin-wallet-card/id1149581638?platform=iphone",
     android: "https://play.google.com/store/apps/details?id=com.bitpay.wallet",
-    mac: "https://apps.apple.com/us/app/bitpay-bitcoin-wallet-card/id1149581638?platform=ipad",
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/bitpay-bitcoin-wallet-card/id1149581638?platform=iphone",
+    linux: null,
+    mac: "https://apps.apple.com/us/app/bitpay-bitcoin-wallet-card/id1149581638?platform=ipad",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "bitpay://",
-    universal: "https://link.bitpay.com",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://bitpay.com/wallet",
+  id: "com.bitpay",
+  image_id: "553e8fff-37c9-4a62-5bfe-02ff22e1e200",
+  mobile: {
+    native: "bitpay://",
+    universal: "https://link.bitpay.com",
+  },
+  name: "BitPay Wallet",
+  rdns: null,
 } as const;

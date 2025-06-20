@@ -31,7 +31,6 @@ export function prepareAutoFactoryDeployTransaction(
   },
 ) {
   return deployProxyByImplementationV2({
-    contract: args.cloneFactoryContract,
     async asyncParams() {
       const rpcRequest = getRpcClient({
         ...args,
@@ -54,9 +53,9 @@ export function prepareAutoFactoryDeployTransaction(
 
         return {
           data: args.initializeData,
+          extraData: "0x",
           implementation: args.implementationAddress,
           salt,
-          extraData: "0x",
         } as const;
       }
 
@@ -72,11 +71,12 @@ export function prepareAutoFactoryDeployTransaction(
       }
       return {
         data: await encode(args.initializeTransaction),
+        extraData: "0x",
         implementation,
         salt,
-        extraData: "0x",
       } as const;
     },
+    contract: args.cloneFactoryContract,
   });
 }
 
@@ -110,9 +110,9 @@ export async function deployViaAutoFactory(
       throw new Error("initializeTransaction can't be undefined");
     }
     return zkDeployProxy({
+      account,
       chain,
       client,
-      account,
       cloneFactoryContract,
       initializeTransaction,
       salt,
@@ -123,15 +123,15 @@ export async function deployViaAutoFactory(
     chain,
     client,
     cloneFactoryContract,
-    initializeTransaction,
-    initializeData,
     implementationAddress,
+    initializeData,
+    initializeTransaction,
     isCrosschain,
     salt,
   });
   const receipt = await sendAndConfirmTransaction({
-    transaction: tx,
     account,
+    transaction: tx,
   });
 
   const proxyEvent = proxyDeployedV2Event();

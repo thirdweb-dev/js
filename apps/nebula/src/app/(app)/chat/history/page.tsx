@@ -11,5 +11,5 @@ export default async function Page() {
   }
 
   const sessions = await getSessions({ authToken }).catch(() => []);
-  return <ChatHistoryPage sessions={sessions} authToken={authToken} />;
+  return <ChatHistoryPage authToken={authToken} sessions={sessions} />;
 }

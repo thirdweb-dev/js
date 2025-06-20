@@ -12,13 +12,13 @@ export function RenderCode(props: {
 }) {
   return (
     <CodeBlockContainer
-      codeToCopy={props.code}
       className={props.className}
+      codeToCopy={props.code}
       copyButtonClassName={props.copyButtonClassName}
+      onCopy={props.onCopy}
       scrollableClassName={props.scrollableClassName}
       scrollableContainerClassName={props.scrollableContainerClassName}
       shadowColor={props.shadowColor}
-      onCopy={props.onCopy}
     >
       <div
         // biome-ignore lint/security/noDangerouslySetInnerHtml: we know what we're doing here

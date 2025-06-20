@@ -146,8 +146,8 @@ export async function tokens(options: tokens.Options): Promise<tokens.Result> {
     const errorJson = await response.json();
     throw new ApiError({
       code: errorJson.code || "UNKNOWN_ERROR",
-      message: errorJson.message || response.statusText,
       correlationId: errorJson.correlationId || undefined,
+      message: errorJson.message || response.statusText,
       statusCode: response.status,
     });
   }
@@ -224,19 +224,19 @@ export async function add(options: add.Options): Promise<add.Result> {
   };
 
   const response = await clientFetch(url, {
-    method: "POST",
+    body: JSON.stringify(requestBody),
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(requestBody),
+    method: "POST",
   });
 
   if (!response.ok) {
     const errorJson = await response.json();
     throw new ApiError({
       code: errorJson.code || "UNKNOWN_ERROR",
-      message: errorJson.message || response.statusText,
       correlationId: errorJson.correlationId || undefined,
+      message: errorJson.message || response.statusText,
       statusCode: response.status,
     });
   }

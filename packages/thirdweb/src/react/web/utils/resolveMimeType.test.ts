@@ -29,8 +29,8 @@ describe("resolveMimeType", () => {
   it("should fetch mime type from server if not available from URL", async () => {
     vi.mocked(getMimeTypeFromUrl).mockReturnValue(null);
     global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
       headers: new Headers({ "content-type": "application/json" }),
+      ok: true,
     });
 
     const result = await resolveMimeType("https://example.com/data.json");
@@ -53,8 +53,8 @@ describe("resolveMimeType", () => {
   it("should return undefined if content-type header is missing", async () => {
     vi.mocked(getMimeTypeFromUrl).mockReturnValue(null);
     global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
       headers: new Headers(),
+      ok: true,
     });
 
     const result = await resolveMimeType("https://example.com/noheader");

@@ -27,21 +27,21 @@ export async function postAuth({
 
   await setWallerUserDetails({
     clientId: client.clientId,
-    userId: storedToken.authDetails.userWalletId,
     email:
       "email" in storedToken.authDetails
         ? storedToken.authDetails.email
         : "phoneNumber" in storedToken.authDetails
           ? storedToken.authDetails.phoneNumber
           : undefined,
+    userId: storedToken.authDetails.userWalletId,
   });
 
   if (storedToken.isNewUser) {
     const _recoveryCode = await getRecoveryCode({
-      storedToken,
       client,
       recoveryCode: encryptionKey,
       storage,
+      storedToken,
     });
     if (!_recoveryCode) {
       throw new Error(ErrorMessages.missingRecoveryCode);
@@ -57,10 +57,10 @@ export async function postAuth({
       await getDeviceShare(client.clientId);
     } catch {
       const _recoveryCode = await getRecoveryCode({
-        storedToken,
         client,
         recoveryCode: encryptionKey,
         storage,
+        storedToken,
       });
       if (!_recoveryCode) {
         throw new Error(ErrorMessages.missingRecoveryCode);

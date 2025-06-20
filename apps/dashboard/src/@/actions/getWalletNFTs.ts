@@ -53,7 +53,7 @@ export async function getWalletNFTs(params: {
       const parsedResponse = await response.json();
       const result = await transformAlchemyResponseToNFT(parsedResponse, owner);
 
-      return { result, error: undefined };
+      return { error: undefined, result };
     } catch (err) {
       console.error("Error fetching NFTs", err);
       return { error: "error parsing response" };
@@ -64,10 +64,10 @@ export async function getWalletNFTs(params: {
     const url = generateMoralisUrl({ chainId, owner });
 
     const response = await fetch(url, {
-      method: "GET",
       headers: {
         "X-API-Key": MORALIS_API_KEY,
       },
+      method: "GET",
       next: {
         revalidate: 10, // cache for 10 seconds
       },
@@ -156,8 +156,8 @@ async function getWalletNFTsFromInsight(params: {
   if (!response.ok) {
     const errorMessage = await response.text();
     return {
-      ok: false,
       error: errorMessage,
+      ok: false,
     };
   }
 
@@ -172,32 +172,32 @@ async function getWalletNFTsFromInsight(params: {
 
   const walletNFTs = nftsResponse.data.map((nft) => {
     const walletNFT: WalletNFT = {
-      id: nft.token_id,
+      chainId: nft.contract.chain_id,
       contractAddress: nft.contract.address,
+      id: nft.token_id,
       metadata: {
-        uri: isDev
-          ? nft.metadata_url.replace("ipfscdn.io/", "thirdwebstorage-dev.com/")
-          : nft.metadata_url,
-        name: nft.name,
-        description: nft.description,
-        image: isDev
-          ? nft.image_url.replace("ipfscdn.io/", "thirdwebstorage-dev.com/")
-          : nft.image_url,
         animation_url: isDev
           ? nft.extra_metadata.animation_original_url?.replace(
               "ipfscdn.io/",
               "thirdwebstorage-dev.com/",
             )
           : nft.extra_metadata.animation_original_url,
-        external_url: nft.external_url,
         background_color: nft.background_color,
+        description: nft.description,
+        external_url: nft.external_url,
+        image: isDev
+          ? nft.image_url.replace("ipfscdn.io/", "thirdwebstorage-dev.com/")
+          : nft.image_url,
+        name: nft.name,
+        uri: isDev
+          ? nft.metadata_url.replace("ipfscdn.io/", "thirdwebstorage-dev.com/")
+          : nft.metadata_url,
       },
       owner: params.owner,
-      tokenURI: nft.metadata_url,
-      type: nft.token_type === "erc721" ? "ERC721" : "ERC1155",
       supply: nft.balance,
       tokenAddress: nft.contract.address,
-      chainId: nft.contract.chain_id,
+      tokenURI: nft.metadata_url,
+      type: nft.token_type === "erc721" ? "ERC721" : "ERC1155",
     };
 
     return walletNFT;

@@ -14,12 +14,12 @@ export const AccountSigners: React.FC<AccountSignersProps> = ({ contract }) => {
   const transformedAdmins: AccountSignerType[] = (allAdmins || []).map(
     (admin) => {
       return {
-        isAdmin: true,
-        signer: admin,
+        approvedTargets: [],
         // default here has to be in seconds not milliseconds (because contract stores in seconds...)
         endTimestamp: BigInt(new Date(0).getTime() / 1000),
+        isAdmin: true,
         nativeTokenLimitPerTransaction: 0n,
-        approvedTargets: [],
+        signer: admin,
       };
     },
   );
@@ -38,10 +38,10 @@ export const AccountSigners: React.FC<AccountSignersProps> = ({ contract }) => {
       <div className="flex flex-col gap-6">
         {data.map((item) => (
           <AccountSigner
-            key={item.signer}
-            item={item}
             client={contract.client}
             contractChainId={contract.chain.id}
+            item={item}
+            key={item.signer}
           />
         ))}
       </div>

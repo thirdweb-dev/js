@@ -27,9 +27,7 @@ export function useSocialProfiles(options: {
 }) {
   const { client, address } = options;
   return useQuery({
-    queryKey: ["social-profiles", address],
     enabled: !!address,
-    retry: 3,
     queryFn: async () => {
       if (!address) {
         throw new Error(
@@ -38,5 +36,7 @@ export function useSocialProfiles(options: {
       }
       return await getSocialProfiles({ address, client });
     },
+    queryKey: ["social-profiles", address],
+    retry: 3,
   });
 }

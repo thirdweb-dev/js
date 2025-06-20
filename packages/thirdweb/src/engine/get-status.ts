@@ -78,17 +78,17 @@ export async function getTransactionStatus(args: {
   const { client, transactionId } = args;
   const searchResult = await searchTransactions({
     baseUrl: getThirdwebBaseUrl("engineCloud"),
-    bodySerializer: stringify,
-    fetch: getClientFetch(client),
     body: {
       filters: [
         {
           field: "id",
-          values: [transactionId],
           operation: "OR",
+          values: [transactionId],
         },
       ],
     },
+    bodySerializer: stringify,
+    fetch: getClientFetch(client),
   });
 
   if (searchResult.error) {
@@ -108,10 +108,10 @@ export async function getTransactionStatus(args: {
   const executionResult = data.executionResult as ExecutionResult4337Serialized;
   return {
     ...executionResult,
-    createdAt: data.createdAt,
-    confirmedAt: data.confirmedAt,
     cancelledAt: data.cancelledAt,
     chain: getCachedChain(Number(data.chainId)),
+    confirmedAt: data.confirmedAt,
+    createdAt: data.createdAt,
     from: data.from ?? undefined,
     id: data.id,
   };

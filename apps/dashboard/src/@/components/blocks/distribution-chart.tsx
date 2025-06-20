@@ -38,11 +38,11 @@ export function DistributionBarChart(props: DistributionBarChartProps) {
         {props.segments.map((segment) => {
           return (
             <div
-              key={segment.label}
               className="flex h-full items-center justify-center transition-all duration-200"
+              key={segment.label}
               style={{
-                width: `${segment.percent}%`,
                 backgroundColor: segment.color,
+                width: `${segment.percent}%`,
               }}
             />
           );
@@ -53,7 +53,7 @@ export function DistributionBarChart(props: DistributionBarChartProps) {
       <div className="mt-3 flex flex-col gap-1 lg:flex-row lg:gap-6">
         {props.segments.map((segment) => {
           return (
-            <div key={segment.label} className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5" key={segment.label}>
               <div
                 className="size-3 rounded-full"
                 style={{

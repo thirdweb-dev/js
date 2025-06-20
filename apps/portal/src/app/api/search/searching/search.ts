@@ -95,8 +95,8 @@ export async function search(query: string): Promise<SearchResult> {
     query,
     maxResults - pageTitleResults.length,
     {
-      index: "title",
       enrich: true,
+      index: "title",
     },
   );
 
@@ -108,8 +108,8 @@ export async function search(query: string): Promise<SearchResult> {
   }
 
   const sectionContentMatches = sectionIndex.search<true>(query, 100, {
-    index: "content",
     enrich: true,
+    index: "content",
     suggest: true,
   });
 

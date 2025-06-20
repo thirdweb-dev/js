@@ -1,19 +1,18 @@
-import { isAddress } from "thirdweb/utils";
 import type { Abi } from "thirdweb/utils";
+import { isAddress } from "thirdweb/utils";
 import { z } from "zod";
 
 const inputAbi = z.object({
-  type: z.string(),
-  name: z.string().optional(),
   inputs: z
     .array(
       z.object({
+        indexed: z.boolean().optional(),
         name: z.string(),
         type: z.string(),
-        indexed: z.boolean().optional(),
       }),
     )
     .optional(),
+  name: z.string().optional(),
   outputs: z
     .array(
       z.object({
@@ -22,18 +21,11 @@ const inputAbi = z.object({
       }),
     )
     .optional(),
+  type: z.string(),
 });
 
 export const webhookFormSchema = z.object({
-  name: z
-    .string()
-    .min(3, { message: "Name must be at least 3 characters long" })
-    .max(100, { message: "Name must be at most 100 characters long" }),
-  webhookUrl: z.string().url({ message: "Must be a valid URL" }),
-  filterType: z.enum(["event", "transaction"]),
-  chainIds: z
-    .array(z.string())
-    .min(1, { message: "Select at least one chain" }),
+  abi: z.string().optional(),
   addresses: z
     .string()
     .optional()
@@ -43,7 +35,7 @@ export const webhookFormSchema = z.object({
           return true;
         }
         return val
-          .split(/[\,\s]+/)
+          .split(/[,\s]+/)
           .filter(Boolean)
           .every((a) => isAddress(a.trim()));
       },
@@ -51,6 +43,11 @@ export const webhookFormSchema = z.object({
         message: "Enter valid addresses (comma-separated) or leave empty",
       },
     ),
+  chainIds: z
+    .array(z.string())
+    .min(1, { message: "Select at least one chain" }),
+  eventTypes: z.array(z.string()).optional(),
+  filterType: z.enum(["event", "transaction"]),
   fromAddresses: z
     .string()
     .optional()
@@ -60,7 +57,7 @@ export const webhookFormSchema = z.object({
           return true;
         }
         return val
-          .split(/[\,\s]+/)
+          .split(/[,\s]+/)
           .filter(Boolean)
           .every((a) => isAddress(a.trim()));
       },
@@ -68,6 +65,15 @@ export const webhookFormSchema = z.object({
         message: "Enter valid addresses (comma-separated) or leave empty",
       },
     ),
+  inputAbi: z.array(inputAbi).optional(),
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters long" })
+    .max(100, { message: "Name must be at most 100 characters long" }),
+  params: z.record(z.unknown()).optional(),
+  secret: z.string().optional(),
+  sigHash: z.string().optional(),
+  sigHashAbi: z.string().optional(),
   toAddresses: z
     .string()
     .optional()
@@ -77,7 +83,7 @@ export const webhookFormSchema = z.object({
           return true;
         }
         return val
-          .split(/[\,\s]+/)
+          .split(/[,\s]+/)
           .filter(Boolean)
           .every((a) => isAddress(a.trim()));
       },
@@ -85,13 +91,7 @@ export const webhookFormSchema = z.object({
         message: "Enter valid addresses (comma-separated) or leave empty",
       },
     ),
-  sigHash: z.string().optional(),
-  sigHashAbi: z.string().optional(),
-  abi: z.string().optional(),
-  inputAbi: z.array(inputAbi).optional(),
-  secret: z.string().optional(),
-  eventTypes: z.array(z.string()).optional(),
-  params: z.record(z.unknown()).optional(),
+  webhookUrl: z.string().url({ message: "Must be a valid URL" }),
 });
 
 export type WebhookFormValues = z.infer<typeof webhookFormSchema>;

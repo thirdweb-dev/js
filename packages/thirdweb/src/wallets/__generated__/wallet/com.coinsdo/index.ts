@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.coinsdo",
-  name: "CoinWallet",
-  homepage: "https://www.coinsdo.com",
-  image_id: "1c0cd352-ce8e-4bcc-f91d-8763eab60b00",
   app: {
-    browser: "https://www.coinsdo.com/wallet_coinsdo.html",
-    ios: "https://apps.apple.com/us/app/coinsdo-wallet-btc-eth-wallet/id6479635869",
     android: "https://play.google.com/store/apps/details?id=com.coinsdo.wallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://www.coinsdo.com/wallet_coinsdo.html",
     chrome:
       "https://chromewebstore.google.com/detail/coinwallet-btc-crypto-wal/oafedfoadhdjjcipmcbecikgokpaphjk",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/coinsdo-wallet-btc-eth-wallet/id6479635869",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "coinwallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: "coinwallet://",
     universal: "https://www.coinsdo.com/wallet_coinsdo.html",
   },
+  homepage: "https://www.coinsdo.com",
+  id: "com.coinsdo",
+  image_id: "1c0cd352-ce8e-4bcc-f91d-8763eab60b00",
+  mobile: {
+    native: "coinwallet://",
+    universal: null,
+  },
+  name: "CoinWallet",
+  rdns: null,
 } as const;

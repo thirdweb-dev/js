@@ -1,7 +1,7 @@
 "use client";
 
-import { TabButtons } from "@/components/ui/tabs";
 import { useState } from "react";
+import { TabButtons } from "@/components/ui/tabs";
 
 export function NFTPublicPageTabs(props: {
   nftsPage: React.ReactNode;
@@ -15,14 +15,14 @@ export function NFTPublicPageTabs(props: {
         <TabButtons
           tabs={[
             {
+              isActive: tab === "nfts",
               name: "NFTs",
               onClick: () => setTab("nfts"),
-              isActive: tab === "nfts",
             },
             {
+              isActive: tab === "buy",
               name: "Buy NFTs",
               onClick: () => setTab("buy"),
-              isActive: tab === "buy",
             },
           ]}
         />

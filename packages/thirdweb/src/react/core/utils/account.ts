@@ -3,8 +3,8 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import { convertCryptoToFiat } from "../../../pay/convert/cryptoToFiat.js";
 import {
-  type SupportedFiatCurrency,
   getFiatSymbol,
+  type SupportedFiatCurrency,
 } from "../../../pay/convert/type.js";
 import { type Address, isAddress } from "../../../utils/address.js";
 import { formatNumber } from "../../../utils/formatNumber.js";
@@ -75,9 +75,9 @@ export async function loadAccountBalance(props: {
   }
 
   const tokenBalanceData = await getWalletBalance({
+    address,
     chain,
     client,
-    address,
     tokenAddress,
   }).catch(() => undefined);
 
@@ -89,11 +89,11 @@ export async function loadAccountBalance(props: {
 
   if (showBalanceInFiat) {
     const fiatData = await convertCryptoToFiat({
+      chain,
+      client,
       fromAmount: Number(tokenBalanceData.displayValue),
       fromTokenAddress: tokenAddress || NATIVE_TOKEN_ADDRESS,
       to: showBalanceInFiat,
-      chain,
-      client,
     }).catch(() => undefined);
 
     if (fiatData === undefined) {

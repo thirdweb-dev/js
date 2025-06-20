@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "network.dgg",
-  name: "DGG Wallet",
-  homepage: "https://dgg.network",
-  image_id: "e4cbed08-8839-4bce-875f-d8917ceb7e00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/nl/app/dgg-wallet-nfts-games/id1659618218",
     android:
       "https://play.google.com/store/apps/details?id=network.dgg.wallet&hl=en_US",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: "https://apps.apple.com/nl/app/dgg-wallet-nfts-games/id1659618218",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/nl/app/dgg-wallet-nfts-games/id1659618218",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "dgg://",
-    universal: "https://dggnetwork.app.link",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://dgg.network",
+  id: "network.dgg",
+  image_id: "e4cbed08-8839-4bce-875f-d8917ceb7e00",
+  mobile: {
+    native: "dgg://",
+    universal: "https://dggnetwork.app.link",
+  },
+  name: "DGG Wallet",
+  rdns: null,
 } as const;

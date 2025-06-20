@@ -1,3 +1,5 @@
+/* biome-ignore-all lint: IGNORED */
+
 // source code of yocto-queue + modified to add types
 // https://github.com/sindresorhus/yocto-queue
 class Node<T> {
@@ -182,13 +184,13 @@ export function pLimit(concurrency: number): LimitFunction {
     activeCount: {
       get: () => activeCount,
     },
-    pendingCount: {
-      get: () => queue.size,
-    },
     clearQueue: {
       value() {
         queue.clear();
       },
+    },
+    pendingCount: {
+      get: () => queue.size,
     },
   });
 

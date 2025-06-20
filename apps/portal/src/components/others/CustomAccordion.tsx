@@ -1,13 +1,13 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 import { Anchor } from "../ui/Anchor";
 import { DynamicHeight } from "./DynamicHeight";
 
 type CustomAccordionProps = {
-  id?: string;
+  anchorId?: string;
   chevronPosition?: "left" | "right";
   trigger: React.ReactNode;
   children: React.ReactNode;
@@ -22,8 +22,6 @@ export function CustomAccordion(props: CustomAccordionProps) {
   const buttonId = useId();
   const accordionContentRef = useRef<HTMLDivElement>(null);
 
-  const accordionAnchorId = props.id;
-
   // if window hash matches current accordion's id, open it
   const accordionIdMatchChecked = useRef(false);
   useEffect(() => {
@@ -32,7 +30,7 @@ export function CustomAccordion(props: CustomAccordionProps) {
     }
     accordionIdMatchChecked.current = true;
     const hash = window.location.hash;
-    if (hash && hash === `#${accordionAnchorId}`) {
+    if (hash && hash === `#${props.anchorId}`) {
       setTimeout(() => {
         setIsOpen(true);
         setTimeout(() => {
@@ -43,7 +41,7 @@ export function CustomAccordion(props: CustomAccordionProps) {
         }, 500);
       }, 500);
     }
-  }, [accordionAnchorId]);
+  }, [props.anchorId]);
 
   // if window hash matches any child accordion's id, open it
   const accordionContentChecked = useRef(false);
@@ -87,14 +85,8 @@ export function CustomAccordion(props: CustomAccordionProps) {
       data-custom-accordion
     >
       <button
-        type="button"
-        data-open={isOpen}
-        id={buttonId}
         aria-controls={contentId}
         aria-expanded={isOpen}
-        onClick={() => {
-          setIsOpen((c) => !c);
-        }}
         className={cn(
           "flex w-full flex-1 cursor-pointer items-center gap-3",
           props.triggerContainerClassName,
@@ -102,6 +94,12 @@ export function CustomAccordion(props: CustomAccordionProps) {
             ? "flex-row-reverse justify-between"
             : "",
         )}
+        data-open={isOpen}
+        id={buttonId}
+        onClick={() => {
+          setIsOpen((c) => !c);
+        }}
+        type="button"
       >
         <ChevronDownIcon
           className={cn(
@@ -110,20 +108,15 @@ export function CustomAccordion(props: CustomAccordionProps) {
           )}
         />
 
-        {props.id ? (
-          <Anchor id={props.id}> {props.trigger} </Anchor>
+        {props.anchorId ? (
+          <Anchor id={props.anchorId}> {props.trigger} </Anchor>
         ) : (
           props.trigger
         )}
       </button>
 
       <DynamicHeight>
-        <div
-          id={contentId}
-          aria-labelledby={buttonId}
-          data-open={isOpen}
-          className="overflow-hidden"
-        >
+        <div className="overflow-hidden" data-open={isOpen} id={contentId}>
           <div
             className={cn(
               "fade-in-0 animate-in duration-500",

@@ -1,22 +1,22 @@
 "use server";
-import { THIRDWEB_CLIENT } from "@/lib/client";
 import { cookies } from "next/headers";
 import { getAddress } from "thirdweb";
 import {
+  createAuth,
   type GenerateLoginPayloadParams,
   type VerifyLoginPayloadParams,
-  createAuth,
 } from "thirdweb/auth";
 import { generateAccount, privateKeyToAccount } from "thirdweb/wallets";
+import { THIRDWEB_CLIENT } from "@/lib/client";
 
 const privateKey = process.env.THIRDWEB_ADMIN_PRIVATE_KEY;
 
 const thirdwebAuth = createAuth({
-  domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN || "thirdweb.com",
-  client: THIRDWEB_CLIENT,
   adminAccount: privateKey
     ? privateKeyToAccount({ client: THIRDWEB_CLIENT, privateKey })
     : await generateAccount({ client: THIRDWEB_CLIENT }),
+  client: THIRDWEB_CLIENT,
+  domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN || "thirdweb.com",
 });
 
 export async function generatePayload(options: GenerateLoginPayloadParams) {

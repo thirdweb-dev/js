@@ -4,8 +4,8 @@ import { BadgeContainer } from "../../../../../../../../stories/utils";
 import { SupplyClaimedProgress } from "./supply-claimed-progress";
 
 const meta = {
-  title: "Assets/NFT/SupplyClaimedProgress",
   component: StoryVariants,
+  title: "Assets/NFT/SupplyClaimedProgress",
 } satisfies Meta<typeof StoryVariants>;
 
 export default meta;

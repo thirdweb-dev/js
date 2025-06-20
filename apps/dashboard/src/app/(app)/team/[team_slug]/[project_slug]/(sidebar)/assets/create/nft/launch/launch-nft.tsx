@@ -1,8 +1,19 @@
 "use client";
 
+import { TransactionButton } from "components/buttons/TransactionButton";
+import {
+  ArrowRightIcon,
+  ArrowUpFromLineIcon,
+  ImageOffIcon,
+} from "lucide-react";
+import Link from "next/link";
+import { useMemo, useRef, useState } from "react";
+import { defineChain, type ThirdwebClient } from "thirdweb";
+import { TokenProvider, TokenSymbol, useActiveWallet } from "thirdweb/react";
+import { parseError } from "utils/errorParser";
 import { reportAssetCreationFailed } from "@/analytics/report";
-import { MultiStepStatus } from "@/components/blocks/multi-step-status/multi-step-status";
 import type { MultiStepState } from "@/components/blocks/multi-step-status/multi-step-status";
+import { MultiStepStatus } from "@/components/blocks/multi-step-status/multi-step-status";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,17 +25,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import {
-  ArrowRightIcon,
-  ArrowUpFromLineIcon,
-  ImageOffIcon,
-} from "lucide-react";
-import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
-import { type ThirdwebClient, defineChain } from "thirdweb";
-import { TokenProvider, TokenSymbol, useActiveWallet } from "thirdweb/react";
-import { parseError } from "utils/errorParser";
 import { ChainOverview } from "../../_common/chain-overview";
 import { FilePreview } from "../../_common/file-preview";
 import { StepCard } from "../../_common/step-card";
@@ -35,8 +35,8 @@ import type {
 
 const stepIds = {
   "deploy-contract": "deploy-contract",
-  "set-claim-conditions": "set-claim-conditions",
   "mint-nfts": "mint-nfts",
+  "set-claim-conditions": "set-claim-conditions",
 } as const;
 
 type StepId = keyof typeof stepIds;
@@ -83,21 +83,21 @@ export function LaunchNFT(props: {
   async function handleSubmitClick() {
     const initialSteps: MultiStepState<StepId>[] = [
       {
-        label: "Deploy contract",
         id: stepIds["deploy-contract"],
+        label: "Deploy contract",
         status: { type: "idle" },
       },
       {
-        label: formValues.nfts.length > 1 ? "Mint NFTs" : "Mint NFT",
         id: stepIds["mint-nfts"],
+        label: formValues.nfts.length > 1 ? "Mint NFTs" : "Mint NFT",
         status: { type: "idle" },
       },
       {
+        id: stepIds["set-claim-conditions"],
         label:
           formValues.nfts.length > 1
             ? "Set claim conditions"
             : "Set claim condition",
-        id: stepIds["set-claim-conditions"],
         status: { type: "idle" },
       },
     ];
@@ -158,22 +158,22 @@ export function LaunchNFT(props: {
             }
 
             await props.createNFTFunctions.erc1155.setClaimConditions({
-              values: formValues,
               batch: {
-                startIndex: batchIndex * batchSize,
                 count: batchSize,
+                startIndex: batchIndex * batchSize,
               },
+              values: formValues,
             });
 
             batchesProcessedRef.current += 1;
           }
         } else {
           await props.createNFTFunctions.erc1155.setClaimConditions({
-            values: formValues,
             batch: {
-              startIndex: 0,
               count: formValues.nfts.length,
+              startIndex: 0,
             },
+            values: formValues,
           });
         }
       }
@@ -207,8 +207,8 @@ export function LaunchNFT(props: {
         const errorMessage = parseError(error);
 
         updateStatus(i, {
-          type: "error",
           message: errorMessage,
+          type: "error",
         });
 
         reportAssetCreationFailed({
@@ -262,27 +262,27 @@ export function LaunchNFT(props: {
 
   return (
     <StepCard
-      title="Launch NFT"
-      prevButton={{
-        onClick: props.onPrevious,
-      }}
       nextButton={{
-        type: "custom",
         custom: (
           <TransactionButton
             client={props.client}
-            variant="default"
-            txChainID={Number(formValues.collectionInfo.chain)}
             isLoggedIn={true}
             isPending={false}
-            transactionCount={undefined}
             onClick={handleSubmitClick}
+            transactionCount={undefined}
+            txChainID={Number(formValues.collectionInfo.chain)}
+            variant="default"
           >
             <ArrowUpFromLineIcon className="size-4" />
             Launch NFT
           </TransactionButton>
         ),
+        type: "custom",
       }}
+      prevButton={{
+        onClick: props.onPrevious,
+      }}
+      title="Launch NFT"
     >
       <Dialog
         open={isModalOpen}
@@ -304,7 +304,7 @@ export function LaunchNFT(props: {
               )}
             </DialogHeader>
 
-            <MultiStepStatus steps={steps} onRetry={handleRetry} />
+            <MultiStepStatus onRetry={handleRetry} steps={steps} />
           </div>
 
           <div className="mt-2 flex justify-between gap-4 border-border border-t bg-card p-6">
@@ -321,13 +321,13 @@ export function LaunchNFT(props: {
             )}
 
             <Button
-              variant="outline"
               disabled={isPending}
               onClick={() => {
                 setIsModalOpen(false);
                 // reset steps
                 setSteps([]);
               }}
+              variant="outline"
             >
               {isComplete ? "Close" : "Cancel"}
             </Button>
@@ -340,16 +340,16 @@ export function LaunchNFT(props: {
         <h2 className="mb-3 font-semibold text-base">Collection Info</h2>
 
         <div className="flex flex-col gap-6 lg:flex-row">
-          <OverviewField name="Image" className="shrink-0">
+          <OverviewField className="shrink-0" name="Image">
             <FilePreview
-              client={props.client}
-              srcOrFile={formValues.collectionInfo.image}
               className="size-24 rounded-lg border object-cover"
+              client={props.client}
               fallback={
                 <div className="flex items-center justify-center bg-muted/50">
                   <ImageOffIcon className="size-5 text-muted-foreground" />
                 </div>
               }
+              srcOrFile={formValues.collectionInfo.image}
             />
           </OverviewField>
 
@@ -369,8 +369,8 @@ export function LaunchNFT(props: {
 
               <OverviewField name="Chain">
                 <ChainOverview
-                  client={props.client}
                   chainId={formValues.collectionInfo.chain}
+                  client={props.client}
                 />
               </OverviewField>
             </div>
@@ -398,10 +398,10 @@ export function LaunchNFT(props: {
               <p className="flex items-center gap-1 text-foreground text-sm">
                 {formValues.nfts[0].price_amount}{" "}
                 <TokenProvider
-                  client={props.client}
                   address={formValues.nfts[0].price_currency}
                   // eslint-disable-next-line no-restricted-syntax
                   chain={defineChain(Number(formValues.collectionInfo.chain))}
+                  client={props.client}
                 >
                   <TokenSymbol
                     loadingComponent={<Skeleton className="size-5 w-20" />}
@@ -416,7 +416,7 @@ export function LaunchNFT(props: {
               <div className="flex flex-wrap gap-1">
                 {uniqueAttributes.map((attr) => {
                   return (
-                    <Badge variant="secondary" key={attr}>
+                    <Badge key={attr} variant="secondary">
                       {attr}
                     </Badge>
                   );
@@ -433,8 +433,8 @@ export function LaunchNFT(props: {
           <OverviewField name="Primary Sales Recipient">
             <WalletAddress
               address={formValues.sales.primarySaleRecipient}
-              client={props.client}
               className="h-auto py-1"
+              client={props.client}
               iconClassName="size-3.5"
             />
           </OverviewField>
@@ -442,9 +442,9 @@ export function LaunchNFT(props: {
           <OverviewField name="Royalties Recipient">
             <WalletAddress
               address={formValues.sales.royaltyRecipient}
+              className="h-auto py-1"
               client={props.client}
               iconClassName="size-3.5"
-              className="h-auto py-1"
             />
           </OverviewField>
 
@@ -472,8 +472,6 @@ function OverviewField(props: {
   );
 }
 
-function OverviewFieldValue(props: {
-  value: string;
-}) {
+function OverviewFieldValue(props: { value: string }) {
   return <p className="text-foreground text-sm">{props.value}</p>;
 }

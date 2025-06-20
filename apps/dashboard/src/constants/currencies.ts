@@ -26,9 +26,9 @@ type NativeTokenInfo = {
 };
 
 const ethereumNativeToken: NativeTokenInfo = {
+  decimals: 18,
   name: "Ether",
   symbol: "ETH",
-  decimals: 18,
   wrapped: {
     address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     name: "Wrapped Ether",
@@ -37,9 +37,9 @@ const ethereumNativeToken: NativeTokenInfo = {
 };
 
 const polygonNativeToken: NativeTokenInfo = {
+  decimals: 18,
   name: "Matic",
   symbol: "MATIC",
-  decimals: 18,
   wrapped: {
     address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
     name: "Wrapped Matic",
@@ -48,9 +48,9 @@ const polygonNativeToken: NativeTokenInfo = {
 };
 
 const avalancheNativeToken: NativeTokenInfo = {
+  decimals: 18,
   name: "Avalanche",
   symbol: "AVAX",
-  decimals: 18,
   wrapped: {
     address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
     name: "Wrapped AVAX",
@@ -59,9 +59,9 @@ const avalancheNativeToken: NativeTokenInfo = {
 };
 
 const avalancheFujiNativeToken: NativeTokenInfo = {
+  decimals: 18,
   name: "Avalanche",
   symbol: "AVAX",
-  decimals: 18,
   wrapped: {
     address: "0xd00ae08403B9bbb9124bB305C09058E32C39A48c",
     name: "Wrapped AVAX",
@@ -70,9 +70,9 @@ const avalancheFujiNativeToken: NativeTokenInfo = {
 };
 
 const fantomNativeToken: NativeTokenInfo = {
+  decimals: 18,
   name: "Fantom",
   symbol: "FTM",
-  decimals: 18,
   wrapped: {
     address: "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
     name: "Wrapped Fantom",
@@ -81,9 +81,9 @@ const fantomNativeToken: NativeTokenInfo = {
 };
 
 const fantomTestnetNativeToken: NativeTokenInfo = {
+  decimals: 18,
   name: "Fantom",
   symbol: "FTM",
-  decimals: 18,
   wrapped: {
     address: "0xf1277d1Ed8AD466beddF92ef448A132661956621",
     name: "Wrapped Fantom",
@@ -92,9 +92,9 @@ const fantomTestnetNativeToken: NativeTokenInfo = {
 };
 
 const arbitrumNativeToken: NativeTokenInfo = {
+  decimals: 18,
   name: "Ether",
   symbol: "ETH",
-  decimals: 18,
   wrapped: {
     address: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
     name: "Wrapped Ether",
@@ -103,9 +103,9 @@ const arbitrumNativeToken: NativeTokenInfo = {
 };
 
 const optimismNativeToken: NativeTokenInfo = {
+  decimals: 18,
   name: "Ether",
   symbol: "ETH",
-  decimals: 18,
   wrapped: {
     address: "0x4200000000000000000000000000000000000006",
     name: "Wrapped Ether",
@@ -114,9 +114,9 @@ const optimismNativeToken: NativeTokenInfo = {
 };
 
 const bscNativeToken: NativeTokenInfo = {
+  decimals: 18,
   name: "Binance Chain Native Token",
   symbol: "BNB",
-  decimals: 18,
   wrapped: {
     address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
     name: "Wrapped Binance Chain Token",
@@ -125,9 +125,9 @@ const bscNativeToken: NativeTokenInfo = {
 };
 
 const bscTestnetNativeToken: NativeTokenInfo = {
+  decimals: 18,
   name: "Binance Chain Native Token",
   symbol: "TBNB",
-  decimals: 18,
   wrapped: {
     address: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
     name: "Wrapped Binance Chain Testnet Token",
@@ -199,18 +199,18 @@ const Fantom: CurrencyMetadata[] = [
     ...fantomNativeToken.wrapped,
   },
   {
-    name: "Wrapped Ether",
     address: "0x74b23882a30290451A17c44f4F05243b6b58C76d",
+    name: "Wrapped Ether",
     symbol: "WETH",
   },
   {
-    name: "USD Coin",
     address: "0x04068DA6C83AFCFA0e13ba15A6696662335D5B75",
+    name: "USD Coin",
     symbol: "USDC",
   },
   {
-    name: "Wrapped Bitcoin",
     address: "0x321162Cd933E2Be498Cd2267a90534A804051b11",
+    name: "Wrapped Bitcoin",
     symbol: "WBTC",
   },
 ];

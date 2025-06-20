@@ -1,7 +1,6 @@
-import { describe, expect, it } from "vitest";
-
 import { readContract } from "src/transaction/read-contract.js";
 import { resolveMethod } from "src/transaction/resolve-method.js";
+import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../../test/src/test-wallets.js";
@@ -16,32 +15,32 @@ describe.runIf(process.env.TW_SECRET_KEY)("uninstall extension", () => {
     "should uninstall extension from a dynamic contract",
     async () => {
       await deployCloneFactory({
+        account: TEST_ACCOUNT_A,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
-        account: TEST_ACCOUNT_A,
       });
 
       const deployed = await deployPublishedContract({
+        account: TEST_ACCOUNT_A,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
-        account: TEST_ACCOUNT_A,
         contractId: "EvolvingNFT",
         contractParams: {
-          name: "Evolving nft",
-          symbol: "ENFT",
+          contractURI: "",
           defaultAdmin: TEST_ACCOUNT_A.address,
+          name: "Evolving nft",
           royaltyBps: 0n,
           royaltyRecipient: TEST_ACCOUNT_A.address,
           saleRecipient: TEST_ACCOUNT_A.address,
+          symbol: "ENFT",
           trustedForwarders: [],
-          contractURI: "",
         },
       });
 
       const contract = getContract({
+        address: deployed,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
-        address: deployed,
       });
 
       const transaction = uninstallExtension({
@@ -50,7 +49,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("uninstall extension", () => {
         extensionName: "EvolvingNFTLogic",
       });
 
-      await sendTransaction({ transaction, account: TEST_ACCOUNT_A });
+      await sendTransaction({ account: TEST_ACCOUNT_A, transaction });
 
       const extensions = await readContract({
         contract,

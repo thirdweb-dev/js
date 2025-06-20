@@ -15,15 +15,15 @@ describe("useBridgePrepare", () => {
 
   it("should have correct type structure for buy prepare request", () => {
     const buyRequest: BridgePrepareRequest = {
-      type: "buy",
+      amount: 1000000n,
       client: mockClient,
-      originChainId: 1,
-      originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       destinationChainId: 137,
       destinationTokenAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-      amount: 1000000n,
-      sender: "0x1234567890123456789012345678901234567890",
+      originChainId: 1,
+      originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       receiver: "0x1234567890123456789012345678901234567890",
+      sender: "0x1234567890123456789012345678901234567890",
+      type: "buy",
     };
 
     expect(buyRequest.type).toBe("buy");
@@ -33,13 +33,13 @@ describe("useBridgePrepare", () => {
 
   it("should have correct type structure for transfer prepare request", () => {
     const transferRequest: BridgePrepareRequest = {
-      type: "transfer",
-      client: mockClient,
-      chainId: 1,
-      tokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       amount: 1000000n,
-      sender: "0x1234567890123456789012345678901234567890",
+      chainId: 1,
+      client: mockClient,
       receiver: "0x1234567890123456789012345678901234567890",
+      sender: "0x1234567890123456789012345678901234567890",
+      tokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      type: "transfer",
     };
 
     expect(transferRequest.type).toBe("transfer");
@@ -49,15 +49,15 @@ describe("useBridgePrepare", () => {
 
   it("should have correct type structure for sell prepare request", () => {
     const sellRequest: BridgePrepareRequest = {
-      type: "sell",
+      amount: 1000000n,
       client: mockClient,
-      originChainId: 1,
-      originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       destinationChainId: 137,
       destinationTokenAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-      amount: 1000000n,
-      sender: "0x1234567890123456789012345678901234567890",
+      originChainId: 1,
+      originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       receiver: "0x1234567890123456789012345678901234567890",
+      sender: "0x1234567890123456789012345678901234567890",
+      type: "sell",
     };
 
     expect(sellRequest.type).toBe("sell");
@@ -67,13 +67,13 @@ describe("useBridgePrepare", () => {
 
   it("should have correct type structure for onramp prepare request", () => {
     const onrampRequest: BridgePrepareRequest = {
-      type: "onramp",
+      amount: 1000000n,
+      chainId: 137,
       client: mockClient,
       onramp: "stripe",
-      chainId: 137,
-      tokenAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
       receiver: "0x1234567890123456789012345678901234567890",
-      amount: 1000000n,
+      tokenAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+      type: "onramp",
     };
 
     expect(onrampRequest.type).toBe("onramp");
@@ -83,16 +83,16 @@ describe("useBridgePrepare", () => {
 
   it("should handle UseBridgePrepareParams with enabled option", () => {
     const params: UseBridgePrepareParams = {
-      type: "buy",
+      amount: 1000000n,
       client: mockClient,
-      originChainId: 1,
-      originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       destinationChainId: 137,
       destinationTokenAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-      amount: 1000000n,
-      sender: "0x1234567890123456789012345678901234567890",
-      receiver: "0x1234567890123456789012345678901234567890",
       enabled: false,
+      originChainId: 1,
+      originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      receiver: "0x1234567890123456789012345678901234567890",
+      sender: "0x1234567890123456789012345678901234567890",
+      type: "buy",
     };
 
     expect(params.enabled).toBe(false);
@@ -101,13 +101,13 @@ describe("useBridgePrepare", () => {
 
   it("should have optional enabled parameter", () => {
     const paramsWithoutEnabled: UseBridgePrepareParams = {
-      type: "transfer",
-      client: mockClient,
-      chainId: 1,
-      tokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       amount: 1000000n,
-      sender: "0x1234567890123456789012345678901234567890",
+      chainId: 1,
+      client: mockClient,
       receiver: "0x1234567890123456789012345678901234567890",
+      sender: "0x1234567890123456789012345678901234567890",
+      tokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      type: "transfer",
     };
 
     expect(paramsWithoutEnabled.enabled).toBeUndefined(); // Should be optional
@@ -116,15 +116,15 @@ describe("useBridgePrepare", () => {
 
   it("should correctly discriminate between different prepare request types", () => {
     const buyRequest: BridgePrepareRequest = {
-      type: "buy",
+      amount: 1000000n,
       client: mockClient,
-      originChainId: 1,
-      originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       destinationChainId: 137,
       destinationTokenAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-      amount: 1000000n,
-      sender: "0x1234567890123456789012345678901234567890",
+      originChainId: 1,
+      originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       receiver: "0x1234567890123456789012345678901234567890",
+      sender: "0x1234567890123456789012345678901234567890",
+      type: "buy",
     };
 
     // Type narrowing should work
@@ -138,13 +138,13 @@ describe("useBridgePrepare", () => {
     }
 
     const onrampRequest: BridgePrepareRequest = {
-      type: "onramp",
+      amount: 1000000n,
+      chainId: 137,
       client: mockClient,
       onramp: "stripe",
-      chainId: 137,
-      tokenAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
       receiver: "0x1234567890123456789012345678901234567890",
-      amount: 1000000n,
+      tokenAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+      type: "onramp",
     };
 
     // Type narrowing should work for onramp

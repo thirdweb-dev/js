@@ -18,7 +18,7 @@ export const DefaultFactory: React.FC<DefaultFactoryProps> = ({
   const form = useFormContext();
 
   return (
-    <Flex px={0} pb={0} flexDir="column" gap={12}>
+    <Flex flexDir="column" gap={12} pb={0} px={0}>
       <UnorderedList>
         <Text as={ListItem}>
           Default factory lets users deploy your contract to{" "}
@@ -32,8 +32,8 @@ export const DefaultFactory: React.FC<DefaultFactoryProps> = ({
           The factory is{" "}
           <Link
             color="primary.500"
-            isExternal
             href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/TWStatelessFactory.sol"
+            isExternal
           >
             open-source
           </Link>
@@ -53,17 +53,17 @@ export const DefaultFactory: React.FC<DefaultFactoryProps> = ({
         </Flex>
         <FormControl isRequired>
           <AbiSelector
-            defaultValue="initialize"
             abi={abi}
-            value={form.watch(
-              "factoryDeploymentData.implementationInitializerFunction",
-            )}
+            defaultValue="initialize"
             onChange={(selectedFn) =>
               form.setValue(
                 "factoryDeploymentData.implementationInitializerFunction",
                 selectedFn,
               )
             }
+            value={form.watch(
+              "factoryDeploymentData.implementationInitializerFunction",
+            )}
           />
         </FormControl>
       </Flex>

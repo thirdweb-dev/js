@@ -13,9 +13,9 @@ import {
 import { iconSize, spacing } from "../../../../core/design-system/index.js";
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
 import { InputSelectionUI } from "../../../wallets/in-app/InputSelectionUI.js";
-import { Spacer } from "../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
+import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
 import { WalletConnectDisconnectScreen } from "./WalletConnectDisconnectScreen.js";
 import { WalletLogoSpinner } from "./WalletLogoSpinner.js";
@@ -34,14 +34,13 @@ export function WalletConnectReceiverScreen(props: {
   const queryClient = useQueryClient();
 
   const { data: walletConnectClient } = useQuery({
-    queryKey: ["walletConnectClient"],
+    enabled: !!activeWallet,
     queryFn: async () => {
       if (!activeWallet) return;
       try {
         const client = await createWalletConnectClient({
-          wallet: activeWallet,
-          client: props.client,
           chains: props.chains,
+          client: props.client,
           onConnect: () => {
             setLoading(false);
             queryClient.invalidateQueries({
@@ -58,6 +57,7 @@ export function WalletConnectReceiverScreen(props: {
             setErrorConnecting(error.message);
             setLoading(false);
           },
+          wallet: activeWallet,
         });
         return client;
       } catch {
@@ -65,18 +65,18 @@ export function WalletConnectReceiverScreen(props: {
         return;
       }
     },
+    queryKey: ["walletConnectClient"],
     retry: false,
-    enabled: !!activeWallet,
   });
 
   const { data: session, refetch: refetchSession } = useQuery({
-    queryKey: ["walletConnectSession"],
+    enabled: !!walletConnectClient,
     queryFn: async () => {
       if (!walletConnectClient) return null;
       const sessions = await getActiveWalletConnectSessions();
       return sessions[0] || null;
     },
-    enabled: !!walletConnectClient,
+    queryKey: ["walletConnectSession"],
   });
 
   const { mutateAsync: disconnect } = useMutation({
@@ -87,16 +87,16 @@ export function WalletConnectReceiverScreen(props: {
         walletConnectClient: walletConnectClient,
       });
     },
+    onError: (error) => {
+      console.error(error);
+      setErrorConnecting(error.message);
+    },
     onSuccess: () => {
       setErrorConnecting(false);
       queryClient.invalidateQueries({
         queryKey: ["walletConnectSession"],
       });
       refetchSession();
-    },
-    onError: (error) => {
-      console.error(error);
-      setErrorConnecting(error.message);
     },
   });
 
@@ -118,7 +118,7 @@ export function WalletConnectReceiverScreen(props: {
       }}
     >
       <Container p="lg">
-        <ModalHeader title="Connect an App" onBack={props.onBack} />
+        <ModalHeader onBack={props.onBack} title="Connect an App" />
       </Container>
       <Line />
       <Container
@@ -130,11 +130,12 @@ export function WalletConnectReceiverScreen(props: {
       >
         <Container py="sm" style={{ position: "relative" }}>
           <Container py="md">
+            {/** biome-ignore lint/nursery/useUniqueElementIds: "id" is not a html attribute here - TODO: stop using 'id' as a prop on JSX elements */}
             <WalletLogoSpinner
               client={props.client}
               error={!!errorConnecting}
-              id="walletConnect"
               hideSpinner={!loading}
+              id="walletConnect"
             />
           </Container>
           <Container
@@ -150,10 +151,11 @@ export function WalletConnectReceiverScreen(props: {
                 </Text>
                 <Spacer y="xl" />
                 <InputSelectionUI
-                  type="text"
                   disabled={
                     loading || !!errorConnecting || !walletConnectClient
                   }
+                  emptyErrorMessage="Please enter a valid URI"
+                  name="wcUri"
                   onSelect={async (value) => {
                     setLoading(true);
                     if (!walletConnectClient) {
@@ -172,28 +174,27 @@ export function WalletConnectReceiverScreen(props: {
                     }
                   }}
                   placeholder="WalletConnect URI"
-                  name="wcUri"
-                  emptyErrorMessage="Please enter a valid URI"
                   submitButtonText="Connect"
+                  type="text"
                 />
               </>
             ) : (
               <>
-                <Text center balance multiline size="sm">
+                <Text balance center multiline size="sm">
                   {errorConnecting}
                 </Text>
                 <Spacer y="md" />
-                <Container flex="row" center="x" animate="fadein">
+                <Container animate="fadein" center="x" flex="row">
                   <Button
                     fullWidth
-                    variant="accent"
                     onClick={() => setErrorConnecting(false)}
                     style={{
-                      gap: spacing.xs,
                       alignItems: "center",
+                      gap: spacing.xs,
                     }}
+                    variant="accent"
                   >
-                    <ReloadIcon width={iconSize.sm} height={iconSize.sm} />
+                    <ReloadIcon height={iconSize.sm} width={iconSize.sm} />
                     Retry
                   </Button>
                 </Container>
@@ -205,9 +206,9 @@ export function WalletConnectReceiverScreen(props: {
       <Container>
         <Spacer y="lg" />
         <Line />
-        <Container flex="row" center="x" p="lg">
+        <Container center="x" flex="row" p="lg">
           <a href="https://blog.thirdweb.com/p/a62c0ef4-1d8f-424d-95b9-a006e5239849/">
-            <Button variant="link" onClick={() => {}}>
+            <Button onClick={() => {}} variant="link">
               Where do I find the URI?
             </Button>
           </a>

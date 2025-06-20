@@ -26,18 +26,6 @@ const UnsupportedTokenScreenWithTheme = (
 };
 
 const meta = {
-  title: "Bridge/UnsupportedTokenScreen",
-  component: UnsupportedTokenScreenWithTheme,
-  parameters: {
-    layout: "centered",
-    docs: {
-      description: {
-        component:
-          "Screen displayed when a token is being indexed or when using an unsupported testnet. Shows loading state for indexing tokens or error state for testnets.",
-      },
-    },
-  },
-  tags: ["autodocs"],
   args: {
     chain: defineChain(1), // Ethereum mainnet
     theme: "dark",
@@ -45,10 +33,22 @@ const meta = {
   argTypes: {
     theme: {
       control: "select",
-      options: ["light", "dark"],
       description: "Theme for the component",
+      options: ["light", "dark"],
     },
   },
+  component: UnsupportedTokenScreenWithTheme,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "Screen displayed when a token is being indexed or when using an unsupported testnet. Shows loading state for indexing tokens or error state for testnets.",
+      },
+    },
+    layout: "centered",
+  },
+  tags: ["autodocs"],
+  title: "Bridge/UnsupportedTokenScreen",
 } satisfies Meta<typeof UnsupportedTokenScreenWithTheme>;
 
 export default meta;
@@ -56,8 +56,8 @@ type Story = StoryObj<typeof meta>;
 
 export const TokenNotSupported: Story = {
   args: {
-    theme: "dark",
-    chain: defineChain(1), // Ethereum mainnet - will show indexing spinner
+    chain: defineChain(1),
+    theme: "dark", // Ethereum mainnet - will show indexing spinner
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -72,8 +72,8 @@ export const TokenNotSupported: Story = {
 
 export const TokenNotSupportedLight: Story = {
   args: {
-    theme: "light",
-    chain: defineChain(1), // Ethereum mainnet - will show indexing spinner
+    chain: defineChain(1),
+    theme: "light", // Ethereum mainnet - will show indexing spinner
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -88,8 +88,8 @@ export const TokenNotSupportedLight: Story = {
 
 export const TestnetNotSupported: Story = {
   args: {
-    theme: "dark",
-    chain: defineChain(11155111), // Sepolia testnet - will show error state
+    chain: defineChain(11155111),
+    theme: "dark", // Sepolia testnet - will show error state
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -104,8 +104,8 @@ export const TestnetNotSupported: Story = {
 
 export const TestnetNotSupportedLight: Story = {
   args: {
-    theme: "light",
-    chain: defineChain(11155111), // Sepolia testnet - will show error state
+    chain: defineChain(11155111),
+    theme: "light", // Sepolia testnet - will show error state
   },
   parameters: {
     backgrounds: { default: "light" },

@@ -5,8 +5,8 @@ import { BadgeContainer } from "../../../stories/utils";
 import { InAppWalletUsersChartCardUI } from "./InAppWalletUsersChartCard";
 
 const meta = {
-  title: "Charts/InAppWallets",
   component: Component,
+  title: "Charts/InAppWallets",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -24,55 +24,55 @@ function Component() {
     <div className="container flex max-w-6xl flex-col gap-10 py-10">
       <BadgeContainer label="30 days">
         <InAppWalletUsersChartCardUI
+          description={description}
           inAppWalletStats={createInAppWalletStatsStub(30)}
           isPending={false}
           title={title}
-          description={description}
         />
       </BadgeContainer>
 
       <BadgeContainer label="60 days">
         <InAppWalletUsersChartCardUI
+          description={description}
           inAppWalletStats={createInAppWalletStatsStub(60)}
           isPending={false}
           title={title}
-          description={description}
         />
       </BadgeContainer>
 
       <BadgeContainer label="120 days">
         <InAppWalletUsersChartCardUI
+          description={description}
           inAppWalletStats={createInAppWalletStatsStub(120)}
           isPending={false}
           title={title}
-          description={description}
         />
       </BadgeContainer>
 
       <BadgeContainer label="10 days">
         <InAppWalletUsersChartCardUI
+          description={description}
           inAppWalletStats={createInAppWalletStatsStub(10)}
           isPending={false}
           title={title}
-          description={description}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Empty List">
         <InAppWalletUsersChartCardUI
+          description={description}
           inAppWalletStats={createInAppWalletStatsStub(0)}
           isPending={false}
           title={title}
-          description={description}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Pending">
         <InAppWalletUsersChartCardUI
+          description={description}
           inAppWalletStats={[]}
           isPending={true}
           title={title}
-          description={description}
         />
       </BadgeContainer>
     </div>
@@ -116,9 +116,9 @@ function createInAppWalletStatsStub(days: number): InAppWalletStats[] {
   while (d !== 0) {
     const uniqueWallets = Math.floor(Math.random() * 100);
     stubbedData.push({
+      authenticationMethod: pickRandomAuthMethod(),
       date: new Date(2024, 11, d).toLocaleString(),
       uniqueWalletsConnected: uniqueWallets,
-      authenticationMethod: pickRandomAuthMethod(),
     });
 
     if (Math.random() > 0.7) {

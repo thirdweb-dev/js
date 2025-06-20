@@ -17,8 +17,8 @@ vi.mock("./autoConnectCore.js");
 describe("autoConnect", () => {
   const mockWallet = createWalletAdapter({
     adaptedAccount: TEST_ACCOUNT_A,
-    client: TEST_CLIENT,
     chain: ethereum,
+    client: TEST_CLIENT,
     onDisconnect: () => {},
     switchChain: () => {},
   });
@@ -37,22 +37,22 @@ describe("autoConnect", () => {
     });
 
     expect(autoConnectCore).toHaveBeenCalledWith({
-      storage: webLocalStorage,
+      createWalletFn: createWallet,
+      getInstalledWallets: expect.any(Function),
+      manager: expect.any(Object),
       props: {
         client: TEST_CLIENT,
         wallets: [mockWallet],
       },
-      createWalletFn: createWallet,
-      getInstalledWallets: expect.any(Function),
-      manager: expect.any(Object),
+      storage: webLocalStorage,
     });
     expect(result).toBe(true);
   });
 
   it("should use default wallets when no wallets are provided", async () => {
     await autoConnect({
-      wallets: [],
       client: TEST_CLIENT,
+      wallets: [],
     });
 
     expect(autoConnectCore).toHaveBeenCalledWith(

@@ -57,7 +57,7 @@ export type ToEip1193ProviderOptions = {
  */
 export function toProvider(options: ToEip1193ProviderOptions): EIP1193Provider {
   const { chain, client, wallet, connectOverride } = options;
-  const rpcClient = getRpcClient({ client, chain });
+  const rpcClient = getRpcClient({ chain, client });
   return {
     on: wallet.subscribe,
     removeListener: () => {
@@ -70,12 +70,12 @@ export function toProvider(options: ToEip1193ProviderOptions): EIP1193Provider {
           throw new Error("Account not connected");
         }
         const result = await sendTransaction({
+          account: account,
           transaction: prepareTransaction({
             ...request.params[0],
             chain,
             client,
           }),
-          account: account,
         });
         return result.transactionHash;
       }
@@ -85,12 +85,12 @@ export function toProvider(options: ToEip1193ProviderOptions): EIP1193Provider {
           throw new Error("Account not connected");
         }
         return estimateGas({
+          account,
           transaction: prepareTransaction({
             ...request.params[0],
             chain,
             client,
           }),
-          account,
         });
       }
       if (request.method === "personal_sign") {

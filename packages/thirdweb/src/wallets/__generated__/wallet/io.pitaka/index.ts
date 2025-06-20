@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.pitaka",
-  name: "Pitaka",
-  homepage: "https://pitaka.io",
-  image_id: "c816aeae-e0d1-4c52-f37a-efde6df1ee00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/ph/app/pitaka-blockchain-wallet/id1644341925",
     android: "https://play.google.com/store/apps/details?id=com.pitakamobile",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/ph/app/pitaka-blockchain-wallet/id1644341925",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "pitaka://",
-    universal: "https://app.pitaka.io",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://pitaka.io",
+  id: "io.pitaka",
+  image_id: "c816aeae-e0d1-4c52-f37a-efde6df1ee00",
+  mobile: {
+    native: "pitaka://",
+    universal: "https://app.pitaka.io",
+  },
+  name: "Pitaka",
+  rdns: null,
 } as const;

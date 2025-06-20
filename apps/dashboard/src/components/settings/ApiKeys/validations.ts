@@ -21,8 +21,8 @@ export const projectDomainsSchema = z.string().refine(
 const customAuthValidation = z.union([
   z.undefined(),
   z.object({
-    jwksUri: z.string(),
     aud: z.string(),
+    jwksUri: z.string(),
   }),
 ]);
 
@@ -100,21 +100,20 @@ const redirectUriSchema = z
   });
 
 export const apiKeyEmbeddedWalletsValidationSchema = z.object({
-  customAuthentication: customAuthValidation,
-  customAuthEndpoint: customAuthEndpointValidation,
   branding: z.union([
     z.undefined(),
     z.object({
-      applicationName: applicationNameValidation,
       applicationImageUrl: applicationImageUrlValidation,
+      applicationName: applicationNameValidation,
     }),
   ]),
+  customAuthEndpoint: customAuthEndpointValidation,
+  customAuthentication: customAuthValidation,
   redirectUrls: redirectUriSchema,
   smsEnabledCountryISOs: z.array(z.string()),
 });
 
 export const apiKeyPayConfigValidationSchema = z.object({
-  payoutAddress: payoutAddressValidation,
   developerFeeBPS: z
     .string()
     .transform((val) => Number(val))
@@ -122,6 +121,7 @@ export const apiKeyPayConfigValidationSchema = z.object({
       message: "Developer fee must be between 0 and 100",
     })
     .optional(),
+  payoutAddress: payoutAddressValidation,
 });
 
 export const routeDiscoveryValidationSchema = z.object({

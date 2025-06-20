@@ -19,19 +19,19 @@ import { getEntrypointFromFactory } from "../index.js";
 import {
   type BundlerOptions,
   type EstimationResult,
+  formatUserOperationReceipt,
   type GasPriceResult,
   type PmTransactionData,
   type SmartWalletOptions,
   type UserOperationReceipt,
   type UserOperationV06,
   type UserOperationV07,
-  formatUserOperationReceipt,
 } from "../types.js";
 import { predictSmartAccountAddress } from "./calls.js";
 import {
   ENTRYPOINT_ADDRESS_v0_6,
-  MANAGED_ACCOUNT_GAS_BUFFER,
   getDefaultBundlerUrl,
+  MANAGED_ACCOUNT_GAS_BUFFER,
 } from "./constants.js";
 import { prepareUserOp } from "./userop.js";
 import { hexlifyUserOp } from "./utils.js";
@@ -105,21 +105,21 @@ export async function estimateUserOpGas(
 
   // add gas buffer for managed account factory delegate calls
   return {
+    callGasLimit: hexToBigInt(res.callGasLimit) + MANAGED_ACCOUNT_GAS_BUFFER,
+    paymasterPostOpGasLimit:
+      res.paymasterPostOpGasLimit !== undefined
+        ? hexToBigInt(res.paymasterPostOpGasLimit)
+        : undefined,
+    paymasterVerificationGasLimit:
+      res.paymasterVerificationGasLimit !== undefined
+        ? hexToBigInt(res.paymasterVerificationGasLimit)
+        : undefined,
     preVerificationGas: hexToBigInt(res.preVerificationGas),
     verificationGas:
       res.verificationGas !== undefined
         ? hexToBigInt(res.verificationGas)
         : undefined,
     verificationGasLimit: hexToBigInt(res.verificationGasLimit),
-    callGasLimit: hexToBigInt(res.callGasLimit) + MANAGED_ACCOUNT_GAS_BUFFER,
-    paymasterVerificationGasLimit:
-      res.paymasterVerificationGasLimit !== undefined
-        ? hexToBigInt(res.paymasterVerificationGasLimit)
-        : undefined,
-    paymasterPostOpGasLimit:
-      res.paymasterPostOpGasLimit !== undefined
-        ? hexToBigInt(res.paymasterPostOpGasLimit)
-        : undefined,
   };
 }
 
@@ -165,22 +165,22 @@ export async function estimateUserOpGasCost(args: {
   }
 
   const userOp = await prepareUserOp({
-    transactions: args.transactions,
     adminAccount: args.adminAccount,
     client: args.client,
-    smartWalletOptions: args.smartWalletOptions,
     isDeployedOverride: await isContractDeployed(
       getContract({
         address: await predictSmartAccountAddress({
           adminAddress: args.adminAccount.address,
-          factoryAddress: args.smartWalletOptions.factoryAddress,
           chain: args.smartWalletOptions.chain,
           client: args.client,
+          factoryAddress: args.smartWalletOptions.factoryAddress,
         }),
         chain: args.smartWalletOptions.chain,
         client: args.client,
       }),
     ),
+    smartWalletOptions: args.smartWalletOptions,
+    transactions: args.transactions,
     waitForDeployment: false,
   });
 
@@ -233,8 +233,8 @@ export async function getUserOpGasFees(args: {
   });
 
   return {
-    maxPriorityFeePerGas: hexToBigInt(res.maxPriorityFeePerGas),
     maxFeePerGas: hexToBigInt(res.maxFeePerGas),
+    maxPriorityFeePerGas: hexToBigInt(res.maxPriorityFeePerGas),
   };
 }
 
@@ -311,8 +311,8 @@ export async function getUserOpReceiptRaw(
   },
 ): Promise<UserOperationReceipt | undefined> {
   const res = await sendBundlerRequest({
-    options: args,
     operation: "eth_getUserOperationReceipt",
+    options: args,
     params: [args.userOpHash],
   });
   if (!res) {
@@ -329,8 +329,8 @@ export async function getZkPaymasterData(args: {
   transaction: SerializableTransaction;
 }): Promise<PmTransactionData> {
   const res = await sendBundlerRequest({
-    options: args.options,
     operation: "zk_paymasterData",
+    options: args.options,
     params: [args.transaction],
   });
 
@@ -389,8 +389,8 @@ export async function broadcastZkTransaction(args: {
   signedTransaction: Hex;
 }): Promise<{ transactionHash: Hex }> {
   const res = await sendBundlerRequest({
-    options: args.options,
     operation: "zk_broadcastTransaction",
+    options: args.options,
     params: [
       {
         ...args.transaction,
@@ -423,16 +423,16 @@ async function sendBundlerRequest(args: {
   const bundlerUrl = options.bundlerUrl ?? getDefaultBundlerUrl(options.chain);
   const fetchWithHeaders = getClientFetch(options.client);
   const response = await fetchWithHeaders(bundlerUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: stringify({
-      jsonrpc: "2.0",
       id: 1,
+      jsonrpc: "2.0",
       method: operation,
       params,
     }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
   });
   const res = await response.json();
   if (!response.ok || res.error) {

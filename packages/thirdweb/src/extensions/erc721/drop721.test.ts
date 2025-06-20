@@ -9,7 +9,7 @@ import {
   TEST_ACCOUNT_C,
   TEST_ACCOUNT_D,
 } from "../../../test/src/test-wallets.js";
-import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { toEther } from "../../utils/units.js";
@@ -18,6 +18,7 @@ import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { deployERC721Contract } from "../prebuilts/deploy-erc721.js";
 import { balanceOf } from "./__generated__/IERC721A/read/balanceOf.js";
 import { nextTokenIdToMint } from "./__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
+import { canClaim } from "./drops/read/canClaim.js";
 import { getClaimConditions } from "./drops/read/getClaimConditions.js";
 import { claimTo } from "./drops/write/claimTo.js";
 import { resetClaimEligibility } from "./drops/write/resetClaimEligibility.js";
@@ -25,7 +26,6 @@ import { setClaimConditions } from "./drops/write/setClaimConditions.js";
 import { getNFT } from "./read/getNFT.js";
 import { lazyMint } from "./write/lazyMint.js";
 
-import { canClaim } from "./drops/read/canClaim.js";
 describe.runIf(process.env.TW_SECRET_KEY)(
   "DropERC721",
   {
@@ -60,8 +60,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
         params: {
-          name: "Test ERC20",
           contractURI: TEST_CONTRACT_URI,
+          name: "Test ERC20",
         },
         type: "TokenERC20",
       });
@@ -91,8 +91,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         ],
       });
       await sendAndConfirmTransaction({
-        transaction: mintTx,
         account: TEST_ACCOUNT_A,
+        transaction: mintTx,
       });
 
       await expect(nextTokenIdToMint({ contract })).resolves.toBe(10n);
@@ -106,17 +106,17 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         balanceOf({ contract, owner: TEST_ACCOUNT_A.address }),
       ).resolves.toBe(0n);
       await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
         transaction: setClaimConditions({
           contract,
           phases: [{}],
         }),
-        account: TEST_ACCOUNT_A,
       });
 
       expect(
         await canClaim({
-          contract,
           claimer: TEST_ACCOUNT_A.address,
+          contract,
           quantity: 1n,
         }),
       ).toMatchInlineSnapshot(`
@@ -127,12 +127,12 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
       const claimTx = claimTo({
         contract,
-        to: TEST_ACCOUNT_A.address,
         quantity: 1n,
+        to: TEST_ACCOUNT_A.address,
       });
       await sendAndConfirmTransaction({
-        transaction: claimTx,
         account: TEST_ACCOUNT_A,
+        transaction: claimTx,
       });
       await expect(
         balanceOf({ contract, owner: TEST_ACCOUNT_A.address }),
@@ -142,6 +142,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     it("should allow to claim tokens with value", async () => {
       // set cc with price
       await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
         transaction: setClaimConditions({
           contract,
           phases: [
@@ -150,12 +151,11 @@ describe.runIf(process.env.TW_SECRET_KEY)(
             },
           ],
         }),
-        account: TEST_ACCOUNT_A,
       });
       const claimTx = claimTo({
         contract,
-        to: TEST_ACCOUNT_C.address,
         quantity: 2n,
+        to: TEST_ACCOUNT_C.address,
       });
       // assert value is set correctly
       const value = await resolvePromisedValue(claimTx.value);
@@ -167,21 +167,21 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     it("should allow to claim tokens with erc20 value", async () => {
       // set cc with price
       await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
         transaction: setClaimConditions({
           contract,
           phases: [
             {
-              price: "0.01",
               currencyAddress: erc20Contract.address,
+              price: "0.01",
             },
           ],
         }),
-        account: TEST_ACCOUNT_A,
       });
       const claimTx = claimTo({
         contract,
-        to: TEST_ACCOUNT_C.address,
         quantity: 2n,
+        to: TEST_ACCOUNT_C.address,
       });
       // assert value is set correctly
       const value = await resolvePromisedValue(claimTx.erc20Value);
@@ -193,19 +193,19 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     describe("Allowlists", () => {
       it("should allow to claim tokens with an allowlist", async () => {
         await sendAndConfirmTransaction({
+          account: TEST_ACCOUNT_A,
           transaction: setClaimConditions({
             contract,
             phases: [
               {
+                maxClaimablePerWallet: 0n,
                 overrideList: [
                   { address: TEST_ACCOUNT_A.address, maxClaimable: "100" },
                   { address: VITALIK_WALLET, maxClaimable: "100" },
                 ],
-                maxClaimablePerWallet: 0n,
               },
             ],
           }),
-          account: TEST_ACCOUNT_A,
         });
 
         await expect(
@@ -214,8 +214,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
         expect(
           await canClaim({
-            contract,
             claimer: TEST_ACCOUNT_A.address,
+            contract,
             quantity: 1n,
           }),
         ).toMatchInlineSnapshot(`
@@ -226,8 +226,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
         expect(
           await canClaim({
-            contract,
             claimer: TEST_ACCOUNT_B.address,
+            contract,
             quantity: 1n,
           }),
         ).toMatchInlineSnapshot(`
@@ -242,8 +242,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           transaction: claimTo({
             contract,
             from: TEST_ACCOUNT_A.address,
-            to: TEST_ACCOUNT_B.address,
             quantity: 1n,
+            to: TEST_ACCOUNT_B.address,
           }),
         });
 
@@ -256,8 +256,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
             account: TEST_ACCOUNT_B,
             transaction: claimTo({
               contract,
-              to: TEST_ACCOUNT_B.address,
               quantity: 1n,
+              to: TEST_ACCOUNT_B.address,
             }),
           }),
         ).rejects.toThrowErrorMatchingInlineSnapshot(`
@@ -270,19 +270,19 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
       it("should respect max claimable", async () => {
         await sendAndConfirmTransaction({
+          account: TEST_ACCOUNT_A,
           transaction: setClaimConditions({
             contract,
             phases: [
               {
+                maxClaimablePerWallet: 0n,
                 overrideList: [
                   { address: TEST_ACCOUNT_A.address, maxClaimable: "3" },
                   { address: VITALIK_WALLET, maxClaimable: "3" },
                 ],
-                maxClaimablePerWallet: 0n,
               },
             ],
           }),
-          account: TEST_ACCOUNT_A,
         });
 
         await expect(
@@ -298,8 +298,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
             account: TEST_ACCOUNT_A,
             transaction: claimTo({
               contract,
-              to: TEST_ACCOUNT_A.address,
               quantity: 2n,
+              to: TEST_ACCOUNT_A.address,
             }),
           }),
         ).rejects.toThrowErrorMatchingInlineSnapshot(`
@@ -316,8 +316,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           account: TEST_ACCOUNT_A,
           transaction: claimTo({
             contract,
-            to: TEST_ACCOUNT_A.address,
             quantity: 1n,
+            to: TEST_ACCOUNT_A.address,
           }),
         });
 
@@ -329,10 +329,12 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
     it("should respect price", async () => {
       await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
         transaction: setClaimConditions({
           contract,
           phases: [
             {
+              maxClaimablePerWallet: 0n,
               overrideList: [
                 {
                   address: TEST_ACCOUNT_A.address,
@@ -340,12 +342,10 @@ describe.runIf(process.env.TW_SECRET_KEY)(
                   price: "0",
                 },
               ],
-              maxClaimablePerWallet: 0n,
               price: "1000",
             },
           ],
         }),
-        account: TEST_ACCOUNT_A,
       });
 
       await expect(
@@ -356,8 +356,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         account: TEST_ACCOUNT_A,
         transaction: claimTo({
           contract,
-          to: TEST_ACCOUNT_A.address,
           quantity: 1n,
+          to: TEST_ACCOUNT_A.address,
         }),
       });
 
@@ -368,6 +368,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
     it("should be able to retrieve multiple phases", async () => {
       await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
         transaction: setClaimConditions({
           contract,
           phases: [
@@ -381,7 +382,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
             },
           ],
         }),
-        account: TEST_ACCOUNT_A,
       });
 
       const phases = await getClaimConditions({ contract });
@@ -393,6 +393,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     it("should be able to reset claim eligibility", async () => {
       // set claim conditions to only allow one claim
       await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
         transaction: setClaimConditions({
           contract,
           phases: [
@@ -401,18 +402,17 @@ describe.runIf(process.env.TW_SECRET_KEY)(
             },
           ],
         }),
-        account: TEST_ACCOUNT_A,
       });
       // claim one token
       await sendAndConfirmTransaction({
-        transaction: claimTo({
-          contract,
-          // fresh account to avoid any previous claims
-          to: TEST_ACCOUNT_D.address,
-          quantity: 1n,
-        }),
         // fresh account to avoid any previous claims
         account: TEST_ACCOUNT_D,
+        transaction: claimTo({
+          contract,
+          quantity: 1n,
+          // fresh account to avoid any previous claims
+          to: TEST_ACCOUNT_D.address,
+        }),
       });
       // check that the account has claimed one token
       await expect(
@@ -421,12 +421,12 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       // attempt to claim another token (this should fail)
       await expect(
         sendAndConfirmTransaction({
+          account: TEST_ACCOUNT_D,
           transaction: claimTo({
             contract,
-            to: TEST_ACCOUNT_D.address,
             quantity: 1n,
+            to: TEST_ACCOUNT_D.address,
           }),
-          account: TEST_ACCOUNT_D,
         }),
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         [TransactionError: DropClaimExceedLimit - 1,2
@@ -437,19 +437,19 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
       // reset claim eligibility
       await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
         transaction: resetClaimEligibility({
           contract,
         }),
-        account: TEST_ACCOUNT_A,
       });
       // attempt to claim another token (this should succeed)
       await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_D,
         transaction: claimTo({
           contract,
-          to: TEST_ACCOUNT_D.address,
           quantity: 1n,
+          to: TEST_ACCOUNT_D.address,
         }),
-        account: TEST_ACCOUNT_D,
       });
       // check that the account has claimed two tokens
       await expect(

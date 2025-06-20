@@ -1,8 +1,8 @@
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Input } from "@/components/ui/input";
 import { SearchIcon, SectionIcon } from "lucide-react";
 import { useState } from "react";
-import { type Theme, darkTheme, lightTheme } from "thirdweb/react";
+import { darkTheme, lightTheme, type Theme } from "thirdweb/react";
+import { Input } from "@/components/ui/input";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { ColorInput } from "./ColorInput";
 import type { ConnectPlaygroundOptions } from "./types";
 
@@ -39,10 +39,10 @@ export function ColorFormGroup(props: {
         <div className="relative max-w-[320px] grow">
           <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
           <Input
-            placeholder="Search"
             className="rounded-lg pl-9"
-            value={search}
             onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search"
+            value={search}
           />
         </div>
       </div>
@@ -68,7 +68,6 @@ export function ColorFormGroup(props: {
                       >
                         <ColorInput
                           className="size-10"
-                          value={themeObj.colors[color.colorId]}
                           onChange={(value) => {
                             const overridesKey =
                               theme.type === "dark"
@@ -84,6 +83,7 @@ export function ColorFormGroup(props: {
                             };
                             onChange(newTheme);
                           }}
+                          value={themeObj.colors[color.colorId]}
                         />
                         <div>
                           <div>{color.label}</div>
@@ -118,7 +118,6 @@ const colorSections: Array<{
   }>;
 }> = [
   {
-    section: "General",
     colors: [
       {
         colorId: "modalBg",
@@ -145,9 +144,9 @@ const colorSections: Array<{
         label: "Skeleton Background",
       },
     ],
+    section: "General",
   },
   {
-    section: "Texts",
     colors: [
       {
         colorId: "primaryText",
@@ -167,9 +166,9 @@ const colorSections: Array<{
         label: "Selected Text Background",
       },
     ],
+    section: "Texts",
   },
   {
-    section: "Buttons",
     colors: [
       {
         colorId: "primaryButtonBg",
@@ -208,9 +207,9 @@ const colorSections: Array<{
         label: "Connected Button Hover Background",
       },
     ],
+    section: "Buttons",
   },
   {
-    section: "Icons",
     colors: [
       {
         colorId: "secondaryIconColor",
@@ -225,9 +224,9 @@ const colorSections: Array<{
         label: "Secondary Icon Hover Background",
       },
     ],
+    section: "Icons",
   },
   {
-    section: "Others",
     colors: [
       {
         colorId: "danger",
@@ -254,5 +253,6 @@ const colorSections: Array<{
         label: "Scrollbar Background",
       },
     ],
+    section: "Others",
   },
 ];

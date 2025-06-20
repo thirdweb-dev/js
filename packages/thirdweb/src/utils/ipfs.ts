@@ -33,7 +33,7 @@ export function resolveScheme(options: ResolveSchemeOptions) {
     const clientId = options.client.clientId;
     const cid = findIPFSCidFromUri(options.uri);
 
-    let bundleId: string | undefined = undefined;
+    let bundleId: string | undefined;
     if (typeof globalThis !== "undefined" && "Application" in globalThis) {
       // shims use wallet connect RN module which injects Application info in globalThis
       // biome-ignore lint/suspicious/noExplicitAny: get around globalThis typing
@@ -108,19 +108,15 @@ export async function uploadOrExtractURIs<
  * @internal
  */
 export function getBaseUriFromBatch(uris: string | string[]): string {
-  // biome-ignore lint/style/noParameterAssign: lemme do my stuff
   uris = Array.isArray(uris) ? uris : [uris];
   const [base, ...rest] = uris.map((uri) => {
     // remove query parameters
-    // biome-ignore lint/style/noParameterAssign: lemme do my stuff
     [uri] = uri.split("?") as [string];
     // remove fragments
-    // biome-ignore lint/style/noParameterAssign: lemme do my stuff
     [uri] = uri.split("#") as [string];
 
     // if the URI ends with a `/`, remove it
     if (uri.endsWith("/")) {
-      // biome-ignore lint/style/noParameterAssign: lemme do my stuff
       uri = uri.slice(0, -1);
     }
 

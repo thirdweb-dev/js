@@ -12,9 +12,9 @@ import {
 import { useChainName } from "../../../../core/hooks/others/useChainQuery.js";
 import { PayTokenIcon } from "../../ConnectWallet/screens/Buy/PayTokenIcon.js";
 import type { ERC20OrNativeToken } from "../../ConnectWallet/screens/nativeToken.js";
-import { Skeleton } from "../Skeleton.js";
 import { Container } from "../basic.js";
 import { Button } from "../buttons.js";
+import { Skeleton } from "../Skeleton.js";
 import { Text } from "../text.js";
 import { TokenSymbol } from "./TokenSymbol.js";
 
@@ -33,23 +33,23 @@ export function TokenRow(props: {
   if (!props.token || !props.chain) {
     return (
       <Button
-        variant="secondary"
         fullWidth
+        gap="xxs"
+        onClick={props.onSelectToken}
         style={{
           fontSize: fontSize.sm,
           justifyContent: "space-between",
-          paddingTop: spacing.md,
           paddingBottom: spacing.md,
+          paddingTop: spacing.md,
           ...props.style,
         }}
-        gap="xxs"
-        onClick={props.onSelectToken}
+        variant="secondary"
       >
-        <Text size="sm" color="primaryText">
+        <Text color="primaryText" size="sm">
           Select payment token
         </Text>
         <Container color="primaryText">
-          <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
+          <ChevronDownIcon height={iconSize.sm} width={iconSize.sm} />
         </Container>
       </Button>
     );
@@ -57,22 +57,22 @@ export function TokenRow(props: {
 
   return (
     <TokenButton
-      variant="secondary"
+      disabled={props.freezeChainAndToken}
       fullWidth
+      gap="xxs"
+      onClick={props.onSelectToken}
       style={{
         fontSize: fontSize.sm,
         ...props.style,
       }}
-      gap="xxs"
-      onClick={props.onSelectToken}
-      disabled={props.freezeChainAndToken}
+      variant="secondary"
     >
-      <Container flex="row" center="y" gap="sm">
+      <Container center="y" flex="row" gap="sm">
         <PayTokenIcon
-          token={props.token}
           chain={props.chain}
-          size="md"
           client={props.client}
+          size="md"
+          token={props.token}
         />
 
         <Container flex="column" gap="4xs">
@@ -80,43 +80,43 @@ export function TokenRow(props: {
           <Container flex="column" gap="4xs">
             {props.isLoading ? (
               <Skeleton
-                width="120px"
-                height={fontSize.md}
                 color="borderColor"
+                height={fontSize.md}
+                width="120px"
               />
             ) : props.value ? (
-              <Container flex="row" gap="xxs" center="y" color="primaryText">
+              <Container center="y" color="primaryText" flex="row" gap="xxs">
                 <Text
-                  size="md"
                   color={props.value ? "primaryText" : "secondaryText"}
+                  size="md"
                 >
                   {formatNumber(Number(props.value), 6) || ""}
                 </Text>
                 <TokenSymbol
-                  token={props.token}
                   chain={props.chain}
                   color="secondaryText"
                   size="sm"
+                  token={props.token}
                 />
               </Container>
             ) : (
-              <TokenSymbol token={props.token} chain={props.chain} size="sm" />
+              <TokenSymbol chain={props.chain} size="sm" token={props.token} />
             )}
           </Container>
 
           {/* Network Name */}
           {name ? (
-            <Text size="xs" color="secondaryText">
+            <Text color="secondaryText" size="xs">
               {name}
             </Text>
           ) : (
-            <Skeleton width="90px" height={fontSize.xs} />
+            <Skeleton height={fontSize.xs} width="90px" />
           )}
         </Container>
       </Container>
       {!props.freezeChainAndToken && (
         <Container color="primaryText">
-          <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
+          <ChevronDownIcon height={iconSize.sm} width={iconSize.sm} />
         </Container>
       )}
     </TokenButton>
@@ -129,7 +129,7 @@ const TokenButton = /* @__PURE__ */ styled(Button)(() => {
     background: theme.colors.tertiaryBg,
     border: `1px solid ${theme.colors.borderColor}`,
     justifyContent: "space-between",
-    transition: "background 0.3s",
     padding: spacing.sm,
+    transition: "background 0.3s",
   };
 });

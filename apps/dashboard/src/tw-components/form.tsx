@@ -9,12 +9,12 @@ import {
 import {
   type BodyBase,
   type BodySizes,
+  fontWeights,
   type LabelBase,
   type LabelSizes,
-  type TypographySize,
-  fontWeights,
   letterSpacings,
   lineHeights,
+  type TypographySize,
 } from "theme/typography";
 import type { ComponentWithChildren } from "types/component-with-children";
 import { convertFontSizeToCSSVar } from "./utils/typography";
@@ -33,8 +33,8 @@ export const FormLabel: ComponentWithChildren<FormLabelProps> = ({
     <FormLabelText
       fontSize={convertFontSizeToCSSVar(size)}
       fontWeight={fontWeights[base]}
-      lineHeight={lineHeights[base]}
       letterSpacing={letterSpacings[base]}
+      lineHeight={lineHeights[base]}
       {...restProps}
     />
   );
@@ -54,8 +54,8 @@ export const FormHelperText: ComponentWithChildren<FormHelperTextProps> = ({
     <ChakraFormHelperText
       fontSize={convertFontSizeToCSSVar(size)}
       fontWeight={fontWeights[base]}
-      lineHeight={lineHeights[base]}
       letterSpacing={letterSpacings[base]}
+      lineHeight={lineHeights[base]}
       {...restProps}
     />
   );
@@ -76,8 +76,8 @@ export const FormErrorMessage: ComponentWithChildren<FormErrorMessageProps> = ({
     <ChakraFormErrorMessage
       fontSize={convertFontSizeToCSSVar(size)}
       fontWeight={fontWeights[base]}
-      lineHeight={lineHeights[base]}
       letterSpacing={letterSpacings[base]}
+      lineHeight={lineHeights[base]}
       {...restProps}
     />
   );

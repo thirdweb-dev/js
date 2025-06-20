@@ -4,8 +4,8 @@ import { getCachedChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getBytecode } from "../../../../contract/actions/get-bytecode.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../../contract/contract.js";
 import { execute } from "../../../../extensions/erc7702/__generated__/MinimalAccount/write/execute.js";
 import type { SignedAuthorization } from "../../../../transaction/actions/eip7702/authorization.js";
@@ -41,11 +41,11 @@ export const create7702MinimalAccount = (args: {
     const chain = getCachedChain(firstTx.chainId);
     const eoaContract = getContract({
       address: adminAccount.address,
-      client,
       chain,
+      client,
     });
     // check if account has been delegated already
-    let authorization: SignedAuthorization | undefined = undefined;
+    let authorization: SignedAuthorization | undefined;
     const isMinimalAccount = await is7702MinimalAccount(eoaContract);
     if (!isMinimalAccount) {
       // if not, sign authorization
@@ -66,49 +66,49 @@ export const create7702MinimalAccount = (args: {
       // send transaction from executor, needs signature
       const wrappedCalls = {
         calls: txs.map((tx) => ({
-          target: getAddress(tx.to ?? ""), // will throw if undefined address
+          data: tx.data ?? "0x", // will throw if undefined address
+          target: getAddress(tx.to ?? ""),
           value: tx.value ?? 0n,
-          data: tx.data ?? "0x",
         })),
         uid: randomBytesHex(),
       };
       const signature = await adminAccount.signTypedData({
         domain: {
-          name: "MinimalAccount",
-          version: "1",
           chainId: firstTx.chainId,
+          name: "MinimalAccount",
           verifyingContract: eoaContract.address,
+          version: "1",
         },
+        message: wrappedCalls,
+        primaryType: "WrappedCalls",
         types: {
-          WrappedCalls: [
-            { name: "calls", type: "Call[]" },
-            { name: "uid", type: "bytes32" },
-          ],
           Call: [
             { name: "target", type: "address" },
             { name: "value", type: "uint256" },
             { name: "data", type: "bytes" },
           ],
+          WrappedCalls: [
+            { name: "calls", type: "Call[]" },
+            { name: "uid", type: "bytes32" },
+          ],
         },
-        message: wrappedCalls,
-        primaryType: "WrappedCalls",
       });
 
       const result = await executeWithSignature({
-        eoaAddress: getAddress(adminAccount.address),
-        wrappedCalls,
-        signature,
         authorization,
+        eoaAddress: getAddress(adminAccount.address),
         options: {
-          client,
           chain: getCachedChain(firstTx.chainId),
+          client,
         },
+        signature,
+        wrappedCalls,
       });
 
       const transactionHash = await waitForTransactionHash({
         options: {
-          client,
           chain: getCachedChain(firstTx.chainId),
+          client,
         },
         transactionId: result.transactionId,
       });
@@ -119,36 +119,36 @@ export const create7702MinimalAccount = (args: {
     // send transaction from EOA
     // wrap txs in a single execute call to the MinimalAccount
     const executeTx = execute({
-      contract: eoaContract,
       calls: txs.map((tx) => ({
+        data: tx.data ?? "0x",
         target: tx.to ?? "",
         value: tx.value ?? 0n,
-        data: tx.data ?? "0x",
       })),
+      contract: eoaContract,
       overrides: {
-        value: txs.reduce((acc, tx) => acc + (tx.value ?? 0n), 0n),
         authorizationList: authorization ? [authorization] : undefined,
+        value: txs.reduce((acc, tx) => acc + (tx.value ?? 0n), 0n),
       },
     });
     // re-estimate gas for the entire batch + authorization
     const serializedTx = await toSerializableTransaction({
-      transaction: executeTx,
       from: adminAccount.address,
+      transaction: executeTx,
     });
     return adminAccount.sendTransaction(serializedTx);
   };
 
   const minimalAccount: Account = {
     address: adminAccount.address,
-    sendTransaction: async (
-      tx: SendTransactionOption,
-    ): Promise<SendTransactionResult> => {
-      return _sendTxWithAuthorization([tx]);
-    },
     sendBatchTransaction: async (
       txs: SendTransactionOption[],
     ): Promise<SendTransactionResult> => {
       return _sendTxWithAuthorization(txs);
+    },
+    sendTransaction: async (
+      tx: SendTransactionOption,
+    ): Promise<SendTransactionResult> => {
+      return _sendTxWithAuthorization([tx]);
     },
     signMessage: ({
       message,
@@ -159,7 +159,7 @@ export const create7702MinimalAccount = (args: {
       originalMessage?: string;
       chainId?: number;
     }): Promise<Hex> =>
-      adminAccount.signMessage({ message, originalMessage, chainId }),
+      adminAccount.signMessage({ chainId, message, originalMessage }),
     signTypedData: <
       const typedData extends TypedData | Record<string, unknown>,
       primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,

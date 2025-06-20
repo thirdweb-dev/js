@@ -11,21 +11,21 @@ const account = TEST_ACCOUNT_B;
 describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
   it("should deploy ERC721 open edition", async () => {
     const address = await deployERC721Contract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       account,
-      type: "OpenEditionERC721",
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       params: {
         name: "OE",
       },
+      type: "OpenEditionERC721",
     });
 
     expect(address).toBeDefined();
     const deployedName = await name({
       contract: getContract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
         address,
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
       }),
     });
     expect(deployedName).toBe("OE");
@@ -33,22 +33,22 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
 
   it("should deploy ERC721 drop", async () => {
     const address = await deployERC721Contract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       account,
-      type: "DropERC721",
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       params: {
         name: "Drop",
         symbol: "DRP",
       },
+      type: "DropERC721",
     });
 
     expect(address).toBeDefined();
     const deployedName = await name({
       contract: getContract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
         address,
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
       }),
     });
     expect(deployedName).toBe("Drop");
@@ -56,22 +56,22 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
 
   it("should deploy ERC721 token", async () => {
     const address = await deployERC721Contract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       account,
-      type: "TokenERC721",
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       params: {
         name: "Token",
         symbol: "TKN",
       },
+      type: "TokenERC721",
     });
 
     expect(address).toBeDefined();
     const deployedName = await name({
       contract: getContract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
         address,
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
       }),
     });
     expect(deployedName).toBe("Token");
@@ -79,22 +79,22 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
 
   it("should deploy ERC721 loyalty card", async () => {
     const address = await deployERC721Contract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       account,
-      type: "LoyaltyCard",
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       params: {
         name: "Loyalty",
         symbol: "LOY",
       },
+      type: "LoyaltyCard",
     });
 
     expect(address).toBeDefined();
     const deployedName = await name({
       contract: getContract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
         address,
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
       }),
     });
     expect(deployedName).toBe("Loyalty");

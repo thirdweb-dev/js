@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { FilePreview } from "@app/team/[team_slug]/[project_slug]/(sidebar)/assets/create/_common/file-preview";
 import { FilePlusIcon, UploadIcon } from "lucide-react";
 import { useCallback, useEffect, useRef } from "react";
@@ -10,6 +8,8 @@ import {
   useDropzone,
 } from "react-dropzone";
 import type { ThirdwebClient } from "thirdweb";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface IFileInputProps {
   accept?: Accept;
@@ -60,8 +60,8 @@ export const FileInput: React.FC<IFileInputProps> = ({
     [setValue],
   );
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
     accept,
+    onDrop,
   });
 
   const helperTextOrFile = helperText
@@ -98,15 +98,15 @@ export const FileInput: React.FC<IFileInputProps> = ({
       {showPreview &&
         (isDisabled ? (
           <div
-            style={{
-              aspectRatio: 1,
-              maxWidth: previewMaxWidth,
-            }}
             className={cn(
               "cursor-not-allowed bg-card opacity-50",
               "flex w-full items-center justify-center border border-border hover:bg-accent hover:ring-2 hover:ring-ring",
               className,
             )}
+            style={{
+              aspectRatio: 1,
+              maxWidth: previewMaxWidth,
+            }}
           >
             <div className="flex flex-col items-center gap-2 text-muted-foreground">
               <UploadIcon className="size-6" />
@@ -115,23 +115,23 @@ export const FileInput: React.FC<IFileInputProps> = ({
           </div>
         ) : (
           <div
-            style={{
-              aspectRatio: 1,
-              maxWidth: previewMaxWidth,
-            }}
             className={cn(
               "relative cursor-pointer overflow-hidden",
               "flex w-full items-center justify-center border border-border hover:bg-accent hover:ring-2 hover:ring-ring",
               value ? "bg-transparent" : "bg-card",
               className,
             )}
+            style={{
+              aspectRatio: 1,
+              maxWidth: previewMaxWidth,
+            }}
           >
             {value ? (
               <FilePreview
-                srcOrFile={value}
-                client={client}
                 className="h-full w-full"
+                client={client}
                 imgContainerClassName="h-full w-full"
+                srcOrFile={value}
               />
             ) : (
               <div className="flex flex-col items-center gap-2.5 text-muted-foreground">
@@ -151,7 +151,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
       {showUploadButton ? (
         <div className="flex flex-col gap-2">
           {showUploadButton && (
-            <Button variant="outline" disabled={isDisabled} className="gap-2">
+            <Button className="gap-2" disabled={isDisabled} variant="outline">
               <FilePlusIcon className="size-4" /> {selectOrUpload}{" "}
               {helperTextOrFile}
             </Button>

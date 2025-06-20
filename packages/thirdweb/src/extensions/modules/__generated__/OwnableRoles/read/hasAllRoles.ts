@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { decodeAbiParameters } from "viem";
-import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the "hasAllRoles" function.
@@ -17,12 +17,12 @@ export type HasAllRolesParams = {
 export const FN_SELECTOR = "0x1cd64df4" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "user",
+    type: "address",
   },
   {
-    type: "uint256",
     name: "roles",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

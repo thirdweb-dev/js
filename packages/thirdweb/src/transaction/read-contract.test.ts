@@ -11,9 +11,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("transaction: read", () => {
   it("should read from the contract correctly", async () => {
     const result = await readContract({
       contract: USDT_CONTRACT,
+      from: VITALIK_WALLET,
       method: "function balanceOf(address) returns (uint256)",
       params: [VITALIK_WALLET],
-      from: VITALIK_WALLET,
     });
     expect(result).toMatchInlineSnapshot("1544900798n");
   });

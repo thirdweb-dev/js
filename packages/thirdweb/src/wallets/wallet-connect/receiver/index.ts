@@ -7,9 +7,9 @@ import { getDefaultAppMetadata } from "../../utils/defaultDappMetadata.js";
 import { DEFAULT_PROJECT_ID } from "../constants.js";
 import { handleSendRawTransactionRequest } from "./request-handlers/send-raw-transaction.js";
 import { handleSendTransactionRequest } from "./request-handlers/send-transaction.js";
+import { handleSignRequest } from "./request-handlers/sign.js";
 import { handleSignTransactionRequest } from "./request-handlers/sign-transaction.js";
 import { handleSignTypedDataRequest } from "./request-handlers/sign-typed-data.js";
-import { handleSignRequest } from "./request-handlers/sign.js";
 import { handleSwitchChain } from "./request-handlers/switch-chain.js";
 import {
   getSessions,
@@ -94,13 +94,13 @@ export const clearWalletConnectClientCache = () => {
  * Default request handlers for WalletConnect requests.
  */
 export const DefaultWalletConnectRequestHandlers = {
-  personal_sign: handleSignRequest,
+  eth_sendRawTransaction: handleSendRawTransactionRequest,
+  eth_sendTransaction: handleSendTransactionRequest,
   eth_sign: handleSignRequest,
+  eth_signTransaction: handleSignTransactionRequest,
   eth_signTypedData: handleSignTypedDataRequest,
   eth_signTypedData_v4: handleSignTypedDataRequest,
-  eth_signTransaction: handleSignTransactionRequest,
-  eth_sendTransaction: handleSendTransactionRequest,
-  eth_sendRawTransaction: handleSendRawTransactionRequest,
+  personal_sign: handleSignRequest,
   wallet_addEthereumChain: (_: {
     wallet: Wallet;
     params: WalletConnectAddEthereumChainRequestParams;
@@ -183,13 +183,13 @@ export async function createWalletConnectClient(
 
   const defaults = getDefaultAppMetadata();
   const walletConnectClient = await SignClient.init({
-    projectId: options.projectId ?? DEFAULT_PROJECT_ID,
     metadata: {
-      name: options.appMetadata?.name ?? defaults.name,
-      url: options.appMetadata?.url ?? defaults.url,
       description: options.appMetadata?.description ?? defaults.description,
       icons: [options.appMetadata?.logoUrl ?? defaults.logoUrl],
+      name: options.appMetadata?.name ?? defaults.name,
+      url: options.appMetadata?.url ?? defaults.url,
     },
+    projectId: options.projectId ?? DEFAULT_PROJECT_ID,
   });
 
   walletConnectClient.on(
@@ -197,11 +197,11 @@ export async function createWalletConnectClient(
     async (event: WalletConnectSessionProposalEvent) => {
       const { onSessionProposal } = await import("./session-proposal.js");
       await onSessionProposal({
+        chains,
+        event,
+        onConnect,
         wallet,
         walletConnectClient,
-        event,
-        chains,
-        onConnect,
       }).catch((error) => {
         if (options.onError) {
           options.onError(error as Error);
@@ -217,11 +217,11 @@ export async function createWalletConnectClient(
     async (event: WalletConnectSessionRequestEvent) => {
       const { fulfillRequest } = await import("./session-request.js");
       await fulfillRequest({
-        wallet,
-        walletConnectClient,
         event,
         handlers: requestHandlers,
         thirdwebClient,
+        wallet,
+        walletConnectClient,
       }).catch((error) => {
         if (options.onError) {
           options.onError(error as Error);
@@ -270,7 +270,7 @@ export async function createWalletConnectClient(
     });
 
     if (onDisconnect) {
-      disconnectHook({ topic: args.topic, onDisconnect });
+      disconnectHook({ onDisconnect, topic: args.topic });
     }
     return result;
   };
@@ -346,11 +346,11 @@ export async function disconnectWalletConnectSession(options: {
 
   try {
     await options.walletConnectClient.disconnect({
-      topic: options.session.topic,
       reason: {
         code: 6000,
         message: "Disconnected",
       },
+      topic: options.session.topic,
     });
   } catch {
     // ignore, the session doesn't exist already

@@ -10,40 +10,40 @@ type ProblemAreaItem = {
 
 const OTHER_PROBLEM_AREAS: ProblemAreaItem[] = [
   {
+    component: (
+      <>
+        <DescriptionInput />
+        <AttachmentForm />
+      </>
+    ),
     label: "General inquiry",
+  },
+  {
     component: (
       <>
         <DescriptionInput />
         <AttachmentForm />
       </>
     ),
-  },
-  {
     label: "Security",
+  },
+  {
     component: (
       <>
         <DescriptionInput />
         <AttachmentForm />
       </>
     ),
-  },
-  {
     label: "Feedback",
-    component: (
-      <>
-        <DescriptionInput />
-        <AttachmentForm />
-      </>
-    ),
   },
   {
-    label: "Other",
     component: (
       <>
         <DescriptionInput />
         <AttachmentForm />
       </>
     ),
+    label: "Other",
   },
 ];
 
@@ -54,11 +54,11 @@ export default function OtherSupportForm() {
       <SupportForm_SelectInput
         formLabel="Problem area"
         name="extraInfo_Problem_Area"
-        promptText="Select a problem area"
+        onValueChange={setProblemArea}
         options={OTHER_PROBLEM_AREAS.map((o) => o.label)}
+        promptText="Select a problem area"
         required={true}
         value={problemArea}
-        onValueChange={setProblemArea}
       />
       {OTHER_PROBLEM_AREAS.find((o) => o.label === problemArea)?.component}
     </>

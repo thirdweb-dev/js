@@ -120,8 +120,8 @@ export function updateMetadata(
 ) {
   const { contract } = options;
   return BatchBaseURI.updateBatchBaseURI({
-    contract,
     asyncParams: async () => getUpdateMetadataParams(options),
+    contract,
   });
 }
 

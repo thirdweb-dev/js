@@ -16,7 +16,6 @@ interface TemplateValue {
 
 const ADDRESS_TEMPLATE_VALUES: TemplateValue[] = [
   {
-    value: "{{connected_wallet}}",
     helperText: "Replaced with the address of the connected wallet.",
     replacerFunction: (searchValue, replacers) => {
       return searchValue.replaceAll(
@@ -24,12 +23,12 @@ const ADDRESS_TEMPLATE_VALUES: TemplateValue[] = [
         replacers.connectedWallet || "",
       );
     },
+    value: "{{connected_wallet}}",
   },
 ];
 
 const ADDRESS_ARRAY_TEMPLATE_VALUES: TemplateValue[] = [
   {
-    value: "{{trusted_forwarders}}",
     helperText:
       "Replaced with the addresses of the trusted (gasless) forwarders for the selected network.",
     replacerFunction: (searchValue) => {
@@ -39,6 +38,7 @@ const ADDRESS_ARRAY_TEMPLATE_VALUES: TemplateValue[] = [
         JSON.stringify(trustedForwardersForChain),
       );
     },
+    value: "{{trusted_forwarders}}",
   },
 ];
 

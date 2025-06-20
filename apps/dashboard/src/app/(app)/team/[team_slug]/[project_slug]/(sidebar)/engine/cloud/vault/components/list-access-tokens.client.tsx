@@ -1,7 +1,13 @@
 "use client";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { listAccessTokens, revokeAccessToken } from "@thirdweb-dev/vault-sdk";
+import { Loader2Icon, LockIcon, Trash2Icon } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { toDateTimeLocal } from "utils/date-utils";
 import type { Project } from "@/api/projects";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import {
   Dialog,
   DialogContent,
@@ -10,21 +16,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { listAccessTokens, revokeAccessToken } from "@thirdweb-dev/vault-sdk";
-import { Loader2Icon, LockIcon, Trash2Icon } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
-import { toDateTimeLocal } from "utils/date-utils";
 import {
-  SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
   createWalletAccessToken,
   initVaultClient,
+  SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
 } from "../../lib/vault.client";
 
-export default function ListAccessTokens(props: {
-  project: Project;
-}) {
+export default function ListAccessTokens(props: { project: Project }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [typedAdminKey, setTypedAdminKey] = useState("");
   const [adminKey, setAdminKey] = useState("");
@@ -37,8 +35,8 @@ export default function ListAccessTokens(props: {
       const vaultClient = await initVaultClient();
 
       const userAccessTokenRes = await createWalletAccessToken({
-        project: props.project,
         adminKey: args.adminKey,
+        project: props.project,
         vaultClient,
       });
 
@@ -70,11 +68,11 @@ export default function ListAccessTokens(props: {
       const revokeAccessTokenRes = await revokeAccessToken({
         client: vaultClient,
         request: {
-          options: {
-            id: args.accessTokenId,
-          },
           auth: {
             adminKey: args.adminKey,
+          },
+          options: {
+            id: args.accessTokenId,
           },
         },
       });
@@ -106,11 +104,7 @@ export default function ListAccessTokens(props: {
   )?.managementAccessToken;
 
   const listAccessTokensQuery = useQuery({
-    queryKey: [
-      "list-access-tokens",
-      maskSecret(managementAccessToken || ""),
-      maskSecret(adminKey),
-    ],
+    enabled: !!managementAccessToken,
     queryFn: async () => {
       if (!managementAccessToken) {
         throw new Error("Management access token not found");
@@ -146,7 +140,11 @@ export default function ListAccessTokens(props: {
       };
       // Return stub data for now
     },
-    enabled: !!managementAccessToken,
+    queryKey: [
+      "list-access-tokens",
+      maskSecret(managementAccessToken || ""),
+      maskSecret(adminKey),
+    ],
   });
 
   const handleCloseModal = () => {
@@ -167,6 +165,7 @@ export default function ListAccessTokens(props: {
             </p>
           </div>
           <Button
+            className="flex flex-row items-center gap-2"
             onClick={() => {
               if (!adminKey) {
                 setModalOpen(true);
@@ -179,7 +178,6 @@ export default function ListAccessTokens(props: {
               }
             }}
             variant={"primary"}
-            className="flex flex-row items-center gap-2"
           >
             <LockIcon className="h-4 w-4" />{" "}
             {adminKey ? "Lock Vault" : "Unlock Vault"}
@@ -205,7 +203,7 @@ export default function ListAccessTokens(props: {
                 <div>
                   <div className="flex flex-col gap-2">
                     {listAccessTokensQuery.data.accessTokens.map((token) => (
-                      <div key={token.id} className="flex gap-2">
+                      <div className="flex gap-2" key={token.id}>
                         <div className="flex max-w-full flex-1 flex-col justify-between gap-4 rounded-lg border border-border bg-background p-4 text-xs">
                           <h4 className="font-bold">
                             {token.metadata?.purpose || "Unnamed Access Token"}
@@ -222,28 +220,28 @@ export default function ListAccessTokens(props: {
                               </div>
                             ) : (
                               <CopyTextButton
-                                textToCopy={token.accessToken}
                                 className="!h-auto min-w-0 flex-grow justify-between bg-background px-3 py-3 font-mono text-xs"
-                                textToShow={token.accessToken}
                                 copyIconPosition="right"
+                                textToCopy={token.accessToken}
+                                textToShow={token.accessToken}
                                 tooltip="Copy Vault Access Token"
                               />
                             )}
                             <Button
-                              variant="destructive"
-                              size="sm"
                               className="px-3 py-3"
-                              onClick={() =>
-                                revokeAccessTokenMutation.mutate({
-                                  adminKey,
-                                  accessTokenId: token.id,
-                                })
-                              }
                               disabled={
                                 deletingTokenId !== null ||
                                 revokeAccessTokenMutation.isPending ||
                                 !adminKey
                               }
+                              onClick={() =>
+                                revokeAccessTokenMutation.mutate({
+                                  accessTokenId: token.id,
+                                  adminKey,
+                                })
+                              }
+                              size="sm"
+                              variant="destructive"
                             >
                               {deletingTokenId === token.id ? (
                                 <Loader2Icon className="size-4 animate-spin" />
@@ -275,8 +273,8 @@ export default function ListAccessTokens(props: {
 
         <div className="flex justify-end gap-3 bg-card py-4">
           <Button
-            onClick={() => createAccessTokenMutation.mutate({ adminKey })}
             disabled={createAccessTokenMutation.isPending || !adminKey}
+            onClick={() => createAccessTokenMutation.mutate({ adminKey })}
             variant={"primary"}
           >
             {createAccessTokenMutation.isPending ? (
@@ -290,7 +288,7 @@ export default function ListAccessTokens(props: {
           </Button>
         </div>
 
-        <Dialog open={modalOpen} onOpenChange={handleCloseModal} modal={true}>
+        <Dialog modal={true} onOpenChange={handleCloseModal} open={modalOpen}>
           <DialogContent className="overflow-hidden p-0">
             <DialogHeader className="px-6 pt-6">
               <DialogTitle>Unlock Vault</DialogTitle>
@@ -302,35 +300,35 @@ export default function ListAccessTokens(props: {
                   Vault admin key.
                 </p>
                 <Input
-                  type="password"
-                  placeholder="sa_adm_ABCD_1234..."
-                  value={typedAdminKey}
                   onChange={(e) => setTypedAdminKey(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       setAdminKey(typedAdminKey);
                     }
                   }}
+                  placeholder="sa_adm_ABCD_1234..."
+                  type="password"
+                  value={typedAdminKey}
                 />
               </div>
               <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
                 <Button
-                  variant={"outline"}
                   onClick={() => {
                     setAdminKey("");
                     setTypedAdminKey("");
                     setModalOpen(false);
                   }}
+                  variant={"outline"}
                 >
                   Cancel
                 </Button>
                 <Button
-                  variant={"primary"}
+                  disabled={!typedAdminKey || listAccessTokensQuery.isLoading}
                   onClick={() => {
                     setAdminKey(typedAdminKey);
                     handleCloseModal();
                   }}
-                  disabled={!typedAdminKey || listAccessTokensQuery.isLoading}
+                  variant={"primary"}
                 >
                   Unlock Vault
                 </Button>

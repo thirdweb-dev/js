@@ -3,12 +3,12 @@ import {
   type HeadingProps as ChakraHeadingProps,
 } from "@chakra-ui/react";
 import {
+  fontWeights,
   type HeadingBase,
   type HeadingSizes,
-  type TypographySize,
-  fontWeights,
   letterSpacings,
   lineHeights,
+  type TypographySize,
 } from "theme/typography";
 import type { ComponentWithChildren } from "types/component-with-children";
 import { convertFontSizeToCSSVar } from "./utils/typography";
@@ -27,8 +27,8 @@ export const Heading: ComponentWithChildren<HeadingProps> = ({
     <ChakraHeading
       fontSize={convertFontSizeToCSSVar(size)}
       fontWeight={fontWeights[base]}
-      lineHeight={lineHeights[base]}
       letterSpacing={letterSpacings[base]}
+      lineHeight={lineHeights[base]}
       {...restProps}
     />
   );

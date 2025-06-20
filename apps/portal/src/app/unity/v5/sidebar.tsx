@@ -1,124 +1,124 @@
-import type { SideBar } from "@/components/Layouts/DocLayout";
 import { CodeIcon, ExternalLinkIcon, ZapIcon } from "lucide-react";
+import type { SideBar } from "@/components/Layouts/DocLayout";
 
 const sdkSlug = "/unity/v5";
 const walletProvidersSlug = `${sdkSlug}/wallets`;
 
 export const sidebar: SideBar = {
-  name: "Unity SDK",
   links: [
     { separator: true },
     {
-      name: "Overview",
       href: sdkSlug,
+      name: "Overview",
     },
     {
-      name: "Getting Started",
       href: `${sdkSlug}/getting-started`,
       icon: <ZapIcon />,
+      name: "Getting Started",
     },
     {
-      name: "API Reference",
       href: "/dotnet",
-      isCollapsible: false,
       icon: <CodeIcon />,
+      isCollapsible: false,
+      name: "API Reference",
     },
     {
       separator: true,
     },
     {
-      name: "Core",
       isCollapsible: false,
       links: [
         {
-          name: "Thirdweb Manager",
           href: `${sdkSlug}/thirdwebmanager`,
+          name: "Thirdweb Manager",
         },
         {
-          name: "Build Instructions",
           href: `${sdkSlug}/build-instructions`,
+          name: "Build Instructions",
         },
       ],
+      name: "Core",
     },
     {
       separator: true,
     },
     {
-      name: "Onboarding Users",
       isCollapsible: false,
       links: [
         {
-          name: "In-App Wallet",
           href: `${walletProvidersSlug}/in-app-wallet`,
+          name: "In-App Wallet",
         },
         {
-          name: "Ecosystem Wallet",
           href: `${walletProvidersSlug}/ecosystem-wallet`,
+          name: "Ecosystem Wallet",
         },
         {
-          name: "Account Abstraction",
           href: `${walletProvidersSlug}/account-abstraction`,
+          name: "Account Abstraction",
         },
         {
-          name: "Private Key Wallet",
           href: `${walletProvidersSlug}/private-key`,
+          name: "Private Key Wallet",
         },
         {
-          name: "WalletConnect Wallet",
           href: `${walletProvidersSlug}/walletconnect`,
+          name: "WalletConnect Wallet",
         },
         {
-          name: "MetaMask Wallet (WebGL)",
           href: `${walletProvidersSlug}/metamask`,
+          name: "MetaMask Wallet (WebGL)",
         },
       ],
+      name: "Onboarding Users",
     },
     {
       separator: true,
     },
     {
-      name: "Onchain Interactions",
       isCollapsible: false,
       links: [
         {
-          name: "Interacting with Contracts",
           href: `${sdkSlug}/contracts`,
+          name: "Interacting with Contracts",
         },
         {
-          name: "Contract Extensions",
           href: "/dotnet/contracts/extensions",
+          name: "Contract Extensions",
         },
       ],
+      name: "Onchain Interactions",
     },
     {
       separator: true,
     },
     {
-      name: "Advanced Functionality",
       isCollapsible: false,
       links: [
         {
-          name: "Insight Indexer",
           href: "/dotnet/insight/quickstart",
           icon: <ExternalLinkIcon />,
+          name: "Insight Indexer",
         },
         {
-          name: "Nebula AI",
           href: "/dotnet/nebula/quickstart",
           icon: <ExternalLinkIcon />,
+          name: "Nebula AI",
         },
         {
-          name: "Universal Bridge",
           href: "/dotnet/universal-bridge/quickstart",
           icon: <ExternalLinkIcon />,
+          name: "Universal Bridge",
         },
       ],
+      name: "Advanced Functionality",
     },
 
     { separator: true },
     {
-      name: "Migrate from v4",
       href: `${sdkSlug}/migration-guide`,
+      name: "Migrate from v4",
     },
   ],
+  name: "Unity SDK",
 };

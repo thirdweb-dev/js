@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC721 from "thirdweb/extensions/erc721";
 import * as ERC1155 from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
+import { Button } from "@/components/ui/button";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { NFTCards } from "../../_components/NFTCards";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
@@ -25,9 +25,9 @@ export function NFTDetails({
   projectMeta,
 }: NFTDetailsProps) {
   const nftsHref = buildContractPagePath({
-    projectMeta,
     chainIdOrSlug: chainSlug,
     contractAddress: contract.address,
+    projectMeta,
     subpath: "/nfts",
   });
 
@@ -50,8 +50,8 @@ export function NFTDetails({
       {/* header */}
       <div className="flex items-center justify-between border-b px-6 py-4">
         <h2 className="font-semibold text-xl tracking-tight">NFTs</h2>
-        <Button variant="outline" asChild className="bg-background" size="sm">
-          <Link href={nftsHref} className="text-muted-foreground">
+        <Button asChild className="bg-background" size="sm" variant="outline">
+          <Link className="text-muted-foreground" href={nftsHref}>
             View all <ArrowRightIcon className="ml-2 size-4 " />
           </Link>
         </Button>
@@ -61,13 +61,13 @@ export function NFTDetails({
       <div className="p-6">
         <NFTCards
           client={contract.client}
-          projectMeta={projectMeta}
+          isPending={nftQuery.isPending}
           nfts={displayableNFTs.map((t) => ({
             ...t,
-            contractAddress: contract.address,
             chainId: contract.chain.id,
+            contractAddress: contract.address,
           }))}
-          isPending={nftQuery.isPending}
+          projectMeta={projectMeta}
         />
       </div>
     </div>

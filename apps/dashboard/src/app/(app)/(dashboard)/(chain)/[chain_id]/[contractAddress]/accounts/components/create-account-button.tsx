@@ -1,7 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC4337Ext from "thirdweb/extensions/erc4337";
@@ -10,6 +8,8 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
+import { Button } from "@/components/ui/button";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 
 interface CreateAccountButtonProps {
   contract: ThirdwebContract;
@@ -26,8 +26,8 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
   const address = useActiveAccount()?.address;
 
   const isAccountDeployedQuery = useReadContract(ERC4337Ext.isAccountDeployed, {
-    contract,
     adminSigner: address || "",
+    contract,
     data: "0x",
     queryOptions: {
       enabled: !!address,
@@ -38,10 +38,10 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
     ERC4337Ext.getAccountsOfSigner,
     {
       contract,
-      signer: address || "",
       queryOptions: {
         enabled: !!address,
       },
+      signer: address || "",
     },
   );
 
@@ -52,7 +52,7 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
   if (isAccountDeployedQuery.data && accountsForAddressQuery.data?.length) {
     return (
       <ToolTipLabel label="You can only initialize one account per EOA.">
-        <Button variant="primary" disabled>
+        <Button disabled variant="primary">
           Account Created
         </Button>
       </ToolTipLabel>
@@ -62,19 +62,19 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
   return (
     <TransactionButton
       client={contract.client}
+      disabled={isAccountDeployedQuery.data}
       isLoggedIn={isLoggedIn}
-      txChainID={contract.chain.id}
+      isPending={sendTxMutation.isPending}
       onClick={() => {
         const tx = ERC4337Ext.createAccount({
-          contract,
           admin: address,
+          contract,
           data: "0x",
         });
         sendTxMutation.mutate(tx);
       }}
-      isPending={sendTxMutation.isPending}
       transactionCount={1}
-      disabled={isAccountDeployedQuery.data}
+      txChainID={contract.chain.id}
       {...restButtonProps}
     >
       Create Account

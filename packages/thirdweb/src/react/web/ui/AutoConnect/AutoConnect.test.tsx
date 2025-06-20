@@ -8,8 +8,8 @@ describe("AutoConnect", () => {
   it("does not break", () => {
     render(
       <AutoConnect
-        wallets={[createWallet("io.metamask")]}
         client={TEST_CLIENT}
+        wallets={[createWallet("io.metamask")]}
       />,
     );
   });

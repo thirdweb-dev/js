@@ -1,7 +1,7 @@
-import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
 import { CheckIcon } from "lucide-react";
 import { type JSX, useMemo } from "react";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
 
 export type Step = {
   title: string | JSX.Element;
@@ -49,7 +49,7 @@ export const StepsCard: React.FC<StepsCardProps> = ({
           </p>
         )}
 
-        <Progress value={Math.max(percentage, 10)} className="h-2" />
+        <Progress className="h-2" value={Math.max(percentage, 10)} />
 
         <p className="text-link-foreground text-xs lg:text-sm">
           {lastStepCompleted + 1}/{steps.length} tasks completed
@@ -70,8 +70,8 @@ export const StepsCard: React.FC<StepsCardProps> = ({
               key={index}
             >
               <StepNumberBadge
-                number={index + 1}
                 isCompleted={step.completed}
+                number={index + 1}
               />
 
               <div className="grow">
@@ -107,10 +107,7 @@ export const StepsCard: React.FC<StepsCardProps> = ({
   );
 };
 
-function StepNumberBadge(props: {
-  number: number;
-  isCompleted: boolean;
-}) {
+function StepNumberBadge(props: { number: number; isCompleted: boolean }) {
   return (
     <div className="flex size-7 shrink-0 items-center justify-center self-start rounded-full border border-border bg-card">
       {props.isCompleted ? (

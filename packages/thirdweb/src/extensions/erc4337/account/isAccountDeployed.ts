@@ -4,8 +4,8 @@ import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed
 import * as PredictAddress from "../__generated__/IAccountFactory/read/getAddress.js";
 
 export {
-  isGetAddressSupported as isIsAccountDeployedSupported,
   type GetAddressParams as IsAccountDeployedParams,
+  isGetAddressSupported as isIsAccountDeployedSupported,
 } from "../__generated__/IAccountFactory/read/getAddress.js";
 
 /**

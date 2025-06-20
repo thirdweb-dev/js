@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { routes } from "../../../bridge/Routes.js";
 import type { routes as RoutesTypes } from "../../../bridge/Routes.js";
+import { routes } from "../../../bridge/Routes.js";
 import { ApiError } from "../../../bridge/types/Errors.js";
 import { mapBridgeError } from "../errors/mapBridgeError.js";
 
@@ -35,23 +35,22 @@ export function useBridgeRoutes(params: UseBridgeRoutesParams) {
   const { enabled = true, ...routeParams } = params;
 
   return useQuery({
+    enabled: enabled && !!routeParams.client,
+    gcTime: 10 * 60 * 1000,
+    queryFn: () => routes(routeParams),
     queryKey: [
       "bridge-routes",
       {
-        originChainId: routeParams.originChainId,
-        originTokenAddress: routeParams.originTokenAddress,
         destinationChainId: routeParams.destinationChainId,
         destinationTokenAddress: routeParams.destinationTokenAddress,
-        maxSteps: routeParams.maxSteps,
-        sortBy: routeParams.sortBy,
         limit: routeParams.limit,
+        maxSteps: routeParams.maxSteps,
         offset: routeParams.offset,
+        originChainId: routeParams.originChainId,
+        originTokenAddress: routeParams.originTokenAddress,
+        sortBy: routeParams.sortBy,
       },
-    ],
-    queryFn: () => routes(routeParams),
-    enabled: enabled && !!routeParams.client,
-    staleTime: 5 * 60 * 1000, // 5 minutes - routes are relatively stable
-    gcTime: 10 * 60 * 1000, // 10 minutes garbage collection
+    ], // 5 minutes - routes are relatively stable
     retry: (failureCount, error) => {
       // Handle both ApiError and generic Error instances
       if (error instanceof ApiError) {
@@ -69,7 +68,8 @@ export function useBridgeRoutes(params: UseBridgeRoutesParams) {
 
       // Retry up to 3 times for server errors or network issues
       return failureCount < 3;
-    },
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff, max 30s
+    }, // 10 minutes garbage collection
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    staleTime: 5 * 60 * 1000, // Exponential backoff, max 30s
   });
 }

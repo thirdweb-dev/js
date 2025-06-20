@@ -14,32 +14,32 @@ type ThemeColors = {
 };
 
 const darkColors = {
+  accentBg: "hsl(216 100% 50%)",
+  accentText: "#3385FF",
   base1: "hsl(230 11.63% 8.43%)",
   base2: "hsl(230 11.63% 12%)",
   base3: "hsl(230 11.63% 15%)",
   base4: "hsl(230 11.63% 17%)",
+  danger: "#e5484D",
+  overlay: "rgba(0, 0, 0, 0.7)",
   primaryText: "#eeeef0",
   secondaryText: "#7c7a85",
-  danger: "#e5484D",
   success: "#30A46C",
-  overlay: "rgba(0, 0, 0, 0.7)",
-  accentText: "#3385FF",
-  accentBg: "hsl(216 100% 50%)",
   textOnAccent: "#eeeef0",
 } as const satisfies ThemeColors;
 
 const lightColors = {
+  accentBg: "hsl(216 100% 50%)",
+  accentText: "#3385FF",
   base1: "#fdfcfd",
   base2: "#f2eff3",
   base3: "#e3dfe6",
   base4: "#dbd8e0",
-  primaryText: "#211f26",
-  secondaryText: "#6f6d78",
-  accentText: "#3385FF",
-  success: "#30A46C",
   danger: "#e5484D",
   overlay: "rgba(0, 0, 0, 0.7)",
-  accentBg: "hsl(216 100% 50%)",
+  primaryText: "#211f26",
+  secondaryText: "#6f6d78",
+  success: "#30A46C",
   textOnAccent: "#fdfcfd",
 } as const satisfies ThemeColors;
 
@@ -100,52 +100,51 @@ export type Theme = {
  */
 function createThemeObj(type: "dark" | "light", colors: ThemeColors): Theme {
   return {
-    type,
     colors: {
-      primaryText: colors.primaryText,
-      secondaryText: colors.secondaryText,
-      accentText: colors.accentText,
-
-      danger: colors.danger,
-      success: colors.success,
-
-      modalOverlayBg: colors.overlay,
-
       accentButtonBg: colors.accentBg,
       accentButtonText: colors.textOnAccent,
+      accentText: colors.accentText,
 
-      primaryButtonBg: colors.primaryText,
-      primaryButtonText: colors.base1,
+      borderColor: colors.base4,
 
-      secondaryButtonBg: colors.base3,
-      secondaryButtonText: colors.primaryText,
-      secondaryButtonHoverBg: colors.base4,
+      connectedButtonBg: colors.base1,
+      connectedButtonBgHover: colors.base2,
+
+      danger: colors.danger,
+
+      inputAutofillBg: colors.base1,
 
       modalBg: colors.base1,
 
-      tooltipBg: colors.primaryText,
-      tooltipText: colors.base1,
+      modalOverlayBg: colors.overlay,
 
-      inputAutofillBg: colors.base1,
+      primaryButtonBg: colors.primaryText,
+      primaryButtonText: colors.base1,
+      primaryText: colors.primaryText,
       scrollbarBg: colors.base2,
-      tertiaryBg: colors.base2,
 
-      separatorLine: colors.base4,
+      secondaryButtonBg: colors.base3,
+      secondaryButtonHoverBg: colors.base4,
+      secondaryButtonText: colors.primaryText,
 
       secondaryIconColor: colors.secondaryText,
       secondaryIconHoverBg: colors.base3,
       secondaryIconHoverColor: colors.primaryText,
-
-      borderColor: colors.base4,
-      skeletonBg: colors.base3,
-
-      selectedTextColor: colors.base1,
+      secondaryText: colors.secondaryText,
       selectedTextBg: colors.primaryText,
 
-      connectedButtonBg: colors.base1,
-      connectedButtonBgHover: colors.base2,
+      selectedTextColor: colors.base1,
+
+      separatorLine: colors.base4,
+      skeletonBg: colors.base3,
+      success: colors.success,
+      tertiaryBg: colors.base2,
+
+      tooltipBg: colors.primaryText,
+      tooltipText: colors.base1,
     },
     fontFamily: "inherit",
+    type,
   };
 }
 
@@ -163,46 +162,46 @@ export type ThemeOverrides = {
 };
 
 export const fontSize = {
-  xs: "12px",
-  sm: "14px",
-  md: "16px",
-  lg: "20px",
-  xl: "24px",
-  xxl: "32px",
   "3xl": "48px",
+  lg: "20px",
+  md: "16px",
+  sm: "14px",
+  xl: "24px",
+  xs: "12px",
+  xxl: "32px",
 };
 
 export const spacing = {
-  "4xs": "2px",
-  "3xs": "4px",
-  xxs: "6px",
-  xs: "8px",
-  sm: "12px",
-  md: "16px",
-  lg: "24px",
-  xl: "32px",
-  xxl: "48px",
   "3xl": "64px",
+  "3xs": "4px",
+  "4xs": "2px",
+  lg: "24px",
+  md: "16px",
+  sm: "12px",
+  xl: "32px",
+  xs: "8px",
+  xxl: "48px",
+  xxs: "6px",
 };
 
 export const radius = {
-  xs: "4px",
-  sm: "6px",
-  md: "8px",
   lg: "12px",
+  md: "8px",
+  sm: "6px",
   xl: "20px",
+  xs: "4px",
   xxl: "32px",
 };
 
 export const iconSize = {
-  xs: "12",
-  sm: "16",
-  md: "24",
-  lg: "32",
-  xl: "48",
-  xxl: "64",
   "3xl": "96",
   "4xl": "128",
+  lg: "32",
+  md: "24",
+  sm: "16",
+  xl: "48",
+  xs: "12",
+  xxl: "64",
 };
 
 // desktop first style media query
@@ -212,9 +211,9 @@ export const media = {
 
 // TODO - move to theme
 export const shadow = {
-  sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
-  md: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
   lg: "0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+  md: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+  sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
   xl: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
 };
 

@@ -1,10 +1,10 @@
-import { ClientOnly } from "@/components/blocks/client-only";
 import type { Metadata } from "next";
+import { ClientOnly } from "@/components/blocks/client-only";
 import { UnixTimeConverter } from "./components/UnixTimeConverter";
 
 export const metadata: Metadata = {
-  title: "thirdweb Unix Time Converter",
   description: "Convert Unix time to a human-readable time.",
+  title: "thirdweb Unix Time Converter",
 };
 
 export default async function Page() {

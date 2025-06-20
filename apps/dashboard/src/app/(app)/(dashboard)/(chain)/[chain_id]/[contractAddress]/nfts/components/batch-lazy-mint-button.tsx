@@ -1,13 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { BatchLazyMint } from "core-ui/batch-upload/batch-lazy-mint";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -17,6 +9,14 @@ import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface BatchLazyMintButtonProps {
   canCreateDelayedRevealBatch: boolean;
@@ -55,7 +55,7 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
     <MinterOnly contract={contract}>
       <Sheet onOpenChange={setOpen} open={open}>
         <SheetTrigger asChild>
-          <Button variant="primary" className="gap-2">
+          <Button className="gap-2" variant="primary">
             <FileStackIcon className="size-4" />
             Batch Upload
           </Button>
@@ -65,9 +65,11 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
             <SheetTitle className="text-left">Upload NFTs</SheetTitle>
           </SheetHeader>
           <BatchLazyMint
-            isLoggedIn={isLoggedIn}
-            client={contract.client}
+            canCreateDelayedRevealBatch={canCreateDelayedRevealBatch}
             chainId={contract.chain.id}
+            client={contract.client}
+            isLoggedIn={isLoggedIn}
+            nextTokenIdToMint={nextTokenIdToMintQuery.data || 0n}
             onSubmit={async ({ revealType, data }) => {
               try {
                 const tx = (() => {
@@ -110,8 +112,6 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
                 txNotifications.onError(error);
               }
             }}
-            nextTokenIdToMint={nextTokenIdToMintQuery.data || 0n}
-            canCreateDelayedRevealBatch={canCreateDelayedRevealBatch}
           />
         </SheetContent>
       </Sheet>

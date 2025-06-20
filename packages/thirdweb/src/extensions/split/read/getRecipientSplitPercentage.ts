@@ -39,7 +39,7 @@ export async function getRecipientSplitPercentage(
   const { contract, recipientAddress } = options;
   const [_totalShares, walletsShares] = await Promise.all([
     totalShares({ contract }),
-    shares({ contract, account: recipientAddress }),
+    shares({ account: recipientAddress, contract }),
   ]);
   // We convert to basis points to avoid floating point loss of precision
   // 7544n -> 75.44 (75.44 %)

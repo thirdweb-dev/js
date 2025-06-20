@@ -1,9 +1,9 @@
-import { baseSepolia } from "./chain-definitions/base-sepolia.js";
 import { base } from "./chain-definitions/base.js";
-import { optimismSepolia } from "./chain-definitions/optimism-sepolia.js";
+import { baseSepolia } from "./chain-definitions/base-sepolia.js";
 import { optimism } from "./chain-definitions/optimism.js";
-import { zoraSepolia } from "./chain-definitions/zora-sepolia.js";
+import { optimismSepolia } from "./chain-definitions/optimism-sepolia.js";
 import { zora } from "./chain-definitions/zora.js";
+import { zoraSepolia } from "./chain-definitions/zora-sepolia.js";
 import type { Chain } from "./types.js";
 
 const opChains = [

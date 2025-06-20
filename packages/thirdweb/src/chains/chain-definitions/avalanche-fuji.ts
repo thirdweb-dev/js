@@ -4,6 +4,13 @@ import { defineChain } from "../utils.js";
  * @chain
  */
 export const avalancheFuji = /* @__PURE__ */ defineChain({
+  blockExplorers: [
+    {
+      apiUrl: "https://api-testnet.snowtrace.io/api",
+      name: "SnowTrace",
+      url: "https://testnet.snowtrace.io",
+    },
+  ],
   id: 43113,
   name: "Avalanche Fuji",
   nativeCurrency: {
@@ -11,12 +18,5 @@ export const avalancheFuji = /* @__PURE__ */ defineChain({
     name: "Avalanche Fuji",
     symbol: "AVAX",
   },
-  blockExplorers: [
-    {
-      name: "SnowTrace",
-      url: "https://testnet.snowtrace.io",
-      apiUrl: "https://api-testnet.snowtrace.io/api",
-    },
-  ],
   testnet: true,
 });

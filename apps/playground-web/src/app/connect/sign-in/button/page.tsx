@@ -1,7 +1,7 @@
 "use client";
 
-import ThirdwebProvider from "@/components/thirdweb-provider";
 import { use, useState } from "react";
+import ThirdwebProvider from "@/components/thirdweb-provider";
 import { PageLayout } from "../../../../components/blocks/APIHeader";
 import type { ConnectPlaygroundOptions } from "../components/types";
 import { LeftSection } from "./LeftSection";
@@ -21,15 +21,25 @@ const defaultInAppLoginMethods: ConnectPlaygroundOptions["inAppWallet"]["methods
 
 // NOTE: Only set the values that are actually the default values used by Connect component
 const defaultConnectOptions: ConnectPlaygroundOptions = {
+  buttonLabel: undefined,
+  enableAccountAbstraction: false,
+  enableAuth: false,
+  inAppWallet: {
+    enabled: true,
+    methods: defaultInAppLoginMethods,
+  },
+  localeId: "en_US",
   modalSize: "compact",
+  modalTitle: undefined,
+  modalTitleIcon: undefined,
+  privacyPolicyLink: undefined,
+  requireApproval: false,
+  ShowThirdwebBranding: true,
+  termsOfServiceLink: undefined,
   theme: {
-    type: "dark",
     darkColorOverrides: {},
     lightColorOverrides: {},
-  },
-  inAppWallet: {
-    methods: defaultInAppLoginMethods,
-    enabled: true,
+    type: "dark",
   },
   walletIds: [
     "io.metamask",
@@ -38,16 +48,6 @@ const defaultConnectOptions: ConnectPlaygroundOptions = {
     "io.rabby",
     "io.zerion.wallet",
   ],
-  modalTitle: undefined,
-  modalTitleIcon: undefined,
-  localeId: "en_US",
-  enableAuth: false,
-  termsOfServiceLink: undefined,
-  privacyPolicyLink: undefined,
-  enableAccountAbstraction: false,
-  buttonLabel: undefined,
-  ShowThirdwebBranding: true,
-  requireApproval: false,
 };
 
 export default function Page(props: {
@@ -60,7 +60,6 @@ export default function Page(props: {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="ConnectButton"
         description={
           <>
             A fully featured wallet connection component that allows to Connect
@@ -70,6 +69,7 @@ export default function Page(props: {
           </>
         }
         docsLink="https://portal.thirdweb.com/connect/sign-in/overview?utm_source=playground"
+        title="ConnectButton"
       >
         <div className="relative flex flex-col-reverse gap-6 xl:min-h-[900px] xl:flex-row xl:gap-6">
           <div className="grow border-b pb-10 xl:mb-0 xl:border-r xl:border-b-0 xl:pr-6">
@@ -80,8 +80,8 @@ export default function Page(props: {
           </div>
 
           <RightSection
-            tab={searchParams.tab}
             connectOptions={connectOptions}
+            tab={searchParams.tab}
           />
         </div>
       </PageLayout>

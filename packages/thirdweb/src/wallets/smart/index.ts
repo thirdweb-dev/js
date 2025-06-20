@@ -1,11 +1,13 @@
 import type * as ox__TypedData from "ox/TypedData";
 import { isInsufficientFundsError } from "../../analytics/track/helpers.js";
-import { trackTransaction } from "../../analytics/track/transaction.js";
-import { trackInsufficientFundsError } from "../../analytics/track/transaction.js";
+import {
+  trackInsufficientFundsError,
+  trackTransaction,
+} from "../../analytics/track/transaction.js";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import { allowance } from "../../extensions/erc20/__generated__/IERC20/read/allowance.js";
 import { approve } from "../../extensions/erc20/write/approve.js";
 import {
@@ -26,7 +28,7 @@ import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parse-typed-data.js";
-import { type SignableMessage, maxUint96 } from "../../utils/types.js";
+import { maxUint96, type SignableMessage } from "../../utils/types.js";
 import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 import {
   broadcastZkTransaction,
@@ -60,6 +62,7 @@ import type {
   UserOperationV06,
   UserOperationV07,
 } from "./types.js";
+
 export { isSmartWallet } from "./is-smart-wallet.js";
 
 /**
@@ -92,9 +95,9 @@ export async function connectSmartAccount(
   if (await isZkSyncChain(chain)) {
     return [
       createZkSyncAccount({
-        creationOptions,
-        connectionOptions,
         chain,
+        connectionOptions,
+        creationOptions,
         sponsorGas,
       }),
       chain,
@@ -132,17 +135,17 @@ export async function connectSmartAccount(
     getDefaultAccountFactory(options.overrides?.entrypointAddress);
 
   const factoryContract = getContract({
-    client: client,
     address: factoryAddress,
     chain: chain,
+    client: client,
   });
 
   const accountAddress = await predictAddress({
-    factoryContract,
-    adminAddress: personalAccount.address,
-    predictAddressOverride: options.overrides?.predictAddress,
-    accountSalt: options.overrides?.accountSalt,
     accountAddress: options.overrides?.accountAddress,
+    accountSalt: options.overrides?.accountSalt,
+    adminAddress: personalAccount.address,
+    factoryContract,
+    predictAddressOverride: options.overrides?.predictAddress,
   })
     .then((address) => address)
     .catch((err) => {
@@ -153,19 +156,19 @@ export async function connectSmartAccount(
     });
 
   const accountContract = getContract({
-    client,
     address: accountAddress,
     chain,
+    client,
   });
 
   const account = await createSmartAccount({
     ...options,
-    chain,
-    sponsorGas,
-    personalAccount,
     accountContract,
-    factoryContract,
+    chain,
     client,
+    factoryContract,
+    personalAccount,
+    sponsorGas,
   });
 
   adminAccountToSmartAccountMap.set(personalAccount, account);
@@ -175,8 +178,8 @@ export async function connectSmartAccount(
     if (
       await shouldUpdateSessionKey({
         accountContract,
-        sessionKeyAddress: options.sessionKey.address,
         newPermissions: options.sessionKey.permissions,
+        sessionKeyAddress: options.sessionKey.address,
       })
     ) {
       const transaction = addSessionKey({
@@ -227,13 +230,48 @@ async function createSmartAccount(
   let accountContract = options.accountContract;
   const account: Account = {
     address: getAddress(accountContract.address),
+    async onTransactionRequested(transaction) {
+      return options.personalAccount.onTransactionRequested?.(transaction);
+    },
+    async sendBatchTransaction(transactions: SendTransactionOption[]) {
+      const executeTx = prepareBatchExecute({
+        accountContract,
+        executeBatchOverride: options.overrides?.executeBatch,
+        transactions,
+      });
+      if (transactions.length === 0) {
+        throw new Error("No transactions to send");
+      }
+      const firstTx = transactions[0];
+      if (!firstTx) {
+        throw new Error("No transactions to send");
+      }
+      const chain = getCachedChain(firstTx.chainId);
+      const result = await _sendUserOp({
+        executeTx,
+        options: {
+          ...options,
+          accountContract,
+          chain,
+        },
+      });
+      trackTransaction({
+        chainId: chain.id,
+        client: options.client,
+        contractAddress: transactions[0]?.to ?? undefined,
+        transactionHash: result.transactionHash,
+        walletAddress: options.accountContract.address,
+        walletType: "smart",
+      });
+      return result;
+    },
     async sendTransaction(transaction: SendTransactionOption) {
       // if erc20 paymaster - check allowance and approve if needed
       let paymasterOverride:
         | undefined
         | ((
             userOp: UserOperationV06 | UserOperationV07,
-          ) => Promise<PaymasterResult>) = undefined;
+          ) => Promise<PaymasterResult>);
       if (erc20Paymaster) {
         await approveERC20({
           accountContract,
@@ -262,8 +300,8 @@ async function createSmartAccount(
 
       const executeTx = prepareExecute({
         accountContract: accountContract,
-        transaction,
         executeOverride: options.overrides?.execute,
+        transaction,
       });
 
       const chain = getCachedChain(transaction.chainId);
@@ -271,8 +309,8 @@ async function createSmartAccount(
         executeTx,
         options: {
           ...options,
-          chain,
           accountContract,
+          chain,
           overrides: {
             ...options.overrides,
             paymaster: paymasterOverride,
@@ -280,53 +318,21 @@ async function createSmartAccount(
         },
       });
       trackTransaction({
-        client: options.client,
         chainId: chain.id,
-        transactionHash: result.transactionHash,
-        walletAddress: options.accountContract.address,
-        walletType: "smart",
+        client: options.client,
         contractAddress: transaction.to ?? undefined,
-      });
-      return result;
-    },
-    async sendBatchTransaction(transactions: SendTransactionOption[]) {
-      const executeTx = prepareBatchExecute({
-        accountContract,
-        transactions,
-        executeBatchOverride: options.overrides?.executeBatch,
-      });
-      if (transactions.length === 0) {
-        throw new Error("No transactions to send");
-      }
-      const firstTx = transactions[0];
-      if (!firstTx) {
-        throw new Error("No transactions to send");
-      }
-      const chain = getCachedChain(firstTx.chainId);
-      const result = await _sendUserOp({
-        executeTx,
-        options: {
-          ...options,
-          chain,
-          accountContract,
-        },
-      });
-      trackTransaction({
-        client: options.client,
-        chainId: chain.id,
         transactionHash: result.transactionHash,
         walletAddress: options.accountContract.address,
         walletType: "smart",
-        contractAddress: transactions[0]?.to ?? undefined,
       });
       return result;
     },
     async signMessage({ message }: { message: SignableMessage }) {
       if (options.overrides?.signMessage) {
         return options.overrides.signMessage({
+          accountContract,
           adminAccount: options.personalAccount,
           factoryContract: options.factoryContract,
-          accountContract,
           message,
         });
       }
@@ -335,8 +341,8 @@ async function createSmartAccount(
       return smartAccountSignMessage({
         accountContract,
         factoryContract: options.factoryContract,
-        options,
         message,
+        options,
       });
     },
     async signTypedData<
@@ -345,9 +351,9 @@ async function createSmartAccount(
     >(typedData: ox__TypedData.Definition<typedData, primaryType>) {
       if (options.overrides?.signTypedData) {
         return options.overrides.signTypedData({
+          accountContract,
           adminAccount: options.personalAccount,
           factoryContract: options.factoryContract,
-          accountContract,
           typedData,
         });
       }
@@ -359,9 +365,6 @@ async function createSmartAccount(
         options,
         typedData,
       });
-    },
-    async onTransactionRequested(transaction) {
-      return options.personalAccount.onTransactionRequested?.(transaction);
     },
   };
   return account;
@@ -390,18 +393,18 @@ async function approveERC20(args: {
   }
 
   const approveTx = approve({
+    amountWei: maxUint96 - 1n,
     contract: tokenContract,
     spender: erc20Paymaster.paymasterAddress,
-    amountWei: maxUint96 - 1n,
   });
   const transaction = await toSerializableTransaction({
-    transaction: approveTx,
     from: accountContract.address,
+    transaction: approveTx,
   });
   const executeTx = prepareExecute({
     accountContract,
-    transaction,
     executeOverride: options.overrides?.execute,
+    transaction,
   });
   await _sendUserOp({
     executeTx,
@@ -424,15 +427,20 @@ function createZkSyncAccount(args: {
   const { creationOptions, connectionOptions, chain } = args;
   const account: Account = {
     address: getAddress(connectionOptions.personalAccount.address),
+    async onTransactionRequested(transaction) {
+      return connectionOptions.personalAccount.onTransactionRequested?.(
+        transaction,
+      );
+    },
     async sendTransaction(transaction: SendTransactionOption) {
       // override passed tx, we have to refetch gas and fees always
       const prepTx = {
-        data: transaction.data,
-        to: transaction.to ?? undefined,
-        value: transaction.value ?? 0n,
         chain: getCachedChain(transaction.chainId),
         client: connectionOptions.client,
+        data: transaction.data,
         eip712: transaction.eip712,
+        to: transaction.to ?? undefined,
+        value: transaction.value ?? 0n,
       };
 
       let serializableTransaction = await populateEip712Transaction({
@@ -444,9 +452,9 @@ function createZkSyncAccount(args: {
         // get paymaster input
         const pmData = await getZkPaymasterData({
           options: {
-            client: connectionOptions.client,
-            chain,
             bundlerUrl: creationOptions.overrides?.bundlerUrl,
+            chain,
+            client: connectionOptions.client,
             entrypointAddress: creationOptions.overrides?.entrypointAddress,
           },
           transaction: serializableTransaction,
@@ -467,28 +475,28 @@ function createZkSyncAccount(args: {
       // broadcast via bundler
       const txHash = await broadcastZkTransaction({
         options: {
-          client: connectionOptions.client,
-          chain,
           bundlerUrl: creationOptions.overrides?.bundlerUrl,
+          chain,
+          client: connectionOptions.client,
           entrypointAddress: creationOptions.overrides?.entrypointAddress,
         },
-        transaction: serializableTransaction,
         signedTransaction,
+        transaction: serializableTransaction,
       });
 
       trackTransaction({
-        client: connectionOptions.client,
         chainId: chain.id,
+        client: connectionOptions.client,
+        contractAddress: transaction.to ?? undefined,
         transactionHash: txHash.transactionHash,
         walletAddress: account.address,
         walletType: "smart",
-        contractAddress: transaction.to ?? undefined,
       });
 
       return {
-        transactionHash: txHash.transactionHash,
-        client: connectionOptions.client,
         chain: chain,
+        client: connectionOptions.client,
+        transactionHash: txHash.transactionHash,
       };
     },
     async signMessage({ message }: { message: SignableMessage }) {
@@ -501,11 +509,6 @@ function createZkSyncAccount(args: {
       const typedData = parseTypedData(_typedData);
       return connectionOptions.personalAccount.signTypedData(typedData);
     },
-    async onTransactionRequested(transaction) {
-      return connectionOptions.personalAccount.onTransactionRequested?.(
-        transaction,
-      );
-    },
   };
   return account;
 }
@@ -517,24 +520,24 @@ async function _sendUserOp(args: {
   const { executeTx, options } = args;
   try {
     const unsignedUserOp = await createUnsignedUserOp({
-      transaction: executeTx,
-      factoryContract: options.factoryContract,
       accountContract: options.accountContract,
       adminAddress: options.personalAccount.address,
-      sponsorGas: options.sponsorGas,
+      factoryContract: options.factoryContract,
       overrides: options.overrides,
+      sponsorGas: options.sponsorGas,
+      transaction: executeTx,
     });
     const signedUserOp = await signUserOp({
-      client: options.client,
-      chain: options.chain,
       adminAccount: options.personalAccount,
+      chain: options.chain,
+      client: options.client,
       entrypointAddress: options.overrides?.entrypointAddress,
       userOp: unsignedUserOp,
     });
     const bundlerOptions: BundlerOptions = {
+      bundlerUrl: options.overrides?.bundlerUrl,
       chain: options.chain,
       client: options.client,
-      bundlerUrl: options.overrides?.bundlerUrl,
       entrypointAddress: options.overrides?.entrypointAddress,
     };
     const userOpHash = await bundleUserOp({
@@ -548,29 +551,29 @@ async function _sendUserOp(args: {
     });
 
     trackTransaction({
-      client: options.client,
       chainId: options.chain.id,
+      client: options.client,
+      contractAddress: await resolvePromisedValue(executeTx.to ?? undefined),
       transactionHash: receipt.transactionHash,
       walletAddress: options.accountContract.address,
       walletType: "smart",
-      contractAddress: await resolvePromisedValue(executeTx.to ?? undefined),
     });
 
     return {
-      client: options.client,
       chain: options.chain,
+      client: options.client,
       transactionHash: receipt.transactionHash,
     };
   } catch (error) {
     // Track insufficient funds errors
     if (isInsufficientFundsError(error)) {
       trackInsufficientFundsError({
-        client: options.client,
-        error,
-        walletAddress: options.accountContract.address,
         chainId: options.chain.id,
+        client: options.client,
         contractAddress: await resolvePromisedValue(executeTx.to ?? undefined),
+        error,
         transactionValue: await resolvePromisedValue(executeTx.value),
+        walletAddress: options.accountContract.address,
       });
     }
 
@@ -588,8 +591,8 @@ export async function getEntrypointFromFactory(
 ) {
   const factoryContract = getContract({
     address: factoryAddress,
-    client,
     chain,
+    client,
   });
   try {
     const entrypointAddress = await readContract({

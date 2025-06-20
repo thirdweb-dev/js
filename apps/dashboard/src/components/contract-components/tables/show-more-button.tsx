@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { ChevronDownIcon } from "lucide-react";
 import type { SetStateAction } from "react";
+import { Button } from "@/components/ui/button";
 
 interface ShowMoreButtonProps {
   limit: number;
@@ -16,10 +16,10 @@ export const ShowMoreButton: React.FC<ShowMoreButtonProps> = ({
   return (
     <div className="flex justify-center border-border border-t py-4">
       <Button
-        onClick={() => setShowMoreLimit(showMoreLimit + limit)}
-        variant="ghost"
-        size="sm"
         className="gap-2"
+        onClick={() => setShowMoreLimit(showMoreLimit + limit)}
+        size="sm"
+        variant="ghost"
       >
         Show more
         <ChevronDownIcon className="size-4" />

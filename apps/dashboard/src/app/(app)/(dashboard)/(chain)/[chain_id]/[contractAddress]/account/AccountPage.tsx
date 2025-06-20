@@ -37,11 +37,11 @@ export const AccountPage: React.FC<AccountPageProps> = ({
 
       {chainMetadata && (
         <DepositNative
-          isLoggedIn={isLoggedIn}
           address={contract.address}
-          symbol={symbol}
           chain={chainMetadata}
           client={contract.client}
+          isLoggedIn={isLoggedIn}
+          symbol={symbol}
         />
       )}
 

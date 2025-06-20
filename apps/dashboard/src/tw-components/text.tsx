@@ -3,12 +3,12 @@ import {
   type TextProps as ChakraTextProps,
 } from "@chakra-ui/react";
 import {
-  type TextBase,
-  type TextSizes,
-  type TypographySize,
   fontWeights,
   letterSpacings,
   lineHeights,
+  type TextBase,
+  type TextSizes,
+  type TypographySize,
 } from "theme/typography";
 import type { ComponentWithChildren } from "types/component-with-children";
 import { convertFontSizeToCSSVar } from "./utils/typography";
@@ -27,8 +27,8 @@ export const Text: ComponentWithChildren<TextProps> = ({
     <ChakraText
       fontSize={convertFontSizeToCSSVar(size)}
       fontWeight={fontWeights[base]}
-      lineHeight={lineHeights[base]}
       letterSpacing={letterSpacings[base]}
+      lineHeight={lineHeights[base]}
       {...restProps}
     />
   );

@@ -1,15 +1,15 @@
 "use client";
 
-import { TabButtons } from "@/components/ui/tabs";
 import { useState } from "react";
+import { TabButtons } from "@/components/ui/tabs";
 
 type TabKey = "ts" | "react" | "react-native" | "dotnet" | "unity" | "unreal";
 
 const tabNames: Record<TabKey, string> = {
-  ts: "TypeScript",
+  dotnet: ".NET",
   react: "React",
   "react-native": "React Native",
-  dotnet: ".NET",
+  ts: "TypeScript",
   unity: "Unity",
   unreal: "Unreal Engine",
 };
@@ -24,9 +24,9 @@ export function IntegrateAPIKeyCodeTabs(props: {
       <TabButtons
         tabClassName="!text-sm"
         tabs={Object.entries(tabNames).map(([key, name]) => ({
+          isActive: tab === key,
           name,
           onClick: () => setTab(key as TabKey),
-          isActive: tab === key,
         }))}
       />
       <div className="h-2" />

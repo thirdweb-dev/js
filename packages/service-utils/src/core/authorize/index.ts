@@ -1,8 +1,8 @@
 import {
   type CoreServiceConfig,
+  fetchTeamAndProject,
   type TeamAndProjectResponse,
   type TeamResponse,
-  fetchTeamAndProject,
 } from "../api.js";
 import { authorizeClient } from "./client.js";
 import { authorizeService } from "./service.js";
@@ -123,19 +123,19 @@ export async function authorize(
       console.warn("failed to fetch key metadata from api", err);
       return {
         authorized: false,
-        status: 500,
+        errorCode: "FAILED_TO_FETCH_KEY",
         errorMessage:
           "Failed to fetch key metadata. Please check your secret-key/clientId.",
-        errorCode: "FAILED_TO_FETCH_KEY",
+        status: 500,
       };
     }
   }
   if (!teamAndProjectResponse) {
     return {
       authorized: false,
-      status: 401,
-      errorMessage: "Key is invalid. Please check your secret-key/clientId.",
       errorCode: "INVALID_KEY",
+      errorMessage: "Key is invalid. Please check your secret-key/clientId.",
+      status: 401,
     };
   }
   // check if the service is maybe disabled for the team (usually due to a billing issue / exceeding the free plan limit)
@@ -147,10 +147,10 @@ export async function authorize(
   ) {
     return {
       authorized: false,
-      status: 403,
+      errorCode: "SERVICE_TEMPORARILY_DISABLED",
       errorMessage:
         "You currently do not have access to this service. Please check if your subscription includes this service and is active.",
-      errorCode: "SERVICE_TEMPORARILY_DISABLED",
+      status: 403,
     };
   }
   // now we can validate the key itself
@@ -158,10 +158,10 @@ export async function authorize(
 
   if (!clientAuth.authorized) {
     return {
-      errorCode: clientAuth.errorCode,
       authorized: false,
-      status: 401,
+      errorCode: clientAuth.errorCode,
       errorMessage: clientAuth.errorMessage,
+      status: 401,
     };
   }
 
@@ -170,19 +170,19 @@ export async function authorize(
 
   if (!serviceAuth.authorized) {
     return {
-      errorCode: serviceAuth.errorCode,
       authorized: false,
-      status: 403,
+      errorCode: serviceAuth.errorCode,
       errorMessage: serviceAuth.errorMessage,
+      status: 403,
     };
   }
 
   // if we reach this point we are authorized!
   return {
-    authorized: true,
-    team: teamAndProjectResponse.team,
-    project: teamAndProjectResponse.project,
     authMethod: clientAuth.authMethod,
+    authorized: true,
+    project: teamAndProjectResponse.project,
+    team: teamAndProjectResponse.team,
   };
 }
 

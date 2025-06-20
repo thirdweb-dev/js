@@ -15,31 +15,30 @@ describe("isSmartWallet", () => {
 
   it("should return true for wallet with smartAccount config", () => {
     const wallet = {
-      id: "inApp",
       getConfig: () => ({
         smartAccount: {
           chain: { id: 1, name: "test", rpc: "test" },
         },
       }),
+      id: "inApp",
     } as Wallet;
     expect(isSmartWallet(wallet)).toBe(true);
   });
 
   it("should return true for wallet with EIP7702 config", () => {
     const wallet = {
-      id: "inApp",
       getConfig: () => ({
         executionMode: {
           mode: "EIP7702",
         },
       }),
+      id: "inApp",
     } as Wallet;
     expect(isSmartWallet(wallet)).toBe(true);
   });
 
   it("should return true for wallet with EIP4337 config", () => {
     const wallet = {
-      id: "inApp",
       getConfig: () => ({
         executionMode: {
           mode: "EIP4337",
@@ -49,22 +48,23 @@ describe("isSmartWallet", () => {
           },
         },
       }),
+      id: "inApp",
     } as Wallet;
     expect(isSmartWallet(wallet)).toBe(true);
   });
 
   it("should return false for non-smart wallet", () => {
     const wallet = {
-      id: "inApp",
       getConfig: () => ({}),
+      id: "inApp",
     } as Wallet;
     expect(isSmartWallet(wallet)).toBe(false);
   });
 
   it("should return false when getConfig returns null", () => {
     const wallet = {
-      id: "inApp",
       getConfig: () => null,
+      id: "inApp",
       // biome-ignore lint/suspicious/noExplicitAny: Testing invalid config
     } as any as Wallet;
     expect(isSmartWallet(wallet)).toBe(false);
@@ -72,17 +72,17 @@ describe("isSmartWallet", () => {
 
   it("should return false when getConfig returns undefined", () => {
     const wallet = {
-      id: "inApp",
       getConfig: () => undefined,
+      id: "inApp",
     } as Wallet;
     expect(isSmartWallet(wallet)).toBe(false);
   });
 
   it("should return false when smartAccount is null", () => {
     const wallet = {
-      id: "inApp",
       // biome-ignore lint/suspicious/noExplicitAny: Testing invalid config
       getConfig: () => ({ smartAccount: null }) as any,
+      id: "inApp",
     } as Wallet;
     expect(isSmartWallet(wallet)).toBe(false);
   });
@@ -95,14 +95,14 @@ describe("hasSponsoredTransactionsEnabled", () => {
 
   it("should handle smart wallet with sponsorGas config", () => {
     const mockSmartWallet = {
-      id: "smart",
       getConfig: () => ({ sponsorGas: true }),
+      id: "smart",
     } as Wallet;
     expect(hasSponsoredTransactionsEnabled(mockSmartWallet)).toBe(true);
 
     const mockSmartWalletDisabled = {
-      id: "smart",
       getConfig: () => ({ sponsorGas: false }),
+      id: "smart",
     } as Wallet;
     expect(hasSponsoredTransactionsEnabled(mockSmartWalletDisabled)).toBe(
       false,
@@ -111,30 +111,30 @@ describe("hasSponsoredTransactionsEnabled", () => {
 
   it("should handle smart wallet with gasless config", () => {
     const mockSmartWallet = {
-      id: "smart",
       getConfig: () => ({ gasless: true }),
+      id: "smart",
     } as Wallet;
     expect(hasSponsoredTransactionsEnabled(mockSmartWallet)).toBe(true);
   });
 
   it("should handle inApp wallet with smartAccount config", () => {
     const mockInAppWallet = {
-      id: "inApp",
       getConfig: () => ({
         smartAccount: {
           sponsorGas: true,
         },
       }),
+      id: "inApp",
     } as Wallet;
     expect(hasSponsoredTransactionsEnabled(mockInAppWallet)).toBe(true);
 
     const mockInAppWalletDisabled = {
-      id: "inApp",
       getConfig: () => ({
         smartAccount: {
           sponsorGas: false,
         },
       }),
+      id: "inApp",
     } as Wallet;
     expect(hasSponsoredTransactionsEnabled(mockInAppWalletDisabled)).toBe(
       false,
@@ -143,23 +143,23 @@ describe("hasSponsoredTransactionsEnabled", () => {
 
   it("should handle inApp wallet with EIP7702 config", () => {
     const mockInAppWallet = {
-      id: "inApp",
       getConfig: () => ({
         executionMode: {
           mode: "EIP7702",
           sponsorGas: true,
         },
       }),
+      id: "inApp",
     } as Wallet;
     expect(hasSponsoredTransactionsEnabled(mockInAppWallet)).toBe(true);
 
     const mockInAppWalletDisabled = {
-      id: "inApp",
       getConfig: () => ({
         executionMode: {
           mode: "EIP7702",
         },
       }),
+      id: "inApp",
     } as Wallet;
     expect(hasSponsoredTransactionsEnabled(mockInAppWalletDisabled)).toBe(
       false,
@@ -168,7 +168,6 @@ describe("hasSponsoredTransactionsEnabled", () => {
 
   it("should handle inApp wallet with EIP4337 config", () => {
     const mockInAppWallet = {
-      id: "inApp",
       getConfig: () => ({
         executionMode: {
           mode: "EIP4337",
@@ -178,11 +177,11 @@ describe("hasSponsoredTransactionsEnabled", () => {
           },
         },
       }),
+      id: "inApp",
     } as Wallet;
     expect(hasSponsoredTransactionsEnabled(mockInAppWallet)).toBe(true);
 
     const mockInAppWalletDisabled = {
-      id: "inApp",
       getConfig: () => ({
         executionMode: {
           mode: "EIP4337",
@@ -192,6 +191,7 @@ describe("hasSponsoredTransactionsEnabled", () => {
           },
         },
       }),
+      id: "inApp",
     } as Wallet;
     expect(hasSponsoredTransactionsEnabled(mockInAppWalletDisabled)).toBe(
       false,
@@ -200,20 +200,20 @@ describe("hasSponsoredTransactionsEnabled", () => {
 
   it("should handle inApp wallet with gasless config", () => {
     const mockInAppWallet = {
-      id: "inApp",
       getConfig: () => ({
         smartAccount: {
           gasless: true,
         },
       }),
+      id: "inApp",
     } as Wallet;
     expect(hasSponsoredTransactionsEnabled(mockInAppWallet)).toBe(true);
   });
 
   it("should return false for regular wallet without smart account config", () => {
     const mockRegularWallet = {
-      id: "inApp",
       getConfig: () => ({}),
+      id: "inApp",
     } as Wallet;
     expect(hasSponsoredTransactionsEnabled(mockRegularWallet)).toBe(false);
   });

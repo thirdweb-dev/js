@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { BadgeContainer } from "@/storybook/utils";
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { StarIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { BadgeContainer } from "@/storybook/utils";
 
 const meta = {
-  title: "Shadcn/Buttons",
   component: Component,
+  title: "Shadcn/Buttons",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -26,32 +26,30 @@ function Component() {
   );
 }
 
-function Variants(props: {
-  size: "default" | "icon" | "sm" | "lg";
-}) {
+function Variants(props: { size: "default" | "icon" | "sm" | "lg" }) {
   return (
     <BadgeContainer label={`Size: ${props.size}`}>
       <div className="flex gap-6">
         <Button size={props.size}>
           {props.size === "icon" ? <StarIcon className="size-4" /> : "Default"}
         </Button>
-        <Button variant="primary" size={props.size}>
+        <Button size={props.size} variant="primary">
           {props.size === "icon" ? <StarIcon className="size-4" /> : "Primary"}
         </Button>
-        <Button variant="secondary" size={props.size}>
+        <Button size={props.size} variant="secondary">
           {props.size === "icon" ? (
             <StarIcon className="size-4" />
           ) : (
             "Secondary"
           )}
         </Button>
-        <Button variant="ghost" size={props.size}>
+        <Button size={props.size} variant="ghost">
           {props.size === "icon" ? <StarIcon className="size-4" /> : "Ghost"}
         </Button>
-        <Button variant="outline" size={props.size}>
+        <Button size={props.size} variant="outline">
           {props.size === "icon" ? <StarIcon className="size-4" /> : "Outline"}
         </Button>
-        <Button variant="destructive" size={props.size}>
+        <Button size={props.size} variant="destructive">
           {props.size === "icon" ? (
             <StarIcon className="size-4" />
           ) : (

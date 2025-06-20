@@ -61,11 +61,11 @@ export async function simulateTransaction<
   const from = options.from ?? options.account?.address ?? undefined;
 
   const serializedTx = formatTransactionRequest({
+    accessList,
     data,
     from: from ? getAddress(from) : undefined,
     to: to ? getAddress(to) : undefined,
     value,
-    accessList,
   });
 
   const rpcRequest = getRpcClient(options.transaction);
@@ -87,8 +87,8 @@ export async function simulateTransaction<
     return decoded as ReadContractResult<PreparedMethod<abiFn>[2]>;
   } catch (error) {
     throw await extractError({
-      error,
       contract: options.transaction.__contract,
+      error,
       fromAddress: from,
     });
   }

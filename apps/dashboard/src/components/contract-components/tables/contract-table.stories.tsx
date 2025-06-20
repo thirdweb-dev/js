@@ -8,13 +8,13 @@ import {
 import { ContractTableUI } from "./contract-table";
 
 const meta = {
-  title: "Contracts/ContractTable",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Contracts/ContractTable",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -62,55 +62,54 @@ function Story() {
       <div className="container flex max-w-6xl flex-col gap-10 py-10">
         <BadgeContainer label="0 Contracts">
           <ContractTableUI
-            variant="contract"
             client={storybookThirdwebClient}
             contracts={[]}
-            removeContractFromProject={removeContractStub}
             pageSize={10}
-            teamSlug={teamSlug}
             projectSlug={projectSlug}
+            removeContractFromProject={removeContractStub}
+            teamSlug={teamSlug}
+            variant="contract"
           />
         </BadgeContainer>
 
         <BadgeContainer label="1 Contract">
           <ContractTableUI
-            variant="contract"
             client={storybookThirdwebClient}
             contracts={[popularPolygonNFTs[0] as ProjectContract]}
             pageSize={10}
+            projectSlug={projectSlug}
             removeContractFromProject={removeContractStub}
             teamSlug={teamSlug}
-            projectSlug={projectSlug}
+            variant="contract"
           />
         </BadgeContainer>
 
         <BadgeContainer label="5 Contracts, 1 chain">
           <ContractTableUI
-            variant="contract"
             client={storybookThirdwebClient}
             contracts={popularPolygonNFTs}
             pageSize={10}
+            projectSlug={projectSlug}
             removeContractFromProject={removeContractStub}
             teamSlug={teamSlug}
-            projectSlug={projectSlug}
+            variant="contract"
           />
         </BadgeContainer>
 
         <BadgeContainer label="10 Contracts, 2 chains">
           <ContractTableUI
-            variant="contract"
             client={storybookThirdwebClient}
             contracts={[...popularPolygonNFTs, ...EthereumPopularNFTs]}
             pageSize={10}
+            projectSlug={projectSlug}
             removeContractFromProject={removeContractStub}
             teamSlug={teamSlug}
-            projectSlug={projectSlug}
+            variant="contract"
           />
         </BadgeContainer>
 
         <BadgeContainer label="15 Contracts, 3 chains">
           <ContractTableUI
-            variant="contract"
             client={storybookThirdwebClient}
             contracts={[
               ...popularPolygonNFTs,
@@ -118,9 +117,10 @@ function Story() {
               ...basePopularTokens,
             ]}
             pageSize={10}
+            projectSlug={projectSlug}
             removeContractFromProject={removeContractStub}
             teamSlug={teamSlug}
-            projectSlug={projectSlug}
+            variant="contract"
           />
         </BadgeContainer>
       </div>
@@ -135,10 +135,10 @@ function projectContractStub(
   return {
     chainId,
     contractAddress,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    id: `${chainId}-${contractAddress}`,
-    deploymentType: null,
     contractType: null,
+    createdAt: new Date().toISOString(),
+    deploymentType: null,
+    id: `${chainId}-${contractAddress}`,
+    updatedAt: new Date().toISOString(),
   };
 }

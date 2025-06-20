@@ -1,12 +1,12 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { toast } from "sonner";
 import { shortenString } from "utils/usedapp-external";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 
 export function LinkWalletPrompt(props: {
   email: string;
@@ -21,13 +21,13 @@ export function LinkWalletPrompt(props: {
 
   function handleLinkWalletRequest() {
     requestLinkWallet.mutate(props.email, {
-      onSuccess: () => {
-        props.onLinkWalletRequestSent();
-      },
       onError: (err) => {
         const error = err as Error;
         console.error(error);
         toast.error("Failed to send link wallet request");
+      },
+      onSuccess: () => {
+        props.onLinkWalletRequestSent();
       },
     });
   }
@@ -51,8 +51,8 @@ export function LinkWalletPrompt(props: {
             Multiple wallets can be linked to the same account.{" "}
             <UnderlineLink
               href="https://portal.thirdweb.com/account/billing/account-info"
-              target="_blank"
               rel="noopener noreferrer"
+              target="_blank"
             >
               Learn more about wallet linking
             </UnderlineLink>
@@ -70,20 +70,20 @@ export function LinkWalletPrompt(props: {
 
       <div className="flex flex-col-reverse gap-4 border-t px-4 py-6 md:flex-row lg:justify-between lg:p-6">
         <Button
-          variant="outline"
           className="gap-2 bg-card"
-          onClick={props.onBack}
           disabled={requestLinkWallet.isPending}
+          onClick={props.onBack}
+          variant="outline"
         >
           <ArrowLeftIcon className="size-4" />
           Change Email
         </Button>
 
         <Button
-          type="button"
-          onClick={handleLinkWalletRequest}
-          disabled={requestLinkWallet.isPending}
           className="gap-2"
+          disabled={requestLinkWallet.isPending}
+          onClick={handleLinkWalletRequest}
+          type="button"
         >
           Link wallet and continue
           {requestLinkWallet.isPending ? (

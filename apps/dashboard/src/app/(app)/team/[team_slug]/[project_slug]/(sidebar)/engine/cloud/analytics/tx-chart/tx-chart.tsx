@@ -1,5 +1,5 @@
-import type { Project } from "@/api/projects";
 import { ResponsiveSuspense } from "responsive-rsc";
+import type { Project } from "@/api/projects";
 import { getTransactionsChart } from "../../lib/analytics";
 import { getTxAnalyticsFiltersFromSearchParams } from "../../lib/utils";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
@@ -15,19 +15,19 @@ async function AsyncTransactionsChartCard(props: {
 }) {
   const data = await getTransactionsChart({
     clientId: props.project.publishableKey,
-    teamId: props.project.teamId,
     from: props.from,
-    to: props.to,
     interval: props.interval,
+    teamId: props.project.teamId,
+    to: props.to,
   });
 
   return (
     <TransactionsChartCardUI
       isPending={false}
-      userOpStats={data}
       project={props.project}
-      wallets={props.wallets}
       teamSlug={props.teamSlug}
+      userOpStats={data}
+      wallets={props.wallets}
     />
   );
 }
@@ -49,24 +49,24 @@ export function TransactionsChartCard(props: {
   return (
     <ResponsiveSuspense
       // TODO - change this if this component does not end up using these params
-      searchParamsUsed={["from", "to", "interval"]}
       fallback={
         <TransactionsChartCardUI
           isPending={true}
-          userOpStats={[]}
           project={props.project}
-          wallets={[]}
           teamSlug={props.teamSlug}
+          userOpStats={[]}
+          wallets={[]}
         />
       }
+      searchParamsUsed={["from", "to", "interval"]}
     >
       <AsyncTransactionsChartCard
         from={range.from.toISOString()}
-        to={range.to.toISOString()}
         interval={interval}
         project={props.project}
-        wallets={props.wallets}
         teamSlug={props.teamSlug}
+        to={range.to.toISOString()}
+        wallets={props.wallets}
       />
     </ResponsiveSuspense>
   );

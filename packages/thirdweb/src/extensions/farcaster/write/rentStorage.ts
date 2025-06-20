@@ -48,36 +48,36 @@ export function rentStorage(options: RentStorageParams) {
 
   return prepareContractCall({
     contract: getStorageRegistry({
-      client: options.client,
       chain: options.chain,
+      client: options.client,
     }),
     method: [
       "0x783a112b",
       [
         {
-          type: "uint256",
           name: "fid",
+          type: "uint256",
         },
         {
-          type: "uint256",
           name: "units",
+          type: "uint256",
         },
       ],
       [
         {
-          type: "uint256",
           name: "overpayment",
+          type: "uint256",
         },
       ],
     ],
+    params: [fid, units],
     value: async () => {
       const price = await getStoragePrice({
-        client: options.client,
         chain: options.chain,
+        client: options.client,
         units,
       });
       return price;
     },
-    params: [fid, units],
   });
 }

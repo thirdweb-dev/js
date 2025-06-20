@@ -1,7 +1,7 @@
 import type { AbiParameterToPrimitiveType, Address } from "abitype";
 import {
-  NATIVE_TOKEN_ADDRESS,
   isNativeTokenAddress,
+  NATIVE_TOKEN_ADDRESS,
 } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
@@ -11,8 +11,8 @@ import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { name } from "../../common/read/name.js";
 import {
-  type MintWithSignatureParams,
   mintWithSignature as generatedMintWithSignature,
+  type MintWithSignatureParams,
 } from "../__generated__/ISignatureMintERC20/write/mintWithSignature.js";
 
 /**
@@ -55,8 +55,8 @@ export function mintWithSignature(
   return generatedMintWithSignature({
     ...options,
     overrides: {
-      value,
       erc20Value,
+      value,
     },
   });
 }
@@ -115,8 +115,8 @@ export async function generateMintSignature(
         );
         return await convertErc20Amount({
           amount: mintRequest.price,
-          client: contract.client,
           chain: contract.chain,
+          client: contract.client,
           erc20Address: currency,
         });
       }
@@ -135,8 +135,8 @@ export async function generateMintSignature(
       );
       return await convertErc20Amount({
         amount: mintRequest.quantity,
-        client: contract.client,
         chain: contract.chain,
+        client: contract.client,
         erc20Address: contract.address,
       });
     })(),
@@ -159,26 +159,26 @@ export async function generateMintSignature(
   const endTime = mintRequest.validityEndTimestamp || tenYearsFromNow();
 
   const payload: PayloadType = {
-    price,
-    quantity,
-    uid,
     currency,
-    to: mintRequest.to,
+    price,
     primarySaleRecipient: mintRequest.primarySaleRecipient || account.address,
-    validityStartTimestamp: dateToSeconds(startTime),
+    quantity,
+    to: mintRequest.to,
+    uid,
     validityEndTimestamp: dateToSeconds(endTime),
+    validityStartTimestamp: dateToSeconds(startTime),
   };
 
   const signature = await account.signTypedData({
     domain: {
-      name: tokenName,
-      version: "1",
       chainId: contract.chain.id,
+      name: tokenName,
       verifyingContract: contract.address as Hex,
+      version: "1",
     },
-    types: { MintRequest: MintRequest20 },
-    primaryType: "MintRequest",
     message: payload,
+    primaryType: "MintRequest",
+    types: { MintRequest: MintRequest20 },
   });
   return { payload, signature };
 }

@@ -1,10 +1,10 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import clsx from "clsx";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useRef } from "react";
+import { cn } from "@/lib/utils";
 import { ClientOnly } from "../ClientOnly";
 import { CustomAccordion } from "./CustomAccordion";
 
@@ -79,13 +79,13 @@ function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
 
   return (
     <Link
-      href={link.href}
-      onClick={props.onLinkClick}
       className={clsx(
         "block overflow-hidden text-ellipsis py-1 font-medium transition-colors duration-300 hover:text-foreground lg:text-base",
         isActive ? "text-foreground" : "text-muted-foreground",
         "crossedOut" in link && link.crossedOut && "line-through",
       )}
+      href={link.href}
+      onClick={props.onLinkClick}
     >
       {link.name}
     </Link>
@@ -149,9 +149,9 @@ function SidebarCategory(props: {
 
   const hasActiveHref = containsActiveHref(
     {
-      name: name,
-      links: links,
       href: href,
+      links: links,
+      name: name,
     },
     currentPageHref,
   );
@@ -174,7 +174,7 @@ function SidebarCategory(props: {
   );
 
   const triggerEl = href ? (
-    <Link href={href} className={cn("block w-full text-left font-medium")}>
+    <Link className={cn("block w-full text-left font-medium")} href={href}>
       {triggerElContent}
     </Link>
   ) : (
@@ -184,11 +184,11 @@ function SidebarCategory(props: {
   return (
     <ClientOnly ssr={triggerEl}>
       <CustomAccordion
-        defaultOpen={defaultOpen}
-        containerClassName="border-none"
-        triggerContainerClassName="lg:text-base group"
-        trigger={triggerEl}
         chevronPosition="right"
+        containerClassName="border-none"
+        defaultOpen={defaultOpen}
+        trigger={triggerEl}
+        triggerContainerClassName="lg:text-base group"
       >
         <ul className="flex flex-col border-l pl-4">
           {links.map((link, i) => {

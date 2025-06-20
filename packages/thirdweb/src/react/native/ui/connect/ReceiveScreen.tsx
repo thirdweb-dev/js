@@ -6,9 +6,9 @@ import type { Theme } from "../../../core/design-system/index.js";
 import { spacing } from "../../design-system/index.js";
 import { Address } from "../components/Address.js";
 import { type ContainerType, Header } from "../components/Header.js";
-import { WalletImage } from "../components/WalletImage.js";
 import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
+import { WalletImage } from "../components/WalletImage.js";
 
 type ReceiveScreenProps = {
   theme: Theme;
@@ -27,15 +27,15 @@ export const ReceiveScreen = (props: ReceiveScreenProps) => {
   return (
     <>
       <Header
-        theme={theme}
-        onClose={onClose}
-        onBack={onBack}
         containerType={containerType}
+        onBack={onBack}
+        onClose={onClose}
+        theme={theme}
         title="Receive Funds"
       />
       <View style={styles.container}>
         {/* TODO (rn) QR code scanning */}
-        <WalletImage theme={theme} wallet={wallet} size={80} client={client} />
+        <WalletImage client={client} size={80} theme={theme} wallet={wallet} />
         <Spacer size="lg" />
         <View
           style={[
@@ -50,9 +50,9 @@ export const ReceiveScreen = (props: ReceiveScreenProps) => {
           />
         </View>
         <ThemedText
+          style={{ textAlign: "center" }}
           theme={theme}
           type="subtext"
-          style={{ textAlign: "center" }}
         >
           Copy your address to send funds to this wallet
         </ThemedText>
@@ -62,23 +62,23 @@ export const ReceiveScreen = (props: ReceiveScreenProps) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.xxl,
-    flexDirection: "column",
-    gap: spacing.md,
-    alignItems: "center",
-    justifyContent: "center",
-    flex: 1,
-  },
   addressContainer: {
-    width: "100%",
+    alignItems: "center",
+    borderRadius: spacing.lg,
+    borderWidth: 1,
     flexDirection: "row",
     gap: spacing.sm,
-    alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
     padding: spacing.md,
-    borderRadius: spacing.lg,
+    width: "100%",
+  },
+  container: {
+    alignItems: "center",
+    flex: 1,
+    flexDirection: "column",
+    gap: spacing.md,
+    justifyContent: "center",
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.xxl,
   },
 });

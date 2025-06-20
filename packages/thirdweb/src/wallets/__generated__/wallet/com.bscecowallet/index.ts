@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.bscecowallet",
-  name: "BSC Wallet",
-  homepage: "https://bscecowallet.com",
-  image_id: "63fe9162-b352-4a2c-1da1-a31d48008e00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/bsc-wallet-bnb-chain/id6445821381",
     android: null,
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/bsc-wallet-bnb-chain/id6445821381",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "bscwalletapp://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://bscecowallet.com",
+  id: "com.bscecowallet",
+  image_id: "63fe9162-b352-4a2c-1da1-a31d48008e00",
+  mobile: {
+    native: "bscwalletapp://",
+    universal: null,
+  },
+  name: "BSC Wallet",
+  rdns: null,
 } as const;

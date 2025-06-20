@@ -35,6 +35,14 @@ export function createEmitter<
   >();
 
   return {
+    emit(event, data) {
+      const subscribers = subsribers.get(event);
+      if (subscribers) {
+        for (const cb of subscribers) {
+          cb(data);
+        }
+      }
+    },
     subscribe(event, cb) {
       if (!subsribers.has(event)) {
         subsribers.set(event, new Set([cb]));
@@ -48,14 +56,6 @@ export function createEmitter<
           subscribers.delete(cb);
         }
       };
-    },
-    emit(event, data) {
-      const subscribers = subsribers.get(event);
-      if (subscribers) {
-        for (const cb of subscribers) {
-          cb(data);
-        }
-      }
     },
   };
 }

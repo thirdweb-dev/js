@@ -8,9 +8,9 @@ import {
   radius,
   spacing,
 } from "../../../../../core/design-system/index.js";
-import { Skeleton } from "../../../components/Skeleton.js";
 import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
+import { Skeleton } from "../../../components/Skeleton.js";
 import { Text } from "../../../components/text.js";
 import { type CurrencyMeta, getFiatIcon } from "./fiat/currencies.js";
 
@@ -33,55 +33,55 @@ export function PayWithCreditCard(props: {
       borderColor="borderColor"
       flex="row"
       style={{
-        borderRadius: radius.md,
-        borderBottomRightRadius: 0,
-        borderBottomLeftRadius: 0,
-        borderWidth: "1px",
-        borderStyle: "solid",
+        alignItems: "center",
         borderBottom: "none",
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
+        borderRadius: radius.md,
+        borderStyle: "solid",
+        borderWidth: "1px",
         flexWrap: "nowrap",
         justifyContent: "space-between",
-        alignItems: "center",
       }}
     >
       {/* Left */}
       <CurrencyButton
-        variant="ghost"
+        gap="sm"
         onClick={props.onSelectCurrency}
         style={{
-          minHeight: "64px",
           justifyContent: "flex-start",
+          minHeight: "64px",
           minWidth: "50%",
         }}
-        gap="sm"
+        variant="ghost"
       >
         {getFiatIcon(props.currency, "md")}
-        <Container flex="row" center="y" gap="xxs" color="secondaryText">
+        <Container center="y" color="secondaryText" flex="row" gap="xxs">
           <Text color="primaryText">{props.currency.shorthand}</Text>
-          <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
+          <ChevronDownIcon height={iconSize.sm} width={iconSize.sm} />
         </Container>
       </CurrencyButton>
 
       {/* Right */}
       <div
         style={{
-          flexGrow: 1,
-          flexShrink: 1,
+          alignItems: "flex-end",
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-end",
+          flexGrow: 1,
+          flexShrink: 1,
           gap: spacing.xxs,
+          justifyContent: "center",
           overflow: "hidden",
+          paddingRight: spacing.sm,
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",
-          justifyContent: "center",
-          paddingRight: spacing.sm,
         }}
       >
         {props.isLoading ? (
-          <Skeleton width="100px" height={fontSize.lg} />
+          <Skeleton height={fontSize.lg} width="100px" />
         ) : (
-          <Text size="lg" color={props.value ? "primaryText" : "secondaryText"}>
+          <Text color={props.value ? "primaryText" : "secondaryText"} size="lg">
             {props.value
               ? `${props.currency.symbol}${formatNumber(
                   Number(props.value),

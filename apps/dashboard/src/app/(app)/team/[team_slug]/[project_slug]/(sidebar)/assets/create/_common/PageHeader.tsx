@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,7 +8,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 
 export function CreateAssetPageHeader(props: {
   teamSlug: string;

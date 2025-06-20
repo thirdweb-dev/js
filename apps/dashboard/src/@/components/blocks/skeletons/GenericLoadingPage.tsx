@@ -3,11 +3,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { cn } from "../../../lib/utils";
 
-export function GenericLoadingPage({
-  className,
-}: {
-  className?: string;
-}) {
+export function GenericLoadingPage({ className }: { className?: string }) {
   return (
     <div
       className={cn(

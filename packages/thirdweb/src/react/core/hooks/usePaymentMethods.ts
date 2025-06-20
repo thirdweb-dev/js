@@ -51,14 +51,7 @@ export function usePaymentMethods(options: {
   const wallet = payerWallet || localWallet;
 
   const routesQuery = useQuery({
-    queryKey: [
-      "bridge-routes",
-      destinationToken.chainId,
-      destinationToken.address,
-      destinationAmount,
-      payerWallet?.getAccount()?.address,
-      includeDestinationToken,
-    ],
+    enabled: !!wallet,
     queryFn: async (): Promise<PaymentMethod[]> => {
       if (!wallet) {
         throw new Error("No wallet connected");
@@ -67,10 +60,10 @@ export function usePaymentMethods(options: {
         client,
         destinationChainId: destinationToken.chainId,
         destinationTokenAddress: destinationToken.address,
-        sortBy: "popularity",
         includePrices: true,
+        limit: 100,
         maxSteps: 3,
-        limit: 100, // Get top 100 most popular routes
+        sortBy: "popularity", // Get top 100 most popular routes
       });
 
       const allOriginTokens = includeDestinationToken
@@ -98,13 +91,13 @@ export function usePaymentMethods(options: {
 
       while (true) {
         const batch = await getOwnedTokens({
-          ownerAddress: wallet.getAccount()?.address || "",
           chains: insightEnabledChains.map((c) => c.chain),
           client,
+          ownerAddress: wallet.getAccount()?.address || "",
           queryOptions: {
             limit,
-            page,
             metadata: "false",
+            page,
           },
         });
 
@@ -115,13 +108,13 @@ export function usePaymentMethods(options: {
         // find matching origin token in allRoutes
         const tokensWithBalance = batch
           .map((b) => ({
+            balance: b.value,
+            originAmount: 0n,
             originToken: allOriginTokens.find(
               (t) =>
                 t.address.toLowerCase() === b.tokenAddress.toLowerCase() &&
                 t.chainId === b.chainId,
             ),
-            balance: b.value,
-            originAmount: 0n,
           }))
           .filter((t) => !!t.originToken) as OwnedTokenWithQuote[];
 
@@ -179,24 +172,31 @@ export function usePaymentMethods(options: {
 
       const transformedRoutes = [
         ...suitableOriginTokens.map((s) => ({
-          type: "wallet" as const,
-          payerWallet: wallet,
-          originToken: s.originToken,
           balance: s.balance,
+          originToken: s.originToken,
+          payerWallet: wallet,
+          type: "wallet" as const,
         })),
       ];
       return transformedRoutes;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryKey: [
+      "bridge-routes",
+      destinationToken.chainId,
+      destinationToken.address,
+      destinationAmount,
+      payerWallet?.getAccount()?.address,
+      includeDestinationToken,
+    ], // 5 minutes
     refetchOnWindowFocus: false,
-    enabled: !!wallet,
+    staleTime: 5 * 60 * 1000,
   });
 
   return {
     data: routesQuery.data || [],
-    isLoading: routesQuery.isLoading,
     error: routesQuery.error,
     isError: routesQuery.isError,
+    isLoading: routesQuery.isLoading,
     isSuccess: routesQuery.isSuccess,
     refetch: routesQuery.refetch,
   };

@@ -3,9 +3,8 @@ import type {
   BaseTransactionOptions,
   WithOverrides,
 } from "../../../transaction/types.js";
-import { toUnits } from "../../../utils/units.js";
-
 import type { Prettify } from "../../../utils/type-utils.js";
+import { toUnits } from "../../../utils/units.js";
 import { transferFrom as generatedTransferFrom } from "../__generated__/IERC20/write/transferFrom.js";
 
 /**
@@ -49,7 +48,6 @@ export function transferFrom(
   options: BaseTransactionOptions<TransferFromParams>,
 ) {
   return generatedTransferFrom({
-    contract: options.contract,
     asyncParams: async () => {
       let amount: bigint;
       if ("amount" in options) {
@@ -64,8 +62,6 @@ export function transferFrom(
       }
       return {
         from: options.from,
-        to: options.to,
-        value: amount,
         overrides: {
           erc20Value: {
             amountWei: amount,
@@ -73,7 +69,10 @@ export function transferFrom(
           },
           ...options.overrides,
         },
+        to: options.to,
+        value: amount,
       } as const;
     },
+    contract: options.contract,
   });
 }

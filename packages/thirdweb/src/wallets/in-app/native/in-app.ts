@@ -59,7 +59,6 @@ export function inAppWallet(
   createOptions?: InAppWalletCreationOptions,
 ): Wallet<"inApp"> {
   return createInAppWallet({
-    createOptions,
     connectorFactory: async (client: ThirdwebClient) => {
       const { InAppNativeConnector } = await import("./native-connector.js");
       return new InAppNativeConnector({
@@ -68,5 +67,6 @@ export function inAppWallet(
         storage: createOptions?.storage,
       });
     },
+    createOptions,
   }) as Wallet<"inApp">;
 }

@@ -1,31 +1,7 @@
 "use client";
 
-import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
-import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { addDays, fromUnixTime } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
@@ -39,13 +15,13 @@ import {
 } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
+  getContract,
   NATIVE_TOKEN_ADDRESS,
   type PreparedTransaction,
-  type ThirdwebClient,
-  ZERO_ADDRESS,
-  getContract,
   sendAndConfirmTransaction,
+  type ThirdwebClient,
   toTokens,
+  ZERO_ADDRESS,
 } from "thirdweb";
 import { decimals } from "thirdweb/extensions/erc20";
 import {
@@ -55,6 +31,29 @@ import {
 } from "thirdweb/modules";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { z } from "zod";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { addressSchema } from "../zod-schemas";
 import { CurrencySelector } from "./CurrencySelector";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
@@ -98,7 +97,6 @@ function ClaimableModule(props: ModuleInstanceProps) {
         ? ClaimableERC20.getClaimCondition
         : ClaimableERC1155.getClaimCondition,
     {
-      tokenId: positiveIntegerRegex.test(tokenId) ? BigInt(tokenId) : 0n,
       contract: contract,
       queryOptions: {
         enabled:
@@ -107,6 +105,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
           ) ||
           (!!tokenId && isValidTokenId),
       },
+      tokenId: positiveIntegerRegex.test(tokenId) ? BigInt(tokenId) : 0n,
     },
   );
 
@@ -126,14 +125,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
     !!claimConditionCurrency && claimConditionCurrency !== ZERO_ADDRESS;
 
   const currencyDecimalsQuery = useQuery({
-    queryKey: [
-      "currency-decimals",
-      {
-        contractAddress: props.contract.address,
-        chainId: props.contract.chain.id,
-        claimConditionCurrency,
-      },
-    ],
+    enabled: shouldFetchCurrencyDecimals,
     queryFn: async () => {
       if (!claimConditionCurrency) {
         throw new Error();
@@ -150,7 +142,14 @@ function ClaimableModule(props: ModuleInstanceProps) {
 
       return decimalsVal;
     },
-    enabled: shouldFetchCurrencyDecimals,
+    queryKey: [
+      "currency-decimals",
+      {
+        chainId: props.contract.chain.id,
+        claimConditionCurrency,
+        contractAddress: props.contract.address,
+      },
+    ],
   });
 
   const tokenDecimalsQuery = useReadContract(decimals, {
@@ -170,20 +169,20 @@ function ClaimableModule(props: ModuleInstanceProps) {
       if (props.contractInfo.name === "ClaimableERC721") {
         mintTx = ClaimableERC721.mint({
           contract,
-          to: values.recipient,
           quantity: values.quantity,
+          to: values.recipient,
         });
       } else if (props.contractInfo.name === "ClaimableERC20") {
         mintTx = ClaimableERC20.mint({
           contract,
-          to: values.recipient,
           quantity: values.quantity,
+          to: values.recipient,
         });
       } else if (values.tokenId) {
         mintTx = ClaimableERC1155.mint({
           contract,
-          to: values.recipient,
           quantity: values.quantity,
+          to: values.recipient,
           tokenId: BigInt(values.tokenId),
         });
       } else {
@@ -208,29 +207,29 @@ function ClaimableModule(props: ModuleInstanceProps) {
       if (props.contractInfo.name === "ClaimableERC721") {
         setClaimConditionTx = ClaimableERC721.setClaimCondition({
           ...values,
-          contract,
           allowList:
             values.allowList && values.allowList.length > 0
               ? values.allowList.map(({ address }) => address)
               : undefined,
+          contract,
         });
       } else if (props.contractInfo.name === "ClaimableERC20") {
         setClaimConditionTx = ClaimableERC20.setClaimCondition({
           ...values,
-          contract,
           allowList:
             values.allowList && values.allowList.length > 0
               ? values.allowList.map(({ address }) => address)
               : undefined,
+          contract,
         });
       } else if (values.tokenId) {
         setClaimConditionTx = ClaimableERC1155.setClaimCondition({
           ...values,
-          contract,
           allowList:
             values.allowList && values.allowList.length > 0
               ? values.allowList.map(({ address }) => address)
               : undefined,
+          contract,
           tokenId: BigInt(values.tokenId),
         });
       } else {
@@ -272,13 +271,6 @@ function ClaimableModule(props: ModuleInstanceProps) {
   return (
     <ClaimableModuleUI
       {...props}
-      client={props.contract.client}
-      primarySaleRecipientSection={{
-        data: primarySaleRecipientQuery.data
-          ? { primarySaleRecipient: primarySaleRecipientQuery.data }
-          : undefined,
-        setPrimarySaleRecipient,
-      }}
       claimConditionSection={{
         data:
           // claim conditions data is present
@@ -291,21 +283,28 @@ function ClaimableModule(props: ModuleInstanceProps) {
                 tokenDecimals: tokenDecimalsQuery.data,
               }
             : undefined,
-        setClaimCondition,
-        tokenId,
         isLoading:
           claimConditionQuery.isLoading ||
           (!!shouldFetchCurrencyDecimals && currencyDecimalsQuery.isLoading),
+        setClaimCondition,
+        tokenId,
       }}
-      isOwnerAccount={!!ownerAccount}
-      name={props.contractInfo.name}
+      client={props.contract.client}
       contractChainId={props.contract.chain.id}
-      setTokenId={setTokenId}
+      isOwnerAccount={!!ownerAccount}
       isValidTokenId={isValidTokenId}
-      noClaimConditionSet={noClaimConditionSet}
       mintSection={{
         mint,
       }}
+      name={props.contractInfo.name}
+      noClaimConditionSet={noClaimConditionSet}
+      primarySaleRecipientSection={{
+        data: primarySaleRecipientQuery.data
+          ? { primarySaleRecipient: primarySaleRecipientQuery.data }
+          : undefined,
+        setPrimarySaleRecipient,
+      }}
+      setTokenId={setTokenId}
     />
   );
 }
@@ -353,23 +352,23 @@ export function ClaimableModuleUI(
 
       <div className="flex flex-col gap-4">
         {/* Mint NFT */}
-        <Accordion type="single" collapsible className="-mx-1">
-          <AccordionItem value="metadata" className="border-none">
+        <Accordion className="-mx-1" collapsible type="single">
+          <AccordionItem className="border-none" value="metadata">
             <AccordionTrigger className="border-border border-t px-1">
               Mint {props.name === "ClaimableERC20" ? "Token" : "NFT"}
             </AccordionTrigger>
             <AccordionContent className="px-1">
               <MintNFTSection
                 client={props.client}
-                mint={props.mintSection.mint}
-                name={props.name}
                 contractChainId={props.contractChainId}
                 isLoggedIn={props.isLoggedIn}
+                mint={props.mintSection.mint}
+                name={props.name}
               />
             </AccordionContent>
           </AccordionItem>
 
-          <AccordionItem value="claim-conditions" className="border-none ">
+          <AccordionItem className="border-none " value="claim-conditions">
             <AccordionTrigger className="border-border border-t px-1 text-left">
               Claim Conditions
             </AccordionTrigger>
@@ -393,23 +392,23 @@ export function ClaimableModuleUI(
               {props.name !== "ClaimableERC1155" || props.isValidTokenId ? (
                 props.claimConditionSection.data ? (
                   <ClaimConditionSection
-                    client={props.client}
-                    isLoggedIn={props.isLoggedIn}
-                    isOwnerAccount={props.isOwnerAccount}
+                    chainId={props.contractChainId}
                     claimCondition={
                       props.claimConditionSection.data.claimCondition
                     }
-                    update={props.claimConditionSection.setClaimCondition}
-                    name={props.name}
-                    chainId={props.contractChainId}
-                    noClaimConditionSet={props.noClaimConditionSet}
+                    client={props.client}
                     currencyDecimals={
                       props.claimConditionSection.data?.currencyDecimals
                     }
+                    isLoggedIn={props.isLoggedIn}
+                    isOwnerAccount={props.isOwnerAccount}
+                    name={props.name}
+                    noClaimConditionSet={props.noClaimConditionSet}
                     tokenDecimals={
                       props.claimConditionSection.data?.tokenDecimals
                     }
                     tokenId={props.claimConditionSection.tokenId}
+                    update={props.claimConditionSection.setClaimCondition}
                   />
                 ) : (
                   <Skeleton className="h-[350px]" />
@@ -419,8 +418,8 @@ export function ClaimableModuleUI(
           </AccordionItem>
 
           <AccordionItem
-            value="primary-sale-recipient"
             className="border-none "
+            value="primary-sale-recipient"
           >
             <AccordionTrigger className="border-border border-t px-1 text-left">
               Primary Sale Recipient
@@ -429,6 +428,7 @@ export function ClaimableModuleUI(
               {props.primarySaleRecipientSection.data ? (
                 <PrimarySaleRecipientSection
                   client={props.client}
+                  contractChainId={props.contractChainId}
                   isLoggedIn={props.isLoggedIn}
                   isOwnerAccount={props.isOwnerAccount}
                   primarySaleRecipient={
@@ -437,7 +437,6 @@ export function ClaimableModuleUI(
                   update={
                     props.primarySaleRecipientSection.setPrimarySaleRecipient
                   }
-                  contractChainId={props.contractChainId}
                 />
               ) : (
                 <Skeleton className="h-[74px]" />
@@ -451,29 +450,29 @@ export function ClaimableModuleUI(
 }
 
 const claimConditionFormSchema = z.object({
-  tokenId: z.string().refine((v) => BigInt(v) >= 0n, {
-    message: "Invalid tokenId",
-  }),
-  pricePerToken: z.coerce
-    .number()
-    .min(0, { message: "Invalid price per token" })
-    .optional(),
+  allowList: z.array(z.object({ address: addressSchema })).optional(),
   currencyAddress: z.string().optional(),
-
-  maxClaimableSupply: z
-    .string()
-    .refine((v) => v.length === 0 || Number(v) >= 0, {
-      message: "Invalid max claimable supply",
-    }),
+  endTime: z.date(),
   maxClaimablePerWallet: z
     .string()
     .refine((v) => v.length === 0 || Number(v) >= 0, {
       message: "Invalid max claimable per wallet",
     }),
 
+  maxClaimableSupply: z
+    .string()
+    .refine((v) => v.length === 0 || Number(v) >= 0, {
+      message: "Invalid max claimable supply",
+    }),
+  pricePerToken: z.coerce
+    .number()
+    .min(0, { message: "Invalid price per token" })
+    .optional(),
+
   startTime: z.date(),
-  endTime: z.date(),
-  allowList: z.array(z.object({ address: addressSchema })).optional(),
+  tokenId: z.string().refine((v) => BigInt(v) >= 0n, {
+    message: "Invalid tokenId",
+  }),
 });
 
 export type ClaimConditionFormValues = z.infer<typeof claimConditionFormSchema>;
@@ -506,25 +505,14 @@ function ClaimConditionSection(props: {
   const form = useForm<ClaimConditionFormValues>({
     resolver: zodResolver(claimConditionFormSchema),
     values: {
-      tokenId,
+      allowList: [],
       currencyAddress:
         claimCondition?.currency === ZERO_ADDRESS
           ? NATIVE_TOKEN_ADDRESS // default to the native token address
           : claimCondition?.currency,
-      // default case is zero state, so 0 // 10 ** 18 still results in 0
-      pricePerToken: Number(
-        toTokens(claimCondition?.pricePerUnit, props.currencyDecimals || 18),
-      ),
-      maxClaimableSupply:
-        claimCondition?.availableSupply.toString() === "0" ||
-        claimCondition?.availableSupply.toString() === MAX_UINT_256
-          ? ""
-          : props.name === "ClaimableERC20"
-            ? toTokens(
-                claimCondition?.availableSupply,
-                props.tokenDecimals || 18,
-              )
-            : claimCondition?.availableSupply.toString() || "",
+      endTime: claimCondition?.endTimestamp
+        ? fromUnixTime(claimCondition?.endTimestamp)
+        : defaultEndDate,
       maxClaimablePerWallet:
         claimCondition?.maxMintPerWallet.toString() === "0" ||
         claimCondition?.maxMintPerWallet.toString() === MAX_UINT_256
@@ -535,13 +523,24 @@ function ClaimConditionSection(props: {
                 props.tokenDecimals || 18,
               )
             : claimCondition?.maxMintPerWallet.toString() || "",
+      maxClaimableSupply:
+        claimCondition?.availableSupply.toString() === "0" ||
+        claimCondition?.availableSupply.toString() === MAX_UINT_256
+          ? ""
+          : props.name === "ClaimableERC20"
+            ? toTokens(
+                claimCondition?.availableSupply,
+                props.tokenDecimals || 18,
+              )
+            : claimCondition?.availableSupply.toString() || "",
+      // default case is zero state, so 0 // 10 ** 18 still results in 0
+      pricePerToken: Number(
+        toTokens(claimCondition?.pricePerUnit, props.currencyDecimals || 18),
+      ),
       startTime: claimCondition?.startTimestamp
         ? fromUnixTime(claimCondition?.startTimestamp)
         : defaultStartDate,
-      endTime: claimCondition?.endTimestamp
-        ? fromUnixTime(claimCondition?.endTimestamp)
-        : defaultEndDate,
-      allowList: [],
+      tokenId,
     },
   });
 
@@ -559,8 +558,8 @@ function ClaimConditionSection(props: {
 
   const updateMutation = useMutation({
     mutationFn: props.update,
-    onSuccess: updateNotifications.onSuccess,
     onError: updateNotifications.onError,
+    onSuccess: updateNotifications.onSuccess,
   });
 
   const onSubmit = async () => {
@@ -586,10 +585,10 @@ function ClaimConditionSection(props: {
           </Alert>
 
           <Button
-            onClick={() => setAddClaimConditionButtonClicked(true)}
-            variant="outline"
             className="w-full"
             disabled={!props.isOwnerAccount}
+            onClick={() => setAddClaimConditionButtonClicked(true)}
+            variant="outline"
           >
             Add Claim Condition
           </Button>
@@ -658,20 +657,20 @@ function ClaimConditionSection(props: {
               </div>
 
               <FormFieldSetup
-                htmlFor="duration"
-                label="Duration"
-                isRequired
                 errorMessage={
                   form.formState.errors?.startTime?.message ||
                   form.formState.errors?.endTime?.message
                 }
+                htmlFor="duration"
+                isRequired
+                label="Duration"
               >
                 <div>
                   <DatePickerWithRange
                     from={startTime}
-                    to={endTime}
                     setFrom={(from: Date) => form.setValue("startTime", from)}
                     setTo={(to: Date) => form.setValue("endTime", to)}
+                    to={endTime}
                   />
                 </div>
               </FormFieldSetup>
@@ -701,12 +700,12 @@ function ClaimConditionSection(props: {
                       />
                       <ToolTipLabel label="Remove address">
                         <Button
-                          variant="outline"
                           className="!text-destructive-text bg-background"
+                          disabled={!props.isOwnerAccount}
                           onClick={() => {
                             allowListFields.remove(index);
                           }}
-                          disabled={!props.isOwnerAccount}
+                          variant="outline"
                         >
                           <Trash2Icon className="size-4" />
                         </Button>
@@ -728,16 +727,16 @@ function ClaimConditionSection(props: {
 
                 <div className="flex gap-3">
                   <Button
-                    variant="outline"
-                    size="sm"
+                    className="gap-2"
+                    disabled={!props.isOwnerAccount}
                     onClick={() => {
                       // add admin by default if adding the first input
                       allowListFields.append({
                         address: "",
                       });
                     }}
-                    className="gap-2"
-                    disabled={!props.isOwnerAccount}
+                    size="sm"
+                    variant="outline"
                   >
                     <PlusIcon className="size-3" />
                     Add Address
@@ -747,15 +746,15 @@ function ClaimConditionSection(props: {
 
               <div className="flex justify-end">
                 <TransactionButton
-                  client={props.client}
-                  isLoggedIn={props.isLoggedIn}
-                  size="sm"
                   className="min-w-24"
+                  client={props.client}
                   disabled={updateMutation.isPending || !props.isOwnerAccount}
-                  type="submit"
+                  isLoggedIn={props.isLoggedIn}
                   isPending={updateMutation.isPending}
-                  txChainID={props.chainId}
+                  size="sm"
                   transactionCount={1}
+                  txChainID={props.chainId}
+                  type="submit"
                 >
                   Update
                 </TransactionButton>
@@ -798,8 +797,8 @@ function PrimarySaleRecipientSection(props: {
 
   const updateMutation = useMutation({
     mutationFn: props.update,
-    onSuccess: updateNotifications.onSuccess,
     onError: updateNotifications.onError,
+    onSuccess: updateNotifications.onSuccess,
   });
 
   const onSubmit = async () => {
@@ -831,19 +830,19 @@ function PrimarySaleRecipientSection(props: {
 
         <div className="flex justify-end">
           <TransactionButton
-            client={props.client}
-            isLoggedIn={props.isLoggedIn}
-            size="sm"
             className="min-w-24 gap-2"
+            client={props.client}
             disabled={
               updateMutation.isPending ||
               !props.isOwnerAccount ||
               !form.formState.isDirty
             }
-            type="submit"
+            isLoggedIn={props.isLoggedIn}
             isPending={updateMutation.isPending}
-            txChainID={props.contractChainId}
+            size="sm"
             transactionCount={1}
+            txChainID={props.contractChainId}
+            type="submit"
           >
             Update
           </TransactionButton>
@@ -854,11 +853,11 @@ function PrimarySaleRecipientSection(props: {
 }
 
 const mintFormSchema = z.object({
+  quantity: z.coerce.number().min(0, { message: "Invalid quantity" }),
+  recipient: addressSchema,
   tokenId: z.string().refine((v) => v.length === 0 || Number(v) >= 0, {
     message: "Invalid tokenId",
   }),
-  quantity: z.coerce.number().min(0, { message: "Invalid quantity" }),
-  recipient: addressSchema,
 });
 
 export type MintFormValues = z.infer<typeof mintFormSchema>;
@@ -872,12 +871,12 @@ function MintNFTSection(props: {
 }) {
   const form = useForm<MintFormValues>({
     resolver: zodResolver(mintFormSchema),
+    reValidateMode: "onChange",
     values: {
-      tokenId: "",
       quantity: 0,
       recipient: "",
+      tokenId: "",
     },
-    reValidateMode: "onChange",
   });
 
   const updateNotifications = useTxNotifications(
@@ -887,8 +886,8 @@ function MintNFTSection(props: {
 
   const mintMutation = useMutation({
     mutationFn: props.mint,
-    onSuccess: updateNotifications.onSuccess,
     onError: updateNotifications.onError,
+    onSuccess: updateNotifications.onSuccess,
   });
 
   const onSubmit = async () => {
@@ -950,15 +949,15 @@ function MintNFTSection(props: {
 
           <div className="flex justify-end">
             <TransactionButton
-              client={props.client}
-              size="sm"
               className="min-w-24 gap-2"
+              client={props.client}
               disabled={mintMutation.isPending}
-              type="submit"
-              isPending={mintMutation.isPending}
-              txChainID={props.contractChainId}
-              transactionCount={1}
               isLoggedIn={props.isLoggedIn}
+              isPending={mintMutation.isPending}
+              size="sm"
+              transactionCount={1}
+              txChainID={props.contractChainId}
+              type="submit"
             >
               Mint
             </TransactionButton>

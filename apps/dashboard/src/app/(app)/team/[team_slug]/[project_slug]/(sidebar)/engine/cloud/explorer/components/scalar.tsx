@@ -9,14 +9,14 @@ export function Scalar() {
       <h2 className="font-bold text-2xl tracking-tight">Full API Reference</h2>
       <ApiReferenceReact
         configuration={{
-          url: `${NEXT_PUBLIC_ENGINE_CLOUD_URL}/openapi`,
           hideModels: true,
           servers: [
             {
-              url: NEXT_PUBLIC_ENGINE_CLOUD_URL,
               description: "Engine Cloud",
+              url: NEXT_PUBLIC_ENGINE_CLOUD_URL,
             },
           ],
+          url: `${NEXT_PUBLIC_ENGINE_CLOUD_URL}/openapi`,
         }}
       />
     </div>

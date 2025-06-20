@@ -1,11 +1,11 @@
-import { Callout } from "@/components/Document";
-import { sluggerContext } from "@/contexts/slugger";
 import invariant from "tiny-invariant";
 import type {
   TypeDeclarationDoc,
   TypeInfo,
   VariableDoc,
 } from "typedoc-better-json";
+import { Callout } from "@/components/Document";
+import { sluggerContext } from "@/contexts/slugger";
 import { CodeBlock } from "../../../../components/Document/Code";
 import { Details } from "../../../../components/Document/Details";
 import { Heading } from "../../../../components/Document/Heading";
@@ -37,7 +37,7 @@ export async function VariableTDoc(props: {
   return (
     <>
       {props.showHeading !== false && (
-        <Heading level={props.level} id={doc.name}>
+        <Heading anchorId={doc.name} level={props.level}>
           {doc.name}
         </Heading>
       )}
@@ -55,14 +55,14 @@ export async function VariableTDoc(props: {
       )}
 
       <CodeBlock
-        lang="ts"
         code={`let ${doc.name}: ${signatureCode}`}
+        lang="ts"
         tokenLinks={tokens ? await getTokenLinks(tokens) : undefined}
       />
 
       {exampleTag?.summary && (
         <>
-          <Heading level={subLevel} id={slugger.slug("example")} noIndex>
+          <Heading anchorId={slugger.slug("example")} level={subLevel} noIndex>
             Example
           </Heading>
           <TypedocSummary summary={exampleTag.summary} />
@@ -72,9 +72,9 @@ export async function VariableTDoc(props: {
       {doc.typeDeclaration?.map((declaration) => {
         return (
           <Details
+            anchorId={declaration.name}
             key={declaration.name}
             summary={declaration.name}
-            id={declaration.name}
           >
             {"kind" in declaration && declaration.kind === "function" ? (
               <FunctionTDoc

@@ -1,7 +1,4 @@
 "use client";
-import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
-import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
-import type { ChartConfig } from "@/components/ui/chart";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
@@ -10,6 +7,9 @@ import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
 import { useMemo } from "react";
 import type { InAppWalletStats } from "types/analytics";
+import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
+import type { ChartConfig } from "@/components/ui/chart";
 
 type ChartData = Record<string, number> & {
   time: string; // human readable date
@@ -73,8 +73,8 @@ export function InAppWalletUsersChartCardUI(props: {
 
     authMethodsToShow.forEach((walletType, i) => {
       _chartConfig[walletType] = {
-        label: authMethodsToShow[i],
         color: `hsl(var(--chart-${(i % 10) + 1}))`,
+        label: authMethodsToShow[i],
       };
     });
 
@@ -82,16 +82,16 @@ export function InAppWalletUsersChartCardUI(props: {
       // Add Other
       authMethodsToShow.push("others");
       _chartConfig.others = {
-        label: "Others",
         color: "hsl(var(--muted-foreground))",
+        label: "Others",
       };
     }
 
     return {
+      chartConfig: _chartConfig,
       chartData: Array.from(_chartDataMap.values()).sort(
         (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
       ),
-      chartConfig: _chartConfig,
     };
   }, [inAppWalletStats]);
 
@@ -103,6 +103,8 @@ export function InAppWalletUsersChartCardUI(props: {
 
   return (
     <ThirdwebBarChart
+      chartClassName="aspect-[1.5] lg:aspect-[3.5]"
+      config={chartConfig}
       customHeader={
         <div className="relative px-6 pt-6">
           <h3 className="mb-0.5 font-semibold text-xl tracking-tight">
@@ -114,8 +116,8 @@ export function InAppWalletUsersChartCardUI(props: {
 
           <ExportToCSVButton
             className="top-6 right-6 mb-4 w-full bg-background md:absolute md:mb-0 md:flex md:w-auto"
-            fileName="Connect Wallets"
             disabled={disableActions}
+            fileName="Connect Wallets"
             getData={async () => {
               // Shows the number of each type of wallet connected on all dates
               const header = ["Date", ...uniqueAuthMethods];
@@ -132,13 +134,10 @@ export function InAppWalletUsersChartCardUI(props: {
         </div>
       }
       data={chartData}
-      isPending={props.isPending}
-      config={chartConfig}
-      chartClassName="aspect-[1.5] lg:aspect-[3.5]"
       emptyChartState={<InAppWalletUsersEmptyChartState />}
-      variant="stacked"
-      showLegend
       hideLabel={false}
+      isPending={props.isPending}
+      showLegend
       toolTipLabelFormatter={(_v, item) => {
         if (Array.isArray(item)) {
           const time = item[0].payload.time as number;
@@ -146,6 +145,7 @@ export function InAppWalletUsersChartCardUI(props: {
         }
         return undefined;
       }}
+      variant="stacked"
     />
   );
 }
@@ -158,29 +158,29 @@ function InAppWalletUsersEmptyChartState() {
       </span>
       <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
         <DocLink
-          link="https://portal.thirdweb.com/typescript/v5/inAppWallet"
-          label="TypeScript"
           icon={TypeScriptIcon}
+          label="TypeScript"
+          link="https://portal.thirdweb.com/typescript/v5/inAppWallet"
         />
         <DocLink
-          link="https://portal.thirdweb.com/react/v5/in-app-wallet/get-started"
+          icon={ReactIcon}
           label="React"
-          icon={ReactIcon}
-        />
-        <DocLink
           link="https://portal.thirdweb.com/react/v5/in-app-wallet/get-started"
-          label="React Native"
+        />
+        <DocLink
           icon={ReactIcon}
+          label="React Native"
+          link="https://portal.thirdweb.com/react/v5/in-app-wallet/get-started"
         />
         <DocLink
-          link="https://portal.thirdweb.com/unity/v5/wallets/in-app-wallet"
-          label="Unity"
           icon={UnityIcon}
+          label="Unity"
+          link="https://portal.thirdweb.com/unity/v5/wallets/in-app-wallet"
         />
         <DocLink
-          link="https://portal.thirdweb.com/unreal-engine/getting-started"
-          label="Unreal Engine"
           icon={UnrealIcon}
+          label="Unreal Engine"
+          link="https://portal.thirdweb.com/unreal-engine/getting-started"
         />
       </div>
     </div>

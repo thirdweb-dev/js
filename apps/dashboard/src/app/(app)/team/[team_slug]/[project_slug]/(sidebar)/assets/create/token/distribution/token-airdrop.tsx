@@ -1,11 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import { useCsvUpload } from "hooks/useCsvUpload";
+import {
+  ArrowRightIcon,
+  ArrowUpFromLineIcon,
+  CircleAlertIcon,
+  FileTextIcon,
+  RotateCcwIcon,
+  XIcon,
+} from "lucide-react";
+import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { DropZone } from "@/components/blocks/drop-zone/drop-zone";
-import { DynamicHeight } from "@/components/ui/DynamicHeight";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { InlineCode } from "@/components/ui/inline-code";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Sheet,
   SheetContent,
@@ -26,17 +37,6 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { useCsvUpload } from "hooks/useCsvUpload";
-import {
-  ArrowRightIcon,
-  ArrowUpFromLineIcon,
-  CircleAlertIcon,
-  FileTextIcon,
-  RotateCcwIcon,
-  XIcon,
-} from "lucide-react";
-import { useState } from "react";
-import type { ThirdwebClient } from "thirdweb";
 import { DownloadFileButton } from "../../_common/download-file-button";
 import type { TokenDistributionForm } from "../_common/form";
 
@@ -121,13 +121,13 @@ export function TokenAirdropSection(props: {
                         </SheetTitle>
                       </SheetHeader>
                       <AirdropTable
-                        data={airdropAddresses}
                         className="rounded-b-none"
+                        data={airdropAddresses}
                       />
                       <div className="flex justify-end gap-3 rounded-b-lg border border-t-0 bg-card p-6">
                         <Button
-                          variant="outline"
                           onClick={removeAirdropAddresses}
+                          variant="outline"
                         >
                           <XIcon className="mr-2 size-4" />
                           Remove
@@ -137,10 +137,10 @@ export function TokenAirdropSection(props: {
                   </Sheet>
 
                   <Button
+                    className="gap-2"
+                    onClick={removeAirdropAddresses}
                     size="sm"
                     variant="outline"
-                    onClick={removeAirdropAddresses}
-                    className="gap-2"
                   >
                     <XIcon className="size-4" />
                     Remove
@@ -149,7 +149,7 @@ export function TokenAirdropSection(props: {
               </div>
             ) : (
               <div>
-                <Sheet open={showUploadSheet} onOpenChange={setShowUploadSheet}>
+                <Sheet onOpenChange={setShowUploadSheet} open={showUploadSheet}>
                   <SheetContent className="flex h-dvh w-full flex-col gap-0 overflow-hidden lg:max-w-2xl">
                     <SheetHeader className="mb-3">
                       <SheetTitle className="text-left font-semibold text-lg">
@@ -162,19 +162,19 @@ export function TokenAirdropSection(props: {
                     </SheetHeader>
                     <AirdropUpload
                       client={props.client}
+                      onClose={() => setShowUploadSheet(false)}
                       setAirdrop={(addresses) => {
                         props.form.setValue("airdropAddresses", addresses);
                         setShowUploadSheet(false);
                       }}
-                      onClose={() => setShowUploadSheet(false)}
                     />
                   </SheetContent>
                 </Sheet>
 
                 <Button
-                  variant="outline"
-                  onClick={() => setShowUploadSheet(true)}
                   className="min-w-44 gap-2 bg-background"
+                  onClick={() => setShowUploadSheet(true)}
+                  variant="outline"
                 >
                   <ArrowUpFromLineIcon className="size-4 text-muted-foreground" />
                   Set up Airdrop
@@ -241,6 +241,7 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
   const [textInput, setTextInput] = useState("");
 
   const csvUpload = useCsvUpload<AirdropAddressInput>({
+    client,
     csvParser: (items: AirdropAddressInput[]) => {
       return items
         .map(({ address, quantity }) => ({
@@ -249,7 +250,6 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
         }))
         .filter(({ address }) => address !== "");
     },
-    client,
   });
 
   const normalizeData = csvUpload.normalizeQuery.data;
@@ -274,8 +274,8 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
     setAirdrop(
       normalizeData.result.map((o) => ({
         address: o.resolvedAddress || o.address,
-        quantity: o.quantity,
         isValid: o.isValid,
+        quantity: o.quantity,
       })),
     );
     onClose();
@@ -298,11 +298,11 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
             </p>
           )}
           <AirdropTable
-            data={normalizeData.result}
             className="rounded-b-none"
+            data={normalizeData.result}
           />
           <div className="flex justify-between gap-3 rounded-b-lg border border-t-0 bg-card p-6">
-            <Button variant="outline" onClick={handleReset}>
+            <Button onClick={handleReset} variant="outline">
               <RotateCcwIcon className="mr-2 size-4" />
               Reset
             </Button>
@@ -330,18 +330,18 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
 
             <DropZone
               accept=".csv"
-              isError={csvUpload.noCsv}
-              title={csvUpload.noCsv ? "Invalid CSV" : "Upload CSV File"}
               description={
                 csvUpload.noCsv
                   ? "Your CSV does not contain the 'address' & 'quantity' columns"
                   : "Drag and drop your file or click here to upload"
               }
+              isError={csvUpload.noCsv}
               onDrop={csvUpload.setFiles}
               resetButton={{
                 label: "Remove Invalid CSV",
                 onClick: handleReset,
               }}
+              title={csvUpload.noCsv ? "Invalid CSV" : "Upload CSV File"}
             />
           </div>
 
@@ -369,24 +369,24 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
               </p>
               <div className="space-y-3">
                 <Textarea
-                  placeholder={`\
-0x314ab97b76e39d63c78d5c86c2daf8eaa306b182 3.141592
-thirdweb.eth,2.7182
-0x141ca95b6177615fb1417cf70e930e102bf8f384=1.41421`}
-                  value={textInput}
-                  onChange={(e) => setTextInput(e.target.value)}
                   className="min-h-[120px] font-mono text-sm"
+                  onChange={(e) => setTextInput(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && e.ctrlKey) {
                       e.preventDefault();
                       handleTextSubmit();
                     }
                   }}
+                  placeholder={`\
+0x314ab97b76e39d63c78d5c86c2daf8eaa306b182 3.141592
+thirdweb.eth,2.7182
+0x141ca95b6177615fb1417cf70e930e102bf8f384=1.41421`}
+                  value={textInput}
                 />
                 <Button
-                  onClick={handleTextSubmit}
-                  disabled={!textInput.trim()}
                   className="w-full"
+                  disabled={!textInput.trim()}
+                  onClick={handleTextSubmit}
                 >
                   Enter
                 </Button>
@@ -421,9 +421,9 @@ function CSVFormatDetails() {
 
       <DownloadFileButton
         fileContent={exampleCSV}
+        fileFormat="text/csv"
         fileNameWithExtension="airdrop.csv"
         label="Download Example CSV"
-        fileFormat="text/csv"
       />
     </div>
   );
@@ -451,8 +451,8 @@ function AirdropTable(props: {
         </TableHeader>
         <TableBody>
           {props.data.map((item, index) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            <TableRow key={index} className="!border-b">
+            // biome-ignore lint/suspicious/noArrayIndexKey: EXPECTED
+            <TableRow className="!border-b" key={index}>
               <TableCell>
                 {item.isValid ? (
                   item.address

@@ -96,10 +96,10 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
           )}
           {isLazyMintable && (
             <BatchLazyMintButton
-              isLoggedIn={isLoggedIn}
               canCreateDelayedRevealBatch={canCreateDelayedRevealBatch}
-              isErc721={isErc721}
               contract={contract}
+              isErc721={isErc721}
+              isLoggedIn={isLoggedIn}
             />
           )}
         </div>
@@ -109,8 +109,8 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
         <NFTGetAllTable
           contract={contract}
           isErc721={isErc721}
-          tokenByIndex={isTokenByIndexSupported}
           projectMeta={projectMeta}
+          tokenByIndex={isTokenByIndexSupported}
         />
       )}
     </div>

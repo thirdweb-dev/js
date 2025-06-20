@@ -4,7 +4,10 @@ import { redirect } from "@/lib/redirect";
 export default async function Layout({
   children,
   params,
-}: { children: React.ReactNode; params: Promise<{ ecosystem: string }> }) {
+}: {
+  children: React.ReactNode;
+  params: Promise<{ ecosystem: string }>;
+}) {
   const { ecosystem } = await params;
 
   const userAddress = await getCurrentUser();

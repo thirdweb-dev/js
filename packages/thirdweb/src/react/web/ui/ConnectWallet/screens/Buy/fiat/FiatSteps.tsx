@@ -1,15 +1,15 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
 import {
-  type Theme,
   iconSize,
   radius,
   spacing,
+  type Theme,
 } from "../../../../../../core/design-system/index.js";
-import { Spinner } from "../../../../components/Spinner.js";
 import { Container } from "../../../../components/basic.js";
+import { Spinner } from "../../../../components/Spinner.js";
 import { Text } from "../../../../components/text.js";
-import { StepIcon } from "../Stepper.js";
 import type { FiatStatusMeta } from "../pay-transactions/statusMeta.js";
+import { StepIcon } from "../Stepper.js";
 
 export function StepContainer(props: {
   state?: FiatStatusMeta["progressStatus"];
@@ -37,13 +37,13 @@ export function StepContainer(props: {
     <Container
       bg="tertiaryBg"
       borderColor={color === "success" ? "borderColor" : color}
-      py="sm"
       px="md"
+      py="sm"
       style={{
-        borderRadius: radius.lg,
         alignItems: "flex-start",
-        borderWidth: "1px",
+        borderRadius: radius.lg,
         borderStyle: "solid",
+        borderWidth: "1px",
         position: "relative",
         ...props.style,
       }}
@@ -51,16 +51,16 @@ export function StepContainer(props: {
       {props.children}
       <div
         style={{
+          alignItems: "center",
+          display: "flex",
+          gap: spacing.xs,
           position: "absolute",
           right: spacing.xs,
           top: spacing.xs,
-          display: "flex",
-          gap: spacing.xs,
-          alignItems: "center",
         }}
       >
         {props.state && text && (
-          <Text size="xs" color={color}>
+          <Text color={color} size="xs">
             {text}
           </Text>
         )}
@@ -75,8 +75,8 @@ export function StepContainer(props: {
         {props.state === "pending" && <Spinner color="accentText" size="sm" />}
 
         {props.state === "failed" && (
-          <Container color="danger" flex="row" center="both">
-            <Cross1Icon width={iconSize.sm} height={iconSize.sm} />
+          <Container center="both" color="danger" flex="row">
+            <Cross1Icon height={iconSize.sm} width={iconSize.sm} />
           </Container>
         )}
       </div>

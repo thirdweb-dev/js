@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "xyz.abs",
-  name: "Abstract Global Wallet",
-  homepage: "https://abs.xyz/",
-  image_id: "abstract.png",
   app: {
-    browser: null,
-    ios: null,
     android: null,
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: "xyz.abs",
-  mobile: {
-    native: null,
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://abs.xyz/",
+  id: "xyz.abs",
+  image_id: "abstract.png",
+  mobile: {
+    native: null,
+    universal: null,
+  },
+  name: "Abstract Global Wallet",
+  rdns: "xyz.abs",
 } as const;

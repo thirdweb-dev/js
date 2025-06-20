@@ -15,12 +15,12 @@ const NATIVE_TOKEN_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 describe.runIf(process.env.TW_SECRET_KEY)("Bridge.Onramp.prepare", () => {
   it("should prepare an onramp successfully", async () => {
     const prepared = await Onramp.prepare({
+      amount: toWei("0.01"),
+      chainId: 1,
       client: TEST_CLIENT,
       onramp: "stripe",
-      chainId: 1,
-      tokenAddress: NATIVE_TOKEN_ADDRESS,
       receiver: RECEIVER_ADDRESS,
-      amount: toWei("0.01"),
+      tokenAddress: NATIVE_TOKEN_ADDRESS,
     });
 
     expect(prepared).toBeDefined();
@@ -46,24 +46,24 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.Onramp.prepare", () => {
   it("should surface any errors", async () => {
     await expect(
       Onramp.prepare({
-        client: TEST_CLIENT,
-        onramp: "stripe",
-        chainId: 444, // Unsupported chain ID
-        tokenAddress: NATIVE_TOKEN_ADDRESS,
-        receiver: RECEIVER_ADDRESS,
         amount: toWei("0.01"),
+        chainId: 444,
+        client: TEST_CLIENT, // Unsupported chain ID
+        onramp: "stripe",
+        receiver: RECEIVER_ADDRESS,
+        tokenAddress: NATIVE_TOKEN_ADDRESS,
       }),
     ).rejects.toThrowError();
   });
 
   it("should prepare a Coinbase onramp successfully", async () => {
     const prepared = await Onramp.prepare({
+      amount: toWei("0.01"),
+      chainId: 1,
       client: TEST_CLIENT,
       onramp: "coinbase",
-      chainId: 1,
-      tokenAddress: NATIVE_TOKEN_ADDRESS,
       receiver: RECEIVER_ADDRESS,
-      amount: toWei("0.01"),
+      tokenAddress: NATIVE_TOKEN_ADDRESS,
     });
 
     expect(prepared).toBeDefined();
@@ -88,12 +88,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.Onramp.prepare", () => {
 
   it("should prepare a Transak onramp successfully", async () => {
     const prepared = await Onramp.prepare({
+      amount: toWei("0.01"),
+      chainId: 1,
       client: TEST_CLIENT,
       onramp: "transak",
-      chainId: 1,
-      tokenAddress: NATIVE_TOKEN_ADDRESS,
       receiver: RECEIVER_ADDRESS,
-      amount: toWei("0.01"),
+      tokenAddress: NATIVE_TOKEN_ADDRESS,
     });
 
     expect(prepared).toBeDefined();

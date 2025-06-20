@@ -36,14 +36,14 @@ export function TokenInfoRow(props: {
           alignItems: "flex-end",
         }}
       >
-        <Container flex="row" gap="xs" center="y">
+        <Container center="y" flex="row" gap="xs">
           <PayTokenIcon
             chain={chainObj}
+            client={props.client}
             size="sm"
             token={{
               address: props.tokenAddress,
             }}
-            client={props.client}
           />
           <Text color="primaryText" size="sm">
             {formatNumber(Number(props.tokenAmount), 6)} {props.tokenSymbol}

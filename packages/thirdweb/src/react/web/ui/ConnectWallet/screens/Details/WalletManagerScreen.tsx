@@ -18,19 +18,19 @@ import { useActiveWallet } from "../../../../../core/hooks/wallets/useActiveWall
 import { useConnectedWallets } from "../../../../../core/hooks/wallets/useConnectedWallets.js";
 import { useDisconnect } from "../../../../../core/hooks/wallets/useDisconnect.js";
 import { useSetActiveWallet } from "../../../../../core/hooks/wallets/useSetActiveWallet.js";
+import { Container, Line, ModalHeader } from "../../../components/basic.js";
+import { Button, IconButton } from "../../../components/buttons.js";
 import { Skeleton } from "../../../components/Skeleton.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { ToolTip } from "../../../components/Tooltip.js";
-import { WalletImage } from "../../../components/WalletImage.js";
-import { Container, Line, ModalHeader } from "../../../components/basic.js";
-import { Button, IconButton } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
+import { WalletImage } from "../../../components/WalletImage.js";
 import { WalletButtonEl } from "../../WalletEntryButton.js";
+import { formatTokenBalance } from "../formatTokenBalance.js";
 import {
   WalletSwitcherConnectionScreen,
   type WalletSwitcherConnectionScreenProps,
 } from "../WalletSwitcherConnectionScreen.js";
-import { formatTokenBalance } from "../formatTokenBalance.js";
 
 export function WalletManagerScreen(
   props: Omit<
@@ -67,7 +67,7 @@ export function WalletManagerScreen(
   return (
     <Container>
       <Container p="lg">
-        <ModalHeader title="Wallets" onBack={props.onBack} />
+        <ModalHeader onBack={props.onBack} title="Wallets" />
       </Container>
 
       <Line />
@@ -85,14 +85,14 @@ export function WalletManagerScreen(
             .map((w) => {
               return (
                 <WalletManangerButton
-                  key={w.id}
+                  chain={props.activeChain}
                   client={props.client}
                   // address={address || ""}
+                  key={w.id}
                   onClick={() => {
                     setActive(w);
                     props.onBack();
                   }}
-                  chain={props.activeChain}
                   wallet={w}
                 />
               );
@@ -105,14 +105,14 @@ export function WalletManagerScreen(
       <Container p="lg">
         {!hideConnectButton && (
           <Button
-            variant="accent"
             fullWidth
+            gap="xs"
             onClick={() => {
               setScreen("connect");
             }}
-            gap="xs"
+            variant="accent"
           >
-            <PlusIcon width={iconSize.sm} height={iconSize.sm} />
+            <PlusIcon height={iconSize.sm} width={iconSize.sm} />
             Connect Wallet
           </Button>
         )}
@@ -150,17 +150,17 @@ function WalletManangerButton(props: {
           justifyContent: "space-between",
         }}
       >
-        <Container flex="row" gap="md" center="y">
+        <Container center="y" flex="row" gap="md">
           <WalletImage client={props.client} id={walletId} size={iconSize.lg} />
 
           <Container flex="column" gap="4xs">
             <Text color="primaryText">{shortenAddress(address || "")}</Text>
             {balanceQuery.data ? (
-              <Text size="xs" color="secondaryText" weight={400}>
+              <Text color="secondaryText" size="xs" weight={400}>
                 {formatTokenBalance(balanceQuery.data)}
               </Text>
             ) : (
-              <Skeleton width="100px" height={fontSize.sm} />
+              <Skeleton height={fontSize.sm} width="100px" />
             )}
           </Container>
         </Container>
@@ -169,16 +169,16 @@ function WalletManangerButton(props: {
       <div
         style={{
           position: "absolute",
-          zIndex: 1,
           right: spacing.xxs,
           top: "50%",
           transform: "translateY(-50%)",
+          zIndex: 1,
         }}
       >
         {activeWallet?.id === props.wallet.id ? (
           <ToolTip tip="Active Wallet">
             <IconButton>
-              <CheckIcon width={iconSize.md} height={iconSize.md} />
+              <CheckIcon height={iconSize.md} width={iconSize.md} />
             </IconButton>
           </ToolTip>
         ) : (
@@ -189,11 +189,11 @@ function WalletManangerButton(props: {
               }}
             >
               <MinusIcon
-                width={iconSize.md}
                 height={iconSize.md}
                 style={{
                   color: theme.colors.secondaryText,
                 }}
+                width={iconSize.md}
               />
             </IconButton>
           </ToolTip>

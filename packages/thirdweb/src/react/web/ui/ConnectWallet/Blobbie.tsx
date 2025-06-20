@@ -42,18 +42,18 @@ export function Blobbie(props: BlobbieProps) {
 
   return (
     <div
+      className={props.className}
       id={id}
       style={{
         ...props.style,
         backgroundImage: `radial-gradient(ellipse at left bottom, ${colors[0]}, ${colors[1]})`,
         ...(props.size
           ? {
-              width: `${props.size}px`,
               height: `${props.size}px`,
+              width: `${props.size}px`,
             }
           : undefined),
       }}
-      className={props.className}
     />
   );
 }

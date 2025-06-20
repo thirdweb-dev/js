@@ -19,21 +19,21 @@ export function NFTPublicPageLayout(props: {
       <div className="container flex max-w-8xl grow flex-col">
         <ContractHeaderUI
           chainMetadata={props.chainMetadata}
-          imageClassName="rounded-lg"
           clientContract={props.clientContract}
           image={
             typeof props.contractMetadata.image === "string"
               ? props.contractMetadata.image
               : undefined
           }
+          imageClassName="rounded-lg"
           name={props.contractMetadata.name}
-          symbol={props.contractMetadata.symbol}
           socialUrls={
             typeof props.contractMetadata.social_urls === "object" &&
             props.contractMetadata.social_urls !== null
               ? props.contractMetadata.social_urls
               : {}
           }
+          symbol={props.contractMetadata.symbol}
         />
         {props.children}
       </div>

@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { lazy, Suspense } from "react";
 import { CodeLoading } from "../../../../components/code/code.client";
 import type { BridgeComponentsPlaygroundOptions } from "./types";
 
@@ -6,17 +6,15 @@ const CodeClient = lazy(
   () => import("../../../../components/code/code.client"),
 );
 
-export function CodeGen(props: {
-  options: BridgeComponentsPlaygroundOptions;
-}) {
+export function CodeGen(props: { options: BridgeComponentsPlaygroundOptions }) {
   return (
     <div className="flex w-full grow flex-col">
       <Suspense fallback={<CodeLoading />}>
         <CodeClient
+          className="grow"
           code={getCode(props.options)}
           lang="tsx"
           loader={<CodeLoading />}
-          className="grow"
         />
       </Suspense>
     </div>
@@ -25,10 +23,10 @@ export function CodeGen(props: {
 
 function getCode(options: BridgeComponentsPlaygroundOptions) {
   const imports = {
+    chains: [] as string[],
     react: ["PayEmbed"] as string[],
     thirdweb: [] as string[],
     wallets: [] as string[],
-    chains: [] as string[],
   };
 
   // Check if we have a custom chain (not base chain which has id 8453)

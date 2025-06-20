@@ -10,13 +10,10 @@ export function DecimalInput(props: {
 }) {
   return (
     <Input
-      id={props.id}
-      type="text"
-      value={props.value}
       className={props.className}
-      inputMode="decimal"
-      placeholder={props.placeholder}
       disabled={props.disabled}
+      id={props.id}
+      inputMode="decimal"
       onChange={(e) => {
         const number = Number(e.target.value);
         // ignore if string becomes invalid number
@@ -34,6 +31,9 @@ export function DecimalInput(props: {
         }
         props.onChange(cleanedValue || "0");
       }}
+      placeholder={props.placeholder}
+      type="text"
+      value={props.value}
     />
   );
 }

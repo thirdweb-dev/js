@@ -1,11 +1,11 @@
 "use client";
+import { CircleAlertIcon } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { TabButtons } from "@/components/ui/tabs";
 import { NEXT_PUBLIC_ENGINE_CLOUD_URL } from "@/constants/public-envs";
-import { CircleAlertIcon } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
 
 export function TryItOut() {
   const [activeTab, setActiveTab] = useState<string>("sdk");
@@ -29,34 +29,34 @@ export function TryItOut() {
         <TabButtons
           tabs={[
             {
+              isActive: activeTab === "sdk",
               name: "thirdweb SDK",
               onClick: () => setActiveTab("sdk"),
-              isActive: activeTab === "sdk",
             },
             {
+              isActive: activeTab === "curl",
               name: "Curl",
               onClick: () => setActiveTab("curl"),
-              isActive: activeTab === "curl",
             },
             {
+              isActive: activeTab === "js",
               name: "JavaScript",
               onClick: () => setActiveTab("js"),
-              isActive: activeTab === "js",
             },
             {
+              isActive: activeTab === "python",
               name: "Python",
               onClick: () => setActiveTab("python"),
-              isActive: activeTab === "python",
             },
             {
+              isActive: activeTab === "go",
               name: "Go",
               onClick: () => setActiveTab("go"),
-              isActive: activeTab === "go",
             },
             {
+              isActive: activeTab === "csharp",
               name: "C#",
               onClick: () => setActiveTab("csharp"),
-              isActive: activeTab === "csharp",
             },
           ]}
         />
@@ -65,7 +65,7 @@ export function TryItOut() {
 
         {activeTab === "sdk" && (
           <div className="flex flex-col gap-4">
-            <Alert variant="info" className="bg-background">
+            <Alert className="bg-background" variant="info">
               <CircleAlertIcon className="size-5" />
               <AlertTitle>Using the thirdweb SDK on the backend</AlertTitle>
               <AlertDescription className="leading-loose">
@@ -76,10 +76,10 @@ export function TryItOut() {
                     <li>
                       The full catalog of{" "}
                       <Link
-                        href="https://portal.thirdweb.com/references/typescript/v5/functions#extensions"
                         className="text-blue-500"
-                        target="_blank"
+                        href="https://portal.thirdweb.com/references/typescript/v5/functions#extensions"
                         rel="noopener noreferrer"
+                        target="_blank"
                       >
                         extension functions
                       </Link>
@@ -87,10 +87,10 @@ export function TryItOut() {
                     <li>
                       The{" "}
                       <Link
-                        href="https://portal.thirdweb.com/references/typescript/v5/prepareContractCall"
                         className="text-blue-500"
-                        target="_blank"
+                        href="https://portal.thirdweb.com/references/typescript/v5/prepareContractCall"
                         rel="noopener noreferrer"
+                        target="_blank"
                       >
                         prepareContractCall
                       </Link>{" "}
@@ -99,10 +99,10 @@ export function TryItOut() {
                     <li>
                       The full{" "}
                       <Link
-                        href="https://portal.thirdweb.com/references/typescript/v5/Account"
                         className="text-blue-500"
-                        target="_blank"
+                        href="https://portal.thirdweb.com/references/typescript/v5/Account"
                         rel="noopener noreferrer"
+                        target="_blank"
                       >
                         account
                       </Link>{" "}
@@ -118,25 +118,25 @@ export function TryItOut() {
               Installation
             </h3>
             <CodeClient
-              lang="shell"
-              code={"npm install thirdweb"}
               className="bg-background"
+              code={"npm install thirdweb"}
+              lang="shell"
             />
             <h3 className="font-semibold text-lg tracking-tight">
               Usage example: Minting a ERC1155 NFT to a user
             </h3>
             <CodeClient
-              lang="ts"
-              code={sdkExample()}
               className="bg-background"
+              code={sdkExample()}
+              lang="ts"
             />
           </div>
         )}
         {activeTab === "curl" && (
           <CodeClient
-            lang="bash"
-            code={curlExample()}
             className="bg-background"
+            code={curlExample()}
+            lang="bash"
           />
         )}
         {activeTab === "js" && (
@@ -145,37 +145,37 @@ export function TryItOut() {
               A lightweight, type safe wrapper package of the Engine HTTP API is
               available on{" "}
               <Link
-                href="https://www.npmjs.com/package/@thirdweb-dev/engine"
                 className="text-blue-500"
-                target="_blank"
+                href="https://www.npmjs.com/package/@thirdweb-dev/engine"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 NPM
               </Link>
               .
             </p>
             <CodeClient
-              lang="js"
-              code={jsExample()}
               className="bg-background"
+              code={jsExample()}
+              lang="js"
             />
           </div>
         )}
         {activeTab === "python" && (
           <CodeClient
-            lang="python"
-            code={pythonExample()}
             className="bg-background"
+            code={pythonExample()}
+            lang="python"
           />
         )}
         {activeTab === "go" && (
-          <CodeClient lang="go" code={goExample()} className="bg-background" />
+          <CodeClient className="bg-background" code={goExample()} lang="go" />
         )}
         {activeTab === "csharp" && (
           <CodeClient
-            lang="csharp"
-            code={csharpExample()}
             className="bg-background"
+            code={csharpExample()}
+            lang="csharp"
           />
         )}
       </div>

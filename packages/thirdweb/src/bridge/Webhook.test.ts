@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 import { describe, expect, it } from "vitest";
-import { type WebhookPayload, parse } from "./Webhook.js";
+import { parse, type WebhookPayload } from "./Webhook.js";
 
 const secret = "test-secret";
 
@@ -22,35 +22,36 @@ const generateSignature = async (
 describe("parseIncomingWebhook", () => {
   const testTimestamp = Math.floor(Date.now() / 1000).toString();
   const validPayload: WebhookPayload = {
-    version: 2,
     data: {
-      paymentId: "pay123",
-      clientId: "client123",
       action: "TRANSFER",
-      status: "COMPLETED",
-      originToken: {
-        chainId: 1,
-        address: "0x1234567890123456789012345678901234567890" as const,
-        name: "Token",
-        symbol: "TKN",
-        decimals: 18,
-        priceUsd: 1.0,
-        iconUri: "https://example.com/icon.png",
-      },
-      originAmount: "1.0",
-      destinationToken: {
-        chainId: 1,
-        address: "0x1234567890123456789012345678901234567890" as const,
-        name: "Token",
-        symbol: "TKN",
-        decimals: 18,
-        priceUsd: 1.0,
-        iconUri: "https://example.com/icon.png",
-      },
+      clientId: "client123",
       destinationAmount: "1.0",
-      sender: "0x1234567890123456789012345678901234567890",
+      destinationToken: {
+        address: "0x1234567890123456789012345678901234567890" as const,
+        chainId: 1,
+        decimals: 18,
+        iconUri: "https://example.com/icon.png",
+        name: "Token",
+        priceUsd: 1.0,
+        symbol: "TKN",
+      },
+      developerFeeBps: 100,
+      developerFeeRecipient: "0x1234567890123456789012345678901234567890",
+      originAmount: "1.0",
+      originToken: {
+        address: "0x1234567890123456789012345678901234567890" as const,
+        chainId: 1,
+        decimals: 18,
+        iconUri: "https://example.com/icon.png",
+        name: "Token",
+        priceUsd: 1.0,
+        symbol: "TKN",
+      },
+      paymentId: "pay123",
+      purchaseData: {},
       receiver: "0x1234567890123456789012345678901234567890",
-      type: "transfer",
+      sender: "0x1234567890123456789012345678901234567890",
+      status: "COMPLETED",
       transactions: [
         {
           chainId: 1,
@@ -61,10 +62,9 @@ describe("parseIncomingWebhook", () => {
           transactionHash: "0x1234567890123456789012345678901234567890",
         },
       ],
-      developerFeeBps: 100,
-      developerFeeRecipient: "0x1234567890123456789012345678901234567890",
-      purchaseData: {},
+      type: "transfer",
     },
+    version: 2,
   };
 
   it("should successfully verify a valid webhook", async () => {
@@ -146,10 +146,10 @@ describe("parseIncomingWebhook", () => {
 
   it("should throw error for version 1 payload", async () => {
     const v1Payload = {
-      version: 1,
       data: {
         someField: "value",
       },
+      version: 1,
     };
     const v1PayloadString = JSON.stringify(v1Payload);
     const signature = await generateSignature(testTimestamp, v1PayloadString);
@@ -233,11 +233,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for missing required fields", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           transactionId: "tx123",
           // Missing other required fields
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -253,11 +253,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid action type", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           action: "INVALID_ACTION", // Invalid action type
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -273,11 +273,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid status type", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           status: "INVALID_STATUS", // Invalid status type
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -293,11 +293,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid hex address", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           destinationToken: "invalid-address", // Invalid hex address
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -313,11 +313,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid transactions array", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           transactions: "not-an-array", // Invalid transactions type
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -333,11 +333,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid developerFeeBps type", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           developerFeeBps: "not-a-number", // Invalid value (cannot coerce to number)
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -353,11 +353,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid purchaseData type", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           purchaseData: null, // Invalid purchaseData type
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -375,11 +375,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid paymentId type", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           paymentId: 123, // number instead of string
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -395,11 +395,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid paymentLinkId type", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           paymentLinkId: 123, // number instead of string
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -415,11 +415,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid clientId type", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           clientId: 123, // number instead of string
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -435,11 +435,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid originToken type", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           originToken: 123, // number instead of string
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -455,11 +455,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid originAmount type", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           originAmount: 123, // number instead of string
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -475,11 +475,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid destinationAmount type", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           destinationAmount: 123, // number instead of string
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -495,11 +495,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid sender address", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           sender: "invalid-address", // not 0x-prefixed
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -515,11 +515,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid receiver address", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           receiver: "invalid-address", // not 0x-prefixed
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -535,11 +535,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid type field", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           type: 123, // number instead of string
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -555,11 +555,11 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for invalid developerFeeRecipient address", async () => {
       const invalidPayload = {
-        version: 2,
         data: {
           ...validPayload.data,
           developerFeeRecipient: "invalid-address", // not 0x-prefixed
         },
+        version: 2,
       };
       const payloadString = JSON.stringify(invalidPayload);
       const signature = await generateSignature(testTimestamp, payloadString);
@@ -593,8 +593,8 @@ describe("parseIncomingWebhook", () => {
 
   it("should throw error for unsupported webhook version", async () => {
     const invalidPayload = {
-      version: 3,
       data: {},
+      version: 3,
     };
     const payloadString = JSON.stringify(invalidPayload);
     const signature = await generateSignature(testTimestamp, payloadString);

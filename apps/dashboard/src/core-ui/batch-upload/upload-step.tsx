@@ -1,7 +1,7 @@
-import { UnorderedList } from "@/components/ui/List/List";
-import { InlineCode } from "@/components/ui/inline-code";
-import { cn } from "@/lib/utils";
 import { UploadIcon } from "lucide-react";
+import { InlineCode } from "@/components/ui/inline-code";
+import { UnorderedList } from "@/components/ui/List/List";
+import { cn } from "@/lib/utils";
 
 interface UploadStepProps {
   // biome-ignore lint/suspicious/noExplicitAny: FIXME
@@ -61,16 +61,16 @@ export const UploadStep: React.FC<UploadStepProps> = ({
           <li>
             Files <em>must</em> contain one .csv or .json file with metadata. -{" "}
             <a
-              download
               className="text-link-foreground hover:text-foreground"
+              download
               href="/assets/examples/example.csv"
             >
               Download example.csv
             </a>
             .{" "}
             <a
-              download
               className="text-link-foreground hover:text-foreground"
+              download
               href="/assets/examples/example.json"
             >
               Download example.json
@@ -111,8 +111,8 @@ export const UploadStep: React.FC<UploadStepProps> = ({
             <InlineCode code="animation_url" /> column and add the IPFS hashes
             there.{" "}
             <a
-              download
               className="text-link-foreground hover:text-foreground"
+              download
               href="/assets/examples/example-with-ipfs.csv"
             >
               Download example.csv
@@ -123,8 +123,8 @@ export const UploadStep: React.FC<UploadStepProps> = ({
             the name of your files to the <InlineCode code="image" /> and
             <InlineCode code="animation_url" /> column.{" "}
             <a
-              download
               className="text-link-foreground hover:text-foreground"
+              download
               href="/assets/examples/example-with-maps.csv"
             >
               Download example.csv

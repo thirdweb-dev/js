@@ -53,11 +53,11 @@ export async function sendBatchTransaction(
           resolvePromisedValue(tx.value),
         ]);
         const serializedTx: SendTransactionOption = {
-          data,
+          accessList,
           chainId: tx.chain.id,
+          data,
           to,
           value,
-          accessList,
         };
         return serializedTx;
       }),

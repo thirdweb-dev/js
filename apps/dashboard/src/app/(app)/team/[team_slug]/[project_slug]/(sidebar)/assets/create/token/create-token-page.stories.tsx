@@ -4,7 +4,6 @@ import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { CreateTokenAssetPageUI } from "./create-token-page.client";
 
 const meta = {
-  title: "Assets/CreateTokenPage",
   component: CreateTokenAssetPageUI,
   decorators: [
     (Story) => (
@@ -17,23 +16,24 @@ const meta = {
       </ThirdwebProvider>
     ),
   ],
+  title: "Assets/CreateTokenPage",
 } satisfies Meta<typeof CreateTokenAssetPageUI>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 const mockCreateTokenFunctions = {
+  airdropTokens: async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  },
   deployContract: async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     return { contractAddress: "0x123" };
   },
-  setClaimConditions: async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  },
   mintTokens: async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
   },
-  airdropTokens: async () => {
+  setClaimConditions: async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
   },
 };
@@ -41,21 +41,18 @@ const mockCreateTokenFunctions = {
 export const Default: Story = {
   args: {
     accountAddress: "0x1234567890123456789012345678901234567890",
-    teamSlug: "test-team",
-    projectSlug: "test-project",
     client: storybookThirdwebClient,
     createTokenFunctions: mockCreateTokenFunctions,
     onLaunchSuccess: () => {},
+    projectSlug: "test-project",
+    teamSlug: "test-team",
   },
 };
 
 export const ErrorOnDeploy: Story = {
   args: {
     accountAddress: "0x1234567890123456789012345678901234567890",
-    teamSlug: "test-team",
-    projectSlug: "test-project",
     client: storybookThirdwebClient,
-    onLaunchSuccess: () => {},
     createTokenFunctions: {
       ...mockCreateTokenFunctions,
       deployContract: async () => {
@@ -63,5 +60,8 @@ export const ErrorOnDeploy: Story = {
         throw new Error("Failed to deploy contract");
       },
     },
+    onLaunchSuccess: () => {},
+    projectSlug: "test-project",
+    teamSlug: "test-team",
   },
 };

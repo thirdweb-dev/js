@@ -1,6 +1,4 @@
 "use client";
-import { FullWidthSidebarLayout } from "@/components/blocks/SidebarLayout";
-import { Badge } from "@/components/ui/badge";
 import {
   BellIcon,
   BookTextIcon,
@@ -10,6 +8,8 @@ import {
   SettingsIcon,
   WalletIcon,
 } from "lucide-react";
+import { FullWidthSidebarLayout } from "@/components/blocks/SidebarLayout";
+import { Badge } from "@/components/ui/badge";
 import { ContractIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/ContractIcon";
 import { EngineIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 import { InsightIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/InsightIcon";
@@ -27,20 +27,20 @@ export function ProjectSidebarLayout(props: {
     <FullWidthSidebarLayout
       contentSidebarLinks={[
         {
-          href: layoutPath,
           exactMatch: true,
-          label: "Overview",
+          href: layoutPath,
           icon: HomeIcon,
+          label: "Overview",
         },
         {
-          label: "In-App Wallets",
           href: `${layoutPath}/connect/in-app-wallets`,
           icon: WalletIcon,
+          label: "In-App Wallets",
         },
         {
-          label: "Account Abstraction",
           href: `${layoutPath}/connect/account-abstraction`,
           icon: SmartAccountIcon,
+          label: "Account Abstraction",
         },
         {
           href: `${layoutPath}/connect/universal-bridge`,
@@ -49,61 +49,61 @@ export function ProjectSidebarLayout(props: {
         },
         {
           href: `${layoutPath}/contracts`,
-          label: "Contracts",
           icon: ContractIcon,
+          label: "Contracts",
         },
         {
           href: `${layoutPath}/assets`,
+          icon: CoinsIcon,
           label: (
             <span className="flex items-center gap-2">
               Assets <Badge>New</Badge>
             </span>
           ),
-          icon: CoinsIcon,
         },
         {
           href: `${layoutPath}/engine`,
-          label: "Engine",
           icon: EngineIcon,
+          label: "Engine",
         },
         {
           href: `${layoutPath}/insight`,
-          label: "Insight",
           icon: InsightIcon,
+          label: "Insight",
         },
         {
           href: `${layoutPath}/nebula`,
-          label: "Nebula",
           icon: NebulaIcon,
+          label: "Nebula",
         },
         {
           href: `${layoutPath}/webhooks`,
+          icon: BellIcon,
           label: (
             <span className="flex items-center gap-2">
               Webhooks <Badge>New</Badge>
             </span>
           ),
-          icon: BellIcon,
         },
       ]}
       footerSidebarLinks={[
         {
           href: `${layoutPath}/settings`,
-          label: "Project Settings",
           icon: SettingsIcon,
+          label: "Project Settings",
         },
         {
           separator: true,
         },
         {
           href: "https://portal.thirdweb.com",
-          label: "Documentation",
           icon: BookTextIcon,
+          label: "Documentation",
         },
         {
           href: "https://playground.thirdweb.com/connect/sign-in/button",
-          label: "Playground",
           icon: BoxIcon,
+          label: "Playground",
         },
       ]}
     >

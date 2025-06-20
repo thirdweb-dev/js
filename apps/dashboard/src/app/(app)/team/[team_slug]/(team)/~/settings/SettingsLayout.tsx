@@ -1,14 +1,14 @@
 "use client";
 
-import type { Team } from "@/api/team";
-import { cn } from "@/lib/utils";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import type { Team } from "@/api/team";
+import { cn } from "@/lib/utils";
+import { getTeamSettingsLinks } from "./_components/sidebar/getTeamSettingsLinks";
 import { TeamSettingsSidebar } from "./_components/sidebar/TeamSettingsSidebar";
 import { TeamSettingsMobileNav } from "./_components/sidebar/TeamsMobileNav";
-import { getTeamSettingsLinks } from "./_components/sidebar/getTeamSettingsLinks";
 
 // on the /~/settings page
 // - On desktop: show the general settings as usual
@@ -40,18 +40,18 @@ export function SettingsLayout(props: {
 
       <div className="md:hidden">
         <TeamSettingsMobileNav
-          teamSlug={props.team.slug}
-          showFull={showFullNavOnMobile}
-          setShowFull={setShowFullNavOnMobile}
           activeLink={activeLink}
+          setShowFull={setShowFullNavOnMobile}
+          showFull={showFullNavOnMobile}
+          teamSlug={props.team.slug}
         />
       </div>
 
       <div className="container flex grow gap-8 lg:min-h-[900px] [&>*]:py-8 lg:[&>*]:py-10">
         <TeamSettingsSidebar
-          team={props.team}
           account={props.account}
           client={props.client}
+          team={props.team}
         />
         <div
           className={cn(

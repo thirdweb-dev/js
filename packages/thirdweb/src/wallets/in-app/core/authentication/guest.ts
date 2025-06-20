@@ -18,9 +18,9 @@ export async function guestAuthenticate(args: {
   ecosystem?: Ecosystem;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
   const storage = new ClientScopedStorage({
-    storage: args.storage,
     clientId: args.client.clientId,
     ecosystem: args.ecosystem,
+    storage: args.storage,
   });
 
   let sessionId = await storage.getGuestSessionId();
@@ -36,13 +36,13 @@ export async function guestAuthenticate(args: {
     ecosystem: args.ecosystem,
   });
   const res = await clientFetch(`${path}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: stringify({
       sessionId,
     }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
   });
 
   if (!res.ok) {

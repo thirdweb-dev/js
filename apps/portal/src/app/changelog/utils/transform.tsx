@@ -1,4 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
+
+import { Fragment } from "react";
+import type { Transform } from "react-html-parser";
+import { convertNodeToElement } from "react-html-parser";
+import type { BundledLanguage, SpecialLanguage } from "shiki";
 import {
   CodeBlock,
   DocLink,
@@ -8,10 +13,6 @@ import {
   Separator,
   UnorderedList,
 } from "@/components/Document";
-import { Fragment } from "react";
-import { convertNodeToElement } from "react-html-parser";
-import type { Transform } from "react-html-parser";
-import type { BundledLanguage, SpecialLanguage } from "shiki";
 
 const headingTags = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 
@@ -49,7 +50,7 @@ export const transform: Transform = (node, index: number) => {
     const level = Number.parseInt(node.name[1] || "");
 
     return (
-      <Heading level={level} id="#" anchorClassName="mt-10">
+      <Heading anchorClassName="mt-10" anchorId="#" level={level}>
         {getChildren()}
       </Heading>
     );
@@ -108,7 +109,7 @@ export const transform: Transform = (node, index: number) => {
       // }
     }
     if (code) {
-      return <CodeBlock lang={lang} code={code} />;
+      return <CodeBlock code={code} lang={lang} />;
     }
   }
 

@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "Deposited" event.
@@ -34,7 +34,7 @@ export type DepositedEventFilters = Partial<{
  */
 export function depositedEvent(filters: DepositedEventFilters = {}) {
   return prepareEvent({
-    signature: "event Deposited(address indexed account, uint256 totalDeposit)",
     filters,
+    signature: "event Deposited(address indexed account, uint256 totalDeposit)",
   });
 }

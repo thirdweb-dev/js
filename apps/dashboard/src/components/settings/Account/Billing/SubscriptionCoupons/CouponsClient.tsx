@@ -16,6 +16,35 @@ export function CouponsClient(
   return (
     <CouponsUI
       {...props}
+      applyCoupon={async (promoCode: string) => {
+        const res = await apiServerProxy<{ data: CouponData }>({
+          body: JSON.stringify({
+            promoCode,
+            teamId: props.teamId,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          pathname: "/v1/coupons/redeem",
+        });
+
+        if (!res.ok) {
+          return {
+            data: null,
+            status: res.status,
+          };
+        }
+
+        const json = res.data;
+
+        router.refresh();
+
+        return {
+          data: json.data,
+          status: 200,
+        };
+      }}
       deleteCoupon={async () => {
         const res = await apiServerProxy({
           method: "DELETE",
@@ -28,35 +57,6 @@ export function CouponsClient(
         }
 
         router.refresh();
-      }}
-      applyCoupon={async (promoCode: string) => {
-        const res = await apiServerProxy<{ data: CouponData }>({
-          method: "POST",
-          pathname: "/v1/coupons/redeem",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            promoCode,
-            teamId: props.teamId,
-          }),
-        });
-
-        if (!res.ok) {
-          return {
-            status: res.status,
-            data: null,
-          };
-        }
-
-        const json = res.data;
-
-        router.refresh();
-
-        return {
-          status: 200,
-          data: json.data,
-        };
       }}
     />
   );

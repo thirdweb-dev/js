@@ -16,12 +16,12 @@ describe("InputSelectionUI", () => {
     render(
       <InputSelectionUI
         defaultSmsCountryCode="CA"
+        format="phone"
+        name=""
         onSelect={vi.fn()}
         placeholder=""
-        name=""
-        type=""
         submitButtonText=""
-        format="phone"
+        type=""
       />,
     );
 
@@ -31,12 +31,12 @@ describe("InputSelectionUI", () => {
   it('should initialize countryCodeInfo with "US +1" if defaultSmsCountryCode is not provided', () => {
     render(
       <InputSelectionUI
+        format="phone"
+        name=""
         onSelect={vi.fn()}
         placeholder=""
-        name=""
-        type=""
         submitButtonText=""
-        format="phone"
+        type=""
       />,
     );
 
@@ -49,13 +49,13 @@ describe("InputSelectionUI", () => {
 
     render(
       <InputSelectionUI
+        allowedSmsCountryCodes={["IN", "BR"]}
+        format="phone"
+        name=""
         onSelect={vi.fn()}
         placeholder=""
-        name=""
-        type=""
         submitButtonText=""
-        format="phone"
-        allowedSmsCountryCodes={["IN", "BR"]}
+        type=""
       />,
     );
 

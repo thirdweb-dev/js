@@ -1,4 +1,4 @@
-import { type Hex, concat, pad, toHex } from "viem";
+import { concat, type Hex, pad, toHex } from "viem";
 import type { PackedUserOperation, UserOperationV07 } from "../types.js";
 
 function getInitCode(unpackedUserOperation: UserOperationV07) {
@@ -52,14 +52,14 @@ export const getPackedUserOperation = (
   userOperation: UserOperationV07,
 ): PackedUserOperation => {
   return {
-    sender: userOperation.sender,
-    nonce: BigInt(userOperation.nonce),
-    initCode: getInitCode(userOperation),
-    callData: userOperation.callData,
     accountGasLimits: getAccountGasLimits(userOperation),
-    preVerificationGas: BigInt(userOperation.preVerificationGas),
+    callData: userOperation.callData,
     gasFees: getGasLimits(userOperation),
+    initCode: getInitCode(userOperation),
+    nonce: BigInt(userOperation.nonce),
     paymasterAndData: getPaymasterAndData(userOperation),
+    preVerificationGas: BigInt(userOperation.preVerificationGas),
+    sender: userOperation.sender,
     signature: userOperation.signature,
   };
 };

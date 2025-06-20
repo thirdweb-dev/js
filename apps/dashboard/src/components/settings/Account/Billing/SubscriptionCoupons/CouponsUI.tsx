@@ -1,17 +1,5 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useMutation } from "@tanstack/react-query";
 import { format, fromUnixTime } from "date-fns";
 import {
@@ -22,6 +10,18 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 
 type Coupon = {
   id: string;
@@ -211,17 +211,17 @@ function DeleteCouponButton(props: {
 
   return (
     <Button
-      variant="outline"
-      size="sm"
+      aria-label="Remove coupon"
       disabled={props.disabled}
       onClick={() => {
         const promise = deleteCoupon.mutateAsync();
         toast.promise(promise, {
-          success: "Coupon removed successfully",
           error: "Failed to remove coupon",
+          success: "Coupon removed successfully",
         });
       }}
-      aria-label="Remove coupon"
+      size="sm"
+      variant="outline"
     >
       {deleteCoupon.isPending ? (
         <Spinner className="size-4" />

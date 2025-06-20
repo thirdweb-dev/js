@@ -3,7 +3,7 @@ import { format, isValid } from "date-fns";
 const DATE_TIME_LOCAL_FORMAT = "yyyy-MM-dd HH:mm";
 
 export function toDateTimeLocal(date?: Date | number | string) {
-  let parsedDate: Date | undefined = undefined;
+  let parsedDate: Date | undefined;
   if (date instanceof Date) {
     parsedDate = date;
   } else if (typeof date === "number") {

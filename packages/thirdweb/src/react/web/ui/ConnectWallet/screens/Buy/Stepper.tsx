@@ -4,13 +4,9 @@ import { fontSize, iconSize } from "../../../../../core/design-system/index.js";
 import { Container } from "../../../components/basic.js";
 import { StyledDiv } from "../../../design-system/elements.js";
 
-export function StepIcon(props: {
-  isDone: boolean;
-  isActive: boolean;
-}) {
+export function StepIcon(props: { isDone: boolean; isActive: boolean }) {
   return (
     <Container
-      flex="row"
       center="both"
       color={
         props.isDone
@@ -19,10 +15,11 @@ export function StepIcon(props: {
             ? "accentText"
             : "secondaryText"
       }
+      flex="row"
     >
       <Circle>
         {props.isDone ? (
-          <CheckIcon width={iconSize.sm} height={iconSize.sm} />
+          <CheckIcon height={iconSize.sm} width={iconSize.sm} />
         ) : (
           <PulsingDot data-active={props.isActive} />
         )}
@@ -38,12 +35,7 @@ export function Step(props: {
 }) {
   return (
     <Container
-      flex="row"
       center="y"
-      gap="xs"
-      style={{
-        fontSize: fontSize.sm,
-      }}
       color={
         props.isDone
           ? "success"
@@ -51,8 +43,13 @@ export function Step(props: {
             ? "accentText"
             : "secondaryText"
       }
+      flex="row"
+      gap="xs"
+      style={{
+        fontSize: fontSize.sm,
+      }}
     >
-      <StepIcon isDone={props.isDone} isActive={props.isActive} />
+      <StepIcon isActive={props.isActive} isDone={props.isDone} />
       {props.label}
     </Container>
   );
@@ -71,24 +68,24 @@ const pulseAnimation = keyframes`
 
 const PulsingDot = /* @__PURE__ */ StyledDiv(() => {
   return {
-    background: "currentColor",
-    width: "10px",
-    height: "10px",
-    borderRadius: "50%",
     '&[data-active="true"]': {
       animation: `${pulseAnimation} 1s infinite`,
     },
+    background: "currentColor",
+    borderRadius: "50%",
+    height: "10px",
+    width: "10px",
   };
 });
 
 const Circle = /* @__PURE__ */ StyledDiv(() => {
   return {
+    alignItems: "center",
     border: "1px solid currentColor",
-    width: "20px",
-    height: "20px",
     borderRadius: "50%",
     display: "flex",
-    alignItems: "center",
+    height: "20px",
     justifyContent: "center",
+    width: "20px",
   };
 });

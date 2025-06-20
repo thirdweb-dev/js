@@ -1,19 +1,19 @@
 "use client";
 
-import type { Project } from "@/api/projects";
-import { WalletAddress } from "@/components/blocks/wallet-address";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CodeClient } from "@/components/ui/code/code.client";
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { type ThirdwebClient, toEther } from "thirdweb";
+import type { Project } from "@/api/projects";
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CodeClient } from "@/components/ui/code/code.client";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { statusDetails } from "../../analytics/tx-table/tx-table-ui";
 import type { Transaction } from "../../analytics/tx-table/types";
 
@@ -103,8 +103,8 @@ export function TransactionDetailsUI({
                     }
                   >
                     <Badge
-                      variant={statusDetails[status].type}
                       className="gap-2"
+                      variant={statusDetails[status].type}
                     >
                       {statusDetails[status].name}
                       {errorMessage && <InfoIcon className="size-3" />}
@@ -120,12 +120,12 @@ export function TransactionDetailsUI({
               </div>
               <div className="md:w-2/3">
                 <CopyTextButton
-                  textToCopy={id}
-                  copyIconPosition="left"
-                  textToShow={`${id.slice(0, 8)}...${id.slice(-6)}`}
-                  variant="ghost"
-                  tooltip="Copy transaction ID"
                   className="font-mono text-muted-foreground text-sm"
+                  copyIconPosition="left"
+                  textToCopy={id}
+                  textToShow={`${id.slice(0, 8)}...${id.slice(-6)}`}
+                  tooltip="Copy transaction ID"
+                  variant="ghost"
                 />
               </div>
             </div>
@@ -139,18 +139,18 @@ export function TransactionDetailsUI({
                   <div>
                     {explorer ? (
                       <Button
-                        variant="ghost"
                         asChild
                         className="-translate-x-2 gap-2 font-mono"
                         size="sm"
+                        variant="ghost"
                       >
                         <Link
                           href={`${explorer.url}/tx/${transactionHash}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
                           onClick={(e) => {
                             e.stopPropagation();
                           }}
+                          rel="noopener noreferrer"
+                          target="_blank"
                         >
                           {`${transactionHash.slice(0, 8)}...${transactionHash.slice(-6)}`}{" "}
                           <ExternalLinkIcon className="size-4 text-muted-foreground" />
@@ -158,12 +158,12 @@ export function TransactionDetailsUI({
                       </Button>
                     ) : (
                       <CopyTextButton
-                        textToCopy={transactionHash}
-                        copyIconPosition="left"
-                        textToShow={`${transactionHash.slice(0, 6)}...${transactionHash.slice(-4)}`}
-                        variant="ghost"
-                        tooltip="Copy transaction hash"
                         className="font-mono text-muted-foreground text-sm"
+                        copyIconPosition="left"
+                        textToCopy={transactionHash}
+                        textToShow={`${transactionHash.slice(0, 6)}...${transactionHash.slice(-4)}`}
+                        tooltip="Copy transaction hash"
+                        variant="ghost"
                       />
                     )}
                   </div>

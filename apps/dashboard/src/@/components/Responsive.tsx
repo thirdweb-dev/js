@@ -1,6 +1,6 @@
 "use client";
-import { ClientOnly } from "@/components/blocks/client-only";
 import { Suspense } from "react";
+import { ClientOnly } from "@/components/blocks/client-only";
 import { useIsMobile } from "../hooks/use-mobile";
 
 export function ResponsiveLayout(props: {

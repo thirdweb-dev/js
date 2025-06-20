@@ -23,7 +23,7 @@ export async function track({
   };
 
   return fetch(`${getThirdwebBaseUrl("analytics")}/event`, {
-    method: "POST",
     body: stringify(event),
+    method: "POST",
   }).catch(() => {});
 }

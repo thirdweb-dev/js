@@ -20,9 +20,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getOwnedNFTs", () => {
 
   it("should detect ownership functions using indexer", async () => {
     const contract = getContract({
-      client: TEST_CLIENT,
-      chain: defineChain(421614),
       address: "0x90450885977EE8F8F21AC79Fc2Dd51a18B13123E",
+      chain: defineChain(421614),
+      client: TEST_CLIENT,
     });
 
     const ownedNFTs = await getOwnedNFTs({
@@ -50,9 +50,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getOwnedNFTs", () => {
 
   it("should detect ownership functions using RPC", async () => {
     const contract = getContract({
-      client: TEST_CLIENT,
-      chain: defineChain(421614),
       address: "0x90450885977EE8F8F21AC79Fc2Dd51a18B13123E",
+      chain: defineChain(421614),
+      client: TEST_CLIENT,
     });
 
     const ownedNFTs = await getOwnedNFTs({

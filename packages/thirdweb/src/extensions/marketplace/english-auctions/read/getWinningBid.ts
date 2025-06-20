@@ -35,9 +35,9 @@ export async function getWinningBid(
   }
 
   return {
+    bidAmountWei,
     bidderAddress,
     currencyAddress,
-    bidAmountWei,
     currencyValue: await resolveCurrencyValue({
       chain: options.contract.chain,
       client: options.contract.client,

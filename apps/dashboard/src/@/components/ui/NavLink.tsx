@@ -1,9 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export type NavButtonProps = {
   className?: string;
@@ -22,11 +21,11 @@ export function NavLink(props: React.PropsWithChildren<NavButtonProps>) {
     : false;
   return (
     <Link
-      href={props.href}
       className={cn(props.className, isActive && props.activeClassName)}
-      target={props.href.startsWith("http") ? "_blank" : undefined}
-      prefetch={false}
+      href={props.href}
       onClick={props.onClick}
+      prefetch={false}
+      target={props.href.startsWith("http") ? "_blank" : undefined}
     >
       {props.children}
     </Link>

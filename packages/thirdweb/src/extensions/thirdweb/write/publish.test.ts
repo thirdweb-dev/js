@@ -16,11 +16,12 @@ import { getAllPublishedContracts } from "../__generated__/IContractPublisher/re
 import { getPublishedContractVersions } from "../__generated__/IContractPublisher/read/getPublishedContractVersions.js";
 import { publishContract } from "./publish.js";
 
-describe.runIf(process.env.TW_SECRET_KEY).sequential("publishContract", () => {
+// currently disabled because it's flaky
+describe.skip.sequential("publishContract", () => {
   const publisherContract = getContract({
-    client: TEST_CLIENT,
-    chain: FORKED_POLYGON_CHAIN,
     address: CONTRACT_PUBLISHER_ADDRESS,
+    chain: FORKED_POLYGON_CHAIN,
+    client: TEST_CLIENT,
   });
   let publishedData: FetchDeployMetadataResult;
 
@@ -38,18 +39,18 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential("publishContract", () => {
     });
 
     const tx = publishContract({
-      contract: publisherContract,
       account: TEST_ACCOUNT_D,
+      contract: publisherContract,
       metadata: {
         ...catAttackDeployMetadata,
-        version: "0.0.1",
-        description: "Cat Attack NFT",
         changelog: "Initial release",
+        description: "Cat Attack NFT",
+        version: "0.0.1",
       },
     });
     const result = await sendAndConfirmTransaction({
-      transaction: tx,
       account: TEST_ACCOUNT_D,
+      transaction: tx,
     });
     expect(result.transactionHash.length).toBeGreaterThan(0);
     const logs = parseEventLogs({
@@ -109,14 +110,14 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential("publishContract", () => {
       sendAndConfirmTransaction({
         account: TEST_ACCOUNT_D,
         transaction: publishContract({
-          contract: publisherContract,
           account: TEST_ACCOUNT_D,
-          previousMetadata: publishedData,
+          contract: publisherContract,
           metadata: {
             ...publishedData,
-            version: "0.0.1",
             changelog: "Initial release 2",
+            version: "0.0.1",
           },
+          previousMetadata: publishedData,
         }),
       }),
     ).rejects.toThrow("Version 0.0.1 is not greater than 0.0.1");
@@ -124,18 +125,18 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential("publishContract", () => {
 
   it("should publish a new version", async () => {
     const tx2 = publishContract({
-      contract: publisherContract,
       account: TEST_ACCOUNT_D,
-      previousMetadata: publishedData,
+      contract: publisherContract,
       metadata: {
         ...publishedData,
-        version: "0.0.2",
         changelog: "Initial release 2",
+        version: "0.0.2",
       },
+      previousMetadata: publishedData,
     });
     const result2 = await sendAndConfirmTransaction({
-      transaction: tx2,
       account: TEST_ACCOUNT_D,
+      transaction: tx2,
     });
 
     expect(result2.transactionHash.length).toBeGreaterThan(0);

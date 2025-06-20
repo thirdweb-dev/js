@@ -1,7 +1,7 @@
 import {
   type DurationId,
-  type Range,
   getLastNDaysRange,
+  type Range,
 } from "components/analytics/date-range-selector";
 import { differenceInCalendarDays } from "date-fns";
 
@@ -45,12 +45,12 @@ export function getFiltersFromSearchParams(params: {
       : ("day" as const));
 
   return {
-    range,
     interval:
       params.interval === "day"
         ? ("day" as const)
         : params.interval === "week"
           ? ("week" as const)
           : (defaultInterval as "day" | "week"),
+    range,
   };
 }

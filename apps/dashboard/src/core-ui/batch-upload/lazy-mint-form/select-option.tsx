@@ -1,8 +1,8 @@
+import { InfoIcon } from "lucide-react";
+import type { JSX, MouseEventHandler } from "react";
 import { Card } from "@/components/ui/card";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { InfoIcon } from "lucide-react";
-import type { JSX, MouseEventHandler } from "react";
 
 interface SelectOptionProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;

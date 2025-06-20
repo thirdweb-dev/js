@@ -3,9 +3,9 @@ import { BadgeContainer } from "stories/utils";
 import { PlainTextCodeBlock } from "./plaintext-code";
 
 const meta = {
-  title: "code/plaintext",
   component: Component,
   parameters: {},
+  title: "code/plaintext",
 } satisfies Meta<typeof Component>;
 
 export default meta;

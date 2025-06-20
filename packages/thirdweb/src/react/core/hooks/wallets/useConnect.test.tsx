@@ -30,8 +30,8 @@ describe("useAddConnectedWallet", () => {
 
   const wallet = createWalletAdapter({
     adaptedAccount: TEST_ACCOUNT_A,
-    client: TEST_CLIENT,
     chain: ethereum,
+    client: TEST_CLIENT,
     onDisconnect: () => {},
     switchChain: () => {},
   });

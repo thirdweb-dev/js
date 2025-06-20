@@ -72,8 +72,8 @@ export type AddSignerForParams = Prettify<
  */
 export function addSignerFor(options: AddSignerForParams) {
   const keyGateway = getKeyGateway({
-    client: options.client,
     chain: options.chain,
+    client: options.client,
   });
   return prepareContractCall({
     contract: keyGateway,
@@ -81,32 +81,32 @@ export function addSignerFor(options: AddSignerForParams) {
       "0xa005d3d2",
       [
         {
-          type: "address",
           name: "fidOwner",
+          type: "address",
         },
         {
-          type: "uint32",
           name: "keyType",
+          type: "uint32",
         },
         {
-          type: "bytes",
           name: "key",
+          type: "bytes",
         },
         {
-          type: "uint8",
           name: "metadataType",
+          type: "uint8",
         },
         {
-          type: "bytes",
           name: "metadata",
-        },
-        {
-          type: "uint256",
-          name: "deadline",
-        },
-        {
           type: "bytes",
+        },
+        {
+          name: "deadline",
+          type: "uint256",
+        },
+        {
           name: "sig",
+          type: "bytes",
         },
       ],
       [],
@@ -128,9 +128,9 @@ export function addSignerFor(options: AddSignerForParams) {
 
       // Fetch the app's FID
       const appFid = await getFid({
-        client: options.client,
-        chain: options.chain,
         address: appAccountAddress,
+        chain: options.chain,
+        client: options.client,
         disableCache: options.disableCache,
       });
       if (appFid === 0n) {
@@ -148,9 +148,9 @@ export function addSignerFor(options: AddSignerForParams) {
         signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
           account: options.appAccount,
           message: {
-            requestFid: toBigInt(appFid),
-            key: options.signerPublicKey,
             deadline,
+            key: options.signerPublicKey,
+            requestFid: toBigInt(appFid),
           },
         });
       } else {
@@ -174,13 +174,13 @@ export function addSignerFor(options: AddSignerForParams) {
         addSignature = await signAdd({
           account: options.userAccount,
           message: {
-            owner: userAddress,
-            keyType: 1,
-            key: options.signerPublicKey,
-            metadataType: 1,
-            metadata: signedKeyRequestMetadata,
-            nonce,
             deadline,
+            key: options.signerPublicKey,
+            keyType: 1,
+            metadata: signedKeyRequestMetadata,
+            metadataType: 1,
+            nonce,
+            owner: userAddress,
           },
         });
       } else {

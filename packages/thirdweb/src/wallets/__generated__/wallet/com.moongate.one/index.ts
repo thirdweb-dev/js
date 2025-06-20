@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.moongate.one",
-  name: "MG",
-  homepage: "https://moongate.one",
-  image_id: "84946308-413c-4191-5414-a325547a5c00",
   app: {
-    browser: "https://wallet.moongate.one/",
-    ios: null,
     android: null,
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://wallet.moongate.one/",
     chrome: "https://wallet.moongate.one/",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: "com.moongate.one",
-  mobile: {
-    native: null,
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://wallet.moongate.one/",
   },
+  homepage: "https://moongate.one",
+  id: "com.moongate.one",
+  image_id: "84946308-413c-4191-5414-a325547a5c00",
+  mobile: {
+    native: null,
+    universal: null,
+  },
+  name: "MG",
+  rdns: "com.moongate.one",
 } as const;

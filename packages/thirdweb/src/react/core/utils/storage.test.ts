@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { AsyncStorage } from "../../../utils/storage/AsyncStorage.js";
 import type { AuthArgsType } from "../../../wallets/in-app/core/authentication/types.js";
 import {
-  LAST_AUTH_PROVIDER_STORAGE_KEY,
   getLastAuthProvider,
+  LAST_AUTH_PROVIDER_STORAGE_KEY,
   setLastAuthProvider,
 } from "./storage.js";
 
@@ -13,8 +13,8 @@ describe("Auth Provider Storage", () => {
   beforeEach(() => {
     mockStorage = {
       getItem: vi.fn(),
-      setItem: vi.fn(),
       removeItem: vi.fn(),
+      setItem: vi.fn(),
     };
   });
 

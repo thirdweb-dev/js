@@ -33,21 +33,21 @@ export function useAddPartner(
       const res = await fetch(
         `${params.ecosystem.url}/${params.ecosystem.id}/partner`,
         {
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-            "x-thirdweb-team-id": teamId,
-          },
           body: JSON.stringify({
-            name: params.name,
-            allowlistedDomains: params.allowlistedDomains,
-            allowlistedBundleIds: params.allowlistedBundleIds,
             accessControl: params.accessControl ?? undefined,
+            allowlistedBundleIds: params.allowlistedBundleIds,
+            allowlistedDomains: params.allowlistedDomains,
+            name: params.name,
             // TODO - remove the requirement for permissions in API endpoint
             permissions: ["FULL_CONTROL_V1"],
           }),
+
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+            "x-thirdweb-team-id": teamId,
+          },
+          method: "POST",
         },
       );
 

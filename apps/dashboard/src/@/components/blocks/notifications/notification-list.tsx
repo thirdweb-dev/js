@@ -1,7 +1,7 @@
 "use client";
-import { TabButtons } from "@/components/ui/tabs";
 import { ArchiveIcon, BellIcon, Loader2Icon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { TabButtons } from "@/components/ui/tabs";
 import { Badge } from "../../ui/badge";
 import { NotificationEntry } from "./notification-entry";
 import type { useNotifications } from "./state/manager";
@@ -23,10 +23,11 @@ export function NotificationList(props: ReturnType<typeof useNotifications>) {
   return (
     <div className="flex w-full flex-1 flex-col">
       <TabButtons
-        tabContainerClassName="space-x-6 px-4 pt-2"
         tabClassName="!text-sm hover:!bg-transparent !px-0 !py-1"
+        tabContainerClassName="space-x-6 px-4 pt-2"
         tabs={[
           {
+            isActive: activeTab === "inbox",
             name: (
               <div className="flex items-center gap-1">
                 Inbox
@@ -38,12 +39,11 @@ export function NotificationList(props: ReturnType<typeof useNotifications>) {
               </div>
             ),
             onClick: () => setActiveTab("inbox"),
-            isActive: activeTab === "inbox",
           },
           {
+            isActive: activeTab === "archive",
             name: "Archive",
             onClick: () => setActiveTab("archive"),
-            isActive: activeTab === "archive",
           },
         ]}
       />
@@ -54,21 +54,21 @@ export function NotificationList(props: ReturnType<typeof useNotifications>) {
       >
         {activeTab === "inbox" ? (
           <InboxTab
-            unreadNotifications={props.unreadNotifications}
-            isLoadingUnread={props.isLoadingUnread}
             hasMoreUnread={props.hasMoreUnread}
             isFetchingMoreUnread={props.isFetchingMoreUnread}
+            isLoadingUnread={props.isLoadingUnread}
             loadMoreUnread={props.loadMoreUnread}
-            markAsRead={props.markAsRead}
             markAllAsRead={props.markAllAsRead}
+            markAsRead={props.markAsRead}
             scrollContainerRef={scrollContainerRef}
+            unreadNotifications={props.unreadNotifications}
           />
         ) : (
           <ArchiveTab
             archivedNotifications={props.archivedNotifications}
-            isLoadingArchived={props.isLoadingArchived}
             hasMoreArchived={props.hasMoreArchived}
             isFetchingMoreArchived={props.isFetchingMoreArchived}
+            isLoadingArchived={props.isLoadingArchived}
             loadMoreArchived={props.loadMoreArchived}
             scrollContainerRef={scrollContainerRef}
           />
@@ -110,8 +110,8 @@ function InboxTab(
       ))}
       <AutoLoadMore
         hasMore={props.hasMoreUnread}
-        loadMore={props.loadMoreUnread}
         isLoading={props.isFetchingMoreUnread || props.isLoadingUnread}
+        loadMore={props.loadMoreUnread}
         scrollContainerRef={props.scrollContainerRef}
       />
     </>
@@ -144,8 +144,8 @@ function ArchiveTab(
       ))}
       <AutoLoadMore
         hasMore={props.hasMoreArchived}
-        loadMore={props.loadMoreArchived}
         isLoading={props.isFetchingMoreArchived || props.isLoadingArchived}
+        loadMore={props.loadMoreArchived}
         scrollContainerRef={props.scrollContainerRef}
       />
     </>
@@ -198,5 +198,5 @@ function AutoLoadMore(props: {
     );
   }
 
-  return <div ref={ref} className="h-[1px] w-full opacity-0" aria-hidden />;
+  return <div aria-hidden className="h-[1px] w-full opacity-0" ref={ref} />;
 }

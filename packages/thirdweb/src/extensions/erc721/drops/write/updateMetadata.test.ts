@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
+import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_C } from "~test/test-wallets.js";
-
-import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { getContract } from "../../../../contract/contract.js";
 import { deployERC721Contract } from "../../../../extensions/prebuilts/deploy-erc721.js";
 import { sendAndConfirmTransaction } from "../../../../transaction/actions/send-and-confirm-transaction.js";
@@ -18,32 +17,32 @@ const chain = ANVIL_CHAIN;
 describe.runIf(process.env.TW_SECRET_KEY)("updateMetadata ERC721", () => {
   it("should update metadata", async () => {
     const address = await deployERC721Contract({
-      client,
-      chain,
       account,
-      type: "DropERC721",
+      chain,
+      client,
       params: {
-        name: "NFT Drop",
         contractURI: TEST_CONTRACT_URI,
+        name: "NFT Drop",
       },
+      type: "DropERC721",
     });
     const contract = getContract({
       address,
-      client,
       chain,
+      client,
     });
     const lazyMintTx = lazyMint({
       contract,
       nfts: [{ name: "token 0" }, { name: "token 1" }, { name: "token 2" }],
     });
-    await sendAndConfirmTransaction({ transaction: lazyMintTx, account });
+    await sendAndConfirmTransaction({ account, transaction: lazyMintTx });
 
     const updateTx = updateMetadata({
       contract,
-      targetTokenId: 1n,
       newMetadata: { name: "token 1 - updated" },
+      targetTokenId: 1n,
     });
-    await sendAndConfirmTransaction({ transaction: updateTx, account });
+    await sendAndConfirmTransaction({ account, transaction: updateTx });
 
     const nfts = await getNFTs({ contract });
 
@@ -55,27 +54,27 @@ describe.runIf(process.env.TW_SECRET_KEY)("updateMetadata ERC721", () => {
 
   it("should throw if no nft uploaded", async () => {
     const address = await deployERC721Contract({
-      client,
-      chain,
       account,
-      type: "DropERC721",
+      chain,
+      client,
       params: {
-        name: "NFT Drop",
         contractURI: TEST_CONTRACT_URI,
+        name: "NFT Drop",
       },
+      type: "DropERC721",
     });
     const contract = getContract({
       address,
-      client,
       chain,
+      client,
     });
     const updateTx = updateMetadata({
       contract,
-      targetTokenId: 0n,
       newMetadata: { name: "token 1 - updated" },
+      targetTokenId: 0n,
     });
     await expect(
-      sendAndConfirmTransaction({ transaction: updateTx, account }),
+      sendAndConfirmTransaction({ account, transaction: updateTx }),
     ).rejects.toThrowError(
       "No base URI set. Please set a base URI before updating metadata",
     );
@@ -88,19 +87,19 @@ describe.runIf(process.env.TW_SECRET_KEY)("updateMetadata ERC721", () => {
     },
     async () => {
       const address = await deployERC721Contract({
-        client,
-        chain,
         account,
-        type: "DropERC721",
+        chain,
+        client,
         params: {
-          name: "NFT Drop",
           contractURI: TEST_CONTRACT_URI,
+          name: "NFT Drop",
         },
+        type: "DropERC721",
       });
       const contract = getContract({
         address,
-        client,
         chain,
+        client,
       });
       const lazyMintTx = lazyMint({
         contract,
@@ -108,13 +107,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("updateMetadata ERC721", () => {
           name: `token ${i}`,
         })),
       });
-      await sendAndConfirmTransaction({ transaction: lazyMintTx, account });
+      await sendAndConfirmTransaction({ account, transaction: lazyMintTx });
       const updateTx = updateMetadata({
         contract,
-        targetTokenId: 1n,
         newMetadata: { name: "token 1 - updated" },
+        targetTokenId: 1n,
       });
-      await sendAndConfirmTransaction({ transaction: updateTx, account });
+      await sendAndConfirmTransaction({ account, transaction: updateTx });
       const nfts = await getNFTs({ contract });
 
       expect(nfts.length).toBe(100); // first page

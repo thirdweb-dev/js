@@ -1,10 +1,5 @@
 "use client";
 
-import { CustomMediaRenderer } from "@/components/blocks/media-renderer";
-import { PaginationButtons } from "@/components/pagination-buttons";
-import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import { CheckCheckIcon } from "lucide-react";
 import { useState } from "react";
 import { type NFT, type ThirdwebContract, toTokens } from "thirdweb";
@@ -13,6 +8,11 @@ import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { maxUint256 } from "thirdweb/utils";
+import { CustomMediaRenderer } from "@/components/blocks/media-renderer";
+import { PaginationButtons } from "@/components/pagination-buttons";
+import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { TokenPrice } from "../../_components/token-price";
 import { useERC1155ClaimCondition } from "../client-utils";
 import { supplyFormatter } from "../format";
@@ -45,9 +45,9 @@ export function NFTsGrid(props: {
     props.type === "erc1155" ? ERC1155Ext.getNFTs : ERC721Ext.getNFTs,
     {
       contract: props.clientContract,
-      start,
       count: pageSize,
       includeOwners: true,
+      start,
       tokenByIndex: props.isTokenByIndexSupported,
     },
   );
@@ -76,14 +76,10 @@ export function NFTsGrid(props: {
     <div className="flex grow flex-col">
       {viewToken && (
         <TokenViewerSheet
-          variant="view-data"
-          clientContract={props.clientContract}
           chainMetadata={props.chainMetadata}
-          type={props.type}
-          nft={viewToken.nft}
-          tokenByIndexSupported={props.isTokenByIndexSupported}
-          open={viewToken.open}
+          clientContract={props.clientContract}
           collectionMetadata={props.collectionMetadata}
+          nft={viewToken.nft}
           onClose={() => {
             window.history.replaceState({}, "", `${contractLayoutPath}`);
             setViewToken({
@@ -91,6 +87,10 @@ export function NFTsGrid(props: {
               open: false,
             });
           }}
+          open={viewToken.open}
+          tokenByIndexSupported={props.isTokenByIndexSupported}
+          type={props.type}
+          variant="view-data"
         />
       )}
 
@@ -105,28 +105,28 @@ export function NFTsGrid(props: {
           {!nftsQuery.isPending &&
             nftsQuery.data?.map((nft) => (
               <NFTCard
-                key={nft.id}
-                data={nft}
-                tokenId={nft.id}
+                chainMetadata={props.chainMetadata}
                 clientContract={props.clientContract}
                 contractLayoutPath={contractLayoutPath}
+                data={nft}
+                key={nft.id}
                 onClick={() => handleNFTCardClick(nft)}
+                tokenId={nft.id}
                 type={props.type}
-                chainMetadata={props.chainMetadata}
               />
             ))}
 
           {nftsQuery.isPending &&
             Array.from({ length: pageSize }).map((_, idx) => (
               <NFTCard
+                chainMetadata={props.chainMetadata}
+                clientContract={props.clientContract}
+                contractLayoutPath={contractLayoutPath}
+                data={undefined}
                 // biome-ignore lint/suspicious/noArrayIndexKey: idx is not relevant
                 key={idx}
                 tokenId={0n}
-                data={undefined}
-                contractLayoutPath={contractLayoutPath}
-                clientContract={props.clientContract}
                 type={props.type}
-                chainMetadata={props.chainMetadata}
               />
             ))}
         </NFTGridContainer>
@@ -137,9 +137,9 @@ export function NFTsGrid(props: {
           <div className="flex justify-start">
             <PaginationButtons
               activePage={page}
-              totalPages={totalPages}
-              onPageClick={setPage}
               className="mx-0 w-auto"
+              onPageClick={setPage}
+              totalPages={totalPages}
             />
           </div>
         </div>
@@ -174,14 +174,14 @@ export function NFTGridSkeleton(props: {
     <NFTGridContainer gridClassName={props.gridClassName}>
       {Array.from({ length: pageSize }).map((_, idx) => (
         <NFTCard
-          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-          key={idx}
-          data={undefined}
-          contractLayoutPath={""}
-          type={props.type}
           chainMetadata={props.chainMetadata}
           clientContract={props.clientContract}
+          contractLayoutPath={""}
+          data={undefined}
+          // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+          key={idx}
           tokenId={0n}
+          type={props.type}
         />
       ))}
     </NFTGridContainer>
@@ -199,8 +199,8 @@ function NFTCard(props: {
 }) {
   return (
     <div
-      role="button"
-      tabIndex={props.onClick ? 0 : undefined}
+      className="group hover:-translate-y-0.5 relative flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border bg-card duration-200 hover:scale-[1.01] hover:border-active-border"
+      onClick={props.onClick}
       onKeyDown={
         props.onClick
           ? (e) => {
@@ -210,18 +210,19 @@ function NFTCard(props: {
             }
           : undefined
       }
-      onClick={props.onClick}
-      className="group hover:-translate-y-0.5 relative flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border bg-card duration-200 hover:scale-[1.01] hover:border-active-border"
+      // biome-ignore lint/a11y/useSemanticElements: FIXME
+      role="button"
+      tabIndex={props.onClick ? 0 : undefined}
     >
       {/* image */}
       <div className="relative aspect-square w-full overflow-hidden">
         {props.data ? (
           <CustomMediaRenderer
-            client={props.clientContract.client}
-            src={props.data.metadata.animation_url || props.data.metadata.image}
             alt={props.data.metadata.name?.toString() || ""}
-            poster={props.data.metadata.image}
             className="aspect-square h-full w-full"
+            client={props.clientContract.client}
+            poster={props.data.metadata.image}
+            src={props.data.metadata.animation_url || props.data.metadata.image}
           />
         ) : (
           <Skeleton className="aspect-square h-full w-full" />
@@ -253,10 +254,10 @@ function NFTCard(props: {
 
         {props.type === "erc1155" && (
           <RenderClaimConditionInfo
-            tokenId={props.tokenId}
             chainMetadata={props.chainMetadata}
             contract={props.clientContract}
             isSkeleton={!props.data}
+            tokenId={props.tokenId}
           />
         )}
       </div>
@@ -277,9 +278,9 @@ function RenderClaimConditionInfo(props: {
     claimCondition,
   } = useERC1155ClaimCondition({
     chainMetadata: props.chainMetadata,
-    tokenId: props.tokenId,
     contract: props.contract,
     enabled: !props.isSkeleton,
+    tokenId: props.tokenId,
   });
 
   const noClaimConditionSet = !claimCondition.isPending && !claimCondition.data;
@@ -347,10 +348,6 @@ function RenderClaimConditionInfo(props: {
               }
             : undefined
         }
-        skeletonData={{
-          maxClaimableSupply: 100n,
-          supplyClaimed: 10n,
-        }}
         render={(value) => {
           const isFullyClaimed =
             value.supplyClaimed === value.maxClaimableSupply;
@@ -368,6 +365,10 @@ function RenderClaimConditionInfo(props: {
               )}
             </div>
           );
+        }}
+        skeletonData={{
+          maxClaimableSupply: 100n,
+          supplyClaimed: 10n,
         }}
       />
     </div>

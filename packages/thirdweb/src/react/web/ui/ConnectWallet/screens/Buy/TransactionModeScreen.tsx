@@ -19,28 +19,28 @@ import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAcc
 import { useActiveWallet } from "../../../../../core/hooks/wallets/useActiveWallet.js";
 import { ErrorState } from "../../../../wallets/shared/ErrorState.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
-import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
+import { Container, Line, ModalHeader } from "../../../components/basic.js";
+import { Button } from "../../../components/buttons.js";
 import { ChainIcon } from "../../../components/ChainIcon.js";
 import { Img } from "../../../components/Img.js";
 import { Skeleton } from "../../../components/Skeleton.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { TokenIcon } from "../../../components/TokenIcon.js";
-import { Container, Line, ModalHeader } from "../../../components/basic.js";
-import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { TokenSymbol } from "../../../components/token/TokenSymbol.js";
+import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
 import { ConnectButton } from "../../ConnectButton.js";
-import { PoweredByThirdweb } from "../../PoweredByTW.js";
 import { OutlineWalletIcon } from "../../icons/OutlineWalletIcon.js";
+import { PoweredByThirdweb } from "../../PoweredByTW.js";
 import { formatTokenBalance } from "../formatTokenBalance.js";
 import {
   type ERC20OrNativeToken,
-  NATIVE_TOKEN,
   isNativeToken,
+  NATIVE_TOKEN,
 } from "../nativeToken.js";
 import { useTransactionCostAndData } from "./main/useBuyTxStates.js";
-import { WalletRow } from "./swap/WalletRow.js";
 import type { SupportedChainAndTokens } from "./swap/useSwapSupportedChains.js";
+import { WalletRow } from "./swap/WalletRow.js";
 
 export function TransactionModeScreen(props: {
   client: ThirdwebClient;
@@ -74,9 +74,9 @@ export function TransactionModeScreen(props: {
     isLoading: transactionCostAndDataLoading,
     refetch: transactionCostAndDataRefetch,
   } = useTransactionCostAndData({
-    transaction: payUiOptions.transaction,
     account: payerAccount,
     supportedDestinations,
+    transaction: payUiOptions.transaction,
   });
   const theme = useCustomTheme();
   const activeWallet = useActiveWallet();
@@ -87,10 +87,10 @@ export function TransactionModeScreen(props: {
     {
       address: activeAccount?.address,
       chain: payUiOptions.transaction.chain,
+      client: props.client,
       tokenAddress: isNativeToken(transactionCostAndData?.token || NATIVE_TOKEN)
         ? undefined
         : transactionCostAndData?.token.address,
-      client: props.client,
     },
     {
       enabled: !!transactionCostAndData,
@@ -104,16 +104,16 @@ export function TransactionModeScreen(props: {
   if (!activeAccount) {
     return (
       <Container
+        center="both"
+        flex="row"
+        fullHeight
         style={{
           minHeight: "350px",
         }}
-        fullHeight
-        flex="row"
-        center="both"
       >
         <Container animate="fadein">
           <Spacer y="xxl" />
-          <Container flex="row" center="x">
+          <Container center="x" flex="row">
             <OutlineWalletIcon size={iconSize["3xl"]} />
           </Container>
           <Spacer y="lg" />
@@ -121,7 +121,7 @@ export function TransactionModeScreen(props: {
             Please connect a wallet to continue
           </Text>
           <Spacer y="xl" />
-          <Container flex="row" center="x" style={{ width: "100%" }}>
+          <Container center="x" flex="row" style={{ width: "100%" }}>
             <ConnectButton
               client={client}
               theme={theme}
@@ -136,23 +136,23 @@ export function TransactionModeScreen(props: {
   if (transactionCostAndDataError || chainDataError) {
     return (
       <Container
+        center="both"
+        flex="row"
+        fullHeight
         style={{
           minHeight: "350px",
         }}
-        fullHeight
-        flex="row"
-        center="both"
       >
         <ErrorState
-          title={
-            transactionCostAndDataError?.message ||
-            chainDataError?.message ||
-            "Something went wrong"
-          }
           onTryAgain={
             transactionCostAndDataError
               ? transactionCostAndDataRefetch
               : chainDataRefetch
+          }
+          title={
+            transactionCostAndDataError?.message ||
+            chainDataError?.message ||
+            "Something went wrong"
           }
         />
       </Container>
@@ -179,20 +179,20 @@ export function TransactionModeScreen(props: {
             client={client}
             src={metadata?.image}
             style={{
-              width: "100%",
-              borderRadius: spacing.md,
-              border: `1px solid ${theme.colors.borderColor}`,
               backgroundColor: theme.colors.tertiaryBg,
+              border: `1px solid ${theme.colors.borderColor}`,
+              borderRadius: spacing.md,
+              width: "100%",
             }}
           />
         ) : activeAccount ? (
           <Container flex="column" gap="sm">
             {insufficientFunds && (
               <div>
-                <Text color="danger" size="xs" center multiline>
+                <Text center color="danger" multiline size="xs">
                   Insufficient Funds
                 </Text>
-                <Text size="xs" center multiline>
+                <Text center multiline size="xs">
                   Select another token or pay with card.
                 </Text>
               </div>
@@ -200,49 +200,49 @@ export function TransactionModeScreen(props: {
             <Container
               flex="row"
               style={{
-                justifyContent: "space-between",
-                padding: spacing.sm,
-                marginBottom: spacing.sm,
-                borderRadius: spacing.md,
                 backgroundColor: theme.colors.tertiaryBg,
                 border: `1px solid ${theme.colors.borderColor}`,
+                borderRadius: spacing.md,
+                justifyContent: "space-between",
+                marginBottom: spacing.sm,
+                padding: spacing.sm,
               }}
             >
               <WalletRow
                 address={activeAccount?.address}
-                iconSize="md"
                 client={client}
+                iconSize="md"
               />
               {balanceQuery.data ? (
-                <Container flex="row" gap="3xs" center="y">
-                  <Text size="xs" color="secondaryText" weight={500}>
+                <Container center="y" flex="row" gap="3xs">
+                  <Text color="secondaryText" size="xs" weight={500}>
                     {formatTokenBalance(balanceQuery.data, false)}
                   </Text>
                   <TokenSymbol
-                    token={transactionCostAndData.token}
                     chain={payUiOptions.transaction.chain}
-                    size="xs"
                     color="secondaryText"
+                    size="xs"
+                    token={transactionCostAndData.token}
                   />
                 </Container>
               ) : (
-                <Skeleton width="70px" height={fontSize.xs} />
+                <Skeleton height={fontSize.xs} width="70px" />
               )}
             </Container>
           </Container>
         ) : null}
         <Spacer y="md" />
         <Container flex="row">
-          <Container flex="column" expand>
-            <Text size="md" color="primaryText" weight={700}>
+          <Container expand flex="column">
+            <Text color="primaryText" size="md" weight={700}>
               Price
             </Text>
           </Container>
           <Container expand>
             <Container
+              center="y"
               flex="row"
               gap="xs"
-              center="y"
               style={{ justifyContent: "right" }}
             >
               <TokenIcon
@@ -272,16 +272,16 @@ export function TransactionModeScreen(props: {
         <Line />
         <Spacer y="md" />
         <Container flex="row">
-          <Container flex="column" expand>
-            <Text size="xs" color="secondaryText">
+          <Container expand flex="column">
+            <Text color="secondaryText" size="xs">
               Gas Fees
             </Text>
           </Container>
           <Container expand>
             <Container
+              center="y"
               flex="row"
               gap="xs"
-              center="y"
               style={{ justifyContent: "right" }}
             >
               <Text
@@ -307,26 +307,26 @@ export function TransactionModeScreen(props: {
         </Container>
         <Spacer y="sm" />
         <Container flex="row">
-          <Container flex="column" expand>
-            <Text size="xs" color="secondaryText">
+          <Container expand flex="column">
+            <Text color="secondaryText" size="xs">
               Network
             </Text>
           </Container>
           <Container expand>
             <Container
+              center="y"
               flex="row"
               gap="xs"
-              center="y"
               style={{ justifyContent: "right" }}
             >
               <ChainIcon
                 chainIconUrl={chainData.icon?.url}
-                size="xs"
                 client={props.client}
+                size="xs"
               />
               <Text
-                size="xs"
                 color="secondaryText"
+                size="xs"
                 style={{ textAlign: "right" }}
               >
                 {chainData.name}
@@ -338,7 +338,6 @@ export function TransactionModeScreen(props: {
       <Spacer y="xl" />
       {payerAccount ? (
         <Button
-          variant="accent"
           fullWidth
           onClick={() => {
             let totalCostWei = insufficientFunds
@@ -352,13 +351,13 @@ export function TransactionModeScreen(props: {
               totalCostWei += transactionCostAndData.gasCostWei;
             }
             trackPayEvent({
-              event: "choose_payment_method_transaction_mode",
+              amountWei: totalCostWei.toString(),
               client,
-              walletAddress: payerAccount.address,
-              walletType: activeWallet?.id,
+              event: "choose_payment_method_transaction_mode",
               toChainId: payUiOptions.transaction.chain.id,
               toToken: transactionCostAndData.token.address,
-              amountWei: totalCostWei.toString(),
+              walletAddress: payerAccount.address,
+              walletType: activeWallet?.id,
             });
             onContinue(
               toTokens(totalCostWei, transactionCostAndData.decimals),
@@ -366,6 +365,7 @@ export function TransactionModeScreen(props: {
               transactionCostAndData.token,
             );
           }}
+          variant="accent"
         >
           Choose Payment Method
         </Button>
@@ -374,12 +374,12 @@ export function TransactionModeScreen(props: {
           <ConnectButton
             {...props.connectOptions}
             client={client}
-            theme={theme}
             connectButton={{
               style: {
                 width: "100%",
               },
             }}
+            theme={theme}
           />
         </div>
       )}

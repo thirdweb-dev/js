@@ -33,8 +33,8 @@ export type GetFidParams = {
 export async function getFid(options: GetFidParams): Promise<bigint> {
   const fetch = () => {
     const contract = getIdRegistry({
-      client: options.client,
       chain: options.chain,
+      client: options.client,
     });
     return idOf({ contract, owner: options.address });
   };

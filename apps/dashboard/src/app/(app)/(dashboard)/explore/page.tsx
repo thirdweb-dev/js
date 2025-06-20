@@ -10,12 +10,12 @@ const description =
   "A list of Ethereum smart contract templates for web3 developers, including the most popular evm smart contracts for dapps, NFTs and more.";
 
 export const metadata: Metadata = {
-  title,
   description,
   openGraph: {
-    title,
     description,
+    title,
   },
+  title,
 };
 
 export default async function ExplorePage() {

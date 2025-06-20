@@ -1,16 +1,16 @@
-import { apiServerProxy } from "@/actions/proxies";
-import type { Project } from "@/api/projects";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useActiveAccount } from "thirdweb/react";
+import { apiServerProxy } from "@/actions/proxies";
+import type { Project } from "@/api/projects";
 import { accountKeys, authorizedWallets } from "../cache-keys";
 
 // FIXME: We keep repeating types, API server should provide them
 
 export const accountPlan = {
+  enterprise: "enterprise",
   free: "free",
   growth: "growth",
   pro: "pro",
-  enterprise: "enterprise",
 } as const;
 
 export type AuthorizedWallet = {
@@ -70,7 +70,7 @@ export interface BillingCredit {
 export function useAccountCredits() {
   const address = useActiveAccount()?.address;
   return useQuery({
-    queryKey: accountKeys.credits(address || ""),
+    enabled: !!address,
     queryFn: async () => {
       type Result = {
         data: BillingCredit[];
@@ -78,11 +78,11 @@ export function useAccountCredits() {
       };
 
       const res = await apiServerProxy<Result>({
-        pathname: "/v1/account/credits",
-        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
+        method: "GET",
+        pathname: "/v1/account/credits",
       });
 
       if (!res.ok) {
@@ -104,7 +104,7 @@ export function useAccountCredits() {
 
       return credits;
     },
-    enabled: !!address,
+    queryKey: accountKeys.credits(address || ""),
   });
 }
 
@@ -123,12 +123,12 @@ export async function updateAccountClient(input: UpdateAccountParams) {
   };
 
   const res = await apiServerProxy<Result>({
-    pathname: "/v1/account",
-    method: "PUT",
+    body: JSON.stringify(input),
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(input),
+    method: "PUT",
+    pathname: "/v1/account",
   });
 
   if (!res.ok) {
@@ -156,12 +156,12 @@ export function useUpdateNotifications() {
       };
 
       const res = await apiServerProxy<Result>({
-        pathname: "/v1/account/notifications",
-        method: "PUT",
+        body: JSON.stringify({ preferences: input }),
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ preferences: input }),
+        method: "PUT",
+        pathname: "/v1/account/notifications",
       });
 
       if (!res.ok) {
@@ -191,12 +191,12 @@ export const verifyEmailClient = async (input: ConfirmEmailInput) => {
   };
 
   const res = await apiServerProxy<Result>({
-    pathname: "/v1/account/confirmEmail",
-    method: "PUT",
+    body: JSON.stringify(input),
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(input),
+    method: "PUT",
+    pathname: "/v1/account/confirmEmail",
   });
 
   if (!res.ok) {
@@ -219,12 +219,12 @@ export const resendEmailClient = async () => {
   };
 
   const res = await apiServerProxy<Result>({
-    pathname: "/v1/account/resendEmailConfirmation",
-    method: "POST",
+    body: JSON.stringify({}),
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({}),
+    method: "POST",
+    pathname: "/v1/account/resendEmailConfirmation",
   });
 
   if (!res.ok) {
@@ -252,12 +252,12 @@ export async function createProjectClient(
   };
 
   const res = await apiServerProxy<Response>({
-    pathname: `/v1/teams/${teamId}/projects`,
-    method: "POST",
+    body: JSON.stringify(body),
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(body),
+    method: "POST",
+    pathname: `/v1/teams/${teamId}/projects`,
   });
 
   if (!res.ok) {
@@ -279,12 +279,12 @@ export async function updateProjectClient(
   };
 
   const res = await apiServerProxy<Response>({
-    pathname: `/v1/teams/${params.teamId}/projects/${params.projectId}`,
-    method: "PUT",
+    body: JSON.stringify(body),
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(body),
+    method: "PUT",
+    pathname: `/v1/teams/${params.teamId}/projects/${params.projectId}`,
   });
 
   if (!res.ok) {
@@ -303,8 +303,8 @@ export async function deleteProjectClient(params: {
   };
 
   const res = await apiServerProxy<Response>({
-    pathname: `/v1/teams/${params.teamId}/projects/${params.projectId}`,
     method: "DELETE",
+    pathname: `/v1/teams/${params.teamId}/projects/${params.projectId}`,
   });
 
   if (!res.ok) {
@@ -326,12 +326,12 @@ export async function rotateSecretKeyClient(params: {
   projectId: string;
 }) {
   const res = await apiServerProxy<RotateSecretKeyAPIReturnType>({
-    pathname: `/v1/teams/${params.teamId}/projects/${params.projectId}/rotate-secret-key`,
-    method: "POST",
     body: JSON.stringify({}),
     headers: {
       "Content-Type": "application/json",
     },
+    method: "POST",
+    pathname: `/v1/teams/${params.teamId}/projects/${params.projectId}/rotate-secret-key`,
   });
 
   if (!res.ok) {
@@ -354,12 +354,12 @@ export function useRevokeAuthorizedWallet() {
       };
 
       const res = await apiServerProxy<Result>({
-        pathname: `/v1/authorized-wallets/${authorizedWalletId}/revoke`,
-        method: "POST",
+        body: JSON.stringify({}),
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({}),
+        method: "POST",
+        pathname: `/v1/authorized-wallets/${authorizedWalletId}/revoke`,
       });
 
       if (!res.ok) {
@@ -385,7 +385,8 @@ export function useRevokeAuthorizedWallet() {
 export function useAuthorizedWallets() {
   const address = useActiveAccount()?.address;
   return useQuery({
-    queryKey: authorizedWallets.authorizedWallets(address || ""),
+    enabled: !!address,
+    gcTime: 0,
     queryFn: async () => {
       type Result = {
         data: AuthorizedWallet[];
@@ -393,11 +394,11 @@ export function useAuthorizedWallets() {
       };
 
       const res = await apiServerProxy<Result>({
-        pathname: "/v1/authorized-wallets",
-        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
+        method: "GET",
+        pathname: "/v1/authorized-wallets",
       });
 
       if (!res.ok) {
@@ -412,7 +413,6 @@ export function useAuthorizedWallets() {
 
       return json.data;
     },
-    enabled: !!address,
-    gcTime: 0,
+    queryKey: authorizedWallets.authorizedWallets(address || ""),
   });
 }

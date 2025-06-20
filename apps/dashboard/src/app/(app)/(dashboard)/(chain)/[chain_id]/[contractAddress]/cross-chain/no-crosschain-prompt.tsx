@@ -10,10 +10,10 @@ export function NoCrossChainPrompt() {
       <br />
       <br />
       <Link
-        href="/explore"
-        target="_blank"
         className="text-blue-500 underline"
+        href="/explore"
         rel="noopener noreferrer"
+        target="_blank"
       >
         Explore contracts
       </Link>

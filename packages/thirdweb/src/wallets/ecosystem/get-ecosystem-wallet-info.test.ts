@@ -13,9 +13,9 @@ describe("getEcosystemWalletInfo", () => {
   it("should fetch wallet metadata successfully", async () => {
     const walletId = "ecosystem.123";
     const mockResponse = {
-      name: "Test Wallet",
-      imageUrl: "http://example.com/image.png",
       homepage: "http://example.com",
+      imageUrl: "http://example.com/image.png",
+      name: "Test Wallet",
     };
     const fetchMock = vi.fn().mockResolvedValue({
       json: () => Promise.resolve(mockResponse),
@@ -27,32 +27,32 @@ describe("getEcosystemWalletInfo", () => {
 
     expect(fetchMock).toHaveBeenCalled();
     expect(result).toEqual({
-      id: walletId,
-      name: "Test Wallet",
-      image_id: "http://example.com/image.png",
-      homepage: "http://example.com",
-      rdns: null,
       app: {
-        browser: null,
-        ios: null,
         android: null,
-        mac: null,
-        windows: null,
-        linux: null,
-        opera: null,
+        browser: null,
         chrome: null,
-        firefox: null,
-        safari: null,
         edge: null,
-      },
-      mobile: {
-        native: null,
-        universal: null,
+        firefox: null,
+        ios: null,
+        linux: null,
+        mac: null,
+        opera: null,
+        safari: null,
+        windows: null,
       },
       desktop: {
         native: null,
         universal: null,
       },
+      homepage: "http://example.com",
+      id: walletId,
+      image_id: "http://example.com/image.png",
+      mobile: {
+        native: null,
+        universal: null,
+      },
+      name: "Test Wallet",
+      rdns: null,
     });
   });
 });

@@ -1,6 +1,6 @@
+import type { Metadata } from "next";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
-import type { Metadata } from "next";
 import {
   ConnectSmartAccountCustomPreview,
   ConnectSmartAccountPreview,
@@ -9,17 +9,16 @@ import { PageLayout } from "../../../../components/blocks/APIHeader";
 import { CodeExample } from "../../../../components/code/code-example";
 
 export const metadata: Metadata = {
-  metadataBase,
-  title: "Account Abstraction | thirdweb Connect",
   description:
     "Let users sign up with their email, phone number, social media accounts or directly with a wallet. Seamlessly integrate account abstraction and SIWE auth.",
+  metadataBase,
+  title: "Account Abstraction | thirdweb Connect",
 };
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="Connect smart accounts"
         description={
           <>
             Let users connect to their smart accounts with any wallet and unlock
@@ -28,6 +27,7 @@ export default function Page() {
           </>
         }
         docsLink="https://portal.thirdweb.com/connect/account-abstraction/overview?utm_source=playground"
+        title="Connect smart accounts"
       >
         <ConnectSmartAccount />
       </PageLayout>
@@ -39,12 +39,6 @@ function ConnectSmartAccount() {
   return (
     <>
       <CodeExample
-        header={{
-          title: "Using prebuilt UI component",
-          description:
-            "Use the prebuilt UI components to connect to smart accounts",
-        }}
-        preview={<ConnectSmartAccountPreview />}
         code={`\
   import { ConnectButton } from "thirdweb/react";
 
@@ -55,16 +49,17 @@ function ConnectSmartAccount() {
 accountAbstraction={{ chain, sponsorGas: true }} />
 </>);
 };`}
+        header={{
+          description:
+            "Use the prebuilt UI components to connect to smart accounts",
+          title: "Using prebuilt UI component",
+        }}
         lang="tsx"
+        preview={<ConnectSmartAccountPreview />}
       />
 
       <div className="h-14" />
       <CodeExample
-        header={{
-          title: "Build custom UI",
-          description: "Build your own UI to connect to smart accounts",
-        }}
-        preview={<ConnectSmartAccountCustomPreview />}
         code={`\
   import { useConnect } from "thirdweb/react";
   import { createWallet } from "thirdweb/wallets";
@@ -84,7 +79,12 @@ accountAbstraction={{ chain, sponsorGas: true }} />
 })}>Connect with Google</button>
 </>);
 };`}
+        header={{
+          description: "Build your own UI to connect to smart accounts",
+          title: "Build custom UI",
+        }}
         lang="tsx"
+        preview={<ConnectSmartAccountCustomPreview />}
       />
     </>
   );

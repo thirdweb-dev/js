@@ -1,13 +1,15 @@
 import type { EIP1193Provider } from "viem";
 import {
-  type SignTypedDataParameters,
   getTypesForEIP712Domain,
+  type SignTypedDataParameters,
   serializeTypedData,
   validateTypedData,
 } from "viem";
 import { isInsufficientFundsError } from "../../analytics/track/helpers.js";
-import { trackTransaction } from "../../analytics/track/transaction.js";
-import { trackInsufficientFundsError } from "../../analytics/track/transaction.js";
+import {
+  trackInsufficientFundsError,
+  trackTransaction,
+} from "../../analytics/track/transaction.js";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain, getChainMetadata } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -106,12 +108,12 @@ export async function connectEip1193Wallet({
   }
 
   return onConnect({
-    provider,
     address,
     chain: connectedChain,
-    emitter,
     client,
+    emitter,
     id,
+    provider,
   });
 }
 
@@ -153,12 +155,12 @@ export async function autoConnectEip1193Wallet({
     chain && chain.id === chainId ? chain : getCachedChain(chainId);
 
   return onConnect({
-    provider,
     address,
     chain: connectedChain,
-    emitter,
     client,
+    emitter,
     id,
+    provider,
   });
 }
 
@@ -191,13 +193,13 @@ function createAccount({
       const params = [
         {
           ...gasFees,
-          nonce: tx.nonce ? numberToHex(tx.nonce) : undefined,
           accessList: tx.accessList,
-          value: tx.value ? numberToHex(tx.value) : undefined,
-          gas: tx.gas ? numberToHex(tx.gas) : undefined,
-          from: this.address,
-          to: tx.to ? getAddress(tx.to) : undefined,
           data: tx.data,
+          from: this.address,
+          gas: tx.gas ? numberToHex(tx.gas) : undefined,
+          nonce: tx.nonce ? numberToHex(tx.nonce) : undefined,
+          to: tx.to ? getAddress(tx.to) : undefined,
+          value: tx.value ? numberToHex(tx.value) : undefined,
           ...tx.eip712,
         },
       ];
@@ -210,13 +212,13 @@ function createAccount({
         })) as Hex;
 
         trackTransaction({
-          client,
           chainId: tx.chainId,
-          walletAddress: getAddress(address),
-          walletType: id,
-          transactionHash,
+          client,
           contractAddress: tx.to ?? undefined,
           gasPrice: tx.gasPrice,
+          transactionHash,
+          walletAddress: getAddress(address),
+          walletType: id,
         });
 
         return {
@@ -226,12 +228,12 @@ function createAccount({
         // Track insufficient funds errors
         if (isInsufficientFundsError(error)) {
           trackInsufficientFundsError({
-            client,
-            error,
-            walletAddress: getAddress(address),
             chainId: tx.chainId,
+            client,
             contractAddress: tx.to || undefined,
+            error,
             transactionValue: tx.value,
+            walletAddress: getAddress(address),
           });
         }
 
@@ -322,7 +324,7 @@ async function onConnect({
   client: ThirdwebClient;
   id: WalletId | ({} & string);
 }): Promise<[Account, Chain, DisconnectFn, SwitchChainFn]> {
-  const account = createAccount({ provider, address, client, id });
+  const account = createAccount({ address, client, id, provider });
   async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
     provider.removeListener("chainChanged", onChainChanged);
@@ -337,10 +339,10 @@ async function onConnect({
   function onAccountsChanged(accounts: string[]) {
     if (accounts[0]) {
       const newAccount = createAccount({
-        provider,
         address: getAddress(accounts[0]),
         client,
         id,
+        provider,
       });
 
       emitter.emit("accountChanged", newAccount);
@@ -386,11 +388,11 @@ async function switchChain(provider: EIP1193Provider, chain: Chain) {
       method: "wallet_addEthereumChain",
       params: [
         {
+          blockExplorerUrls: apiChain.explorers?.map((x) => x.url),
           chainId: hexChainId,
           chainName: apiChain.name,
-          nativeCurrency: apiChain.nativeCurrency,
-          rpcUrls: getValidPublicRPCUrl(apiChain), // no client id on purpose here
-          blockExplorerUrls: apiChain.explorers?.map((x) => x.url),
+          nativeCurrency: apiChain.nativeCurrency, // no client id on purpose here
+          rpcUrls: getValidPublicRPCUrl(apiChain),
         },
       ],
     });

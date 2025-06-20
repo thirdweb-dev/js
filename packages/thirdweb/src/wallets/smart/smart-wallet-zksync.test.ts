@@ -53,25 +53,25 @@ describe.runIf(process.env.TW_SECRET_KEY).todo(
 
     it("should send a transactions", async () => {
       const tx = await sendAndConfirmTransaction({
+        account: smartAccount,
         transaction: claimTo({
           contract,
           quantity: 1n,
           to: smartWalletAddress,
           tokenId: 0n,
         }),
-        account: smartAccount,
       });
       expect(tx.transactionHash.length).toBe(66);
     });
 
     it("should send dummy a transactions", async () => {
       const tx = await sendAndConfirmTransaction({
+        account: smartAccount,
         transaction: prepareTransaction({
           chain,
           client,
           to: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7",
         }),
-        account: smartAccount,
       });
       expect(tx.transactionHash.length).toBe(66);
     });
@@ -90,13 +90,13 @@ describe.runIf(process.env.TW_SECRET_KEY).todo(
       const preparedTx = prepareTransaction({
         chain: defineChain(302),
         client: client,
+        data: "0x",
         to: zkCandySmartWalletAddress,
         value: BigInt(0),
-        data: "0x",
       });
       const tx = await sendTransaction({
-        transaction: preparedTx,
         account: zkCandySmartAccount,
+        transaction: preparedTx,
       });
       expect(tx.transactionHash.length).toBe(66);
     });
@@ -111,6 +111,7 @@ describe.runIf(process.env.TW_SECRET_KEY).todo(
         personalAccount,
       });
       const tx = await sendTransaction({
+        account: account,
         transaction: claimTo({
           contract: getContract({
             address: "0x8A24a7Df38fA5fCCcFD1259e90Fb6996fDdfcADa", // edition drop
@@ -121,7 +122,6 @@ describe.runIf(process.env.TW_SECRET_KEY).todo(
           to: account.address,
           tokenId: 0n,
         }),
-        account: account,
       });
       expect(tx.transactionHash.length).toBe(66);
     });
@@ -136,14 +136,14 @@ describe.runIf(process.env.TW_SECRET_KEY).todo(
         personalAccount,
       });
       const tx = await sendTransaction({
+        account: account,
         transaction: prepareTransaction({
           chain: defineChain(4654),
           client: TEST_CLIENT,
+          data: "0x",
           to: account.address,
           value: BigInt(0),
-          data: "0x",
         }),
-        account: account,
       });
       expect(tx.transactionHash.length).toBe(66);
     });
@@ -158,14 +158,14 @@ describe.runIf(process.env.TW_SECRET_KEY).todo(
         personalAccount,
       });
       const tx = await sendTransaction({
+        account: account,
         transaction: prepareTransaction({
           chain: defineChain(978658),
           client: TEST_CLIENT,
+          data: "0x",
           to: account.address,
           value: BigInt(0),
-          data: "0x",
         }),
-        account: account,
       });
       expect(tx.transactionHash.length).toBe(66);
     });

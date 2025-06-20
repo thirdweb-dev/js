@@ -6,16 +6,16 @@ import invariant from "tiny-invariant";
 
 export function useResolveContractAbi(contract?: ThirdwebContract) {
   return useQuery({
-    queryKey: [
-      "full-contract-abi",
-      contract?.chain.id || "",
-      contract?.address || "",
-    ],
+    enabled: !!contract,
     queryFn: async () => {
       invariant(contract, "contract is required");
       const abi = await resolveContractAbi<Abi>(contract);
       return abi;
     },
-    enabled: !!contract,
+    queryKey: [
+      "full-contract-abi",
+      contract?.chain.id || "",
+      contract?.address || "",
+    ],
   });
 }

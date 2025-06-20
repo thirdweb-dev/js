@@ -7,14 +7,10 @@ export function buildCheckoutUrl(options: {
   return `/checkout/${options.teamSlug}/${options.sku}`;
 }
 
-export function buildCancelPlanUrl(options: {
-  teamId: string;
-}) {
+export function buildCancelPlanUrl(options: { teamId: string }) {
   return `/cancel-plan/${options.teamId}`;
 }
 
-export function buildBillingPortalUrl(options: {
-  teamSlug: string;
-}) {
+export function buildBillingPortalUrl(options: { teamSlug: string }) {
   return `/manage-billing/${options.teamSlug}`;
 }

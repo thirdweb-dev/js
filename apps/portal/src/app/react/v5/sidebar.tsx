@@ -4,178 +4,178 @@ import type { SideBar } from "../../../components/Layouts/DocLayout";
 const slug = "/react/v5";
 
 export const sidebar: SideBar = {
-  name: "Connect React SDK",
   links: [
     {
       separator: true,
     },
     {
-      name: "Overview",
       href: slug,
+      name: "Overview",
     },
     {
-      name: "Getting Started",
       href: `${slug}/getting-started`,
       icon: <ZapIcon />,
+      name: "Getting Started",
     },
     {
-      name: "Live Playground",
       href: "https://playground.thirdweb.com/",
       icon: <ExternalLinkIcon />,
+      name: "Live Playground",
     },
     {
-      name: "API Reference",
       href: "/references/typescript/v5",
-      isCollapsible: false,
       icon: <CodeIcon />,
+      isCollapsible: false,
+      name: "API Reference",
     },
     {
       separator: true,
     },
     {
-      name: "Onboarding Users",
       isCollapsible: false,
       links: [
         {
-          name: "UI Components",
           href: `${slug}/connecting-wallets/ui-components`,
+          name: "UI Components",
         },
         {
-          name: "Connection Hooks",
           href: `${slug}/connecting-wallets/hooks`,
+          name: "Connection Hooks",
         },
         {
-          name: "In-App Wallets",
           href: `${slug}/in-app-wallet/get-started`,
+          name: "In-App Wallets",
         },
         {
-          name: "Ecosystems Wallets",
           href: `${slug}/ecosystem-wallet/get-started`,
+          name: "Ecosystems Wallets",
         },
         {
-          name: "External Wallets",
           href: "/typescript/v5/supported-wallets",
+          name: "External Wallets",
         },
         {
-          name: "Account Abstraction",
           href: `${slug}/account-abstraction/get-started`,
+          name: "Account Abstraction",
         },
         {
-          name: "Funding wallets",
           href: `${slug}/pay/fund-wallets`,
+          name: "Funding wallets",
         },
       ],
+      name: "Onboarding Users",
     },
     {
       separator: true,
     },
     {
-      name: "User Identity",
       isCollapsible: false,
       links: [
         {
-          name: "UI Components",
           href: `${slug}/components/account`,
+          name: "UI Components",
         },
         {
-          name: "Sign in with Ethereum",
           href: `${slug}/auth`,
+          name: "Sign in with Ethereum",
         },
         {
-          name: "Link Profiles",
           href: `${slug}/linking`,
+          name: "Link Profiles",
         },
         {
-          name: "Web3 Social Identities",
           href: `${slug}/social`,
+          name: "Web3 Social Identities",
         },
         {
-          name: "Permissions",
           href: `${slug}/account-abstraction/permissions`,
+          name: "Permissions",
         },
         {
-          name: "Export private key",
           href: `${slug}/in-app-wallet/export-private-key`,
+          name: "Export private key",
         },
       ],
+      name: "User Identity",
     },
     {
       separator: true,
     },
     {
-      name: "Onchain Interactions",
       isCollapsible: false,
       links: [
         // TODO - SPONSOR TRANSACTIONS
         {
-          name: "UI Components",
           href: `${slug}/components/onchain`,
+          name: "UI Components",
         },
         {
-          name: "Reading State",
           href: `${slug}/reading-state`,
+          name: "Reading State",
         },
         {
-          name: "Transactions",
           href: `${slug}/transactions`,
+          name: "Transactions",
         },
         {
-          name: "Sponsored Transactions",
           href: `${slug}/in-app-wallet/enable-gasless`,
+          name: "Sponsored Transactions",
         },
         {
-          name: "Chain Abstraction",
           href: `${slug}/pay/transaction`,
+          name: "Chain Abstraction",
         },
       ],
+      name: "Onchain Interactions",
     },
     {
       separator: true,
     },
     {
-      name: "Advanced",
       isCollapsible: false,
       links: [
         {
+          href: `${slug}/adapters`,
           // TODO one guide per library
           name: "Usage with other libraries",
-          href: `${slug}/adapters`,
         },
         {
-          name: "Shared Logins",
           links: ["SiteEmbed", "SiteLink"].map((name) => ({
-            name,
             href: `${slug}/${name}`,
+            name,
           })),
+          name: "Shared Logins",
         },
       ],
+      name: "Advanced",
     },
     { separator: true },
     {
-      name: "Migrate from v4",
       href: `${slug}/migrate`,
       links: [
         {
-          name: "Installation",
           href: `${slug}/migrate/installation`,
+          name: "Installation",
         },
         {
-          name: "Interacting with contracts",
           href: `${slug}/migrate/contracts`,
+          name: "Interacting with contracts",
         },
         {
-          name: "ethers.js Adapter",
           href: `${slug}/migrate/ethers-adapter`,
+          name: "ethers.js Adapter",
         },
         {
-          name: "Cheatsheet",
           href: `${slug}/migrate/cheatsheet`,
+          name: "Cheatsheet",
         },
       ],
+      name: "Migrate from v4",
     },
     {
-      name: "Migrate from RainbowKit",
       href: `${slug}/rainbow-kit-migrate`,
+      name: "Migrate from RainbowKit",
     },
   ],
+  name: "Connect React SDK",
 };

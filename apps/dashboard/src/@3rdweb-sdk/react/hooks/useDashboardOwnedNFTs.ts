@@ -15,14 +15,13 @@ export function useDashboardOwnedNFTs({
   contract,
   owner,
   disabled,
-}: { owner?: string; contract?: ThirdwebContract; disabled?: boolean }) {
+}: {
+  owner?: string;
+  contract?: ThirdwebContract;
+  disabled?: boolean;
+}) {
   return useQuery({
-    queryKey: [
-      "owned-nfts",
-      contract?.chain.id || "",
-      contract?.address || "",
-      owner || "",
-    ],
+    enabled: !!contract && !!owner && !disabled,
     queryFn: async (): Promise<NFT[]> => {
       invariant(contract, "Contract is required");
       invariant(owner, "owner address is required");
@@ -34,8 +33,13 @@ export function useDashboardOwnedNFTs({
         });
       }
       // Else default to 1155
-      return getOwnedERC1155({ contract, address: owner });
+      return getOwnedERC1155({ address: owner, contract });
     },
-    enabled: !!contract && !!owner && !disabled,
+    queryKey: [
+      "owned-nfts",
+      contract?.chain.id || "",
+      contract?.address || "",
+      owner || "",
+    ],
   });
 }

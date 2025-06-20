@@ -74,8 +74,8 @@ export const SettingsMetadata = ({
 
   const transformedQueryData = useMemo(() => {
     let socialUrls: z.infer<typeof SocialUrlSchema> = {
-      twitter: "",
       discord: "",
+      twitter: "",
     };
     if (metadata.data?.social_urls) {
       try {
@@ -99,12 +99,12 @@ export const SettingsMetadata = ({
     }
     return {
       ...metadata.data,
-      name: metadata.data?.name || "",
-      image: image || "",
       dashboard_social_urls: Object.entries(socialUrls).map(([key, value]) => ({
         key,
         value,
       })),
+      image: image || "",
+      name: metadata.data?.name || "",
     };
   }, [metadata.data, contract.client]);
 
@@ -117,13 +117,13 @@ export const SettingsMetadata = ({
     formState,
     getFieldState,
   } = useForm<z.input<typeof DashboardCommonContractSchema>>({
-    resolver: zodResolver(DashboardCommonContractSchema),
     defaultValues: transformedQueryData,
-    values: transformedQueryData,
     resetOptions: {
       keepDirty: true,
       keepDirtyValues: true,
     },
+    resolver: zodResolver(DashboardCommonContractSchema),
+    values: transformedQueryData,
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -139,10 +139,11 @@ export const SettingsMetadata = ({
   );
 
   return (
-    <Card p={0} position="relative" overflow="hidden">
-      <SettingDetectedState type="metadata" detectedState={detectedState} />
+    <Card overflow="hidden" p={0} position="relative">
+      <SettingDetectedState detectedState={detectedState} type="metadata" />
       <Flex
         as="form"
+        direction="column"
         onSubmit={handleSubmit((d) => {
           const { dashboard_social_urls, ...data } = d;
 
@@ -172,28 +173,27 @@ export const SettingsMetadata = ({
           });
 
           sendTransaction.mutate(tx, {
-            onSuccess: () => {
-              onSuccess();
-            },
             onError: (error) => {
               onError(error);
             },
+            onSuccess: () => {
+              onSuccess();
+            },
           });
         })}
-        direction="column"
       >
-        <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
+        <Flex as="section" direction="column" gap={4} p={{ base: 6, md: 10 }}>
           <div className="flex flex-col">
             <Heading size="title.md">Metadata</Heading>
-            <Text size="body.md" fontStyle="italic">
+            <Text fontStyle="italic" size="body.md">
               Settings to organize and distinguish between your different
               contracts.
             </Text>
           </div>
-          <Flex gap={4} direction={{ base: "column", md: "row" }}>
+          <Flex direction={{ base: "column", md: "row" }} gap={4}>
             <Flex
-              flexShrink={0}
               flexGrow={1}
+              flexShrink={0}
               maxW={{ base: "100%", md: "160px" }}
             >
               <FormControl
@@ -204,17 +204,17 @@ export const SettingsMetadata = ({
               >
                 <FormLabel>Image</FormLabel>
                 <FileInput
+                  accept={{ "image/*": [] }}
+                  className="rounded border border-border transition-all duration-200"
                   client={contract.client}
                   isDisabled={metadata.isPending || sendTransaction.isPending}
-                  accept={{ "image/*": [] }}
-                  value={watch("image")}
                   setValue={(file) =>
                     setValue("image", file, {
-                      shouldTouch: true,
                       shouldDirty: true,
+                      shouldTouch: true,
                     })
                   }
-                  className="rounded border border-border transition-all duration-200"
+                  value={watch("image")}
                 />
                 <FormErrorMessage>
                   {getFieldState("image", formState).error?.message}
@@ -224,11 +224,11 @@ export const SettingsMetadata = ({
 
             <Flex
               direction="column"
-              gap={4}
               flexGrow={1}
+              gap={4}
               justify="space-between"
             >
-              <Flex gap={4} direction={{ base: "column", md: "row" }}>
+              <Flex direction={{ base: "column", md: "row" }} gap={4}>
                 <FormControl
                   isDisabled={metadata.isPending || sendTransaction.isPending}
                   isInvalid={!!getFieldState("name", formState).error}
@@ -278,15 +278,15 @@ export const SettingsMetadata = ({
                         metadata.isPending || sendTransaction.isPending
                       }
                       {...register(`dashboard_social_urls.${index}.value`)}
-                      type="url"
                       placeholder="https://..."
+                      type="url"
                     />
                     <IconButton
+                      aria-label="Remove row"
+                      icon={<Trash2Icon className="size-5" />}
                       isDisabled={
                         metadata.isPending || sendTransaction.isPending
                       }
-                      icon={<Trash2Icon className="size-5" />}
-                      aria-label="Remove row"
                       onClick={() => remove(index)}
                     />
                   </div>
@@ -295,13 +295,13 @@ export const SettingsMetadata = ({
             ))}
             <div>
               <Button
-                isDisabled={metadata.isPending || sendTransaction.isPending}
-                type="button"
-                size="sm"
-                colorScheme="primary"
                 borderRadius="md"
+                colorScheme="primary"
+                isDisabled={metadata.isPending || sendTransaction.isPending}
                 leftIcon={<PlusIcon className="size-5" />}
                 onClick={() => append({ key: "", value: "" })}
+                size="sm"
+                type="button"
               >
                 Add URL
               </Button>
@@ -311,14 +311,14 @@ export const SettingsMetadata = ({
 
         <AdminOnly contract={contract}>
           <TransactionButton
-            client={contract.client}
-            isLoggedIn={isLoggedIn}
-            txChainID={contract.chain.id}
-            transactionCount={1}
-            disabled={metadata.isPending || !formState.isDirty}
-            type="submit"
-            isPending={sendTransaction.isPending}
             className="!rounded-t-none rounded-xl"
+            client={contract.client}
+            disabled={metadata.isPending || !formState.isDirty}
+            isLoggedIn={isLoggedIn}
+            isPending={sendTransaction.isPending}
+            transactionCount={1}
+            txChainID={contract.chain.id}
+            type="submit"
           >
             {sendTransaction.isPending
               ? "Updating Metadata"

@@ -48,9 +48,9 @@ export async function getBalance(
   ]);
   return {
     ...currencyMetadata,
-    value: balanceWei,
+    chainId: options.contract.chain.id,
     displayValue: toTokens(balanceWei, currencyMetadata.decimals),
     tokenAddress: options.contract.address,
-    chainId: options.contract.chain.id,
+    value: balanceWei,
   };
 }

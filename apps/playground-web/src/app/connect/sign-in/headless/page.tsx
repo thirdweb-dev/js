@@ -1,23 +1,22 @@
+import type { Metadata } from "next";
 import { PageLayout } from "@/components/blocks/APIHeader";
 import { CodeExample } from "@/components/code/code-example";
 import { HooksPreview } from "@/components/sign-in/hooks";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
-import type { Metadata } from "next";
 import { ModalPreview } from "../../../../components/sign-in/modal";
 
 export const metadata: Metadata = {
-  metadataBase,
-  title: "Sign In, Account Abstraction and SIWE Auth | thirdweb Connect",
   description:
     "Let users sign up with their email, phone number, social media accounts or directly with a wallet. Seamlessly integrate account abstraction and SIWE auth.",
+  metadataBase,
+  title: "Sign In, Account Abstraction and SIWE Auth | thirdweb Connect",
 };
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="Headless"
         description={
           <>
             Create a login experience tailor-made for your app. Add your wallets
@@ -26,6 +25,7 @@ export default function Page() {
           </>
         }
         docsLink="https://portal.thirdweb.com/connect/sign-in/overview?utm_source=playground"
+        title="Headless"
       >
         <div className="flex flex-col gap-14">
           <BuildCustomUISection />
@@ -40,10 +40,6 @@ function OpenConnectModalSection() {
   return (
     <>
       <CodeExample
-        header={{
-          title: "Open prebuilt connect modal using a hook",
-        }}
-        preview={<ModalPreview />}
         code={`\
 import { useConnectModal } from "thirdweb/react";
 
@@ -62,7 +58,11 @@ function App() {
     </button>
   );
 }`}
+        header={{
+          title: "Open prebuilt connect modal using a hook",
+        }}
         lang="tsx"
+        preview={<ModalPreview />}
       />
     </>
   );
@@ -71,13 +71,6 @@ function App() {
 function BuildCustomUISection() {
   return (
     <CodeExample
-      lang="tsx"
-      header={{
-        title: "Create custom UI using hooks",
-        description:
-          "Full control over your UI using react hooks. Wallet state management is all handled for you.",
-      }}
-      preview={<HooksPreview />}
       code={`\
 import { useConnect } from "thirdweb/react";
 import { createWallet } from "thirdweb/wallets";
@@ -117,6 +110,13 @@ function App() {
     </button>
   );
 }`}
+      header={{
+        description:
+          "Full control over your UI using react hooks. Wallet state management is all handled for you.",
+        title: "Create custom UI using hooks",
+      }}
+      lang="tsx"
+      preview={<HooksPreview />}
     />
   );
 }

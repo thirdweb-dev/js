@@ -1,9 +1,9 @@
 import {
   type BaseTransactionOptions,
-  type Hex,
-  type ThirdwebContract,
   encode,
   getAddress,
+  type Hex,
+  type ThirdwebContract,
 } from "thirdweb";
 import { multicall } from "thirdweb/extensions/common";
 import { resolveAddress } from "thirdweb/extensions/ens";
@@ -32,7 +32,6 @@ export function createSetAllRoleMembersTx(options: {
   roleMemberMap: Awaited<ReturnType<typeof getAllRoleMembers>>;
 }) {
   return multicall({
-    contract: options.contract,
     asyncParams: async () => {
       const connectedWalletAddress = getAddress(options.account.address);
       // if we are removing multiple roles, we need to allways remove the connected wallet address *last*
@@ -124,5 +123,6 @@ export function createSetAllRoleMembersTx(options: {
         data: encoded,
       };
     },
+    contract: options.contract,
   });
 }

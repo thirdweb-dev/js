@@ -45,22 +45,22 @@ export async function canClaim(
       }),
       getClaimParams({
         contract: options.contract,
+        from: options.from,
         quantity: options.quantity,
         to: options.claimer,
-        type: "erc1155",
         tokenId: options.tokenId,
-        from: options.from,
+        type: "erc1155",
       }),
     ]);
   try {
     await verifyClaim({
-      contract: options.contract,
+      allowlistProof,
       claimer: options.claimer,
-      quantity,
+      conditionId,
+      contract: options.contract,
       currency,
       pricePerToken,
-      allowlistProof,
-      conditionId,
+      quantity,
       tokenId: options.tokenId,
     });
     return {
@@ -68,8 +68,8 @@ export async function canClaim(
     };
   } catch (error) {
     return {
+      reason: await extractErrorResult({ contract: options.contract, error }),
       result: false,
-      reason: await extractErrorResult({ error, contract: options.contract }),
     };
   }
 }

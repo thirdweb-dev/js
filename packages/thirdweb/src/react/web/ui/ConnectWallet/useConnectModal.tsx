@@ -12,9 +12,9 @@ import { SetRootElementContext } from "../../../core/providers/RootElementContex
 import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
 import type { LocaleId } from "../types.js";
-import ConnectModal from "./Modal/ConnectModal.js";
 import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
+import ConnectModal from "./Modal/ConnectModal.js";
 import type { WelcomeScreen } from "./screens/types.js";
 
 /**
@@ -63,16 +63,16 @@ export function useConnectModal() {
             setRootEl(
               <Modal
                 {...props}
+                connectLocale={locale}
+                onClose={() => {
+                  reject();
+                  cleanup();
+                }}
                 onConnect={(w) => {
                   if (props.auth) return;
                   resolve(w);
                   cleanup();
                 }}
-                onClose={() => {
-                  reject();
-                  cleanup();
-                }}
-                connectLocale={locale}
               />,
             );
           })
@@ -127,26 +127,26 @@ function Modal(
   ]);
 
   return (
-    <WalletUIStatesProvider theme={props.theme} isOpen={true}>
+    <WalletUIStatesProvider isOpen={true} theme={props.theme}>
       <ConnectModal
-        onClose={props.onClose}
-        shouldSetActive={props.setActive === undefined ? true : props.setActive}
         accountAbstraction={props.accountAbstraction}
         auth={props.auth}
         chain={props.chain}
+        chains={props.chains}
         client={props.client}
         connectLocale={props.connectLocale}
-        meta={meta}
-        size={size}
-        welcomeScreen={props.welcomeScreen}
+        hiddenWallets={props.hiddenWallets}
         localeId={props.locale || "en_US"}
+        meta={meta}
+        onClose={props.onClose}
         onConnect={props.onConnect}
         recommendedWallets={props.recommendedWallets}
+        shouldSetActive={props.setActive === undefined ? true : props.setActive}
         showAllWallets={props.showAllWallets}
-        hiddenWallets={props.hiddenWallets}
-        wallets={wallets}
-        chains={props.chains}
+        size={size}
         walletConnect={props.walletConnect}
+        wallets={wallets}
+        welcomeScreen={props.welcomeScreen}
       />
     </WalletUIStatesProvider>
   );

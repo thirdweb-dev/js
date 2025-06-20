@@ -27,8 +27,8 @@ export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({
           Notify your app backend when transaction and backend wallet events
           occur.{" "}
           <Link
-            href="https://portal.thirdweb.com/infrastructure/engine/features/webhooks"
             color="primary.500"
+            href="https://portal.thirdweb.com/infrastructure/engine/features/webhooks"
             isExternal
           >
             Learn more about webhooks
@@ -37,13 +37,13 @@ export const EngineWebhooks: React.FC<EngineWebhooksProps> = ({
         </Text>
       </div>
       <WebhooksTable
-        instanceUrl={instanceUrl}
-        webhooks={webhooks.data || []}
-        isPending={webhooks.isPending}
-        isFetched={webhooks.isFetched}
         authToken={authToken}
+        instanceUrl={instanceUrl}
+        isFetched={webhooks.isFetched}
+        isPending={webhooks.isPending}
+        webhooks={webhooks.data || []}
       />
-      <AddWebhookButton instanceUrl={instanceUrl} authToken={authToken} />
+      <AddWebhookButton authToken={authToken} instanceUrl={instanceUrl} />
     </div>
   );
 };

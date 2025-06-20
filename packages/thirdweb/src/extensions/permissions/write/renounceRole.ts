@@ -1,7 +1,7 @@
 import type { Address } from "abitype";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { renounceRole as generatedRenounceRole } from "../__generated__/IPermissions/write/renounceRole.js";
-import { type RoleInput, getRoleHash } from "../utils.js";
+import { getRoleHash, type RoleInput } from "../utils.js";
 
 export { isRenounceRoleSupported } from "../__generated__/IPermissions/write/renounceRole.js";
 
@@ -36,8 +36,8 @@ export function renounceRole(
   options: BaseTransactionOptions<RenounceRoleParams>,
 ) {
   return generatedRenounceRole({
+    account: options.targetAccountAddress,
     contract: options.contract,
     role: getRoleHash(options.role),
-    account: options.targetAccountAddress,
   });
 }

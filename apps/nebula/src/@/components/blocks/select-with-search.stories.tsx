@@ -1,16 +1,16 @@
-import { BadgeContainer } from "@/storybook/utils";
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useMemo, useState } from "react";
+import { BadgeContainer } from "@/storybook/utils";
 import { SelectWithSearch } from "./select-with-search";
 
 const meta = {
-  title: "blocks/SelectWithSearch",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "blocks/SelectWithSearch",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -22,20 +22,20 @@ export const Variants: Story = {
 
 function createList(len: number) {
   return Array.from({ length: len }, (_, i) => ({
-    value: `${i}`,
     label: `Item ${i}`,
+    value: `${i}`,
   }));
 }
 
 function Story() {
   return (
     <div className="container flex max-w-6xl flex-col gap-6 py-10">
-      <VariantTest storyLabel="5 items" listLen={5} />
-      <VariantTest storyLabel="5000 items" listLen={5000} />
+      <VariantTest listLen={5} storyLabel="5 items" />
+      <VariantTest listLen={5000} storyLabel="5000 items" />
       <VariantTest
         defaultValue={"3"}
-        storyLabel="20 items, 3 selected by default"
         listLen={20}
+        storyLabel="20 items, 3 selected by default"
       />
     </div>
   );
@@ -52,10 +52,10 @@ function VariantTest(props: {
   return (
     <BadgeContainer label={props.storyLabel}>
       <SelectWithSearch
-        value={value}
-        options={list}
         onValueChange={setValue}
+        options={list}
         placeholder="Select items"
+        value={value}
       />
     </BadgeContainer>
   );

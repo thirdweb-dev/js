@@ -115,9 +115,7 @@ export function reportOnboardingPlanSelectionSkipped() {
  * @jnsdls
  *
  */
-export function reportOnboardingMembersInvited(properties: {
-  count: number;
-}) {
+export function reportOnboardingMembersInvited(properties: { count: number }) {
   posthog.capture("onboarding members invited", {
     count: properties.count,
   });
@@ -185,9 +183,7 @@ export function reportOnboardingCompleted() {
  * @jnsdls
  *
  */
-export function reportFaucetUsed(properties: {
-  chainId: number;
-}) {
+export function reportFaucetUsed(properties: { chainId: number }) {
   posthog.capture("faucet used", {
     chainId: properties.chainId,
   });
@@ -217,8 +213,8 @@ export function reportChainConfigurationAdded(properties: {
   posthog.capture("chain configuration added", {
     chainId: properties.chainId,
     chainName: properties.chainName,
-    rpcURLs: properties.rpcURLs,
     nativeCurrency: properties.nativeCurrency,
+    rpcURLs: properties.rpcURLs,
   });
 }
 
@@ -242,9 +238,9 @@ export function reportAssetBuySuccessful(properties: {
   assetType: "nft" | "coin";
 }) {
   posthog.capture("asset buy successful", {
+    assetType: properties.assetType,
     chainId: properties.chainId,
     contractType: properties.contractType,
-    assetType: properties.assetType,
   });
 }
 
@@ -263,9 +259,9 @@ export function reportAssetBuyFailed(properties: {
   error: string;
 }) {
   posthog.capture("asset buy failed", {
+    assetType: properties.assetType,
     chainId: properties.chainId,
     contractType: properties.contractType,
-    assetType: properties.assetType,
     error: properties.error,
   });
 }

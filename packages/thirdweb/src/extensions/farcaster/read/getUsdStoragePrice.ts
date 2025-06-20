@@ -42,8 +42,8 @@ export async function getUsdStoragePrice(
 
   const fetch = async () => {
     const contract = getStorageRegistry({
-      client: options.client,
       chain: options.chain,
+      client: options.client,
     });
     const bigNumberValue = (await usdUnitPrice({ contract })) * units;
     return Number(toTokens(bigNumberValue, 8)); // storage registry uses 8 decimal places

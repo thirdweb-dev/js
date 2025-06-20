@@ -2,13 +2,13 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import { ImageIcon } from "lucide-react";
 import { useState } from "react";
 import { BadgeContainer } from "../../../stories/utils";
-import { Spinner } from "../ui/Spinner/Spinner";
 import { Button } from "../ui/button";
+import { Spinner } from "../ui/Spinner/Spinner";
 import { Img } from "./Img";
 
 const meta = {
-  title: "blocks/Img",
   component: Story,
+  title: "blocks/Img",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -51,24 +51,24 @@ function Story() {
 
       <BadgeContainer label="Custom Skeleton">
         <Img
-          src={undefined}
+          className="size-20"
           skeleton={
             <div className="flex items-center justify-center rounded-lg border">
               <Spinner className="size-6" />
             </div>
           }
-          className="size-20"
+          src={undefined}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Custom Fallback">
         <Img
+          className="size-20"
           fallback={
             <div className="flex items-center justify-center rounded-lg border">
               <ImageIcon className="size-10 text-muted-foreground" />
             </div>
           }
-          className="size-20"
           src="invalid-src"
         />
       </BadgeContainer>
@@ -82,7 +82,7 @@ function ToggleTest() {
   return (
     <div className="relative flex flex-col gap-10 border p-6">
       <Button
-        variant="outline"
+        className="absolute top-6 right-6 inline-flex"
         onClick={() => {
           if (src) {
             setSrc(undefined);
@@ -90,7 +90,7 @@ function ToggleTest() {
             setSrc("https://picsum.photos/400");
           }
         }}
-        className="absolute top-6 right-6 inline-flex"
+        variant="outline"
       >
         Toggle Src
       </Button>

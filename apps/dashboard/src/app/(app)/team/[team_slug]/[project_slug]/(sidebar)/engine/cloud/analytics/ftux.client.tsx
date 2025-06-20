@@ -1,10 +1,10 @@
 "use client";
-import type { Project } from "@/api/projects";
-import { Button } from "@/components/ui/button";
 import { type Step, StepsCard } from "components/dashboard/StepsCard";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import type { Project } from "@/api/projects";
+import { Button } from "@/components/ui/button";
 import CreateServerWallet from "../server-wallets/components/create-server-wallet.client";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import CreateVaultAccountButton from "../vault/components/create-vault-account.client";
@@ -27,50 +27,50 @@ export const EngineChecklist: React.FC<Props> = (props) => {
   const finalSteps = useMemo(() => {
     const steps: Step[] = [];
     steps.push({
-      title: "Create a Vault Admin Account",
-      description:
-        "Vault is thirdweb's key management system. It allows you to create secure server wallets and manage access tokens.",
       children: (
         <CreateVaultAccountStep
+          onUserAccessTokenCreated={(token) => setUserAccessToken(token)}
           project={props.project}
           teamSlug={props.teamSlug}
-          onUserAccessTokenCreated={(token) => setUserAccessToken(token)}
         />
       ),
       completed: !!props.managementAccessToken,
+      description:
+        "Vault is thirdweb's key management system. It allows you to create secure server wallets and manage access tokens.",
       showCompletedChildren: false,
+      title: "Create a Vault Admin Account",
     });
     steps.push({
-      title: "Create a Server Wallet",
-      description:
-        "Server wallets are smart wallets, they don't require any gas funds to send transactions.",
       children: (
         <CreateServerWalletStep
+          managementAccessToken={props.managementAccessToken}
           project={props.project}
           teamSlug={props.teamSlug}
-          managementAccessToken={props.managementAccessToken}
         />
       ),
       completed: props.wallets.length > 0,
-      showIncompleteChildren: false,
+      description:
+        "Server wallets are smart wallets, they don't require any gas funds to send transactions.",
       showCompletedChildren: false,
+      showIncompleteChildren: false,
+      title: "Create a Server Wallet",
     });
     steps.push({
-      title: "Send a Test Transaction",
-      description:
-        "Engine handles gas fees, and is designed for scale, speed and security. Send a test transaction to see it in action",
       children: (
         <SendTestTransaction
-          wallets={props.wallets}
-          project={props.project}
           client={props.client}
-          userAccessToken={userAccessToken}
+          project={props.project}
           teamSlug={props.teamSlug}
+          userAccessToken={userAccessToken}
+          wallets={props.wallets}
         />
       ),
       completed: props.hasTransactions,
-      showIncompleteChildren: false,
+      description:
+        "Engine handles gas fees, and is designed for scale, speed and security. Send a test transaction to see it in action",
       showCompletedChildren: false,
+      showIncompleteChildren: false,
+      title: "Send a Test Transaction",
     });
     return steps;
   }, [
@@ -91,12 +91,12 @@ export const EngineChecklist: React.FC<Props> = (props) => {
   if (props.testTxWithWallet) {
     return (
       <SendTestTransaction
-        wallets={props.wallets}
-        project={props.project}
         client={props.client}
+        project={props.project}
+        teamSlug={props.teamSlug}
         userAccessToken={userAccessToken}
         walletId={props.testTxWithWallet}
-        teamSlug={props.teamSlug}
+        wallets={props.wallets}
       />
     );
   }
@@ -107,7 +107,7 @@ export const EngineChecklist: React.FC<Props> = (props) => {
     return null;
   }
   return (
-    <StepsCard title="Setup Your Engine" steps={finalSteps} delay={1000} />
+    <StepsCard delay={1000} steps={finalSteps} title="Setup Your Engine" />
   );
 };
 
@@ -119,13 +119,13 @@ function CreateVaultAccountStep(props: {
   return (
     <div className="mt-4 flex flex-row gap-4">
       <CreateVaultAccountButton
-        project={props.project}
         onUserAccessTokenCreated={props.onUserAccessTokenCreated}
+        project={props.project}
       />
       <Link
         href="https://portal.thirdweb.com/engine/vault"
-        target="_blank"
         rel="noopener noreferrer"
+        target="_blank"
       >
         <Button variant="outline">Learn more about Vault</Button>
       </Link>
@@ -141,9 +141,9 @@ function CreateServerWalletStep(props: {
   return (
     <div className="mt-4 flex flex-row gap-4">
       <CreateServerWallet
+        managementAccessToken={props.managementAccessToken}
         project={props.project}
         teamSlug={props.teamSlug}
-        managementAccessToken={props.managementAccessToken}
       />
     </div>
   );

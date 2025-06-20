@@ -1,18 +1,12 @@
-import { randomLorem } from "@/storybook/stubs";
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { subDays } from "date-fns";
 import { ThirdwebProvider } from "thirdweb/react";
+import { randomLorem } from "@/storybook/stubs";
 import { ChatPageLayout } from "../../components/ChatPageLayout";
 import { ChatHistoryPageUI } from "./ChatHistoryPage";
 
 const meta = {
-  title: "Nebula/history",
   component: Variant,
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
-  },
   decorators: [
     (Story) => (
       <ThirdwebProvider>
@@ -20,6 +14,12 @@ const meta = {
       </ThirdwebProvider>
     ),
   ],
+  parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
+  },
+  title: "Nebula/history",
 } satisfies Meta<typeof Variant>;
 
 export default meta;
@@ -56,21 +56,18 @@ function createRandomSessions(length: number) {
     sessions.push({
       created_at: new Date().toISOString(),
       id: Math.random().toString(),
+      title: randomLorem(Math.floor(5 + Math.random() * 15)),
       updated_at: subDays(
         new Date(),
         Math.floor(Math.random() * 10),
       ).toISOString(),
-      title: randomLorem(Math.floor(5 + Math.random() * 15)),
     });
   }
 
   return sessions;
 }
 
-function Variant(props: {
-  length: number;
-  prefillSearch?: string;
-}) {
+function Variant(props: { length: number; prefillSearch?: string }) {
   return (
     <ChatPageLayout
       accountAddress="0x1234567890"
@@ -78,11 +75,11 @@ function Variant(props: {
       sessions={createRandomSessions(props.length)}
     >
       <ChatHistoryPageUI
-        sessions={createRandomSessions(props.length)}
-        prefillSearch={props.prefillSearch}
         deleteSession={async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
+        prefillSearch={props.prefillSearch}
+        sessions={createRandomSessions(props.length)}
       />
     </ChatPageLayout>
   );

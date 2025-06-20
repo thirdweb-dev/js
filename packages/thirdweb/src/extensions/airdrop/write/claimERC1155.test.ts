@@ -8,8 +8,8 @@ import {
   TEST_ACCOUNT_D,
 } from "../../../../test/src/test-wallets.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import {
   balanceOf,
@@ -37,11 +37,11 @@ describe.runIf(process.env.TW_SECRET_KEY).skip("claimERC1155", () => {
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
         contractId: "Airdrop",
-        publisher: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
         contractParams: {
-          defaultAdmin: TEST_ACCOUNT_A.address,
           contractURI: "",
+          defaultAdmin: TEST_ACCOUNT_A.address,
         },
+        publisher: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
       }),
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
@@ -65,81 +65,81 @@ describe.runIf(process.env.TW_SECRET_KEY).skip("claimERC1155", () => {
     const mintTransactions = [
       mintTo({
         contract: erc1155TokenContract,
-        to: TEST_ACCOUNT_A.address,
-        supply: 100000n,
         nft: {
           name: "Test 0",
         },
+        supply: 100000n,
+        to: TEST_ACCOUNT_A.address,
       }),
       mintTo({
         contract: erc1155TokenContract,
-        to: TEST_ACCOUNT_A.address,
-        supply: 100000n,
         nft: {
           name: "Test 1",
         },
+        supply: 100000n,
+        to: TEST_ACCOUNT_A.address,
       }),
     ];
 
     for (const tx of mintTransactions) {
       await sendAndConfirmTransaction({
-        transaction: tx,
         account: TEST_ACCOUNT_A,
+        transaction: tx,
       });
     }
 
     const approvalTx = setApprovalForAll({
+      approved: true,
       contract: erc1155TokenContract,
       operator: airdropContract.address,
-      approved: true,
     });
     await sendAndConfirmTransaction({
-      transaction: approvalTx,
       account: TEST_ACCOUNT_A,
+      transaction: approvalTx,
     });
   }, 60000);
 
   it("should send ERC1155 tokens to allowlisted claimer", async () => {
     const snapshot = [
-      { recipient: TEST_ACCOUNT_B.address, tokenId: 0, amount: 10 },
-      { recipient: TEST_ACCOUNT_C.address, tokenId: 0, amount: 12 },
-      { recipient: TEST_ACCOUNT_D.address, tokenId: 1, amount: 5 },
+      { amount: 10, recipient: TEST_ACCOUNT_B.address, tokenId: 0 },
+      { amount: 12, recipient: TEST_ACCOUNT_C.address, tokenId: 0 },
+      { amount: 5, recipient: TEST_ACCOUNT_D.address, tokenId: 1 },
     ];
 
     const { merkleRoot, snapshotUri } = await generateMerkleTreeInfoERC1155({
+      contract: airdropContract,
       snapshot,
       tokenAddress: erc1155TokenContract.address,
-      contract: airdropContract,
     });
     const saveSnapshotTransaction = saveSnapshot({
+      contract: airdropContract,
       merkleRoot,
       snapshotUri,
-      contract: airdropContract,
     });
     await sendAndConfirmTransaction({
-      transaction: saveSnapshotTransaction,
       account: TEST_ACCOUNT_A,
+      transaction: saveSnapshotTransaction,
     });
 
     const setMerkleRootTransaction = setMerkleRoot({
+      contract: airdropContract,
+      resetClaimStatus: true,
       token: erc1155TokenContract.address,
       tokenMerkleRoot: merkleRoot as `0x${string}`,
-      resetClaimStatus: true,
-      contract: airdropContract,
     });
     await sendAndConfirmTransaction({
-      transaction: setMerkleRootTransaction,
       account: TEST_ACCOUNT_A,
+      transaction: setMerkleRootTransaction,
     });
 
     const claimTransaction = claimERC1155({
-      tokenAddress: erc1155TokenContract.address,
-      recipient: TEST_ACCOUNT_B.address,
       contract: airdropContract,
+      recipient: TEST_ACCOUNT_B.address,
+      tokenAddress: erc1155TokenContract.address,
     });
     const { transactionHash } = await sendAndConfirmTransaction({
-      transaction: claimTransaction,
       account: TEST_ACCOUNT_A,
+      transaction: claimTransaction,
     });
 
     const balanceB = await balanceOf({

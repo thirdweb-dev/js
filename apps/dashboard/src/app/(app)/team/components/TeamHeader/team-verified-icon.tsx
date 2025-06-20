@@ -1,9 +1,7 @@
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import { VerifiedIcon } from "lucide-react";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 
-export function TeamVerifiedIcon(props: {
-  domain: string | null;
-}) {
+export function TeamVerifiedIcon(props: { domain: string | null }) {
   if (!props.domain) {
     return null;
   }

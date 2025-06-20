@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Code2Icon,
   DatabaseIcon,
@@ -6,24 +5,25 @@ import {
   ZapIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function BlueprintCard() {
   const features = [
     {
+      description: "RESTful endpoints for any application",
       icon: Code2Icon,
       title: "Easy-to-Use API",
-      description: "RESTful endpoints for any application",
     },
     {
-      icon: DatabaseIcon,
-      title: "Managed Infrastructure",
       description:
         "No need to index blockchains yourself or manage infrastructure and RPC costs.",
+      icon: DatabaseIcon,
+      title: "Managed Infrastructure",
     },
     {
+      description: "Access any transaction, event or token API data",
       icon: ZapIcon,
       title: "Lightning-Fast Queries",
-      description: "Access any transaction, event or token API data",
     },
   ];
 
@@ -35,11 +35,11 @@ export function BlueprintCard() {
           <h2 className="font-semibold text-2xl tracking-tight">Blueprints</h2>
 
           <div className="flex items-center gap-2">
-            <Button asChild variant="outline" className="gap-2 bg-background">
+            <Button asChild className="gap-2 bg-background" variant="outline">
               <Link
                 href="https://portal.thirdweb.com/insight/blueprints"
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 Docs <ExternalLinkIcon className="size-4" />
               </Link>
@@ -64,7 +64,7 @@ export function BlueprintCard() {
         {/* Features */}
         <div className="flex flex-col gap-6">
           {features.map((feature) => (
-            <div key={feature.title} className="flex items-start gap-3">
+            <div className="flex items-start gap-3" key={feature.title}>
               <div className="rounded-full border p-2">
                 <feature.icon className="size-4 text-muted-foreground" />
               </div>
@@ -81,11 +81,11 @@ export function BlueprintCard() {
 
       {/* Playground link */}
       <div className="border-t p-4 lg:p-6">
-        <Button className="w-full gap-2" asChild>
+        <Button asChild className="w-full gap-2">
           <Link
             href="https://playground.thirdweb.com/insight"
-            target="_blank"
             rel="noopener noreferrer"
+            target="_blank"
           >
             Try Insight blueprints in the playground
             <ExternalLinkIcon className="size-4" />

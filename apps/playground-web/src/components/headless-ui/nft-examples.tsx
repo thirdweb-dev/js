@@ -11,11 +11,6 @@ export function NftMediaExample() {
   return (
     <div>
       <CodeExample
-        header={{
-          title: "NFTMedia",
-          description: "Show the media of an NFT in a collection.",
-        }}
-        preview={<NftMediaBasicPreview />}
         code={`import { NFTProvider, NFTMedia } from "thirdweb/react";
 
 function App() {
@@ -23,7 +18,12 @@ function App() {
     <NFTMedia className="rounded-md w-40 h-40" loadingComponent={<span>Loading...</span>} />
   </NFTProvider>
 }`}
+        header={{
+          description: "Show the media of an NFT in a collection.",
+          title: "NFTMedia",
+        }}
         lang="tsx"
+        preview={<NftMediaBasicPreview />}
       />
 
       <p className="my-4 text-muted-foreground">
@@ -33,7 +33,6 @@ function App() {
       </p>
 
       <CodeExample
-        preview={<NftMediaOverridePreview />}
         code={`import { NFTProvider, NFTMedia } from "thirdweb/react";
 
 function App() {
@@ -48,6 +47,7 @@ function App() {
     </NFTProvider>
 }`}
         lang="tsx"
+        preview={<NftMediaOverridePreview />}
       />
     </div>
   );
@@ -56,11 +56,6 @@ function App() {
 export function NftNameExample() {
   return (
     <CodeExample
-      header={{
-        title: "NFTName",
-        description: "Show the name of an NFT in a collection.",
-      }}
-      preview={<NftNameBasicPreview />}
       code={`import { NFTProvider, NFTName } from "thirdweb/react";
 
 function App() {
@@ -68,7 +63,12 @@ function App() {
     <NFTName loadingComponent={<span>Loading...</span>} />
   </NFTProvider>
 }`}
+      header={{
+        description: "Show the name of an NFT in a collection.",
+        title: "NFTName",
+      }}
       lang="tsx"
+      preview={<NftNameBasicPreview />}
     />
   );
 }
@@ -76,11 +76,6 @@ function App() {
 export function NftDescriptionBasic() {
   return (
     <CodeExample
-      header={{
-        title: "NFTDescription",
-        description: "Show the description of an NFT in a collection.",
-      }}
-      preview={<NftDescriptionBasicPreview />}
       code={`import { NFTProvider, NFTDescription } from "thirdweb/react";
 
 function App() {
@@ -88,7 +83,12 @@ function App() {
     <NFTDescription className="text-center" loadingComponent={<span>Loading...</span>} />
   </NFTProvider>
 }`}
+      header={{
+        description: "Show the description of an NFT in a collection.",
+        title: "NFTDescription",
+      }}
       lang="tsx"
+      preview={<NftDescriptionBasicPreview />}
     />
   );
 }
@@ -96,12 +96,6 @@ function App() {
 export function NftCardExample() {
   return (
     <CodeExample
-      header={{
-        title: "Build an NFT Card",
-        description:
-          "Using these headless components, you can easily build your own NFT Card",
-      }}
-      preview={<NftCardDemoPreview />}
       code={`import { NFTProvider, NFTDescription, NFTName, NFTMedia } from "thirdweb/react";
 
 function App() {
@@ -118,7 +112,13 @@ function App() {
     </NFTProvider>
   )
 }`}
+      header={{
+        description:
+          "Using these headless components, you can easily build your own NFT Card",
+        title: "Build an NFT Card",
+      }}
       lang="tsx"
+      preview={<NftCardDemoPreview />}
     />
   );
 }

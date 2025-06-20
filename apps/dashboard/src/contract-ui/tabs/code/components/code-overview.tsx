@@ -1,10 +1,5 @@
 "use client";
 import {
-  type CodeEnvironment,
-  CodeSegment,
-} from "@/components/blocks/code-segment.client";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import {
   Alert,
   AlertDescription,
   AlertIcon,
@@ -39,6 +34,11 @@ import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import { useActiveAccount } from "thirdweb/react";
 import { toFunctionSelector } from "thirdweb/utils";
 import { Button, Card, Heading, Link, Text } from "tw-components";
+import {
+  type CodeEnvironment,
+  CodeSegment,
+} from "@/components/blocks/code-segment.client";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 
 interface CodeOverviewProps {
   abi?: Abi;
@@ -49,6 +49,43 @@ interface CodeOverviewProps {
 }
 
 export const COMMANDS = {
+  events: {
+    javascript: `import { prepareEvent, getContractEvents } from "thirdweb";
+
+const preparedEvent = prepareEvent({
+  signature: "{{function}}"
+});
+const events = await getContractEvents({
+  contract,
+  events: [preparedEvent]
+});`,
+    react: `import { prepareEvent } from "thirdweb";
+import { useContractEvents } from "thirdweb/react";
+
+const preparedEvent = prepareEvent({
+  signature: "{{function}}"
+});
+
+export default function Component() {
+  const { data: event } = useContractEvents({
+    contract,
+    events: [preparedEvent]
+  });
+}`,
+    "react-native": `import { prepareEvent } from "thirdweb";
+import { useContractEvents } from "thirdweb/react";
+
+const preparedEvent = prepareEvent({
+  signature: "{{function}}"
+});
+
+export default function Component() {
+  const { data: event } = useContractEvents({
+    contract,
+    events: [preparedEvent]
+  });
+}`,
+  },
   install: {
     javascript: "npm i thirdweb",
     react: "npm i thirdweb",
@@ -56,6 +93,33 @@ export const COMMANDS = {
     unity: `// Download the .unitypackage from the latest release:
 // https://github.com/thirdweb-dev/unity-sdk/releases
 // and drag it into your project`,
+  },
+  read: {
+    javascript: `import { readContract } from "thirdweb";
+
+const data = await readContract({
+  contract,
+  method: "{{function}}",
+  params: [{{args}}]
+})`,
+    react: `import { useReadContract } from "thirdweb/react";
+
+export default function Component() {
+  const { data, isPending } = useReadContract({
+    contract,
+    method: "{{function}}",
+    params: [{{args}}]
+  });
+}`,
+    "react-native": `import { useReadContract } from "thirdweb/react";
+
+export default function Component() {
+  const { data, isPending } = useReadContract({
+    contract,
+    method: "{{function}}",
+    params: [{{args}}]
+  });
+}`,
   },
   setup: {
     javascript: `import { createThirdwebClient, getContract } from "thirdweb";
@@ -127,33 +191,6 @@ var sdk = ThirdwebManager.Instance.SDK;
 // Get your contract
 var contract = sdk.GetContract("{{contract_address}}");`,
   },
-  read: {
-    javascript: `import { readContract } from "thirdweb";
-
-const data = await readContract({
-  contract,
-  method: "{{function}}",
-  params: [{{args}}]
-})`,
-    react: `import { useReadContract } from "thirdweb/react";
-
-export default function Component() {
-  const { data, isPending } = useReadContract({
-    contract,
-    method: "{{function}}",
-    params: [{{args}}]
-  });
-}`,
-    "react-native": `import { useReadContract } from "thirdweb/react";
-
-export default function Component() {
-  const { data, isPending } = useReadContract({
-    contract,
-    method: "{{function}}",
-    params: [{{args}}]
-  });
-}`,
-  },
   write: {
     javascript: `import { prepareContractCall, sendTransaction } from "thirdweb";
 
@@ -197,53 +234,16 @@ export default function Component() {
   }
 }`,
   },
-  events: {
-    javascript: `import { prepareEvent, getContractEvents } from "thirdweb";
-
-const preparedEvent = prepareEvent({
-  signature: "{{function}}"
-});
-const events = await getContractEvents({
-  contract,
-  events: [preparedEvent]
-});`,
-    react: `import { prepareEvent } from "thirdweb";
-import { useContractEvents } from "thirdweb/react";
-
-const preparedEvent = prepareEvent({
-  signature: "{{function}}"
-});
-
-export default function Component() {
-  const { data: event } = useContractEvents({
-    contract,
-    events: [preparedEvent]
-  });
-}`,
-    "react-native": `import { prepareEvent } from "thirdweb";
-import { useContractEvents } from "thirdweb/react";
-
-const preparedEvent = prepareEvent({
-  signature: "{{function}}"
-});
-
-export default function Component() {
-  const { data: event } = useContractEvents({
-    contract,
-    events: [preparedEvent]
-  });
-}`,
-  },
 };
 
 const WALLETS_SNIPPETS = [
   {
-    id: "smart-wallet",
-    name: "Account Abstraction",
     description: "Deploy accounts for your users",
     iconUrl:
       "ipfs://QmeAJVqn17aDNQhjEU3kcWVZCFBrfta8LzaDGkS8Egdiyk/smart-wallet.svg",
+    id: "smart-wallet",
     link: "https://portal.thirdweb.com/references/typescript/v5/smartWallet",
+    name: "Account Abstraction",
     supportedLanguages: {
       javascript: `import { defineChain } from "thirdweb";
 import { inAppWallet, smartWallet } from "thirdweb/wallets";
@@ -402,20 +402,20 @@ const { data: event } = useContractEvents({
 const EXTENSION_NAMESPACE_FUNCTION_MAPPING = {
   erc20: {
     claim: {
-      name: "claimTo",
       args: ["to", "amount"],
+      name: "claimTo",
     },
   },
   erc721: {
     claim: {
-      name: "claimTo",
       args: ["to", "amount"],
+      name: "claimTo",
     },
   },
   erc1155: {
     claim: {
-      name: "claimTo",
       args: ["to", "amount", "tokenId"],
+      name: "claimTo",
     },
   },
 } as Record<
@@ -487,13 +487,13 @@ export function formatSnippet(
           codeForEnv = buildJavascriptSnippet({
             extensionName: extensionConfig.name,
             extensionNamespace,
+            fnArgs: extensionConfig.args,
             type:
               "stateMutability" in fn
                 ? fn.stateMutability === "view" || fn.stateMutability === "pure"
                   ? "read"
                   : "write"
                 : "event",
-            fnArgs: extensionConfig.args,
           });
           break;
         case "react":
@@ -501,13 +501,13 @@ export function formatSnippet(
           codeForEnv = buildReactSnippet({
             extensionName: extensionConfig.name,
             extensionNamespace,
+            fnArgs: extensionConfig.args,
             type:
               "stateMutability" in fn
                 ? fn.stateMutability === "view" || fn.stateMutability === "pure"
                   ? "read"
                   : "write"
                 : "event",
-            fnArgs: extensionConfig.args,
           });
           break;
       }
@@ -624,24 +624,24 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   return (
     <SimpleGrid
       columns={12}
+      display={{ base: "block", md: "grid" }}
       gap={16}
       justifyContent="space-between"
       maxW="full"
       overflowX={{ base: "scroll", md: "hidden" }}
-      display={{ base: "block", md: "grid" }}
     >
       <GridItem as={Flex} colSpan={12} flexDir="column" gap={12}>
         {isAccountFactory && (
           <Flex flexDirection="column" gap={4}>
-            <Flex flexDir="column" gap={6} id="integrate-smart-wallet">
+            <Flex flexDir="column" gap={6}>
               <Heading size="title.md">Integrate your account factory</Heading>
               <Alert
-                status="info"
-                borderRadius="md"
-                as={Flex}
-                flexDir="column"
                 alignItems="start"
+                as={Flex}
+                borderRadius="md"
+                flexDir="column"
                 gap={2}
+                status="info"
               >
                 <Flex justifyContent="start">
                   <AlertIcon />
@@ -651,10 +651,10 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                   The recommended way to use account factories is to integrate
                   the{" "}
                   <UnderlineLink
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="text-primary-500"
                     href="https://portal.thirdweb.com/connect/account-abstraction/overview"
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     Connect SDK
                   </UnderlineLink>{" "}
@@ -665,6 +665,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
               <Flex flexDir="column" gap={2}>
                 <CodeSegment
                   environment={environment}
+                  hideTabs
                   setEnvironment={setEnvironment}
                   snippet={formatSnippet(
                     (WALLETS_SNIPPETS.find((w) => w.id === "smart-wallet")
@@ -673,19 +674,18 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                       string
                     >,
                     {
-                      contractAddress,
                       address,
                       chainId,
+                      contractAddress,
                     },
                   )}
-                  hideTabs
                 />
               </Flex>
             </Flex>
           </Flex>
         )}
         <Flex flexDirection="column" gap={4}>
-          <Flex flexDir="column" gap={2} id="getting-started">
+          <Flex flexDir="column" gap={2}>
             <Heading size="title.md">
               {isAccountFactory
                 ? "Direct contract interaction (advanced)"
@@ -698,8 +698,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
             <Flex flexDir="column" gap={2}>
               <Text>Choose a language:</Text>
               <CodeSegment
-                onlyTabs
                 environment={environment}
+                onlyTabs
                 setEnvironment={setEnvironment}
                 snippet={COMMANDS.install}
               />
@@ -710,10 +710,10 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
               <Text>
                 Install the latest version of the SDK. <br />
                 <UnderlineLink
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="text-primary-500"
                   href={`https://portal.thirdweb.com/${environment}`}
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
                   Learn how in the{" "}
                   {environment === "react-native" ? "React Native" : "Unity"}{" "}
@@ -725,9 +725,9 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
               <>
                 <Text>Install the latest version of the SDK:</Text>
                 <CodeSegment
+                  environment={environment}
                   hideTabs
                   isInstallCommand
-                  environment={environment}
                   setEnvironment={setEnvironment}
                   snippet={COMMANDS.install}
                 />
@@ -738,21 +738,19 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
             <Text>Initialize the SDK and contract on your project:</Text>
             <CodeSegment
               environment={environment}
-              setEnvironment={setEnvironment}
-              // biome-ignore lint/suspicious/noExplicitAny: FIXME
-              snippet={formatSnippet(COMMANDS.setup as any, {
-                contractAddress,
-
-                chainId,
-              })}
               hideTabs
+              setEnvironment={setEnvironment}
+              snippet={formatSnippet(COMMANDS.setup, {
+                chainId,
+                contractAddress,
+              })}
             />
             <Text>
               You will need to pass a client ID/secret key to use
               thirdweb&apos;s infrastructure services. If you don&apos;t have
               any API keys yet you can create one by creating a project for free
               from the{" "}
-              <Link href="/team" color="primary.500">
+              <Link color="primary.500" href="/team">
                 dashboard
               </Link>
               .
@@ -760,45 +758,45 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
           </Flex>
         </Flex>
         {!onlyInstall && (
-          <Flex flexDirection="column" gap={6} id="functions-and-events">
+          <Flex flexDirection="column" gap={6}>
             <Heading size="title.md">All Functions & Events</Heading>
-            <SimpleGrid height="100%" columns={12} gap={3}>
+            <SimpleGrid columns={12} gap={3} height="100%">
               <GridItem
                 as={Card}
-                px={0}
-                pt={0}
+                colSpan={{ base: 12, md: 4 }}
                 height="100%"
                 overflow="auto"
-                colSpan={{ base: 12, md: 4 }}
                 overflowY="auto"
+                pt={0}
+                px={0}
               >
                 <List height="100%" overflowX="hidden">
                   {((writeFunctions || []).length > 0 ||
                     (readFunctions || []).length > 0) && (
                     <Tabs
                       colorScheme="gray"
-                      h="100%"
-                      position="relative"
                       display="flex"
                       flexDir="column"
+                      h="100%"
+                      position="relative"
                     >
                       <TabList as={Flex}>
                         {(writeFunctions || []).length > 0 && (
-                          <Tab gap={2} flex="1 1 0">
+                          <Tab flex="1 1 0" gap={2}>
                             <Heading color="inherit" my={1} size="label.md">
                               Write
                             </Heading>
                           </Tab>
                         )}
                         {(readFunctions || []).length > 0 && (
-                          <Tab gap={2} flex="1 1 0">
+                          <Tab flex="1 1 0" gap={2}>
                             <Heading color="inherit" my={1} size="label.md">
                               Read
                             </Heading>
                           </Tab>
                         )}
                         {(events || []).length > 0 && (
-                          <Tab gap={2} flex="1 1 0">
+                          <Tab flex="1 1 0" gap={2}>
                             <Heading color="inherit" my={1} size="label.md">
                               Events
                             </Heading>
@@ -808,32 +806,32 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                       <TabPanels h="auto" overflow="auto">
                         <TabPanel>
                           {writeFunctions?.map((fn) => (
-                            <ListItem my={0.5} key={fn.signature}>
+                            <ListItem key={fn.signature} my={0.5}>
                               <Button
-                                size="sm"
+                                _hover={{
+                                  opacity: 1,
+                                  textDecor: "underline",
+                                }}
+                                color="heading"
+                                fontFamily="mono"
                                 fontWeight={
                                   tab === "write" &&
                                   write?.signature === fn.signature
                                     ? 600
                                     : 400
                                 }
+                                onClick={() => {
+                                  setTab("write");
+                                  setWrite(fn);
+                                }}
                                 opacity={
                                   tab === "write" &&
                                   write?.signature === fn.signature
                                     ? 1
                                     : 0.65
                                 }
-                                onClick={() => {
-                                  setTab("write");
-                                  setWrite(fn);
-                                }}
-                                color="heading"
-                                _hover={{
-                                  opacity: 1,
-                                  textDecor: "underline",
-                                }}
+                                size="sm"
                                 variant="link"
-                                fontFamily="mono"
                               >
                                 {fn.name}
                               </Button>
@@ -842,32 +840,32 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                         </TabPanel>
                         <TabPanel>
                           {readFunctions?.map((fn) => (
-                            <ListItem my={0.5} key={fn.signature}>
+                            <ListItem key={fn.signature} my={0.5}>
                               <Button
-                                size="sm"
+                                _hover={{
+                                  opacity: 1,
+                                  textDecor: "underline",
+                                }}
+                                color="heading"
+                                fontFamily="mono"
                                 fontWeight={
                                   tab === "read" &&
                                   read?.signature === fn.signature
                                     ? 600
                                     : 400
                                 }
+                                onClick={() => {
+                                  setTab("read");
+                                  setRead(fn);
+                                }}
                                 opacity={
                                   tab === "read" &&
                                   read?.signature === fn.signature
                                     ? 1
                                     : 0.65
                                 }
-                                onClick={() => {
-                                  setTab("read");
-                                  setRead(fn);
-                                }}
-                                color="heading"
-                                _hover={{
-                                  opacity: 1,
-                                  textDecor: "underline",
-                                }}
+                                size="sm"
                                 variant="link"
-                                fontFamily="mono"
                               >
                                 {fn.name}
                               </Button>
@@ -876,9 +874,14 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                         </TabPanel>
                         <TabPanel>
                           {events?.map((ev) => (
-                            <ListItem my={0.5} key={ev.name}>
+                            <ListItem key={ev.name} my={0.5}>
                               <Button
-                                size="sm"
+                                _hover={{
+                                  opacity: 1,
+                                  textDecor: "underline",
+                                }}
+                                color="heading"
+                                fontFamily="mono"
                                 fontWeight={
                                   tab === "events" &&
                                   (event as AbiEvent).name ===
@@ -886,6 +889,10 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                                     ? 600
                                     : 400
                                 }
+                                onClick={() => {
+                                  setTab("events");
+                                  setEvent(ev);
+                                }}
                                 opacity={
                                   tab === "events" &&
                                   (event as AbiEvent).name ===
@@ -893,17 +900,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                                     ? 1
                                     : 0.65
                                 }
-                                onClick={() => {
-                                  setTab("events");
-                                  setEvent(ev);
-                                }}
-                                color="heading"
-                                _hover={{
-                                  opacity: 1,
-                                  textDecor: "underline",
-                                }}
+                                size="sm"
                                 variant="link"
-                                fontFamily="mono"
                               >
                                 {ev.name}
                               </Button>
@@ -917,9 +915,9 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
               </GridItem>
               <GridItem
                 as={Card}
+                colSpan={{ base: 12, md: 8 }}
                 height="100%"
                 overflow="auto"
-                colSpan={{ base: 12, md: 8 }}
               >
                 <CodeSegment
                   environment={environment}
@@ -928,9 +926,6 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                     // biome-ignore lint/suspicious/noExplicitAny: FIXME
                     COMMANDS[tab as keyof typeof COMMANDS] as any,
                     {
-                      contractAddress,
-                      fn:
-                        tab === "read" ? read : tab === "write" ? write : event,
                       args:
                         abi
                           ?.filter(
@@ -948,7 +943,10 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                           ?.inputs.map((i) => i.name || "") || [],
 
                       chainId,
+                      contractAddress,
                       extensionNamespace,
+                      fn:
+                        tab === "read" ? read : tab === "write" ? write : event,
                     },
                   )}
                 />

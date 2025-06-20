@@ -1,5 +1,5 @@
-import { getProject } from "@/api/projects";
 import { notFound } from "next/navigation";
+import { getProject } from "@/api/projects";
 import { SharedPermissionsPage } from "../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/permissions/shared-permissions-page";
 import type { ProjectContractPageParams } from "../types";
 
@@ -15,9 +15,9 @@ export default async function Page(props: {
 
   return (
     <SharedPermissionsPage
-      isLoggedIn={true}
-      contractAddress={params.contractAddress}
       chainIdOrSlug={params.chainIdOrSlug}
+      contractAddress={params.contractAddress}
+      isLoggedIn={true}
       projectMeta={{
         projectSlug: project.slug,
         teamId: project.teamId,

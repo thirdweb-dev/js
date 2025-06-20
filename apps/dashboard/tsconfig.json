@@ -1,33 +1,34 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
-    "target": "ES2020",
-    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
+    "baseUrl": "./src",
+    "downlevelIteration": true,
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true,
-    "downlevelIteration": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
     "noUncheckedIndexedAccess": true,
     "paths": {
+      "@app/*": ["app/(app)/*"],
       "tw-components": ["tw-components"],
-      "tw-components/*": ["tw-components/*"],
-      "@app/*": ["app/(app)/*"]
+      "tw-components/*": ["tw-components/*"]
     },
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2020"
   },
+  "exclude": ["node_modules", ".next", "lib/__generated__"],
   "include": [
     "next-env.d.ts",
     "lucide-react.d.ts",
@@ -35,6 +36,5 @@
     "**/*.tsx",
     "additional.d.ts",
     ".next/types/**/*.ts"
-  ],
-  "exclude": ["node_modules", ".next", "lib/__generated__"]
+  ]
 }

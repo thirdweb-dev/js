@@ -38,8 +38,8 @@ export function getOnRampSteps(
     return [
       {
         action: "buy",
-        token: buyWithFiatQuote.toToken,
         amount: buyWithFiatQuote.estimatedToAmountMin,
+        token: buyWithFiatQuote.toToken,
       },
     ];
   }
@@ -48,18 +48,18 @@ export function getOnRampSteps(
     return [
       {
         action: "buy",
-        token: buyWithFiatQuote.onRampToken.token,
         amount: buyWithFiatQuote.onRampToken.amount,
+        token: buyWithFiatQuote.onRampToken.token,
       },
       {
         action: "swap",
-        token: buyWithFiatQuote.routingToken.token,
         amount: buyWithFiatQuote.routingToken.amount,
+        token: buyWithFiatQuote.routingToken.token,
       },
       {
         action: "bridge",
-        token: buyWithFiatQuote.toToken,
         amount: buyWithFiatQuote.estimatedToAmountMin,
+        token: buyWithFiatQuote.toToken,
       },
     ];
   }
@@ -67,13 +67,13 @@ export function getOnRampSteps(
   return [
     {
       action: "buy",
-      token: buyWithFiatQuote.onRampToken.token,
       amount: buyWithFiatQuote.onRampToken.amount,
+      token: buyWithFiatQuote.onRampToken.token,
     },
     {
       action: "swap",
-      token: buyWithFiatQuote.toToken,
       amount: buyWithFiatQuote.estimatedToAmountMin,
+      token: buyWithFiatQuote.toToken,
     },
   ];
 }

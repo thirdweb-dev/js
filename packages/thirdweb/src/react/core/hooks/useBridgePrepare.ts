@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import type { prepare as BuyPrepare } from "../../../bridge/Buy.js";
+import * as Bridge from "../../../bridge/index.js";
 import type { prepare as OnrampPrepare } from "../../../bridge/Onramp.js";
 import type { prepare as SellPrepare } from "../../../bridge/Sell.js";
 import type { prepare as TransferPrepare } from "../../../bridge/Transfer.js";
-import * as Bridge from "../../../bridge/index.js";
 import { ApiError } from "../../../bridge/types/Errors.js";
 import { stringify } from "../../../utils/json.js";
 import { mapBridgeError } from "../errors/mapBridgeError.js";
@@ -76,7 +76,8 @@ export function useBridgePrepare(params: UseBridgePrepareParams) {
   const { enabled = true, type, ...prepareParams } = params;
 
   return useQuery({
-    queryKey: ["bridge-prepare", type, stringify(prepareParams)],
+    enabled: enabled && !!prepareParams.client,
+    gcTime: 5 * 60 * 1000,
     queryFn: async (): Promise<BridgePrepareResult> => {
       switch (type) {
         case "buy": {
@@ -107,9 +108,7 @@ export function useBridgePrepare(params: UseBridgePrepareParams) {
           throw new Error(`Unsupported bridge prepare type: ${type}`);
       }
     },
-    enabled: enabled && !!prepareParams.client,
-    staleTime: 2 * 60 * 1000, // 2 minutes - prepared quotes have shorter validity
-    gcTime: 5 * 60 * 1000, // 5 minutes garbage collection
+    queryKey: ["bridge-prepare", type, stringify(prepareParams)], // 2 minutes - prepared quotes have shorter validity
     retry: (failureCount, error) => {
       // Handle both ApiError and generic Error instances
       if (error instanceof ApiError) {
@@ -127,7 +126,8 @@ export function useBridgePrepare(params: UseBridgePrepareParams) {
 
       // Retry up to 2 times for prepared quotes (they're more time-sensitive)
       return failureCount < 2;
-    },
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000), // Exponential backoff, max 10s
+    }, // 5 minutes garbage collection
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
+    staleTime: 2 * 60 * 1000, // Exponential backoff, max 10s
   });
 }

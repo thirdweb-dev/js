@@ -6,14 +6,14 @@ export default async function Page(props: EngineInstancePageProps) {
   const params = await props.params;
   const { instance, authToken } = await engineInstancePageHandler({
     engineId: params.engineId,
-    teamSlug: params.team_slug,
     projectSlug: params.project_slug,
+    teamSlug: params.team_slug,
   });
 
   return (
     <WalletCredentialsSection
-      instanceUrl={instance.url}
       authToken={authToken}
+      instanceUrl={instance.url}
     />
   );
 }

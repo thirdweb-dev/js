@@ -1,6 +1,16 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  type PaginationState,
+  type TableOptions,
+  useReactTable,
+} from "@tanstack/react-table";
+import { EllipsisVerticalIcon, MoveRightIcon } from "lucide-react";
+import pluralize from "pluralize";
+import { type ReactNode, type SetStateAction, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,6 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Separator } from "@/components/ui/separator";
 import {
   Table,
@@ -19,17 +30,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import {
-  type ColumnDef,
-  type PaginationState,
-  type TableOptions,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { EllipsisVerticalIcon, MoveRightIcon } from "lucide-react";
-import pluralize from "pluralize";
-import { type ReactNode, type SetStateAction, useMemo, useState } from "react";
 
 type CtaMenuItem<TRowData> = {
   icon?: ReactNode;
@@ -107,18 +107,18 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
     () =>
       tableProps.pagination
         ? {
+            manualPagination: true,
+            onPaginationChange: setPagination,
             pageCount: Math.ceil(slicedData.length / pageSize),
             state: { pagination },
-            onPaginationChange: setPagination,
-            manualPagination: true,
           }
         : {},
     [pageSize, pagination, slicedData.length, tableProps.pagination],
   );
 
   const table = useReactTable({
-    data: slicedData,
     columns: tableProps.columns,
+    data: slicedData,
     ...paginationOptions,
     getCoreRowModel: getCoreRowModel(),
     // TODO - add filtering?
@@ -135,7 +135,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id} colSpan={header.colSpan}>
+                <TableHead colSpan={header.colSpan} key={header.id}>
                   {header.isPlaceholder ? null : (
                     <div className="flex items-center gap-2 ">
                       {flexRender(
@@ -164,18 +164,19 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
             return (
               <TableRow
                 key={row.id}
+                // biome-ignore lint/a11y/useSemanticElements: FIXME
                 role="group"
                 {...(tableProps.onRowClick
                   ? {
-                      style: {
-                        cursor: "pointer",
-                      },
-                      onClick: () => tableProps.onRowClick?.(row.original),
-                      _hover: { bg: "blackAlpha.50" },
                       _dark: {
                         _hover: {
                           bg: "whiteAlpha.50",
                         },
+                      },
+                      _hover: { bg: "blackAlpha.50" },
+                      onClick: () => tableProps.onRowClick?.(row.original),
+                      style: {
+                        cursor: "pointer",
                       },
                     }
                   : {})}
@@ -203,9 +204,9 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
-                          variant="ghost"
                           aria-label="Actions"
                           className="!h-auto relative z-10 p-2.5"
+                          variant="ghost"
                         >
                           <EllipsisVerticalIcon className="size-4" />
                         </Button>
@@ -215,12 +216,12 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                           ({ icon, text, onClick, isDestructive }) => {
                             return (
                               <DropdownMenuItem
-                                key={text}
-                                onClick={() => onClick(row.original)}
                                 className={cn(
                                   "min-w-[170px] cursor-pointer gap-3 px-3 py-3",
                                   isDestructive && "!text-destructive-text",
                                 )}
+                                key={text}
+                                onClick={() => onClick(row.original)}
                               >
                                 {icon}
                                 {text}
@@ -262,14 +263,14 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
         )}
 
       <ShowMoreButton
-        shouldShowMore={slicedData.length < tableProps.data.length}
+        pageSize={tableProps.showMore?.pageSize || -1}
+        setShowMoreLimit={setShowMoreLimit}
         shouldShowLess={
           !!tableProps.showMore?.showLess &&
           slicedData.length > tableProps.showMore.pageSize
         }
-        pageSize={tableProps.showMore?.pageSize || -1}
+        shouldShowMore={slicedData.length < tableProps.data.length}
         showMoreLimit={showMoreLimit}
-        setShowMoreLimit={setShowMoreLimit}
       />
     </TableContainer>
   );
@@ -305,18 +306,18 @@ const ShowMoreButton: React.FC<ShowMoreButtonProps> = ({
         <div className="flex items-center gap-2">
           {shouldShowMore && (
             <Button
-              variant="ghost"
-              size="sm"
               onClick={() => setShowMoreLimit(showMoreLimit + pageSize)}
+              size="sm"
+              variant="ghost"
             >
               Show more
             </Button>
           )}
           {shouldShowLess && (
             <Button
-              variant="ghost"
-              size="sm"
               onClick={() => setShowMoreLimit(newShowLess)}
+              size="sm"
+              variant="ghost"
             >
               Show Less
             </Button>

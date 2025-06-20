@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.dfinnwallet",
-  name: "Dfinn Wallet",
-  homepage: "https://dfinnwallet.app",
-  image_id: "9a9c59ce-6346-4af8-db19-778533fb6000",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/dfinn-wallet/id6451134219",
     android: "https://play.google.com/store/apps/details?id=money.dfinn.wallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/dfinn-wallet/id6451134219",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "dfinnwallet://",
-    universal: "https://dfinnwallet-link.vercel.app/",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://dfinnwallet.app",
+  id: "app.dfinnwallet",
+  image_id: "9a9c59ce-6346-4af8-db19-778533fb6000",
+  mobile: {
+    native: "dfinnwallet://",
+    universal: "https://dfinnwallet-link.vercel.app/",
+  },
+  name: "Dfinn Wallet",
+  rdns: null,
 } as const;

@@ -1,9 +1,9 @@
 import { fetchDashboardContractMetadata } from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
-import { type ThirdwebClient, defineChain, getContract } from "thirdweb";
+import { defineChain, getContract, type ThirdwebClient } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
 import type { TransactionStats } from "types/analytics";
-import { TransactionsChartCardUI } from "../../../../(team)/_components/TransactionsCard";
 import { PieChartCard } from "../../../../../components/Analytics/PieChartCard";
+import { TransactionsChartCardUI } from "../../../../(team)/_components/TransactionsCard";
 
 export function TransactionsChartsUI({
   data,
@@ -19,14 +19,14 @@ export function TransactionsChartsUI({
   return (
     <>
       <TransactionsChartCardUI
-        searchParams={searchParams}
-        data={data}
         aggregatedData={aggregatedData}
         className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
+        data={data}
+        searchParams={searchParams}
       />
       <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
         <ChainDistributionCard data={aggregatedData} />
-        <ContractDistributionCard data={aggregatedData} client={client} />
+        <ContractDistributionCard client={client} data={aggregatedData} />
       </div>
     </>
   );
@@ -51,8 +51,8 @@ async function ChainDistributionCard({ data }: { data: TransactionStats[] }) {
         const chainMeta = await getChainMetadata(chain).catch(() => undefined);
         return {
           label: chainMeta?.slug || chain.id.toString(),
-          value,
           link: `/${chain.id}`,
+          value,
         };
       }),
   );
@@ -60,14 +60,17 @@ async function ChainDistributionCard({ data }: { data: TransactionStats[] }) {
   const aggregateFn = () => new Set(data.map((d) => `${d.chainId}`)).size;
 
   return (
-    <PieChartCard title="Chains" data={reducedData} aggregateFn={aggregateFn} />
+    <PieChartCard aggregateFn={aggregateFn} data={reducedData} title="Chains" />
   );
 }
 
 async function ContractDistributionCard({
   data,
   client,
-}: { data: TransactionStats[]; client: ThirdwebClient }) {
+}: {
+  data: TransactionStats[];
+  client: ThirdwebClient;
+}) {
   const _reducedData = await Promise.all(
     Object.entries(
       data
@@ -97,8 +100,8 @@ async function ContractDistributionCard({
           );
           const contractData = await fetchDashboardContractMetadata(
             getContract({
-              chain,
-              address: contractAddress as string, // we filter above
+              address: contractAddress as string,
+              chain, // we filter above
               client,
             }),
           ).catch(() => undefined);
@@ -124,9 +127,9 @@ async function ContractDistributionCard({
 
   return (
     <PieChartCard
-      title="Contracts"
-      data={reducedData}
       aggregateFn={aggregateFn}
+      data={reducedData}
+      title="Contracts"
     />
   );
 }

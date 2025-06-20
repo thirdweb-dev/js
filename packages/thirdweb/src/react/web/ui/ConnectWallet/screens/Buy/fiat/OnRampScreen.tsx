@@ -14,8 +14,8 @@ import {
   getBuyWithFiatStatus,
 } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import {
-  type OnRampStep,
   getOnRampSteps,
+  type OnRampStep,
 } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import type { PayTokenInfo } from "../../../../../../../pay/utils/commonTypes.js";
 import { sendBatchTransaction } from "../../../../../../../transaction/actions/send-batch-transaction.js";
@@ -30,19 +30,19 @@ import { useBuyWithCryptoStatus } from "../../../../../../core/hooks/pay/useBuyW
 import { useBuyWithFiatStatus } from "../../../../../../core/hooks/pay/useBuyWithFiatStatus.js";
 import { useConnectedWallets } from "../../../../../../core/hooks/wallets/useConnectedWallets.js";
 import { invalidateWalletBalance } from "../../../../../../core/providers/invalidateWalletBalance.js";
+import { Container, ModalHeader } from "../../../../components/basic.js";
+import { Button } from "../../../../components/buttons.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { SwitchNetworkButton } from "../../../../components/SwitchNetwork.js";
-import { Container, ModalHeader } from "../../../../components/basic.js";
-import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
-import { PayTokenIcon } from "../PayTokenIcon.js";
 import { openOnrampPopup } from "../openOnRamppopup.js";
+import { PayTokenIcon } from "../PayTokenIcon.js";
 import type { FiatStatusMeta } from "../pay-transactions/statusMeta.js";
+import { addPendingTx } from "../swap/pendingSwapTx.js";
 import { StepConnectorArrow } from "../swap/StepConnector.js";
 import { WalletRow } from "../swap/WalletRow.js";
-import { addPendingTx } from "../swap/pendingSwapTx.js";
 import type { PayerInfo } from "../types.js";
 import { getProviderLabel } from "../utils.js";
 import { StepContainer } from "./FiatSteps.js";
@@ -76,38 +76,38 @@ export function OnRampScreen(props: {
 }) {
   const connectedWallets = useConnectedWallets();
   const isAutoMode = isInAppSigner({
-    wallet: props.payer.wallet,
     connectedWallets,
+    wallet: props.payer.wallet,
   });
   const state = useOnRampScreenState({
-    quote: props.quote,
     client: props.client,
-    onSuccess: props.onSuccess,
-    onDone: props.onDone,
-    payer: props.payer,
-    theme: props.theme,
     isAutoMode,
+    onDone: props.onDone,
+    onSuccess: props.onSuccess,
+    payer: props.payer,
     paymentLinkId: props.paymentLinkId,
+    quote: props.quote,
+    theme: props.theme,
   });
   const firstStepChainId = state.steps[0]?.step.token.chainId;
   return (
     <Container p="lg">
-      <ModalHeader title={props.title} onBack={props.onBack} />
+      <ModalHeader onBack={props.onBack} title={props.title} />
       <Spacer y="xl" />
       <Container
+        center="y"
         flex="column"
         gap="xs"
-        center="y"
         style={{
           paddingLeft: spacing.md,
         }}
       >
         <WalletRow
-          client={props.client}
           address={props.receiverAddress}
+          client={props.client}
           iconSize="md"
-          textSize="sm"
           label="Recipient wallet"
+          textSize="sm"
         />
       </Container>
       <Spacer y="md" />
@@ -115,17 +115,17 @@ export function OnRampScreen(props: {
         {state.steps.map(({ step, status }, index) => (
           <Container flex="column" key={step.action}>
             <StepContainer
-              state={status}
               index={index}
+              state={status}
               style={{
                 flex: "1",
               }}
             >
               <StepUI
-                step={step}
                 client={props.client}
-                payer={props.payer}
                 index={index}
+                payer={props.payer}
+                step={step}
               />
             </StepContainer>
             {index < state.steps.length - 1 && <StepConnectorArrow />}
@@ -136,9 +136,9 @@ export function OnRampScreen(props: {
       <Spacer y="md" />
 
       <Text
-        size="xs"
-        color="secondaryText"
         center
+        color="secondaryText"
+        size="xs"
         style={{ padding: `0 ${spacing.xl}` }}
       >
         Keep this window open until all transactions are complete.
@@ -152,20 +152,20 @@ export function OnRampScreen(props: {
         firstStepChainId !== props.payer.chain.id ? (
           <SwitchNetworkButton
             fullWidth
-            variant="accent"
             switchChain={async () => {
               await props.payer.wallet.switchChain(
                 getCachedChain(firstStepChainId),
               );
             }}
+            variant="accent"
           />
         ) : (
           <Button
-            variant="accent"
-            gap="sm"
-            fullWidth
-            onClick={state.handleContinue}
             disabled={state.isLoading}
+            fullWidth
+            gap="sm"
+            onClick={state.handleContinue}
+            variant="accent"
           >
             {state.isLoading
               ? "Processing"
@@ -176,7 +176,7 @@ export function OnRampScreen(props: {
                 : state.isFailed
                   ? "Retry"
                   : "Continue"}
-            {state.isLoading && <Spinner size="sm" color="primaryText" />}
+            {state.isLoading && <Spinner color="primaryText" size="sm" />}
           </Button>
         )}
       </Container>
@@ -195,13 +195,13 @@ function StepUI(props: {
   return (
     <Container flex="column" gap="xs" py="3xs">
       <Container
-        flex="row"
         center="y"
+        flex="row"
         gap="sm"
         style={{
           display: "flex",
-          justifyContent: "space-between",
           flexWrap: "nowrap",
+          justifyContent: "space-between",
         }}
       >
         <PayTokenIcon
@@ -212,57 +212,57 @@ function StepUI(props: {
             address: step.token.tokenAddress,
           }}
         />
-        <Container flex="column" gap="3xs" center="y" style={{ flex: "1" }}>
-          <Text size="sm" color="primaryText">
+        <Container center="y" flex="column" gap="3xs" style={{ flex: "1" }}>
+          <Text color="primaryText" size="sm">
             {getProviderLabel(step.action)}
           </Text>
 
           <Container
+            center="y"
             flex="row"
             gap="xs"
-            center="y"
             style={{
               display: "flex",
-              justifyContent: "space-between",
               flexWrap: "nowrap",
+              justifyContent: "space-between",
             }}
           >
             <Container
+              center="y"
               flex="row"
               gap="xxs"
-              center="y"
               style={{
                 flex: "1 1 60%",
-                minWidth: 0,
-                maxWidth: "60%",
-                overflow: "hidden",
                 flexWrap: "nowrap",
+                maxWidth: "60%",
+                minWidth: 0,
+                overflow: "hidden",
               }}
             >
-              <Text size="sm" color="primaryText">
+              <Text color="primaryText" size="sm">
                 {formatNumber(Number(step.amount), 5)}
               </Text>
               <TokenSymbol
+                chain={getCachedChain(step.token.chainId)}
+                color="secondaryText"
+                size="sm"
                 token={{
                   address: step.token.tokenAddress,
                   name: step.token.name || "",
                   symbol: step.token.symbol || "",
                 }}
-                chain={getCachedChain(step.token.chainId)}
-                size="sm"
-                color="secondaryText"
               />
             </Container>
             <Container
+              center="y"
               flex="row"
               gap="xs"
-              center="y"
               style={{
                 flex: "1 1 40%",
+                flexWrap: "nowrap",
+                justifyContent: "flex-end",
                 maxWidth: "40%",
                 minWidth: 0,
-                justifyContent: "flex-end",
-                flexWrap: "nowrap",
               }}
             >
               <Text
@@ -303,8 +303,8 @@ function useOnRampScreenState(props: {
 
   // Track onramp status
   const { uiStatus: fiatOnrampStatus } = useOnRampStatus({
-    intentId: props.quote.intentId,
     client: props.client,
+    intentId: props.quote.intentId,
     onSuccess: (status) => {
       if (onRampSteps.length === 1) {
         // If only one step, this is the final success
@@ -324,22 +324,21 @@ function useOnRampScreenState(props: {
   // Handle swap execution
   const swapMutation = useSwapMutation({
     client: props.client,
-    payer: props.payer,
     isFiatFlow: true,
+    payer: props.payer,
     paymentLinkId: props.paymentLinkId,
   });
 
   // Track swap status
   const { uiStatus: swapStatus } = useSwapStatus({
-    client: props.client,
-    transactionHash: swapTxHash?.hash,
     chainId: swapTxHash?.chainId,
+    client: props.client,
     onSuccess: () => {
       if (currentStepIndex === onRampSteps.length - 1) {
         // Last step completed - call final success
         getBuyWithFiatStatus({
-          intentId: props.quote.intentId,
           client: props.client,
+          intentId: props.quote.intentId,
         }).then(props.onSuccess);
       } else {
         // Reset swap state before moving to next step
@@ -349,6 +348,7 @@ function useOnRampScreenState(props: {
         setCurrentStepIndex((prev) => prev + 1);
       }
     },
+    transactionHash: swapTxHash?.hash,
   });
 
   // Map steps to their current status
@@ -376,8 +376,8 @@ function useOnRampScreenState(props: {
 
     return {
       index,
-      step,
       status,
+      step,
     };
   });
 
@@ -396,30 +396,30 @@ function useOnRampScreenState(props: {
       // First step - open onramp popup
       const popup = openOnrampPopup(props.quote.onRampLink, props.theme);
       trackPayEvent({
-        event: "open_onramp_popup",
+        amountWei: props.quote.onRampToken.amountWei,
         client: props.client,
-        walletAddress: props.payer.account.address,
-        walletType: props.payer.wallet.id,
+        event: "open_onramp_popup",
         toChainId: props.quote.onRampToken.token.chainId,
         toToken: props.quote.onRampToken.token.tokenAddress,
-        amountWei: props.quote.onRampToken.amountWei,
+        walletAddress: props.payer.account.address,
+        walletType: props.payer.wallet.id,
       });
       setPopupWindow(popup);
       addPendingTx({
-        type: "fiat",
         intentId: props.quote.intentId,
+        type: "fiat",
       });
     } else if (previousStep && currentStep && !swapTxHash) {
       // Execute swap/bridge
       try {
         const result = await swapMutation.mutateAsync({
+          amount: currentStep.amount,
           fromToken: previousStep.token,
           toToken: currentStep.token,
-          amount: currentStep.amount,
         });
         setSwapTxHash({
-          hash: result.transactionHash,
           chainId: result.chainId,
+          hash: result.transactionHash,
         });
       } catch (e) {
         console.error("Failed to execute swap:", e);
@@ -475,11 +475,11 @@ function useOnRampScreenState(props: {
   ]);
 
   return {
-    steps,
     handleContinue,
-    isLoading,
     isDone,
     isFailed,
+    isLoading,
+    steps,
   };
 }
 
@@ -491,8 +491,8 @@ function useOnRampStatus(props: {
 }) {
   const queryClient = useQueryClient();
   const statusQuery = useBuyWithFiatStatus({
-    intentId: props.intentId,
     client: props.client,
+    intentId: props.intentId,
     queryOptions: {
       enabled: !!props.openedWindow,
     },
@@ -564,9 +564,9 @@ function useSwapStatus(props: {
   const swapStatus = useBuyWithCryptoStatus(
     props.transactionHash && props.chainId
       ? {
+          chainId: props.chainId,
           client: props.client,
           transactionHash: props.transactionHash,
-          chainId: props.chainId,
         }
       : undefined,
   );
@@ -645,22 +645,22 @@ function useSwapMutation(props: {
 
       // always get a fresh quote before executing
       const quote = await getBuyWithCryptoQuote({
+        client: props.client,
+        fromAddress: account.address,
         fromChainId: fromToken.chainId,
         fromTokenAddress: fromToken.tokenAddress,
+        paymentLinkId: props.paymentLinkId,
+        toAddress: account.address,
         toAmount: amount,
         toChainId: toToken.chainId,
         toTokenAddress: toToken.tokenAddress,
-        fromAddress: account.address,
-        toAddress: account.address,
-        paymentLinkId: props.paymentLinkId,
-        client: props.client,
       });
 
       const canBatch = account.sendBatchTransaction;
       const tokenContract = getContract({
-        client: props.client,
         address: quote.swapDetails.fromToken.tokenAddress,
         chain: getCachedChain(quote.swapDetails.fromToken.chainId),
+        client: props.client,
       });
       const approveTxRequired =
         quote.approvalData &&
@@ -671,21 +671,21 @@ function useSwapMutation(props: {
         })) < BigInt(quote.approvalData.amountWei);
       if (approveTxRequired && quote.approvalData && !canBatch) {
         trackPayEvent({
-          event: "prompt_swap_approval",
+          amountWei: quote.swapDetails.fromAmountWei,
+          chainId: quote.swapDetails.fromToken.chainId,
           client: props.client,
+          event: "prompt_swap_approval",
+          fromToken: quote.swapDetails.fromToken.tokenAddress,
+          toChainId: quote.swapDetails.toToken.chainId,
+          toToken: quote.swapDetails.toToken.tokenAddress,
           walletAddress: account.address,
           walletType: props.payer.wallet.id,
-          fromToken: quote.swapDetails.fromToken.tokenAddress,
-          chainId: quote.swapDetails.fromToken.chainId,
-          amountWei: quote.swapDetails.fromAmountWei,
-          toToken: quote.swapDetails.toToken.tokenAddress,
-          toChainId: quote.swapDetails.toToken.chainId,
         });
 
         const transaction = approve({
+          amountWei: BigInt(quote.approvalData.amountWei),
           contract: tokenContract,
           spender: quote.approvalData.spenderAddress,
-          amountWei: BigInt(quote.approvalData.amountWei),
         });
 
         const tx = await sendTransaction({
@@ -696,37 +696,37 @@ function useSwapMutation(props: {
         await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
 
         trackPayEvent({
-          event: "swap_approval_success",
+          amountWei: quote.swapDetails.fromAmountWei,
+          chainId: quote.swapDetails.fromToken.chainId,
           client: props.client,
+          event: "swap_approval_success",
+          fromToken: quote.swapDetails.fromToken.tokenAddress,
+          toChainId: quote.swapDetails.toToken.chainId,
+          toToken: quote.swapDetails.toToken.tokenAddress,
           walletAddress: account.address,
           walletType: props.payer.wallet.id,
-          fromToken: quote.swapDetails.fromToken.tokenAddress,
-          amountWei: quote.swapDetails.fromAmountWei,
-          toToken: quote.swapDetails.toToken.tokenAddress,
-          chainId: quote.swapDetails.fromToken.chainId,
-          toChainId: quote.swapDetails.toToken.chainId,
         });
       }
 
       trackPayEvent({
-        event: "prompt_swap_execution",
+        amountWei: quote.swapDetails.fromAmountWei,
+        chainId: quote.swapDetails.fromToken.chainId,
         client: props.client,
+        event: "prompt_swap_execution",
+        fromToken: quote.swapDetails.fromToken.tokenAddress,
+        toChainId: quote.swapDetails.toToken.chainId,
+        toToken: quote.swapDetails.toToken.tokenAddress,
         walletAddress: account.address,
         walletType: props.payer.wallet.id,
-        fromToken: quote.swapDetails.fromToken.tokenAddress,
-        amountWei: quote.swapDetails.fromAmountWei,
-        toToken: quote.swapDetails.toToken.tokenAddress,
-        chainId: quote.swapDetails.fromToken.chainId,
-        toChainId: quote.swapDetails.toToken.chainId,
       });
       const tx = quote.transactionRequest;
       let _swapTx: WaitForReceiptOptions;
       // check if we can batch approval and swap
       if (canBatch && quote.approvalData && approveTxRequired) {
         const approveTx = approve({
+          amountWei: BigInt(quote.approvalData.amountWei),
           contract: tokenContract,
           spender: quote.approvalData.spenderAddress,
-          amountWei: BigInt(quote.approvalData.amountWei),
         });
 
         _swapTx = await sendBatchTransaction({
@@ -743,29 +743,29 @@ function useSwapMutation(props: {
       await waitForReceipt({ ..._swapTx, maxBlocksWaitTime: 50 });
 
       trackPayEvent({
-        event: "swap_execution_success",
+        amountWei: quote.swapDetails.fromAmountWei,
+        chainId: quote.swapDetails.fromToken.chainId,
         client: props.client,
+        event: "swap_execution_success",
+        fromToken: quote.swapDetails.fromToken.tokenAddress,
+        toChainId: quote.swapDetails.toToken.chainId,
+        toToken: quote.swapDetails.toToken.tokenAddress,
         walletAddress: account.address,
         walletType: props.payer.wallet.id,
-        fromToken: quote.swapDetails.fromToken.tokenAddress,
-        amountWei: quote.swapDetails.fromAmountWei,
-        toToken: quote.swapDetails.toToken.tokenAddress,
-        toChainId: quote.swapDetails.toToken.chainId,
-        chainId: quote.swapDetails.fromToken.chainId,
       });
 
       // do not add pending tx if the swap is part of fiat flow
       if (!props.isFiatFlow) {
         addPendingTx({
-          type: "swap",
-          txHash: _swapTx.transactionHash,
           chainId: _swapTx.chain.id,
+          txHash: _swapTx.transactionHash,
+          type: "swap",
         });
       }
 
       return {
-        transactionHash: _swapTx.transactionHash,
         chainId: _swapTx.chain.id,
+        transactionHash: _swapTx.transactionHash,
       };
     },
     onSuccess: () => {

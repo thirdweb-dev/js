@@ -78,40 +78,40 @@ export function SwapFlow(props: SwapFlowProps) {
   if (swapTxHash) {
     return (
       <SwapStatusScreen
-        title={props.title}
-        onBack={props.onBack}
-        onTryAgain={props.onTryAgain}
-        swapTxHash={swapTxHash}
-        fromChain={fromChain}
         client={props.client}
-        onDone={props.onDone}
-        transactionMode={props.transactionMode}
+        fromChain={fromChain}
         isEmbed={props.isEmbed}
-        quote={quote}
+        onBack={props.onBack}
+        onDone={props.onDone}
         onSuccess={props.onSuccess}
+        onTryAgain={props.onTryAgain}
+        quote={quote}
+        swapTxHash={swapTxHash}
+        title={props.title}
+        transactionMode={props.transactionMode}
       />
     );
   }
 
   return (
     <SwapConfirmationScreen
-      title={props.title}
-      setSwapTxHash={setSwapTxHash}
-      toChain={toChain}
-      toAmount={toAmount}
-      toTokenSymbol={toTokenSymbol}
-      fromChain={fromChain}
-      toToken={toToken}
+      client={props.client}
       fromAmount={fromAmount}
+      fromChain={fromChain}
       fromToken={fromToken}
       fromTokenSymbol={fromTokenSymbol}
-      client={props.client}
+      isFiatFlow={props.isFiatFlow}
       onBack={props.onBack}
       onTryAgain={props.onTryAgain}
-      quote={quote}
-      isFiatFlow={props.isFiatFlow}
       payer={props.payer}
       preApprovedAmount={props.approvalAmount}
+      quote={quote}
+      setSwapTxHash={setSwapTxHash}
+      title={props.title}
+      toAmount={toAmount}
+      toChain={toChain}
+      toToken={toToken}
+      toTokenSymbol={toTokenSymbol}
     />
   );
 }

@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { useClipboard } from "hooks/useClipboard";
 import { CheckIcon, CopyIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "./button";
 import { ToolTipLabel } from "./tooltip";
 
@@ -39,7 +39,6 @@ export function CopyTextButton(props: {
   return (
     <ToolTipLabel label={props.tooltip}>
       <Button
-        variant={props.variant || "outline"}
         aria-label={props.tooltip}
         className={cn(
           "flex h-auto w-auto gap-2 rounded-lg px-1.5 py-0.5 font-normal text-foreground",
@@ -50,6 +49,7 @@ export function CopyTextButton(props: {
           e.stopPropagation();
           props.onClick?.();
         }}
+        variant={props.variant || "outline"}
       >
         {props.copyIconPosition === "right" ? (
           <>

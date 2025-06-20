@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.walletnow",
-  name: "NOW Wallet",
-  homepage: "https://walletnow.app/",
-  image_id: "b6ee4efc-f53e-475b-927b-a7ded6211700",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/app/now-wallet-bitcoin-crypto/id1591216386",
     android: "https://play.google.com/store/apps/details?id=com.nowwallet",
-    mac: "https://apps.apple.com/app/now-wallet-bitcoin-crypto/id1591216386",
-    windows: "https://apps.microsoft.com/detail/xpdc4v0j3zkvhh",
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/app/now-wallet-bitcoin-crypto/id1591216386",
+    linux: null,
+    mac: "https://apps.apple.com/app/now-wallet-bitcoin-crypto/id1591216386",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "nowwallet://",
-    universal: "https://walletnow.app.link",
+    safari: null,
+    windows: "https://apps.microsoft.com/detail/xpdc4v0j3zkvhh",
   },
   desktop: {
     native: "nowwallet://",
     universal: "https://walletnow.app.link",
   },
+  homepage: "https://walletnow.app/",
+  id: "app.walletnow",
+  image_id: "b6ee4efc-f53e-475b-927b-a7ded6211700",
+  mobile: {
+    native: "nowwallet://",
+    universal: "https://walletnow.app.link",
+  },
+  name: "NOW Wallet",
+  rdns: null,
 } as const;

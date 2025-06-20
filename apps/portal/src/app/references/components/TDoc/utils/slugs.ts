@@ -1,5 +1,5 @@
-import type { SomeDoc } from "@/app/references/components/TDoc/types";
 import type { TransformedDoc } from "typedoc-better-json";
+import type { SomeDoc } from "@/app/references/components/TDoc/types";
 import { getExtensionName } from "./getSidebarLinkgroups";
 import { subgroups } from "./subgroups";
 import { uniqueSlugger } from "./uniqueSlugger";

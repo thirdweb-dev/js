@@ -10,9 +10,9 @@ export function BuildYourApp(props: {
   projectMeta: ProjectMeta | undefined;
 }) {
   const codePath = buildContractPagePath({
-    projectMeta: props.projectMeta,
     chainIdOrSlug: props.chainSlug,
     contractAddress: props.contractAddress,
+    projectMeta: props.projectMeta,
     subpath: "/code",
   });
 
@@ -24,8 +24,8 @@ export function BuildYourApp(props: {
           Build your app
         </h2>
         <Link
-          href={codePath}
           className="block text-balance text-muted-foreground text-sm before:absolute before:inset-0"
+          href={codePath}
         >
           Learn more about how you can use thirdweb tools to build apps on top
           of this contract
@@ -36,8 +36,8 @@ export function BuildYourApp(props: {
       <div className="flex items-center justify-end gap-3">
         {[TypeScriptIcon, ReactIcon].map((Icon, i) => {
           return (
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            <div key={i} className="rounded-full border bg-background p-3">
+            // biome-ignore lint/suspicious/noArrayIndexKey: this is stable
+            <div className="rounded-full border bg-background p-3" key={i}>
               <Icon className="size-5 text-muted-foreground" />
             </div>
           );

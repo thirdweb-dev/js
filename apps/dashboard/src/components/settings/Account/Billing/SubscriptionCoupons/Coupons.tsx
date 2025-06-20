@@ -1,5 +1,5 @@
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { Suspense } from "react";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { getAuthToken } from "../../../../../app/(app)/api/lib/getAuthToken";
 import { CouponsClient } from "./CouponsClient";
 import type { CouponData } from "./CouponsUI";
@@ -39,10 +39,10 @@ async function AsyncCoupons(props: {
   ) {
     return (
       <CouponsClient
-        status="error"
-        activeCoupons={[]}
         accountCouponId={undefined}
+        activeCoupons={[]}
         isPaymentSetup={props.isPaymentSetup}
+        status="error"
         teamId={props.teamId}
       />
     );
@@ -58,34 +58,31 @@ async function AsyncCoupons(props: {
 
   return (
     <CouponsClient
-      status="success"
-      activeCoupons={allCouponsData.data}
       accountCouponId={accountCouponData.data?.id}
+      activeCoupons={allCouponsData.data}
       isPaymentSetup={props.isPaymentSetup}
+      status="success"
       teamId={props.teamId}
     />
   );
 }
 
-export function Coupons(props: {
-  teamId: string;
-  isPaymentSetup: boolean;
-}) {
+export function Coupons(props: { teamId: string; isPaymentSetup: boolean }) {
   return (
     <Suspense
       fallback={
         <CouponsClient
-          status="pending"
-          activeCoupons={[]}
           accountCouponId={undefined}
+          activeCoupons={[]}
           isPaymentSetup={true}
+          status="pending"
           teamId={props.teamId}
         />
       }
     >
       <AsyncCoupons
-        teamId={props.teamId}
         isPaymentSetup={props.isPaymentSetup}
+        teamId={props.teamId}
       />
     </Suspense>
   );

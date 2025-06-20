@@ -13,16 +13,12 @@ export function PlanInfoCardClient(props: {
 }) {
   return (
     <PlanInfoCardUI
-      openPlanSheetButtonByDefault={props.openPlanSheetButtonByDefault}
-      team={props.team}
-      subscriptions={props.subscriptions}
-      isOwnerAccount={props.isOwnerAccount}
       getTeam={async () => {
         const res = await apiServerProxy<{
           result: Team;
         }>({
-          pathname: `/v1/teams/${props.team.slug}`,
           method: "GET",
+          pathname: `/v1/teams/${props.team.slug}`,
         });
 
         if (!res.ok) {
@@ -32,6 +28,10 @@ export function PlanInfoCardClient(props: {
         return res.data.result;
       }}
       highlightPlan={props.highlightPlan}
+      isOwnerAccount={props.isOwnerAccount}
+      openPlanSheetButtonByDefault={props.openPlanSheetButtonByDefault}
+      subscriptions={props.subscriptions}
+      team={props.team}
     />
   );
 }

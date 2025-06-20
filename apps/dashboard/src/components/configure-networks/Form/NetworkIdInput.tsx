@@ -1,7 +1,8 @@
+import { useAllChainsData } from "hooks/chains/allChains";
+import { useId } from "react";
+import type { UseFormReturn } from "react-hook-form";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Input } from "@/components/ui/input";
-import { useAllChainsData } from "hooks/chains/allChains";
-import type { UseFormReturn } from "react-hook-form";
 import type { NetworkConfigFormData } from "../ConfigureNetworkForm";
 
 export const NetworkIDInput: React.FC<{
@@ -9,10 +10,15 @@ export const NetworkIDInput: React.FC<{
   disabled?: boolean;
 }> = ({ form, disabled }) => {
   const { slugToChain } = useAllChainsData();
-
+  const slugId = useId();
   return (
     <FormFieldSetup
-      htmlFor="slug"
+      errorMessage={
+        form.formState.errors.slug?.type === "taken"
+          ? "Slug is taken by other network"
+          : undefined
+      }
+      htmlFor={slugId}
       isRequired
       label="Slug"
       tooltip={
@@ -25,24 +31,19 @@ export const NetworkIDInput: React.FC<{
           </p>
         </span>
       }
-      errorMessage={
-        form.formState.errors.slug?.type === "taken" ? (
-          <>Slug is taken by other network</>
-        ) : undefined
-      }
     >
       <Input
-        disabled={disabled}
         autoComplete="off"
-        placeholder="ethereum"
-        id="slug"
         className="bg-card font-mono disabled:bg-card disabled:text-muted-foreground disabled:opacity-100"
+        disabled={disabled}
+        id={slugId}
         onKeyDown={(e) => {
           // only allow alphanumeric characters and dashes
           if (!/^[a-z0-9-]*$/i.test(e.key)) {
             e.preventDefault();
           }
         }}
+        placeholder="ethereum"
         type="text"
         {...form.register("slug", {
           required: true,

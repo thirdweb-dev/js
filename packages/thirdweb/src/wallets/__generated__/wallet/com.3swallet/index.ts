@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.3swallet",
-  name: "3S Wallet",
-  homepage: "https://3swallet.com/",
-  image_id: "f3b6a89d-ec8f-49dc-e07f-6bf723e1e500",
   app: {
-    browser: "https://3swallet.com/",
-    ios: "https://apps.apple.com/us/app/3s-wallet-crypto-wallet/id1622316272",
     android: "https://play.google.com/store/apps/details?id=network.bho.wallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://3swallet.com/",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/3s-wallet-crypto-wallet/id1622316272",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "bhcwallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://3swallet.com/",
   },
+  homepage: "https://3swallet.com/",
+  id: "com.3swallet",
+  image_id: "f3b6a89d-ec8f-49dc-e07f-6bf723e1e500",
+  mobile: {
+    native: "bhcwallet://",
+    universal: null,
+  },
+  name: "3S Wallet",
+  rdns: null,
 } as const;

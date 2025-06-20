@@ -26,7 +26,7 @@ export async function getGasPrice(
   options: GetGasPriceOptions,
 ): Promise<bigint> {
   const { client, chain, percentMultiplier } = options;
-  const rpcClient = getRpcClient({ client, chain });
+  const rpcClient = getRpcClient({ chain, client });
   const gasPrice_ = await eth_gasPrice(rpcClient);
   const extraTip = percentMultiplier
     ? (gasPrice_ / BigInt(100)) * BigInt(percentMultiplier)

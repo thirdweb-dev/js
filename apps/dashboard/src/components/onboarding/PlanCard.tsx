@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { TeamPlanBadge } from "../../app/(app)/components/TeamPlanBadge";
 import type { CreditsRecord } from "./ApplyForOpCreditsModal";
 
@@ -22,7 +22,7 @@ export function PlanCard({ creditsRecord, teamSlug }: PlanCardProps) {
         {creditsRecord.features && (
           <ul className="list-disc space-y-1 pl-4 text-muted-foreground text-sm">
             {creditsRecord.features.map((feature) => (
-              <li key={feature} className="text-muted-foreground">
+              <li className="text-muted-foreground" key={feature}>
                 {feature}
               </li>
             ))}
@@ -34,8 +34,8 @@ export function PlanCard({ creditsRecord, teamSlug }: PlanCardProps) {
         <Button
           asChild
           className="gap-2 bg-background"
-          variant="outline"
           size="sm"
+          variant="outline"
         >
           <Link href={`/team/${teamSlug}/~/settings/billing`}>Upgrade</Link>
         </Button>

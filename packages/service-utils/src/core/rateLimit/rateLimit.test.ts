@@ -5,9 +5,9 @@ import { rateLimit } from "./index.js";
 const SLIDING_WINDOW_SECONDS = 10;
 
 const mockRedis = {
-  mget: vi.fn(),
   expire: vi.fn(),
   incrby: vi.fn(),
+  mget: vi.fn(),
 };
 
 describe("rateLimit", () => {
@@ -23,16 +23,16 @@ describe("rateLimit", () => {
 
   it("should not rate limit if limitPerSecond is 0", async () => {
     const result = await rateLimit({
-      team: validTeamResponse,
       limitPerSecond: 0,
-      serviceConfig: validServiceConfig,
       redis: mockRedis,
+      serviceConfig: validServiceConfig,
+      team: validTeamResponse,
     });
 
     expect(result).toEqual({
+      rateLimit: 0,
       rateLimited: false,
       requestCount: 1,
-      rateLimit: 0,
     });
     expect(mockRedis.mget).not.toHaveBeenCalled();
   });
@@ -53,10 +53,10 @@ describe("rateLimit", () => {
     ]);
 
     const result = await rateLimit({
-      team: validTeamResponse,
       limitPerSecond: 10,
-      serviceConfig: validServiceConfig,
       redis: mockRedis,
+      serviceConfig: validServiceConfig,
+      team: validTeamResponse,
     });
 
     // Verify correct keys are checked
@@ -76,18 +76,18 @@ describe("rateLimit", () => {
     mockRedis.mget.mockResolvedValue(["50", "51"]);
 
     const result = await rateLimit({
-      team: validTeamResponse,
       limitPerSecond: 10,
-      serviceConfig: validServiceConfig,
       redis: mockRedis,
+      serviceConfig: validServiceConfig,
+      team: validTeamResponse,
     });
 
     expect(result).toMatchObject({
+      errorCode: "RATE_LIMIT_EXCEEDED",
+      rateLimit: 100,
       rateLimited: true,
       requestCount: 101,
-      rateLimit: 100,
       status: 429,
-      errorCode: "RATE_LIMIT_EXCEEDED",
     });
   });
 
@@ -95,10 +95,10 @@ describe("rateLimit", () => {
     // First case: current second has no requests
     mockRedis.mget.mockResolvedValueOnce([null, ...Array(9).fill("5")]);
     await rateLimit({
-      team: validTeamResponse,
       limitPerSecond: 10,
-      serviceConfig: validServiceConfig,
       redis: mockRedis,
+      serviceConfig: validServiceConfig,
+      team: validTeamResponse,
     });
     expect(mockRedis.expire).toHaveBeenCalled();
 
@@ -107,10 +107,10 @@ describe("rateLimit", () => {
     // Second case: current second already has requests
     mockRedis.mget.mockResolvedValueOnce(["5", ...Array(9).fill("5")]);
     await rateLimit({
-      team: validTeamResponse,
       limitPerSecond: 10,
-      serviceConfig: validServiceConfig,
       redis: mockRedis,
+      serviceConfig: validServiceConfig,
+      team: validTeamResponse,
     });
     expect(mockRedis.expire).not.toHaveBeenCalled();
   });
@@ -118,11 +118,11 @@ describe("rateLimit", () => {
   it("should increment by the amount provided", async () => {
     mockRedis.mget.mockResolvedValueOnce(["5"]);
     const result = await rateLimit({
-      team: validTeamResponse,
-      limitPerSecond: 10,
-      serviceConfig: validServiceConfig,
-      redis: mockRedis,
       increment: 3,
+      limitPerSecond: 10,
+      redis: mockRedis,
+      serviceConfig: validServiceConfig,
+      team: validTeamResponse,
     });
     expect(mockRedis.incrby).toHaveBeenCalledWith(expect.anything(), 3);
     expect(result.requestCount).toBe(8);

@@ -108,8 +108,8 @@ export function usePaymentMachine(
 ) {
   const [currentState, setCurrentState] = useState<PaymentMachineState>("init");
   const [context, setContext] = useState<PaymentMachineContext>({
-    mode,
     adapters,
+    mode,
   });
 
   const send = useCallback(
@@ -121,8 +121,8 @@ export function usePaymentMachine(
               if (event.type === "DESTINATION_CONFIRMED") {
                 return {
                   ...ctx,
-                  destinationToken: event.destinationToken,
                   destinationAmount: event.destinationAmount,
+                  destinationToken: event.destinationToken,
                   receiverAddress: event.receiverAddress,
                 };
               } else if (event.type === "ERROR_OCCURRED") {
@@ -204,8 +204,8 @@ export function usePaymentMachine(
             case "success":
               if (event.type === "RESET") {
                 return {
-                  mode: ctx.mode,
                   adapters: ctx.adapters,
+                  mode: ctx.mode,
                 };
               }
               break;
@@ -213,8 +213,8 @@ export function usePaymentMachine(
             case "post-buy-transaction":
               if (event.type === "RESET") {
                 return {
-                  mode: ctx.mode,
                   adapters: ctx.adapters,
+                  mode: ctx.mode,
                 };
               }
               break;
@@ -282,8 +282,8 @@ export function usePaymentMachine(
 
   return [
     {
-      value: currentState,
       context,
+      value: currentState,
     },
     send,
   ] as const;

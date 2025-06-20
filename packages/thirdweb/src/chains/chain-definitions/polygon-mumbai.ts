@@ -4,16 +4,16 @@ import { defineChain } from "../utils.js";
  * @chain
  */
 export const polygonMumbai = /*@__PURE__*/ defineChain({
-  id: 80001,
-  name: "Polygon Mumbai",
-  nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
   blockExplorers: [
     {
+      apiUrl: "https://mumbai.polygonscan.com/api",
       name: "PolygonScan",
       url: "https://mumbai.polygonscan.com",
-      apiUrl: "https://mumbai.polygonscan.com/api",
     },
   ],
+  id: 80001,
+  name: "Polygon Mumbai",
+  nativeCurrency: { decimals: 18, name: "MATIC", symbol: "MATIC" },
   testnet: true,
 });
 

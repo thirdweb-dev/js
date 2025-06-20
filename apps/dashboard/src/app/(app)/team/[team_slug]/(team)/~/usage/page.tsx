@@ -1,3 +1,6 @@
+import { format, parseISO } from "date-fns";
+import { InfoIcon } from "lucide-react";
+import { redirect } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
 import { getBilledUsage } from "@/api/usage/billing-preview";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -9,13 +12,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { format, parseISO } from "date-fns";
-import { InfoIcon } from "lucide-react";
-import { redirect } from "next/navigation";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
 import {
-  UsageCategoryDetails,
   formatPrice,
+  UsageCategoryDetails,
 } from "../../_components/usage-category-details";
 
 export default async function Page(props: {
@@ -127,8 +127,8 @@ export default async function Page(props: {
       <div className="space-y-6">
         {sortedCategories.map((category, index) => (
           <UsageCategoryDetails
-            key={`${category.category}_${index}`}
             category={category}
+            key={`${category.category}_${index}`}
           />
         ))}
       </div>

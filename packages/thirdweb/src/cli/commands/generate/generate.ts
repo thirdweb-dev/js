@@ -1,3 +1,6 @@
+import { existsSync } from "node:fs";
+import { mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import {
   type Abi,
   type AbiEvent,
@@ -5,15 +8,11 @@ import {
   formatAbiItem,
   parseAbiItem,
 } from "abitype";
+import type { Options } from "prettier";
 import { getCachedChain } from "../../../chains/utils.js";
 import { createThirdwebClient } from "../../../client/client.js";
 import { resolveAbiFromContractApi } from "../../../contract/actions/resolve-abi.js";
 import { getContract } from "../../../contract/contract.js";
-
-import { existsSync } from "node:fs";
-import { mkdir, writeFile } from "node:fs/promises";
-import { join } from "node:path";
-import type { Options } from "prettier";
 import { prepareMethod } from "../../../utils/abi/prepare-method.js";
 import { packageDirectory } from "./utils.js";
 
@@ -25,9 +24,9 @@ export async function generate(input: ChainIdAndContract) {
     throw new Error("Invalid chainId and contractAddress");
   }
   const contract = getContract({
-    client,
-    chain: getCachedChain(Number.parseInt(chainId)),
     address: contractAddress,
+    chain: getCachedChain(Number.parseInt(chainId)),
+    client,
   });
   const abi = await resolveAbiFromContractApi(contract);
 
@@ -74,7 +73,6 @@ export function isValidChainIdAndContractAddress(
 
 async function generateFromAbi(abi: Abi | string[]) {
   // turn any human readable abi into a proper abi object
-  // biome-ignore lint/style/noParameterAssign: TODO: fix later
   abi = abi.map((x) => (typeof x === "string" ? parseAbiItem(x) : x)) as Abi;
 
   const events = abi.filter((x) => x.type === "event") as AbiEvent[];

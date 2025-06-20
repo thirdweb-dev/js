@@ -32,11 +32,11 @@ export function deposit(options: BaseTransactionOptions<DepositParams>) {
     "amountWei" in options ? options.amountWei : toWei(options.amount);
   return prepareContractCall({
     contract: options.contract,
-    method: [FN_SELECTOR, [], []] as const,
-    value,
     erc20Value: {
       amountWei: value,
       tokenAddress: options.contract.address,
     },
+    method: [FN_SELECTOR, [], []] as const,
+    value,
   });
 }

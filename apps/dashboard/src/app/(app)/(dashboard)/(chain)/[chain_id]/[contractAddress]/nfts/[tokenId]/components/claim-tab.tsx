@@ -30,9 +30,8 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
   const account = useActiveAccount();
   return (
     <Flex
-      w="full"
-      direction="column"
       as="form"
+      direction="column"
       onSubmit={form.handleSubmit(async (data) => {
         if (!account) {
           return toast.error("No account detected");
@@ -40,33 +39,33 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
         try {
           const transaction = claimTo({
             contract,
-            tokenId: BigInt(tokenId),
+            from: account.address,
             quantity: BigInt(data.amount),
             to: data.to,
-            from: account.address,
+            tokenId: BigInt(tokenId),
           });
           const approveTx = await getApprovalForTransaction({
-            transaction,
             account,
+            transaction,
           });
           if (approveTx) {
             const approvalPromise = sendAndConfirmTx.mutateAsync(approveTx);
             toast.promise(approvalPromise, {
-              success: "Approved successfully",
               error: "Failed to approve ERC20",
+              success: "Approved successfully",
             });
             await approvalPromise;
           }
           const promise = sendAndConfirmTx.mutateAsync(transaction);
           toast.promise(promise, {
-            loading: "Claiming NFT",
-            success: "NFT claimed successfully",
             error: (error) => {
               return {
-                message: "Failed to claim NFT",
                 description: parseError(error),
+                message: "Failed to claim NFT",
               };
             },
+            loading: "Claiming NFT",
+            success: "NFT claimed successfully",
           });
 
           form.reset();
@@ -74,12 +73,13 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
           console.error(error);
         }
       })}
+      w="full"
     >
-      <Flex gap={3} direction="column">
-        <Flex gap={6} w="100%" direction="column">
+      <Flex direction="column" gap={3}>
+        <Flex direction="column" gap={6} w="100%">
           <FormControl
-            isRequired
             isInvalid={!!form.getFieldState("to", form.formState).error}
+            isRequired
           >
             <FormLabel>To Address</FormLabel>
             <Input placeholder={ZERO_ADDRESS} {...form.register("to")} />
@@ -89,8 +89,8 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
             </FormErrorMessage>
           </FormControl>
           <FormControl
-            isRequired
             isInvalid={!!form.getFieldState("amount", form.formState).error}
+            isRequired
           >
             <FormLabel>Amount</FormLabel>
             <Input
@@ -113,13 +113,13 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
         </Flex>
 
         <TransactionButton
+          className="self-end"
           client={contract.client}
           isLoggedIn={isLoggedIn}
-          txChainID={contract.chain.id}
-          transactionCount={1}
           isPending={form.formState.isSubmitting}
+          transactionCount={1}
+          txChainID={contract.chain.id}
           type="submit"
-          className="self-end"
         >
           Claim
         </TransactionButton>

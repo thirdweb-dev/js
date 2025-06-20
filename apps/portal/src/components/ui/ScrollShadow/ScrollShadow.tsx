@@ -1,8 +1,8 @@
 "use client";
 
+import { useRef } from "react";
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { cn } from "@/lib/utils";
-import { useRef } from "react";
 import styles from "./ScrollShadow.module.css";
 
 export function ScrollShadow(props: {
@@ -102,8 +102,8 @@ export function ScrollShadow(props: {
         )}
         ref={shadowTopEl}
         style={{
-          opacity: "0",
           display: props.disableTopShadow ? "none" : "block",
+          opacity: "0",
         }}
       />
       <div
@@ -141,8 +141,8 @@ export function ScrollShadow(props: {
       />
       <div
         className={cn("no-scrollbar overflow-auto", props.scrollableClassName)}
-        ref={scrollableEl}
         data-scrollable
+        ref={scrollableEl}
       >
         {props.children}
       </div>

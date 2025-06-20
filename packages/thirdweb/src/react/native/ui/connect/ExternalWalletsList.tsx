@@ -19,9 +19,9 @@ import type { Theme } from "../../../core/design-system/index.js";
 import { useWalletImage, useWalletInfo } from "../../../core/utils/wallet.js";
 import { spacing } from "../../design-system/index.js";
 import type { ContainerType } from "../components/Header.js";
+import { ThemedInput } from "../components/input.js";
 import { RNImage } from "../components/RNImage.js";
 import { Skeleton } from "../components/Skeleton.js";
-import { ThemedInput } from "../components/input.js";
 import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 import { SEARCH_ICON } from "../icons/svgs.js";
@@ -46,14 +46,14 @@ export function ExternalWalletsList(
   const { connector, client, theme, externalWallets, onShowAllWallets } = props;
   const connectWallet = (wallet: Wallet) => {
     connector({
-      wallet,
       connectFn: async (chain) => {
         await wallet.connect({
-          client,
           chain,
+          client,
         });
         return wallet;
       },
+      wallet,
     });
   };
   return (
@@ -73,18 +73,18 @@ export function ExternalWalletsList(
         >
           {externalWallets.map((wallet) => (
             <ExternalWalletRow
-              key={wallet.id}
-              wallet={wallet}
               connectWallet={connectWallet}
+              key={wallet.id}
               theme={theme}
+              wallet={wallet}
             />
           ))}
           {props.showAllWalletsButton && (
-            <ShowAllWalletsRow theme={theme} onPress={onShowAllWallets} />
+            <ShowAllWalletsRow onPress={onShowAllWallets} theme={theme} />
           )}
         </View>
       </ScrollView>
-      <NewToWallets theme={props.theme} containerType={props.containerType} />
+      <NewToWallets containerType={props.containerType} theme={props.theme} />
     </View>
   );
 }
@@ -114,14 +114,14 @@ export function AllWalletsList(
 
   const connectWallet = (wallet: Wallet) => {
     connector({
-      wallet,
       connectFn: async (chain) => {
         await wallet.connect({
-          client,
           chain,
+          client,
         });
         return wallet;
       },
+      wallet,
     });
   };
 
@@ -129,47 +129,47 @@ export function AllWalletsList(
     <View style={styles.container}>
       <View style={styles.searchContainer}>
         <ThemedInput
-          theme={theme}
           leftView={
             <View
               style={{
-                padding: spacing.sm,
-                width: 48,
                 flexDirection: "row",
                 justifyContent: "center",
+                padding: spacing.sm,
+                width: 48,
               }}
             >
               <RNImage
+                color={theme.colors.secondaryIconColor}
                 data={SEARCH_ICON}
                 size={24}
                 theme={theme}
-                color={theme.colors.secondaryIconColor}
               />
             </View>
           }
-          placeholder="Search Wallet"
-          value={searchQuery}
           onChangeText={setSearchQuery}
+          placeholder="Search Wallet"
+          theme={theme}
+          value={searchQuery}
         />
       </View>
       <Spacer size="md" />
       <FlatList
-        style={{
-          flex: 1,
-          paddingHorizontal: props.containerType === "modal" ? spacing.lg : 0,
-          paddingBottom: spacing.md,
-        }}
         data={walletsToShow}
+        ItemSeparatorComponent={() => <View style={{ height: spacing.md }} />}
+        keyExtractor={(walletId) => walletId}
         renderItem={({ item: walletId }) => (
           <ExternalWalletRow
-            key={walletId}
-            wallet={createWallet(walletId as WalletId)}
             connectWallet={connectWallet}
+            key={walletId}
             theme={theme}
+            wallet={createWallet(walletId as WalletId)}
           />
         )}
-        keyExtractor={(walletId) => walletId}
-        ItemSeparatorComponent={() => <View style={{ height: spacing.md }} />}
+        style={{
+          flex: 1,
+          paddingBottom: spacing.md,
+          paddingHorizontal: props.containerType === "modal" ? spacing.lg : 0,
+        }}
       />
     </View>
   );
@@ -184,19 +184,19 @@ function ExternalWalletRow(props: {
   const imageQuery = useWalletImage(wallet.id);
   const infoQuery = useWalletInfo(wallet.id);
   return (
-    <TouchableOpacity style={styles.row} onPress={() => connectWallet(wallet)}>
+    <TouchableOpacity onPress={() => connectWallet(wallet)} style={styles.row}>
       {imageQuery.data ? (
         <Image
           source={{ uri: imageQuery.data ?? "" }}
-          style={{ width: 52, height: 52, borderRadius: 6 }}
+          style={{ borderRadius: 6, height: 52, width: 52 }}
         />
       ) : (
         <Skeleton
-          theme={theme}
           style={{
-            width: 52,
             height: 52,
+            width: 52,
           }}
+          theme={theme}
         />
       )}
       <ThemedText theme={theme} type="subtitle">
@@ -206,26 +206,23 @@ function ExternalWalletRow(props: {
   );
 }
 
-function ShowAllWalletsRow(props: {
-  theme: Theme;
-  onPress: () => void;
-}) {
+function ShowAllWalletsRow(props: { theme: Theme; onPress: () => void }) {
   const { theme, onPress } = props;
   return (
-    <TouchableOpacity style={styles.row} onPress={onPress}>
+    <TouchableOpacity onPress={onPress} style={styles.row}>
       <View
         style={{
-          width: 52,
-          height: 52,
-          flexDirection: "row",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
           alignContent: "space-between",
           backgroundColor: theme.colors.secondaryButtonBg,
           borderColor: theme.colors.borderColor,
-          borderWidth: 1,
-          padding: 8,
           borderRadius: 6,
+          borderWidth: 1,
+          flexDirection: "row",
+          flexWrap: "wrap",
+          height: 52,
+          justifyContent: "space-between",
+          padding: 8,
+          width: 52,
         }}
       >
         {[...Array(4)].map((_, index) => (
@@ -233,10 +230,10 @@ function ShowAllWalletsRow(props: {
             // biome-ignore lint/suspicious/noArrayIndexKey: only have index as key
             key={index}
             style={{
-              width: 14,
-              height: 14,
-              borderRadius: 7,
               backgroundColor: theme.colors.secondaryIconColor,
+              borderRadius: 7,
+              height: 14,
+              width: 14,
             }}
           />
         ))}
@@ -251,16 +248,19 @@ function ShowAllWalletsRow(props: {
 function NewToWallets({
   theme,
   containerType,
-}: { theme: Theme; containerType: ContainerType }) {
+}: {
+  theme: Theme;
+  containerType: ContainerType;
+}) {
   return (
     <View
       style={[
         styles.row,
         {
-          borderTopWidth: 1,
           borderColor: theme.colors.borderColor,
-          paddingVertical: spacing.md,
+          borderTopWidth: 1,
           paddingHorizontal: containerType === "modal" ? spacing.lg : 0,
+          paddingVertical: spacing.md,
         },
       ]}
     >
@@ -269,12 +269,12 @@ function NewToWallets({
       </ThemedText>
       <View style={{ flex: 1 }} />
       <ThemedText
-        type="subtext"
-        style={{ color: theme.colors.primaryText }}
-        theme={theme}
         onPress={() =>
           Linking.openURL("https://blog.thirdweb.com/web3-wallet/")
         }
+        style={{ color: theme.colors.primaryText }}
+        theme={theme}
+        type="subtext"
       >
         Get started
       </ThemedText>
@@ -288,16 +288,16 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   row: {
+    alignItems: "center",
     flexDirection: "row",
     gap: spacing.md,
     justifyContent: "flex-start",
-    alignItems: "center",
   },
   searchContainer: {
+    alignItems: "center",
     flexDirection: "row",
     gap: spacing.md,
     justifyContent: "flex-start",
-    alignItems: "center",
     paddingHorizontal: spacing.lg,
   },
 });

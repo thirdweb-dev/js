@@ -4,19 +4,17 @@ import * as ox__TransactionEnvelopeEip2930 from "ox/TransactionEnvelopeEip2930";
 import * as ox__TransactionEnvelopeEip7702 from "ox/TransactionEnvelopeEip7702";
 import * as ox__TransactionEnvelopeLegacy from "ox/TransactionEnvelopeLegacy";
 import { assertType, describe, expect, test } from "vitest";
-
+import { wagmiTokenContractConfig } from "../../test/src/abis/wagmiToken.js";
+import { ANVIL_PKEY_A, TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
 import { type Address, checksumAddress } from "../utils/address.js";
+import { keccak256 } from "../utils/hashing/keccak256.js";
+import { sign } from "../utils/signatures/sign.js";
 import { fromGwei, toWei } from "../utils/units.js";
 import { serializeTransaction } from "./serialize-transaction.js";
 
-import { wagmiTokenContractConfig } from "../../test/src/abis/wagmiToken.js";
-import { ANVIL_PKEY_A, TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
-import { keccak256 } from "../utils/hashing/keccak256.js";
-import { sign } from "../utils/signatures/sign.js";
-
 const BASE_TRANSACTION = {
-  to: checksumAddress(TEST_ACCOUNT_B.address),
   nonce: 785,
+  to: checksumAddress(TEST_ACCOUNT_B.address),
   value: toWei("1"),
 } as const;
 
@@ -63,11 +61,11 @@ describe.runIf(process.env.TW_SECRET_KEY)("eip1559", () => {
 
   test("default (all zeros)", () => {
     const baseEip1559Zero = {
-      to: TEST_ACCOUNT_B.address as Address,
-      nonce: 0,
       chainId: 1,
       maxFeePerGas: 0n,
       maxPriorityFeePerGas: 0n,
+      nonce: 0,
+      to: TEST_ACCOUNT_B.address as Address,
       value: 0n,
     };
 
@@ -285,7 +283,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("eip1559", () => {
 describe("eip2930", () => {
   const BASE_EIP2930_TRANSACTION = {
     ...BASE_TRANSACTION,
-    chainId: 1,
     accessList: [
       {
         address: "0x1234512345123451234512345123451234512345",
@@ -294,6 +291,7 @@ describe("eip2930", () => {
         ],
       },
     ],
+    chainId: 1,
     gasPrice: fromGwei("2"),
   } as const;
 
@@ -316,12 +314,12 @@ describe("eip2930", () => {
 
   test("default (all zeros)", () => {
     const baseEip2930Zero = {
-      to: checksumAddress(TEST_ACCOUNT_B.address),
-      nonce: 0,
-      chainId: 1,
-      value: 0n,
-      gasPrice: 0n,
       accessList: [],
+      chainId: 1,
+      gasPrice: 0n,
+      nonce: 0,
+      to: checksumAddress(TEST_ACCOUNT_B.address),
+      value: 0n,
     };
 
     const serialized = serializeTransaction({
@@ -344,7 +342,6 @@ describe("eip2930", () => {
 
   test("minimal (w/ accessList & gasPrice)", () => {
     const args = {
-      chainId: 1,
       accessList: [
         {
           address: "0x0000000000000000000000000000000000000000",
@@ -353,6 +350,7 @@ describe("eip2930", () => {
           ],
         },
       ],
+      chainId: 1,
       gasPrice: fromGwei("2"),
     } as const;
     const serialized = serializeTransaction({
@@ -663,10 +661,10 @@ describe("legacy", () => {
 
   test("default (all zeros)", () => {
     const baseLegacyZero = {
-      to: checksumAddress(TEST_ACCOUNT_B.address),
-      nonce: 0,
-      value: 0n,
       gasPrice: 0n,
+      nonce: 0,
+      to: checksumAddress(TEST_ACCOUNT_B.address),
+      value: 0n,
     };
 
     const serialized = serializeTransaction({
@@ -777,9 +775,9 @@ describe("legacy", () => {
       nonce: BigInt(BASE_LEGACY_TRANSACTION.nonce),
       r: ox__Hex.toBigInt(signature.r),
       s: ox__Hex.toBigInt(signature.s),
+      type: "legacy",
       v: 28,
       yParity: 1,
-      type: "legacy",
     });
   });
 
@@ -831,9 +829,9 @@ describe("legacy", () => {
       nonce: BigInt(args.nonce),
       r: ox__Hex.toBigInt(signature.r),
       s: ox__Hex.toBigInt(signature.s),
-      yParity: 0,
       type: "legacy",
       v: 173,
+      yParity: 0,
     });
   });
 

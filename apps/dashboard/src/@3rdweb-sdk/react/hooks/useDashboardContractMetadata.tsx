@@ -13,8 +13,8 @@ import { getContractMetadata, name, symbol } from "thirdweb/extensions/common";
  */
 export function useDashboardContractMetadata(contract: ThirdwebContract) {
   return useQuery({
-    queryKey: ["contract-metadata-header", contract.chain.id, contract.address],
     queryFn: () => fetchDashboardContractMetadata(contract),
+    queryKey: ["contract-metadata-header", contract.chain.id, contract.address],
     refetchOnWindowFocus: false,
   });
 }
@@ -58,9 +58,9 @@ export async function fetchDashboardContractMetadata(
   const contractSymbol = contractMetadata?.symbol || _symbol || "";
 
   return {
+    contractType: compilerMetadata?.name || "",
+    image: contractMetadata.image || "",
     name: contractName,
     symbol: contractSymbol,
-    image: contractMetadata.image || "",
-    contractType: compilerMetadata?.name || "",
   };
 }

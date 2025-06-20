@@ -6,9 +6,9 @@ export function getTxAnalyticsFiltersFromSearchParams(params: {
   interval?: string | undefined | string[];
 }) {
   return getFiltersFromSearchParams({
-    from: params.from,
-    to: params.to,
-    interval: params.interval,
     defaultRange: "last-30",
+    from: params.from,
+    interval: params.interval,
+    to: params.to,
   });
 }

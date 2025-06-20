@@ -83,9 +83,9 @@ export async function resolveL2Name(options: ResolveL2NameOptions) {
   return withCache(
     async () => {
       const contract = getContract({
-        client,
-        chain: resolverChain,
         address: resolverAddress,
+        chain: resolverChain,
+        client,
       });
 
       const reverseName = convertReverseNodeToBytes(

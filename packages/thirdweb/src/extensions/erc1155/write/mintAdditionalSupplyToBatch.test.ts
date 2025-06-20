@@ -8,13 +8,13 @@ describe("ERC1155 Edition: mintToBatch", () => {
   it("should optimize the mint content", () => {
     expect(
       optimizeMintBatchContent([
-        { tokenId: 0n, supply: 99n, to: account.address },
-        { tokenId: 1n, supply: 49n, to: account.address },
-        { tokenId: 1n, supply: 51n, to: account.address },
+        { supply: 99n, to: account.address, tokenId: 0n },
+        { supply: 49n, to: account.address, tokenId: 1n },
+        { supply: 51n, to: account.address, tokenId: 1n },
       ]),
     ).toStrictEqual([
-      { tokenId: 0n, supply: 99n, to: account.address },
-      { tokenId: 1n, supply: 100n, to: account.address },
+      { supply: 99n, to: account.address, tokenId: 0n },
+      { supply: 100n, to: account.address, tokenId: 1n },
     ]);
   });
 });

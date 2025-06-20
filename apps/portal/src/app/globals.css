@@ -193,10 +193,12 @@ html:not(.dark) .dark-only {
   display: none;
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity:we explicitly WANT to target SPANs INSIDE of CODE tags */
 code span {
   color: var(--code-light-color);
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity:we explicitly WANT to target SPANs INSIDE of CODE tags */
 .dark code span {
   color: var(--code-dark-color);
 }

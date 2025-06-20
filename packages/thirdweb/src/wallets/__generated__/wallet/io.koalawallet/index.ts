@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.koalawallet",
-  name: "Koala Wallet",
-  homepage: "https://koalawallet.io/",
-  image_id: "0d222367-ffaf-4402-3873-fdc80e521b00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/koala-wallet/id1627486259",
     android:
       "https://play.google.com/store/apps/details?id=com.eucalyptuslabs.kowallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome:
       "https://chrome.google.com/webstore/detail/koala-wallet/lnnnmfcpbkafcpgdilckhmhbkkbpkmid",
-    firefox: null,
-    safari: null,
     edge: "https://chrome.google.com/webstore/detail/koala-wallet/lnnnmfcpbkafcpgdilckhmhbkkbpkmid",
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/koala-wallet/id1627486259",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "kowallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://koalawallet.io/",
+  id: "io.koalawallet",
+  image_id: "0d222367-ffaf-4402-3873-fdc80e521b00",
+  mobile: {
+    native: "kowallet://",
+    universal: null,
+  },
+  name: "Koala Wallet",
+  rdns: null,
 } as const;

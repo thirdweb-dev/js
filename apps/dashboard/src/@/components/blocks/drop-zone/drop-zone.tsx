@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { UploadIcon, XIcon } from "lucide-react";
 import { useDropzone } from "react-dropzone";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export function DropZone(props: {
   isError: boolean;
@@ -64,11 +64,11 @@ export function DropZone(props: {
             {resetButton && (
               <Button
                 className="relative z-50 mt-4"
-                size="sm"
                 onClick={(e) => {
                   e.stopPropagation();
                   resetButton.onClick();
                 }}
+                size="sm"
               >
                 {resetButton.label}
               </Button>

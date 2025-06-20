@@ -3,54 +3,52 @@ import { isProd } from "@/constants/env-utils";
 import { ClientIDSection } from "../components/ProjectFTUX/ClientIDSection";
 import { WaitingForIntegrationCard } from "../components/WaitingForIntegrationCard/WaitingForIntegrationCard";
 
-export function InsightFTUX(props: {
-  clientId: string;
-}) {
+export function InsightFTUX(props: { clientId: string }) {
   return (
     <WaitingForIntegrationCard
-      title="Integrate Insight"
       codeTabs={[
         {
-          label: "JavaScript",
           code: (
             <CodeServer
-              code={jsCode(props.clientId)}
               className="bg-background"
+              code={jsCode(props.clientId)}
               lang="ts"
             />
           ),
+          label: "JavaScript",
         },
         {
-          label: "Python",
           code: (
             <CodeServer
-              code={pythonCode(props.clientId)}
               className="bg-background"
+              code={pythonCode(props.clientId)}
               lang="python"
             />
           ),
+          label: "Python",
         },
         {
-          label: "Curl",
           code: (
             <CodeServer
-              code={curlCode(props.clientId)}
               className="bg-background"
+              code={curlCode(props.clientId)}
               lang="bash"
             />
           ),
+          label: "Curl",
         },
       ]}
       ctas={[
         {
-          label: "Try on Playground",
           href: "https://playground.thirdweb.com/insight",
+          label: "Try on Playground",
         },
         {
-          label: "View Docs",
           href: "https://portal.thirdweb.com/insight",
+          label: "View Docs",
         },
       ]}
+      title="Integrate Insight"
     >
       <ClientIDSection clientId={props.clientId} />
       <div className="h-4" />

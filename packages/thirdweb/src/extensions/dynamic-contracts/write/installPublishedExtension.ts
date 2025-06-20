@@ -48,13 +48,11 @@ export function installPublishedExtension(
   } = options;
 
   return addExtension({
-    contract,
     asyncParams: async () => {
       const deployedExtension = await getOrDeployInfraForPublishedContract({
+        account,
         chain: contract.chain,
         client: contract.client,
-        account,
-        contractId: extensionName,
         constructorParams:
           constructorParams ||
           (await getAllDefaultConstructorParamsForImplementation({
@@ -62,6 +60,7 @@ export function installPublishedExtension(
             client: contract.client,
             contractId: extensionName,
           })),
+        contractId: extensionName,
         publisher,
         version,
       });
@@ -72,14 +71,15 @@ export function installPublishedExtension(
       const functions = generateExtensionFunctionsFromAbi(abi);
       return {
         extension: {
-          metadata: {
-            name: extensionName,
-            metadataURI: "",
-            implementation: deployedExtension.implementationContract.address,
-          },
           functions,
+          metadata: {
+            implementation: deployedExtension.implementationContract.address,
+            metadataURI: "",
+            name: extensionName,
+          },
         },
       };
     },
+    contract,
   });
 }

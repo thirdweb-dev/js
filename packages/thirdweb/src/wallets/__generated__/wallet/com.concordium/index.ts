@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.concordium",
-  name: "Concordium",
-  homepage: "https://concordium.com/",
-  image_id: "b1ca907e-2f5f-42a8-d11c-86a15a291600",
   app: {
-    browser: "https://concordium.com/",
-    ios: "https://apps.apple.com/us/app/concordium-blockchain-wallet/id6444703764",
     android:
       "https://play.google.com/store/apps/details?id=software.concordium.mobilewallet.seedphrase.mainnet&pli=1",
-    mac: "",
-    windows: null,
-    linux: null,
+    browser: "https://concordium.com/",
     chrome:
       "https://chrome.google.com/webstore/detail/concordium-wallet/mnnkpffndmickbiakofclnpoiajlegmg?hl=en-US",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/concordium-blockchain-wallet/id6444703764",
+    linux: null,
+    mac: "",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "concordiumwallet://",
-    universal: "https://wallet.concordium.software",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://concordium.com/",
   },
+  homepage: "https://concordium.com/",
+  id: "com.concordium",
+  image_id: "b1ca907e-2f5f-42a8-d11c-86a15a291600",
+  mobile: {
+    native: "concordiumwallet://",
+    universal: "https://wallet.concordium.software",
+  },
+  name: "Concordium",
+  rdns: null,
 } as const;

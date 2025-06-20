@@ -1,5 +1,10 @@
 "use client";
 
+import { EllipsisIcon, PlusIcon } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import { createTeam } from "@/actions/createTeam";
 import type { Team } from "@/api/team";
 import type { TeamAccountRole } from "@/api/team-members";
@@ -12,11 +17,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { EllipsisIcon, PlusIcon } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { toast } from "sonner";
-import type { ThirdwebClient } from "thirdweb";
 import { TeamPlanBadge } from "../../components/TeamPlanBadge";
 import { getValidTeamPlan } from "../../team/components/TeamHeader/getValidTeamPlan";
 import { SearchInput } from "../components/SearchInput";
@@ -47,9 +47,9 @@ export function AccountTeamsUI(props: {
         router.push(`/team/${res.data.slug}`);
       }),
       {
+        error: "Failed to create team",
         loading: "Creating team",
         success: "Team created",
-        error: "Failed to create team",
       },
     );
   };
@@ -73,9 +73,9 @@ export function AccountTeamsUI(props: {
       <div className="h-4" />
 
       <SearchInput
+        onValueChange={setTeamSearchValue}
         placeholder="Search Teams"
         value={teamSearchValue}
-        onValueChange={setTeamSearchValue}
       />
 
       <div className="h-4" />
@@ -85,10 +85,10 @@ export function AccountTeamsUI(props: {
         {teamsToShow.map((v) => {
           return (
             <li
-              key={v.team.id}
               className="border-border border-b p-4 last:border-b-0"
+              key={v.team.id}
             >
-              <TeamRow team={v.team} role={v.role} client={props.client} />
+              <TeamRow client={props.client} role={v.role} team={v.team} />
             </li>
           );
         })}
@@ -125,9 +125,9 @@ function TeamRow(props: {
       <div className="flex items-center gap-4">
         <GradientAvatar
           className="size-8"
-          src={props.team.image || ""}
-          id={props.team.id}
           client={props.client}
+          id={props.team.id}
+          src={props.team.image || ""}
         />
 
         <div>
@@ -145,22 +145,22 @@ function TeamRow(props: {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button size="icon" variant="ghost" className="!h-auto !w-auto p-1.5">
+          <Button className="!h-auto !w-auto p-1.5" size="icon" variant="ghost">
             <EllipsisIcon className="size-4 text-muted-foreground" />
           </Button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent className="w-[180px]">
           <DropdownMenuItem>
-            <Link href={`/team/${props.team.slug}`} className="w-full p-1 ">
+            <Link className="w-full p-1 " href={`/team/${props.team.slug}`}>
               View
             </Link>
           </DropdownMenuItem>
 
           <DropdownMenuItem>
             <Link
-              href={`/team/${props.team.slug}/~/settings`}
               className="w-full p-1 "
+              href={`/team/${props.team.slug}/~/settings`}
             >
               Manage
             </Link>

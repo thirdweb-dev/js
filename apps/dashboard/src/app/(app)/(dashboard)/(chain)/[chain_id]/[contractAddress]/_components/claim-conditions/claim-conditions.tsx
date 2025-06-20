@@ -33,12 +33,12 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
 
       {/* Set Claim Conditions */}
       <ClaimConditionsForm
-        isLoggedIn={isLoggedIn}
-        isErc20={isERC20}
         contract={contract}
-        tokenId={tokenId}
         isColumn={isColumn}
+        isErc20={isERC20}
+        isLoggedIn={isLoggedIn}
         isMultiPhase={isMultiphase}
+        tokenId={tokenId}
       />
     </div>
   );

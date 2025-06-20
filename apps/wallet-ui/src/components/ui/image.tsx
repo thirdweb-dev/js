@@ -7,7 +7,6 @@ interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
 }
 
 export const Image = ({ alt, ...props }: ImageProps) => {
-  // biome-ignore lint/a11y/useAltText: alt is required
   return (
     <img
       alt={alt}

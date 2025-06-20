@@ -22,13 +22,13 @@ export function ChatPageLayout(props: {
     >
       <aside className="hidden w-[300px] shrink-0 border-border border-r bg-card lg:block">
         <ChatSidebar
-          sessions={props.sessions}
           authToken={props.authToken}
+          sessions={props.sessions}
           type="desktop"
         />
       </aside>
 
-      <MobileNav sessions={props.sessions} authToken={props.authToken} />
+      <MobileNav authToken={props.authToken} sessions={props.sessions} />
 
       <TWAutoConnect
         accountAbstraction={nebulaAAOptions}

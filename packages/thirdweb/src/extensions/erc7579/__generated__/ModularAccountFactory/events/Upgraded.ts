@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "Upgraded" event.
@@ -34,7 +34,7 @@ export type UpgradedEventFilters = Partial<{
  */
 export function upgradedEvent(filters: UpgradedEventFilters = {}) {
   return prepareEvent({
-    signature: "event Upgraded(address indexed implementation)",
     filters,
+    signature: "event Upgraded(address indexed implementation)",
   });
 }

@@ -1,11 +1,11 @@
-import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
-import { Alert, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { InfoIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useFieldArray } from "react-hook-form";
 import { type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { Alert, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { Fieldset } from "./common";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 
@@ -24,8 +24,8 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({
   client,
 }) => {
   const { fields, append, remove } = useFieldArray({
-    name: "recipients",
     control: form.control,
+    name: "recipients",
   });
 
   const totalShares =
@@ -39,57 +39,57 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({
         <div className="flex flex-col gap-5">
           {fields.map((field, index) => {
             return (
-              <div key={field.id} className="flex items-end gap-3">
+              <div className="flex items-end gap-3" key={field.id}>
                 <FormFieldSetup
                   className="grow"
-                  isRequired={false}
-                  label="Recipient Address"
                   errorMessage={
                     form.getFieldState(
                       `recipients.${index}.address`,
                       form.formState,
                     ).error?.message
                   }
+                  isRequired={false}
+                  label="Recipient Address"
                 >
                   <SolidityInput
                     client={client}
-                    solidityType="address"
                     formContext={form}
                     placeholder={ZERO_ADDRESS}
+                    solidityType="address"
                     {...form.register(`recipients.${index}.address`)}
                   />
                 </FormFieldSetup>
 
                 {/*  */}
                 <FormFieldSetup
-                  label="Percentage"
                   className="max-w-[160px]"
-                  isRequired={false}
                   errorMessage={
                     form.getFieldState(
                       `recipients.${index}.sharesBps`,
                       form.formState,
                     ).error?.message
                   }
+                  isRequired={false}
+                  label="Percentage"
                 >
                   <BasisPointsInput
-                    value={form.watch(`recipients.${index}.sharesBps`)}
                     onChange={(value) =>
                       form.setValue(`recipients.${index}.sharesBps`, value, {
+                        shouldDirty: true,
                         shouldTouch: true,
                         shouldValidate: true,
-                        shouldDirty: true,
                       })
                     }
+                    value={form.watch(`recipients.${index}.sharesBps`)}
                   />
                 </FormFieldSetup>
 
                 <Button
-                  variant="outline"
+                  aria-label="remove row"
                   className="px-3 text-destructive-text"
                   disabled={fields.length === 1 || form.formState.isSubmitting}
-                  aria-label="remove row"
                   onClick={() => remove(index)}
+                  variant="outline"
                 >
                   <Trash2Icon className="size-4" />
                 </Button>
@@ -102,9 +102,9 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({
         <div>
           <Button
             className="gap-2"
-            variant="outline"
-            size="sm"
             onClick={() => append({ address: "", sharesBps: 0 })}
+            size="sm"
+            variant="outline"
           >
             <PlusIcon className="size-4" />
             Add Recipient
@@ -113,8 +113,8 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({
 
         {totalShares !== 10000 && (
           <Alert
-            variant="destructive"
             className="flex h-auto items-center gap-2"
+            variant="destructive"
           >
             <InfoIcon className="!text-destructive-text !static size-5 shrink-0" />
             <AlertTitle className="!m-0 !p-0 !text-destructive-text">

@@ -19,22 +19,22 @@ import {
 import { useTokenInfo } from "../../../../core/hooks/others/useTokenInfo.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import type { TokenInfo } from "../../../../core/utils/defaultTokens.js";
+import { Container, Line, ModalHeader } from "../../components/basic.js";
+import { Button } from "../../components/buttons.js";
 import { ChainIcon } from "../../components/ChainIcon.js";
+import { Input } from "../../components/formElements.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
 import { TokenIcon } from "../../components/TokenIcon.js";
-import { Container, Line, ModalHeader } from "../../components/basic.js";
-import { Button } from "../../components/buttons.js";
-import { Input } from "../../components/formElements.js";
 import { Text } from "../../components/text.js";
-import { ChainButton, NetworkSelectorContent } from "../NetworkSelector.js";
 import type { ConnectLocale } from "../locale/types.js";
+import { ChainButton, NetworkSelectorContent } from "../NetworkSelector.js";
 import { formatTokenBalance } from "./formatTokenBalance.js";
 import {
   type ERC20OrNativeToken,
-  NATIVE_TOKEN,
   isNativeToken,
+  NATIVE_TOKEN,
 } from "./nativeToken.js";
 
 // Note: TokenSelector can be used when wallet may or may not be connected
@@ -67,8 +67,8 @@ export function TokenSelector(props: {
   // otherwise it loads the token with given address
   const tokenQuery = useTokenInfo({
     chain: chain,
-    tokenAddress: input,
     client: props.client,
+    tokenAddress: input,
   });
 
   const locale = props.connectLocale.sendFundsScreen;
@@ -101,30 +101,30 @@ export function TokenSelector(props: {
   if (screen === "select-chain" && chainSelection) {
     return (
       <NetworkSelectorContent
-        client={props.client}
-        connectLocale={props.connectLocale}
-        showTabs={false}
-        onBack={() => setScreen("base")}
-        // pass swap supported chains
         chains={chainSelection.chains}
+        client={props.client}
         closeModal={() => setScreen("base")}
+        connectLocale={props.connectLocale}
+        // pass swap supported chains
         networkSelector={{
           renderChain(renderChainProps) {
             return (
               <ChainButton
                 chain={renderChainProps.chain}
+                client={props.client}
                 confirming={false}
-                switchingFailed={false}
+                connectLocale={props.connectLocale}
                 onClick={() => {
                   chainSelection.select(renderChainProps.chain);
                   setScreen("base");
                 }}
-                client={props.client}
-                connectLocale={props.connectLocale}
+                switchingFailed={false}
               />
             );
           },
         }}
+        onBack={() => setScreen("base")}
+        showTabs={false}
       />
     );
   }
@@ -159,15 +159,15 @@ export function TokenSelector(props: {
             <Spacer y="xxs" />
             <SelectTokenBtn
               fullWidth
-              variant="secondary"
               onClick={() => {
                 setScreen("select-chain");
               }}
+              variant="secondary"
             >
               <ChainIcon
                 chainIconUrl={chainIconQuery.url}
-                size={iconSize.lg}
                 client={props.client}
+                size={iconSize.lg}
               />
 
               {chainNameQuery.name ? (
@@ -179,11 +179,11 @@ export function TokenSelector(props: {
               )}
 
               <ChevronDownIcon
-                width={iconSize.sm}
                 height={iconSize.sm}
                 style={{
                   marginLeft: "auto",
                 }}
+                width={iconSize.sm}
               />
             </SelectTokenBtn>
             <Spacer y="xl" />
@@ -194,12 +194,12 @@ export function TokenSelector(props: {
         <Container px="lg">
           <Spacer y="xs" />
           <Input
-            placeholder={locale.searchToken}
-            variant="outline"
-            value={input}
             onChange={(e) => {
               setInput(e.target.value);
             }}
+            placeholder={locale.searchToken}
+            value={input}
+            variant="outline"
           />
         </Container>
 
@@ -212,29 +212,29 @@ export function TokenSelector(props: {
             px="lg"
             scrollY
             style={{
-              paddingTop: 0,
               paddingBottom: spacing.lg,
+              paddingTop: 0,
             }}
           >
             {!input && (
               <SelectTokenButton
+                chain={props.chain}
+                client={props.client}
                 onClick={() => {
                   props.onTokenSelect(NATIVE_TOKEN);
                 }}
-                chain={props.chain}
                 token={NATIVE_TOKEN}
-                client={props.client}
               />
             )}
 
             {filteredList.map((token) => {
               return (
                 <SelectTokenButton
-                  onClick={() => props.onTokenSelect(token)}
-                  token={token}
-                  key={token.address}
                   chain={props.chain}
                   client={props.client}
+                  key={token.address}
+                  onClick={() => props.onTokenSelect(token)}
+                  token={token}
                 />
               );
             })}
@@ -244,34 +244,34 @@ export function TokenSelector(props: {
         {filteredList.length === 0 && tokenQuery.isLoading && input && (
           <Container
             animate="fadein"
-            p="lg"
+            center="both"
+            color="secondaryText"
             flex="column"
             gap="md"
-            center="both"
+            p="lg"
             style={{
               minHeight: "200px",
               paddingTop: 0,
             }}
-            color="secondaryText"
           >
-            <Spinner size="lg" color="accentText" />
+            <Spinner color="accentText" size="lg" />
           </Container>
         )}
 
         {filteredList.length === 0 && !tokenQuery.isLoading && input && (
           <Container
             animate="fadein"
-            p="lg"
+            center="both"
+            color="secondaryText"
             flex="column"
             gap="md"
-            center="both"
+            p="lg"
             style={{
               minHeight: "200px",
               paddingTop: 0,
             }}
-            color="secondaryText"
           >
-            <CrossCircledIcon width={iconSize.lg} height={iconSize.lg} />
+            <CrossCircledIcon height={iconSize.lg} width={iconSize.lg} />
             {locale.noTokensFound}
           </Container>
         )}
@@ -291,8 +291,8 @@ function SelectTokenButton(props: {
   const account = useActiveAccount();
   const tokenInfoQuery = useTokenInfo({
     chain: props.chain,
-    tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
     client: props.client,
+    tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
   });
 
   const tokenName = isNativeToken(props.token)
@@ -300,17 +300,17 @@ function SelectTokenButton(props: {
     : props.token.name;
 
   return (
-    <SelectTokenBtn fullWidth variant="secondary" onClick={props.onClick}>
+    <SelectTokenBtn fullWidth onClick={props.onClick} variant="secondary">
       <TokenIcon
-        token={props.token}
         chain={props.chain}
-        size="lg"
         client={props.client}
+        size="lg"
+        token={props.token}
       />
 
       <Container flex="column" gap="4xs">
         {tokenName ? (
-          <Text size="sm" color="primaryText">
+          <Text color="primaryText" size="sm">
             {tokenName}
           </Text>
         ) : (
@@ -339,7 +339,6 @@ function TokenBalance(props: {
   tokenAddress?: string;
 }) {
   const tokenBalanceQuery = useQuery({
-    queryKey: ["tokenBalance", props],
     queryFn: async () => {
       return getTokenBalance({
         account: props.account,
@@ -348,6 +347,7 @@ function TokenBalance(props: {
         tokenAddress: props.tokenAddress,
       });
     },
+    queryKey: ["tokenBalance", props],
   });
 
   if (tokenBalanceQuery.data) {
@@ -360,14 +360,14 @@ function TokenBalance(props: {
 const SelectTokenBtn = /* @__PURE__ */ styled(Button)(() => {
   const theme = useCustomTheme();
   return {
-    background: theme.colors.tertiaryBg,
-    justifyContent: "flex-start",
-    gap: spacing.sm,
-    padding: spacing.sm,
     "&:hover": {
       background: theme.colors.secondaryButtonBg,
       transform: "scale(1.01)",
     },
+    background: theme.colors.tertiaryBg,
+    gap: spacing.sm,
+    justifyContent: "flex-start",
+    padding: spacing.sm,
     transition: "background 200ms ease, transform 150ms ease",
   };
 });

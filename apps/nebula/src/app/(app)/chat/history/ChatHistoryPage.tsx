@@ -1,14 +1,5 @@
 "use client";
 
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { useMutation } from "@tanstack/react-query";
 import { formatDistance } from "date-fns";
 import Fuse from "fuse.js";
@@ -21,6 +12,15 @@ import {
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { deleteSession } from "../../api/session";
 import type { TruncatedSessionInfo } from "../../api/types";
 import { useSessionsWithLocalOverrides } from "../../hooks/useSessionsWithLocalOverrides";
@@ -35,7 +35,7 @@ export function ChatHistoryPage(props: {
     <ChatHistoryPageUI
       {...props}
       deleteSession={async (s) => {
-        await deleteSession({ sessionId: s, authToken: props.authToken });
+        await deleteSession({ authToken: props.authToken, sessionId: s });
       }}
     />
   );
@@ -74,25 +74,25 @@ export function ChatHistoryPageUI(props: {
         <h1 className="px-6 font-semibold text-lg tracking-tight">All Chats</h1>
       </header>
       <SearchInput
+        onValueChange={setSearchVal}
         placeholder="Search for a chat"
         value={searchVal}
-        onValueChange={setSearchVal}
       />
 
       {filteredSessions.length > 0 && (
         <ScrollShadow
           className="flex-1"
           scrollableClassName="max-h-full py-6"
-          shadowColor="hsl(var(--background))"
           shadowClassName="z-10"
+          shadowColor="hsl(var(--background))"
         >
           {filteredSessions.length > 0 && (
             <div className="container flex max-w-[800px] flex-col gap-5">
               {filteredSessions.map((session) => (
                 <SessionCard
+                  deleteSession={props.deleteSession}
                   key={session.id + session.updated_at + session.created_at}
                   session={session}
-                  deleteSession={props.deleteSession}
                 />
               ))}
             </div>
@@ -149,10 +149,10 @@ function SearchInput(props: {
   return (
     <div className="relative">
       <Input
+        className="!border-b h-auto rounded-none border-0 px-6 py-4 pl-11 focus-visible:ring-0 focus-visible:ring-offset-0"
+        onChange={(e) => props.onValueChange(e.target.value)}
         placeholder={props.placeholder}
         value={props.value}
-        onChange={(e) => props.onValueChange(e.target.value)}
-        className="!border-b h-auto rounded-none border-0 px-6 py-4 pl-11 focus-visible:ring-0 focus-visible:ring-offset-0"
       />
       <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-5 size-4 text-muted-foreground" />
     </div>
@@ -203,17 +203,17 @@ function SessionCard(props: {
               <EllipsisIcon className="size-4 text-muted-foreground" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-44 p-1" side="top" align="end">
+          <PopoverContent align="end" className="w-44 p-1" side="top">
             <Button
-              variant="ghost"
               className="!text-destructive-text flex w-full justify-start gap-2.5 px-2"
               onClick={() => {
                 const promise = deleteChat.mutateAsync();
                 toast.promise(promise, {
-                  success: "Chat deleted successfully",
                   error: "Failed to delete chat",
+                  success: "Chat deleted successfully",
                 });
               }}
+              variant="ghost"
             >
               {deleteChat.isPending ? (
                 <Spinner className="size-4" />

@@ -92,8 +92,8 @@ export async function estimateGas(
         return gas;
       } catch (error) {
         throw await extractError({
-          error,
           contract: options.transaction.__contract,
+          error,
           fromAddress,
         });
       }
@@ -120,17 +120,17 @@ export async function estimateGas(
       let gas = await eth_estimateGas(
         rpcRequest,
         formatTransactionRequest({
-          to: toAddress ? getAddress(toAddress) : undefined,
-          data: encodedData,
-          from: fromAddress ? getAddress(fromAddress) : undefined,
-          value,
           authorizationList: authorizationList?.map((auth) => ({
             ...auth,
+            contractAddress: getAddress(auth.address),
+            nonce: Number(auth.nonce),
             r: ox__Hex.fromNumber(auth.r),
             s: ox__Hex.fromNumber(auth.s),
-            nonce: Number(auth.nonce),
-            contractAddress: getAddress(auth.address),
           })),
+          data: encodedData,
+          from: fromAddress ? getAddress(fromAddress) : undefined,
+          to: toAddress ? getAddress(toAddress) : undefined,
+          value,
           ...(authorizationList && authorizationList?.length > 0
             ? {
                 gas:
@@ -149,8 +149,8 @@ export async function estimateGas(
       return gas;
     } catch (error) {
       throw await extractError({
-        error,
         contract: options.transaction.__contract,
+        error,
         fromAddress,
       });
     }

@@ -35,11 +35,10 @@ export function executeSale(
   options: BaseTransactionOptions<ExecuteSaleParams>,
 ) {
   return multicall({
-    contract: options.contract,
     asyncParams: async () => {
       const winningBid = await getWinningBid({
-        contract: options.contract,
         auctionId: options.auctionId,
+        contract: options.contract,
       });
       if (!winningBid) {
         throw new Error("Auction is still active");
@@ -55,5 +54,6 @@ export function executeSale(
         },
       };
     },
+    contract: options.contract,
   });
 }

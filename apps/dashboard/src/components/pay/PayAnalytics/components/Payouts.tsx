@@ -1,10 +1,10 @@
 "use client";
-import { SkeletonContainer } from "@/components/ui/skeleton";
 import { useMemo } from "react";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import type { UniversalBridgeStats } from "types/analytics";
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import { toUSD } from "../../../../utils/number";
-import { CardHeading, NoDataOverlay, chartHeight } from "./common";
+import { CardHeading, chartHeight, NoDataOverlay } from "./common";
 
 type GraphData = {
   date: string;
@@ -72,7 +72,6 @@ export function Payouts(props: {
                   ? toUSD(totalPayoutsUSD)
                   : "NA"
             }
-            skeletonData="$20"
             render={(value) => {
               return (
                 <p className="font-semibold text-4xl tracking-tighter">
@@ -80,11 +79,12 @@ export function Payouts(props: {
                 </p>
               );
             }}
+            skeletonData="$20"
           />
         </div>
 
         <div className="relative flex w-full justify-center">
-          <ResponsiveContainer width="100%" height={chartHeight}>
+          <ResponsiveContainer height={chartHeight} width="100%">
             <BarChart data={isEmpty ? emptyGraphData : graphData}>
               <Tooltip
                 content={(x) => {
@@ -105,24 +105,24 @@ export function Payouts(props: {
                 cursor={{ fill: "hsl(var(--accent))", radius: 8 }}
               />
               <Bar
-                dataKey="value"
-                stroke="none"
-                fillOpacity={1}
-                fill={barColor}
-                radius={8}
                 barSize={20}
-                strokeWidth={1}
                 className="stroke-background"
+                dataKey="value"
+                fill={barColor}
+                fillOpacity={1}
+                radius={8}
+                stroke="none"
+                strokeWidth={1}
               />
 
               {graphData && (
                 <XAxis
-                  dataKey="date"
                   axisLine={false}
-                  tickLine={false}
                   className="font-sans text-xs"
-                  stroke="hsl(var(--muted-foreground))"
+                  dataKey="date"
                   dy={10}
+                  stroke="hsl(var(--muted-foreground))"
+                  tickLine={false}
                 />
               )}
             </BarChart>
@@ -141,7 +141,7 @@ const emptyGraphData: GraphData[] = [
   const date = new Date();
   date.setDate(date.getDate() + i - arr.length);
   return {
-    value: x,
     date: date.toISOString(),
+    value: x,
   };
 });

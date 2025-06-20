@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.ancrypto",
-  name: "Ancrypto",
-  homepage: "https://www.ancrypto.io/",
-  image_id: "8dee1c33-b277-4a5a-5ddd-5e70fd9d1800",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/in/app/ancrypto/id1660898349",
     android: "https://play.google.com/store/apps/details?id=com.ancryptoWallet",
-    mac: "",
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/in/app/ancrypto/id1660898349",
+    linux: null,
+    mac: "",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "ancrypto://app",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.ancrypto.io/",
+  id: "io.ancrypto",
+  image_id: "8dee1c33-b277-4a5a-5ddd-5e70fd9d1800",
+  mobile: {
+    native: "ancrypto://app",
+    universal: null,
+  },
+  name: "Ancrypto",
+  rdns: null,
 } as const;

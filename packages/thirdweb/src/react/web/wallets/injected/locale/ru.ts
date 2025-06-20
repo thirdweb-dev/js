@@ -5,22 +5,22 @@ import type { InjectedWalletLocale } from "./types.js";
  */
 const injectedWalletLocaleRu = (wallet: string): InjectedWalletLocale => ({
   connectionScreen: {
-    inProgress: "Ожидание подтверждения",
     failed: "Подключение не удалось",
+    inProgress: "Ожидание подтверждения",
     instruction: `Примите запрос на подключение в ${wallet}`,
     retry: "Попробовать снова",
   },
+  download: {
+    android: "Скачать в Google Play",
+    chrome: "Скачать расширение для Chrome",
+    iOS: "Скачать в App Store",
+  },
+  getStartedLink: `Ещё нет ${wallet}?`,
   getStartedScreen: {
     instruction: `Отсканируйте QR-код, чтобы скачать приложение ${wallet}`,
   },
   scanScreen: {
     instruction: `Для подключения отсканируйте QR-код с помощью приложения ${wallet}`,
-  },
-  getStartedLink: `Ещё нет ${wallet}?`,
-  download: {
-    chrome: "Скачать расширение для Chrome",
-    android: "Скачать в Google Play",
-    iOS: "Скачать в App Store",
   },
 });
 

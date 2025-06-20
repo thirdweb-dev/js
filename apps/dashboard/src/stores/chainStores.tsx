@@ -1,7 +1,7 @@
 "use client";
 
-import { createStore } from "@/lib/reactive";
 import type { ChainMetadata } from "thirdweb/chains";
+import { createStore } from "@/lib/reactive";
 import { SyncStoreToCookies } from "./SyncStoreToCookies";
 import {
   TW_LOCAL_CHAIN_STORE,
@@ -25,11 +25,11 @@ export function SyncChainStores() {
   return (
     <>
       <SyncStoreToCookies
-        storageKey={TW_LOCAL_CHAIN_STORE}
-        store={chainOverridesStore}
         onLoaded={() => {
           isChainOverridesLoadedStore.setValue(true);
         }}
+        storageKey={TW_LOCAL_CHAIN_STORE}
+        store={chainOverridesStore}
       />
 
       <SyncStoreToCookies

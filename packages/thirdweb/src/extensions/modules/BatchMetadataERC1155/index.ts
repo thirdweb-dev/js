@@ -1,9 +1,9 @@
-export { uploadMetadata, type UploadMetadataParams } from "./uploadMetadata.js";
+export { batchMetadataUpdateEvent } from "../__generated__/BatchMetadataERC1155/events/BatchMetadataUpdate.js";
 
 // generated
 export {
+  encodeInstall,
   install,
   module,
-  encodeInstall,
 } from "../__generated__/BatchMetadataERC1155/module/install.js";
-export { batchMetadataUpdateEvent } from "../__generated__/BatchMetadataERC1155/events/BatchMetadataUpdate.js";
+export { type UploadMetadataParams, uploadMetadata } from "./uploadMetadata.js";

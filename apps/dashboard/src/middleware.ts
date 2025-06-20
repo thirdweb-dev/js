@@ -1,9 +1,9 @@
-import { isLoginRequired } from "@/constants/auth";
-import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { type NextRequest, NextResponse } from "next/server";
 import { getAddress } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
 import { isValidENSName } from "thirdweb/utils";
+import { isLoginRequired } from "@/constants/auth";
+import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { LAST_VISITED_TEAM_PAGE_PATH } from "./app/(app)/team/components/last-visited-page/consts";
 import { defineDashboardChain } from "./lib/defineDashboardChain";
 
@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
   // nebula subdomain handling
   const paths = pathname.slice(1).split("/");
 
-  let cookiesToSet: Record<string, string> | undefined = undefined;
+  let cookiesToSet: Record<string, string> | undefined;
 
   const activeAccount = request.cookies.get(COOKIE_ACTIVE_ACCOUNT)?.value;
   const authCookie = activeAccount
@@ -71,9 +71,9 @@ export async function middleware(request: NextRequest) {
 
       // if not logged in, rewrite to login page
       return redirect(request, "/login", {
+        cookiesToSet,
         permanent: false,
         searchParams: `next=${encodeURIComponent(`${pathname}${searchParamsString ? `?${searchParamsString}` : ""}`)}`,
-        cookiesToSet,
       });
     }
   }
@@ -127,8 +127,8 @@ export async function middleware(request: NextRequest) {
     // we want to always redirect this to "thirdweb.eth/..."
     if (paths[0] === "deployer.thirdweb.eth") {
       return redirect(request, `/thirdweb.eth/${paths.slice(1).join("/")}`, {
-        permanent: true,
         cookiesToSet,
+        permanent: true,
       });
     }
     // if we have exactly 1 path part, we're in the <address> case -> profile page

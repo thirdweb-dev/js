@@ -20,12 +20,12 @@ export function CopyAddressButton(props: {
 
   return (
     <CopyTextButton
+      className={cn("font-mono text-sm", props.className)}
+      copyIconPosition={props.copyIconPosition}
       textToCopy={props.address}
       textToShow={shortenedAddress}
       tooltip="Copy Address"
-      className={cn("font-mono text-sm", props.className)}
       variant={props.variant}
-      copyIconPosition={props.copyIconPosition}
     />
   );
 }

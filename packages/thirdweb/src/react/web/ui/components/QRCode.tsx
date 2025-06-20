@@ -1,7 +1,7 @@
 "use client";
 import { keyframes } from "@emotion/react";
 import type React from "react";
-import { Suspense, lazy } from "react";
+import { lazy, Suspense } from "react";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { radius } from "../../../core/design-system/index.js";
 import { fadeInAnimation } from "../design-system/animations.js";
@@ -24,8 +24,8 @@ export const QRCode = (props: {
   const placeholder = (
     <QRPlaceholder
       style={{
-        width: `${size}px`,
         height: `${size}px`,
+        width: `${size}px`,
       }}
     >
       <span data-v1 />
@@ -38,19 +38,19 @@ export const QRCode = (props: {
   return (
     <div
       style={{
-        position: "relative",
         display: "flex",
         justifyContent: "center",
+        position: "relative",
       }}
     >
       {props.qrCodeUri ? (
         <Suspense fallback={placeholder}>
           <QRCodeContainer>
             <QRCodeRenderer
-              uri={props.qrCodeUri}
-              size={size + 20}
-              ecl="M"
               clearSize={props.QRIcon ? 70 : undefined}
+              ecl="M"
+              size={size + 20}
+              uri={props.qrCodeUri}
             />
           </QRCodeContainer>
         </Suspense>
@@ -64,23 +64,23 @@ export const QRCode = (props: {
 };
 
 const IconContainer = /* @__PURE__ */ StyledDiv({
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
+  alignContent: "center",
   display: "flex",
   justifyContent: "center",
-  alignContent: "center",
+  left: "50%",
+  position: "absolute",
+  top: "50%",
+  transform: "translate(-50%, -50%)",
   zIndex: 1000,
 });
 
 const QRCodeContainer = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
-    animation: `${fadeInAnimation} 600ms ease`,
-    "--ck-qr-dot-color": theme.colors.primaryText,
     "--ck-body-background": theme.colors.modalBg,
     "--ck-qr-background": theme.colors.modalBg,
+    "--ck-qr-dot-color": theme.colors.primaryText,
+    animation: `${fadeInAnimation} 600ms ease`,
   };
 });
 
@@ -92,70 +92,70 @@ const PlaceholderKeyframes = keyframes`
 const QRPlaceholder = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
-    "--color": theme.colors.skeletonBg,
     "--bg": theme.colors.modalBg,
-    overflow: "hidden",
-    position: "relative",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: radius.md,
+    "--color": theme.colors.skeletonBg,
+    "&::after": {
+      animation: `${PlaceholderKeyframes} 1000ms linear infinite both`,
+      background:
+        "linear-gradient(90deg, transparent 50%, var(--color), transparent)",
+      backgroundSize: "200% 100%",
+      content: '""',
+      inset: 0,
+      position: "absolute",
+      transform: "scale(1.5) rotate(45deg)",
+      zIndex: 100,
+    },
+    "&:before": {
+      background: "repeat",
+      backgroundImage: "radial-gradient(var(--color) 41%, transparent 41%)",
+      backgroundSize: "1.888% 1.888%",
+      content: '""',
+      inset: 0,
+      position: "absolute",
+      zIndex: 3,
+    },
     "> div": {
-      zIndex: 4,
+      background: "var(--bg)",
+      borderRadius: "5px",
+      boxShadow: "0 0 0 7px var(--bg)",
+      height: "28%",
       position: "relative",
       width: "28%",
-      height: "28%",
-      borderRadius: "5px",
-      background: "var(--bg)",
-      boxShadow: "0 0 0 7px var(--bg)",
+      zIndex: 4,
     },
     "> span": {
-      zIndex: 4,
-      position: "absolute",
-      background: "var(--color)",
-      borderRadius: "12px",
-      width: "13.25%",
-      height: "13.25%",
-      boxShadow: "0 0 0 4px var(--bg)",
       "&:before": {
-        content: '""',
-        position: "absolute",
-        inset: "9px",
         borderRadius: "3px",
         boxShadow: "0 0 0 4px var(--bg)",
+        content: '""',
+        inset: "9px",
+        position: "absolute",
       },
       "&[data-v1]": {
-        top: 0,
         left: 0,
+        top: 0,
       },
       "&[data-v2]": {
-        top: 0,
         right: 0,
+        top: 0,
       },
       "&[data-v3]": {
         bottom: 0,
         left: 0,
       },
-    },
-    "&:before": {
-      zIndex: 3,
-      content: '""',
+      background: "var(--color)",
+      borderRadius: "12px",
+      boxShadow: "0 0 0 4px var(--bg)",
+      height: "13.25%",
       position: "absolute",
-      inset: 0,
-      background: "repeat",
-      backgroundSize: "1.888% 1.888%",
-      backgroundImage: "radial-gradient(var(--color) 41%, transparent 41%)",
+      width: "13.25%",
+      zIndex: 4,
     },
-    "&::after": {
-      zIndex: 100,
-      content: '""',
-      position: "absolute",
-      inset: 0,
-      transform: "scale(1.5) rotate(45deg)",
-      background:
-        "linear-gradient(90deg, transparent 50%, var(--color), transparent)",
-      backgroundSize: "200% 100%",
-      animation: `${PlaceholderKeyframes} 1000ms linear infinite both`,
-    },
+    alignItems: "center",
+    borderRadius: radius.md,
+    display: "flex",
+    justifyContent: "center",
+    overflow: "hidden",
+    position: "relative",
   };
 });

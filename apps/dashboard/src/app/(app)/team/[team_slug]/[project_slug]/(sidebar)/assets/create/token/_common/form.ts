@@ -3,20 +3,27 @@ import * as z from "zod";
 import { addressSchema, socialUrlsSchema } from "../../_common/schema";
 
 export const tokenInfoFormSchema = z.object({
+  chain: z.string().min(1, "Chain is required"),
+  description: z.string().optional(),
+  image: z.instanceof(File).optional(),
   // info fieldset
   name: z.string().min(1, "Name is required"),
+  socialUrls: socialUrlsSchema,
   symbol: z
     .string()
     .min(1, "Symbol is required")
     .max(10, "Symbol must be 10 characters or less"),
-  chain: z.string().min(1, "Chain is required"),
-  description: z.string().optional(),
-  image: z.instanceof(File).optional(),
-  socialUrls: socialUrlsSchema,
 });
 
 export const tokenDistributionFormSchema = z.object({
-  supply: z.string().min(1, "Supply is required"),
+  airdropAddresses: z.array(
+    z.object({
+      address: addressSchema,
+      quantity: z.string(),
+    }),
+  ),
+  // UI states
+  airdropEnabled: z.boolean(),
   saleAllocationPercentage: z.string().refine(
     (value) => {
       const number = Number(value);
@@ -29,7 +36,7 @@ export const tokenDistributionFormSchema = z.object({
       message: "Must be a number between 0 and 100",
     },
   ),
-  saleTokenAddress: z.string(),
+  saleEnabled: z.boolean(),
   salePrice: z.string().refine(
     (value) => {
       const number = Number(value);
@@ -39,15 +46,8 @@ export const tokenDistributionFormSchema = z.object({
       message: "Must be number larger than or equal to 0",
     },
   ),
-  airdropAddresses: z.array(
-    z.object({
-      address: addressSchema,
-      quantity: z.string(),
-    }),
-  ),
-  // UI states
-  airdropEnabled: z.boolean(),
-  saleEnabled: z.boolean(),
+  saleTokenAddress: z.string(),
+  supply: z.string().min(1, "Supply is required"),
 });
 
 export type TokenDistributionForm = UseFormReturn<

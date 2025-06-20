@@ -2,13 +2,13 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import { MarkdownRenderer } from "./markdown-renderer";
 
 const meta = {
-  title: "blocks/MarkdownRenderer",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "blocks/MarkdownRenderer",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -146,17 +146,14 @@ function example() {
 <br />
 `;
 
-function Story(props: {
-  disableCodeHighlight?: boolean;
-  skipHtml?: boolean;
-}) {
+function Story(props: { disableCodeHighlight?: boolean; skipHtml?: boolean }) {
   return (
     <div className="container max-w-[800px] py-10">
       <MarkdownRenderer
-        markdownText={markdownExample}
         code={{
           disableCodeHighlight: props.disableCodeHighlight,
         }}
+        markdownText={markdownExample}
         skipHtml={props.skipHtml}
       />
     </div>

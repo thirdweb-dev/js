@@ -11,9 +11,9 @@ import { useWalletInfo } from "../../../../core/utils/wallet.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { getSmartWalletLocale } from "../../../wallets/smartWallet/locale/getSmartWalletLocale.js";
 import type { SmartWalletLocale } from "../../../wallets/smartWallet/locale/types.js";
+import { Container } from "../../components/basic.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
-import { Container } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
 import type { LocaleId } from "../../types.js";
 import type { ConnectLocale } from "../locale/types.js";
@@ -57,33 +57,33 @@ export function SmartConnectUI(props: {
   if (!keyConnected) {
     return (
       <AnyWalletConnectUI
-        wallet={props.personalWallet}
-        done={() => {
-          setKeyConnected(true);
-        }}
-        onBack={props.onBack}
-        setModalVisibility={props.setModalVisibility}
         chain={props.chain}
         chains={props.chains}
         client={props.client}
-        meta={props.meta}
-        size={props.size}
-        walletConnect={props.walletConnect}
         connectLocale={props.connectLocale}
+        done={() => {
+          setKeyConnected(true);
+        }}
+        meta={props.meta}
+        onBack={props.onBack}
+        setModalVisibility={props.setModalVisibility}
+        size={props.size}
+        wallet={props.personalWallet}
+        walletConnect={props.walletConnect}
       />
     );
   }
 
   return (
     <SmartWalletConnecting
-      done={props.done}
-      personalWallet={props.personalWallet}
       accountAbstraction={props.accountAbstraction}
-      onBack={props.onBack}
-      personalWalletInfo={personalWalletInfo.data}
-      localeId={props.connectLocale.id}
-      size={props.size}
       client={props.client}
+      done={props.done}
+      localeId={props.connectLocale.id}
+      onBack={props.onBack}
+      personalWallet={props.personalWallet}
+      personalWalletInfo={personalWalletInfo.data}
+      size={props.size}
     />
   );
 }
@@ -99,8 +99,8 @@ function SmartWalletConnecting(props: {
   client: ThirdwebClient;
 }) {
   const localeQuery = useQuery<SmartWalletLocale>({
-    queryKey: ["getSmartWalletLocale", props.localeId],
     queryFn: () => getSmartWalletLocale(props.localeId),
+    queryKey: ["getSmartWalletLocale", props.localeId],
   });
   const { personalWallet } = props;
   const { done } = props;
@@ -153,10 +153,10 @@ function SmartWalletConnecting(props: {
   if (smartWalletConnectionStatus === "connect-error") {
     return (
       <Container
-        fullHeight
         animate="fadein"
-        flex="column"
         center="both"
+        flex="column"
+        fullHeight
         p="lg"
         style={{
           minHeight: "300px",
@@ -169,14 +169,14 @@ function SmartWalletConnecting(props: {
 
   return (
     <Container
-      fullHeight
-      flex="column"
       center="both"
+      flex="column"
+      fullHeight
       style={{
         minHeight: "300px",
       }}
     >
-      <Text color="primaryText" multiline center>
+      <Text center color="primaryText" multiline>
         {localeQuery.data.connecting}
       </Text>
       <Spacer y="lg" />

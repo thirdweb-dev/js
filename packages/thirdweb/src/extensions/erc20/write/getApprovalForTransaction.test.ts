@@ -21,49 +21,49 @@ describe.runIf(process.env.TW_SECRET_KEY)(
   () => {
     it("should return an approval tx", async () => {
       const currencyAddress = await deployERC20Contract({
+        account,
         chain,
         client,
-        account,
+        params: { contractURI: TEST_CONTRACT_URI, name: "erc20token" },
         type: "TokenERC20",
-        params: { name: "erc20token", contractURI: TEST_CONTRACT_URI },
       });
       const contract = getContract({
         address: await deployERC721Contract({
-          client,
-          chain,
           account,
+          chain,
+          client,
+          params: { contractURI: TEST_CONTRACT_URI, name: "" },
           type: "DropERC721",
-          params: { name: "", contractURI: TEST_CONTRACT_URI },
         }),
         chain,
         client,
       });
       await sendAndConfirmTransaction({
-        transaction: lazyMint({ contract, nfts: [{ name: "token 0" }] }),
         account,
+        transaction: lazyMint({ contract, nfts: [{ name: "token 0" }] }),
       });
       await sendAndConfirmTransaction({
+        account,
         transaction: setClaimConditions({
           contract,
           phases: [
             {
-              maxClaimableSupply: 100n,
-              maxClaimablePerWallet: 1n,
               currencyAddress,
+              maxClaimablePerWallet: 1n,
+              maxClaimableSupply: 100n,
               price: 1,
               startTime: new Date(),
             },
           ],
         }),
-        account,
       });
       const approveTx = await getApprovalForTransaction({
+        account,
         transaction: claimTo({
           contract,
-          to: TEST_ACCOUNT_B.address,
           quantity: 1n,
+          to: TEST_ACCOUNT_B.address,
         }),
-        account,
       });
       expect(approveTx?.to).toBe(currencyAddress);
     });
@@ -71,40 +71,40 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     it("should return NULL", async () => {
       const contract = getContract({
         address: await deployERC721Contract({
-          client,
-          chain,
           account,
+          chain,
+          client,
+          params: { contractURI: TEST_CONTRACT_URI, name: "" },
           type: "DropERC721",
-          params: { name: "", contractURI: TEST_CONTRACT_URI },
         }),
         chain,
         client,
       });
       await sendAndConfirmTransaction({
-        transaction: lazyMint({ contract, nfts: [{ name: "token 0" }] }),
         account,
+        transaction: lazyMint({ contract, nfts: [{ name: "token 0" }] }),
       });
       await sendAndConfirmTransaction({
+        account,
         transaction: setClaimConditions({
           contract,
           phases: [
             {
-              maxClaimableSupply: 100n,
               maxClaimablePerWallet: 1n,
+              maxClaimableSupply: 100n,
               price: 1,
               startTime: new Date(),
             },
           ],
         }),
-        account,
       });
       const approveTx = await getApprovalForTransaction({
+        account,
         transaction: claimTo({
           contract,
-          to: TEST_ACCOUNT_B.address,
           quantity: 1n,
+          to: TEST_ACCOUNT_B.address,
         }),
-        account,
       });
       expect(approveTx).toBe(null);
     });

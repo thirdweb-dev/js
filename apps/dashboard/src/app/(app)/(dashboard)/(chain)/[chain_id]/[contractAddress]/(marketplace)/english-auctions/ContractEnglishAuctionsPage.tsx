@@ -22,10 +22,10 @@ export const ContractEnglishAuctionsPage: React.FC<
         <div className="flex flex-row gap-4">
           <CreateListingButton
             contract={contract}
-            type="english-auctions"
             createText="Create English Auction"
-            isLoggedIn={isLoggedIn}
             isInsightSupported={isInsightSupported}
+            isLoggedIn={isLoggedIn}
+            type="english-auctions"
           />
         </div>
       </div>

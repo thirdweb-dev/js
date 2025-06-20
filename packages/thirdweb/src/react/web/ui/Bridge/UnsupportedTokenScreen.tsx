@@ -2,8 +2,8 @@ import type { Chain } from "../../../../chains/types.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useChainMetadata } from "../../../core/hooks/others/useChainQuery.js";
 import { AccentFailIcon } from "../ConnectWallet/icons/AccentFailIcon.js";
-import { Spacer } from "../components/Spacer.js";
 import { Container } from "../components/basic.js";
+import { Spacer } from "../components/Spacer.js";
 import { Text } from "../components/text.js";
 
 export interface UnsupportedTokenScreenProps {
@@ -26,8 +26,8 @@ export function UnsupportedTokenScreen(props: UnsupportedTokenScreenProps) {
     return (
       <Container
         animate="fadein"
-        flex="column"
         center="both"
+        flex="column"
         style={{ minHeight: "350px" }}
       >
         {/* Error Icon */}
@@ -45,7 +45,7 @@ export function UnsupportedTokenScreen(props: UnsupportedTokenScreenProps) {
           center
           color="secondaryText"
           size="sm"
-          style={{ maxWidth: "280px", lineHeight: 1.5 }}
+          style={{ lineHeight: 1.5, maxWidth: "280px" }}
         >
           The Universal Bridge does not support testnets at this time.
         </Text>
@@ -56,8 +56,8 @@ export function UnsupportedTokenScreen(props: UnsupportedTokenScreenProps) {
   return (
     <Container
       animate="fadein"
-      flex="column"
       center="both"
+      flex="column"
       style={{ minHeight: "350px" }}
     >
       {/* Error Icon */}
@@ -75,7 +75,7 @@ export function UnsupportedTokenScreen(props: UnsupportedTokenScreenProps) {
         center
         color="secondaryText"
         size="sm"
-        style={{ maxWidth: "280px", lineHeight: 1.5 }}
+        style={{ lineHeight: 1.5, maxWidth: "280px" }}
       >
         This token or chain is not supported by the Universal Bridge.
       </Text>

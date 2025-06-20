@@ -22,13 +22,11 @@ export async function getSessions(): Promise<WalletConnectSession[]> {
 /**
  * @internal
  */
-export function initializeSessionStore(options: {
-  clientId: string;
-}) {
+export function initializeSessionStore(options: { clientId: string }) {
   if (!walletConnectSessions) {
     walletConnectSessions = new ClientScopedStorage({
-      storage: null, // TODO: inject storage
-      clientId: options.clientId,
+      clientId: options.clientId, // TODO: inject storage
+      storage: null,
     });
   }
 }

@@ -99,9 +99,9 @@ export const loginWithOauth = async (options: {
             window.removeEventListener("message", messageListener);
             clearInterval(pollTimer);
             closeWindow({
+              closeOpenedWindow: options.closeOpenedWindow,
               isWindowOpenedByFn,
               win,
-              closeOpenedWindow: options.closeOpenedWindow,
             });
             if (event.data.authResult) {
               resolve(event.data.authResult);
@@ -112,9 +112,9 @@ export const loginWithOauth = async (options: {
             window.removeEventListener("message", messageListener);
             clearInterval(pollTimer);
             closeWindow({
+              closeOpenedWindow: options.closeOpenedWindow,
               isWindowOpenedByFn,
               win,
-              closeOpenedWindow: options.closeOpenedWindow,
             });
             reject(new Error(event.data.errorString));
             break;

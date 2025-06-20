@@ -32,8 +32,8 @@ describe.skip("createNewPack", () => {
     it("should create a Pack and open it to receive rewards", async () => {
       const packAddress = await deployPackContract({
         account,
-        client,
         chain,
+        client,
         params: {
           name: "pack-contract",
         },
@@ -46,14 +46,14 @@ describe.skip("createNewPack", () => {
       });
 
       const erc20Address = await deployERC20Contract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
         account: TEST_ACCOUNT_A,
-        type: "TokenERC20",
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
         params: {
-          name: "Token",
           contractURI: TEST_CONTRACT_URI,
+          name: "Token",
         },
+        type: "TokenERC20",
       });
 
       const erc20Contract = getContract({
@@ -63,14 +63,14 @@ describe.skip("createNewPack", () => {
       });
 
       const erc721Address = await deployERC721Contract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
         account: TEST_ACCOUNT_A,
-        type: "TokenERC721",
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
         params: {
-          name: "NFTCollection",
           contractURI: TEST_CONTRACT_URI,
+          name: "NFTCollection",
         },
+        type: "TokenERC721",
       });
 
       const erc721Contract = getContract({
@@ -80,68 +80,68 @@ describe.skip("createNewPack", () => {
       });
       // Mint some ERC20 tokens
       await sendAndConfirmTransaction({
+        account,
         transaction: mintToERC20({
+          amount: "100",
           contract: erc20Contract,
           to: account.address,
-          amount: "100",
         }),
-        account,
       });
 
       // Set allowance for Pack contract
       await sendAndConfirmTransaction({
+        account,
         transaction: approve({
-          contract: erc20Contract,
           amount: "1000000000000000",
+          contract: erc20Contract,
           spender: packContract.address,
         }),
-        account,
       });
 
       // Mint some ERC721 tokens
       await sendAndConfirmTransaction({
+        account,
         transaction: mintToERC721({
           contract: erc721Contract,
-          to: account.address,
           nft: { name: "token #0" },
+          to: account.address,
         }),
-        account,
       });
 
       // set erc721 approval
       await sendAndConfirmTransaction({
+        account,
         transaction: setApprovalForAll({
-          contract: erc721Contract,
           approved: true,
+          contract: erc721Contract,
           operator: packContract.address,
         }),
-        account,
       });
 
       // Create pack
       await sendAndConfirmTransaction({
+        account,
         transaction: createNewPack({
+          amountDistributedPerOpen: 1n,
+          client,
           contract: packContract,
           erc20Rewards: [
             {
               contractAddress: erc20Contract.address,
-              totalRewards: 1,
               quantityPerReward: 1,
+              totalRewards: 1,
             },
           ],
           erc721Rewards: [
             { contractAddress: erc721Contract.address, tokenId: 0n },
           ],
-          client,
+          openStartTimestamp: new Date(),
           packMetadata: {
             name: "Pack #0",
           },
           recipient: account.address,
           tokenOwner: account.address,
-          openStartTimestamp: new Date(),
-          amountDistributedPerOpen: 1n,
         }),
-        account,
       });
 
       // Read the info of the new Pack
@@ -153,9 +153,9 @@ describe.skip("createNewPack", () => {
         erc721BalanceAfterCreatePack,
       ] = await Promise.all([
         getPackContents({ contract: packContract, packId: 0n }),
-        getTokenCountOfBundle({ contract: packContract, bundleId: 0n }),
-        getUriOfBundle({ contract: packContract, bundleId: 0n }),
-        balanceOfERC20({ contract: erc20Contract, address: account.address }),
+        getTokenCountOfBundle({ bundleId: 0n, contract: packContract }),
+        getUriOfBundle({ bundleId: 0n, contract: packContract }),
+        balanceOfERC20({ address: account.address, contract: erc20Contract }),
         balanceOfERC721({ contract: erc721Contract, owner: account.address }),
       ]);
 
@@ -168,14 +168,14 @@ describe.skip("createNewPack", () => {
         [
           {
             assetContract: erc20Contract.address,
-            tokenType: 0,
             tokenId: 0n,
+            tokenType: 0,
             totalAmount: 1000000000000000000n,
           },
           {
             assetContract: erc721Contract.address,
-            tokenType: 1,
             tokenId: 0n,
+            tokenType: 1,
             totalAmount: 1n,
           },
         ],
@@ -194,14 +194,14 @@ describe.skip("createNewPack", () => {
       await sendAndConfirmTransaction({
         account,
         transaction: openPack({
+          amountToOpen: 1n,
           contract: packContract,
           packId: 0n,
-          amountToOpen: 1n,
         }),
       });
 
       const [erc20Balance, erc721Owner] = await Promise.all([
-        balanceOfERC20({ contract: erc20Contract, address: account.address }),
+        balanceOfERC20({ address: account.address, contract: erc20Contract }),
         ownerOf({ contract: erc721Contract, tokenId: 0n }),
       ]);
 

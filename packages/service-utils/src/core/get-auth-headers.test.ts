@@ -6,17 +6,17 @@ import { getAuthHeaders } from "./get-auth-headers.js";
 describe("getAuthHeaders", () => {
   const mockServiceApiKey = "test-service-api-key";
   const defaultAuthData: AuthorizationInput = {
-    incomingServiceApiKey: null,
-    incomingServiceApiKeyHash: null,
-    secretKey: null,
+    bundleId: null,
     clientId: null,
     ecosystemId: null,
     ecosystemPartnerId: null,
-    origin: null,
-    bundleId: null,
-    secretKeyHash: null,
-    jwt: null,
     hashedJWT: null,
+    incomingServiceApiKey: null,
+    incomingServiceApiKeyHash: null,
+    jwt: null,
+    origin: null,
+    secretKey: null,
+    secretKeyHash: null,
   };
 
   it("should use secret key when provided", () => {
@@ -49,8 +49,8 @@ describe("getAuthHeaders", () => {
   it("should use JWT when both JWT and clientId are provided", () => {
     const authData: AuthorizationInput = {
       ...defaultAuthData,
-      jwt: "test-jwt",
       clientId: "test-client-id",
+      jwt: "test-jwt",
     };
 
     const headers = getAuthHeaders(authData, mockServiceApiKey);
@@ -84,10 +84,10 @@ describe("getAuthHeaders", () => {
   it("should prioritize secret key over other auth methods", () => {
     const authData: AuthorizationInput = {
       ...defaultAuthData,
-      secretKey: "test-secret-key",
-      jwt: "test-jwt",
-      teamId: "test-team-id",
       incomingServiceApiKey: "test-incoming-service-api-key",
+      jwt: "test-jwt",
+      secretKey: "test-secret-key",
+      teamId: "test-team-id",
     };
 
     const headers = getAuthHeaders(authData, mockServiceApiKey);
@@ -100,9 +100,9 @@ describe("getAuthHeaders", () => {
   it("should prioritize JWT over incoming service api key when teamId is present", () => {
     const authData: AuthorizationInput = {
       ...defaultAuthData,
+      incomingServiceApiKey: "test-incoming-service-api-key",
       jwt: "test-jwt",
       teamId: "test-team-id",
-      incomingServiceApiKey: "test-incoming-service-api-key",
     };
 
     const headers = getAuthHeaders(authData, mockServiceApiKey);

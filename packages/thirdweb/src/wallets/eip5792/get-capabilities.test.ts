@@ -121,11 +121,11 @@ describe.sequential("in-app wallet", async () => {
 
     expect(capabilities).toEqual({
       [ANVIL_CHAIN.id]: {
-        paymasterService: {
-          supported: false,
-        },
         atomic: {
           status: "unsupported",
+        },
+        paymasterService: {
+          supported: false,
         },
       },
     });
@@ -147,8 +147,8 @@ describe.sequential("in-app wallet", async () => {
     test("with sponsorGas should support paymasterService and atomicBatch", async () => {
       wallet = createWallet("inApp", {
         smartAccount: {
-          sponsorGas: true,
           chain: ANVIL_CHAIN,
+          sponsorGas: true,
         },
       });
 
@@ -164,11 +164,11 @@ describe.sequential("in-app wallet", async () => {
 
       expect(capabilities).toEqual({
         [ANVIL_CHAIN.id]: {
-          paymasterService: {
-            supported: true,
-          },
           atomic: {
             status: "supported",
+          },
+          paymasterService: {
+            supported: true,
           },
         },
       });
@@ -177,8 +177,8 @@ describe.sequential("in-app wallet", async () => {
     test("without sponsorGas should support atomicBatch", async () => {
       wallet = createWallet("inApp", {
         smartAccount: {
-          sponsorGas: false,
           chain: ANVIL_CHAIN,
+          sponsorGas: false,
         },
       });
       wallet.getAccount = vi.fn().mockReturnValue({
@@ -193,11 +193,11 @@ describe.sequential("in-app wallet", async () => {
 
       expect(capabilities).toEqual({
         [ANVIL_CHAIN.id]: {
-          paymasterService: {
-            supported: false,
-          },
           atomic: {
             status: "supported",
+          },
+          paymasterService: {
+            supported: false,
           },
         },
       });
@@ -256,11 +256,11 @@ describe.sequential("smart wallet", async () => {
 
     expect(capabilities).toEqual({
       [FORKED_ETHEREUM_CHAIN.id]: {
-        paymasterService: {
-          supported: true,
-        },
         atomic: {
           status: "supported",
+        },
+        paymasterService: {
+          supported: true,
         },
       },
     });

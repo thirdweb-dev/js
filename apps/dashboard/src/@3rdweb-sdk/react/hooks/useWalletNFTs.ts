@@ -1,6 +1,6 @@
-import { getWalletNFTs } from "@/actions/getWalletNFTs";
 import { useQuery } from "@tanstack/react-query";
 import invariant from "tiny-invariant";
+import { getWalletNFTs } from "@/actions/getWalletNFTs";
 
 export function useWalletNFTs(params: {
   chainId: number;
@@ -8,15 +8,15 @@ export function useWalletNFTs(params: {
   isInsightSupported: boolean;
 }) {
   return useQuery({
-    queryKey: ["walletNfts", params.chainId, params.walletAddress],
+    enabled: !!params.walletAddress,
     queryFn: async () => {
       invariant(params.walletAddress, "walletAddress is required");
       return getWalletNFTs({
         chainId: params.chainId,
-        owner: params.walletAddress,
         isInsightSupported: params.isInsightSupported,
+        owner: params.walletAddress,
       });
     },
-    enabled: !!params.walletAddress,
+    queryKey: ["walletNfts", params.chainId, params.walletAddress],
   });
 }

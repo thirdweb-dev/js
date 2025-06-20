@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.zypto",
-  name: "Zypto",
-  homepage: "https://zypto.com",
-  image_id: "4f6ae851-7fe6-41ac-5714-3a910b2ff400",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/app/zypto-all-in-one-crypto-wallet/id6463755992",
     android: "https://play.google.com/store/apps/details?id=com.zypto&gl=US",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/app/zypto-all-in-one-crypto-wallet/id6463755992",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: "com.zypto",
-  mobile: {
-    native: "zypto://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://zypto.com",
+  id: "com.zypto",
+  image_id: "4f6ae851-7fe6-41ac-5714-3a910b2ff400",
+  mobile: {
+    native: "zypto://",
+    universal: null,
+  },
+  name: "Zypto",
+  rdns: "com.zypto",
 } as const;

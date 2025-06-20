@@ -21,9 +21,9 @@ function getBodyTitle(authOption: InAppWalletSocialAuth) {
 function getWidthAndHeight(authOption: InAppWalletSocialAuth) {
   switch (authOption) {
     case "facebook":
-      return { width: 715, height: 555 };
+      return { height: 555, width: 715 };
     default:
-      return { width: 350, height: 500 };
+      return { height: 500, width: 350 };
   }
 }
 

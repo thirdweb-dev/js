@@ -50,16 +50,16 @@ export function mintWithSignature(
   >,
 ) {
   return generatedMint({
-    contract: options.contract,
     asyncParams: async () => {
       const { payload, signature } = options;
       return {
-        to: payload.to,
         amount: payload.amount,
         data: payload.data,
         signature,
+        to: payload.to,
       };
     },
+    contract: options.contract,
   });
 }
 
@@ -129,8 +129,8 @@ export async function generateMintSignature(
       );
       return await convertErc20Amount({
         amount: mintRequest.quantity,
-        client: contract.client,
         chain: contract.chain,
+        client: contract.client,
         erc20Address: contract.address,
       });
     })(),
@@ -141,31 +141,31 @@ export async function generateMintSignature(
   const endTime = mintRequest.validityEndTimestamp || tenYearsFromNow();
 
   const mintParams: EncodeBytesBeforeMintWithSignatureERC20Params["params"] = {
-    pricePerUnit,
-    uid,
     currency,
-    startTimestamp: Number(dateToSeconds(startTime)),
     endTimestamp: Number(dateToSeconds(endTime)),
+    pricePerUnit,
+    startTimestamp: Number(dateToSeconds(startTime)),
+    uid,
   };
 
   const payload = {
-    to: getAddress(mintRequest.recipient),
     amount: quantity,
     data: encodeBytesBeforeMintWithSignatureERC20Params({
       params: mintParams,
     }),
+    to: getAddress(mintRequest.recipient),
   };
 
   const signature = await account.signTypedData({
     domain: {
-      name: "ERC20Core",
-      version: "1",
       chainId: contract.chain.id,
+      name: "ERC20Core",
       verifyingContract: contract.address as Hex,
+      version: "1",
     },
-    types: { MintRequestERC20: MintRequestERC20 },
-    primaryType: "MintRequestERC20",
     message: payload,
+    primaryType: "MintRequestERC20",
+    types: { MintRequestERC20: MintRequestERC20 },
   });
   return { payload, signature };
 }
@@ -180,7 +180,7 @@ type GeneratePayloadInput = {
 } & ({ quantity: string } | { quantityWei: bigint });
 
 const MintRequestERC20 = [
-  { type: "address", name: "to" },
-  { type: "uint256", name: "amount" },
-  { type: "bytes", name: "data" },
+  { name: "to", type: "address" },
+  { name: "amount", type: "uint256" },
+  { name: "data", type: "bytes" },
 ] as const;

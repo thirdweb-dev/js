@@ -1,6 +1,5 @@
 "use client";
 
-import { THIRDWEB_CLIENT } from "@/lib/client";
 import { ethereum } from "thirdweb/chains";
 import {
   AccountAvatar,
@@ -10,6 +9,7 @@ import {
   AccountName,
   AccountProvider,
 } from "thirdweb/react";
+import { THIRDWEB_CLIENT } from "@/lib/client";
 
 const vitalikAddress = "0xd8da6bf26964af9d7eed9e03e53415d37aa96045";
 
@@ -25,8 +25,8 @@ export function AccountNameCustomPreview() {
   return (
     <AccountProvider address={vitalikAddress} client={THIRDWEB_CLIENT}>
       <AccountName
-        socialType="lens"
         loadingComponent={<span>Loading...</span>}
+        socialType="lens"
       />
     </AccountProvider>
   );
@@ -48,8 +48,8 @@ export function AccountBalanceCustomTokenPreview() {
     <AccountProvider address={vitalikAddress} client={THIRDWEB_CLIENT}>
       <AccountBalance
         chain={ethereum}
-        tokenAddress="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
         loadingComponent={<span>Loading...</span>}
+        tokenAddress="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
       />
     </AccountProvider>
   );
@@ -74,8 +74,8 @@ export function AccountBalanceUSDPreview() {
     <AccountProvider address={vitalikAddress} client={THIRDWEB_CLIENT}>
       <AccountBalance
         chain={ethereum}
-        showBalanceInFiat="USD"
         loadingComponent={<span>Loading...</span>}
+        showBalanceInFiat="USD"
       />
     </AccountProvider>
   );

@@ -59,8 +59,8 @@ export async function getContractEvents(options: {
 
   const defaultQueryOptions: GetV1EventsByContractAddressData["query"] = {
     chain: chains.map((chain) => chain.id),
-    limit: 100,
     decode: decodeLogs,
+    limit: 100,
   };
 
   if (event) {

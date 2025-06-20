@@ -45,5 +45,5 @@ export function getErrorDetails(error: Error | unknown): {
     (error as { code?: string | number })?.code ||
     (error as { reason?: string })?.reason;
 
-  return { message, code };
+  return { code, message };
 }

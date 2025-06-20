@@ -3,48 +3,48 @@ import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 
 const sidebarLinkMeta: Array<{ pathId: string; label: string }> = [
   {
-    pathId: "",
     label: "Overview",
+    pathId: "",
   },
   {
-    pathId: "explorer",
     label: "Explorer",
+    pathId: "explorer",
   },
   {
-    pathId: "relayers",
     label: "Relayers",
+    pathId: "relayers",
   },
   {
-    pathId: "contract-subscriptions",
     label: "Contract Subscriptions",
+    pathId: "contract-subscriptions",
   },
   {
-    pathId: "admins",
     label: "Admins",
+    pathId: "admins",
   },
   {
-    pathId: "access-tokens",
     label: "Access Tokens",
+    pathId: "access-tokens",
   },
   {
-    pathId: "webhooks",
     label: "Webhooks",
+    pathId: "webhooks",
   },
   {
-    pathId: "metrics",
     label: "Metrics",
+    pathId: "metrics",
   },
   {
-    pathId: "alerts",
     label: "Alerts",
+    pathId: "alerts",
   },
   {
-    pathId: "wallet-credentials",
     label: "Wallet Credentials",
+    pathId: "wallet-credentials",
   },
   {
-    pathId: "configuration",
     label: "Configuration",
+    pathId: "configuration",
   },
 ];
 
@@ -58,12 +58,12 @@ export function EngineSidebarLayout(props: {
 
   const links: SidebarLink[] = sidebarLinkMeta.map((linkMeta) => {
     return {
+      exactMatch: true,
       href: `${rootPath}/${props.engineId}${linkMeta.pathId === "" ? "" : `/${linkMeta.pathId}`}`,
       label: linkMeta.label,
-      exactMatch: true,
       tracking: {
-        category: "engine",
         action: "navigate-tab",
+        category: "engine",
         label: linkMeta.label,
       },
     };

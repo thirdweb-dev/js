@@ -1,4 +1,3 @@
-import type { SideBar } from "@/components/Layouts/DocLayout";
 import {
   BookMarkedIcon,
   BracesIcon,
@@ -14,154 +13,155 @@ import {
   WalletIcon,
   WrenchIcon,
 } from "lucide-react";
+import type { SideBar } from "@/components/Layouts/DocLayout";
 
 const engineSlug = "/engine/v2";
 
 export const sidebar: SideBar = {
-  name: "Engine",
   links: [
     {
-      name: "Overview",
       href: engineSlug,
       icon: <CloudIcon />,
+      name: "Overview",
     },
     {
-      name: "Playground",
       href: "https://playground.thirdweb.com/engine/airdrop",
       icon: <ExternalLinkIcon />,
+      name: "Playground",
     },
     {
-      name: "Get Started",
       href: `${engineSlug}/get-started`,
       icon: <RocketIcon />,
+      name: "Get Started",
     },
     {
-      name: "Key Concepts",
       icon: <KeyIcon />,
       links: [
         {
-          name: "Transactions",
           href: `${engineSlug}/features/transactions`,
+          name: "Transactions",
         },
         {
-          name: "Contracts",
           href: `${engineSlug}/features/contracts`,
+          name: "Contracts",
         },
         {
-          name: "Admins",
           href: `${engineSlug}/features/admins`,
+          name: "Admins",
         },
         {
-          name: "Access Tokens",
           href: `${engineSlug}/features/access-tokens`,
+          name: "Access Tokens",
         },
         {
-          name: "Webhooks",
           href: `${engineSlug}/features/webhooks`,
+          name: "Webhooks",
         },
         {
-          name: "Preventing Duplicate Transactions",
           href: `${engineSlug}/features/preventing-duplicate-transactions`,
+          name: "Preventing Duplicate Transactions",
         },
         {
-          name: "Custom Chains",
           href: `${engineSlug}/features/custom-chains`,
+          name: "Custom Chains",
         },
         {
-          name: "Account Abstraction",
           href: `${engineSlug}/features/account-abstraction`,
+          name: "Account Abstraction",
         },
         {
-          name: "Relayers",
           href: `${engineSlug}/features/relayers`,
+          name: "Relayers",
         },
         {
-          name: "Gasless Transactions",
           href: `${engineSlug}/features/gasless-transactions`,
+          name: "Gasless Transactions",
         },
         {
-          name: "Contract Subscriptions",
           href: `${engineSlug}/features/contract-subscriptions`,
+          name: "Contract Subscriptions",
         },
         {
-          name: "Alert Notifications",
           href: `${engineSlug}/features/alert-notifications`,
+          name: "Alert Notifications",
         },
         {
-          name: "Security",
           href: `${engineSlug}/features/security`,
+          name: "Security",
         },
       ],
+      name: "Key Concepts",
     },
     {
-      name: "Configure Wallets",
       href: `${engineSlug}/configure-wallets`,
       icon: <WalletIcon />,
       links: [
         {
-          name: "Smart Server Wallet",
           href: `${engineSlug}/configure-wallets/server-wallet`,
+          name: "Smart Server Wallet",
         },
         {
-          name: "AWS KMS",
           href: `${engineSlug}/configure-wallets/aws-kms`,
+          name: "AWS KMS",
         },
         {
-          name: "Google Cloud KMS",
           href: `${engineSlug}/configure-wallets/gcp-kms`,
+          name: "Google Cloud KMS",
         },
         {
-          name: "Circle Wallet",
           href: `${engineSlug}/configure-wallets/circle-wallet`,
+          name: "Circle Wallet",
         },
         {
-          name: "Wallet Credentials",
           href: `${engineSlug}/configure-wallets/wallet-credentials`,
+          name: "Wallet Credentials",
         },
       ],
+      name: "Configure Wallets",
     },
     {
-      name: "Tutorials",
       icon: <BookMarkedIcon />,
       links: [
-        { name: "Airdrop NFTs", href: `${engineSlug}/guides/airdrop-nfts` },
-        { name: "NFT Checkout", href: `${engineSlug}/guides/nft-checkout` },
+        { href: `${engineSlug}/guides/airdrop-nfts`, name: "Airdrop NFTs" },
+        { href: `${engineSlug}/guides/nft-checkout`, name: "NFT Checkout" },
       ],
+      name: "Tutorials",
     },
     {
-      name: "API Reference",
       href: "https://thirdweb-engine.apidocumentation.com/",
       icon: <BracesIcon />,
+      name: "API Reference",
     },
     {
-      name: "Typescript SDK",
       href: `${engineSlug}/references/typescript`,
       icon: <CodeIcon />,
+      name: "Typescript SDK",
     },
     {
-      name: "Prod Checklist",
       href: `${engineSlug}/production-checklist`,
       icon: <ListCheckIcon />,
+      name: "Prod Checklist",
     },
     {
-      name: "Self-Host",
       href: `${engineSlug}/self-host`,
       icon: <ServerIcon />,
+      name: "Self-Host",
     },
     {
-      name: "Security",
       href: `${engineSlug}/security`,
       icon: <ShieldQuestionIcon />,
+      name: "Security",
     },
     {
-      name: "Troubleshoot",
       href: `${engineSlug}/troubleshooting`,
       icon: <WrenchIcon />,
+      name: "Troubleshoot",
     },
     {
-      name: "FAQ",
       href: `${engineSlug}/faq`,
       icon: <MessageCircleQuestionIcon />,
+      name: "FAQ",
     },
   ],
+  name: "Engine",
 };

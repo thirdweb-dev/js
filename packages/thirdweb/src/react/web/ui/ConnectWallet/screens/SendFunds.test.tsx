@@ -20,15 +20,15 @@ describe("SendFunds screen", () => {
     vi.mocked(useActiveWalletChain).mockReturnValue(base);
     const { container } = render(
       <SendFundsForm
-        token={{ nativeToken: true }}
-        onTokenSelect={() => {}}
-        receiverAddress={TEST_ACCOUNT_A.address}
-        setReceiverAddress={() => {}}
         amount={"1"}
-        setAmount={() => {}}
-        onBack={() => {}}
         client={client}
         connectLocale={en}
+        onBack={() => {}}
+        onTokenSelect={() => {}}
+        receiverAddress={TEST_ACCOUNT_A.address}
+        setAmount={() => {}}
+        setReceiverAddress={() => {}}
+        token={{ nativeToken: true }}
       />,
     );
     const element = container.querySelector("h2");
@@ -47,15 +47,15 @@ describe("SendFunds screen", () => {
     vi.mocked(useActiveWalletChain).mockReturnValue(base);
     const { container } = render(
       <SendFundsForm
-        token={{ nativeToken: true }}
-        onTokenSelect={() => {}}
-        receiverAddress={TEST_ACCOUNT_A.address}
-        setReceiverAddress={() => {}}
         amount={"1"}
-        setAmount={() => {}}
-        onBack={() => {}}
         client={client}
         connectLocale={en}
+        onBack={() => {}}
+        onTokenSelect={() => {}}
+        receiverAddress={TEST_ACCOUNT_A.address}
+        setAmount={() => {}}
+        setReceiverAddress={() => {}}
+        token={{ nativeToken: true }}
       />,
     );
     const element = container.querySelector(

@@ -1,9 +1,9 @@
-import { getInAppWalletUsage } from "@/api/analytics";
 import {
-  type Range,
   getLastNDaysRange,
+  type Range,
 } from "components/analytics/date-range-selector";
 import { Suspense } from "react";
+import { getInAppWalletUsage } from "@/api/analytics";
 import type { InAppWalletStats } from "../../../types/analytics";
 import { RangeSelector } from "../../analytics/range-selector";
 import { InAppWalletUsersChartCardUI } from "./InAppWalletUsersChartCard";
@@ -23,14 +23,14 @@ function InAppWalletAnalyticsInner({
 }: InAppWalletAnalyticsProps) {
   return (
     <div>
-      <RangeSelector range={range} interval={interval} />
+      <RangeSelector interval={interval} range={range} />
       <div className="h-6" />
       <div className="flex flex-col gap-4 lg:gap-6">
         <InAppWalletUsersChartCardUI
+          description="The total number of active in-app wallet users on your project."
           inAppWalletStats={stats || []}
           isPending={isPending}
           title="Unique Users"
-          description="The total number of active in-app wallet users on your project."
         />
       </div>
     </div>
@@ -50,11 +50,11 @@ async function AsyncInAppWalletAnalytics(
   const range = props.range ?? getLastNDaysRange("last-120");
 
   const stats = await getInAppWalletUsage({
-    teamId: props.teamId,
-    projectId: props.projectId,
     from: range.from,
-    to: range.to,
     period: props.interval,
+    projectId: props.projectId,
+    teamId: props.teamId,
+    to: range.to,
   }).catch((error) => {
     console.error(error);
     return [];
@@ -63,9 +63,9 @@ async function AsyncInAppWalletAnalytics(
   return (
     <InAppWalletAnalyticsInner
       {...props}
-      stats={stats}
-      range={range}
       isPending={false}
+      range={range}
+      stats={stats}
     />
   );
 }
@@ -74,7 +74,7 @@ export function InAppWalletAnalytics(props: AsyncInAppWalletAnalyticsProps) {
   return (
     <Suspense
       fallback={
-        <InAppWalletAnalyticsInner {...props} stats={[]} isPending={true} />
+        <InAppWalletAnalyticsInner {...props} isPending={true} stats={[]} />
       }
     >
       <AsyncInAppWalletAnalytics {...props} />

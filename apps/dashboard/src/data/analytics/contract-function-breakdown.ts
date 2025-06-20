@@ -1,5 +1,5 @@
-import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
 import { getUnixTime } from "date-fns";
+import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
 import { getVercelEnv } from "../../lib/vercel-utils";
 
 type InsightAggregationEntry = {
@@ -77,8 +77,8 @@ export async function getContractFunctionBreakdown(params: {
     ) {
       collectedAggregations.push({
         count: value.count,
-        time: value.time,
         function_selector: value.function_selector,
+        time: value.time,
       });
     }
   }

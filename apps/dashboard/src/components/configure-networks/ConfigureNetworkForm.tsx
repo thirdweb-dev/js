@@ -1,20 +1,21 @@
-import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useStore } from "@/lib/reactive";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { getDashboardChainRpc } from "lib/rpc";
 import { CircleAlertIcon, Trash2Icon } from "lucide-react";
+import { useId } from "react";
 import { useForm } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { useStore } from "@/lib/reactive";
 import {
-  type StoredChain,
   chainOverridesStore,
   removeChainOverrides,
+  type StoredChain,
 } from "../../stores/chainStores";
 import { ChainIdInput } from "./Form/ChainIdInput";
 import { IconUpload } from "./Form/IconUpload";
@@ -60,9 +61,17 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
 }) => {
   const { idToChain, nameToChain } = useAllChainsData();
   const chainOverrides = useStore(chainOverridesStore);
-
+  const currencySymbolId = useId();
+  const nameId = useId();
+  const networkTypeId = useId();
   const form = useForm<NetworkConfigFormData>({
+    mode: "onChange",
     values: {
+      chainId: editingChain?.chainId
+        ? `${editingChain?.chainId}`
+        : prefillChainId || "",
+      currencySymbol: editingChain?.nativeCurrency.symbol || "",
+      icon: editingChain?.icon?.url || "",
       name: editingChain?.name || prefillSlug || "",
       rpcUrl:
         (!editingChain || editingChain.status === "deprecated"
@@ -75,16 +84,10 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
                 editingChain,
                 client,
               )) || "",
-      chainId: editingChain?.chainId
-        ? `${editingChain?.chainId}`
-        : prefillChainId || "",
-      currencySymbol: editingChain?.nativeCurrency.symbol || "",
-      type: editingChain?.testnet ? "testnet" : "mainnet",
-      icon: editingChain?.icon?.url || "",
       slug: prefillSlug || editingChain?.slug || "",
       stackType: "",
+      type: editingChain?.testnet ? "testnet" : "mainnet",
     },
-    mode: "onChange",
   });
 
   const isFullyEditable = !editingChain || editingChain?.isCustom;
@@ -138,52 +141,52 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
     if (editingChain) {
       configuredNetwork = {
         ...editingChain,
-        name: data.name,
-        rpc: [data.rpcUrl],
         chainId: Number.parseInt(data.chainId),
-        nativeCurrency: {
-          ...editingChain.nativeCurrency,
-          symbol: data.currencySymbol,
-        },
         icon: editingChain.icon
           ? {
               ...editingChain.icon,
               url: data.icon,
             }
           : {
+              format: "",
+              height: 50,
               url: data.icon,
               // we don't care about these fields - adding dummy values
               width: 50,
-              height: 50,
-              format: "",
             },
-        testnet: data.type === "testnet",
+        name: data.name,
+        nativeCurrency: {
+          ...editingChain.nativeCurrency,
+          symbol: data.currencySymbol,
+        },
+        rpc: [data.rpcUrl],
         stackType: data.stackType || "",
+        testnet: data.type === "testnet",
       };
     } else {
       configuredNetwork = {
-        name: data.name,
-        rpc: [data.rpcUrl],
-        chainId: Number.parseInt(data.chainId),
-        nativeCurrency: {
-          symbol: data.currencySymbol,
-          name: data.currencySymbol,
-          decimals: 18,
-        },
-        testnet: data.type === "testnet",
-        shortName: form.watch("slug"),
-        slug: form.watch("slug"),
         // we don't care about this field
         chain: "",
+        chainId: Number.parseInt(data.chainId),
         icon: data.icon
           ? {
+              format: "",
+              height: 50,
               url: data.icon,
               width: 50,
-              height: 50,
-              format: "",
             }
           : undefined,
+        name: data.name,
+        nativeCurrency: {
+          decimals: 18,
+          name: data.currencySymbol,
+          symbol: data.currencySymbol,
+        },
+        rpc: [data.rpcUrl],
+        shortName: form.watch("slug"),
+        slug: form.watch("slug"),
         stackType: data.stackType || "",
+        testnet: data.type === "testnet",
       };
     }
 
@@ -238,9 +241,9 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
                     <p>{c.name}</p>
                   </div>
                   <Button
+                    onClick={() => removeChainOverrides(c.chainId)}
                     size="icon"
                     variant="ghost"
-                    onClick={() => removeChainOverrides(c.chainId)}
                   >
                     <Trash2Icon className="size-4 text-destructive-text" />
                   </Button>
@@ -266,23 +269,21 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
         <div className="grid grid-cols-2 gap-4">
           {/* name */}
           <FormFieldSetup
-            htmlFor="name"
-            label="Name"
             errorMessage={networkNameErrorMessage}
+            htmlFor={nameId}
             isRequired
+            label="Name"
           >
             <Input
-              id="name"
               autoComplete="off"
-              placeholder="My Network"
               className="bg-card disabled:bg-card disabled:text-muted-foreground disabled:opacity-100"
-              type="text"
+              id={nameId}
               onChange={(e) => {
                 const value = e.target.value;
 
                 form.setValue("name", value, {
-                  shouldValidate: true,
                   shouldDirty: true,
+                  shouldValidate: true,
                 });
 
                 if (isFullyEditable) {
@@ -293,31 +294,33 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
                   }
                 }
               }}
+              placeholder="My Network"
               ref={ref}
+              type="text"
             />
           </FormFieldSetup>
 
           {/* Slug */}
-          <NetworkIDInput form={form} disabled={!isFullyEditable} />
+          <NetworkIDInput disabled={!isFullyEditable} form={form} />
         </div>
 
         {/* Chain ID + Currency Symbol */}
         <div className="grid grid-cols-2 gap-4">
-          <ChainIdInput form={form} disabled={!isFullyEditable} />
+          <ChainIdInput disabled={!isFullyEditable} form={form} />
 
           {/* Currency Symbol */}
           <FormFieldSetup
+            errorMessage={form.formState.errors.currencySymbol?.message}
+            htmlFor={currencySymbolId}
             isRequired
             label="Currency Symbol"
-            errorMessage={form.formState.errors.currencySymbol?.message}
-            htmlFor="currency-symbol"
           >
             <Input
-              id="currency-symbol"
-              disabled={!isFullyEditable}
-              placeholder="ETH"
               autoComplete="off"
               className="bg-card font-mono disabled:bg-card disabled:text-muted-foreground disabled:opacity-100"
+              disabled={!isFullyEditable}
+              id={currencySymbolId}
+              placeholder="ETH"
               type="text"
               {...form.register("currencySymbol", { required: true })}
             />
@@ -327,8 +330,8 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
         <div className="grid grid-cols-2 gap-4">
           {/* Testnet / Mainnet */}
           <FormFieldSetup
-            htmlFor="network-type"
             errorMessage={undefined}
+            htmlFor={networkTypeId}
             isRequired
             label="Type"
             tooltip={
@@ -346,23 +349,23 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
             }
           >
             <RadioGroup
-              id="network-type"
-              value={form.watch("type")}
+              className="flex gap-4"
+              id={networkTypeId}
               onValueChange={(v) => {
                 form.setValue("type", v === "testnet" ? "testnet" : "mainnet", {
-                  shouldValidate: true,
                   shouldDirty: true,
+                  shouldValidate: true,
                 });
               }}
-              className="flex gap-4"
+              value={form.watch("type")}
             >
               <div className="flex items-center gap-2">
-                <RadioGroupItem value="mainnet" id="mainnet" />
+                <RadioGroupItem value="mainnet" />
                 <Label htmlFor="mainnet">Mainnet</Label>
               </div>
 
               <div className="flex items-center gap-2">
-                <RadioGroupItem value="testnet" id="testnet" />
+                <RadioGroupItem value="testnet" />
                 <Label htmlFor="testnet">Testnet</Label>
               </div>
             </RadioGroup>
@@ -370,16 +373,15 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
 
           {/* Icon */}
           <FormFieldSetup
-            isRequired={false}
             errorMessage={form.formState.errors.icon?.message}
-            htmlFor="network-icon"
+            isRequired={false}
             label="Icon"
           >
             <div className="flex items-center gap-1">
               <ChainIconClient
                 className="size-5"
-                src={form.watch("icon")}
                 client={client}
+                src={form.watch("icon")}
               />
               <IconUpload
                 client={client}
@@ -406,17 +408,17 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
 
       {/* Buttons  */}
       <div className="flex flex-col justify-end gap-4 border-border border-t bg-card p-6 md:flex-row">
-        <Button type="submit" disabled={disableSubmit}>
+        <Button disabled={disableSubmit} type="submit">
           {editingChain ? "Update Network" : "Add Network"}
         </Button>
 
         {editedFrom && (
           <Button
-            variant="outline"
             onClick={() => {
               onSubmit(editedFrom);
               removeChainOverrides(editedFrom.chainId);
             }}
+            variant="outline"
           >
             Reset
           </Button>

@@ -1,5 +1,16 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import { format, formatDistanceToNowStrict } from "date-fns";
+import { useV5DashboardChain } from "lib/v5-adapter";
+import { SendIcon } from "lucide-react";
+import Link from "next/link";
+import { useId, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
+import {
+  DEFAULT_ACCOUNT_FACTORY_V0_7,
+  predictSmartAccountAddress,
+} from "thirdweb/wallets/smart";
 import type { Project } from "@/api/projects";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
@@ -25,17 +36,6 @@ import {
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useQuery } from "@tanstack/react-query";
-import { format, formatDistanceToNowStrict } from "date-fns";
-import { useV5DashboardChain } from "lib/v5-adapter";
-import { SendIcon } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import type { ThirdwebClient } from "thirdweb";
-import {
-  DEFAULT_ACCOUNT_FACTORY_V0_7,
-  predictSmartAccountAddress,
-} from "thirdweb/wallets/smart";
 import CreateServerWallet from "../components/create-server-wallet.client";
 import type { Wallet } from "./types";
 
@@ -59,6 +59,7 @@ export function ServerWalletsTableUI({
   client: ThirdwebClient;
 }) {
   const [showSigners, setShowSigners] = useState(false);
+  const showSignersId = useId();
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
       <div className="flex flex-row items-center gap-4 px-6 py-6">
@@ -73,19 +74,19 @@ export function ServerWalletsTableUI({
           </div>
         </div>
         <div className="flex items-center justify-end gap-2">
-          <label htmlFor="show-signers" className="cursor-pointer text-sm">
+          <label className="cursor-pointer text-sm" htmlFor={showSignersId}>
             Show Signer Addresses
           </label>
           <Switch
-            id="show-signers"
             checked={showSigners}
+            id={showSignersId}
             onCheckedChange={() => setShowSigners(!showSigners)}
           />
         </div>
         <CreateServerWallet
+          managementAccessToken={managementAccessToken}
           project={project}
           teamSlug={teamSlug}
-          managementAccessToken={managementAccessToken}
         />
       </div>
 
@@ -103,18 +104,18 @@ export function ServerWalletsTableUI({
           <TableBody>
             {wallets.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={3} className="text-center">
+                <TableCell className="text-center" colSpan={3}>
                   No server wallets found
                 </TableCell>
               </TableRow>
             ) : (
               wallets.map((wallet) => (
-                <TableRow key={wallet.id} className="hover:bg-accent/50">
+                <TableRow className="hover:bg-accent/50" key={wallet.id}>
                   <TableCell>
                     {showSigners ? (
                       <WalletAddress address={wallet.address} client={client} />
                     ) : (
-                      <SmartAccountCell wallet={wallet} client={client} />
+                      <SmartAccountCell client={client} wallet={wallet} />
                     )}
                   </TableCell>
                   <TableCell>{wallet.metadata.label || "none"}</TableCell>
@@ -126,9 +127,9 @@ export function ServerWalletsTableUI({
                   </TableCell>
                   <TableCell className="flex justify-end">
                     <SendTestTransaction
-                      wallet={wallet}
                       project={project}
                       teamSlug={teamSlug}
+                      wallet={wallet}
                     />
                   </TableCell>
                 </TableRow>
@@ -148,8 +149,8 @@ export function ServerWalletsTableUI({
                 href={`/team/${teamSlug}/${project.slug}/engine/cloud/server-wallets?page=${
                   currentPage > 1 ? currentPage - 1 : 1
                 }`}
-                passHref
                 legacyBehavior
+                passHref
               >
                 <PaginationPrevious
                   className={
@@ -206,16 +207,16 @@ export function SmartAccountCell({
   const chain = useV5DashboardChain(chainId);
 
   const smartAccountAddressQuery = useQuery({
-    queryKey: ["smart-account-address", wallet.address],
     queryFn: async () => {
       const smartAccountAddress = await predictSmartAccountAddress({
-        client: client,
         adminAddress: wallet.address,
         chain,
+        client: client,
         factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,
       });
       return smartAccountAddress;
     },
+    queryKey: ["smart-account-address", wallet.address],
   });
 
   return (
@@ -256,13 +257,13 @@ function SendTestTransaction(props: {
   const router = useDashboardRouter();
   return (
     <Button
-      variant="secondary"
-      size="sm"
       onClick={() => {
         router.push(
           `/team/${props.teamSlug}/${props.project.slug}/engine/cloud?testTxWithWallet=${props.wallet.id}`,
         );
       }}
+      size="sm"
+      variant="secondary"
     >
       <SendIcon className="size-4" />
     </Button>

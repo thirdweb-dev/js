@@ -1,6 +1,6 @@
 import "server-only";
-import { REDIS_URL } from "@/constants/server-envs";
 import Redis from "ioredis";
+import { REDIS_URL } from "@/constants/server-envs";
 
 // wrapped in a function to avoid calling this during build
 let redis_: Redis;

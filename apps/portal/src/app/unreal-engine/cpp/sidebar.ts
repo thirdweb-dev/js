@@ -2,40 +2,40 @@ import { hrefBuilder } from "@/app/unreal-engine/util";
 import type { LinkGroup } from "@/components/others/Sidebar";
 
 export const cpp: LinkGroup = hrefBuilder("/cpp", {
-  name: "C++",
   isCollapsible: true,
   links: [
     {
-      name: "Namespaces",
       isCollapsible: false,
       links: [
         {
-          name: "Thirdweb",
           href: "/thirdweb",
+          name: "Thirdweb",
         },
         {
-          name: "ThirdwebUtils",
           href: "/thirdweb-utils",
+          name: "ThirdwebUtils",
         },
       ],
+      name: "Namespaces",
     },
     {
-      name: "Classes",
       isCollapsible: false,
       links: [
         {
-          name: "Common",
           href: "/common",
+          name: "Common",
         },
         {
-          name: "Runtime Settings",
           href: "/runtime-settings",
+          name: "Runtime Settings",
         },
         {
-          name: "Wallet Handles",
           href: "/wallet-handles",
+          name: "Wallet Handles",
         },
       ],
+      name: "Classes",
     },
   ],
+  name: "C++",
 });

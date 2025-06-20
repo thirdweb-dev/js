@@ -39,7 +39,6 @@ export type NFTMintParams = {
  */
 export function mintWithRole(options: BaseTransactionOptions<NFTMintParams>) {
   return generatedMint({
-    contract: options.contract,
     asyncParams: async () => {
       let baseURI = "";
       if (options.nfts?.[0] !== "") {
@@ -51,11 +50,12 @@ export function mintWithRole(options: BaseTransactionOptions<NFTMintParams>) {
       }
 
       return {
-        to: getAddress(options.to),
         amount: BigInt(options.nfts.length),
         baseURI,
         data: "0x",
+        to: getAddress(options.to),
       };
     },
+    contract: options.contract,
   });
 }

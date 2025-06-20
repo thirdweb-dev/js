@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { decodeAbiParameters } from "viem";
-import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the "isValidSigner" function.
@@ -17,18 +17,18 @@ export type IsValidSignerParams = {
 export const FN_SELECTOR = "0x523e3260" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "signer",
+    type: "address",
   },
   {
-    type: "bytes",
     name: "context",
+    type: "bytes",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "bytes4",
     name: "magicValue",
+    type: "bytes4",
   },
 ] as const;
 

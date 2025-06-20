@@ -39,10 +39,10 @@ export const DirectListingsTable: React.FC<DirectListingsTableProps> = ({
       contract={contract}
       getAllQueryResult={getAllQueryResult}
       getValidQueryResult={getValidQueryResult}
-      totalCountQuery={totalCountQuery}
+      isLoggedIn={isLoggedIn}
       queryParams={queryParams}
       setQueryParams={setQueryParams}
-      isLoggedIn={isLoggedIn}
+      totalCountQuery={totalCountQuery}
     />
   );
 };

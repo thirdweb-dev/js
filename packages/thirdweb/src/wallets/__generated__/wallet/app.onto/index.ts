@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.onto",
-  name: "ONTO",
-  homepage: "https://onto.app",
-  image_id: "14934596-632e-4b29-d45f-61109e959000",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/onto-an-ontology-dapp/id1436009823",
     android:
       "https://play.google.com/store/apps/details?id=com.github.ontio.onto",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/onto-an-ontology-dapp/id1436009823",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "ontoprovider://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://onto.app",
+  id: "app.onto",
+  image_id: "14934596-632e-4b29-d45f-61109e959000",
+  mobile: {
+    native: "ontoprovider://",
+    universal: null,
+  },
+  name: "ONTO",
+  rdns: null,
 } as const;

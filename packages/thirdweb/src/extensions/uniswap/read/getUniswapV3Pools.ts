@@ -3,10 +3,10 @@ import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 
 const UniswapFee = {
-  LOWEST: 100,
-  LOW: 500,
-  MEDIUM: 3000,
   HIGH: 10000,
+  LOW: 500,
+  LOWEST: 100,
+  MEDIUM: 3000,
 } as const;
 
 /**
@@ -53,14 +53,14 @@ export async function getUniswapV3Pool(
     .map(async (fee) => {
       const poolAddress = await getPool({
         contract: options.contract,
+        fee,
         tokenA: options.tokenA,
         tokenB: options.tokenB,
-        fee,
       });
 
       return {
-        poolFee: fee,
         poolAddress,
+        poolFee: fee,
       };
     });
 

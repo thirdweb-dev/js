@@ -1,13 +1,5 @@
 "use client";
 
-import { DocSearch } from "@/components/others/DocSearch";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import clsx from "clsx";
 import {
   ChevronDownIcon,
@@ -18,6 +10,14 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { DocSearch } from "@/components/others/DocSearch";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { GithubIcon } from "../components/Document/GithubButtonLink";
 import { CustomAccordion } from "../components/others/CustomAccordion";
 import { ThemeSwitcher } from "../components/others/theme/ThemeSwitcher";
@@ -32,55 +32,55 @@ import { ThirdwebIcon } from "../icons/thirdweb";
 
 const links = [
   {
-    name: "Connect",
     href: "/connect",
+    name: "Connect",
   },
   {
-    name: "Bridge",
     href: "/pay",
+    name: "Bridge",
   },
   {
-    name: "Engine",
     href: "/engine",
+    name: "Engine",
   },
   {
-    name: "Contracts",
     href: "/contracts",
+    name: "Contracts",
   },
   {
-    name: "Insight",
     href: "/insight",
+    name: "Insight",
   },
   {
-    name: "Nebula",
     href: "/nebula",
+    name: "Nebula",
   },
   {
-    name: "Vault",
     href: "/vault",
+    name: "Vault",
   },
 ];
 
 const toolLinks = [
   {
-    name: "Chain List",
     href: "https://thirdweb.com/chainlist",
+    name: "Chain List",
   },
   {
-    name: "Wei Converter",
     href: "https://thirdweb.com/tools/wei-converter",
+    name: "Wei Converter",
   },
   {
-    name: "Hex Converter",
     href: "https://thirdweb.com/tools/hex-converter",
+    name: "Hex Converter",
   },
   {
-    name: "API Keys",
     href: "/account/api-keys",
+    name: "API Keys",
   },
   {
-    name: "CLI",
     href: "/cli",
+    name: "CLI",
   },
 ];
 
@@ -90,106 +90,106 @@ export const connectLinks: Array<{
   icon: React.FC<{ className?: string }>;
 }> = [
   {
-    name: "Overview",
     href: "/connect",
     icon: TableOfContentsIcon,
+    name: "Overview",
   },
   {
-    name: "TypeScript",
     href: "/typescript/v5",
     icon: TypeScriptIcon,
+    name: "TypeScript",
   },
   {
-    name: "React",
     href: "/react/v5",
     icon: ReactIcon,
+    name: "React",
   },
   {
-    name: "React Native",
     href: "/react-native/v5",
     icon: ReactIcon,
+    name: "React Native",
   },
   {
-    name: ".NET",
     href: "/dotnet",
     icon: DotNetIcon,
+    name: ".NET",
   },
   {
-    name: "Unity",
     href: "/unity",
     icon: UnityIcon,
+    name: "Unity",
   },
   {
-    name: "Unreal Engine",
     href: "/unreal-engine",
     icon: UnrealEngineIcon,
+    name: "Unreal Engine",
   },
 ] as const;
 
 const apisLinks = [
   {
-    name: "Nebula",
     href: "/nebula/api-reference",
+    name: "Nebula",
   },
   {
-    name: "Insight",
     href: "https://insight.thirdweb.com/reference",
+    name: "Insight",
   },
   {
-    name: "Engine Cloud",
     href: "https://engine.thirdweb.com/reference#tag/write",
+    name: "Engine Cloud",
   },
   {
-    name: "Universal Bridge",
     href: "https://bridge.thirdweb.com/reference",
+    name: "Universal Bridge",
   },
 ];
 
 const sdkLinks = [
   {
-    name: "TypeScript",
     href: "/typescript/v5",
     icon: TypeScriptIcon,
+    name: "TypeScript",
   },
   {
-    name: "React",
     href: "/react/v5",
     icon: ReactIcon,
+    name: "React",
   },
   {
-    name: "React Native",
     href: "/react-native/v5",
     icon: ReactIcon,
+    name: "React Native",
   },
   {
-    name: ".NET",
     href: "/dotnet",
     icon: DotNetIcon,
+    name: ".NET",
   },
   {
-    name: "Unity",
     href: "/unity",
     icon: UnityIcon,
+    name: "Unity",
   },
   {
-    name: "Unreal Engine",
     href: "/unreal-engine",
     icon: UnrealEngineIcon,
+    name: "Unreal Engine",
   },
 ];
 
 const supportLinks = [
   {
-    name: "Get thirdweb support",
     href: "/knowledge-base",
+    name: "Get thirdweb support",
   },
   {
-    name: "Account",
     href: "/account",
+    name: "Account",
   },
   {
-    name: "Status",
     href: "https://status.thirdweb.com",
+    name: "Status",
   },
 ];
 
@@ -203,9 +203,9 @@ export function Header() {
         {/* Top row */}
         <div className="flex items-center gap-2">
           <Link
+            aria-label="thirdweb Docs"
             className="flex items-center gap-2"
             href="/"
-            aria-label="thirdweb Docs"
             title="thirdweb Docs"
           >
             <ThirdwebIcon className="size-8" />
@@ -237,9 +237,9 @@ export function Header() {
 
           <div className="hidden xl:block">
             <Link
+              className="text-foreground"
               href="https://github.com/thirdweb-dev"
               target="_blank"
-              className="text-foreground"
             >
               <GithubIcon className="mx-3 size-6" />
             </Link>
@@ -249,16 +249,16 @@ export function Header() {
             <ThemeSwitcher className="border-none bg-transparent" />
             <DocSearch variant="icon" />
             <Button
-              variant="ghost"
               className="p-2"
               onClick={() => router.push("/chat")}
+              variant="ghost"
             >
               <MessageCircleIcon className="size-7" />
             </Button>
             <Button
-              variant="ghost"
               className="p-2"
               onClick={() => setShowBurgerMenu(!showBurgerMenu)}
+              variant="ghost"
             >
               <MenuIcon className="size-7" />
             </Button>
@@ -282,7 +282,7 @@ export function Header() {
                     setShowBurgerMenu(false);
                   }}
                 >
-                  <NavLink name={link.name} href={link.href} />
+                  <NavLink href={link.href} name={link.name} />
                 </li>
               );
             })}
@@ -292,38 +292,38 @@ export function Header() {
         <div className="flex items-center gap-3">
           <div className="px-1">
             <DropdownLinks
+              category="SDKs"
               links={sdkLinks}
               onLinkClick={() => setShowBurgerMenu(false)}
-              category="SDKs"
             />
           </div>
           <div className="px-1">
             <DropdownLinks
+              category="APIs"
               links={apisLinks}
               onLinkClick={() => setShowBurgerMenu(false)}
-              category="APIs"
             />
           </div>
 
           <div className="px-1">
             <DropdownLinks
+              category="Tools"
               links={toolLinks}
               onLinkClick={() => setShowBurgerMenu(false)}
-              category="Tools"
             />
           </div>
 
           <div className="px-1">
             <DropdownLinks
+              category="Support"
               links={supportLinks}
               onLinkClick={() => setShowBurgerMenu(false)}
-              category="Support"
             />
           </div>
 
           <NavLink
-            name="Changelog"
             href="/changelog"
+            name="Changelog"
             onClick={() => {
               setShowBurgerMenu(false);
             }}
@@ -339,9 +339,9 @@ export function Header() {
               <h3 className="font-semibold text-lg">Products</h3>
               {links.map((link) => (
                 <NavLink
+                  href={link.href}
                   key={link.name}
                   name={link.name}
-                  href={link.href}
                   onClick={() => setShowBurgerMenu(false)}
                 />
               ))}
@@ -351,10 +351,10 @@ export function Header() {
               <h3 className="font-semibold text-lg">SDKs</h3>
               {sdkLinks.map((link) => (
                 <NavLink
-                  key={link.name}
-                  name={link.name}
                   href={link.href}
                   icon={link.icon}
+                  key={link.name}
+                  name={link.name}
                   onClick={() => setShowBurgerMenu(false)}
                 />
               ))}
@@ -364,9 +364,9 @@ export function Header() {
               <h3 className="font-semibold text-lg">APIs</h3>
               {apisLinks.map((link) => (
                 <NavLink
+                  href={link.href}
                   key={link.name}
                   name={link.name}
-                  href={link.href}
                   onClick={() => setShowBurgerMenu(false)}
                 />
               ))}
@@ -376,17 +376,17 @@ export function Header() {
               <h3 className="font-semibold text-lg">Support</h3>
               {supportLinks.map((link) => (
                 <NavLink
+                  href={link.href}
                   key={link.name}
                   name={link.name}
-                  href={link.href}
                   onClick={() => setShowBurgerMenu(false)}
                 />
               ))}
             </div>
 
             <NavLink
-              name="Changelog"
               href="/changelog"
+              name="Changelog"
               onClick={() => setShowBurgerMenu(false)}
             />
 
@@ -394,9 +394,9 @@ export function Header() {
               <h3 className="font-semibold text-lg">Tools</h3>
               {toolLinks.map((link) => (
                 <NavLink
+                  href={link.href}
                   key={link.name}
                   name={link.name}
-                  href={link.href}
                   onClick={() => setShowBurgerMenu(false)}
                 />
               ))}
@@ -424,8 +424,8 @@ function DropdownLinks(props: {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              variant="ghost"
               className="inline-flex items-center gap-1 p-0 font-medium text-muted-foreground text-sm hover:bg-transparent hover:text-foreground"
+              variant="ghost"
             >
               {props.category}
               <ChevronDownIcon className="size-4 text-muted-foreground opacity-70" />
@@ -451,10 +451,10 @@ function DropdownLinks(props: {
                       <info.icon className="size-5 text-foreground" />
                     )}
                     <Link
+                      className="before:absolute before:inset-0"
+                      href={info.href}
                       prefetch={false}
                       target={info.href.startsWith("http") ? "_blank" : ""}
-                      href={info.href}
-                      className="before:absolute before:inset-0"
                     >
                       {info.name}
                     </Link>
@@ -479,11 +479,11 @@ function DropdownLinks(props: {
               {props.links.map((info) => {
                 return (
                   <NavLink
+                    href={info.href}
+                    icon={info.icon}
                     key={info.name}
                     name={info.name}
-                    href={info.href}
                     onClick={props.onLinkClick}
-                    icon={info.icon}
                   />
                 );
               })}
@@ -504,14 +504,14 @@ function NavLink(props: {
   const pathname = usePathname();
   return (
     <Link
-      href={props.href}
-      onClick={props.onClick}
-      target={props.href.startsWith("http") ? "_blank" : ""}
       className={clsx(
         "font-medium text-base transition-colors hover:text-foreground xl:text-sm",
         pathname === props.href ? "text-foreground" : "text-muted-foreground ",
         props.icon ? "flex flex-row gap-3" : "",
       )}
+      href={props.href}
+      onClick={props.onClick}
+      target={props.href.startsWith("http") ? "_blank" : ""}
     >
       {props.icon ? (
         <>

@@ -12,7 +12,7 @@ type ChakraNextLinkProps = Omit<ChakraLinkProps, "as"> &
   Omit<_NextLinkProps, "as">;
 export const ChakraNextLink = forwardRef<ChakraNextLinkProps, "a">(
   (props, ref) => (
-    <ChakraLink as={_NextLink} {...props} ref={ref} prefetch={false} />
+    <ChakraLink as={_NextLink} {...props} prefetch={false} ref={ref} />
   ),
 );
 
@@ -34,7 +34,7 @@ export const Link = reactForwardRef<HTMLAnchorElement, LinkProps>(
   ({ href, isExternal, children, scroll, ...restLinkProps }, ref) => {
     if (isExternal) {
       return (
-        <ChakraLink isExternal href={href} ref={ref} {...restLinkProps}>
+        <ChakraLink href={href} isExternal ref={ref} {...restLinkProps}>
           {children}
         </ChakraLink>
       );
@@ -42,11 +42,11 @@ export const Link = reactForwardRef<HTMLAnchorElement, LinkProps>(
 
     return (
       <ChakraNextLink
+        _focus={{ boxShadow: "none" }}
         href={href}
+        ref={ref}
         scroll={scroll}
         scrollBehavior="smooth"
-        ref={ref}
-        _focus={{ boxShadow: "none" }}
         {...restLinkProps}
       >
         {children}

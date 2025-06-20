@@ -29,7 +29,6 @@ export function useCapabilities(options?: {
 }): UseQueryResult<GetCapabilitiesResult> {
   const wallet = useActiveWallet();
   return useQuery({
-    queryKey: ["getCapabilities", wallet?.id, options?.chainId] as const,
     queryFn: async () => {
       if (!wallet) {
         return {
@@ -37,10 +36,11 @@ export function useCapabilities(options?: {
         } as const;
       }
       return getCapabilities({
-        wallet,
         chainId: options?.chainId,
+        wallet,
       });
     },
+    queryKey: ["getCapabilities", wallet?.id, options?.chainId] as const,
     retry: false,
     ...options?.queryOptions,
   });

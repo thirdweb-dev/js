@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "RequestExecuted" event.
@@ -42,8 +42,8 @@ export function requestExecutedEvent(
   filters: RequestExecutedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event RequestExecuted(address indexed user, address indexed signer, (uint128 validityStartTimestamp, uint128 validityEndTimestamp, bytes32 uid, bytes data) _req)",
-    filters,
   });
 }

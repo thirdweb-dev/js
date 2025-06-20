@@ -62,12 +62,11 @@ export function useWalletBalance(
   const { chain, address, tokenAddress, client } = options;
   return useQuery({
     ...queryOptions,
-    queryKey: [
-      "walletBalance",
-      chain?.id || -1,
-      address || "0x0",
-      { tokenAddress },
-    ] as const,
+    enabled:
+      (queryOptions?.enabled === undefined || queryOptions.enabled) &&
+      !!chain &&
+      !!client &&
+      !!address,
     queryFn: async () => {
       if (!chain) {
         throw new Error("chain is required");
@@ -79,16 +78,17 @@ export function useWalletBalance(
         throw new Error("address is required");
       }
       return getWalletBalance({
+        address,
         chain,
         client,
-        address,
         tokenAddress,
       });
     },
-    enabled:
-      (queryOptions?.enabled === undefined || queryOptions.enabled) &&
-      !!chain &&
-      !!client &&
-      !!address,
+    queryKey: [
+      "walletBalance",
+      chain?.id || -1,
+      address || "0x0",
+      { tokenAddress },
+    ] as const,
   });
 }

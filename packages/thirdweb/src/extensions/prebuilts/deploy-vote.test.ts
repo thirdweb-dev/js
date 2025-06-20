@@ -12,15 +12,15 @@ describe.runIf(process.env.TW_SECRET_KEY)("deploy-voteERC20 contract", () => {
     await expect(
       deployVoteContract({
         account,
-        client: TEST_CLIENT,
         chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
         params: {
-          name: "",
           contractURI: TEST_CONTRACT_URI,
-          tokenAddress: "doesnt matter here, code wont be reached",
           initialProposalThreshold: "0.5",
           initialVotingPeriod: 10,
           minVoteQuorumRequiredPercent: 51.12,
+          name: "",
+          tokenAddress: "doesnt matter here, code wont be reached",
         },
       }),
     ).rejects.toThrowError(

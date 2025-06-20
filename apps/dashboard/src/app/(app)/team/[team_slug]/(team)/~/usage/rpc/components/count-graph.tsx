@@ -1,7 +1,7 @@
 "use client";
 
-import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 import { format } from "date-fns";
+import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 
 export function CountGraph(props: {
   peakPercentage: number;
@@ -19,47 +19,47 @@ export function CountGraph(props: {
   return (
     <ThirdwebAreaChart
       chartClassName="aspect-[1.5] lg:aspect-[4]"
-      header={{
-        title: "Requests Over Time",
-        description: "Requests over the last 24 hours.",
-      }}
       config={
         hasAnyRateLimited
           ? {
               includedCount: {
-                label: "Successful Requests",
                 color: "hsl(var(--chart-1))",
+                label: "Successful Requests",
               },
               rateLimitedCount: {
-                label: "Rate Limited Requests",
                 color: "hsl(var(--chart-4))",
+                label: "Rate Limited Requests",
               },
             }
           : {
               includedCount: {
-                label: "Successful Requests",
                 color: "hsl(var(--chart-1))",
+                label: "Successful Requests",
               },
             }
       }
-      showLegend={hasAnyRateLimited}
-      yAxis
-      xAxis={{
-        sameDay: true,
-      }}
-      hideLabel={false}
-      toolTipLabelFormatter={(label) => {
-        return format(label, "MMM dd, HH:mm");
-      }}
       // @ts-expect-error - sending MORE data than expected is ok
       data={props.data
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .map((v) => ({
-          time: v.date,
           includedCount: Number(v.includedCount) + Number(v.overageCount),
           rateLimitedCount: Number(v.rateLimitedCount),
+          time: v.date,
         }))}
+      header={{
+        description: "Requests over the last 24 hours.",
+        title: "Requests Over Time",
+      }}
+      hideLabel={false}
       isPending={false}
+      showLegend={hasAnyRateLimited}
+      toolTipLabelFormatter={(label) => {
+        return format(label, "MMM dd, HH:mm");
+      }}
+      xAxis={{
+        sameDay: true,
+      }}
+      yAxis
     />
   );
 }

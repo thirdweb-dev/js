@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "xyz.talisman",
-  name: "Talisman Wallet",
-  homepage: "https://talisman.xyz",
-  image_id: "ba290222-c3f3-4194-23bf-28ba7587af00",
   app: {
-    browser: null,
-    ios: null,
     android: null,
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome:
       "https://chromewebstore.google.com/detail/talisman-wallet/fijngjgcjhjmmpcmkeiomlglpeiijkld",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: "xyz.talisman",
-  mobile: {
-    native: null,
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://talisman.xyz",
+  id: "xyz.talisman",
+  image_id: "ba290222-c3f3-4194-23bf-28ba7587af00",
+  mobile: {
+    native: null,
+    universal: null,
+  },
+  name: "Talisman Wallet",
+  rdns: "xyz.talisman",
 } as const;

@@ -3,22 +3,20 @@ import type { Hex } from "../../../utils/encoding/hex.js";
 import type { Wallet } from "../../interfaces/wallet.js";
 import { handleSendRawTransactionRequest } from "./request-handlers/send-raw-transaction.js";
 import { handleSendTransactionRequest } from "./request-handlers/send-transaction.js";
-import { handleSignTransactionRequest } from "./request-handlers/sign-transaction.js";
-import { handleSignTypedDataRequest } from "./request-handlers/sign-typed-data.js";
 // Due to some edge cases, we can't import these handlers dynamically
 import { handleSignRequest } from "./request-handlers/sign.js";
+import { handleSignTransactionRequest } from "./request-handlers/sign-transaction.js";
+import { handleSignTypedDataRequest } from "./request-handlers/sign-typed-data.js";
 import type {
   WalletConnectAddEthereumChainRequestParams,
   WalletConnectClient,
-  WalletConnectSwitchEthereumChainRequestParams,
-} from "./types.js";
-import type {
   WalletConnectRawTransactionRequestParams,
   WalletConnectRequestError,
   WalletConnectRequestHandlers,
   WalletConnectSessionRequestEvent,
   WalletConnectSignRequestPrams,
   WalletConnectSignTypedDataRequestParams,
+  WalletConnectSwitchEthereumChainRequestParams,
   WalletConnectTransactionRequestParams,
 } from "./types.js";
 import { parseEip155ChainId } from "./utils.js";
@@ -135,8 +133,8 @@ export async function fulfillRequest(options: {
           result = await handleSendTransactionRequest({
             account,
             chainId,
-            thirdwebClient,
             params: request.params as WalletConnectTransactionRequestParams,
+            thirdwebClient,
           });
         }
         break;
@@ -161,9 +159,9 @@ export async function fulfillRequest(options: {
       case "wallet_addEthereumChain": {
         if (handlers?.wallet_addEthereumChain) {
           result = await handlers.wallet_addEthereumChain({
-            wallet,
             params:
               request.params as WalletConnectAddEthereumChainRequestParams,
+            wallet,
           });
         } else {
           throw new Error(
@@ -175,9 +173,9 @@ export async function fulfillRequest(options: {
       case "wallet_switchEthereumChain": {
         if (handlers?.wallet_switchEthereumChain) {
           result = await handlers.wallet_switchEthereumChain({
-            wallet,
             params:
               request.params as WalletConnectSwitchEthereumChainRequestParams,
+            wallet,
           });
         } else {
           const { handleSwitchChain } = await import(
@@ -185,9 +183,9 @@ export async function fulfillRequest(options: {
           );
 
           result = await handleSwitchChain({
-            wallet,
             params:
               request.params as WalletConnectSwitchEthereumChainRequestParams,
+            wallet,
           });
         }
         break;
@@ -219,11 +217,11 @@ export async function fulfillRequest(options: {
   }
 
   walletConnectClient.respond({
-    topic,
     response: {
       id,
       jsonrpc: "2.0",
       result,
     },
+    topic,
   });
 }

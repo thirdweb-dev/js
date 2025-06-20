@@ -4,8 +4,10 @@ import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import { getDeployedCreate2Factory } from "../../contract/deployment/utils/create-2-factory.js";
-import { getDeployedInfraContract } from "../../contract/deployment/utils/infra.js";
-import { getDeployedInfraContractFromMetadata } from "../../contract/deployment/utils/infra.js";
+import {
+  getDeployedInfraContract,
+  getDeployedInfraContractFromMetadata,
+} from "../../contract/deployment/utils/infra.js";
 import { ZKSYNC_WETH } from "../../contract/deployment/zksync/implementations.js";
 import { computePublishedContractAddress } from "../../utils/any-evm/compute-published-contract-address.js";
 import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metadata.js";
@@ -72,7 +74,7 @@ export async function getRequiredTransactions(
           }).then((c) =>
             c
               ? null
-              : ({ type: "infra", contractId: "Create2Factory" } as const),
+              : ({ contractId: "Create2Factory", type: "infra" } as const),
           ),
       isZkSync
         ? null
@@ -81,14 +83,13 @@ export async function getRequiredTransactions(
             client,
             contractId: "Forwarder",
           }).then((c) =>
-            c ? null : ({ type: "infra", contractId: "Forwarder" } as const),
+            c ? null : ({ contractId: "Forwarder", type: "infra" } as const),
           ),
       isZkSync
         ? null
         : getDeployedInfraContract({
             chain,
             client,
-            contractId: "TWCloneFactory",
             constructorParams: {
               _trustedForwarder: await computePublishedContractAddress({
                 chain,
@@ -96,10 +97,11 @@ export async function getRequiredTransactions(
                 contractId: "Forwarder",
               }),
             },
+            contractId: "TWCloneFactory",
           }).then((c) =>
             c
               ? null
-              : ({ type: "infra", contractId: "TWCloneFactory" } as const),
+              : ({ contractId: "TWCloneFactory", type: "infra" } as const),
           ),
       // TODO (deploy): add WETH contract check for implementations that need it (check implementation constructor params)
       getTransactionsForImplementation({
@@ -117,17 +119,17 @@ export async function getRequiredTransactions(
           c
             ? null
             : ({
-                type: "module",
                 contractId: m.deployMetadata.name,
+                type: "module",
               } as const),
         ),
       ),
     ]);
-    results.push({ type: "proxy", contractId: deployMetadata.name });
+    results.push({ contractId: deployMetadata.name, type: "proxy" });
     return results.flat().filter((r) => r !== null);
   }
 
-  return [{ type: "implementation", contractId: deployMetadata.name }];
+  return [{ contractId: deployMetadata.name, type: "implementation" }];
 }
 
 async function getTransactionsForImplementation(options: {
@@ -158,16 +160,16 @@ async function getTransactionsForImplementation(options: {
   const result = await getDeployedInfraContract({
     chain,
     client,
-    contractId: deployMetadata.name,
     constructorParams,
+    contractId: deployMetadata.name,
     publisher: deployMetadata.publisher,
     version: deployMetadata.version,
   }).then((c) =>
     c
       ? null
       : ({
-          type: "implementation",
           contractId: deployMetadata.name,
+          type: "implementation",
         } as const),
   );
   return result ? [result] : [];
@@ -189,40 +191,40 @@ async function getTransactionsForMarketplaceV3(options: {
       client,
       contractId: "WETH9",
     }).then((c) =>
-      c ? null : ({ type: "infra", contractId: "WETH9" } as const),
+      c ? null : ({ contractId: "WETH9", type: "infra" } as const),
     ),
     getDeployedInfraContract({
       chain,
       client,
+      constructorParams: { _nativeTokenWrapper: WETHAddress },
       contractId: "DirectListingsLogic",
-      constructorParams: { _nativeTokenWrapper: WETHAddress },
     }).then((c) =>
       c
         ? null
-        : ({ type: "extension", contractId: "DirectListingsLogic" } as const),
+        : ({ contractId: "DirectListingsLogic", type: "extension" } as const),
     ),
     getDeployedInfraContract({
       chain,
       client,
-      contractId: "EnglishAuctionsLogic",
       constructorParams: { _nativeTokenWrapper: WETHAddress },
+      contractId: "EnglishAuctionsLogic",
     }).then((c) =>
       c
         ? null
-        : ({ type: "extension", contractId: "EnglishAuctionsLogic" } as const),
+        : ({ contractId: "EnglishAuctionsLogic", type: "extension" } as const),
     ),
     getDeployedInfraContract({
       chain,
       client,
       contractId: "OffersLogic",
     }).then((c) =>
-      c ? null : ({ type: "extension", contractId: "OffersLogic" } as const),
+      c ? null : ({ contractId: "OffersLogic", type: "extension" } as const),
     ),
   ]);
   // hacky assumption: if we need to deploy any of the extensions, we also need to deploy the implementation
   const transactions = extensions.filter((e) => e !== null);
   if (transactions.length) {
-    transactions.push({ type: "implementation", contractId: "MarketplaceV3" });
+    transactions.push({ contractId: "MarketplaceV3", type: "implementation" });
   }
   return transactions;
 }
@@ -243,7 +245,7 @@ async function getTransactionsForDynamicContract(options: {
     client,
     contractId: "WETH9",
   }).then((c) =>
-    c ? null : ({ type: "infra", contractId: "WETH9" } as const),
+    c ? null : ({ contractId: "WETH9", type: "infra" } as const),
   );
   const extensions: (DeployTransactionResult | null)[] = options.deployMetadata
     .defaultExtensions
@@ -252,14 +254,14 @@ async function getTransactionsForDynamicContract(options: {
           return getDeployedInfraContract({
             chain,
             client,
+            constructorParams: { _nativeTokenWrapper: WETHAddress },
             contractId: e.extensionName,
             publisher: e.publisherAddress,
             version: e.extensionVersion || "latest",
-            constructorParams: { _nativeTokenWrapper: WETHAddress },
           }).then((c) =>
             c
               ? null
-              : ({ type: "extension", contractId: e.extensionName } as const),
+              : ({ contractId: e.extensionName, type: "extension" } as const),
           );
         }),
       )
@@ -268,8 +270,8 @@ async function getTransactionsForDynamicContract(options: {
   const transactions = [...extensions, wethTx].filter((e) => e !== null);
   if (transactions.length) {
     transactions.push({
-      type: "implementation",
       contractId: options.deployMetadata.name,
+      type: "implementation",
     });
   }
   return transactions;
@@ -319,18 +321,18 @@ export async function getAllDefaultConstructorParamsForImplementation(args: {
 
   const defaultExtensionInput = args.defaultExtensions
     ? await generateExtensionInput({
-        defaultExtensions: args.defaultExtensions,
         chain,
         client,
+        defaultExtensions: args.defaultExtensions,
         forwarder,
         nativeTokenWrapper: weth,
       })
     : [];
 
   return {
-    trustedForwarder: forwarder,
-    nativeTokenWrapper: weth,
     extensions: defaultExtensionInput,
+    nativeTokenWrapper: weth,
+    trustedForwarder: forwarder,
   };
 }
 
@@ -349,14 +351,14 @@ async function generateExtensionInput(args: {
       getDeployedInfraContract({
         chain,
         client,
+        constructorParams: { forwarder, nativeTokenWrapper },
         contractId: e.extensionName,
         publisher: e.publisherAddress,
         version: e.extensionVersion || "latest",
-        constructorParams: { forwarder, nativeTokenWrapper },
       }).then((c) => ({
-        name: e.extensionName,
-        metadataURI: "",
         implementation: c,
+        metadataURI: "",
+        name: e.extensionName,
       })),
     ),
   );
@@ -369,11 +371,11 @@ async function generateExtensionInput(args: {
       return resolveContractAbi(e.implementation)
         .then(generateExtensionFunctionsFromAbi)
         .then((c) => ({
+          functions: c,
           metadata: {
             ...e,
             implementation: e.implementation?.address,
           },
-          functions: c,
         }));
     }),
   );

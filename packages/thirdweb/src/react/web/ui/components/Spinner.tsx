@@ -1,8 +1,8 @@
 "use client";
 import { keyframes } from "@emotion/react";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
-import { iconSize } from "../../../core/design-system/index.js";
 import type { Theme } from "../../../core/design-system/index.js";
+import { iconSize } from "../../../core/design-system/index.js";
 import { StyledCircle, StyledSvg } from "../design-system/elements.js";
 
 /**
@@ -16,16 +16,16 @@ export const Spinner: React.FC<{
   return (
     <Svg
       style={{
-        width: `${iconSize[props.size]}px`,
         height: `${iconSize[props.size]}px`,
+        width: `${iconSize[props.size]}px`,
       }}
       viewBox="0 0 50 50"
     >
       <Circle
         cx="25"
         cy="25"
-        r="20"
         fill="none"
+        r="20"
         stroke={props.color ? theme.colors[props.color] : "currentColor"}
         strokeWidth={Number(iconSize[props.size]) > 64 ? "2" : "4"}
       />
@@ -57,11 +57,11 @@ const rotateAnimation = keyframes`
 
 const Svg = /* @__PURE__ */ StyledSvg({
   animation: `${rotateAnimation} 2s linear infinite`,
-  width: "1em",
   height: "1em",
+  width: "1em",
 });
 
 const Circle = /* @__PURE__ */ StyledCircle({
-  strokeLinecap: "round",
   animation: `${dashAnimation} 1.5s ease-in-out infinite`,
+  strokeLinecap: "round",
 });

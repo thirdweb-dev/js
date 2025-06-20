@@ -1,15 +1,15 @@
-import { ChainIconClient } from "@/components/blocks/ChainIcon";
-import { TransactionButton } from "@/components/blocks/buttons/TransactionButton";
-import { WalletAddress } from "@/components/blocks/wallet-address";
 import { ArrowRightLeftIcon } from "lucide-react";
 import {
-  type PreparedTransaction,
-  type ThirdwebClient,
   defineChain,
+  type PreparedTransaction,
   prepareTransaction,
+  type ThirdwebClient,
   toEther,
 } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
+import { TransactionButton } from "@/components/blocks/buttons/TransactionButton";
+import { ChainIconClient } from "@/components/blocks/ChainIcon";
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import type { NebulaTxData } from "../api/types";
 import {
   TxHashRow,
@@ -27,12 +27,12 @@ export function ExecuteTransactionCard(props: {
 
   return (
     <ExecuteTransactionCardLayout
-      txData={props.txData}
       client={props.client}
-      status={status}
-      setStatus={setStatus}
-      sendTx={sendTx}
       onTxSettled={props.onTxSettled}
+      sendTx={sendTx}
+      setStatus={setStatus}
+      status={status}
+      txData={props.txData}
     />
   );
 }
@@ -105,8 +105,8 @@ export function ExecuteTransactionCardLayout(props: {
             <div className="flex items-center gap-2">
               <ChainIconClient
                 className="size-5 rounded-full"
-                src={chain.icon?.url}
                 client={props.client}
+                src={chain.icon?.url}
               />
               <span className="text-foreground">
                 {chain.name || `Chain ID: ${txData.chainId}`}
@@ -129,16 +129,14 @@ export function ExecuteTransactionCardLayout(props: {
         {props.status.type !== "confirmed" && (
           <div className="flex items-center justify-end border-t px-4 py-5 lg:px-5">
             <TransactionButton
+              className="gap-2"
               client={props.client}
-              isPending={props.status.type === "sending"}
-              transactionCount={undefined}
-              txChainID={txData.chainId}
-              variant="default"
               disabled={
                 props.status.type === "sending" ||
                 props.status.type === "confirming"
               }
-              size="sm"
+              isLoggedIn={true}
+              isPending={props.status.type === "sending"}
               onClick={async () => {
                 const tx = prepareTransaction({
                   chain: chain,
@@ -150,8 +148,10 @@ export function ExecuteTransactionCardLayout(props: {
 
                 props.sendTx(tx, props.onTxSettled);
               }}
-              className="gap-2"
-              isLoggedIn={true}
+              size="sm"
+              transactionCount={undefined}
+              txChainID={txData.chainId}
+              variant="default"
             >
               <ArrowRightLeftIcon className="size-4" />
               Execute Transaction

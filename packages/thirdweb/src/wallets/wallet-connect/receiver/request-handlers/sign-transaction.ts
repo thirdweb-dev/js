@@ -30,13 +30,13 @@ export async function handleSignTransactionRequest(options: {
   }
 
   return account.signTransaction({
+    data: transaction.data,
     gas: transaction.gas ? hexToBigInt(transaction.gas) : undefined,
     gasPrice: transaction.gasPrice
       ? hexToBigInt(transaction.gasPrice)
       : undefined,
-    value: transaction.value ? hexToBigInt(transaction.value) : undefined,
     nonce: transaction.nonce ? hexToNumber(transaction.nonce) : undefined,
     to: transaction.to,
-    data: transaction.data,
+    value: transaction.value ? hexToBigInt(transaction.value) : undefined,
   });
 }

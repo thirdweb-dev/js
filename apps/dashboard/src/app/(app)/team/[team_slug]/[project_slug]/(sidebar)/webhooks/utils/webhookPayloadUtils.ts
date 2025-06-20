@@ -4,7 +4,7 @@ import type { WebhookFormValues } from "./webhookTypes";
 export function parseAddresses(addresses: string | undefined): string[] {
   if (!addresses) return [];
   return addresses
-    .split(/[\,\s]+/)
+    .split(/[,\s]+/)
     .map((addr) => addr.trim())
     .filter(Boolean);
 }
@@ -34,22 +34,22 @@ export function buildEventWebhookPayload(
   const eventSignatures = [];
   if (data.sigHash) {
     eventSignatures.push({
+      abi: data.sigHashAbi || data.abi,
+      params: {},
       sig_hash: data.sigHash.startsWith("0x")
         ? data.sigHash
         : keccak256(new TextEncoder().encode(data.sigHash)),
-      abi: data.sigHashAbi || data.abi,
-      params: {},
     });
   }
   return {
-    name: data.name ?? "",
     filters: {
       "v1.events": {
-        chain_ids: data.chainIds?.map(String),
         addresses: parseAddresses(data.addresses),
+        chain_ids: data.chainIds?.map(String),
         signatures: eventSignatures.length > 0 ? eventSignatures : undefined,
       },
     },
+    name: data.name ?? "",
     webhook_url: data.webhookUrl,
   };
 }
@@ -60,25 +60,25 @@ export function buildTransactionWebhookPayload(
   const txSignatures = [];
   if (data.sigHash) {
     txSignatures.push({
+      abi: data.sigHashAbi || data.abi,
+      params: {},
       sig_hash: data.sigHash.startsWith("0x")
         ? data.sigHash
         : toFunctionSelector(data.sigHash),
-      abi: data.sigHashAbi || data.abi,
-      params: {},
     });
   }
   return {
-    name: data.name ?? "",
     filters: {
       "v1.transactions": {
         chain_ids: data.chainIds?.map(String),
         from_addresses: parseAddresses(data.fromAddresses),
+        signatures: txSignatures.length > 0 ? txSignatures : undefined,
         to_addresses: data.toAddresses
           ? parseAddresses(data.toAddresses)
           : undefined,
-        signatures: txSignatures.length > 0 ? txSignatures : undefined,
       },
     },
+    name: data.name ?? "",
     webhook_url: data.webhookUrl,
   };
 }

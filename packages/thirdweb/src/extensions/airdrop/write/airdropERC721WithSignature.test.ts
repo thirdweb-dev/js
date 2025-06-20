@@ -8,8 +8,8 @@ import {
   TEST_ACCOUNT_D,
 } from "../../../../test/src/test-wallets.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import {
   ownerOf,
@@ -40,8 +40,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           client: TEST_CLIENT,
           contractId: "Airdrop",
           contractParams: {
-            defaultAdmin: TEST_ACCOUNT_A.address,
             contractURI: "",
+            defaultAdmin: TEST_ACCOUNT_A.address,
           },
         }),
         chain: ANVIL_CHAIN,
@@ -66,49 +66,49 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       const mintTransactions = [
         mintTo({
           contract: erc721TokenContract,
-          to: TEST_ACCOUNT_A.address,
           nft: {
             name: "Test 0",
           },
+          to: TEST_ACCOUNT_A.address,
         }),
         mintTo({
           contract: erc721TokenContract,
-          to: TEST_ACCOUNT_A.address,
           nft: {
             name: "Test 1",
           },
+          to: TEST_ACCOUNT_A.address,
         }),
         mintTo({
           contract: erc721TokenContract,
-          to: TEST_ACCOUNT_A.address,
           nft: {
             name: "Test 2",
           },
+          to: TEST_ACCOUNT_A.address,
         }),
         mintTo({
           contract: erc721TokenContract,
-          to: TEST_ACCOUNT_A.address,
           nft: {
             name: "Test 3",
           },
+          to: TEST_ACCOUNT_A.address,
         }),
       ];
 
       for (const tx of mintTransactions) {
         await sendAndConfirmTransaction({
-          transaction: tx,
           account: TEST_ACCOUNT_A,
+          transaction: tx,
         });
       }
 
       const approvalTx = setApprovalForAll({
+        approved: true,
         contract: erc721TokenContract,
         operator: airdropContract.address,
-        approved: true,
       });
       await sendAndConfirmTransaction({
-        transaction: approvalTx,
         account: TEST_ACCOUNT_A,
+        transaction: approvalTx,
       });
     }, 60000);
 
@@ -119,11 +119,11 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         { recipient: TEST_ACCOUNT_D.address, tokenId: 2n },
       ];
       const { req, signature } = await generateAirdropSignatureERC721({
-        airdropRequest: {
-          tokenAddress: erc721TokenContract.address,
-          contents,
-        },
         account: TEST_ACCOUNT_A,
+        airdropRequest: {
+          contents,
+          tokenAddress: erc721TokenContract.address,
+        },
         contract: airdropContract,
       });
 
@@ -133,8 +133,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         signature,
       });
       const { transactionHash } = await sendAndConfirmTransaction({
-        transaction,
         account: TEST_ACCOUNT_A,
+        transaction,
       });
 
       const ownerZero = await ownerOf({

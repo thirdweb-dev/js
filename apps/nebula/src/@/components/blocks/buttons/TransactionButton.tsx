@@ -1,13 +1,4 @@
 "use client";
-import type { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useAllChainsData } from "@/hooks/chains";
-import { cn } from "@/lib/utils";
 import { ArrowLeftRightIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
@@ -17,6 +8,15 @@ import {
   useConnectedWallets,
 } from "thirdweb/react";
 import type { Wallet } from "thirdweb/wallets";
+import type { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useAllChainsData } from "@/hooks/chains";
+import { cn } from "@/lib/utils";
 import { MismatchButton } from "./MismatchButton";
 
 type ButtonProps = React.ComponentProps<typeof Button>;
@@ -72,14 +72,14 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
           disableNoFundsPopup={
             disableNoFundsPopup === undefined ? false : disableNoFundsPopup
           }
-          isPending={isPending}
-          variant={variant || "primary"}
           isLoggedIn={isLoggedIn}
+          isPending={isPending}
           txChainId={txChainID}
+          variant={variant || "primary"}
           {...restButtonProps}
-          disabled={disabled}
           checkBalance={checkBalance}
           className={cn("relative overflow-hidden", restButtonProps.className)}
+          disabled={disabled}
           style={{
             paddingLeft: transactionCount
               ? `${txCountDivWidth + 16}px`
@@ -117,7 +117,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
         </MismatchButton>
       </PopoverTrigger>
 
-      <PopoverContent className="min-w-[300px]" sideOffset={10} side="top">
+      <PopoverContent className="min-w-[300px]" side="top" sideOffset={10}>
         <ExternalApprovalNotice />
       </PopoverContent>
     </Popover>

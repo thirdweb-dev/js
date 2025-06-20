@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.robinhood.wallet",
-  name: "Robinhood Wallet",
-  homepage: "https://robinhood.com/web3-wallet/",
-  image_id: "dfe0e3e3-5746-4e2b-12ad-704608531500",
   app: {
-    browser: "https://robinhood.com/web3-wallet/",
-    ios: "https://robinhood.com/web3-wallet/",
     android:
       "https://play.google.com/store/apps/details?id=com.robinhood.gateway",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://robinhood.com/web3-wallet/",
     chrome: "https://robinhood.com/web3-wallet/",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://robinhood.com/web3-wallet/",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: "com.robinhood.wallet",
-  mobile: {
-    native: "robinhood-wallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://robinhood.com/web3-wallet/",
+  id: "com.robinhood.wallet",
+  image_id: "dfe0e3e3-5746-4e2b-12ad-704608531500",
+  mobile: {
+    native: "robinhood-wallet://",
+    universal: null,
+  },
+  name: "Robinhood Wallet",
+  rdns: "com.robinhood.wallet",
 } as const;

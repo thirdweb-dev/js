@@ -29,13 +29,13 @@ export const Skeleton: React.FC<SkeletonLoaderProps> = ({
     const animation = Animated.loop(
       Animated.sequence([
         Animated.timing(translateX.current, {
-          toValue: width,
           duration: 2500,
+          toValue: width,
           useNativeDriver: true,
         }),
         Animated.timing(translateX.current, {
-          toValue: -width,
           duration: 0,
+          toValue: -width,
           useNativeDriver: true,
         }),
       ]),
@@ -70,24 +70,24 @@ export const Skeleton: React.FC<SkeletonLoaderProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    overflow: "hidden",
     borderRadius: radius.lg,
+    overflow: "hidden",
+  },
+  gradient: {
+    bottom: 0,
+    position: "absolute",
+    top: 0,
+    width: "100%",
+  },
+  innerGradient: {
+    backgroundColor: "rgba(255,255,255,0.5)",
+    height: "100%",
+    opacity: 0.3,
+    transform: [{ skewX: "-20deg" }],
+    width: "100%",
   },
   skeleton: {
     height: "100%",
     width: "100%",
-  },
-  gradient: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    width: "100%",
-  },
-  innerGradient: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: "rgba(255,255,255,0.5)",
-    opacity: 0.3,
-    transform: [{ skewX: "-20deg" }],
   },
 });

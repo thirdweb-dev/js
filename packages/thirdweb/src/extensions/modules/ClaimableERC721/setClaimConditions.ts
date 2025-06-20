@@ -33,7 +33,6 @@ export function setClaimCondition(
   options: BaseTransactionOptions<ClaimConditionInput>,
 ) {
   return generatedSetClaimCondition({
-    contract: options.contract,
     asyncParams: async () => {
       const { convertErc20Amount } = await import(
         "../../../utils/extensions/convert-erc20-amount.js"
@@ -44,10 +43,10 @@ export function setClaimCondition(
         await Promise.all([
           options.pricePerToken
             ? convertErc20Amount({
+                amount: options.pricePerToken.toString(),
                 chain: options.contract.chain,
                 client: options.contract.client,
                 erc20Address: options.currencyAddress || NATIVE_TOKEN_ADDRESS,
-                amount: options.pricePerToken.toString(),
               })
             : 0n,
           options.maxClaimableSupply
@@ -63,17 +62,17 @@ export function setClaimCondition(
       let merkleRoot: Hex = toHex("", { size: 32 });
       if (options.allowList) {
         const { shardedMerkleInfo, uri } = await processOverrideList({
-          overrides: options.allowList.map((entry) => ({
-            address: entry,
-          })),
-          client: options.contract.client,
           chain: options.contract.chain,
-          tokenDecimals: 18, // unused in this case
+          client: options.contract.client,
           async hashEntry(options) {
             return keccak256(
               encodePacked(["address"], [getAddress(options.entry.address)]),
             );
           },
+          overrides: options.allowList.map((entry) => ({
+            address: entry,
+          })), // unused in this case
+          tokenDecimals: 18,
         });
         merkleRoot = shardedMerkleInfo.merkleRoot;
         metadata = await upload({
@@ -89,16 +88,17 @@ export function setClaimCondition(
 
       return {
         claimCondition: {
-          startTimestamp: Number(dateToSeconds(startTime)),
-          endTimestamp: Number(dateToSeconds(endTime)),
-          pricePerUnit,
-          currency: getAddress(options.currencyAddress || NATIVE_TOKEN_ADDRESS),
-          availableSupply,
-          maxMintPerWallet,
           allowlistMerkleRoot: merkleRoot,
-          auxData: metadata, // stores the merkle root and merkle tree uri in IPFS
+          auxData: metadata,
+          availableSupply,
+          currency: getAddress(options.currencyAddress || NATIVE_TOKEN_ADDRESS),
+          endTimestamp: Number(dateToSeconds(endTime)),
+          maxMintPerWallet,
+          pricePerUnit,
+          startTimestamp: Number(dateToSeconds(startTime)), // stores the merkle root and merkle tree uri in IPFS
         },
       };
     },
+    contract: options.contract,
   });
 }

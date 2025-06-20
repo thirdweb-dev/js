@@ -11,7 +11,6 @@ export function usePreloadWalletProviders({ wallets }: { wallets: Wallet[] }) {
         (w) => w.id === COINBASE || w.id === "inApp" || isEcosystemWallet(w.id),
       )
       .map((w) => ({
-        queryKey: ["preload-wallet", w.id],
         queryFn: async () => {
           switch (true) {
             case COINBASE === w.id: {
@@ -30,6 +29,7 @@ export function usePreloadWalletProviders({ wallets }: { wallets: Wallet[] }) {
             }
           }
         },
+        queryKey: ["preload-wallet", w.id],
       })),
   });
 }

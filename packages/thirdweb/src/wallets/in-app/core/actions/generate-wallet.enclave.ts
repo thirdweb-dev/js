@@ -21,12 +21,12 @@ export async function generateWallet({
   const response = await clientFetch(
     `${getThirdwebBaseUrl("inAppWallet")}/api/v1/enclave-wallet/generate`,
     {
-      method: "POST",
       headers: {
+        Authorization: `Bearer embedded-wallet-token:${authToken}`,
         "Content-Type": "application/json",
         "x-thirdweb-client-id": client.clientId,
-        Authorization: `Bearer embedded-wallet-token:${authToken}`,
       },
+      method: "POST",
     },
   );
 

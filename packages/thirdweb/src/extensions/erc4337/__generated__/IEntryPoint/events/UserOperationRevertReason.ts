@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "UserOperationRevertReason" event.
@@ -42,8 +42,8 @@ export function userOperationRevertReasonEvent(
   filters: UserOperationRevertReasonEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event UserOperationRevertReason(bytes32 indexed userOpHash, address indexed sender, uint256 nonce, bytes revertReason)",
-    filters,
   });
 }

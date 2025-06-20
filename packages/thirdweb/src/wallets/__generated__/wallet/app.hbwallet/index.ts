@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.hbwallet",
-  name: "HB WALLET",
-  homepage: "https://hbwallet.app",
-  image_id: "f134f8a2-cf58-44dd-7626-dc2cd21a3800",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/ethereum-wallet-hb-wallet/id1273639572",
     android:
       "https://play.google.com/store/apps/details?id=co.bacoor.android.hbwallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/ethereum-wallet-hb-wallet/id1273639572",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "hbwallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://hbwallet.app",
+  id: "app.hbwallet",
+  image_id: "f134f8a2-cf58-44dd-7626-dc2cd21a3800",
+  mobile: {
+    native: "hbwallet://",
+    universal: null,
+  },
+  name: "HB WALLET",
+  rdns: null,
 } as const;

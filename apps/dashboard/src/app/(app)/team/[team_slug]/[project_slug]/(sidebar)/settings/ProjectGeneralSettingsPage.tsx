@@ -1,39 +1,4 @@
 "use client";
-import { apiServerProxy } from "@/actions/proxies";
-import type { Project } from "@/api/projects";
-import type { Team } from "@/api/team";
-import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
-import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
-import { SettingsCard } from "@/components/blocks/SettingsCard";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { DynamicHeight } from "@/components/ui/DynamicHeight";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Form } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { cn } from "@/lib/utils";
 import type { RotateSecretKeyAPIReturnType } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   deleteProjectClient,
@@ -43,10 +8,10 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import type { ProjectService } from "@thirdweb-dev/service-utils";
-import { SERVICES } from "@thirdweb-dev/service-utils";
 import {
-  type ServiceName,
   getServiceByName,
+  SERVICES,
+  type ServiceName,
 } from "@thirdweb-dev/service-utils";
 import {
   HIDDEN_SERVICES,
@@ -63,8 +28,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { type UseFormReturn, useForm } from "react-hook-form";
-import { type FieldArrayWithId, useFieldArray } from "react-hook-form";
+import {
+  type FieldArrayWithId,
+  type UseFormReturn,
+  useFieldArray,
+  useForm,
+} from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { upload } from "thirdweb/storage";
@@ -72,22 +41,57 @@ import { RE_BUNDLE_ID } from "utils/regex";
 import { joinWithComma, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
+import { apiServerProxy } from "@/actions/proxies";
+import type { Project } from "@/api/projects";
+import type { Team } from "@/api/team";
+import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
+import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
+import { SettingsCard } from "@/components/blocks/SettingsCard";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Form } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import { cn } from "@/lib/utils";
 
 // TODO: instead of single submit handler, move the submit to each section
 
 const projectSettingsFormSchema = z.object({
-  name: projectNameSchema,
-  domains: projectDomainsSchema,
-  servicesMeta: z.array(
-    z.object({
-      name: z.string(),
-      enabled: z.boolean(),
-      actions: z.array(z.string()),
-    }),
-  ),
   bundleIds: z.string().refine((str) => validStrList(str, RE_BUNDLE_ID), {
     message: "Some of the bundle ids are invalid",
   }),
+  domains: projectDomainsSchema,
+  name: projectNameSchema,
+  servicesMeta: z.array(
+    z.object({
+      actions: z.array(z.string()),
+      enabled: z.boolean(),
+      name: z.string(),
+    }),
+  ),
 });
 
 type ProjectSettingsPageFormSchema = z.infer<typeof projectSettingsFormSchema>;
@@ -117,12 +121,59 @@ export function ProjectGeneralSettingsPage(props: {
 
   return (
     <ProjectGeneralSettingsPageUI
-      isOwnerAccount={props.isOwnerAccount}
       client={props.client}
-      teamSlug={props.teamSlug}
+      deleteProject={async () => {
+        await deleteProjectClient({
+          projectId: props.project.id,
+          teamId: props.project.teamId,
+        });
+      }}
+      isOwnerAccount={props.isOwnerAccount}
+      onKeyUpdated={() => {
+        router.refresh();
+      }}
       project={props.project}
+      rotateSecretKey={async () => {
+        return rotateSecretKeyClient({
+          projectId: props.project.id,
+          teamId: props.project.teamId,
+        });
+      }}
+      showNebulaSettings={props.showNebulaSettings}
+      teamSlug={props.teamSlug}
+      teamsWithRole={props.teamsWithRole}
+      transferProject={async (newTeam) => {
+        const res = await apiServerProxy({
+          body: JSON.stringify({
+            destinationTeamId: newTeam.id,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          pathname: `/v1/teams/${props.teamId}/projects/${props.project.id}/transfer`,
+        });
+
+        if (!res.ok) {
+          console.error(res.error);
+          throw new Error(res.error);
+        }
+
+        // Can't open new project in new team or new team landing pagae because it takes a while for the transfer and it doesn't show up in new team immediately
+        // so the safe option is to just redirect to the current team landing page
+        router.replace(`/team/${props.teamSlug}`);
+      }}
+      updateProject={async (projectValues) => {
+        return updateProjectClient(
+          {
+            projectId: props.project.id,
+            teamId: props.project.teamId,
+          },
+          projectValues,
+        );
+      }}
       updateProjectImage={async (file) => {
-        let uri: string | undefined = undefined;
+        let uri: string | undefined;
 
         if (file) {
           // upload to IPFS
@@ -143,53 +194,6 @@ export function ProjectGeneralSettingsPage(props: {
         );
 
         router.refresh();
-      }}
-      updateProject={async (projectValues) => {
-        return updateProjectClient(
-          {
-            projectId: props.project.id,
-            teamId: props.project.teamId,
-          },
-          projectValues,
-        );
-      }}
-      deleteProject={async () => {
-        await deleteProjectClient({
-          projectId: props.project.id,
-          teamId: props.project.teamId,
-        });
-      }}
-      onKeyUpdated={() => {
-        router.refresh();
-      }}
-      showNebulaSettings={props.showNebulaSettings}
-      rotateSecretKey={async () => {
-        return rotateSecretKeyClient({
-          teamId: props.project.teamId,
-          projectId: props.project.id,
-        });
-      }}
-      teamsWithRole={props.teamsWithRole}
-      transferProject={async (newTeam) => {
-        const res = await apiServerProxy({
-          pathname: `/v1/teams/${props.teamId}/projects/${props.project.id}/transfer`,
-          method: "POST",
-          body: JSON.stringify({
-            destinationTeamId: newTeam.id,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!res.ok) {
-          console.error(res.error);
-          throw new Error(res.error);
-        }
-
-        // Can't open new project in new team or new team landing pagae because it takes a while for the transfer and it doesn't show up in new team immediately
-        // so the safe option is to just redirect to the current team landing page
-        router.replace(`/team/${props.teamSlug}`);
       }}
     />
   );
@@ -218,9 +222,9 @@ export function ProjectGeneralSettingsPageUI(props: {
 
   const paths = {
     aaConfig: `${projectLayout}/connect/account-abstraction/settings`,
+    afterDeleteRedirectTo: `/team/${props.teamSlug}`,
     inAppConfig: `${projectLayout}/connect/in-app-wallets/settings`,
     payConfig: `${projectLayout}/connect/universal-bridge/settings`,
-    afterDeleteRedirectTo: `/team/${props.teamSlug}`,
   };
 
   const { project } = props;
@@ -231,23 +235,23 @@ export function ProjectGeneralSettingsPageUI(props: {
   });
 
   const form = useForm<ProjectSettingsPageFormSchema>({
-    resolver: zodResolver(projectSettingsFormSchema),
     defaultValues: {
-      name: project.name,
-      domains: joinWithComma(project.domains),
       bundleIds: joinWithComma(project.bundleIds),
+      domains: joinWithComma(project.domains),
+      name: project.name,
       servicesMeta: SERVICES.map((service) => {
         const projectService = project.services.find(
           (projectService) => projectService.name === service.name,
         );
 
         return {
-          name: service.name as ServiceName,
-          enabled: !!projectService,
           actions: projectService?.actions || [],
+          enabled: !!projectService,
+          name: service.name as ServiceName,
         };
       }),
     },
+    resolver: zodResolver(projectSettingsFormSchema),
   });
 
   const handleSubmit = form.handleSubmit((values) => {
@@ -266,15 +270,15 @@ export function ProjectGeneralSettingsPageUI(props: {
 
           if (serviceMeta.name === "pay") {
             return {
+              actions: [],
               name: "pay",
               payoutAddress: null,
-              actions: [],
             };
           }
 
           return {
-            name: serviceMeta.name as Exclude<ProjectService["name"], "pay">,
             actions: [],
+            name: serviceMeta.name as Exclude<ProjectService["name"], "pay">,
           };
         }
 
@@ -297,22 +301,22 @@ export function ProjectGeneralSettingsPageUI(props: {
     }
 
     const projectValues: Partial<Project> = {
+      bundleIds: toArrFromList(values.bundleIds),
+      domains: toArrFromList(values.domains),
       id: project.id,
       name: values.name,
-      domains: toArrFromList(values.domains),
-      bundleIds: toArrFromList(values.bundleIds),
       services,
     };
 
     updateProject.mutate(projectValues, {
+      onError: (err) => {
+        toast.error("Failed to update project");
+        console.error(err);
+      },
       onSuccess: () => {
         toast.success("Project updated successfully");
 
         props.onKeyUpdated?.();
-      },
-      onError: (err) => {
-        toast.error("Failed to update project");
-        console.error(err);
       },
     });
   });
@@ -320,22 +324,22 @@ export function ProjectGeneralSettingsPageUI(props: {
   return (
     <Form {...form}>
       <form
+        autoComplete="off"
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit();
         }}
-        autoComplete="off"
       >
         <div className="flex flex-col gap-8">
           <ProjectNameSetting
             form={form}
-            isUpdatingProject={updateProject.isPending}
             handleSubmit={handleSubmit}
+            isUpdatingProject={updateProject.isPending}
           />
           <ProjectImageSetting
-            updateProjectImage={props.updateProjectImage}
             avatar={project.image || null}
             client={props.client}
+            updateProjectImage={props.updateProjectImage}
           />
           <ProjectKeyDetails
             project={project}
@@ -344,35 +348,35 @@ export function ProjectGeneralSettingsPageUI(props: {
           <ProjectIdCard project={project} />
           <AllowedDomainsSetting
             form={form}
-            isUpdatingProject={updateProject.isPending}
             handleSubmit={handleSubmit}
+            isUpdatingProject={updateProject.isPending}
           />
           <AllowedBundleIDsSetting
             form={form}
-            isUpdatingProject={updateProject.isPending}
             handleSubmit={handleSubmit}
+            isUpdatingProject={updateProject.isPending}
           />
           <EnabledServicesSetting
             form={form}
-            isUpdatingProject={updateProject.isPending}
             handleSubmit={handleSubmit}
+            isUpdatingProject={updateProject.isPending}
             paths={paths}
             showNebulaSettings={props.showNebulaSettings}
           />
           <TransferProject
-            isOwnerAccount={props.isOwnerAccount}
             client={props.client}
+            currentTeamId={project.teamId}
+            isOwnerAccount={props.isOwnerAccount}
             projectName={project.name}
             teamsWithRole={props.teamsWithRole}
-            currentTeamId={project.teamId}
             transferProject={props.transferProject}
           />
           <DeleteProject
-            projectName={project.name}
             deleteProject={props.deleteProject}
             onDeleteSuccessful={() => {
               router.replace(paths.afterDeleteRedirectTo);
             }}
+            projectName={project.name}
           />
         </div>
       </form>
@@ -389,19 +393,19 @@ function ProjectNameSetting(props: {
 
   return (
     <SettingsCard
+      bottomText="Please use 64 characters at maximum"
+      errorText={form.getFieldState("name").error?.message}
       header={{
-        title: "Project Name",
         description:
           "Assign a name to identify your project on thirdweb dashboard",
+        title: "Project Name",
       }}
       noPermissionText={undefined}
-      errorText={form.getFieldState("name").error?.message}
       saveButton={{
-        onClick: handleSubmit,
         disabled: false,
         isPending: props.isUpdatingProject,
+        onClick: handleSubmit,
       }}
-      bottomText="Please use 64 characters at maximum"
     >
       <Input
         autoFocus
@@ -414,26 +418,24 @@ function ProjectNameSetting(props: {
   );
 }
 
-function ProjectIdCard(props: {
-  project: Project;
-}) {
+function ProjectIdCard(props: { project: Project }) {
   return (
     <SettingsCard
-      header={{
-        title: "Project ID",
-        description: "This is your project's ID on thirdweb",
-      }}
       bottomText="Used when interacting with the thirdweb API"
-      noPermissionText={undefined}
       errorText={undefined}
+      header={{
+        description: "This is your project's ID on thirdweb",
+        title: "Project ID",
+      }}
+      noPermissionText={undefined}
     >
       <CopyTextButton
+        className="w-full justify-between truncate bg-background px-3 py-2 font-mono text-muted-foreground lg:w-[450px]"
+        copyIconPosition="right"
         textToCopy={props.project.id}
         textToShow={props.project.id}
-        variant="outline"
-        className="w-full justify-between truncate bg-background px-3 py-2 font-mono text-muted-foreground lg:w-[450px]"
         tooltip="Copy Project ID"
-        copyIconPosition="right"
+        variant="outline"
       />
     </SettingsCard>
   );
@@ -460,21 +462,21 @@ function ProjectImageSetting(props: {
   function handleSave() {
     const promise = updateProjectAvatarMutation.mutateAsync(projectAvatar);
     toast.promise(promise, {
-      success: "Project avatar updated successfully",
       error: "Failed to update project avatar",
+      success: "Project avatar updated successfully",
     });
   }
 
   return (
     <SettingsCard
       bottomText="An avatar is optional but strongly recommended."
+      errorText={undefined}
+      noPermissionText={undefined}
       saveButton={{
-        onClick: handleSave,
         disabled: false,
         isPending: updateProjectAvatarMutation.isPending,
+        onClick: handleSave,
       }}
-      noPermissionText={undefined}
-      errorText={undefined}
     >
       <div className="flex flex-row gap-4 md:justify-between">
         <div>
@@ -488,11 +490,11 @@ function ProjectImageSetting(props: {
         </div>
         <FileInput
           accept={{ "image/*": [] }}
-          value={projectAvatar || projectAvatarUrl}
-          setValue={setProjectAvatar}
-          client={props.client}
           className="w-20 rounded-full lg:w-28"
+          client={props.client}
           disableHelperText
+          setValue={setProjectAvatar}
+          value={projectAvatar || projectAvatarUrl}
         />
       </div>
     </SettingsCard>
@@ -538,23 +540,23 @@ function AllowedDomainsSetting(props: {
 
   return (
     <SettingsCard
+      bottomText="This is only applicable for web applications"
+      errorText={form.getFieldState("domains", form.formState).error?.message}
       header={{
-        title: "Domain Restrictions",
         description:
           "Only allow Client ID to be used on specific domains to prevent unauthorized use",
+        title: "Domain Restrictions",
       }}
       noPermissionText={undefined}
-      errorText={form.getFieldState("domains", form.formState).error?.message}
       saveButton={{
-        onClick: handleSubmit,
         disabled: false,
         isPending: props.isUpdatingProject,
+        onClick: handleSubmit,
       }}
-      bottomText="This is only applicable for web applications"
     >
       <div className="flex flex-col gap-6">
         <div className="relative">
-          <Label htmlFor="domains" className="mb-2 inline-block">
+          <Label className="mb-2 inline-block" htmlFor="domains">
             Allowed Domains
           </Label>
 
@@ -611,19 +613,19 @@ function AllowedBundleIDsSetting(props: {
   const { form, handleSubmit } = props;
   return (
     <SettingsCard
-      saveButton={{
-        onClick: handleSubmit,
-        disabled: false,
-        isPending: props.isUpdatingProject,
-      }}
-      noPermissionText={undefined}
-      header={{
-        title: "Bundle ID Restrictions",
-        description:
-          "Only allow Client ID to be used on specific Bundle IDs to prevent unauthorized use",
-      }}
       bottomText="This is only applicable for Native games or Native applications"
       errorText={form.getFieldState("bundleIds", form.formState).error?.message}
+      header={{
+        description:
+          "Only allow Client ID to be used on specific Bundle IDs to prevent unauthorized use",
+        title: "Bundle ID Restrictions",
+      }}
+      noPermissionText={undefined}
+      saveButton={{
+        disabled: false,
+        isPending: props.isUpdatingProject,
+        onClick: handleSubmit,
+      }}
     >
       <div className="flex flex-col gap-4">
         <div className="relative ">
@@ -709,18 +711,18 @@ function EnabledServicesSetting(props: {
 
   return (
     <SettingsCard
+      bottomText=""
+      errorText={undefined}
       header={{
-        title: "Enabled Services",
         description: "thirdweb services enabled for this project",
+        title: "Enabled Services",
       }}
       noPermissionText={undefined}
-      errorText={undefined}
       saveButton={{
-        onClick: handleSubmit,
         disabled: false,
         isPending: props.isUpdatingProject,
+        onClick: handleSubmit,
       }}
-      bottomText=""
     >
       <DynamicHeight>
         <div className="flex flex-col">
@@ -760,8 +762,8 @@ function EnabledServicesSetting(props: {
 
             return (
               <div
-                key={service.name}
                 className="flex items-start justify-between gap-6 border-border border-t py-5"
+                key={service.name}
               >
                 {/* Left */}
                 <div className="flex flex-col gap-4">
@@ -778,9 +780,9 @@ function EnabledServicesSetting(props: {
                     <div>
                       <Button
                         asChild
+                        className="min-w-32 justify-between gap-2"
                         size="sm"
                         variant="outline"
-                        className="min-w-32 justify-between gap-2"
                       >
                         <Link href={configurationLink}>
                           Configure
@@ -860,10 +862,10 @@ function ProjectKeyDetails({
         </p>
 
         <CopyTextButton
-          textToCopy={clientId}
           className="!h-auto w-full max-w-[350px] justify-between truncate bg-background px-3 py-3 font-mono"
-          textToShow={clientId}
           copyIconPosition="right"
+          textToCopy={clientId}
+          textToShow={clientId}
           tooltip="Copy Client ID"
         />
       </div>
@@ -884,26 +886,26 @@ function ProjectKeyDetails({
             </div>
 
             <RotateSecretKeyButton
-              rotateSecretKey={rotateSecretKey}
               onSuccess={(data) => {
                 setSecretKeyMasked(data.data.secretMasked);
               }}
+              rotateSecretKey={rotateSecretKey}
             />
           </div>
         </div>
       )}
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <TimeInfo label="Created" date={createdAt} fallbackText="" />
+        <TimeInfo date={createdAt} fallbackText="" label="Created" />
         <TimeInfo
-          label="Last Updated"
           date={updatedAt}
           fallbackText="Not updated"
+          label="Last Updated"
         />
         <TimeInfo
-          label="Last Accessed"
           date={lastAccessedAt}
           fallbackText="Not accessed in 30 days"
+          label="Last Accessed"
         />
       </div>
     </div>
@@ -938,13 +940,13 @@ function DeleteProject(props: {
 
   const handleRevoke = () => {
     deleteProject.mutate(undefined, {
-      onSuccess: () => {
-        toast.success("Project deleted successfully");
-        props.onDeleteSuccessful();
-      },
       onError: (err) => {
         toast.error("Failed to delete project");
         console.error(err);
+      },
+      onSuccess: () => {
+        toast.success("Project deleted successfully");
+        props.onDeleteSuccessful();
       },
     });
   };
@@ -954,11 +956,11 @@ function DeleteProject(props: {
 
   return (
     <DangerSettingCard
-      buttonOnClick={() => handleRevoke()}
       buttonLabel="Delete project"
+      buttonOnClick={() => handleRevoke()}
       confirmationDialog={{
-        title: `Delete project "${props.projectName}"?`,
         description: description,
+        title: `Delete project "${props.projectName}"?`,
       }}
       description={description}
       isPending={deleteProject.isPending}
@@ -975,19 +977,19 @@ export function RotateSecretKeyButton(props: {
   const [isModalCloseAllowed, setIsModalCloseAllowed] = useState(true);
   return (
     <Dialog
-      open={isOpen}
       onOpenChange={(v) => {
         if (!isModalCloseAllowed) {
           return;
         }
         setIsOpen(v);
       }}
+      open={isOpen}
     >
       <DialogTrigger asChild>
         <Button
-          variant="outline"
           className="h-auto gap-2 rounded-lg bg-background px-4 py-3"
           onClick={() => setIsOpen(true)}
+          variant="outline"
         >
           <RefreshCcwIcon className="size-4" />
           Rotate Secret Key
@@ -999,13 +1001,13 @@ export function RotateSecretKeyButton(props: {
         dialogCloseClassName={cn(!isModalCloseAllowed && "hidden")}
       >
         <RotateSecretKeyModalContent
-          rotateSecretKey={props.rotateSecretKey}
           closeModal={() => {
             setIsOpen(false);
             setIsModalCloseAllowed(true);
           }}
           disableModalClose={() => setIsModalCloseAllowed(false)}
           onSuccess={props.onSuccess}
+          rotateSecretKey={props.rotateSecretKey}
         />
       </DialogContent>
     </Dialog>
@@ -1029,8 +1031,8 @@ function RotateSecretKeyModalContent(props: {
   if (screen.id === "save-newkey") {
     return (
       <SaveNewKeyScreen
-        secretKey={screen.secretKey}
         closeModal={props.closeModal}
+        secretKey={screen.secretKey}
       />
     );
   }
@@ -1038,13 +1040,13 @@ function RotateSecretKeyModalContent(props: {
   if (screen.id === "initial") {
     return (
       <RotateSecretKeyInitialScreen
-        rotateSecretKey={props.rotateSecretKey}
+        closeModal={props.closeModal}
         onSuccess={(data) => {
           props.disableModalClose();
           props.onSuccess(data);
           setScreen({ id: "save-newkey", secretKey: data.data.secret });
         }}
-        closeModal={props.closeModal}
+        rotateSecretKey={props.rotateSecretKey}
       />
     );
   }
@@ -1060,12 +1062,12 @@ function RotateSecretKeyInitialScreen(props: {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const rotateKeyMutation = useMutation({
     mutationFn: props.rotateSecretKey,
-    onSuccess: (data) => {
-      props.onSuccess(data);
-    },
     onError: (err) => {
       console.error(err);
       toast.error("Failed to rotate secret key");
+    },
+    onSuccess: (data) => {
+      props.onSuccess(data);
     },
   });
   return (
@@ -1098,16 +1100,16 @@ function RotateSecretKeyInitialScreen(props: {
       </div>
 
       <div className="flex justify-end gap-3 border-t bg-card p-6">
-        <Button variant="outline" onClick={props.closeModal}>
+        <Button onClick={props.closeModal} variant="outline">
           Close
         </Button>
         <Button
-          variant="destructive"
           className="gap-2"
           disabled={!isConfirmed || rotateKeyMutation.isPending}
           onClick={() => {
             rotateKeyMutation.mutate();
           }}
+          variant="destructive"
         >
           {rotateKeyMutation.isPending ? (
             <Spinner className="size-4" />
@@ -1136,10 +1138,10 @@ function SaveNewKeyScreen(props: {
         <div className="h-6" />
 
         <CopyTextButton
-          textToCopy={props.secretKey}
           className="!h-auto w-full justify-between bg-card px-3 py-3 font-mono"
-          textToShow={props.secretKey}
           copyIconPosition="right"
+          textToCopy={props.secretKey}
+          textToShow={props.secretKey}
           tooltip="Copy Secret Key"
         />
         <div className="h-4" />
@@ -1166,10 +1168,10 @@ function SaveNewKeyScreen(props: {
 
       <div className="flex justify-end gap-3 border-t bg-card p-6">
         <Button
-          variant="outline"
           className="gap-2"
           disabled={!isSecretStored}
           onClick={props.closeModal}
+          variant="outline"
         >
           Close
         </Button>
@@ -1209,18 +1211,16 @@ function TransferProject(props: {
 
     const promise = transferProject.mutateAsync(selectedTeamWithRole.team);
     toast.promise(promise, {
-      success: "Project transferred successfully",
       error: "Failed to transfer project",
+      success: "Project transferred successfully",
     });
   };
 
   return (
     <DangerSettingCard
-      buttonOnClick={handleTransfer}
-      isDisabled={isDisabled}
       buttonLabel="Transfer project"
+      buttonOnClick={handleTransfer}
       confirmationDialog={{
-        title: "Transfer project",
         description: (
           <>
             <span className="mb-5 block">
@@ -1244,17 +1244,19 @@ function TransferProject(props: {
             </span>
           </>
         ),
+        title: "Transfer project",
       }}
       description={<>Transfer this project to another team</>}
+      isDisabled={isDisabled}
       isPending={transferProject.isPending}
       title="Transfer Project"
     >
       <div className="flex flex-col gap-4">
         <div>
           <Select
-            value={selectedTeamId}
-            onValueChange={setSelectedTeamId}
             disabled={transferProject.isPending || !props.isOwnerAccount}
+            onValueChange={setSelectedTeamId}
+            value={selectedTeamId}
           >
             <SelectTrigger className="w-auto min-w-[320px]">
               <SelectValue placeholder="Select a team" />
@@ -1266,10 +1268,10 @@ function TransferProject(props: {
                   <SelectItem key={team.id} value={team.id}>
                     <div className="flex items-center gap-2 py-1">
                       <GradientAvatar
-                        src={team.image || ""}
-                        id={team.id}
                         className="size-5"
                         client={props.client}
+                        id={team.id}
+                        src={team.image || ""}
                       />
                       {team.name}
                     </div>

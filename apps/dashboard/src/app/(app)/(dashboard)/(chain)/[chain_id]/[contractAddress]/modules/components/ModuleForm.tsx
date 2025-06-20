@@ -1,6 +1,5 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { FormControl, Input, Select, Skeleton, Spacer } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -13,10 +12,10 @@ import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
   type Chain,
-  type ThirdwebClient,
-  type ThirdwebContract,
   getContract,
   sendTransaction,
+  type ThirdwebClient,
+  type ThirdwebContract,
   waitForReceipt,
 } from "thirdweb";
 import {
@@ -32,6 +31,7 @@ import {
 } from "thirdweb/utils";
 import type { Account } from "thirdweb/wallets";
 import { FormErrorMessage, FormLabel } from "tw-components";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   ModuleInstallParams,
   useModuleInstallParams,
@@ -70,8 +70,8 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
   const { errors } = formState;
 
   const { data, isPending, isFetching } = usePublishedContractsQuery({
-    client: contract.client,
     address: watch("publisherAddress"),
+    client: contract.client,
   });
 
   // filter out all the contracts that AREN'T modules
@@ -108,35 +108,35 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
       }
 
       const installTransaction = installPublishedModule({
-        contract,
         account,
+        contract,
+        moduleData,
         moduleName: watch("moduleContract"),
         publisher: watch("publisherAddress"),
         version: watch("version"),
-        moduleData,
       });
 
       const txResult = await sendTransaction({
-        transaction: installTransaction,
         account,
+        transaction: installTransaction,
       });
 
       await waitForReceipt(txResult);
+    },
+    onError(err) {
+      toast.error("Failed to install module");
+      console.error("Error during installation:", err);
     },
     onSuccess() {
       props.refetchModules();
       toast.success("Module installed successfully");
       // clear form
       reset({
-        publisherAddress: "",
         moduleContract: "",
-        version: "latest",
         moduleInstallFormParams: undefined,
+        publisherAddress: "",
+        version: "latest",
       });
-    },
-    onError(err) {
-      toast.error("Failed to install module");
-      console.error("Error during installation:", err);
     },
   });
 
@@ -154,11 +154,11 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
 
   // Get core contract bytecode
   const coreContractByteCodeQuery = useQuery({
-    queryKey: ["getBytecode", contract.address, contract.chain.id],
     queryFn: async () => {
       const coreImplementation = await resolveImplementation(contract);
       return coreImplementation.bytecode;
     },
+    queryKey: ["getBytecode", contract.address, contract.chain.id],
     retry: false,
     // 30 minutes
     // staleTime: 1000 * 60 * 30,
@@ -166,12 +166,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
 
   // Get Installed module bytecodes
   const installedModuleBytecodesQuery = useQuery({
-    queryKey: [
-      "installedModuleBytecodes",
-      contract.address,
-      contract.chain.id,
-      props.installedModules.data,
-    ],
+    enabled: !!props.installedModules.data,
     queryFn: async () => {
       const moduleAddress = props.installedModules.data;
       if (!moduleAddress) {
@@ -182,9 +177,9 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
         moduleAddress.map(async (address) => {
           const result = await resolveImplementation(
             getContract({
-              client: contract.client,
               address,
               chain: contract.chain,
+              client: contract.client,
             }),
           );
 
@@ -196,7 +191,12 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
         }),
       );
     },
-    enabled: !!props.installedModules.data,
+    queryKey: [
+      "installedModuleBytecodes",
+      contract.address,
+      contract.chain.id,
+      props.installedModules.data,
+    ],
     retry: false,
     // 30 minutes
     staleTime: 1000 * 60 * 30,
@@ -204,15 +204,10 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
 
   // check if selected module is compatible with the core contract and installed modules
   const isModuleCompatibleQuery = useQuery({
-    queryKey: [
-      "isModuleCompatible",
-      contract.address,
-      contract.chain.id,
-      installedModuleBytecodesQuery.data,
-      coreContractByteCodeQuery.data,
-      selectedModule?.contractId,
-      selectedModule?.bytecodeHash,
-    ],
+    enabled:
+      !!selectedModule &&
+      !!coreContractByteCodeQuery.data &&
+      !!installedModuleBytecodesQuery.data,
     queryFn: async () => {
       if (
         !coreContractByteCodeQuery.data ||
@@ -223,24 +218,29 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
       }
 
       return isModuleCompatible({
+        client: contract.client,
         contractInfo: {
           bytecode: coreContractByteCodeQuery.data,
-          installedModuleBytecodes: installedModuleBytecodesQuery.data,
           chain: contract.chain,
+          installedModuleBytecodes: installedModuleBytecodesQuery.data,
         },
         moduleInfo: {
           bytecodeUri: selectedModule.metadata.bytecodeUri,
         },
-        client: contract.client,
       });
     },
+    queryKey: [
+      "isModuleCompatible",
+      contract.address,
+      contract.chain.id,
+      installedModuleBytecodesQuery.data,
+      coreContractByteCodeQuery.data,
+      selectedModule?.contractId,
+      selectedModule?.bytecodeHash,
+    ],
     retry: false,
     // 30 minutes
     staleTime: 1000 * 60 * 30,
-    enabled:
-      !!selectedModule &&
-      !!coreContractByteCodeQuery.data &&
-      !!installedModuleBytecodesQuery.data,
   });
 
   const selectedModuleMeta =
@@ -253,9 +253,9 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
       : undefined;
 
   const moduleInstallParams = useModuleInstallParams({
-    module: selectedModuleMeta,
-    isQueryEnabled: !!selectedModule && !!isModuleCompatibleQuery.data,
     client: contract.client,
+    isQueryEnabled: !!selectedModule && !!isModuleCompatibleQuery.data,
+    module: selectedModuleMeta,
   });
 
   return (
@@ -270,8 +270,8 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
           <FormControl isInvalid={!!errors.publisherAddress}>
             <FormLabel>Publisher</FormLabel>
             <Input
-              disabled={installMutation.isPending}
               bg="backgroundHighlight"
+              disabled={installMutation.isPending}
               placeholder="Publisher address"
               {...register("publisherAddress", {
                 required: "Publisher address is required",
@@ -290,16 +290,16 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
           >
             <FormLabel>Module Name</FormLabel>
             <Skeleton
-              isLoaded={!!modulesOnly.length || !isFetching}
               borderRadius="lg"
+              isLoaded={!!modulesOnly.length || !isFetching}
             >
               <Select
+                bg="backgroundHighlight"
                 disabled={
                   installMutation.isPending ||
                   modulesOnly?.length === 0 ||
                   isPending
                 }
-                bg="backgroundHighlight"
                 {...moduleContractInputProps}
                 onChange={(e) => {
                   // reset version when module changes
@@ -342,8 +342,9 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
 
           <FormControl isInvalid={!!errors.version} isRequired={true}>
             <FormLabel>Module Version</FormLabel>
-            <Skeleton isLoaded={!allVersions.isFetching} borderRadius="lg">
+            <Skeleton borderRadius="lg" isLoaded={!allVersions.isFetching}>
               <Select
+                bg="backgroundHighlight"
                 disabled={
                   !allVersions.data ||
                   allVersions.isPending ||
@@ -351,7 +352,6 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
                   installMutation.isPending ||
                   isModuleCompatibleQuery.isFetching
                 }
-                bg="backgroundHighlight"
                 w="full"
                 {...register("version", {
                   required: "Version is required",
@@ -376,9 +376,9 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
           !isModuleCompatibleQuery.isFetching &&
           moduleInstallParams.data.params.length > 0 && (
             <ModuleInstallParams
-              installParams={moduleInstallParams.data}
-              form={form}
               disableInputs={installMutation.isPending}
+              form={form}
+              installParams={moduleInstallParams.data}
             />
           )
         )}
@@ -388,18 +388,18 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
         {/* Submit */}
         <div className="flex justify-end">
           <TransactionButton
-            client={contract.client}
-            isLoggedIn={props.isLoggedIn}
-            txChainID={contract.chain.id}
-            transactionCount={1}
-            isPending={installMutation.isPending}
-            type="submit"
             className="self-end"
+            client={contract.client}
             disabled={
               !formState.isValid ||
               isModuleCompatibleQuery.data === false ||
               isModuleCompatibleQuery.isFetching
             }
+            isLoggedIn={props.isLoggedIn}
+            isPending={installMutation.isPending}
+            transactionCount={1}
+            txChainID={contract.chain.id}
+            type="submit"
           >
             Install
           </TransactionButton>
@@ -432,8 +432,8 @@ async function isModuleCompatible(options: {
   try {
     const isCompatible = await checkModulesCompatibility({
       chain: options.contractInfo.chain,
-      coreBytecode: options.contractInfo.bytecode,
       client: options.client,
+      coreBytecode: options.contractInfo.bytecode,
       moduleBytecodes: [
         moduleBytecode,
         ...options.contractInfo.installedModuleBytecodes,

@@ -50,19 +50,19 @@ export const nebulaAPI422Response = `\
 }`;
 
 export const nebulaSecretKeyHeaderParameter: APIParameter = {
+  description: "Your thirdweb secret key for authentication.",
+  example: "YOUR_THIRDWEB_SECRET_KEY",
   name: "x-secret-key",
   required: true,
-  description: "Your thirdweb secret key for authentication.",
   type: "string",
-  example: "YOUR_THIRDWEB_SECRET_KEY",
 };
 
 export const nebulaSessionIdPathParameter: APIParameter = {
+  description: "The unique ID of the session",
+  example: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   name: "session_id",
   required: true,
-  description: "The unique ID of the session",
   type: "string",
-  example: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
 };
 const nebulaContextFilterType = `\
 {
@@ -71,8 +71,8 @@ const nebulaContextFilterType = `\
 }`;
 
 export const nebulaContextParameter: APIParameter = {
+  description: "Provide additional context information along with the message",
   name: "context",
   required: false,
-  description: "Provide additional context information along with the message",
   type: nebulaContextFilterType,
 };

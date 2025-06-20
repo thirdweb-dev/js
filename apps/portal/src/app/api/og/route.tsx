@@ -33,61 +33,61 @@ export async function GET(request: Request) {
     // ImageResponse JSX element
     <div
       style={{
-        background: "black",
-        width: "100%",
-        height: "100%",
-        display: "flex",
         alignItems: "center",
+        background: "black",
+        display: "flex",
+        height: "100%",
+        width: "100%",
       }}
     >
       <img
-        src={`${BAST_URL}/og/background-1.png`}
         alt=""
-        width={width}
         height={height}
+        src={`${BAST_URL}/og/background-1.png`}
         style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
           bottom: 0,
+          left: 0,
+          position: "absolute",
           right: 0,
+          top: 0,
         }}
+        width={width}
       />
 
       {/* Left */}
       <div
         style={{
           color: "white",
-          width: "50%",
-          padding: "80px 60px",
           display: "flex",
           flexDirection: "column",
+          padding: "80px 60px",
+          width: "50%",
         }}
       >
         <div
           style={{
+            alignItems: "center",
             display: "flex",
             gap: "10px",
-            alignItems: "center",
             marginBottom: "40px",
           }}
         >
           <img
-            src={`${BAST_URL}/icons/thirdweb-logo.svg`}
             alt=""
-            width={300 / 1.7}
             height={50 / 1.7}
+            src={`${BAST_URL}/icons/thirdweb-logo.svg`}
             style={{
               display: "flex",
             }}
+            width={300 / 1.7}
           />
 
           <div
             style={{
-              fontSize: "26px",
-              fontFamily: "Inter",
-              fontWeight: 600,
               color: "white",
+              fontFamily: "Inter",
+              fontSize: "26px",
+              fontWeight: 600,
               marginTop: "2px",
             }}
           >
@@ -97,10 +97,10 @@ export async function GET(request: Request) {
 
         <div
           style={{
-            fontSize: "60px",
-            fontFamily: "Inter",
-            fontWeight: 600,
             display: "flex",
+            fontFamily: "Inter",
+            fontSize: "60px",
+            fontWeight: 600,
             marginBottom: "40px",
             wordBreak: title.includes(" ") ? "break-word" : "break-all",
           }}
@@ -116,12 +116,12 @@ export async function GET(request: Request) {
           <div
             style={{
               background: "white",
-              padding: "14px 20px",
-              fontSize: "24px",
+              borderRadius: "10px",
               color: "black",
               fontFamily: "Inter",
+              fontSize: "24px",
               fontWeight: 600,
-              borderRadius: "10px",
+              padding: "14px 20px",
             }}
           >
             Read More
@@ -130,30 +130,30 @@ export async function GET(request: Request) {
       </div>
 
       <img
-        src={iconUrl}
         alt=""
-        width={iconSize}
         height={iconSize}
+        src={iconUrl}
         style={{
           display: "flex",
           position: "absolute",
           right: width / 6.6,
           top: height / 2 - iconSize / 2 + 10,
         }}
+        width={iconSize}
       />
     </div>,
     // ImageResponse options
     {
-      width: width,
-      height: height,
       fonts: [
         {
-          name: "Inter",
           data: await inter600,
+          name: "Inter",
           style: "normal",
           weight: 600,
         },
       ],
+      height: height,
+      width: width,
     },
   );
 }

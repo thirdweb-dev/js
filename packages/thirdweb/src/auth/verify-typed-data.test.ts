@@ -18,11 +18,11 @@ describe.runIf(process.env.TW_SECRET_KEY)("verifyTypedData", async () => {
     expect(
       await verifyTypedData({
         ...typedData.basic,
-        primaryType: "Mail",
         address: TEST_ACCOUNT_A.address,
-        signature,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
+        primaryType: "Mail",
+        signature,
       }),
     ).toBe(true);
   });
@@ -31,11 +31,11 @@ describe.runIf(process.env.TW_SECRET_KEY)("verifyTypedData", async () => {
     expect(
       await verifyTypedData({
         ...typedData.basic,
-        primaryType: "Mail",
         address: TEST_ACCOUNT_A.address,
-        signature: "0xdead",
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
+        primaryType: "Mail",
+        signature: "0xdead",
       }),
     ).toBe(false);
   });
@@ -44,12 +44,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("verifyTypedData", async () => {
     expect(
       await verifyTypedData({
         ...typedData.basic,
-        primaryType: "Mail",
         address: "0x3FCf42e10CC70Fe75A62EB3aDD6D305Aa840d145",
-        signature:
-          "0x79d756d805073dc97b7bc885b0d56ddf319a2599530fe1e178c2a7de5be88980068d24f20a79b318ea0a84d33ae06f93db77e4235e5d9eeb8b1d7a63922ada3e1c",
         chain: mainnet,
         client: TEST_CLIENT,
+        primaryType: "Mail",
+        signature:
+          "0x79d756d805073dc97b7bc885b0d56ddf319a2599530fe1e178c2a7de5be88980068d24f20a79b318ea0a84d33ae06f93db77e4235e5d9eeb8b1d7a63922ada3e1c",
       }),
     ).toBe(true);
   });
@@ -58,11 +58,11 @@ describe.runIf(process.env.TW_SECRET_KEY)("verifyTypedData", async () => {
     expect(
       await verifyTypedData({
         ...typedData.basic,
-        primaryType: "Mail",
         address: "0x3FCf42e10CC70Fe75A62EB3aDD6D305Aa840d145",
-        signature: "0xdead",
         chain: mainnet,
         client: TEST_CLIENT,
+        primaryType: "Mail",
+        signature: "0xdead",
       }),
     ).toBe(false);
   });
@@ -71,12 +71,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("verifyTypedData", async () => {
     expect(
       await verifyTypedData({
         ...typedData.basic,
-        primaryType: "Mail",
         address: "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
-        signature:
-          "0x79d756d805073dc97b7bc885b0d56ddf319a2599530fe1e178c2a7de5be88980068d24f20a79b318ea0a84d33ae06f93db77e4235e5d9eeb8b1d7a63922ada3e1c",
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
+        primaryType: "Mail",
+        signature:
+          "0x79d756d805073dc97b7bc885b0d56ddf319a2599530fe1e178c2a7de5be88980068d24f20a79b318ea0a84d33ae06f93db77e4235e5d9eeb8b1d7a63922ada3e1c",
       }),
     ).toBe(false);
   });

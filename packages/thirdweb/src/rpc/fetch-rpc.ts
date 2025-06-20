@@ -60,15 +60,15 @@ export async function fetchRpc(
   options: FetchRpcOptions,
 ): Promise<RpcResponse[]> {
   const response = await getClientFetch(client)(rpcUrl, {
+    body: stringify(options.requests),
     headers: {
       ...client.config?.rpc?.fetch?.headers,
       "Content-Type": "application/json",
     },
-    body: stringify(options.requests),
+    keepalive: client.config?.rpc?.fetch?.keepalive,
     method: "POST",
     requestTimeoutMs:
       options.requestTimeoutMs ?? client.config?.rpc?.fetch?.requestTimeoutMs,
-    keepalive: client.config?.rpc?.fetch?.keepalive,
   });
 
   if (!response.ok) {
@@ -95,15 +95,15 @@ export async function fetchSingleRpc(
   options: FetchSingleRpcOptions,
 ): Promise<RpcResponse> {
   const response = await getClientFetch(client)(rpcUrl, {
+    body: stringify(options.request),
     headers: {
       ...(client.config?.rpc?.fetch?.headers || {}),
       "Content-Type": "application/json",
     },
-    body: stringify(options.request),
+    keepalive: client.config?.rpc?.fetch?.keepalive,
     method: "POST",
     requestTimeoutMs:
       options.requestTimeoutMs ?? client.config?.rpc?.fetch?.requestTimeoutMs,
-    keepalive: client.config?.rpc?.fetch?.keepalive,
   });
 
   if (!response.ok) {

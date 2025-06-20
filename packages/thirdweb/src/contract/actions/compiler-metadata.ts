@@ -44,10 +44,10 @@ export function formatCompilerMetadata(
   const targets = Object.keys(compilationTarget);
   const name = compilationTarget[targets[0] as keyof typeof compilationTarget];
   const info = {
-    title: meta.output.devdoc.title,
     author: meta.output.devdoc.author,
     details: meta.output.devdoc.detail,
     notice: meta.output.userdoc.notice,
+    title: meta.output.devdoc.title,
   };
   const licenses: string[] = [
     ...new Set(
@@ -56,12 +56,12 @@ export function formatCompilerMetadata(
     ),
   ];
   return {
-    name,
     abi: meta?.output?.abi || [],
-    metadata: meta,
     info,
-    licenses,
     isPartialAbi: meta.isPartialAbi,
+    licenses,
+    metadata: meta,
+    name,
     zk_version: metadata.zk_version,
   };
 }

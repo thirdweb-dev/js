@@ -3,10 +3,9 @@ import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
 import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
-import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
+import { upload } from "../../storage/upload.js";
 import { type Address, getAddress } from "../../utils/address.js";
-import type {} from "../../utils/any-evm/deploy-metadata.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
@@ -103,9 +102,9 @@ export async function deployModularContract(
   const contractId = getContractId(core);
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
+      account,
       chain,
       client,
-      account,
       contractId,
       publisher,
     });
@@ -115,38 +114,38 @@ export async function deployModularContract(
       client,
       files: [
         {
-          name: coreParams.name,
           description: coreParams.description,
-          symbol: coreParams.symbol,
-          image: coreParams.image,
           external_link: coreParams.external_link,
+          image: coreParams.image,
+          name: coreParams.name,
           social_urls: coreParams.social_urls,
+          symbol: coreParams.symbol,
         },
       ],
     })) ||
     "";
   const initializeTransaction =
     await getInitializeTransactionForModularContract({
-      client,
-      chain,
       account,
-      implementationContract,
+      accountAddress: getAddress(account.address),
+      chain,
+      client,
       contractId,
+      implementationContract,
       initializeParams: {
-        name: coreParams.name || "",
-        symbol: coreParams.symbol || "",
         contractURI,
+        name: coreParams.name || "",
         owner: coreParams.defaultAdmin
           ? getAddress(coreParams.defaultAdmin)
           : account.address,
+        symbol: coreParams.symbol || "",
       },
-      accountAddress: getAddress(account.address),
       modules,
     });
   return deployViaAutoFactory({
-    client,
-    chain,
     account,
+    chain,
+    client,
     cloneFactoryContract,
     initializeTransaction,
     salt,
@@ -183,9 +182,9 @@ async function getInitializeTransactionForModularContract(options: {
       for (const installer of modules) {
         // this might deploy the module if not already deployed
         const installData = await installer({
-          client,
-          chain,
           account,
+          chain,
+          client,
         });
         moduleAddresses.push(installData.module);
         moduleInstallData.push(installData.data);
@@ -193,12 +192,12 @@ async function getInitializeTransactionForModularContract(options: {
       // all 3 cores have the same initializer
       return initialize({
         contract: implementationContract,
-        owner: initializeParams.owner,
-        name: initializeParams.name,
-        symbol: initializeParams.symbol,
         contractURI: initializeParams.contractURI,
-        modules: moduleAddresses,
         moduleInstallData,
+        modules: moduleAddresses,
+        name: initializeParams.name,
+        owner: initializeParams.owner,
+        symbol: initializeParams.symbol,
       });
     }
     default:

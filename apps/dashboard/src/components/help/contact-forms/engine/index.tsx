@@ -21,22 +21,22 @@ export default function EngineSupportForm() {
       <SupportForm_SelectInput
         formLabel="Problem area"
         name="extraInfo_Engine_Type"
-        promptText="Select Engine type"
-        options={ENGINE_TYPES}
-        value={selectedEngineType}
         onValueChange={setSelectedEngineType}
+        options={ENGINE_TYPES}
+        promptText="Select Engine type"
         required={true}
+        value={selectedEngineType}
       />
       {selectedEngineType && (
         <>
           <SupportForm_SelectInput
             formLabel="Problem area"
             name="extraInfo_Problem_Area"
-            promptText="Select a problem area"
+            onValueChange={setProblemArea}
             options={ENGINE_PROBLEM_AREAS}
+            promptText="Select a problem area"
             required={true}
             value={problemArea}
-            onValueChange={setProblemArea}
           />
 
           {problemArea && (
@@ -44,9 +44,9 @@ export default function EngineSupportForm() {
               <SupportForm_TextInput
                 formLabel="Engine URL"
                 formValue="extraInfo_Engine_URL"
-                required={true}
                 inputType="url"
                 placeholder="https://your-engine-url.com"
+                required={true}
               />
               <DescriptionInput />
               <AttachmentForm />

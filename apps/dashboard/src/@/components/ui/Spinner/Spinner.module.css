@@ -1,7 +1,6 @@
 .loader {
   border-radius: 50%;
   position: relative;
-  animation: rotate 1s linear infinite;
   animation: rotate 2s linear infinite;
 }
 

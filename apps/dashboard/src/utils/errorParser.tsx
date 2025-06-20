@@ -7,9 +7,9 @@ const PLEASE_REACH_OUT_MESSAGE = (
     If you believe this is incorrect or the error persists, please visit our{" "}
     <Link
       className="font-semibold underline"
-      target="_blank"
       href="/support"
       rel="noopener noreferrer"
+      target="_blank"
     >
       support site
     </Link>

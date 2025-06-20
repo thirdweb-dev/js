@@ -80,8 +80,8 @@ export async function getAllOwners(
       ownerOf({ contract: options.contract, tokenId: i })
         .catch(() => ZERO_ADDRESS)
         .then((owner) => ({
-          tokenId: i,
           owner,
+          tokenId: i,
         })),
     );
   }

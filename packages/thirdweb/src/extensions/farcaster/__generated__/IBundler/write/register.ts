@@ -1,12 +1,12 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type {
   BaseTransactionOptions,
   WithOverrides,
 } from "../../../../../transaction/types.js";
-import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { once } from "../../../../../utils/promise/once.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "register" function.
@@ -43,66 +43,66 @@ export type RegisterParams = WithOverrides<{
 export const FN_SELECTOR = "0xa44c9ce7" as const;
 const FN_INPUTS = [
   {
-    type: "tuple",
-    name: "registerParams",
     components: [
       {
-        type: "address",
         name: "to",
-      },
-      {
         type: "address",
+      },
+      {
         name: "recovery",
+        type: "address",
       },
       {
-        type: "uint256",
         name: "deadline",
+        type: "uint256",
       },
       {
-        type: "bytes",
         name: "sig",
+        type: "bytes",
       },
     ],
+    name: "registerParams",
+    type: "tuple",
   },
   {
-    type: "tuple[]",
-    name: "signerParams",
     components: [
       {
-        type: "uint32",
         name: "keyType",
+        type: "uint32",
       },
       {
-        type: "bytes",
         name: "key",
+        type: "bytes",
       },
       {
-        type: "uint8",
         name: "metadataType",
+        type: "uint8",
       },
       {
-        type: "bytes",
         name: "metadata",
-      },
-      {
-        type: "uint256",
-        name: "deadline",
-      },
-      {
         type: "bytes",
+      },
+      {
+        name: "deadline",
+        type: "uint256",
+      },
+      {
         name: "sig",
+        type: "bytes",
       },
     ],
+    name: "signerParams",
+    type: "tuple[]",
   },
   {
-    type: "uint256",
     name: "extraStorage",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "fid",
+    type: "uint256",
   },
 ] as const;
 
@@ -207,8 +207,19 @@ export function register(
   });
 
   return prepareContractCall({
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    authorizationList: async () =>
+      (await asyncOptions()).overrides?.authorizationList,
     contract: options.contract,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
     params: async () => {
       const resolvedOptions = await asyncOptions();
       return [
@@ -218,16 +229,5 @@ export function register(
       ] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
-    accessList: async () => (await asyncOptions()).overrides?.accessList,
-    gas: async () => (await asyncOptions()).overrides?.gas,
-    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
-    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
-    maxPriorityFeePerGas: async () =>
-      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
-    nonce: async () => (await asyncOptions()).overrides?.nonce,
-    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
-    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
-    authorizationList: async () =>
-      (await asyncOptions()).overrides?.authorizationList,
   });
 }

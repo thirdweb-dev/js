@@ -1,10 +1,10 @@
+import { redirect } from "next/navigation";
 import { nebulaAppThirdwebClient } from "@/constants/nebula-client";
 import {
   getNebulaAuthToken,
   getNebulaAuthTokenWalletAddress,
 } from "@/utils/authToken";
 import { loginRedirect } from "@/utils/loginRedirect";
-import { redirect } from "next/navigation";
 import { getSessionById } from "../../api/session";
 import { ChatPageContent } from "../../components/ChatPageContent";
 
@@ -36,9 +36,9 @@ export default async function Page(props: {
       accountAddress={accountAddress}
       authToken={authToken}
       client={nebulaAppThirdwebClient}
+      initialParams={undefined}
       session={session}
       type="new-chat"
-      initialParams={undefined}
     />
   );
 }

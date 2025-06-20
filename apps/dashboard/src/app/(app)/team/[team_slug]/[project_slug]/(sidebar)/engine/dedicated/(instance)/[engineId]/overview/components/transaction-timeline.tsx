@@ -1,5 +1,3 @@
-import { WalletAddress } from "@/components/blocks/wallet-address";
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import type { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
@@ -12,9 +10,9 @@ import {
   ModalOverlay,
   Step,
   StepIndicator,
+  Stepper,
   StepSeparator,
   StepStatus,
-  Stepper,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
@@ -24,6 +22,8 @@ import { useRef } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { Button, FormLabel, Text } from "tw-components";
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 
 interface TimelineStep {
   step: string;
@@ -50,17 +50,17 @@ export const TransactionTimeline = ({
       // Queued: [ queued, _sent, _mined ]
       timeline = [
         {
-          isLatest: true,
-          step: "Queued",
-          date: transaction.queuedAt,
           cta: (
             <CancelTransactionButton
-              transaction={transaction}
-              instanceUrl={instanceUrl}
               authToken={authToken}
               client={client}
+              instanceUrl={instanceUrl}
+              transaction={transaction}
             />
           ),
+          date: transaction.queuedAt,
+          isLatest: true,
+          step: "Queued",
         },
         { step: "Sent" },
         { step: "Mined" },
@@ -69,19 +69,19 @@ export const TransactionTimeline = ({
     case "sent":
       // Sent: [ queued, sent, _mined ]
       timeline = [
-        { step: "Queued", date: transaction.queuedAt },
+        { date: transaction.queuedAt, step: "Queued" },
         {
-          isLatest: true,
-          step: "Sent",
-          date: transaction.sentAt,
           cta: (
             <CancelTransactionButton
-              transaction={transaction}
-              instanceUrl={instanceUrl}
               authToken={authToken}
               client={client}
+              instanceUrl={instanceUrl}
+              transaction={transaction}
             />
           ),
+          date: transaction.sentAt,
+          isLatest: true,
+          step: "Sent",
         },
         { step: "Mined" },
       ];
@@ -89,17 +89,17 @@ export const TransactionTimeline = ({
     case "mined":
       // Mined: [ queued, sent, mined ]
       timeline = [
-        { step: "Queued", date: transaction.queuedAt },
-        { step: "Sent", date: transaction.sentAt },
-        { isLatest: true, step: "Mined", date: transaction.minedAt },
+        { date: transaction.queuedAt, step: "Queued" },
+        { date: transaction.sentAt, step: "Sent" },
+        { date: transaction.minedAt, isLatest: true, step: "Mined" },
       ];
       break;
     case "cancelled":
       // Mined: [ queued, sent, cancelled, _mined ]
       timeline = [
-        { step: "Queued", date: transaction.queuedAt },
-        { step: "Sent", date: transaction.sentAt },
-        { isLatest: true, step: "Cancelled", date: transaction.cancelledAt },
+        { date: transaction.queuedAt, step: "Queued" },
+        { date: transaction.sentAt, step: "Sent" },
+        { date: transaction.cancelledAt, isLatest: true, step: "Cancelled" },
         { step: "Mined" },
       ];
       break;
@@ -107,15 +107,15 @@ export const TransactionTimeline = ({
       if (transaction.sentAt) {
         // Errored with sentAt: [ queued, sent, errored, _mined ]
         timeline = [
-          { step: "Queued", date: transaction.queuedAt },
-          { step: "Sent", date: transaction.sentAt },
+          { date: transaction.queuedAt, step: "Queued" },
+          { date: transaction.sentAt, step: "Sent" },
           { isLatest: true, step: "Failed" },
           { step: "Mined" },
         ];
       } else {
         // Errored without sentAt: [ queued, errored, _sent, _mined ]
         timeline = [
-          { step: "Queued", date: transaction.queuedAt },
+          { date: transaction.queuedAt, step: "Queued" },
           { isLatest: true, step: "Failed" },
           { step: "Sent" },
           { step: "Mined" },
@@ -130,24 +130,24 @@ export const TransactionTimeline = ({
 
   return (
     <Stepper
+      gap="0"
+      height={12 * timeline.length}
       index={activeIdx}
       orientation="vertical"
-      height={12 * timeline.length}
-      gap="0"
       size="xs"
     >
       {timeline.map((step, index) => {
         const isFilled = index <= activeIdx;
         return (
           // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-          <Step key={index} as={Flex} w="full">
+          <Step as={Flex} key={index} w="full">
             <StepIndicator>
               <StepStatus
-                complete={<CheckIcon className="size-4" />}
                 active={<CheckIcon className="size-4" />}
+                complete={<CheckIcon className="size-4" />}
               />
             </StepIndicator>
-            <Flex justify="space-between" w="full" mt={-1}>
+            <Flex justify="space-between" mt={-1} w="full">
               <div className="flex flex-col gap-2">
                 {isFilled ? (
                   <Text>{step.step}</Text>
@@ -200,13 +200,13 @@ const CancelTransactionButton = ({
   const cancelTransactionMutation = useMutation({
     mutationFn: async () => {
       const resp = await fetch(`${instanceUrl}transaction/cancel`, {
-        method: "POST",
+        body: JSON.stringify({ queueId: transaction.queueId }),
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
           "x-backend-wallet-address": transaction.fromAddress ?? "",
         },
-        body: JSON.stringify({ queueId: transaction.queueId }),
+        method: "POST",
       });
 
       if (!resp.ok) {
@@ -219,8 +219,8 @@ const CancelTransactionButton = ({
   const cancelTransactions = async () => {
     const promise = cancelTransactionMutation.mutateAsync();
     toast.promise(promise, {
-      success: "Transaction cancelled successfully",
       error: "Failed to cancel transaction",
+      success: "Transaction cancelled successfully",
     });
 
     promise.then(() => {
@@ -231,7 +231,7 @@ const CancelTransactionButton = ({
   return (
     <>
       {/* @ts-expect-error - this works fine */}
-      <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={closeButtonRef}>
+      <Modal initialFocusRef={closeButtonRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent className="!bg-background rounded-lg border border-border">
           <ModalHeader>Cancel Transaction</ModalHeader>
@@ -252,8 +252,8 @@ const CancelTransactionButton = ({
                 <FormLabel>From</FormLabel>
                 <WalletAddress
                   address={transaction.fromAddress ?? ""}
-                  shortenAddress={false}
                   client={client}
+                  shortenAddress={false}
                 />
               </FormControl>
               <FormControl>
@@ -277,17 +277,17 @@ const CancelTransactionButton = ({
 
           <ModalFooter as={Flex} gap={3}>
             <Button
+              onClick={onClose}
               ref={closeButtonRef}
               type="button"
-              onClick={onClose}
               variant="ghost"
             >
               Close
             </Button>
             <Button
               colorScheme="red"
-              onClick={cancelTransactions}
               isLoading={cancelTransactionMutation.isPending}
+              onClick={cancelTransactions}
             >
               Cancel transaction
             </Button>
@@ -295,7 +295,7 @@ const CancelTransactionButton = ({
         </ModalContent>
       </Modal>
 
-      <Button onClick={onOpen} variant="outline" size="xs" colorScheme="red">
+      <Button colorScheme="red" onClick={onOpen} size="xs" variant="outline">
         Cancel transaction
       </Button>
     </>

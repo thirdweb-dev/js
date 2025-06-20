@@ -16,10 +16,10 @@ vi.mock("@coinbase/wallet-sdk", () => ({
   default: class {
     makeWeb3Provider() {
       return {
-        request: vi.fn(),
+        disconnect: vi.fn(),
         on: vi.fn(),
         removeListener: vi.fn(),
-        disconnect: vi.fn(),
+        request: vi.fn(),
       };
     }
   },
@@ -32,9 +32,9 @@ vi.mock("../../utils/address.js", () => ({
 vi.mock("../../chains/utils.js", () => ({
   getCachedChain: vi.fn((chainId) => ({ id: chainId })),
   getChainMetadata: vi.fn(async (_chain) => ({
-    name: "Test Chain",
-    nativeCurrency: { name: "Test Coin", symbol: "TC", decimals: 18 },
     explorers: [{ url: "https://explorer.test" }],
+    name: "Test Chain",
+    nativeCurrency: { decimals: 18, name: "Test Coin", symbol: "TC" },
   })),
 }));
 
@@ -46,15 +46,15 @@ vi.mock("ox/Hex", async () => {
   const actualModule = await vi.importActual("ox/Hex");
   return {
     ...actualModule,
-    validate: vi.fn(() => true),
     toNumber: vi.fn((hex) => Number.parseInt(hex, 16)),
+    validate: vi.fn(() => true),
   };
 });
 
 vi.mock("ox/TypedData", () => ({
   extractEip712DomainTypes: vi.fn(() => []),
-  validate: vi.fn(),
   serialize: vi.fn(() => "serializedData"),
+  validate: vi.fn(),
 }));
 
 describe("Coinbase Web", () => {

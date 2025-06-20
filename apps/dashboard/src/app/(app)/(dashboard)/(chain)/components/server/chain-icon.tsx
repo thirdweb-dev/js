@@ -21,14 +21,14 @@ export async function ChainIcon(props: {
     if (resolved) {
       // check if it loads or not
       const res = await fetch(resolved, {
-        // revalidate every hour
-        next: { revalidate: 60 * 60 },
-        method: "HEAD",
         headers: DASHBOARD_THIRDWEB_SECRET_KEY
           ? {
               "x-secret-key": DASHBOARD_THIRDWEB_SECRET_KEY,
             }
           : {},
+        method: "HEAD",
+        // revalidate every hour
+        next: { revalidate: 60 * 60 },
       }).catch(() => null);
 
       if (res?.status === 200) {
@@ -44,16 +44,16 @@ export async function ChainIcon(props: {
     return (
       <img
         alt=""
-        src={imageLink}
         className={cn("object-contain", props.className)}
+        src={imageLink}
       />
     );
   }
   return (
     <img
       alt=""
-      src={fallbackChainIcon}
       className={cn("object-contain", props.className)}
+      src={fallbackChainIcon}
     />
   );
 }

@@ -1,15 +1,14 @@
 import type { ThirdwebContract } from "thirdweb";
-import {} from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { decimals, getActiveClaimCondition } from "thirdweb/extensions/erc20";
 import { PageHeader } from "../_components/PageHeader";
 import { ContractHeaderUI } from "./_components/ContractHeader";
+import { TokenDropClaim } from "./_components/claim-tokens/claim-tokens-ui";
+import { ContractAnalyticsOverview } from "./_components/contract-analytics/contract-analytics";
 import { BuyTokenEmbed } from "./_components/PayEmbedSection";
 import { TokenStats } from "./_components/PriceChart";
 import { RecentTransfers } from "./_components/RecentTransfers";
-import { TokenDropClaim } from "./_components/claim-tokens/claim-tokens-ui";
-import { ContractAnalyticsOverview } from "./_components/contract-analytics/contract-analytics";
 import { getCurrencyMeta } from "./_utils/getCurrencyMeta";
 
 export async function ERC20PublicPage(props: {
@@ -30,21 +29,16 @@ export async function ERC20PublicPage(props: {
 
   const claimConditionCurrencyMeta = activeClaimCondition
     ? await getCurrencyMeta({
-        currencyAddress: activeClaimCondition.currency,
-        chainMetadata: props.chainMetadata,
         chain: props.serverContract.chain,
+        chainMetadata: props.chainMetadata,
         client: props.serverContract.client,
+        currencyAddress: activeClaimCondition.currency,
       }).catch(() => undefined)
     : undefined;
 
   const buyEmbed = (
     <BuyEmbed
-      clientContract={props.clientContract}
       chainMetadata={props.chainMetadata}
-      tokenDecimals={tokenDecimals}
-      tokenName={contractMetadata.name}
-      tokenSymbol={contractMetadata.symbol}
-      tokenAddress={props.clientContract.address}
       claimConditionMeta={
         activeClaimCondition && claimConditionCurrencyMeta
           ? {
@@ -53,6 +47,11 @@ export async function ERC20PublicPage(props: {
             }
           : undefined
       }
+      clientContract={props.clientContract}
+      tokenAddress={props.clientContract.address}
+      tokenDecimals={tokenDecimals}
+      tokenName={contractMetadata.name}
+      tokenSymbol={contractMetadata.symbol}
     />
   );
 
@@ -65,13 +64,13 @@ export async function ERC20PublicPage(props: {
           clientContract={props.clientContract}
           image={contractMetadata.image}
           name={contractMetadata.name}
-          symbol={contractMetadata.symbol}
           socialUrls={
             typeof contractMetadata.social_urls === "object" &&
             contractMetadata.social_urls !== null
               ? contractMetadata.social_urls
               : {}
           }
+          symbol={contractMetadata.symbol}
         />
 
         <div className="h-6" />
@@ -81,9 +80,9 @@ export async function ERC20PublicPage(props: {
             {activeClaimCondition ? (
               <div className="border-b border-dashed pb-6">
                 <ContractAnalyticsOverview
-                  contractAddress={props.clientContract.address}
                   chainId={props.chainMetadata.chainId}
                   chainSlug={props.chainMetadata.slug}
+                  contractAddress={props.clientContract.address}
                 />
               </div>
             ) : (
@@ -96,17 +95,17 @@ export async function ERC20PublicPage(props: {
             <div className="xl:hidden">{buyEmbed}</div>
 
             <RecentTransfers
-              clientContract={props.clientContract}
-              tokenSymbol={contractMetadata.symbol}
               chainMetadata={props.chainMetadata}
+              clientContract={props.clientContract}
               decimals={tokenDecimals}
+              tokenSymbol={contractMetadata.symbol}
             />
 
             {!activeClaimCondition && (
               <ContractAnalyticsOverview
-                contractAddress={props.clientContract.address}
                 chainId={props.chainMetadata.chainId}
                 chainSlug={props.chainMetadata.slug}
+                contractAddress={props.clientContract.address}
               />
             )}
           </div>
@@ -139,24 +138,24 @@ function BuyEmbed(props: {
   if (!props.claimConditionMeta) {
     return (
       <BuyTokenEmbed
-        client={props.clientContract.client}
         chain={props.clientContract.chain}
-        tokenSymbol={props.tokenSymbol}
-        tokenName={props.tokenName}
+        client={props.clientContract.client}
         tokenAddress={props.clientContract.address}
+        tokenName={props.tokenName}
+        tokenSymbol={props.tokenSymbol}
       />
     );
   }
 
   return (
     <TokenDropClaim
+      chainMetadata={props.chainMetadata}
+      claimCondition={props.claimConditionMeta.activeClaimCondition}
+      claimConditionCurrency={props.claimConditionMeta.claimConditionCurrency}
       contract={props.clientContract}
       decimals={props.tokenDecimals}
       name={props.tokenName}
       symbol={props.tokenSymbol}
-      chainMetadata={props.chainMetadata}
-      claimCondition={props.claimConditionMeta.activeClaimCondition}
-      claimConditionCurrency={props.claimConditionMeta.claimConditionCurrency}
     />
   );
 }

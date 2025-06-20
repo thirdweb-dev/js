@@ -7,9 +7,9 @@ const prefix =
 export function EditPage(props: { path: string }) {
   return (
     <Link
+      className="inline-flex items-center rounded-lg border text-sm duration-200 hover:border-active-border"
       href={prefix + props.path}
       target="_blank"
-      className="inline-flex items-center rounded-lg border text-sm duration-200 hover:border-active-border"
     >
       <div className="p-2.5">
         <GithubIcon className="size-5" />

@@ -1,31 +1,31 @@
 export const spacing = {
-  xxs: 2,
-  xs: 4,
+  "3xl": 64,
+  lg: 24,
+  md: 16,
   sm: 8,
   smd: 12,
-  md: 16,
-  lg: 24,
   xl: 32,
+  xs: 4,
   xxl: 48,
-  "3xl": 64,
+  xxs: 2,
 };
 
 export const radius = {
+  full: 9999,
+  lg: 12,
+  md: 8,
   none: 0,
   sm: 4,
-  md: 8,
-  lg: 12,
   xl: 24,
   xxl: 32,
-  full: 9999,
 };
 
 export const fontSize = {
-  xxs: 10,
-  xs: 12,
-  sm: 14,
-  md: 16,
   lg: 20,
+  md: 16,
+  sm: 14,
   xl: 24,
+  xs: 12,
   xxl: 32,
+  xxs: 10,
 };

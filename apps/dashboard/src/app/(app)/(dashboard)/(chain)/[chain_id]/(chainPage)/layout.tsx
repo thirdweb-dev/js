@@ -1,3 +1,8 @@
+import { getAuthToken } from "@app/api/lib/getAuthToken";
+import { ChevronDownIcon, TicketCheckIcon } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,11 +19,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "@app/api/lib/getAuthToken";
-import { ChevronDownIcon, TicketCheckIcon } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { redirect } from "next/navigation";
 import { mapV4ChainToV5Chain } from "../../../../../../contexts/map-chains";
 import { TeamHeader } from "../../../../team/components/TeamHeader/team-header";
 import { StarButton } from "../../components/client/star-button";
@@ -41,12 +41,12 @@ export async function generateMetadata(props: {
   }.`;
 
   return {
-    title,
     description,
     openGraph: {
-      title,
       description,
+      title,
     },
+    title,
   };
 }
 
@@ -119,10 +119,10 @@ export default async function ChainPageLayout(props: {
         <div className="flex w-full flex-col pb-10">
           {/* Icon + Background */}
           <ChainHeader
-            headerImageUrl={chainMetadata?.headerImgUrl}
-            logoUrl={chain.icon?.url}
             chain={chain}
             client={client}
+            headerImageUrl={chainMetadata?.headerImgUrl}
+            logoUrl={chain.icon?.url}
           />
 
           <div className="h-4 md:h-8" />
@@ -145,8 +145,8 @@ export default async function ChainPageLayout(props: {
               {authToken && (
                 <StarButton
                   chainId={chain.chainId}
-                  iconClassName="size-5"
                   className="p-1"
+                  iconClassName="size-5"
                 />
               )}
 
@@ -169,15 +169,15 @@ export default async function ChainPageLayout(props: {
             <div className="w-full sm:hidden">
               <div className="grid grid-cols-2 gap-2">
                 <AddChainToWallet
-                  client={client}
                   chain={
                     // Do not include chain overrides for chain pages
                     // eslint-disable-next-line no-restricted-syntax
                     mapV4ChainToV5Chain(chain)
                   }
+                  client={client}
                 />
-                <Button variant="primary" asChild>
-                  <Link href="/team" target="_blank" rel="noopener noreferrer">
+                <Button asChild variant="primary">
+                  <Link href="/team" rel="noopener noreferrer" target="_blank">
                     Get started
                   </Link>
                 </Button>

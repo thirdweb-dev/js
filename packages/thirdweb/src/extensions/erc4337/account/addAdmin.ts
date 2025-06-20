@@ -42,18 +42,18 @@ export type AddAdminOptions = {
 export function addAdmin(options: BaseTransactionOptions<AddAdminOptions>) {
   const { contract, account, adminAddress } = options;
   return setPermissionsForSigner({
-    contract,
     async asyncParams() {
       const { req, signature } = await signPermissionRequest({
         account,
         contract,
         req: await defaultPermissionsForAdmin({
-          target: adminAddress,
           action: "add-admin",
+          target: adminAddress,
         }),
       });
-      return { signature, req };
+      return { req, signature };
     },
+    contract,
   });
 }
 

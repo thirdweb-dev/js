@@ -30,14 +30,14 @@ export function useDashboardRouter() {
   return useMemo(() => {
     return {
       ...router,
-      replace(href: string, options?: { scroll?: boolean }) {
-        startTransition(() => {
-          router.replace(href, options);
-        });
-      },
       push(href: string, options?: { scroll?: boolean }) {
         startTransition(() => {
           router.push(href, options);
+        });
+      },
+      replace(href: string, options?: { scroll?: boolean }) {
+        startTransition(() => {
+          router.replace(href, options);
         });
       },
     };
@@ -109,10 +109,10 @@ export function DashboardRouterTopProgressBar() {
       className="fixed top-0 block h-[3px] bg-foreground"
       style={{
         opacity: isRouteLoading ? "1" : "0",
-        width: `${width}%`,
-        transition: width === 0 ? "none" : "width 0.2s ease, opacity 0.3s ease",
-        zIndex: "100000000",
         pointerEvents: "none",
+        transition: width === 0 ? "none" : "width 0.2s ease, opacity 0.3s ease",
+        width: `${width}%`,
+        zIndex: "100000000",
       }}
     />
   );

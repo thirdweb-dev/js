@@ -14,17 +14,17 @@ export const PhaseNameInput: React.FC = () => {
   return (
     <CustomFormControl
       disabled={formDisabled}
-      label="Name"
       helperText="This does not affect how your claim phase functions and is for organizational purposes only."
+      label="Name"
     >
       <Input
         disabled={formDisabled}
-        type="text"
-        value={inputValue}
-        placeholder={inputPlaceholder}
         onChange={(e) => {
           form.setValue(`phases.${phaseIndex}.metadata.name`, e.target.value);
         }}
+        placeholder={inputPlaceholder}
+        type="text"
+        value={inputValue}
       />
     </CustomFormControl>
   );

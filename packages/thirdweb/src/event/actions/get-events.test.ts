@@ -25,8 +25,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
     const BLOCK_HASH =
       "0xb0ad5ee7b4912b50e5a2d7993796944653a4c0632c57740fe4a7a1c61e426324";
     const events = await getContractEvents({
-      contract: USDT_CONTRACT,
       blockHash: BLOCK_HASH,
+      contract: USDT_CONTRACT,
     });
 
     expect(events.length).toBe(14);
@@ -34,8 +34,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
 
   it("should get events for blockRange", async () => {
     const events = await getContractEvents({
-      contract: USDT_CONTRACT,
       blockRange: 10n,
+      contract: USDT_CONTRACT,
       useIndexer: false,
     });
     expect(events.length).toBe(241);
@@ -51,17 +51,17 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
 
   it("should get events for blockRange using fromBlock and toBlock", async () => {
     const eventsFromBlock = await getContractEvents({
+      blockRange: 20n,
       contract: USDT_CONTRACT,
       fromBlock: FORK_BLOCK_NUMBER - 49n,
-      blockRange: 20n,
       useIndexer: false,
     });
     expect(eventsFromBlock.length).toBe(412);
 
     const eventsToBlock = await getContractEvents({
+      blockRange: 20n,
       contract: USDT_CONTRACT,
       toBlock: FORK_BLOCK_NUMBER - 30n,
-      blockRange: 20n,
       useIndexer: false,
     });
     expect(eventsToBlock.length).toBe(eventsFromBlock.length);
@@ -78,13 +78,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
   it("should get individual events with signature", async () => {
     const events = await getContractEvents({
       contract: USDT_CONTRACT,
-      fromBlock: FORK_BLOCK_NUMBER - 100n,
-      useIndexer: false,
       events: [
         prepareEvent({
           signature: "event Burn(address indexed burner, uint256 amount)",
         }),
       ],
+      fromBlock: FORK_BLOCK_NUMBER - 100n,
+      useIndexer: false,
     });
     expect(events.length).toMatchInlineSnapshot("0");
   });
@@ -92,9 +92,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
   it("should get specified events", async () => {
     const events = await getContractEvents({
       contract: USDT_CONTRACT,
-      fromBlock: FORK_BLOCK_NUMBER - 10n,
-      toBlock: FORK_BLOCK_NUMBER,
-      useIndexer: false,
       events: [
         prepareEvent({
           signature: "event Burn(address indexed burner, uint256 amount)",
@@ -127,6 +124,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
           },
         }),
       ],
+      fromBlock: FORK_BLOCK_NUMBER - 10n,
+      toBlock: FORK_BLOCK_NUMBER,
+      useIndexer: false,
     });
     expect(events.length).toMatchInlineSnapshot("9");
   });
@@ -134,10 +134,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
   it("should get individual events with extension", async () => {
     const events = await getContractEvents({
       contract: DOODLES_CONTRACT,
+      events: [transferEvent()],
       fromBlock: FORK_BLOCK_NUMBER - 1000n,
       toBlock: FORK_BLOCK_NUMBER,
       useIndexer: false,
-      events: [transferEvent()],
     });
     expect(events.length).toBe(38);
   });
@@ -145,14 +145,14 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
   it("should get individual events with filters", async () => {
     const events = await getContractEvents({
       contract: DOODLES_CONTRACT,
-      fromBlock: FORK_BLOCK_NUMBER - 1000n,
-      toBlock: FORK_BLOCK_NUMBER,
-      useIndexer: false,
       events: [
         transferEvent({
           from: "0xB81965DdFdDA3923f292a47A1be83ba3A36B5133",
         }),
       ],
+      fromBlock: FORK_BLOCK_NUMBER - 1000n,
+      toBlock: FORK_BLOCK_NUMBER,
+      useIndexer: false,
     });
     expect(events.length).toBe(2);
   });
@@ -163,8 +163,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
     const BLOCK_HASH =
       "0xb0ad5ee7b4912b50e5a2d7993796944653a4c0632c57740fe4a7a1c61e426324";
     const events = await getContractEvents({
-      contract: USDT_CONTRACT,
       blockHash: BLOCK_HASH,
+      contract: USDT_CONTRACT,
       useIndexer: true,
     });
 
@@ -174,9 +174,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
   it("should get individual events with extension no filter using indexer", async () => {
     const events = await getContractEvents({
       contract: DOODLES_CONTRACT,
+      events: [transferEvent()],
       fromBlock: FORK_BLOCK_NUMBER - 1000n,
       toBlock: FORK_BLOCK_NUMBER,
-      events: [transferEvent()],
       useIndexer: true,
     });
     expect(events.length).toBe(38);
@@ -185,13 +185,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
   it("should get events for signature using indexer", async () => {
     const events = await getContractEvents({
       contract: DOODLES_CONTRACT,
-      fromBlock: FORK_BLOCK_NUMBER - 1000n,
-      toBlock: FORK_BLOCK_NUMBER,
       events: [
         transferEvent({
           from: "0xB81965DdFdDA3923f292a47A1be83ba3A36B5133",
         }),
       ],
+      fromBlock: FORK_BLOCK_NUMBER - 1000n,
+      toBlock: FORK_BLOCK_NUMBER,
       useIndexer: true,
     });
 
@@ -201,9 +201,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
   it("should get specified events using indexer", async () => {
     const events = await getContractEvents({
       contract: USDT_CONTRACT,
-      fromBlock: FORK_BLOCK_NUMBER - 10n,
-      toBlock: FORK_BLOCK_NUMBER,
-      useIndexer: true,
       events: [
         prepareEvent({
           signature: "event Burn(address indexed burner, uint256 amount)",
@@ -236,6 +233,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
           },
         }),
       ],
+      fromBlock: FORK_BLOCK_NUMBER - 10n,
+      toBlock: FORK_BLOCK_NUMBER,
+      useIndexer: true,
     });
     expect(events.length).toMatchInlineSnapshot("9");
   });

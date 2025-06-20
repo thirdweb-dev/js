@@ -11,23 +11,23 @@ export const PhaseStartTimeInput: React.FC = () => {
     useClaimConditionsFormContext();
   return (
     <CustomFormControl
-      label="When will this phase start?"
-      helperText="This time is in your local timezone."
       disabled={formDisabled}
       error={
         form.getFieldState(`phases.${phaseIndex}.startTime`, form.formState)
           .error
       }
+      helperText="This time is in your local timezone."
+      label="When will this phase start?"
     >
       <Input
-        type="datetime-local"
-        value={toDateTimeLocal(field.startTime)}
         onChange={(e) =>
           form.setValue(
             `phases.${phaseIndex}.startTime`,
             new Date(e.target.value),
           )
         }
+        type="datetime-local"
+        value={toDateTimeLocal(field.startTime)}
       />
     </CustomFormControl>
   );

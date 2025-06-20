@@ -50,24 +50,24 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         },
       });
       const account = await wallet.connect({
+        chain,
         client: TEST_CLIENT,
         strategy: "guest",
-        chain,
       });
       expect(account.address).toBeDefined();
       const tx = await sendAndConfirmTransaction({
+        account,
         transaction: prepareTransaction({
           chain,
           client: TEST_CLIENT,
           to: account.address,
           value: 0n,
         }),
-        account,
       });
       expect(tx.transactionHash).toBeDefined();
       const logs = parseEventLogs({
-        logs: tx.logs,
         events: [executedEvent()],
+        logs: tx.logs,
       });
       const executedLog = logs[0];
       if (!executedLog) {
@@ -89,24 +89,24 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         },
       });
       const account = await wallet.connect({
+        chain,
         client: TEST_CLIENT,
         strategy: "guest",
-        chain,
       });
       expect(account.address).toBeDefined();
       const tx = await sendAndConfirmTransaction({
+        account,
         transaction: prepareTransaction({
           chain,
           client: TEST_CLIENT,
           to: account.address,
           value: 0n,
         }),
-        account,
       });
       expect(tx.transactionHash).toBeDefined();
       const logs = parseEventLogs({
-        logs: tx.logs,
         events: [userOperationEventEvent()],
+        logs: tx.logs,
       });
       const executedLog = logs[0];
       if (!executedLog) {
@@ -125,19 +125,19 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         },
       });
       const account = await iaw.connect({
+        chain,
         client: TEST_CLIENT,
         strategy: "guest",
-        chain,
       });
       const tx1 = prepareTransaction({
-        client: TEST_CLIENT,
         chain,
+        client: TEST_CLIENT,
         to: (await generateAccount({ client: TEST_CLIENT })).address,
         value: 0n,
       });
       const tx2 = prepareTransaction({
-        client: TEST_CLIENT,
         chain,
+        client: TEST_CLIENT,
         to: (await generateAccount({ client: TEST_CLIENT })).address,
         value: 0n,
       });

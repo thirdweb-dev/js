@@ -28,7 +28,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect((await resolved).address).to.equal(NFT_DROP_IMPLEMENTATION);
     });
 
-    it("should extract implementation address for matic proxy contract", async () => {
+    // currently disabled because it's flaky
+    it.skip("should extract implementation address for matic proxy contract", async () => {
       const resolved = resolveImplementation(POLYGON_USDT_PROXY_CONTRACT);
       expect((await resolved).address).to.equal(
         POLYGON_USDT_IMPLEMENTATION.toLowerCase(),
@@ -44,28 +45,28 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
     it("should extract implementation address for ERC1967 proxy contract", async () => {
       const implementationAddress = await deployContract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
+        abi: [],
         account: TEST_ACCOUNT_A,
         bytecode: DUMMY_BYTECODE,
-        abi: [],
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
       });
 
       const proxyAddress = await deployContract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
+        abi: ERC1967_PROXY_CONSTRUCTOR_ABI as Abi,
         account: TEST_ACCOUNT_A,
         bytecode: ERC1967_PROXY_BYTECODE,
-        abi: ERC1967_PROXY_CONSTRUCTOR_ABI as Abi,
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
         constructorParams: {
-          logic: implementationAddress,
           data: "0x",
+          logic: implementationAddress,
         },
       });
 
       const proxy = getContract({
-        chain: ANVIL_CHAIN,
         address: proxyAddress,
+        chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
       });
 

@@ -1,9 +1,8 @@
-import { randomLorem } from "@/storybook/stubs";
 import type { Meta, StoryObj } from "@storybook/nextjs";
+import { randomLorem } from "@/storybook/stubs";
 import { Reasoning } from "./Reasoning";
 
 const meta = {
-  title: "Nebula/Reasoning",
   component: Story,
   decorators: [
     (Story) => (
@@ -12,6 +11,7 @@ const meta = {
       </div>
     ),
   ],
+  title: "Nebula/Reasoning",
 } satisfies Meta<typeof Story>;
 
 export default meta;

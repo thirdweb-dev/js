@@ -1,8 +1,8 @@
-import { getProject } from "@/api/projects";
 import type { Range } from "components/analytics/date-range-selector";
 import { InAppWalletAnalytics } from "components/embedded-wallets/Analytics";
 import { InAppWalletsSummary } from "components/embedded-wallets/Analytics/Summary";
 import { redirect } from "next/navigation";
+import { getProject } from "@/api/projects";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -21,9 +21,9 @@ export default async function Page(props: {
   const range =
     searchParams.from && searchParams.to
       ? {
-          type: searchParams.type ?? "last-120",
           from: new Date(searchParams.from),
           to: new Date(searchParams.to),
+          type: searchParams.type ?? "last-120",
         }
       : undefined;
 
@@ -41,13 +41,13 @@ export default async function Page(props: {
 
   return (
     <div>
-      <InAppWalletsSummary teamId={project.teamId} projectId={project.id} />
+      <InAppWalletsSummary projectId={project.id} teamId={project.teamId} />
       <div className="h-10" />
       <InAppWalletAnalytics
-        teamId={project.teamId}
-        projectId={project.id}
         interval={interval}
+        projectId={project.id}
         range={range as Range}
+        teamId={project.teamId}
       />
     </div>
   );

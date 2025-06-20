@@ -46,11 +46,11 @@ export const alchemySupportedChainIdsMap: Record<number, string> = {
 
 // List: https://docs.moralis.io/supported-chains
 const moralisSupportedChainIdsMap: Record<number, string> = {
-  [ethereum.id]: "",
-  [sepolia.id]: "",
-  [polygon.id]: "",
-  [polygonMumbai.id]: "",
-  [bsc.id]: "",
+  [moonbeam.id]: "",
+  // Flow testnet
+  545: "",
+  // Flow
+  747: "",
   [bscTestnet.id]: "",
   [avalanche.id]: "",
   [fantom.id]: "",
@@ -63,47 +63,47 @@ const moralisSupportedChainIdsMap: Record<number, string> = {
   [polygonAmoy.id]: "",
   [optimism.id]: "",
   [linea.id]: "",
-  // Chiliz
-  [88888]: "",
-  // Chiliz testnet
-  [88882]: "",
-  // Holesky
-  [17000]: "",
+  [sepolia.id]: "",
+  // opBNB
+  204: "",
   // Pulse chain
-  [369]: "",
-  [moonbeam.id]: "",
-  // Moonriver
-  [1285]: "",
-  // Moonbase Alpha
-  [1287]: "",
+  369: "",
   [blast.id]: "",
   [blastSepolia.id]: "",
   [zkSync.id]: "",
   [zkSyncSepolia.id]: "",
-  // Mantle
-  [5000]: "",
-  // Mantle Sepolia
-  [5003]: "",
-  // opBNB
-  [204]: "",
+  [polygonMumbai.id]: "",
   [polygonZkEvm.id]: "",
   [polygonZkEvmTestnet.id]: "",
-  // Zeta chain
-  [7000]: "",
-  // Zeta chain testnet
-  [7001]: "",
-  // Flow
-  [747]: "",
-  // Flow testnet
-  [545]: "",
-  // Ronin
-  [2020]: "",
-  // Ronin Saigon testnet
-  [2021]: "",
+  [ethereum.id]: "",
+  [bsc.id]: "",
   // Lisk
-  [1135]: "",
+  1135: "",
+  [polygon.id]: "",
+  // Moonriver
+  1285: "",
+  // Moonbase Alpha
+  1287: "",
+  // Ronin
+  2020: "",
+  // Ronin Saigon testnet
+  2021: "",
   // Lisk Sepolia testnet
-  [4202]: "",
+  4202: "",
+  // Mantle
+  5000: "",
+  // Mantle Sepolia
+  5003: "",
+  // Zeta chain
+  7000: "",
+  // Zeta chain testnet
+  7001: "",
+  // Holesky
+  17000: "",
+  // Chiliz testnet
+  88882: "",
+  // Chiliz
+  88888: "",
 };
 
 export type AlchemySupportedChainId = keyof typeof alchemySupportedChainIdsMap;

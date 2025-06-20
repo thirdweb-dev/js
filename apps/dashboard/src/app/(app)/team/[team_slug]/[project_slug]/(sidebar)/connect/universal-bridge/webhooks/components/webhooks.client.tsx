@@ -1,14 +1,23 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { formatDistanceToNow } from "date-fns";
+import { PlusIcon, TrashIcon } from "lucide-react";
+import { type PropsWithChildren, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { randomPrivateKey } from "thirdweb/wallets";
+import { shortenString } from "utils/usedapp-external";
+import { z } from "zod";
 import {
   createWebhook,
   deleteWebhook,
   getWebhooks,
 } from "@/api/universal-bridge/developer";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import {
   Dialog,
@@ -29,6 +38,7 @@ import {
   RequiredFormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Select,
   SelectContent,
@@ -45,16 +55,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { formatDistanceToNow } from "date-fns";
-import { PlusIcon, TrashIcon } from "lucide-react";
-import { type PropsWithChildren, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { randomPrivateKey } from "thirdweb/wallets";
-import { shortenString } from "utils/usedapp-external";
-import { z } from "zod";
 
 type PayWebhooksPageProps = {
   clientId: string;
@@ -63,13 +63,13 @@ type PayWebhooksPageProps = {
 
 export function PayWebhooksPage(props: PayWebhooksPageProps) {
   const webhooksQuery = useQuery({
-    queryKey: ["webhooks", props.clientId, props.teamId],
     queryFn: async () => {
       return await getWebhooks({
         clientId: props.clientId,
         teamId: props.teamId,
       });
     },
+    queryKey: ["webhooks", props.clientId, props.teamId],
   });
 
   if (webhooksQuery.isPending) {
@@ -81,7 +81,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
       <div className="flex flex-col items-center gap-8 rounded-lg border border-border p-8 text-center">
         <h2 className="font-semibold text-xl">No webhooks configured yet.</h2>
         <CreateWebhookButton clientId={props.clientId} teamId={props.teamId}>
-          <Button variant="primary" className="gap-1">
+          <Button className="gap-1" variant="primary">
             <PlusIcon className="size-4" />
             <span>Create Webhook</span>
           </Button>
@@ -95,7 +95,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
       <div className="flex items-center justify-between">
         <h2 className="font-semibold text-xl tracking-tight">Webhooks</h2>
         <CreateWebhookButton clientId={props.clientId} teamId={props.teamId}>
-          <Button size="sm" variant="default" className="gap-1">
+          <Button className="gap-1" size="sm" variant="default">
             <PlusIcon className="size-4" />
             <span>Create Webhook</span>
           </Button>
@@ -132,7 +132,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
                     teamId={props.teamId}
                     webhookId={webhook.id}
                   >
-                    <Button variant="ghost" size="icon">
+                    <Button size="icon" variant="ghost">
                       <TrashIcon className="size-5" strokeWidth={1} />
                     </Button>
                   </DeleteWebhookButton>
@@ -147,10 +147,10 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
 }
 
 const formSchema = z.object({
-  url: z.string().url("Please enter a valid URL."),
   label: z.string().min(3, "Label must be at least 3 characters long"),
-  version: z.string(),
   secret: z.string().optional(),
+  url: z.string().url("Please enter a valid URL."),
+  version: z.string(),
 });
 
 function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
@@ -162,23 +162,23 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
   }, [open]);
 
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
     defaultValues: {
-      url: "",
       label: "",
+      url: "",
       version: "2",
     },
+    resolver: zodResolver(formSchema),
   });
   const queryClient = useQueryClient();
   const createMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
       await createWebhook({
         clientId: props.clientId,
+        label: values.label,
+        secret,
         teamId: props.teamId,
         url: values.url,
-        label: values.label,
         version: Number(values.version),
-        secret,
       });
       return null;
     },
@@ -189,11 +189,12 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
     },
   });
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>{props.children}</DialogTrigger>
       <DialogContent>
         <Form {...form}>
           <form
+            className="flex flex-col gap-4"
             onSubmit={form.handleSubmit((values) =>
               createMutation.mutateAsync(values, {
                 onError: (err) => {
@@ -214,7 +215,6 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
                 },
               }),
             )}
-            className="flex flex-col gap-4"
           >
             <DialogHeader>
               <DialogTitle>Create Webhook</DialogTitle>
@@ -278,10 +278,10 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
               <FormLabel>Webhook Secret</FormLabel>
 
               <CopyTextButton
-                textToCopy={secret}
                 className="!h-auto my-1 w-full justify-between truncate bg-card px-3 py-3 font-mono"
-                textToShow={shortenString(secret)}
                 copyIconPosition="right"
+                textToCopy={secret}
+                textToShow={shortenString(secret)}
                 tooltip="Copy Webhook Secret"
               />
               <FormDescription>
@@ -301,9 +301,9 @@ function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
 
             <DialogFooter>
               <Button
-                type="submit"
-                disabled={createMutation.isPending || !secretStored}
                 className="gap-2"
+                disabled={createMutation.isPending || !secretStored}
+                type="submit"
               >
                 Create Webhook
                 {createMutation.isPending && <Spinner className="size-4" />}
@@ -337,7 +337,7 @@ function DeleteWebhookButton(
     },
   });
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>{props.children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -351,7 +351,7 @@ function DeleteWebhookButton(
         <DialogFooter>
           <Button
             className="gap-2"
-            variant="destructive"
+            disabled={deleteMutation.isPending}
             onClick={() => {
               deleteMutation.mutateAsync(props.webhookId, {
                 onError(err) {
@@ -368,7 +368,7 @@ function DeleteWebhookButton(
                 },
               });
             }}
-            disabled={deleteMutation.isPending}
+            variant="destructive"
           >
             Delete Webhook
             {deleteMutation.isPending && <Spinner className="size-4" />}

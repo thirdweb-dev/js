@@ -1,4 +1,8 @@
 "use client";
+import { CheckIcon, CopyIcon, XIcon } from "lucide-react";
+import { useMemo } from "react";
+import { isAddress, type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
+import { Blobbie, type SocialProfile, useSocialProfiles } from "thirdweb/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   HoverCard,
@@ -7,11 +11,6 @@ import {
 } from "@/components/ui/hover-card";
 import { useClipboard } from "@/hooks/use-clipboard";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { CheckIcon, CopyIcon, XIcon } from "lucide-react";
-import { useMemo } from "react";
-import { type ThirdwebClient, isAddress } from "thirdweb";
-import { ZERO_ADDRESS } from "thirdweb";
-import { Blobbie, type SocialProfile, useSocialProfiles } from "thirdweb/react";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -47,7 +46,7 @@ export function WalletAddress(props: {
 
   if (!isAddress(address)) {
     return (
-      <ToolTipLabel label={address} hoverable>
+      <ToolTipLabel hoverable label={address}>
         <span className="flex items-center gap-2 underline-offset-4 hover:underline">
           <div className="flex size-6 items-center justify-center rounded-full border bg-background">
             <XIcon className="size-4 text-muted-foreground" />
@@ -70,19 +69,19 @@ export function WalletAddress(props: {
         tabIndex={props.preventOpenOnFocus ? -1 : undefined}
       >
         <Button
-          onClick={(e) => e.stopPropagation()}
-          variant="link"
           className={cn(
             "flex flex-row items-center gap-2 px-0",
             props.className,
           )}
+          onClick={(e) => e.stopPropagation()}
+          variant="link"
         >
           {address && (
             <WalletAvatar
               address={address}
+              iconClassName={props.iconClassName}
               profiles={profiles.data || []}
               thirdwebClient={props.client}
-              iconClassName={props.iconClassName}
             />
           )}
           <span className="cursor-pointer font-mono">
@@ -101,10 +100,10 @@ export function WalletAddress(props: {
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-lg">Wallet Address</h3>
             <Button
-              variant="outline"
-              size="sm"
-              onClick={onCopy}
               className="flex items-center gap-2"
+              onClick={onCopy}
+              size="sm"
+              variant="outline"
             >
               {hasCopied ? (
                 <CheckIcon className="h-4 w-4" />
@@ -137,9 +136,9 @@ export function WalletAddress(props: {
                   {walletAvatarLink && (
                     <Avatar>
                       <AvatarImage
-                        src={walletAvatarLink}
                         alt={profile.name}
                         className="object-cover"
+                        src={walletAvatarLink}
                       />
                       {profile.name && (
                         <AvatarFallback>
@@ -197,14 +196,14 @@ function WalletAvatar(props: {
     >
       {resolvedAvatarSrc ? (
         <Img
-          src={resolvedAvatarSrc}
           className={cn("size-6 object-cover", props.iconClassName)}
+          src={resolvedAvatarSrc}
         />
       ) : (
         <Blobbie
           address={props.address}
-          size={24}
           className={props.iconClassName}
+          size={24}
         />
       )}
     </div>

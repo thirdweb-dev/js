@@ -38,14 +38,14 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
         personalAccount,
       });
       const tx = prepareTransaction({
-        client,
         chain,
+        client,
         to: smartAccount.address,
         value: 0n,
       });
       const receipt = await sendTransaction({
-        transaction: tx,
         account: smartAccount,
+        transaction: tx,
       });
       expect(receipt.transactionHash).toBeDefined();
     });
@@ -70,14 +70,14 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
         personalAccount,
       });
       const tx = prepareTransaction({
-        client,
         chain,
+        client,
         to: smartAccount.address,
         value: 0n,
       });
       const receipt = await sendTransaction({
-        transaction: tx,
         account: smartAccount,
+        transaction: tx,
       });
       expect(receipt.transactionHash).toBeDefined();
     });
@@ -102,14 +102,14 @@ describe.runIf(process.env.TW_SECRET_KEY).skip.sequential(
         personalAccount,
       });
       const tx = prepareTransaction({
-        client,
         chain,
+        client,
         to: smartAccount.address,
         value: 0n,
       });
       const receipt = await sendTransaction({
-        transaction: tx,
         account: smartAccount,
+        transaction: tx,
       });
       expect(receipt.transactionHash).toBeDefined();
     });

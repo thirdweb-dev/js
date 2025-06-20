@@ -1,9 +1,9 @@
-import { Checkbox } from "@/components/ui/checkbox";
-import { Switch } from "@/components/ui/switch";
-import { cn } from "@/lib/utils";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import type { InAppWalletAuth } from "thirdweb/wallets";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
 import type { ConnectPlaygroundOptions } from "./types";
 
 const allInAppWalletLoginMethods: InAppWalletAuth[] = [
@@ -37,9 +37,9 @@ export function InAppWalletFormGroup(props: {
     <div className="rounded-xl border bg-card">
       <div className="flex items-center justify-between gap-2 p-4">
         <Link
-          target="_blank"
           className="group flex items-center gap-2"
           href="https://portal.thirdweb.com/connect/in-app-wallet/overview?utm_source=playground"
+          target="_blank"
         >
           <h2 className="font-semibold tracking-tight">In-App Wallet</h2>
           <ExternalLinkIcon className="mt-[-2px] size-4 text-muted-foreground group-hover:text-foreground" />
@@ -65,12 +65,12 @@ export function InAppWalletFormGroup(props: {
                   "flex cursor-pointer items-center gap-2 rounded-lg py-1.5",
                   !enabled && "opacity-50",
                 )}
-                key={method}
                 htmlFor={`in-app-wallet-${method}`}
+                key={method}
               >
                 <Checkbox
-                  id={`in-app-wallet-${method}`}
                   checked={enabled}
+                  id={`in-app-wallet-${method}`}
                   onCheckedChange={(checked) => {
                     setConnectOptions((v) => {
                       const newInAppWallet = { ...v.inAppWallet };

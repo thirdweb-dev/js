@@ -1,23 +1,5 @@
 "use client";
 
-import { ChainIconClient } from "@/components/blocks/ChainIcon";
-import { Img } from "@/components/blocks/Img";
-import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
-import { DynamicHeight } from "@/components/ui/DynamicHeight";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ImageUploadButton } from "@/components/ui/image-upload-button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Skeleton } from "@/components/ui/skeleton";
-import { AutoResizeTextarea } from "@/components/ui/textarea";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useAllChainsData } from "@/hooks/chains";
-import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import {
   ArrowUpIcon,
@@ -36,13 +18,31 @@ import {
   AccountBlobbie,
   AccountName,
   AccountProvider,
+  useActiveWallet,
   WalletIcon,
   WalletName,
   WalletProvider,
-  useActiveWallet,
 } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
 import type { Wallet } from "thirdweb/wallets";
+import { ChainIconClient } from "@/components/blocks/ChainIcon";
+import { Img } from "@/components/blocks/Img";
+import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
+import { ImageUploadButton } from "@/components/ui/image-upload-button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AutoResizeTextarea } from "@/components/ui/textarea";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useAllChainsData } from "@/hooks/chains";
+import { cn } from "@/lib/utils";
 import type { NebulaContext } from "../api/chat";
 import type { NebulaUserMessage } from "../api/types";
 
@@ -86,16 +86,16 @@ export function ChatBar(props: {
 
   function handleSubmit(message: string) {
     const userMessage: NebulaUserMessage = {
+      content: [{ text: message, type: "text" }],
       role: "user",
-      content: [{ type: "text", text: message }],
     };
     if (images.length > 0) {
       for (const image of images) {
         if (image.b64) {
           userMessage.content.push({
-            type: "image",
             b64: image.b64,
             image_url: null,
+            type: "image",
           });
         }
       }
@@ -151,7 +151,7 @@ export function ChatBar(props: {
       const urls = await Promise.all(
         validFiles.map(async (image) => {
           const b64 = await uploadImageMutation.mutateAsync(image);
-          return { file: image, b64: b64 };
+          return { b64: b64, file: image };
         }),
       );
 
@@ -166,29 +166,13 @@ export function ChatBar(props: {
 
   return (
     <DynamicHeight transition="height 200ms ease">
+      {/** biome-ignore lint/a11y/noStaticElementInteractions: TODO */}
       <div
         className={cn(
           "overflow-hidden rounded-2xl border border-border bg-card transition-colors",
           isDragOver && "border-nebula-pink-foreground bg-nebula-pink/5",
           props.className,
         )}
-        onDrop={(e) => {
-          setIsDragOver(false);
-          e.preventDefault();
-          if (!props.allowImageUpload) {
-            showSigninToUploadImagesToast();
-            return;
-          }
-          const files = Array.from(e.dataTransfer.files);
-          if (files.length > 0) handleImageUpload(files);
-        }}
-        onDragOver={(e) => {
-          e.preventDefault();
-          setIsDragOver(true);
-          if (!props.allowImageUpload) {
-            return;
-          }
-        }}
         onDragEnter={(e) => {
           e.preventDefault();
           setIsDragOver(true);
@@ -206,6 +190,23 @@ export function ChatBar(props: {
             setIsDragOver(false);
           }
         }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragOver(true);
+          if (!props.allowImageUpload) {
+            return;
+          }
+        }}
+        onDrop={(e) => {
+          setIsDragOver(false);
+          e.preventDefault();
+          if (!props.allowImageUpload) {
+            showSigninToUploadImagesToast();
+            return;
+          }
+          const files = Array.from(e.dataTransfer.files);
+          if (files.length > 0) handleImageUpload(files);
+        }}
       >
         {images.length > 0 && (
           <ImagePreview
@@ -220,9 +221,19 @@ export function ChatBar(props: {
         <div className="p-2">
           <div className="max-h-[200px] overflow-y-auto">
             <AutoResizeTextarea
-              placeholder={props.placeholder}
-              value={message}
+              className="min-h-[60px] resize-none border-none bg-transparent pt-2 leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
+              disabled={props.isChatStreaming}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => {
+                // ignore if shift key is pressed to allow entering new lines
+                if (e.shiftKey) {
+                  return;
+                }
+                if (e.key === "Enter" && !props.isChatStreaming) {
+                  e.preventDefault();
+                  handleSubmit(message);
+                }
+              }}
               onPaste={(e) => {
                 const files = Array.from(e.clipboardData.files);
                 if (files.length > 0) {
@@ -234,18 +245,8 @@ export function ChatBar(props: {
                   handleImageUpload(files);
                 }
               }}
-              onKeyDown={(e) => {
-                // ignore if shift key is pressed to allow entering new lines
-                if (e.shiftKey) {
-                  return;
-                }
-                if (e.key === "Enter" && !props.isChatStreaming) {
-                  e.preventDefault();
-                  handleSubmit(message);
-                }
-              }}
-              className="min-h-[60px] resize-none border-none bg-transparent pt-2 leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
-              disabled={props.isChatStreaming}
+              placeholder={props.placeholder}
+              value={message}
             />
           </div>
 
@@ -258,25 +259,25 @@ export function ChatBar(props: {
                     !props.isConnectingWallet && (
                       <WalletSelector
                         client={props.client}
-                        wallets={props.connectedWallets}
-                        selectedAddress={
-                          props.context?.walletAddress || undefined
-                        }
                         onClick={(walletMeta) => {
                           props.setActiveWallet(walletMeta);
                           props.setContext({
-                            walletAddress: walletMeta.address,
                             chainIds: props.context?.chainIds || [],
                             networks: props.context?.networks || null,
+                            walletAddress: walletMeta.address,
                           });
                         }}
+                        selectedAddress={
+                          props.context?.walletAddress || undefined
+                        }
+                        wallets={props.connectedWallets}
                       />
                     )}
 
                   {props.isConnectingWallet && (
                     <Badge
-                      variant="outline"
                       className="h-auto w-auto shrink-0 gap-1.5 px-2 py-1.5"
+                      variant="outline"
                     >
                       <Spinner className="size-3" />
                       <span>Connecting Wallet</span>
@@ -284,31 +285,25 @@ export function ChatBar(props: {
                   )}
 
                   <MultiNetworkSelector
-                    client={props.client}
-                    hideTestnets
-                    disableChainId
-                    selectedChainIds={selectedChainIds}
-                    popoverContentClassName="!w-[calc(100vw-80px)] lg:!w-[320px]"
                     align="start"
-                    side="top"
-                    showSelectedValuesInModal={true}
+                    client={props.client}
                     customTrigger={
                       <Button
-                        variant="ghost"
                         className="h-auto w-full p-0 hover:bg-transparent "
+                        variant="ghost"
                       >
                         {selectedChainIds.length > 0 && firstChainId && (
                           <ChainBadge
                             chainId={firstChainId}
-                            plusMore={selectedChainIds.length - 1}
                             client={props.client}
+                            plusMore={selectedChainIds.length - 1}
                           />
                         )}
 
                         {selectedChainIds.length === 0 && (
                           <Badge
-                            variant="outline"
                             className="flex h-auto gap-1 px-2 py-1.5 hover:bg-accent"
+                            variant="outline"
                           >
                             Select Chains
                             <ChevronDownIcon className="size-3 text-muted-foreground" />
@@ -316,13 +311,16 @@ export function ChatBar(props: {
                         )}
                       </Button>
                     }
+                    disableChainId
+                    hideTestnets
                     onChange={(values) => {
                       props.setContext({
-                        walletAddress: props.context?.walletAddress || null,
                         chainIds: values.map((x) => x.toString()),
                         networks: props.context?.networks || null,
+                        walletAddress: props.context?.walletAddress || null,
                       });
                     }}
+                    popoverContentClassName="!w-[calc(100vw-80px)] lg:!w-[320px]"
                     priorityChains={[
                       1, // ethereum
                       56, // bnb smart chain mainnet (bsc)
@@ -334,6 +332,9 @@ export function ChatBar(props: {
                       80094, // berachain mainnet
                       10, // optimism
                     ]}
+                    selectedChainIds={selectedChainIds}
+                    showSelectedValuesInModal={true}
+                    side="top"
                   />
                 </div>
               )}
@@ -343,14 +344,14 @@ export function ChatBar(props: {
             <div className="flex items-center gap-2">
               {props.allowImageUpload ? (
                 <ImageUploadButton
-                  multiple
-                  value={undefined}
                   accept={supportedFileTypes.join(",")}
+                  className="!h-auto w-auto shrink-0 gap-2 p-2"
+                  multiple
                   onChange={(files) => {
                     handleImageUpload(files);
                   }}
+                  value={undefined}
                   variant="ghost"
-                  className="!h-auto w-auto shrink-0 gap-2 p-2"
                 >
                   <ToolTipLabel label="Attach Image">
                     <PaperclipIcon className="size-4" />
@@ -360,8 +361,8 @@ export function ChatBar(props: {
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
-                      variant="ghost"
                       className="!h-auto w-auto shrink-0 gap-2 p-2"
+                      variant="ghost"
                     >
                       <ToolTipLabel label="Attach Image">
                         <PaperclipIcon className="size-4" />
@@ -374,9 +375,9 @@ export function ChatBar(props: {
                         Get access to image uploads by signing in to Nebula
                       </p>
                       <Button
-                        variant="default"
-                        onClick={props.onLoginClick}
                         className="w-full"
+                        onClick={props.onLoginClick}
+                        variant="default"
                       >
                         Sign in
                       </Button>
@@ -388,11 +389,11 @@ export function ChatBar(props: {
               {/* Send / Stop */}
               {props.isChatStreaming ? (
                 <Button
-                  variant="default"
                   className="!h-auto w-auto shrink-0 gap-2 p-2"
                   onClick={() => {
                     props.abortChatStream();
                   }}
+                  variant="default"
                 >
                   <CircleStopIcon className="size-4" />
                   Stop
@@ -400,16 +401,16 @@ export function ChatBar(props: {
               ) : (
                 <Button
                   aria-label="Send"
+                  className="!h-auto w-auto border border-nebula-pink-foreground p-2 disabled:opacity-100"
                   disabled={
                     (message.trim() === "" && images.length === 0) ||
                     props.isConnectingWallet
                   }
-                  className="!h-auto w-auto border border-nebula-pink-foreground p-2 disabled:opacity-100"
-                  variant="pink"
                   onClick={() => {
                     if (message.trim() === "" && images.length === 0) return;
                     handleSubmit(message);
                   }}
+                  variant="pink"
                 >
                   <ArrowUpIcon className="size-4" />
                 </Button>
@@ -446,13 +447,13 @@ function ImagePreview(props: {
             key={image.file.name}
           >
             <Img
-              src={image.b64}
               className="size-8 rounded"
               skeleton={
                 <div className="flex items-center justify-center rounded border">
                   <Spinner className="size-4 text-muted-foreground" />
                 </div>
               }
+              src={image.b64}
             />
             <div className="w-[100px] lg:w-[120px]">
               <p className="truncate text-muted-foreground text-xs">
@@ -465,9 +466,9 @@ function ImagePreview(props: {
 
             <ToolTipLabel label="Remove Image">
               <Button
-                variant="outline"
                 className="-top-1.5 -right-1.5 absolute h-auto w-auto rounded-full bg-card p-0.5"
                 onClick={() => props.onRemove(index)}
+                variant="outline"
               >
                 <XIcon className="size-2.5" />
               </Button>
@@ -489,13 +490,13 @@ function ChainBadge(props: {
 
   return (
     <Badge
-      variant="outline"
       className="flex h-auto gap-1.5 px-1.5 py-1.5 hover:bg-accent"
+      variant="outline"
     >
       <ChainIconClient
-        src={chain?.icon?.url}
-        client={props.client}
         className="size-3.5"
+        client={props.client}
+        src={chain?.icon?.url}
       />
       {chain?.name ? shortenChainName(chain.name) : `Chain #${props.chainId}`}
       {props.plusMore > 0 && (
@@ -540,12 +541,12 @@ function WalletSelector(props: {
   });
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
           aria-expanded={open}
           className="flex h-auto items-center gap-1 rounded-full px-2 py-1.5 text-xs"
+          variant="outline"
         >
           <WalletProvider id={activeWallet.id}>
             <AccountProvider
@@ -554,17 +555,17 @@ function WalletSelector(props: {
             >
               <AccountAvatar
                 className="size-3 rounded-full"
-                loadingComponent={accountAvatarFallback}
                 fallbackComponent={accountAvatarFallback}
+                loadingComponent={accountAvatarFallback}
               />
               <AccountName
                 className="text-xs"
-                loadingComponent={
+                fallbackComponent={
                   <span className="text-xs">
                     {shortenAddress(props.selectedAddress)}
                   </span>
                 }
-                fallbackComponent={
+                loadingComponent={
                   <span className="text-xs">
                     {shortenAddress(props.selectedAddress)}
                   </span>
@@ -601,23 +602,24 @@ function WalletSelector(props: {
 
             return (
               <div
-                role="button"
-                tabIndex={0}
-                key={wallet.address}
                 className={cn(
                   "flex cursor-pointer items-center justify-between px-3 py-4 hover:bg-accent/50",
                   props.selectedAddress === wallet.address && "bg-accent/50",
                 )}
+                key={wallet.address}
+                onClick={() => {
+                  setOpen(false);
+                  props.onClick(wallet);
+                }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     setOpen(false);
                     props.onClick(wallet);
                   }
                 }}
-                onClick={() => {
-                  setOpen(false);
-                  props.onClick(wallet);
-                }}
+                // biome-ignore lint/a11y/useSemanticElements: TODO
+                role="button"
+                tabIndex={0}
               >
                 <div className="flex items-center gap-2">
                   <WalletProvider id={wallet.walletId}>
@@ -629,20 +631,20 @@ function WalletSelector(props: {
                         <div className="flex items-center gap-2.5">
                           <AccountAvatar
                             className="size-8 rounded-full"
-                            loadingComponent={accountAvatarFallback}
                             fallbackComponent={accountAvatarFallback}
+                            loadingComponent={accountAvatarFallback}
                           />
 
                           <div className="flex flex-col">
                             <div className="flex items-center gap-1">
                               <AccountName
                                 className="text-sm"
-                                loadingComponent={
+                                fallbackComponent={
                                   <span className="text-sm">
                                     {shortenAddress(wallet.address)}
                                   </span>
                                 }
-                                fallbackComponent={
+                                loadingComponent={
                                   <span className="text-sm">
                                     {shortenAddress(wallet.address)}
                                   </span>
@@ -653,8 +655,8 @@ function WalletSelector(props: {
 
                               {wallet.walletId === "smart" && (
                                 <Badge
-                                  variant="outline"
                                   className="bg-card px-2"
+                                  variant="outline"
                                 >
                                   Gasless
                                 </Badge>
@@ -698,7 +700,6 @@ function CopyButton(props: { address: string }) {
   const [copied, setCopied] = useState(false);
   return (
     <Button
-      variant="ghost"
       className="h-auto w-auto p-1.5 text-muted-foreground"
       onClick={(e) => {
         e.stopPropagation();
@@ -708,6 +709,7 @@ function CopyButton(props: { address: string }) {
           setCopied(false);
         }, 1000);
       }}
+      variant="ghost"
     >
       {copied ? (
         <CheckIcon className="size-3 text-green-500" />

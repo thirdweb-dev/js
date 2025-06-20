@@ -1,7 +1,7 @@
+import { redirect } from "next/navigation";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { redirect } from "next/navigation";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,
@@ -44,20 +44,20 @@ export default async function Page(props: {
   return (
     <div className="flex grow flex-col">
       <CreateAssetPageHeader
-        teamSlug={params.team_slug}
-        projectSlug={params.project_slug}
-        title="Create Coin"
-        description="Launch an ERC-20 coin for your project"
         containerClassName="container max-w-5xl"
+        description="Launch an ERC-20 coin for your project"
+        projectSlug={params.project_slug}
+        teamSlug={params.team_slug}
+        title="Create Coin"
       />
       <div className="container max-w-5xl pt-8 pb-32">
         <CreateTokenAssetPage
-          teamSlug={params.team_slug}
-          projectSlug={params.project_slug}
           accountAddress={accountAddress}
           client={client}
-          teamId={team.id}
           projectId={project.id}
+          projectSlug={params.project_slug}
+          teamId={team.id}
+          teamSlug={params.team_slug}
         />
       </div>
     </div>

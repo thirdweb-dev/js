@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.tellaw",
-  name: "Tellaw Wallet",
-  homepage: "https://www.tellaw.com/",
-  image_id: "c1cb03f5-e1c2-4c3e-86e1-9a90565ea300",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/id6446802245",
     android: "https://play.google.com/store/apps/details?id=com.tellaw.tellaw",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/id6446802245",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "tellaw://walletconnect",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.tellaw.com/",
+  id: "com.tellaw",
+  image_id: "c1cb03f5-e1c2-4c3e-86e1-9a90565ea300",
+  mobile: {
+    native: "tellaw://walletconnect",
+    universal: null,
+  },
+  name: "Tellaw Wallet",
+  rdns: null,
 } as const;

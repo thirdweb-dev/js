@@ -7,10 +7,10 @@ import type { AppMetadata } from "../types.js";
 export function getDefaultAppMetadata(): Required<AppMetadata> {
   if (!isBrowser()) {
     return {
-      name: "thirdweb powered dApp",
-      url: "https://thirdweb.com",
       description: "thirdweb powered dApp",
       logoUrl: "https://thirdweb.com/favicon.ico",
+      name: "thirdweb powered dApp",
+      url: "https://thirdweb.com",
     };
   }
 
@@ -25,9 +25,9 @@ export function getDefaultAppMetadata(): Required<AppMetadata> {
   const logoUrl = `${baseUrl}/favicon.ico`;
 
   return {
-    name: window.document.title || "thirdweb powered dApp",
-    url: baseUrl,
     description: window.document.title || "thirdweb powered dApp",
     logoUrl,
+    name: window.document.title || "thirdweb powered dApp",
+    url: baseUrl,
   };
 }

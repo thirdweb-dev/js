@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.amazewallet",
-  name: "AmazeWallet",
-  homepage: "https://amazewallet.com/",
-  image_id: "38495eb4-efcf-47cb-be73-a695510f9f00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/gb/app/amazewallet/id1622941204",
     android:
       "https://play.google.com/store/apps/details?id=com.mining.amaze.wallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/gb/app/amazewallet/id1622941204",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "amazeapp://amazewallet.com",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://amazewallet.com/",
+  id: "com.amazewallet",
+  image_id: "38495eb4-efcf-47cb-be73-a695510f9f00",
+  mobile: {
+    native: "amazeapp://amazewallet.com",
+    universal: null,
+  },
+  name: "AmazeWallet",
+  rdns: null,
 } as const;

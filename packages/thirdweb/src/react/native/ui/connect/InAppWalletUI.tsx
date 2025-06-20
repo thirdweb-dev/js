@@ -22,12 +22,12 @@ import {
 import type { Theme } from "../../../core/design-system/index.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import { radius, spacing } from "../../design-system/index.js";
-import { RNImage } from "../components/RNImage.js";
-import { getAuthProviderImage } from "../components/WalletImage.js";
 import { ThemedButton, ThemedButtonWithIcon } from "../components/button.js";
 import { ThemedInput, ThemedInputWithSubmit } from "../components/input.js";
+import { RNImage } from "../components/RNImage.js";
 import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
+import { getAuthProviderImage } from "../components/WalletImage.js";
 import {
   APPLE_ICON,
   COINBASE_ICON,
@@ -55,18 +55,18 @@ const defaultAuthOptions: InAppWalletAuth[] = [
 ];
 
 const socialIcons = {
-  google: GOOGLE_ICON,
-  facebook: FACEBOOK_ICON,
-  coinbase: COINBASE_ICON,
   apple: APPLE_ICON,
+  coinbase: COINBASE_ICON,
   discord: DISCORD_ICON,
-  line: LINE_ICON,
-  x: X_ICON,
+  facebook: FACEBOOK_ICON,
   farcaster: FARCASTER_ICON,
-  telegram: TELEGRAM_ICON,
   github: GITHUB_ICON,
-  twitch: TWITCH_ICON,
+  google: GOOGLE_ICON,
+  line: LINE_ICON,
   steam: STEAM_ICON,
+  telegram: TELEGRAM_ICON,
+  twitch: TWITCH_ICON,
+  x: X_ICON,
 };
 
 type InAppWalletFormUIProps = {
@@ -95,7 +95,7 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
     <View style={styles.container}>
       <View style={styles.row}>
         {socialLogins.map((auth) => (
-          <SocialLogin key={auth} auth={auth} {...props} />
+          <SocialLogin auth={auth} key={auth} {...props} />
         ))}
       </View>
       {authOptions.includes("email") ? (
@@ -103,10 +103,10 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
           <PreOtpLogin auth="email" {...props} />
         ) : (
           <ThemedButtonWithIcon
-            theme={theme}
-            title="Email address"
             icon={getAuthProviderImage("email")}
             onPress={() => setInputMode("email")}
+            theme={theme}
+            title="Email address"
           />
         )
       ) : null}
@@ -115,21 +115,21 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
           <PreOtpLogin auth="phone" {...props} />
         ) : (
           <ThemedButtonWithIcon
-            theme={theme}
-            title="Phone number"
             icon={getAuthProviderImage("phone")}
             onPress={() => setInputMode("phone")}
+            theme={theme}
+            title="Phone number"
           />
         )
       ) : null}
       {authOptions.includes("passkey") ? (
         <ThemedButtonWithIcon
-          theme={theme}
-          title="Passkey"
           icon={getAuthProviderImage("passkey")}
           onPress={() => {
             props.setScreen({ screen: "passkey", wallet });
           }}
+          theme={theme}
+          title="Passkey"
         />
       ) : null}
       {authOptions.includes("guest") ? <GuestLogin {...props} /> : null}
@@ -141,7 +141,7 @@ function GuestLogin(props: InAppWalletFormUIProps) {
   const { theme, wallet, client, connector } = props;
   const connectInAppWallet = useCallback(() => {
     connector({
-      wallet,
+      authMethod: "guest",
       connectFn: async () => {
         await wallet.connect({
           client,
@@ -150,18 +150,18 @@ function GuestLogin(props: InAppWalletFormUIProps) {
         await setLastAuthProvider("guest", nativeLocalStorage);
         return wallet;
       },
-      authMethod: "guest",
+      wallet,
     });
   }, [connector, wallet, client]);
 
   return (
     <ThemedButtonWithIcon
-      theme={theme}
-      title="Continue as guest"
       icon={getAuthProviderImage("guest")}
       onPress={() => {
         connectInAppWallet();
       }}
+      theme={theme}
+      title="Continue as guest"
     />
   );
 }
@@ -174,30 +174,30 @@ function SocialLogin(
   const strategy = props.auth;
   const connectInAppWallet = useCallback(() => {
     connector({
-      wallet,
+      authMethod: auth,
       connectFn: async (chain) => {
         await wallet.connect({
+          chain,
           client,
           strategy: auth,
-          chain,
         });
         await setLastAuthProvider(auth, nativeLocalStorage);
         return wallet;
       },
-      authMethod: auth,
+      wallet,
     });
   }, [connector, auth, wallet, client]);
 
   return (
     <TouchableOpacity
+      key={strategy}
+      onPress={connectInAppWallet}
       style={[
         styles.socialIconContainer,
         { borderColor: theme.colors.borderColor },
       ]}
-      key={strategy}
-      onPress={connectInAppWallet}
     >
-      <RNImage theme={theme} size={38} data={socialIcons[auth]} />
+      <RNImage data={socialIcons[auth]} size={38} theme={theme} />
     </TouchableOpacity>
   );
 }
@@ -224,14 +224,14 @@ function PreOtpLogin(
         }
         await preAuthenticate({
           client,
-          strategy: auth,
           phoneNumber: phoneOrEmail,
+          strategy: auth,
         });
       } else {
         await preAuthenticate({
           client,
-          strategy: auth,
           email: phoneOrEmail,
+          strategy: auth,
         });
       }
     },
@@ -239,11 +239,9 @@ function PreOtpLogin(
 
   return (
     <ThemedInputWithSubmit
-      theme={theme}
-      placeholder={auth === "phone" ? "Phone number" : "Email address"}
-      onChangeText={setPhoneNumberOrEmail}
-      value={phoneOrEmail}
+      isSubmitting={sendCode.isPending}
       keyboardType={auth === "phone" ? "phone-pad" : "email-address"}
+      onChangeText={setPhoneNumberOrEmail}
       onSubmit={() =>
         sendCode.mutate(
           {
@@ -251,32 +249,34 @@ function PreOtpLogin(
             phoneOrEmail,
           },
           {
-            onSuccess: (_, vars) => {
-              if (vars.auth === "phone") {
-                setScreen({
-                  screen: "otp",
-                  auth: {
-                    strategy: vars.auth,
-                    phoneNumber: vars.phoneOrEmail,
-                  },
-                  wallet,
-                });
-              } else {
-                setScreen({
-                  screen: "otp",
-                  auth: { strategy: vars.auth, email: vars.phoneOrEmail },
-                  wallet,
-                });
-              }
-            },
             onError: (error) => {
               // TODO (rn) - handle error toast or input error border/label
               Alert.alert("Error", error.message);
             },
+            onSuccess: (_, vars) => {
+              if (vars.auth === "phone") {
+                setScreen({
+                  auth: {
+                    phoneNumber: vars.phoneOrEmail,
+                    strategy: vars.auth,
+                  },
+                  screen: "otp",
+                  wallet,
+                });
+              } else {
+                setScreen({
+                  auth: { email: vars.phoneOrEmail, strategy: vars.auth },
+                  screen: "otp",
+                  wallet,
+                });
+              }
+            },
           },
         )
       }
-      isSubmitting={sendCode.isPending}
+      placeholder={auth === "phone" ? "Phone number" : "Email address"}
+      theme={theme}
+      value={phoneOrEmail}
     />
   );
 }
@@ -292,29 +292,29 @@ export function OtpLogin(
   const connectInAppWallet = async () => {
     if (!verificationCode || !verificationCode) return;
     await connector({
-      wallet,
+      authMethod: auth.strategy,
       connectFn: async (chain) => {
         if (auth.strategy === "phone") {
           await wallet.connect({
-            client,
-            strategy: auth.strategy,
-            phoneNumber: auth.phoneNumber,
-            verificationCode,
             chain,
+            client,
+            phoneNumber: auth.phoneNumber,
+            strategy: auth.strategy,
+            verificationCode,
           });
         } else {
           await wallet.connect({
-            client,
-            strategy: auth.strategy,
-            email: auth.email,
-            verificationCode,
             chain,
+            client,
+            email: auth.email,
+            strategy: auth.strategy,
+            verificationCode,
           });
         }
         await setLastAuthProvider(auth.strategy, nativeLocalStorage);
         return wallet;
       },
-      authMethod: auth.strategy,
+      wallet,
     });
   };
 
@@ -322,12 +322,12 @@ export function OtpLogin(
     <>
       <View
         style={{
+          alignItems: "center",
           flexDirection: "column",
           justifyContent: "center",
-          alignItems: "center",
         }}
       >
-        <ThemedText theme={theme} style={{ color: theme.colors.secondaryText }}>
+        <ThemedText style={{ color: theme.colors.secondaryText }} theme={theme}>
           Enter the verification code sent to
         </ThemedText>
         <ThemedText theme={theme} type="defaultSemiBold">
@@ -336,17 +336,17 @@ export function OtpLogin(
       </View>
       <Spacer size="xs" />
       <ThemedInput
-        theme={theme}
-        placeholder="Verification code"
-        onChangeText={setVerificationCode}
-        value={verificationCode}
         keyboardType="number-pad"
+        onChangeText={setVerificationCode}
+        placeholder="Verification code"
+        theme={theme}
+        value={verificationCode}
       />
-      <ThemedButton theme={theme} onPress={connectInAppWallet} variant="accent">
+      <ThemedButton onPress={connectInAppWallet} theme={theme} variant="accent">
         <ThemedText
+          style={{ color: theme.colors.accentButtonText }}
           theme={theme}
           type="defaultSemiBold"
-          style={{ color: theme.colors.accentButtonText }}
         >
           Verify
         </ThemedText>
@@ -398,52 +398,52 @@ export function PasskeyView(props: InAppWalletFormUIProps) {
     wallet && (
       <View
         style={{
-          flexDirection: "column",
           alignItems: "center",
+          flexDirection: "column",
           justifyContent: "center",
           padding: spacing.xl,
         }}
       >
         <RNImage
-          theme={theme}
-          size={90}
-          data={getAuthProviderImage("passkey")}
           color={theme.colors.accentButtonBg}
+          data={getAuthProviderImage("passkey")}
+          size={90}
+          theme={theme}
         />
         <Spacer size="xxl" />
         <ThemedButton
-          theme={theme}
-          variant="accent"
-          style={{ width: "100%" }}
           onPress={async () => {
             setScreen("signup");
           }}
+          style={{ width: "100%" }}
+          theme={theme}
+          variant="accent"
         >
           <ThemedText
-            theme={theme}
-            type="defaultSemiBold"
             style={{
               color: theme.colors.accentButtonText,
             }}
+            theme={theme}
+            type="defaultSemiBold"
           >
             Create a Passkey
           </ThemedText>
         </ThemedButton>
         <Spacer size="md" />
         <ThemedButton
-          theme={theme}
-          variant="secondary"
-          style={{ width: "100%" }}
           onPress={async () => {
             setScreen("login");
           }}
+          style={{ width: "100%" }}
+          theme={theme}
+          variant="secondary"
         >
           <ThemedText
-            theme={theme}
-            type="defaultSemiBold"
             style={{
               color: theme.colors.secondaryButtonText,
             }}
+            theme={theme}
+            type="defaultSemiBold"
           >
             I have a Passkey
           </ThemedText>
@@ -468,18 +468,18 @@ function PasskeyLoadingView(
     triggered.current = true;
     const connectInAppWallet = async (type: "sign-in" | "sign-up") => {
       await connector({
-        wallet,
+        authMethod: "passkey",
         connectFn: async (chain) => {
           await wallet.connect({
+            chain,
             client,
             strategy: "passkey",
             type,
-            chain,
           });
           await setLastAuthProvider("passkey", nativeLocalStorage);
           return wallet;
         },
-        authMethod: "passkey",
+        wallet,
       });
     };
     connectInAppWallet(type);
@@ -500,13 +500,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   socialIconContainer: {
-    flex: 1,
-    flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
+    borderRadius: radius.lg,
     borderStyle: "solid",
     borderWidth: 1,
-    borderRadius: radius.lg,
+    flex: 1,
+    flexDirection: "column",
     height: 60,
+    justifyContent: "center",
   },
 });

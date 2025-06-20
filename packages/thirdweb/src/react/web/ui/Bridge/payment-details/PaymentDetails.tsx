@@ -4,14 +4,13 @@ import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvid
 import { radius, spacing } from "../../../../core/design-system/index.js";
 import type { BridgePrepareResult } from "../../../../core/hooks/useBridgePrepare.js";
 import type { PaymentMethod } from "../../../../core/machines/paymentMachine.js";
-import {} from "../../ConnectWallet/screens/Buy/fiat/currencies.js";
 import {
   formatCurrencyAmount,
   formatTokenAmount,
 } from "../../ConnectWallet/screens/formatTokenBalance.js";
-import { Spacer } from "../../components/Spacer.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
+import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
 import type { UIOptions } from "../BridgeOrchestrator.js";
 import { PaymentOverview } from "./PaymentOverview.js";
@@ -81,25 +80,25 @@ export function PaymentDetails({
           // can never happen
           onError(new Error("Invalid payment method"));
           return {
-            originToken: undefined,
-            destinationToken: undefined,
-            originAmount: "0",
             destinationAmount: "0",
+            destinationToken: undefined,
             estimatedTime: 0,
+            originAmount: "0",
+            originToken: undefined,
           };
         }
         return {
-          originToken: token,
-          destinationToken: token,
-          originAmount: formatTokenAmount(
-            preparedQuote.originAmount,
-            token.decimals,
-          ),
           destinationAmount: formatTokenAmount(
             preparedQuote.destinationAmount,
             token.decimals,
           ),
+          destinationToken: token,
           estimatedTime: preparedQuote.estimatedExecutionTimeMs,
+          originAmount: formatTokenAmount(
+            preparedQuote.originAmount,
+            token.decimals,
+          ),
+          originToken: token,
         };
       }
       case "buy": {
@@ -109,31 +108,31 @@ export function PaymentDetails({
           // can never happen
           onError(new Error("Invalid payment method"));
           return {
-            originToken: undefined,
-            destinationToken: undefined,
-            originAmount: "0",
             destinationAmount: "0",
+            destinationToken: undefined,
             estimatedTime: 0,
+            originAmount: "0",
+            originToken: undefined,
           };
         }
         return {
-          originToken:
-            paymentMethod.type === "wallet"
-              ? paymentMethod.originToken
-              : undefined,
-          destinationToken:
-            preparedQuote.steps[preparedQuote.steps.length - 1]
-              ?.destinationToken,
-          originAmount: formatTokenAmount(
-            preparedQuote.originAmount,
-            method.originToken.decimals,
-          ),
           destinationAmount: formatTokenAmount(
             preparedQuote.destinationAmount,
             preparedQuote.steps[preparedQuote.steps.length - 1]
               ?.destinationToken?.decimals ?? 18,
           ),
+          destinationToken:
+            preparedQuote.steps[preparedQuote.steps.length - 1]
+              ?.destinationToken,
           estimatedTime: preparedQuote.estimatedExecutionTimeMs,
+          originAmount: formatTokenAmount(
+            preparedQuote.originAmount,
+            method.originToken.decimals,
+          ),
+          originToken:
+            paymentMethod.type === "wallet"
+              ? paymentMethod.originToken
+              : undefined,
         };
       }
       case "onramp": {
@@ -143,25 +142,25 @@ export function PaymentDetails({
           // can never happen
           onError(new Error("Invalid payment method"));
           return {
-            originToken: undefined,
-            destinationToken: undefined,
-            originAmount: "0",
             destinationAmount: "0",
+            destinationToken: undefined,
             estimatedTime: 0,
+            originAmount: "0",
+            originToken: undefined,
           };
         }
         return {
-          originToken: undefined, // Onramp starts with fiat
+          destinationAmount: formatTokenAmount(
+            preparedQuote.destinationAmount,
+            preparedQuote.destinationToken.decimals,
+          ), // Onramp starts with fiat
           destinationToken: preparedQuote.destinationToken,
+          estimatedTime: undefined,
           originAmount: formatCurrencyAmount(
             method.currency,
             Number(preparedQuote.currencyAmount),
           ),
-          destinationAmount: formatTokenAmount(
-            preparedQuote.destinationAmount,
-            preparedQuote.destinationToken.decimals,
-          ),
-          estimatedTime: undefined,
+          originToken: undefined,
         };
       }
       default: {
@@ -176,7 +175,7 @@ export function PaymentDetails({
 
   return (
     <Container flex="column" fullHeight p="lg">
-      <ModalHeader title="Payment Details" onBack={onBack} />
+      <ModalHeader onBack={onBack} title="Payment Details" />
 
       <Spacer y="xl" />
 
@@ -185,17 +184,17 @@ export function PaymentDetails({
         <Container flex="column">
           {displayData.destinationToken && (
             <PaymentOverview
-              uiOptions={uiOptions}
+              client={client}
+              fromAmount={displayData.originAmount}
+              paymentMethod={paymentMethod}
+              receiver={preparedQuote.intent.receiver}
               sender={
                 preparedQuote.intent.sender ||
                 paymentMethod.payerWallet.getAccount()?.address
               }
-              client={client}
-              paymentMethod={paymentMethod}
-              toToken={displayData.destinationToken}
-              receiver={preparedQuote.intent.receiver}
-              fromAmount={displayData.originAmount}
               toAmount={displayData.destinationAmount}
+              toToken={displayData.destinationToken}
+              uiOptions={uiOptions}
             />
           )}
 
@@ -204,12 +203,12 @@ export function PaymentDetails({
             <Container
               flex="row"
               gap="xs"
-              style={{ justifyContent: "center", flex: 1 }}
+              style={{ flex: 1, justifyContent: "center" }}
             >
-              <Text size="sm" color="secondaryText">
+              <Text color="secondaryText" size="sm">
                 Estimated Time
               </Text>
-              <Text size="sm" color="primaryText">
+              <Text color="primaryText" size="sm">
                 {displayData.estimatedTime
                   ? `~${Math.ceil(displayData.estimatedTime / 60000)} min`
                   : "~2 min"}
@@ -220,12 +219,12 @@ export function PaymentDetails({
               <Container
                 flex="row"
                 gap="xs"
-                style={{ justifyContent: "center", flex: 1 }}
+                style={{ flex: 1, justifyContent: "center" }}
               >
-                <Text size="sm" color="secondaryText">
+                <Text color="secondaryText" size="sm">
                   Route Length
                 </Text>
-                <Text size="sm" color="primaryText">
+                <Text color="primaryText" size="sm">
                   {preparedQuote.steps.length} step
                   {preparedQuote.steps.length !== 1 ? "s" : ""}
                 </Text>
@@ -243,17 +242,17 @@ export function PaymentDetails({
               flex="column"
               gap="sm"
               style={{
+                backgroundColor: theme.colors.tertiaryBg,
                 border: `1px solid ${theme.colors.borderColor}`,
                 borderRadius: radius.md,
-                backgroundColor: theme.colors.tertiaryBg,
                 padding: `${spacing.sm} ${spacing.md}`,
               }}
             >
               {preparedQuote.steps.map((step, stepIndex) => (
                 <Container
-                  key={`step-${stepIndex}-${step.originToken.address}-${step.destinationToken.address}`}
                   flex="column"
                   gap="sm"
+                  key={`step-${stepIndex}-${step.originToken.address}-${step.destinationToken.address}`}
                 >
                   {/* Step Header */}
                   <Container
@@ -265,33 +264,33 @@ export function PaymentDetails({
                       center="both"
                       flex="row"
                       style={{
-                        width: "24px",
-                        height: "24px",
-                        borderRadius: "50%",
                         backgroundColor: theme.colors.accentButtonBg,
+                        borderRadius: "50%",
                         color: theme.colors.accentButtonText,
+                        flexShrink: 0,
                         fontSize: "12px",
                         fontWeight: "bold",
-                        flexShrink: 0,
+                        height: "24px",
+                        width: "24px",
                       }}
                     >
-                      <Text size="xs" color="accentButtonText">
+                      <Text color="accentButtonText" size="xs">
                         {stepIndex + 1}
                       </Text>
                     </Container>
 
                     <Container
-                      flex="row"
                       center="y"
+                      flex="row"
                       gap="sm"
                       style={{ flex: 1 }}
                     >
                       <Container flex="column" gap="3xs" style={{ flex: 1 }}>
-                        <Text size="sm" color="primaryText">
+                        <Text color="primaryText" size="sm">
                           {step.originToken.symbol} →{" "}
                           {step.destinationToken.symbol}
                         </Text>
-                        <Text size="xs" color="secondaryText">
+                        <Text color="secondaryText" size="xs">
                           {step.originToken.name} to{" "}
                           {step.destinationToken.name}
                         </Text>
@@ -308,7 +307,7 @@ export function PaymentDetails({
 
         {/* Action Buttons */}
         <Container flex="column" gap="sm">
-          <Button variant="accent" fullWidth onClick={handleConfirm}>
+          <Button fullWidth onClick={handleConfirm} variant="accent">
             Confirm Payment
           </Button>
         </Container>

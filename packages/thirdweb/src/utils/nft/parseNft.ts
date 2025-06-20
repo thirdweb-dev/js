@@ -88,24 +88,24 @@ export function parseNFT(base: NFTMetadata, options: ParseNFTOptions): NFT {
   switch (options.type) {
     case "ERC721":
       return {
+        chainId: options.chainId,
+        id: options.tokenId,
         metadata: base,
         owner: options?.owner ?? null,
-        id: options.tokenId,
+        tokenAddress: options.tokenAddress,
         tokenURI: options.tokenUri,
         type: options.type,
-        tokenAddress: options.tokenAddress,
-        chainId: options.chainId,
       };
     case "ERC1155":
       return {
+        chainId: options.chainId,
+        id: options.tokenId,
         metadata: base,
         owner: options?.owner ?? null,
-        id: options.tokenId,
-        tokenURI: options.tokenUri,
-        type: options.type,
         supply: options.supply,
         tokenAddress: options.tokenAddress,
-        chainId: options.chainId,
+        tokenURI: options.tokenUri,
+        type: options.type,
       };
     default:
       throw new Error("Invalid NFT type");
@@ -165,9 +165,9 @@ export async function parseNftUri(options: {
   }
   const chain = getCachedChain(Number(chainID));
   const contract = getContract({
-    client: options.client,
-    chain,
     address: contractAddress,
+    chain,
+    client: options.client,
   });
   switch (erc_namespace) {
     case "erc721": {

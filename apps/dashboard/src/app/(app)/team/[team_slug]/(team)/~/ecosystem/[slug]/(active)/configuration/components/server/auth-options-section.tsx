@@ -20,10 +20,10 @@ export function AuthOptionsSection({
     <section className="flex flex-col gap-4 md:gap-8">
       {ecosystem ? (
         <AuthOptionsForm
-          ecosystem={ecosystem}
           authToken={authToken}
-          teamId={teamId}
           client={client}
+          ecosystem={ecosystem}
+          teamId={teamId}
         />
       ) : (
         <AuthOptionsFormSkeleton />

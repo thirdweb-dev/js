@@ -38,7 +38,6 @@ export function reveal(options: BaseTransactionOptions<RevealParams>) {
   }
 
   return generatedReveal({
-    contract: options.contract,
     asyncParams: async () => {
       const key = await hashDelayedRevealPassword(
         options.batchId,
@@ -50,5 +49,6 @@ export function reveal(options: BaseTransactionOptions<RevealParams>) {
         key,
       };
     },
+    contract: options.contract,
   });
 }

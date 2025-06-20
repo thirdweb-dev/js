@@ -26,19 +26,19 @@ export const CreditsInfoCard = (props: {
   return (
     <section className="flex flex-col gap-4">
       <CreditsItem
+        client={props.client}
         credit={opCredit}
         isOpCreditDefault={true}
-        twAccount={props.twAccount}
-        client={props.client}
         teamSlug={props.teamSlug}
+        twAccount={props.twAccount}
       />
       {restCredits?.map((credit) => (
         <CreditsItem
-          key={credit.couponId}
-          credit={credit}
-          twAccount={props.twAccount}
           client={props.client}
+          credit={credit}
+          key={credit.couponId}
           teamSlug={props.teamSlug}
+          twAccount={props.twAccount}
         />
       ))}
     </section>

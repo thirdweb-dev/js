@@ -18,13 +18,13 @@ const OPStackGasPriceOracleAddress =
 export async function estimateL1Fee(options: EstimateL1FeeOptions) {
   const { transaction, gasPriceOracleAddress } = options;
   const oracleContract = getContract({
-    client: transaction.client,
     address: gasPriceOracleAddress || OPStackGasPriceOracleAddress,
     chain: transaction.chain,
+    client: transaction.client,
   });
 
-  // purposefully remove gasPrice from the transaction
-
+  //
+  // biome-ignore lint/correctness/noUnusedVariables: purposefully remove gasPrice from the transaction
   const { gasPrice, ...serializableTx } = await toSerializableTransaction({
     transaction,
   });

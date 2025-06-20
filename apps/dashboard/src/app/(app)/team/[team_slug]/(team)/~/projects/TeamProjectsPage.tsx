@@ -1,11 +1,17 @@
 "use client";
 
+import { LazyCreateProjectDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
+import { format } from "date-fns";
+import { ArrowDownNarrowWideIcon, PlusIcon, SearchIcon } from "lucide-react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
 import { PaginationButtons } from "@/components/pagination-buttons";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -24,12 +30,6 @@ import {
 } from "@/components/ui/table";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import { LazyCreateProjectDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
-import { format } from "date-fns";
-import { ArrowDownNarrowWideIcon, PlusIcon, SearchIcon } from "lucide-react";
-import Link from "next/link";
-import { useMemo, useState } from "react";
-import type { ThirdwebClient } from "thirdweb";
 
 type SortById = "name" | "createdAt" | "monthlyActiveUsers";
 
@@ -101,19 +101,19 @@ export function TeamProjectsPage(props: {
         {/* Filters + Add New */}
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
           <SearchInput
-            value={searchTerm}
             onValueChange={(v) => {
               setSearchTerm(v);
               setPage(1);
             }}
+            value={searchTerm}
           />
           <div className="flex gap-3">
             <SelectBy
-              value={sortBy}
               onChange={(v) => {
                 setSortBy(v);
                 setPage(1);
               }}
+              value={sortBy}
             />
             <AddNewButton
               createProject={() => setIsCreateProjectDialogOpen(true)}
@@ -125,31 +125,29 @@ export function TeamProjectsPage(props: {
 
       {/* Projects Table */}
       {paginatedProjects.length === 0 ? (
-        <>
-          {searchTerm !== "" ? (
-            <div className="flex min-h-[450px] grow items-center justify-center border border-border bg-card">
-              <div className="flex flex-col items-center">
-                <p className="mb-5 text-center">No projects found</p>
-              </div>
+        searchTerm !== "" ? (
+          <div className="flex min-h-[450px] grow items-center justify-center border border-border bg-card">
+            <div className="flex flex-col items-center">
+              <p className="mb-5 text-center">No projects found</p>
             </div>
-          ) : (
-            <div className="flex min-h-[450px] grow items-center justify-center rounded-b-lg border border-border bg-card">
-              <div className="flex flex-col items-center">
-                <p className="mb-5 text-center font-semibold text-lg">
-                  No projects created
-                </p>
-                <Button
-                  className="gap-2 bg-background"
-                  onClick={() => setIsCreateProjectDialogOpen(true)}
-                  variant="outline"
-                >
-                  <PlusIcon className="size-4" />
-                  Create Project
-                </Button>
-              </div>
+          </div>
+        ) : (
+          <div className="flex min-h-[450px] grow items-center justify-center rounded-b-lg border border-border bg-card">
+            <div className="flex flex-col items-center">
+              <p className="mb-5 text-center font-semibold text-lg">
+                No projects created
+              </p>
+              <Button
+                className="gap-2 bg-background"
+                onClick={() => setIsCreateProjectDialogOpen(true)}
+                variant="outline"
+              >
+                <PlusIcon className="size-4" />
+                Create Project
+              </Button>
             </div>
-          )}
-        </>
+          </div>
+        )
       ) : (
         <div>
           <TableContainer
@@ -170,9 +168,9 @@ export function TeamProjectsPage(props: {
               <TableBody>
                 {paginatedProjects.map((project) => (
                   <TableRow
+                    className="hover:bg-accent/50"
                     key={project.id}
                     linkBox
-                    className="hover:bg-accent/50"
                   >
                     <TableCell>
                       <Link
@@ -181,8 +179,8 @@ export function TeamProjectsPage(props: {
                       >
                         <ProjectAvatar
                           className="size-8 rounded-full"
-                          src={project.image || ""}
                           client={props.client}
+                          src={project.image || ""}
                         />
                         <span className="font-medium text-sm">
                           {project.name}
@@ -198,12 +196,12 @@ export function TeamProjectsPage(props: {
                     </TableCell>
                     <TableCell>
                       <CopyTextButton
+                        className="-translate-x-2 z-10 font-mono text-muted-foreground"
+                        copyIconPosition="right"
                         textToCopy={project.publishableKey}
                         textToShow={`${project.publishableKey.slice(0, 4)}...${project.publishableKey.slice(-4)}`}
-                        copyIconPosition="right"
                         tooltip={undefined}
                         variant="ghost"
-                        className="-translate-x-2 z-10 font-mono text-muted-foreground"
                       />
                     </TableCell>
                     <TableCell className="text-muted-foreground">
@@ -228,17 +226,17 @@ export function TeamProjectsPage(props: {
       )}
 
       <LazyCreateProjectDialog
-        open={isCreateProjectDialogOpen}
-        onOpenChange={setIsCreateProjectDialogOpen}
-        teamSlug={props.team.slug}
-        teamId={props.team.id}
+        enableNebulaServiceByDefault={props.team.enabledScopes.includes(
+          "nebula",
+        )}
         onCreateAndComplete={() => {
           // refresh projects
           router.refresh();
         }}
-        enableNebulaServiceByDefault={props.team.enabledScopes.includes(
-          "nebula",
-        )}
+        onOpenChange={setIsCreateProjectDialogOpen}
+        open={isCreateProjectDialogOpen}
+        teamId={props.team.id}
+        teamSlug={props.team.slug}
       />
     </div>
   );
@@ -251,10 +249,10 @@ function SearchInput(props: {
   return (
     <div className="relative grow">
       <Input
+        className="bg-background pl-9 lg:w-[320px]"
+        onChange={(e) => props.onValueChange(e.target.value)}
         placeholder="Project name or Client ID"
         value={props.value}
-        onChange={(e) => props.onValueChange(e.target.value)}
-        className="bg-background pl-9 lg:w-[320px]"
       />
       <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
     </div>
@@ -267,9 +265,9 @@ function AddNewButton(props: {
 }) {
   return (
     <Button
-      variant="default"
       className="absolute top-0 right-0 gap-2 lg:static"
       onClick={props.createProject}
+      variant="default"
     >
       <PlusIcon className="size-4" />
       <span>
@@ -285,17 +283,17 @@ function SelectBy(props: {
 }) {
   const values: SortById[] = ["name", "createdAt", "monthlyActiveUsers"];
   const valueToLabel: Record<SortById, string> = {
-    name: "Name",
     createdAt: "Creation Date",
     monthlyActiveUsers: "Monthly Active Users",
+    name: "Name",
   };
 
   return (
     <Select
-      value={props.value}
       onValueChange={(v) => {
         props.onChange(v as SortById);
       }}
+      value={props.value}
     >
       <SelectTrigger className="min-w-[200px] bg-background capitalize">
         <div className="flex items-center gap-2">

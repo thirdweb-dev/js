@@ -103,7 +103,7 @@ export function WalletName({
   formatFn,
   ...restProps
 }: WalletNameProps) {
-  const nameQuery = useWalletName({ queryOptions, formatFn });
+  const nameQuery = useWalletName({ formatFn, queryOptions });
   if (nameQuery.isLoading) {
     return loadingComponent || null;
   }

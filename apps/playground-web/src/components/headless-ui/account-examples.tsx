@@ -14,11 +14,6 @@ export function AccountNameExample() {
   return (
     <div>
       <CodeExample
-        header={{
-          title: "AccountName",
-          description: "Show the social alias associated with the account.",
-        }}
-        preview={<AccountNameBasicPreview />}
         code={`import { AccountProvider, AccountName } from "thirdweb/react";
 
 function App() {
@@ -26,7 +21,12 @@ function App() {
     <AccountName loadingComponent={<span>Loading...</span>} />
   </AccountProvider>
 }`}
+        header={{
+          description: "Show the social alias associated with the account.",
+          title: "AccountName",
+        }}
         lang="tsx"
+        preview={<AccountNameBasicPreview />}
       />
 
       <p className="my-4 text-muted-foreground">
@@ -34,7 +34,6 @@ function App() {
       </p>
 
       <CodeExample
-        preview={<AccountNameCustomPreview />}
         code={`import { AccountProvider, AccountName } from "thirdweb/react";
 
 function App() {
@@ -44,6 +43,7 @@ function App() {
   </AccountProvider>
 }`}
         lang="tsx"
+        preview={<AccountNameCustomPreview />}
       />
     </div>
   );
@@ -53,11 +53,6 @@ export function AccountBalanceExample() {
   return (
     <div>
       <CodeExample
-        header={{
-          title: "AccountBalance",
-          description: "Display the current native balance of the wallet.",
-        }}
-        preview={<AccountBalanceBasicPreview />}
         code={`import { AccountProvider, AccountAddress } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
 
@@ -69,7 +64,12 @@ function App() {
     />
   </AccountProvider>
 }`}
+        header={{
+          description: "Display the current native balance of the wallet.",
+          title: "AccountBalance",
+        }}
         lang="tsx"
+        preview={<AccountBalanceBasicPreview />}
       />
 
       <p className="my-4 text-muted-foreground">
@@ -77,7 +77,6 @@ function App() {
       </p>
 
       <CodeExample
-        preview={<AccountBalanceCustomTokenPreview />}
         code={`import { AccountProvider, AccountAddress } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
 
@@ -93,6 +92,7 @@ function App() {
   </AccountProvider>
 }`}
         lang="tsx"
+        preview={<AccountBalanceCustomTokenPreview />}
       />
 
       <p className="my-4 text-muted-foreground">
@@ -100,7 +100,6 @@ function App() {
       </p>
 
       <CodeExample
-        preview={<AccountBalanceFormatPreview />}
         code={`import { AccountProvider, AccountAddress, type AccountBalanceFormatParams } from "thirdweb/react";
 
 function App() {
@@ -112,6 +111,7 @@ function App() {
   </AccountProvider>
 }`}
         lang="tsx"
+        preview={<AccountBalanceFormatPreview />}
       />
 
       <p className="my-4 text-muted-foreground">
@@ -119,7 +119,6 @@ function App() {
       </p>
 
       <CodeExample
-        preview={<AccountBalanceUSDPreview />}
         code={`import { AccountProvider, AccountAddress } from "thirdweb/react";
 
 function App() {
@@ -134,6 +133,7 @@ function App() {
   )
 }`}
         lang="tsx"
+        preview={<AccountBalanceUSDPreview />}
       />
     </div>
   );
@@ -142,11 +142,6 @@ function App() {
 export function AccountAvatarExample() {
   return (
     <CodeExample
-      header={{
-        title: "AccountAvatar",
-        description: "Show the social avatar associated with the account",
-      }}
-      preview={<AccountAvatarBasicPreview />}
       code={`import { AccountProvider, AccountAvatar } from "thirdweb/react";
 
 function App() {
@@ -154,7 +149,12 @@ function App() {
     <AccountAvatar className="w-20 h-20 rounded-full" loadingComponent={<span>Loading...</span>} />
   </AccountProvider>
 }`}
+      header={{
+        description: "Show the social avatar associated with the account",
+        title: "AccountAvatar",
+      }}
       lang="tsx"
+      preview={<AccountAvatarBasicPreview />}
     />
   );
 }
@@ -162,12 +162,6 @@ function App() {
 export function AccountBlobbieExample() {
   return (
     <CodeExample
-      header={{
-        title: "AccountBlobbie",
-        description:
-          "Show the unique blobbie generated from the wallet address",
-      }}
-      preview={<AccountBlobbieBasicPreview />}
       code={`import { AccountProvider, AccountBlobbie } from "thirdweb/react";
 
 function App() {
@@ -175,7 +169,13 @@ function App() {
     <AccountBlobbie className="h-20 w-20 rounded-full" />
   </AccountProvider>
 }`}
+      header={{
+        description:
+          "Show the unique blobbie generated from the wallet address",
+        title: "AccountBlobbie",
+      }}
       lang="tsx"
+      preview={<AccountBlobbieBasicPreview />}
     />
   );
 }

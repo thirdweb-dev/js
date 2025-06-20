@@ -42,8 +42,8 @@ export async function getUsdRegistrationPrice(
 
   const fetch = async () => {
     const contract = getStorageRegistry({
-      client: options.client,
       chain: options.chain,
+      client: options.client,
     });
     const bigNumberValue =
       (await usdUnitPrice({ contract })) * (extraStorage + 1n);

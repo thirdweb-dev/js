@@ -1,3 +1,6 @@
+import { useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
+import { Heading, Text } from "tw-components";
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import {
   Select,
@@ -7,9 +10,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { useFormContext } from "react-hook-form";
-import type { ThirdwebClient } from "thirdweb";
-import { Heading, Text } from "tw-components";
 
 interface NetworksFieldsetProps {
   fromStandard?: boolean;
@@ -31,11 +31,11 @@ export const NetworksFieldset: React.FC<NetworksFieldsetProps> = ({
       </div>
       <div className="flex flex-col gap-2" data-required>
         <Select
-          value={
-            form.watch("networksForDeployment.allNetworks") ? "all" : "specific"
-          }
           onValueChange={(value) =>
             form.setValue("networksForDeployment.allNetworks", value === "all")
+          }
+          value={
+            form.watch("networksForDeployment.allNetworks") ? "all" : "specific"
           }
         >
           <SelectTrigger className="w-full">

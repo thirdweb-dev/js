@@ -19,7 +19,7 @@ export function useResolvedMediaType(
       return "";
     }
     if (uri.startsWith("ar://")) {
-      return resolveArweaveScheme({ uri, gatewayUrl });
+      return resolveArweaveScheme({ gatewayUrl, uri });
     }
     if (gatewayUrl) {
       return uri.replace("ipfs://", gatewayUrl);
@@ -35,18 +35,18 @@ export function useResolvedMediaType(
   }, [uri, gatewayUrl, client]);
 
   const resolvedMimeType = useQuery({
-    queryKey: ["mime-type", resolvedUrl],
-    queryFn: () => resolveMimeType(resolvedUrl),
     enabled: !!resolvedUrl && !mimeType,
     initialData: mimeType,
+    queryFn: () => resolveMimeType(resolvedUrl),
+    queryKey: ["mime-type", resolvedUrl],
   });
 
   return {
-    mediaInfo: {
-      url: resolvedUrl,
-      mimeType: resolvedMimeType.data || "image/", // default to image if no mime type is found
-    },
     isFetched: resolvedMimeType.isFetched || !!mimeType,
+    mediaInfo: {
+      mimeType: resolvedMimeType.data || "image/",
+      url: resolvedUrl, // default to image if no mime type is found
+    },
   };
 }
 
@@ -63,7 +63,7 @@ export function resolveMediaTypeFromUri(props: {
     return "";
   }
   if (uri.startsWith("ar://")) {
-    return resolveArweaveScheme({ uri, gatewayUrl });
+    return resolveArweaveScheme({ gatewayUrl, uri });
   }
   if (gatewayUrl) {
     return uri.replace("ipfs://", gatewayUrl);

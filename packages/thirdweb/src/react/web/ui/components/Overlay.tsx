@@ -6,11 +6,11 @@ import { StyledDiv } from "../design-system/elements.js";
 export const Overlay = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
-    backgroundColor: theme.colors.modalOverlayBg,
-    zIndex: 9999,
-    position: "fixed",
-    inset: 0,
     animation: `${fadeInAnimation} 400ms cubic-bezier(0.16, 1, 0.3, 1)`,
     backdropFilter: "blur(10px)",
+    backgroundColor: theme.colors.modalOverlayBg,
+    inset: 0,
+    position: "fixed",
+    zIndex: 9999,
   };
 });

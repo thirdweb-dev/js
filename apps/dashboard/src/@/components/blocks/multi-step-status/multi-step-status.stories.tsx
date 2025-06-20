@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import { MultiStepStatus } from "./multi-step-status";
 
 const meta = {
-  title: "Blocks/MultiStepStatus",
   component: MultiStepStatus,
   decorators: [
     (Story) => (
@@ -11,6 +10,7 @@ const meta = {
       </div>
     ),
   ],
+  title: "Blocks/MultiStepStatus",
 } satisfies Meta<typeof MultiStepStatus>;
 
 export default meta;
@@ -21,29 +21,29 @@ export const AllStates: Story = {
     onRetry: () => {},
     steps: [
       {
-        status: { type: "completed" },
-        label: "Connect Wallet",
         id: "connect-wallet",
+        label: "Connect Wallet",
+        status: { type: "completed" },
       },
       {
-        status: { type: "pending" },
-        label: "Sign Message",
         id: "sign-message",
+        label: "Sign Message",
+        status: { type: "pending" },
       },
       {
-        status: { type: "error", message: "This is an error message" },
-        label: "Approve Transaction",
         id: "approve-transaction",
+        label: "Approve Transaction",
+        status: { message: "This is an error message", type: "error" },
       },
       {
-        status: { type: "idle" },
-        label: "Confirm Transaction",
         id: "confirm-transaction",
+        label: "Confirm Transaction",
+        status: { type: "idle" },
       },
       {
-        status: { type: "idle" },
-        label: "Finalize",
         id: "finalize",
+        label: "Finalize",
+        status: { type: "idle" },
       },
     ],
   },

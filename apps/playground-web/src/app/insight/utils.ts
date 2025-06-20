@@ -41,9 +41,7 @@ export type MinimalBlueprintSpec = {
   }[];
 };
 
-export async function fetchBlueprintSpec(params: {
-  blueprintId: string;
-}) {
+export async function fetchBlueprintSpec(params: { blueprintId: string }) {
   const res = await fetch(
     `https://${THIRDWEB_INSIGHT_API_DOMAIN}/v1/blueprints/${params.blueprintId}`,
   );

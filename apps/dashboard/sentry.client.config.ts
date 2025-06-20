@@ -5,28 +5,32 @@
 import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
-  dsn: "https://8813f5d93c8c4aa89eda86816f0b1bbf@o1378374.ingest.sentry.io/6690186",
-
-  // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 0.1,
+  allowUrls: [/thirdweb-dev\.com/i, /thirdweb\.com/, /thirdweb-preview\.com/],
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
-
-  replaysOnErrorSampleRate: 1.0,
-
-  // This sets the sample rate to be 10%. You may want this to be 100% while
-  // in development and sample at a lower rate in production
-  replaysSessionSampleRate: 0.1,
-
-  // You can remove this option if you're not planning to use the Sentry Session Replay feature:
-  integrations: [
-    Sentry.replayIntegration({
-      // Additional Replay configuration goes in here, for example:
-      maskAllText: true,
-      blockAllMedia: true,
-    }),
+  denyUrls: [
+    // Google Adsense
+    /pagead\/js/i,
+    // Facebook flakiness
+    /graph\.facebook\.com/i,
+    // Facebook blocked
+    /connect\.facebook\.net\/en_US\/all\.js/i,
+    // Woopra flakiness
+    /eatdifferent\.com\.woopra-ns\.com/i,
+    /static\.woopra\.com\/js\/woopra\.js/i,
+    // Chrome extensions
+    /extensions\//i,
+    /^chrome:\/\//i,
+    // Other plugins
+    // Cacaoweb
+    /127\.0\.0\.1:4001\/isrunning/i,
+    /webappstoolbarba\.texthelp\.com\//i,
+    /metrics\.itunes\.apple\.com\.edgesuite\.net\//i,
+    // injected (extensions)
+    /inject/i,
   ],
+  dsn: "https://8813f5d93c8c4aa89eda86816f0b1bbf@o1378374.ingest.sentry.io/6690186",
   ignoreErrors: [
     // Random plugins/extensions
     "top.GLOBALS",
@@ -72,26 +76,22 @@ Sentry.init({
     // cannot do anything with these errors
     "Non-Error promise rejection captured",
   ],
-  denyUrls: [
-    // Google Adsense
-    /pagead\/js/i,
-    // Facebook flakiness
-    /graph\.facebook\.com/i,
-    // Facebook blocked
-    /connect\.facebook\.net\/en_US\/all\.js/i,
-    // Woopra flakiness
-    /eatdifferent\.com\.woopra-ns\.com/i,
-    /static\.woopra\.com\/js\/woopra\.js/i,
-    // Chrome extensions
-    /extensions\//i,
-    /^chrome:\/\//i,
-    // Other plugins
-    // Cacaoweb
-    /127\.0\.0\.1:4001\/isrunning/i,
-    /webappstoolbarba\.texthelp\.com\//i,
-    /metrics\.itunes\.apple\.com\.edgesuite\.net\//i,
-    // injected (extensions)
-    /inject/i,
+
+  // You can remove this option if you're not planning to use the Sentry Session Replay feature:
+  integrations: [
+    Sentry.replayIntegration({
+      blockAllMedia: true,
+      // Additional Replay configuration goes in here, for example:
+      maskAllText: true,
+    }),
   ],
-  allowUrls: [/thirdweb-dev\.com/i, /thirdweb\.com/, /thirdweb-preview\.com/],
+
+  replaysOnErrorSampleRate: 1.0,
+
+  // This sets the sample rate to be 10%. You may want this to be 100% while
+  // in development and sample at a lower rate in production
+  replaysSessionSampleRate: 0.1,
+
+  // Adjust this value in production, or use tracesSampler for greater control
+  tracesSampleRate: 0.1,
 });

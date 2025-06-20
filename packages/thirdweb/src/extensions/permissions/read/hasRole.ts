@@ -1,6 +1,6 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { hasRole as hasRoleGenerated } from "../__generated__/IPermissions/read/hasRole.js";
-import { type RoleInput, getRoleHash } from "../utils.js";
+import { getRoleHash, type RoleInput } from "../utils.js";
 
 export { isHasRoleSupported } from "../__generated__/IPermissions/read/hasRole.js";
 
@@ -32,8 +32,8 @@ export function hasRole(
   options: BaseTransactionOptions<HasRoleParams>,
 ): Promise<boolean> {
   return hasRoleGenerated({
+    account: options.targetAccountAddress,
     contract: options.contract,
     role: getRoleHash(options.role),
-    account: options.targetAccountAddress,
   });
 }

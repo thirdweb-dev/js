@@ -55,8 +55,8 @@ export function ModuleInstance(props: ModuleInstanceProps) {
   return (
     <ModuleCardUI
       {...props}
-      isOwnerAccount={!!props.ownerAccount}
       client={props.contract.client}
+      isOwnerAccount={!!props.ownerAccount}
     />
   );
 }

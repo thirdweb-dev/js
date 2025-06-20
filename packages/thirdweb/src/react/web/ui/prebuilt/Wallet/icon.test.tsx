@@ -19,6 +19,7 @@ describe("WalletIcon", () => {
 
   it("should render an image", async () => {
     const { container } = render(
+      // biome-ignore lint/nursery/useUniqueElementIds: "id" is not a html attribute here - TODO: stop using 'id' as a prop on JSX elements
       <WalletProvider id="io.cosmostation">
         <WalletIcon />
       </WalletProvider>,

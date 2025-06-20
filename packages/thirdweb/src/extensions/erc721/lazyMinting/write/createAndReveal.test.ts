@@ -1,12 +1,11 @@
-import { beforeAll, describe, it } from "vitest";
-import { expect } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { ANVIL_CHAIN } from "../../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../../../test/src/test-wallets.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../../../transaction/actions/send-and-confirm-transaction.js";
 import { deployERC721Contract } from "../../../prebuilts/deploy-erc721.js";
@@ -15,18 +14,18 @@ import { createDelayedRevealBatch } from "./createDelayedRevealBatch.js";
 import { reveal } from "./reveal.js";
 
 const placeholderNFT = {
-  name: "Hidden NFT",
   description: "Will be revealed next week!",
+  name: "Hidden NFT",
 };
 
 const realNFTs = [
   {
-    name: "Common NFT #1",
     description: "Common NFT, one of many.",
+    name: "Common NFT #1",
   },
   {
-    name: "Super Rare NFT #2",
     description: "You got a Super Rare NFT!",
+    name: "Super Rare NFT #2",
   },
 ];
 
@@ -34,18 +33,18 @@ describe.runIf(process.env.TW_SECRET_KEY)("createAndReveal", () => {
   let contract: ThirdwebContract;
   beforeAll(async () => {
     const address = await deployERC721Contract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
-      type: "DropERC721",
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       params: {
-        name: "Test NFT",
         contractURI: TEST_CONTRACT_URI,
+        name: "Test NFT",
       },
+      type: "DropERC721",
     });
     contract = getContract({
-      chain: ANVIL_CHAIN,
       address,
+      chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
     });
   });
@@ -58,8 +57,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("createAndReveal", () => {
       placeholderMetadata: placeholderNFT,
     });
     await sendAndConfirmTransaction({
-      transaction: tx,
       account: TEST_ACCOUNT_A,
+      transaction: tx,
     });
     const nft = await getNFT({
       contract,
@@ -67,13 +66,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("createAndReveal", () => {
     });
     expect(nft.metadata.name).toBe(placeholderNFT.name);
     const revealTx = reveal({
-      contract,
       batchId: 0n,
+      contract,
       password: "password",
     });
     await sendAndConfirmTransaction({
-      transaction: revealTx,
       account: TEST_ACCOUNT_A,
+      transaction: revealTx,
     });
     const nftAfterReveal = await getNFT({
       contract,

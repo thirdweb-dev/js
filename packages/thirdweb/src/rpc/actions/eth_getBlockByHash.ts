@@ -1,9 +1,9 @@
 import {
   type EIP1193RequestFn,
   type EIP1474Methods,
+  formatBlock,
   type GetBlockReturnType,
   type Hash,
-  formatBlock,
 } from "viem";
 
 type GetBlockByHashParams<TIncludeTransactions extends boolean = false> = {

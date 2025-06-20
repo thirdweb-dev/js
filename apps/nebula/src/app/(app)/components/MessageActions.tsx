@@ -1,6 +1,3 @@
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import {
   CheckIcon,
@@ -10,6 +7,9 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { cn } from "@/lib/utils";
 import { submitFeedback } from "../api/feedback";
 
 export function MessageActions(props: {
@@ -31,13 +31,13 @@ export function MessageActions(props: {
   }
   const sendPositiveRating = useMutation({
     mutationFn: () => sendRating("good"),
-    onSuccess() {
-      toast.info("Thanks for the feedback!", {
+    onError() {
+      toast.error("Failed to send feedback", {
         position: "top-right",
       });
     },
-    onError() {
-      toast.error("Failed to send feedback", {
+    onSuccess() {
+      toast.info("Thanks for the feedback!", {
         position: "top-right",
       });
     },
@@ -45,13 +45,13 @@ export function MessageActions(props: {
 
   const sendBadRating = useMutation({
     mutationFn: () => sendRating("bad"),
-    onSuccess() {
-      toast.info("Thanks for the feedback!", {
+    onError() {
+      toast.error("Failed to send feedback", {
         position: "top-right",
       });
     },
-    onError() {
-      toast.error("Failed to send feedback", {
+    onSuccess() {
+      toast.info("Thanks for the feedback!", {
         position: "top-right",
       });
     },
@@ -65,8 +65,6 @@ export function MessageActions(props: {
     >
       {messageText && (
         <Button
-          variant="outline"
-          size="sm"
           className={cn("h-8 gap-2 rounded-lg text-sm", props.buttonClassName)}
           onClick={() => {
             navigator.clipboard.writeText(messageText);
@@ -75,6 +73,8 @@ export function MessageActions(props: {
               setIsCopied(false);
             }, 1000);
           }}
+          size="sm"
+          variant="outline"
         >
           {isCopied ? (
             <CheckIcon className="size-3.5 text-green-500" />
@@ -86,8 +86,6 @@ export function MessageActions(props: {
       )}
 
       <Button
-        variant="outline"
-        size="sm"
         className={cn(
           "size-8 rounded-lg bg-background p-0",
           props.buttonClassName,
@@ -95,6 +93,8 @@ export function MessageActions(props: {
         onClick={() => {
           sendPositiveRating.mutate();
         }}
+        size="sm"
+        variant="outline"
       >
         {sendPositiveRating.isPending ? (
           <Spinner className="size-4" />
@@ -104,8 +104,6 @@ export function MessageActions(props: {
       </Button>
 
       <Button
-        variant="outline"
-        size="sm"
         className={cn(
           "size-8 rounded-lg bg-background p-0",
           props.buttonClassName,
@@ -113,6 +111,8 @@ export function MessageActions(props: {
         onClick={() => {
           sendBadRating.mutate();
         }}
+        size="sm"
+        variant="outline"
       >
         {sendBadRating.isPending ? (
           <Spinner className="size-4" />

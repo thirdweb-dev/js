@@ -1,28 +1,28 @@
+import type { Metadata } from "next";
 import { PageLayout } from "@/components/blocks/APIHeader";
 import { CodeExample } from "@/components/code/code-example";
 import { BuyMerchPreview } from "@/components/pay/direct-payment";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  metadataBase,
-  title: "Integrate Fiat & Cross-Chain Crypto Payments | Universal Bridge",
   description:
     "The easiest way for users to transact in your app. Onramp users in clicks and generate revenue for each user transaction. Integrate for free.",
+  metadataBase,
+  title: "Integrate Fiat & Cross-Chain Crypto Payments | Universal Bridge",
 };
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="Commerce payments with fiat or crypto"
         description={
           <>
             Let your users pay for any service with fiat or crypto on any chain.
           </>
         }
         docsLink="https://portal.thirdweb.com/connect/pay/get-started?utm_source=playground"
+        title="Commerce payments with fiat or crypto"
       >
         <BuyMerch />
       </PageLayout>
@@ -33,19 +33,6 @@ export default function Page() {
 function BuyMerch() {
   return (
     <CodeExample
-      header={{
-        title: "Checkout",
-        description: (
-          <>
-            Take payments from Fiat or Crypto directly to your seller wallet.
-            <br />
-            Get notified for every sale through webhooks, which lets you trigger
-            any action you want like shipping physical goods, activating
-            services or doing onchain actions.
-          </>
-        ),
-      }}
-      preview={<BuyMerchPreview />}
       code={`import { CheckoutWidget, getDefaultToken } from "thirdweb/react";
           import { base } from "thirdweb/chains";
 
@@ -64,7 +51,20 @@ function BuyMerch() {
       />
           );
         };`}
+      header={{
+        description: (
+          <>
+            Take payments from Fiat or Crypto directly to your seller wallet.
+            <br />
+            Get notified for every sale through webhooks, which lets you trigger
+            any action you want like shipping physical goods, activating
+            services or doing onchain actions.
+          </>
+        ),
+        title: "Checkout",
+      }}
       lang="tsx"
+      preview={<BuyMerchPreview />}
     />
   );
 }

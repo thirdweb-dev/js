@@ -54,14 +54,14 @@ export class KafkaProducer {
     const { producerName, kafkaServers, username, password, config } = options;
 
     this.producer = new KafkaJS.Kafka({}).producer({
-      "client.id": producerName,
-      "bootstrap.servers": kafkaServers,
-      "security.protocol": "sasl_ssl",
-      "sasl.mechanisms": "PLAIN",
-      "sasl.username": username,
-      "sasl.password": password,
-      "compression.codec": "lz4",
       "allow.auto.create.topics": true,
+      "bootstrap.servers": kafkaServers,
+      "client.id": producerName,
+      "compression.codec": "lz4",
+      "sasl.mechanisms": "PLAIN",
+      "sasl.password": password,
+      "sasl.username": username,
+      "security.protocol": "sasl_ssl",
       // All configuration can be overridden.
       ...config,
     });
@@ -99,10 +99,10 @@ export class KafkaProducer {
     await this.connect();
 
     await this.producer.send({
-      topic,
       messages: messages.map((m) => ({
         value: JSON.stringify(m),
       })),
+      topic,
     });
   }
 

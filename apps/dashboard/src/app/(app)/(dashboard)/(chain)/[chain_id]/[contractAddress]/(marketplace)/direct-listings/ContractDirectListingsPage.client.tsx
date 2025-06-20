@@ -34,8 +34,8 @@ export function ContractDirectListingsPageClient(props: {
   return (
     <ContractDirectListingsPage
       contract={props.contract}
-      isLoggedIn={props.isLoggedIn}
       isInsightSupported={metadataQuery.data.isInsightSupported}
+      isLoggedIn={props.isLoggedIn}
     />
   );
 }

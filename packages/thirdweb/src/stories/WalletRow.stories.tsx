@@ -26,48 +26,48 @@ const WalletRowWithTheme = (props: WalletRowWithThemeProps) => {
 };
 
 const meta = {
-  title: "Connect/WalletRow",
+  args: {
+    address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    client: storyClient, // Vitalik's address for ENS demo
+    theme: "dark",
+  },
+  argTypes: {
+    address: {
+      control: "text",
+      description: "Wallet address to display",
+    },
+    iconSize: {
+      control: "select",
+      description: "Size of the wallet icon",
+      options: ["xs", "sm", "md", "lg", "xl"],
+    },
+    label: {
+      control: "text",
+      description: "Optional label to display above the address",
+    },
+    textSize: {
+      control: "select",
+      description: "Size of the main address text",
+      options: ["xs", "sm", "md", "lg", "xl"],
+    },
+    theme: {
+      control: "select",
+      description: "Theme for the component",
+      options: ["light", "dark"],
+    },
+  },
   component: WalletRowWithTheme,
   parameters: {
-    layout: "centered",
     docs: {
       description: {
         component:
           "A reusable component that displays wallet information including address, wallet type, and optional ENS name or email.",
       },
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  args: {
-    client: storyClient,
-    address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045", // Vitalik's address for ENS demo
-    theme: "dark",
-  },
-  argTypes: {
-    theme: {
-      control: "select",
-      options: ["light", "dark"],
-      description: "Theme for the component",
-    },
-    iconSize: {
-      control: "select",
-      options: ["xs", "sm", "md", "lg", "xl"],
-      description: "Size of the wallet icon",
-    },
-    textSize: {
-      control: "select",
-      options: ["xs", "sm", "md", "lg", "xl"],
-      description: "Size of the main address text",
-    },
-    label: {
-      control: "text",
-      description: "Optional label to display above the address",
-    },
-    address: {
-      control: "text",
-      description: "Wallet address to display",
-    },
-  },
+  title: "Connect/WalletRow",
 } satisfies Meta<typeof WalletRowWithTheme>;
 
 type Story = StoryObj<typeof meta>;
@@ -92,9 +92,9 @@ export const Dark: Story = {
 
 export const WithLabel: Story = {
   args: {
-    theme: "dark",
-    label: "Recipient Wallet",
     address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    label: "Recipient Wallet",
+    theme: "dark",
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -103,11 +103,11 @@ export const WithLabel: Story = {
 
 export const LargeSize: Story = {
   args: {
-    theme: "light",
-    iconSize: "lg",
-    textSize: "md",
-    label: "Primary Wallet",
     address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    iconSize: "lg",
+    label: "Primary Wallet",
+    textSize: "md",
+    theme: "light",
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -116,10 +116,10 @@ export const LargeSize: Story = {
 
 export const SmallSize: Story = {
   args: {
-    theme: "dark",
+    address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
     iconSize: "sm",
     textSize: "xs",
-    address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    theme: "dark",
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -127,6 +127,12 @@ export const SmallSize: Story = {
 };
 
 export const DifferentAddresses: Story = {
+  args: {
+    theme: "dark",
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
+  },
   render: (args) => (
     <CustomThemeProvider theme={args.theme}>
       <div
@@ -138,29 +144,23 @@ export const DifferentAddresses: Story = {
         }}
       >
         <WalletRow
-          client={args.client}
           address="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+          client={args.client}
           label="ENS Example (vitalik.eth)"
         />
         <WalletRow
-          client={args.client}
           address="0x4fA9230f4E8978462cE7Bf8e6b5a2588da5F4264"
+          client={args.client}
           label="Regular Address"
         />
         <WalletRow
-          client={args.client}
           address="0x4fA9230f4E8978462cE7Bf8e6b5a2588da5F4264"
+          client={args.client}
           label="Short Address"
         />
       </div>
     </CustomThemeProvider>
   ),
-  args: {
-    theme: "dark",
-  },
-  parameters: {
-    backgrounds: { default: "dark" },
-  },
 };
 
 export default meta;

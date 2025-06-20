@@ -1,10 +1,10 @@
 "use client";
 
-import { SkeletonContainer } from "@/components/ui/skeleton";
 import { memo } from "react";
-import { type ThirdwebClient, getContract } from "thirdweb";
+import { getContract, type ThirdwebClient } from "thirdweb";
 import { getAllAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import { useV5DashboardChain } from "../../../lib/v5-adapter";
 
 function useAccountCount(
@@ -40,10 +40,10 @@ export const FactoryAccountCell = memo(function FactoryAccountCell(props: {
   return (
     <SkeletonContainer
       loadedData={accountsQuery.data?.length}
-      skeletonData={100}
       render={(v) => {
         return <span> {v}</span>;
       }}
+      skeletonData={100}
     />
   );
 });

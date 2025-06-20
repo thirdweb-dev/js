@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "PrimarySaleRecipientUpdated" event.
@@ -36,7 +36,7 @@ export function primarySaleRecipientUpdatedEvent(
   filters: PrimarySaleRecipientUpdatedEventFilters = {},
 ) {
   return prepareEvent({
-    signature: "event PrimarySaleRecipientUpdated(address indexed recipient)",
     filters,
+    signature: "event PrimarySaleRecipientUpdated(address indexed recipient)",
   });
 }

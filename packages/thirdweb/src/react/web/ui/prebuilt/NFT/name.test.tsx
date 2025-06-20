@@ -29,8 +29,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTName", () => {
   it("fetchNftName should respect nameResolver as a string", async () => {
     const desc = await fetchNftName({
       contract: DOODLES_CONTRACT,
-      tokenId: 0n,
       nameResolver: "string",
+      tokenId: 0n,
     });
     expect(desc).toBe("string");
   });
@@ -38,8 +38,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTName", () => {
   it("fetchNftName should respect nameResolver as a non-async function", async () => {
     const desc = await fetchNftName({
       contract: DOODLES_CONTRACT,
-      tokenId: 0n,
       nameResolver: () => "non-async",
+      tokenId: 0n,
     });
     expect(desc).toBe("non-async");
   });
@@ -47,8 +47,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTName", () => {
   it("fetchNftName should respect nameResolver as a async function", async () => {
     const desc = await fetchNftName({
       contract: DOODLES_CONTRACT,
-      tokenId: 0n,
       nameResolver: async () => "async",
+      tokenId: 0n,
     });
     expect(desc).toBe("async");
   });
@@ -66,8 +66,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTName", () => {
     expect(
       getQueryKey({
         chainId: 1,
-        tokenId: 1n,
         contractAddress: testContractAddress,
+        tokenId: 1n,
       }),
     ).toStrictEqual([
       "_internal_nft_name_",
@@ -82,9 +82,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTName", () => {
     expect(
       getQueryKey({
         chainId: 1,
-        tokenId: 1n,
-        nameResolver: "test",
         contractAddress: testContractAddress,
+        nameResolver: "test",
+        tokenId: 1n,
       }),
     ).toStrictEqual([
       "_internal_nft_name_",
@@ -101,9 +101,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTName", () => {
     expect(
       getQueryKey({
         chainId: 1,
-        tokenId: 1n,
-        nameResolver: fn,
         contractAddress: testContractAddress,
+        nameResolver: fn,
+        tokenId: 1n,
       }),
     ).toStrictEqual([
       "_internal_nft_name_",
@@ -120,9 +120,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTName", () => {
     expect(
       getQueryKey({
         chainId: 1,
-        tokenId: 1n,
-        nameResolver: fn,
         contractAddress: testContractAddress,
+        nameResolver: fn,
+        tokenId: 1n,
       }),
     ).toStrictEqual([
       "_internal_nft_name_",

@@ -1,15 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "next": true,
-  "project": ["src/**"],
-  "ignoreBinaries": ["only-allow", "biome"],
-  "ignore": ["src/components/ui/**"],
-  "ignoreDependencies": [
-    "@thirdweb-dev/chains",
-    "@thirdweb-dev/wallets",
-    "thirdweb",
-    "@types/flexsearch"
-  ],
   "entry": [
     "next.config.{js,ts,cjs,mjs}",
     "{instrumentation,middleware}.{js,ts}",
@@ -29,5 +19,15 @@
     "src/app/**/{opengraph,twitter}-image.{js,jsx,ts,tsx}",
     "src/pages/**/*.{js,jsx,ts,tsx}",
     "scripts/*.ts"
-  ]
+  ],
+  "ignore": ["src/components/ui/**"],
+  "ignoreBinaries": ["only-allow"],
+  "ignoreDependencies": [
+    "@thirdweb-dev/chains",
+    "@thirdweb-dev/wallets",
+    "thirdweb",
+    "@types/flexsearch"
+  ],
+  "next": true,
+  "project": ["src/**"]
 }

@@ -1,5 +1,5 @@
-import { useClaimConditionsFormContext } from "..";
 import { QuantityInputWithUnlimited } from "../../quantity-input-with-unlimited";
+import { useClaimConditionsFormContext } from "..";
 import { CustomFormControl } from "../common";
 
 /**
@@ -22,28 +22,28 @@ export const MaxClaimableSupplyInput: React.FC = () => {
 
   return (
     <CustomFormControl
-      label={`How many ${
-        isErc20 ? "tokens" : "NFTs"
-      } will you drop in this phase?`}
+      disabled={formDisabled}
       error={
         form.getFieldState(
           `phases.${phaseIndex}.maxClaimableSupply`,
           form.formState,
         ).error
       }
-      disabled={formDisabled}
+      label={`How many ${
+        isErc20 ? "tokens" : "NFTs"
+      } will you drop in this phase?`}
     >
       <QuantityInputWithUnlimited
-        isRequired
-        isDisabled={formDisabled || (isErc20 && !tokenDecimals)}
         decimals={tokenDecimals}
-        value={field.maxClaimableSupply?.toString() || "0"}
+        isDisabled={formDisabled || (isErc20 && !tokenDecimals)}
+        isRequired
         onChange={(value) =>
           form.setValue(
             `phases.${phaseIndex}.maxClaimableSupply`,
             value.toString(),
           )
         }
+        value={field.maxClaimableSupply?.toString() || "0"}
       />
     </CustomFormControl>
   );

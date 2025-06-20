@@ -1,3 +1,5 @@
+import { useId } from "react";
+import type { LocaleId } from "thirdweb/react";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -7,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { LocaleId } from "thirdweb/react";
 import type { ConnectPlaygroundOptions } from "./types";
 
 const locales: {
@@ -15,36 +16,36 @@ const locales: {
   id: LocaleId;
 }[] = [
   {
-    name: "English",
     id: "en_US",
+    name: "English",
   },
   {
-    name: "Spanish",
     id: "es_ES",
+    name: "Spanish",
   },
   {
-    name: "Japanese",
     id: "ja_JP",
+    name: "Japanese",
   },
   {
-    name: "Korean",
     id: "ko_KR",
+    name: "Korean",
   },
   {
-    name: "Filipino",
     id: "tl_PH",
+    name: "Filipino",
   },
   {
-    name: "Vietnamese",
     id: "vi_VN",
+    name: "Vietnamese",
   },
   {
-    name: "German",
     id: "de_DE",
+    name: "German",
   },
   {
-    name: "French",
     id: "fr_FR",
+    name: "French",
   },
 ];
 
@@ -55,18 +56,19 @@ export function LocaleFormControl(props: {
   >;
 }) {
   const { connectOptions, setConnectOptions } = props;
+  const id = useId();
   return (
     <div className="flex flex-col gap-2">
-      <Label htmlFor="modal-locale">Locale</Label>
+      <Label htmlFor={id}>Locale</Label>
       <Select
-        value={connectOptions.localeId}
         onValueChange={(v) => {
           const locale = locales.find((locale) => locale.id === v);
           if (!locale) return;
           setConnectOptions((v) => ({ ...v, localeId: locale.id }));
         }}
+        value={connectOptions.localeId}
       >
-        <SelectTrigger id="modal-locale">
+        <SelectTrigger id={id}>
           <SelectValue placeholder="English" />
         </SelectTrigger>
         <SelectContent>

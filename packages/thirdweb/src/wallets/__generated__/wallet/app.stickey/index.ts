@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.stickey",
-  name: "Stickey Wallet",
-  homepage: "https://stickey.app",
-  image_id: "12aab9fb-f3d4-4248-10e0-4eda17a5de00",
   app: {
-    browser: "https://stickey.app",
-    ios: "https://apps.apple.com/app/id1671113083",
     android: "https://play.google.com/store/apps/details?id=app.stickey",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://stickey.app",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/app/id1671113083",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "stickyapp://",
-    universal: "https://stickeyapp.page.link",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: "stickyapp://",
     universal: "https://stickeyapp.page.link",
   },
+  homepage: "https://stickey.app",
+  id: "app.stickey",
+  image_id: "12aab9fb-f3d4-4248-10e0-4eda17a5de00",
+  mobile: {
+    native: "stickyapp://",
+    universal: "https://stickeyapp.page.link",
+  },
+  name: "Stickey Wallet",
+  rdns: null,
 } as const;

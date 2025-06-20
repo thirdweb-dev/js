@@ -1,6 +1,6 @@
-import { Progress } from "@/components/ui/progress";
 import { InfinityIcon } from "lucide-react";
 import { maxUint256 } from "thirdweb/utils";
+import { Progress } from "@/components/ui/progress";
 import { supplyFormatter } from "../nft/format";
 
 export function SupplyClaimedProgress(props: {
@@ -14,7 +14,7 @@ export function SupplyClaimedProgress(props: {
         <span className="font-medium text-sm">Claimed Supply </span>
         <span className="flex items-center gap-1 font-bold text-sm">
           {supplyFormatter.format(props.claimedSupply)} /{" "}
-          <InfinityIcon className="size-4" aria-label="Unlimited" />
+          <InfinityIcon aria-label="Unlimited" className="size-4" />
         </span>
       </p>
     );
@@ -40,7 +40,7 @@ export function SupplyClaimedProgress(props: {
           {supplyFormatter.format(props.totalSupply)}
         </span>
       </div>
-      <Progress value={soldPercentage} className="h-2.5" />
+      <Progress className="h-2.5" value={soldPercentage} />
       <p className="font-medium text-muted-foreground text-xs">
         {soldPercentage === 0 && props.claimedSupply !== 0n && "~"}
         {soldPercentage.toFixed(2)}% Sold

@@ -1,14 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -24,6 +15,15 @@ import {
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface TokenTransferButtonProps {
   contract: ThirdwebContract;
@@ -39,8 +39,8 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
 }) => {
   const address = useActiveAccount()?.address;
   const tokenBalanceQuery = useReadContract(ERC20Ext.balanceOf, {
-    contract,
     address: address || "",
+    contract,
     queryOptions: { enabled: !!address },
   });
   const form = useForm({ defaultValues: { amount: "0", to: "" } });
@@ -50,13 +50,13 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
   const [open, setOpen] = useState(false);
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet onOpenChange={setOpen} open={open}>
       <SheetTrigger asChild>
         <Button
           variant="primary"
           {...restButtonProps}
-          disabled={!hasBalance}
           className="gap-2"
+          disabled={!hasBalance}
         >
           <SendIcon size={16} /> Transfer
         </Button>
@@ -67,13 +67,13 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
         </SheetHeader>
         <form className="mt-10">
           <div className="flex flex-col gap-6">
-            <FormControl isRequired isInvalid={!!form.formState.errors.to}>
+            <FormControl isInvalid={!!form.formState.errors.to} isRequired>
               <FormLabel>To Address</FormLabel>
               <SolidityInput
                 client={contract.client}
                 formContext={form}
-                solidityType="address"
                 placeholder={ZERO_ADDRESS}
+                solidityType="address"
                 {...form.register("to")}
               />
               <FormHelperText>Enter the address to transfer to.</FormHelperText>
@@ -81,11 +81,11 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
                 {form.formState.errors.to?.message}
               </FormErrorMessage>
             </FormControl>
-            <FormControl isRequired isInvalid={!!form.formState.errors.amount}>
+            <FormControl isInvalid={!!form.formState.errors.amount} isRequired>
               <FormLabel>Amount</FormLabel>
               <Input
-                type="text"
                 pattern={`^\\d+(\\.\\d{1,${decimalsQuery.data || 18}})?$`}
+                type="text"
                 {...form.register("amount")}
               />
               <FormHelperText>
@@ -100,34 +100,34 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
         <SheetFooter className="mt-10">
           <TransactionButton
             client={contract.client}
-            txChainID={contract.chain.id}
-            transactionCount={1}
-            isLoggedIn={isLoggedIn}
-            form={TRANSFER_FORM_ID}
-            isPending={sendConfirmation.isPending}
-            type="submit"
             disabled={!form.formState.isDirty}
+            form={TRANSFER_FORM_ID}
+            isLoggedIn={isLoggedIn}
+            isPending={sendConfirmation.isPending}
             onClick={form.handleSubmit((d) => {
               const transaction = ERC20Ext.transfer({
-                contract,
                 amount: d.amount,
+                contract,
                 to: d.to,
               });
               const promise = sendConfirmation.mutateAsync(transaction, {
+                onError: (error) => {
+                  console.error(error);
+                },
                 onSuccess: () => {
                   form.reset({ amount: "0", to: "" });
                   setOpen(false);
                 },
-                onError: (error) => {
-                  console.error(error);
-                },
               });
               toast.promise(promise, {
+                error: "Failed to transfer tokens",
                 loading: "Transferring tokens",
                 success: "Successfully transferred tokens",
-                error: "Failed to transfer tokens",
               });
             })}
+            transactionCount={1}
+            txChainID={contract.chain.id}
+            type="submit"
           >
             Transfer Tokens
           </TransactionButton>

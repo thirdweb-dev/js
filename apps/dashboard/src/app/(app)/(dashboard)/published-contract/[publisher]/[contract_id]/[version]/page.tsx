@@ -1,12 +1,12 @@
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
-import { Separator } from "@/components/ui/separator";
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { SimpleGrid } from "@chakra-ui/react";
 import { fetchPublishedContractVersions } from "components/contract-components/fetch-contracts-with-versions";
 import { PublishedContract } from "components/contract-components/published-contract";
 import { notFound } from "next/navigation";
 import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
+import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
+import { Separator } from "@/components/ui/separator";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { getUserThirdwebClient } from "../../../../../api/lib/getAuthToken";
 import { PublishedActions } from "../../../components/contract-actions-published.client";
@@ -32,7 +32,7 @@ export default async function PublishedContractPage(
 ) {
   const params = await props.params;
   // resolve ENS if required
-  let publisherAddress: string | undefined = undefined;
+  let publisherAddress: string | undefined;
 
   if (isAddress(params.publisher)) {
     publisherAddress = params.publisher;
@@ -78,8 +78,8 @@ export default async function PublishedContractPage(
     <>
       <DeployContractHeader
         {...params}
-        allVersions={publishedContractVersions}
         activeVersion={publishedContract}
+        allVersions={publishedContractVersions}
       >
         <PublishedActions
           {...params}
@@ -91,9 +91,9 @@ export default async function PublishedContractPage(
       <ChakraProviderSetup>
         <SimpleGrid columns={12} gap={{ base: 6, md: 10 }} w="full">
           <PublishedContract
-            publishedContract={publishedContract}
-            isLoggedIn={!!account}
             client={client}
+            isLoggedIn={!!account}
+            publishedContract={publishedContract}
           />
         </SimpleGrid>
       </ChakraProviderSetup>

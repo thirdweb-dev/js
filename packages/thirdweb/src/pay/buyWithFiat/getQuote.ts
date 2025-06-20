@@ -307,9 +307,9 @@ export async function getBuyWithFiatQuote(
       params.toTokenAddress !== NATIVE_TOKEN_ADDRESS
         ? await decimals({
             contract: getContract({
-              client: params.client,
               address: params.toTokenAddress,
               chain: getCachedChain(params.toChainId),
+              client: params.client,
             }),
           })
         : 18;
@@ -319,19 +319,19 @@ export async function getBuyWithFiatQuote(
 
     // Call new Onramp.prepare to get the quote & link
     const prepared = await prepareOnramp({
-      client: params.client,
-      onramp: onrampProvider,
-      chainId: params.toChainId,
-      tokenAddress: params.toTokenAddress,
-      receiver: params.toAddress,
-      sender: params.fromAddress,
       amount: amountWei,
-      purchaseData: params.purchaseData,
+      chainId: params.toChainId,
+      client: params.client,
       currency: params.fromCurrencySymbol,
       maxSteps: 2,
-      onrampTokenAddress: params.onrampTokenAddress ?? NATIVE_TOKEN_ADDRESS, // force onramp to native token to avoid missing gas issues
+      onramp: onrampProvider,
       onrampChainId: params.onrampChainId,
+      onrampTokenAddress: params.onrampTokenAddress ?? NATIVE_TOKEN_ADDRESS,
       paymentLinkId: params.paymentLinkId,
+      purchaseData: params.purchaseData,
+      receiver: params.toAddress, // force onramp to native token to avoid missing gas issues
+      sender: params.fromAddress,
+      tokenAddress: params.toTokenAddress,
     });
 
     // Determine tokens based on steps rules
@@ -369,11 +369,11 @@ export async function getBuyWithFiatQuote(
       priceUsd: number;
     }): PayTokenInfo => ({
       chainId: token.chainId,
-      tokenAddress: token.address,
       decimals: token.decimals,
-      priceUSDCents: Math.round(token.priceUsd * 100),
       name: token.name,
+      priceUSDCents: Math.round(token.priceUsd * 100),
       symbol: token.symbol,
+      tokenAddress: token.address,
     });
 
     // Determine the raw token objects using new simplified rules
@@ -406,10 +406,10 @@ export async function getBuyWithFiatQuote(
     // Build info objects
     const onRampTokenObject = {
       amount: onRampTokenAmount,
-      amountWei: onRampTokenAmountWei.toString(),
       amountUSDCents: Math.round(
         Number(onRampTokenAmount) * onRampTokenRaw.priceUsd * 100,
       ),
+      amountWei: onRampTokenAmountWei.toString(),
       token: tokenToPayTokenInfo(onRampTokenRaw),
     };
 
@@ -432,10 +432,10 @@ export async function getBuyWithFiatQuote(
       );
       routingTokenObject = {
         amount: routingAmount,
-        amountWei: routingAmountWei.toString(),
         amountUSDCents: Math.round(
           Number(routingAmount) * routingTokenRaw.priceUsd * 100,
         ),
+        amountWei: routingAmountWei.toString(),
         token: tokenToPayTokenInfo(routingTokenRaw),
       };
     }
@@ -444,30 +444,30 @@ export async function getBuyWithFiatQuote(
       estimatedDurationSeconds,
       estimatedToAmountMin: estimatedToAmountMin,
       estimatedToAmountMinWei: estimatedToAmountMinWeiBigInt.toString(),
-      toAmountMinWei: toAmountMinWeiBigInt.toString(),
-      toAmountMin: toAmountMin,
+      fromAddress: params.fromAddress,
       fromCurrency: {
         amount: prepared.currencyAmount.toString(),
         amountUnits: Number(prepared.currencyAmount).toFixed(2),
-        decimals: 2,
         currencySymbol: prepared.currency,
+        decimals: 2,
       },
       fromCurrencyWithFees: {
         amount: prepared.currencyAmount.toString(),
         amountUnits: Number(prepared.currencyAmount).toFixed(2),
-        decimals: 2,
         currencySymbol: prepared.currency,
+        decimals: 2,
       },
-      toToken: tokenToPayTokenInfo(toTokenRaw),
-      toAddress: params.toAddress,
-      fromAddress: params.fromAddress,
-      maxSlippageBPS: maxSlippageBPS,
       intentId: prepared.id,
-      processingFees: [],
-      onRampToken: onRampTokenObject,
-      routingToken: routingTokenObject,
+      maxSlippageBPS: maxSlippageBPS,
       onRampLink: prepared.link,
+      onRampToken: onRampTokenObject,
+      processingFees: [],
       provider: (params.preferredProvider ?? "COINBASE") as FiatProvider,
+      routingToken: routingTokenObject,
+      toAddress: params.toAddress,
+      toAmountMin: toAmountMin,
+      toAmountMinWei: toAmountMinWeiBigInt.toString(),
+      toToken: tokenToPayTokenInfo(toTokenRaw),
     };
 
     return buyWithFiatQuote;

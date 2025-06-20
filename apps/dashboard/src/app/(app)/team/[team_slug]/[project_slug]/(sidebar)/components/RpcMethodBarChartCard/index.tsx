@@ -1,7 +1,7 @@
-import { getRpcMethodUsage } from "@/api/analytics";
 import { LoadingChartState } from "components/analytics/empty-chart-state";
 import { Suspense } from "react";
 import type { AnalyticsQueryParams } from "types/analytics";
+import { getRpcMethodUsage } from "@/api/analytics";
 import { RpcMethodBarChartCardUI } from "./RpcMethodBarChartCardUI";
 
 export function RpcMethodBarChartCard(props: AnalyticsQueryParams) {

@@ -43,11 +43,6 @@ export async function autoConnect(
   const wallets = props.wallets || getDefaultWallets(props);
   const manager = createConnectionManager(webLocalStorage);
   const result = await autoConnectCore({
-    storage: webLocalStorage,
-    props: {
-      ...props,
-      wallets,
-    },
     createWalletFn: createWallet,
     getInstalledWallets: () => {
       const specifiedWalletIds = new Set(wallets.map((x) => x.id));
@@ -60,6 +55,11 @@ export async function autoConnect(
       return installedWallets;
     },
     manager,
+    props: {
+      ...props,
+      wallets,
+    },
+    storage: webLocalStorage,
   });
   return result;
 }

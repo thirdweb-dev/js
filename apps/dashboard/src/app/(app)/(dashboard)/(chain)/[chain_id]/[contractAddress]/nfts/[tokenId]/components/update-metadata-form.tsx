@@ -68,16 +68,16 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
 
   const transformedQueryData = useMemo(() => {
     const nftMetadata: Partial<NFTMetadata> = {
-      // basic
-      name: nft.metadata.name || "",
-      description: nft.metadata.description || "",
-      // media
-      image: nft.metadata.image,
       animation_url: nft.metadata.animation_url,
+      attributes: nft.metadata.attributes,
+      background_color: nft.metadata.background_color || "",
+      description: nft.metadata.description || "",
       // advanced
       external_url: nft.metadata.external_url || "",
-      background_color: nft.metadata.background_color || "",
-      attributes: nft.metadata.attributes,
+      // media
+      image: nft.metadata.image,
+      // basic
+      name: nft.metadata.name || "",
     };
 
     return nftMetadata;
@@ -128,8 +128,8 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
         try {
           const newMetadata = parseAttributes({
             ...data,
-            image: data.image || nft.metadata.image,
             animation_url: data.animation_url || nft.metadata.animation_url,
+            image: data.image || nft.metadata.image,
           });
 
           const transaction = useUpdateMetadata
@@ -137,32 +137,32 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
               nft.type === "ERC721"
               ? updateMetadata721({
                   contract,
-                  targetTokenId: BigInt(nft.id),
                   newMetadata,
+                  targetTokenId: BigInt(nft.id),
                 })
               : updateMetadata1155({
                   contract,
-                  targetTokenId: BigInt(nft.id),
                   newMetadata,
+                  targetTokenId: BigInt(nft.id),
                 })
             : // For Collection contracts, we need to call the `setTokenURI` method
               nft.type === "ERC721"
               ? updateTokenURI721({
                   contract,
-                  tokenId: BigInt(nft.id),
                   newMetadata,
+                  tokenId: BigInt(nft.id),
                 })
               : updateTokenURI1155({
                   contract,
-                  tokenId: BigInt(nft.id),
                   newMetadata,
+                  tokenId: BigInt(nft.id),
                 });
           await sendAndConfirmTx.mutateAsync(transaction, {
-            onSuccess: () => {
-              setOpen(false);
-            },
             onError: (error) => {
               console.error(error);
+            },
+            onSuccess: () => {
+              setOpen(false);
             },
           });
 
@@ -173,7 +173,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
         }
       })}
     >
-      <FormControl isRequired isInvalid={!!errors.name}>
+      <FormControl isInvalid={!!errors.name} isRequired>
         <FormLabel>Name</FormLabel>
         <Input autoFocus {...register("name")} />
         <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
@@ -183,15 +183,15 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
         <FormLabel>Media</FormLabel>
         <div className="flex flex-row flex-wrap gap-3">
           <FileInput
-            previewMaxWidth="200px"
-            value={media}
-            showUploadButton
-            showPreview
-            setValue={setFile}
             className="shrink-0 rounded border border-border transition-all duration-200"
-            selectOrUpload="Upload"
-            helperText={nft?.metadata ? "New Media" : "Media"}
             client={contract.client}
+            helperText={nft?.metadata ? "New Media" : "Media"}
+            previewMaxWidth="200px"
+            selectOrUpload="Upload"
+            setValue={setFile}
+            showPreview
+            showUploadButton
+            value={media}
           />
         </div>
 
@@ -208,13 +208,13 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
         <FormControl isInvalid={!!errors.image}>
           <FormLabel>Cover Image</FormLabel>
           <FileInput
-            previewMaxWidth="200px"
-            client={contract.client}
             accept={{ "image/*": [] }}
-            value={image}
-            showUploadButton
-            setValue={(file) => setValue("image", file)}
             className="rounded border border-border transition-all"
+            client={contract.client}
+            previewMaxWidth="200px"
+            setValue={(file) => setValue("image", file)}
+            showUploadButton
+            value={image}
           />
           <FormHelperText>
             You can optionally upload an image as the cover of your NFT.
@@ -230,13 +230,13 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
         <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
       </FormControl>
       <PropertiesFormControl
-        watch={watch}
+        client={contract.client}
+        control={control}
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
         errors={errors as any}
-        control={control}
         register={register}
         setValue={setValue}
-        client={contract.client}
+        watch={watch}
       />
 
       <Accordion
@@ -244,7 +244,7 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
         index={errors.background_color || errors.external_url ? [0] : undefined}
       >
         <AccordionItem>
-          <AccordionButton px={0} justifyContent="space-between">
+          <AccordionButton justifyContent="space-between" px={0}>
             <Heading size="subtitle.md">Advanced Options</Heading>
             <AccordionIcon />
           </AccordionButton>
@@ -283,10 +283,10 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
               <FormControl isInvalid={!!errors.image}>
                 <FormLabel>Image URL</FormLabel>
                 <Input
-                  value={typeof image === "string" ? image : ""}
                   onChange={(e) => {
                     setValue("image", e.target.value);
                   }}
+                  value={typeof image === "string" ? image : ""}
                 />
                 <FormHelperText>
                   If you already have your NFT image pre-uploaded to a URL, you
@@ -300,10 +300,10 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
               <FormControl isInvalid={!!errors.animation_url}>
                 <FormLabel>Animation URL</FormLabel>
                 <Input
-                  value={typeof animation_url === "string" ? animation_url : ""}
                   onChange={(e) => {
                     setValue("animation_url", e.target.value);
                   }}
+                  value={typeof animation_url === "string" ? animation_url : ""}
                 />
                 <FormHelperText>
                   If you already have your NFT Animation URL pre-uploaded to a
@@ -321,20 +321,20 @@ export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
       <div className="mt-8 flex flex-row justify-end gap-3">
         <Button
           isDisabled={sendAndConfirmTx.isPending}
-          variant="outline"
           onClick={() => setOpen(false)}
+          variant="outline"
         >
           Cancel
         </Button>
         <TransactionButton
           client={contract.client}
-          isLoggedIn={isLoggedIn}
-          txChainID={contract.chain.id}
-          transactionCount={1}
-          isPending={sendAndConfirmTx.isPending}
-          form={UPDATE_METADATA_FORM_ID}
-          type="submit"
           disabled={!isDirty}
+          form={UPDATE_METADATA_FORM_ID}
+          isLoggedIn={isLoggedIn}
+          isPending={sendAndConfirmTx.isPending}
+          transactionCount={1}
+          txChainID={contract.chain.id}
+          type="submit"
         >
           Update NFT
         </TransactionButton>

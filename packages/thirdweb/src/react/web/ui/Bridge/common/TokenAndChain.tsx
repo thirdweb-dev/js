@@ -13,10 +13,10 @@ import {
 } from "../../../../core/hooks/others/useChainQuery.js";
 import { genericTokenIcon } from "../../../../core/utils/walletIcon.js";
 import { isNativeToken } from "../../ConnectWallet/screens/nativeToken.js";
-import { ChainName } from "../../components/ChainName.js";
-import { Img } from "../../components/Img.js";
 import { Container } from "../../components/basic.js";
+import { ChainName } from "../../components/ChainName.js";
 import { fallbackChainIcon } from "../../components/fallbackChainIcon.js";
+import { Img } from "../../components/Img.js";
 import { Text } from "../../components/text.js";
 
 export function TokenAndChain({
@@ -34,8 +34,8 @@ export function TokenAndChain({
   const chain = getCachedChain(token.chainId);
   return (
     <Container
-      flex="row"
       center="y"
+      flex="row"
       gap="sm"
       style={{
         flexWrap: "nowrap",
@@ -44,30 +44,30 @@ export function TokenAndChain({
     >
       <Container
         style={{
+          height: iconSize[size],
           position: "relative",
           width: iconSize[size],
-          height: iconSize[size],
         }}
       >
-        <TokenIconWithFallback token={token} size={size} client={client} />
+        <TokenIconWithFallback client={client} size={size} token={token} />
         {chain.id !== 1 && (
           <Container
             style={{
-              position: "absolute",
-              bottom: "-2px",
-              right: "-6px",
-              width: size === "lg" || size === "xl" ? iconSize.sm : iconSize.xs,
-              height:
-                size === "lg" || size === "xl" ? iconSize.sm : iconSize.xs,
-              borderRadius: "50%",
               background: theme.colors.borderColor,
               border: `1.5px solid ${theme.colors.modalBg}`,
+              borderRadius: "50%",
+              bottom: "-2px",
+              height:
+                size === "lg" || size === "xl" ? iconSize.sm : iconSize.xs,
+              position: "absolute",
+              right: "-6px",
+              width: size === "lg" || size === "xl" ? iconSize.sm : iconSize.xs,
             }}
           >
             <ChainIcon
               chain={chain}
-              size={size === "xl" || size === "lg" ? "sm" : "xs"}
               client={client}
+              size={size === "xl" || size === "lg" ? "sm" : "xs"}
             />
           </Container>
         )}
@@ -75,22 +75,22 @@ export function TokenAndChain({
 
       <Container flex="column" gap="3xs" style={{ minWidth: 0 }}>
         <Text
-          size={size === "xl" ? "lg" : "sm"}
           color="primaryText"
-          weight={600}
+          size={size === "xl" ? "lg" : "sm"}
           style={{
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
           }}
+          weight={600}
         >
           {token.name}
         </Text>
         <ChainName
           chain={chain}
-          size={size === "xl" ? "sm" : "xs"}
           client={client}
           short
+          size={size === "xl" ? "sm" : "xs"}
         />
       </Container>
     </Container>
@@ -121,32 +121,32 @@ function TokenIconWithFallback(props: {
 
   return tokenImage ? (
     <Img
+      client={props.client}
+      fallbackImage={genericTokenIcon}
+      height={iconSize[props.size]}
       src={tokenImage}
       style={{
         borderRadius: "50%",
       }}
       width={iconSize[props.size]}
-      height={iconSize[props.size]}
-      fallbackImage={genericTokenIcon}
-      client={props.client}
     />
   ) : (
     <Container
       style={{
-        width: `${iconSize.md}px`,
-        height: `${iconSize.md}px`,
-        borderRadius: "50%",
+        alignItems: "center",
         backgroundColor: theme.colors.secondaryButtonBg,
         border: `1px solid ${theme.colors.borderColor}`,
+        borderRadius: "50%",
         display: "flex",
-        alignItems: "center",
+        height: `${iconSize.md}px`,
         justifyContent: "center",
         padding: spacing.xs,
+        width: `${iconSize.md}px`,
       }}
     >
       <Text
-        size={props.size === "xl" ? "sm" : "xs"}
         color="secondaryText"
+        size={props.size === "xl" ? "sm" : "xs"}
         style={{ fontWeight: 600 }}
       >
         {props.token.symbol.slice(0, 1)}
@@ -164,21 +164,21 @@ export const ChainIcon: React.FC<{
   return (
     <Container
       style={{
-        position: "relative",
+        alignItems: "center",
         display: "flex",
         flexShrink: 0,
-        alignItems: "center",
+        position: "relative",
       }}
     >
       <Img
+        client={props.client}
+        fallbackImage={fallbackChainIcon}
+        height={iconSize[props.size]}
         src={getSrcChainIcon({
-          client: props.client,
           chainIconUrl: url,
+          client: props.client,
         })}
         width={iconSize[props.size]}
-        height={iconSize[props.size]}
-        fallbackImage={fallbackChainIcon}
-        client={props.client}
       />
     </Container>
   );
@@ -194,8 +194,8 @@ const getSrcChainIcon = (props: {
   }
   try {
     return resolveScheme({
-      uri: url,
       client: props.client,
+      uri: url,
     });
   } catch {
     return fallbackChainIcon;

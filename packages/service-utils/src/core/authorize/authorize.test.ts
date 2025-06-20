@@ -4,25 +4,25 @@ import { authorize } from "./index.js";
 
 const validServiceConfig: CoreServiceConfig = {
   apiUrl: "https://api.example.com",
-  serviceScope: "storage",
   serviceApiKey: "service key",
+  serviceScope: "storage",
 };
 
 describe("authorizeClient", () => {
   it("should not authorize if auth not enforced and no credentials", async () => {
     const result = (await authorize(
       {
-        secretKey: null,
-        clientId: null,
-        origin: null,
         bundleId: null,
-        secretKeyHash: null,
-        hashedJWT: null,
-        jwt: null,
-        incomingServiceApiKey: null,
-        incomingServiceApiKeyHash: null,
+        clientId: null,
         ecosystemId: null,
         ecosystemPartnerId: null,
+        hashedJWT: null,
+        incomingServiceApiKey: null,
+        incomingServiceApiKeyHash: null,
+        jwt: null,
+        origin: null,
+        secretKey: null,
+        secretKeyHash: null,
       },
       validServiceConfig,
       // biome-ignore lint/suspicious/noExplicitAny: test only

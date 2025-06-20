@@ -9,8 +9,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("ENS:resolve-text", () => {
   it("resolves record for name", async () => {
     const record = await resolveText({
       client: TEST_CLIENT,
-      name: "jns.eth",
       key: "com.twitter",
+      name: "jns.eth",
     });
     expect(record).toMatchInlineSnapshot(`"jnsdls"`);
   });
@@ -18,8 +18,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("ENS:resolve-text", () => {
   it("resolves name without text record to null", async () => {
     const record = await resolveText({
       client: TEST_CLIENT,
-      name: "unregistered-name.eth",
       key: "com.twitter",
+      name: "unregistered-name.eth",
     });
     expect(record).toBeNull();
   });

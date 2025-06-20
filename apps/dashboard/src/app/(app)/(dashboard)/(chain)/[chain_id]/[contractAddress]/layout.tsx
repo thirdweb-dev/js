@@ -1,8 +1,8 @@
 import { getAuthToken } from "@app/api/lib/getAuthToken";
 import type { Metadata } from "next";
 import {
-  SharedContractLayout,
   generateContractLayoutMetadata,
+  SharedContractLayout,
 } from "./shared-layout";
 
 export default async function Layout(props: {
@@ -15,10 +15,10 @@ export default async function Layout(props: {
   const [params, authToken] = await Promise.all([props.params, getAuthToken()]);
   return (
     <SharedContractLayout
-      contractAddress={params.contractAddress}
-      chainIdOrSlug={params.chain_id}
-      projectMeta={undefined}
       authToken={authToken}
+      chainIdOrSlug={params.chain_id}
+      contractAddress={params.contractAddress}
+      projectMeta={undefined}
     >
       {props.children}
     </SharedContractLayout>
@@ -33,7 +33,7 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const params = await props.params;
   return generateContractLayoutMetadata({
-    contractAddress: params.contractAddress,
     chainIdOrSlug: params.chain_id,
+    contractAddress: params.contractAddress,
   });
 }

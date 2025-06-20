@@ -1,21 +1,19 @@
 "use client";
 
+import clsx from "clsx";
+import { ChevronDownIcon } from "lucide-react";
+import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import clsx from "clsx";
-import { ChevronDownIcon } from "lucide-react";
-import Link from "next/link";
 import { connectLinks } from "../../app/Header";
 
 type Platform = (typeof connectLinks)[number]["name"];
 
-export function PlatformSelector(props: {
-  selected: Platform;
-}) {
+export function PlatformSelector(props: { selected: Platform }) {
   // biome-ignore lint/style/noNonNullAssertion: guaranteed
   const platform = connectLinks.find((p) => p.name === props.selected)!;
   return (
@@ -48,8 +46,8 @@ export function PlatformSelector(props: {
                 <div className="flex gap-2">
                   <platform.icon className="size-5 text-foreground" />
                   <Link
-                    href={platform.href}
                     className="before:absolute before:inset-0"
+                    href={platform.href}
                   >
                     {platform.name}
                   </Link>

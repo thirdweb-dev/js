@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "../global.css";
-import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
-import { cn } from "@/lib/utils";
 import { Inter } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
+import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import { NebulaProviders } from "./providers";
 
 const title =
@@ -12,27 +12,25 @@ const description =
   "The most powerful AI for interacting with the blockchain, with real-time access to EVM chains and their data";
 
 export const metadata: Metadata = {
-  title,
   description,
   openGraph: {
-    title,
     description,
+    title,
   },
+  title,
 };
 
 const fontSans = Inter({
+  display: "swap",
   subsets: ["latin"],
   variable: "--font-sans",
-  display: "swap",
 });
 
-export default function Layout(props: {
-  children: React.ReactNode;
-}) {
+export default function Layout(props: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/assets/nebula/favicon.ico" />
+        <link href="/assets/nebula/favicon.ico" rel="icon" />
       </head>
       <body
         className={cn("bg-background font-sans antialiased", fontSans.variable)}

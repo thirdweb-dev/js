@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 export function ThemeSwitcher(props: { className?: string }) {
   const { theme, setTheme } = useTheme();
@@ -14,12 +14,12 @@ export function ThemeSwitcher(props: { className?: string }) {
   return (
     <Button
       aria-label="Toggle theme"
+      className={cn("p-2", props.className)}
       onClick={() => {
         const newTheme = theme === "light" ? "dark" : "light";
         setTheme(newTheme);
       }}
       variant="outline"
-      className={cn("p-2", props.className)}
     >
       {!hasMounted ? (
         <Skeleton className="size-6 lg:size-5" />

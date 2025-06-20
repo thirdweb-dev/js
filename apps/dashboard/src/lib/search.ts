@@ -49,10 +49,10 @@ const getSearchQueryUrl = ({
   baseUrl.searchParams.set("per_page", perPage.toString());
   const dateFilter =
     timeRange === "month"
-      ? `updatedAt:> ${new Date().getTime() - 30 * 24 * 60 * 60 * 1000}`
+      ? `updatedAt:> ${Date.now() - 30 * 24 * 60 * 60 * 1000}`
       : timeRange === "week"
-        ? `updatedAt:> ${new Date().getTime() - 7 * 24 * 60 * 60 * 1000}`
-        : `updatedAt:> ${new Date().getTime() - 1 * 24 * 60 * 60 * 1000}`;
+        ? `updatedAt:> ${Date.now() - 7 * 24 * 60 * 60 * 1000}`
+        : `updatedAt:> ${Date.now() - 1 * 24 * 60 * 60 * 1000}`;
   const gasUsageFilter =
     timeRange === "month"
       ? "last30Days.gasUsage:> 0"
@@ -85,12 +85,12 @@ export async function fetchTopContracts(args?: {
   invariant(typesenseApiKey, "No typesense api key");
   const res = await fetch(
     getSearchQueryUrl({
-      perPage: args?.perPage || 10,
-      page: args?.page || 1,
       chainId: args?.chainId,
+      page: args?.page || 1,
+      perPage: args?.perPage || 10,
       query: args?.query,
-      timeRange: args?.timeRange,
       sortBy: args?.sortBy,
+      timeRange: args?.timeRange,
     }),
     {
       headers: {
@@ -148,23 +148,23 @@ export async function fetchTopContracts(args?: {
       }
 
       return {
-        name,
         chainMetadata,
         contractAddress: document.contractAddress,
-        transactionCount: formatNumber(timeData.transactionCount),
-        transactionCountChange: timeData.transactionCountChange,
-        walletCount: formatNumber(timeData.walletCount),
-        walletCountChange: timeData.walletCountChange,
         gasUsage: `${formatNumber(timeData.gasUsage)} ${chainMetadata.nativeCurrency.symbol}`,
         gasUsageChange: timeData.gasUsageChange,
+        name,
+        transactionCount: formatNumber(timeData.transactionCount),
+        transactionCountChange: timeData.transactionCountChange,
+        type: (document.type as Array<string>)?.find((t) =>
+          t.startsWith("ERC"),
+        ),
         valueMoved:
           timeData.totalValueMoved !== 0
             ? `${formatNumber(timeData.totalValueMoved)} ${chainMetadata.nativeCurrency.symbol}`
             : "",
         valueMovedChange: timeData.totalValueMovedChange,
-        type: (document.type as Array<string>)?.find((t) =>
-          t.startsWith("ERC"),
-        ),
+        walletCount: formatNumber(timeData.walletCount),
+        walletCountChange: timeData.walletCountChange,
       } as TrendingContract;
     }),
   )) as TrendingContract[];
@@ -187,18 +187,18 @@ async function fetchContractName(chainId: number, contractAddress: string) {
 const formatNumber = (num: number) => {
   if (num >= 1000000) {
     return `${(num / 1000000).toLocaleString(undefined, {
-      minimumFractionDigits: 1,
       maximumFractionDigits: 1,
+      minimumFractionDigits: 1,
     })}M`;
   }
   if (num >= 1000) {
     return `${(num / 1000).toLocaleString(undefined, {
-      minimumFractionDigits: 1,
       maximumFractionDigits: 1,
+      minimumFractionDigits: 1,
     })}k`;
   }
   return num.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
     maximumFractionDigits: num < 10 ? 2 : 1,
+    minimumFractionDigits: 0,
   });
 };

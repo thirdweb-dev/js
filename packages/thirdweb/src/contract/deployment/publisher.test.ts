@@ -10,9 +10,9 @@ vi.mock("../../../storage/download");
 describe.runIf(process.env.TW_SECRET_KEY)("fetchPublishedContract", () => {
   it("fetches the latest published contract when no version is specified", async () => {
     const result = await fetchPublishedContractMetadata({
-      publisher: "0x4a706de5CE9bfe2f9C37BA945805e396d1810824",
-      contractId: "Counter",
       client: TEST_CLIENT,
+      contractId: "Counter",
+      publisher: "0x4a706de5CE9bfe2f9C37BA945805e396d1810824",
     });
 
     expect(result?.version).toEqual("1.0.2");
@@ -20,9 +20,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("fetchPublishedContract", () => {
 
   it("fetches a specific version when specified", async () => {
     const result = await fetchPublishedContractMetadata({
-      publisher: "0x4a706de5CE9bfe2f9C37BA945805e396d1810824",
-      contractId: "Counter",
       client: TEST_CLIENT,
+      contractId: "Counter",
+      publisher: "0x4a706de5CE9bfe2f9C37BA945805e396d1810824",
       version: "1.0.1",
     });
 
@@ -31,9 +31,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("fetchPublishedContract", () => {
 
   it("throws an error when an invalid version is specified", async () => {
     const result = fetchPublishedContractMetadata({
-      publisher: "0x4a706de5CE9bfe2f9C37BA945805e396d1810824",
-      contractId: "Counter",
       client: TEST_CLIENT,
+      contractId: "Counter",
+      publisher: "0x4a706de5CE9bfe2f9C37BA945805e396d1810824",
       version: "1.2.3",
     });
 

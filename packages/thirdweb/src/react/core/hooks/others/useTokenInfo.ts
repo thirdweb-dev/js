@@ -21,7 +21,7 @@ type GetTokenInfoResult = {
 export function useTokenInfo(options: GetTokenInfoOptions) {
   const { chain, tokenAddress, client } = options;
   return useQuery({
-    queryKey: ["tokenInfo", chain?.id || -1, { tokenAddress }] as const,
+    enabled: !!chain && !!client,
     queryFn: async () => {
       // erc20 case
       if (tokenAddress) {
@@ -29,7 +29,7 @@ export function useTokenInfo(options: GetTokenInfoOptions) {
           "../../../../extensions/erc20/read/getCurrencyMetadata.js"
         );
         const result: GetTokenInfoResult = await getCurrencyMetadata({
-          contract: getContract({ client, chain, address: tokenAddress }),
+          contract: getContract({ address: tokenAddress, chain, client }),
         });
 
         return result;
@@ -46,12 +46,12 @@ export function useTokenInfo(options: GetTokenInfoOptions) {
 
       const result: GetTokenInfoResult = {
         decimals: nativeDecimals,
-        symbol: nativeSymbol,
         name: nativeName,
+        symbol: nativeSymbol,
       };
 
       return result;
     },
-    enabled: !!chain && !!client,
+    queryKey: ["tokenInfo", chain?.id || -1, { tokenAddress }] as const,
   });
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { PlusIcon, Trash2Icon } from "lucide-react";
+import { type UseFormReturn, useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
@@ -8,8 +10,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PlusIcon, Trash2Icon } from "lucide-react";
-import { type UseFormReturn, useFieldArray } from "react-hook-form";
 
 type WithSocialUrls = {
   socialUrls: {
@@ -25,8 +25,8 @@ export function SocialUrlsFieldset<T extends WithSocialUrls>(props: {
   const form = props.form as unknown as UseFormReturn<WithSocialUrls>;
 
   const { fields, append, remove } = useFieldArray({
-    name: "socialUrls",
     control: form.control,
+    name: "socialUrls",
   });
 
   return (
@@ -37,8 +37,8 @@ export function SocialUrlsFieldset<T extends WithSocialUrls>(props: {
         <div className="mb-5 space-y-4">
           {fields.map((field, index) => (
             <div
-              key={field.id}
               className="flex gap-3 max-sm:mb-6 max-sm:border-b max-sm:border-dashed max-sm:pb-6"
+              key={field.id}
             >
               <div className="flex flex-1 flex-col gap-3 lg:flex-row">
                 <FormField
@@ -49,8 +49,8 @@ export function SocialUrlsFieldset<T extends WithSocialUrls>(props: {
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder="Platform"
                           aria-label="Platform"
+                          placeholder="Platform"
                         />
                       </FormControl>
                       <FormMessage />
@@ -66,8 +66,8 @@ export function SocialUrlsFieldset<T extends WithSocialUrls>(props: {
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder="https://..."
                           aria-label="Platform URL"
+                          placeholder="https://..."
                         />
                       </FormControl>
                       <FormMessage />
@@ -77,11 +77,11 @@ export function SocialUrlsFieldset<T extends WithSocialUrls>(props: {
               </div>
 
               <Button
+                className="rounded-full"
+                onClick={() => remove(index)}
+                size="icon"
                 type="button"
                 variant="outline"
-                size="icon"
-                onClick={() => remove(index)}
-                className="rounded-full"
               >
                 <Trash2Icon className="h-4 w-4" />
                 <span className="sr-only">Remove</span>
@@ -92,11 +92,11 @@ export function SocialUrlsFieldset<T extends WithSocialUrls>(props: {
       )}
 
       <Button
-        type="button"
-        size="sm"
-        variant="outline"
-        onClick={() => append({ platform: "", url: "" })}
         className="h-auto gap-1.5 rounded-full px-3 py-1.5 text-xs"
+        onClick={() => append({ platform: "", url: "" })}
+        size="sm"
+        type="button"
+        variant="outline"
       >
         <PlusIcon className="size-3.5" />
         Add Social URL

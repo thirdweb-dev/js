@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { PageLayout } from "@/components/blocks/APIHeader";
 import { CodeExample } from "@/components/code/code-example";
 import {
@@ -6,20 +7,19 @@ import {
 } from "@/components/pay/transaction-button";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  metadataBase,
-  title: "Integrate Fiat & Cross-Chain Crypto Payments | thirdweb Pay",
   description:
     "The easiest way for users to transact in your app. Onramp users in clicks and generate revenue for each user transaction. Integrate for free.",
+  metadataBase,
+  title: "Integrate Fiat & Cross-Chain Crypto Payments | thirdweb Pay",
 };
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="Onchain transactions with fiat or crypto"
+        containerClassName="space-y-12"
         description={
           <>
             Let your users pay for onchain transactions with fiat or crypto on
@@ -27,7 +27,7 @@ export default function Page() {
           </>
         }
         docsLink="https://portal.thirdweb.com/connect/pay/get-started?utm_source=playground"
-        containerClassName="space-y-12"
+        title="Onchain transactions with fiat or crypto"
       >
         <BuyOnchainAsset />
         <NoFundsPopup />
@@ -39,20 +39,6 @@ export default function Page() {
 function BuyOnchainAsset() {
   return (
     <CodeExample
-      header={{
-        title: "Transactions",
-        description: (
-          <>
-            Let your users pay for onchain transactions with fiat or crypto on
-            any chain.
-            <br />
-            Amounts are calculated automatically from the transaction, and will
-            get executed after the user has obtained the necessary funds via
-            onramp or swap.
-          </>
-        ),
-      }}
-      preview={<PayTransactionPreview />}
       code={`import { claimTo } from "thirdweb/extensions/erc1155";
           import { PayEmbed, useActiveAccount } from "thirdweb/react";
 
@@ -79,7 +65,21 @@ function BuyOnchainAsset() {
         />
           );
         };`}
+      header={{
+        description: (
+          <>
+            Let your users pay for onchain transactions with fiat or crypto on
+            any chain.
+            <br />
+            Amounts are calculated automatically from the transaction, and will
+            get executed after the user has obtained the necessary funds via
+            onramp or swap.
+          </>
+        ),
+        title: "Transactions",
+      }}
       lang="tsx"
+      preview={<PayTransactionPreview />}
     />
   );
 }
@@ -87,16 +87,6 @@ function BuyOnchainAsset() {
 function NoFundsPopup() {
   return (
     <CodeExample
-      header={{
-        title: "Automatic Onramp",
-        description: (
-          <>
-            Any transaction with value will automatically trigger onramp to fund
-            the wallet if needed before executing the transaction.
-          </>
-        ),
-      }}
-      preview={<PayTransactionButtonPreview />}
       code={`import { transfer } from "thirdweb/extensions/erc1155";
           import { TransactionButton, useActiveAccount } from "thirdweb/react";
 
@@ -120,7 +110,17 @@ function NoFundsPopup() {
             </TransactionButton>
           );
         };`}
+      header={{
+        description: (
+          <>
+            Any transaction with value will automatically trigger onramp to fund
+            the wallet if needed before executing the transaction.
+          </>
+        ),
+        title: "Automatic Onramp",
+      }}
       lang="tsx"
+      preview={<PayTransactionButtonPreview />}
     />
   );
 }

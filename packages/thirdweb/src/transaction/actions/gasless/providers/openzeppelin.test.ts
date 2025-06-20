@@ -6,8 +6,8 @@ import {
   TEST_ACCOUNT_B,
 } from "../../../../../test/src/test-wallets.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../../contract/contract.js";
 import { mintTo } from "../../../../extensions/erc20/write/mintTo.js";
 import { transfer } from "../../../../extensions/erc20/write/transfer.js";
@@ -35,12 +35,12 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
       // mint some tokens to the account
       await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
         transaction: mintTo({
-          contract: erc20Contract,
           amount: "1000",
+          contract: erc20Contract,
           to: TEST_ACCOUNT_A.address,
         }),
-        account: TEST_ACCOUNT_A,
       });
     }, 60_000);
 
@@ -53,20 +53,20 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
       // seralizable transaction
       const serializableTransaction = await toSerializableTransaction({
-        transaction,
         from: TEST_ACCOUNT_A.address,
+        transaction,
       });
 
       const result = await prepareOpenZeppelinTransaction({
         account: TEST_ACCOUNT_A,
-        serializableTransaction,
-        transaction,
         gasless: {
           provider: "openzeppelin",
-          relayerUrl: "https://safe-transaction.openzeppelin.com/api/v1",
           // mainnet forwarder address
           relayerForwarderAddress: "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81",
+          relayerUrl: "https://safe-transaction.openzeppelin.com/api/v1",
         },
+        serializableTransaction,
+        transaction,
       });
 
       const { message, messageType, signature } = result;

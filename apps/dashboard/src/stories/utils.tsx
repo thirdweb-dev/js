@@ -1,10 +1,8 @@
+import { INITIAL_VIEWPORTS } from "storybook/viewport";
 import { Badge } from "@/components/ui/badge";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { INITIAL_VIEWPORTS } from "storybook/viewport";
 
-function StoryBadge(props: {
-  label: string;
-}) {
+function StoryBadge(props: { label: string }) {
   return (
     <Badge
       className="mb-3 self-start border-none bg-muted px-3 py-1 font-normal text-muted-foreground text-xs"
@@ -31,8 +29,8 @@ export function mobileViewport(
   key: "iphone14" | "iphone14promax" | "ipad11p" | "ipad12p",
 ) {
   return {
-    viewports: INITIAL_VIEWPORTS,
     defaultViewport: key,
+    viewports: INITIAL_VIEWPORTS,
   };
 }
 

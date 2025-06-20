@@ -1,4 +1,3 @@
-import type { SideBar } from "@/components/Layouts/DocLayout";
 import {
   Code2Icon,
   KeyIcon,
@@ -8,95 +7,96 @@ import {
   VaultIcon,
   WrenchIcon,
 } from "lucide-react";
+import type { SideBar } from "@/components/Layouts/DocLayout";
 
 export const sidebar: SideBar = {
-  name: "Vault",
   links: [
     {
-      name: "Overview",
       href: "/vault",
       icon: <VaultIcon />,
+      name: "Overview",
     },
     {
-      name: "Get Started",
       href: "/vault/get-started",
       icon: <RocketIcon />,
+      name: "Get Started",
     },
     {
-      name: "Key Concepts",
       icon: <KeyIcon />,
       links: [
         {
-          name: "Key Management",
           href: "/vault/key-concepts/key-management",
+          name: "Key Management",
         },
         {
-          name: "Entities",
           href: "/vault/key-concepts/entities",
+          name: "Entities",
         },
         {
-          name: "Accounts",
           href: "/vault/key-concepts/accounts",
+          name: "Accounts",
         },
         {
-          name: "Access Tokens",
           href: "/vault/key-concepts/access-tokens",
+          name: "Access Tokens",
         },
         {
-          name: "Access Control",
           href: "/vault/key-concepts/access-control",
+          name: "Access Control",
         },
       ],
+      name: "Key Concepts",
     },
     {
-      name: "TypeScript SDK",
       icon: <Code2Icon />,
       links: [
         {
-          name: "Overview",
           href: "/vault/sdk",
+          name: "Overview",
         },
         {
-          name: "Installation",
           href: "/vault/sdk/installation",
+          name: "Installation",
         },
         {
-          name: "API Reference",
           href: "/vault/sdk/api-reference",
+          name: "API Reference",
         },
         {
-          name: "Guides",
           links: [
             {
-              name: "Creating & Managing EOAs",
               href: "/vault/sdk/guides/creating-eoas",
+              name: "Creating & Managing EOAs",
             },
             {
-              name: "Signing Transactions & Messages",
               href: "/vault/sdk/guides/signing",
+              name: "Signing Transactions & Messages",
             },
             {
-              name: "Managing Access Tokens",
               href: "/vault/sdk/guides/access-tokens",
+              name: "Managing Access Tokens",
             },
           ],
+          name: "Guides",
         },
       ],
+      name: "TypeScript SDK",
     },
     {
-      name: "Security",
       href: "/vault/security",
       icon: <ShieldQuestionIcon />,
+      name: "Security",
     },
     {
-      name: "Troubleshoot",
       href: "/vault/troubleshoot",
       icon: <WrenchIcon />,
+      name: "Troubleshoot",
     },
     {
-      name: "FAQs",
       href: "/vault/faqs",
       icon: <MessageCircleQuestionIcon />,
+      name: "FAQs",
     },
   ],
+  name: "Vault",
 };

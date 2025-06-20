@@ -3,11 +3,11 @@
 import {
   Button as ChakraButton,
   type ButtonProps as ChakraButtonProps,
+  forwardRef,
   IconButton,
   type IconButtonProps,
   LightMode,
   Link,
-  forwardRef,
   useButtonGroup,
 } from "@chakra-ui/react";
 import { useClipboard } from "hooks/useClipboard";
@@ -18,10 +18,10 @@ import { ChakraNextLink } from "./link";
 import { convertFontSizeToCSSVar } from "./utils/typography";
 
 const buttonSizesMap = {
-  xs: "sm",
-  sm: "md",
-  md: "lg",
   lg: "xl",
+  md: "lg",
+  sm: "md",
+  xs: "sm",
 } as const;
 
 type PossibleButtonSize = keyof typeof buttonSizesMap;
@@ -42,10 +42,10 @@ export const Button = forwardRef<ButtonProps, "button">(
       _size = "md";
     }
     const props: ButtonProps = {
-      fontWeight: fontWeights.label,
-      lineHeight: lineHeights.label,
-      letterSpacing: letterSpacings.label,
       fontSize: convertFontSizeToCSSVar(`label.${buttonSizesMap[_size]}`),
+      fontWeight: fontWeights.label,
+      letterSpacing: letterSpacings.label,
+      lineHeight: lineHeights.label,
       size: _size,
       ...buttonGroupContext,
       ...restButtonProps,
@@ -59,8 +59,8 @@ export const Button = forwardRef<ButtonProps, "button">(
         <LightMode>
           <ChakraButton
             fontWeight={fontWeights.label}
-            lineHeight={lineHeights.label}
             letterSpacing={letterSpacings.label}
+            lineHeight={lineHeights.label}
             {...props}
             ref={ref}
           />
@@ -72,8 +72,8 @@ export const Button = forwardRef<ButtonProps, "button">(
       <ChakraButton
         {...props}
         fontWeight={fontWeights.label}
-        lineHeight={lineHeights.label}
         letterSpacing={letterSpacings.label}
+        lineHeight={lineHeights.label}
         ref={ref}
       />
     );
@@ -95,10 +95,10 @@ export const LinkButton = reactForwardRef<HTMLButtonElement, LinkButtonProps>(
           href={href}
           isExternal
           ref={ref}
-          textDecoration="none!important"
           rightIcon={
             noIcon ? undefined : <ExternalLinkIcon className="size-4" />
           }
+          textDecoration="none!important"
           {...restButtonProps}
         >
           {children}
@@ -138,15 +138,15 @@ export const Legacy_CopyButton = forwardRef<Legacy_CopyButtonProps, "button">(
 
     return (
       <IconButton
-        ref={ref}
         borderRadius="md"
-        variant="ghost"
         colorScheme="whiteAlpha"
-        size="sm"
-        onClick={copy}
         icon={
           hasCopied ? <CheckIcon className="text-success-text" /> : <CopyIcon />
         }
+        onClick={copy}
+        ref={ref}
+        size="sm"
+        variant="ghost"
         {...restButtonProps}
       />
     );

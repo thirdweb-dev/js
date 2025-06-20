@@ -1,7 +1,7 @@
-import { Input } from "@/components/ui/input";
 import { forwardRef } from "react";
 import { type UseFormReturn, useFormContext } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
+import { Input } from "@/components/ui/input";
 import { SolidityAddressInput } from "./address-input";
 import { SolidityBoolInput } from "./bool-input";
 import { SolidityBytesInput } from "./bytes-input";
@@ -68,8 +68,8 @@ export const SolidityInput = forwardRef<
     return (
       <SolidityRawInput
         formContext={form}
-        solidityType={solidityType}
         solidityComponents={solidityComponents}
+        solidityType={solidityType}
         {...inputProps}
       />
     );
@@ -86,9 +86,9 @@ export const SolidityInput = forwardRef<
   if (solidityType === "tuple") {
     return (
       <SolidityTupleInput
-        solidityType={solidityType}
-        solidityComponents={solidityComponents}
         formContext={form}
+        solidityComponents={solidityComponents}
+        solidityType={solidityType}
         {...inputProps}
       />
     );
@@ -100,8 +100,8 @@ export const SolidityInput = forwardRef<
     return (
       <SolidityStringInput
         formContext={form}
-        solidityType={solidityType}
         solidityName={solidityName}
+        solidityType={solidityType}
         {...inputProps}
       />
     );

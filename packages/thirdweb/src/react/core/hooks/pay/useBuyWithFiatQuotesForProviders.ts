@@ -67,7 +67,7 @@ export function useBuyWithFiatQuotesForProviders(
   const queries = useQueries({
     queries: providers.map((provider) => ({
       ...queryOptions,
-      queryKey: ["onramp-prepare", provider, params],
+      enabled: !!params,
       queryFn: async () => {
         if (!params) {
           throw new Error("No params provided");
@@ -82,16 +82,16 @@ export function useBuyWithFiatQuotesForProviders(
         const amountWei = toUnits(params.amount, token.decimals);
 
         return prepareOnramp({
-          client: params.client,
-          onramp: provider,
-          chainId: params.chainId,
-          tokenAddress: params.tokenAddress,
-          receiver: params.receiver,
           amount: amountWei,
+          chainId: params.chainId,
+          client: params.client,
           currency: params.currency || "USD",
+          onramp: provider,
+          receiver: params.receiver,
+          tokenAddress: params.tokenAddress,
         });
       },
-      enabled: !!params,
+      queryKey: ["onramp-prepare", provider, params],
       retry: false,
     })),
   });

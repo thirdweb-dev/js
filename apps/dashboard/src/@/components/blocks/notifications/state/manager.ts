@@ -1,23 +1,22 @@
 "use client";
 
 import {
-  type Notification,
-  type NotificationsApiResponse,
-  getArchivedNotifications,
-  getUnreadNotifications,
-  getUnreadNotificationsCount,
-  markNotificationAsRead,
-} from "@/api/notifications";
-import {
   type InfiniteData,
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-
 import { useMemo } from "react";
 import { toast } from "sonner";
+import {
+  getArchivedNotifications,
+  getUnreadNotifications,
+  getUnreadNotificationsCount,
+  markNotificationAsRead,
+  type Notification,
+  type NotificationsApiResponse,
+} from "@/api/notifications";
 
 /**
  * Internal helper to safely flatten pages coming from useInfiniteQuery.
@@ -68,7 +67,9 @@ export function useNotifications(accountId: string) {
   );
 
   const unreadQuery = useInfiniteQuery<NotificationsApiResponse>({
-    queryKey: unreadQueryKey,
+    enabled: !!accountId,
+    getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
+    initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {
       const cursor = (pageParam ?? undefined) as string | undefined;
       const res = await getUnreadNotifications(cursor);
@@ -77,14 +78,14 @@ export function useNotifications(accountId: string) {
       }
       return res.data;
     },
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
-    enabled: !!accountId,
+    queryKey: unreadQueryKey,
     refetchInterval: 60_000, // 1min
   });
 
   const archivedQuery = useInfiniteQuery<NotificationsApiResponse>({
-    queryKey: archivedQueryKey,
+    enabled: !!accountId,
+    getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
+    initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {
       const cursor = (pageParam ?? undefined) as string | undefined;
       const res = await getArchivedNotifications(cursor);
@@ -93,14 +94,12 @@ export function useNotifications(accountId: string) {
       }
       return res.data;
     },
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
-    enabled: !!accountId,
+    queryKey: archivedQueryKey,
     refetchInterval: 60_000, // 1min
   });
 
   const unreadCountQuery = useQuery({
-    queryKey: unreadCountKey,
+    enabled: !!accountId,
     queryFn: async () => {
       const res = await getUnreadNotificationsCount();
       if (res.status === "error") {
@@ -108,8 +107,8 @@ export function useNotifications(accountId: string) {
       }
       return res.data.result.unreadCount;
     },
-    refetchInterval: 60_000, // 1min
-    enabled: !!accountId,
+    queryKey: unreadCountKey, // 1min
+    refetchInterval: 60_000,
   });
 
   // --------------------
@@ -172,16 +171,7 @@ export function useNotifications(accountId: string) {
         queryClient.setQueryData(unreadCountKey, optimisticCount);
       }
 
-      return { previousUnread, previousCount } as const;
-    },
-    // Rollback on error
-    onError: (_err, _vars, context) => {
-      if (context?.previousUnread) {
-        queryClient.setQueryData(unreadQueryKey, context.previousUnread);
-      }
-      if (typeof context?.previousCount === "number") {
-        queryClient.setQueryData(unreadCountKey, context.previousCount);
-      }
+      return { previousCount, previousUnread } as const;
     },
     // Always refetch to ensure consistency
     onSettled: () => {
@@ -199,25 +189,25 @@ export function useNotifications(accountId: string) {
   const unreadNotificationsCount = unreadCountQuery.data ?? 0; // this is the total unread count
 
   return {
-    // data
-    unreadNotifications,
     archivedNotifications,
-    unreadNotificationsCount,
+    hasMoreArchived: archivedQuery.hasNextPage ?? false,
+    hasMoreUnread: unreadQuery.hasNextPage ?? false,
+    isFetchingMoreArchived: archivedQuery.isFetchingNextPage,
+    isFetchingMoreUnread: unreadQuery.isFetchingNextPage,
+    isLoadingArchived: archivedQuery.isLoading,
 
     // booleans
     isLoadingUnread: unreadQuery.isLoading,
-    isLoadingArchived: archivedQuery.isLoading,
-    hasMoreUnread: unreadQuery.hasNextPage ?? false,
-    hasMoreArchived: archivedQuery.hasNextPage ?? false,
-    isFetchingMoreUnread: unreadQuery.isFetchingNextPage,
-    isFetchingMoreArchived: archivedQuery.isFetchingNextPage,
+    loadMoreArchived: () => archivedQuery.fetchNextPage(),
 
     // pagination helpers
     loadMoreUnread: () => unreadQuery.fetchNextPage(),
-    loadMoreArchived: () => archivedQuery.fetchNextPage(),
+    markAllAsRead: () => archiveMutation.mutate(undefined),
 
     // mutations
     markAsRead: (id: string) => archiveMutation.mutate(id),
-    markAllAsRead: () => archiveMutation.mutate(undefined),
+    // data
+    unreadNotifications,
+    unreadNotificationsCount,
   } as const;
 }

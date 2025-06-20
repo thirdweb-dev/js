@@ -17,12 +17,12 @@ const description =
   "A list of EVM networks with RPCs, smart contracts, block explorers & faucets. Deploy smart contracts to all EVM chains with thirdweb.";
 
 export const metadata: Metadata = {
-  title,
   description,
   openGraph: {
-    title,
     description,
+    title,
   },
+  title,
 };
 
 export default async function ChainListPage(props: {
@@ -73,9 +73,9 @@ export default async function ChainListPage(props: {
       <div className="h-10" />
       {/* we used to have suspense + spinner here, that feels more jarring than the page loading _minutely_ slower */}
       <ChainsData
-        searchParams={searchParams}
         activeView={activeView}
         isLoggedIn={!!authToken}
+        searchParams={searchParams}
       />
     </section>
   );

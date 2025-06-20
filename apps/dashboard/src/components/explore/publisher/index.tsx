@@ -1,6 +1,5 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { replaceDeployerAddress } from "lib/publisher-utils";
 import Link from "next/link";
 import type { ThirdwebClient } from "thirdweb";
@@ -12,6 +11,7 @@ import {
   AccountProvider,
 } from "thirdweb/react";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ContractPublisherProps {
   addressOrEns: string;
@@ -29,9 +29,9 @@ export const ContractPublisher: React.FC<ContractPublisherProps> = ({
         href={replaceDeployerAddress(`/${addressOrEns}`)}
       >
         <AccountAvatar
+          className="size-5 rounded-full object-cover"
           fallbackComponent={<AccountBlobbie className="size-5 rounded-full" />}
           loadingComponent={<Skeleton className="size-5 rounded-full" />}
-          className="size-5 rounded-full object-cover"
         />
 
         <AccountName
@@ -44,8 +44,8 @@ export const ContractPublisher: React.FC<ContractPublisherProps> = ({
               }
             />
           }
-          loadingComponent={<Skeleton className="h-4 w-40" />}
           formatFn={(name) => replaceDeployerAddress(name)}
+          loadingComponent={<Skeleton className="h-4 w-40" />}
         />
       </Link>
     </AccountProvider>

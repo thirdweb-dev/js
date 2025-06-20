@@ -100,7 +100,7 @@ describe("MediaRenderer", () => {
     it("renders with custom src and alt", () => {
       const src = "https://example.com/file";
       const alt = "Custom File Name";
-      render(<LinkPlayer src={src} alt={alt} />);
+      render(<LinkPlayer alt={alt} src={src} />);
 
       const linkElement = screen.getByText(alt);
       expect(linkElement).toBeInTheDocument();
@@ -111,7 +111,7 @@ describe("MediaRenderer", () => {
       const customStyle = { backgroundColor: "red" };
       const customClassName = "custom-class";
       const { container } = render(
-        <LinkPlayer style={customStyle} className={customClassName} />,
+        <LinkPlayer className={customClassName} style={customStyle} />,
       );
 
       const outerDiv = container.querySelector(".custom-class");
@@ -152,7 +152,7 @@ describe("MediaRenderer", () => {
     it("applies custom src and alt", () => {
       const src = "https://example.com/video";
       const alt = "Custom Video";
-      render(<IframePlayer src={src} alt={alt} />);
+      render(<IframePlayer alt={alt} src={src} />);
 
       const iframe = screen.getByTitle(alt);
       expect(iframe).toBeInTheDocument();
@@ -191,7 +191,7 @@ describe("MediaRenderer", () => {
     it("applies custom style", () => {
       const customStyle = { backgroundColor: "red" };
       const { container } = render(
-        <IframePlayer style={customStyle} className="iframe-test" />,
+        <IframePlayer className="iframe-test" style={customStyle} />,
       );
 
       const element = container.querySelector(".iframe-test");
@@ -210,7 +210,7 @@ describe("MediaRenderer", () => {
 
     it("respects requireInteraction prop", () => {
       render(
-        <IframePlayer src="https://example.com/video" requireInteraction />,
+        <IframePlayer requireInteraction src="https://example.com/video" />,
       );
 
       const iframe = screen.getByTitle("thirdweb iframe player");
@@ -227,8 +227,8 @@ describe("MediaRenderer", () => {
     render(
       <MediaRenderer
         client={TEST_CLIENT}
-        src={three3dModelLink}
         poster={imageLink}
+        src={three3dModelLink}
       />,
     );
     await waitFor(() => {

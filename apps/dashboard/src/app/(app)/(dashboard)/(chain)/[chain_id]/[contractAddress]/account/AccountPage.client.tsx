@@ -35,10 +35,10 @@ export function AccountPageClient(props: {
 
   return (
     <AccountPage
-      contract={props.contract}
       chainMetadata={props.chainMetadata}
-      isLoggedIn={props.isLoggedIn}
+      contract={props.contract}
       isInsightSupported={metadataQuery.data.isInsightSupported}
+      isLoggedIn={props.isLoggedIn}
       projectMeta={props.projectMeta}
     />
   );

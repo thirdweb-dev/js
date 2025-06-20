@@ -1,4 +1,15 @@
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { TransactionButton } from "components/buttons/TransactionButton";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import { CircleAlertIcon } from "lucide-react";
+import { useCallback } from "react";
+import { useForm } from "react-hook-form";
+import { sendAndConfirmTransaction, type ThirdwebClient } from "thirdweb";
+import { BatchMetadataERC721, BatchMetadataERC1155 } from "thirdweb/modules";
+import { parseAttributes } from "utils/parseAttributes";
+import { z } from "zod";
 import {
   Accordion,
   AccordionContent,
@@ -16,17 +27,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { CircleAlertIcon } from "lucide-react";
-import { useCallback } from "react";
-import { useForm } from "react-hook-form";
-import { type ThirdwebClient, sendAndConfirmTransaction } from "thirdweb";
-import { BatchMetadataERC721, BatchMetadataERC1155 } from "thirdweb/modules";
-import { parseAttributes } from "utils/parseAttributes";
-import { z } from "zod";
 import { fileBufferOrStringSchema } from "../zod-schemas";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
@@ -35,11 +35,13 @@ import { NFTMediaFormGroup } from "./nft/NFTMediaFormGroup";
 import { PropertiesFormControl } from "./nft/PropertiesFormControl";
 
 const uploadMetadataFormSchema = z.object({
-  name: z.string().min(1),
-  description: z.string().optional(),
-  image: fileBufferOrStringSchema.optional(),
   animationUri: fileBufferOrStringSchema.optional(),
-  external_url: fileBufferOrStringSchema.optional(),
+  attributes: z.array(
+    z.object({
+      trait_type: z.string().min(1),
+      value: z.string().min(1),
+    }),
+  ),
   background_color: z
     .string()
     .refine(
@@ -51,12 +53,10 @@ const uploadMetadataFormSchema = z.object({
       },
     )
     .optional(),
-  attributes: z.array(
-    z.object({
-      trait_type: z.string().min(1),
-      value: z.string().min(1),
-    }),
-  ),
+  description: z.string().optional(),
+  external_url: fileBufferOrStringSchema.optional(),
+  image: fileBufferOrStringSchema.optional(),
+  name: z.string().min(1),
 });
 
 export type UploadMetadataFormValues = z.infer<typeof uploadMetadataFormSchema>;
@@ -91,10 +91,10 @@ function BatchMetadataModule(props: ModuleInstanceProps) {
   return (
     <BatchMetadataModuleUI
       {...props}
-      uploadMetadata={uploadMetadata}
-      isOwnerAccount={!!ownerAccount}
-      contractChainId={contract.chain.id}
       client={contract.client}
+      contractChainId={contract.chain.id}
+      isOwnerAccount={!!ownerAccount}
+      uploadMetadata={uploadMetadata}
     />
   );
 }
@@ -111,19 +111,19 @@ export function BatchMetadataModuleUI(
   return (
     <ModuleCardUI {...props}>
       <div className="flex flex-col gap-4">
-        <Accordion type="single" collapsible className="-mx-1">
+        <Accordion className="-mx-1" collapsible type="single">
           {/* uploadMetadata  */}
-          <AccordionItem value="metadata" className="border-none">
+          <AccordionItem className="border-none" value="metadata">
             <AccordionTrigger className="border-border border-t px-1">
               Upload NFT Metadata
             </AccordionTrigger>
             <AccordionContent className="px-1">
               {props.isOwnerAccount && (
                 <UploadMetadataNFTSection
+                  client={props.client}
+                  contractChainId={props.contractChainId}
                   isLoggedIn={props.isLoggedIn}
                   uploadMetadata={props.uploadMetadata}
-                  contractChainId={props.contractChainId}
-                  client={props.client}
                 />
               )}
               {!props.isOwnerAccount && (
@@ -139,7 +139,7 @@ export function BatchMetadataModuleUI(
           </AccordionItem>
 
           {/* batchMetadata  */}
-          <AccordionItem value="batch-metadata" className="border-none">
+          <AccordionItem className="border-none" value="batch-metadata">
             <AccordionTrigger className="border-border border-t px-1">
               Batch Upload NFT Metadata
             </AccordionTrigger>
@@ -170,11 +170,11 @@ function UploadMetadataNFTSection(props: {
 }) {
   const form = useForm<UploadMetadataFormValues>({
     resolver: zodResolver(uploadMetadataFormSchema),
-    values: {
-      name: "",
-      attributes: [],
-    },
     reValidateMode: "onChange",
+    values: {
+      attributes: [],
+      name: "",
+    },
   });
 
   const uploadNotifications = useTxNotifications(
@@ -184,8 +184,8 @@ function UploadMetadataNFTSection(props: {
 
   const uploadMetadataMutation = useMutation({
     mutationFn: props.uploadMetadata,
-    onSuccess: uploadNotifications.onSuccess,
     onError: uploadNotifications.onError,
+    onSuccess: uploadNotifications.onSuccess,
   });
 
   const onSubmit = async () => {
@@ -200,9 +200,9 @@ function UploadMetadataNFTSection(props: {
             {/* Left */}
             <div className="shrink-0 lg:w-[300px]">
               <NFTMediaFormGroup
+                client={props.client}
                 form={form}
                 previewMaxWidth="300px"
-                client={props.client}
               />
             </div>
 
@@ -244,17 +244,17 @@ function UploadMetadataNFTSection(props: {
 
               {/* Advanced options */}
               <Accordion
-                type="single"
                 collapsible={
                   !(
                     form.formState.errors.background_color ||
                     form.formState.errors.external_url
                   )
                 }
+                type="single"
               >
                 <AccordionItem
-                  value="advanced-options"
                   className="-mx-1 border-y"
+                  value="advanced-options"
                 >
                   <AccordionTrigger className="px-1">
                     Advanced Options
@@ -269,15 +269,15 @@ function UploadMetadataNFTSection(props: {
 
           <div className="flex justify-end">
             <TransactionButton
-              client={props.client}
-              isLoggedIn={props.isLoggedIn}
-              size="sm"
               className="min-w-24"
+              client={props.client}
               disabled={uploadMetadataMutation.isPending}
-              type="submit"
+              isLoggedIn={props.isLoggedIn}
               isPending={uploadMetadataMutation.isPending}
-              txChainID={props.contractChainId}
+              size="sm"
               transactionCount={1}
+              txChainID={props.contractChainId}
+              type="submit"
             >
               Upload
             </TransactionButton>

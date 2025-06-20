@@ -1,8 +1,5 @@
 "use client";
 
-import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
-import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
-import type { ChartConfig } from "@/components/ui/chart";
 import { DotNetIcon } from "components/icons/brand-icons/DotNetIcon";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
@@ -13,6 +10,9 @@ import { format } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useMemo } from "react";
 import type { UserOpStats } from "types/analytics";
+import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
+import type { ChartConfig } from "@/components/ui/chart";
 import { formatTickerNumber } from "../../../lib/format-utils";
 
 type ChartData = Record<string, number> & {
@@ -73,21 +73,21 @@ export function SponsoredTransactionsChartCard(props: {
 
     chainsToShow.forEach((chainName, i) => {
       _chartConfig[chainName] = {
-        label: chainName,
         color: `hsl(var(--chart-${(i % 10) + 1}))`,
+        label: chainName,
       };
     });
 
     // Add Other
     chainsToShow.push("others");
     _chartConfig.others = {
-      label: "Others",
       color: "hsl(var(--muted-foreground))",
+      label: "Others",
     };
 
     return {
-      chartData: Array.from(_chartDataMap.values()),
       chartConfig: _chartConfig,
+      chartData: Array.from(_chartDataMap.values()),
     };
   }, [userOpStats, chainsStore]);
 
@@ -99,6 +99,8 @@ export function SponsoredTransactionsChartCard(props: {
 
   return (
     <ThirdwebBarChart
+      chartClassName="aspect-[1] lg:aspect-[3]"
+      config={chartConfig}
       customHeader={
         <div className="relative px-6 pt-6">
           <h3 className="mb-0.5 font-semibold text-xl tracking-tight">
@@ -111,8 +113,8 @@ export function SponsoredTransactionsChartCard(props: {
           <div className="top-6 right-6 mt-4 mb-8 grid grid-cols-2 items-center gap-2 md:absolute md:my-0 md:flex">
             <ExportToCSVButton
               className="bg-background"
-              fileName="Sponsored Transactions"
               disabled={disableActions}
+              fileName="Sponsored Transactions"
               getData={async () => {
                 const header = ["Date", ...uniqueChainIds];
                 const rows = chartData.map((data) => {
@@ -128,12 +130,11 @@ export function SponsoredTransactionsChartCard(props: {
           </div>
         </div>
       }
-      config={chartConfig}
       data={chartData}
-      isPending={props.isPending}
-      chartClassName="aspect-[1] lg:aspect-[3]"
-      showLegend
+      emptyChartState={<EmptyAccountAbstractionChartContent />}
       hideLabel={false}
+      isPending={props.isPending}
+      showLegend
       toolTipLabelFormatter={(_v, item) => {
         if (Array.isArray(item)) {
           const time = item[0].payload.time as number;
@@ -142,7 +143,6 @@ export function SponsoredTransactionsChartCard(props: {
         return undefined;
       }}
       toolTipValueFormatter={(value) => formatTickerNumber(Number(value))}
-      emptyChartState={<EmptyAccountAbstractionChartContent />}
     />
   );
 }
@@ -155,34 +155,34 @@ export function EmptyAccountAbstractionChartContent() {
       </span>
       <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
         <DocLink
-          link="https://portal.thirdweb.com/typescript/v5/account-abstraction/batching-transactions"
-          label="TypeScript"
           icon={TypeScriptIcon}
+          label="TypeScript"
+          link="https://portal.thirdweb.com/typescript/v5/account-abstraction/batching-transactions"
         />
         <DocLink
-          link="https://portal.thirdweb.com/react/v5/account-abstraction/batching-transactions"
+          icon={ReactIcon}
           label="React"
-          icon={ReactIcon}
+          link="https://portal.thirdweb.com/react/v5/account-abstraction/batching-transactions"
         />
         <DocLink
-          link="https://portal.thirdweb.com/react/v5/account-abstraction/get-started"
+          icon={ReactIcon}
           label="React Native"
-          icon={ReactIcon}
+          link="https://portal.thirdweb.com/react/v5/account-abstraction/get-started"
         />
         <DocLink
-          link="https://portal.thirdweb.com/unity/v5/wallets/account-abstraction"
-          label="Unity"
           icon={UnityIcon}
+          label="Unity"
+          link="https://portal.thirdweb.com/unity/v5/wallets/account-abstraction"
         />
         <DocLink
-          link="https://portal.thirdweb.com/unreal-engine/blueprints/smart-wallet"
-          label="Unreal Engine"
           icon={UnrealIcon}
+          label="Unreal Engine"
+          link="https://portal.thirdweb.com/unreal-engine/blueprints/smart-wallet"
         />
         <DocLink
-          link="https://portal.thirdweb.com/dotnet/wallets/providers/account-abstraction"
-          label=".NET"
           icon={DotNetIcon}
+          label=".NET"
+          link="https://portal.thirdweb.com/dotnet/wallets/providers/account-abstraction"
         />
       </div>
     </div>

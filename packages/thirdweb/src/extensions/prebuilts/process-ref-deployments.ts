@@ -50,13 +50,13 @@ export async function processRefDeployments(
             : "";
 
         const addr = await deployPublishedContract({
-          client,
-          chain,
           account,
+          chain,
+          client,
           contractId: contracts[0]?.contractId,
           publisher: contracts[0]?.publisherAddress,
-          version: contracts[0]?.version,
           salt,
+          version: contracts[0]?.version,
         });
 
         return addr;
@@ -73,13 +73,13 @@ export async function processRefDeployments(
 
           addressArray.push(
             await deployPublishedContract({
-              client,
-              chain,
               account,
+              chain,
+              client,
               contractId: c.contractId,
               publisher: c.publisherAddress,
-              version: c.version,
               salt,
+              version: c.version,
             }),
           );
         }
@@ -104,9 +104,9 @@ export async function processRefDeployments(
             } else if (v.dynamicValue) {
               values.push(
                 await processRefDeployments({
-                  client,
                   account,
                   chain,
+                  client,
                   paramValue: v,
                 }),
               );
@@ -143,9 +143,9 @@ export async function processRefDeployments(
               } else if (v.dynamicValue) {
                 values.push(
                   await processRefDeployments({
-                    client,
                     account,
                     chain,
+                    client,
                     paramValue: v,
                   }),
                 );

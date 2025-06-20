@@ -2,6 +2,7 @@
 import styled from "@emotion/styled";
 import { CrossCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Fuse from "fuse.js";
+import type React from "react";
 import {
   Fragment,
   memo,
@@ -11,7 +12,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import type React from "react";
 import type { Chain } from "../../../../chains/types.js";
 import { convertApiChainToChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
@@ -20,27 +20,27 @@ import {
   useCustomTheme,
 } from "../../../core/design-system/CustomThemeProvider.js";
 import {
-  type Theme,
   fontSize,
   iconSize,
   media,
   radius,
   spacing,
+  type Theme,
 } from "../../../core/design-system/index.js";
 import { useChainsQuery } from "../../../core/hooks/others/useChainQuery.js";
 import { useActiveWalletChain } from "../../../core/hooks/wallets/useActiveWalletChain.js";
 import { useSwitchActiveWalletChain } from "../../../core/hooks/wallets/useSwitchActiveWalletChain.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
+import { Container, Line, ModalHeader } from "../components/basic.js";
+import { Button } from "../components/buttons.js";
 import { ChainActiveDot } from "../components/ChainActiveDot.js";
+import { fallbackChainIcon } from "../components/fallbackChainIcon.js";
+import { Input } from "../components/formElements.js";
 import { Modal } from "../components/Modal.js";
+import { ModalTitle } from "../components/modalElements.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
-import { Container, Line, ModalHeader } from "../components/basic.js";
-import { Button } from "../components/buttons.js";
-import { fallbackChainIcon } from "../components/fallbackChainIcon.js";
-import { Input } from "../components/formElements.js";
-import { ModalTitle } from "../components/modalElements.js";
 import { Text } from "../components/text.js";
 import { StyledButton, StyledP, StyledUl } from "../design-system/elements.js";
 import { useDebouncedValue } from "../hooks/useDebouncedValue.js";
@@ -186,8 +186,8 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
         );
         if (chainsToAdd.length > 0) {
           chainSectionsValue.push({
-            label: s.label,
             chains: chainsToAdd,
+            label: s.label,
           });
           for (const c of chainsToAdd) {
             addChain(c, s.label);
@@ -209,8 +209,8 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
           .filter((c) => c !== undefined);
 
         chainSectionsValue.push({
-          label: recentLabel,
           chains: recentChains,
+          label: recentLabel,
         });
         for (const c of recentChains) {
           addChain(c, recentLabel);
@@ -231,8 +231,8 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
         );
         if (chainsToAdd.length > 0) {
           chainSectionsValue.push({
-            label: popularLabel,
             chains: chainsToAdd,
+            label: popularLabel,
           });
           for (const c of chainsToAdd) {
             addChain(c, popularLabel);
@@ -247,8 +247,8 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
     );
     if (otherChainsToAdd.length > 0) {
       chainSectionsValue.push({
-        label: othersLabel,
         chains: otherChainsToAdd,
+        label: othersLabel,
       });
       for (const c of otherChainsToAdd) {
         addChain(c, othersLabel);
@@ -256,9 +256,9 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
     }
 
     return {
-      chainSections: chainSectionsValue,
       allChains: allChainsValue,
       allChainsToSectionMap: allChainsToSectionMapValue,
+      chainSections: chainSectionsValue,
     };
   }, [
     props.networkSelector?.sections,
@@ -289,7 +289,6 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
   // fuse instance for searching
   const fuse = useMemo(() => {
     return new Fuse(allChainsMetadata, {
-      threshold: 0.4,
       keys: [
         {
           name: "name",
@@ -300,6 +299,7 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
           weight: 1,
         },
       ],
+      threshold: 0.4,
     });
   }, [allChainsMetadata]);
 
@@ -329,8 +329,8 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
           section.chains.push(c);
         } else {
           filteredChainSectionsValue.push({
-            label,
             chains: [c],
+            label,
           });
         }
       }
@@ -344,12 +344,12 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
     }
 
     return searchedChainSections.map((section) => ({
-      label: section.label,
       chains: section.chains.filter(
         (c) =>
           (selectedTab === "mainnet" && !c.testnet) ||
           (selectedTab === "testnet" && c.testnet),
       ),
+      label: section.label,
     }));
   }, [searchedChainSections, selectedTab]);
 
@@ -367,7 +367,7 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
     <Container>
       <Container p="lg">
         {props.onBack ? (
-          <ModalHeader title={locale.title} onBack={props.onBack} />
+          <ModalHeader onBack={props.onBack} title={locale.title} />
         ) : (
           <ModalTitle>{locale.title}</ModalTitle>
         )}
@@ -379,20 +379,20 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
           <Container px="lg">
             <Container flex="row" gap="xxs">
               <TabButton
-                onClick={() => setSelectedTab("all")}
                 data-active={selectedTab === "all"}
+                onClick={() => setSelectedTab("all")}
               >
                 {locale.allNetworks}
               </TabButton>
               <TabButton
-                onClick={() => setSelectedTab("mainnet")}
                 data-active={selectedTab === "mainnet"}
+                onClick={() => setSelectedTab("mainnet")}
               >
                 {locale.mainnets}
               </TabButton>
               <TabButton
-                onClick={() => setSelectedTab("testnet")}
                 data-active={selectedTab === "testnet"}
+                onClick={() => setSelectedTab("testnet")}
               >
                 {locale.testnets}
               </TabButton>
@@ -408,29 +408,29 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
         {/* Search */}
         <div
           style={{
-            display: "flex",
             alignItems: "center",
+            display: "flex",
             position: "relative",
           }}
         >
-          <StyledMagnifyingGlassIcon width={iconSize.md} height={iconSize.md} />
+          <StyledMagnifyingGlassIcon height={iconSize.md} width={iconSize.md} />
 
           <Input
-            style={{
-              padding: `${spacing.sm} ${spacing.md} ${spacing.sm} ${spacing.xxl}`,
-            }}
-            tabIndex={-1}
-            variant="outline"
-            value={searchTerm}
+            disabled={isAllChainsQueryLoading}
             onChange={(e) => {
               setSearchTerm(e.target.value);
             }}
-            disabled={isAllChainsQueryLoading}
             placeholder={
               isAllChainsQueryLoading
                 ? "Loading chains..."
                 : locale.inputPlaceholder
             }
+            style={{
+              padding: `${spacing.sm} ${spacing.md} ${spacing.sm} ${spacing.xxl}`,
+            }}
+            tabIndex={-1}
+            value={searchTerm}
+            variant="outline"
           />
           {/* Searching Spinner */}
           {(deferredSearchTerm !== searchTerm || isAllChainsQueryLoading) && (
@@ -440,7 +440,7 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
                 right: spacing.md,
               }}
             >
-              <Spinner size="md" color="accentText" />
+              <Spinner color="accentText" size="md" />
             </div>
           )}
         </div>
@@ -449,11 +449,11 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
       <Container px="md">
         <NetworkTabContent
           chainSections={filteredChainSections}
-          onSwitch={handleSwitch}
-          renderChain={props.networkSelector?.renderChain}
-          connectLocale={props.connectLocale}
           client={props.client}
           close={props.closeModal}
+          connectLocale={props.connectLocale}
+          onSwitch={handleSwitch}
+          renderChain={props.networkSelector?.renderChain}
         />
       </Container>
       {onCustomClick && (
@@ -462,16 +462,16 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
           <Container p="lg">
             <Button
               fullWidth
-              variant="link"
               onClick={() => {
                 onCustomClick();
                 props.closeModal();
               }}
               style={{
+                boxShadow: "none",
                 display: "flex",
                 fontSize: fontSize.sm,
-                boxShadow: "none",
               }}
+              variant="link"
             >
               {locale.addCustomNetwork}
             </Button>
@@ -502,8 +502,8 @@ const NetworkTabContent = (props: {
 
   return (
     <Container
-      scrollY
       animate="fadein"
+      scrollY
       style={{
         height: "330px",
         paddingBottom: spacing.lg,
@@ -511,9 +511,9 @@ const NetworkTabContent = (props: {
     >
       {/* empty state */}
       {noChainsToShow ? (
-        <Container flex="column" gap="md" center="both" color="secondaryText">
+        <Container center="both" color="secondaryText" flex="column" gap="md">
           <Spacer y="xl" />
-          <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
+          <CrossCircledIcon height={iconSize.xl} width={iconSize.xl} />
           <Text> No Results </Text>
         </Container>
       ) : (
@@ -528,11 +528,11 @@ const NetworkTabContent = (props: {
               <Spacer y="xs" />
               <NetworkList
                 chains={section.chains}
+                client={props.client}
+                close={props.close}
+                connectLocale={props.connectLocale}
                 onSwitch={props.onSwitch}
                 renderChain={props.renderChain}
-                close={props.close}
-                client={props.client}
-                connectLocale={props.connectLocale}
               />
             </Fragment>
           );
@@ -607,22 +607,22 @@ export const NetworkList = /* @__PURE__ */ memo(function NetworkList(
           <li key={chain.id} ref={isLast ? lastItemRef : undefined}>
             {RenderChain ? (
               <RenderChain
+                chain={chain}
+                close={props.close}
                 switchChain={() => {
                   handleSwitch(chain);
                 }}
-                chain={chain}
-                switching={switchingChainId === chain.id}
                 switchFailed={errorSwitchingChainId === chain.id}
-                close={props.close}
+                switching={switchingChainId === chain.id}
               />
             ) : (
               <ChainButton
                 chain={chain}
+                client={props.client}
                 confirming={confirming}
+                connectLocale={props.connectLocale}
                 onClick={() => handleSwitch(chain)}
                 switchingFailed={switchingFailed}
-                client={props.client}
-                connectLocale={props.connectLocale}
               />
             )}
           </li>
@@ -655,35 +655,35 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
       >
         <Container
           style={{
-            position: "relative",
+            alignItems: "center",
             display: "flex",
             flexShrink: 0,
-            alignItems: "center",
+            position: "relative",
           }}
         >
           <ChainIcon
             client={props.client}
-            loadingComponent={
-              <Skeleton
-                width={`${iconSize.lg}px`}
-                height={`${iconSize.lg}px`}
-              />
-            }
             fallbackComponent={
               <img
-                src={fallbackChainIcon}
                 alt=""
+                src={fallbackChainIcon}
                 style={{
-                  width: `${iconSize.lg}px`,
                   height: `${iconSize.lg}px`,
+                  width: `${iconSize.lg}px`,
                 }}
               />
             }
-            style={{
-              width: `${iconSize.lg}px`,
-              height: `${iconSize.lg}px`,
-            }}
             loading="lazy"
+            loadingComponent={
+              <Skeleton
+                height={`${iconSize.lg}px`}
+                width={`${iconSize.lg}px`}
+              />
+            }
+            style={{
+              height: `${iconSize.lg}px`,
+              width: `${iconSize.lg}px`,
+            }}
           />
           {activeChain?.id === chain.id && (
             <ChainActiveDot className="tw-chain-active-dot-button-network-selector" />
@@ -698,21 +698,21 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
             }}
           >
             <ChainName
-              loadingComponent={<Skeleton width="150px" height="20px" />}
+              loadingComponent={<Skeleton height="20px" width="150px" />}
             />
-            <Container animate="fadein" flex="row" gap="xxs" center="y">
+            <Container animate="fadein" center="y" flex="row" gap="xxs">
               {confirming && (
                 <>
-                  <Text size="xs" color="accentText">
+                  <Text color="accentText" size="xs">
                     {locale.switchingNetwork}
                   </Text>
-                  <Spinner size="xs" color="accentText" />
+                  <Spinner color="accentText" size="xs" />
                 </>
               )}
 
               {switchingFailed && (
                 <Container animate="fadein">
-                  <Text size="xs" color="danger">
+                  <Text color="danger" size="xs">
                     {locale.networkSelector.failedToSwitch}
                   </Text>
                 </Container>
@@ -721,8 +721,8 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
           </div>
         ) : (
           <ChainName
-            loadingComponent={<Skeleton width="150px" height="20px" />}
             className="tw-chain-icon-none-confirming"
+            loadingComponent={<Skeleton height="20px" width="150px" />}
           />
         )}
       </NetworkButton>
@@ -737,20 +737,19 @@ export const TabButton = /* @__PURE__ */ (() =>
   styled.button((_) => {
     const theme = useCustomTheme();
     return {
-      all: "unset",
-      fontSize: fontSize.sm,
-      fontWeight: 500,
-      color: theme.colors.secondaryText,
-      cursor: "pointer",
-      padding: `${spacing.sm} ${spacing.sm}`,
-      WebkitTapHighlightColor: "transparent",
-      borderRadius: radius.lg,
-      transition: "background 0.2s ease, color 0.2s ease",
-
       "&[data-active='true']": {
         background: theme.colors.secondaryButtonBg,
         color: theme.colors.primaryText,
       },
+      all: "unset",
+      borderRadius: radius.lg,
+      color: theme.colors.secondaryText,
+      cursor: "pointer",
+      fontSize: fontSize.sm,
+      fontWeight: 500,
+      padding: `${spacing.sm} ${spacing.sm}`,
+      transition: "background 0.2s ease, color 0.2s ease",
+      WebkitTapHighlightColor: "transparent",
     };
   }))();
 
@@ -760,22 +759,22 @@ export const TabButton = /* @__PURE__ */ (() =>
 export const SectionLabel = /* @__PURE__ */ StyledP(() => {
   const theme = useCustomTheme();
   return {
-    fontSize: fontSize.sm,
     color: theme.colors.secondaryText,
-    margin: 0,
     display: "block",
+    fontSize: fontSize.sm,
+    margin: 0,
     padding: `0 ${spacing.xs}`,
   };
 });
 
 const NetworkListUl = /* @__PURE__ */ StyledUl({
-  padding: 0,
-  margin: 0,
-  listStyle: "none",
+  boxSizing: "border-box",
   display: "flex",
   flexDirection: "column",
   gap: spacing.xs,
-  boxSizing: "border-box",
+  listStyle: "none",
+  margin: 0,
+  padding: 0,
 });
 
 /**
@@ -784,22 +783,22 @@ const NetworkListUl = /* @__PURE__ */ StyledUl({
 export const NetworkButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
-    all: "unset",
-    display: "flex",
-    width: "100%",
-    boxSizing: "border-box",
-    alignItems: "center",
-    gap: spacing.md,
-    padding: `${spacing.xs} ${spacing.sm}`,
-    borderRadius: radius.md,
-    cursor: "pointer",
-    transition: "background 0.2s ease",
-    color: theme.colors.primaryText,
-    fontWeight: 500,
-    fontSize: fontSize.md,
     "&:hover": {
       background: theme.colors.secondaryButtonBg,
     },
+    alignItems: "center",
+    all: "unset",
+    borderRadius: radius.md,
+    boxSizing: "border-box",
+    color: theme.colors.primaryText,
+    cursor: "pointer",
+    display: "flex",
+    fontSize: fontSize.md,
+    fontWeight: 500,
+    gap: spacing.md,
+    padding: `${spacing.xs} ${spacing.sm}`,
+    transition: "background 0.2s ease",
+    width: "100%",
 
     [media.mobile]: {
       fontSize: fontSize.sm,
@@ -816,8 +815,8 @@ export const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(
   const theme = useCustomTheme();
   return {
     color: theme.colors.secondaryText,
-    position: "absolute",
     left: spacing.sm,
+    position: "absolute",
   };
 });
 
@@ -957,21 +956,21 @@ export function useNetworkSwitcherModal() {
       setRootEl(
         <CustomThemeProvider theme={props.theme}>
           <Modal
-            size="compact"
             open={true}
             setOpen={(value) => {
               if (!value) {
                 closeModal();
               }
             }}
+            size="compact"
             style={{
               paddingBottom: props.onCustomClick ? spacing.md : "0px",
             }}
           >
             <NetworkSelectorContent
+              chains={[activeChain]}
               client={props.client}
               closeModal={closeModal}
-              chains={[activeChain]}
               connectLocale={locale}
               networkSelector={{
                 onCustomClick: props.onCustomClick,
@@ -988,7 +987,7 @@ export function useNetworkSwitcherModal() {
   );
 
   return {
-    open: openNetworkSwitcher,
     close: closeModal,
+    open: openNetworkSwitcher,
   };
 }

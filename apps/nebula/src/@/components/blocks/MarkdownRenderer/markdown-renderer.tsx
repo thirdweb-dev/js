@@ -1,3 +1,7 @@
+import Link from "next/link";
+import { onlyText } from "react-children-utilities";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import { InlineCode } from "@/components/ui/inline-code";
@@ -11,10 +15,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { onlyText } from "react-children-utilities";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
 export const MarkdownRenderer: React.FC<{
   markdownText: string;
@@ -41,9 +41,54 @@ export const MarkdownRenderer: React.FC<{
   return (
     <div className={className}>
       <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        skipHtml={markdownProps.skipHtml}
         components={{
+          a: (props) => (
+            <Link
+              href={props.href ?? "#"}
+              target="_blank"
+              {...cleanedProps(props)}
+              className="mt-4 underline decoration-muted-foreground/50 decoration-dotted underline-offset-[5px] hover:text-foreground hover:decoration-foreground hover:decoration-solid"
+            />
+          ),
+
+          code: ({ ...props }) => {
+            const codeStr = onlyText(props.children);
+
+            if (props?.className || codeStr.length > 100) {
+              if (code?.disableCodeHighlight || !props.className) {
+                return (
+                  <div className="my-4">
+                    {/* @ts-expect-error - TODO: fix this */}
+                    <PlainTextCodeBlock
+                      {...cleanedProps(props)}
+                      className={markdownProps.code?.className}
+                      code={onlyText(props.children).trim()}
+                    />
+                  </div>
+                );
+              }
+              const language = props.className.replace("language-", "");
+              return (
+                <div className="my-4">
+                  <CodeClient
+                    // @ts-expect-error - TODO: fix this
+                    lang={language}
+                    {...cleanedProps(props)}
+                    className={markdownProps.code?.className}
+                    code={onlyText(props.children).trim()}
+                    ignoreFormattingErrors={code?.ignoreFormattingErrors}
+                  />
+                </div>
+              );
+            }
+
+            return (
+              <InlineCode
+                className={markdownProps.inlineCode?.className}
+                code={onlyText(props.children).trim()}
+              />
+            );
+          },
           h1: (props) => (
             <h2
               className={cn(
@@ -95,104 +140,8 @@ export const MarkdownRenderer: React.FC<{
             />
           ),
 
-          a: (props) => (
-            <Link
-              href={props.href ?? "#"}
-              target="_blank"
-              {...cleanedProps(props)}
-              className="mt-4 underline decoration-muted-foreground/50 decoration-dotted underline-offset-[5px] hover:text-foreground hover:decoration-foreground hover:decoration-solid"
-            />
-          ),
-
           hr: (props) => (
             <hr {...cleanedProps(props)} className="my-5 bg-border" />
-          ),
-
-          code: ({ ...props }) => {
-            const codeStr = onlyText(props.children);
-
-            if (props?.className || codeStr.length > 100) {
-              if (code?.disableCodeHighlight || !props.className) {
-                return (
-                  <div className="my-4">
-                    {/* @ts-expect-error - TODO: fix this */}
-                    <PlainTextCodeBlock
-                      {...cleanedProps(props)}
-                      code={onlyText(props.children).trim()}
-                      className={markdownProps.code?.className}
-                    />
-                  </div>
-                );
-              }
-              const language = props.className.replace("language-", "");
-              return (
-                <div className="my-4">
-                  <CodeClient
-                    // @ts-expect-error - TODO: fix this
-                    lang={language}
-                    {...cleanedProps(props)}
-                    code={onlyText(props.children).trim()}
-                    ignoreFormattingErrors={code?.ignoreFormattingErrors}
-                    className={markdownProps.code?.className}
-                  />
-                </div>
-              );
-            }
-
-            return (
-              <InlineCode
-                code={onlyText(props.children).trim()}
-                className={markdownProps.inlineCode?.className}
-              />
-            );
-          },
-
-          p: (props) => (
-            <p
-              className={cn(
-                "mb-4 text-muted-foreground leading-loose",
-                markdownProps.p?.className,
-              )}
-              {...cleanedProps(props)}
-            />
-          ),
-
-          table: (props) => (
-            <div className="mb-6">
-              <TableContainer>
-                <Table {...cleanedProps(props)} />
-              </TableContainer>
-            </div>
-          ),
-
-          th: ({ children: c, ...props }) => (
-            <TableHead
-              {...cleanedProps(props)}
-              className="text-left text-muted-foreground"
-            >
-              {c}
-            </TableHead>
-          ),
-
-          td: (props) => (
-            <TableCell {...cleanedProps(props)} className="text-left" />
-          ),
-          thead: (props) => <TableHeader {...cleanedProps(props)} />,
-          tbody: (props) => <TableBody {...cleanedProps(props)} />,
-          tr: (props) => <TableRow {...cleanedProps(props)} />,
-          ul: (props) => {
-            return (
-              <ul
-                className="mb-4 list-outside list-disc pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
-                {...cleanedProps(props)}
-              />
-            );
-          },
-          ol: (props) => (
-            <ol
-              className="mb-4 list-outside list-decimal pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
-              {...cleanedProps(props)}
-            />
           ),
           li: ({ children: c, ...props }) => (
             <li
@@ -205,10 +154,60 @@ export const MarkdownRenderer: React.FC<{
               {c}
             </li>
           ),
+          ol: (props) => (
+            <ol
+              className="mb-4 list-outside list-decimal pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
+              {...cleanedProps(props)}
+            />
+          ),
+
+          p: (props) => (
+            <p
+              className={cn(
+                "mb-4 text-muted-foreground leading-loose",
+                markdownProps.p?.className,
+              )}
+              {...cleanedProps(props)}
+            />
+          ),
           strong(props) {
             return <strong className="font-medium" {...cleanedProps(props)} />;
           },
+
+          table: (props) => (
+            <div className="mb-6">
+              <TableContainer>
+                <Table {...cleanedProps(props)} />
+              </TableContainer>
+            </div>
+          ),
+          tbody: (props) => <TableBody {...cleanedProps(props)} />,
+
+          td: (props) => (
+            <TableCell {...cleanedProps(props)} className="text-left" />
+          ),
+
+          th: ({ children: c, ...props }) => (
+            <TableHead
+              {...cleanedProps(props)}
+              className="text-left text-muted-foreground"
+            >
+              {c}
+            </TableHead>
+          ),
+          thead: (props) => <TableHeader {...cleanedProps(props)} />,
+          tr: (props) => <TableRow {...cleanedProps(props)} />,
+          ul: (props) => {
+            return (
+              <ul
+                className="mb-4 list-outside list-disc pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
+                {...cleanedProps(props)}
+              />
+            );
+          },
         }}
+        remarkPlugins={[remarkGfm]}
+        skipHtml={markdownProps.skipHtml}
       >
         {markdownText}
       </ReactMarkdown>
@@ -219,7 +218,7 @@ export const MarkdownRenderer: React.FC<{
 function cleanedProps<T extends object & { node?: unknown }>(
   props: T,
 ): Omit<T, "node"> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // biome-ignore lint/correctness/noUnusedVariables: explicitly removing node here
   const { node, ...rest } = props;
   return rest;
 }

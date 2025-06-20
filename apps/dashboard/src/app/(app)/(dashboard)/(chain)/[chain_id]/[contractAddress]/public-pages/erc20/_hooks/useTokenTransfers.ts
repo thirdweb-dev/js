@@ -1,6 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { isProd } from "@/constants/env-utils";
 import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
-import { useQuery } from "@tanstack/react-query";
 
 export type TokenTransfersData = {
   from_address: string;
@@ -23,10 +23,6 @@ export function useTokenTransfers(params: {
   limit: number;
 }) {
   return useQuery({
-    queryKey: ["token-transfers", params],
-    retry: false,
-    retryOnMount: false,
-    refetchOnWindowFocus: false,
     queryFn: async () => {
       const domain = isProd ? "thirdweb" : "thirdweb-dev";
       const url = new URL(
@@ -49,6 +45,10 @@ export function useTokenTransfers(params: {
       const data = json.data as TokenTransfersData[];
       return data;
     },
+    queryKey: ["token-transfers", params],
     refetchInterval: 5000,
+    refetchOnWindowFocus: false,
+    retry: false,
+    retryOnMount: false,
   });
 }

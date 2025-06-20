@@ -24,12 +24,12 @@ import type { Address } from "../../../../../../../utils/address.js";
 import { toWei } from "../../../../../../../utils/units.js";
 import { iconSize } from "../../../../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
+import { Container, ModalHeader } from "../../../../components/basic.js";
+import { Button } from "../../../../components/buttons.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { StepBar } from "../../../../components/StepBar.js";
 import { SwitchNetworkButton } from "../../../../components/SwitchNetwork.js";
-import { Container, ModalHeader } from "../../../../components/basic.js";
-import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
@@ -84,6 +84,25 @@ export function TransferConfirmationScreen(
   >({ id: "idle" });
 
   const transferQuery = useQuery({
+    queryFn: async () => {
+      const transferResponse = await getBuyWithCryptoTransfer({
+        amount: tokenAmount,
+        chainId: chain.id,
+        client,
+        feePayer:
+          payOptions?.mode === "direct_payment"
+            ? payOptions.paymentInfo.feePayer
+            : undefined,
+        fromAddress: payer.account.address,
+        paymentLinkId: paymentLinkId,
+        purchaseData: payOptions?.purchaseData,
+        toAddress: receiverAddress,
+        tokenAddress: isNativeToken(token)
+          ? NATIVE_TOKEN_ADDRESS
+          : token.address,
+      });
+      return transferResponse;
+    },
     queryKey: [
       "transfer",
       isNativeToken(token) ? NATIVE_TOKEN_ADDRESS : token.address,
@@ -92,25 +111,6 @@ export function TransferConfirmationScreen(
       payer.account.address,
       payOptions?.purchaseData,
     ],
-    queryFn: async () => {
-      const transferResponse = await getBuyWithCryptoTransfer({
-        client,
-        fromAddress: payer.account.address,
-        toAddress: receiverAddress,
-        chainId: chain.id,
-        tokenAddress: isNativeToken(token)
-          ? NATIVE_TOKEN_ADDRESS
-          : token.address,
-        amount: tokenAmount,
-        purchaseData: payOptions?.purchaseData,
-        feePayer:
-          payOptions?.mode === "direct_payment"
-            ? payOptions.paymentInfo.feePayer
-            : undefined,
-        paymentLinkId: paymentLinkId,
-      });
-      return transferResponse;
-    },
     refetchInterval: 30 * 1000,
   });
 
@@ -122,21 +122,21 @@ export function TransferConfirmationScreen(
         status.error.toLowerCase().includes("user denied")
       ) {
         return {
-          title: "Failed to Approve",
           message: "Your wallet rejected the approval request.",
+          title: "Failed to Approve",
         };
       }
       if (status.error.toLowerCase().includes("insufficient funds for gas")) {
         return {
-          title: "Insufficient Native Funds",
           message:
             "You do not have enough native funds to approve the transaction.",
+          title: "Insufficient Native Funds",
         };
       }
       return {
-        title: "Failed to Approve",
         message:
           "Your wallet failed to approve the transaction for an unknown reason. Please try again or contact support.",
+        title: "Failed to Approve",
       };
     }
 
@@ -151,21 +151,21 @@ export function TransferConfirmationScreen(
         status.error.toLowerCase().includes("user denied")
       ) {
         return {
-          title: "Failed to Confirm",
           message: "Your wallet rejected the confirmation request.",
+          title: "Failed to Confirm",
         };
       }
       if (status.error.toLowerCase().includes("insufficient funds for gas")) {
         return {
-          title: "Insufficient Native Funds",
           message:
             "You do not have enough native funds to confirm the transaction.",
+          title: "Insufficient Native Funds",
         };
       }
       return {
-        title: "Failed to Confirm",
         message:
           "Your wallet failed to confirm the transaction for an unknown reason. Please try again or contact support.",
+        title: "Failed to Confirm",
       };
     }
 
@@ -175,10 +175,10 @@ export function TransferConfirmationScreen(
   if (transferQuery.isLoading) {
     return (
       <Container p="lg">
-        <ModalHeader title={title} onBack={onBack} />
-        <Container flex="column" center="both" style={{ minHeight: "300px" }}>
+        <ModalHeader onBack={onBack} title={title} />
+        <Container center="both" flex="column" style={{ minHeight: "300px" }}>
           <Spacer y="xl" />
-          <Spinner size="xl" color="secondaryText" />
+          <Spinner color="secondaryText" size="xl" />
           <Spacer y="xl" />
         </Container>
       </Container>
@@ -190,12 +190,12 @@ export function TransferConfirmationScreen(
 
   return (
     <Container p="lg">
-      <ModalHeader title={title} onBack={onBack} />
+      <ModalHeader onBack={onBack} title={title} />
       <Spacer y="xl" />
 
       {transactionMode ? (
         <>
-          <StepBar steps={2} currentStep={step === "transfer" ? 1 : 2} />
+          <StepBar currentStep={step === "transfer" ? 1 : 2} steps={2} />
           <Spacer y="sm" />
           <Text size="sm">
             {step === "transfer"
@@ -212,15 +212,15 @@ export function TransferConfirmationScreen(
       )}
 
       <SwapSummary
-        sender={payer.account.address}
-        receiver={receiverAddress}
         client={client}
-        fromToken={token}
-        fromChain={chain}
-        toToken={token}
-        toChain={chain}
         fromAmount={transactionMode ? tokenAmount : transferFromAmountWithFees}
+        fromChain={chain}
+        fromToken={token}
+        receiver={receiverAddress}
+        sender={payer.account.address}
         toAmount={tokenAmount}
+        toChain={chain}
+        toToken={token}
       />
 
       <Spacer y="lg" />
@@ -229,24 +229,24 @@ export function TransferConfirmationScreen(
         <>
           <Spacer y="sm" />
           <Container
-            gap="sm"
+            center="y"
+            color="accentText"
             flex="row"
+            gap="sm"
             style={{
               justifyContent: "space-between",
             }}
-            center="y"
-            color="accentText"
           >
             <Step
-              isDone={step === "execute"}
               isActive={step === "transfer"}
+              isDone={step === "execute"}
               label={step === "transfer" ? "Transfer" : "Done"}
             />
             <ConnectorLine />
             <Step
+              isActive={step === "execute"}
               isDone={false}
               label="Finalize"
-              isActive={step === "execute"}
             />
           </Container>
           <Spacer y="lg" />
@@ -256,8 +256,8 @@ export function TransferConfirmationScreen(
       {uiErrorMessage && (
         <>
           <ErrorText
-            title={uiErrorMessage.title}
             message={uiErrorMessage.message}
+            title={uiErrorMessage.title}
           />
           <Spacer y="md" />
         </>
@@ -265,8 +265,8 @@ export function TransferConfirmationScreen(
 
       {!transactionMode && step === "execute" && status.id === "done" && (
         <>
-          <Container flex="row" gap="xs" center="both" color="success">
-            <CheckCircledIcon width={iconSize.sm} height={iconSize.sm} />
+          <Container center="both" color="success" flex="row" gap="xs">
+            <CheckCircledIcon height={iconSize.sm} width={iconSize.sm} />
             <Text color="success" size="sm">
               Payment completed
             </Text>
@@ -279,16 +279,16 @@ export function TransferConfirmationScreen(
       {payer.chain.id !== chain.id ? (
         <SwitchNetworkButton
           fullWidth
-          variant="accent"
           switchChain={async () => {
             await props.payer.wallet.switchChain(chain);
           }}
+          variant="accent"
         />
       ) : (
         <Button
-          variant="accent"
-          fullWidth
           disabled={status.id === "pending"}
+          fullWidth
+          gap="xs"
           onClick={async () => {
             if (step === "execute") {
               onDone();
@@ -302,19 +302,19 @@ export function TransferConfirmationScreen(
               if (transactionMode) {
                 const transaction = isNativeToken(token)
                   ? prepareTransaction({
-                      client,
                       chain,
+                      client,
                       to: receiverAddress,
                       value: toWei(tokenAmount),
                     })
                   : transfer({
+                      amount: tokenAmount,
                       contract: getContract({
                         address: token.address,
                         chain: chain,
                         client: client,
                       }),
                       to: receiverAddress,
-                      amount: tokenAmount,
                     });
                 const [txResult, tokenMetadata] = await Promise.all([
                   sendAndConfirmTransaction({
@@ -333,23 +333,23 @@ export function TransferConfirmationScreen(
                 ]);
                 trackPayEvent({
                   client: props.client,
-                  walletAddress: payer.account.address,
-                  walletType: payer.wallet.id,
+                  event: "transfer_confirmation_success_transaction_mode",
                   toChainId: chain.id,
                   toToken: isNativeToken(token) ? undefined : token.address,
-                  event: "transfer_confirmation_success_transaction_mode",
+                  walletAddress: payer.account.address,
+                  walletType: payer.wallet.id,
                 });
                 // its the last step before the transaction, so propagate onPurchaseSuccess here
                 props.onSuccess?.(
                   transferBuyWithCryptoQuote({
-                    token,
                     chain,
-                    tokenMetadata,
+                    fromAddress: payer.account.address,
+                    toAddress: receiverAddress,
+                    token,
                     tokenAmount: transactionMode
                       ? tokenAmount
                       : transferFromAmountWithFees,
-                    fromAddress: payer.account.address,
-                    toAddress: receiverAddress,
+                    tokenMetadata,
                     transaction: txResult,
                   }),
                 );
@@ -367,15 +367,15 @@ export function TransferConfirmationScreen(
                   // check allowance
                   const prevAllowance = await allowance({
                     contract: getContract({
-                      client: client,
                       address: transferResponse.approvalData.tokenAddress,
                       chain: getCachedChain(
                         transferResponse.approvalData.chainId,
                       ),
+                      client: client,
                     }),
+                    owner: payer.account.address,
                     spender: transferResponse.approvalData
                       .spenderAddress as Address,
-                    owner: payer.account.address,
                   });
 
                   if (
@@ -385,25 +385,25 @@ export function TransferConfirmationScreen(
                     setStep("approve");
                     trackPayEvent({
                       client: props.client,
-                      walletAddress: payer.account.address,
-                      walletType: payer.wallet.id,
+                      event: "prompt_transfer_approval",
                       toChainId: chain.id,
                       toToken: isNativeToken(token) ? undefined : token.address,
-                      event: "prompt_transfer_approval",
+                      walletAddress: payer.account.address,
+                      walletType: payer.wallet.id,
                     });
                     const transaction = approve({
+                      amountWei: BigInt(
+                        transferResponse.approvalData.amountWei,
+                      ),
                       contract: getContract({
-                        client: client,
                         address: transferResponse.approvalData.tokenAddress,
                         chain: getCachedChain(
                           transferResponse.approvalData.chainId,
                         ),
+                        client: client,
                       }),
                       spender: transferResponse.approvalData
                         .spenderAddress as Address,
-                      amountWei: BigInt(
-                        transferResponse.approvalData.amountWei,
-                      ),
                     });
                     // approve the transfer
                     await sendAndConfirmTransaction({
@@ -412,22 +412,22 @@ export function TransferConfirmationScreen(
                     });
                     trackPayEvent({
                       client: props.client,
-                      walletAddress: payer.account.address,
-                      walletType: payer.wallet.id,
+                      event: "transfer_approval_success",
                       toChainId: chain.id,
                       toToken: isNativeToken(token) ? undefined : token.address,
-                      event: "transfer_approval_success",
+                      walletAddress: payer.account.address,
+                      walletType: payer.wallet.id,
                     });
                   }
                 }
 
                 trackPayEvent({
                   client: props.client,
-                  walletAddress: payer.account.address,
-                  walletType: payer.wallet.id,
+                  event: "prompt_transfer_confirmation",
                   toChainId: chain.id,
                   toToken: isNativeToken(token) ? undefined : token.address,
-                  event: "prompt_transfer_confirmation",
+                  walletAddress: payer.account.address,
+                  walletType: payer.wallet.id,
                 });
 
                 setStep("transfer");
@@ -443,23 +443,23 @@ export function TransferConfirmationScreen(
 
                 trackPayEvent({
                   client: props.client,
-                  walletAddress: payer.account.address,
-                  walletType: payer.wallet.id,
+                  event: "transfer_confirmation_success",
                   toChainId: chain.id,
                   toToken: isNativeToken(token) ? undefined : token.address,
-                  event: "transfer_confirmation_success",
+                  walletAddress: payer.account.address,
+                  walletType: payer.wallet.id,
                 });
               }
               // biome-ignore lint/suspicious/noExplicitAny: catch multiple errors
             } catch (e: any) {
               console.error(e);
               setStatus({
-                id: "error",
                 error: "error" in e ? e.error?.message : e?.message,
+                id: "error",
               });
             }
           }}
-          gap="xs"
+          variant="accent"
         >
           {step === "execute" && (status.id === "done" ? "Done" : "Continue")}
           {step === "transfer" &&
@@ -467,7 +467,7 @@ export function TransferConfirmationScreen(
           {step === "approve" &&
             (status.id === "pending" ? "Approving" : "Approve")}
           {status.id === "pending" && (
-            <Spinner size="sm" color="accentButtonText" />
+            <Spinner color="accentButtonText" size="sm" />
           )}
         </Button>
       )}
@@ -494,65 +494,65 @@ function transferBuyWithCryptoQuote(args: {
     transaction,
   } = args;
   return {
-    status: "COMPLETED",
-    subStatus: "SUCCESS",
-    swapType: "TRANSFER",
+    fromAddress,
     quote: {
       createdAt: new Date().toISOString(),
-      fromToken: {
-        chainId: chain.id,
-        tokenAddress: isNativeToken(token)
-          ? NATIVE_TOKEN_ADDRESS
-          : token.address,
-        decimals: tokenMetadata.decimals,
-        symbol: tokenMetadata.symbol,
-        name: tokenMetadata.name,
-        priceUSDCents: 0,
-      },
-      toToken: {
-        chainId: chain.id,
-        tokenAddress: isNativeToken(token)
-          ? NATIVE_TOKEN_ADDRESS
-          : token.address,
-        decimals: tokenMetadata.decimals,
-        symbol: tokenMetadata.symbol,
-        name: tokenMetadata.name,
-        priceUSDCents: 0,
-      },
-      fromAmountWei: toWei(tokenAmount).toString(),
-      fromAmount: tokenAmount,
-      toAmountWei: toWei(tokenAmount).toString(),
-      toAmount: tokenAmount,
-      toAmountMin: tokenAmount,
-      toAmountMinWei: toWei(tokenAmount).toString(),
       estimated: {
+        durationSeconds: 0,
         feesUSDCents: 0,
+        fromAmountUSDCents: 0,
         gasCostUSDCents: 0,
         slippageBPS: 0,
         toAmountMinUSDCents: 0,
         toAmountUSDCents: 0,
-        fromAmountUSDCents: 0,
-        durationSeconds: 0,
       },
-    },
-    fromAddress,
-    toAddress,
-    source: {
-      transactionHash: transaction.transactionHash,
-      amount: tokenAmount,
-      amountWei: toWei(tokenAmount).toString(),
-      amountUSDCents: 0,
-      completedAt: new Date().toISOString(),
-      token: {
+      fromAmount: tokenAmount,
+      fromAmountWei: toWei(tokenAmount).toString(),
+      fromToken: {
         chainId: chain.id,
+        decimals: tokenMetadata.decimals,
+        name: tokenMetadata.name,
+        priceUSDCents: 0,
+        symbol: tokenMetadata.symbol,
         tokenAddress: isNativeToken(token)
           ? NATIVE_TOKEN_ADDRESS
           : token.address,
+      },
+      toAmount: tokenAmount,
+      toAmountMin: tokenAmount,
+      toAmountMinWei: toWei(tokenAmount).toString(),
+      toAmountWei: toWei(tokenAmount).toString(),
+      toToken: {
+        chainId: chain.id,
         decimals: tokenMetadata.decimals,
-        symbol: tokenMetadata.symbol,
         name: tokenMetadata.name,
         priceUSDCents: 0,
+        symbol: tokenMetadata.symbol,
+        tokenAddress: isNativeToken(token)
+          ? NATIVE_TOKEN_ADDRESS
+          : token.address,
       },
     },
+    source: {
+      amount: tokenAmount,
+      amountUSDCents: 0,
+      amountWei: toWei(tokenAmount).toString(),
+      completedAt: new Date().toISOString(),
+      token: {
+        chainId: chain.id,
+        decimals: tokenMetadata.decimals,
+        name: tokenMetadata.name,
+        priceUSDCents: 0,
+        symbol: tokenMetadata.symbol,
+        tokenAddress: isNativeToken(token)
+          ? NATIVE_TOKEN_ADDRESS
+          : token.address,
+      },
+      transactionHash: transaction.transactionHash,
+    },
+    status: "COMPLETED",
+    subStatus: "SUCCESS",
+    swapType: "TRANSFER",
+    toAddress,
   };
 }

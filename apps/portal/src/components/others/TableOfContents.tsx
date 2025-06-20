@@ -1,9 +1,9 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
 /**
  * Automatically query all the heading anchors inside the <main> and creates a table of contents
@@ -101,9 +101,9 @@ export function TableOfContentsSideBar(props: {
       }
 
       anchorNodes.push({
-        name: heading?.textContent || "",
         href: anchorEl.getAttribute("href") || "",
         level: Number.parseInt(heading?.tagName.slice(1) || "6"),
+        name: heading?.textContent || "",
       });
     }
 
@@ -131,7 +131,7 @@ export function TableOfContentsSideBar(props: {
           transition: "opacity 0.5s ease",
         }}
       >
-        <TableOfContents nodes={nodes} linkClassName={props.linkClassName} />
+        <TableOfContents linkClassName={props.linkClassName} nodes={nodes} />
       </div>
     </nav>
   );
@@ -147,9 +147,9 @@ function TableOfContents(props: {
         if (node.children.length > 0) {
           return (
             <li key={node.href}>
-              <TOCLink name={node.name} href={node.href} />
+              <TOCLink href={node.href} name={node.name} />
               <div className="pt-3 pl-3">
-                <TableOfContents nodes={node.children} key={node.href} />
+                <TableOfContents key={node.href} nodes={node.children} />
               </div>
             </li>
           );
@@ -158,9 +158,9 @@ function TableOfContents(props: {
         return (
           <li key={node.href}>
             <TOCLink
-              name={node.name}
               href={node.href}
               linkClassName={props.linkClassName}
+              name={node.name}
             />
           </li>
         );

@@ -1,5 +1,15 @@
 "use client";
 
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  CreditCardIcon,
+  DownloadIcon,
+  ReceiptIcon,
+} from "lucide-react";
+import { useQueryState } from "nuqs";
+import { useTransition } from "react";
+import type Stripe from "stripe";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,16 +22,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  CreditCardIcon,
-  DownloadIcon,
-  ReceiptIcon,
-} from "lucide-react";
-import { useQueryState } from "nuqs";
-import { useTransition } from "react";
-import type Stripe from "stripe";
 import { ThirdwebMiniLogo } from "../../../../../../../components/ThirdwebMiniLogo";
 import { searchParams } from "../search-params";
 
@@ -36,24 +36,24 @@ export function BillingHistory(props: {
   const [cursor, setCursor] = useQueryState(
     "cursor",
     searchParams.cursor.withOptions({
-      startTransition,
       history: "push",
       shallow: false,
+      startTransition,
     }),
   );
 
   const formatCurrency = (amount: number, currency: string) => {
     return new Intl.NumberFormat("en-US", {
-      style: "currency",
       currency: currency.toUpperCase(),
+      style: "currency",
     }).format(amount / 100);
   };
 
   const formatDate = (timestamp: number) => {
     return new Date(timestamp * 1000).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
       day: "numeric",
+      month: "long",
+      year: "numeric",
     });
   };
 
@@ -138,15 +138,15 @@ export function BillingHistory(props: {
                         >
                           <div>
                             <Button
-                              variant="default"
-                              size="sm"
                               asChild
                               disabled={!props.isOwnerAccount}
+                              size="sm"
+                              variant="default"
                             >
                               <a
-                                target="_blank"
                                 href={`/checkout/${props.teamSlug}/invoice?invoice_id=${invoice.id}`}
                                 rel="noopener noreferrer"
+                                target="_blank"
                               >
                                 <ThirdwebMiniLogo className="mr-2 h-4 w-4" />
                                 Pay with crypto
@@ -165,15 +165,15 @@ export function BillingHistory(props: {
                           >
                             <div>
                               <Button
-                                variant="outline"
-                                size="sm"
                                 asChild
                                 disabled={!props.isOwnerAccount}
+                                size="sm"
+                                variant="outline"
                               >
                                 <a
                                   href={invoice.hosted_invoice_url}
-                                  target="_blank"
                                   rel="noopener noreferrer"
+                                  target="_blank"
                                 >
                                   <CreditCardIcon className="mr-2 h-4 w-4" />
                                   Pay with Card
@@ -186,11 +186,11 @@ export function BillingHistory(props: {
                     )}
 
                     {invoice.invoice_pdf && (
-                      <Button variant="ghost" size="sm" asChild>
+                      <Button asChild size="sm" variant="ghost">
                         <a
                           href={invoice.invoice_pdf}
-                          target="_blank"
                           rel="noopener noreferrer"
+                          target="_blank"
                         >
                           <DownloadIcon className="mr-2 h-4 w-4 " />
                           PDF
@@ -208,14 +208,14 @@ export function BillingHistory(props: {
       {showPagination && (
         <div className="flex items-center justify-between border-t p-6">
           <Button
-            variant="outline"
-            size="sm"
+            disabled={isLoading || !cursor}
             onClick={() => {
               // use browser history to go back
               // this is KINDA hacky but it works (as long as the user doesn't send the URL to someone else...)
               window.history.back();
             }}
-            disabled={isLoading || !cursor}
+            size="sm"
+            variant="outline"
           >
             {isLoading ? (
               <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -225,15 +225,15 @@ export function BillingHistory(props: {
             Previous
           </Button>
           <Button
-            variant="outline"
-            size="sm"
+            disabled={!props.hasMore || isLoading}
             onClick={() => {
               const lastInvoice = props.invoices[props.invoices.length - 1];
               if (lastInvoice && props.hasMore) {
                 setCursor(lastInvoice.id);
               }
             }}
-            disabled={!props.hasMore || isLoading}
+            size="sm"
+            variant="outline"
           >
             Next
             {isLoading && props.hasMore ? (

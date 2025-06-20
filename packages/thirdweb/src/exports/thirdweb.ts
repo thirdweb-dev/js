@@ -6,26 +6,9 @@ declare module "abitype" {
 }
 
 /**
- * CONSTANTS
+ * UNIVERSAL BRIDGE
  */
-export {
-  /**
-   * @deprecated Use {@link ZERO_ADDRESS}.
-   */
-  ZERO_ADDRESS as ADDRESS_ZERO,
-  ZERO_ADDRESS,
-  NATIVE_TOKEN_ADDRESS,
-} from "../constants/addresses.js";
-
-/**
- * CLIENT
- */
-export {
-  createThirdwebClient,
-  type CreateThirdwebClientOptions,
-  type ThirdwebClient,
-} from "../client/client.js";
-
+export * as Bridge from "../bridge/index.js";
 /**
  * CHAIN
  */
@@ -33,18 +16,41 @@ export {
 export type { Chain } from "../chains/types.js";
 // define chain
 export { defineChain } from "../chains/utils.js";
-
 /**
- * RPC
+ * CLIENT
  */
-// rpc client
-export { getRpcClient } from "../rpc/rpc.js";
-// blockNumber watcher
 export {
-  watchBlockNumber,
-  type WatchBlockNumberOptions,
-} from "../rpc/watchBlockNumber.js";
-
+  type CreateThirdwebClientOptions,
+  createThirdwebClient,
+  type ThirdwebClient,
+} from "../client/client.js";
+/**
+ * CONSTANTS
+ */
+export {
+  NATIVE_TOKEN_ADDRESS,
+  /**
+   * @deprecated Use {@link ZERO_ADDRESS}.
+   */
+  ZERO_ADDRESS as ADDRESS_ZERO,
+  ZERO_ADDRESS,
+} from "../constants/addresses.js";
+/**
+ * CONTRACT
+ */
+export {
+  type ContractOptions,
+  getContract,
+  type ThirdwebContract,
+} from "../contract/contract.js";
+/**
+ * ENGINE
+ */
+export * as Engine from "../engine/index.js";
+/**
+ * INSIGHT
+ */
+export * as Insight from "../insight/index.js";
 // all the actions
 export { eth_blockNumber } from "../rpc/actions/eth_blockNumber.js";
 export { eth_call } from "../rpc/actions/eth_call.js";
@@ -61,263 +67,215 @@ export { eth_getTransactionCount } from "../rpc/actions/eth_getTransactionCount.
 export { eth_getTransactionReceipt } from "../rpc/actions/eth_getTransactionReceipt.js";
 export { eth_maxPriorityFeePerGas } from "../rpc/actions/eth_maxPriorityFeePerGas.js";
 export { eth_sendRawTransaction } from "../rpc/actions/eth_sendRawTransaction.js";
-
 /**
- * CONTRACT
+ * RPC
  */
+// rpc client
+export { getRpcClient } from "../rpc/rpc.js";
+// blockNumber watcher
 export {
-  getContract,
-  type ContractOptions,
-  type ThirdwebContract,
-} from "../contract/contract.js";
-
-/**
- * UNIVERSAL BRIDGE
- */
-export * as Bridge from "../bridge/index.js";
-
-/**
- * INSIGHT
- */
-export * as Insight from "../insight/index.js";
-
-/**
- * ENGINE
- */
-export * as Engine from "../engine/index.js";
+  type WatchBlockNumberOptions,
+  watchBlockNumber,
+} from "../rpc/watchBlockNumber.js";
 
 /**
  * WALLETS
  */
 export {
-  getUser,
   type GetUserResult,
+  getUser,
 } from "../wallets/in-app/core/users/getUser.js";
 
 /**
  * TRANSACTIONS
  */
 
+// actions
 export {
-  prepareTransaction,
-  type PrepareTransactionOptions,
-  type PreparedTransaction,
-} from "../transaction/prepare-transaction.js";
-
+  type GetContractEventsOptions,
+  type GetContractEventsResult,
+  getContractEvents,
+} from "../event/actions/get-events.js";
 export {
-  isBaseTransactionOptions,
-  type BaseTransactionOptions,
-} from "../transaction/types.js";
-
+  type ParseEventLogsOptions,
+  type ParseEventLogsResult,
+  parseEventLogs,
+} from "../event/actions/parse-logs.js";
 export {
-  prepareContractCall,
-  type PrepareContractCallOptions,
-} from "../transaction/prepare-contract-call.js";
-
-export {
-  readContract,
-  type ReadContractOptions,
-} from "../transaction/read-contract.js";
-
-// method resolver
-export { resolveMethod } from "../transaction/resolve-method.js";
-
-// transaction actions
-export { encode } from "../transaction/actions/encode.js";
-export {
-  estimateGas,
-  type EstimateGasOptions,
-} from "../transaction/actions/estimate-gas.js";
-export { estimateGasCost } from "../transaction/actions/estimate-gas-cost.js";
-export {
-  getGasPrice,
-  type GetGasPriceOptions,
-} from "../gas/get-gas-price.js";
-export {
-  sendTransaction,
-  type SendTransactionOptions,
-} from "../transaction/actions/send-transaction.js";
-export { sendAndConfirmTransaction } from "../transaction/actions/send-and-confirm-transaction.js";
-export {
-  sendBatchTransaction,
-  type SendBatchTransactionOptions,
-} from "../transaction/actions/send-batch-transaction.js";
-export {
-  simulateTransaction,
-  type SimulateOptions,
-} from "../transaction/actions/simulate.js";
-export { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
-export { signTransaction } from "../transaction/actions/sign-transaction.js";
-export { serializeTransaction } from "../transaction/serialize-transaction.js";
-export {
-  toSerializableTransaction,
-  type ToSerializableTransactionOptions,
-} from "../transaction/actions/to-serializable-transaction.js";
-
+  type WatchContractEventsOptions,
+  watchContractEvents,
+} from "../event/actions/watch-events.js";
 /**
  * EVENTS
  */
 export {
-  prepareEvent,
-  type PrepareEventOptions,
   type PreparedEvent,
+  type PrepareEventOptions,
+  prepareEvent,
 } from "../event/prepare-event.js";
-
-// actions
 export {
-  getContractEvents,
-  type GetContractEventsOptions,
-  type GetContractEventsResult,
-} from "../event/actions/get-events.js";
-export {
-  parseEventLogs,
-  type ParseEventLogsOptions,
-  type ParseEventLogsResult,
-} from "../event/actions/parse-logs.js";
-export {
-  watchContractEvents,
-  type WatchContractEventsOptions,
-} from "../event/actions/watch-events.js";
-
-/**
- * TYPES
- */
-export type { NFT } from "../utils/nft/parseNft.js";
-
-/**
- * UNITS
- */
-export { toEther, toTokens, toUnits, toWei, fromGwei } from "../utils/units.js";
-
-export {
-  getBuyWithCryptoQuote,
-  type BuyWithCryptoQuote,
-  type GetBuyWithCryptoQuoteParams,
-} from "../pay/buyWithCrypto/getQuote.js";
-
+  type GetGasPriceOptions,
+  getGasPrice,
+} from "../gas/get-gas-price.js";
 export type {
   QuoteApprovalParams,
   QuoteTokenInfo,
 } from "../pay/buyWithCrypto/commonTypes.js";
-
 export {
-  getBuyWithCryptoStatus,
-  type BuyWithCryptoStatus,
-  type BuyWithCryptoTransaction,
-} from "../pay/buyWithCrypto/getStatus.js";
-
-export {
-  getBuyWithCryptoHistory,
   type BuyWithCryptoHistoryData,
   type BuyWithCryptoHistoryParams,
+  getBuyWithCryptoHistory,
 } from "../pay/buyWithCrypto/getHistory.js";
-
 export {
-  getBuyWithCryptoTransfer,
-  type GetBuyWithCryptoTransferParams,
+  type BuyWithCryptoQuote,
+  type GetBuyWithCryptoQuoteParams,
+  getBuyWithCryptoQuote,
+} from "../pay/buyWithCrypto/getQuote.js";
+export {
+  type BuyWithCryptoStatus,
+  type BuyWithCryptoTransaction,
+  getBuyWithCryptoStatus,
+} from "../pay/buyWithCrypto/getStatus.js";
+export {
   type BuyWithCryptoTransfer,
+  type GetBuyWithCryptoTransferParams,
+  getBuyWithCryptoTransfer,
 } from "../pay/buyWithCrypto/getTransfer.js";
-
 export type {
   PayOnChainTransactionDetails,
   PayTokenInfo,
 } from "../pay/utils/commonTypes.js";
+// transaction actions
+export { encode } from "../transaction/actions/encode.js";
+export {
+  type EstimateGasOptions,
+  estimateGas,
+} from "../transaction/actions/estimate-gas.js";
+export { estimateGasCost } from "../transaction/actions/estimate-gas-cost.js";
+export { sendAndConfirmTransaction } from "../transaction/actions/send-and-confirm-transaction.js";
+export {
+  type SendBatchTransactionOptions,
+  sendBatchTransaction,
+} from "../transaction/actions/send-batch-transaction.js";
+export {
+  type SendTransactionOptions,
+  sendTransaction,
+} from "../transaction/actions/send-transaction.js";
+export { signTransaction } from "../transaction/actions/sign-transaction.js";
+export {
+  type SimulateOptions,
+  simulateTransaction,
+} from "../transaction/actions/simulate.js";
+export {
+  type ToSerializableTransactionOptions,
+  toSerializableTransaction,
+} from "../transaction/actions/to-serializable-transaction.js";
+export { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
+export {
+  type PrepareContractCallOptions,
+  prepareContractCall,
+} from "../transaction/prepare-contract-call.js";
+export {
+  type PreparedTransaction,
+  type PrepareTransactionOptions,
+  prepareTransaction,
+} from "../transaction/prepare-transaction.js";
+export {
+  type ReadContractOptions,
+  readContract,
+} from "../transaction/read-contract.js";
+// method resolver
+export { resolveMethod } from "../transaction/resolve-method.js";
+export { serializeTransaction } from "../transaction/serialize-transaction.js";
+export {
+  type BaseTransactionOptions,
+  isBaseTransactionOptions,
+} from "../transaction/types.js";
+/**
+ * TYPES
+ */
+export type { NFT } from "../utils/nft/parseNft.js";
+/**
+ * UNITS
+ */
+export { fromGwei, toEther, toTokens, toUnits, toWei } from "../utils/units.js";
 
 // ------------------------------------------------
 // encoding
 // ------------------------------------------------
 
+// from
+export {
+  type BytesToBigIntOpts,
+  type BytesToBoolOpts,
+  type BytesToNumberOpts,
+  type BytesToStringOpts,
+  bytesToBigInt,
+  bytesToBool,
+  bytesToNumber,
+  bytesToString,
+  type FromBytesParameters,
+  type FromBytesReturnType,
+  fromBytes,
+} from "../utils/encoding/from-bytes.js";
+export { concatHex } from "../utils/encoding/helpers/concat-hex.js";
 // hex
 export {
-  boolToHex,
-  // from
-  fromHex,
-  hexToBigInt,
-  hexToBool,
-  hexToNumber,
-  hexToString,
-  hexToUint8Array,
-  // util
-  isHex,
-  numberToHex,
-  padHex,
-  stringToHex,
-  // to
-  toHex,
-  uint8ArrayToHex,
   type BoolToHexOpts,
+  boolToHex,
   type FromHexParameters,
   type FromHexReturnType,
+  // from
+  fromHex,
+  type Hex,
   type HexToBigIntOpts,
   type HexToBoolOpts,
   type HexToNumberOpts,
   type HexToStringOpts,
   type HexToUint8ArrayOpts,
+  hexToBigInt,
+  hexToBool,
+  hexToNumber,
+  hexToString,
+  hexToUint8Array,
   type IsHexOptions,
+  // util
+  isHex,
   type NumberToHexOpts,
+  numberToHex,
+  padHex,
   type StringToHexOpts,
+  stringToHex,
   type ToHexParameters,
+  // to
+  toHex,
   type Uint8ArrayToHexOpts,
-  type Hex,
+  uint8ArrayToHex,
 } from "../utils/encoding/hex.js";
-export { concatHex } from "../utils/encoding/helpers/concat-hex.js";
-
 // bytes
 // to
 export {
+  type BoolToBytesOpts,
   boolToBytes,
+  type HexToBytesOpts,
   hexToBytes,
   numberToBytes,
-  stringToBytes,
-  toBytes,
-  type BoolToBytesOpts,
-  type HexToBytesOpts,
   type StringToBytesOpts,
+  stringToBytes,
   type ToBytesParameters,
+  toBytes,
 } from "../utils/encoding/to-bytes.js";
-// from
-export {
-  bytesToBigInt,
-  bytesToBool,
-  bytesToNumber,
-  bytesToString,
-  fromBytes,
-  type BytesToBigIntOpts,
-  type BytesToBoolOpts,
-  type BytesToNumberOpts,
-  type BytesToStringOpts,
-  type FromBytesParameters,
-  type FromBytesReturnType,
-} from "../utils/encoding/from-bytes.js";
 
 // ------------------------------------------------
 // hashing
 // ------------------------------------------------
 
-// keccak256
-export { keccak256 } from "../utils/hashing/keccak256.js";
-
-// sha256
-export { sha256 } from "../utils/hashing/sha256.js";
-
-// ------------------------------------------------
-// address
-// ------------------------------------------------
-export {
-  getAddress,
-  isAddress,
-  type Address,
-  type AddressInput,
-} from "../utils/address.js";
-
 // re-exports of types
 export type { AbiParameterToPrimitiveType } from "abitype";
-
 export {
   type VerifyTypedDataParams,
   verifyTypedData,
 } from "../auth/verify-typed-data.js";
-
 /**
  * EIP-7702
  */
@@ -326,4 +284,17 @@ export type {
   SignedAuthorization,
 } from "../transaction/actions/eip7702/authorization.js";
 export { signAuthorization } from "../transaction/actions/eip7702/authorization.js";
+// ------------------------------------------------
+// address
+// ------------------------------------------------
+export {
+  type Address,
+  type AddressInput,
+  getAddress,
+  isAddress,
+} from "../utils/address.js";
+// keccak256
+export { keccak256 } from "../utils/hashing/keccak256.js";
+// sha256
+export { sha256 } from "../utils/hashing/sha256.js";
 export { deploySmartAccount } from "../wallets/smart/lib/signing.js";

@@ -29,5 +29,5 @@ export function useTxNotifications(
     [errorMessage, onError],
   );
 
-  return { onSuccess, onError: _onError };
+  return { onError: _onError, onSuccess };
 }

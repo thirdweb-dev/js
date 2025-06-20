@@ -28,38 +28,38 @@ export function WalletLogoSpinner(props: {
       <div
         data-container
         style={{
-          position: "relative",
+          alignItems: "center",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          position: "relative",
         }}
       >
         <div data-img-container>
           {!props.hideSpinner && (
             <svg
-              viewBox="0 0 110 110"
+              role="presentation"
               style={{
                 display: props.error ? "none" : "block",
               }}
-              role="presentation"
+              viewBox="0 0 110 110"
             >
               <rect
-                x="2"
-                y="2"
-                width="106"
+                fill="none"
                 height="106"
                 rx={loaderRadius}
                 strokeDasharray={`${dashArrayStart} ${dashArrayEnd}`}
                 strokeDashoffset={dashOffset}
                 strokeLinecap="round"
-                fill="none"
                 strokeWidth={4}
+                width="106"
+                x="2"
+                y="2"
               />
             </svg>
           )}
 
           <WalletBg>
-            <WalletImage id={props.id} size="68" client={props.client} />
+            <WalletImage client={props.client} id={props.id} size="68" />
           </WalletBg>
         </div>
       </div>
@@ -70,13 +70,13 @@ export function WalletLogoSpinner(props: {
 const WalletBg = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
+    alignItems: "center",
     background: theme.colors.tertiaryBg,
-    borderRadius: "13px",
     border: `1px solid ${theme.colors.borderColor}`,
-    padding: spacing.xs,
+    borderRadius: "13px",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    padding: spacing.xs,
   };
 });
 
@@ -117,15 +117,10 @@ const pulseAnimation = keyframes`
 const LogoContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
-    display: "flex",
-    justifyContent: "center",
-    position: "relative",
-    borderRadius: radius.xl,
-
     "[data-img-container]": {
+      alignItems: "center",
       display: "flex",
       justifyContent: "center",
-      alignItems: "center",
       position: "relative",
     },
 
@@ -134,32 +129,36 @@ const LogoContainer = /* @__PURE__ */ StyledDiv((_) => {
     },
 
     "&[data-error='true'] [data-img-container]::before": {
-      content: '""',
-      position: "absolute",
-      inset: 0,
-      background: theme.colors.danger,
       animation: `${pulseAnimation} 1.5s ease infinite`,
+      background: theme.colors.danger,
       borderRadius: "20px",
+      content: '""',
+      inset: 0,
+      position: "absolute",
       zIndex: -1,
     },
-
-    svg: {
-      position: "absolute",
-      /* can't use inset because safari doesn't like it */
-      left: "-8px",
-      top: "-8px",
-      width: "calc(100% + 16px)",
-      height: "calc(100% + 16px)",
-      animation: `${fadeInAnimation} 400ms ease`,
-    },
+    borderRadius: radius.xl,
+    display: "flex",
 
     img: {
       zIndex: 100,
     },
+    justifyContent: "center",
+    position: "relative",
 
     rect: {
       animation: `${dashRotateAnimation} 1.2s linear infinite`,
       stroke: theme.colors.accentText,
+    },
+
+    svg: {
+      animation: `${fadeInAnimation} 400ms ease`,
+      height: "calc(100% + 16px)",
+      /* can't use inset because safari doesn't like it */
+      left: "-8px",
+      position: "absolute",
+      top: "-8px",
+      width: "calc(100% + 16px)",
     },
   };
 });

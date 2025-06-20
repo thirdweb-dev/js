@@ -24,9 +24,9 @@ export async function getMulticallSetClaimConditionTransactions(options: {
       let merkleRoot: string = phase.merkleRootHash || toHex("", { size: 32 });
       if (phase.overrideList) {
         const { shardedMerkleInfo, uri } = await processOverrideList({
-          overrides: phase.overrideList,
-          client: options.contract.client,
           chain: options.contract.chain,
+          client: options.contract.client,
+          overrides: phase.overrideList,
           tokenDecimals: options.tokenDecimals,
         });
         merkleInfos[shardedMerkleInfo.merkleRoot] = uri;
@@ -43,18 +43,18 @@ export async function getMulticallSetClaimConditionTransactions(options: {
         });
       }
       return {
-        startTimestamp: dateToSeconds(phase.startTime ?? new Date(0)),
         currency: phase.currencyAddress || NATIVE_TOKEN_ADDRESS,
+        maxClaimableSupply: phase.maxClaimableSupply ?? maxUint256,
+        merkleRoot,
+        metadata,
         pricePerToken: await convertErc20Amount({
+          amount: phase.price?.toString() ?? "0",
           chain: options.contract.chain,
           client: options.contract.client,
           erc20Address: phase.currencyAddress || NATIVE_TOKEN_ADDRESS,
-          amount: phase.price?.toString() ?? "0",
         }),
-        maxClaimableSupply: phase.maxClaimableSupply ?? maxUint256,
         quantityLimitPerWallet: phase.maxClaimablePerWallet ?? maxUint256,
-        merkleRoot,
-        metadata,
+        startTimestamp: dateToSeconds(phase.startTime ?? new Date(0)),
         supplyClaimed: 0n,
       } as GeneratedParams["phases"][number];
     }),
@@ -104,18 +104,18 @@ export async function getMulticallSetClaimConditionTransactions(options: {
         throw new Error("No phase provided");
       }
       encodedSetClaimConditions = encodeSetClaimConditions({
-        tokenId: options.tokenId,
         phase,
         resetClaimEligibility: options.resetClaimEligibility || false,
+        tokenId: options.tokenId,
       });
     } else {
       const { encodeSetClaimConditions } = await import(
         "../../../extensions/erc1155/__generated__/IDrop1155/write/setClaimConditions.js"
       );
       encodedSetClaimConditions = encodeSetClaimConditions({
-        tokenId: options.tokenId,
         phases: sortedPhases,
         resetClaimEligibility: options.resetClaimEligibility || false,
+        tokenId: options.tokenId,
       });
     }
   } else {

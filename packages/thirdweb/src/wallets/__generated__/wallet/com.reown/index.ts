@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.reown",
-  name: "React Native Sample Wallet",
-  homepage: "https://reown.com/walletkit",
-  image_id: "78bbcc97-c450-4685-5faa-276ef8fc5f00",
   app: {
-    browser: null,
-    ios: "https://testflight.apple.com/join/kdlGVGLo",
     android: "https://appdistribution.firebase.dev/i/e7711e780547234e",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://testflight.apple.com/join/kdlGVGLo",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "rn-web3wallet-internal://",
-    universal: "https://appkit-lab.reown.com/rn_walletkit_internal",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://reown.com/walletkit",
+  id: "com.reown",
+  image_id: "78bbcc97-c450-4685-5faa-276ef8fc5f00",
+  mobile: {
+    native: "rn-web3wallet-internal://",
+    universal: "https://appkit-lab.reown.com/rn_walletkit_internal",
+  },
+  name: "React Native Sample Wallet",
+  rdns: null,
 } as const;

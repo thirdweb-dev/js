@@ -25,15 +25,15 @@ export function PageHeader(props: {
         <div className="flex flex-col gap-3 md:flex-row">
           <Button asChild>
             <Link
-              target="_blank"
               href={"https://thirdweb.com/dashboard?utm_source=playground"}
+              target="_blank"
             >
               <PresentationIcon className="mr-2 h-4 w-4" />
               Add instantly
             </Link>
           </Button>
-          <Button asChild variant="outline" className="bg-card">
-            <Link target="_blank" href={props.docsLink}>
+          <Button asChild className="bg-card" variant="outline">
+            <Link href={props.docsLink} target="_blank">
               <BookOpenIcon className="mr-2 h-4 w-4" />
               Documentation
             </Link>
@@ -54,9 +54,9 @@ export function PageLayout(props: {
   return (
     <main>
       <PageHeader
-        title={props.title}
         description={props.description}
         docsLink={props.docsLink}
+        title={props.title}
       />
       <div className={cn("container pb-8", props.containerClassName)}>
         {props.children}

@@ -1,16 +1,17 @@
-import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   type EngineInstance,
   type SetWalletConfigInput,
   useEngineSetWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import Link from "next/link";
+import { useId } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 
 interface CircleConfigProps {
   instance: EngineInstance;
@@ -22,37 +23,39 @@ export const CircleConfig: React.FC<CircleConfigProps> = ({
   authToken,
 }) => {
   const { mutate: setCircleConfig, isPending } = useEngineSetWalletConfig({
-    instanceUrl: instance.url,
     authToken,
+    instanceUrl: instance.url,
   });
 
   const defaultValues: SetWalletConfigInput = {
-    type: "circle" as const,
     circleApiKey: "",
+    type: "circle" as const,
   };
 
   const form = useForm<SetWalletConfigInput>({
     defaultValues,
-    values: defaultValues,
     resetOptions: {
       keepDirty: true,
       keepDirtyValues: true,
     },
+    values: defaultValues,
   });
 
   const onSubmit = (data: SetWalletConfigInput) => {
     setCircleConfig(data, {
-      onSuccess: () => {
-        toast.success("Configuration set successfully");
-      },
       onError: (error) => {
         toast.error("Failed to set configuration", {
           description: error.message,
         });
         console.error(error);
       },
+      onSuccess: () => {
+        toast.success("Configuration set successfully");
+      },
     });
   };
+
+  const circleApiKeyId = useId();
 
   return (
     <div className="flex flex-col gap-6">
@@ -63,10 +66,10 @@ export const CircleConfig: React.FC<CircleConfigProps> = ({
           account. Configure your Circle API Key to use Circle wallets. Learn
           more about{" "}
           <Link
-            href="https://portal.thirdweb.com/engine/features/backend-wallets#circle-wallet"
-            target="_blank"
-            rel="noopener noreferrer"
             className="text-link-foreground hover:text-foreground"
+            href="https://portal.thirdweb.com/engine/features/backend-wallets#circle-wallet"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             how to get an API Key
           </Link>
@@ -80,18 +83,18 @@ export const CircleConfig: React.FC<CircleConfigProps> = ({
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormFieldSetup
-            label="Circle API Key"
             errorMessage={
               form.getFieldState("circleApiKey", form.formState).error?.message
             }
-            htmlFor="circle-api-key"
+            htmlFor={circleApiKeyId}
             isRequired
+            label="Circle API Key"
             tooltip={null}
           >
             <Input
-              id="circle-api-key"
-              placeholder="TEST_API_KEY:..."
               autoComplete="off"
+              id={circleApiKeyId}
+              placeholder="TEST_API_KEY:..."
               type="password"
               {...form.register("circleApiKey")}
             />
@@ -99,9 +102,9 @@ export const CircleConfig: React.FC<CircleConfigProps> = ({
 
           <div className="flex items-center justify-end gap-4">
             <Button
-              type="submit"
               className="min-w-28 gap-2"
               disabled={isPending}
+              type="submit"
             >
               {isPending && <Spinner className="size-4" />}
               Save

@@ -23,8 +23,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       // which was the original issue we were trying to fix
       const mockContract = {
         address: "0x0000000000000000000000000000000000000001",
-        client: TEST_CLIENT,
         chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
       } as const;
 
       // Mock getBytecode to return a minimal proxy bytecode that will trigger the beacon check

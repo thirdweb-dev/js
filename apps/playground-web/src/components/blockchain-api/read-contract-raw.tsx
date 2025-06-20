@@ -1,9 +1,9 @@
 "use client";
 
-import { THIRDWEB_CLIENT } from "@/lib/client";
 import { getContract } from "thirdweb";
 import { ethereum } from "thirdweb/chains";
 import { MediaRenderer, useReadContract } from "thirdweb/react";
+import { THIRDWEB_CLIENT } from "@/lib/client";
 
 const onChainCryptoPunks = getContract({
   address: "0x16F5A35647D6F03D5D3da7b35409D65ba03aF3B2",
@@ -23,9 +23,9 @@ export function ReadContractRawPreview() {
   // Read the image of the tokenId #1
   const { data } = useReadContract({
     contract: onChainCryptoPunks,
+    from: "0x16F5A35647D6F03D5D3da7b35409D65ba03aF3B2",
     method: "function punkImageSvg(uint16 index) view returns (string svg)",
     params: [1],
-    from: "0x16F5A35647D6F03D5D3da7b35409D65ba03aF3B2",
   });
 
   return (

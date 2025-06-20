@@ -29,8 +29,8 @@ export function useSendBatchTransaction(): UseMutationResult<
         throw new Error("No active account");
       }
       return await sendBatchTransaction({
-        transactions,
         account,
+        transactions,
       });
     },
   });

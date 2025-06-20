@@ -6,7 +6,6 @@ export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="Webhooks"
         description={
           <>
             Configure webhooks in Engine to notify your backend server of
@@ -14,6 +13,7 @@ export default function Page() {
           </>
         }
         docsLink="https://portal.thirdweb.com/engine/features/webhooks?utm_source=playground"
+        title="Webhooks"
       >
         <EngineWebhooksPreview />
       </PageLayout>

@@ -1,22 +1,12 @@
 "use client";
 
-import { getRawAccountAction } from "@/actions/getAccount";
-import { resetAnalytics } from "@/analytics/reset";
-import { ClientOnly } from "@/components/blocks/client-only";
-import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
-import { ToggleThemeButton } from "@/components/color-mode-toggle";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { isVercel } from "lib/vercel-utils";
 import { PhoneIcon } from "lucide-react";
-import { useTheme } from "next-themes";
 import Link from "next/link";
-import { Suspense, lazy, useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+import { lazy, Suspense, useEffect, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import {
   ConnectEmbed,
@@ -24,13 +14,23 @@ import {
   useActiveWalletConnectionStatus,
 } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
+import { getRawAccountAction } from "@/actions/getAccount";
+import { resetAnalytics } from "@/analytics/reset";
+import { ClientOnly } from "@/components/blocks/client-only";
+import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
+import { ToggleThemeButton } from "@/components/color-mode-toggle";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import {
   LAST_USED_PROJECT_ID,
   LAST_USED_TEAM_ID,
 } from "../../../constants/cookies";
 import { deleteCookie } from "../../../lib/cookie";
-import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { getSDKTheme } from "../components/sdk-component-theme";
+import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { LAST_VISITED_TEAM_PAGE_PATH } from "../team/components/last-visited-page/consts";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
 import { isAccountOnboardingComplete } from "./onboarding/isOnboardingRequired";
@@ -85,28 +85,28 @@ export function LoginAndOnboardingPage(props: {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <Link
-                href="https://portal.thirdweb.com/"
                 className="px-2 text-muted-foreground text-sm hover:text-foreground"
-                target="_blank"
+                href="https://portal.thirdweb.com/"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 Docs
               </Link>
 
               <Link
-                href="/support"
-                target="_blank"
                 className="px-2 text-muted-foreground text-sm hover:text-foreground"
+                href="/support"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 Support
               </Link>
 
               <Link
-                target="_blank"
-                href="https://feedback.thirdweb.com"
                 className="px-2 text-muted-foreground text-sm hover:text-foreground"
+                href="https://feedback.thirdweb.com"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 Feedback
               </Link>
@@ -117,10 +117,10 @@ export function LoginAndOnboardingPage(props: {
       </div>
 
       <LoginAndOnboardingPageContent
-        client={props.client}
         account={props.account}
-        redirectPath={props.redirectPath}
+        client={props.client}
         loginWithInAppWallet={props.loginWithInAppWallet}
+        redirectPath={props.redirectPath}
       />
 
       <ResetLastUsedCookies />
@@ -128,9 +128,7 @@ export function LoginAndOnboardingPage(props: {
   );
 }
 
-function LoginPageContainer(props: {
-  children: React.ReactNode;
-}) {
+function LoginPageContainer(props: { children: React.ReactNode }) {
   return (
     <>
       <main className="container z-10 flex grow flex-col items-center justify-center gap-6 py-12">
@@ -140,8 +138,8 @@ function LoginPageContainer(props: {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         alt=""
-        src="/assets/login/background.svg"
         className="-bottom-12 -right-12 pointer-events-none fixed lg:right-0 lg:bottom-0"
+        src="/assets/login/background.svg"
       />
     </>
   );
@@ -193,8 +191,8 @@ function LoginAndOnboardingPageContent(props: {
 
     if (!isAccountOnboardingComplete(account)) {
       setScreen({
-        id: "onboarding",
         account,
+        id: "onboarding",
       });
     } else {
       onComplete();
@@ -230,8 +228,8 @@ function LoginAndOnboardingPageContent(props: {
       <LoginPageContainer>
         <CustomConnectEmbed
           client={props.client}
-          onLogin={onLogin}
           loginWithInAppWallet={props.loginWithInAppWallet}
+          onLogin={onLogin}
         />
       </LoginPageContainer>
     );
@@ -241,11 +239,11 @@ function LoginAndOnboardingPageContent(props: {
     return (
       <Suspense fallback={<GenericLoadingPage className="border-none" />}>
         <LazyAccountOnboarding
+          accountAddress={accountAddress}
           onComplete={onComplete}
           onLogout={() => {
             setScreen({ id: "login" });
           }}
-          accountAddress={accountAddress}
         />
       </Suspense>
     );
@@ -254,9 +252,9 @@ function LoginAndOnboardingPageContent(props: {
   return (
     <LoginPageContainer>
       <CustomConnectEmbed
-        onLogin={onLogin}
-        loginWithInAppWallet={props.loginWithInAppWallet}
         client={props.client}
+        loginWithInAppWallet={props.loginWithInAppWallet}
+        onLogin={onLogin}
       />
     </LoginPageContainer>
   );
@@ -276,6 +274,7 @@ function CustomConnectEmbed(props: {
   return (
     <div className="flex flex-col items-center gap-4">
       <Turnstile
+        onSuccess={(token) => setTurnstileToken(token)}
         options={{
           // only show if interaction is required
           appearance: alwaysShowTurnstile ? "always" : "interaction-only",
@@ -283,12 +282,10 @@ function CustomConnectEmbed(props: {
           theme: theme === "light" ? "light" : "dark",
         }}
         siteKey={NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-        onSuccess={(token) => setTurnstileToken(token)}
       />
       <ClientOnly ssr={<ConnectEmbedSizedLoadingCard />}>
         <ConnectEmbed
           auth={{
-            getLoginPayload,
             doLogin: async (params) => {
               if (isVercel() && !turnstileToken) {
                 setAlwaysShowTurnstile(true);
@@ -315,6 +312,7 @@ function CustomConnectEmbed(props: {
               await doLogout();
               resetAnalytics();
             },
+            getLoginPayload,
             isLoggedIn: async (x) => {
               const isLoggedInResult = await isLoggedIn(x);
               if (isLoggedInResult) {
@@ -323,18 +321,18 @@ function CustomConnectEmbed(props: {
               return isLoggedInResult;
             },
           }}
+          className="shadow-lg"
+          client={props.client}
+          modalSize="wide"
+          privacyPolicyUrl="/privacy-policy"
+          termsOfServiceUrl="/terms"
+          theme={getSDKTheme(theme === "light" ? "light" : "dark")}
           wallets={
             props.loginWithInAppWallet ? inAppWalletLoginOptions : loginOptions
           }
-          client={props.client}
-          modalSize="wide"
-          theme={getSDKTheme(theme === "light" ? "light" : "dark")}
-          className="shadow-lg"
-          privacyPolicyUrl="/privacy-policy"
-          termsOfServiceUrl="/terms"
         />
         {/* alert people who used to log in with phone to instead log in with their account email */}
-        <Alert variant="info" className="mt-8">
+        <Alert className="mt-8" variant="info">
           <PhoneIcon className="size-4" />
           <AlertTitle>
             <span>Phone login is no longer supported</span>
@@ -358,9 +356,7 @@ function CustomConnectEmbed(props: {
   );
 }
 
-function ConnectEmbedSizedCard(props: {
-  children: React.ReactNode;
-}) {
+function ConnectEmbedSizedCard(props: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-[522px] w-full items-center justify-center rounded-xl border border-border bg-card shadow-lg max-sm:max-w-[358px] lg:min-h-[568px] lg:w-[728px]">
       {props.children}

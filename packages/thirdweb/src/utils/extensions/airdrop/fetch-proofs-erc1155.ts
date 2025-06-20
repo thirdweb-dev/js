@@ -112,8 +112,8 @@ export async function fetchProofsERC1155(options: {
 
   return {
     proof,
+    quantity: BigInt(entry.amount),
     recipient: recipient as Address,
     tokenId: BigInt(entry.tokenId),
-    quantity: BigInt(entry.amount),
   };
 }

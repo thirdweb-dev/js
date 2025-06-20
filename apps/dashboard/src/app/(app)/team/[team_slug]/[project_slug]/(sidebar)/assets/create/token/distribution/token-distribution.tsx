@@ -1,13 +1,14 @@
 "use client";
 
-import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { useId } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import {
   DistributionBarChart,
   type Segment,
 } from "@/components/blocks/distribution-chart";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import type { ThirdwebClient } from "thirdweb";
 import { StepCard } from "../../_common/step-card";
 import type {
   TokenDistributionForm,
@@ -28,29 +29,31 @@ export function TokenDistributionFieldset(props: {
   const { form } = props;
   const distributionError = getDistributionError(form);
 
+  const supplyId = useId();
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(props.onNext)}>
         <StepCard
-          title="Coin Distribution"
+          nextButton={{
+            disabled: !!distributionError,
+            type: "submit",
+          }}
           prevButton={{
             onClick: props.onPrevious,
           }}
-          nextButton={{
-            type: "submit",
-            disabled: !!distributionError,
-          }}
+          title="Coin Distribution"
         >
           <div>
             <div className="space-y-6 p-4 md:px-6 md:py-6">
               <FormFieldSetup
-                label="Total Supply"
-                isRequired
-                htmlFor="supply"
                 errorMessage={form.formState.errors.supply?.message}
+                htmlFor={supplyId}
+                isRequired
+                label="Total Supply"
               >
                 <div className="relative">
-                  <Input id="supply" {...form.register("supply")} />
+                  <Input id={supplyId} {...form.register("supply")} />
                   <span className="-translate-y-1/2 absolute top-1/2 right-3 text-muted-foreground text-sm">
                     {props.tokenSymbol || "Tokens"}
                   </span>
@@ -70,11 +73,11 @@ export function TokenDistributionFieldset(props: {
               </div>
             </div>
 
-            <TokenAirdropSection form={form} client={props.client} />
+            <TokenAirdropSection client={props.client} form={form} />
             <TokenSaleSection
-              form={form}
               chainId={props.chainId}
               client={props.client}
+              form={form}
             />
           </div>
         </StepCard>
@@ -131,19 +134,19 @@ export function TokenDistributionBarChart(props: {
 
   const tokenAllocations: Segment[] = [
     {
+      color: "hsl(var(--chart-1))",
       label: "Owner",
       percent: ownerPercentage,
-      color: "hsl(var(--chart-1))",
     },
     {
+      color: "hsl(var(--chart-3))",
       label: "Airdrop",
       percent: airdropPercentage,
-      color: "hsl(var(--chart-3))",
     },
     {
+      color: "hsl(var(--chart-4))",
       label: "Sale",
       percent: salePercentage,
-      color: "hsl(var(--chart-4))",
     },
   ];
 

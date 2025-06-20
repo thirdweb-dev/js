@@ -1,14 +1,5 @@
 "use client";
 
-import { ClientOnly } from "@/components/blocks/client-only";
-import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { nebulaAAOptions } from "@/config/nebula-aa";
-import { getSDKTheme } from "@/config/sdk-component-theme";
-import { nebulaAppThirdwebClient } from "@/constants/nebula-client";
-import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { isVercel } from "@/utils/vercel-utils";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -19,6 +10,15 @@ import {
   useActiveWalletConnectionStatus,
 } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
+import { ClientOnly } from "@/components/blocks/client-only";
+import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { nebulaAAOptions } from "@/config/nebula-aa";
+import { getSDKTheme } from "@/config/sdk-component-theme";
+import { nebulaAppThirdwebClient } from "@/constants/nebula-client";
+import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { isVercel } from "@/utils/vercel-utils";
 import {
   doNebulaLogin,
   doNebulaLogout,
@@ -26,9 +26,7 @@ import {
   isNebulaLoggedIn,
 } from "./auth-actions";
 
-export function NebulaLoginPage(props: {
-  redirectPath: string;
-}) {
+export function NebulaLoginPage(props: { redirectPath: string }) {
   return (
     <main className="container z-10 flex grow flex-col items-center justify-center gap-6 py-12">
       <NebulaLoginPageContent {...props} />
@@ -57,9 +55,7 @@ const loginOptions = [
   createWallet("io.zerion.wallet"),
 ];
 
-function NebulaLoginPageContent(props: {
-  redirectPath: string;
-}) {
+function NebulaLoginPageContent(props: { redirectPath: string }) {
   const accountAddress = useActiveAccount()?.address;
   const [screen, setScreen] = useState<
     | { id: "login" }
@@ -102,12 +98,12 @@ function NebulaLoginPageContent(props: {
     !accountAddress
   ) {
     return (
-      <CustomConnectEmbed onLogin={onLogin} client={nebulaAppThirdwebClient} />
+      <CustomConnectEmbed client={nebulaAppThirdwebClient} onLogin={onLogin} />
     );
   }
 
   return (
-    <CustomConnectEmbed onLogin={onLogin} client={nebulaAppThirdwebClient} />
+    <CustomConnectEmbed client={nebulaAppThirdwebClient} onLogin={onLogin} />
   );
 }
 
@@ -124,6 +120,7 @@ function CustomConnectEmbed(props: {
   return (
     <div className="flex flex-col items-center gap-4">
       <Turnstile
+        onSuccess={(token) => setTurnstileToken(token)}
         options={{
           // only show if interaction is required
           appearance: alwaysShowTurnstile ? "always" : "interaction-only",
@@ -131,12 +128,11 @@ function CustomConnectEmbed(props: {
           theme: theme === "light" ? "light" : "dark",
         }}
         siteKey={NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-        onSuccess={(token) => setTurnstileToken(token)}
       />
       <ClientOnly ssr={<ConnectEmbedSizedLoadingCard />}>
         <ConnectEmbed
+          accountAbstraction={nebulaAAOptions}
           auth={{
-            getLoginPayload: getNebulaLoginPayload,
             doLogin: async (loginPayload) => {
               if (isVercel() && !turnstileToken) {
                 setAlwaysShowTurnstile(true);
@@ -145,9 +141,9 @@ function CustomConnectEmbed(props: {
 
               try {
                 const result = await doNebulaLogin({
-                  type: "nebula-app",
                   loginPayload: loginPayload,
                   turnstileToken,
+                  type: "nebula-app",
                 });
                 if (result.error) {
                   console.error(
@@ -164,6 +160,7 @@ function CustomConnectEmbed(props: {
               }
             },
             doLogout: doNebulaLogout,
+            getLoginPayload: getNebulaLoginPayload,
             isLoggedIn: async (x) => {
               const isLoggedInResult = await isNebulaLoggedIn(x);
               if (isLoggedInResult) {
@@ -172,23 +169,20 @@ function CustomConnectEmbed(props: {
               return isLoggedInResult;
             },
           }}
-          wallets={loginOptions}
+          className="shadow-lg"
           client={props.client}
           modalSize="wide"
-          theme={getSDKTheme(theme === "light" ? "light" : "dark")}
-          className="shadow-lg"
           privacyPolicyUrl="/privacy-policy"
           termsOfServiceUrl="/terms"
-          accountAbstraction={nebulaAAOptions}
+          theme={getSDKTheme(theme === "light" ? "light" : "dark")}
+          wallets={loginOptions}
         />
       </ClientOnly>
     </div>
   );
 }
 
-function ConnectEmbedSizedCard(props: {
-  children: React.ReactNode;
-}) {
+function ConnectEmbedSizedCard(props: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-[522px] w-full items-center justify-center rounded-xl border border-border bg-card shadow-lg max-sm:max-w-[358px] lg:min-h-[568px] lg:w-[728px]">
       {props.children}

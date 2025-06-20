@@ -132,25 +132,12 @@ export function smartWallet(
   createOptions: SmartWalletOptions,
 ): Wallet<"smart"> {
   const emitter = createWalletEmitter<"smart">();
-  let account: Account | undefined = undefined;
-  let adminAccount: Account | undefined = undefined;
-  let chain: Chain | undefined = undefined;
+  let account: Account | undefined;
+  let adminAccount: Account | undefined;
+  let chain: Chain | undefined;
   let lastConnectOptions: WalletConnectionOption<"smart"> | undefined;
 
   return {
-    id: "smart",
-    subscribe: emitter.subscribe,
-    getChain() {
-      if (!chain) {
-        return undefined;
-      }
-
-      chain = getCachedChainIfExists(chain.id) || chain;
-      return chain;
-    },
-    getConfig: () => createOptions,
-    getAccount: () => account,
-    getAdminAccount: () => adminAccount,
     autoConnect: async (options) => {
       const { connectSmartAccount: connectSmartWallet } = await import(
         "./index.js"
@@ -164,10 +151,10 @@ export function smartWallet(
       account = connectedAccount;
       chain = connectedChain;
       trackConnect({
-        client: options.client,
-        walletType: "smart",
-        walletAddress: account.address,
         chainId: chain.id,
+        client: options.client,
+        walletAddress: account.address,
+        walletType: "smart",
       });
       // return account
       return account;
@@ -184,10 +171,10 @@ export function smartWallet(
       account = connectedAccount;
       chain = connectedChain;
       trackConnect({
-        client: options.client,
-        walletType: "smart",
-        walletAddress: account.address,
         chainId: chain.id,
+        client: options.client,
+        walletAddress: account.address,
+        walletType: "smart",
       });
       // return account
       emitter.emit("accountChanged", account);
@@ -203,6 +190,19 @@ export function smartWallet(
       chain = undefined;
       emitter.emit("disconnect", undefined);
     },
+    getAccount: () => account,
+    getAdminAccount: () => adminAccount,
+    getChain() {
+      if (!chain) {
+        return undefined;
+      }
+
+      chain = getCachedChainIfExists(chain.id) || chain;
+      return chain;
+    },
+    getConfig: () => createOptions,
+    id: "smart",
+    subscribe: emitter.subscribe,
     switchChain: async (newChain: Chain) => {
       if (!lastConnectOptions) {
         throw new Error("Cannot switch chain without a previous connection");

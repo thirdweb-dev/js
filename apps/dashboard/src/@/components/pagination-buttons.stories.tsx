@@ -4,13 +4,13 @@ import { BadgeContainer } from "stories/utils";
 import { PaginationButtons } from "./pagination-buttons";
 
 const meta = {
-  title: "blocks/PaginationButtons",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "blocks/PaginationButtons",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -32,10 +32,7 @@ function Story() {
   );
 }
 
-function Variant(props: {
-  label: string;
-  totalPages: number;
-}) {
+function Variant(props: { label: string; totalPages: number }) {
   const [activePage, setActivePage] = useState(1);
   return (
     <BadgeContainer label={props.label}>

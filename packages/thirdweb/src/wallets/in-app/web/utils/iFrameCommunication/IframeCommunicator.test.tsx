@@ -25,12 +25,12 @@ describe("IframeCommunicator", () => {
 
   it("should create an iframe with correct properties", () => {
     new IframeCommunicator({
-      link: "https://example.com",
       baseUrl: "https://example.com",
-      iframeId: "test-iframe",
-      container: mockContainer,
-      localStorage: mockLocalStorage,
       clientId: "test-client",
+      container: mockContainer,
+      iframeId: "test-iframe",
+      link: "https://example.com",
+      localStorage: mockLocalStorage,
     });
 
     expect(document.createElement).toHaveBeenCalledWith("iframe");
@@ -41,12 +41,12 @@ describe("IframeCommunicator", () => {
 
   it("should initialize with correct variables", async () => {
     const communicator = new IframeCommunicator({
-      link: "https://example.com",
       baseUrl: "https://example.com",
-      iframeId: "test-iframe",
-      container: mockContainer,
-      localStorage: mockLocalStorage,
       clientId: "test-client",
+      container: mockContainer,
+      iframeId: "test-iframe",
+      link: "https://example.com",
+      localStorage: mockLocalStorage,
     });
 
     // biome-ignore lint/complexity/useLiteralKeys: accessing protected method
@@ -54,11 +54,11 @@ describe("IframeCommunicator", () => {
 
     expect(vars).toEqual({
       authCookie: "mockAuthCookie",
-      deviceShareStored: "mockDeviceShare",
-      walletUserId: "mockWalletUserId",
       clientId: "test-client",
-      partnerId: undefined,
+      deviceShareStored: "mockDeviceShare",
       ecosystemId: undefined,
+      partnerId: undefined,
+      walletUserId: "mockWalletUserId",
     });
   });
 
@@ -68,17 +68,17 @@ describe("IframeCommunicator", () => {
     global.document = undefined;
 
     const communicator = new IframeCommunicator({
-      link: "https://example.com",
       baseUrl: "https://example.com",
-      iframeId: "test-iframe",
-      localStorage: mockLocalStorage,
       clientId: "test-client",
+      iframeId: "test-iframe",
+      link: "https://example.com",
+      localStorage: mockLocalStorage,
     });
 
     await expect(
       communicator.call({
-        procedureName: "test",
         params: {},
+        procedureName: "test",
       }),
     ).rejects.toThrow("Iframe not found");
     global.document = temp;
@@ -86,12 +86,12 @@ describe("IframeCommunicator", () => {
 
   it("should cleanup on destroy", () => {
     const communicator = new IframeCommunicator({
-      link: "https://example.com",
       baseUrl: "https://example.com",
-      iframeId: "test-iframe",
-      container: mockContainer,
-      localStorage: mockLocalStorage,
       clientId: "test-client",
+      container: mockContainer,
+      iframeId: "test-iframe",
+      link: "https://example.com",
+      localStorage: mockLocalStorage,
     });
 
     communicator.destroy();

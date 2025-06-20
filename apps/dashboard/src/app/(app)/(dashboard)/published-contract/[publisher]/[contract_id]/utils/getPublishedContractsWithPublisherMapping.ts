@@ -2,7 +2,7 @@ import {
   fetchLatestPublishedContractVersion,
   fetchPublishedContractVersions,
 } from "components/contract-components/fetch-contracts-with-versions";
-import { type ThirdwebClient, isAddress } from "thirdweb";
+import { isAddress, type ThirdwebClient } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
 
 function mapThirdwebPublisher(publisher: string) {

@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { lazy, Suspense } from "react";
 import { CodeLoading } from "../../../../components/code/code.client";
 import type { ConnectPlaygroundOptions } from "./types";
 
@@ -6,18 +6,16 @@ const CodeClient = lazy(
   () => import("../../../../components/code/code.client"),
 );
 
-export function CodeGen(props: {
-  connectOptions: ConnectPlaygroundOptions;
-}) {
+export function CodeGen(props: { connectOptions: ConnectPlaygroundOptions }) {
   return (
     <div className="flex w-full grow flex-col">
       <Suspense fallback={<CodeLoading />}>
         <CodeClient
+          className="xl:h-[calc(100vh-100px)]"
           code={getCode(props.connectOptions)}
           lang="tsx"
-          loader={<CodeLoading />}
           // Need to add max-h in both places - TODO figure out a better way
-          className="xl:h-[calc(100vh-100px)]"
+          loader={<CodeLoading />}
           scrollableClassName="xl:h-[calc(100vh-100px)]"
         />
       </Suspense>
@@ -28,10 +26,10 @@ export function CodeGen(props: {
 function getCode(connectOptions: ConnectPlaygroundOptions) {
   const walletCodes: string[] = [];
   const imports = {
+    chains: [] as string[],
     react: [] as string[],
     thirdweb: [] as string[],
     wallets: [] as string[],
-    chains: [] as string[],
   };
 
   if (
@@ -83,32 +81,32 @@ function getCode(connectOptions: ConnectPlaygroundOptions) {
   }
 
   const props: Record<string, string | undefined> = {
+    accountAbstraction: connectOptions.enableAccountAbstraction
+      ? accountAbstractCode
+      : undefined,
+    auth: connectOptions.enableAuth ? authPlaceholder : undefined,
     client: "client",
-    wallets: "wallets",
-    theme: themeProp,
     connectButton: connectOptions.buttonLabel
       ? stringifyIgnoreFalsy({
           label: connectOptions.buttonLabel,
         })
       : undefined,
     connectModal: stringifyIgnoreFalsy({
-      size: connectOptions.modalSize,
-      title: connectOptions.modalTitle,
-      titleIcon: connectOptions.modalTitleIcon,
+      privacyPolicyUrl: connectOptions.privacyPolicyLink,
       showThirdwebBranding: !connectOptions.ShowThirdwebBranding
         ? false
         : undefined,
+      size: connectOptions.modalSize,
       termsOfServiceUrl: connectOptions.termsOfServiceLink,
-      privacyPolicyUrl: connectOptions.privacyPolicyLink,
+      title: connectOptions.modalTitle,
+      titleIcon: connectOptions.modalTitleIcon,
     }),
-    accountAbstraction: connectOptions.enableAccountAbstraction
-      ? accountAbstractCode
-      : undefined,
     locale:
       connectOptions.localeId === "en_US"
         ? undefined
         : quotes(connectOptions.localeId),
-    auth: connectOptions.enableAuth ? authPlaceholder : undefined,
+    theme: themeProp,
+    wallets: "wallets",
   };
 
   return `\

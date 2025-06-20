@@ -6,18 +6,18 @@ import type { IconFC } from "./types.js";
 export const CreditCardIcon: IconFC = (props) => {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={props.size}
-      height={props.size}
-      viewBox="0 0 24 24"
       fill="none"
+      height={props.size}
+      role="presentation"
       stroke={props.color ?? "currentColor"}
-      strokeWidth="1"
       strokeLinecap="round"
       strokeLinejoin="round"
-      role="presentation"
+      strokeWidth="1"
+      viewBox="0 0 24 24"
+      width={props.size}
+      xmlns="http://www.w3.org/2000/svg"
     >
-      <rect width="20" height="14" x="2" y="5" rx="2" />
+      <rect height="14" rx="2" width="20" x="2" y="5" />
       <line x1="2" x2="22" y1="10" y2="10" />
     </svg>
   );

@@ -1,26 +1,26 @@
 "use client";
 
-import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
-import { TokenSelector } from "@/components/blocks/TokenSelector";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
 import { payAppThirdwebClient } from "app/pay/constants";
 import { ChevronDownIcon, CreditCardIcon } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useId, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
-  type ThirdwebClient,
   createThirdwebClient,
   defineChain,
   getContract,
+  type ThirdwebClient,
   toUnits,
 } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { resolveScheme, upload } from "thirdweb/storage";
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { TokenSelector } from "@/components/blocks/TokenSelector";
+import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 import { FileInput } from "../../../../components/shared/FileInput";
 import { resolveEns } from "../../../../lib/ens";
 
@@ -57,8 +57,8 @@ export function PaymentLinkForm() {
 
       // eslint-disable-next-line no-restricted-syntax
       const resolvedUrl = resolveScheme({
-        uri,
         client: uploadClient,
+        uri,
       });
 
       setImageUri(resolvedUrl);
@@ -97,11 +97,11 @@ export function PaymentLinkForm() {
 
         // Build payment URL
         const params = new URLSearchParams({
+          amount: inputs.amount.toString(),
           chainId: inputs.chainId.toString(),
+          clientId: payAppThirdwebClient.clientId,
           recipientAddress: inputs.recipientAddress,
           tokenAddress: inputs.tokenAddress,
-          amount: inputs.amount.toString(),
-          clientId: payAppThirdwebClient.clientId,
         });
 
         // Add title as name parameter if provided
@@ -142,11 +142,11 @@ export function PaymentLinkForm() {
       );
 
       const params = new URLSearchParams({
+        amount: inputs.amount.toString(),
         chainId: inputs.chainId.toString(),
+        clientId: payAppThirdwebClient.clientId,
         recipientAddress: inputs.recipientAddress,
         tokenAddress: inputs.tokenAddress,
-        amount: inputs.amount.toString(),
-        clientId: payAppThirdwebClient.clientId,
       });
 
       // Add title as name parameter if provided
@@ -176,6 +176,10 @@ export function PaymentLinkForm() {
     ? tokenAddressWithChain.split(":")
     : [];
 
+  const recipientId = useId();
+  const amountId = useId();
+  const titleId = useId();
+
   return (
     <Card className="mx-auto w-full max-w-[500px]">
       <CardHeader>
@@ -189,84 +193,80 @@ export function PaymentLinkForm() {
         </div>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-2">
-            <Label htmlFor="network" className="font-medium text-sm">
-              Network
-            </Label>
+            <Label className="font-medium text-sm">Network</Label>
             <SingleNetworkSelector
               chainId={chainId}
-              onChange={setChainId}
-              disableTestnets
-              client={payAppThirdwebClient}
               className="w-full"
+              client={payAppThirdwebClient}
+              disableTestnets
+              onChange={setChainId}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="token" className="font-medium text-sm">
-              Token
-            </Label>
+            <Label className="font-medium text-sm">Token</Label>
             <TokenSelector
-              showCheck={false}
               addNativeTokenIfMissing={false}
-              selectedToken={
-                selectedChainId && selectedTokenAddress
-                  ? {
-                      chainId: Number(selectedChainId),
-                      address: selectedTokenAddress,
-                    }
-                  : undefined
-              }
               chainId={chainId ?? undefined}
-              onChange={(value) => {
-                setTokenAddressWithChain(`${value.chainId}:${value.address}`);
-              }}
               className="w-full"
               client={payAppThirdwebClient}
               disabled={!chainId}
               enabled={!!chainId}
+              onChange={(value) => {
+                setTokenAddressWithChain(`${value.chainId}:${value.address}`);
+              }}
+              selectedToken={
+                selectedChainId && selectedTokenAddress
+                  ? {
+                      address: selectedTokenAddress,
+                      chainId: Number(selectedChainId),
+                    }
+                  : undefined
+              }
+              showCheck={false}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="recipient" className="font-medium text-sm">
+            <Label className="font-medium text-sm" htmlFor={recipientId}>
               Recipient Address
             </Label>
             <Input
-              id="recipient"
-              value={recipientAddress}
+              className="w-full"
+              id={recipientId}
               onChange={(e) => setRecipientAddress(e.target.value)}
               placeholder="Address or ENS"
               required
-              className="w-full"
+              value={recipientAddress}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="amount" className="font-medium text-sm">
+            <Label className="font-medium text-sm" htmlFor={amountId}>
               Amount
             </Label>
             <Input
-              id="amount"
-              type="number"
-              step="any"
-              value={amount}
+              className="w-full"
+              id={amountId}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.0"
               required
-              className="w-full"
+              step="any"
+              type="number"
+              value={amount}
             />
           </div>
 
           <div className="space-y-2">
             <Button
-              type="button"
-              variant="ghost"
               className={cn(
                 "flex w-full items-center justify-between px-0 text-muted-foreground hover:bg-transparent",
               )}
               onClick={() => setShowAdvanced(!showAdvanced)}
+              type="button"
+              variant="ghost"
             >
               <span>Advanced Options</span>
               <ChevronDownIcon
@@ -287,33 +287,31 @@ export function PaymentLinkForm() {
               <div className={cn(showAdvanced ? "" : "overflow-hidden")}>
                 <div className="space-y-3">
                   <div className="space-y-2">
-                    <Label htmlFor="title" className="font-medium text-sm">
+                    <Label className="font-medium text-sm" htmlFor={titleId}>
                       Title
                     </Label>
                     <Input
-                      id="title"
-                      value={title}
+                      className="w-full"
+                      id={titleId}
                       onChange={(e) => setTitle(e.target.value)}
                       placeholder="Payment for..."
-                      className="w-full"
+                      value={title}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="image" className="font-medium text-sm">
-                      Image
-                    </Label>
+                    <Label className="font-medium text-sm">Image</Label>
                     <div className="w-full">
                       <FileInput
-                        client={payAppThirdwebClient}
                         accept={{ "image/*": [] }}
-                        setValue={handleImageUpload}
-                        value={image || imageUri}
                         className="!rounded-md aspect-square h-24 w-full"
+                        client={payAppThirdwebClient}
+                        helperText="image"
                         isDisabled={uploadingImage}
                         isDisabledText="Uploading..."
                         selectOrUpload="Upload"
-                        helperText="image"
+                        setValue={handleImageUpload}
+                        value={image || imageUri}
                       />
                     </div>
                   </div>
@@ -325,28 +323,28 @@ export function PaymentLinkForm() {
           <div className="flex flex-col space-y-4">
             {paymentUrl && (
               <CopyTextButton
+                className="w-full justify-between truncate bg-background px-3 py-2"
+                copyIconPosition="right"
                 textToCopy={paymentUrl}
                 textToShow={paymentUrl}
                 tooltip="Copy Payment Link"
-                className="w-full justify-between truncate bg-background px-3 py-2"
-                copyIconPosition="right"
               />
             )}
 
             <div className="flex gap-2">
               <Button
-                type="button"
-                variant="outline"
                 className="flex-1"
                 disabled={isLoading || !isFormComplete}
                 onClick={handlePreview}
+                type="button"
+                variant="outline"
               >
                 Preview
               </Button>
               <Button
-                type="submit"
                 className="flex-1"
                 disabled={isLoading || !isFormComplete}
+                type="submit"
               >
                 {isLoading ? "Creating..." : "Create"}
               </Button>
@@ -376,10 +374,10 @@ async function parseInputs(
   const ensPromise = resolveEns(recipientAddressOrEns, client);
   const currencyPromise = getCurrencyMetadata({
     contract: getContract({
-      client,
+      address: tokenAddress,
       // eslint-disable-next-line no-restricted-syntax
       chain: defineChain(chainId),
-      address: tokenAddress,
+      client,
     }),
   });
   const [ens, currencyMetadata] = await Promise.all([
@@ -393,9 +391,9 @@ async function parseInputs(
   const amountInWei = toUnits(decimalAmount, currencyMetadata.decimals);
 
   return {
-    chainId,
-    tokenAddress,
-    recipientAddress: ens.address,
     amount: amountInWei,
+    chainId,
+    recipientAddress: ens.address,
+    tokenAddress,
   };
 }

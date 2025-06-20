@@ -1,6 +1,3 @@
-import { getProjects } from "@/api/projects";
-import { getTeams } from "@/api/team";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import type { MinimalTeamsAndProjects } from "components/contract-components/contract-deploy-form/add-to-project-card";
 import { resolveFunctionSelectors } from "lib/selectors";
 import type { Metadata } from "next";
@@ -8,6 +5,9 @@ import { notFound } from "next/navigation";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { isAddress, isContractDeployed } from "thirdweb/utils";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { getProjects } from "@/api/projects";
+import { getTeams } from "@/api/team";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import type { ProjectMeta } from "../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { TeamHeader } from "../../../../team/components/TeamHeader/team-header";
 import { ConfigureCustomChain } from "./_layout/ConfigureCustomChain";
@@ -33,8 +33,8 @@ export async function SharedContractLayout(props: {
 
   const [info, teamsAndProjects] = await Promise.all([
     getContractPageParamsInfo({
-      contractAddress: props.contractAddress,
       chainIdOrSlug: props.chainIdOrSlug,
+      contractAddress: props.contractAddress,
       teamId: props.projectMeta?.teamId,
     }),
     getTeamsAndProjectsIfLoggedIn(),
@@ -65,8 +65,8 @@ export async function SharedContractLayout(props: {
         <ContractPageLayoutClient
           chainMetadata={chainMetadata}
           contract={clientContract}
-          teamsAndProjects={teamsAndProjects}
           projectMeta={props.projectMeta}
+          teamsAndProjects={teamsAndProjects}
         >
           {props.children}
         </ContractPageLayoutClient>
@@ -110,11 +110,11 @@ export async function SharedContractLayout(props: {
       <ContractPageLayout
         chainMetadata={chainMetadata}
         contract={clientContract}
-        sidebarLinks={sidebarLinks}
         dashboardContractMetadata={contractMetadata}
         externalLinks={externalLinks}
-        teamsAndProjects={teamsAndProjects}
         projectMeta={props.projectMeta}
+        sidebarLinks={sidebarLinks}
+        teamsAndProjects={teamsAndProjects}
       >
         {props.children}
       </ContractPageLayout>
@@ -132,18 +132,18 @@ async function getTeamsAndProjectsIfLoggedIn() {
 
     const teamsAndProjects: MinimalTeamsAndProjects = await Promise.all(
       teams.map(async (team) => ({
-        team: {
-          id: team.id,
-          name: team.name,
-          slug: team.slug,
-          image: team.image,
-        },
         projects: (await getProjects(team.slug)).map((x) => ({
           id: x.id,
-          name: x.name,
           image: x.image,
+          name: x.name,
           slug: x.slug,
         })),
+        team: {
+          id: team.id,
+          image: team.image,
+          name: team.name,
+          slug: team.slug,
+        },
       })),
     );
 
@@ -159,8 +159,8 @@ export async function generateContractLayoutMetadata(params: {
 }): Promise<Metadata> {
   try {
     const info = await getContractPageParamsInfo({
-      contractAddress: params.contractAddress,
       chainIdOrSlug: params.chainIdOrSlug,
+      contractAddress: params.contractAddress,
       teamId: undefined,
     });
 
@@ -202,13 +202,13 @@ export async function generateContractLayoutMetadata(params: {
     }
 
     return {
-      title: title,
       description: description,
+      title: title,
     };
   } catch {
     return {
-      title: `${shortenIfAddress(params.contractAddress)} | ${params.chainIdOrSlug}`,
       description: `View tokens, transactions, balances, source code, and analytics for the smart contract  on Chain ID ${params.chainIdOrSlug}`,
+      title: `${shortenIfAddress(params.contractAddress)} | ${params.chainIdOrSlug}`,
     };
   }
 }
@@ -216,7 +216,10 @@ export async function generateContractLayoutMetadata(params: {
 function ConditionalTeamHeaderLayout({
   children,
   projectMeta,
-}: { children: React.ReactNode; projectMeta: ProjectMeta | undefined }) {
+}: {
+  children: React.ReactNode;
+  projectMeta: ProjectMeta | undefined;
+}) {
   // if inside a project page - do not another team header
   if (projectMeta) {
     return children;

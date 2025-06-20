@@ -8,11 +8,11 @@ import { useChainMetadata } from "../../../core/hooks/others/useChainQuery.js";
 import { genericTokenIcon } from "../../../core/utils/walletIcon.js";
 import { CoinsIcon } from "../ConnectWallet/icons/CoinsIcon.js";
 import {
-  type NativeToken,
   isNativeToken,
+  type NativeToken,
 } from "../ConnectWallet/screens/nativeToken.js";
-import { Img } from "./Img.js";
 import { Container } from "./basic.js";
+import { Img } from "./Img.js";
 /**
  * @internal
  */
@@ -44,17 +44,17 @@ export function TokenIcon(props: {
 
   return tokenImage ? (
     <Img
+      client={props.client}
+      fallbackImage={genericTokenIcon}
+      height={iconSize[props.size]}
       src={tokenImage}
       width={iconSize[props.size]}
-      height={iconSize[props.size]}
-      fallbackImage={genericTokenIcon}
-      client={props.client}
     />
   ) : (
     <Container
       center="both"
-      style={{ width: iconSize[props.size], height: iconSize[props.size] }}
       color="secondaryText"
+      style={{ height: iconSize[props.size], width: iconSize[props.size] }}
     >
       <CoinsIcon size={iconSize[props.size]} />
     </Container>

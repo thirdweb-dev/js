@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import type React from "react";
 import { useRef } from "react";
+import { Button } from "@/components/ui/button";
 
 interface ImageUploadProps {
   value: File | undefined;
@@ -25,20 +25,20 @@ export function ImageUploadButton(props: ImageUploadProps) {
   return (
     <div>
       <Button
-        variant={props.variant}
-        onClick={() => fileInputRef.current?.click()}
         className={props.className}
+        onClick={() => fileInputRef.current?.click()}
+        variant={props.variant}
       >
         {props.children}
       </Button>
       <input
+        accept={props.accept}
+        aria-label="Upload image"
+        className="hidden"
+        multiple={props.multiple}
+        onChange={handleFileChange}
         ref={fileInputRef}
         type="file"
-        multiple={props.multiple}
-        accept={props.accept}
-        onChange={handleFileChange}
-        className="hidden"
-        aria-label="Upload image"
       />
     </div>
   );

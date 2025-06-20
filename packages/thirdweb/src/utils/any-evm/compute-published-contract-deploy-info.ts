@@ -37,10 +37,10 @@ export async function computeDeploymentInfoFromContractId(args: {
     version: args.version,
   });
   return computeDeploymentInfoFromMetadata({
-    client,
     chain,
-    contractMetadata,
+    client,
     constructorParams,
+    contractMetadata,
     salt,
   });
 }
@@ -63,8 +63,8 @@ export async function computeDeploymentInfoFromMetadata(args: {
     processedConstructorParams = {};
     for (const key in definedConstructorParams) {
       processedConstructorParams[key] = await computeRefDeployments({
-        client,
         chain,
+        client,
         paramValue: definedConstructorParams[key] as
           | string
           | ImplementationConstructorParam,
@@ -74,21 +74,21 @@ export async function computeDeploymentInfoFromMetadata(args: {
 
   const isStylus = contractMetadata.metadata.language === "rust";
   return computeDeploymentInfoFromBytecode({
-    client: args.client,
-    chain: args.chain,
     abi: args.contractMetadata.abi,
     bytecode: await fetchBytecodeFromCompilerMetadata({
-      compilerMetadata: args.contractMetadata,
-      client: args.client,
       chain: args.chain,
+      client: args.client,
+      compilerMetadata: args.contractMetadata,
     }),
+    chain: args.chain,
+    client: args.client,
     constructorParams: processedConstructorParams,
-    salt: args.salt,
     extraDataWithUri: isStylus
       ? encodeExtraDataWithUri({
           metadataUri: contractMetadata.metadataUri,
         })
       : undefined,
+    salt: args.salt,
   });
 }
 
@@ -103,8 +103,8 @@ export async function computeDeploymentInfoFromBytecode(args: {
 }) {
   const { client, chain, constructorParams, salt, extraDataWithUri } = args;
   const create2FactoryAddress = await computeCreate2FactoryAddress({
-    client,
     chain,
+    client,
   });
   const bytecode = ensureBytecodePrefix(args.bytecode);
   const constructorAbi = args.abi.find((abi) => abi.type === "constructor") as
@@ -125,10 +125,10 @@ export async function computeDeploymentInfoFromBytecode(args: {
     : initBytecodeWithsalt;
   return {
     bytecode,
-    initCalldata,
-    encodedArgs,
     create2FactoryAddress,
-    salt,
+    encodedArgs,
     extraDataWithUri,
+    initCalldata,
+    salt,
   };
 }

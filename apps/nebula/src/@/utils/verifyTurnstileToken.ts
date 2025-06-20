@@ -1,7 +1,7 @@
 import "server-only";
-import { TURNSTILE_SECRET_KEY } from "@/constants/server-envs";
 import { ipAddress } from "@vercel/functions";
 import { headers } from "next/headers";
+import { TURNSTILE_SECRET_KEY } from "@/constants/server-envs";
 
 export async function verifyTurnstileToken(turnstileToken: string) {
   // get the request headers
@@ -41,8 +41,8 @@ export async function verifyTurnstileToken(turnstileToken: string) {
 
   if (!ip) {
     return {
-      error: "Could not get IP address. Please try again.",
       context: errors,
+      error: "Could not get IP address. Please try again.",
     };
   }
 
@@ -52,14 +52,14 @@ export async function verifyTurnstileToken(turnstileToken: string) {
     "https://challenges.cloudflare.com/turnstile/v0/siteverify",
     {
       body: JSON.stringify({
-        secret: TURNSTILE_SECRET_KEY,
-        response: turnstileToken,
         remoteip: ip,
+        response: turnstileToken,
+        secret: TURNSTILE_SECRET_KEY,
       }),
-      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      method: "POST",
     },
   );
 

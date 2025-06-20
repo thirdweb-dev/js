@@ -1,7 +1,7 @@
 import type { Address } from "abitype";
 import {
-  NATIVE_TOKEN_ADDRESS,
   isNativeTokenAddress,
+  NATIVE_TOKEN_ADDRESS,
 } from "../../../../constants/addresses.js";
 import { getContract } from "../../../../contract/contract.js";
 import { eth_getBlockByNumber } from "../../../../rpc/actions/eth_getBlockByNumber.js";
@@ -224,22 +224,22 @@ export function createAuction(
       }
 
       return {
+        overrides: {
+          extraGas: 50_000n, // add extra gas to account for router call
+        },
         params: {
           assetContract: options.assetContractAddress,
-          tokenId: options.tokenId,
-          currency: options.currencyContractAddress ?? NATIVE_TOKEN_ADDRESS,
-          quantity,
-          startTimestamp,
-          endTimestamp,
-          buyoutBidAmount,
-          minimumBidAmount,
 
           // TODO validate these?
           bidBufferBps: BigInt(options.bidBufferBps ?? 500),
+          buyoutBidAmount,
+          currency: options.currencyContractAddress ?? NATIVE_TOKEN_ADDRESS,
+          endTimestamp,
+          minimumBidAmount,
+          quantity,
+          startTimestamp,
           timeBufferInSeconds: BigInt(options.timeBufferInSeconds ?? 900),
-        },
-        overrides: {
-          extraGas: 50_000n, // add extra gas to account for router call
+          tokenId: options.tokenId,
         },
       } as const;
     },

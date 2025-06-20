@@ -6,17 +6,8 @@ import {
   type ExtractAbiFunctionNames,
   parseAbiItem,
 } from "abitype";
-import { type TransactionRequest, decodeAbiParameters } from "viem";
+import { decodeAbiParameters, type TransactionRequest } from "viem";
 import type { ThirdwebContract } from "../contract/contract.js";
-import { isAbiFunction } from "./utils.js";
-
-import type { PrepareTransactionOptions } from "./prepare-transaction.js";
-import type {
-  BaseTransactionOptions,
-  ParamsOption,
-  ParseMethod,
-} from "./types.js";
-
 import { eth_call } from "../rpc/actions/eth_call.js";
 import { getRpcClient } from "../rpc/rpc.js";
 import { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
@@ -26,6 +17,13 @@ import {
 } from "../utils/abi/prepare-method.js";
 import { getAddress } from "../utils/address.js";
 import type { Hex } from "../utils/encoding/hex.js";
+import type { PrepareTransactionOptions } from "./prepare-transaction.js";
+import type {
+  BaseTransactionOptions,
+  ParamsOption,
+  ParseMethod,
+} from "./types.js";
+import { isAbiFunction } from "./utils.js";
 
 export type ReadContractResult<outputs extends readonly AbiParameter[]> = // if the outputs are 0 length, return never, invalid case
   outputs extends { length: 0 }
@@ -214,8 +212,8 @@ export async function readContract<
 
   const result = await eth_call(rpcRequest, {
     data: encodedData,
-    to: contract.address,
     from: options.from ? getAddress(options.from) : undefined,
+    to: contract.address,
   });
   // use the prepared method to decode the result
   const decoded = decodeAbiParameters(resolvedPreparedMethod[2], result);

@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { SectionTitle } from "./SectionTitle";
 
 export function ClaimChainSection() {
@@ -14,12 +14,12 @@ export function ClaimChainSection() {
           information on this page to help your developers get started!
         </p>
 
-        <Button variant="outline" asChild>
+        <Button asChild variant="outline">
           <Link
             className="gap-2"
             href="https://share.hsforms.com/1qAViW3U5SoKbabNhRZy4Kgea58c"
-            target="_blank"
             rel="noopener noreferrer"
+            target="_blank"
           >
             <span>Claim Chain</span>
             <ExternalLinkIcon className="-mt-[3px] size-4" />

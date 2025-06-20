@@ -16,8 +16,8 @@ import { privateKeyToAccount } from "../wallets/private-key.js";
 import { toViemContract, viemAdapter } from "./viem.js";
 
 const account = privateKeyToAccount({
-  privateKey: ANVIL_PKEY_A,
   client: TEST_CLIENT,
+  privateKey: ANVIL_PKEY_A,
 });
 
 describe("walletClient.toViem", () => {
@@ -25,9 +25,9 @@ describe("walletClient.toViem", () => {
 
   beforeAll(() => {
     walletClient = viemAdapter.walletClient.toViem({
-      client: TEST_CLIENT,
       account,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
   });
 
@@ -70,8 +70,8 @@ describe("walletClient.toViem", () => {
 
     const signature = await walletClient.signTypedData({
       ...typedData.basic,
-      primaryType: "Mail",
       account: walletClient.account,
+      primaryType: "Mail",
     });
 
     expect(signature).toMatchInlineSnapshot(
@@ -93,13 +93,13 @@ describe("walletClient.toViem", () => {
       chain: {
         id: ANVIL_CHAIN.id,
         name: ANVIL_CHAIN.name || "",
-        rpcUrls: {
-          default: { http: [ANVIL_CHAIN.rpc] },
-        },
         nativeCurrency: {
+          decimals: ANVIL_CHAIN.nativeCurrency?.decimals || 18,
           name: ANVIL_CHAIN.nativeCurrency?.name || "Ether",
           symbol: ANVIL_CHAIN.nativeCurrency?.symbol || "ETH",
-          decimals: ANVIL_CHAIN.nativeCurrency?.decimals || 18,
+        },
+        rpcUrls: {
+          default: { http: [ANVIL_CHAIN.rpc] },
         },
       },
       to: TEST_ACCOUNT_B.address,
@@ -111,9 +111,9 @@ describe("walletClient.toViem", () => {
 
   test("should get address on live chain", async () => {
     walletClient = viemAdapter.walletClient.toViem({
-      client: TEST_CLIENT,
       account,
       chain: FORKED_ETHEREUM_CHAIN,
+      client: TEST_CLIENT,
     });
 
     const address = await walletClient.getAddresses();
@@ -127,8 +127,8 @@ describe("walletClient.toViem", () => {
     const rawViemAccount = viemPrivateKeyToAccount(ANVIL_PKEY_A);
     const twSignature = await account.signMessage({ message });
     const viemTwSignature = await walletClient.signMessage({
-      message,
       account: walletClient.account as ViemAccount,
+      message,
     });
     const viemSignature = await rawViemAccount.signMessage({ message });
 

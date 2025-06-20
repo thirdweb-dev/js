@@ -80,22 +80,22 @@ export async function generateAirdropSignatureERC1155(
   const endTime = airdropRequest.expirationTimestamp || tenYearsFromNow();
 
   const req: ReqType = {
-    uid,
-    tokenAddress,
-    expirationTimestamp: dateToSeconds(endTime),
     contents,
+    expirationTimestamp: dateToSeconds(endTime),
+    tokenAddress,
+    uid,
   };
 
   const signature = await account.signTypedData({
     domain: {
-      name: "Airdrop",
-      version: "1",
       chainId: contract.chain.id,
+      name: "Airdrop",
       verifyingContract: contract.address as Hex,
+      version: "1",
     },
-    types: { AirdropRequestERC1155, AirdropContentERC1155 },
-    primaryType: "AirdropRequestERC1155",
     message: req,
+    primaryType: "AirdropRequestERC1155",
+    types: { AirdropContentERC1155, AirdropRequestERC1155 },
   });
   return { req, signature };
 }

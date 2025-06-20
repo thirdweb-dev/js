@@ -1,12 +1,12 @@
-import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { AccountAbstractionSettingsPage } from "components/smart-wallets/SponsorshipPolicies";
 import { CircleAlertIcon } from "lucide-react";
 import { redirect } from "next/navigation";
+import { getProject } from "@/api/projects";
+import { getTeamBySlug } from "@/api/team";
+import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
 import { getValidTeamPlan } from "../../../../../../components/TeamHeader/getValidTeamPlan";
 
@@ -55,8 +55,8 @@ export default async function Page(props: {
   return (
     <ChakraProviderSetup>
       <AccountAbstractionSettingsPage
-        client={client}
         bundlerService={bundlerService}
+        client={client}
         project={project}
         teamId={team.id}
         teamSlug={team.slug}

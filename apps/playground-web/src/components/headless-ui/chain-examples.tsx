@@ -4,11 +4,6 @@ import { ChainIconPreview, ChainNamePreview } from "./chain-previews";
 export function ChainIconExample() {
   return (
     <CodeExample
-      header={{
-        title: "ChainIcon",
-        description: "Show the native icon of a network",
-      }}
-      preview={<ChainIconPreview />}
       code={`import { ChainProvider, ChainIcon } from "thirdweb/react";
 
 function App() {
@@ -22,7 +17,12 @@ function App() {
     </ChainProvider>
   )
 }`}
+      header={{
+        description: "Show the native icon of a network",
+        title: "ChainIcon",
+      }}
       lang="tsx"
+      preview={<ChainIconPreview />}
     />
   );
 }
@@ -30,11 +30,6 @@ function App() {
 export function ChainNameExample() {
   return (
     <CodeExample
-      header={{
-        title: "ChainName",
-        description: "Show the name of the chain",
-      }}
-      preview={<ChainNamePreview />}
       code={`import { ChainProvider, ChainName } from "thirdweb/react";
 
 function App() {
@@ -44,7 +39,12 @@ function App() {
     </ChainProvider>
   )
 }`}
+      header={{
+        description: "Show the name of the chain",
+        title: "ChainName",
+      }}
       lang="tsx"
+      preview={<ChainNamePreview />}
     />
   );
 }

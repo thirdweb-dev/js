@@ -1,6 +1,6 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { getRoleMemberCount as generatedGetRoleMemberCount } from "../__generated__/IPermissionsEnumerable/read/getRoleMemberCount.js";
-import { type RoleInput, getRoleHash } from "../utils.js";
+import { getRoleHash, type RoleInput } from "../utils.js";
 
 export { isGetRoleMemberCountSupported } from "../__generated__/IPermissionsEnumerable/read/getRoleMemberCount.js";
 

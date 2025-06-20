@@ -1,7 +1,7 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { useCallback, useMemo } from "react";
+import { Badge } from "@/components/ui/badge";
 import { useAllChainsData } from "../../app/hooks/chains";
 import { ChainIcon } from "./ChainIcon";
 import { MultiSelect } from "./multi-select";
@@ -96,7 +96,7 @@ export function MultiNetworkSelector(props: {
           </span>
 
           {!props.disableChainId && (
-            <Badge variant="outline" className="gap-2">
+            <Badge className="gap-2" variant="outline">
               <span className="text-muted-foreground">Chain ID</span>
               {chain.chainId}
             </Badge>
@@ -109,21 +109,21 @@ export function MultiNetworkSelector(props: {
 
   return (
     <MultiSelect
-      searchPlaceholder="Search by Name or Chain Id"
-      selectedValues={props.selectedChainIds.map(String)}
-      options={options}
+      className={props.className}
+      disabled={allChains.length === 0}
       onSelectedValuesChange={(chainIds) => {
         props.onChange(chainIds.map(Number));
       }}
+      options={options}
+      overrideSearchFn={searchFn}
       placeholder={
         allChains.length === 0 ? "Loading Chains..." : "Select Chains"
       }
-      disabled={allChains.length === 0}
-      overrideSearchFn={searchFn}
-      renderOption={renderOption}
-      className={props.className}
       popoverContentClassName={props.popoverContentClassName}
+      renderOption={renderOption}
+      searchPlaceholder="Search by Name or Chain Id"
       selectedBadgeClassName={props.selectedBadgeClassName}
+      selectedValues={props.selectedChainIds.map(String)}
     />
   );
 }

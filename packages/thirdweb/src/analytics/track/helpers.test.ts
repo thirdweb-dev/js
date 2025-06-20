@@ -36,8 +36,8 @@ describe("isInsufficientFundsError", () => {
 
   it("should detect reason field", () => {
     const error = {
-      reason: "insufficient funds",
       message: "Transaction failed",
+      reason: "insufficient funds",
     };
     expect(isInsufficientFundsError(error)).toBe(true);
   });
@@ -76,7 +76,7 @@ describe("getErrorDetails", () => {
   });
 
   it("should extract message and code from error object", () => {
-    const error = { message: "Test message", code: "TEST_CODE" };
+    const error = { code: "TEST_CODE", message: "Test message" };
     const details = getErrorDetails(error);
     expect(details.message).toBe("Test message");
     expect(details.code).toBe("TEST_CODE");

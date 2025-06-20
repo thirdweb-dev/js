@@ -1,7 +1,7 @@
-import { getProject } from "@/api/projects";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { InAppWalletUsersPageContent } from "components/embedded-wallets/Users";
 import { redirect } from "next/navigation";
+import { getProject } from "@/api/projects";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../login/loginRedirect";
 import { TRACKING_CATEGORY } from "../_constants";
@@ -32,10 +32,10 @@ export default async function Page(props: {
 
   return (
     <InAppWalletUsersPageContent
-      projectClientId={project.publishableKey}
-      trackingCategory={TRACKING_CATEGORY}
       authToken={authToken}
       client={client}
+      projectClientId={project.publishableKey}
+      trackingCategory={TRACKING_CATEGORY}
     />
   );
 }

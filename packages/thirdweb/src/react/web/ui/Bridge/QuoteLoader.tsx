@@ -11,9 +11,9 @@ import {
   useBridgePrepare,
 } from "../../../core/hooks/useBridgePrepare.js";
 import type { PaymentMethod } from "../../../core/machines/paymentMachine.js";
+import { Container } from "../components/basic.js";
 import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
-import { Container } from "../components/basic.js";
 import { Text } from "../components/text.js";
 
 interface QuoteLoaderProps {
@@ -97,15 +97,15 @@ export function QuoteLoader({
   // For now, we'll use a simple buy operation
   // This will be expanded to handle different bridge types based on the payment method
   const request: BridgePrepareRequest = getBridgeParams({
-    paymentMethod,
     amount,
+    client,
     destinationToken,
+    feePayer,
+    paymentLinkId,
+    paymentMethod,
+    purchaseData,
     receiver,
     sender,
-    client,
-    purchaseData,
-    paymentLinkId,
-    feePayer,
   });
   const prepareQuery = useBridgePrepare(request);
 
@@ -125,19 +125,19 @@ export function QuoteLoader({
 
   return (
     <Container
-      flex="column"
       center="both"
-      p="lg"
+      flex="column"
       fullHeight
+      p="lg"
       style={{ minHeight: "350px" }}
     >
-      <Spinner size="xl" color="secondaryText" />
+      <Spinner color="secondaryText" size="xl" />
       <Spacer y="md" />
-      <Text size="lg" color="primaryText" center style={{ fontWeight: 600 }}>
+      <Text center color="primaryText" size="lg" style={{ fontWeight: 600 }}>
         Finding the best route...
       </Text>
       <Spacer y="sm" />
-      <Text size="sm" color="secondaryText" center>
+      <Text center color="secondaryText" size="sm">
         We're searching for the most efficient path for this payment.
       </Text>
     </Container>
@@ -161,19 +161,19 @@ function getBridgeParams(args: {
   switch (paymentMethod.type) {
     case "fiat":
       return {
-        type: "onramp",
-        client,
         amount: toUnits(amount, destinationToken.decimals),
-        receiver,
-        sender,
         chainId: destinationToken.chainId,
-        tokenAddress: destinationToken.address,
-        onramp: paymentMethod.onramp || "coinbase",
-        purchaseData: args.purchaseData,
+        client,
         currency: paymentMethod.currency,
-        onrampTokenAddress: NATIVE_TOKEN_ADDRESS, // always onramp to native token
-        paymentLinkId: args.paymentLinkId,
         enabled: !!(destinationToken && amount && client),
+        onramp: paymentMethod.onramp || "coinbase",
+        onrampTokenAddress: NATIVE_TOKEN_ADDRESS,
+        paymentLinkId: args.paymentLinkId,
+        purchaseData: args.purchaseData,
+        receiver,
+        sender, // always onramp to native token
+        tokenAddress: destinationToken.address,
+        type: "onramp",
       };
     case "wallet":
       // if the origin token is the same as the destination token, use transfer type
@@ -183,37 +183,37 @@ function getBridgeParams(args: {
           destinationToken.address.toLowerCase()
       ) {
         return {
-          type: "transfer",
-          client,
-          chainId: destinationToken.chainId,
-          tokenAddress: destinationToken.address,
-          feePayer: args.feePayer || "sender",
           amount: toUnits(amount, destinationToken.decimals),
+          chainId: destinationToken.chainId,
+          client,
+          enabled: !!(destinationToken && amount && client),
+          feePayer: args.feePayer || "sender",
+          paymentLinkId: args.paymentLinkId,
+          purchaseData: args.purchaseData,
+          receiver,
           sender:
             sender ||
             paymentMethod.payerWallet.getAccount()?.address ||
             receiver,
-          receiver,
-          purchaseData: args.purchaseData,
-          paymentLinkId: args.paymentLinkId,
-          enabled: !!(destinationToken && amount && client),
+          tokenAddress: destinationToken.address,
+          type: "transfer",
         };
       }
 
       return {
-        type: "buy",
+        amount: toUnits(amount, destinationToken.decimals),
         client,
-        originChainId: paymentMethod.originToken.chainId,
-        originTokenAddress: paymentMethod.originToken.address,
         destinationChainId: destinationToken.chainId,
         destinationTokenAddress: destinationToken.address,
-        amount: toUnits(amount, destinationToken.decimals),
+        enabled: !!(destinationToken && amount && client),
+        originChainId: paymentMethod.originToken.chainId,
+        originTokenAddress: paymentMethod.originToken.address,
+        paymentLinkId: args.paymentLinkId,
+        purchaseData: args.purchaseData,
+        receiver,
         sender:
           sender || paymentMethod.payerWallet.getAccount()?.address || receiver,
-        receiver,
-        purchaseData: args.purchaseData,
-        paymentLinkId: args.paymentLinkId,
-        enabled: !!(destinationToken && amount && client),
+        type: "buy",
       };
   }
 }

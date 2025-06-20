@@ -1,12 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { ImportModal } from "components/contract-components/import-contract/modal";
-
 import { DownloadIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { Button } from "@/components/ui/button";
 
 export function DeployedContractsPageHeader(props: {
   teamId: string;
@@ -23,8 +22,8 @@ export function DeployedContractsPageHeader(props: {
         onClose={() => {
           setImportModalOpen(false);
         }}
-        teamId={props.teamId}
         projectId={props.projectId}
+        teamId={props.teamId}
         type="contract"
       />
 
@@ -37,10 +36,10 @@ export function DeployedContractsPageHeader(props: {
         <div className="flex gap-3 [&>*]:grow">
           <Button
             className="gap-2 bg-card"
-            variant="outline"
             onClick={() => {
               setImportModalOpen(true);
             }}
+            variant="outline"
           >
             <DownloadIcon className="size-4" />
             Import contract

@@ -24,19 +24,19 @@ export function useContractTransactionAnalytics(params: {
   const { startDate, endDate, contractAddress, chainId } = params;
 
   return useQuery({
+    queryFn: async () => {
+      return getContractTransactionAnalytics(params);
+    },
     queryKey: [
       "analytics",
       "transactions",
       {
-        contractAddress: contractAddress,
         chainId: chainId,
-        startDate: getDayKey(startDate),
+        contractAddress: contractAddress,
         endDate: getDayKey(endDate),
+        startDate: getDayKey(startDate),
       },
     ] as const,
-    queryFn: async () => {
-      return getContractTransactionAnalytics(params);
-    },
   });
 }
 
@@ -49,18 +49,18 @@ export function useTotalContractTransactionAnalytics(params: {
   contractAddress: string;
 }) {
   return useQuery({
+    queryFn: async () => {
+      return getTotalContractTransactions(params);
+    },
     queryKey: [
       "analytics",
       "total-transactions",
       {
-        contractAddress: params.contractAddress,
         chainId: params.chainId,
+        contractAddress: params.contractAddress,
         currentDate: getDayKey(new Date()),
       },
     ] as const,
-    queryFn: async () => {
-      return getTotalContractTransactions(params);
-    },
   });
 }
 
@@ -73,107 +73,107 @@ function getDayKey(date?: Date) {
 
 export function useContractEventAnalytics(params: AnalyticsQueryParams) {
   return useQuery({
+    enabled: !!params.contractAddress && !!params.chainId,
+    queryFn: async () => {
+      return await getContractEventAnalytics(params);
+    },
     queryKey: [
       "analytics",
       "logs",
       {
-        contractAddress: params.contractAddress,
         chainId: params.chainId,
-        startDate: getDayKey(params.startDate),
+        contractAddress: params.contractAddress,
         endDate: getDayKey(params.endDate),
+        startDate: getDayKey(params.startDate),
       },
     ] as const,
-    queryFn: async () => {
-      return await getContractEventAnalytics(params);
-    },
-    enabled: !!params.contractAddress && !!params.chainId,
   });
 }
 
 export function useTotalContractEvents(params: AnalyticsQueryParams) {
   return useQuery({
+    queryFn: async () => {
+      return getTotalContractEvents(params);
+    },
     queryKey: [
       "analytics",
       "total-logs",
       {
-        contractAddress: params.contractAddress,
         chainId: params.chainId,
+        contractAddress: params.contractAddress,
         currentDate: getDayKey(new Date()),
       },
     ] as const,
-    queryFn: async () => {
-      return getTotalContractEvents(params);
-    },
   });
 }
 
 export function useContractFunctionBreakdown(params: AnalyticsQueryParams) {
   return useQuery({
+    enabled: !!params.contractAddress && !!params.chainId,
+    queryFn: () => {
+      return getContractFunctionBreakdown(params);
+    },
     queryKey: [
       "analytics",
       "functions",
       {
-        contractAddress: params.contractAddress,
         chainId: params.chainId,
-        startDate: `${params.startDate?.getDate()}-${params.startDate?.getMonth()}-${params.startDate?.getFullYear()}`,
+        contractAddress: params.contractAddress,
         endDate: `${params.endDate?.getDate()}-${params.endDate?.getMonth()}-${params.endDate?.getFullYear()}`,
+        startDate: `${params.startDate?.getDate()}-${params.startDate?.getMonth()}-${params.startDate?.getFullYear()}`,
       },
     ] as const,
-    queryFn: () => {
-      return getContractFunctionBreakdown(params);
-    },
-    enabled: !!params.contractAddress && !!params.chainId,
   });
 }
 
 export function useContractEventBreakdown(params: AnalyticsQueryParams) {
   return useQuery({
+    enabled: !!params.contractAddress && !!params.chainId,
+    queryFn: () => {
+      return getContractEventBreakdown(params);
+    },
     queryKey: [
       "analytics",
       "events",
       {
-        contractAddress: params.contractAddress,
         chainId: params.chainId,
-        startDate: `${params.startDate?.getDate()}-${params.startDate?.getMonth()}-${params.startDate?.getFullYear()}`,
+        contractAddress: params.contractAddress,
         endDate: `${params.endDate?.getDate()}-${params.endDate?.getMonth()}-${params.endDate?.getFullYear()}`,
+        startDate: `${params.startDate?.getDate()}-${params.startDate?.getMonth()}-${params.startDate?.getFullYear()}`,
       },
     ] as const,
-    queryFn: () => {
-      return getContractEventBreakdown(params);
-    },
-    enabled: !!params.contractAddress && !!params.chainId,
   });
 }
 
 export function useContractUniqueWalletAnalytics(params: AnalyticsQueryParams) {
   return useQuery({
+    queryFn: async () => getContractUniqueWalletAnalytics(params),
     queryKey: [
       "analytics",
       "unique-wallets",
       {
-        contractAddress: params.contractAddress,
         chainId: params.chainId,
-        startDate: getDayKey(params.startDate),
+        contractAddress: params.contractAddress,
         endDate: getDayKey(params.endDate),
+        startDate: getDayKey(params.startDate),
       },
     ],
-    queryFn: async () => getContractUniqueWalletAnalytics(params),
   });
 }
 
 export function useTotalContractUniqueWallets(params: AnalyticsQueryParams) {
   return useQuery({
+    queryFn: () => {
+      return getTotalContractUniqueWallets(params);
+    },
     queryKey: [
       "analytics",
       "total-wallets",
       {
-        contractAddress: params.contractAddress,
         chainId: params.chainId,
+        contractAddress: params.contractAddress,
         currentDate: getDayKey(new Date()),
       },
     ] as const,
-    queryFn: () => {
-      return getTotalContractUniqueWallets(params);
-    },
   });
 }

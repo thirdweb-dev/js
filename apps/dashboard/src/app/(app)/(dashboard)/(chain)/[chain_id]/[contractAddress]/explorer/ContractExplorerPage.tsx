@@ -1,10 +1,10 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import type { Abi } from "abitype";
 import { getContractFunctionsFromAbi } from "components/contract-components/getContractFunctionsFromAbi";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
 import { CircleAlertIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface ContractExplorePageProps {
   contract: ThirdwebContract;
@@ -37,10 +37,10 @@ export const ContractExplorerPage: React.FC<ContractExplorePageProps> = ({
     <div className="flex h-[70vh] flex-col ">
       {functions && functions.length > 0 ? (
         <ContractFunctionsOverview
-          onlyFunctions
-          functions={functions}
           contract={contract}
+          functions={functions}
           isLoggedIn={isLoggedIn}
+          onlyFunctions
         />
       ) : (
         <div className="flex flex-col items-center justify-center gap-2 bg-card text-center">

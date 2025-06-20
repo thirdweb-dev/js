@@ -58,8 +58,8 @@ type ConnectModalOptions = {
 const ConnectModal = (props: ConnectModalOptions) => {
   const screenSetup = useSetupScreen({
     size: props.size,
-    welcomeScreen: props.welcomeScreen,
     wallets: props.wallets,
+    welcomeScreen: props.welcomeScreen,
   });
   const setSelectionData = useSetSelectionData();
   const { screen, setScreen, initialScreen } = screenSetup;
@@ -119,7 +119,6 @@ const ConnectModal = (props: ConnectModalOptions) => {
   return (
     <Modal
       hide={hideModal}
-      size={props.size}
       open={isWalletModalOpen}
       setOpen={(value) => {
         if (hideModal) {
@@ -130,30 +129,31 @@ const ConnectModal = (props: ConnectModalOptions) => {
           closeModal();
         }
       }}
+      size={props.size}
     >
       <ConnectModalContent
-        shouldSetActive={props.shouldSetActive}
-        screenSetup={screenSetup}
-        setModalVisibility={setModalVisibility}
-        isOpen={isWalletModalOpen}
-        onClose={closeModal}
         accountAbstraction={props.accountAbstraction}
         auth={props.auth}
+        chain={props.chain}
+        chains={props.chains}
         client={props.client}
         connectLocale={props.connectLocale}
-        size={props.size}
-        welcomeScreen={props.welcomeScreen}
-        meta={props.meta}
         hideHeader={false}
+        isOpen={isWalletModalOpen}
+        meta={props.meta}
+        modalHeader={undefined}
+        onClose={closeModal}
         onConnect={props.onConnect}
         recommendedWallets={props.recommendedWallets}
-        wallets={props.wallets}
-        chain={props.chain}
+        screenSetup={screenSetup}
+        setModalVisibility={setModalVisibility}
+        shouldSetActive={props.shouldSetActive}
         showAllWallets={props.showAllWallets}
-        chains={props.chains}
+        size={props.size}
         walletConnect={props.walletConnect}
-        modalHeader={undefined}
         walletIdsToHide={props.hiddenWallets}
+        wallets={props.wallets}
+        welcomeScreen={props.welcomeScreen}
       />
     </Modal>
   );

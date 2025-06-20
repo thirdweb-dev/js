@@ -1,6 +1,9 @@
 "use client";
-import { DynamicHeight } from "@/components/ui/DynamicHeight";
+import { ArrowUpIcon, CircleStopIcon, PaperclipIcon } from "lucide-react";
+import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { Button } from "@/components/ui/button";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import {
   Popover,
   PopoverContent,
@@ -9,9 +12,6 @@ import {
 import { AutoResizeTextarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { ArrowUpIcon, CircleStopIcon, PaperclipIcon } from "lucide-react";
-import { useState } from "react";
-import type { ThirdwebClient } from "thirdweb";
 import type { NebulaUserMessage } from "./types";
 
 export function ChatBar(props: {
@@ -29,8 +29,8 @@ export function ChatBar(props: {
 
   function handleSubmit(message: string) {
     const userMessage: NebulaUserMessage = {
+      content: [{ text: message, type: "text" }],
       role: "user",
-      content: [{ type: "text", text: message }],
     };
 
     props.sendMessage(userMessage);
@@ -48,8 +48,8 @@ export function ChatBar(props: {
         <div className="p-2">
           <div className="max-h-[200px] overflow-y-auto">
             <AutoResizeTextarea
-              placeholder={props.placeholder}
-              value={message}
+              className="min-h-[60px] resize-none border-none bg-transparent pt-2 leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
+              disabled={props.isChatStreaming}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={(e) => {
                 // ignore if shift key is pressed to allow entering new lines
@@ -61,8 +61,8 @@ export function ChatBar(props: {
                   handleSubmit(message);
                 }
               }}
-              className="min-h-[60px] resize-none border-none bg-transparent pt-2 leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0"
-              disabled={props.isChatStreaming}
+              placeholder={props.placeholder}
+              value={message}
             />
           </div>
 
@@ -76,8 +76,8 @@ export function ChatBar(props: {
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
-                      variant="ghost"
                       className="!h-auto w-auto shrink-0 gap-2 p-2"
+                      variant="ghost"
                     >
                       <ToolTipLabel label="Attach Image">
                         <PaperclipIcon className="size-4" />
@@ -90,9 +90,9 @@ export function ChatBar(props: {
                         Get access to image uploads by signing in to Nebula
                       </p>
                       <Button
-                        variant="default"
-                        onClick={props.onLoginClick}
                         className="w-full"
+                        onClick={props.onLoginClick}
+                        variant="default"
                       >
                         Sign in
                       </Button>
@@ -104,11 +104,11 @@ export function ChatBar(props: {
               {/* Send / Stop */}
               {props.isChatStreaming ? (
                 <Button
-                  variant="default"
                   className="!h-auto w-auto shrink-0 gap-2 p-2"
                   onClick={() => {
                     props.abortChatStream();
                   }}
+                  variant="default"
                 >
                   <CircleStopIcon className="size-4" />
                   Stop
@@ -116,13 +116,13 @@ export function ChatBar(props: {
               ) : (
                 <Button
                   aria-label="Send"
-                  disabled={message.trim() === "" || props.isConnectingWallet}
                   className="!h-auto w-auto border border-nebula-pink-foreground p-2 disabled:opacity-100"
-                  variant="pink"
+                  disabled={message.trim() === "" || props.isConnectingWallet}
                   onClick={() => {
                     if (message.trim() === "") return;
                     handleSubmit(message);
                   }}
+                  variant="pink"
                 >
                   <ArrowUpIcon className="size-4" />
                 </Button>

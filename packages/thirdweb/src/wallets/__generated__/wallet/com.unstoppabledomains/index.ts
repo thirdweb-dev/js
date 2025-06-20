@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.unstoppabledomains",
-  name: "Unstoppable Domains",
-  homepage: "https://unstoppabledomains.com/",
-  image_id: "4725dda0-4471-4d0f-7adf-6bbe8b929c00",
   app: {
-    browser: "https://unstoppabledomains.com/",
-    ios: "https://apps.apple.com/us/app/unstoppable-domains/id1544748602",
     android:
       "https://play.google.com/store/apps/details?id=com.unstoppabledomains.manager",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://unstoppabledomains.com/",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/unstoppable-domains/id1544748602",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "unstoppabledomains://",
-    universal: "https://unstoppabledomains.com/mobile",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://unstoppabledomains.com/",
   },
+  homepage: "https://unstoppabledomains.com/",
+  id: "com.unstoppabledomains",
+  image_id: "4725dda0-4471-4d0f-7adf-6bbe8b929c00",
+  mobile: {
+    native: "unstoppabledomains://",
+    universal: "https://unstoppabledomains.com/mobile",
+  },
+  name: "Unstoppable Domains",
+  rdns: null,
 } as const;

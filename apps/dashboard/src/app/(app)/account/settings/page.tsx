@@ -27,8 +27,8 @@ export default async function Page() {
     <AccountSettingsPage
       account={account}
       client={client}
-      defaultTeamSlug={defaultTeam.slug}
       defaultTeamName={defaultTeam.name}
+      defaultTeamSlug={defaultTeam.slug}
     />
   );
 }

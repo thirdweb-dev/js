@@ -1,7 +1,7 @@
 import type { Address } from "abitype";
 import {
-  NATIVE_TOKEN_ADDRESS,
   isNativeTokenAddress,
+  NATIVE_TOKEN_ADDRESS,
 } from "../../../../constants/addresses.js";
 import { getContract } from "../../../../contract/contract.js";
 import { eth_getBlockByNumber } from "../../../../rpc/actions/eth_getBlockByNumber.js";
@@ -90,7 +90,6 @@ export function updateListing(
   options: BaseTransactionOptions<UpdateListingParams>,
 ) {
   return generatedUpdateListing({
-    contract: options.contract,
     asyncParams: async () => {
       const { contract, listingId, ...updateParams } = options;
 
@@ -183,21 +182,22 @@ export function updateListing(
 
       return {
         listingId,
-        params: {
-          assetContract: mergedOptions.assetContractAddress,
-          tokenId: mergedOptions.tokenId,
-          currency:
-            mergedOptions.currencyContractAddress ?? NATIVE_TOKEN_ADDRESS,
-          quantity,
-          pricePerToken,
-          startTimestamp,
-          endTimestamp,
-          reserved: mergedOptions.isReservedListing ?? false,
-        },
         overrides: {
           extraGas: 50_000n, // add extra gas to account for router call
         },
+        params: {
+          assetContract: mergedOptions.assetContractAddress,
+          currency:
+            mergedOptions.currencyContractAddress ?? NATIVE_TOKEN_ADDRESS,
+          endTimestamp,
+          pricePerToken,
+          quantity,
+          reserved: mergedOptions.isReservedListing ?? false,
+          startTimestamp,
+          tokenId: mergedOptions.tokenId,
+        },
       } as const;
     },
+    contract: options.contract,
   });
 }

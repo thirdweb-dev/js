@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.copiosa",
-  name: "Copiosa",
-  homepage: "https://copiosa.io",
-  image_id: "cae1be94-9f53-4eba-b915-f6e381d5a500",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/gb/app/copiosa-crypto-wallet/id6443951470",
     android:
       "https://play.google.com/store/apps/details?id=io.copiosa.exchange",
-    mac: "",
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/gb/app/copiosa-crypto-wallet/id6443951470",
+    linux: null,
+    mac: "",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "copiosa://",
-    universal: "https://copiosa.io/action/",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://copiosa.io",
+  id: "io.copiosa",
+  image_id: "cae1be94-9f53-4eba-b915-f6e381d5a500",
+  mobile: {
+    native: "copiosa://",
+    universal: "https://copiosa.io/action/",
+  },
+  name: "Copiosa",
+  rdns: null,
 } as const;

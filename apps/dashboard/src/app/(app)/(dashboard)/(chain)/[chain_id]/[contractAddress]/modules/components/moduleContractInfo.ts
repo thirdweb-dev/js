@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { usePublishedContractsFromDeploy } from "components/contract-components/hooks";
 import { THIRDWEB_DEPLOYER_ADDRESS } from "constants/addresses";
 import { useMemo } from "react";
-import { type ThirdwebContract, getContract } from "thirdweb";
+import { getContract, type ThirdwebContract } from "thirdweb";
 import { getCompilerMetadata } from "thirdweb/contract";
 import { useActiveAccount } from "thirdweb/react";
 
@@ -29,9 +29,9 @@ export function useAllModuleContractInfo(
   contract: ThirdwebContract,
 ) {
   return useQuery({
-    queryKey: ["all-module-contract-info", installedModules, contract],
-    queryFn: () => getAllModuleContractInfo(installedModules || [], contract),
     enabled: !!contract,
+    queryFn: () => getAllModuleContractInfo(installedModules || [], contract),
+    queryKey: ["all-module-contract-info", installedModules, contract],
   });
 }
 

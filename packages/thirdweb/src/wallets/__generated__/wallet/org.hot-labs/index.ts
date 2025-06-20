@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "org.hot-labs",
-  name: "HOT Wallet",
-  homepage: "https://hot-labs.org/wallet",
-  image_id: "809867ce-345f-4180-033a-165019d4c700",
   app: {
-    browser: "https://t.me/hot_wallet/app",
-    ios: "https://apps.apple.com/us/app/hot-wallet/id6740916148",
     android:
       "https://play.google.com/store/apps/details?id=app.herewallet.hot&hl=en_US",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://t.me/hot_wallet/app",
     chrome:
       "https://chromewebstore.google.com/detail/hot-wallet/mpeengabcnhhjjgleiodimegnkpcenbk?pli=1",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/hot-wallet/id6740916148",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "hotwallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://t.me/hot_wallet/app",
   },
+  homepage: "https://hot-labs.org/wallet",
+  id: "org.hot-labs",
+  image_id: "809867ce-345f-4180-033a-165019d4c700",
+  mobile: {
+    native: "hotwallet://",
+    universal: null,
+  },
+  name: "HOT Wallet",
+  rdns: null,
 } as const;

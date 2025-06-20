@@ -1,6 +1,6 @@
+import { notFound } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { notFound } from "next/navigation";
 import { getAuthToken } from "../../../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../../../login/loginRedirect";
 import { AddPartnerForm } from "../components/client/add-partner-form.client";
@@ -35,9 +35,9 @@ export default async function AddPartnerPage({
 
   try {
     const ecosystem = await fetchEcosystem({
-      teamIdOrSlug: teamSlug,
-      slug: ecosystemSlug,
       authToken,
+      slug: ecosystemSlug,
+      teamIdOrSlug: teamSlug,
     });
 
     return (
@@ -47,10 +47,10 @@ export default async function AddPartnerPage({
             Add New Partner
           </h1>
           <AddPartnerForm
-            ecosystem={ecosystem}
             authToken={authToken}
-            teamId={team.id}
             client={client}
+            ecosystem={ecosystem}
+            teamId={team.id}
           />
         </div>
       </div>

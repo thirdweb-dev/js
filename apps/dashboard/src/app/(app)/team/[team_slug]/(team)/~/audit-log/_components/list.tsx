@@ -1,10 +1,10 @@
 "use client";
 
-import type { AuditLogEntry } from "@/api/audit-log";
-import { Button } from "@/components/ui/button";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useTransition } from "react";
+import type { AuditLogEntry } from "@/api/audit-log";
+import { Button } from "@/components/ui/button";
 import { searchParams } from "../search-params";
 import { AuditLogEntryComponent } from "./entry";
 
@@ -24,9 +24,9 @@ export function AuditLogList({
   const [after, setAfter] = useQueryState(
     "after",
     searchParams.after.withOptions({
-      startTransition,
       history: "push",
       shallow: false,
+      startTransition,
     }),
   );
 
@@ -37,8 +37,8 @@ export function AuditLogList({
       <div>
         {entries.map((log) => (
           <AuditLogEntryComponent
-            key={buildAuditLogEntryKey(log)}
             entry={log}
+            key={buildAuditLogEntryKey(log)}
           />
         ))}
       </div>
@@ -46,12 +46,12 @@ export function AuditLogList({
       {showPagination && (
         <div className="flex items-center justify-between border-t p-6">
           <Button
-            variant="outline"
-            size="sm"
+            disabled={isPending || !after}
             onClick={() => {
               window.history.back();
             }}
-            disabled={isPending || !after}
+            size="sm"
+            variant="outline"
           >
             {isPending ? (
               <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -62,14 +62,14 @@ export function AuditLogList({
           </Button>
 
           <Button
-            variant="outline"
-            size="sm"
+            disabled={!hasMore || isPending}
             onClick={() => {
               if (hasMore && nextCursor) {
                 setAfter(nextCursor);
               }
             }}
-            disabled={!hasMore || isPending}
+            size="sm"
+            variant="outline"
           >
             Next
             {isPending && hasMore ? (

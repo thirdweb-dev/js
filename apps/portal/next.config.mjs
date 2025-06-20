@@ -50,41 +50,41 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  productionBrowserSourceMaps: false,
   experimental: {
+    serverSourceMaps: false,
     webpackBuildWorker: true,
     webpackMemoryOptimizations: true,
-    serverSourceMaps: false,
+  },
+  async headers() {
+    return [
+      {
+        headers: securityHeaders,
+        source: "/(.*)",
+      },
+    ];
   },
   pageExtensions: ["mdx", "tsx", "ts"],
+  productionBrowserSourceMaps: false,
   redirects,
   async rewrites() {
     return [
       {
-        source: "/_ph/static/:path*",
         destination: "https://us-assets.i.posthog.com/static/:path*",
+        source: "/_ph/static/:path*",
       },
       {
-        source: "/_ph/:path*",
         destination: "https://us.i.posthog.com/:path*",
+        source: "/_ph/:path*",
       },
       {
-        source: "/_ph/decide",
         destination: "https://us.i.posthog.com/decide",
+        source: "/_ph/decide",
       },
     ];
   },
   webpack: (config) => {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
-  },
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: securityHeaders,
-      },
-    ];
   },
 };
 

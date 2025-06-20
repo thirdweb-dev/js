@@ -42,26 +42,26 @@ function TransactionAnalyticsSummaryUI(props: {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       <StatCard
-        label="Total Transactions"
-        // Value is a number, standard formatter works
-        value={props.data?.totalCount}
         icon={ActivityIcon}
+        // Value is a number, standard formatter works
         isPending={props.isPending}
+        label="Total Transactions"
+        value={props.data?.totalCount}
       />
       <StatCard
-        label="Total Gas Spent (includes testnet)"
+        formatter={(v: number) => `${v.toFixed(10)} ETH`}
         // If pending, value doesn't matter much.
         // If not pending, pass the wei string `as any` if data exists, otherwise pass 0.
         // Passing 0 ensures StatCard receives a number if data is missing post-loading.
+        icon={CoinsIcon}
+        isPending={props.isPending}
+        label="Total Gas Spent (includes testnet)"
+        // Pass the formatter that handles the type juggling
         value={
           props.isPending
             ? undefined
             : parseTotalGasCost(props.data?.totalGasCostWei ?? "0")
         }
-        formatter={(v: number) => `${v.toFixed(10)} ETH`}
-        icon={CoinsIcon}
-        // Pass the formatter that handles the type juggling
-        isPending={props.isPending}
       />
       {/*
       // Example of how totalGasUnitsUsed could be added later:

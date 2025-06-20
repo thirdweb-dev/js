@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
 import {
-  type WalletCredential,
   useEngineUpdateWalletCredential,
+  type WalletCredential,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { PencilIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import { CredentialForm } from "./credential-form";
 import type { CredentialUpdateFormData } from "./types";
 
@@ -21,8 +21,8 @@ export const EditWalletCredentialButton: React.FC<
   const [isOpen, setIsOpen] = useState(false);
 
   const updateCredential = useEngineUpdateWalletCredential({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
 
   const handleSubmit = async (data: CredentialUpdateFormData) => {
@@ -32,15 +32,15 @@ export const EditWalletCredentialButton: React.FC<
     });
 
     toast.promise(promise, {
-      success: () => {
-        setIsOpen(false);
-
-        return "Wallet credential updated successfully";
-      },
       error: (error) => {
         console.log(error);
         console.error(error);
         return "Failed to update wallet credential";
+      },
+      success: () => {
+        setIsOpen(false);
+
+        return "Wallet credential updated successfully";
       },
     });
   };
@@ -48,33 +48,33 @@ export const EditWalletCredentialButton: React.FC<
   return (
     <>
       <Button
-        variant="ghost"
-        size="icon"
+        className="size-8"
         onClick={() => {
           setIsOpen(true);
         }}
-        className="size-8"
+        size="icon"
+        variant="ghost"
       >
         <PencilIcon className="size-4" />
       </Button>
 
       <CredentialForm
+        defaultValues={{
+          label: credential.label || "",
+          type: credential.type as "circle",
+        }}
+        hideTypeSelect
         isOpen={isOpen}
+        isPending={updateCredential.isPending}
+        isUpdate
         onOpenChange={setIsOpen}
         onSubmit={async (data) => {
           return new Promise<void>((resolve) => {
             handleSubmit(data as CredentialUpdateFormData).then(resolve);
           });
         }}
-        title="Edit Wallet Credential"
         submitButtonText="Save Changes"
-        isPending={updateCredential.isPending}
-        defaultValues={{
-          type: credential.type as "circle",
-          label: credential.label || "",
-        }}
-        hideTypeSelect
-        isUpdate
+        title="Edit Wallet Credential"
       />
     </>
   );

@@ -8,11 +8,6 @@ import {
 export function WalletIconExample() {
   return (
     <CodeExample
-      header={{
-        title: "WalletIcon",
-        description: "Show the icon of a crypto wallet",
-      }}
-      preview={<WalletIconBasicPreview />}
       code={`import { WalletProvider, WalletIcon } from "thirdweb/react";
 
 function App() {
@@ -25,7 +20,12 @@ function App() {
     </WalletProvider>
   )
 }`}
+      header={{
+        description: "Show the icon of a crypto wallet",
+        title: "WalletIcon",
+      }}
       lang="tsx"
+      preview={<WalletIconBasicPreview />}
     />
   );
 }
@@ -34,11 +34,6 @@ export function WalletNameExample() {
   return (
     <div>
       <CodeExample
-        header={{
-          title: "WalletName",
-          description: "Show the name of a crypto wallet",
-        }}
-        preview={<WalletNameBasicPreview />}
         code={`import { WalletProvider, WalletName } from "thirdweb/react";
 
 function App() {
@@ -48,7 +43,12 @@ function App() {
     </WalletProvider>
   )
 }`}
+        header={{
+          description: "Show the name of a crypto wallet",
+          title: "WalletName",
+        }}
         lang="tsx"
+        preview={<WalletNameBasicPreview />}
       />
 
       <p className="my-4 text-muted-foreground text-sm">
@@ -56,7 +56,6 @@ function App() {
       </p>
 
       <CodeExample
-        preview={<WalletNameFormatPreview />}
         code={`import { WalletProvider, WalletName } from "thirdweb/react";
 
 function App() {
@@ -70,6 +69,7 @@ function App() {
   )
 }`}
         lang="tsx"
+        preview={<WalletNameFormatPreview />}
       />
     </div>
   );

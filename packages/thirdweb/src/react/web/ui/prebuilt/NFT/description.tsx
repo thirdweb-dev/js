@@ -92,6 +92,8 @@ export function NFTDescription({
 }: NFTDescriptionProps) {
   const { contract, tokenId } = useNFTContext();
   const descQuery = useQuery({
+    queryFn: async (): Promise<string> =>
+      fetchNftDescription({ contract, descriptionResolver, tokenId }),
     queryKey: [
       "_internal_nft_description_",
       contract.chain.id,
@@ -106,8 +108,6 @@ export function NFTDescription({
               : undefined,
       },
     ],
-    queryFn: async (): Promise<string> =>
-      fetchNftDescription({ descriptionResolver, contract, tokenId }),
     ...queryOptions,
   });
 

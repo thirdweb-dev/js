@@ -23,9 +23,9 @@ export function Providers(props: {
     >
       {props.supportedProviders.map((provider) => (
         <Container
-          key={provider}
-          flex="row"
           expand
+          flex="row"
+          key={provider}
           style={{
             justifyContent: "space-between",
           }}
@@ -41,8 +41,8 @@ export function Providers(props: {
                   ? "primaryText"
                   : "secondaryText"
               }
-              size="sm"
               hoverColor="primaryText"
+              size="sm"
             >
               {getProviderLabel(provider)}
             </Link>

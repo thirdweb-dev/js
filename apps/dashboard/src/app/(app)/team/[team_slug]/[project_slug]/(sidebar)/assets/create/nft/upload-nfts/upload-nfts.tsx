@@ -1,5 +1,5 @@
-import { TabButtons } from "@/components/ui/tabs";
 import type { ThirdwebClient } from "thirdweb";
+import { TabButtons } from "@/components/ui/tabs";
 import { StepCard } from "../../_common/step-card";
 import { BatchUploadNFTs } from "./batch-upload/batch-upload-nfts";
 import type {
@@ -27,55 +27,55 @@ export function UploadNFTsFieldset(props: {
   setNFTData: (nftData: NFTData) => void;
 }) {
   return (
-    <StepCard title="Upload NFTs" prevButton={undefined} nextButton={undefined}>
+    <StepCard nextButton={undefined} prevButton={undefined} title="Upload NFTs">
       <TabButtons
         containerClassName="pt-2 px-4 md:px-6"
         tabClassName="!text-sm"
         tabs={[
           {
+            isActive: props.nftData.type === "single",
             name: "Create Single",
             onClick: () =>
               props.setNFTData({
-                type: "single",
                 nft: null,
+                type: "single",
               }),
-            isActive: props.nftData.type === "single",
           },
           {
-            name: "Create Multiple",
-            onClick: () => props.setNFTData({ type: "multiple", nfts: null }),
             isActive: props.nftData.type === "multiple",
+            name: "Create Multiple",
+            onClick: () => props.setNFTData({ nfts: null, type: "multiple" }),
           },
         ]}
       />
 
       {props.nftData.type === "multiple" && (
         <BatchUploadNFTs
+          chainId={props.chainId}
+          client={props.client}
           onNext={props.onNext}
           onPrev={props.onPrev}
-          client={props.client}
           results={props.nftData.nfts}
           setResults={(results) =>
             props.setNFTData({
-              type: "multiple",
               nfts: results,
+              type: "multiple",
             })
           }
-          chainId={props.chainId}
         />
       )}
 
       {props.nftData.type === "single" && (
         <SingleUploadNFT
+          chainId={props.chainId}
           client={props.client}
+          nftData={props.nftData.nft}
           onNext={props.onNext}
           onPrev={props.onPrev}
-          chainId={props.chainId}
-          nftData={props.nftData.nft}
           setNFTData={(nft) =>
             props.setNFTData({
-              type: "single",
               nft,
+              type: "single",
             })
           }
         />

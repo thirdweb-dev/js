@@ -41,19 +41,19 @@ function trackTransactionEvent(
 ) {
   return track({
     client: args.client,
-    ecosystem: args.ecosystem,
     data: {
       action: args.action,
-      clientId: args.client.clientId,
       chainId: args.chainId,
+      clientId: args.client.clientId,
+      contractAddress: args.contractAddress,
+      errorCode: stringify(args.error),
+      functionName: args.functionName,
+      gasPrice: args.gasPrice,
       transactionHash: args.transactionHash,
       walletAddress: args.walletAddress,
       walletType: args.walletType,
-      contractAddress: args.contractAddress,
-      functionName: args.functionName,
-      gasPrice: args.gasPrice,
-      errorCode: stringify(args.error),
     },
+    ecosystem: args.ecosystem,
   });
 }
 
@@ -76,19 +76,19 @@ export async function trackInsufficientFundsError(args: {
 
   return track({
     client: args.client,
-    ecosystem: args.ecosystem,
     data: {
       action: "transaction:insufficient_funds",
-      clientId: args.client.clientId,
       chainId: args.chainId,
-      walletAddress: args.walletAddress,
+      clientId: args.client.clientId,
       contractAddress: args.contractAddress,
-      functionName: args.functionName,
-      transactionValue: args.transactionValue?.toString(),
-      requiredAmount: args.requiredAmount?.toString(),
-      userBalance: args.userBalance?.toString(),
-      errorMessage: errorDetails.message,
       errorCode: errorDetails.code ? stringify(errorDetails.code) : undefined,
+      errorMessage: errorDetails.message,
+      functionName: args.functionName,
+      requiredAmount: args.requiredAmount?.toString(),
+      transactionValue: args.transactionValue?.toString(),
+      userBalance: args.userBalance?.toString(),
+      walletAddress: args.walletAddress,
     },
+    ecosystem: args.ecosystem,
   });
 }

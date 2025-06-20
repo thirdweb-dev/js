@@ -73,25 +73,25 @@ export async function getContractPageMetadataSetup(
     contractTypeResult.status === "fulfilled" ? contractTypeResult.value : null;
 
   return {
-    supportedERCs: supportedERCs(functionSelectors),
-    isDirectListingSupported: isDirectListingSupported(functionSelectors),
-    isEnglishAuctionSupported: isEnglishAuctionSupported(functionSelectors),
-    isPermissionsSupported: isPermissionsSupported(functionSelectors),
-    isPermissionsEnumerableSupported:
-      isPermissionsEnumerableSupported(functionSelectors),
-    isModularCore: isModularCoreContract(functionSelectors),
     embedType: getEmbedTypeToShow(functionSelectors),
-    isInsightSupported: isInsightSupported,
-    isSplitSupported: contractType === "Split",
-    isVoteContract: contractType === "VoteERC20",
-    isERC721ClaimConditionsSupported:
-      isERC721ClaimConditionsSupported(functionSelectors),
-    isERC20ClaimConditionsSupported:
-      isERC20ClaimConditionsSupported(functionSelectors),
-    isAccountFactory: isAccountFactoryContract(functionSelectors),
+    functionSelectors,
     isAccount: isAccountContract(functionSelectors),
+    isAccountFactory: isAccountFactoryContract(functionSelectors),
     isAccountPermissionsSupported:
       isAccountPermissionsSupported(functionSelectors),
-    functionSelectors,
+    isDirectListingSupported: isDirectListingSupported(functionSelectors),
+    isEnglishAuctionSupported: isEnglishAuctionSupported(functionSelectors),
+    isERC20ClaimConditionsSupported:
+      isERC20ClaimConditionsSupported(functionSelectors),
+    isERC721ClaimConditionsSupported:
+      isERC721ClaimConditionsSupported(functionSelectors),
+    isInsightSupported: isInsightSupported,
+    isModularCore: isModularCoreContract(functionSelectors),
+    isPermissionsEnumerableSupported:
+      isPermissionsEnumerableSupported(functionSelectors),
+    isPermissionsSupported: isPermissionsSupported(functionSelectors),
+    isSplitSupported: contractType === "Split",
+    isVoteContract: contractType === "VoteERC20",
+    supportedERCs: supportedERCs(functionSelectors),
   };
 }

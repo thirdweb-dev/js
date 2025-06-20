@@ -1,16 +1,16 @@
 "use client";
 
+import { ImportModal } from "components/contract-components/import-contract/modal";
+import { ArrowDownToLineIcon, CoinsIcon, ImagesIcon } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import {
   reportAssetCreationStarted,
   reportAssetImportStarted,
   reportAssetImportSuccessful,
 } from "@/analytics/report";
 import { cn } from "@/lib/utils";
-import { ImportModal } from "components/contract-components/import-contract/modal";
-import { ArrowDownToLineIcon, CoinsIcon, ImagesIcon } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import type { ThirdwebClient } from "thirdweb";
 
 export function Cards(props: {
   teamSlug: string;
@@ -29,16 +29,15 @@ export function Cards(props: {
         onClose={() => {
           setImportModalOpen(false);
         }}
-        teamId={props.teamId}
-        projectId={props.projectId}
-        type="asset"
         onSuccess={() => {
           reportAssetImportSuccessful();
         }}
+        projectId={props.projectId}
+        teamId={props.teamId}
+        type="asset"
       />
 
       <CardLink
-        title="Create Coin"
         description="Launch your own ERC-20 coin"
         href={`/team/${props.teamSlug}/${props.projectSlug}/assets/create/token`}
         icon={CoinsIcon}
@@ -47,10 +46,10 @@ export function Cards(props: {
             assetType: "coin",
           });
         }}
+        title="Create Coin"
       />
 
       <CardLink
-        title="Create NFT Collection"
         description="Launch your own NFT collection"
         href={`/team/${props.teamSlug}/${props.projectSlug}/assets/create/nft`}
         icon={ImagesIcon}
@@ -59,10 +58,10 @@ export function Cards(props: {
             assetType: "nft",
           });
         }}
+        title="Create NFT Collection"
       />
 
       <CardLink
-        title="Import Existing Asset"
         description="Import tokens or NFTs you own to the project"
         href={undefined}
         icon={ArrowDownToLineIcon}
@@ -70,6 +69,7 @@ export function Cards(props: {
           reportAssetImportStarted();
           setImportModalOpen(true);
         }}
+        title="Import Existing Asset"
       />
     </div>
   );
@@ -86,19 +86,20 @@ function CardLink(props: {
   const isClickable = !!onClick || !!props.href;
 
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: FIXME
     <div
       className={cn(
         "relative flex flex-col rounded-lg border bg-card p-4",
         isClickable && "cursor-pointer hover:border-active-border ",
       )}
       onClick={onClick}
-      role={onClick ? "button" : undefined}
-      tabIndex={onClick ? 0 : undefined}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           onClick?.();
         }
       }}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
     >
       <div className="mb-4 flex">
         <div className="flex items-center justify-center rounded-full border p-2.5">
@@ -108,7 +109,7 @@ function CardLink(props: {
 
       <h3 className="mb-0.5 font-semibold text-lg tracking-tight">
         {props.href ? (
-          <Link href={props.href} className="before:absolute before:inset-0">
+          <Link className="before:absolute before:inset-0" href={props.href}>
             {props.title}
           </Link>
         ) : (

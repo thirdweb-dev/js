@@ -28,7 +28,7 @@ function QRCodeRenderer({
 
   const dots = useMemo(() => {
     const dotsArray: ReactElement[] = [];
-    const matrix = encode(uri, { ecc: ecl, border: 0 }).data;
+    const matrix = encode(uri, { border: 0, ecc: ecl }).data;
     const cellSize = size / matrix.length;
     const qrList = [
       { x: 0, y: 0 },
@@ -42,16 +42,16 @@ function QRCodeRenderer({
       for (let i = 0; i < 3; i++) {
         dotsArray.push(
           <rect
-            key={`${i}-${x}-${y}`}
             fill={
               i % 2 !== 0
                 ? "var(--ck-qr-background, var(--ck-body-background))"
                 : "var(--ck-qr-dot-color)"
             }
+            height={cellSize * (7 - i * 2)}
+            key={`${i}-${x}-${y}`}
             rx={(i - 2) * -5 + (i === 0 ? 2 : 3)}
             ry={(i - 2) * -5 + (i === 0 ? 2 : 3)}
             width={cellSize * (7 - i * 2)}
-            height={cellSize * (7 - i * 2)}
             x={x1 + cellSize * i}
             y={y1 + cellSize * i}
           />,
@@ -66,16 +66,16 @@ function QRCodeRenderer({
         <>
           <rect
             fill={imageBackground}
+            height={cellSize * (7 - 0 * 2)}
             rx={(0 - 2) * -5 + 2}
             ry={(0 - 2) * -5 + 2}
             width={cellSize * (7 - 0 * 2)}
-            height={cellSize * (7 - 0 * 2)}
             x={x1 + cellSize * 0}
             y={y1 + cellSize * 0}
           />
           <foreignObject
-            width={cellSize * (7 - 0 * 2)}
             height={cellSize * (7 - 0 * 2)}
+            width={cellSize * (7 - 0 * 2)}
             x={x1 + cellSize * 0}
             y={y1 + cellSize * 0}
           >
@@ -114,13 +114,13 @@ function QRCodeRenderer({
             ) {
               dotsArray.push(
                 <circle
+                  cx={i * cellSize + cellSize / 2}
+                  cy={j * cellSize + cellSize / 2}
+                  fill="var(--ck-qr-dot-color)"
                   key={`circle-${i}-${
                     // biome-ignore lint/suspicious/noArrayIndexKey: its the only thing available for the key here
                     j
                   }`}
-                  cx={i * cellSize + cellSize / 2}
-                  cy={j * cellSize + cellSize / 2}
-                  fill="var(--ck-qr-dot-color)"
                   r={cellSize / 3}
                 />,
               );
@@ -136,13 +136,13 @@ function QRCodeRenderer({
   return (
     <svg
       height={size}
-      width={size}
-      viewBox={`0 0 ${size} ${size}`}
-      style={{
-        width: size,
-        height: size,
-      }}
       role="presentation"
+      style={{
+        height: size,
+        width: size,
+      }}
+      viewBox={`0 0 ${size} ${size}`}
+      width={size}
     >
       <rect fill="transparent" height={size} width={size} />
       {dots}

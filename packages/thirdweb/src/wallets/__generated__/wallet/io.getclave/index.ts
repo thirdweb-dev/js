@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.getclave",
-  name: "Clave",
-  homepage: "https://getclave.io",
-  image_id: "f1c538df-15d9-4448-542f-b7b358e95d00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/gr/app/clave-smart-wallet/id6449253761",
     android: "https://play.google.com/store/apps/details?id=com.clave.mobile",
-    mac: "https://apps.apple.com/gr/app/clave-smart-wallet/id6449253761",
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/gr/app/clave-smart-wallet/id6449253761",
+    linux: null,
+    mac: "https://apps.apple.com/gr/app/clave-smart-wallet/id6449253761",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "clave://link/wc/",
-    universal: "https://getclave.io/link/wc",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: "clave://link/wc/",
     universal: "https://getclave.io/link",
   },
+  homepage: "https://getclave.io",
+  id: "io.getclave",
+  image_id: "f1c538df-15d9-4448-542f-b7b358e95d00",
+  mobile: {
+    native: "clave://link/wc/",
+    universal: "https://getclave.io/link/wc",
+  },
+  name: "Clave",
+  rdns: null,
 } as const;

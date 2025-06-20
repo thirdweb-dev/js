@@ -56,16 +56,16 @@ export type ClaimToParams = {
  */
 export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
   return claim({
-    contract: options.contract,
     asyncParams: () =>
       getClaimParams({
-        type: "erc721",
         contract: options.contract,
-        to: options.to,
-        quantity: options.quantity,
         from: options.from,
+        quantity: options.quantity,
         singlePhaseDrop: options.singlePhaseDrop,
+        to: options.to,
+        type: "erc721",
       }),
+    contract: options.contract,
   });
 }
 

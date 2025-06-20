@@ -16,19 +16,19 @@ type WalletTypeRowProps = {
 export function WalletTypeRowButton(props: WalletTypeRowProps) {
   return (
     <Button
+      disabled={props.disabled}
       fullWidth
-      variant="outline"
+      onClick={() => {
+        props.onClick();
+      }}
       style={{
         display: "flex",
         justifyContent: "flex-start",
         padding: spacing.sm,
       }}
-      onClick={() => {
-        props.onClick();
-      }}
-      disabled={props.disabled}
+      variant="outline"
     >
-      <Container flex="row" gap="sm" center="y" color="accentText">
+      <Container center="y" color="accentText" flex="row" gap="sm">
         <props.icon size={iconSize.md} />
         <Text color="primaryText">{props.title}</Text>
       </Container>

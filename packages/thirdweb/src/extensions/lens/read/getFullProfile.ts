@@ -98,7 +98,7 @@ export async function getFullProfile(
     import("../__generated__/LensHandle/read/getHandle.js"),
     import("../__generated__/LensHub/read/mintTimestampOf.js"),
     profile?.metadataURI
-      ? (await download({ uri: profile.metadataURI, client })).json()
+      ? (await download({ client, uri: profile.metadataURI })).json()
       : null,
   ]);
 
@@ -115,9 +115,9 @@ export async function getFullProfile(
   ]);
 
   const result: FullProfileResponse = {
-    profileData,
     handle,
     joinDate,
+    profileData,
   };
 
   return result;

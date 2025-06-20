@@ -1,11 +1,11 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { UserXIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
 import { getInstalledModules, owner } from "thirdweb/modules";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { InstalledModulesTable } from "./components/InstalledModulesTable";
 import { InstallModuleForm } from "./components/ModuleForm";
 
@@ -46,10 +46,10 @@ export const ContractEditModulesPage: React.FC<
   const isOwner = ownerQuery.data === account?.address;
 
   const installedModules = {
-    isPending: installedModulesQuery.isPending,
     data: installedModulesQuery.data
       ? installedModulesQuery.data.map((x) => x.implementation)
       : [],
+    isPending: installedModulesQuery.isPending,
   };
 
   return (
@@ -67,11 +67,11 @@ export const ContractEditModulesPage: React.FC<
           </div>
           <div className="h-10" />
           <InstallModuleForm
-            isLoggedIn={isLoggedIn}
-            contract={contract}
-            refetchModules={() => installedModulesQuery.refetch()}
             account={account}
+            contract={contract}
             installedModules={installedModules}
+            isLoggedIn={isLoggedIn}
+            refetchModules={() => installedModulesQuery.refetch()}
           />
         </div>
       )}
@@ -95,11 +95,11 @@ export const ContractEditModulesPage: React.FC<
       <div className="h-10" />
 
       <InstalledModulesTable
-        installedModules={installedModules}
-        refetchModules={() => installedModulesQuery.refetch()}
         contract={contract}
-        ownerAccount={isOwner ? account : undefined}
+        installedModules={installedModules}
         isLoggedIn={isLoggedIn}
+        ownerAccount={isOwner ? account : undefined}
+        refetchModules={() => installedModulesQuery.refetch()}
       />
     </div>
   );
