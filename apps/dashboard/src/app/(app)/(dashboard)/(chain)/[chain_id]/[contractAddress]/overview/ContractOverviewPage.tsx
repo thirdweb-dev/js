@@ -45,10 +45,10 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
       <div className="flex grow flex-col gap-10 overflow-hidden">
         {isErc20 && (
           <UpsellBannerCard
-            title="Public asset page available"
-            description="A public page is available for this contract for anyone to buy this asset"
+            title="Public token page available"
+            description="A public page is available for this contract for anyone to buy this token"
             cta={{
-              text: "View asset page",
+              text: "View token page",
               icon: <ExternalLinkIcon className="size-4" />,
               target: "_blank",
               link: `/${chainSlug}/${contract.address}`,

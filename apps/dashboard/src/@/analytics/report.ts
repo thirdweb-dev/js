@@ -10,7 +10,7 @@ import type { Team } from "../api/team";
  * ### Why do we need to report this event?
  * - To track the number of contracts deployed
  * - To track the number of contracts deployed on each chain
- * - To track if the contract was deployed on the asset page vs on the deploy page
+ * - To track if the contract was deployed on the token page vs on the deploy page
  *
  * ### Who is responsible for this event?
  * @jnsdls
@@ -230,7 +230,7 @@ type AssetContractType = "DropERC20" | "DropERC1155" | "DropERC721";
 
 /**
  * ### Why do we need to report this event?
- * - To track number of successful asset purchases from the asset page
+ * - To track number of successful asset purchases from the token page
  * - To track which asset and contract types are being purchased the most
  *
  * ### Who is responsible for this event?
@@ -250,7 +250,7 @@ export function reportAssetBuySuccessful(properties: {
 
 /**
  * ### Why do we need to report this event?
- * - To track number of failed asset purchases from the asset page
+ * - To track number of failed asset purchases from the token page
  * - To track the errors that users encounter when trying to purchase an asset
  *
  * ### Who is responsible for this event?
