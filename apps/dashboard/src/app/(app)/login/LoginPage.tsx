@@ -6,11 +6,14 @@ import { ClientOnly } from "@/components/blocks/client-only";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { ToggleThemeButton } from "@/components/color-mode-toggle";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { isVercel } from "lib/vercel-utils";
+import { PhoneIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { Suspense, lazy, useEffect, useState } from "react";
@@ -39,15 +42,7 @@ const LazyAccountOnboarding = lazy(
 const loginOptions = [
   inAppWallet({
     auth: {
-      options: [
-        "google",
-        "apple",
-        "facebook",
-        "github",
-        "email",
-        "phone",
-        "passkey",
-      ],
+      options: ["google", "apple", "facebook", "github", "email", "passkey"],
     },
   }),
   createWallet("io.metamask"),
@@ -66,7 +61,6 @@ const inAppWalletLoginOptions = [
         "facebook",
         "github",
         "email",
-        "phone",
         "passkey",
         "wallet",
       ],
@@ -339,6 +333,26 @@ function CustomConnectEmbed(props: {
           privacyPolicyUrl="/privacy-policy"
           termsOfServiceUrl="/terms"
         />
+        {/* alert people who used to log in with phone to instead log in with their account email */}
+        <Alert variant="info" className="mt-8">
+          <PhoneIcon className="size-4" />
+          <AlertTitle>
+            <span>Phone login is no longer supported</span>
+          </AlertTitle>
+          <AlertDescription>
+            <p>
+              You can instead log into your account using your account email
+              address.
+            </p>
+            <p>
+              Please{" "}
+              <UnderlineLink href="/support">
+                reach out to support
+              </UnderlineLink>{" "}
+              if you need help.
+            </p>
+          </AlertDescription>
+        </Alert>
       </ClientOnly>
     </div>
   );
