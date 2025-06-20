@@ -141,7 +141,8 @@ function BackendWalletsSection(props: {
                   chainId={chainId}
                   onChange={setChainId}
                   className="min-w-40 max-w-52 lg:max-w-60"
-                  popoverContentClassName="!w-[80vw] md:!w-[500px]"
+                  popoverContentClassName="!w-[80vw] md:!w-[400px]"
+                  disableChainId
                   align="end"
                   client={props.client}
                 />

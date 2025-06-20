@@ -12,7 +12,7 @@ export default function TransactionLayout({
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
         <Link
-          href={`/team/${params.team_slug}/${params.project_slug}/engine/cloud`}
+          href={`/team/${params.team_slug}/${params.project_slug}/transactions`}
           className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground"
         >
           <ChevronLeftIcon className="size-4" />

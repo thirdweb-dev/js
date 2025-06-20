@@ -95,7 +95,7 @@ function EngineLegacyBannerUI(props: {
         <div className="flex justify-start gap-3">
           <Button className="flex items-center gap-2" asChild size="sm">
             <Link
-              href={`/team/${props.teamSlug}/${props.projectSlug}/engine/cloud`}
+              href={`/team/${props.teamSlug}/${props.projectSlug}/transactions`}
             >
               <EngineIcon className="size-4" /> Try Engine Cloud
             </Link>

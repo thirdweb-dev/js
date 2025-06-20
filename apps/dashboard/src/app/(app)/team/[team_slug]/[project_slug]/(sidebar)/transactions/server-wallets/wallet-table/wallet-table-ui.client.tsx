@@ -89,7 +89,7 @@ export function ServerWalletsTableUI({
         />
       </div>
 
-      <TableContainer className="rounded-none border-x-0">
+      <TableContainer className="rounded-none border-x-0 border-b-0">
         <Table>
           <TableHeader>
             <TableRow>
@@ -137,60 +137,63 @@ export function ServerWalletsTableUI({
           </TableBody>
         </Table>
       </TableContainer>
-      <div className="flex flex-col items-center p-6">
-        <div className="mb-4 text-muted-foreground text-sm">
-          Found {totalRecords} server wallets
+
+      {totalPages > 1 && (
+        <div className="flex flex-col items-center border-t p-6">
+          <div className="mb-4 text-muted-foreground text-sm">
+            Found {totalRecords} server wallets
+          </div>
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <Link
+                  href={`/team/${teamSlug}/${project.slug}/transactions/server-wallets?page=${
+                    currentPage > 1 ? currentPage - 1 : 1
+                  }`}
+                  passHref
+                  legacyBehavior
+                >
+                  <PaginationPrevious
+                    className={
+                      currentPage <= 1 ? "pointer-events-none opacity-50" : ""
+                    }
+                  />
+                </Link>
+              </PaginationItem>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (pageNumber) => (
+                  <PaginationItem key={`page-${pageNumber}`}>
+                    <Link
+                      href={`/team/${teamSlug}/${project.slug}/transactions/server-wallets?page=${pageNumber}`}
+                      passHref
+                    >
+                      <PaginationLink isActive={currentPage === pageNumber}>
+                        {pageNumber}
+                      </PaginationLink>
+                    </Link>
+                  </PaginationItem>
+                ),
+              )}
+              <PaginationItem>
+                <Link
+                  href={`/team/${teamSlug}/${project.slug}/transactions/server-wallets?page=${
+                    currentPage < totalPages ? currentPage + 1 : totalPages
+                  }`}
+                  passHref
+                >
+                  <PaginationNext
+                    className={
+                      currentPage >= totalPages
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }
+                  />
+                </Link>
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <Link
-                href={`/team/${teamSlug}/${project.slug}/engine/cloud/server-wallets?page=${
-                  currentPage > 1 ? currentPage - 1 : 1
-                }`}
-                passHref
-                legacyBehavior
-              >
-                <PaginationPrevious
-                  className={
-                    currentPage <= 1 ? "pointer-events-none opacity-50" : ""
-                  }
-                />
-              </Link>
-            </PaginationItem>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-              (pageNumber) => (
-                <PaginationItem key={`page-${pageNumber}`}>
-                  <Link
-                    href={`/team/${teamSlug}/${project.slug}/engine/cloud/server-wallets?page=${pageNumber}`}
-                    passHref
-                  >
-                    <PaginationLink isActive={currentPage === pageNumber}>
-                      {pageNumber}
-                    </PaginationLink>
-                  </Link>
-                </PaginationItem>
-              ),
-            )}
-            <PaginationItem>
-              <Link
-                href={`/team/${teamSlug}/${project.slug}/engine/cloud/server-wallets?page=${
-                  currentPage < totalPages ? currentPage + 1 : totalPages
-                }`}
-                passHref
-              >
-                <PaginationNext
-                  className={
-                    currentPage >= totalPages
-                      ? "pointer-events-none opacity-50"
-                      : ""
-                  }
-                />
-              </Link>
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
+      )}
     </div>
   );
 }
@@ -260,7 +263,7 @@ function SendTestTransaction(props: {
       size="sm"
       onClick={() => {
         router.push(
-          `/team/${props.teamSlug}/${props.project.slug}/engine/cloud?testTxWithWallet=${props.wallet.id}`,
+          `/team/${props.teamSlug}/${props.project.slug}/transactions?testTxWithWallet=${props.wallet.id}`,
         );
       }}
     >
