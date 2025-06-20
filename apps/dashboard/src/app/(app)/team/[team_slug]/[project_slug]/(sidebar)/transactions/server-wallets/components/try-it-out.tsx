@@ -11,7 +11,7 @@ export function TryItOut() {
   const [activeTab, setActiveTab] = useState<string>("sdk");
 
   return (
-    <div className="flex flex-col gap-6 overflow-hidden rounded-lg border border-border bg-card p-6">
+    <div className="flex flex-col gap-4 overflow-hidden rounded-lg border border-border bg-card p-4">
       <div className="flex flex-row items-center gap-4">
         <div className="flex flex-1 flex-col gap-4 rounded-lg rounded-b-none lg:flex-row lg:justify-between">
           <div>
@@ -25,8 +25,10 @@ export function TryItOut() {
           </div>
         </div>
       </div>
+
       <div>
         <TabButtons
+          tabClassName="!text-sm"
           tabs={[
             {
               name: "thirdweb SDK",
@@ -61,10 +63,10 @@ export function TryItOut() {
           ]}
         />
 
-        <div className="h-4" />
+        <div className="h-2" />
 
         {activeTab === "sdk" && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-6">
             <Alert variant="info" className="bg-background">
               <CircleAlertIcon className="size-5" />
               <AlertTitle>Using the thirdweb SDK on the backend</AlertTitle>
@@ -114,22 +116,26 @@ export function TryItOut() {
                 </p>
               </AlertDescription>
             </Alert>
-            <h3 className="font-semibold text-lg tracking-tight">
-              Installation
-            </h3>
-            <CodeClient
-              lang="shell"
-              code={"npm install thirdweb"}
-              className="bg-background"
-            />
-            <h3 className="font-semibold text-lg tracking-tight">
-              Usage example: Minting a ERC1155 NFT to a user
-            </h3>
-            <CodeClient
-              lang="ts"
-              code={sdkExample()}
-              className="bg-background"
-            />
+            <div className="space-y-2">
+              <h3 className="font-semibold text-lg tracking-tight">
+                Installation
+              </h3>
+              <CodeClient
+                lang="shell"
+                code={"npm install thirdweb"}
+                className="bg-background"
+              />
+            </div>
+            <div className="space-y-2">
+              <h3 className="font-semibold text-lg tracking-tight">
+                Usage example: Minting a ERC1155 NFT to a user
+              </h3>
+              <CodeClient
+                lang="ts"
+                code={sdkExample()}
+                className="bg-background"
+              />
+            </div>
           </div>
         )}
         {activeTab === "curl" && (
@@ -140,7 +146,7 @@ export function TryItOut() {
           />
         )}
         {activeTab === "js" && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 pt-2">
             <p className="text-muted-foreground text-sm">
               A lightweight, type safe wrapper package of the Engine HTTP API is
               available on{" "}

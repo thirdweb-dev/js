@@ -5,7 +5,7 @@ import { type Step, StepsCard } from "components/dashboard/StepsCard";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { CreateVaultAccountButton } from "../../../vault/components/create-vault-account.client";
+import { CreateVaultAccountButton } from "../../vault/components/create-vault-account.client";
 import CreateServerWallet from "../server-wallets/components/create-server-wallet.client";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import { SendTestTransaction } from "./send-test-tx.client";
@@ -107,7 +107,11 @@ export const EngineChecklist: React.FC<Props> = (props) => {
     return null;
   }
   return (
-    <StepsCard title="Setup Your Engine" steps={finalSteps} delay={1000} />
+    <StepsCard
+      title="Get Started with Transactions"
+      steps={finalSteps}
+      delay={1000}
+    />
   );
 };
 

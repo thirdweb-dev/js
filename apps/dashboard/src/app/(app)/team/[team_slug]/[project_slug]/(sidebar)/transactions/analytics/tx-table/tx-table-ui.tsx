@@ -138,7 +138,7 @@ export function TransactionsTableUI(props: {
                     className="cursor-pointer hover:bg-accent/50"
                     onClick={() => {
                       router.push(
-                        `/team/${props.teamSlug}/${props.project.slug}/engine/cloud/tx/${tx.id}`,
+                        `/team/${props.teamSlug}/${props.project.slug}/transactions/tx/${tx.id}`,
                       );
                     }}
                   >

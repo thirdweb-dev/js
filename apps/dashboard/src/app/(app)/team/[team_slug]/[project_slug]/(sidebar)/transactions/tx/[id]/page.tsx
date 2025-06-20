@@ -1,8 +1,8 @@
 import { getProject } from "@/api/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { getAuthToken } from "@app/api/lib/getAuthToken";
+import { loginRedirect } from "@app/login/loginRedirect";
 import { notFound, redirect } from "next/navigation";
-import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
-import { loginRedirect } from "../../../../../../../../login/loginRedirect";
 import { getSingleTransaction } from "../../lib/analytics";
 import { TransactionDetailsUI } from "./transaction-details-ui";
 
@@ -19,7 +19,7 @@ export default async function TransactionPage({
   ]);
 
   if (!authToken) {
-    loginRedirect(`/team/${team_slug}/${project_slug}/engine/cloud/tx/${id}`);
+    loginRedirect(`/team/${team_slug}/${project_slug}/transactions/tx/${id}`);
   }
 
   if (!project) {

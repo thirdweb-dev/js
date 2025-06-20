@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { NEXT_PUBLIC_ENGINE_CLOUD_URL } from "@/constants/public-envs";
 import Link from "next/link";
-import { EngineIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -23,8 +22,8 @@ function TransactionsLayout(props: {
   teamSlug: string;
   children: React.ReactNode;
 }) {
-  const engineBaseSlug = `/team/${props.teamSlug}/${props.projectSlug}/engine`;
-  const engineLayoutSlug = `${engineBaseSlug}/cloud`;
+  const projectLayoutPath = `/team/${props.teamSlug}/${props.projectSlug}`;
+  const layoutPath = `${projectLayoutPath}/transactions`;
 
   return (
     <div className="flex grow flex-col">
@@ -36,12 +35,6 @@ function TransactionsLayout(props: {
             <div className="flex flex-col">
               <h1 className="mb-0.5 flex items-center gap-2 font-semibold text-3xl tracking-tight">
                 Transactions{" "}
-                <Badge
-                  variant="success"
-                  className="mt-0.5 flex items-center gap-2 text-sm"
-                >
-                  <EngineIcon className="size-4" /> Engine Cloud
-                </Badge>
                 <Badge
                   variant="outline"
                   className="mt-0.5 flex items-center gap-2 text-sm"
@@ -60,7 +53,7 @@ function TransactionsLayout(props: {
                 </Link>
               </div>
             </div>
-            <Link href={`${engineBaseSlug}/dedicated`}>
+            <Link href={`${projectLayoutPath}/engine/dedicated`}>
               <Button variant="outline">View Dedicated Engine</Button>
             </Link>
           </div>
@@ -74,16 +67,16 @@ function TransactionsLayout(props: {
           links={[
             {
               name: "Transactions",
-              path: `${engineLayoutSlug}`,
+              path: `${layoutPath}`,
               exactMatch: true,
             },
             {
               name: "API Explorer",
-              path: `${engineLayoutSlug}/explorer`,
+              path: `${layoutPath}/explorer`,
             },
             {
               name: "Server Wallets",
-              path: `${engineLayoutSlug}/server-wallets`,
+              path: `${layoutPath}/server-wallets`,
             },
           ]}
         />
