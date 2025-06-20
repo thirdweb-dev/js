@@ -1,17 +1,17 @@
+import type { ThirdwebClient } from "thirdweb";
 import {
   getUniversalBridgeUsage,
   getUniversalBridgeWalletUsage,
 } from "@/api/analytics";
-import type { ThirdwebClient } from "thirdweb";
 import type { Range } from "../../analytics/date-range-selector";
-import { PayEmbedFTUX } from "./PayEmbedFTUX";
 import { PayCustomersTable } from "./components/PayCustomersTable";
-import { PayNewCustomers } from "./components/PayNewCustomers";
 import { PaymentHistory } from "./components/PaymentHistory";
 import { PaymentsSuccessRate } from "./components/PaymentsSuccessRate";
+import { PayNewCustomers } from "./components/PayNewCustomers";
 import { Payouts } from "./components/Payouts";
 import { TotalPayVolume } from "./components/TotalPayVolume";
 import { TotalVolumePieChart } from "./components/TotalVolumePieChart";
+import { PayEmbedFTUX } from "./PayEmbedFTUX";
 
 export async function PayAnalytics(props: {
   projectClientId: string;
@@ -25,28 +25,28 @@ export async function PayAnalytics(props: {
 
   const dateFormat =
     interval === "day"
-      ? { month: "short" as const, day: "numeric" as const }
+      ? { day: "numeric" as const, month: "short" as const }
       : {
-          month: "short" as const,
           day: "numeric" as const,
+          month: "short" as const,
         };
 
   const volumeDataPromise = getUniversalBridgeUsage({
-    teamId: teamId,
-    projectId: projectId,
     from: range.from,
-    to: range.to,
     period: interval,
+    projectId: projectId,
+    teamId: teamId,
+    to: range.to,
   }).catch((error) => {
     console.error(error);
     return [];
   });
   const walletDataPromise = getUniversalBridgeWalletUsage({
-    teamId: teamId,
-    projectId: projectId,
     from: range.from,
-    to: range.to,
     period: interval,
+    projectId: projectId,
+    teamId: teamId,
+    to: range.to,
   }).catch((error) => {
     console.error(error);
     return [];
@@ -93,13 +93,13 @@ export async function PayAnalytics(props: {
         <div className="border-border border-b pb-6 xl:border-none xl:pb-0">
           <PayNewCustomers data={walletData || []} dateFormat={dateFormat} />
         </div>
-        <PayCustomersTable data={walletData || []} client={props.client} />
+        <PayCustomersTable client={props.client} data={walletData || []} />
       </GridWithSeparator>
       <CardContainer>
         <PaymentHistory
           client={props.client}
-          teamId={props.teamId}
           projectClientId={props.projectClientId}
+          teamId={props.teamId}
         />
       </CardContainer>
     </div>

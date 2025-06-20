@@ -1,6 +1,6 @@
+import type { HTMLInputTypeAttribute } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { HTMLInputTypeAttribute } from "react";
 
 type Props = {
   formLabel: string;
@@ -13,7 +13,7 @@ export const SupportForm_TextInput = (props: Props) => {
   const { formLabel, formValue, required, placeholder, inputType } = props;
   return (
     <div className="flex flex-col items-start gap-2">
-      <Label htmlFor={formValue} className="relative">
+      <Label className="relative" htmlFor={formValue}>
         {formLabel}
         {required && (
           <span className="-top-1.5 -right-2 absolute text-destructive">•</span>
@@ -23,8 +23,8 @@ export const SupportForm_TextInput = (props: Props) => {
       <Input
         name={formValue}
         placeholder={placeholder}
-        type={inputType}
         required={required}
+        type={inputType}
       />
     </div>
   );

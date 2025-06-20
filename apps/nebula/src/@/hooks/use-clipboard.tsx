@@ -32,5 +32,5 @@ export function useClipboard(text: string, delay = 1500) {
     };
   }, [hasCopied, delay]);
 
-  return { onCopy, hasCopied };
+  return { hasCopied, onCopy };
 }

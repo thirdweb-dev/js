@@ -1,5 +1,7 @@
+import { useMutation } from "@tanstack/react-query";
+import { ArrowDownToLineIcon } from "lucide-react";
+import type { ThirdwebClient } from "thirdweb";
 import { Img } from "@/components/blocks/Img";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,10 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { useMutation } from "@tanstack/react-query";
-import { ArrowDownToLineIcon } from "lucide-react";
-import type { ThirdwebClient } from "thirdweb";
 import { MessageActions } from "./MessageActions";
 
 export function NebulaImage(
@@ -33,8 +33,8 @@ export function NebulaImage(
 ) {
   const src = props.url.startsWith("ipfs://")
     ? resolveSchemeWithErrorHandler({
-        uri: props.url,
         client: props.client,
+        uri: props.url,
       })
     : props.url;
 
@@ -51,13 +51,13 @@ export function NebulaImage(
       <Dialog>
         <DialogTrigger asChild>
           <Img
-            width={props.type === "response" ? props.width : undefined}
-            height={props.type === "response" ? props.height : undefined}
-            src={src}
             className="w-full rounded-lg border hover:border-active-border"
+            height={props.type === "response" ? props.height : undefined}
             skeleton={
               <div className="min-h-[300px] animate-skeleton bg-muted" />
             }
+            src={src}
+            width={props.type === "response" ? props.width : undefined}
           />
         </DialogTrigger>
 
@@ -67,21 +67,21 @@ export function NebulaImage(
         >
           <DialogTitle className="sr-only">Image</DialogTitle>
           <Img
-            src={src}
             className="h-full w-full object-contain"
             skeleton={<div className="animate-skeleton bg-muted" />}
+            src={src}
           />
         </DialogContent>
       </Dialog>
 
       <div className="absolute top-4 right-4 z-10 flex justify-between gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
         <Button
-          variant="ghost"
-          size="sm"
           className="size-8 gap-2 rounded-lg bg-background/50 p-0 "
           onClick={async () => {
             downloadMutation.mutate();
           }}
+          size="sm"
+          variant="ghost"
         >
           {downloadMutation.isPending ? (
             <Spinner className="size-4" />
@@ -95,10 +95,10 @@ export function NebulaImage(
         <div className="absolute right-4 bottom-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           <MessageActions
             authToken={props.authToken}
+            buttonClassName="bg-background/50 border-none"
+            messageText={undefined}
             requestId={props.requestId}
             sessionId={props.sessionId}
-            messageText={undefined}
-            buttonClassName="bg-background/50 border-none"
           />
         </div>
       )}

@@ -20,8 +20,8 @@ export default async function Page(props: {
     <div className="flex grow flex-col justify-center pt-8 pb-20">
       <EngineImportCard
         prefillImportUrl={importUrl ? decodeURIComponent(importUrl) : undefined}
-        teamSlug={params.team_slug}
         projectSlug={params.project_slug}
+        teamSlug={params.team_slug}
       />
     </div>
   );

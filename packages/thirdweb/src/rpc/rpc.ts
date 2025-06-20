@@ -1,10 +1,9 @@
 import type { EIP1193RequestFn, EIP1474Methods } from "viem";
-import type { ThirdwebClient } from "../client/client.js";
-
 import type { Chain } from "../chains/types.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
+import type { ThirdwebClient } from "../client/client.js";
 import { stringify } from "../utils/json.js";
-import { type RpcRequest, fetchRpc, fetchSingleRpc } from "./fetch-rpc.js";
+import { fetchRpc, fetchSingleRpc, type RpcRequest } from "./fetch-rpc.js";
 
 const RPC_CLIENT_MAP = new WeakMap();
 
@@ -71,8 +70,8 @@ export function getRpcClient(
   const rpcClient: EIP1193RequestFn<EIP1474Methods> = (() => {
     // we can do this upfront because it cannot change later
     const rpcUrl = getRpcUrlForChain({
-      client: options.client,
       chain: options.chain,
+      client: options.client,
     });
 
     const batchSize =
@@ -223,7 +222,7 @@ export function getRpcClient(
       });
       inflightRequests.set(requestKey, promise);
       // @ts-expect-error - they *are* definitely assigned within the promise constructor
-      pendingBatch.push({ request, resolve, reject, requestKey });
+      pendingBatch.push({ reject, request, requestKey, resolve });
       if (batchSize > 1) {
         // if there is no timeout, set one
         if (!pendingBatchTimeout) {

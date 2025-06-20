@@ -1,3 +1,4 @@
+import type { Address } from "thirdweb";
 import {
   Table,
   TableBody,
@@ -6,7 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { Address } from "thirdweb";
 import { getRoutes } from "../../../utils";
 import { ChainlistPagination } from "../client/pagination";
 import { RouteListCard } from "./routelist-card";
@@ -53,16 +53,16 @@ async function getRoutesToRender(params: SearchParams) {
     }
   }
   const routes = await getRoutes({
+    destinationQuery: filters.destinationQuery,
     limit: DEFAULT_PAGE_SIZE,
     offset: DEFAULT_PAGE_SIZE * ((params.page || 1) - 1),
     originQuery: filters.originQuery,
-    destinationQuery: filters.destinationQuery,
   });
 
   return {
+    filteredCount: routes.meta.filteredCount,
     routesToRender: routes.data,
     totalCount: routes.meta.totalCount,
-    filteredCount: routes.meta.filteredCount,
   };
 }
 
@@ -107,17 +107,17 @@ export async function RoutesData(props: {
               <TableBody>
                 {routesToRender.map((route) => (
                   <RouteListRow
+                    destinationChainId={route.destinationToken.chainId}
+                    destinationTokenAddress={route.destinationToken.address}
+                    destinationTokenIconUri={route.destinationToken.iconUri}
+                    destinationTokenName={route.destinationToken.name}
+                    destinationTokenSymbol={route.destinationToken.symbol}
                     key={`${route.originToken.chainId}:${route.originToken.address}-${route.destinationToken.chainId}:${route.destinationToken.address}`}
                     originChainId={route.originToken.chainId}
                     originTokenAddress={route.originToken.address}
                     originTokenIconUri={route.originToken.iconUri}
-                    originTokenSymbol={route.originToken.symbol}
                     originTokenName={route.originToken.name}
-                    destinationChainId={route.destinationToken.chainId}
-                    destinationTokenAddress={route.destinationToken.address}
-                    destinationTokenIconUri={route.destinationToken.iconUri}
-                    destinationTokenSymbol={route.destinationToken.symbol}
-                    destinationTokenName={route.destinationToken.name}
+                    originTokenSymbol={route.originToken.symbol}
                   />
                 ))}
               </TableBody>
@@ -127,20 +127,20 @@ export async function RoutesData(props: {
           <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {routesToRender.map((route) => (
               <li
-                key={`${route.originToken.chainId}:${route.originToken.address}-${route.destinationToken.chainId}:${route.destinationToken.address}`}
                 className="h-full"
+                key={`${route.originToken.chainId}:${route.originToken.address}-${route.destinationToken.chainId}:${route.destinationToken.address}`}
               >
                 <RouteListCard
-                  originChainId={route.originToken.chainId}
-                  originTokenAddress={route.originToken.address}
-                  originTokenIconUri={route.originToken.iconUri}
-                  originTokenSymbol={route.originToken.symbol}
-                  originTokenName={route.originToken.name}
                   destinationChainId={route.destinationToken.chainId}
                   destinationTokenAddress={route.destinationToken.address}
                   destinationTokenIconUri={route.destinationToken.iconUri}
-                  destinationTokenSymbol={route.destinationToken.symbol}
                   destinationTokenName={route.destinationToken.name}
+                  destinationTokenSymbol={route.destinationToken.symbol}
+                  originChainId={route.originToken.chainId}
+                  originTokenAddress={route.originToken.address}
+                  originTokenIconUri={route.originToken.iconUri}
+                  originTokenName={route.originToken.name}
+                  originTokenSymbol={route.originToken.symbol}
                 />
               </li>
             ))}
@@ -150,8 +150,8 @@ export async function RoutesData(props: {
       <div className="h-10" />
       {totalPages > 1 && (
         <ChainlistPagination
-          totalPages={totalPages}
           activePage={Number(props.searchParams.page) || 1}
+          totalPages={totalPages}
         />
       )}
       <div className="h-4" />

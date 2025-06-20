@@ -7,9 +7,9 @@ import type { Hex } from "../../../utils/encoding/hex.js";
 import { isObjectWithKeys } from "../../../utils/type-guards.js";
 import type { ConnectionManager } from "../../../wallets/manager/index.js";
 import { structuralSharing } from "../utils/structuralSharing.js";
-import { SetRootElementContext } from "./RootElementContext.js";
 import { ConnectionManagerCtx } from "./connection-manager.js";
 import { invalidateWalletBalance } from "./invalidateWalletBalance.js";
+import { SetRootElementContext } from "./RootElementContext.js";
 
 /**
  * @internal
@@ -31,9 +31,9 @@ export function ThirdwebProviderCore(props: {
                   isObjectWithKeys(variables, ["client", "chain"])
                 ) {
                   waitForReceipt({
-                    transactionHash: data.transactionHash as Hex, // We know it exists from the if
+                    chain: variables.chain, // We know it exists from the if
                     client: variables.client,
-                    chain: variables.chain,
+                    transactionHash: data.transactionHash as Hex,
                   })
                     .catch((e) => {
                       // swallow errors for receipts, but log

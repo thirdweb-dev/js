@@ -18,8 +18,8 @@ export const EngineRelayer: React.FC<EngineRelayerProps> = ({
   client,
 }) => {
   const relayers = useEngineRelayer({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
 
   return (
@@ -30,8 +30,8 @@ export const EngineRelayer: React.FC<EngineRelayerProps> = ({
           Use relayers to submit transactions from your backend wallets on
           behalf of your users.{" "}
           <Link
-            href="https://portal.thirdweb.com/engine/features/relayers"
             color="primary.500"
+            href="https://portal.thirdweb.com/engine/features/relayers"
             isExternal
           >
             Learn more about relayers
@@ -41,17 +41,17 @@ export const EngineRelayer: React.FC<EngineRelayerProps> = ({
       </div>
 
       <RelayersTable
-        instanceUrl={instanceUrl}
-        relayers={relayers.data || []}
-        isPending={relayers.isPending}
-        isFetched={relayers.isFetched}
         authToken={authToken}
         client={client}
+        instanceUrl={instanceUrl}
+        isFetched={relayers.isFetched}
+        isPending={relayers.isPending}
+        relayers={relayers.data || []}
       />
       <AddRelayerButton
-        instanceUrl={instanceUrl}
         authToken={authToken}
         client={client}
+        instanceUrl={instanceUrl}
       />
     </div>
   );

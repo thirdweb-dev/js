@@ -82,27 +82,27 @@ Great! How much ETH and to what address?
 
 export const examplePrompts: ExamplePrompt[] = [
   {
-    title: "What can Nebula do?",
-    message: "Tell me about Nebula's capabilities.",
     interceptedReply: whatCanNebulaDoReply,
+    message: "Tell me about Nebula's capabilities.",
+    title: "What can Nebula do?",
   },
   {
-    title: "Launch a Token",
-    message: "I'd like to deploy a token.",
     interceptedReply: deployTokenReply,
+    message: "I'd like to deploy a token.",
+    title: "Launch a Token",
   },
   {
-    title: "Buy USDC",
-    message: "I want to buy USDC",
     interceptedReply: buyUsdcReply,
+    message: "I want to buy USDC",
+    title: "Buy USDC",
   },
   {
-    title: "Analyze the Uniswap contracts",
     message: "Analyze the Uniswap v3 contracts on Ethereum",
+    title: "Analyze the Uniswap contracts",
   },
   {
-    title: "Send ETH to someone",
-    message: "I want to send some ETH",
     interceptedReply: transferEthReply,
+    message: "I want to send some ETH",
+    title: "Send ETH to someone",
   },
 ];

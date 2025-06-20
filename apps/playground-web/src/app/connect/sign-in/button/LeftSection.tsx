@@ -1,7 +1,3 @@
-import { CustomRadioGroup } from "@/components/ui/CustomRadioGroup";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   ExternalLinkIcon,
   FuelIcon,
@@ -13,13 +9,18 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
+import { useId } from "react";
+import { CustomRadioGroup } from "@/components/ui/CustomRadioGroup";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Switch } from "../../../../components/ui/switch";
 import { CollapsibleSection } from "../components/CollapsibleSection";
 import { ColorFormGroup } from "../components/ColorFormGroup";
 import { InAppWalletFormGroup } from "../components/InAppWalletFormGroup";
 import { LocaleFormControl } from "../components/LocaleFormControl";
-import { WalletsSelection } from "../components/WalletsSelection";
 import type { ConnectPlaygroundOptions } from "../components/types";
+import { WalletsSelection } from "../components/WalletsSelection";
 
 export function LeftSection(props: {
   connectOptions: ConnectPlaygroundOptions;
@@ -42,12 +43,22 @@ export function LeftSection(props: {
   const setModalSize = (modalSize: "compact" | "wide") =>
     setConnectOptions((v) => ({ ...v, modalSize }));
 
+  const modalSizeId = useId();
+  const modalTitleId = useId();
+  const modalTitleIconId = useId();
+  const tosLinkId = useId();
+  const privacyLinkId = useId();
+  const showThirdwebBrandingId = useId();
+  const requireApprovalId = useId();
+  const themeId = useId();
+  const btnLabelId = useId();
+
   return (
     <div className="flex flex-col gap-4">
       <CollapsibleSection
-        title="Wallets"
-        icon={WalletCardsIcon}
         defaultOpen
+        icon={WalletCardsIcon}
+        title="Wallets"
         triggerContainerClassName="pt-0"
       >
         <div className="h-3" />
@@ -56,18 +67,18 @@ export function LeftSection(props: {
         <WalletsSelection {...props} />
       </CollapsibleSection>
 
-      <CollapsibleSection title="Modal Options" icon={Settings2Icon}>
+      <CollapsibleSection icon={Settings2Icon} title="Modal Options">
         <div className="flex flex-col gap-6 pt-5">
           {/* Modal Size */}
           <section className="flex flex-col gap-3">
-            <Label htmlFor="modal-size"> Modal Size </Label>
+            <Label htmlFor={modalSizeId}> Modal Size </Label>
             <CustomRadioGroup
-              id="modal-size"
-              options={[
-                { value: "compact", label: "Compact" },
-                { value: "wide", label: "Wide" },
-              ]}
+              id={modalSizeId}
               onValueChange={setModalSize}
+              options={[
+                { label: "Compact", value: "compact" },
+                { label: "Wide", value: "wide" },
+              ]}
               value={modalSize}
             />
           </section>
@@ -81,33 +92,33 @@ export function LeftSection(props: {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-4">
             {/* Modal title */}
             <div className="flex flex-col gap-2">
-              <Label htmlFor="modal-title"> Modal Title </Label>
+              <Label htmlFor={modalTitleId}> Modal Title </Label>
               <Input
-                id="modal-title"
-                placeholder="Sign in"
-                value={connectOptions.modalTitle}
+                id={modalTitleId}
                 onChange={(e) =>
                   setConnectOptions((v) => ({
                     ...v,
                     modalTitle: e.target.value,
                   }))
                 }
+                placeholder="Sign in"
+                value={connectOptions.modalTitle}
               />
             </div>
 
             {/* Modal Title Icon */}
             <div className="flex flex-col gap-2">
-              <Label htmlFor="modal-title"> Modal Title Icon </Label>
+              <Label htmlFor={modalTitleIconId}> Modal Title Icon </Label>
               <Input
-                id="modal-title"
-                placeholder="https://..."
-                value={connectOptions.modalTitleIcon}
+                id={modalTitleIconId}
                 onChange={(e) =>
                   setConnectOptions((v) => ({
                     ...v,
                     modalTitleIcon: e.target.value,
                   }))
                 }
+                placeholder="https://..."
+                value={connectOptions.modalTitleIcon}
               />
             </div>
           </div>
@@ -115,33 +126,33 @@ export function LeftSection(props: {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-4">
             {/* TOS link */}
             <div className="flex flex-col gap-2">
-              <Label htmlFor="tos-link"> Terms of Service Link </Label>
+              <Label htmlFor={tosLinkId}> Terms of Service Link </Label>
               <Input
-                id="tos-link"
-                placeholder="https://..."
-                value={connectOptions.termsOfServiceLink}
+                id={tosLinkId}
                 onChange={(e) =>
                   setConnectOptions((v) => ({
                     ...v,
                     termsOfServiceLink: e.target.value,
                   }))
                 }
+                placeholder="https://..."
+                value={connectOptions.termsOfServiceLink}
               />
             </div>
 
             {/* Privacy Policy Link */}
             <div className="flex flex-col gap-2">
-              <Label htmlFor="privacy-link"> Privacy Policy Link </Label>
+              <Label htmlFor={privacyLinkId}> Privacy Policy Link </Label>
               <Input
-                id="privacy-link"
-                placeholder="https://..."
-                value={connectOptions.privacyPolicyLink}
+                id={privacyLinkId}
                 onChange={(e) =>
                   setConnectOptions((v) => ({
                     ...v,
                     privacyPolicyLink: e.target.value,
                   }))
                 }
+                placeholder="https://..."
+                value={connectOptions.privacyPolicyLink}
               />
             </div>
           </div>
@@ -150,8 +161,8 @@ export function LeftSection(props: {
             {/* Thirdweb Branding */}
             <section className="flex items-center gap-2">
               <Checkbox
-                id="show-thirdweb-branding"
                 checked={connectOptions.ShowThirdwebBranding}
+                id={showThirdwebBrandingId}
                 onCheckedChange={(checkState) => {
                   setConnectOptions((v) => ({
                     ...v,
@@ -159,7 +170,7 @@ export function LeftSection(props: {
                   }));
                 }}
               />
-              <Label htmlFor="show-thirdweb-branding">
+              <Label htmlFor={showThirdwebBrandingId}>
                 Show thirdweb branding
               </Label>
             </section>
@@ -167,8 +178,8 @@ export function LeftSection(props: {
             {/* Require Approval */}
             <section className="flex items-center gap-2">
               <Checkbox
-                id="require-approval"
                 checked={connectOptions.requireApproval}
+                id={requireApprovalId}
                 onCheckedChange={(checkState) => {
                   setConnectOptions((v) => ({
                     ...v,
@@ -176,23 +187,23 @@ export function LeftSection(props: {
                   }));
                 }}
               />
-              <Label htmlFor="require-approval">Require TOS approval</Label>
+              <Label htmlFor={requireApprovalId}>Require TOS approval</Label>
             </section>
           </div>
         </div>
       </CollapsibleSection>
 
-      <CollapsibleSection title="Appearance" icon={PaletteIcon}>
+      <CollapsibleSection icon={PaletteIcon} title="Appearance">
         {/* Theme */}
         <section className="flex flex-col gap-3 pt-6">
-          <Label htmlFor="theme"> Theme </Label>
+          <Label htmlFor={themeId}> Theme </Label>
           <CustomRadioGroup
-            id="theme"
-            options={[
-              { value: "dark", label: "Dark" },
-              { value: "light", label: "Light" },
-            ]}
+            id={themeId}
             onValueChange={setThemeType}
+            options={[
+              { label: "Dark", value: "dark" },
+              { label: "Light", value: "light" },
+            ]}
             value={theme.type}
           />
         </section>
@@ -201,17 +212,17 @@ export function LeftSection(props: {
 
         {/* Colors */}
         <ColorFormGroup
-          theme={connectOptions.theme}
           onChange={(newTheme) => {
             setConnectOptions((v) => ({
               ...v,
               theme: newTheme,
             }));
           }}
+          theme={connectOptions.theme}
         />
       </CollapsibleSection>
 
-      <CollapsibleSection title="Auth (SIWE)" icon={KeyRoundIcon}>
+      <CollapsibleSection icon={KeyRoundIcon} title="Auth (SIWE)">
         <div className="mt-4 flex items-start gap-2">
           <div className="flex flex-col gap-2">
             <span>
@@ -219,9 +230,9 @@ export function LeftSection(props: {
               after connecting wallet
             </span>
             <Link
+              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
               href="https://portal.thirdweb.com/connect/auth?utm_source=playground"
               target="_blank"
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
             >
               Learn more about Auth
               <ExternalLinkIcon className="size-4" />
@@ -239,7 +250,7 @@ export function LeftSection(props: {
         </div>
       </CollapsibleSection>
 
-      <CollapsibleSection title="Sponsor gas fees" icon={FuelIcon}>
+      <CollapsibleSection icon={FuelIcon} title="Sponsor gas fees">
         <div className="mt-4 flex items-start gap-6">
           <div className="flex flex-col gap-2">
             <p className="">
@@ -248,9 +259,9 @@ export function LeftSection(props: {
             </p>
 
             <Link
+              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
               href="https://portal.thirdweb.com/connect/account-abstraction/overview?utm_source=playground"
               target="_blank"
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
             >
               Learn more about Account Abstraction
               <ExternalLinkIcon className="size-4" />
@@ -268,19 +279,19 @@ export function LeftSection(props: {
         </div>
       </CollapsibleSection>
 
-      <CollapsibleSection title="Button Options" icon={RectangleHorizontalIcon}>
+      <CollapsibleSection icon={RectangleHorizontalIcon} title="Button Options">
         <div className="flex flex-col gap-2 pt-5">
-          <Label htmlFor="btn-label"> Button Label </Label>
+          <Label htmlFor={btnLabelId}> Button Label </Label>
           <Input
-            id="btn-label"
-            placeholder="Connect"
-            value={connectOptions.buttonLabel}
+            id={btnLabelId}
             onChange={(e) =>
               setConnectOptions((v) => ({
                 ...v,
                 buttonLabel: e.target.value,
               }))
             }
+            placeholder="Connect"
+            value={connectOptions.buttonLabel}
           />
         </div>
       </CollapsibleSection>

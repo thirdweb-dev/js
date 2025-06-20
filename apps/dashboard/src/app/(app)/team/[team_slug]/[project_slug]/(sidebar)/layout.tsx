@@ -1,13 +1,13 @@
+import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getProject, getProjects } from "@/api/projects";
 import { getTeamBySlug, getTeams } from "@/api/team";
 import { Button } from "@/components/ui/button";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { siwaExamplePrompts } from "../../../../(dashboard)/support/definitions";
 import { CustomChatButton } from "../../../../../../components/CustomChat/CustomChatButton";
+import { siwaExamplePrompts } from "../../../../(dashboard)/support/definitions";
 import { getValidAccount } from "../../../../account/settings/getAccount";
 import {
   getAuthToken,
@@ -43,8 +43,8 @@ export default async function ProjectLayout(props: {
 
   const teamsAndProjects = await Promise.all(
     teams.map(async (team) => ({
-      team,
       projects: await getProjects(team.slug),
+      team,
     })),
   );
 
@@ -71,7 +71,7 @@ export default async function ProjectLayout(props: {
                   You can only view this team, not take any actions.
                 </p>
               </div>
-              <Button variant="default" asChild>
+              <Button asChild variant="default">
                 <Link href="/team/~">Leave Staff Mode</Link>
               </Button>
             </div>
@@ -80,12 +80,12 @@ export default async function ProjectLayout(props: {
         <div className="sticky top-0 z-10 border-border border-b bg-card">
           <AnnouncementBanner />
           <TeamHeaderLoggedIn
-            currentProject={project}
-            currentTeam={team}
-            teamsAndProjects={teamsAndProjects}
             account={account}
             accountAddress={accountAddress}
             client={client}
+            currentProject={project}
+            currentTeam={team}
+            teamsAndProjects={teamsAndProjects}
           />
         </div>
         <ProjectSidebarLayout layoutPath={layoutPath}>
@@ -94,15 +94,15 @@ export default async function ProjectLayout(props: {
       </div>
       <div className="fixed right-6 bottom-6 z-50">
         <CustomChatButton
-          isLoggedIn={true}
-          networks="all"
-          isFloating={true}
-          pageType="support"
-          label="Ask AI Assistant"
-          examplePrompts={siwaExamplePrompts}
-          teamId={team.id}
-          clientId={project.publishableKey}
           authToken={authToken}
+          clientId={project.publishableKey}
+          examplePrompts={siwaExamplePrompts}
+          isFloating={true}
+          isLoggedIn={true}
+          label="Ask AI Assistant"
+          networks="all"
+          pageType="support"
+          teamId={team.id}
         />
       </div>
       <SaveLastUsedProject projectId={project.id} teamId={team.id} />

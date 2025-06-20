@@ -28,11 +28,11 @@ export function ModularContractDefaultModulesFieldset(props: {
       {props.modules.map((mod) => {
         return (
           <RenderModule
+            client={props.client}
+            form={props.form}
+            isTWPublisher={props.isTWPublisher}
             key={mod.name}
             module={mod}
-            isTWPublisher={props.isTWPublisher}
-            form={props.form}
-            client={props.client}
           />
         );
       })}
@@ -62,10 +62,10 @@ function RenderModule(props: {
     if (showRoyaltyFieldset(paramNames)) {
       return (
         <RenderRoyaltyFieldset
-          module={module}
+          client={props.client}
           form={form}
           isTWPublisher
-          client={props.client}
+          module={module}
         />
       );
     }
@@ -73,10 +73,10 @@ function RenderModule(props: {
     if (showPrimarySaleFieldset(paramNames)) {
       return (
         <RenderPrimarySaleFieldset
-          module={module}
+          client={props.client}
           form={form}
           isTWPublisher
-          client={props.client}
+          module={module}
         />
       );
     }
@@ -84,10 +84,10 @@ function RenderModule(props: {
     if (showSequentialTokenIdFieldset(paramNames)) {
       return (
         <RenderSequentialTokenIdFieldset
-          module={module}
+          client={props.client}
           form={form}
           isTWPublisher
-          client={props.client}
+          module={module}
         />
       );
     }
@@ -105,18 +105,18 @@ function RenderModule(props: {
 
           return (
             <FormControl
-              key={formFieldKey}
-              isRequired
               isInvalid={
                 !!form.getFieldState(formFieldKey, form.formState).error
               }
+              isRequired
+              key={formFieldKey}
             >
               <FormLabel> {param.name}</FormLabel>
               <SolidityInput
                 client={props.client}
-                solidityType={param.type}
                 // @ts-expect-error - old types, need to update
                 solidityComponents={param.components}
+                solidityType={param.type}
                 {...form.register(formFieldKey)}
               />
               <FormErrorMessage>
@@ -146,15 +146,15 @@ function RenderPrimarySaleFieldset(props: {
 
   return (
     <PrimarySaleFieldset
-      isInvalid={
-        !!form.getFieldState(primarySaleRecipientPath, form.formState).error
-      }
-      register={form.register(primarySaleRecipientPath)}
+      client={client}
       errorMessage={
         form.getFieldState(primarySaleRecipientPath, form.formState).error
           ?.message
       }
-      client={client}
+      isInvalid={
+        !!form.getFieldState(primarySaleRecipientPath, form.formState).error
+      }
+      register={form.register(primarySaleRecipientPath)}
     />
   );
 }
@@ -171,12 +171,12 @@ function RenderSequentialTokenIdFieldset(props: {
 
   return (
     <SequentialTokenIdFieldset
-      isInvalid={!!form.getFieldState(startTokenIdPath, form.formState).error}
-      register={form.register(startTokenIdPath)}
+      client={client}
       errorMessage={
         form.getFieldState(startTokenIdPath, form.formState).error?.message
       }
-      client={client}
+      isInvalid={!!form.getFieldState(startTokenIdPath, form.formState).error}
+      register={form.register(startTokenIdPath)}
     />
   );
 }
@@ -200,33 +200,33 @@ function RenderRoyaltyFieldset(props: {
   return (
     <RoyaltyFieldset
       client={props.client}
+      royaltyBps={{
+        errorMessage: form.getFieldState(royaltyBpsPath, form.formState).error
+          ?.message,
+        isInvalid: !!form.getFieldState(royaltyBpsPath, form.formState).error,
+        setValue: (value) =>
+          form.setValue(royaltyBpsPath, value, {
+            shouldTouch: true,
+          }),
+        value: form.watch(royaltyBpsPath) || "0",
+      }}
       royaltyRecipient={{
+        errorMessage: form.getFieldState(royaltyRecipientPath, form.formState)
+          .error?.message,
         isInvalid: !!form.getFieldState(royaltyRecipientPath, form.formState)
           .error,
         register: form.register(royaltyRecipientPath, {
           required: "Required",
         }),
-        errorMessage: form.getFieldState(royaltyRecipientPath, form.formState)
-          .error?.message,
-      }}
-      royaltyBps={{
-        isInvalid: !!form.getFieldState(royaltyBpsPath, form.formState).error,
-        value: form.watch(royaltyBpsPath) || "0",
-        setValue: (value) =>
-          form.setValue(royaltyBpsPath, value, {
-            shouldTouch: true,
-          }),
-        errorMessage: form.getFieldState(royaltyBpsPath, form.formState).error
-          ?.message,
       }}
       transferValidator={{
+        errorMessage: form.getFieldState(transferValidatorPath, form.formState)
+          .error?.message,
         isInvalid: !!form.getFieldState(transferValidatorPath, form.formState)
           .error,
         register: form.register(transferValidatorPath, {
           required: "Required",
         }),
-        errorMessage: form.getFieldState(transferValidatorPath, form.formState)
-          .error?.message,
       }}
     />
   );

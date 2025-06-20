@@ -37,15 +37,15 @@ export async function migrateToEnclaveWallet(args: {
 }): Promise<UserWallet> {
   // setup sharded wallet first, so we have the shares available
   await postAuth({
-    storedToken: args.storedToken,
     client: args.client,
-    storage: args.storage,
     encryptionKey: args.encryptionKey,
+    storage: args.storage,
+    storedToken: args.storedToken,
   });
 
   const { authShare, deviceShare } = await getShares({
-    client: args.client,
     authShare: { toRetrieve: true },
+    client: args.client,
     deviceShare: { toRetrieve: true },
     recoveryShare: { toRetrieve: false },
     storage: args.storage,
@@ -65,11 +65,11 @@ export async function migrateToEnclaveWallet(args: {
   // get cognito identity
   const idTokenResponse = await authFetchEmbeddedWalletUser({
     client: args.client,
-    url: ROUTE_AUTH_COGNITO_ID_TOKEN_V2,
     props: {
       method: "GET",
     },
     storage: args.storage,
+    url: ROUTE_AUTH_COGNITO_ID_TOKEN_V2,
   });
   if (!idTokenResponse.ok) {
     throw new Error(
@@ -95,8 +95,8 @@ export async function migrateToEnclaveWallet(args: {
 
   // get kms key
   const kmsClient = new KMSClient({
-    region: AWS_REGION,
     credentials: cognitoIdentity,
+    region: AWS_REGION,
   });
   const generateDataKeyCommand = new GenerateDataKeyCommand({
     KeyId: ENCLAVE_KMS_KEY_ARN,
@@ -123,8 +123,8 @@ export async function migrateToEnclaveWallet(args: {
   // @ts-ignore - default import buils but ts doesn't like it
   const encryptedPrivateKey = await QuickCrypto.subtle.encrypt(
     {
-      name: "AES-CBC",
       iv,
+      name: "AES-CBC",
     },
     key,
     stringToBytes(privateKey),
@@ -141,12 +141,12 @@ export async function migrateToEnclaveWallet(args: {
 
   // execute migration
   const result = await executeMigration({
-    client: args.client,
-    storage: args.storage,
     address,
-    kmsCiphertextB64: cipherTextB64,
+    client: args.client,
     encryptedPrivateKeyB64: encryptedPrivateKeyB64,
     ivB64,
+    kmsCiphertextB64: cipherTextB64,
+    storage: args.storage,
   });
 
   return result;
@@ -162,17 +162,17 @@ async function executeMigration(args: {
 }): Promise<UserWallet> {
   const migrationResponse = await authFetchEmbeddedWalletUser({
     client: args.client,
-    url: `${getThirdwebBaseUrl("inAppWallet")}/api/v1/enclave-wallet/migrate`,
     props: {
-      method: "POST",
       body: stringify({
         address: args.address,
-        kmsCiphertextB64: args.kmsCiphertextB64,
         encryptedPrivateKeyB64: args.encryptedPrivateKeyB64,
         ivB64: args.ivB64,
+        kmsCiphertextB64: args.kmsCiphertextB64,
       }),
+      method: "POST",
     },
     storage: args.storage,
+    url: `${getThirdwebBaseUrl("inAppWallet")}/api/v1/enclave-wallet/migrate`,
   });
   if (!migrationResponse.ok) {
     throw new Error(

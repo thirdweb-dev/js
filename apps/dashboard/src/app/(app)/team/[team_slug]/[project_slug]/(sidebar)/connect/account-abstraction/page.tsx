@@ -1,15 +1,15 @@
-import { getUserOpUsage } from "@/api/analytics";
-import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import {
-  type Range,
   getLastNDaysRange,
+  type Range,
 } from "components/analytics/date-range-selector";
 import { AccountAbstractionAnalytics } from "components/smart-wallets/AccountAbstractionAnalytics";
 import { AccountAbstractionSummary } from "components/smart-wallets/AccountAbstractionAnalytics/AccountAbstractionSummary";
 import { notFound, redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
+import { getUserOpUsage } from "@/api/analytics";
+import { getProject } from "@/api/projects";
+import { getTeamBySlug } from "@/api/team";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import { searchParamLoader } from "./search-params";
 
@@ -62,11 +62,11 @@ export default async function Page(props: {
   };
 
   const userOpStats = await getUserOpUsage({
-    teamId: project.teamId,
-    projectId: project.id,
     from: range.from,
-    to: range.to,
     period: interval,
+    projectId: project.id,
+    teamId: project.teamId,
+    to: range.to,
   });
 
   const client = getClientThirdwebClient({
@@ -77,17 +77,17 @@ export default async function Page(props: {
   return (
     <div className="flex grow flex-col">
       <AccountAbstractionSummary
-        teamId={project.teamId}
         projectId={project.id}
+        teamId={project.teamId}
       />
 
       <div className="h-10" />
       <AccountAbstractionAnalytics
-        userOpStats={userOpStats}
         client={client}
-        teamId={project.teamId}
         projectId={project.id}
+        teamId={project.teamId}
         teamSlug={params.team_slug}
+        userOpStats={userOpStats}
       />
     </div>
   );

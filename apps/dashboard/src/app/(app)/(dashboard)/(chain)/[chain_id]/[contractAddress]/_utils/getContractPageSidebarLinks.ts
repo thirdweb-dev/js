@@ -14,131 +14,131 @@ export function getContractPageSidebarLinks(data: {
   projectMeta: ProjectMeta | undefined;
 }) {
   const layoutPrefix = buildContractPagePath({
-    projectMeta: data.projectMeta,
     chainIdOrSlug: data.chainSlug,
     contractAddress: data.contractAddress,
+    projectMeta: data.projectMeta,
   });
 
   const generalLinks: SidebarBaseLinkWithHide[] = [
     {
-      label: "Overview",
+      exactMatch: true,
       href: layoutPrefix,
-      exactMatch: true,
+      label: "Overview",
     },
     {
-      label: "Modules",
-      href: `${layoutPrefix}/modules`,
+      exactMatch: true,
       hide: !data.metadata.isModularCore,
-      exactMatch: true,
+      href: `${layoutPrefix}/modules`,
+      label: "Modules",
     },
     {
-      label: "Cross Chain (Beta)",
+      exactMatch: true,
       href: `${layoutPrefix}/cross-chain`,
-      exactMatch: true,
+      label: "Cross Chain (Beta)",
     },
     {
-      label: "Code Snippets",
+      exactMatch: true,
       href: `${layoutPrefix}/code`,
-      exactMatch: true,
+      label: "Code Snippets",
     },
     {
-      label: "Explorer",
+      exactMatch: true,
       href: `${layoutPrefix}/explorer`,
-      exactMatch: true,
+      label: "Explorer",
     },
     {
-      label: "Events",
+      exactMatch: true,
       href: `${layoutPrefix}/events`,
-      exactMatch: true,
+      label: "Events",
     },
     {
-      label: "Analytics",
-      href: `${layoutPrefix}/analytics`,
+      exactMatch: true,
       hide: !data.metadata.isInsightSupported,
-      exactMatch: true,
+      href: `${layoutPrefix}/analytics`,
+      label: "Analytics",
     },
     {
-      label: "Settings",
+      exactMatch: true,
       href: `${layoutPrefix}/settings`,
-      exactMatch: true,
+      label: "Settings",
     },
     {
-      label: "Sources",
-      href: `${layoutPrefix}/sources`,
       exactMatch: true,
+      href: `${layoutPrefix}/sources`,
+      label: "Sources",
     },
   ];
 
   const extensionsLinks: SidebarBaseLinkWithHide[] = [
     {
-      label: "NFTs",
-      href: `${layoutPrefix}/nfts`,
       hide:
         !data.metadata.supportedERCs.isERC721 &&
         !data.metadata.supportedERCs.isERC1155,
+      href: `${layoutPrefix}/nfts`,
+      label: "NFTs",
     },
     {
-      label: "Tokens",
-      href: `${layoutPrefix}/tokens`,
+      exactMatch: true,
       hide: !data.metadata.supportedERCs.isERC20,
-      exactMatch: true,
+      href: `${layoutPrefix}/tokens`,
+      label: "Tokens",
     },
     {
-      label: "Direct Listings",
-      href: `${layoutPrefix}/direct-listings`,
+      exactMatch: true,
       hide: !data.metadata.isDirectListingSupported,
-      exactMatch: true,
+      href: `${layoutPrefix}/direct-listings`,
+      label: "Direct Listings",
     },
     {
-      label: "English Auctions",
-      href: `${layoutPrefix}/english-auctions`,
+      exactMatch: true,
       hide: !data.metadata.isEnglishAuctionSupported,
-      exactMatch: true,
+      href: `${layoutPrefix}/english-auctions`,
+      label: "English Auctions",
     },
     {
-      label: "Balances",
-      href: `${layoutPrefix}/split`,
+      exactMatch: true,
       hide: !data.metadata.isSplitSupported,
-      exactMatch: true,
+      href: `${layoutPrefix}/split`,
+      label: "Balances",
     },
     {
-      label: "Proposals",
-      href: `${layoutPrefix}/proposals`,
+      exactMatch: true,
       hide: !data.metadata.isVoteContract,
-      exactMatch: true,
+      href: `${layoutPrefix}/proposals`,
+      label: "Proposals",
     },
     {
-      label: "Claim Conditions",
-      href: `${layoutPrefix}/claim-conditions`,
+      exactMatch: true,
       hide: !(
         data.metadata.isERC721ClaimConditionsSupported ||
         data.metadata.isERC20ClaimConditionsSupported
       ),
-      exactMatch: true,
+      href: `${layoutPrefix}/claim-conditions`,
+      label: "Claim Conditions",
     },
     {
-      label: "Accounts",
-      href: `${layoutPrefix}/accounts`,
+      exactMatch: true,
       hide: !data.metadata.isAccountFactory,
-      exactMatch: true,
+      href: `${layoutPrefix}/accounts`,
+      label: "Accounts",
     },
     {
-      label: "Balance",
-      href: `${layoutPrefix}/account`,
+      exactMatch: true,
       hide: !data.metadata.isAccount,
-      exactMatch: true,
+      href: `${layoutPrefix}/account`,
+      label: "Balance",
     },
     {
-      label: "Account Permissions",
-      href: `${layoutPrefix}/account-permissions`,
+      exactMatch: true,
       hide: !data.metadata.isAccountPermissionsSupported,
-      exactMatch: true,
+      href: `${layoutPrefix}/account-permissions`,
+      label: "Account Permissions",
     },
     {
-      label: "Permissions",
-      href: `${layoutPrefix}/permissions`,
       exactMatch: true,
       hide: !data.metadata.isPermissionsSupported,
+      href: `${layoutPrefix}/permissions`,
+      label: "Permissions",
     },
   ];
 

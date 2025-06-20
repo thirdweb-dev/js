@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function AddYourChainButton(props: { className?: string }) {
   return (
-    <Button asChild variant="default" className={props.className}>
+    <Button asChild className={props.className} variant="default">
       <Link
-        href="https://share.hsforms.com/1XDi-ieM9Rl6oIkn7ynK6Lgea58c"
-        target="_blank"
-        rel="noopener noreferrer"
         className="flex items-center gap-2"
+        href="https://share.hsforms.com/1XDi-ieM9Rl6oIkn7ynK6Lgea58c"
+        rel="noopener noreferrer"
+        target="_blank"
       >
         <PlusIcon className="size-4" />
         Add your chain

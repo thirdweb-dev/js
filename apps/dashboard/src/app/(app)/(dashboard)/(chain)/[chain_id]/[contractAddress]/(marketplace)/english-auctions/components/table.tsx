@@ -36,13 +36,13 @@ export const EnglishAuctionsTable: React.FC<EnglishAuctionsTableProps> = ({
 
   return (
     <MarketplaceTable
-      isLoggedIn={isLoggedIn}
       contract={contract}
       getAllQueryResult={getAllQueryResult}
       getValidQueryResult={getValidQueryResult}
-      totalCountQuery={totalCountQuery}
+      isLoggedIn={isLoggedIn}
       queryParams={queryParams}
       setQueryParams={setQueryParams}
+      totalCountQuery={totalCountQuery}
     />
   );
 };

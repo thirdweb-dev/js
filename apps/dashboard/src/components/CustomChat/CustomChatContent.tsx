@@ -1,15 +1,15 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWalletConnectionStatus } from "thirdweb/react";
+import { Button } from "@/components/ui/button";
 import { NebulaIcon } from "../../app/(app)/(dashboard)/(chain)/components/server/icons/NebulaIcon";
 import { ChatBar } from "./ChatBar";
-import { type CustomChatMessage, CustomChats } from "./CustomChats";
 import type { UserMessage, UserMessageContent } from "./CustomChats";
+import { type CustomChatMessage, CustomChats } from "./CustomChats";
 import type { ExamplePrompt, NebulaContext } from "./types";
 
 export default function CustomChatContent(props: {
@@ -27,11 +27,11 @@ export default function CustomChatContent(props: {
 
   return (
     <CustomChatContentLoggedIn
-      teamId={props.teamId}
-      clientId={props.clientId}
       authToken={props.authToken || ""}
       client={props.client}
+      clientId={props.clientId}
       examplePrompts={props.examplePrompts}
+      teamId={props.teamId}
     />
   );
 }
@@ -65,13 +65,13 @@ function CustomChatContentLoggedIn(props: {
       setMessages((prev) => [
         ...prev,
         {
-          type: "user",
           content: userMessage.content as UserMessageContent[],
+          type: "user",
         },
         // instant loading indicator feedback to user
         {
-          type: "presence",
           texts: [],
+          type: "presence",
         },
       ]);
 
@@ -85,21 +85,21 @@ function CustomChatContentLoggedIn(props: {
         setChatAbortController(abortController);
         // --- Custom API call ---
         const payload = {
+          conversationId: sessionId,
           message:
             messageToSend.content.find((x) => x.type === "text")?.text ?? "",
-          conversationId: sessionId,
           source: "dashboard-support",
         };
         const apiUrl = process.env.NEXT_PUBLIC_SIWA_URL;
         const response = await fetch(`${apiUrl}/v1/chat`, {
-          method: "POST",
+          body: JSON.stringify(payload),
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${props.authToken}`,
+            "Content-Type": "application/json",
             ...(props.teamId ? { "x-team-id": props.teamId } : {}),
             ...(props.clientId ? { "x-client-id": props.clientId } : {}),
           },
-          body: JSON.stringify(payload),
+          method: "POST",
           signal: abortController.signal,
         });
         const data = await response.json();
@@ -110,9 +110,9 @@ function CustomChatContentLoggedIn(props: {
         setMessages((prev) => [
           ...prev.slice(0, -1), // remove presence indicator
           {
-            type: "assistant",
             request_id: undefined,
             text: data.data,
+            type: "assistant",
           },
         ]);
       } catch (error) {
@@ -122,9 +122,9 @@ function CustomChatContentLoggedIn(props: {
         setMessages((prev) => [
           ...prev.slice(0, -1),
           {
-            type: "assistant",
             request_id: undefined,
             text: `Sorry, something went wrong. ${error instanceof Error ? error.message : "Unknown error"}`,
+            type: "assistant",
           },
         ]);
       } finally {
@@ -158,16 +158,16 @@ function CustomChatContentLoggedIn(props: {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_SIWA_URL;
         const response = await fetch(`${apiUrl}/v1/chat/feedback`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${props.authToken}`,
-            ...(props.teamId ? { "x-team-id": props.teamId } : {}),
-          },
           body: JSON.stringify({
             conversationId: sessionId,
             feedbackRating: feedback,
           }),
+          headers: {
+            Authorization: `Bearer ${props.authToken}`,
+            "Content-Type": "application/json",
+            ...(props.teamId ? { "x-team-id": props.teamId } : {}),
+          },
+          method: "POST",
         });
 
         if (!response.ok) {
@@ -196,29 +196,25 @@ function CustomChatContentLoggedIn(props: {
     <div className="flex grow flex-col overflow-hidden">
       {showEmptyState ? (
         <EmptyStateChatPageContent
-          sendMessage={handleSendMessage}
           examplePrompts={props.examplePrompts}
+          sendMessage={handleSendMessage}
         />
       ) : (
         <CustomChats
-          messages={messages}
-          isChatStreaming={isChatStreaming}
           authToken={props.authToken}
-          sessionId={sessionId}
           className="min-w-0 pb-10"
           client={props.client}
           enableAutoScroll={enableAutoScroll}
+          isChatStreaming={isChatStreaming}
+          messages={messages}
+          onFeedback={handleFeedback}
+          sendMessage={handleSendMessage}
+          sessionId={sessionId}
           setEnableAutoScroll={setEnableAutoScroll}
           useSmallText
-          sendMessage={handleSendMessage}
-          onFeedback={handleFeedback}
         />
       )}
       <ChatBar
-        placeholder={"Ask AI Assistant"}
-        onLoginClick={undefined}
-        client={props.client}
-        isConnectingWallet={connectionStatus === "connecting"}
         abortChatStream={() => {
           chatAbortController?.abort();
           setChatAbortController(undefined);
@@ -228,18 +224,22 @@ function CustomChatContentLoggedIn(props: {
             setMessages((prev) => prev.slice(0, -1));
           }
         }}
+        className="rounded-none border-x-0 border-b-0"
+        client={props.client}
         isChatStreaming={isChatStreaming}
+        isConnectingWallet={connectionStatus === "connecting"}
+        onLoginClick={undefined}
+        placeholder={"Ask AI Assistant"}
         prefillMessage={undefined}
         sendMessage={(siwaUserMessage) => {
           const userMessage: UserMessage = {
-            type: "user",
             content: siwaUserMessage.content
               .filter((c) => c.type === "text")
-              .map((c) => ({ type: "text", text: c.text })),
+              .map((c) => ({ text: c.text, type: "text" })),
+            type: "user",
           };
           handleSendMessage(userMessage);
         }}
-        className="rounded-none border-x-0 border-b-0"
       />
     </div>
   );
@@ -270,8 +270,8 @@ function LoggedOutStateChatContent() {
 
       <Button asChild>
         <Link
-          href={`/login?next=${encodeURIComponent(pathname)}`}
           className="w-full max-w-96 gap-2"
+          href={`/login?next=${encodeURIComponent(pathname)}`}
         >
           Sign in
           <ArrowRightIcon className="size-4" />
@@ -304,21 +304,21 @@ function EmptyStateChatPageContent(props: {
       <div className="flex max-w-lg flex-col flex-wrap justify-center gap-2.5">
         {props.examplePrompts.map((prompt) => (
           <Button
+            disabled={false}
             key={prompt.title}
-            variant="outline"
-            size="sm"
             onClick={() =>
               props.sendMessage({
-                type: "user",
                 content: [
                   {
-                    type: "text",
                     text: prompt.message,
+                    type: "text",
                   },
                 ],
+                type: "user",
               })
             }
-            disabled={false}
+            size="sm"
+            variant="outline"
           >
             {prompt.title}
           </Button>

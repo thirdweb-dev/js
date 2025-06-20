@@ -10,165 +10,162 @@ const slug = "/typescript/v5";
 const docs = await fetchTypeScriptDoc();
 
 export const sidebar: SideBar = {
-  name: "Connect Typescript SDK",
   links: [
     {
       separator: true,
     },
     {
-      name: "Overview",
       href: slug,
+      name: "Overview",
     },
     {
-      name: "Getting Started",
       href: `${slug}/getting-started`,
       icon: <ZapIcon />,
+      name: "Getting Started",
     },
     {
-      name: "Live Playground",
       href: "https://playground.thirdweb.com/",
       icon: <ExternalLinkIcon />,
+      name: "Live Playground",
     },
     {
-      name: "API Reference",
       href: "/references/typescript/v5",
       icon: <CodeIcon />,
+      name: "API Reference",
     },
     { separator: true },
     {
-      name: "Core Concepts",
       isCollapsible: false,
       links: [
         {
-          name: "Client",
           href: `${slug}/client`,
+          name: "Client",
         },
         {
-          name: "Chains",
           href: `${slug}/chain`,
+          name: "Chains",
         },
         {
-          name: "Contracts",
           href: `${slug}/contract`,
+          name: "Contracts",
         },
         {
-          name: "Accounts & Wallets",
           href: `${slug}/wallets`,
+          name: "Accounts & Wallets",
         },
       ],
+      name: "Core Concepts",
     },
     { separator: true },
     {
-      name: "Onboarding Users",
       isCollapsible: false,
       links: [
         {
-          name: "External Wallets",
           href: `${slug}/supported-wallets`,
+          name: "External Wallets",
         },
         {
-          name: "In-App Wallets",
           href: `${slug}/in-app-wallet`,
+          name: "In-App Wallets",
         },
         {
-          name: "Ecosystem Wallets",
           href: `${slug}/ecosystem-wallet`,
+          name: "Ecosystem Wallets",
         },
         {
-          name: "Account Abstraction",
           links: [
             {
-              name: "Getting Started",
               href: `${slug}/account-abstraction/get-started`,
+              name: "Getting Started",
             },
             {
-              name: "Batching Transactions",
               href: `${slug}/account-abstraction/batching-transactions`,
+              name: "Batching Transactions",
             },
           ],
+          name: "Account Abstraction",
         },
       ],
+      name: "Onboarding Users",
     },
     { separator: true },
     {
-      name: "Identity Management",
       isCollapsible: false,
       links: [
         {
-          name: "Sign In With Ethereum",
           href: `${slug}/auth`,
+          name: "Sign In With Ethereum",
         },
         {
-          name: "Link Profiles",
           href: `${slug}/linkProfile`,
+          name: "Link Profiles",
         },
         {
-          name: "Web3 Social Identities",
           href: `${slug}/getSocialProfiles`,
+          name: "Web3 Social Identities",
         },
         {
-          name: "Permissions",
           href: `${slug}/account-abstraction/permissions`,
+          name: "Permissions",
         },
       ],
+      name: "Identity Management",
     },
     { separator: true },
     {
-      name: "Onchain Interactions",
       isCollapsible: false,
       links: [
         {
-          name: "Reading state",
           href: `${slug}/transactions/read`,
+          name: "Reading state",
         },
         {
-          name: "Preparing transactions",
           href: `${slug}/transactions/prepare`,
+          name: "Preparing transactions",
         },
         {
-          name: "Sending transactions",
           href: `${slug}/transactions/send`,
+          name: "Sending transactions",
         },
         {
-          name: "Extensions",
           links: [
             {
-              name: "Using Extensions",
               href: `${slug}/extensions/use`,
+              name: "Using Extensions",
             },
             {
-              name: "Generating Extensions",
               href: `${slug}/extensions/generate`,
+              name: "Generating Extensions",
             },
             {
-              name: "Writing Extensions",
               href: `${slug}/extensions/create`,
+              name: "Writing Extensions",
             },
             {
-              name: "Available Extensions",
               href: `${slug}/extensions/built-in`,
+              name: "Available Extensions",
             },
             {
-              name: "Examples",
               links: [
                 {
-                  name: "Lens Protocol",
                   href: `${slug}/extensions/examples/lens-protocol`,
+                  name: "Lens Protocol",
                 },
                 {
-                  name: "Transfering tokens",
                   href: `${slug}/extensions/examples/transfering-tokens`,
+                  name: "Transfering tokens",
                 },
                 {
-                  name: "Ethereum Name Service",
                   href: `${slug}/extensions/examples/ethereum-name-service`,
+                  name: "Ethereum Name Service",
                 },
               ],
+              name: "Examples",
             },
           ],
+          name: "Extensions",
         },
         {
-          name: "Deploying contracts",
           links:
             docs.functions
               ?.filter((f) => {
@@ -177,37 +174,37 @@ export const sidebar: SideBar = {
               })
               .sort((a, b) => a.name.localeCompare(b.name))
               .map((f) => ({
-                name: f.name,
                 href: `${slug}/deploy/${f.name}`,
+                name: f.name,
               })) || [],
+          name: "Deploying contracts",
         },
         {
-          name: "Modular contracts",
           links: [
             {
-              name: "Introduction",
               href: `${slug}/modular`,
+              name: "Introduction",
             },
             {
-              name: "Deploying",
               href: `${slug}/modular/deploy`,
+              name: "Deploying",
             },
             {
-              name: "Upgrading",
               href: `${slug}/modular/upgrade`,
+              name: "Upgrading",
             },
             {
-              name: "Interacting",
               href: `${slug}/modular/interact`,
+              name: "Interacting",
             },
             {
-              name: "Available Modules",
               href: `${slug}/modular/built-in`,
+              name: "Available Modules",
             },
           ],
+          name: "Modular contracts",
         },
         {
-          name: "RPC Methods",
           links:
             docs.functions
               ?.filter((f) => {
@@ -215,19 +212,18 @@ export const sidebar: SideBar = {
                 return tag === "@rpc";
               })
               ?.map((f) => ({
-                name: f.name,
                 href: `${slug}/${f.name}`,
+                name: f.name,
               })) || [],
+          name: "RPC Methods",
         },
         {
-          name: "IPFS Storage",
           href: `${slug}/storage`,
+          name: "IPFS Storage",
         },
         {
-          name: "Bridge, Swap, and Onramp",
           links: [
             {
-              name: "Buy",
               links:
                 docs.functions
                   ?.filter((f) => {
@@ -250,13 +246,13 @@ export const sidebar: SideBar = {
                       ? getExtensionName(blockTag) || "Common"
                       : "Common";
                     return {
-                      name: f.name,
                       href: `${slug}/${extensionName.toLowerCase()}/${f.name}`,
+                      name: f.name,
                     };
                   }) || [],
+              name: "Buy",
             },
             {
-              name: "Sell",
               links:
                 docs.functions
                   ?.filter((f) => {
@@ -279,13 +275,13 @@ export const sidebar: SideBar = {
                       ? getExtensionName(blockTag) || "Common"
                       : "Common";
                     return {
-                      name: f.name,
                       href: `${slug}/${extensionName.toLowerCase()}/${f.name}`,
+                      name: f.name,
                     };
                   }) || [],
+              name: "Sell",
             },
             {
-              name: "Onramp",
               links:
                 docs.functions
                   ?.filter((f) => {
@@ -308,10 +304,11 @@ export const sidebar: SideBar = {
                       ? getExtensionName(blockTag) || "Common"
                       : "Common";
                     return {
-                      name: f.name,
                       href: `${slug}/${extensionName.toLowerCase()}/${f.name}`,
+                      name: f.name,
                     };
                   }) || [],
+              name: "Onramp",
             },
             ...(docs.functions
               ?.filter((f) => {
@@ -328,22 +325,25 @@ export const sidebar: SideBar = {
               })
               ?.map((f) => {
                 return {
-                  name: f.name,
                   href: `${slug}/${f.name}`,
+                  name: f.name,
                 };
               }) || []),
           ],
+          name: "Bridge, Swap, and Onramp",
         },
       ],
+      name: "Onchain Interactions",
     },
     { separator: true },
     {
-      name: "Usage with other libraries",
       href: `${slug}/adapters`,
+      name: "Usage with other libraries",
     },
     {
-      name: "Migrate from v4",
       href: `${slug}/migrate`,
+      name: "Migrate from v4",
     },
   ],
+  name: "Connect Typescript SDK",
 };

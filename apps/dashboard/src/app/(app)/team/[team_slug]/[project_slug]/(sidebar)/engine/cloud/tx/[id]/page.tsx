@@ -1,6 +1,6 @@
+import { notFound, redirect } from "next/navigation";
 import { getProject } from "@/api/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { notFound, redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../../login/loginRedirect";
 import { getSingleTransaction } from "../../lib/analytics";
@@ -27,8 +27,8 @@ export default async function TransactionPage({
   }
 
   const transactionData = await getSingleTransaction({
-    teamId: project.teamId,
     clientId: project.publishableKey,
+    teamId: project.teamId,
     transactionId: id,
   });
 
@@ -44,10 +44,10 @@ export default async function TransactionPage({
   return (
     <div className="space-y-6 p-2">
       <TransactionDetailsUI
-        transaction={transactionData}
-        teamSlug={team_slug}
         client={client}
         project={project}
+        teamSlug={team_slug}
+        transaction={transactionData}
       />
     </div>
   );

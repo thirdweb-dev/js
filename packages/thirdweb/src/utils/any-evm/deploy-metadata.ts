@@ -26,8 +26,8 @@ export async function fetchDeployMetadata(
   options: FetchDeployMetadataOptions,
 ): Promise<FetchDeployMetadataResult> {
   const rawMeta: RawCompilerMetadata = await download({
-    uri: options.uri,
     client: options.client,
+    uri: options.uri,
   }).then((r) => r.json());
 
   const metadataUri = rawMeta.metadataUri;
@@ -39,8 +39,8 @@ export async function fetchDeployMetadata(
   return {
     ...rawMeta,
     ...parsedMeta,
-    version: rawMeta.version,
     name: rawMeta.name,
+    version: rawMeta.version,
   };
 }
 
@@ -89,8 +89,8 @@ export async function fetchBytecodeFromCompilerMetadata(options: {
         );
       }
       const deployBytecode = await download({
-        uri: bytecodeUri,
         client,
+        uri: bytecodeUri,
       }).then((res) => res.text() as Promise<Hex>);
 
       return deployBytecode;

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { Theme } from "../../react/core/design-system/index.js";
-import { FundWallet } from "../../react/web/ui/Bridge/FundWallet.js";
 import type { FundWalletProps } from "../../react/web/ui/Bridge/FundWallet.js";
+import { FundWallet } from "../../react/web/ui/Bridge/FundWallet.js";
 import { ModalThemeWrapper, storyClient } from "../utils.js";
 import { FUND_WALLET_UI_OPTIONS, RECEIVER_ADDRESSES } from "./fixtures.js";
 
@@ -21,10 +21,31 @@ const FundWalletWithTheme = (props: FundWalletWithThemeProps) => {
 };
 
 const meta = {
-  title: "Bridge/FundWallet",
+  args: {
+    client: storyClient,
+    onContinue: (amount, token, receiverAddress) => {
+      alert(`Continue with ${amount} ${token.symbol} to ${receiverAddress}`);
+    },
+    receiverAddress: RECEIVER_ADDRESSES.primary,
+    theme: "dark",
+    uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
+  },
+  argTypes: {
+    onContinue: { action: "continue clicked" },
+    receiverAddress: {
+      description: "Optional receiver address (defaults to connected wallet)",
+    },
+    theme: {
+      control: "select",
+      description: "Theme for the component",
+      options: ["light", "dark"],
+    },
+    uiOptions: {
+      description: "UI configuration for fund wallet mode",
+    },
+  },
   component: FundWalletWithTheme,
   parameters: {
-    layout: "centered",
     docs: {
       description: {
         component:
@@ -38,31 +59,10 @@ const meta = {
           "This component now accepts uiOptions directly to configure the destination token, initial amount, and quick options.",
       },
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  args: {
-    uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
-    client: storyClient,
-    onContinue: (amount, token, receiverAddress) => {
-      alert(`Continue with ${amount} ${token.symbol} to ${receiverAddress}`);
-    },
-    receiverAddress: RECEIVER_ADDRESSES.primary,
-    theme: "dark",
-  },
-  argTypes: {
-    theme: {
-      control: "select",
-      options: ["light", "dark"],
-      description: "Theme for the component",
-    },
-    onContinue: { action: "continue clicked" },
-    uiOptions: {
-      description: "UI configuration for fund wallet mode",
-    },
-    receiverAddress: {
-      description: "Optional receiver address (defaults to connected wallet)",
-    },
-  },
+  title: "Bridge/FundWallet",
 } satisfies Meta<typeof FundWalletWithTheme>;
 
 export default meta;
@@ -70,9 +70,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Light: Story = {
   args: {
+    receiverAddress: undefined,
     theme: "light",
     uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
-    receiverAddress: undefined,
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -86,9 +86,9 @@ export const Light: Story = {
 
 export const Dark: Story = {
   args: {
+    receiverAddress: undefined,
     theme: "dark",
     uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
-    receiverAddress: undefined,
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -102,9 +102,9 @@ export const Dark: Story = {
 
 export const WithInitialAmount: Story = {
   args: {
+    receiverAddress: RECEIVER_ADDRESSES.secondary,
     theme: "dark",
     uiOptions: FUND_WALLET_UI_OPTIONS.ethWithAmount,
-    receiverAddress: RECEIVER_ADDRESSES.secondary,
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -119,9 +119,9 @@ export const WithInitialAmount: Story = {
 
 export const WithInitialAmountLight: Story = {
   args: {
+    receiverAddress: RECEIVER_ADDRESSES.secondary,
     theme: "light",
     uiOptions: FUND_WALLET_UI_OPTIONS.ethWithAmount,
-    receiverAddress: RECEIVER_ADDRESSES.secondary,
   },
   parameters: {
     backgrounds: { default: "light" },

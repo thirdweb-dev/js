@@ -61,9 +61,9 @@ export async function resolveAddress(
   return withCache(
     async () => {
       const contract = getContract({
-        client,
-        chain: resolverChain || polygon,
         address: resolverAddress || UD_POLYGON_MAINNET,
+        chain: resolverChain || polygon,
+        client,
       });
 
       // Get namehash
@@ -83,9 +83,9 @@ export async function resolveAddress(
       // Resolve ETH address from the tokenId
       const resolved = await getMany({
         contract,
-        tokenId: possibleTokenId,
         // note that you can also retrieve the (BTC, SOL, etc.) address by using "crypto.<symbol>.address" (should that become useful one day)
         keys: ["crypto.ETH.address"],
+        tokenId: possibleTokenId,
       });
 
       const possibleETHAddress = resolved[0];

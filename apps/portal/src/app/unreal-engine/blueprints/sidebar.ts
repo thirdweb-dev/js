@@ -2,28 +2,28 @@ import { hrefBuilder } from "@/app/unreal-engine/util";
 import type { LinkGroup } from "@/components/others/Sidebar";
 
 export const blueprints: LinkGroup = hrefBuilder("/blueprints", {
-  name: "Blueprints",
   isCollapsible: true,
   links: [
     {
-      name: "Overview",
       href: "",
+      name: "Overview",
     },
     {
-      name: "In App Wallets",
       href: "/in-app-wallet",
+      name: "In App Wallets",
     },
     {
-      name: "Smart Wallets",
       href: "/smart-wallet",
+      name: "Smart Wallets",
     },
     {
-      name: "Engine",
       href: "/engine",
+      name: "Engine",
     },
     {
-      name: "Utilities",
       href: "/utilities",
+      name: "Utilities",
     },
   ],
+  name: "Blueprints",
 });

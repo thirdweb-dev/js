@@ -1,5 +1,12 @@
 "use client";
 
+import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
+import { isAlchemySupported } from "lib/wallet/nfts/isAlchemySupported";
+import { isMoralisSupported } from "lib/wallet/nfts/isMoralisSupported";
+import { PlusIcon } from "lucide-react";
+import { useState } from "react";
+import type { ThirdwebContract } from "thirdweb";
+import { useActiveAccount } from "thirdweb/react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -9,13 +16,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { TabButtons } from "@/components/ui/tabs";
-import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
-import { isAlchemySupported } from "lib/wallet/nfts/isAlchemySupported";
-import { isMoralisSupported } from "lib/wallet/nfts/isMoralisSupported";
-import { PlusIcon } from "lucide-react";
-import { useState } from "react";
-import type { ThirdwebContract } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
 import { CreateListingsForm } from "./list-form";
 
 interface CreateListingButtonProps {
@@ -49,7 +49,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
 
   return (
     <ListerOnly contract={contract}>
-      <Sheet open={open} onOpenChange={setOpen}>
+      <Sheet onOpenChange={setOpen} open={open}>
         <SheetTrigger asChild>
           <Button variant="primary" {...restButtonProps} disabled={!address}>
             {createText} <PlusIcon className="ml-2 size-5" />
@@ -66,36 +66,36 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
           {isSupportedChain ? (
             <>
               <TabButtons
-                tabs={LISTING_MODES.map((mode) => ({
-                  name: mode,
-                  isActive: mode === listingMode,
-                  onClick: () => setListingMode(mode),
-                }))}
                 tabClassName="text-sm gap-2 !text-sm"
                 tabContainerClassName="gap-0.5"
+                tabs={LISTING_MODES.map((mode) => ({
+                  isActive: mode === listingMode,
+                  name: mode,
+                  onClick: () => setListingMode(mode),
+                }))}
               />
               <div className="mt-5">
                 <CreateListingsForm
-                  isLoggedIn={isLoggedIn}
-                  contract={contract}
-                  type={type}
                   actionText={createText}
-                  setOpen={setOpen}
-                  mode={listingMode === "Select NFT" ? "automatic" : "manual"}
+                  contract={contract}
                   isInsightSupported={isInsightSupported}
+                  isLoggedIn={isLoggedIn}
+                  mode={listingMode === "Select NFT" ? "automatic" : "manual"}
+                  setOpen={setOpen}
+                  type={type}
                 />
               </div>
             </>
           ) : (
             <div className="mt-5">
               <CreateListingsForm
-                isLoggedIn={isLoggedIn}
-                contract={contract}
-                type={type}
                 actionText={createText}
-                setOpen={setOpen}
-                mode="manual"
+                contract={contract}
                 isInsightSupported={isInsightSupported}
+                isLoggedIn={isLoggedIn}
+                mode="manual"
+                setOpen={setOpen}
+                type={type}
               />
             </div>
           )}

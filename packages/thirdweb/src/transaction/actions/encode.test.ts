@@ -76,9 +76,9 @@ describe("transaction: encode", () => {
   it("extraCallData | should encode correctly (human-readable)", async () => {
     const tx = prepareContractCall({
       contract: USDT_CONTRACT,
+      extraCallData,
       method: "function transfer(address, uint256) returns (bool)",
       params: [TEST_WALLET_A, 100n],
-      extraCallData,
     });
     const encoded = await encode(tx);
     expect(encoded).toEqual(expectedFinalData);
@@ -87,6 +87,7 @@ describe("transaction: encode", () => {
   it("extraCallData | should encode correctly (transaction abi)", async () => {
     const tx = prepareContractCall({
       contract: USDT_CONTRACT,
+      extraCallData,
       method: {
         inputs: [
           { internalType: "address", name: "to", type: "address" },
@@ -98,7 +99,6 @@ describe("transaction: encode", () => {
         type: "function",
       },
       params: [TEST_WALLET_A, 100n],
-      extraCallData,
     });
     const encoded = await encode(tx);
     expect(encoded).toEqual(expectedFinalData);
@@ -107,9 +107,9 @@ describe("transaction: encode", () => {
   it("extraCallData | should encode correctly (contract abi)", async () => {
     const tx = prepareContractCall({
       contract: USDT_CONTRACT_WITH_ABI,
+      extraCallData,
       method: "transfer",
       params: [TEST_WALLET_A, 100n],
-      extraCallData,
     });
     const encoded = await encode(tx);
     expect(encoded).toEqual(expectedFinalData);
@@ -117,9 +117,9 @@ describe("transaction: encode", () => {
   it("extraCallData | should encode correctly (auto-abi)", async () => {
     const tx = prepareContractCall({
       contract: USDT_CONTRACT,
+      extraCallData,
       method: resolveMethod("transfer"),
       params: [TEST_WALLET_A, 100n],
-      extraCallData,
     });
     const encoded = await encode(tx);
     expect(encoded).toEqual(expectedFinalData);
@@ -137,9 +137,9 @@ describe("transaction: encode", () => {
     const txWithExtraData = prepareTransaction({
       chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
+      extraCallData,
       to: TEST_WALLET_B,
       value: toWei("0.1"),
-      extraCallData,
     });
 
     const encoded2 = await encode(txWithExtraData);
@@ -161,9 +161,9 @@ describe("transaction: encode", () => {
     const tx = prepareTransaction({
       chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
+      data: extraCallData,
       to: TEST_WALLET_B,
       value: toWei("0.1"),
-      data: extraCallData,
     });
     const _hex = await getDataFromTx(tx);
     expect(_hex).toBe(extraCallData);
@@ -184,10 +184,10 @@ describe("transaction: encode", () => {
     const tx = prepareTransaction({
       chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
-      to: TEST_WALLET_B,
-      value: toWei("0.1"),
       data: toHex("getExtraCallDataFromTx-should-not-return-this"),
       extraCallData,
+      to: TEST_WALLET_B,
+      value: toWei("0.1"),
     });
     const result = await getExtraCallDataFromTx(tx);
     expect(result).toBe(extraCallData);
@@ -197,11 +197,11 @@ describe("transaction: encode", () => {
     const tx = prepareTransaction({
       chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
-      to: TEST_WALLET_B,
-      value: toWei("0.1"),
       data: toHex("getExtraCallDataFromTx-should-not-return-this"),
       // @ts-ignore Intentionally for the test purpose
       extraCallData: "I'm a cat",
+      to: TEST_WALLET_B,
+      value: toWei("0.1"),
     });
     await expect(getExtraCallDataFromTx(tx)).rejects.toThrowError(
       "Invalid extra calldata - must be a hex string",

@@ -1,6 +1,6 @@
 "use client";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
-import { type Theme, fontSize } from "../../../core/design-system/index.js";
+import { fontSize, type Theme } from "../../../core/design-system/index.js";
 import { StyledAnchor, StyledSpan } from "../design-system/elements.js";
 
 export type TextProps = {
@@ -17,17 +17,17 @@ export type TextProps = {
 export const Text = /* @__PURE__ */ StyledSpan<TextProps>((p) => {
   const theme = useCustomTheme();
   return {
-    fontSize: fontSize[p.size || "md"],
     color: theme.colors[p.color || "secondaryText"],
-    margin: 0,
     display: p.inline ? "inline" : "block",
+    fontSize: fontSize[p.size || "md"],
     fontWeight: p.weight || 500,
     lineHeight: p.multiline ? 1.5 : "normal",
-    textAlign: p.center ? "center" : "left",
-    textWrap: p.balance ? "balance" : "inherit",
+    margin: 0,
     maxWidth: "100%",
     overflow: "hidden",
+    textAlign: p.center ? "center" : "left",
     textOverflow: "ellipsis",
+    textWrap: p.balance ? "balance" : "inherit",
   };
 });
 
@@ -44,19 +44,19 @@ type LinkProps = {
 export const Link = /* @__PURE__ */ StyledAnchor<LinkProps>((p) => {
   const theme = useCustomTheme();
   return {
-    all: "unset",
-    cursor: "pointer",
-    color: theme.colors[p.color || "accentText"],
-    fontSize: fontSize[p.size || "md"],
-    textDecoration: "none",
-    textAlign: p.center ? "center" : "left",
-    display: p.inline ? "inline" : "block",
-    fontWeight: p.weight || 500,
-    lineHeight: "normal",
-    transition: "color 0.2s ease",
     "&:hover": {
       color: theme.colors[p.hoverColor || "primaryText"],
       textDecoration: "none",
     },
+    all: "unset",
+    color: theme.colors[p.color || "accentText"],
+    cursor: "pointer",
+    display: p.inline ? "inline" : "block",
+    fontSize: fontSize[p.size || "md"],
+    fontWeight: p.weight || 500,
+    lineHeight: "normal",
+    textAlign: p.center ? "center" : "left",
+    textDecoration: "none",
+    transition: "color 0.2s ease",
   };
 });

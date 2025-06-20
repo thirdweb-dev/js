@@ -32,11 +32,11 @@ export async function createServerWallet(params: CreateServerWalletArgs) {
   const { client, label } = params;
   const result = await createAccount({
     baseUrl: getThirdwebBaseUrl("engineCloud"),
-    bodySerializer: stringify,
-    fetch: getClientFetch(client),
     body: {
       label,
     },
+    bodySerializer: stringify,
+    fetch: getClientFetch(client),
   });
 
   if (result.error) {

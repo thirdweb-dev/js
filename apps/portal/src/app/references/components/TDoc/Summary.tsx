@@ -1,6 +1,6 @@
-import { sluggerContext } from "@/contexts/slugger";
 import invariant from "tiny-invariant";
 import type { FunctionSignature } from "typedoc-better-json";
+import { sluggerContext } from "@/contexts/slugger";
 import { CodeBlock } from "../../../../components/Document/Code";
 import { DocLink } from "../../../../components/Document/DocLink";
 import { Heading } from "../../../../components/Document/Heading";
@@ -24,7 +24,7 @@ export function TypedocSummary(props: {
         switch (s.type) {
           case "code": {
             return (
-              <CodeBlock lang={s.lang} code={s.value} key={Math.random()} />
+              <CodeBlock code={s.value} key={Math.random()} lang={s.lang} />
             );
           }
 
@@ -75,7 +75,7 @@ export function TypedocSummary(props: {
           case "listItem": {
             return (
               <li key={Math.random()}>
-                <TypedocSummary summary={s.children} className="mb-0" />
+                <TypedocSummary className="mb-0" summary={s.children} />
               </li>
             );
           }
@@ -83,10 +83,13 @@ export function TypedocSummary(props: {
           case "heading": {
             return (
               <Heading
+                anchorId={slugger.slug(
+                  // biome-ignore lint/suspicious/noExplicitAny: complex type
+                  (s.children[0] as any)?.value ?? "",
+                  false,
+                )}
                 key={Math.random()}
                 level={s.depth}
-                // biome-ignore lint/suspicious/noExplicitAny: complex type
-                id={slugger.slug((s.children[0] as any)?.value ?? "", false)}
               >
                 <TypedocSummary summary={s.children} />
               </Heading>

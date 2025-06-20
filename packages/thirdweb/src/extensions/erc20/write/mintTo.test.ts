@@ -6,8 +6,8 @@ import {
   TEST_ACCOUNT_B,
 } from "../../../../test/src/test-wallets.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { deployERC20Contract } from "../../prebuilts/deploy-erc20.js";
@@ -39,31 +39,31 @@ describe.runIf(process.env.TW_SECRET_KEY)("ERC20.mintTo", () => {
   describe("mintTo", () => {
     it("should mint tokens to an address", async () => {
       const transaction = mintTo({
+        amount: 100,
         contract: erc20Contract,
         to: TEST_ACCOUNT_A.address,
-        amount: 100,
       });
 
-      await sendAndConfirmTransaction({ transaction, account: TEST_ACCOUNT_A });
+      await sendAndConfirmTransaction({ account: TEST_ACCOUNT_A, transaction });
 
       const balance = await getBalance({
-        contract: erc20Contract,
         address: TEST_ACCOUNT_A.address,
+        contract: erc20Contract,
       });
       expect(balance.displayValue).toBe("100");
     });
 
     it("should mint tokens to an address with a specified amount in wei", async () => {
       const transaction = mintTo({
+        amountWei: 100n,
         contract: erc20Contract,
         to: TEST_ACCOUNT_B.address,
-        amountWei: 100n,
       });
-      await sendAndConfirmTransaction({ transaction, account: TEST_ACCOUNT_A });
+      await sendAndConfirmTransaction({ account: TEST_ACCOUNT_A, transaction });
 
       const balance = await getBalance({
-        contract: erc20Contract,
         address: TEST_ACCOUNT_B.address,
+        contract: erc20Contract,
       });
 
       expect(balance.value).toBe(100n);

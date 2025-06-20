@@ -22,8 +22,8 @@ import type { Theme } from "../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButton_connectModalOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
-import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
+import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { DynamicHeight } from "../components/DynamicHeight.js";
 import { Spinner } from "../components/Spinner.js";
 import type { LocaleId } from "../types.js";
@@ -276,7 +276,6 @@ export function TransactionWidget(props: TransactionWidgetProps) {
   const theme = props.theme || "dark";
 
   const bridgeDataQuery = useQuery({
-    queryKey: ["bridgeData", stringify(props)],
     queryFn: async (): Promise<UIOptionsResult> => {
       let erc20Value = props.transaction.erc20Value;
 
@@ -301,18 +300,19 @@ export function TransactionWidget(props: TransactionWidgetProps) {
       });
 
       return {
-        type: "success",
         data: {
-          mode: "transaction",
           metadata: {
-            title: props.title,
             description: props.description,
             image: props.image,
+            title: props.title,
           },
+          mode: "transaction",
           transaction,
         },
+        type: "success",
       };
     },
+    queryKey: ["bridgeData", stringify(props)],
   });
 
   let content = null;
@@ -320,13 +320,13 @@ export function TransactionWidget(props: TransactionWidgetProps) {
     content = (
       <div
         style={{
-          minHeight: "350px",
+          alignItems: "center",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          minHeight: "350px",
         }}
       >
-        <Spinner size="xl" color="secondaryText" />
+        <Spinner color="secondaryText" size="xl" />
       </div>
     );
   } else if (bridgeDataQuery.data?.type === "unsupported_token") {
@@ -337,22 +337,22 @@ export function TransactionWidget(props: TransactionWidgetProps) {
     content = (
       <BridgeOrchestrator
         client={props.client}
-        uiOptions={bridgeDataQuery.data.data}
-        connectOptions={props.connectOptions}
         connectLocale={localeQuery.data}
-        purchaseData={props.purchaseData}
-        paymentLinkId={props.paymentLinkId}
+        connectOptions={props.connectOptions}
+        onCancel={() => {
+          props.onCancel?.();
+        }}
         onComplete={() => {
           props.onSuccess?.();
         }}
         onError={(err: Error) => {
           props.onError?.(err);
         }}
-        onCancel={() => {
-          props.onCancel?.();
-        }}
+        paymentLinkId={props.paymentLinkId}
         presetOptions={props.presetOptions}
+        purchaseData={props.purchaseData}
         receiverAddress={undefined}
+        uiOptions={bridgeDataQuery.data.data}
       />
     );
   }
@@ -360,9 +360,9 @@ export function TransactionWidget(props: TransactionWidgetProps) {
   return (
     <CustomThemeProvider theme={theme}>
       <EmbedContainer
+        className={props.className}
         modalSize="compact"
         style={props.style}
-        className={props.className}
       >
         <DynamicHeight>{content}</DynamicHeight>
       </EmbedContainer>

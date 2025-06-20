@@ -1,7 +1,7 @@
 import "server-only";
 
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { download } from "thirdweb/storage";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
 import type { GenerateURLParams, WalletNFT } from "./types";
 
@@ -24,23 +24,23 @@ export async function transformMoralisResponseToNFT(
       moralisResponse.result.map(async (moralisNft) => {
         try {
           return {
-            id: moralisNft.token_id,
+            chainId,
             contractAddress: moralisNft.token_address,
-            tokenId: moralisNft.token_id,
+            id: moralisNft.token_id,
             metadata: shouldDownloadURI(moralisNft.token_uri)
               ? await download({
-                  uri: handleArbitraryTokenURI(moralisNft.token_uri),
                   client: serverThirdwebClient,
+                  uri: handleArbitraryTokenURI(moralisNft.token_uri),
                 })
                   .then((res) => res.json())
                   .catch(() => ({}))
               : moralisNft.token_uri,
             owner,
-            tokenURI: moralisNft.token_uri,
             supply: moralisNft.amount || "1",
-            type: moralisNft.contract_type,
             tokenAddress: moralisNft.token_address,
-            chainId,
+            tokenId: moralisNft.token_id,
+            tokenURI: moralisNft.token_uri,
+            type: moralisNft.contract_type,
           } as WalletNFT;
         } catch {
           return undefined as unknown as WalletNFT;

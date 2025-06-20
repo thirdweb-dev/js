@@ -4,6 +4,7 @@ import { fetchTokenMetadata } from "../../../utils/nft/fetchTokenMetadata.js";
 import { type NFT, parseNFT } from "../../../utils/nft/parseNft.js";
 import { totalSupply } from "../__generated__/IERC1155/read/totalSupply.js";
 import { uri } from "../__generated__/IERC1155/read/uri.js";
+
 export { isUriSupported as isGetNFTSupported } from "../__generated__/IERC1155/read/uri.js";
 
 /**
@@ -51,8 +52,8 @@ async function getNFTFromInsight(
   options: BaseTransactionOptions<GetNFTParams>,
 ): Promise<NFT> {
   const nft = await getNFTInsight({
-    client: options.contract.client,
     chain: options.contract.chain,
+    client: options.contract.client,
     contractAddress: options.contract.address,
     tokenId: options.tokenId,
   });
@@ -88,13 +89,13 @@ async function getNFTFromRPC(
       uri: tokenUri,
     })),
     {
-      tokenId: options.tokenId,
-      tokenUri,
-      type: "ERC1155",
+      chainId: options.contract.chain.id,
       owner: null,
       supply,
       tokenAddress: options.contract.address,
-      chainId: options.contract.chain.id,
+      tokenId: options.tokenId,
+      tokenUri,
+      type: "ERC1155",
     },
   );
 }

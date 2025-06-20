@@ -285,11 +285,11 @@ export async function fetchTeamAndProject(
   for (let i = 0; i < retryCount; i++) {
     try {
       const response = await fetch(url, {
-        method: "GET",
         headers: {
           ...authHeaders,
           "content-type": "application/json",
         },
+        method: "GET",
       });
 
       // TODO: if the response is a well understood status code (401, 402, etc), we should skip retry logic

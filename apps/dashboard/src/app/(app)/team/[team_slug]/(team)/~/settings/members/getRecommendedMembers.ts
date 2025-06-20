@@ -8,8 +8,8 @@ export async function getRecommendedMembers(params: {
     `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${params.teamId}/members/recommended`,
     {
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${params.authToken}`,
+        "Content-Type": "application/json",
       },
     },
   );

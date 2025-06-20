@@ -1,4 +1,6 @@
+/** biome-ignore-all lint/suspicious/noTemplateCurlyInString: expected here */
 import { defineChain as viemChain } from "viem";
+import { base } from "viem/chains";
 import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
@@ -10,8 +12,6 @@ import { privateKeyToAccount } from "../wallets/private-key.js";
 import { avalanche } from "./chain-definitions/avalanche.js";
 import { ethereum } from "./chain-definitions/ethereum.js";
 import type { ChainMetadata, LegacyChain } from "./types.js";
-
-import { base } from "viem/chains";
 import {
   CUSTOM_CHAIN_MAP,
   cacheChains,
@@ -35,8 +35,8 @@ const legacyChain: LegacyChain = {
   explorers: [
     {
       name: "etherscan",
-      url: "https://etherscan.io",
       standard: "EIP3091",
+      url: "https://etherscan.io",
     },
   ],
   faucets: [],
@@ -49,17 +49,17 @@ const legacyChain: LegacyChain = {
     },
   ],
   icon: {
+    format: "png",
+    height: 512,
     url: "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
     width: 512,
-    height: 512,
-    format: "png",
   },
   infoURL: "https://ethereum.org",
   name: "Ethereum Mainnet",
   nativeCurrency: {
+    decimals: 18,
     name: "Ether",
     symbol: "ETH",
-    decimals: 18,
   },
   networkId: 1,
   redFlags: [],
@@ -73,6 +73,9 @@ const legacyChain: LegacyChain = {
 describe("defineChain", () => {
   it("should convert viem chain to thirdweb chain", () => {
     const zoraViem = viemChain({
+      blockExplorers: {
+        default: { name: "Explorer", url: "https://explorer.zora.energy" },
+      },
       id: 7777777,
       name: "Zora",
       nativeCurrency: {
@@ -85,9 +88,6 @@ describe("defineChain", () => {
           http: ["https://rpc.zora.energy"],
           webSocket: ["wss://rpc.zora.energy"],
         },
-      },
-      blockExplorers: {
-        default: { name: "Explorer", url: "https://explorer.zora.energy" },
       },
     });
     const thirdwebViem = defineChain(zoraViem);
@@ -116,8 +116,8 @@ describe("defineChain", () => {
     getRpcClient({ chain: oldChain, client: TEST_CLIENT });
 
     const account = privateKeyToAccount({
-      privateKey: ANVIL_PKEY_A,
       client: TEST_CLIENT,
+      privateKey: ANVIL_PKEY_A,
     });
     const chain2 = defineChain({
       id: ANVIL_CHAIN.id,
@@ -126,15 +126,15 @@ describe("defineChain", () => {
     }); // this should be the rpc used
 
     const tx = prepareTransaction({
-      to: TEST_ACCOUNT_B.address,
-      value: 100n,
       chain: chain2,
       client: TEST_CLIENT,
+      to: TEST_ACCOUNT_B.address,
+      value: 100n,
     });
 
     const serializableTransaction = await toSerializableTransaction({
-      transaction: tx,
       from: account.address,
+      transaction: tx,
     });
 
     await account.sendTransaction(serializableTransaction);
@@ -191,48 +191,48 @@ describe("defineChain", () => {
 
   it("should convert LegacyChain", () => {
     expect(convertLegacyChain(legacyChain)).toStrictEqual({
-      id: 1,
-      name: "Ethereum Mainnet",
-      rpc: "https://1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
       blockExplorers: [
         {
+          apiUrl: "https://etherscan.io",
           name: "etherscan",
           url: "https://etherscan.io",
-          apiUrl: "https://etherscan.io",
         },
       ],
-      nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
       faucets: [],
       icon: {
+        format: "png",
+        height: 512,
         url: "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
         width: 512,
-        height: 512,
-        format: "png",
       },
+      id: 1,
+      name: "Ethereum Mainnet",
+      nativeCurrency: { decimals: 18, name: "Ether", symbol: "ETH" },
+      rpc: "https://1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
       testnet: undefined,
     });
   });
 
   it("`defineChain` should work with Legacy chain", () => {
     expect(defineChain(legacyChain)).toStrictEqual({
-      id: 1,
-      name: "Ethereum Mainnet",
-      rpc: "https://1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
       blockExplorers: [
         {
+          apiUrl: "https://etherscan.io",
           name: "etherscan",
           url: "https://etherscan.io",
-          apiUrl: "https://etherscan.io",
         },
       ],
-      nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
       faucets: [],
       icon: {
+        format: "png",
+        height: 512,
         url: "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
         width: 512,
-        height: 512,
-        format: "png",
       },
+      id: 1,
+      name: "Ethereum Mainnet",
+      nativeCurrency: { decimals: 18, name: "Ether", symbol: "ETH" },
+      rpc: "https://1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
       testnet: undefined,
     });
   });
@@ -248,37 +248,37 @@ describe("defineChain", () => {
 
   it("convertApiChainToChain should work", () => {
     const ethChain: ChainMetadata = {
-      chainId: 1,
-      name: "Ethereum Mainnet",
       chain: "ETH",
-      shortName: "eth",
-      icon: {
-        url: "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
-        width: 512,
-        height: 512,
-        format: "png",
-      },
-      nativeCurrency: {
-        name: "Ether",
-        symbol: "ETH",
-        decimals: 18,
-      },
+      chainId: 1,
       ens: {
         registry: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
       },
       explorers: [
         {
           name: "etherscan",
-          url: "https://etherscan.io",
           standard: "EIP3091",
+          url: "https://etherscan.io",
         },
       ],
-      rpc: ["https://1.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
-      testnet: false,
+      icon: {
+        format: "png",
+        height: 512,
+        url: "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+        width: 512,
+      },
       infoURL: "https://ethereum.org",
-      slug: "ethereum",
+      name: "Ethereum Mainnet",
+      nativeCurrency: {
+        decimals: 18,
+        name: "Ether",
+        symbol: "ETH",
+      },
       networkId: 1,
+      rpc: ["https://1.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
+      shortName: "eth",
+      slug: "ethereum",
       stackType: "l1",
+      testnet: false,
     };
 
     expect(convertApiChainToChain(ethChain)).toStrictEqual({
@@ -311,8 +311,8 @@ describe("defineChain", () => {
   describe("getRpcUrlForChain", () => {
     it("should construct RPC URL using chain ID and client ID when chain is a number", () => {
       const options = {
-        client: { ...TEST_CLIENT, clientId: "test-client-id" },
         chain: 1,
+        client: { ...TEST_CLIENT, clientId: "test-client-id" },
       };
       const result = getRpcUrlForChain(options);
       expect(result).toBe("https://1.rpc.thirdweb.com/test-client-id");
@@ -320,11 +320,11 @@ describe("defineChain", () => {
 
     it("should return the custom RPC URL if provided", () => {
       const options = {
-        client: { ...TEST_CLIENT, clientId: "test-client-id" },
         chain: {
           id: 1,
           rpc: "https://custom-rpc.com",
         },
+        client: { ...TEST_CLIENT, clientId: "test-client-id" },
       };
       const result = getRpcUrlForChain(options);
       expect(result).toBe("https://custom-rpc.com");
@@ -332,11 +332,11 @@ describe("defineChain", () => {
 
     it("should add client ID to thirdweb RPC URL", () => {
       const options = {
-        client: { ...TEST_CLIENT, clientId: "test-client-id" },
         chain: {
           id: 1,
           rpc: "https://1.rpc.thirdweb.com",
         },
+        client: { ...TEST_CLIENT, clientId: "test-client-id" },
       };
       const result = getRpcUrlForChain(options);
       expect(result).toBe("https://1.rpc.thirdweb.com/test-client-id");
@@ -344,11 +344,11 @@ describe("defineChain", () => {
 
     it("should honor client ID passed directly in rpc field", () => {
       const options = {
-        client: { ...TEST_CLIENT, clientId: "test-client-id" },
         chain: {
           id: 1,
           rpc: "https://1.rpc.thirdweb.com/abc",
         },
+        client: { ...TEST_CLIENT, clientId: "test-client-id" },
       };
       const result = getRpcUrlForChain(options);
       expect(result).toBe("https://1.rpc.thirdweb.com/abc");
@@ -356,11 +356,11 @@ describe("defineChain", () => {
 
     it("should replace template string in rpc url", () => {
       const options = {
-        client: { ...TEST_CLIENT, clientId: "test-client-id" },
         chain: {
           id: 1,
           rpc: "https://1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
         },
+        client: { ...TEST_CLIENT, clientId: "test-client-id" },
       };
       const result = getRpcUrlForChain(options);
       expect(result).toBe("https://1.rpc.thirdweb.com/test-client-id");
@@ -368,11 +368,11 @@ describe("defineChain", () => {
 
     it("should return the RPC URL without modification if it's not a thirdweb URL", () => {
       const options = {
-        client: { ...TEST_CLIENT, clientId: "test-client-id" },
         chain: {
           id: 1,
           rpc: "https://custom-rpc.com",
         },
+        client: { ...TEST_CLIENT, clientId: "test-client-id" },
       };
       const result = getRpcUrlForChain(options);
       expect(result).toBe("https://custom-rpc.com");

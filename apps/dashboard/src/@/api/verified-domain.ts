@@ -56,12 +56,12 @@ export async function createDomainVerification(
   const res = await fetch(
     `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamIdOrSlug}/verified-domain`,
     {
-      method: "POST",
       body: JSON.stringify({ domain }),
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
+      method: "POST",
     },
   );
 

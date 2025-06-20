@@ -4,13 +4,7 @@ import { teamStub } from "../../../../../../../../../../stories/stubs";
 import { EngineInstancesTableUI } from "./engine-instances-table";
 
 const meta: Meta<typeof Story> = {
-  title: "Engine/general/instances",
   component: Story,
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
-  },
   decorators: [
     (StoryInstance) => (
       <div className="container max-w-[1154px] py-10">
@@ -18,6 +12,12 @@ const meta: Meta<typeof Story> = {
       </div>
     ),
   ],
+  parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
+  },
+  title: "Engine/general/instances",
 };
 
 export default meta;
@@ -31,15 +31,15 @@ function createEngineInstanceStub(
 ): EngineInstance {
   const engineId = `${name.toLowerCase().replace(/\s+/g, "-")}-engine`;
   return {
-    id: engineId,
-    name,
-    url: `https://${engineId}.example.com`,
-    status,
-    deploymentId: status === "active" ? "dep-123" : undefined,
     accountId: "acc-123",
-    lastAccessedAt: new Date().toISOString(),
+    deploymentId: status === "active" ? "dep-123" : undefined,
+    id: engineId,
     isCloudHosted,
     isPlanEngine,
+    lastAccessedAt: new Date().toISOString(),
+    name,
+    status,
+    url: `https://${engineId}.example.com`,
   };
 }
 
@@ -91,6 +91,7 @@ const deploymentFailedEngineInstance = createEngineInstanceStub(
 
 export const MultipleInstances: Story = {
   args: {
+    engineLinkPrefix: "/team/test/engine",
     instances: [
       // active
       cloudHostedEngineInstance,
@@ -102,22 +103,21 @@ export const MultipleInstances: Story = {
       paymentFailedEngineInstance,
       deploymentFailedEngineInstance,
     ],
-    engineLinkPrefix: "/team/test/engine",
   },
 };
 
 export const NoInstancesProPlan: Story = {
   args: {
-    instances: [],
     engineLinkPrefix: "/team/test/engine",
+    instances: [],
     team: teamStub("1", "pro"),
   },
 };
 
 export const NoInstancesGrowthPlan: Story = {
   args: {
-    instances: [],
     engineLinkPrefix: "/team/test/engine",
+    instances: [],
     team: teamStub("2", "growth"),
   },
 };
@@ -126,16 +126,16 @@ export const NoInstancesGrowthPlan: Story = {
 // the section that prompts user to either choose a cloud-hosted engine or import an engine is hidden in this case
 export const NoInstancesAcceleratePlan: Story = {
   args: {
-    instances: [],
     engineLinkPrefix: "/team/test/engine",
+    instances: [],
     team: teamStub("3", "accelerate"),
   },
 };
 
 export const OneInstance: Story = {
   args: {
-    instances: [cloudHostedEngineInstance],
     engineLinkPrefix: "/team/test/engine",
+    instances: [cloudHostedEngineInstance],
   },
 };
 

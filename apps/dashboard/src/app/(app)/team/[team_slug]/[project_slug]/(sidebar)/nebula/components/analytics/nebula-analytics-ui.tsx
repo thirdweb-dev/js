@@ -1,7 +1,5 @@
 "use client";
 
-import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
-import { SkeletonContainer } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import {
   ActivityIcon,
@@ -10,6 +8,8 @@ import {
   MessageSquareQuoteIcon,
 } from "lucide-react";
 import { useMemo } from "react";
+import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import type { NebulaAnalyticsDataItem } from "./fetch-nebula-analytics";
 
 type ChartData = {
@@ -39,25 +39,25 @@ function AnalyticsChart({
 }: AnalyticsChartProps) {
   return (
     <ThirdwebAreaChart
+      chartClassName="aspect-[1.5] lg:aspect-[2.5]"
+      config={{
+        [dataKey]: {
+          color,
+          label: title,
+        },
+      }}
       data={data.map((item) => ({
         ...item,
         time: item.time.getTime(),
       }))}
-      isPending={isPending}
       header={{
-        title,
         description,
+        title,
         titleClassName: "text-xl mb-1",
       }}
-      chartClassName="aspect-[1.5] lg:aspect-[2.5]"
       hideLabel={false}
+      isPending={isPending}
       toolTipLabelFormatter={toolTipLabelFormatter}
-      config={{
-        [dataKey]: {
-          label: title,
-          color,
-        },
-      }}
     />
   );
 }
@@ -74,11 +74,11 @@ export function NebulaAnalyticsDashboardUI(props: {
       totalRequests: number;
       chartData: ChartData[];
     } = {
-      totalPromptTokens: 0,
-      totalCompletionTokens: 0,
-      totalSessions: 0,
-      totalRequests: 0,
       chartData: [],
+      totalCompletionTokens: 0,
+      totalPromptTokens: 0,
+      totalRequests: 0,
+      totalSessions: 0,
     };
 
     for (const item of props.data) {
@@ -87,11 +87,11 @@ export function NebulaAnalyticsDashboardUI(props: {
       val.totalSessions += item.totalSessions;
       val.totalRequests += item.totalRequests;
       val.chartData.push({
-        totalPromptTokens: item.totalPromptTokens,
-        totalCompletionTokens: item.totalCompletionTokens,
-        totalSessions: item.totalSessions,
-        totalRequests: item.totalRequests,
         time: new Date(item.date),
+        totalCompletionTokens: item.totalCompletionTokens,
+        totalPromptTokens: item.totalPromptTokens,
+        totalRequests: item.totalRequests,
+        totalSessions: item.totalSessions,
       });
     }
 
@@ -102,28 +102,28 @@ export function NebulaAnalyticsDashboardUI(props: {
     <div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          title="User Prompts"
-          value={data.totalRequests}
           icon={ActivityIcon}
           isPending={props.isPending}
+          title="User Prompts"
+          value={data.totalRequests}
         />
         <StatCard
-          title="Sessions Created"
-          value={data.totalSessions}
           icon={MessageSquareIcon}
           isPending={props.isPending}
+          title="Sessions Created"
+          value={data.totalSessions}
         />
         <StatCard
-          title="Prompt Tokens"
-          value={data.totalPromptTokens}
           icon={MessageCircleQuestionIcon}
           isPending={props.isPending}
+          title="Prompt Tokens"
+          value={data.totalPromptTokens}
         />
         <StatCard
-          title="Response Tokens"
-          value={data.totalCompletionTokens}
           icon={MessageSquareQuoteIcon}
           isPending={props.isPending}
+          title="Response Tokens"
+          value={data.totalCompletionTokens}
         />
       </div>
 
@@ -131,39 +131,39 @@ export function NebulaAnalyticsDashboardUI(props: {
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <AnalyticsChart
+          color="hsl(var(--chart-1))"
           data={data.chartData}
+          dataKey="totalRequests"
+          description="Total user-generated prompts"
           isPending={props.isPending}
           title="Prompts"
-          description="Total user-generated prompts"
-          dataKey="totalRequests"
-          color="hsl(var(--chart-1))"
         />
 
         <AnalyticsChart
+          color="hsl(var(--chart-3))"
           data={data.chartData}
+          dataKey="totalSessions"
+          description="Total chat sessions created by users"
           isPending={props.isPending}
           title="Sessions Created"
-          description="Total chat sessions created by users"
-          dataKey="totalSessions"
-          color="hsl(var(--chart-3))"
         />
 
         <AnalyticsChart
+          color="hsl(var(--chart-2))"
           data={data.chartData}
+          dataKey="totalPromptTokens"
+          description="Total tokens sent in prompts"
           isPending={props.isPending}
           title="Prompt Tokens"
-          description="Total tokens sent in prompts"
-          dataKey="totalPromptTokens"
-          color="hsl(var(--chart-2))"
         />
 
         <AnalyticsChart
+          color="hsl(var(--chart-5))"
           data={data.chartData}
+          dataKey="totalCompletionTokens"
+          description="Total tokens sent in responses"
           isPending={props.isPending}
           title="Response Tokens"
-          description="Total tokens sent in responses"
-          dataKey="totalCompletionTokens"
-          color="hsl(var(--chart-5))"
         />
       </div>
     </div>
@@ -192,11 +192,11 @@ function StatCard(props: {
       </div>
       <SkeletonContainer
         className="inline-block"
-        skeletonData={10000}
         loadedData={props.isPending ? undefined : props.value}
         render={(v) => (
           <p className="font-semibold text-2xl tracking-tight">{v}</p>
         )}
+        skeletonData={10000}
       />
     </div>
   );

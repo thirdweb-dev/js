@@ -1,8 +1,8 @@
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { NEXT_PUBLIC_ENGINE_CLOUD_URL } from "@/constants/public-envs";
-import Link from "next/link";
 import { EngineIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 
 export default async function Page(props: {
@@ -37,24 +37,24 @@ function TransactionsLayout(props: {
               <h1 className="mb-0.5 flex items-center gap-2 font-semibold text-3xl tracking-tight">
                 Engine{" "}
                 <Badge
-                  variant="success"
                   className="mt-0.5 flex items-center gap-2 text-sm"
+                  variant="success"
                 >
                   <EngineIcon className="size-4" /> Cloud
                 </Badge>
                 <Badge
-                  variant="outline"
                   className="mt-0.5 flex items-center gap-2 text-sm"
+                  variant="outline"
                 >
                   Beta
                 </Badge>
               </h1>
               <div className="flex items-center gap-2">
                 <Link
-                  href={`${NEXT_PUBLIC_ENGINE_CLOUD_URL}/reference`} // TODO: change this
-                  target="_blank"
+                  className="max-w-full truncate py-1 text-muted-foreground" // TODO: change this
+                  href={`${NEXT_PUBLIC_ENGINE_CLOUD_URL}/reference`}
                   rel="noopener noreferrer"
-                  className="max-w-full truncate py-1 text-muted-foreground"
+                  target="_blank"
                 >
                   {NEXT_PUBLIC_ENGINE_CLOUD_URL}
                 </Link>
@@ -70,12 +70,11 @@ function TransactionsLayout(props: {
 
         {/* Nav */}
         <TabPathLinks
-          scrollableClassName="container max-w-7xl"
           links={[
             {
+              exactMatch: true,
               name: "Transactions",
               path: `${engineLayoutSlug}`,
-              exactMatch: true,
             },
             {
               name: "API Explorer",
@@ -90,6 +89,7 @@ function TransactionsLayout(props: {
               path: `${engineLayoutSlug}/vault`,
             },
           ]}
+          scrollableClassName="container max-w-7xl"
         />
       </div>
       <div className="h-6" />

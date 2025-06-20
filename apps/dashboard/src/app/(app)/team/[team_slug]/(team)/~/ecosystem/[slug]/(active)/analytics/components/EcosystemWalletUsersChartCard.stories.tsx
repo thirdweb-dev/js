@@ -3,7 +3,6 @@ import type { EcosystemWalletStats } from "types/analytics";
 import { EcosystemWalletUsersChartCard } from "./EcosystemWalletUsersChartCard";
 
 const meta = {
-  title: "Ecosystem/Analytics/EcosystemWalletUsersChartCard",
   component: EcosystemWalletUsersChartCard,
   decorators: [
     (Story) => (
@@ -12,6 +11,7 @@ const meta = {
       </div>
     ),
   ],
+  title: "Ecosystem/Analytics/EcosystemWalletUsersChartCard",
 } satisfies Meta<typeof EcosystemWalletUsersChartCard>;
 
 export default meta;
@@ -50,10 +50,10 @@ function ecosystemWalletStatsStub(
       const authMethod =
         authMethods[Math.floor(Math.random() * authMethods.length)];
       stats.push({
-        date: formattedDate,
         authenticationMethod: authMethod || "MetaMask",
-        uniqueWalletsConnected: Math.floor(Math.random() * 1000) + 1,
+        date: formattedDate,
         ecosystemPartnerId: "123",
+        uniqueWalletsConnected: Math.floor(Math.random() * 1000) + 1,
       });
     }
   }
@@ -65,8 +65,8 @@ function ecosystemWalletStatsStub(
 export const EmptyData: Story = {
   args: {
     ecosystemWalletStats: [],
-    isPending: false,
     groupBy: "authenticationMethod",
+    isPending: false,
   },
 };
 
@@ -74,8 +74,8 @@ export const EmptyData: Story = {
 export const Loading: Story = {
   args: {
     ecosystemWalletStats: [],
-    isPending: true,
     groupBy: "authenticationMethod",
+    isPending: true,
   },
 };
 
@@ -83,8 +83,8 @@ export const Loading: Story = {
 export const ThirtyDaysData: Story = {
   args: {
     ecosystemWalletStats: ecosystemWalletStatsStub(30),
-    isPending: false,
     groupBy: "authenticationMethod",
+    isPending: false,
   },
 };
 
@@ -92,8 +92,8 @@ export const ThirtyDaysData: Story = {
 export const SixtyDaysData: Story = {
   args: {
     ecosystemWalletStats: ecosystemWalletStatsStub(60),
-    isPending: false,
     groupBy: "authenticationMethod",
+    isPending: false,
   },
 };
 
@@ -101,8 +101,8 @@ export const SixtyDaysData: Story = {
 export const OneHundredTwentyDaysData: Story = {
   args: {
     ecosystemWalletStats: ecosystemWalletStatsStub(120),
-    isPending: false,
     groupBy: "authenticationMethod",
+    isPending: false,
   },
 };
 
@@ -119,8 +119,8 @@ export const ManyAuthMethods: Story = {
           authMethods[index % authMethods.length] || "MetaMask",
       }));
     })(),
-    isPending: false,
     groupBy: "authenticationMethod",
+    isPending: false,
   },
 };
 
@@ -131,7 +131,7 @@ export const ZeroValues: Story = {
       ...stat,
       uniqueWalletsConnected: 0,
     })),
-    isPending: false,
     groupBy: "authenticationMethod",
+    isPending: false,
   },
 };

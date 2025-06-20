@@ -1,5 +1,7 @@
 "use client";
 
+import { BellIcon } from "lucide-react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -13,8 +15,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { BellIcon } from "lucide-react";
-import { useMemo, useState } from "react";
 import { NotificationList } from "./notification-list";
 import { useNotifications } from "./state/manager";
 
@@ -26,7 +26,7 @@ export function NotificationsButton(props: { accountId: string }) {
 
   const trigger = useMemo(
     () => (
-      <Button variant="outline" size="icon" className="relative rounded-full">
+      <Button className="relative rounded-full" size="icon" variant="outline">
         <BellIcon className="h-4 w-4" />
         {(manager.unreadNotificationsCount || 0) > 0 && (
           <span className="absolute top-0 right-0 flex h-2 w-2">
@@ -41,7 +41,7 @@ export function NotificationsButton(props: { accountId: string }) {
 
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={setOpen}>
+      <Drawer onOpenChange={setOpen} open={open}>
         <DrawerTrigger asChild>{trigger}</DrawerTrigger>
         <DrawerContent className="max-h-[90vh] min-h-[66vh]">
           <DrawerTitle className="sr-only">Notifications</DrawerTitle>
@@ -52,11 +52,11 @@ export function NotificationsButton(props: { accountId: string }) {
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
       <PopoverContent
-        className="max-h-[90vh] min-h-[500px] w-[400px] max-w-md p-0"
         align="end"
+        className="max-h-[90vh] min-h-[500px] w-[400px] max-w-md p-0"
       >
         <NotificationList {...manager} />
       </PopoverContent>

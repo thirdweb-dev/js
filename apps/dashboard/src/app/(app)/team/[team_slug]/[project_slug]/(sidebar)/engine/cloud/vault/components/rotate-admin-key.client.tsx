@@ -1,20 +1,5 @@
 "use client";
 
-import type { Project } from "@/api/projects";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { rotateServiceAccount } from "@thirdweb-dev/vault-sdk";
 import {
@@ -26,6 +11,21 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import type { Project } from "@/api/projects";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import {
   createManagementAccessToken,
   createWalletAccessToken,
@@ -65,15 +65,15 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
 
       // need to recreate the management access token with the new admin key
       const managementAccessTokenPromise = createManagementAccessToken({
-        project: props.project,
         adminKey: rotateServiceAccountRes.data.newAdminKey,
+        project: props.project,
         rotationCode: rotateServiceAccountRes.data.newRotationCode,
         vaultClient,
       });
 
       const userAccesTokenPromise = createWalletAccessToken({
-        project: props.project,
         adminKey: rotateServiceAccountRes.data.newAdminKey,
+        project: props.project,
         vaultClient,
       });
 
@@ -87,8 +87,8 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
       }
 
       return {
-        success: true,
         adminKey: rotateServiceAccountRes.data.newAdminKey,
+        success: true,
         userAccessToken: userAccessTokenRes.data,
       };
     },
@@ -138,17 +138,17 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
   return (
     <>
       <Button
-        variant="outline"
-        onClick={() => setModalOpen(true)}
-        disabled={isLoading}
         className="h-auto gap-2 rounded-lg bg-background px-4 py-3"
+        disabled={isLoading}
+        onClick={() => setModalOpen(true)}
+        variant="outline"
       >
         {isLoading && <Loader2Icon className="size-4 animate-spin" />}
         {!isLoading && <RefreshCcwIcon className="size-4" />}
         Rotate Admin Key
       </Button>
 
-      <Dialog open={modalOpen} onOpenChange={handleCloseModal} modal={true}>
+      <Dialog modal={true} onOpenChange={handleCloseModal} open={modalOpen}>
         <DialogContent
           className="overflow-hidden p-0"
           dialogCloseClassName={cn(!keysConfirmed && "hidden")}
@@ -179,12 +179,12 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
                     </h3>
                     <div className="flex flex-col gap-2">
                       <CopyTextButton
-                        textToCopy={rotateAdminKeyMutation.data.adminKey}
                         className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
+                        copyIconPosition="right"
+                        textToCopy={rotateAdminKeyMutation.data.adminKey}
                         textToShow={maskSecret(
                           rotateAdminKeyMutation.data.adminKey,
                         )}
-                        copyIconPosition="right"
                         tooltip="Copy Admin Key"
                       />
                       <p className="text-muted-foreground text-xs">
@@ -199,16 +199,16 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
                     </h3>
                     <div className="flex flex-col gap-2 ">
                       <CopyTextButton
+                        className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
+                        copyIconPosition="right"
                         textToCopy={
                           rotateAdminKeyMutation.data.userAccessToken
                             .accessToken
                         }
-                        className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
                         textToShow={maskSecret(
                           rotateAdminKeyMutation.data.userAccessToken
                             .accessToken,
                         )}
-                        copyIconPosition="right"
                         tooltip="Copy Vault Access Token"
                       />
                       <p className="text-muted-foreground text-xs">
@@ -228,9 +228,9 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
                   <div className="h-4" />
                   <div className="flex items-center gap-2">
                     <Button
-                      variant="link"
-                      onClick={handleDownloadKeys}
                       className="flex h-auto items-center gap-2 p-0 text-sm text-success-text"
+                      onClick={handleDownloadKeys}
+                      variant="link"
                     >
                       <DownloadIcon className="size-4" />
                       {keysDownloaded ? "Keys Downloaded" : "Download Keys"}
@@ -254,8 +254,8 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
 
               <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
                 <Button
-                  onClick={handleCloseModal}
                   disabled={!keysConfirmed}
+                  onClick={handleCloseModal}
                   variant="primary"
                 >
                   Close
@@ -288,17 +288,17 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
                 </div>
                 <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
                   <Button
-                    variant="outline"
                     onClick={() => {
                       setModalOpen(false);
                     }}
+                    variant="outline"
                   >
                     Cancel
                   </Button>
                   <Button
-                    variant="destructive"
-                    onClick={() => rotateAdminKeyMutation.mutate()}
                     disabled={rotateAdminKeyMutation.isPending}
+                    onClick={() => rotateAdminKeyMutation.mutate()}
+                    variant="destructive"
                   >
                     {rotateAdminKeyMutation.isPending ? (
                       <>

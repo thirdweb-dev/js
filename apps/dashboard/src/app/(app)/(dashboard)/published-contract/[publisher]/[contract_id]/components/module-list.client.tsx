@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
+import { Badge } from "@/components/ui/badge";
 import { moduleFromBase64 } from "../../../utils/module-base-64";
 
 function useModules() {

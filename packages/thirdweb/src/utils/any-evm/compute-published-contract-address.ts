@@ -44,10 +44,10 @@ export async function computePublishedContractAddress(args: {
     version: args.version,
   });
   return computeContractAddress({
-    client: args.client,
     chain: args.chain,
-    contractMetadata,
+    client: args.client,
     constructorParams: args.constructorParams,
+    contractMetadata,
     salt: args.salt,
   });
 }

@@ -40,10 +40,10 @@ describe.runIf(
       //   engineCloud: "engine.thirdweb-dev.com",
       // });
       serverWallet = Engine.serverWallet({
-        client: TEST_CLIENT,
-        vaultAccessToken: process.env.VAULT_TOKEN as string,
         address: process.env.ENGINE_CLOUD_WALLET_ADDRESS as string,
         chain: arbitrumSepolia,
+        client: TEST_CLIENT,
+        vaultAccessToken: process.env.VAULT_TOKEN as string,
       });
     });
 
@@ -82,8 +82,8 @@ describe.runIf(
       const tx = await sendTransaction({
         account: serverWallet,
         transaction: {
-          client: TEST_CLIENT,
           chain: arbitrumSepolia,
+          client: TEST_CLIENT,
           to: TEST_ACCOUNT_B.address,
           value: 0n,
         },
@@ -93,15 +93,15 @@ describe.runIf(
 
     it("should enqueue a tx", async () => {
       const nftContract = getContract({
-        client: TEST_CLIENT,
-        chain: sepolia,
         address: "0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
+        chain: sepolia,
+        client: TEST_CLIENT,
       });
       const claimTx = claimTo({
         contract: nftContract,
+        quantity: 1n,
         to: serverWallet.address,
         tokenId: 0n,
-        quantity: 1n,
       });
       const result = await serverWallet.enqueueTransaction({
         transaction: claimTx,
@@ -116,7 +116,7 @@ describe.runIf(
       const res = await Engine.searchTransactions({
         client: TEST_CLIENT,
         filters: [
-          { field: "id", values: [result.transactionId], operation: "OR" },
+          { field: "id", operation: "OR", values: [result.transactionId] },
         ],
       });
       expect(res).toBeDefined();
@@ -126,14 +126,14 @@ describe.runIf(
 
     it("should send a extension tx", async () => {
       const tokenContract = getContract({
-        client: TEST_CLIENT,
-        chain: baseSepolia,
         address: "0x87C52295891f208459F334975a3beE198fE75244",
+        chain: baseSepolia,
+        client: TEST_CLIENT,
       });
       const claimTx = mintTo({
+        amount: "0.001",
         contract: tokenContract,
         to: serverWallet.address,
-        amount: "0.001",
       });
       const tx = await sendTransaction({
         account: serverWallet,
@@ -144,19 +144,19 @@ describe.runIf(
 
     it("should enqueue a batch of txs", async () => {
       const tokenContract = getContract({
-        client: TEST_CLIENT,
-        chain: baseSepolia,
         address: "0x87C52295891f208459F334975a3beE198fE75244",
+        chain: baseSepolia,
+        client: TEST_CLIENT,
       });
       const claimTx1 = mintTo({
+        amount: "0.001",
         contract: tokenContract,
         to: serverWallet.address,
-        amount: "0.001",
       });
       const claimTx2 = mintTo({
+        amount: "0.002",
         contract: tokenContract,
         to: serverWallet.address,
-        amount: "0.002",
       });
       const tx = await serverWallet.enqueueBatchTransaction({
         transactions: [claimTx1, claimTx2],
@@ -171,16 +171,16 @@ describe.runIf(
 
     it("should get revert reason", async () => {
       const nftContract = getContract({
-        client: TEST_CLIENT,
-        chain: sepolia,
         address: "0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
+        chain: sepolia,
+        client: TEST_CLIENT,
       });
       const transaction = setContractURI({
         contract: nftContract,
-        uri: "https://example.com",
         overrides: {
           gas: 1000000n, // skip simulation
         },
+        uri: "https://example.com",
       });
       await expect(
         sendTransaction({
@@ -198,13 +198,13 @@ describe.runIf(
       });
       const smart = smartWallet({
         chain: sepolia,
-        sponsorGas: true,
         sessionKey: {
           address: sessionKeyAccountAddress,
           permissions: {
             approvedTargets: "*",
           },
         },
+        sponsorGas: true,
       });
       const smartAccount = await smart.connect({
         client: TEST_CLIENT,
@@ -214,32 +214,32 @@ describe.runIf(
 
       const signers = await getAllActiveSigners({
         contract: getContract({
-          client: TEST_CLIENT,
-          chain: sepolia,
           address: smartAccount.address,
+          chain: sepolia,
+          client: TEST_CLIENT,
         }),
       });
       expect(signers.map((s) => s.signer)).toContain(sessionKeyAccountAddress);
 
       const serverWallet = Engine.serverWallet({
-        client: TEST_CLIENT,
-        vaultAccessToken: process.env.VAULT_TOKEN as string,
         address: sessionKeyAccountAddress,
         chain: sepolia,
+        client: TEST_CLIENT,
         executionOptions: {
-          type: "ERC4337",
+          entrypointAddress: ENTRYPOINT_ADDRESS_v0_6,
+          factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
           signerAddress: sessionKeyAccountAddress,
           smartAccountAddress: smartAccount.address,
-          factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
-          entrypointAddress: ENTRYPOINT_ADDRESS_v0_6,
+          type: "ERC4337",
         },
+        vaultAccessToken: process.env.VAULT_TOKEN as string,
       });
 
       const tx = await sendTransaction({
         account: serverWallet,
         transaction: {
-          client: TEST_CLIENT,
           chain: sepolia,
+          client: TEST_CLIENT,
           to: TEST_ACCOUNT_B.address,
           value: 0n,
         },

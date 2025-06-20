@@ -10,19 +10,19 @@ describe("StartScreen", () => {
   it("should render an image for the welcome screen", () => {
     const { container } = render(
       <StartScreen
-        connectLocale={en}
         client={client}
-        welcomeScreen={{
-          img: {
-            src: "https://cat.png",
-            width: 100,
-            height: 100,
-          },
-        }}
+        connectLocale={en}
         meta={{
+          privacyPolicyUrl: "https://privacy.com",
           showThirdwebBranding: false,
           termsOfServiceUrl: "https://cat.com",
-          privacyPolicyUrl: "https://privacy.com",
+        }}
+        welcomeScreen={{
+          img: {
+            height: 100,
+            src: "https://cat.png",
+            width: 100,
+          },
         }}
       />,
     );
@@ -36,14 +36,14 @@ describe("StartScreen", () => {
   it("should render new-to-wallet link", () => {
     const { container } = render(
       <StartScreen
-        connectLocale={en}
         client={client}
-        welcomeScreen={undefined}
+        connectLocale={en}
         meta={{
+          privacyPolicyUrl: "https://privacy.com",
           showThirdwebBranding: false,
           termsOfServiceUrl: "https://cat.com",
-          privacyPolicyUrl: "https://privacy.com",
         }}
+        welcomeScreen={undefined}
       />,
     );
 
@@ -55,14 +55,14 @@ describe("StartScreen", () => {
   it("should render an svg icon if a custom image is not passed", () => {
     const { container } = render(
       <StartScreen
-        connectLocale={en}
         client={client}
-        welcomeScreen={undefined}
+        connectLocale={en}
         meta={{
+          privacyPolicyUrl: "https://privacy.com",
           showThirdwebBranding: false,
           termsOfServiceUrl: "https://cat.com",
-          privacyPolicyUrl: "https://privacy.com",
         }}
+        welcomeScreen={undefined}
       />,
     );
     const svg = container.querySelector("svg");

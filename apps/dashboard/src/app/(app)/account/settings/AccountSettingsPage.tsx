@@ -1,13 +1,13 @@
 "use client";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
+import type { ThirdwebClient } from "thirdweb";
+import { useActiveWallet, useDisconnect } from "thirdweb/react";
+import { upload } from "thirdweb/storage";
 import { confirmEmailWithOTP } from "@/actions/confirmEmail";
 import { apiServerProxy } from "@/actions/proxies";
 import { updateAccount } from "@/actions/updateAccount";
 import { resetAnalytics } from "@/analytics/reset";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import type { ThirdwebClient } from "thirdweb";
-import { useActiveWallet, useDisconnect } from "thirdweb/react";
-import { upload } from "thirdweb/storage";
 import { doLogout } from "../../login/auth-actions";
 import { AccountSettingsPageUI } from "./AccountSettingsPageUI";
 
@@ -32,9 +32,7 @@ export function AccountSettingsPage(props: {
 
       <div className="container max-w-[950px] grow pt-8 pb-20">
         <AccountSettingsPageUI
-          client={props.client}
-          defaultTeamSlug={props.defaultTeamSlug}
-          defaultTeamName={props.defaultTeamName}
+          account={props.account}
           cancelSubscriptions={async () => {
             const res = await apiServerProxy({
               method: "DELETE",
@@ -45,14 +43,9 @@ export function AccountSettingsPage(props: {
               throw new Error(res.error);
             }
           }}
-          onAccountDeleted={async () => {
-            await doLogout();
-            resetAnalytics();
-            if (activeWallet) {
-              disconnect(activeWallet);
-            }
-            router.replace("/login");
-          }}
+          client={props.client}
+          defaultTeamName={props.defaultTeamName}
+          defaultTeamSlug={props.defaultTeamSlug}
           deleteAccount={async () => {
             try {
               const res = await apiServerProxy({
@@ -68,8 +61,22 @@ export function AccountSettingsPage(props: {
               return { status: 500 };
             }
           }}
+          onAccountDeleted={async () => {
+            await doLogout();
+            resetAnalytics();
+            if (activeWallet) {
+              disconnect(activeWallet);
+            }
+            router.replace("/login");
+          }}
+          sendEmail={async (email) => {
+            const res = await updateAccount({ email });
+            if (res?.errorMessage) {
+              throw new Error(res.errorMessage);
+            }
+          }}
           updateAccountAvatar={async (file) => {
-            let uri: string | undefined = undefined;
+            let uri: string | undefined;
 
             if (file) {
               // upload to IPFS
@@ -85,7 +92,6 @@ export function AccountSettingsPage(props: {
 
             router.refresh();
           }}
-          account={props.account}
           updateEmailWithOTP={async (otp) => {
             const res = await confirmEmailWithOTP(otp);
             if (res?.errorMessage) {
@@ -93,20 +99,14 @@ export function AccountSettingsPage(props: {
             }
             router.refresh();
           }}
+          // yes, this is weird -
+          // to send OTP to email, we use updateAccount
           updateName={async (name) => {
             const res = await updateAccount({ name });
             if (res?.errorMessage) {
               throw new Error(res.errorMessage);
             }
             router.refresh();
-          }}
-          // yes, this is weird -
-          // to send OTP to email, we use updateAccount
-          sendEmail={async (email) => {
-            const res = await updateAccount({ email });
-            if (res?.errorMessage) {
-              throw new Error(res.errorMessage);
-            }
           }}
         />
       </div>

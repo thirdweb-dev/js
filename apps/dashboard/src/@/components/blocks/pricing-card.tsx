@@ -1,15 +1,15 @@
 "use client";
-import type { Team } from "@/api/team";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import { RenewSubscriptionButton } from "components/settings/Account/Billing/renew-subscription/renew-subscription-button";
 import { CheckIcon, DollarSignIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import { remainingDays } from "utils/date-utils";
 import { TEAM_PLANS } from "utils/pricing";
+import type { Team } from "@/api/team";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import type { ProductSKU } from "../../lib/billing";
 import { CheckoutButton } from "../billing";
 
@@ -141,18 +141,18 @@ export const PricingCard: React.FC<PricingCardProps> = ({
       {cta && (
         <div className="flex flex-col gap-3">
           {cta.type === "renew" && (
-            <RenewSubscriptionButton teamId={teamId} getTeam={getTeam} />
+            <RenewSubscriptionButton getTeam={getTeam} teamId={teamId} />
           )}
           {billingPlanToSkuMap[billingPlan] && cta.type === "checkout" && (
             <CheckoutButton
               billingStatus={billingStatus}
               buttonProps={{
-                variant: highlighted ? "default" : "outline",
                 className: highlighted ? undefined : "bg-background",
                 onClick: cta.onClick,
+                variant: highlighted ? "default" : "outline",
               }}
-              teamSlug={teamSlug}
               sku={billingPlanToSkuMap[billingPlan]}
+              teamSlug={teamSlug}
             >
               {has7DayTrial ? "Start 7 Day Free Trial" : cta.label}
             </CheckoutButton>
@@ -160,15 +160,15 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
           {cta.type === "link" && (
             <Button
-              variant={highlighted ? "default" : "outline"}
-              className={highlighted ? undefined : "bg-background"}
               asChild
+              className={highlighted ? undefined : "bg-background"}
+              variant={highlighted ? "default" : "outline"}
             >
               <Link
                 href={cta.href}
-                target="_blank"
                 onClick={cta.onClick}
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 {has7DayTrial ? "Start 7 Day Free Trial" : cta.label}
               </Link>
@@ -188,14 +188,14 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
 const billingPlanToSkuMap: Record<Team["billingPlan"], ProductSKU | undefined> =
   {
-    starter: "plan:starter",
-    growth: "plan:growth",
-    scale: "plan:scale",
-    pro: "plan:pro",
     // we can't render checkout buttons for these plans:
     accelerate: undefined,
     free: undefined,
+    growth: "plan:growth",
     growth_legacy: undefined,
+    pro: "plan:pro",
+    scale: "plan:scale",
+    starter: "plan:starter",
   };
 
 type FeatureItemProps = {

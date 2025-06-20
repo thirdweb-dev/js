@@ -19,7 +19,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
     it("should throw error on addresses that dont own any UD", async () => {
       await expect(
-        resolveName({ client: TEST_CLIENT, address: TEST_ACCOUNT_D.address }),
+        resolveName({ address: TEST_ACCOUNT_D.address, client: TEST_CLIENT }),
       ).rejects.toThrowError(
         `Failed to retrieve domain for address: ${TEST_ACCOUNT_D.address}. Make sure you have set the Reverse Resolution address for your domain at https://unstoppabledomains.com/manage?page=reverseResolution&domain=your-domain`,
       );

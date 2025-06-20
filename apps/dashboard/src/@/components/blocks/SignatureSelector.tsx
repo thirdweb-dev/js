@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import { useCallback, useMemo, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 import { MultiSelect } from "./multi-select";
 
 interface SignatureOption {
@@ -85,38 +85,38 @@ export function SignatureSelector({
   // Custom render for MultiSelect's search input
   const customSearchInput = (
     <input
-      ref={inputRef}
-      type="text"
+      autoComplete="off"
       className={cn(
         "w-full border-0 border-border border-b bg-transparent py-4 pr-2 pl-10 text-sm focus-visible:ring-0 focus-visible:ring-offset-0",
         disabled && "cursor-not-allowed opacity-50",
       )}
-      placeholder={placeholder}
-      value={searchValue}
+      disabled={disabled}
       onChange={(e) => setSearchValue(e.target.value)}
       onKeyDown={handleInputKeyDown}
-      disabled={disabled}
-      autoComplete="off"
+      placeholder={placeholder}
+      ref={inputRef}
+      type="text"
+      value={searchValue}
     />
   );
 
   return (
     <div className={className}>
       <MultiSelect
-        options={allOptions}
-        selectedValues={value ? [value] : []}
-        onSelectedValuesChange={handleSelectedValuesChange}
-        placeholder={placeholder}
-        maxCount={1}
-        disabled={disabled}
-        searchPlaceholder={placeholder}
+        customSearchInput={customSearchInput}
         customTrigger={null}
-        renderOption={(option) => <span>{option.label}</span>}
+        disabled={disabled}
+        maxCount={1}
+        onSelectedValuesChange={handleSelectedValuesChange}
+        options={allOptions}
         overrideSearchFn={(option, searchTerm) =>
           option.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
           option.value.toLowerCase().includes(searchTerm.toLowerCase())
         }
-        customSearchInput={customSearchInput}
+        placeholder={placeholder}
+        renderOption={(option) => <span>{option.label}</span>}
+        searchPlaceholder={placeholder}
+        selectedValues={value ? [value] : []}
       />
       {isCustomValue && (
         <div className="mt-2 rounded border border-warning-200 bg-warning-50 px-2 py-1 text-warning-700 text-xs">

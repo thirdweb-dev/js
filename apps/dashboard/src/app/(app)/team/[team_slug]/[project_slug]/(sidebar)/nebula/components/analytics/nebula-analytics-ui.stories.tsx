@@ -4,13 +4,7 @@ import type { NebulaAnalyticsDataItem } from "./fetch-nebula-analytics";
 import { NebulaAnalyticsDashboardUI } from "./nebula-analytics-ui";
 
 const meta = {
-  title: "Nebula/Analytics",
   component: NebulaAnalyticsDashboardUI,
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
-  },
   decorators: [
     (Story) => (
       <div className="container max-w-6xl py-10">
@@ -18,6 +12,12 @@ const meta = {
       </div>
     ),
   ],
+  parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
+  },
+  title: "Nebula/Analytics",
 } satisfies Meta<typeof NebulaAnalyticsDashboardUI>;
 
 export default meta;
@@ -56,10 +56,10 @@ function generateRandomNebulaAnalyticsData(
 ): NebulaAnalyticsDataItem[] {
   return Array.from({ length: days }, (_, i) => ({
     date: subDays(new Date(), i).toISOString(),
-    totalPromptTokens: randomInt(500, 700 + i * 100),
     totalCompletionTokens: randomInt(1000, 2000 + i * 100),
-    totalSessions: randomInt(400, 1000 + i * 100),
+    totalPromptTokens: randomInt(500, 700 + i * 100),
     totalRequests: randomInt(4000, 5000 + i * 100),
+    totalSessions: randomInt(400, 1000 + i * 100),
   }));
 }
 

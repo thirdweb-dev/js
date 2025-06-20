@@ -5,9 +5,9 @@ export function Author(props: { name: string; profileImage?: string | null }) {
     <div className="flex items-center gap-1.5">
       {props.profileImage && (
         <img
-          src={props.profileImage}
-          className="size-8 rounded-[50%] border"
           alt=""
+          className="size-8 rounded-[50%] border"
+          src={props.profileImage}
         />
       )}
       <span className="font-medium text-muted-foreground text-sm">

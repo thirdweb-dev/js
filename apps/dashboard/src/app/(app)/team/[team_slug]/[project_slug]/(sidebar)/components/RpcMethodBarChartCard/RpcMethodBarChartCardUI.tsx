@@ -1,11 +1,4 @@
 "use client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
 import { format } from "date-fns";
 import { useMemo } from "react";
 import {
@@ -15,11 +8,20 @@ import {
   XAxis,
 } from "recharts";
 import type { RpcMethodStats } from "types/analytics";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { EmptyStateCard } from "../../../../../components/Analytics/EmptyStateCard";
 
 export function RpcMethodBarChartCardUI({
   rawData,
-}: { rawData: RpcMethodStats[] }) {
+}: {
+  rawData: RpcMethodStats[];
+}) {
   const maxMethodsToDisplay = 10;
 
   const { data, methodsToDisplay, chartConfig, isAllEmpty } = useMemo(() => {
@@ -94,15 +96,15 @@ export function RpcMethodBarChartCardUI({
     }
 
     return {
-      data: returnValue,
-      methodsToDisplay: methodsToDisplayArray,
       chartConfig,
+      data: returnValue,
       isAllEmpty: returnValue.every((d) => d.total === 0),
+      methodsToDisplay: methodsToDisplayArray,
     };
   }, [rawData]);
 
   if (data.length === 0 || isAllEmpty) {
-    return <EmptyStateCard metric="RPC" link="https://portal.thirdweb.com/" />;
+    return <EmptyStateCard link="https://portal.thirdweb.com/" metric="RPC" />;
   }
 
   return (
@@ -114,8 +116,8 @@ export function RpcMethodBarChartCardUI({
       </CardHeader>
       <CardContent className="px-2 sm:p-6 sm:pl-0">
         <ChartContainer
-          config={chartConfig}
           className="aspect-auto h-[250px] w-full pt-6"
+          config={chartConfig}
         >
           <RechartsBarChart
             accessibilityLayer
@@ -128,18 +130,18 @@ export function RpcMethodBarChartCardUI({
             <CartesianGrid vertical={false} />
 
             <XAxis
-              dataKey="date"
-              tickLine={false}
               axisLine={false}
-              tickMargin={8}
+              dataKey="date"
               minTickGap={32}
               tickFormatter={(value: string) => {
                 const date = new Date(value);
                 return date.toLocaleDateString("en-US", {
-                  month: "short",
                   day: "numeric",
+                  month: "short",
                 });
               }}
+              tickLine={false}
+              tickMargin={8}
             />
 
             <ChartTooltip
@@ -167,18 +169,18 @@ export function RpcMethodBarChartCardUI({
             />
             {methodsToDisplay.map((method, idx) => (
               <Bar
-                key={method}
-                stackId="a"
+                className="stroke-background"
                 dataKey={method}
+                fill={`hsl(var(--chart-${idx + 1}))`}
+                key={method}
                 radius={[
                   idx === methodsToDisplay.length - 1 ? 4 : 0,
                   idx === methodsToDisplay.length - 1 ? 4 : 0,
                   idx === 0 ? 4 : 0,
                   idx === 0 ? 4 : 0,
                 ]}
-                fill={`hsl(var(--chart-${idx + 1}))`}
+                stackId="a"
                 strokeWidth={1}
-                className="stroke-background"
               />
             ))}
           </RechartsBarChart>

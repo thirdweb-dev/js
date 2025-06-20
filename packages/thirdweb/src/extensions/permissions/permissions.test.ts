@@ -6,7 +6,7 @@ import {
   TEST_ACCOUNT_A,
   TEST_ACCOUNT_B,
 } from "../../../test/src/test-wallets.js";
-import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { getAllRoleMembers } from "./read/getAllMembers.js";
@@ -22,8 +22,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("Permissions", () => {
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       params: {
-        name: "PermissionsErc20",
         contractURI: TEST_CONTRACT_URI,
+        name: "PermissionsErc20",
       },
       type: "TokenERC20",
     });
@@ -72,8 +72,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("Permissions", () => {
       targetAccountAddress: TEST_ACCOUNT_B.address,
     });
     await sendAndConfirmTransaction({
-      transaction: grantTx,
       account: TEST_ACCOUNT_A,
+      transaction: grantTx,
     });
 
     // now the target account should have the admin role
@@ -104,8 +104,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("Permissions", () => {
     });
 
     await sendAndConfirmTransaction({
-      transaction: revokeTx,
       account: TEST_ACCOUNT_A,
+      transaction: revokeTx,
     });
 
     // now the target account should not have the admin role
@@ -136,8 +136,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("Permissions", () => {
     });
 
     await sendAndConfirmTransaction({
-      transaction: revokeTx,
       account: TEST_ACCOUNT_A,
+      transaction: revokeTx,
     });
 
     // now the target account should not have the admin role
@@ -169,8 +169,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("Permissions", () => {
 
     await expect(
       sendAndConfirmTransaction({
-        transaction: grantTx,
         account: TEST_ACCOUNT_B,
+        transaction: grantTx,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(`
       [TransactionError: Error - AccessControl: account 0x70997970c51812dc3a010c7d01b50e0d17dc79c8 is missing role 0x0000000000000000000000000000000000000000000000000000000000000000
@@ -197,8 +197,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("PermissionsEnumerable", () => {
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       params: {
-        name: "PermissionsErc20",
         contractURI: TEST_CONTRACT_URI,
+        name: "PermissionsErc20",
       },
       type: "TokenERC20",
     });
@@ -218,8 +218,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("PermissionsEnumerable", () => {
       targetAccountAddress: TEST_ACCOUNT_B.address,
     });
     await sendAndConfirmTransaction({
-      transaction: grantTx,
       account: TEST_ACCOUNT_A,
+      transaction: grantTx,
     });
 
     await expect(

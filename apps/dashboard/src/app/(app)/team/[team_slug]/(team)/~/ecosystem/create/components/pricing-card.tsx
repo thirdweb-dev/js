@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
 import { CheckIcon } from "lucide-react";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 import headerImage from "../../assets/header.png";
 
 export function EcosystemWalletPricingCard(props: { className?: string }) {
@@ -11,7 +11,7 @@ export function EcosystemWalletPricingCard(props: { className?: string }) {
         props.className,
       )}
     >
-      <Image src={headerImage} alt="" sizes="50vw" className="w-full" />
+      <Image alt="" className="w-full" sizes="50vw" src={headerImage} />
 
       <div className="relative flex grow flex-col border-border border-t p-4 lg:p-6">
         <h4 className="flex items-center gap-2 font-semibold text-4xl text-foreground tracking-tight">

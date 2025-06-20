@@ -1,17 +1,18 @@
-import { BadgeContainer, storybookThirdwebClient } from "@/storybook/utils";
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useState } from "react";
 import { ThirdwebProvider } from "thirdweb/react";
+import { BadgeContainer, storybookThirdwebClient } from "@/storybook/utils";
 import type { NebulaContext } from "../api/chat";
 import { ChatBar, type WalletMeta } from "./ChatBar";
+
 const meta = {
-  title: "Nebula/Chatbar",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Nebula/Chatbar",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -29,119 +30,119 @@ function Story() {
     <ThirdwebProvider>
       <div className="container flex max-w-[800px] flex-col gap-14 py-10">
         <Variant
-          label="Not Streaming"
-          isStreaming={false}
-          showContextSelector={true}
-          connectedWallets={[]}
           activeAccountAddress={undefined}
+          connectedWallets={[]}
+          isStreaming={false}
+          label="Not Streaming"
+          showContextSelector={true}
         />
         <Variant
-          label="Streaming"
-          isStreaming={true}
-          showContextSelector={true}
-          connectedWallets={[]}
           activeAccountAddress={undefined}
+          connectedWallets={[]}
+          isStreaming={true}
+          label="Streaming"
+          showContextSelector={true}
         />
 
         <Variant
-          label="1 Chain set in context"
-          isStreaming={false}
+          activeAccountAddress={undefined}
+          connectedWallets={[]}
           context={{
             chainIds: ["1"],
             networks: null,
             walletAddress: null,
           }}
+          isStreaming={false}
+          label="1 Chain set in context"
           showContextSelector={true}
-          connectedWallets={[]}
-          activeAccountAddress={undefined}
         />
 
         <Variant
-          label="3 Chains set in context"
-          isStreaming={false}
+          activeAccountAddress={undefined}
+          connectedWallets={[]}
           context={{
             chainIds: ["1", "137", "10"],
             networks: null,
             walletAddress: null,
           }}
+          isStreaming={false}
+          label="3 Chains set in context"
           showContextSelector={true}
-          connectedWallets={[]}
-          activeAccountAddress={undefined}
         />
 
         <Variant
-          label="5 Chains set in context, 1 user connected wallet"
-          isStreaming={false}
-          context={{
-            chainIds: ["1", "137", "10", "146", "80094"],
-            networks: null,
-            walletAddress: null,
-          }}
-          showContextSelector={true}
-          connectedWallets={[
-            {
-              walletId: "io.metamask",
-              address: userWalletAddress,
-            },
-          ]}
           activeAccountAddress={userWalletAddress}
-        />
-
-        <Variant
-          label="5 Chains set in context, 2 connected wallets - smart wallet active"
-          isStreaming={false}
+          connectedWallets={[
+            {
+              address: userWalletAddress,
+              walletId: "io.metamask",
+            },
+          ]}
           context={{
             chainIds: ["1", "137", "10", "146", "80094"],
             networks: null,
             walletAddress: null,
           }}
+          isStreaming={false}
+          label="5 Chains set in context, 1 user connected wallet"
           showContextSelector={true}
-          connectedWallets={[
-            {
-              walletId: "io.metamask",
-              address: userWalletAddress,
-            },
-            {
-              walletId: "smart",
-              address: smartWalletAddress,
-            },
-          ]}
-          activeAccountAddress={smartWalletAddress}
         />
 
         <Variant
-          label="Prefilled Message"
+          activeAccountAddress={smartWalletAddress}
+          connectedWallets={[
+            {
+              address: userWalletAddress,
+              walletId: "io.metamask",
+            },
+            {
+              address: smartWalletAddress,
+              walletId: "smart",
+            },
+          ]}
+          context={{
+            chainIds: ["1", "137", "10", "146", "80094"],
+            networks: null,
+            walletAddress: null,
+          }}
           isStreaming={false}
+          label="5 Chains set in context, 2 connected wallets - smart wallet active"
+          showContextSelector={true}
+        />
+
+        <Variant
+          activeAccountAddress={undefined}
+          connectedWallets={[]}
+          isStreaming={false}
+          label="Prefilled Message"
           prefillMessage="This is a prefilled message"
           showContextSelector={true}
-          connectedWallets={[]}
-          activeAccountAddress={undefined}
         />
 
         <Variant
+          activeAccountAddress={undefined}
+          connectedWallets={[]}
+          isStreaming={false}
           label="No Context Selector"
-          isStreaming={false}
           showContextSelector={false}
-          connectedWallets={[]}
-          activeAccountAddress={undefined}
         />
 
         <Variant
-          label="No Image Upload"
-          isStreaming={false}
-          showContextSelector={true}
-          connectedWallets={[]}
           activeAccountAddress={undefined}
           allowImageUpload={false}
+          connectedWallets={[]}
+          isStreaming={false}
+          label="No Image Upload"
+          showContextSelector={true}
         />
 
         <Variant
-          label="Connecting Wallet"
-          isStreaming={false}
-          isConnectingWallet={true}
-          showContextSelector={true}
-          connectedWallets={[]}
           activeAccountAddress={undefined}
+          connectedWallets={[]}
+          isConnectingWallet={true}
+          isStreaming={false}
+          label="Connecting Wallet"
+          showContextSelector={true}
         />
       </div>
     </ThirdwebProvider>
@@ -166,21 +167,19 @@ function Variant(props: {
   return (
     <BadgeContainer label={props.label}>
       <ChatBar
-        placeholder={"Ask Nebula"}
-        isConnectingWallet={props.isConnectingWallet || false}
-        client={storybookThirdwebClient}
         abortChatStream={() => {}}
-        onLoginClick={undefined}
-        isChatStreaming={props.isStreaming}
-        sendMessage={() => {}}
-        prefillMessage={props.prefillMessage}
-        context={context}
-        setContext={setContext}
-        showContextSelector={props.showContextSelector}
-        connectedWallets={props.connectedWallets}
         allowImageUpload={
           props.allowImageUpload === undefined ? true : props.allowImageUpload
         }
+        client={storybookThirdwebClient}
+        connectedWallets={props.connectedWallets}
+        context={context}
+        isChatStreaming={props.isStreaming}
+        isConnectingWallet={props.isConnectingWallet || false}
+        onLoginClick={undefined}
+        placeholder={"Ask Nebula"}
+        prefillMessage={props.prefillMessage}
+        sendMessage={() => {}}
         setActiveWallet={(wallet) => {
           setContext({
             chainIds: context?.chainIds || [],
@@ -188,6 +187,8 @@ function Variant(props: {
             walletAddress: wallet.address,
           });
         }}
+        setContext={setContext}
+        showContextSelector={props.showContextSelector}
       />
     </BadgeContainer>
   );

@@ -1,6 +1,6 @@
+import Link from "next/link";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 export default async function Layout(props: {
   children: React.ReactNode;
@@ -17,12 +17,12 @@ export default async function Layout(props: {
             Usage
           </h1>
           <div className="flex items-center gap-2">
-            <Button variant="outline" asChild>
+            <Button asChild variant="outline">
               <Link href={`/team/${params.team_slug}/~/settings/billing`}>
                 Billing Settings
               </Link>
             </Button>
-            <Button variant="outline" asChild>
+            <Button asChild variant="outline">
               <Link href={`/team/${params.team_slug}/~/settings/invoices`}>
                 Invoice History
               </Link>
@@ -33,23 +33,23 @@ export default async function Layout(props: {
       <SidebarLayout
         sidebarLinks={[
           {
-            href: `/team/${params.team_slug}/~/usage`,
             exactMatch: true,
+            href: `/team/${params.team_slug}/~/usage`,
             label: "Overview",
           },
           {
-            href: `/team/${params.team_slug}/~/usage/rpc`,
             exactMatch: true,
+            href: `/team/${params.team_slug}/~/usage/rpc`,
             label: "RPC",
           },
           {
-            href: `/team/${params.team_slug}/~/usage/storage`,
             exactMatch: true,
+            href: `/team/${params.team_slug}/~/usage/storage`,
             label: "Storage",
           },
           {
-            href: `/team/${params.team_slug}/~/usage/account-abstraction`,
             exactMatch: true,
+            href: `/team/${params.team_slug}/~/usage/account-abstraction`,
             label: "Account Abstraction",
           },
         ]}

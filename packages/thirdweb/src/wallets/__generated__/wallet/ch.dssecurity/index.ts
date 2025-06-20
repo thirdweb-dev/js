@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "ch.dssecurity",
-  name: "DS Security SA",
-  homepage: "https://www.dssecurity.ch",
-  image_id: "149a10a6-8914-44ea-424a-236017890100",
   app: {
+    android: "https://dssecurity.ch",
     browser:
       "https://wiki.polygon.technology/docs/tools/wallets/metamask/config-polygon-on-metamask#polygon-scan",
-    ios: "https://dssecurity.ch",
-    android: "https://dssecurity.ch",
-    mac: "https://dssecurity.ch",
-    windows: "https://dssecurity.ch",
-    linux: "https://dssecurity.ch",
     chrome: "https://dssecurity.ch",
-    firefox: "https://dssecurity.ch",
-    safari: "https://dssecurity.ch",
     edge: "https://dssecurity.ch",
+    firefox: "https://dssecurity.ch",
+    ios: "https://dssecurity.ch",
+    linux: "https://dssecurity.ch",
+    mac: "https://dssecurity.ch",
     opera: "https://dssecurity.ch",
-  },
-  rdns: null,
-  mobile: {
-    native: null,
-    universal: "https://www.coinbase.com/wallet/",
+    safari: "https://dssecurity.ch",
+    windows: "https://dssecurity.ch",
   },
   desktop: {
     native: null,
     universal: "https://www.coinbase.com/wallet/",
   },
+  homepage: "https://www.dssecurity.ch",
+  id: "ch.dssecurity",
+  image_id: "149a10a6-8914-44ea-424a-236017890100",
+  mobile: {
+    native: null,
+    universal: "https://www.coinbase.com/wallet/",
+  },
+  name: "DS Security SA",
+  rdns: null,
 } as const;

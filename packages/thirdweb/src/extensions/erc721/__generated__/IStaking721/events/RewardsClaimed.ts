@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "RewardsClaimed" event.
@@ -34,8 +34,8 @@ export type RewardsClaimedEventFilters = Partial<{
  */
 export function rewardsClaimedEvent(filters: RewardsClaimedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event RewardsClaimed(address indexed staker, uint256 rewardAmount)",
-    filters,
   });
 }

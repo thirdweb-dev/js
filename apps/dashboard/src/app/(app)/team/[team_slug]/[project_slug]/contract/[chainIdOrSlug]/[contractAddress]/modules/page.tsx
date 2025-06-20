@@ -1,5 +1,5 @@
-import { getProject } from "@/api/projects";
 import { notFound } from "next/navigation";
+import { getProject } from "@/api/projects";
 import { SharedModulesPage } from "../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/modules/shared-modules-page";
 import type { ProjectContractPageParams } from "../types";
 
@@ -15,9 +15,9 @@ export default async function Page(props: {
 
   return (
     <SharedModulesPage
+      chainIdOrSlug={params.chainIdOrSlug}
       contractAddress={params.contractAddress}
       isLoggedIn={true}
-      chainIdOrSlug={params.chainIdOrSlug}
       projectMeta={{
         projectSlug: project.slug,
         teamId: project.teamId,

@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.fastex.wallet",
-  name: "Yo Wallet",
-  homepage: "https://yowallet.io",
-  image_id: "a38db32b-8291-4d25-9aae-4bf4b6e6f300",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/fastex-wallet/id6474118944",
     android: "https://play.google.com/store/apps/details?id=com.yowallet.app",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/fastex-wallet/id6474118944",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: "com.fastex.wallet",
-  mobile: {
-    native: "yo-wallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://yowallet.io",
+  id: "com.fastex.wallet",
+  image_id: "a38db32b-8291-4d25-9aae-4bf4b6e6f300",
+  mobile: {
+    native: "yo-wallet://",
+    universal: null,
+  },
+  name: "Yo Wallet",
+  rdns: "com.fastex.wallet",
 } as const;

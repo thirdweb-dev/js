@@ -3,9 +3,9 @@ import { version } from "../version.js";
 import type { Ecosystem } from "../wallets/in-app/core/wallet/types.js";
 import { LruMap } from "./caching/lru.js";
 import {
-  type OperatingSystem,
   detectOS,
   detectPlatform,
+  type OperatingSystem,
 } from "./detect-platform.js";
 import { getServiceKey } from "./domains.js";
 import { isJWT } from "./jwt/is-jwt.js";
@@ -213,7 +213,7 @@ export function getPlatformHeaders() {
     os = detectOS(navigator.userAgent);
   }
 
-  let bundleId: string | undefined = undefined;
+  let bundleId: string | undefined;
   if (typeof globalThis !== "undefined" && "Application" in globalThis) {
     // shims use wallet connect RN module which injects Application info in globalThis
     // biome-ignore lint/suspicious/noExplicitAny: get around globalThis typing
@@ -221,10 +221,10 @@ export function getPlatformHeaders() {
   }
 
   previousPlatform = Object.entries({
+    "x-sdk-name": SDK_NAME,
+    "x-sdk-os": os ? parseOs(os) : "unknown",
     "x-sdk-platform": detectPlatform(),
     "x-sdk-version": version,
-    "x-sdk-os": os ? parseOs(os) : "unknown",
-    "x-sdk-name": SDK_NAME,
     ...(bundleId ? { "x-bundle-id": bundleId } : {}),
   });
 

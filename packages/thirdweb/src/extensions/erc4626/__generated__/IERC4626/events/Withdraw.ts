@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "Withdraw" event.
@@ -46,8 +46,8 @@ export type WithdrawEventFilters = Partial<{
  */
 export function withdrawEvent(filters: WithdrawEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event Withdraw(address indexed caller, address indexed receiver, address indexed owner, uint256 assets, uint256 shares)",
-    filters,
   });
 }

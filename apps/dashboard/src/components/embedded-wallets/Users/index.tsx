@@ -1,14 +1,5 @@
 "use client";
 
-import { WalletAddress } from "@/components/blocks/wallet-address";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import {
   useAllEmbeddedWallets,
   useEmbeddedWallets,
@@ -21,6 +12,15 @@ import Papa from "papaparse";
 import { useCallback, useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { WalletUser } from "thirdweb/wallets";
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { SearchInput } from "./SearchInput";
 
 const getUserIdentifier = (accounts: WalletUser["linkedAccounts"]) => {
@@ -44,26 +44,25 @@ export function InAppWalletUsersPageContent(props: {
   const columns = useMemo(() => {
     return [
       columnHelper.accessor("linkedAccounts", {
-        header: "User Identifier",
-        enableColumnFilter: true,
         cell: (cell) => {
           const identifier = getUserIdentifier(cell.getValue());
           return <span className="text-sm">{identifier}</span>;
         },
+        enableColumnFilter: true,
+        header: "User Identifier",
         id: "user_identifier",
       }),
       columnHelper.accessor("wallets", {
-        header: "Address",
         cell: (cell) => {
           const address = cell.getValue()[0]?.address;
           return address ? (
             <WalletAddress address={address} client={props.client} />
           ) : null;
         },
+        header: "Address",
         id: "address",
       }),
       columnHelper.accessor("wallets", {
-        header: "Created",
         cell: (cell) => {
           const value = cell.getValue()[0]?.createdAt;
 
@@ -76,10 +75,10 @@ export function InAppWalletUsersPageContent(props: {
             </span>
           );
         },
+        header: "Created",
         id: "created_at",
       }),
       columnHelper.accessor("linkedAccounts", {
-        header: "Login Methods",
         cell: (cell) => {
           const value = cell.getValue();
           const loginMethodsDisplay = value.reduce((acc, curr) => {
@@ -105,6 +104,7 @@ export function InAppWalletUsersPageContent(props: {
             </TooltipProvider>
           );
         },
+        header: "Login Methods",
         id: "login_methods",
       }),
     ];
@@ -158,12 +158,12 @@ export function InAppWalletUsersPageContent(props: {
     const csv = Papa.unparse(
       usersWallets.map((row) => {
         return {
-          user_identifier: getUserIdentifier(row.linkedAccounts),
           address: row.wallets[0]?.address || "Uninitialized",
           created: row.wallets[0]?.createdAt
             ? format(new Date(row.wallets[0].createdAt), "MMM dd, yyyy")
             : "Wallet not created yet",
           login_methods: row.linkedAccounts.map((acc) => acc.type).join(", "),
+          user_identifier: getUserIdentifier(row.linkedAccounts),
         };
       }),
     );
@@ -183,17 +183,17 @@ export function InAppWalletUsersPageContent(props: {
         <div className="flex items-center justify-end gap-3">
           <div className="w-full max-w-xs">
             <SearchInput
+              onValueChange={setSearchValue}
               placeholder="Search"
               value={searchValue}
-              onValueChange={setSearchValue}
             />
           </div>
           <Button
+            className="gap-2"
             disabled={wallets.length === 0 || isPending}
-            variant="outline"
             onClick={downloadCSV}
             size="sm"
-            className="gap-2"
+            variant="outline"
           >
             {isPending && <Spinner className="size-4" />}
             Download as .csv
@@ -202,31 +202,31 @@ export function InAppWalletUsersPageContent(props: {
 
         <div>
           <TWTable
-            title="in-app wallets"
-            data={filteredWallets}
             columns={columns}
-            isPending={walletsQuery.isPending}
+            data={filteredWallets}
             isFetched={walletsQuery.isFetched}
+            isPending={walletsQuery.isPending}
             tableContainerClassName="rounded-b-none"
+            title="in-app wallets"
           />
 
           <div className="flex justify-center gap-3 rounded-b-lg border border-t-0 bg-card p-6">
             <Button
-              variant="outline"
-              size="sm"
               className="gap-2 bg-background"
-              onClick={() => setActivePage((p) => Math.max(1, p - 1))}
               disabled={activePage === 1 || walletsQuery.isPending}
+              onClick={() => setActivePage((p) => Math.max(1, p - 1))}
+              size="sm"
+              variant="outline"
             >
               <ArrowLeftIcon className="size-4" />
               Previous
             </Button>
             <Button
-              variant="outline"
-              size="sm"
               className="gap-2 bg-background"
-              onClick={() => setActivePage((p) => p + 1)}
               disabled={wallets.length === 0 || walletsQuery.isPending}
+              onClick={() => setActivePage((p) => p + 1)}
+              size="sm"
+              variant="outline"
             >
               Next
               <ArrowRightIcon className="size-4" />

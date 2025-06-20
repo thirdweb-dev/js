@@ -1,7 +1,7 @@
-import type { Project } from "@/api/projects";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
 import Link from "next/link";
+import type { Project } from "@/api/projects";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import CreateVaultAccountButton from "./create-vault-account.client";
 import ListAccessTokens from "./list-access-tokens.client";
 import RotateAdminKeyButton from "./rotate-admin-key.client";
@@ -9,7 +9,10 @@ import RotateAdminKeyButton from "./rotate-admin-key.client";
 export function KeyManagement({
   maskedAdminKey,
   project,
-}: { maskedAdminKey?: string; project: Project }) {
+}: {
+  maskedAdminKey?: string;
+  project: Project;
+}) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-6 overflow-hidden rounded-lg border border-border bg-card">
@@ -18,8 +21,8 @@ export function KeyManagement({
           <p className="text-muted-foreground text-sm">
             Secure, non-custodial key management system for your server wallets.{" "}
             <Link
-              href="https://portal.thirdweb.com/vault"
               className="underline"
+              href="https://portal.thirdweb.com/vault"
             >
               Learn more.
             </Link>
@@ -62,13 +65,11 @@ export function KeyManagement({
   );
 }
 
-async function CreateVaultAccountAlert(props: {
-  project: Project;
-}) {
+async function CreateVaultAccountAlert(props: { project: Project }) {
   return (
     <div className="flex flex-col gap-6">
       <div className="px-6">
-        <Alert variant="info" className="bg-background">
+        <Alert className="bg-background" variant="info">
           <AlertTitle className="flex items-center gap-2">
             <InfoIcon className="h-4 w-4" />
             What is Vault?
@@ -84,8 +85,8 @@ async function CreateVaultAccountAlert(props: {
             Your keys are stored in a hardware enclave, and all requests are
             end-to-end encrypted.{" "}
             <Link
-              href="https://portal.thirdweb.com/vault"
               className="underline"
+              href="https://portal.thirdweb.com/vault"
             >
               Learn more about Vault security model.
             </Link>

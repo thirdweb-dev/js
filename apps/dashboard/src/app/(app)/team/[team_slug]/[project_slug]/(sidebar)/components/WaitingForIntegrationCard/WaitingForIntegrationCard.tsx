@@ -1,9 +1,9 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { TabButtons } from "@/components/ui/tabs";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { TabButtons } from "@/components/ui/tabs";
 
 export function WaitingForIntegrationCard(props: {
   title: string;
@@ -31,9 +31,9 @@ export function WaitingForIntegrationCard(props: {
           <TabButtons
             tabClassName="!text-sm"
             tabs={props.codeTabs.map((tab) => ({
+              isActive: tab.label === selectedTab,
               name: tab.label,
               onClick: () => setSelectedTab(tab.label),
-              isActive: tab.label === selectedTab,
             }))}
           />
           <div className="h-2" />
@@ -44,13 +44,13 @@ export function WaitingForIntegrationCard(props: {
       <div className="flex flex-col gap-3 border-t p-4 lg:flex-row lg:items-center lg:justify-between lg:p-6">
         <div className="flex gap-3">
           {props.ctas.map((cta) => (
-            <Button asChild key={cta.label} variant="outline" size="sm">
+            <Button asChild key={cta.label} size="sm" variant="outline">
               <Link
+                className="gap-2"
                 href={cta.href}
                 key={cta.label}
-                target="_blank"
                 rel="noopener noreferrer"
-                className="gap-2"
+                target="_blank"
               >
                 {cta.label}
                 <ExternalLinkIcon className="size-4 text-muted-foreground" />

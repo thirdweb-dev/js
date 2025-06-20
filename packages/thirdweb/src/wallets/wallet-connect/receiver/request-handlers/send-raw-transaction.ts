@@ -23,8 +23,8 @@ export async function handleSendRawTransactionRequest(options: {
   }
 
   const txResult = await account.sendRawTransaction({
-    rawTransaction,
     chainId,
+    rawTransaction,
   });
   return txResult.transactionHash;
 }

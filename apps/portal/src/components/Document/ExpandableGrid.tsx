@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 import { DynamicHeight } from "../others/DynamicHeight";
 import { Button } from "../ui/button";
 import { Grid } from "./Grid";
@@ -18,9 +18,9 @@ export function ExpandableGrid(props: { children: React.ReactNode }) {
       </Grid>
       <div className="mt-3 flex justify-end">
         <Button
-          variant="ghost"
-          onClick={() => setIsExpanded(!isExpanded)}
           className="gap-2 p-0 text-muted-foreground hover:bg-transparent hover:text-foreground"
+          onClick={() => setIsExpanded(!isExpanded)}
+          variant="ghost"
         >
           <ChevronDownIcon
             className={cn(

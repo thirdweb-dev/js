@@ -21,9 +21,9 @@ export const SolidityRawInput: React.FC<SolidityInputWithTypeProps> = ({
     form.setValue(inputName, value);
 
     const invalidInputError = {
-      type: "pattern",
       message:
         "Invalid input. Input should be passed in JSON format with valid values.",
+      type: "pattern",
     };
 
     const trimmedValue = value.trim();
@@ -55,8 +55,8 @@ export const SolidityRawInput: React.FC<SolidityInputWithTypeProps> = ({
         placeholder={solidityType}
         {...(restOfInputProps as TextareaProps)}
         className={cn("font-mono", restOfInputProps.className)}
-        value={form.watch(inputName)}
         onChange={handleChange}
+        value={form.watch(inputName)}
       />
       <div className="mt-2 text-muted-foreground text-sm">
         Input should be passed in JSON format - Ex:{" "}

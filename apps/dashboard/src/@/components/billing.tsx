@@ -38,12 +38,12 @@ export function CheckoutButton(props: {
         }}
       >
         <Link
-          target="_blank"
-          rel="noopener noreferrer"
           href={buildCheckoutUrl({
-            teamSlug: props.teamSlug,
             sku: props.sku,
+            teamSlug: props.teamSlug,
           })}
+          rel="noopener noreferrer"
+          target="_blank"
         >
           {props.children}
         </Link>
@@ -59,8 +59,8 @@ function BillingWarning({ teamSlug }: { teamSlug: string }) {
       <p className="text-sm">
         You have outstanding invoices. Please{" "}
         <Link
-          href={`/team/${teamSlug}/~/settings/invoices?status=open`}
           className="font-medium text-amber-700 underline transition-colors hover:text-amber-900 dark:text-amber-400 dark:hover:text-amber-300"
+          href={`/team/${teamSlug}/~/settings/invoices?status=open`}
         >
           pay them
         </Link>{" "}
@@ -78,17 +78,17 @@ export function BillingPortalButton(props: {
   return (
     <Button
       {...props.buttonProps}
+      asChild
       className={cn(props.buttonProps?.className, "gap-2")}
       disabled={props.buttonProps?.disabled}
-      asChild
       onClick={async (e) => {
         props.buttonProps?.onClick?.(e);
       }}
     >
       <a
         href={buildBillingPortalUrl({ teamSlug: props.teamSlug })}
-        target="_blank"
         rel="noopener noreferrer"
+        target="_blank"
       >
         {props.children}
       </a>

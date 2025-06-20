@@ -10,10 +10,10 @@ import { iconSize } from "../../../core/design-system/index.js";
 import { useChainExplorers } from "../../../core/hooks/others/useChainQuery.js";
 import { useSendTransaction } from "../../hooks/transaction/useSendTransaction.js";
 import { AccentFailIcon } from "../ConnectWallet/icons/AccentFailIcon.js";
-import { Spacer } from "../components/Spacer.js";
-import { Spinner } from "../components/Spinner.js";
 import { Container, ModalHeader } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
+import { Spacer } from "../components/Spacer.js";
+import { Spinner } from "../components/Spinner.js";
 import { Text } from "../components/text.js";
 
 export function ExecutingTxScreen(props: {
@@ -63,34 +63,34 @@ export function ExecutingTxScreen(props: {
 
   return (
     <Container p="lg">
-      <ModalHeader title="Transaction" onBack={props.onBack} />
+      <ModalHeader onBack={props.onBack} title="Transaction" />
 
       <Spacer y="xxl" />
 
-      <Container flex="row" center="x">
-        {status === "loading" && <Spinner size="xxl" color="accentText" />}
+      <Container center="x" flex="row">
+        {status === "loading" && <Spinner color="accentText" size="xxl" />}
         {status === "failed" && <AccentFailIcon size={iconSize["3xl"]} />}
         {status === "sent" && (
           <Container
             center="both"
             flex="row"
             style={{
-              width: "64px",
-              height: "64px",
-              borderRadius: "50%",
-              backgroundColor: theme.colors.tertiaryBg,
-              marginBottom: "16px",
-              border: `2px solid ${theme.colors.success}`,
               animation: "successBounce 0.6s ease-out",
+              backgroundColor: theme.colors.tertiaryBg,
+              border: `2px solid ${theme.colors.success}`,
+              borderRadius: "50%",
+              height: "64px",
+              marginBottom: "16px",
+              width: "64px",
             }}
           >
             <CheckIcon
-              width={iconSize.xl}
-              height={iconSize.xl}
               color={theme.colors.success}
+              height={iconSize.xl}
               style={{
                 animation: "checkAppear 0.3s ease-out 0.3s both",
               }}
+              width={iconSize.xl}
             />
           </Container>
         )}
@@ -98,20 +98,20 @@ export function ExecutingTxScreen(props: {
 
       <Spacer y="md" />
 
-      <Text color="primaryText" center size="lg">
+      <Text center color="primaryText" size="lg">
         {status === "loading" && "Sending transaction"}
         {status === "failed" && "Transaction failed"}
         {status === "sent" && "Transaction sent"}
       </Text>
       <Spacer y="sm" />
-      <Text color="danger" center size="sm">
+      <Text center color="danger" size="sm">
         {status === "failed" && txError ? txError.message || "" : ""}
       </Text>
 
       <Spacer y="xl" />
 
       {status === "failed" && (
-        <Button variant="accent" fullWidth onClick={sendTx}>
+        <Button fullWidth onClick={sendTx} variant="accent">
           Try Again
         </Button>
       )}
@@ -121,8 +121,9 @@ export function ExecutingTxScreen(props: {
           {txHash && (
             <>
               <Button
-                variant="secondary"
+                color="primaryText"
                 fullWidth
+                gap="xs"
                 onClick={() => {
                   props.windowAdapter.open(
                     formatExplorerTxUrl(
@@ -131,16 +132,15 @@ export function ExecutingTxScreen(props: {
                     ),
                   );
                 }}
-                gap="xs"
-                color="primaryText"
+                variant="secondary"
               >
                 View on Explorer
-                <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
+                <ExternalLinkIcon height={iconSize.sm} width={iconSize.sm} />
               </Button>
               <Spacer y="sm" />
             </>
           )}
-          <Button variant="accent" fullWidth onClick={props.closeModal}>
+          <Button fullWidth onClick={props.closeModal} variant="accent">
             Done
           </Button>
         </>

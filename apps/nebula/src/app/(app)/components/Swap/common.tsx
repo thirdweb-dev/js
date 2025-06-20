@@ -1,17 +1,15 @@
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import { getSDKTheme } from "@/config/sdk-component-theme";
-import { useAllChainsData } from "@/hooks/chains";
-import { cn } from "@/lib/utils";
-
-import { CircleCheckIcon, CircleXIcon } from "lucide-react";
-import { ExternalLinkIcon } from "lucide-react";
-import { useTheme } from "next-themes";
+import { CircleCheckIcon, CircleXIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 import { useCallback, useState } from "react";
 import { type PreparedTransaction, waitForReceipt } from "thirdweb";
 import { useSendTransaction } from "thirdweb/react";
+import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { getSDKTheme } from "@/config/sdk-component-theme";
+import { useAllChainsData } from "@/hooks/chains";
+import { cn } from "@/lib/utils";
 
 export type TxStatus =
   | {
@@ -33,9 +31,7 @@ export type TxStatus =
       txHash: string | undefined;
     };
 
-export function TxStatusRow(props: {
-  status: TxStatus;
-}) {
+export function TxStatusRow(props: { status: TxStatus }) {
   return (
     <div className="flex items-center justify-between gap-2">
       <span className="font-medium text-muted-foreground">Status</span>
@@ -77,10 +73,7 @@ export function TxStatusRow(props: {
   );
 }
 
-export function TxHashRow(props: {
-  chainId: number;
-  txHash: string;
-}) {
+export function TxHashRow(props: { chainId: number; txHash: string }) {
   const { idToChain } = useAllChainsData();
   const chainMetadata = idToChain.get(props.chainId);
   const explorer = chainMetadata?.explorers?.[0]?.url;
@@ -94,9 +87,9 @@ export function TxHashRow(props: {
         {explorer ? (
           <Button
             asChild
-            variant="ghost"
-            size="sm"
             className="gap-1.5 font-mono"
+            size="sm"
+            variant="ghost"
           >
             <Link href={`${explorer}/tx/${props.txHash}`} target="_blank">
               {`${props.txHash.slice(0, 6)}...${props.txHash.slice(-4)}`}
@@ -105,12 +98,12 @@ export function TxHashRow(props: {
           </Button>
         ) : (
           <CopyTextButton
-            textToCopy={props.txHash}
-            textToShow={`${props.txHash.slice(0, 6)}...${props.txHash.slice(-4)}`}
-            variant="ghost"
             className="font-mono"
             copyIconPosition="right"
+            textToCopy={props.txHash}
+            textToShow={`${props.txHash.slice(0, 6)}...${props.txHash.slice(-4)}`}
             tooltip="Copy Transaction Hash"
+            variant="ghost"
           />
         )}
       </div>
@@ -143,15 +136,15 @@ export function useTxSetup() {
 
         // wait for receipt
         setStatus({
-          type: "confirming",
           txHash: submittedReceipt.transactionHash,
+          type: "confirming",
         });
 
         const confirmReceipt = await waitForReceipt(submittedReceipt);
         txHash = confirmReceipt.transactionHash;
         setStatus({
-          type: "confirmed",
           txHash: confirmReceipt.transactionHash,
+          type: "confirmed",
         });
 
         onTxSettled?.(txHash);
@@ -161,8 +154,8 @@ export function useTxSetup() {
           onTxSettled?.(txHash);
         }
         setStatus({
-          type: "failed",
           txHash: txHash,
+          type: "failed",
         });
       }
     },
@@ -170,8 +163,8 @@ export function useTxSetup() {
   );
 
   return {
-    status,
-    setStatus,
     sendTx,
+    setStatus,
+    status,
   };
 }

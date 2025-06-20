@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function StepCard(props: {
   title: string;
@@ -38,11 +38,11 @@ export function StepCard(props: {
         <div className="flex justify-end gap-3 border-t p-6">
           {props.prevButton && (
             <Button
-              variant="outline"
               className="gap-2"
               onClick={() => {
                 props.prevButton?.onClick();
               }}
+              variant="outline"
             >
               <ArrowLeftIcon className="size-4" />
               Back
@@ -51,15 +51,15 @@ export function StepCard(props: {
 
           {nextButton && nextButton.type !== "custom" && (
             <Button
-              variant="default"
               className="gap-2"
-              type="submit"
               disabled={nextButton.disabled}
               onClick={() => {
                 if (nextButton.type === "click") {
                   nextButton.onClick();
                 }
               }}
+              type="submit"
+              variant="default"
             >
               Next
               <ArrowRightIcon className="size-4" />

@@ -20,8 +20,8 @@ vi.mock("../../../../transaction/actions/send-transaction.js", () => ({
 }));
 
 const TRANSFER_TX = prepareTransaction({
-  client: TEST_CLIENT,
   chain: ANVIL_CHAIN,
+  client: TEST_CLIENT,
   to: TEST_ACCOUNT_A.address,
   value: BigInt(toWei("100")),
 });

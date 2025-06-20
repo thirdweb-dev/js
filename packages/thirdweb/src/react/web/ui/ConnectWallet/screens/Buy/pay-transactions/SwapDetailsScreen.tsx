@@ -13,13 +13,13 @@ import {
   useChainExplorers,
   useChainName,
 } from "../../../../../../core/hooks/others/useChainQuery.js";
-import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line } from "../../../../components/basic.js";
 import { ButtonLink } from "../../../../components/buttons.js";
+import { Spacer } from "../../../../components/Spacer.js";
 import { Text } from "../../../../components/text.js";
 import { WalletRow } from "../swap/WalletRow.js";
+import { getBuyWithCryptoStatusMeta, type StatusMeta } from "./statusMeta.js";
 import { TokenInfoRow } from "./TokenInfoRow.js";
-import { type StatusMeta, getBuyWithCryptoStatusMeta } from "./statusMeta.js";
 
 type SwapTxDetailsData = {
   fromToken: {
@@ -75,52 +75,52 @@ export function SwapTxDetailsTable(
       status.status === "COMPLETED" && status.subStatus === "PARTIAL_SUCCESS";
 
     uiData = {
+      destinationTxHash: status.destination?.transactionHash,
+      estimatedDuration: status.quote.estimated.durationSeconds || 0,
+      fromAddress: status.fromAddress,
       fromToken: {
-        chainId: status.quote.fromToken.chainId,
-        symbol: status.quote.fromToken.symbol || "",
         address: status.quote.fromToken.tokenAddress,
         amount: status.quote.fromAmount,
-      },
-      quotedToToken: {
-        chainId: status.quote.toToken.chainId,
-        symbol: status.quote.toToken.symbol || "",
-        address: status.quote.toToken.tokenAddress,
-        amount: status.quote.toAmount,
+        chainId: status.quote.fromToken.chainId,
+        symbol: status.quote.fromToken.symbol || "",
       },
       gotToken: status.destination
         ? {
-            chainId: status.destination.token.chainId,
-            symbol: status.destination.token.symbol || "",
             address: status.destination.token.tokenAddress,
             amount: status.destination.amount,
+            chainId: status.destination.token.chainId,
+            symbol: status.destination.token.symbol || "",
           }
         : undefined,
-      statusMeta: getBuyWithCryptoStatusMeta(status),
-      estimatedDuration: status.quote.estimated.durationSeconds || 0,
       isPartialSuccess,
-      destinationTxHash: status.destination?.transactionHash,
+      quotedToToken: {
+        address: status.quote.toToken.tokenAddress,
+        amount: status.quote.toAmount,
+        chainId: status.quote.toToken.chainId,
+        symbol: status.quote.toToken.symbol || "",
+      },
       sourceTxHash: status.source?.transactionHash,
-      fromAddress: status.fromAddress,
+      statusMeta: getBuyWithCryptoStatusMeta(status),
       toAddress: status.toAddress,
     };
   } else {
     const quote = props.quote;
     uiData = {
-      fromToken: {
-        chainId: quote.swapDetails.fromToken.chainId,
-        symbol: quote.swapDetails.fromToken.symbol || "",
-        address: quote.swapDetails.fromToken.tokenAddress,
-        amount: quote.swapDetails.fromAmount,
-      },
-      quotedToToken: {
-        chainId: quote.swapDetails.toToken.chainId,
-        symbol: quote.swapDetails.toToken.symbol || "",
-        address: quote.swapDetails.toToken.tokenAddress,
-        amount: quote.swapDetails.toAmount,
-      },
-      isPartialSuccess: false,
       estimatedDuration: quote.swapDetails.estimated.durationSeconds || 0,
       fromAddress: quote.swapDetails.fromAddress,
+      fromToken: {
+        address: quote.swapDetails.fromToken.tokenAddress,
+        amount: quote.swapDetails.fromAmount,
+        chainId: quote.swapDetails.fromToken.chainId,
+        symbol: quote.swapDetails.fromToken.symbol || "",
+      },
+      isPartialSuccess: false,
+      quotedToToken: {
+        address: quote.swapDetails.toToken.tokenAddress,
+        amount: quote.swapDetails.toAmount,
+        chainId: quote.swapDetails.toToken.chainId,
+        symbol: quote.swapDetails.toToken.symbol || "",
+      },
       toAddress: quote.swapDetails.toAddress,
     };
   }
@@ -160,9 +160,9 @@ export function SwapTxDetailsTable(
         chainId={fromToken.chainId}
         client={client}
         label="Paid"
+        tokenAddress={fromToken.address}
         tokenAmount={fromToken.amount}
         tokenSymbol={fromToken.symbol || ""}
-        tokenAddress={fromToken.address}
       />
 
       {lineSpacer}
@@ -174,9 +174,9 @@ export function SwapTxDetailsTable(
             chainId={toToken.chainId}
             client={client}
             label={isPartialSuccess ? "Expected" : "Received"}
+            tokenAddress={toToken.address}
             tokenAmount={toToken.amount}
             tokenSymbol={toToken.symbol || ""}
-            tokenAddress={toToken.address}
           />
 
           {lineSpacer}
@@ -186,9 +186,9 @@ export function SwapTxDetailsTable(
             chainId={gotToken.chainId}
             client={client}
             label="Got"
+            tokenAddress={gotToken.address}
             tokenAmount={gotToken.amount}
             tokenSymbol={gotToken.symbol || ""}
-            tokenAddress={gotToken.address}
           />
         </>
       ) : (
@@ -197,24 +197,22 @@ export function SwapTxDetailsTable(
           chainId={toToken.chainId}
           client={client}
           label="Received"
+          tokenAddress={toToken.address}
           tokenAmount={toToken.amount}
           tokenSymbol={toToken.symbol || ""}
-          tokenAddress={toToken.address}
         />
       )}
 
-      <>
-        {lineSpacer}
-        <Container
-          flex="row"
-          style={{
-            justifyContent: "space-between",
-          }}
-        >
-          <Text size="sm">Recipient</Text>
-          <WalletRow address={uiData.toAddress} iconSize="sm" client={client} />
-        </Container>
-      </>
+      {lineSpacer}
+      <Container
+        flex="row"
+        style={{
+          justifyContent: "space-between",
+        }}
+      >
+        <Text size="sm">Recipient</Text>
+        <WalletRow address={uiData.toAddress} client={client} iconSize="sm" />
+      </Container>
 
       {/* Status */}
       {statusMeta && showStatusRow && (
@@ -228,9 +226,9 @@ export function SwapTxDetailsTable(
           >
             <Text size="sm">Status</Text>
             <Container
+              center="y"
               flex="column"
               gap="3xs"
-              center="y"
               style={{
                 alignItems: "flex-end",
               }}
@@ -249,20 +247,20 @@ export function SwapTxDetailsTable(
       {fromChainExplorers.explorers?.[0]?.url && sourceTxHash && (
         <ButtonLink
           fullWidth
-          variant="outline"
+          gap="xs"
           href={formatExplorerTxUrl(
             fromChainExplorers.explorers[0]?.url,
             sourceTxHash,
           )}
-          target="_blank"
-          gap="xs"
           style={{
             fontSize: fontSize.sm,
             padding: spacing.sm,
           }}
+          target="_blank"
+          variant="outline"
         >
           View on {fromChainName.name} Explorer
-          <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
+          <ExternalLinkIcon height={iconSize.sm} width={iconSize.sm} />
         </ButtonLink>
       )}
 
@@ -274,20 +272,20 @@ export function SwapTxDetailsTable(
             <Spacer y="sm" />
             <ButtonLink
               fullWidth
-              variant="outline"
+              gap="xs"
               href={formatExplorerTxUrl(
                 toChainExplorers.explorers[0]?.url,
                 destinationTxHash,
               )}
-              target="_blank"
-              gap="xs"
               style={{
                 fontSize: fontSize.sm,
                 padding: spacing.sm,
               }}
+              target="_blank"
+              variant="outline"
             >
               View on {toChainName.name} Explorer
-              <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
+              <ExternalLinkIcon height={iconSize.sm} width={iconSize.sm} />
             </ButtonLink>
           </>
         )}

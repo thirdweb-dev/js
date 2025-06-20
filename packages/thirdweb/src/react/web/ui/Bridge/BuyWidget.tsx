@@ -21,8 +21,8 @@ import type { Theme } from "../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButton_connectModalOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
-import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
+import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { DynamicHeight } from "../components/DynamicHeight.js";
 import { Spinner } from "../components/Spinner.js";
 import type { LocaleId } from "../types.js";
@@ -259,7 +259,6 @@ export function BuyWidget(props: BuyWidgetProps) {
   const theme = props.theme || "dark";
 
   const bridgeDataQuery = useQuery({
-    queryKey: ["bridgeData", stringify(props)],
     queryFn: async (): Promise<UIOptionsResult> => {
       if (
         !props.tokenAddress ||
@@ -273,12 +272,12 @@ export function BuyWidget(props: BuyWidgetProps) {
           props.chain.id,
         );
         return {
-          type: "success",
           data: {
-            mode: "fund_wallet",
             destinationToken: ETH,
             initialAmount: props.amount,
+            mode: "fund_wallet",
           },
+          type: "success",
         };
       }
 
@@ -291,23 +290,24 @@ export function BuyWidget(props: BuyWidgetProps) {
       });
       if (!token) {
         return {
-          type: "unsupported_token",
-          tokenAddress: props.tokenAddress,
           chain: props.chain,
+          tokenAddress: props.tokenAddress,
+          type: "unsupported_token",
         };
       }
       return {
-        type: "success",
         data: {
-          mode: "fund_wallet",
           destinationToken: token,
           initialAmount: props.amount,
           metadata: {
             title: props.title,
           },
+          mode: "fund_wallet",
         },
+        type: "success",
       };
     },
+    queryKey: ["bridgeData", stringify(props)],
   });
 
   let content = null;
@@ -315,13 +315,13 @@ export function BuyWidget(props: BuyWidgetProps) {
     content = (
       <div
         style={{
-          minHeight: "350px",
+          alignItems: "center",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          minHeight: "350px",
         }}
       >
-        <Spinner size="xl" color="secondaryText" />
+        <Spinner color="secondaryText" size="xl" />
       </div>
     );
   } else if (bridgeDataQuery.data?.type === "unsupported_token") {
@@ -332,22 +332,22 @@ export function BuyWidget(props: BuyWidgetProps) {
     content = (
       <BridgeOrchestrator
         client={props.client}
-        uiOptions={bridgeDataQuery.data.data}
-        connectOptions={props.connectOptions}
         connectLocale={localeQuery.data}
-        purchaseData={props.purchaseData}
-        paymentLinkId={props.paymentLinkId}
+        connectOptions={props.connectOptions}
+        onCancel={() => {
+          props.onCancel?.();
+        }}
         onComplete={() => {
           props.onSuccess?.();
         }}
         onError={(err: Error) => {
           props.onError?.(err);
         }}
-        onCancel={() => {
-          props.onCancel?.();
-        }}
+        paymentLinkId={props.paymentLinkId}
         presetOptions={props.presetOptions}
+        purchaseData={props.purchaseData}
         receiverAddress={undefined}
+        uiOptions={bridgeDataQuery.data.data}
       />
     );
   }
@@ -355,9 +355,9 @@ export function BuyWidget(props: BuyWidgetProps) {
   return (
     <CustomThemeProvider theme={theme}>
       <EmbedContainer
+        className={props.className}
         modalSize="compact"
         style={props.style}
-        className={props.className}
       >
         <DynamicHeight>{content}</DynamicHeight>
       </EmbedContainer>

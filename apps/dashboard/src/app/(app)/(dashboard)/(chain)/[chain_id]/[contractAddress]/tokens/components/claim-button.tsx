@@ -1,17 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { GemIcon } from "lucide-react";
 import { useState } from "react";
@@ -25,6 +15,15 @@ import {
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface TokenClaimButtonProps {
   contract: ThirdwebContract;
@@ -52,9 +51,9 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
     "Failed to claim tokens",
   );
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet onOpenChange={setOpen} open={open}>
       <SheetTrigger asChild>
-        <Button variant="primary" className="gap-2" {...restButtonProps}>
+        <Button className="gap-2" variant="primary" {...restButtonProps}>
           <GemIcon size={16} /> Claim
         </Button>
       </SheetTrigger>
@@ -64,7 +63,7 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
         </SheetHeader>
         <form>
           <div className="mt-10 flex flex-col gap-6">
-            <FormControl isRequired isInvalid={!!form.formState.errors.to}>
+            <FormControl isInvalid={!!form.formState.errors.to} isRequired>
               <FormLabel>To Address</FormLabel>
               <Input
                 placeholder={ZERO_ADDRESS}
@@ -75,11 +74,11 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
                 {form.formState.errors.to?.message}
               </FormErrorMessage>
             </FormControl>
-            <FormControl isRequired isInvalid={!!form.formState.errors.amount}>
+            <FormControl isInvalid={!!form.formState.errors.amount} isRequired>
               <FormLabel>Amount</FormLabel>
               <Input
-                type="text"
                 pattern={`^\\d+(\\.\\d{1,${_decimals || 18}})?$`}
+                type="text"
                 {...form.register("amount", { required: true })}
               />
               <FormHelperText>How many would you like to claim?</FormHelperText>
@@ -91,14 +90,11 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
         </form>
         <SheetFooter className="mt-10">
           <TransactionButton
-            isLoggedIn={isLoggedIn}
-            txChainID={contract.chain.id}
             client={contract.client}
-            transactionCount={1}
-            form={CLAIM_FORM_ID}
-            isPending={form.formState.isSubmitting}
-            type="submit"
             disabled={!form.formState.isDirty || isPending}
+            form={CLAIM_FORM_ID}
+            isLoggedIn={isLoggedIn}
+            isPending={form.formState.isSubmitting}
             onClick={form.handleSubmit(async (d) => {
               try {
                 if (!d.to) {
@@ -112,14 +108,14 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
                 }
                 const transaction = ERC20Ext.claimTo({
                   contract,
-                  to: d.to,
-                  quantity: d.amount,
                   from: account.address,
+                  quantity: d.amount,
+                  to: d.to,
                 });
 
                 const approveTx = await ERC20Ext.getApprovalForTransaction({
-                  transaction,
                   account,
+                  transaction,
                 });
 
                 if (approveTx) {
@@ -132,21 +128,21 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
                     },
                   );
                   toast.promise(promise, {
+                    error: "Failed to approve token",
                     loading: "Approving ERC20 tokens for this claim",
                     success: "Tokens approved successfully",
-                    error: "Failed to approve token",
                   });
 
                   await promise;
                 }
 
                 await sendAndConfirmTransaction.mutateAsync(transaction, {
+                  onError: (error) => {
+                    console.error(error);
+                  },
                   onSuccess: () => {
                     form.reset({ amount: "0", to: account?.address });
                     setOpen(false);
-                  },
-                  onError: (error) => {
-                    console.error(error);
                   },
                 });
 
@@ -156,6 +152,9 @@ export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
                 claimTokensNotifications.onError(error);
               }
             })}
+            transactionCount={1}
+            txChainID={contract.chain.id}
+            type="submit"
           >
             Claim Tokens
           </TransactionButton>

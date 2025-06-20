@@ -1,6 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { isProd } from "@/constants/env-utils";
 import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
-import { useQuery } from "@tanstack/react-query";
 
 type TokenPriceData = {
   price_usd: number;
@@ -22,10 +22,6 @@ export function useTokenPriceData(params: {
   contractAddress: string;
 }) {
   return useQuery({
-    queryKey: ["token-price-chart", params.chainId, params.contractAddress],
-    retry: false,
-    retryOnMount: false,
-    refetchOnWindowFocus: false,
     queryFn: async () => {
       const url = new URL(
         `https://insight.${isProd ? "thirdweb" : "thirdweb-dev"}.com/v1/tokens/price`,
@@ -46,11 +42,15 @@ export function useTokenPriceData(params: {
       const priceData = json.data[0] as TokenPriceData | undefined;
       return priceData
         ? {
-            type: "data-found" as const,
             data: priceData,
+            type: "data-found" as const,
           }
         : { type: "no-data" as const };
     },
+    queryKey: ["token-price-chart", params.chainId, params.contractAddress],
     refetchInterval: 5000,
+    refetchOnWindowFocus: false,
+    retry: false,
+    retryOnMount: false,
   });
 }

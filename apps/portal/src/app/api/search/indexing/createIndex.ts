@@ -22,22 +22,22 @@ async function createSearchIndexes(): Promise<Indexes> {
   // create indexes
   const pageTitleIndex: PageTitleIndex = new FlexSearch.Document({
     cache: 100,
-    tokenize: "full",
     document: {
       id: "id",
       index: ["title", "id"],
     },
+    tokenize: "full",
   });
 
   const sectionIndex: SectionIndex = new FlexSearch.Document({
     cache: 100,
-    preset: "default",
-    tokenize: "full",
     document: {
       id: "id",
       index: ["title", "content"],
       store: ["title", "content", "pageId", "href", "id"],
     },
+    preset: "default",
+    tokenize: "full",
   });
 
   // add data to indexes
@@ -56,11 +56,11 @@ async function createSearchIndexes(): Promise<Indexes> {
     if (pageData.sections) {
       for (const section of pageData.sections) {
         sectionIndex.add({
-          id: sectionId++,
-          title: section.title || "",
           content: section.content,
           href: section.href || "",
+          id: sectionId++,
           pageId: pageId,
+          title: section.title || "",
         });
       }
     }
@@ -69,8 +69,8 @@ async function createSearchIndexes(): Promise<Indexes> {
   console.debug("SEARCH INDEX CREATED");
 
   return {
-    sectionIndex,
     pageTitleIndex,
+    sectionIndex,
     websiteData,
   };
 }

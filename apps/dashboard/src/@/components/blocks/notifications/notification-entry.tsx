@@ -1,7 +1,5 @@
 "use client";
 
-import type { Notification } from "@/api/notifications";
-import { Button } from "@/components/ui/button";
 import {
   format,
   formatDistanceToNow,
@@ -11,6 +9,8 @@ import {
 } from "date-fns";
 import { ArchiveIcon } from "lucide-react";
 import { useMemo } from "react";
+import type { Notification } from "@/api/notifications";
+import { Button } from "@/components/ui/button";
 
 interface NotificationEntryProps {
   notification: Notification;
@@ -54,11 +54,11 @@ export function NotificationEntry({
               <p className="text-muted-foreground text-xs">{timeAgo}</p>
             )}
             <div className="flex flex-row justify-between gap-2 pt-1">
-              <Button asChild variant="link" size="sm" className="px-0">
+              <Button asChild className="px-0" size="sm" variant="link">
                 <a
                   href={notification.ctaUrl}
-                  target="_blank"
                   rel="noopener noreferrer"
+                  target="_blank"
                 >
                   {notification.ctaText}
                 </a>
@@ -68,10 +68,10 @@ export function NotificationEntry({
         </div>
         {onMarkAsRead && (
           <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => onMarkAsRead(notification.id)}
             className="text-muted-foreground hover:text-foreground"
+            onClick={() => onMarkAsRead(notification.id)}
+            size="icon"
+            variant="ghost"
           >
             <ArchiveIcon className="h-4 w-4" />
           </Button>

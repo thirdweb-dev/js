@@ -1,5 +1,5 @@
-import { Input } from "@/components/ui/input";
 import { useActiveAccount } from "thirdweb/react";
+import { Input } from "@/components/ui/input";
 import { CustomFormControl } from "../common";
 import { useClaimConditionsFormContext } from "../index";
 
@@ -25,7 +25,6 @@ export const CreatorInput: React.FC<CreatorInputProps> = ({
   return (
     <CustomFormControl
       disabled={formDisabled}
-      label="Creator address"
       helperText={
         <>
           This wallet address will be able to indefinitely claim.{" "}
@@ -33,6 +32,7 @@ export const CreatorInput: React.FC<CreatorInputProps> = ({
             "To use a different address, please connect a different wallet."}
         </>
       }
+      label="Creator address"
     >
       <Input disabled readOnly value={creatorAddress || walletAddress} />
     </CustomFormControl>

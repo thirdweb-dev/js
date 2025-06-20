@@ -1,11 +1,11 @@
 "use client";
 
+import type { ThirdwebClient } from "thirdweb";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { DecimalInput } from "@/components/ui/decimal-input";
 import { Switch } from "@/components/ui/switch";
-import type { ThirdwebClient } from "thirdweb";
 import type { TokenDistributionForm } from "../_common/form";
 
 export function TokenSaleSection(props: {
@@ -45,20 +45,20 @@ export function TokenSaleSection(props: {
         {isEnabled && (
           <div className="mt-4 flex flex-col gap-6">
             <FormFieldSetup
-              label="Sell % of Total Supply"
-              isRequired
-              helperText={`${sellSupply} tokens`}
               errorMessage={
                 props.form.formState.errors.saleAllocationPercentage?.message
               }
+              helperText={`${sellSupply} tokens`}
+              isRequired
+              label="Sell % of Total Supply"
             >
               <div className="relative">
                 <DecimalInput
                   maxValue={100}
-                  value={props.form.watch("saleAllocationPercentage")}
                   onChange={(value) => {
                     props.form.setValue("saleAllocationPercentage", value);
                   }}
+                  value={props.form.watch("saleAllocationPercentage")}
                 />
                 <span className="-translate-y-1/2 absolute top-1/2 right-3 text-muted-foreground text-sm">
                   %
@@ -68,41 +68,41 @@ export function TokenSaleSection(props: {
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
               <FormFieldSetup
-                label="Price per Token"
-                isRequired
                 errorMessage={props.form.formState.errors.salePrice?.message}
+                isRequired
+                label="Price per Token"
               >
                 <div className="relative">
                   <DecimalInput
-                    value={props.form.watch("salePrice")}
                     onChange={(value) => {
                       props.form.setValue("salePrice", value);
                     }}
+                    value={props.form.watch("salePrice")}
                   />
                 </div>
               </FormFieldSetup>
 
               <FormFieldSetup
-                label="Currency"
-                isRequired
                 errorMessage={
                   props.form.formState.errors.saleTokenAddress?.message
                 }
+                isRequired
+                label="Currency"
               >
                 <TokenSelector
-                  className="bg-background"
                   addNativeTokenIfMissing={true}
-                  showCheck={true}
+                  chainId={Number(props.chainId)}
+                  className="bg-background"
+                  client={props.client}
                   disableAddress={true}
+                  onChange={(value) => {
+                    props.form.setValue("saleTokenAddress", value.address);
+                  }}
                   selectedToken={{
                     address: props.form.watch("saleTokenAddress"),
                     chainId: Number(props.chainId),
                   }}
-                  onChange={(value) => {
-                    props.form.setValue("saleTokenAddress", value.address);
-                  }}
-                  client={props.client}
-                  chainId={Number(props.chainId)}
+                  showCheck={true}
                 />
               </FormFieldSetup>
             </div>

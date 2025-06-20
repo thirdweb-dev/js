@@ -1,6 +1,6 @@
 // generated
 export {
+  encodeInstall,
   install,
   module,
-  encodeInstall,
 } from "../__generated__/SequentialTokenIdERC1155/module/install.js";

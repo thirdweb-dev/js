@@ -11,16 +11,16 @@ export async function getToken(
   return withCache(
     async () => {
       const result = await tokens({
+        chainId,
         client,
         tokenAddress,
-        chainId,
       });
       const token = result[0];
       if (!token) {
         // Attempt to add the token
         const tokenResult = await add({
-          client,
           chainId,
+          client,
           tokenAddress,
         }).catch(() => {
           throw new Error("Token not supported");

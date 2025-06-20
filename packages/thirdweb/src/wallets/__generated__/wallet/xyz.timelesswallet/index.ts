@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "xyz.timelesswallet",
-  name: "Timeless X",
-  homepage: "https://timelesswallet.xyz",
-  image_id: "7870d465-6028-49cb-6667-d0a2cc509400",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/timeless-x/id6470180600",
     android:
       "https://play.google.com/store/apps/details?id=xyz.timelesswallet.aa",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome:
       "https://chrome.google.com/webstore/detail/ifcpkdgcgcepjdkfcogehpnhpipejgho",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/timeless-x/id6470180600",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "timeless-x://connect",
-    universal: "https://timelesswallet.xyz/x",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://timelesswallet.xyz",
+  id: "xyz.timelesswallet",
+  image_id: "7870d465-6028-49cb-6667-d0a2cc509400",
+  mobile: {
+    native: "timeless-x://connect",
+    universal: "https://timelesswallet.xyz/x",
+  },
+  name: "Timeless X",
+  rdns: null,
 } as const;

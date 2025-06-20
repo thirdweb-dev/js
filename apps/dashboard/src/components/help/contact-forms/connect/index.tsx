@@ -15,8 +15,8 @@ const SDKVersionInput = () => (
   <SupportForm_TextInput
     formLabel="SDK Version"
     formValue="extraInfo_SDK_Version"
-    required={true}
     inputType="text"
+    required={true}
   />
 );
 
@@ -26,54 +26,53 @@ const OSSelect = () => {
     <SupportForm_SelectInput
       formLabel="OS"
       name="extraInfo_OS"
-      required={true}
-      promptText="Select an operating system"
-      options={["Windows", "MacOS", "Linux", "Other"]}
-      value={selectedOS}
       onValueChange={setSelectedOS}
+      options={["Windows", "MacOS", "Linux", "Other"]}
+      promptText="Select an operating system"
+      required={true}
+      value={selectedOS}
     />
   );
 };
 
 const PROBLEM_AREAS: ProblemAreaItem[] = [
   {
+    component: <AffectedAreaInput />,
     label: "Embedded wallet login issues",
-    component: <AffectedAreaInput />,
   },
   {
+    component: <AffectedAreaInput />,
     label: "Embedded wallet transaction issues",
-    component: <AffectedAreaInput />,
   },
   {
+    component: <AffectedAreaInput />,
     label: "Embedded wallet Custom Auth",
-    component: <AffectedAreaInput />,
   },
   {
+    component: <AffectedAreaInput />,
     label: "Account Abstraction",
-    component: <AffectedAreaInput />,
   },
   {
+    component: <AffectedAreaInput />,
     label: "In-app wallet",
-    component: <AffectedAreaInput />,
   },
   {
-    label: "Connect SDKs",
     component: (
       <>
         <SDKVersionInput />
         <SupportForm_TextInput
           formLabel="Application URL"
           formValue="extraInfo_Application_URL"
-          required={false}
           inputType="url"
+          required={false}
         />
         <DescriptionInput />
         <AttachmentForm />
       </>
     ),
+    label: "Connect SDKs",
   },
   {
-    label: "Unity SDK",
     component: (
       <>
         <UnitySupportForm />
@@ -82,9 +81,9 @@ const PROBLEM_AREAS: ProblemAreaItem[] = [
         <AttachmentForm />
       </>
     ),
+    label: "Unity SDK",
   },
   {
-    label: ".NET SDK",
     component: (
       <>
         <SDKVersionInput />
@@ -92,28 +91,29 @@ const PROBLEM_AREAS: ProblemAreaItem[] = [
         <SupportForm_TextInput
           formLabel="Framework"
           formValue="extraInfo_dotNET_Framework"
-          required={false}
-          placeholder="MAUI | Blazor | Godot, etc"
           inputType="text"
+          placeholder="MAUI | Blazor | Godot, etc"
+          required={false}
         />
         <SupportForm_TextInput
           formLabel="Target OS"
           formValue="extraInfo_dotNET_Target_OS"
-          required={false}
           inputType="text"
+          required={false}
         />
         <DescriptionInput />
         <AttachmentForm />
       </>
     ),
+    label: ".NET SDK",
   },
   {
+    component: <AffectedAreaInput />,
     label: "Pay",
-    component: <AffectedAreaInput />,
   },
   {
-    label: "Auth",
     component: <AffectedAreaInput />,
+    label: "Auth",
   },
 ];
 
@@ -125,10 +125,10 @@ export default function ConnectSupportForm() {
       <SupportForm_SelectInput
         formLabel="Problem area"
         name="extraInfo_Problem_Area"
-        promptText="Select a problem area"
-        options={PROBLEM_AREAS.map((o) => o.label)}
-        required={true}
         onValueChange={setSelectedProblemArea}
+        options={PROBLEM_AREAS.map((o) => o.label)}
+        promptText="Select a problem area"
+        required={true}
         value={selectedProblemArea}
       />
       {PROBLEM_AREAS.find((o) => o.label === selectedProblemArea)?.component}

@@ -1,7 +1,7 @@
+import { CheckIcon, MinusIcon } from "lucide-react";
 import type { SMSCountryTiers } from "@/api/sms";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { CheckIcon, MinusIcon } from "lucide-react";
 import {
   countryNames,
   countryPrefixes,
@@ -88,22 +88,22 @@ export default function CountrySelector({
   return (
     <div className="space-y-3">
       {Object.entries(countryTiers).map(([tier, countries], index) => (
-        <div key={tier} className="overflow-hidden rounded-md border">
+        <div className="overflow-hidden rounded-md border" key={tier}>
           <div className="flex items-center bg-muted/30 p-2">
             <div className="relative mr-2 flex items-center">
               <Checkbox
-                id={`tier-${index + 1}`}
                 checked={isTierSelected(tier)}
-                onCheckedChange={() => toggleTier(tier)}
                 className="h-4 w-4"
+                id={`tier-${index + 1}`}
+                onCheckedChange={() => toggleTier(tier)}
               />
               {isTierIndeterminate(tier) && (
                 <MinusIcon className="-translate-x-1/2 -translate-y-1/2 pointer-events-none absolute top-1/2 left-1/2 h-2.5 w-2.5 transform text-primary" />
               )}
             </div>
             <label
-              htmlFor={`tier-${index + 1}`}
               className="flex-1 cursor-pointer font-medium text-sm"
+              htmlFor={`tier-${index + 1}`}
             >
               Tier {index + 1}
               {isTierIndeterminate(tier) && (
@@ -136,25 +136,26 @@ export default function CountrySelector({
           >
             {countries.map((country) => (
               <div
-                key={country}
                 className={cn(
                   "relative flex cursor-pointer items-center justify-between rounded-md border p-1.5 transition-colors ",
                   isCountrySelected(country)
                     ? "border-primary bg-primary/10"
                     : "border-transparent hover:bg-muted/50",
                 )}
+                key={country}
                 onClick={() => toggleCountry(country)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     toggleCountry(country);
                   }
                 }}
+                // biome-ignore lint/a11y/useSemanticElements: FIXME
                 role="button"
                 tabIndex={0}
                 title={countryNames[country] || country}
               >
                 <span className="flex items-center space-x-2">
-                  <span className="text-lg" aria-hidden="true">
+                  <span aria-hidden="true" className="text-lg">
                     {getCountryFlag(country)}
                   </span>
                   <span className="font-medium text-xs">

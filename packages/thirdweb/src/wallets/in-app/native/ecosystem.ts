@@ -70,14 +70,6 @@ export function ecosystemWallet(
     partnerId: createOptions?.partnerId,
   };
   return createInAppWallet({
-    ecosystem,
-    createOptions: {
-      auth: {
-        ...createOptions?.auth,
-        options: [], // controlled by ecosystem
-      },
-      partnerId: createOptions?.partnerId,
-    },
     connectorFactory: async (client: ThirdwebClient) => {
       const { InAppNativeConnector } = await import("./native-connector.js");
       return new InAppNativeConnector({
@@ -87,5 +79,13 @@ export function ecosystemWallet(
         // TODO (enclave): passkeyDomain for ecosystem wallets
       });
     },
+    createOptions: {
+      auth: {
+        ...createOptions?.auth,
+        options: [], // controlled by ecosystem
+      },
+      partnerId: createOptions?.partnerId,
+    },
+    ecosystem,
   }) as Wallet<EcosystemWalletId>;
 }

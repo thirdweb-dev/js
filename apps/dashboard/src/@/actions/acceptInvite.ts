@@ -11,20 +11,20 @@ export async function acceptInvite(options: {
 
   if (!token) {
     return {
-      ok: false,
       errorMessage: "You are not authorized to perform this action",
+      ok: false,
     };
   }
 
   const res = await fetch(
     `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamId}/invites/${options.inviteId}/accept`,
     {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify({}),
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
     },
   );
 
@@ -42,8 +42,8 @@ export async function acceptInvite(options: {
     } catch {}
 
     return {
-      ok: false,
       errorMessage,
+      ok: false,
     };
   }
 

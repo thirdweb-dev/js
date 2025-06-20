@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+import type { UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
@@ -11,7 +13,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
-import type { UseFormReturn } from "react-hook-form";
 import type { WebhookFormValues } from "../utils/webhookTypes";
 
 interface BasicInfoStepProps {
@@ -25,6 +26,8 @@ export default function BasicInfoStep({
   goToNextStep,
   isLoading,
 }: BasicInfoStepProps) {
+  const filterEventId = useId();
+  const filterTransactionId = useId();
   return (
     <>
       <div className="mb-4">
@@ -44,9 +47,9 @@ export default function BasicInfoStep({
             </FormLabel>
             <FormControl>
               <Input
+                onChange={field.onChange}
                 placeholder="Webhook name"
                 value={field.value}
-                onChange={field.onChange}
               />
             </FormControl>
             <FormMessage />
@@ -64,10 +67,10 @@ export default function BasicInfoStep({
             </FormLabel>
             <FormControl>
               <Input
+                onChange={field.onChange}
                 placeholder="https://your-server.com/webhook"
                 type="url"
                 value={field.value}
-                onChange={field.onChange}
               />
             </FormControl>
             <FormMessage />
@@ -85,6 +88,7 @@ export default function BasicInfoStep({
             </FormLabel>
             <FormControl>
               <RadioGroup
+                className="grid grid-cols-1 gap-4 md:grid-cols-2"
                 onValueChange={(value: string) => {
                   if (value !== "event" && value !== "transaction") {
                     return;
@@ -92,27 +96,26 @@ export default function BasicInfoStep({
                   field.onChange(value);
                   // Ensure the form state is updated immediately
                   form.setValue("filterType", value, {
-                    shouldValidate: true,
                     shouldDirty: true,
+                    shouldValidate: true,
                   });
                 }}
                 value={field.value || undefined}
-                className="grid grid-cols-1 gap-4 md:grid-cols-2"
               >
                 <div className="col-span-1">
                   <label
-                    htmlFor="filter-event"
                     className={cn(
                       "flex cursor-pointer flex-col rounded-lg border-2 p-4 hover:border-primary/50",
                       field.value === "event"
                         ? "border-primary bg-primary/5"
                         : "",
                     )}
+                    htmlFor={filterEventId}
                   >
                     <RadioGroupItem
-                      value="event"
-                      id="filter-event"
                       className="sr-only"
+                      id={filterEventId}
+                      value="event"
                     />
                     <div className="mb-2 flex items-center justify-between">
                       <span className="font-medium text-base">Event</span>
@@ -138,18 +141,18 @@ export default function BasicInfoStep({
 
                 <div className="col-span-1">
                   <label
-                    htmlFor="filter-transaction"
                     className={cn(
                       "flex cursor-pointer flex-col rounded-lg border-2 p-4 hover:border-primary/50",
                       field.value === "transaction"
                         ? "border-primary bg-primary/5"
                         : "",
                     )}
+                    htmlFor={filterTransactionId}
                   >
                     <RadioGroupItem
-                      value="transaction"
-                      id="filter-transaction"
                       className="sr-only"
+                      id={filterTransactionId}
+                      value="transaction"
                     />
                     <div className="mb-2 flex items-center justify-between">
                       <span className="font-medium text-base">Transaction</span>
@@ -180,7 +183,7 @@ export default function BasicInfoStep({
       />
 
       <div className="mt-6 flex justify-end">
-        <Button type="button" onClick={goToNextStep} disabled={isLoading}>
+        <Button disabled={isLoading} onClick={goToNextStep} type="button">
           Next
         </Button>
       </div>

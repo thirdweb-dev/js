@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.keeper-wallet",
-  name: "Keeper",
-  homepage: "https://keeper-wallet.app",
-  image_id: "41f6ac85-8f4e-4d9f-b37b-92b43fa7f400",
   app: {
+    android: "https://play.google.com/store/apps/details?id=app.keeper.wallet",
     browser:
       "https://chrome.google.com/webstore/detail/keeper-wallet/lpilbniiabackdjcionkobglmddfbcjo",
-    ios: "https://apps.apple.com/us/app/keeper-wallet/id6444443920",
-    android: "https://play.google.com/store/apps/details?id=app.keeper.wallet",
-    mac: "",
-    windows: null,
-    linux: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/keeper-wallet/id6444443920",
+    linux: null,
+    mac: "",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: null,
-    universal: "https://link.keeper-wallet.app",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal:
       "https://chrome.google.com/webstore/detail/keeper-wallet/lpilbniiabackdjcionkobglmddfbcjo",
   },
+  homepage: "https://keeper-wallet.app",
+  id: "app.keeper-wallet",
+  image_id: "41f6ac85-8f4e-4d9f-b37b-92b43fa7f400",
+  mobile: {
+    native: null,
+    universal: "https://link.keeper-wallet.app",
+  },
+  name: "Keeper",
+  rdns: null,
 } as const;

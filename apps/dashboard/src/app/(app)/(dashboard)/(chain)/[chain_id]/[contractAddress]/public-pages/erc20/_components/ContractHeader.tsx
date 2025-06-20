@@ -1,10 +1,3 @@
-import { Img } from "@/components/blocks/Img";
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
-import { Button } from "@/components/ui/button";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { cn } from "@/lib/utils";
-import { ChainIconClient } from "components/icons/ChainIcon";
 import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 import { InstagramIcon } from "components/icons/brand-icons/InstagramIcon";
@@ -14,24 +7,31 @@ import { TelegramIcon } from "components/icons/brand-icons/TelegramIcon";
 import { TiktokIcon } from "components/icons/brand-icons/TiktokIcon";
 import { XIcon as TwitterXIcon } from "components/icons/brand-icons/XIcon";
 import { YoutubeIcon } from "components/icons/brand-icons/YoutubeIcon";
+import { ChainIconClient } from "components/icons/ChainIcon";
 import { ExternalLinkIcon, GlobeIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
+import { Img } from "@/components/blocks/Img";
+import { Button } from "@/components/ui/button";
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import { cn } from "@/lib/utils";
 
 const platformToIcons: Record<string, React.FC<{ className?: string }>> = {
-  twitter: TwitterXIcon,
-  x: TwitterXIcon,
   discord: DiscordIcon,
-  telegram: TelegramIcon,
-  reddit: RedditIcon,
-  website: GlobeIcon,
   github: GithubIcon,
-  youtube: YoutubeIcon,
   instagram: InstagramIcon,
-  tiktok: TiktokIcon,
   linkedin: LinkedInIcon,
+  reddit: RedditIcon,
+  telegram: TelegramIcon,
+  tiktok: TiktokIcon,
+  twitter: TwitterXIcon,
+  website: GlobeIcon,
+  x: TwitterXIcon,
+  youtube: YoutubeIcon,
 };
 
 export function ContractHeaderUI(props: {
@@ -51,7 +51,7 @@ export function ContractHeaderUI(props: {
         typeof key === "string" &&
         isValidUrl(value)
       ) {
-        socialUrlsValue.push({ name: key, href: value });
+        socialUrlsValue.push({ href: value, name: key });
       }
     }
 
@@ -72,18 +72,18 @@ export function ContractHeaderUI(props: {
             "size-20 shrink-0 rounded-full border bg-muted",
             props.imageClassName,
           )}
-          src={
-            props.image
-              ? resolveSchemeWithErrorHandler({
-                  uri: props.image,
-                  client: props.clientContract.client,
-                })
-              : ""
-          }
           fallback={
             <div className="flex items-center justify-center font-bold text-3xl text-muted-foreground/80">
               {props.name[0]}
             </div>
+          }
+          src={
+            props.image
+              ? resolveSchemeWithErrorHandler({
+                  client: props.clientContract.client,
+                  uri: props.image,
+                })
+              : ""
           }
         />
       )}
@@ -98,13 +98,13 @@ export function ContractHeaderUI(props: {
 
             <div className="flex flex-wrap gap-2">
               <Link
-                href={`/${props.chainMetadata.slug}`}
                 className="flex w-fit shrink-0 items-center gap-2 rounded-3xl border border-border bg-card px-2.5 py-1.5 hover:bg-accent"
+                href={`/${props.chainMetadata.slug}`}
               >
                 <ChainIconClient
-                  src={props.chainMetadata.icon?.url || ""}
-                  client={props.clientContract.client}
                   className="size-4"
+                  client={props.clientContract.client}
+                  src={props.chainMetadata.icon?.url || ""}
                 />
                 {cleanedChainName && (
                   <span className="text-xs">{cleanedChainName}</span>
@@ -128,10 +128,10 @@ export function ContractHeaderUI(props: {
                 })
                 .map(({ name, href }) => (
                   <SocialLink
-                    key={name}
-                    name={name}
                     href={href}
                     icon={platformToIcons[name.toLowerCase()]}
+                    key={name}
+                    name={name}
                   />
                 ))}
             </div>
@@ -142,16 +142,16 @@ export function ContractHeaderUI(props: {
         <div className="flex flex-row flex-wrap items-center gap-2">
           <CopyAddressButton
             address={props.clientContract.address}
-            copyIconPosition="left"
             className="rounded-full bg-card px-2.5 py-1.5 text-xs"
+            copyIconPosition="left"
             variant="outline"
           />
 
           {explorersToShow?.map((validBlockExplorer) => (
             <BadgeLink
+              href={`${validBlockExplorer.url.endsWith("/") ? validBlockExplorer.url : `${validBlockExplorer.url}/`}address/${props.clientContract.address}`}
               key={validBlockExplorer.url}
               name={validBlockExplorer.name}
-              href={`${validBlockExplorer.url.endsWith("/") ? validBlockExplorer.url : `${validBlockExplorer.url}/`}address/${props.clientContract.address}`}
             />
           ))}
 
@@ -179,17 +179,14 @@ function getExplorersToShow(chainMetadata: ChainMetadata) {
   return validBlockExplorers?.slice(0, 1);
 }
 
-function BadgeLink(props: {
-  name: string;
-  href: string;
-}) {
+function BadgeLink(props: { name: string; href: string }) {
   return (
     <Button
-      variant="outline"
       asChild
       className="!h-auto gap-2 rounded-full bg-card px-3 py-1.5 text-xs capitalize"
+      variant="outline"
     >
-      <Link href={props.href} target="_blank" rel="noopener noreferrer">
+      <Link href={props.href} rel="noopener noreferrer" target="_blank">
         {props.name}
         <ExternalLinkIcon className="size-3 text-muted-foreground/70" />
       </Link>
@@ -203,20 +200,20 @@ function SocialLink(props: {
   icon?: React.FC<{ className?: string }>;
 }) {
   return (
-    <ToolTipLabel label={props.name} contentClassName="capitalize">
+    <ToolTipLabel contentClassName="capitalize" label={props.name}>
       <Button
-        variant="outline"
         asChild
         className={cn(
           "!h-auto gap-2 rounded-full bg-card px-3 py-1.5 text-xs capitalize",
           props.icon && "rounded-full p-1.5",
         )}
+        variant="outline"
       >
         <Link
-          href={props.href}
-          target="_blank"
           className="capitalize"
+          href={props.href}
           rel="noopener noreferrer"
+          target="_blank"
         >
           {props.icon ? <props.icon className="size-4" /> : props.name}
           {!props.icon && (

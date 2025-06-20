@@ -1,10 +1,10 @@
+import { PayConfig } from "components/pay/PayConfig";
+import { RouteDiscovery } from "components/pay/RouteDiscovery";
+import { redirect } from "next/navigation";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getFees } from "@/api/universal-bridge/developer";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { PayConfig } from "components/pay/PayConfig";
-import { RouteDiscovery } from "components/pay/RouteDiscovery";
-import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../login/loginRedirect";
 
@@ -41,18 +41,18 @@ export default async function Page(props: {
     teamId: team.id,
   }).catch(() => {
     return {
-      feeRecipient: "",
-      feeBps: 0,
       createdAt: "",
+      feeBps: 0,
+      feeRecipient: "",
       updatedAt: "",
     };
   });
 
   if (!fees) {
     fees = {
-      feeRecipient: "",
-      feeBps: 0,
       createdAt: "",
+      feeBps: 0,
+      feeRecipient: "",
       updatedAt: "",
     };
   }
@@ -65,14 +65,14 @@ export default async function Page(props: {
   return (
     <div className="flex flex-col p-5">
       <PayConfig
+        fees={fees}
         project={project}
         teamId={team.id}
         teamSlug={team_slug}
-        fees={fees}
       />
 
       <div className="flex pt-5">
-        <RouteDiscovery project={project} client={client} />
+        <RouteDiscovery client={client} project={project} />
       </div>
     </div>
   );

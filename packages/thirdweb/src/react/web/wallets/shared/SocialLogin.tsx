@@ -11,10 +11,10 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
-import { Spacer } from "../../ui/components/Spacer.js";
-import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
+import { Spacer } from "../../ui/components/Spacer.js";
+import { Spinner } from "../../ui/components/Spinner.js";
 import { Text } from "../../ui/components/text.js";
 import type { ConnectWalletSelectUIState } from "./ConnectWalletSocialOptions.js";
 import type { InAppWalletLocale } from "./locale/types.js";
@@ -69,17 +69,17 @@ export function SocialLogin(props: {
         authOption: props.socialAuth,
         client: props.client,
         ecosystem,
-        redirectUrl: walletConfig?.auth?.redirectUrl,
         mode: walletConfig?.auth?.mode,
+        redirectUrl: walletConfig?.auth?.redirectUrl,
       });
     }
 
     try {
       const socialWindow = openOauthSignInWindow({
         authOption: props.socialAuth,
-        themeObj,
         client: props.client,
         ecosystem,
+        themeObj,
       });
 
       if (!socialWindow) {
@@ -90,12 +90,12 @@ export function SocialLogin(props: {
       if (props.isLinking) {
         await linkProfile({
           client: props.client,
-          strategy: props.socialAuth,
-          openedWindow: socialWindow,
           closeOpenedWindow: (openedWindow) => {
             openedWindow.close();
           },
           ecosystem,
+          openedWindow: socialWindow,
+          strategy: props.socialAuth,
         }).catch((e) => {
           setAuthError(e.message);
           throw e;
@@ -103,12 +103,12 @@ export function SocialLogin(props: {
       } else {
         await wallet.connect({
           chain: props.chain,
-          strategy: props.socialAuth,
-          openedWindow: socialWindow,
+          client: props.client,
           closeOpenedWindow: (openedWindow) => {
             openedWindow.close();
           },
-          client: props.client,
+          openedWindow: socialWindow,
+          strategy: props.socialAuth,
         });
       }
 
@@ -156,8 +156,8 @@ export function SocialLogin(props: {
   return (
     <Container animate="fadein" flex="column" fullHeight>
       <Container
-        flex="column"
         expand
+        flex="column"
         p="lg"
         style={{
           paddingBottom: 0,
@@ -165,31 +165,31 @@ export function SocialLogin(props: {
       >
         {props.goBack && (
           <ModalHeader
+            onBack={props.goBack}
             title={
               props.isLinking
                 ? props.connectLocale.manageWallet.linkProfile
                 : locale.title
             }
-            onBack={props.goBack}
           />
         )}
 
         {props.size === "compact" ? <Spacer y="xl" /> : null}
 
         <Container
-          flex="column"
           center="both"
           expand
+          flex="column"
           style={{
-            textAlign: "center",
             minHeight: "250px",
+            textAlign: "center",
           }}
         >
           {status !== "error" && (
             <Container animate="fadein">
               <Text
-                color="primaryText"
                 center
+                color="primaryText"
                 multiline
                 style={{
                   maxWidth: "250px",
@@ -199,7 +199,7 @@ export function SocialLogin(props: {
               </Text>
               <Spacer y="xl" />
               <Container center="x" flex="row">
-                <Spinner size="lg" color="accentText" />
+                <Spinner color="accentText" size="lg" />
               </Container>
 
               <Spacer y="xxl" />
@@ -216,7 +216,7 @@ export function SocialLogin(props: {
                 <Text color="danger">{locale.failed}</Text>
               )}
               <Spacer y="lg" />
-              <Button variant="primary" onClick={handleSocialLogin}>
+              <Button onClick={handleSocialLogin} variant="primary">
                 {locale.retry}
               </Button>
               <Spacer y="xxl" />

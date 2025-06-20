@@ -29,8 +29,8 @@ export function SwapSummary(props: {
         bg="tertiaryBg"
         flex="column"
         style={{
-          borderRadius: radius.lg,
           border: `1px solid ${theme.colors.borderColor}`,
+          borderRadius: radius.lg,
         }}
       >
         <Container
@@ -49,29 +49,29 @@ export function SwapSummary(props: {
           />
         </Container>
         <TokenRow
-          token={props.fromToken}
           chain={props.fromChain}
           client={props.client}
-          isLoading={false}
-          value={props.fromAmount}
           freezeChainAndToken={true}
+          isLoading={false}
           onSelectToken={() => {}}
           style={{
             background: "transparent",
-            borderRadius: 0,
             border: "none",
+            borderRadius: 0,
           }}
+          token={props.fromToken}
+          value={props.fromAmount}
         />
       </Container>
       {/* Connector Icon */}
       <StepConnectorArrow />
       {/* Buy */}
       <Container
-        flex="column"
         bg="tertiaryBg"
+        flex="column"
         style={{
-          borderRadius: radius.lg,
           border: `1px solid ${theme.colors.borderColor}`,
+          borderRadius: radius.lg,
         }}
       >
         {isDifferentRecipient && (
@@ -92,18 +92,18 @@ export function SwapSummary(props: {
           </Container>
         )}
         <TokenRow
-          token={props.toToken}
           chain={props.toChain}
           client={props.client}
-          isLoading={false}
-          value={props.toAmount}
           freezeChainAndToken={true}
+          isLoading={false}
           onSelectToken={() => {}}
           style={{
             background: "transparent",
-            borderRadius: 0,
             border: "none",
+            borderRadius: 0,
           }}
+          token={props.toToken}
+          value={props.toAmount}
         />
       </Container>
     </Container>

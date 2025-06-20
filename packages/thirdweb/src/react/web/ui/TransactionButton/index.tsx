@@ -6,8 +6,8 @@ import {
 } from "../../../core/hooks/transaction/transaction-button-utils.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useSendTransaction } from "../../hooks/transaction/useSendTransaction.js";
-import { Spinner } from "../components/Spinner.js";
 import { Button } from "../components/buttons.js";
+import { Spinner } from "../components/Spinner.js";
 
 /**
  * TransactionButton component is used to render a button that triggers a transaction.
@@ -134,10 +134,15 @@ import { Button } from "../components/buttons.js";
 export function TransactionButton(props: TransactionButtonProps) {
   const {
     children,
+    // biome-ignore lint/correctness/noUnusedVariables: TODO
     transaction,
+    // biome-ignore lint/correctness/noUnusedVariables: TODO
     onTransactionSent,
+    // biome-ignore lint/correctness/noUnusedVariables: TODO
     onTransactionConfirmed,
+    // biome-ignore lint/correctness/noUnusedVariables: TODO
     onError,
+    // biome-ignore lint/correctness/noUnusedVariables: TODO
     onClick,
     gasless,
     payModal,
@@ -155,18 +160,18 @@ export function TransactionButton(props: TransactionButtonProps) {
   return (
     <CustomThemeProvider theme={props.theme}>
       <Button
-        gap="xs"
-        disabled={!account || disabled || isPending}
-        variant="primary"
-        unstyled={unstyled}
         data-is-loading={isPending}
+        disabled={!account || disabled || isPending}
+        gap="xs"
         onClick={() => handleClick()}
+        unstyled={unstyled}
+        variant="primary"
         {...buttonProps}
         style={
           !unstyled
             ? {
-                opacity: !account || disabled ? 0.5 : 1,
                 minWidth: "165px",
+                opacity: !account || disabled ? 0.5 : 1,
                 position: "relative",
                 ...buttonProps.style,
               }
@@ -182,16 +187,16 @@ export function TransactionButton(props: TransactionButtonProps) {
         {isPending && (
           <div
             style={{
-              position: "absolute",
-              display: "flex",
               alignItems: "center",
-              height: "100%",
-              top: 0,
               bottom: 0,
+              display: "flex",
+              height: "100%",
               margin: "auto",
+              position: "absolute",
+              top: 0,
             }}
           >
-            <Spinner size="md" color="primaryButtonText" />
+            <Spinner color="primaryButtonText" size="md" />
           </div>
         )}
       </Button>

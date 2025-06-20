@@ -6,8 +6,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFT", () => {
   it("without owner using indexer", async () => {
     const nft = await getNFT({
       contract: DOODLES_CONTRACT,
-      tokenId: 1n,
       includeOwner: false,
+      tokenId: 1n,
     });
     expect(nft.metadata.name).toBe("Doodle #1");
     expect(nft).toMatchInlineSnapshot(`
@@ -54,8 +54,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFT", () => {
   it("with owner using indexer", async () => {
     const nft = await getNFT({
       contract: { ...DOODLES_CONTRACT },
-      tokenId: 1n,
       includeOwner: true,
+      tokenId: 1n,
     });
     expect(nft.metadata.name).toBe("Doodle #1");
     expect(nft.owner).toBeDefined();
@@ -103,8 +103,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFT", () => {
   it("without owner", async () => {
     const nft = await getNFT({
       contract: { ...DOODLES_CONTRACT },
-      tokenId: 1n,
       includeOwner: false,
+      tokenId: 1n,
       useIndexer: false,
     });
     expect(nft).toMatchInlineSnapshot(`
@@ -149,8 +149,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFT", () => {
   it("with owner", async () => {
     const nft = await getNFT({
       contract: { ...DOODLES_CONTRACT },
-      tokenId: 1n,
       includeOwner: true,
+      tokenId: 1n,
       useIndexer: false,
     });
     expect(nft).toMatchInlineSnapshot(`

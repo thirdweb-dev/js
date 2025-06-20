@@ -1,5 +1,8 @@
 "use client";
 
+import { MenuIcon } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -7,9 +10,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { MenuIcon } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
 import type { TruncatedSessionInfo } from "../api/types";
 import { useNewChatPageLink } from "../hooks/useNewChatPageLink";
 import { ChatSidebar } from "./ChatSidebar";
@@ -23,18 +23,17 @@ export function MobileNav(props: {
 
   return (
     <nav className="flex justify-between border-b bg-card px-4 py-4 lg:hidden">
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <Sheet onOpenChange={setIsOpen} open={isOpen}>
         <SheetTrigger asChild>
           <Button
-            variant="ghost"
-            onClick={() => setIsOpen(!isOpen)}
             className="h-auto w-auto p-0.5"
+            onClick={() => setIsOpen(!isOpen)}
+            variant="ghost"
           >
             <MenuIcon className="size-8" />
           </Button>
         </SheetTrigger>
         <SheetContent
-          side="left"
           className="w-[calc(100vw-80px)] max-w-[300px] p-0"
           onClick={(e) => {
             if (!(e.target instanceof HTMLElement)) {
@@ -47,12 +46,13 @@ export function MobileNav(props: {
               setIsOpen(false);
             }
           }}
+          side="left"
         >
           <SheetTitle className="sr-only"> Menu </SheetTitle>
           <ChatSidebar
-            type="mobile"
             authToken={props.authToken}
             sessions={props.sessions}
+            type="mobile"
           />
         </SheetContent>
       </Sheet>

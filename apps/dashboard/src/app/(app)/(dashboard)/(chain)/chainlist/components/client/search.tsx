@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { SearchIcon, XCircleIcon } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 
 function cleanUrl(url: string) {
   if (url.endsWith("?")) {
@@ -47,17 +47,15 @@ export const SearchInput: React.FC = () => {
     <div className="relative w-full">
       <SearchIcon className="-translate-y-1/2 absolute top-[50%] left-3 size-4 text-muted-foreground" />
       <Input
-        placeholder="Search by name or chain ID"
         className="h-10 rounded-lg bg-card py-2 pl-9 lg:min-w-[300px]"
         defaultValue={searchParams?.get("query") || ""}
         onChange={(e) => handleSearch(e.target.value)}
+        placeholder="Search by name or chain ID"
         ref={inputRef}
       />
       {searchParams?.has("query") && (
         <Button
-          size="icon"
           className="-translate-y-1/2 absolute top-[50%] right-2 text-muted-foreground"
-          variant="ghost"
           onClick={() => {
             const params = new URLSearchParams(searchParams ?? undefined);
             params.delete("query");
@@ -65,6 +63,8 @@ export const SearchInput: React.FC = () => {
             const url = cleanUrl(`${pathname}?${params.toString()}`);
             router.replace(url);
           }}
+          size="icon"
+          variant="ghost"
         >
           <XCircleIcon className="size-5" />
         </Button>

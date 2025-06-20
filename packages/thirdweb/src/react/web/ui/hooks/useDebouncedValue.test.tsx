@@ -19,13 +19,13 @@ describe("useDebouncedValue", () => {
   it("should debounce value changes", () => {
     const { result, rerender } = renderHook(
       ({ value, delay }) => useDebouncedValue(value, delay),
-      { initialProps: { value: "initial", delay: 1000 } },
+      { initialProps: { delay: 1000, value: "initial" } },
     );
 
     expect(result.current).toBe("initial");
 
     // Change the value
-    rerender({ value: "changed", delay: 1000 });
+    rerender({ delay: 1000, value: "changed" });
 
     // The value should not change immediately
     expect(result.current).toBe("initial");
@@ -58,12 +58,12 @@ describe("useDebouncedValue", () => {
   it("should handle multiple rapid changes", () => {
     const { result, rerender } = renderHook(
       ({ value, delay }) => useDebouncedValue(value, delay),
-      { initialProps: { value: "initial", delay: 1000 } },
+      { initialProps: { delay: 1000, value: "initial" } },
     );
 
-    rerender({ value: "change1", delay: 1000 });
-    rerender({ value: "change2", delay: 1000 });
-    rerender({ value: "change3", delay: 1000 });
+    rerender({ delay: 1000, value: "change1" });
+    rerender({ delay: 1000, value: "change2" });
+    rerender({ delay: 1000, value: "change3" });
 
     expect(result.current).toBe("initial");
 
@@ -77,10 +77,10 @@ describe("useDebouncedValue", () => {
   it("should respect changing delay times", () => {
     const { result, rerender } = renderHook(
       ({ value, delay }) => useDebouncedValue(value, delay),
-      { initialProps: { value: "initial", delay: 1000 } },
+      { initialProps: { delay: 1000, value: "initial" } },
     );
 
-    rerender({ value: "changed", delay: 500 });
+    rerender({ delay: 500, value: "changed" });
 
     act(() => {
       vi.advanceTimersByTime(600);

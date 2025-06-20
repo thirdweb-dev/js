@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "TokensMinted" event.
@@ -34,8 +34,8 @@ export type TokensMintedEventFilters = Partial<{
  */
 export function tokensMintedEvent(filters: TokensMintedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event TokensMinted(address indexed mintedTo, uint256 quantityMinted)",
-    filters,
   });
 }

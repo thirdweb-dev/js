@@ -1,17 +1,17 @@
 "use client";
 
-import type { Project } from "@/api/projects";
-import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
-import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
-import { Button } from "@/components/ui/button";
-import type { ChartConfig } from "@/components/ui/chart";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { format } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { formatTickerNumber } from "lib/format-utils";
 import Link from "next/link";
 import { useMemo } from "react";
 import type { TransactionStats } from "types/analytics";
+import type { Project } from "@/api/projects";
+import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
+import { Button } from "@/components/ui/button";
+import type { ChartConfig } from "@/components/ui/chart";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
 
 type ChartData = Record<string, number> & {
@@ -77,21 +77,21 @@ export function TransactionsChartCardUI(props: {
 
     chainsToShow.forEach((chainName, i) => {
       _chartConfig[chainName] = {
-        label: chainName,
         color: `hsl(var(--chart-${(i % 10) + 1}))`,
+        label: chainName,
       };
     });
 
     // Add Other
     chainsToShow.push("others");
     _chartConfig.others = {
-      label: "Others",
       color: "hsl(var(--muted-foreground))",
+      label: "Others",
     };
 
     return {
-      chartData: Array.from(_chartDataMap.values()),
       chartConfig: _chartConfig,
+      chartData: Array.from(_chartDataMap.values()),
     };
   }, [userOpStats, chainsStore]);
 
@@ -103,6 +103,8 @@ export function TransactionsChartCardUI(props: {
 
   return (
     <ThirdwebBarChart
+      chartClassName="aspect-[1.5] lg:aspect-[3.5]"
+      config={chartConfig}
       customHeader={
         <div className="relative px-6 pt-6">
           <h3 className="mb-0.5 font-semibold text-xl tracking-tight">
@@ -115,8 +117,8 @@ export function TransactionsChartCardUI(props: {
           <div className="top-6 right-6 mb-8 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
             <ExportToCSVButton
               className="bg-background"
-              fileName="Sponsored Transactions"
               disabled={disableActions}
+              fileName="Sponsored Transactions"
               getData={async () => {
                 const header = ["Date", ...uniqueChainIds];
                 const rows = chartData.map((data) => {
@@ -132,12 +134,17 @@ export function TransactionsChartCardUI(props: {
           </div>
         </div>
       }
-      config={chartConfig}
       data={chartData}
-      isPending={props.isPending}
-      chartClassName="aspect-[1.5] lg:aspect-[3.5]"
-      showLegend
+      emptyChartState={
+        <EmptyChartContent
+          project={props.project}
+          teamSlug={props.teamSlug}
+          wallets={props.wallets}
+        />
+      }
       hideLabel={false}
+      isPending={props.isPending}
+      showLegend
       toolTipLabelFormatter={(_v, item) => {
         if (Array.isArray(item)) {
           const time = item[0].payload.time as number;
@@ -146,13 +153,6 @@ export function TransactionsChartCardUI(props: {
         return undefined;
       }}
       toolTipValueFormatter={(value) => formatTickerNumber(Number(value))}
-      emptyChartState={
-        <EmptyChartContent
-          teamSlug={props.teamSlug}
-          project={props.project}
-          wallets={props.wallets}
-        />
-      }
     />
   );
 }
@@ -171,10 +171,10 @@ function EmptyChartContent(props: {
           <span className="mb-6 text-center text-lg">
             Engine requires a{" "}
             <Link
-              href="https://portal.thirdweb.com/vault"
-              target="_blank"
               className="underline"
+              href="https://portal.thirdweb.com/vault"
               rel="noopener noreferrer"
+              target="_blank"
             >
               Vault admin account
             </Link>
@@ -182,12 +182,12 @@ function EmptyChartContent(props: {
           </span>
           <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
             <Button
-              variant="primary"
               onClick={() => {
                 router.push(
                   `/team/${props.teamSlug}/${props.project.slug}/engine/cloud/vault`,
                 );
               }}
+              variant="primary"
             >
               Create Vault Admin Account
             </Button>

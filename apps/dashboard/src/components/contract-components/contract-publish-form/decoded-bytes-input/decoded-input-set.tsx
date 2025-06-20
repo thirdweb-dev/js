@@ -1,3 +1,7 @@
+import type { AbiParameter } from "abitype";
+import { PlusIcon, TrashIcon } from "lucide-react";
+import { useFieldArray, useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import {
   Accordion,
   AccordionContent,
@@ -6,10 +10,6 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import type { AbiParameter } from "abitype";
-import { PlusIcon, TrashIcon } from "lucide-react";
-import { useFieldArray, useFormContext } from "react-hook-form";
-import type { ThirdwebClient } from "thirdweb";
 import { DecodedInput } from "./decoded-input";
 
 interface DecodedInputSetProps {
@@ -26,15 +26,15 @@ export const DecodedInputSet: React.FC<DecodedInputSetProps> = ({
   const form = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
-    name: `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}`,
     control: form.control,
+    name: `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}`,
   });
 
   return (
     <fieldset>
       {fields.map((item, index) => (
-        <Accordion type="single" collapsible className="-mx-1" key={item.id}>
-          <AccordionItem value="metadata" className="border-border border-b">
+        <Accordion className="-mx-1" collapsible key={item.id} type="single">
+          <AccordionItem className="border-border border-b" value="metadata">
             <AccordionTrigger className="gap-3 border-0 px-1 ">
               <div className="flex grow items-center justify-between gap-4">
                 <span className="font-medium text-sm">
@@ -42,30 +42,27 @@ export const DecodedInputSet: React.FC<DecodedInputSetProps> = ({
                 </span>
                 <ToolTipLabel label="Remove Parameter">
                   <Button
-                    asChild
-                    size="sm"
-                    className="!text-destructive-text h-auto w-auto p-2"
-                    variant="ghost"
+                    className="!text-destructive-text"
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                       remove(index);
                     }}
+                    size="icon"
+                    variant="ghost"
                   >
-                    <div role="button" tabIndex={0}>
-                      <TrashIcon className="size-4" />
-                    </div>
+                    <TrashIcon className="size-4" />
                   </Button>
                 </ToolTipLabel>
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-1 pb-6">
               <DecodedInput
+                client={client}
                 key={item.id}
+                param={param}
                 paramIndex={index}
                 setIndex={setIndex}
-                param={param}
-                client={client}
               />
             </AccordionContent>
           </AccordionItem>
@@ -74,17 +71,17 @@ export const DecodedInputSet: React.FC<DecodedInputSetProps> = ({
 
       <div className="mt-6 flex justify-start">
         <Button
-          type="button"
-          size="sm"
           className="gap-2"
-          variant="outline"
           disabled={param.type === "bytes" && fields.length >= 1}
           onClick={() =>
             append({
-              type: "",
               defaultValue: "",
+              type: "",
             })
           }
+          size="sm"
+          type="button"
+          variant="outline"
         >
           <PlusIcon className="size-4" />
           Add Parameter

@@ -1,5 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FileInput } from "components/shared/FileInput";
+import { ArrowLeftIcon, ArrowRightIcon, AsteriskIcon } from "lucide-react";
+import { useId } from "react";
+import { useForm } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { Badge } from "@/components/ui/badge";
@@ -18,11 +24,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FileInput } from "components/shared/FileInput";
-import { ArrowLeftIcon, ArrowRightIcon, AsteriskIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
-import type { ThirdwebClient } from "thirdweb";
 import {
   getUploadedNFTMediaMeta,
   handleNFTMediaUpload,
@@ -40,16 +41,22 @@ export function SingleUploadNFT(props: {
   setNFTData: (nftData: NFTMetadataWithPrice) => void;
 }) {
   const form = useForm<NFTMetadataWithPrice>({
-    resolver: zodResolver(nftWithPriceSchema),
-    values: props.nftData || undefined,
     defaultValues: {
+      attributes: [{ trait_type: "", value: "" }],
+      description: "",
       image: undefined,
       name: "",
-      description: "",
-      attributes: [{ trait_type: "", value: "" }],
     },
+    resolver: zodResolver(nftWithPriceSchema),
     reValidateMode: "onChange",
+    values: props.nftData || undefined,
   });
+
+  const nameId = useId();
+  const descriptionId = useId();
+
+  const priceAmountId = useId();
+  const supplyId = useId();
 
   function handlePrev() {
     props.setNFTData(form.getValues()); // save before going back
@@ -86,21 +93,21 @@ export function SingleUploadNFT(props: {
             <FormFieldSetup
               errorMessage={mediaFileError?.message}
               htmlFor="media"
-              label="Media"
               isRequired={false}
+              label="Media"
             >
               <p className="mb-2 text-muted-foreground text-sm">
                 You can upload image, audio, video, html, text, pdf, or 3d model
                 file
               </p>
               <FileInput
-                value={media}
-                showPreview={true}
-                setValue={setFile}
                 className="rounded-lg bg-background"
-                selectOrUpload="Upload"
                 client={props.client}
                 helperText="Media"
+                selectOrUpload="Upload"
+                setValue={setFile}
+                showPreview={true}
+                value={media}
               />
             </FormFieldSetup>
 
@@ -108,21 +115,21 @@ export function SingleUploadNFT(props: {
               <FormFieldSetup
                 errorMessage={form.formState.errors?.image?.message}
                 htmlFor="cover-image"
-                label="Cover Image"
                 isRequired={false}
+                label="Cover Image"
               >
                 <p className="mb-2 text-muted-foreground text-sm">
                   You can optionally upload an image as the cover of your NFT
                 </p>
                 <FileInput
-                  client={props.client}
                   accept={{ "image/*": [] }}
+                  className="rounded-lg bg-background"
+                  client={props.client}
                   helperText="Cover Image"
-                  value={image}
                   setValue={(file) => {
                     form.setValue("image", file);
                   }}
-                  className="rounded-lg bg-background"
+                  value={image}
                 />
               </FormFieldSetup>
             )}
@@ -132,29 +139,29 @@ export function SingleUploadNFT(props: {
           <div className="flex flex-col gap-6">
             {/* name  */}
             <FormFieldSetup
-              label="Name"
-              isRequired
-              htmlFor="name"
               errorMessage={form.formState.errors.name?.message}
+              htmlFor="name"
+              isRequired
+              label="Name"
             >
               <Input
-                id="name"
+                id={nameId}
                 placeholder="My NFT"
                 {...form.register("name")}
               />
             </FormFieldSetup>
 
             <FormFieldSetup
-              label="Description"
-              isRequired={false}
-              htmlFor="description"
               className="flex grow flex-col"
               errorMessage={form.formState.errors.description?.message}
+              htmlFor="description"
+              isRequired={false}
+              label="Description"
             >
               <Textarea
-                id="description"
-                placeholder="Describe your NFT"
                 className="grow"
+                id={descriptionId}
+                placeholder="Describe your NFT"
                 {...form.register("description")}
               />
             </FormFieldSetup>
@@ -177,15 +184,15 @@ export function SingleUploadNFT(props: {
               {/* Price Amount */}
               <div className="space-y-1">
                 <DecimalInput
-                  id="price_amount"
-                  value={form.watch("price_amount")}
-                  placeholder="0.00"
                   className="w-40 rounded-r-none border-r-0 bg-background"
+                  id={priceAmountId}
                   onChange={(value) => {
                     form.setValue("price_amount", value, {
                       shouldValidate: true,
                     });
                   }}
+                  placeholder="0.00"
+                  value={form.watch("price_amount")}
                 />
                 {form.formState.errors.price_amount?.message && (
                   <p className="text-destructive-text text-sm">
@@ -197,10 +204,16 @@ export function SingleUploadNFT(props: {
               {/* Price Currency */}
               <div className="flex-1 space-y-1">
                 <TokenSelector
-                  className="rounded-l-none bg-background"
                   addNativeTokenIfMissing={true}
-                  showCheck={true}
+                  chainId={props.chainId}
+                  className="rounded-l-none bg-background"
+                  client={props.client}
                   disableAddress={true}
+                  onChange={(token) => {
+                    form.setValue("price_currency", token.address, {
+                      shouldValidate: true,
+                    });
+                  }}
                   selectedToken={
                     form.watch("price_currency")
                       ? {
@@ -209,13 +222,7 @@ export function SingleUploadNFT(props: {
                         }
                       : undefined
                   }
-                  onChange={(token) => {
-                    form.setValue("price_currency", token.address, {
-                      shouldValidate: true,
-                    });
-                  }}
-                  client={props.client}
-                  chainId={props.chainId}
+                  showCheck={true}
                 />
                 {form.formState.errors.price_currency?.message && (
                   <p className="text-destructive-text text-sm">
@@ -228,21 +235,21 @@ export function SingleUploadNFT(props: {
 
           {/* Supply */}
           <FormFieldSetup
-            label="Supply"
-            isRequired
-            htmlFor="supply"
             errorMessage={form.formState.errors.supply?.message}
+            htmlFor="supply"
+            isRequired
+            label="Supply"
           >
             <DecimalInput
-              id="supply"
-              placeholder="Custom"
-              value={form.watch("supply")}
               className="bg-background"
+              id={supplyId}
               onChange={(value) => {
                 form.setValue("supply", value, {
                   shouldValidate: true,
                 });
               }}
+              placeholder="Custom"
+              value={form.watch("supply")}
             />
           </FormFieldSetup>
         </div>
@@ -319,15 +326,15 @@ export function SingleUploadNFT(props: {
         <div className="border-t border-dashed px-4 py-6 md:px-6">
           <div className="flex justify-end gap-3">
             <Button
+              className="gap-2"
+              onClick={handlePrev}
               type="button"
               variant="outline"
-              onClick={handlePrev}
-              className="gap-2"
             >
               <ArrowLeftIcon className="size-4" />
               Back
             </Button>
-            <Button type="submit" className="gap-2">
+            <Button className="gap-2" type="submit">
               Next
               <ArrowRightIcon className="size-4" />
             </Button>

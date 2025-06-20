@@ -53,18 +53,13 @@ export function useTransactionDetails({
   const chainMetadata = useChainMetadata(transaction.chain);
 
   return useQuery({
-    queryKey: [
-      "transaction-details",
-      transaction.to,
-      transaction.chain.id,
-      transaction.erc20Value?.toString(),
-    ],
+    enabled: !!transaction.to && !!chainMetadata.data,
     queryFn: async (): Promise<TransactionDetails> => {
       // Create contract instance for metadata fetching
       const contract = getContract({
-        client,
-        chain: transaction.chain,
         address: transaction.to as string,
+        chain: transaction.chain,
+        client,
       });
 
       const [contractMetadata, value, erc20Value, transactionData] =
@@ -86,9 +81,9 @@ export function useTransactionDetails({
 
       // Process function info from ABI if available
       let functionInfo = {
+        description: undefined,
         functionName: "Contract Call",
         selector: "0x",
-        description: undefined,
       };
 
       if (contractMetadata?.abi && transactionData.length >= 10) {
@@ -114,9 +109,9 @@ export function useTransactionDetails({
 
           if (matchingFunction) {
             functionInfo = {
+              description: undefined,
               functionName: matchingFunction.name,
-              selector,
-              description: undefined, // Skip devdoc for now
+              selector, // Skip devdoc for now
             };
           }
         } catch {
@@ -131,9 +126,9 @@ export function useTransactionDetails({
         if (erc20Value) {
           return decimals({
             contract: getContract({
-              client,
-              chain: transaction.chain,
               address: erc20Value.tokenAddress,
+              chain: transaction.chain,
+              client,
             }),
           });
         }
@@ -157,21 +152,26 @@ export function useTransactionDetails({
 
       return {
         contractMetadata,
+        costWei,
         functionInfo,
-        usdValueDisplay: usdValue
-          ? formatCurrencyAmount("USD", usdValue)
-          : null,
-        txCostDisplay: `${formatTokenAmount(costWei, decimal)} ${tokenSymbol}`,
         gasCostDisplay: gasCostWei
           ? `${formatTokenAmount(gasCostWei, 18)} ${nativeTokenSymbol}`
           : null,
-        tokenInfo,
-        costWei,
         gasCostWei,
+        tokenInfo,
         totalCost,
         totalCostWei,
+        txCostDisplay: `${formatTokenAmount(costWei, decimal)} ${tokenSymbol}`,
+        usdValueDisplay: usdValue
+          ? formatCurrencyAmount("USD", usdValue)
+          : null,
       };
     },
-    enabled: !!transaction.to && !!chainMetadata.data,
+    queryKey: [
+      "transaction-details",
+      transaction.to,
+      transaction.chain.id,
+      transaction.erc20Value?.toString(),
+    ],
   });
 }

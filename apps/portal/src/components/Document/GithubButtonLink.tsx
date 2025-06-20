@@ -4,12 +4,12 @@ import type { SVGProps } from "react";
 export const GithubIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
+      fill="currentColor"
+      height={24}
       role="img"
       viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="currentColor"
       width={24}
-      height={24}
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <title>GitHub</title>
@@ -21,9 +21,9 @@ export const GithubIcon = (props: SVGProps<SVGSVGElement>) => {
 export function GithubButtonLink(props: { href: string }) {
   return (
     <Link
+      className="inline-flex items-center rounded-lg border text-sm duration-200 hover:border-active-border"
       href={props.href}
       target="_blank"
-      className="inline-flex items-center rounded-lg border text-sm duration-200 hover:border-active-border"
     >
       <div className="p-2.5">
         <GithubIcon className="size-5" />

@@ -54,7 +54,10 @@ export function signMessage({ message, privateKey }: SignMessageOptions): Hex;
 export function signMessage({
   message,
   account,
-}: { message: Message; account: Account }): Promise<Hex>;
+}: {
+  message: Message;
+  account: Account;
+}): Promise<Hex>;
 
 export function signMessage(
   options: SignMessageOptions | { message: Message; account: Account },

@@ -30,12 +30,12 @@ export default async function Page(props: {
       accountAddress={accountAddress}
       authToken={authToken}
       client={nebulaAppThirdwebClient}
+      initialParams={{
+        chainIds: chains.map((c) => c.chainId),
+        q: typeof searchParams.q === "string" ? searchParams.q : undefined,
+      }}
       session={undefined}
       type="landing"
-      initialParams={{
-        q: typeof searchParams.q === "string" ? searchParams.q : undefined,
-        chainIds: chains.map((c) => c.chainId),
-      }}
     />
   );
 }

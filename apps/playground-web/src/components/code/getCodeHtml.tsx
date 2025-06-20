@@ -29,10 +29,10 @@ export async function getCodeHtml(code: string, lang: BundledLanguage) {
   const html = await codeToHtml(formattedCode, {
     lang: lang,
     themes: {
-      light: "github-light",
       dark: "github-dark-default",
+      light: "github-light",
     },
   });
 
-  return { html, formattedCode };
+  return { formattedCode, html };
 }

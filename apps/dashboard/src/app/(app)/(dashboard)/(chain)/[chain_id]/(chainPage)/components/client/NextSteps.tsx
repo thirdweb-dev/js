@@ -16,12 +16,12 @@ export default function NextSteps(props: { chain: ChainMetadata }) {
           <div>
             <h3 className="mb-1.5 font-medium">
               <Link
+                className="before:absolute before:inset-0"
                 href={
                   "https://blog.thirdweb.com/supercharge-user-adoption-integrate-embedded-wallets-in-minutes/"
                 }
-                className="before:absolute before:inset-0"
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 Create a login for {chain.name}
               </Link>

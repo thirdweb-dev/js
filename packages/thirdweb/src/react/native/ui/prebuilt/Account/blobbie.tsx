@@ -54,8 +54,8 @@ export function Blobbie(props: BlobbieProps) {
     if (props.size) {
       return {
         ...baseStyle,
-        width: props.size,
         height: props.size,
+        width: props.size,
       };
     }
     return baseStyle;
@@ -68,20 +68,20 @@ export function Blobbie(props: BlobbieProps) {
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Svg height="100%" width="100%" style={StyleSheet.absoluteFillObject}>
+      <Svg height="100%" style={StyleSheet.absoluteFillObject} width="100%">
         <Defs>
           <LinearGradient
             id={gradientUniqueId}
             x1="0%"
-            y1="100%"
             x2="100%"
+            y1="100%"
             y2="0%"
           >
             <Stop offset="0" stopColor={colors[0]} />
             <Stop offset="1" stopColor={colors[1]} />
           </LinearGradient>
         </Defs>
-        <Rect width="100%" height="100%" fill={`url(#${gradientUniqueId})`} />
+        <Rect fill={`url(#${gradientUniqueId})`} height="100%" width="100%" />
       </Svg>
     </View>
   );

@@ -12,8 +12,8 @@ import {
 describe.runIf(process.env.TW_SECRET_KEY)("create2 factory tests", () => {
   it("should compute create2 factory address", async () => {
     const addr = await computeCreate2FactoryAddress({
-      client: TEST_CLIENT,
       chain: defineChain(1),
+      client: TEST_CLIENT,
     });
 
     expect(addr).to.eq("0x4e59b44847b379578588920cA78FbF26c0B4956C");
@@ -21,8 +21,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("create2 factory tests", () => {
 
   it("should compute create2 factory address with custom gas", async () => {
     const addr = await computeCreate2FactoryAddress({
-      client: TEST_CLIENT,
       chain: defineChain(1564830818),
+      client: TEST_CLIENT,
     });
 
     expect(addr).to.eq("0x50620b64D9524aC7dC8c967123E87e5b6dB98f0c");
@@ -30,9 +30,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("create2 factory tests", () => {
 
   it("should deploy create2 factory", async () => {
     await deployCreate2Factory({
-      client: TEST_CLIENT,
       account: TEST_ACCOUNT_A,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
 
     const create2Factory = await getDeployedCreate2Factory({

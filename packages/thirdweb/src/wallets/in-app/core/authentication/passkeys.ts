@@ -77,8 +77,8 @@ export async function registerPasskey(options: {
 
   // 2. initiate registration
   const registration = await options.passkeyClient.register({
-    name: generatedName,
     challenge,
+    name: generatedName,
     rp: options.rp,
   });
 
@@ -92,25 +92,25 @@ export async function registerPasskey(options: {
 
   // 3. send the registration object to the server
   const verifRes = await fetchWithId(getVerificationPath(), {
-    method: "POST",
+    body: stringify({
+      authenticatorData: registration.authenticatorData,
+      clientData: registration.clientData,
+      credential: {
+        algorithm: registration.credential.algorithm,
+        publicKey: registration.credential.publicKey,
+      },
+      credentialId: registration.credentialId,
+      origin: registration.origin,
+      rpId: options.rp.id,
+      serverVerificationId: challengeData.serverVerificationId,
+      type: "sign-up",
+      username: generatedName,
+    }),
     headers: {
       "Content-Type": "application/json",
       ...customHeaders,
     },
-    body: stringify({
-      type: "sign-up",
-      authenticatorData: registration.authenticatorData,
-      credentialId: registration.credentialId,
-      serverVerificationId: challengeData.serverVerificationId,
-      clientData: registration.clientData,
-      username: generatedName,
-      credential: {
-        publicKey: registration.credential.publicKey,
-        algorithm: registration.credential.algorithm,
-      },
-      origin: registration.origin,
-      rpId: options.rp.id,
-    }),
+    method: "POST",
   });
   const verifData = await verifRes.json();
 
@@ -148,8 +148,8 @@ export async function loginWithPasskey(options: {
   const challenge = challengeData.challenge;
   // 2. initiate login
   const authentication = await options.passkeyClient.authenticate({
-    credentialId: credentialId ?? undefined,
     challenge,
+    credentialId: credentialId ?? undefined,
     rp: options.rp,
   });
 
@@ -162,21 +162,21 @@ export async function loginWithPasskey(options: {
   }
 
   const verifRes = await fetchWithId(getVerificationPath(), {
-    method: "POST",
+    body: stringify({
+      authenticatorData: authentication.authenticatorData,
+      clientData: authentication.clientData,
+      credentialId: authentication.credentialId,
+      origin: authentication.origin,
+      rpId: options.rp.id,
+      serverVerificationId: challengeData.serverVerificationId,
+      signature: authentication.signature,
+      type: "sign-in",
+    }),
     headers: {
       "Content-Type": "application/json",
       ...customHeaders,
     },
-    body: stringify({
-      type: "sign-in",
-      authenticatorData: authentication.authenticatorData,
-      credentialId: authentication.credentialId,
-      serverVerificationId: challengeData.serverVerificationId,
-      clientData: authentication.clientData,
-      signature: authentication.signature,
-      origin: authentication.origin,
-      rpId: options.rp.id,
-    }),
+    method: "POST",
   });
 
   const verifData = await verifRes.json();

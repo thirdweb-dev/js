@@ -1,3 +1,7 @@
+import type { AbiParameter } from "abitype";
+import { useState } from "react";
+import { useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Input } from "@/components/ui/input";
 import {
@@ -8,10 +12,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import type { AbiParameter } from "abitype";
-import { useState } from "react";
-import { useFormContext } from "react-hook-form";
-import type { ThirdwebClient } from "thirdweb";
 import { RefBytesInputFieldset } from "./ref-bytes-input-fieldset";
 
 interface DecodedInputProps {
@@ -57,14 +57,14 @@ export const DecodedInput: React.FC<DecodedInputProps> = ({
     <div className={className}>
       {/* Type */}
       <FormFieldSetup
-        isRequired={true}
-        label="Parameter Type"
         errorMessage={
           form.getFieldState(
             `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.type`,
             form.formState,
           ).error?.message
         }
+        isRequired={true}
+        label="Parameter Type"
       >
         <Select
           {...form.register(
@@ -111,10 +111,10 @@ export const DecodedInput: React.FC<DecodedInputProps> = ({
       <div>
         {isCustomAddress ? (
           <RefBytesInputFieldset
-            param={param}
-            setIndex={setIndex}
-            paramIndex={paramIndex}
             client={client}
+            param={param}
+            paramIndex={paramIndex}
+            setIndex={setIndex}
           />
         ) : (
           <Input

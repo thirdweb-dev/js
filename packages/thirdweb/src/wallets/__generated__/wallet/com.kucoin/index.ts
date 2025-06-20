@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.kucoin",
-  name: "KuCoin Web3 Wallet",
-  homepage: "https://www.kucoin.com",
-  image_id: "70d8a90b-457b-4c04-4bc3-791e97caab00",
   app: {
-    browser: "https://www.kucoin.com",
-    ios: "https://www.kucoin.com/download",
     android: "https://www.kucoin.com/download",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://www.kucoin.com",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://www.kucoin.com/download",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "kucoin:///wallet/walletConnect",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.kucoin.com",
+  id: "com.kucoin",
+  image_id: "70d8a90b-457b-4c04-4bc3-791e97caab00",
+  mobile: {
+    native: "kucoin:///wallet/walletConnect",
+    universal: null,
+  },
+  name: "KuCoin Web3 Wallet",
+  rdns: null,
 } as const;

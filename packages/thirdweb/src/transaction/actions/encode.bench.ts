@@ -4,10 +4,9 @@ import {
   USDT_CONTRACT,
   USDT_CONTRACT_WITH_ABI,
 } from "../../../test/src/test-contracts.js";
+import { prepareMethod } from "../../utils/abi/prepare-method.js";
 import { prepareContractCall } from "../prepare-contract-call.js";
 import { encode } from "./encode.js";
-
-import { prepareMethod } from "../../utils/abi/prepare-method.js";
 
 bench("encode tx (human readable)", async () => {
   const tx = prepareContractCall({
@@ -22,14 +21,14 @@ bench("encode tx (json abi)", async () => {
   const tx = prepareContractCall({
     contract: { ...USDT_CONTRACT },
     method: {
-      name: "transfer",
-      type: "function",
       inputs: [
         { name: "to", type: "address" },
         { name: "value", type: "uint256" },
       ],
+      name: "transfer",
       outputs: [],
       stateMutability: "payable",
+      type: "function",
     },
     params: [VITALIK_WALLET, 100n],
   });

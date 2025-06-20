@@ -57,18 +57,18 @@ export function mintWithSignature(
   >,
 ) {
   return generatedMint({
-    contract: options.contract,
     asyncParams: async () => {
       const { payload, signature } = options;
       return {
-        to: payload.to,
-        tokenId: payload.tokenId,
-        baseURI: payload.baseURI,
         amount: payload.amount,
+        baseURI: payload.baseURI,
         data: payload.data,
         signature,
+        to: payload.to,
+        tokenId: payload.tokenId,
       };
     },
+    contract: options.contract,
   });
 }
 
@@ -142,33 +142,33 @@ export async function generateMintSignature(
 
   const mintParams: EncodeBytesBeforeMintWithSignatureERC1155Params["params"] =
     {
-      pricePerUnit,
-      uid,
       currency,
-      startTimestamp: Number(dateToSeconds(startTime)),
       endTimestamp: Number(dateToSeconds(endTime)),
+      pricePerUnit,
+      startTimestamp: Number(dateToSeconds(startTime)),
+      uid,
     };
 
   const payload = {
-    to: mintRequest.recipient,
-    tokenId: mintRequest.tokenId ?? maxUint256,
     amount: mintRequest.quantity,
     baseURI: metadataURI,
     data: encodeBytesBeforeMintWithSignatureERC1155Params({
       params: mintParams,
     }),
+    to: mintRequest.recipient,
+    tokenId: mintRequest.tokenId ?? maxUint256,
   };
 
   const signature = await account.signTypedData({
     domain: {
-      name: "ERC1155Core",
-      version: "1",
       chainId: contract.chain.id,
+      name: "ERC1155Core",
       verifyingContract: contract.address as Hex,
+      version: "1",
     },
-    types: { MintRequestERC1155: MintRequestERC1155 },
-    primaryType: "MintRequestERC1155",
     message: payload,
+    primaryType: "MintRequestERC1155",
+    types: { MintRequestERC1155: MintRequestERC1155 },
   });
   return { payload, signature };
 }
@@ -185,9 +185,9 @@ type GeneratePayloadInput = {
 };
 
 const MintRequestERC1155 = [
-  { type: "address", name: "to" },
-  { type: "uint256", name: "tokenId" },
-  { type: "uint256", name: "amount" },
-  { type: "string", name: "baseURI" },
-  { type: "bytes", name: "data" },
+  { name: "to", type: "address" },
+  { name: "tokenId", type: "uint256" },
+  { name: "amount", type: "uint256" },
+  { name: "baseURI", type: "string" },
+  { name: "data", type: "bytes" },
 ] as const;

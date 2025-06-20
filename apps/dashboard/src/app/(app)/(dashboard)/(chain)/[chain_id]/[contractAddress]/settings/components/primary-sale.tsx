@@ -55,8 +55,8 @@ export const SettingsPrimarySale = ({
   };
 
   const form = useForm<z.input<typeof CommonPrimarySaleSchema>>({
-    resolver: zodResolver(CommonPrimarySaleSchema),
     defaultValues: transformedQueryData,
+    resolver: zodResolver(CommonPrimarySaleSchema),
     values: transformedQueryData,
   });
 
@@ -67,10 +67,11 @@ export const SettingsPrimarySale = ({
   );
 
   return (
-    <Card p={0} position="relative" overflow="hidden">
-      <SettingDetectedState type="primarySale" detectedState={detectedState} />
+    <Card overflow="hidden" p={0} position="relative">
+      <SettingDetectedState detectedState={detectedState} type="primarySale" />
       <Flex
         as="form"
+        direction="column"
         onSubmit={form.handleSubmit((d) => {
           const saleRecipient = d.primary_sale_recipient;
           if (!saleRecipient) {
@@ -84,25 +85,24 @@ export const SettingsPrimarySale = ({
           });
           // if we switch back to mutateAsync then *need* to catch errors
           mutation.mutate(transaction, {
-            onSuccess: () => {
-              form.reset({ primary_sale_recipient: saleRecipient });
-              onSuccess();
-            },
             onError: (error) => {
               console.error(error);
               onError(error);
             },
+            onSuccess: () => {
+              form.reset({ primary_sale_recipient: saleRecipient });
+              onSuccess();
+            },
           });
         })}
-        direction="column"
       >
-        <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
+        <Flex as="section" direction="column" gap={4} p={{ base: 6, md: 10 }}>
           <Heading size="title.sm">Primary Sales</Heading>
-          <Text size="body.md" fontStyle="italic">
+          <Text fontStyle="italic" size="body.md">
             The wallet address that should receive the revenue from initial
             sales of the assets.
           </Text>
-          <Flex gap={4} direction={{ base: "column", md: "row" }}>
+          <Flex direction={{ base: "column", md: "row" }} gap={4}>
             <FormControl
               isDisabled={mutation.isPending || !address}
               isInvalid={
@@ -114,8 +114,8 @@ export const SettingsPrimarySale = ({
               <SolidityInput
                 client={contract.client}
                 disabled={mutation.isPending || !address}
-                solidityType="address"
                 formContext={form}
+                solidityType="address"
                 {...form.register("primary_sale_recipient")}
               />
               <FormErrorMessage>
@@ -129,14 +129,14 @@ export const SettingsPrimarySale = ({
         </Flex>
         <AdminOnly contract={contract}>
           <TransactionButton
-            client={contract.client}
-            isLoggedIn={isLoggedIn}
-            txChainID={contract.chain.id}
-            transactionCount={1}
-            disabled={query.isPending || !form.formState.isDirty}
-            type="submit"
-            isPending={mutation.isPending}
             className="!rounded-t-none rounded-xl"
+            client={contract.client}
+            disabled={query.isPending || !form.formState.isDirty}
+            isLoggedIn={isLoggedIn}
+            isPending={mutation.isPending}
+            transactionCount={1}
+            txChainID={contract.chain.id}
+            type="submit"
           >
             {mutation.isPending
               ? "Updating Primary Sale Settings"

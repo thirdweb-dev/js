@@ -1,8 +1,8 @@
 "use client";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
 import { CheckIcon, PlayIcon, XIcon } from "lucide-react";
 import type { UseFormReturn } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 
 import { truncateMiddle } from "../utils/abiUtils";
 import type { WebhookFormValues } from "../utils/webhookTypes";
@@ -172,9 +172,7 @@ export default function ReviewStep({
             </span>
           </li>
 
-          {form.watch("filterType") === "event" ? (
-            <></>
-          ) : (
+          {form.watch("filterType") === "event" ? null : (
             <>
               <li className="flex justify-between">
                 <span className="text-muted-foreground text-sm">
@@ -229,17 +227,17 @@ export default function ReviewStep({
 
       <div className="flex justify-between pt-4">
         <Button
+          disabled={isLoading}
+          onClick={goToPreviousStep}
           type="button"
           variant="outline"
-          onClick={goToPreviousStep}
-          disabled={isLoading}
         >
           Back
         </Button>
         <Button
-          type="submit"
           disabled={isLoading}
           onClick={handleCreateButtonClick}
+          type="submit"
         >
           {isLoading ? "Creating..." : "Create Webhook"}
         </Button>

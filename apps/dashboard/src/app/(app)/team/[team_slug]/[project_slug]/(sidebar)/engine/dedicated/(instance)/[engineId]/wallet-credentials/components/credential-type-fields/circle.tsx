@@ -1,7 +1,8 @@
+import Link from "next/link";
+import { useId } from "react";
+import type { UseFormReturn } from "react-hook-form";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import type { UseFormReturn } from "react-hook-form";
 import type { CredentialFormData, CredentialUpdateFormData } from "../types";
 
 interface CircleCredentialFieldsProps {
@@ -13,47 +14,49 @@ export const CircleCredentialFields: React.FC<CircleCredentialFieldsProps> = ({
   form,
   isUpdate = false,
 }) => {
+  const entitySecretId = useId();
+
   return (
     <>
       <FormFieldSetup
-        label="Entity Secret"
         errorMessage={
           form.getFieldState("entitySecret", form.formState).error?.message
         }
-        htmlFor="entity-secret"
-        isRequired={!isUpdate}
-        tooltip={null}
         helperText={
           <>
             Entity Secret is a 32-byte private key designed to secure your
             Developer-Controlled wallets{" "}
             <Link
-              href="https://developers.circle.com/w3s/entity-secret-management"
-              target="_blank"
-              rel="noopener noreferrer"
               className="text-link-foreground hover:text-foreground"
+              href="https://developers.circle.com/w3s/entity-secret-management"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Learn more about entity secret management
             </Link>
           </>
         }
+        htmlFor={entitySecretId}
+        isRequired={!isUpdate}
+        label="Entity Secret"
+        tooltip={null}
       >
         <Input
-          id="entity-secret"
-          type="password"
           className="bg-card"
+          id={entitySecretId}
           placeholder={
             isUpdate
               ? "Leave empty to keep existing secret"
               : "Your Circle entity secret"
           }
+          type="password"
           {...form.register("entitySecret", {
-            required: !isUpdate,
             pattern: {
-              value: /^([0-9a-fA-F]{64})?$/,
               message:
                 "Entity secret must be a 32-byte hex string (64 characters)",
+              value: /^([0-9a-fA-F]{64})?$/,
             },
+            required: !isUpdate,
             setValueAs: (value: string) => (value === "" ? undefined : value),
           })}
         />

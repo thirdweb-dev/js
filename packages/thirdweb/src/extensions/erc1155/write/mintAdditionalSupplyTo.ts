@@ -37,15 +37,15 @@ export function mintAdditionalSupplyTo(
   options: BaseTransactionOptions<MintAdditionalSupplyToParams>,
 ) {
   return MintTo.mintTo({
-    contract: options.contract,
     asyncParams: async () => {
       return {
-        to: options.to,
-        tokenId: options.tokenId,
-        uri: "", // contract will maintain the existing token URI
         amount: options.supply,
+        to: options.to,
+        tokenId: options.tokenId, // contract will maintain the existing token URI
+        uri: "",
       };
     },
+    contract: options.contract,
   });
 }
 

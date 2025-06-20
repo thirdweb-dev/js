@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "ai.pundi",
-  name: "Pundi Wallet",
-  homepage: "https://pundi.ai/",
-  image_id: "f095abd7-575e-4851-cf9c-79c2c4e4cc00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/f-x-wallet-by-function-x-labs/id1504798360",
     android:
       "https://play.google.com/store/apps/details?id=com.pundix.functionx",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/f-x-wallet-by-function-x-labs/id1504798360",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "fxwallet://",
-    universal: "https://fx.wallet/wc",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://pundi.ai/",
+  id: "ai.pundi",
+  image_id: "f095abd7-575e-4851-cf9c-79c2c4e4cc00",
+  mobile: {
+    native: "fxwallet://",
+    universal: "https://fx.wallet/wc",
+  },
+  name: "Pundi Wallet",
+  rdns: null,
 } as const;

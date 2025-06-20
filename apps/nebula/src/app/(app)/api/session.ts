@@ -17,16 +17,16 @@ export async function createSession(params: {
   if (params.context) {
     body.context = {
       chain_ids: params.context.chainIds || [],
-      wallet_address: params.context.walletAddress,
       networks: params.context.networks,
+      wallet_address: params.context.walletAddress,
     };
   }
 
   const res = await fetchWithAuthToken({
-    method: "POST",
-    endpoint: `${NEXT_PUBLIC_NEBULA_URL}/session`,
-    body: body,
     authToken: params.authToken,
+    body: body,
+    endpoint: `${NEXT_PUBLIC_NEBULA_URL}/session`,
+    method: "POST",
   });
 
   if (!res.ok) {
@@ -47,16 +47,16 @@ export async function updateSession(params: {
   if (params.contextFilters) {
     body.context = {
       chain_ids: params.contextFilters.chainIds || [],
-      wallet_address: params.contextFilters.walletAddress,
       networks: params.contextFilters.networks,
+      wallet_address: params.contextFilters.walletAddress,
     };
   }
 
   const res = await fetchWithAuthToken({
-    method: "PUT",
-    endpoint: `${NEXT_PUBLIC_NEBULA_URL}/session/${params.sessionId}`,
-    body: body,
     authToken: params.authToken,
+    body: body,
+    endpoint: `${NEXT_PUBLIC_NEBULA_URL}/session/${params.sessionId}`,
+    method: "PUT",
   });
 
   if (!res.ok) {
@@ -72,9 +72,9 @@ export async function deleteSession(params: {
   sessionId: string;
 }) {
   const res = await fetchWithAuthToken({
-    method: "DELETE",
-    endpoint: `${NEXT_PUBLIC_NEBULA_URL}/session/${params.sessionId}`,
     authToken: params.authToken,
+    endpoint: `${NEXT_PUBLIC_NEBULA_URL}/session/${params.sessionId}`,
+    method: "DELETE",
   });
 
   if (!res.ok) {
@@ -85,13 +85,11 @@ export async function deleteSession(params: {
   return data.result as DeletedSessionInfo;
 }
 
-export async function getSessions(params: {
-  authToken: string;
-}) {
+export async function getSessions(params: { authToken: string }) {
   const res = await fetchWithAuthToken({
-    method: "GET",
-    endpoint: `${NEXT_PUBLIC_NEBULA_URL}/session/list`,
     authToken: params.authToken,
+    endpoint: `${NEXT_PUBLIC_NEBULA_URL}/session/list`,
+    method: "GET",
   });
 
   if (!res.ok) {
@@ -107,9 +105,9 @@ export async function getSessionById(params: {
   sessionId: string;
 }) {
   const res = await fetchWithAuthToken({
-    method: "GET",
-    endpoint: `${NEXT_PUBLIC_NEBULA_URL}/session/${params.sessionId}`,
     authToken: params.authToken,
+    endpoint: `${NEXT_PUBLIC_NEBULA_URL}/session/${params.sessionId}`,
+    method: "GET",
   });
 
   if (!res.ok) {

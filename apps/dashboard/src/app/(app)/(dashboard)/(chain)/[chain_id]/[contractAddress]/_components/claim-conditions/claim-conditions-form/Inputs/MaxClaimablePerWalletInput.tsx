@@ -25,7 +25,6 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
   return (
     <CustomFormControl
       disabled={formDisabled}
-      label={`How many ${isErc20 ? "tokens" : "NFTs"} can be claimed per wallet?`}
       error={
         form.getFieldState(
           `phases.${phaseIndex}.maxClaimablePerWallet`,
@@ -42,29 +41,30 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
           could get around wallet restrictions.{" "}
           <Link
             className="text-blue-500"
-            target="_blank"
-            rel="noopener noreferrer"
             href="https://portal.thirdweb.com/contracts/design/Drop#sybil-attacks"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             Learn more
           </Link>
           .
         </>
       }
+      label={`How many ${isErc20 ? "tokens" : "NFTs"} can be claimed per wallet?`}
     >
       <QuantityInputWithUnlimited
-        isRequired
         decimals={tokenDecimals}
         isDisabled={
           dropType === "specific" || formDisabled || (isErc20 && !tokenDecimals)
         }
-        value={field?.maxClaimablePerWallet?.toString() || "0"}
+        isRequired
         onChange={(value) =>
           form.setValue(
             `phases.${phaseIndex}.maxClaimablePerWallet`,
             value.toString(),
           )
         }
+        value={field?.maxClaimablePerWallet?.toString() || "0"}
       />
     </CustomFormControl>
   );

@@ -9,13 +9,13 @@ import {
 } from "../../../../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
 import type { TokenInfo } from "../../../../../../core/utils/defaultTokens.js";
-import { Skeleton } from "../../../../components/Skeleton.js";
 import { Container } from "../../../../components/basic.js";
+import { Skeleton } from "../../../../components/Skeleton.js";
 import { Text } from "../../../../components/text.js";
 import { TokenRow } from "../../../../components/token/TokenRow.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import { formatTokenBalance } from "../../formatTokenBalance.js";
-import { type NativeToken, isNativeToken } from "../../nativeToken.js";
+import { isNativeToken, type NativeToken } from "../../nativeToken.js";
 import { WalletRow } from "./WalletRow.js";
 
 /**
@@ -40,10 +40,10 @@ export function PayWithCryptoQuoteInfo(props: {
     {
       address: props.payerAccount.address,
       chain: props.chain,
+      client: props.client,
       tokenAddress: isNativeToken(props.token)
         ? undefined
         : props.token?.address,
-      client: props.client,
     },
     {
       enabled: !!props.chain && !!props.token,
@@ -54,8 +54,8 @@ export function PayWithCryptoQuoteInfo(props: {
     <Container
       bg="tertiaryBg"
       style={{
-        borderRadius: radius.lg,
         border: `1px solid ${theme.colors.borderColor}`,
+        borderRadius: radius.lg,
         ...(props.swapRequired
           ? {
               borderBottom: "none",
@@ -70,44 +70,44 @@ export function PayWithCryptoQuoteInfo(props: {
         flex="row"
         gap="sm"
         style={{
+          borderBottom: `1px solid ${theme.colors.borderColor}`,
           justifyContent: "space-between",
           padding: spacing.sm,
-          borderBottom: `1px solid ${theme.colors.borderColor}`,
         }}
       >
-        <WalletRow client={props.client} address={props.payerAccount.address} />
+        <WalletRow address={props.payerAccount.address} client={props.client} />
         {props.token && props.chain && balanceQuery.data ? (
-          <Container flex="row" gap="3xs" center="y">
-            <Text size="xs" color="secondaryText" weight={500}>
+          <Container center="y" flex="row" gap="3xs">
+            <Text color="secondaryText" size="xs" weight={500}>
               {formatTokenBalance(balanceQuery.data, false, 4)}
             </Text>
             <TokenSymbol
-              token={props.token}
               chain={props.chain}
-              size="xs"
               color="secondaryText"
+              size="xs"
+              token={props.token}
             />
           </Container>
         ) : props.token && props.chain && balanceQuery.isLoading ? (
-          <Skeleton width="70px" height={fontSize.xs} />
+          <Skeleton height={fontSize.xs} width="70px" />
         ) : null}
       </Container>
       {/* Quoted price & token selector */}
       <TokenRow
-        token={props.token}
         chain={props.chain}
         client={props.client}
         isLoading={props.isLoading}
-        value={props.value}
         onSelectToken={props.onSelectToken}
         style={{
           border: "none",
-          borderRadius: 0,
           borderBottomLeftRadius:
             !props.token || !props.chain || !props.swapRequired ? radius.lg : 0,
           borderBottomRightRadius:
             !props.token || !props.chain || !props.swapRequired ? radius.lg : 0,
+          borderRadius: 0,
         }}
+        token={props.token}
+        value={props.value}
       />
     </Container>
   );

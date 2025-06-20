@@ -53,7 +53,6 @@ export type ClaimToParams = {
  */
 export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
   return GeneratedClaim.claim({
-    contract: options.contract,
     asyncParams: async () => {
       const quantity = await (async () => {
         if ("quantityInWei" in options) {
@@ -68,15 +67,16 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
       })();
 
       return getClaimParams({
-        type: "erc20",
         contract: options.contract,
-        to: options.to,
-        quantity,
         from: options.from,
-        tokenDecimals: await decimals({ contract: options.contract }),
+        quantity,
         singlePhaseDrop: options.singlePhaseDrop,
+        to: options.to,
+        tokenDecimals: await decimals({ contract: options.contract }),
+        type: "erc20",
       });
     },
+    contract: options.contract,
   });
 }
 

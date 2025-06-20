@@ -1,6 +1,6 @@
-import { testWebhook } from "@/api/insight/webhooks";
 import { useState } from "react";
 import { toast } from "sonner";
+import { testWebhook } from "@/api/insight/webhooks";
 
 type TestResult = {
   status: "success" | "error";
@@ -41,7 +41,7 @@ export function useTestWebhook(clientId: string) {
       });
 
       const result = await testWebhook(
-        { webhook_url: webhookUrl, type },
+        { type, webhook_url: webhookUrl },
         clientId,
       );
 
@@ -114,9 +114,9 @@ export function useTestWebhook(clientId: string) {
   };
 
   return {
-    testWebhookEndpoint,
+    isRecentResult,
     isTestingMap,
     testResults,
-    isRecentResult,
+    testWebhookEndpoint,
   };
 }

@@ -1,7 +1,7 @@
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { getAddress, getContract, isAddress } from "thirdweb";
 import { localhost } from "thirdweb/chains";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { fetchChainWithLocalOverrides } from "../../../../../../../utils/fetchChainWithLocalOverrides";
 import { getUserThirdwebClient } from "../../../../../api/lib/getAuthToken";
 
@@ -39,9 +39,9 @@ export async function getContractPageParamsInfo(params: {
 
   return {
     chainMetadata,
-    serverContract,
     clientContract,
     isLocalhostChain: chainMetadata.chainId === localhost.id,
+    serverContract,
   };
 }
 

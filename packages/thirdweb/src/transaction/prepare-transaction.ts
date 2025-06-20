@@ -38,11 +38,11 @@ export type StaticPrepareTransactionOptions = {
 type TransactionType = "legacy" | "eip1559" | "eip2930" | "eip4844" | "eip7702";
 
 export const TransactionTypeMap: Record<TransactionType, number> = {
-  legacy: 0,
   eip1559: 1,
   eip2930: 2,
   eip4844: 3,
   eip7702: 4,
+  legacy: 0,
 };
 
 export type EIP712TransactionOptions = {

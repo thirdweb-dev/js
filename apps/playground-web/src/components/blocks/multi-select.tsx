@@ -1,14 +1,7 @@
 /* eslint-disable no-restricted-syntax */
+/** biome-ignore-all lint/a11y/useSemanticElements: TODO */
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
 import { CheckIcon, ChevronDownIcon, SearchIcon, XIcon } from "lucide-react";
 import {
   forwardRef,
@@ -18,9 +11,17 @@ import {
   useRef,
   useState,
 } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 import { useShowMore } from "../../lib/useShowMore";
-import { ScrollShadow } from "../ui/ScrollShadow/ScrollShadow";
 import { Input } from "../ui/input";
+import { ScrollShadow } from "../ui/ScrollShadow/ScrollShadow";
 
 interface MultiSelectProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -156,16 +157,16 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
     }, [searchValue]);
 
     return (
-      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen} modal>
+      <Popover modal onOpenChange={setIsPopoverOpen} open={isPopoverOpen}>
         <PopoverTrigger asChild>
           <Button
             ref={ref}
             {...props}
-            onClick={handleTogglePopover}
             className={cn(
               "flex h-auto min-h-10 w-full items-center justify-between rounded-md border border-border bg-inherit p-3 hover:bg-inherit",
               className,
             )}
+            onClick={handleTogglePopover}
           >
             {selectedValues.length > 0 ? (
               <div className="flex w-full justify-between">
@@ -179,10 +180,10 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
 
                     return (
                       <ClosableBadge
+                        className={selectedBadgeClassName}
                         key={value}
                         label={option.label}
                         onClose={() => toggleOption(value)}
-                        className={selectedBadgeClassName}
                       />
                     );
                   })}
@@ -198,22 +199,22 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
 
                 <div className="flex items-center justify-between gap-2">
                   {/* Clear All */}
-                  {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-                  {/* biome-ignore lint/a11y/useFocusableInteractive: <explanation> */}
+                  {/* biome-ignore lint/a11y/useKeyWithClickEvents: TODO */}
+                  {/* biome-ignore lint/a11y/useFocusableInteractive: TODO */}
                   <div
-                    role="button"
+                    className="rounded p-1 hover:bg-accent"
                     onClick={(event) => {
                       event.stopPropagation();
                       handleClear();
                     }}
-                    className="rounded p-1 hover:bg-accent"
+                    role="button"
                   >
                     <XIcon className="h-4 cursor-pointer text-muted-foreground" />
                   </div>
 
                   <Separator
-                    orientation="vertical"
                     className="flex h-full min-h-6"
+                    orientation="vertical"
                   />
                   <ChevronDownIcon className="h-4 cursor-pointer text-muted-foreground" />
                 </div>
@@ -229,32 +230,32 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className={cn("p-0", popoverContentClassName)}
           align="center"
-          sideOffset={10}
+          className={cn("p-0", popoverContentClassName)}
           onEscapeKeyDown={() => setIsPopoverOpen(false)}
-          style={{
-            width: "var(--radix-popover-trigger-width)",
-            maxHeight: "var(--radix-popover-content-available-height)",
-          }}
           ref={popoverElRef}
+          sideOffset={10}
+          style={{
+            maxHeight: "var(--radix-popover-content-available-height)",
+            width: "var(--radix-popover-trigger-width)",
+          }}
         >
           <div>
             {/* Search */}
             <div className="relative">
               <Input
+                className="!h-auto rounded-b-none border-0 border-border border-b py-4 pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
+                onChange={(e) => setSearchValue(e.target.value)}
+                onKeyDown={handleInputKeyDown}
                 placeholder={searchPlaceholder || "Search"}
                 value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                className="!h-auto rounded-b-none border-0 border-border border-b py-4 pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
-                onKeyDown={handleInputKeyDown}
               />
               <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-4 size-4 text-muted-foreground" />
             </div>
 
             <ScrollShadow
-              scrollableClassName="max-h-[min(calc(var(--radix-popover-content-available-height)-60px),350px)] p-1"
               className="rounded"
+              scrollableClassName="max-h-[min(calc(var(--radix-popover-content-available-height)-60px),350px)] p-1"
             >
               {/* List */}
               <div>
@@ -268,15 +269,15 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
                   const isSelected = selectedValues.includes(option.value);
                   return (
                     <Button
-                      key={option.value}
-                      role="option"
                       aria-selected={isSelected}
-                      onClick={() => toggleOption(option.value)}
-                      variant="ghost"
                       className="flex w-full cursor-pointer justify-start gap-3 rounded-sm px-3 py-2 text-left"
+                      key={option.value}
+                      onClick={() => toggleOption(option.value)}
                       ref={
                         i === optionsToShow.length - 1 ? lastItemRef : undefined
                       }
+                      role="option"
+                      variant="ghost"
                     >
                       <div
                         className={cn(

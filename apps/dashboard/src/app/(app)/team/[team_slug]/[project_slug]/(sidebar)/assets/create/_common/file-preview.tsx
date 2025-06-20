@@ -1,10 +1,10 @@
-import { Img } from "@/components/blocks/Img";
-import { fileToBlobUrl } from "@/lib/file-to-url";
-import { cn } from "@/lib/utils";
 import { ImageOffIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { MediaRenderer } from "thirdweb/react";
+import { Img } from "@/components/blocks/Img";
+import { fileToBlobUrl } from "@/lib/file-to-url";
+import { cn } from "@/lib/utils";
 
 export function FilePreview(props: {
   srcOrFile: File | string | undefined;
@@ -46,19 +46,19 @@ export function FilePreview(props: {
   if (isImage) {
     return (
       <Img
-        src={objectUrl}
         className={props.className}
-        fallback={props.fallback}
         containerClassName={props.imgContainerClassName}
+        fallback={props.fallback}
+        src={objectUrl}
       />
     );
   }
 
   return (
     <MediaRenderer
-      src={objectUrl}
-      client={props.client}
       className={cn(props.className, "[&>div]:!bg-muted")}
+      client={props.client}
+      src={objectUrl}
     />
   );
 }

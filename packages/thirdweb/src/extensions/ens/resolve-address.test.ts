@@ -30,8 +30,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("ENS:resolve-address", () => {
     const address = await resolveAddress({
       client: TEST_CLIENT,
       name,
-      resolverChain: base,
       resolverAddress: BASENAME_RESOLVER_ADDRESS,
+      resolverChain: base,
     });
     expect(address).toBe("0x653Ff253b0c7C1cc52f484e891b71f9f1F010Bfb");
   });

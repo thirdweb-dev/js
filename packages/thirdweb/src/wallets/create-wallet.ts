@@ -1,21 +1,13 @@
-import type { Chain } from "../chains/types.js";
-import type {
-  InjectedSupportedWalletIds,
-  WCSupportedWalletIds,
-} from "./__generated__/wallet-ids.js";
-import type { Account, Wallet } from "./interfaces/wallet.js";
-import type {
-  CreateWalletArgs,
-  EcosystemWalletId,
-  WalletAutoConnectionOption,
-  WalletId,
-} from "./wallet-types.js";
-
 import { trackConnect } from "../analytics/track/connect.js";
+import type { Chain } from "../chains/types.js";
 import { getCachedChainIfExists } from "../chains/utils.js";
 import { webLocalStorage } from "../utils/storage/webStorage.js";
 import { isMobile } from "../utils/web/isMobile.js";
 import { openWindow } from "../utils/web/openWindow.js";
+import type {
+  InjectedSupportedWalletIds,
+  WCSupportedWalletIds,
+} from "./__generated__/wallet-ids.js";
 import { coinbaseWalletSDK } from "./coinbase/coinbase-wallet.js";
 import { getCoinbaseWebProvider } from "./coinbase/coinbase-web.js";
 import { COINBASE } from "./constants.js";
@@ -23,9 +15,16 @@ import { isEcosystemWallet } from "./ecosystem/is-ecosystem-wallet.js";
 import { ecosystemWallet } from "./in-app/web/ecosystem.js";
 import { inAppWallet } from "./in-app/web/in-app.js";
 import { getInjectedProvider } from "./injected/index.js";
+import type { Account, Wallet } from "./interfaces/wallet.js";
 import { smartWallet } from "./smart/smart-wallet.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";
 import { createWalletEmitter } from "./wallet-emitter.js";
+import type {
+  CreateWalletArgs,
+  EcosystemWalletId,
+  WalletAutoConnectionOption,
+  WalletId,
+} from "./wallet-types.js";
 
 // TODO: figure out how to define the type without tuple args type and using function overloads
 
@@ -172,7 +171,6 @@ export function createWallet<const ID extends WalletId>(
       const options = creationOptions as CreateWalletArgs<typeof COINBASE>[1];
       return coinbaseWalletSDK({
         createOptions: options,
-        providerFactory: () => getCoinbaseWebProvider(options),
         onConnectRequested: async (provider) => {
           // on the web, make sure to show the coinbase popup IMMEDIATELY on connection requested
           // otherwise the popup might get blocked in safari
@@ -181,6 +179,7 @@ export function createWallet<const ID extends WalletId>(
           const { showCoinbasePopup } = await import("./coinbase/utils.js");
           return showCoinbasePopup(provider);
         },
+        providerFactory: () => getCoinbaseWebProvider(options),
       }) as Wallet<ID>;
     }
     /**
@@ -188,9 +187,9 @@ export function createWallet<const ID extends WalletId>(
      */
     default: {
       const emitter = createWalletEmitter<ID>();
-      let account: Account | undefined = undefined;
-      let chain: Chain | undefined = undefined;
-      let unsubscribeChain: (() => void) | undefined = undefined;
+      let account: Account | undefined;
+      let chain: Chain | undefined;
+      let unsubscribeChain: (() => void) | undefined;
 
       function reset() {
         account = undefined;
@@ -219,18 +218,6 @@ export function createWallet<const ID extends WalletId>(
         : undefined;
 
       const wallet: Wallet<ID> = {
-        id,
-        subscribe: emitter.subscribe,
-        getConfig: () => args[1],
-        getChain() {
-          if (!chain) {
-            return undefined;
-          }
-
-          chain = getCachedChainIfExists(chain.id) || chain;
-          return chain;
-        },
-        getAccount: () => account,
         autoConnect: async (
           options: WalletAutoConnectionOption<
             WCSupportedWalletIds | InjectedSupportedWalletIds
@@ -249,11 +236,11 @@ export function createWallet<const ID extends WalletId>(
               doDisconnect,
               doSwitchChain,
             ] = await autoConnectEip1193Wallet({
-              id: id as InjectedSupportedWalletIds,
-              provider: getInjectedProvider(id),
-              emitter,
               chain: options.chain,
               client: options.client,
+              emitter,
+              id: id as InjectedSupportedWalletIds,
+              provider: getInjectedProvider(id),
             });
             // set the states
             account = connectedAccount;
@@ -264,10 +251,10 @@ export function createWallet<const ID extends WalletId>(
               chain = newChain;
             });
             trackConnect({
-              client: options.client,
-              walletType: id,
-              walletAddress: account.address,
               chainId: chain.id,
+              client: options.client,
+              walletAddress: account.address,
+              walletType: id,
             });
             // return account
             return account;
@@ -296,10 +283,10 @@ export function createWallet<const ID extends WalletId>(
             handleDisconnect = doDisconnect;
             handleSwitchChain = doSwitchChain;
             trackConnect({
-              client: options.client,
-              walletType: id,
-              walletAddress: account.address,
               chainId: chain.id,
+              client: options.client,
+              walletAddress: account.address,
+              walletType: id,
             });
             // return account
             return account;
@@ -330,10 +317,10 @@ export function createWallet<const ID extends WalletId>(
             handleDisconnect = doDisconnect;
             handleSwitchChain = doSwitchChain;
             trackConnect({
-              client: wcOptions.client,
-              walletType: id,
-              walletAddress: account.address,
               chainId: chain.id,
+              client: wcOptions.client,
+              walletAddress: account.address,
+              walletType: id,
             });
             return account;
           }
@@ -342,8 +329,8 @@ export function createWallet<const ID extends WalletId>(
             const { client, chain: _chain, ...walletConnectOptions } = options;
 
             return wcConnect({
-              client,
               chain: _chain,
+              client,
               walletConnect: {
                 ...walletConnectOptions,
               },
@@ -366,11 +353,11 @@ export function createWallet<const ID extends WalletId>(
               doDisconnect,
               doSwitchChain,
             ] = await connectEip1193Wallet({
+              chain: options.chain,
+              client: options.client,
+              emitter,
               id: id as InjectedSupportedWalletIds,
               provider: getInjectedProvider(id),
-              client: options.client,
-              chain: options.chain,
-              emitter,
             });
             // set the states
             account = connectedAccount;
@@ -381,10 +368,10 @@ export function createWallet<const ID extends WalletId>(
               chain = newChain;
             });
             trackConnect({
-              client: options.client,
-              walletType: id,
-              walletAddress: account.address,
               chainId: chain.id,
+              client: options.client,
+              walletAddress: account.address,
+              walletType: id,
             });
             // return account
             return account;
@@ -400,6 +387,18 @@ export function createWallet<const ID extends WalletId>(
           reset();
           await handleDisconnect();
         },
+        getAccount: () => account,
+        getChain() {
+          if (!chain) {
+            return undefined;
+          }
+
+          chain = getCachedChainIfExists(chain.id) || chain;
+          return chain;
+        },
+        getConfig: () => args[1],
+        id,
+        subscribe: emitter.subscribe,
         switchChain: (c) => handleSwitchChain(c),
       };
       return wallet;

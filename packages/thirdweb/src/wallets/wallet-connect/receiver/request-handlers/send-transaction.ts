@@ -28,20 +28,20 @@ export async function handleSendTransactionRequest(options: {
   }
 
   const preparedTransaction = prepareTransaction({
+    chain: getCachedChain(chainId),
+    client: thirdwebClient,
+    data: transaction.data,
     gas: transaction.gas ? hexToBigInt(transaction.gas) : undefined,
     gasPrice: transaction.gasPrice
       ? hexToBigInt(transaction.gasPrice)
       : undefined,
-    value: transaction.value ? hexToBigInt(transaction.value) : undefined,
     to: transaction.to,
-    data: transaction.data,
-    chain: getCachedChain(chainId),
-    client: thirdwebClient,
+    value: transaction.value ? hexToBigInt(transaction.value) : undefined,
   });
 
   const txResult = await sendTransaction({
-    transaction: preparedTransaction,
     account,
+    transaction: preparedTransaction,
   });
 
   return txResult.transactionHash;

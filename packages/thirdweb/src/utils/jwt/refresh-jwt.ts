@@ -30,15 +30,15 @@ export async function refreshJWT(options: RefreshJWTParams): Promise<string> {
   const { account, jwt, expirationTime = DEFAULT_EXPIRATION_TIME } = options;
   const payload = decodeJWT(jwt).payload;
   return encodeJWT({
+    account,
     payload: {
-      iss: payload.iss,
-      sub: payload.sub,
       aud: payload.aud,
-      nbf: new Date(),
+      ctx: payload.ctx,
       exp: new Date(Date.now() + expirationTime),
       iat: new Date(),
-      ctx: payload.ctx,
+      iss: payload.iss,
+      nbf: new Date(),
+      sub: payload.sub,
     },
-    account,
   });
 }

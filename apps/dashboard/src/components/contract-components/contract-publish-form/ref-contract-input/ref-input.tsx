@@ -1,3 +1,7 @@
+import type { AbiParameter } from "abitype";
+import { TrashIcon } from "lucide-react";
+import { useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,10 +14,6 @@ import {
 } from "@/components/ui/select";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import type { AbiParameter } from "abitype";
-import { TrashIcon } from "lucide-react";
-import { useFormContext } from "react-hook-form";
-import type { ThirdwebClient } from "thirdweb";
 import { useAllVersions, usePublishedContractsQuery } from "../../hooks";
 
 interface RefContractInputProps {
@@ -34,10 +34,10 @@ export const RefContractInput: React.FC<RefContractInputProps> = ({
   const form = useFormContext();
 
   const publishedContractsQuery = usePublishedContractsQuery({
-    client,
     address: form.watch(
       `constructorParams.${param.name ? param.name : "*"}.dynamicValue.refContracts.${index}.publisherAddress`,
     ),
+    client,
   });
 
   const allVersions = useAllVersions(
@@ -54,14 +54,14 @@ export const RefContractInput: React.FC<RefContractInputProps> = ({
     <div className={cn("flex flex-col gap-4 lg:flex-row", className)}>
       <div className="grid grow grid-cols-1 gap-4 lg:grid-cols-4">
         <FormFieldSetup
-          isRequired={true}
-          label="Publisher"
           errorMessage={
             form.getFieldState(
               `constructorParams.${param.name ? param.name : "*"}.dynamicValue.refContracts.${index}.publisherAddress`,
               form.formState,
             ).error?.message
           }
+          isRequired={true}
+          label="Publisher"
         >
           <Input
             className="truncate"
@@ -73,19 +73,18 @@ export const RefContractInput: React.FC<RefContractInputProps> = ({
         </FormFieldSetup>
 
         <FormFieldSetup
-          label="Contract Name"
-          isRequired={true}
           errorMessage={
             form.getFieldState(
               `constructorParams.${param.name ? param.name : "*"}.dynamicValue.refContracts.${index}.contractId`,
               form.formState,
             ).error?.message
           }
+          isRequired={true}
+          label="Contract Name"
         >
           <SkeletonContainer
             className="block"
             loadedData={!publishedContractsQuery.isFetching ? true : undefined}
-            skeletonData={false}
             render={() => {
               return (
                 <Select
@@ -121,23 +120,23 @@ export const RefContractInput: React.FC<RefContractInputProps> = ({
                 </Select>
               );
             }}
+            skeletonData={false}
           />
         </FormFieldSetup>
 
         <FormFieldSetup
-          label="Contract Version"
-          isRequired={false}
           errorMessage={
             form.getFieldState(
               `constructorParams.${param.name ? param.name : "*"}.dynamicValue.refContracts.${index}.version`,
               form.formState,
             ).error?.message
           }
+          isRequired={false}
+          label="Contract Version"
         >
           <SkeletonContainer
             className="block"
             loadedData={!allVersions.isFetching ? true : undefined}
-            skeletonData={false}
             render={() => {
               return (
                 <Select
@@ -170,18 +169,19 @@ export const RefContractInput: React.FC<RefContractInputProps> = ({
                 </Select>
               );
             }}
+            skeletonData={false}
           />
         </FormFieldSetup>
 
         <FormFieldSetup
-          isRequired={false}
-          label="Salt"
           errorMessage={
             form.getFieldState(
               `constructorParams.${param.name ? param.name : "*"}.dynamicValue.refContracts.${index}.salt`,
               form.formState,
             ).error?.message
           }
+          isRequired={false}
+          label="Salt"
         >
           <Input
             className="truncate"
@@ -195,9 +195,9 @@ export const RefContractInput: React.FC<RefContractInputProps> = ({
 
       <Button
         aria-label="Remove"
+        className="self-end text-destructive-text"
         onClick={() => remove(index)}
         variant="outline"
-        className="self-end text-destructive-text"
       >
         <TrashIcon className="size-4" />
       </Button>

@@ -34,8 +34,8 @@ export async function getNebulaLoginStatus(): Promise<
   }
 
   return {
-    isLoggedIn: true,
-    authToken,
     accountAddress,
+    authToken,
+    isLoggedIn: true,
   };
 }

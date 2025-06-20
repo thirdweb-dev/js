@@ -1,9 +1,9 @@
-import { getInAppWalletUsage } from "@/api/analytics";
 import { StatCard } from "components/analytics/stat";
 import { subDays } from "date-fns";
 import { ActivityIcon, UserIcon } from "lucide-react";
 import { Suspense } from "react";
 import type { InAppWalletStats } from "types/analytics";
+import { getInAppWalletUsage } from "@/api/analytics";
 
 function InAppWalletsSummaryInner(props: {
   allTimeStats: InAppWalletStats[] | undefined;
@@ -33,16 +33,16 @@ function InAppWalletsSummaryInner(props: {
   return (
     <div className="grid grid-cols-2 gap-4">
       <StatCard
-        label="Total Users"
-        value={allTimeStats?.uniqueWalletsConnected || 0}
         icon={ActivityIcon}
         isPending={props.isPending}
+        label="Total Users"
+        value={allTimeStats?.uniqueWalletsConnected || 0}
       />
       <StatCard
-        label="Monthly Active Users"
-        value={monthlyStats?.uniqueWalletsConnected || 0}
         icon={UserIcon}
         isPending={props.isPending}
+        label="Monthly Active Users"
+        value={monthlyStats?.uniqueWalletsConnected || 0}
       />
     </div>
   );
@@ -54,19 +54,19 @@ async function AsyncInAppWalletsSummary(props: {
 }) {
   const { teamId, projectId } = props;
   const allTimeStatsPromise = getInAppWalletUsage({
-    teamId,
-    projectId,
     from: new Date(2022, 0, 1),
-    to: new Date(),
     period: "all",
+    projectId,
+    teamId,
+    to: new Date(),
   });
 
   const monthlyStatsPromise = getInAppWalletUsage({
-    teamId,
-    projectId,
     from: subDays(new Date(), 30),
-    to: new Date(),
     period: "month",
+    projectId,
+    teamId,
+    to: new Date(),
   });
 
   const [allTimeStats, monthlyStats] = await Promise.all([
@@ -77,8 +77,8 @@ async function AsyncInAppWalletsSummary(props: {
   return (
     <InAppWalletsSummaryInner
       allTimeStats={allTimeStats || undefined}
-      monthlyStats={monthlyStats || undefined}
       isPending={false}
+      monthlyStats={monthlyStats || undefined}
     />
   );
 }
@@ -92,14 +92,14 @@ export function InAppWalletsSummary(props: {
       fallback={
         <InAppWalletsSummaryInner
           allTimeStats={undefined}
-          monthlyStats={undefined}
           isPending={true}
+          monthlyStats={undefined}
         />
       }
     >
       <AsyncInAppWalletsSummary
-        teamId={props.teamId}
         projectId={props.projectId}
+        teamId={props.teamId}
       />
     </Suspense>
   );

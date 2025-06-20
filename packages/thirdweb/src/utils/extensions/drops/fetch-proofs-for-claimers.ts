@@ -1,8 +1,8 @@
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import {
-  ZERO_ADDRESS,
   isNativeTokenAddress,
+  ZERO_ADDRESS,
 } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { MerkleTree } from "../../../merkletree/MerkleTree.js";
@@ -63,9 +63,9 @@ export async function fetchProofsForClaimer(options: {
   const hashedEntries = await Promise.all(
     shardData.entries.map(async (entry) => {
       return hashEntryFn({
-        entry,
         chain: contract.chain,
         client: contract.client,
+        entry,
         tokenDecimals: options.tokenDecimals,
       });
     }),
@@ -81,9 +81,9 @@ export async function fetchProofsForClaimer(options: {
   const proof = tree
     .getHexProof(
       await hashEntryFn({
-        entry,
         chain: contract.chain,
         client: contract.client,
+        entry,
         tokenDecimals: options.tokenDecimals,
       }),
     )
@@ -110,15 +110,15 @@ export async function fetchProofsForClaimer(options: {
   })();
 
   return {
+    currency: currencyAddress,
+    pricePerToken: convertQuantity({
+      quantity: entry.price || "unlimited",
+      tokenDecimals: currencyDecimals,
+    }),
     proof,
     quantityLimitPerWallet: convertQuantity({
       quantity: entry.maxClaimable || "unlimited",
       tokenDecimals: options.tokenDecimals,
     }),
-    pricePerToken: convertQuantity({
-      quantity: entry.price || "unlimited",
-      tokenDecimals: currencyDecimals,
-    }),
-    currency: currencyAddress,
   };
 }

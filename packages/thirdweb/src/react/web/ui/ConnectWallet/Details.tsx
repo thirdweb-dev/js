@@ -48,17 +48,17 @@ import {
   useCustomTheme,
 } from "../../../core/design-system/CustomThemeProvider.js";
 import {
-  type Theme,
   fontSize,
   iconSize,
   radius,
   spacing,
+  type Theme,
 } from "../../../core/design-system/index.js";
 import type {
-  ConnectButtonProps,
   ConnectButton_connectModalOptions,
   ConnectButton_detailsButtonOptions,
   ConnectButton_detailsModalOptions,
+  ConnectButtonProps,
   PayUIOptions,
 } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import { useChainFaucets } from "../../../core/hooks/others/useChainQuery.js";
@@ -80,19 +80,19 @@ import type {
 } from "../../../core/utils/defaultTokens.js";
 import { useWalletInfo } from "../../../core/utils/wallet.js";
 import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
+import { Container, Line } from "../components/basic.js";
+import { Button, IconButton } from "../components/buttons.js";
 import { ChainActiveDot } from "../components/ChainActiveDot.js";
 import { CopyIcon } from "../components/CopyIcon.js";
+import { fallbackChainIcon } from "../components/fallbackChainIcon.js";
 import { IconContainer } from "../components/IconContainer.js";
 import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
 import { ToolTip } from "../components/Tooltip.js";
-import { WalletImage } from "../components/WalletImage.js";
-import { Container, Line } from "../components/basic.js";
-import { Button, IconButton } from "../components/buttons.js";
-import { fallbackChainIcon } from "../components/fallbackChainIcon.js";
 import { Link, Text } from "../components/text.js";
+import { WalletImage } from "../components/WalletImage.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton } from "../design-system/elements.js";
 import { AccountAddress } from "../prebuilt/Account/address.js";
@@ -104,32 +104,32 @@ import { ChainIcon } from "../prebuilt/Chain/icon.js";
 import { ChainName } from "../prebuilt/Chain/name.js";
 import { ChainProvider } from "../prebuilt/Chain/provider.js";
 import type { LocaleId } from "../types.js";
-import { MenuButton, MenuLink } from "./MenuButton.js";
-import { ScreenSetupContext, useSetupScreen } from "./Modal/screen.js";
-import {
-  NetworkSelectorContent,
-  type NetworkSelectorProps,
-} from "./NetworkSelector.js";
-import { TransactionsScreen } from "./TransactionsScreen.js";
 import { onModalUnmount } from "./constants.js";
 import { CoinsIcon } from "./icons/CoinsIcon.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
 import { OutlineWalletIcon } from "./icons/OutlineWalletIcon.js";
 import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
+import { MenuButton, MenuLink } from "./MenuButton.js";
+import { ScreenSetupContext, useSetupScreen } from "./Modal/screen.js";
+import {
+  NetworkSelectorContent,
+  type NetworkSelectorProps,
+} from "./NetworkSelector.js";
 import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
 import { WalletManagerScreen } from "./screens/Details/WalletManagerScreen.js";
-import { LinkProfileScreen } from "./screens/LinkProfileScreen.js";
 import { LinkedProfilesScreen } from "./screens/LinkedProfilesScreen.js";
+import { LinkProfileScreen } from "./screens/LinkProfileScreen.js";
 import { ManageWalletScreen } from "./screens/ManageWalletScreen.js";
 import { PrivateKey } from "./screens/PrivateKey.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
+import type { WalletDetailsModalScreen } from "./screens/types.js";
 import { type AssetTabs, ViewAssets } from "./screens/ViewAssets.js";
 import { ViewNFTs } from "./screens/ViewNFTs.js";
 import { ViewTokens } from "./screens/ViewTokens.js";
 import { WalletConnectReceiverScreen } from "./screens/WalletConnectReceiverScreen.js";
-import type { WalletDetailsModalScreen } from "./screens/types.js";
+import { TransactionsScreen } from "./TransactionsScreen.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -139,10 +139,7 @@ const LocalhostChainId = 1337;
  * @internal
  */
 export const ConnectedWalletDetails: React.FC<{
-  onDisconnect: (info: {
-    wallet: Wallet;
-    account: Account;
-  }) => void;
+  onDisconnect: (info: { wallet: Wallet; account: Account }) => void;
   detailsButton?: ConnectButton_detailsButtonOptions;
   detailsModal?: ConnectButton_detailsModalOptions;
   theme: "light" | "dark" | Theme;
@@ -166,18 +163,18 @@ export const ConnectedWalletDetails: React.FC<{
   function openModal() {
     setRootEl(
       <DetailsModal
-        client={client}
-        locale={locale}
-        detailsModal={props.detailsModal}
-        theme={props.theme}
-        supportedTokens={props.supportedTokens}
-        supportedNFTs={props.supportedNFTs}
-        closeModal={closeModal}
-        onDisconnect={props.onDisconnect}
-        chains={props.chains}
-        displayBalanceToken={props.detailsButton?.displayBalanceToken}
-        connectOptions={props.connectOptions}
         assetTabs={props.detailsModal?.assetTabs}
+        chains={props.chains}
+        client={client}
+        closeModal={closeModal}
+        connectOptions={props.connectOptions}
+        detailsModal={props.detailsModal}
+        displayBalanceToken={props.detailsButton?.displayBalanceToken}
+        locale={locale}
+        onDisconnect={props.onDisconnect}
+        supportedNFTs={props.supportedNFTs}
+        supportedTokens={props.supportedTokens}
+        theme={props.theme}
       />,
     );
   }
@@ -188,6 +185,7 @@ export const ConnectedWalletDetails: React.FC<{
   if (props.detailsButton?.render) {
     return (
       // biome-ignore lint/a11y/useKeyWithClickEvents: ok
+      // biome-ignore lint/a11y/noStaticElementInteractions: TODO
       <div onClick={openModal}>
         <props.detailsButton.render />
       </div>
@@ -197,11 +195,11 @@ export const ConnectedWalletDetails: React.FC<{
   if (props.chain && isNetworkMismatch) {
     return (
       <SwitchNetworkButton
-        style={props.switchButton?.style}
         className={props.switchButton?.className}
+        connectLocale={locale}
+        style={props.switchButton?.style}
         switchNetworkBtnTitle={props.switchButton?.label}
         targetChain={props.chain}
-        connectLocale={locale}
       />
     );
   }
@@ -213,18 +211,18 @@ export const ConnectedWalletDetails: React.FC<{
 
   return (
     <WalletInfoButton
-      type="button"
       className={combinedClassName}
-      style={props.detailsButton?.style}
       data-test="connected-wallet-details"
       onClick={openModal}
+      style={props.detailsButton?.style}
+      type="button"
     >
       <Container
         style={{
           borderRadius: "100%",
+          height: "35px",
           overflow: "hidden",
           width: "35px",
-          height: "35px",
         }}
       >
         {props.detailsButton?.connectedAccountAvatarUrl ? (
@@ -233,33 +231,33 @@ export const ConnectedWalletDetails: React.FC<{
             src={props.detailsButton.connectedAccountAvatarUrl}
             style={{
               height: "100%",
-              width: "100%",
               objectFit: "cover",
+              width: "100%",
             }}
           />
         ) : (
           <AccountAvatar
             className={`${TW_CONNECTED_WALLET}__account_avatar`}
-            loadingComponent={
-              <AccountBlobbie
-                size={35}
-                className={`${TW_CONNECTED_WALLET}__account_avatar`}
-              />
-            }
             fallbackComponent={
               <AccountBlobbie
-                size={35}
                 className={`${TW_CONNECTED_WALLET}__account_avatar`}
+                size={35}
+              />
+            }
+            loadingComponent={
+              <AccountBlobbie
+                className={`${TW_CONNECTED_WALLET}__account_avatar`}
+                size={35}
               />
             }
             queryOptions={{
-              refetchOnWindowFocus: false,
               refetchOnMount: false,
+              refetchOnWindowFocus: false,
             }}
             style={{
               height: "100%",
-              width: "100%",
               objectFit: "cover",
+              width: "100%",
             }}
           />
         )}
@@ -268,74 +266,74 @@ export const ConnectedWalletDetails: React.FC<{
         flex="column"
         gap="4xs"
         style={{
+          borderRadius: `0 ${radius.md} ${radius.md} 0`,
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",
-          borderRadius: `0 ${radius.md} ${radius.md} 0`,
         }}
       >
         {/* Address */}
         {props.detailsButton?.connectedAccountName ? (
           <Text
-            size="xs"
-            color="primaryText"
-            weight={500}
             className={`${TW_CONNECTED_WALLET}__address`}
+            color="primaryText"
+            size="xs"
+            weight={500}
           >
             {props.detailsButton.connectedAccountName}
           </Text>
         ) : (
           <Text
-            size="xs"
-            color="primaryText"
-            weight={500}
             className={`${TW_CONNECTED_WALLET}__address`}
+            color="primaryText"
+            size="xs"
+            weight={500}
           >
             <AccountName
-              loadingComponent={<AccountAddress formatFn={shortenAddress} />}
               fallbackComponent={<AccountAddress formatFn={shortenAddress} />}
+              loadingComponent={<AccountAddress formatFn={shortenAddress} />}
             />
           </Text>
         )}
 
         <Text
           className={`${TW_CONNECTED_WALLET}__balance`}
-          size="xs"
           color="secondaryText"
-          weight={400}
+          size="xs"
           style={{
+            alignItems: "center",
             display: "flex",
             gap: "2px",
-            alignItems: "center",
           }}
+          weight={400}
         >
           {props.detailsButton?.showBalanceInFiat ? (
             <>
               <AccountBalance
                 chain={walletChain}
-                loadingComponent={
+                fallbackComponent={
                   <Skeleton height={fontSize.xs} width="50px" />
                 }
-                fallbackComponent={
+                loadingComponent={
                   <Skeleton height={fontSize.xs} width="50px" />
                 }
                 tokenAddress={tokenAddress}
               />
               <AccountBalance
                 chain={walletChain}
-                tokenAddress={tokenAddress}
-                showBalanceInFiat="USD"
                 formatFn={detailsBtn_formatFiatBalanceForButton}
                 loadingComponent={
                   <Skeleton height={fontSize.xs} width="20px" />
                 }
+                showBalanceInFiat="USD"
+                tokenAddress={tokenAddress}
               />
             </>
           ) : (
             <AccountBalance
               chain={walletChain}
-              loadingComponent={<Skeleton height={fontSize.xs} width="70px" />}
               fallbackComponent={<Skeleton height={fontSize.xs} width="70px" />}
               formatFn={detailsBtn_formatTokenBalanceForButton}
+              loadingComponent={<Skeleton height={fontSize.xs} width="70px" />}
               tokenAddress={tokenAddress}
             />
           )}
@@ -374,10 +372,7 @@ export function DetailsModal(props: {
   supportedTokens?: SupportedTokens;
   supportedNFTs?: SupportedNFTs;
   closeModal: () => void;
-  onDisconnect: (info: {
-    wallet: Wallet;
-    account: Account;
-  }) => void;
+  onDisconnect: (info: { wallet: Wallet; account: Account }) => void;
   chains: Chain[];
   displayBalanceToken?: Record<number, string>;
   connectOptions: DetailsModalConnectOptions | undefined;
@@ -400,8 +395,8 @@ export function DetailsModal(props: {
 
   const screenSetup = useSetupScreen({
     size: "compact",
-    welcomeScreen: undefined,
     wallets: activeWallet ? [activeWallet] : [],
+    welcomeScreen: undefined,
   });
 
   const closeModal = useCallback(() => {
@@ -431,38 +426,38 @@ export function DetailsModal(props: {
   const avatarContent = (
     <Container
       style={{
-        position: "relative",
         height: `${iconSize.xl}px`,
+        position: "relative",
         width: `${iconSize.xl}px`,
       }}
     >
       <Container
         style={{
-          width: "100%",
-          height: "100%",
           borderRadius: "100%",
+          height: "100%",
           overflow: "hidden",
+          width: "100%",
         }}
       >
         {props.detailsModal?.connectedAccountAvatarUrl ? (
           <img
+            alt=""
             src={props.detailsModal.connectedAccountAvatarUrl}
             style={{
               height: "100%",
-              width: "100%",
               objectFit: "cover",
+              width: "100%",
             }}
-            alt=""
           />
         ) : (
           activeAccount && (
             <AccountAvatar
-              loadingComponent={<AccountBlobbie size={Number(iconSize.xxl)} />}
               fallbackComponent={<AccountBlobbie size={Number(iconSize.xxl)} />}
+              loadingComponent={<AccountBlobbie size={Number(iconSize.xxl)} />}
               style={{
                 height: "100%",
-                width: "100%",
                 objectFit: "cover",
+                width: "100%",
               }}
             />
           )
@@ -471,23 +466,23 @@ export function DetailsModal(props: {
       {!props.detailsModal?.hideSwitchWallet ? (
         <Container
           style={{
-            position: "absolute",
             bottom: -2,
+            position: "absolute",
             right: -2,
           }}
         >
           <IconContainer
+            padding="4px"
             style={{
               background: theme.colors.modalBg,
             }}
-            padding="4px"
           >
             {activeWallet && (
               <WalletImage
-                style={{ borderRadius: 0 }}
-                id={activeWallet.id}
                 client={client}
+                id={activeWallet.id}
                 size="12"
+                style={{ borderRadius: 0 }}
               />
             )}
           </IconContainer>
@@ -500,30 +495,31 @@ export function DetailsModal(props: {
     <div className={`${TW_CONNECTED_WALLET}__default_modal_screen`}>
       <Spacer y="xs" />
       <Container
-        px="lg"
-        gap="sm"
-        flex="row"
         center="y"
+        flex="row"
+        gap="sm"
+        px="lg"
         style={{
-          paddingTop: spacing.lg,
           paddingBottom: hideAllButtons ? spacing.md : spacing.lg,
+          paddingTop: spacing.lg,
         }}
       >
         {props.detailsModal?.hideSwitchWallet ? (
           avatarContent
         ) : (
           <ToolTip tip="Switch wallet">
+            {/** biome-ignore lint/a11y/noStaticElementInteractions: TODO */}
             <div
-              style={{
-                cursor: "pointer",
+              onClick={() => {
+                setScreen("wallet-manager");
               }}
               onKeyDown={(e) => {
                 if (e.key === "w") {
                   setScreen("wallet-manager");
                 }
               }}
-              onClick={() => {
-                setScreen("wallet-manager");
+              style={{
+                cursor: "pointer",
               }}
             >
               {avatarContent}
@@ -533,22 +529,22 @@ export function DetailsModal(props: {
         <Container flex="column" gap="3xs">
           <div
             style={{
+              alignItems: "center",
               display: "flex",
               gap: spacing.xxs,
-              alignItems: "center",
             }}
           >
             {props.detailsModal?.connectedAccountName ? (
-              <Text color="primaryText" weight={500} size="md">
+              <Text color="primaryText" size="md" weight={500}>
                 {props.detailsModal.connectedAccountName}
               </Text>
             ) : (
-              <Text color="primaryText" weight={500} size="md">
+              <Text color="primaryText" size="md" weight={500}>
                 <AccountName
-                  loadingComponent={
+                  fallbackComponent={
                     <AccountAddress formatFn={shortenAddress} />
                   }
-                  fallbackComponent={
+                  loadingComponent={
                     <AccountAddress formatFn={shortenAddress} />
                   }
                 />
@@ -577,26 +573,26 @@ export function DetailsModal(props: {
             >
               {!hideSendFunds && (
                 <Button
-                  variant="outline"
-                  style={{
-                    fontSize: fontSize.sm,
-                    display: "flex",
-                    gap: spacing.xs,
-                    alignItems: "center",
-                    padding: spacing.sm,
-                    flex: 1,
-                  }}
                   onClick={() => {
                     setScreen("send");
                   }}
+                  style={{
+                    alignItems: "center",
+                    display: "flex",
+                    flex: 1,
+                    fontSize: fontSize.sm,
+                    gap: spacing.xs,
+                    padding: spacing.sm,
+                  }}
+                  variant="outline"
                 >
-                  <Container color="secondaryText" flex="row" center="both">
+                  <Container center="both" color="secondaryText" flex="row">
                     <PaperPlaneIcon
-                      width={iconSize.sm}
                       height={iconSize.sm}
                       style={{
                         transform: "translateY(-10%) rotate(-45deg) ",
                       }}
+                      width={iconSize.sm}
                     />
                   </Container>
 
@@ -606,21 +602,21 @@ export function DetailsModal(props: {
 
               {!hideReceiveFunds && (
                 <Button
-                  variant="outline"
-                  style={{
-                    fontSize: fontSize.sm,
-                    display: "flex",
-                    gap: spacing.xs,
-                    alignItems: "center",
-                    padding: spacing.sm,
-                    flex: 1,
-                  }}
                   onClick={() => {
                     setScreen("receive");
                   }}
+                  style={{
+                    alignItems: "center",
+                    display: "flex",
+                    flex: 1,
+                    fontSize: fontSize.sm,
+                    gap: spacing.xs,
+                    padding: spacing.sm,
+                  }}
+                  variant="outline"
                 >
-                  <Container color="secondaryText" flex="row" center="both">
-                    <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />
+                  <Container center="both" color="secondaryText" flex="row">
+                    <PinBottomIcon height={iconSize.sm} width={iconSize.sm} />
                   </Container>
                   {locale.receive}
                 </Button>
@@ -628,27 +624,27 @@ export function DetailsModal(props: {
 
               {!hideBuyFunds && (
                 <Button
-                  variant="outline"
-                  style={{
-                    fontSize: fontSize.sm,
-                    display: "flex",
-                    gap: spacing.xs,
-                    alignItems: "center",
-                    padding: spacing.sm,
-                    flex: 1,
-                  }}
                   onClick={() => {
                     trackPayEvent({
-                      event: "details_modal_buy_click",
                       client: client,
+                      event: "details_modal_buy_click",
                       walletAddress: activeAccount?.address,
                       walletType: activeWallet?.id,
                     });
                     setScreen("buy");
                   }}
+                  style={{
+                    alignItems: "center",
+                    display: "flex",
+                    flex: 1,
+                    fontSize: fontSize.sm,
+                    gap: spacing.xs,
+                    padding: spacing.sm,
+                  }}
+                  variant="outline"
                 >
-                  <Container color="secondaryText" flex="row" center="both">
-                    <PlusIcon width={iconSize.sm} height={iconSize.sm} />
+                  <Container center="both" color="secondaryText" flex="row">
+                    <PlusIcon height={iconSize.sm} width={iconSize.sm} />
                   </Container>
                   {locale.buy}
                 </Button>
@@ -670,10 +666,10 @@ export function DetailsModal(props: {
           {/* Network Switcher */}
           <NetworkSwitcherButton
             client={props.client}
-            setScreen={() => setScreen("network-switcher")}
             disableSwitchChain={disableSwitchChain}
-            showBalanceInFiat={props.detailsModal?.showBalanceInFiat}
             displayBalanceToken={props.displayBalanceToken}
+            setScreen={() => setScreen("network-switcher")}
+            showBalanceInFiat={props.detailsModal?.showBalanceInFiat}
           />
 
           {/* Transactions */}
@@ -685,8 +681,8 @@ export function DetailsModal(props: {
               fontSize: fontSize.sm,
             }}
           >
-            <TextAlignJustifyIcon width={iconSize.md} height={iconSize.md} />
-            <Container flex="row" gap="xs" center="y">
+            <TextAlignJustifyIcon height={iconSize.md} width={iconSize.md} />
+            <Container center="y" flex="row" gap="xs">
               <Text color="primaryText">{locale.transactions}</Text>
             </Container>
           </MenuButton>
@@ -725,17 +721,17 @@ export function DetailsModal(props: {
             (chainFaucetsQuery.faucets.length > 0 ||
               walletChain?.id === LocalhostChainId) && (
               <MenuLink
+                as="a"
                 href={
                   chainFaucetsQuery.faucets ? chainFaucetsQuery.faucets[0] : "#"
                 }
-                target="_blank"
-                as="a"
                 style={{
-                  textDecoration: "none",
                   color: "inherit",
+                  textDecoration: "none",
                 }}
+                target="_blank"
               >
-                <Container flex="row" center="both" color="secondaryText">
+                <Container center="both" color="secondaryText" flex="row">
                   <FundsIcon size={iconSize.md} />
                 </Container>
                 {locale.requestTestnetFunds}
@@ -756,7 +752,6 @@ export function DetailsModal(props: {
           <Container px="md">
             <MenuButton
               data-variant="danger"
-              type="button"
               onClick={() => {
                 if (activeWallet && activeAccount) {
                   disconnect(activeWallet);
@@ -766,8 +761,9 @@ export function DetailsModal(props: {
                   });
                 }
               }}
+              type="button"
             >
-              <ExitIcon width={iconSize.md} height={iconSize.md} />
+              <ExitIcon height={iconSize.md} width={iconSize.md} />
               <Text color="primaryText">{locale.disconnectWallet}</Text>
             </MenuButton>
           </Container>
@@ -780,12 +776,12 @@ export function DetailsModal(props: {
   if (screen === "transactions") {
     content = (
       <TransactionsScreen
-        title={locale.buy}
-        onBack={() => setScreen("main")}
+        client={client}
         closeModal={closeModal}
         locale={locale}
+        onBack={() => setScreen("main")}
         setScreen={setScreen}
-        client={client}
+        title={locale.buy}
       />
     );
   }
@@ -798,21 +794,21 @@ export function DetailsModal(props: {
   ) {
     content = (
       <WalletManagerScreen
-        onBack={() => setScreen("main")}
         accountAbstraction={props.connectOptions?.accountAbstraction}
+        activeAccount={activeAccount}
+        activeChain={walletChain}
+        activeWallet={activeWallet}
         appMetadata={props.connectOptions?.appMetadata}
         chain={props.connectOptions?.chain}
         chains={props.connectOptions?.chains}
         client={client}
-        hiddenWallets={props.connectOptions?.hiddenWallets}
         connectLocale={locale}
+        hiddenWallets={props.connectOptions?.hiddenWallets}
+        onBack={() => setScreen("main")}
         recommendedWallets={props.connectOptions?.recommendedWallets}
         showAllWallets={!!props.connectOptions?.showAllWallets}
         walletConnect={props.connectOptions?.walletConnect}
         wallets={props.connectOptions?.wallets}
-        activeAccount={activeAccount}
-        activeChain={walletChain}
-        activeWallet={activeWallet}
       />
     );
   }
@@ -827,104 +823,104 @@ export function DetailsModal(props: {
             ? [walletChain, ...props.chains]
             : props.chains
         }
+        client={client}
         closeModal={closeModal}
+        connectLocale={locale}
         networkSelector={props.detailsModal?.networkSelector}
         onBack={() => {
           setScreen("main");
         }}
-        connectLocale={locale}
-        client={client}
       />
     );
   } else if (screen === "view-assets") {
     content = (
       <ViewAssets
-        supportedTokens={props.supportedTokens}
-        supportedNFTs={props.supportedNFTs}
+        assetTabs={props.detailsModal?.assetTabs}
+        client={client}
+        connectLocale={locale}
         onBack={() => {
           setScreen("main");
         }}
-        theme={props.theme}
         setScreen={setScreen}
-        client={client}
-        connectLocale={locale}
-        assetTabs={props.detailsModal?.assetTabs}
+        supportedNFTs={props.supportedNFTs}
+        supportedTokens={props.supportedTokens}
+        theme={props.theme}
       />
     );
   } else if (screen === "view-nfts") {
     content = (
       <ViewNFTs
-        theme={props.theme}
-        supportedNFTs={props.supportedNFTs}
+        client={client}
+        connectLocale={locale}
         onBack={() => {
           setScreen("main");
         }}
-        client={client}
-        connectLocale={locale}
+        supportedNFTs={props.supportedNFTs}
+        theme={props.theme}
       />
     );
   } else if (screen === "view-tokens") {
     content = (
       <ViewTokens
-        supportedTokens={props.supportedTokens}
+        client={client}
+        connectLocale={locale}
         onBack={() => {
           setScreen("main");
         }}
-        client={client}
-        connectLocale={locale}
+        supportedTokens={props.supportedTokens}
       />
     );
   } else if (screen === "private-key") {
     content = (
       <PrivateKey
-        theme={props.theme} // do not use the useCustomTheme hook to get this, it's not valid here
+        client={client} // do not use the useCustomTheme hook to get this, it's not valid here
+        connectLocale={locale}
         onBack={() => {
           setScreen("manage-wallet");
         }}
+        theme={props.theme}
         wallet={activeWallet}
-        client={client}
-        connectLocale={locale}
       />
     );
   } else if (screen === "manage-wallet") {
     content = (
       <ManageWalletScreen
+        client={client}
+        closeModal={closeModal}
+        locale={locale}
         onBack={() => {
           setScreen("main");
         }}
-        locale={locale}
-        closeModal={closeModal}
-        client={client}
         setScreen={setScreen}
       />
     );
   } else if (screen === "wallet-connect-receiver") {
     content = (
       <WalletConnectReceiverScreen
+        chains={props.chains}
+        client={client}
         onBack={() => {
           setScreen("manage-wallet");
         }}
-        chains={props.chains}
-        client={client}
       />
     );
   } else if (screen === "linked-profiles") {
     content = (
       <LinkedProfilesScreen
-        onBack={() => setScreen("manage-wallet")}
         client={client}
         locale={locale}
+        onBack={() => setScreen("manage-wallet")}
         setScreen={setScreen}
       />
     );
   } else if (screen === "link-profile") {
     content = (
       <LinkProfileScreen
+        client={client}
+        locale={locale}
         onBack={() => {
           setScreen("linked-profiles");
         }}
-        client={client}
-        locale={locale}
         walletConnect={props.connectOptions?.walletConnect}
       />
     );
@@ -934,12 +930,12 @@ export function DetailsModal(props: {
   else if (screen === "send") {
     content = (
       <SendFunds
-        supportedTokens={props.supportedTokens}
+        client={client}
+        connectLocale={locale}
         onBack={() => {
           setScreen("main");
         }}
-        client={client}
-        connectLocale={locale}
+        supportedTokens={props.supportedTokens}
       />
     );
   }
@@ -948,12 +944,12 @@ export function DetailsModal(props: {
   else if (screen === "receive") {
     content = (
       <ReceiveFunds
-        walletId={activeWallet?.id}
+        client={client}
+        connectLocale={locale}
         onBack={() => {
           setScreen("main");
         }}
-        client={client}
-        connectLocale={locale}
+        walletId={activeWallet?.id}
       />
     );
   }
@@ -962,31 +958,30 @@ export function DetailsModal(props: {
   else if (screen === "buy") {
     content = (
       <LazyBuyScreen
-        title={locale.buy}
-        isEmbed={false}
         client={client}
-        onBack={() => setScreen("main")}
-        supportedTokens={props.supportedTokens}
         connectLocale={locale}
+        connectOptions={undefined}
+        hiddenWallets={props.detailsModal?.hiddenWallets}
+        isEmbed={false}
+        onBack={() => setScreen("main")}
+        onDone={closeModal}
         payOptions={
           props.detailsModal?.payOptions || {
             mode: "fund_wallet",
           }
         }
-        hiddenWallets={props.detailsModal?.hiddenWallets}
+        supportedTokens={props.supportedTokens}
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
-        onDone={closeModal}
-        connectOptions={undefined}
+        title={locale.buy}
       />
     );
   }
 
   return (
     <CustomThemeProvider theme={props.theme}>
-      <WalletUIStatesProvider theme={props.theme} isOpen={false}>
+      <WalletUIStatesProvider isOpen={false} theme={props.theme}>
         <ScreenSetupContext.Provider value={screenSetup}>
           <Modal
-            size="compact"
             open={isOpen}
             setOpen={(_open) => {
               if (!_open) {
@@ -996,6 +991,7 @@ export function DetailsModal(props: {
                 }
               }
             }}
+            size="compact"
           >
             {activeAccount?.address && (
               <AccountProvider address={activeAccount.address} client={client}>
@@ -1028,96 +1024,96 @@ export function NetworkSwitcherButton(props: {
   }
   return (
     <MenuButton
-      type="button"
+      className="tw-internal-network-switcher-button"
+      data-variant="primary"
       disabled={disableSwitchChain}
       onClick={() => {
         setScreen("network-switcher");
       }}
-      data-variant="primary"
-      className="tw-internal-network-switcher-button"
+      type="button"
     >
       <ChainProvider chain={walletChain}>
         <div
           style={{
-            display: "flex",
             alignItems: "center",
+            display: "flex",
             position: "relative",
           }}
         >
           <Container
             style={{
-              position: "relative",
+              alignItems: "center",
               display: "flex",
               flexShrink: 0,
-              alignItems: "center",
+              position: "relative",
             }}
           >
             <ChainIcon
               client={client}
+              fallbackComponent={
+                <img
+                  alt=""
+                  src={fallbackChainIcon}
+                  style={{
+                    height: `${iconSize.md}px`,
+                    width: `${iconSize.md}px`,
+                  }}
+                />
+              }
               loadingComponent={
                 <Skeleton
                   height={`${iconSize.md}px`}
                   width={`${iconSize.md}px`}
                 />
               }
-              fallbackComponent={
-                <img
-                  src={fallbackChainIcon}
-                  alt=""
-                  style={{
-                    width: `${iconSize.md}px`,
-                    height: `${iconSize.md}px`,
-                  }}
-                />
-              }
               style={{
-                width: `${iconSize.md}px`,
                 height: `${iconSize.md}px`,
+                width: `${iconSize.md}px`,
               }}
             />
             <ChainActiveDot className="tw-chain-active-dot-details-button" />
           </Container>
         </div>
 
-        <Text color="primaryText" size="md" multiline>
+        <Text color="primaryText" multiline size="md">
           <ChainName
-            loadingComponent={<Skeleton height="16px" width="150px" />}
             fallbackComponent={<span>Unknown chain #{walletChain?.id}</span>}
+            loadingComponent={<Skeleton height="16px" width="150px" />}
           />
           <Text color="secondaryText" size="xs">
             {showBalanceInFiat ? (
               <>
                 <AccountBalance
-                  fallbackComponent={<Skeleton height="1em" width="70px" />}
-                  loadingComponent={<Skeleton height="1em" width="70px" />}
                   chain={walletChain}
-                  tokenAddress={
-                    props.displayBalanceToken?.[Number(walletChain?.id)]
-                  }
+                  fallbackComponent={<Skeleton height="1em" width="70px" />}
                   formatFn={(props: AccountBalanceInfo) =>
                     formatAccountTokenBalance({ ...props, decimals: 7 })
                   }
-                />{" "}
-                <AccountBalance
-                  loadingComponent={<Skeleton height="1em" width="30px" />}
-                  chain={walletChain}
+                  loadingComponent={<Skeleton height="1em" width="70px" />}
                   tokenAddress={
                     props.displayBalanceToken?.[Number(walletChain?.id)]
                   }
+                />{" "}
+                <AccountBalance
+                  chain={walletChain}
                   formatFn={(props: AccountBalanceInfo) =>
                     ` (${formatAccountFiatBalance({ ...props, decimals: 3 })})`
                   }
+                  loadingComponent={<Skeleton height="1em" width="30px" />}
                   showBalanceInFiat="USD"
+                  tokenAddress={
+                    props.displayBalanceToken?.[Number(walletChain?.id)]
+                  }
                 />
               </>
             ) : (
               <AccountBalance
+                chain={walletChain}
                 fallbackComponent={<Skeleton height="1em" width="100px" />}
-                loadingComponent={<Skeleton height="1em" width="100px" />}
                 formatFn={(props: AccountBalanceInfo) =>
                   formatAccountTokenBalance({ ...props, decimals: 7 })
                 }
-                chain={walletChain}
+                loadingComponent={<Skeleton height="1em" width="100px" />}
                 tokenAddress={
                   props.displayBalanceToken?.[Number(walletChain?.id)]
                 }
@@ -1128,12 +1124,12 @@ export function NetworkSwitcherButton(props: {
       </ChainProvider>
 
       <StyledChevronRightIcon
-        width={iconSize.sm}
         height={iconSize.sm}
         style={{
           flexShrink: 0,
           marginLeft: "auto",
         }}
+        width={iconSize.sm}
       />
     </MenuButton>
   );
@@ -1142,26 +1138,26 @@ export function NetworkSwitcherButton(props: {
 const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
+    "&:hover": {
+      background: theme.colors.connectedButtonBgHover,
+      transition: "background 250ms ease",
+    },
+    alignItems: "center",
     all: "unset",
+    animation: `${fadeInAnimation} 300ms ease`,
     background: theme.colors.connectedButtonBg,
-    overflow: "hidden",
+    border: `1px solid ${theme.colors.borderColor}`,
     borderRadius: radius.md,
+    boxSizing: "border-box",
     cursor: "pointer",
     display: "inline-flex",
     gap: spacing.xs,
-    padding: spacing.xs,
-    alignItems: "center",
-    minWidth: "165px",
     height: "50px",
-    boxSizing: "border-box",
-    border: `1px solid ${theme.colors.borderColor}`,
-    WebkitTapHighlightColor: "transparent",
     lineHeight: "normal",
-    animation: `${fadeInAnimation} 300ms ease`,
-    "&:hover": {
-      transition: "background 250ms ease",
-      background: theme.colors.connectedButtonBgHover,
-    },
+    minWidth: "165px",
+    overflow: "hidden",
+    padding: spacing.xs,
+    WebkitTapHighlightColor: "transparent",
   };
 });
 
@@ -1209,8 +1205,8 @@ export function ConnectedToSmartWallet(props: {
   }, [activeAccount, chain, client, isSW]);
 
   const content = (
-    <Container flex="row" gap="3xs" center="y">
-      <Text size="xs" weight={400} color="secondaryText">
+    <Container center="y" flex="row" gap="3xs">
+      <Text color="secondaryText" size="xs" weight={400}>
         {locale.connectedToSmartWallet}
       </Text>
     </Container>
@@ -1224,8 +1220,8 @@ export function ConnectedToSmartWallet(props: {
             color="secondaryText"
             hoverColor="primaryText"
             href={`https://thirdweb.com/${chain.id}/${activeAccount.address}/account`}
-            target="_blank"
             size="sm"
+            target="_blank"
           >
             {content}
           </Link>
@@ -1253,10 +1249,7 @@ export function InAppWalletUserInfo(props: {
   const { data: walletInfo } = useWalletInfo(activeWallet?.id);
   const isSW = isSmartWallet(activeWallet);
   const { data: walletName } = useQuery({
-    queryKey: [
-      "wallet-name",
-      { walletId: activeWallet?.id, walletAddress: account?.address },
-    ],
+    enabled: !!activeWallet?.id && !!walletInfo,
     queryFn: async () => {
       const lastAuthProvider = await getLastAuthProvider(webLocalStorage);
       if (lastAuthProvider === "guest") {
@@ -1273,11 +1266,14 @@ export function InAppWalletUserInfo(props: {
       }
       return walletInfo?.name;
     },
-    enabled: !!activeWallet?.id && !!walletInfo,
+    queryKey: [
+      "wallet-name",
+      { walletAddress: account?.address, walletId: activeWallet?.id },
+    ],
   });
 
   const userInfoQuery = useQuery({
-    queryKey: ["in-app-wallet-user", client, account?.address],
+    enabled: !!adminWallet,
     queryFn: async () => {
       const isInAppWallet =
         adminWallet &&
@@ -1314,7 +1310,7 @@ export function InAppWalletUserInfo(props: {
 
       return email || phone || null;
     },
-    enabled: !!adminWallet,
+    queryKey: ["in-app-wallet-user", client, account?.address],
   });
 
   if (!userInfoQuery.data && isSW) {
@@ -1331,9 +1327,9 @@ export function InAppWalletUserInfo(props: {
 
   return (
     <Skeleton
-      width="50px"
-      height="10px"
       className="InAppWalletUserInfo__skeleton"
+      height="10px"
+      width="50px"
     />
   );
 }
@@ -1357,9 +1353,8 @@ export function SwitchNetworkButton(props: {
 
   return (
     <Button
+      aria-label={switching ? locale.switchingNetwork : undefined}
       className={`tw-connect-wallet--switch-network ${props.className || ""}`}
-      variant="primary"
-      type="button"
       data-is-loading={switching}
       data-test="switch-network-button"
       disabled={switching}
@@ -1376,10 +1371,11 @@ export function SwitchNetworkButton(props: {
         minWidth: "140px",
         ...props.style,
       }}
-      aria-label={switching ? locale.switchingNetwork : undefined}
+      type="button"
+      variant="primary"
     >
       {switching ? (
-        <Spinner size="sm" color="primaryButtonText" />
+        <Spinner color="primaryButtonText" size="sm" />
       ) : (
         switchNetworkBtnTitle
       )}
@@ -1579,10 +1575,7 @@ export type UseWalletDetailsModalOptions = {
    * }
    * ```
    */
-  onDisconnect?: (info: {
-    wallet: Wallet;
-    account: Account;
-  }) => void;
+  onDisconnect?: (info: { wallet: Wallet; account: Account }) => void;
 
   /**
    * Render custom UI at the bottom of the Details Modal
@@ -1716,34 +1709,34 @@ export function useWalletDetailsModal() {
       .then((locale) => {
         setRootEl(
           <DetailsModal
+            chains={props.chains || []}
             client={props.client}
-            locale={locale}
+            closeModal={closeModal}
+            connectOptions={props.connectOptions}
             detailsModal={{
-              footer: props.footer,
-              hideDisconnect: props.hideDisconnect,
-              hideSwitchWallet: props.hideSwitchWallet,
-              networkSelector: props.networkSelector,
-              payOptions: props.payOptions,
-              showTestnetFaucet: props.showTestnetFaucet,
-              connectedAccountName: props.connectedAccountName,
+              assetTabs: props.assetTabs,
               connectedAccountAvatarUrl: props.connectedAccountAvatarUrl,
+              connectedAccountName: props.connectedAccountName,
+              footer: props.footer,
               hideBuyFunds: props.hideBuyFunds,
+              hideDisconnect: props.hideDisconnect,
               hideReceiveFunds: props.hideReceiveFunds,
               hideSendFunds: props.hideSendFunds,
-              assetTabs: props.assetTabs,
+              hideSwitchWallet: props.hideSwitchWallet,
+              networkSelector: props.networkSelector,
               onClose: props.onClose,
+              payOptions: props.payOptions,
+              showTestnetFaucet: props.showTestnetFaucet,
             }}
             displayBalanceToken={props.displayBalanceToken}
-            theme={props.theme || "dark"}
-            supportedTokens={props.supportedTokens}
-            supportedNFTs={props.supportedNFTs}
-            closeModal={closeModal}
+            locale={locale}
             onDisconnect={(info) => {
               props.onDisconnect?.(info);
               closeModal();
             }}
-            chains={props.chains || []}
-            connectOptions={props.connectOptions}
+            supportedNFTs={props.supportedNFTs}
+            supportedTokens={props.supportedTokens}
+            theme={props.theme || "dark"}
           />,
         );
       })

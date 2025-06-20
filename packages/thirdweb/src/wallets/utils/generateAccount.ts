@@ -24,5 +24,5 @@ export async function generateAccount(
   options: GenerateAccountOptions,
 ): Promise<Account> {
   const privateKey = toHex(secp256k1.utils.randomPrivateKey());
-  return privateKeyToAccount({ privateKey, client: options.client });
+  return privateKeyToAccount({ client: options.client, privateKey });
 }

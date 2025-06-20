@@ -1,10 +1,10 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { CodeServer } from "@/components/ui/code/code.server";
-import { TabButtons } from "@/components/ui/tabs";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { CodeServer } from "@/components/ui/code/code.server";
+import { TabButtons } from "@/components/ui/tabs";
 
 export function PayEmbedFTUX(props: { clientId: string }) {
   const [tab, setTab] = useState("embed");
@@ -21,56 +21,56 @@ export function PayEmbedFTUX(props: { clientId: string }) {
           tabClassName="!text-sm"
           tabs={[
             {
+              isActive: tab === "embed",
               name: "Embed",
               onClick: () => setTab("embed"),
-              isActive: tab === "embed",
             },
             {
+              isActive: tab === "sdk",
               name: "SDK",
               onClick: () => setTab("sdk"),
-              isActive: tab === "sdk",
             },
             {
+              isActive: tab === "api",
               name: "API",
               onClick: () => setTab("api"),
-              isActive: tab === "api",
             },
           ]}
         />
         <div className="h-2" />
         {tab === "embed" && (
           <CodeServer
+            className="bg-background"
             code={embedCode(props.clientId)}
             lang="tsx"
-            className="bg-background"
           />
         )}
         {tab === "sdk" && (
           <CodeServer
-            code={sdkCode(props.clientId)}
-            lang="ts"
             className="bg-background"
+            code={sdkCode(props.clientId)}
             ignoreFormattingErrors
+            lang="ts"
           />
         )}
         {tab === "api" && (
           <CodeServer
-            code={apiCode(props.clientId)}
-            lang="bash"
             className="bg-background"
+            code={apiCode(props.clientId)}
             ignoreFormattingErrors
+            lang="bash"
           />
         )}
       </div>
 
       <div className="flex flex-col gap-3 border-t p-4 lg:flex-row lg:items-center lg:justify-between lg:p-6">
         <div className="flex gap-3">
-          <Button asChild variant="outline" size="sm">
+          <Button asChild size="sm" variant="outline">
             <Link
-              href="https://portal.thirdweb.com/pay"
-              target="_blank"
-              rel="noopener noreferrer"
               className="gap-2"
+              href="https://portal.thirdweb.com/pay"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               View Docs
               <ExternalLinkIcon className="size-4 text-muted-foreground" />

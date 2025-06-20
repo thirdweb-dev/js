@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
+import { Container } from "../../ui/components/basic.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Spinner } from "../../ui/components/Spinner.js";
-import { Container } from "../../ui/components/basic.js";
 import { Text } from "../../ui/components/text.js";
 
 export function LoadingState(props: {
@@ -13,19 +13,19 @@ export function LoadingState(props: {
     <Container animate="fadein">
       <Spacer y="xxl" />
       <Container
-        flex="row"
         center="x"
+        flex="row"
         style={{
           position: "relative",
         }}
       >
-        <Spinner size="4xl" color="accentText" />
+        <Spinner color="accentText" size="4xl" />
         <Container
           color="accentText"
           style={{
+            left: "50%",
             position: "absolute",
             top: "50%",
-            left: "50%",
             transform: "translate(-50%, -50%)",
           }}
         >
@@ -37,7 +37,7 @@ export function LoadingState(props: {
         {props.title}
       </Text>
       <Spacer y="md" />
-      <Text multiline center>
+      <Text center multiline>
         {props.subtitle}
       </Text>
       <Spacer y="xxl" />

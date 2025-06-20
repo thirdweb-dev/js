@@ -40,7 +40,6 @@ export type ApproveParams = Prettify<
  */
 export function approve(options: BaseTransactionOptions<ApproveParams>) {
   return generatedApprove({
-    contract: options.contract,
     asyncParams: async () => {
       let amount: bigint;
       if ("amount" in options) {
@@ -54,15 +53,16 @@ export function approve(options: BaseTransactionOptions<ApproveParams>) {
         amount = options.amountWei;
       }
       return {
-        spender: options.spender,
-        value: amount,
         overrides: {
           erc20Value: {
             amountWei: amount,
             tokenAddress: options.contract.address,
           },
         },
+        spender: options.spender,
+        value: amount,
       } as const;
     },
+    contract: options.contract,
   });
 }

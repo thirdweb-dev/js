@@ -10,10 +10,10 @@ import { checkModulesCompatibility } from "./checkModulesCompatibility.js";
 describe("compatibleModules", () => {
   it("should return true for compatible modules", async () => {
     const result = await checkModulesCompatibility({
-      coreBytecode: ERC20_CORE_BYTECODE,
-      moduleBytecodes: [CLAIMABLE_ERC20_MODULE_BYTECODE],
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
+      coreBytecode: ERC20_CORE_BYTECODE,
+      moduleBytecodes: [CLAIMABLE_ERC20_MODULE_BYTECODE],
     });
 
     expect(result).toBe(true);
@@ -21,10 +21,10 @@ describe("compatibleModules", () => {
 
   it("should return false for incompatible modules", async () => {
     const result = await checkModulesCompatibility({
-      coreBytecode: ERC20_CORE_BYTECODE,
-      moduleBytecodes: [CLAIMABLE_ERC721_BYTECODE],
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
+      coreBytecode: ERC20_CORE_BYTECODE,
+      moduleBytecodes: [CLAIMABLE_ERC721_BYTECODE],
     });
 
     expect(result).toBe(false);
@@ -32,13 +32,13 @@ describe("compatibleModules", () => {
 
   it("should return false for overlapping modules", async () => {
     const result = await checkModulesCompatibility({
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       coreBytecode: ERC20_CORE_BYTECODE,
       moduleBytecodes: [
         CLAIMABLE_ERC20_MODULE_BYTECODE,
         MINTABLE_ERC20_BYTECODE,
       ],
-      chain: ANVIL_CHAIN,
-      client: TEST_CLIENT,
     });
 
     expect(result).toBe(false);

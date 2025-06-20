@@ -1,33 +1,34 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
     "noUncheckedIndexedAccess": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@doc": ["./src/components/Document"],
+      "@public/*": ["./public/*"],
+      "@root/*": ["./*"],
+      "flexsearch": ["./node_modules/@types/flexsearch"]
+    },
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "paths": {
-      "@/*": ["./src/*"],
-      "@public/*": ["./public/*"],
-      "flexsearch": ["./node_modules/@types/flexsearch"],
-      "@root/*": ["./*"],
-      "@doc": ["./src/components/Document"]
-    },
-    "forceConsistentCasingInFileNames": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es2020"
   },
+  "exclude": ["node_modules", ".next", "lib/__generated__"],
   "include": [
     "lucide-env.d.ts",
     "next-env.d.ts",
@@ -35,7 +36,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"],
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs"

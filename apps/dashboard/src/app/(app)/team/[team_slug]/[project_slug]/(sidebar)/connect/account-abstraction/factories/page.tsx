@@ -1,19 +1,19 @@
-import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
-import { ClientOnly } from "@/components/blocks/client-only";
-import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { Button } from "@/components/ui/button";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { DefaultFactoriesSection } from "components/smart-wallets/AccountFactories";
 import { FactoryContracts } from "components/smart-wallets/AccountFactories/factory-contracts";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { type ThirdwebClient, defineChain, getContract } from "thirdweb";
+import { defineChain, getContract, type ThirdwebClient } from "thirdweb";
 import { getCompilerMetadata } from "thirdweb/contract";
+import { getProject } from "@/api/projects";
+import { getTeamBySlug } from "@/api/team";
+import { ClientOnly } from "@/components/blocks/client-only";
+import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
+import { Button } from "@/components/ui/button";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { getSortedDeployedContracts } from "../../../../../../../account/contracts/_components/getSortedDeployedContracts";
 import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../login/loginRedirect";
@@ -52,12 +52,12 @@ export default async function Page(props: {
     <div className="flex flex-col gap-6">
       <DefaultFactoriesSection />
       <YourFactoriesSection
-        teamId={team.id}
-        projectId={project.id}
-        teamSlug={team.slug}
-        projectSlug={project.slug}
         authToken={authToken}
         clientThirdwebClient={client}
+        projectId={project.id}
+        projectSlug={project.slug}
+        teamId={team.id}
+        teamSlug={team.slug}
       />
     </div>
   );
@@ -82,16 +82,16 @@ function YourFactoriesSection(props: {
             Deploy your own account factories to create smart wallets.{" "}
             <UnderlineLink
               href="https://portal.thirdweb.com/connect/account-abstraction/factories"
-              target="_blank"
               rel="noopener noreferrer"
+              target="_blank"
             >
               Learn more{" "}
             </UnderlineLink>
           </p>
         </div>
 
-        <Button variant="default" asChild size="sm">
-          <Link href="/explore/smart-wallet" className="gap-2 text-sm">
+        <Button asChild size="sm" variant="default">
+          <Link className="gap-2 text-sm" href="/explore/smart-wallet">
             <PlusIcon className="size-3" />
             Deploy Account Factory
           </Link>
@@ -100,12 +100,12 @@ function YourFactoriesSection(props: {
 
       <Suspense fallback={<GenericLoadingPage />}>
         <AsyncYourFactories
-          teamId={props.teamId}
-          projectId={props.projectId}
           authToken={props.authToken}
-          teamSlug={props.teamSlug}
-          projectSlug={props.projectSlug}
           clientThirdwebClient={props.clientThirdwebClient}
+          projectId={props.projectId}
+          projectSlug={props.projectSlug}
+          teamId={props.teamId}
+          teamSlug={props.teamSlug}
         />
       </Suspense>
     </div>
@@ -121,10 +121,10 @@ async function AsyncYourFactories(props: {
   clientThirdwebClient: ThirdwebClient;
 }) {
   const deployedContracts = await getSortedDeployedContracts({
-    teamId: props.teamId,
-    projectId: props.projectId,
     authToken: props.authToken,
     deploymentType: undefined,
+    projectId: props.projectId,
+    teamId: props.teamId,
   });
 
   const factories = (
@@ -132,9 +132,9 @@ async function AsyncYourFactories(props: {
       deployedContracts.map(async (c) => {
         try {
           const contract = getContract({
+            address: c.contractAddress,
             // eslint-disable-next-line no-restricted-syntax
             chain: defineChain(Number(c.chainId)),
-            address: c.contractAddress,
             client: serverThirdwebClient,
           });
           const m = await getCompilerMetadata(contract);
@@ -149,12 +149,12 @@ async function AsyncYourFactories(props: {
   return (
     <ClientOnly ssr={<GenericLoadingPage />}>
       <FactoryContracts
-        contracts={factories}
-        isPending={false}
-        teamSlug={props.teamSlug}
-        projectSlug={props.projectSlug}
-        isFetched={true}
         client={props.clientThirdwebClient}
+        contracts={factories}
+        isFetched={true}
+        isPending={false}
+        projectSlug={props.projectSlug}
+        teamSlug={props.teamSlug}
       />
     </ClientOnly>
   );

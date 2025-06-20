@@ -53,16 +53,15 @@ export type ClaimToParams = {
  */
 export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
   return GeneratedClaim.claim({
-    contract: options.contract,
     async asyncParams() {
       const params = await getClaimParams({
-        type: "erc1155",
         contract: options.contract,
-        to: options.to,
-        quantity: options.quantity,
         from: options.from,
-        tokenId: options.tokenId,
+        quantity: options.quantity,
         singlePhaseDrop: options.singlePhaseDrop,
+        to: options.to,
+        tokenId: options.tokenId,
+        type: "erc1155",
       });
 
       return {
@@ -70,6 +69,7 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
         tokenId: options.tokenId,
       };
     },
+    contract: options.contract,
   });
 }
 

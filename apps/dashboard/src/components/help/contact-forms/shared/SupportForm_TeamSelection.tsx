@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -23,22 +24,24 @@ export const SupportForm_TeamSelection = (props: Props) => {
     (t) => t.id === props.selectedTeamId,
   )?.name;
 
+  const teamId = useId();
+
   return (
     <>
       <div className="flex flex-col items-start gap-2">
-        <Label htmlFor="team" className="relative">
+        <Label className="relative" htmlFor={teamId}>
           Select Team
           <span className="-top-1.5 -right-2 absolute text-destructive">•</span>
         </Label>
 
         <Select
           name="teamId"
-          value={props.selectedTeamId}
           onValueChange={(selectedId) => {
             props.onChange(selectedId);
           }}
+          value={props.selectedTeamId}
         >
-          <SelectTrigger id="team">
+          <SelectTrigger id={teamId}>
             <SelectValue placeholder="Select a Team">
               {selectedTeamName}
             </SelectValue>

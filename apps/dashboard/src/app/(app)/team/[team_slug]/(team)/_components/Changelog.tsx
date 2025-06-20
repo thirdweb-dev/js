@@ -20,10 +20,9 @@ export async function Changelog() {
 
           <div className="flex flex-col">
             <Link
-              target="_blank"
-              href={`${item.url}?utm_source=thirdweb&utm_campaign=changelog`}
-              role="group"
               className="line-clamp-2 text-foreground text-sm hover:underline"
+              href={`${item.url}?utm_source=thirdweb&utm_campaign=changelog`}
+              target="_blank"
             >
               {item.title}
             </Link>
@@ -36,10 +35,10 @@ export async function Changelog() {
         </div>
       ))}
       <Link
-        href="https://blog.thirdweb.com/changelog?utm_source=thirdweb&utm_campaign=changelog"
-        target="_blank"
-        rel="noopener noreferrer"
         className="flex items-center gap-2 pl-5 text-foreground text-sm hover:underline"
+        href="https://blog.thirdweb.com/changelog?utm_source=thirdweb&utm_campaign=changelog"
+        rel="noopener noreferrer"
+        target="_blank"
       >
         View More <ArrowRightIcon className="size-4" />
       </Link>

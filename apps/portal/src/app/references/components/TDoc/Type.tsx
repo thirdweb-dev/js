@@ -1,7 +1,7 @@
+import invariant from "tiny-invariant";
+import { getInterfaceSignature, type InterfaceDoc } from "typedoc-better-json";
 import { Callout } from "@/components/Document";
 import { sluggerContext } from "@/contexts/slugger";
-import invariant from "tiny-invariant";
-import { type InterfaceDoc, getInterfaceSignature } from "typedoc-better-json";
 import { CodeBlock } from "../../../../components/Document/Code";
 import { Details } from "../../../../components/Document/Details";
 import { Heading } from "../../../../components/Document/Heading";
@@ -27,7 +27,7 @@ export async function TypeTDoc(props: { doc: InterfaceDoc; level: number }) {
 
   return (
     <>
-      <Heading level={props.level} id={doc.name}>
+      <Heading anchorId={doc.name} level={props.level}>
         {doc.name}
       </Heading>
 
@@ -38,14 +38,14 @@ export async function TypeTDoc(props: { doc: InterfaceDoc; level: number }) {
       {remarksTag?.summary && <TypedocSummary summary={remarksTag.summary} />}
 
       <CodeBlock
-        lang="ts"
         code={code}
+        lang="ts"
         tokenLinks={tokens ? await getTokenLinks(tokens) : undefined}
       />
 
       {exampleTag?.summary && (
         <>
-          <Heading level={subLevel} id={slugger.slug("example")} noIndex>
+          <Heading anchorId={slugger.slug("example")} level={subLevel} noIndex>
             Example
           </Heading>
           <TypedocSummary summary={exampleTag.summary} />
@@ -61,14 +61,14 @@ export async function TypeTDoc(props: { doc: InterfaceDoc; level: number }) {
       {doc.typeDeclaration?.map((declaration) => {
         return (
           <Details
+            anchorId={declaration.name}
             key={declaration.name}
             summary={declaration.name}
-            id={declaration.name}
           >
             <TypeDeclarationTDoc
-              showHeading={false}
               doc={declaration}
               level={props.level + 1}
+              showHeading={false}
             />
           </Details>
         );

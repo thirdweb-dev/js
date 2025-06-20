@@ -60,14 +60,6 @@ export function ecosystemWallet(
     partnerId: createOptions?.partnerId,
   };
   return createInAppWallet({
-    ecosystem,
-    createOptions: {
-      auth: {
-        ...createOptions?.auth,
-        options: [], // controlled by ecosystem
-      },
-      partnerId: ecosystem.partnerId,
-    },
     connectorFactory: async (client: ThirdwebClient) => {
       const { InAppWebConnector } = await import("./lib/web-connector.js");
       return new InAppWebConnector({
@@ -76,5 +68,13 @@ export function ecosystemWallet(
         storage: createOptions?.storage,
       });
     },
+    createOptions: {
+      auth: {
+        ...createOptions?.auth,
+        options: [], // controlled by ecosystem
+      },
+      partnerId: ecosystem.partnerId,
+    },
+    ecosystem,
   }) as Wallet<EcosystemWalletId>;
 }

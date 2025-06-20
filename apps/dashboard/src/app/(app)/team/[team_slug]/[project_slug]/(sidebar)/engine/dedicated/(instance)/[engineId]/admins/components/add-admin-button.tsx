@@ -32,8 +32,8 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutate: grantPermissions } = useEngineGrantPermissions({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
 
   const form = useForm<EngineAdmin>({
@@ -50,32 +50,32 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
   return (
     <>
       <Button
-        onClick={onOpen}
-        variant="ghost"
-        size="sm"
-        leftIcon={<CirclePlusIcon className="size-6" />}
         colorScheme="primary"
+        leftIcon={<CirclePlusIcon className="size-6" />}
+        onClick={onOpen}
+        size="sm"
+        variant="ghost"
         w="fit-content"
       >
         Add Admin
       </Button>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent
-          className="!bg-background rounded-lg border border-border"
           as="form"
+          className="!bg-background rounded-lg border border-border"
           onSubmit={form.handleSubmit((data) => {
             if (!isAddress(data.walletAddress)) {
               onError(new Error("Invalid wallet address"));
             }
             grantPermissions(data, {
-              onSuccess: () => {
-                onSuccess();
-                onClose();
-              },
               onError: (error) => {
                 onError(error);
                 console.error(error);
+              },
+              onSuccess: () => {
+                onSuccess();
+                onClose();
               },
             });
           })}
@@ -87,16 +87,16 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
               <FormControl isRequired>
                 <FormLabel>Wallet Address</FormLabel>
                 <Input
-                  type="text"
                   placeholder="The wallet address for this admin"
+                  type="text"
                   {...form.register("walletAddress", { required: true })}
                 />
               </FormControl>
               <FormControl>
                 <FormLabel>Label</FormLabel>
                 <Input
-                  type="text"
                   placeholder="Enter a description for this admin"
+                  type="text"
                   {...form.register("label")}
                 />
               </FormControl>
@@ -104,10 +104,10 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
           </ModalBody>
 
           <ModalFooter as={Flex} gap={3}>
-            <Button type="button" onClick={onClose} variant="ghost">
+            <Button onClick={onClose} type="button" variant="ghost">
               Cancel
             </Button>
-            <Button type="submit" colorScheme="primary">
+            <Button colorScheme="primary" type="submit">
               Add
             </Button>
           </ModalFooter>

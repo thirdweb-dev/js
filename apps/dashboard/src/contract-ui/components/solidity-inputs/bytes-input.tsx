@@ -8,7 +8,7 @@ export const SolidityBytesInput: React.FC<SolidityInputWithTypeProps> = ({
   ...inputProps
 }) => {
   // discard size prop to fix type
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // biome-ignore lint/correctness/noUnusedVariables: EXPECTED
   const { name, size, ...restOfInputProps } = inputProps;
   const inputName = name as string;
 
@@ -29,8 +29,8 @@ export const SolidityBytesInput: React.FC<SolidityInputWithTypeProps> = ({
     <Input
       placeholder={solidityType}
       {...restOfInputProps}
-      value={form.watch(inputName)}
       onChange={handleChange}
+      value={form.watch(inputName)}
     />
   );
 };

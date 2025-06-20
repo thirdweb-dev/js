@@ -9,17 +9,17 @@ export const getChatResponse = async (
 ) => {
   try {
     const payload = {
-      message: userMessage,
       conversationId: sessionId,
+      message: userMessage,
       source: "portal",
     };
     const response = await fetch(`${apiUrl}/v1/chat`, {
-      method: "POST",
+      body: JSON.stringify(payload),
       headers: {
         "Content-Type": "application/json",
         "x-service-api-key": serviceKey,
       },
-      body: JSON.stringify(payload),
+      method: "POST",
     });
 
     if (!response.ok) {
@@ -49,12 +49,12 @@ export const sendFeedback = async (
 ) => {
   try {
     const response = await fetch(`${apiUrl}/v1/chat/feedback`, {
-      method: "POST",
+      body: JSON.stringify({ conversationId, feedbackRating }),
       headers: {
         "Content-Type": "application/json",
         "x-service-api-key": serviceKey,
       },
-      body: JSON.stringify({ conversationId, feedbackRating }),
+      method: "POST",
     });
 
     if (!response.ok) {

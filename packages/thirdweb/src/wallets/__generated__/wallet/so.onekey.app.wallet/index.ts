@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "so.onekey.app.wallet",
-  name: "OneKey",
-  homepage: "https://onekey.so",
-  image_id: "2067c771-93e8-4b32-b388-b2a0e1d4dc00",
   app: {
-    browser: "https://onekey.so",
-    ios: "https://apps.apple.com/us/app/onekey-open-source-wallet/id1609559473",
     android:
       "https://play.google.com/store/apps/details?id=so.onekey.app.wallet&hl=en_US&gl=US",
-    mac: "https://github.com/OneKeyHQ/app-monorepo/releases",
-    windows: "https://github.com/OneKeyHQ/app-monorepo/releases",
-    linux: "https://github.com/OneKeyHQ/app-monorepo/releases",
+    browser: "https://onekey.so",
     chrome:
       "https://chrome.google.com/webstore/detail/onekey/jnmbobjmhlngoefaiojfljckilhhlhcj",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/onekey-open-source-wallet/id1609559473",
+    linux: "https://github.com/OneKeyHQ/app-monorepo/releases",
+    mac: "https://github.com/OneKeyHQ/app-monorepo/releases",
     opera: null,
-  },
-  rdns: "so.onekey.app.wallet",
-  mobile: {
-    native: "onekey-wallet://",
-    universal: "https://app.onekey.so/wc/connect",
+    safari: null,
+    windows: "https://github.com/OneKeyHQ/app-monorepo/releases",
   },
   desktop: {
     native: "onekey-wallet://",
     universal: "https://app.onekey.so/wc/connect",
   },
+  homepage: "https://onekey.so",
+  id: "so.onekey.app.wallet",
+  image_id: "2067c771-93e8-4b32-b388-b2a0e1d4dc00",
+  mobile: {
+    native: "onekey-wallet://",
+    universal: "https://app.onekey.so/wc/connect",
+  },
+  name: "OneKey",
+  rdns: "so.onekey.app.wallet",
 } as const;

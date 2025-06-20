@@ -7,15 +7,15 @@ export function StepBar(props: { steps: number; currentStep: number }) {
       bg="tertiaryBg"
       flex="row"
       style={{
-        height: "8px",
         borderRadius: radius.lg,
+        height: "8px",
       }}
     >
       <Container
         bg="accentText"
         style={{
-          width: `${(props.currentStep / props.steps) * 95}%`,
           borderRadius: radius.lg,
+          width: `${(props.currentStep / props.steps) * 95}%`,
         }}
       >
         {null}

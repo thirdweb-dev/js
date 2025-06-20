@@ -3,11 +3,11 @@ import type { IconFC } from "../types.js";
 export const JPYIcon: IconFC = (props) => {
   return (
     <svg
-      width={props.size}
       height={props.size}
-      viewBox="0 0 32 32"
-      xmlns="http://www.w3.org/2000/svg"
       role="presentation"
+      viewBox="0 0 32 32"
+      width={props.size}
+      xmlns="http://www.w3.org/2000/svg"
     >
       <g fill="none" fillRule="evenodd">
         <circle cx="16" cy="16" fill="#a81b1b" r="16" />

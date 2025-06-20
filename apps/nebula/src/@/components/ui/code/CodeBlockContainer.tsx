@@ -1,10 +1,10 @@
 "use client";
 
+import { CheckIcon, CopyIcon } from "lucide-react";
 import { useClipboard } from "@/hooks/use-clipboard";
 import { cn } from "@/lib/utils";
-import { CheckIcon, CopyIcon } from "lucide-react";
-import { ScrollShadow } from "../ScrollShadow/ScrollShadow";
 import { Button } from "../button";
+import { ScrollShadow } from "../ScrollShadow/ScrollShadow";
 
 export function CodeBlockContainer(props: {
   codeToCopy: string;
@@ -26,29 +26,29 @@ export function CodeBlockContainer(props: {
       )}
     >
       <ScrollShadow
-        scrollableClassName={cn("p-4", props.scrollableClassName)}
         className={cn(
           "text-xs md:text-sm [&_*]:leading-relaxed",
           props.scrollableContainerClassName,
         )}
+        scrollableClassName={cn("p-4", props.scrollableClassName)}
         shadowColor={props.shadowColor || "hsl(var(--muted))"}
       >
         {props.children}
       </ScrollShadow>
 
       <Button
-        size="sm"
-        variant="outline"
-        onClick={() => {
-          onCopy();
-          props.onCopy?.(props.codeToCopy);
-        }}
         aria-label={hasCopied ? "Copied" : "Copy code to clipboard"}
-        title={hasCopied ? "Copied" : "Copy"}
         className={cn(
           "absolute top-3.5 right-3.5 h-auto bg-background p-2",
           props.copyButtonClassName,
         )}
+        onClick={() => {
+          onCopy();
+          props.onCopy?.(props.codeToCopy);
+        }}
+        size="sm"
+        title={hasCopied ? "Copied" : "Copy"}
+        variant="outline"
       >
         {hasCopied ? (
           <CheckIcon className="size-3 text-green-500" />

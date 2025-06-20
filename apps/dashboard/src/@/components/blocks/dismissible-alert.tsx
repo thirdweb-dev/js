@@ -20,9 +20,9 @@ export function DismissibleAlert(props: {
   return (
     <div className="relative rounded-lg border border-border bg-card p-4">
       <Button
-        onClick={() => setIsVisible(false)}
-        className="absolute top-4 right-4 h-auto w-auto p-1 text-muted-foreground"
         aria-label="Close alert"
+        className="absolute top-4 right-4 h-auto w-auto p-1 text-muted-foreground"
+        onClick={() => setIsVisible(false)}
         variant="ghost"
       >
         <XIcon className="size-5" />

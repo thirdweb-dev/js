@@ -1,18 +1,4 @@
 "use client";
-import { engineCloudProxy } from "@/actions/proxies";
-import type { Project } from "@/api/projects";
-import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAllChainsData } from "hooks/chains/allChains";
@@ -22,14 +8,28 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import * as z from "zod";
+import { engineCloudProxy } from "@/actions/proxies";
+import type { Project } from "@/api/projects";
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import { SmartAccountCell } from "../server-wallets/wallet-table/wallet-table-ui.client";
 import { deleteUserAccessToken, getUserAccessToken } from "./utils";
 
 const formSchema = z.object({
   accessToken: z.string().min(1, "Access token is required"),
-  walletIndex: z.string(),
   chainId: z.number(),
+  walletIndex: z.string(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -53,9 +53,9 @@ export function SendTestTransaction(props: {
     props.userAccessToken ?? getUserAccessToken(props.project.id) ?? "";
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
     defaultValues: {
       accessToken: userAccessToken,
+      chainId: 84532,
       walletIndex:
         props.wallets && props.walletId
           ? props.wallets
@@ -63,8 +63,8 @@ export function SendTestTransaction(props: {
               ?.toString()
               .replace("-1", "0")
           : "0",
-      chainId: 84532,
     },
+    resolver: zodResolver(formSchema),
   });
 
   const selectedWalletIndex = Number(form.watch("walletIndex"));
@@ -77,18 +77,10 @@ export function SendTestTransaction(props: {
       chainId: number;
     }) => {
       const response = await engineCloudProxy({
-        pathname: "/v1/write/transaction",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-team-id": props.project.teamId,
-          "x-client-id": props.project.publishableKey,
-          "x-vault-access-token": args.accessToken,
-        },
         body: JSON.stringify({
           executionOptions: {
-            from: args.walletAddress,
             chainId: args.chainId.toString(),
+            from: args.walletAddress,
           },
           params: [
             {
@@ -97,6 +89,14 @@ export function SendTestTransaction(props: {
             },
           ],
         }),
+        headers: {
+          "Content-Type": "application/json",
+          "x-client-id": props.project.publishableKey,
+          "x-team-id": props.project.teamId,
+          "x-vault-access-token": args.accessToken,
+        },
+        method: "POST",
+        pathname: "/v1/write/transaction",
       });
 
       if (!response.ok) {
@@ -106,11 +106,11 @@ export function SendTestTransaction(props: {
 
       return response.data;
     },
-    onSuccess: () => {
-      toast.success("Test transaction sent successfully!");
-    },
     onError: (error) => {
       toast.error(error.message);
+    },
+    onSuccess: () => {
+      toast.success("Test transaction sent successfully!");
     },
   });
 
@@ -123,9 +123,9 @@ export function SendTestTransaction(props: {
 
   const onSubmit = async (data: FormValues) => {
     await sendDummyTxMutation.mutateAsync({
-      walletAddress: selectedWallet.address,
       accessToken: data.accessToken,
       chainId: data.chainId,
+      walletAddress: selectedWallet.address,
     });
     queryClient.invalidateQueries({
       queryKey: ["transactions", props.project.id],
@@ -154,11 +154,11 @@ export function SendTestTransaction(props: {
               {userAccessToken ? (
                 <div className="flex flex-col gap-2 ">
                   <CopyTextButton
+                    className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
                     copyIconPosition="right"
                     textToCopy={userAccessToken}
                     textToShow={userAccessToken}
                     tooltip="Copy Vault Access Token"
-                    className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
                   />
                   <p className="text-muted-foreground text-xs">
                     This is a project-wide access token to access your server
@@ -168,12 +168,11 @@ export function SendTestTransaction(props: {
                 </div>
               ) : (
                 <Input
-                  id="access-token"
-                  type={userAccessToken ? "text" : "password"}
                   placeholder="vt_act_1234....ABCD"
+                  type={userAccessToken ? "text" : "password"}
                   {...form.register("accessToken")}
-                  disabled={isLoading}
                   className="text-xs"
+                  disabled={isLoading}
                 />
               )}
             </div>
@@ -186,15 +185,15 @@ export function SendTestTransaction(props: {
             <div className="flex flex-1 flex-col gap-2">
               <p className="text-sm">Server Wallet</p>
               <Select
-                value={form.watch("walletIndex")}
                 onValueChange={(value) => form.setValue("walletIndex", value)}
+                value={form.watch("walletIndex")}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue>
                     <div className="flex items-center gap-2">
                       <SmartAccountCell
-                        wallet={selectedWallet}
                         client={props.client}
+                        wallet={selectedWallet}
                       />
                       <span className="text-muted-foreground text-sm">
                         {selectedWallet.metadata.label}
@@ -207,8 +206,8 @@ export function SendTestTransaction(props: {
                     <SelectItem key={wallet.address} value={index.toString()}>
                       <div className="flex items-center gap-2">
                         <SmartAccountCell
-                          wallet={wallet}
                           client={props.client}
+                          wallet={wallet}
                         />
                         <span className="text-muted-foreground text-sm">
                           {wallet.metadata.label}
@@ -222,7 +221,7 @@ export function SendTestTransaction(props: {
             <div className="flex flex-1 flex-col gap-2">
               <p className="text-sm">Select Testnet</p>
               <SingleNetworkSelector
-                className="bg-background"
+                chainId={form.watch("chainId")}
                 chainIds={chainsQuery.allChains
                   .filter(
                     (chain) =>
@@ -230,8 +229,8 @@ export function SendTestTransaction(props: {
                       chain.stackType !== "zksync_stack",
                   )
                   .map((chain) => chain.chainId)}
+                className="bg-background"
                 client={props.client}
-                chainId={form.watch("chainId")}
                 onChange={(chainId) => {
                   form.setValue("chainId", chainId);
                 }}
@@ -242,23 +241,24 @@ export function SendTestTransaction(props: {
         <div className="h-6" />
         <div className="flex flex-col gap-2 md:flex-row md:justify-end md:gap-2">
           <Button
+            className="w-full min-w-[200px] md:w-auto"
+            disabled={isLoading || !form.formState.isValid}
             type="submit"
             variant={hasSentTx ? "secondary" : "primary"}
-            disabled={isLoading || !form.formState.isValid}
-            className="w-full min-w-[200px] md:w-auto"
           >
             {isLoading ? (
               <>
                 <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                 Sending...
               </>
+            ) : hasSentTx ? (
+              "Send More Transactions"
             ) : (
-              <>{hasSentTx ? "Send More Transactions" : "Send Transaction"}</>
+              "Send Transaction"
             )}
           </Button>
           {hasSentTx && (
             <Button
-              variant="primary"
               className="w-full md:w-auto"
               onClick={() => {
                 if (props.walletId) {
@@ -271,6 +271,7 @@ export function SendTestTransaction(props: {
                 // clear token from local storage after FTUX is complete
                 deleteUserAccessToken(props.project.id);
               }}
+              variant="primary"
             >
               {props.walletId ? "Close" : "Complete Setup"}
             </Button>

@@ -33,9 +33,9 @@ export default async function Page() {
 
       <div className="container max-w-[950px] py-8">
         <LinkWallet
-          wallets={wallets || []}
           accountEmail={account.email || ""}
           client={client}
+          wallets={wallets || []}
         />
       </div>
     </div>

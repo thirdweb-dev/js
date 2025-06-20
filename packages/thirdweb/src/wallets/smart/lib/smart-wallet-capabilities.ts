@@ -3,9 +3,7 @@ import type { Wallet } from "../../interfaces/wallet.js";
 /**
  * @internal
  */
-export function smartWalletGetCapabilities(args: {
-  wallet: Wallet;
-}) {
+export function smartWalletGetCapabilities(args: { wallet: Wallet }) {
   const { wallet } = args;
 
   const chain = wallet.getChain();
@@ -20,14 +18,14 @@ export function smartWalletGetCapabilities(args: {
   const config = wallet.getConfig() ?? {};
   return {
     [chain.id]: {
-      paymasterService: {
-        supported: "sponsorGas" in config ? config.sponsorGas : false,
-      },
       atomic: {
         status:
           account?.sendBatchTransaction !== undefined
             ? "supported"
             : "unsupported",
+      },
+      paymasterService: {
+        supported: "sponsorGas" in config ? config.sponsorGas : false,
       },
     },
   };

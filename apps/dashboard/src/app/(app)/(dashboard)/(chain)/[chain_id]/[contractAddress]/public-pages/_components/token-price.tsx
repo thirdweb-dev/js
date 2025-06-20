@@ -11,7 +11,6 @@ export function TokenPrice(props: {
 }) {
   return (
     <SkeletonContainer
-      skeletonData={"0.00 ETH"}
       loadedData={
         props.data
           ? props.data.priceInTokens === 0
@@ -29,11 +28,12 @@ export function TokenPrice(props: {
         }
         return <span className="font-medium text-foreground text-sm">{v}</span>;
       }}
+      skeletonData={"0.00 ETH"}
     />
   );
 }
 
 const tokenPriceFormatter = new Intl.NumberFormat("en-US", {
-  notation: "compact",
   maximumFractionDigits: 10,
+  notation: "compact",
 });

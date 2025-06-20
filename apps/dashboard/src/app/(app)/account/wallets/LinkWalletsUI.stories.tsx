@@ -1,4 +1,3 @@
-import type { LinkedWallet } from "@/api/linked-wallets";
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import {
   BadgeContainer,
@@ -6,16 +5,17 @@ import {
   storybookThirdwebClient,
 } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
+import type { LinkedWallet } from "@/api/linked-wallets";
 import { LinkWalletUI } from "./LinkWalletUI";
 
 const meta = {
-  title: "Account/Pages/Link Wallets",
   component: Variants,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Account/Pages/Link Wallets",
 } satisfies Meta<typeof Variants>;
 
 export default meta;
@@ -49,21 +49,21 @@ const unlinkWalletFailureStub = async (walletId: string) => {
 
 const accountWalletsStub: LinkedWallet[] = [
   {
-    walletAddress: "0x51696930092b42243dee1077c8dd237074fb28d4", // jns.eth
-    createdAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(), // jns.eth
     id: "1",
+    walletAddress: "0x51696930092b42243dee1077c8dd237074fb28d4",
   },
   {
-    walletAddress: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37", // no ens
     createdAt: new Date(
       Date.now() - 1000 * 60 * 60 * 24 * 365 * 2,
-    ).toISOString(),
+    ).toISOString(), // no ens
     id: "2",
+    walletAddress: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
   },
   {
-    walletAddress: "0xd8da6bf26964af9d7eed9e03e53415d37aa96045", // vitalik.eth
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(),
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(), // vitalik.eth
     id: "3",
+    walletAddress: "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
   },
 ];
 
@@ -74,27 +74,27 @@ function Variants() {
         <BadgeContainer label="Unlink wallet success">
           <LinkWalletUI
             accountEmail="team@example.com"
+            client={storybookThirdwebClient}
             unlinkWallet={unlinkWalletSuccessStub}
             wallets={accountWalletsStub}
-            client={storybookThirdwebClient}
           />
         </BadgeContainer>
 
         <BadgeContainer label="Unlink wallet failure">
           <LinkWalletUI
             accountEmail="team@example.com"
+            client={storybookThirdwebClient}
             unlinkWallet={unlinkWalletFailureStub}
             wallets={accountWalletsStub}
-            client={storybookThirdwebClient}
           />
         </BadgeContainer>
 
         <BadgeContainer label="0 wallets">
           <LinkWalletUI
-            wallets={[]}
-            unlinkWallet={unlinkWalletSuccessStub}
             accountEmail="team@example.com"
             client={storybookThirdwebClient}
+            unlinkWallet={unlinkWalletSuccessStub}
+            wallets={[]}
           />
         </BadgeContainer>
       </div>

@@ -52,13 +52,11 @@ export function createWalletAdapter(
   const emitter = createWalletEmitter<"adapter">();
   let _chain = options.chain;
   return {
-    id: "adapter",
-    subscribe: emitter.subscribe,
-    connect: async () => {
+    autoConnect: async () => {
       emitter.emit("onConnect", options);
       return options.adaptedAccount;
     },
-    autoConnect: async () => {
+    connect: async () => {
       emitter.emit("onConnect", options);
       return options.adaptedAccount;
     },
@@ -77,6 +75,8 @@ export function createWalletAdapter(
     getConfig() {
       return options;
     },
+    id: "adapter",
+    subscribe: emitter.subscribe,
     switchChain: async (chain) => {
       await options.switchChain(chain);
       _chain = chain;

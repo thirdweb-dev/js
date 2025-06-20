@@ -7,17 +7,17 @@ import { resolveName } from "./resolve-name.js";
 describe.runIf(process.env.TW_SECRET_KEY)("ENS:resolve-name", () => {
   it("should resolve ENS", async () => {
     const ens = await resolveName({
-      client: TEST_CLIENT,
       // vitalik.eth
       address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+      client: TEST_CLIENT,
     });
     expect(ens).toBe("vitalik.eth");
   });
 
   it("should return null if no ENS exists for the address", async () => {
     const ens = await resolveName({
-      client: TEST_CLIENT,
       address: "0xc6248746A9CA5935ae722E2061347A5897548c03",
+      client: TEST_CLIENT,
     });
     expect(ens).toBeNull();
   });

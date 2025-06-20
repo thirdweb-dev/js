@@ -6,10 +6,10 @@ import { radius, spacing } from "../../../../core/design-system/index.js";
 import { useBridgeQuote } from "../../../../core/hooks/useBridgeQuote.js";
 import type { PaymentMethod } from "../../../../core/machines/paymentMachine.js";
 import { formatTokenAmount } from "../../ConnectWallet/screens/formatTokenBalance.js";
-import { Skeleton } from "../../components/Skeleton.js";
-import { Spacer } from "../../components/Spacer.js";
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
+import { Skeleton } from "../../components/Skeleton.js";
+import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
 import { TokenAndChain } from "../common/TokenAndChain.js";
 
@@ -47,10 +47,10 @@ function PaymentMethodTokenRow({
     isLoading: quoteLoading,
     error: quoteError,
   } = useBridgeQuote({
-    originToken: paymentMethod.originToken,
-    destinationToken,
-    destinationAmount,
     client,
+    destinationAmount,
+    destinationToken,
+    originToken: paymentMethod.originToken,
   });
 
   // Use the fetched originAmount if available, otherwise fall back to the one from paymentMethod
@@ -61,56 +61,56 @@ function PaymentMethodTokenRow({
 
   return (
     <Button
-      key={`${paymentMethod.originToken.address}-${paymentMethod.originToken.chainId}`}
-      variant="secondary"
-      fullWidth
-      onClick={() => onPaymentMethodSelected(paymentMethod)}
       disabled={!hasEnoughBalance}
+      fullWidth
+      key={`${paymentMethod.originToken.address}-${paymentMethod.originToken.chainId}`}
+      onClick={() => onPaymentMethodSelected(paymentMethod)}
       style={{
+        backgroundColor: theme.colors.tertiaryBg,
         border: `1px solid ${theme.colors.borderColor}`,
         borderRadius: radius.md,
-        padding: `${spacing.sm} ${spacing.md}`,
-        backgroundColor: theme.colors.tertiaryBg,
         opacity: hasEnoughBalance ? 1 : 0.5,
+        padding: `${spacing.sm} ${spacing.md}`,
         textAlign: "left",
       }}
+      variant="secondary"
     >
       <Container
         flex="row"
         gap="md"
-        style={{ width: "100%", alignItems: "center" }}
+        style={{ alignItems: "center", width: "100%" }}
       >
         <TokenAndChain
-          token={paymentMethod.originToken}
           client={client}
           size="lg"
           style={{
             maxWidth: "50%",
           }}
+          token={paymentMethod.originToken}
         />
         <Container
           flex="column"
           gap="3xs"
-          style={{ flex: 1, alignItems: "flex-end" }}
+          style={{ alignItems: "flex-end", flex: 1 }}
         >
           {quoteLoading ? (
             <>
               {/* Price amount skeleton */}
-              <Skeleton width="80px" height="16px" />
+              <Skeleton height="16px" width="80px" />
               {/* Balance skeleton */}
               <Container flex="row" gap="3xs">
-                <Skeleton width="50px" height="12px" />
-                <Skeleton width="40px" height="12px" />
+                <Skeleton height="12px" width="50px" />
+                <Skeleton height="12px" width="40px" />
               </Container>
             </>
           ) : quoteError ? (
-            <Text size="sm" color="danger" style={{ fontWeight: 600 }}>
+            <Text color="danger" size="sm" style={{ fontWeight: 600 }}>
               Quote failed
             </Text>
           ) : displayOriginAmount ? (
             <Text
-              size="sm"
               color="primaryText"
+              size="sm"
               style={{ fontWeight: 600, textWrap: "nowrap" }}
             >
               {formatTokenAmount(
@@ -124,11 +124,10 @@ function PaymentMethodTokenRow({
           )}
           {!quoteLoading && (
             <Container flex="row" gap="3xs">
-              <Text size="xs" color="secondaryText">
+              <Text color="secondaryText" size="xs">
                 Balance:{" "}
               </Text>
               <Text
-                size="xs"
                 color={
                   !quoteLoading
                     ? hasEnoughBalance
@@ -136,6 +135,7 @@ function PaymentMethodTokenRow({
                       : "danger"
                     : "secondaryText"
                 }
+                size="xs"
               >
                 {formatTokenAmount(
                   paymentMethod.balance,
@@ -164,7 +164,7 @@ export function TokenSelection({
   if (paymentMethodsLoading) {
     return (
       <>
-        <Text size="md" color="primaryText">
+        <Text color="primaryText" size="md">
           Loading your tokens
         </Text>
         <Spacer y="sm" />
@@ -174,38 +174,38 @@ export function TokenSelection({
             <Container
               key={i}
               style={{
+                backgroundColor: theme.colors.tertiaryBg,
                 border: `1px solid ${theme.colors.borderColor}`,
                 borderRadius: radius.md,
                 padding: `${spacing.sm} ${spacing.md}`,
-                backgroundColor: theme.colors.tertiaryBg,
               }}
             >
               <Container
                 flex="row"
                 gap="md"
-                style={{ width: "100%", alignItems: "center" }}
+                style={{ alignItems: "center", width: "100%" }}
               >
                 {/* Left side: Token icon and name skeleton */}
                 <Container
+                  center="y"
                   flex="row"
                   gap="sm"
-                  center="y"
                   style={{ maxWidth: "50%" }}
                 >
                   {/* Token icon skeleton */}
                   <div
                     style={{
-                      width: "32px",
-                      height: "32px",
                       backgroundColor: theme.colors.skeletonBg,
                       borderRadius: "50%",
+                      height: "32px",
+                      width: "32px",
                     }}
                   />
                   <Container flex="column" gap="3xs">
                     {/* Token name skeleton */}
-                    <Skeleton width="60px" height="14px" />
+                    <Skeleton height="14px" width="60px" />
                     {/* Chain name skeleton */}
-                    <Skeleton width="40px" height="12px" />
+                    <Skeleton height="12px" width="40px" />
                   </Container>
                 </Container>
 
@@ -213,14 +213,14 @@ export function TokenSelection({
                 <Container
                   flex="column"
                   gap="3xs"
-                  style={{ flex: 1, alignItems: "flex-end" }}
+                  style={{ alignItems: "flex-end", flex: 1 }}
                 >
                   {/* Price amount skeleton */}
-                  <Skeleton width="80px" height="16px" />
+                  <Skeleton height="16px" width="80px" />
                   {/* Balance skeleton */}
                   <Container flex="row" gap="3xs">
-                    <Skeleton width="50px" height="12px" />
-                    <Skeleton width="40px" height="12px" />
+                    <Skeleton height="12px" width="50px" />
+                    <Skeleton height="12px" width="40px" />
                   </Container>
                 </Container>
               </Container>
@@ -233,16 +233,16 @@ export function TokenSelection({
 
   if (paymentMethods.length === 0) {
     return (
-      <Container flex="column" center="both" style={{ minHeight: "250px" }}>
-        <Text size="md" color="primaryText" center>
+      <Container center="both" flex="column" style={{ minHeight: "250px" }}>
+        <Text center color="primaryText" size="md">
           No available tokens found for this wallet
         </Text>
         <Spacer y="sm" />
-        <Text size="sm" color="secondaryText" center>
+        <Text center color="secondaryText" size="sm">
           Try connecting a different wallet or pay with card
         </Text>
         <Spacer y="lg" />
-        <Button variant="primary" onClick={onBack}>
+        <Button onClick={onBack} variant="primary">
           Select another payment method
         </Button>
       </Container>
@@ -251,7 +251,7 @@ export function TokenSelection({
 
   return (
     <>
-      <Text size="md" color="primaryText">
+      <Text color="primaryText" size="md">
         Select payment token
       </Text>
       <Spacer y="sm" />
@@ -268,12 +268,12 @@ export function TokenSelection({
           .filter((method) => method.type === "wallet")
           .map((method) => (
             <PaymentMethodTokenRow
-              key={`${method.originToken.address}-${method.originToken.chainId}`}
-              paymentMethod={method}
-              destinationToken={destinationToken}
-              destinationAmount={destinationAmount}
               client={client}
+              destinationAmount={destinationAmount}
+              destinationToken={destinationToken}
+              key={`${method.originToken.address}-${method.originToken.chainId}`}
               onPaymentMethodSelected={onPaymentMethodSelected}
+              paymentMethod={method}
             />
           ))}
       </Container>

@@ -1,8 +1,9 @@
 /* eslint-disable no-restricted-syntax */
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+
 import { PercentIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 type InputProps = React.ComponentProps<typeof Input>;
 
@@ -51,7 +52,7 @@ export const BasisPointsInput: React.FC<BasisPointsInputProps> = ({
           "rounded-r-none border-none focus-visible:ring-0 focus-visible:ring-offset-0",
           restInputProps.className,
         )}
-        onChange={(e) => setStringValue(e.target.value)}
+        maxLength={5}
         onBlur={(e) => {
           const val = e.target.value;
           const validValue = val.match(
@@ -63,7 +64,7 @@ export const BasisPointsInput: React.FC<BasisPointsInputProps> = ({
             setStringValue("0.00");
           }
         }}
-        maxLength={5}
+        onChange={(e) => setStringValue(e.target.value)}
       />
       <div className="flex items-center justify-center border-border border-l bg-card px-3 font-medium">
         <PercentIcon className="size-4" />

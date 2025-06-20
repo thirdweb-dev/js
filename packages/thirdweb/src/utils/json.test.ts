@@ -5,22 +5,22 @@ import { stringify } from "./json.js";
 it("default", () => {
   expect(
     stringify({
-      foo: "bar",
       baz: {
         value: 69n,
       },
+      foo: "bar",
     }),
-  ).toEqual('{"foo":"bar","baz":{"value":"69"}}');
+  ).toMatchInlineSnapshot(`"{"baz":{"value":"69"},"foo":"bar"}"`);
 });
 
 it("args: replacer", () => {
   expect(
     stringify(
       {
-        foo: "bar",
         baz: {
           value: 69n,
         },
+        foo: "bar",
       },
       (key, value) => {
         if (key === "value") {
@@ -29,27 +29,27 @@ it("args: replacer", () => {
         return value;
       },
     ),
-  ).toEqual('{"foo":"bar","baz":{"value":"69!"}}');
+  ).toMatchInlineSnapshot(`"{"baz":{"value":"69!"},"foo":"bar"}"`);
 });
 
 it("args: space", () => {
   expect(
     stringify(
       {
-        foo: "bar",
         baz: {
           value: 69n,
         },
+        foo: "bar",
       },
       null,
       2,
     ),
   ).toMatchInlineSnapshot(`
     "{
-      "foo": "bar",
       "baz": {
         "value": "69"
-      }
+      },
+      "foo": "bar"
     }"
   `);
 });

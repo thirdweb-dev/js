@@ -1,5 +1,5 @@
-import { apiServerProxy } from "@/actions/proxies";
 import { useQuery } from "@tanstack/react-query";
+import { apiServerProxy } from "@/actions/proxies";
 import type { Ecosystem } from "../../../types";
 
 export function useEcosystem({
@@ -16,11 +16,11 @@ export function useEcosystem({
   initialData?: Ecosystem;
 }) {
   return useQuery({
-    queryKey: ["ecosystems", teamIdOrSlug, slug],
+    initialData,
     queryFn: async () => {
       const res = await apiServerProxy({
-        pathname: `/v1/teams/${teamIdOrSlug}/ecosystem-wallet/${slug}`,
         method: "GET",
+        pathname: `/v1/teams/${teamIdOrSlug}/ecosystem-wallet/${slug}`,
       });
 
       if (!res.ok) {
@@ -30,9 +30,9 @@ export function useEcosystem({
       const data = res.data as { result: Ecosystem };
       return data.result;
     },
-    retry: false,
+    queryKey: ["ecosystems", teamIdOrSlug, slug],
     refetchInterval,
     refetchOnWindowFocus,
-    initialData,
+    retry: false,
   });
 }

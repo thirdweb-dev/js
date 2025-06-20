@@ -85,8 +85,8 @@ export async function getClaimPhasesInLegacyFormat(
           value: condition.pricePerToken,
         })),
         download({
-          uri: condition.metadata,
           client: options.contract.client,
+          uri: condition.metadata,
         }).then((r) => r.json()),
         getContractMetadata(options),
       ]);
@@ -97,16 +97,7 @@ export async function getClaimPhasesInLegacyFormat(
       );
       return {
         ...condition,
-        startTime: new Date(Number(condition.startTimestamp * 1000n)),
         currencyAddress: condition.currency,
-        price: condition.pricePerToken,
-        maxClaimableSupply:
-          options.type === "erc20"
-            ? convertERC20ValueToDisplayValue(
-                condition.maxClaimableSupply,
-                options.decimals,
-              )
-            : toUnlimited(condition.maxClaimableSupply),
         currencyMetadata,
         currentMintSupply: (
           condition.maxClaimableSupply - condition.supplyClaimed
@@ -118,9 +109,18 @@ export async function getClaimPhasesInLegacyFormat(
                 options.decimals,
               )
             : toUnlimited(condition.quantityLimitPerWallet),
+        maxClaimableSupply:
+          options.type === "erc20"
+            ? convertERC20ValueToDisplayValue(
+                condition.maxClaimableSupply,
+                options.decimals,
+              )
+            : toUnlimited(condition.maxClaimableSupply),
         merkleRootHash: condition.merkleRoot,
         metadata,
+        price: condition.pricePerToken,
         snapshot,
+        startTime: new Date(Number(condition.startTimestamp * 1000n)),
       } satisfies CombinedClaimCondition;
     }),
   );
@@ -134,14 +134,7 @@ export function setClaimPhasesTx(
 ) {
   const phases = rawPhases.map((phase) => {
     return {
-      startTime: toDate(phase.startTime),
-      maxClaimableSupply:
-        baseOptions.type === "erc20"
-          ? convertERC20ValueToWei(
-              phase.maxClaimableSupply,
-              baseOptions.decimals,
-            )
-          : toBigInt(phase.maxClaimableSupply),
+      currencyAddress: phase.currencyAddress,
       maxClaimablePerWallet:
         baseOptions.type === "erc20"
           ? convertERC20ValueToWei(
@@ -149,13 +142,20 @@ export function setClaimPhasesTx(
               baseOptions.decimals,
             )
           : toBigInt(phase.maxClaimablePerWallet),
+      maxClaimableSupply:
+        baseOptions.type === "erc20"
+          ? convertERC20ValueToWei(
+              phase.maxClaimableSupply,
+              baseOptions.decimals,
+            )
+          : toBigInt(phase.maxClaimableSupply),
       merkleRootHash: phase.merkleRootHash as string | undefined,
+      metadata: phase.metadata,
       overrideList: phase.snapshot?.length
         ? snapshotToOverrides(phase.snapshot)
         : undefined,
       price: phase.price?.toString(),
-      currencyAddress: phase.currencyAddress,
-      metadata: phase.metadata,
+      startTime: toDate(phase.startTime),
     } satisfies ERC20Ext.SetClaimConditionsParams["phases"][0];
   });
 
@@ -174,8 +174,8 @@ export function setClaimPhasesTx(
       return ERC1155Ext.setClaimConditions({
         contract: baseOptions.contract,
         phases,
-        tokenId: baseOptions.tokenId,
         singlePhaseDrop: baseOptions.isSinglePhase,
+        tokenId: baseOptions.tokenId,
       });
   }
 }
@@ -194,9 +194,9 @@ function snapshotToOverrides(snapshot: PhaseInput["snapshot"]) {
     }
     return {
       address: entry.address,
+      currencyAddress: entry.currencyAddress,
       maxClaimable: entry.maxClaimable?.toString(),
       price: entry.price?.toString(),
-      currencyAddress: entry.currencyAddress,
     } satisfies OverrideEntry;
   });
 }
@@ -275,13 +275,13 @@ async function fetchSnapshot(
     const snapshotUri = merkleMetadata[merkleRoot];
     if (snapshotUri) {
       const raw = await download({
-        uri: snapshotUri,
         client: client,
+        uri: snapshotUri,
       }).then((r) => r.json());
       if (raw.isShardedMerkleTree && raw.merkleRoot === merkleRoot) {
         return download({
-          uri: raw.originalEntriesUri,
           client: client,
+          uri: raw.originalEntriesUri,
         })
           .then((r) => r.json())
           .catch(() => null);
@@ -295,9 +295,9 @@ async function fetchSnapshot(
             currencyAddress: string;
           }) => ({
             address: claim.address,
+            currencyAddress: claim.currencyAddress,
             maxClaimable: claim.maxClaimable,
             price: claim.price,
-            currencyAddress: claim.currencyAddress,
           }),
         );
       }

@@ -39,19 +39,19 @@ export async function checkModulesCompatibility(options: {
     _coreBytecode = `0x${_coreBytecode.substring(index)}`;
   }
   const rpcClient = getRpcClient({
-    client: options.client,
     chain: options.chain,
+    client: options.client,
   });
 
   // get the core's supported callback functions
   const coreCallResult = await eth_call(rpcClient, {
     data: getSupportedCallbackFunctionsSelector,
-    to: addr,
     stateOverrides: {
       [addr]: {
         code: _coreBytecode,
       },
     },
+    to: addr,
   });
 
   const decodedCallResult =
@@ -73,12 +73,12 @@ export async function checkModulesCompatibility(options: {
 
       const callResult = await eth_call(rpcClient, {
         data: getModuleConfigSelector,
-        to: addr,
         stateOverrides: {
           [addr]: {
             code: moduleBytecode,
           },
         },
+        to: addr,
       });
       return decodeGetModuleConfigResult(callResult);
     }),
@@ -102,12 +102,12 @@ export async function checkModulesCompatibility(options: {
           data: encodeSupportsInterface({
             interfaceId: r,
           }),
-          to: addr,
           stateOverrides: {
             [addr]: {
               code: _coreBytecode,
             },
           },
+          to: addr,
         });
         return decodeSupportsInterfaceResult(callResult);
       }),

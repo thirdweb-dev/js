@@ -3,14 +3,14 @@ import { ConnectButton } from "../../react/web/ui/ConnectWallet/ConnectButton.js
 import { storyClient } from "../utils.js";
 
 const meta = {
-  title: "Connect/ConnectButton/themes",
+  args: {
+    client: storyClient,
+  },
   component: ConnectButton,
   parameters: {
     layout: "centered",
   },
-  args: {
-    client: storyClient,
-  },
+  title: "Connect/ConnectButton/themes",
 } satisfies Meta<typeof ConnectButton>;
 
 type Story = StoryObj<typeof meta>;

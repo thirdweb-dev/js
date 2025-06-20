@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.unagi.unawallet",
-  name: "una Wallet",
-  homepage: "https://unawallet.unagi.io",
-  image_id: "78118aa8-8dfc-4742-86f7-b51d34e7cf00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/una-wallet/id6456397239",
     android: "https://play.google.com/store/apps/details?id=app.unawallet.app",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/una-wallet/id6456397239",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "unaWallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://unawallet.unagi.io",
+  id: "io.unagi.unawallet",
+  image_id: "78118aa8-8dfc-4742-86f7-b51d34e7cf00",
+  mobile: {
+    native: "unaWallet://",
+    universal: null,
+  },
+  name: "una Wallet",
+  rdns: null,
 } as const;

@@ -1,3 +1,5 @@
+import { PlusIcon, RotateCcwIcon, Trash2Icon } from "lucide-react";
+import { type UseFormReturn, useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
@@ -6,8 +8,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PlusIcon, RotateCcwIcon, Trash2Icon } from "lucide-react";
-import { type UseFormReturn, useFieldArray } from "react-hook-form";
 
 type PropertiesFormValues = {
   attributes?: {
@@ -63,9 +63,9 @@ export function PropertiesFormControl<T extends PropertiesFormValues>(props: {
               />
 
               <Button
-                variant="outline"
                 className="!text-destructive-text bg-background"
                 onClick={() => remove(index)}
+                variant="outline"
               >
                 <Trash2Icon className="size-4" />
               </Button>
@@ -76,10 +76,10 @@ export function PropertiesFormControl<T extends PropertiesFormValues>(props: {
 
       <div className="flex flex-row gap-3">
         <Button
-          size="sm"
-          variant="outline"
           className="flex items-center gap-2"
           onClick={() => append({ trait_type: "", value: "" })}
+          size="sm"
+          variant="outline"
         >
           <PlusIcon className="size-4" />
           Add Attribute
@@ -88,9 +88,9 @@ export function PropertiesFormControl<T extends PropertiesFormValues>(props: {
         {fields.length > 0 && (
           <Button
             className="flex items-center gap-2"
-            variant="outline"
-            size="sm"
             onClick={() => form.setValue("attributes", [])}
+            size="sm"
+            variant="outline"
           >
             Reset
             <RotateCcwIcon className="size-4" />

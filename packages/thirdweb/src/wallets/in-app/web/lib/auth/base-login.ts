@@ -14,8 +14,8 @@ export class BaseLogin extends AbstractLogin<
 > {
   async authenticateWithModal(): Promise<AuthAndWalletRpcReturnType> {
     return this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
-      procedureName: "loginWithThirdwebModal",
       params: undefined,
+      procedureName: "loginWithThirdwebModal",
       showIframe: true,
     });
   }
@@ -35,8 +35,8 @@ export class BaseLogin extends AbstractLogin<
     email: string;
   }): Promise<AuthAndWalletRpcReturnType> {
     return this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
-      procedureName: "loginWithThirdwebModal",
       params: { email },
+      procedureName: "loginWithThirdwebModal",
       showIframe: true,
     });
   }
@@ -63,8 +63,8 @@ export class BaseLogin extends AbstractLogin<
     }
 
     return this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
-      procedureName: "loginWithCustomJwt",
       params: { encryptionKey, jwt },
+      procedureName: "loginWithCustomJwt",
     });
   }
 
@@ -89,8 +89,8 @@ export class BaseLogin extends AbstractLogin<
     payload,
   }: LoginQuerierTypes["loginWithCustomAuthEndpoint"]): Promise<AuthAndWalletRpcReturnType> {
     return this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
-      procedureName: "loginWithCustomAuthEndpoint",
       params: { encryptionKey, payload },
+      procedureName: "loginWithCustomAuthEndpoint",
     });
   }
 
@@ -119,8 +119,8 @@ export class BaseLogin extends AbstractLogin<
     recoveryCode,
   }: LoginQuerierTypes["verifyThirdwebEmailLoginOtp"]): Promise<AuthAndWalletRpcReturnType> {
     return this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
-      procedureName: "verifyThirdwebEmailLoginOtp",
       params: { email, otp, recoveryCode },
+      procedureName: "verifyThirdwebEmailLoginOtp",
     });
   }
 
@@ -146,8 +146,8 @@ export class BaseLogin extends AbstractLogin<
     recoveryCode,
   }: LoginQuerierTypes["verifyThirdwebSmsLoginOtp"]): Promise<AuthAndWalletRpcReturnType> {
     return this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
+      params: { otp, phoneNumber, recoveryCode },
       procedureName: "verifyThirdwebSmsLoginOtp",
-      params: { phoneNumber, otp, recoveryCode },
     });
   }
 
@@ -160,8 +160,8 @@ export class BaseLogin extends AbstractLogin<
     recoveryCode,
   }: LoginQuerierTypes["verifyThirdwebSmsLoginOtp"]): Promise<AuthLoginReturnType> {
     const result = await this.authenticateWithSmsOtp({
-      phoneNumber,
       otp,
+      phoneNumber,
       recoveryCode,
     });
     return this.postLogin(result);

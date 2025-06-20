@@ -1,9 +1,9 @@
 "use client";
 
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import type { fetchPublishedContracts } from "components/contract-components/fetchPublishedContracts";
 import { ShowMoreButton } from "components/contract-components/tables/show-more-button";
 import { useState } from "react";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { PublishedContractTable } from "./PublishedContractTable";
 
 interface PublishedContractsProps {
@@ -25,16 +25,16 @@ export const PublishedContracts: React.FC<PublishedContractsProps> = ({
     <PublishedContractTable
       client={client}
       contractDetails={slicedData}
-      publisherEnsName={publisherEnsName}
       footer={
         publishedContracts.length > slicedData.length ? (
           <ShowMoreButton
             limit={limit}
-            showMoreLimit={showMoreLimit}
             setShowMoreLimit={setShowMoreLimit}
+            showMoreLimit={showMoreLimit}
           />
         ) : undefined
       }
+      publisherEnsName={publisherEnsName}
     />
   );
 };

@@ -8,41 +8,41 @@ import {
   TEST_ACCOUNT_C,
 } from "../../../../test/src/test-wallets.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { balanceOf } from "../../erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { getNFTs } from "../../erc1155/read/getNFTs.js";
 import { getOwnedNFTs } from "../../erc1155/read/getOwnedNFTs.js";
 import { deployModularContract } from "../../prebuilts/deploy-modular.js";
-import * as BatchMetadataERC1155 from "../BatchMetadataERC1155/index.js";
 import { getInstalledModules } from "../__generated__/IModularCore/read/getInstalledModules.js";
+import * as BatchMetadataERC1155 from "../BatchMetadataERC1155/index.js";
 import * as ClaimableERC1155 from "./index.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("ModularClaimableERC1155", () => {
   let contract: ThirdwebContract;
   beforeAll(async () => {
     const address = await deployModularContract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       core: "ERC1155",
-      params: {
-        name: "TestDropERC1155",
-        contractURI: TEST_CONTRACT_URI,
-      },
       modules: [
         ClaimableERC1155.module({
           primarySaleRecipient: TEST_ACCOUNT_A.address,
         }),
         BatchMetadataERC1155.module(),
       ],
+      params: {
+        contractURI: TEST_CONTRACT_URI,
+        name: "TestDropERC1155",
+      },
     });
     contract = getContract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       address,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
   }, 120000);
 
@@ -62,8 +62,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularClaimableERC1155", () => {
     });
 
     await sendAndConfirmTransaction({
-      transaction,
       account: TEST_ACCOUNT_A,
+      transaction,
     });
   });
 
@@ -71,62 +71,62 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularClaimableERC1155", () => {
     // should throw
     await expect(
       sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
         transaction: ClaimableERC1155.mint({
           contract,
-          tokenId: 123123123213n,
           quantity: 1,
           to: TEST_ACCOUNT_A.address,
+          tokenId: 123123123213n,
         }),
-        account: TEST_ACCOUNT_A,
       }),
     ).rejects.toThrowError(/ClaimableOutOfTimeWindow/);
   });
 
   it("should claim tokens with claim conditions", async () => {
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: ClaimableERC1155.setClaimCondition({
         contract,
-        tokenId: 0n,
         maxClaimableSupply: "1",
         pricePerToken: "0.1",
+        tokenId: 0n,
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     // should throw if claiming more than supply
     await expect(
       sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
         transaction: ClaimableERC1155.mint({
           contract,
-          tokenId: 0n,
           quantity: 1000,
           to: TEST_ACCOUNT_A.address,
+          tokenId: 0n,
         }),
-        account: TEST_ACCOUNT_A,
       }),
     ).rejects.toThrowError(/ClaimableOutOfSupply/);
 
     let balance = await balanceOf({
-      owner: TEST_ACCOUNT_A.address,
       contract,
+      owner: TEST_ACCOUNT_A.address,
       tokenId: 0n,
     });
 
     expect(balance).toBe(0n);
 
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: ClaimableERC1155.mint({
         contract,
-        tokenId: 0n,
         quantity: 1,
         to: TEST_ACCOUNT_A.address,
+        tokenId: 0n,
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     balance = await balanceOf({
-      owner: TEST_ACCOUNT_A.address,
       contract,
+      owner: TEST_ACCOUNT_A.address,
       tokenId: 0n,
     });
     expect(balance).toBe(1n);
@@ -147,56 +147,56 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularClaimableERC1155", () => {
 
   it("should claim tokens with allowlist", async () => {
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: ClaimableERC1155.setClaimCondition({
+        allowList: [TEST_ACCOUNT_A.address, TEST_ACCOUNT_B.address],
         contract,
-        tokenId: 0n,
         maxClaimableSupply: "2",
         pricePerToken: "0.1",
-        allowList: [TEST_ACCOUNT_A.address, TEST_ACCOUNT_B.address],
+        tokenId: 0n,
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     // should throw if not in allowlist
     await expect(
       sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_C,
         transaction: ClaimableERC1155.mint({
           contract,
-          tokenId: 0n,
           quantity: 1,
           to: TEST_ACCOUNT_C.address,
+          tokenId: 0n,
         }),
-        account: TEST_ACCOUNT_C,
       }),
     ).rejects.toThrowError(/ClaimableNotInAllowlist/);
 
     // should throw if in allowlist but over supply
     await expect(
       sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_C,
         transaction: ClaimableERC1155.mint({
           contract,
-          tokenId: 0n,
           quantity: 3,
           to: TEST_ACCOUNT_C.address,
+          tokenId: 0n,
         }),
-        account: TEST_ACCOUNT_C,
       }),
     ).rejects.toThrowError(/ClaimableOutOfSupply/);
 
     // can claim to address in allowlist (regardless of sender)
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_C,
       transaction: ClaimableERC1155.mint({
         contract,
-        tokenId: 0n,
         quantity: 2,
         to: TEST_ACCOUNT_B.address,
+        tokenId: 0n,
       }),
-      account: TEST_ACCOUNT_C,
     });
 
     const balance = await balanceOf({
-      owner: TEST_ACCOUNT_B.address,
       contract,
+      owner: TEST_ACCOUNT_B.address,
       tokenId: 0n,
     });
     expect(balance).toBe(2n);
@@ -204,18 +204,18 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularClaimableERC1155", () => {
 
   it("should claim tokens with max per wallet", async () => {
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: ClaimableERC1155.setClaimCondition({
         contract,
-        tokenId: 0n,
-        maxClaimableSupply: 10,
         maxClaimablePerWallet: 1,
+        maxClaimableSupply: 10,
+        tokenId: 0n,
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     let balance = await balanceOf({
-      owner: TEST_ACCOUNT_C.address,
       contract,
+      owner: TEST_ACCOUNT_C.address,
       tokenId: 0n,
     });
     expect(balance).toBe(0n);
@@ -223,29 +223,29 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularClaimableERC1155", () => {
     // should throw if max per wallet is reached
     await expect(
       sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_C,
         transaction: ClaimableERC1155.mint({
           contract,
-          tokenId: 0n,
           quantity: 4,
           to: TEST_ACCOUNT_C.address,
+          tokenId: 0n,
         }),
-        account: TEST_ACCOUNT_C,
       }),
     ).rejects.toThrowError(/ClaimableMaxMintPerWalletExceeded/);
 
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_C,
       transaction: ClaimableERC1155.mint({
         contract,
-        tokenId: 0n,
         quantity: 1,
         to: TEST_ACCOUNT_C.address,
+        tokenId: 0n,
       }),
-      account: TEST_ACCOUNT_C,
     });
 
     balance = await balanceOf({
-      owner: TEST_ACCOUNT_C.address,
       contract,
+      owner: TEST_ACCOUNT_C.address,
       tokenId: 0n,
     });
     expect(balance).toBe(1n);

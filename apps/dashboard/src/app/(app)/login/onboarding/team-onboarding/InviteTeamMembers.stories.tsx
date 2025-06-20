@@ -1,18 +1,18 @@
-import type { Team } from "@/api/team";
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { teamStub } from "stories/stubs";
 import { storybookLog, storybookThirdwebClient } from "stories/utils";
+import type { Team } from "@/api/team";
 import { TeamOnboardingLayout } from "../onboarding-layout";
 import { InviteTeamMembersUI } from "./InviteTeamMembers";
 
 const meta = {
-  title: "Onboarding/TeamOnboarding/InviteTeamMembers",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Onboarding/TeamOnboarding/InviteTeamMembers",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -55,9 +55,7 @@ export const ProPlan: Story = {
   },
 };
 
-function Story(props: {
-  plan: Team["billingPlan"];
-}) {
+function Story(props: { plan: Team["billingPlan"] }) {
   return (
     <TeamOnboardingLayout currentStep={2}>
       <InviteTeamMembersUI
@@ -65,13 +63,13 @@ function Story(props: {
         getTeam={async () => {
           return teamStub("foo", props.plan);
         }}
-        team={teamStub("foo", props.plan)}
         inviteTeamMembers={async (params) => {
           return { results: params.map(() => "fulfilled") };
         }}
         onComplete={() => {
           storybookLog("onComplete");
         }}
+        team={teamStub("foo", props.plan)}
       />
     </TeamOnboardingLayout>
   );

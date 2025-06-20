@@ -41,8 +41,8 @@ export async function getRegistrationPrice(
 
   const fetch = () => {
     const contract = getIdGateway({
-      client: options.client,
       chain: options.chain,
+      client: options.client,
     });
     return price({ contract, extraStorage: toBigInt(extraStorage) });
   };

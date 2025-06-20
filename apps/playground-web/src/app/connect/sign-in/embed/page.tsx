@@ -1,22 +1,21 @@
+import type { Metadata } from "next";
 import { CodeExample } from "@/components/code/code-example";
 import { StyledConnectEmbed } from "@/components/styled-connect-embed";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
-import type { Metadata } from "next";
 import { PageLayout } from "../../../../components/blocks/APIHeader";
 
 export const metadata: Metadata = {
-  metadataBase,
-  title: "Sign In, Account Abstraction and SIWE Auth | thirdweb ConnectEmbed",
   description:
     "Let users sign up with their email, phone number, social media accounts or directly with a wallet. Seamlessly integrate account abstraction and SIWE auth.",
+  metadataBase,
+  title: "Sign In, Account Abstraction and SIWE Auth | thirdweb ConnectEmbed",
 };
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="ConnectEmbed"
         description={
           <>
             Create a login experience tailor-made for your app. Add your wallets
@@ -25,6 +24,7 @@ export default function Page() {
           </>
         }
         docsLink="https://portal.thirdweb.com/connect/sign-in/overview?utm_source=playground"
+        title="ConnectEmbed"
       >
         <EmbedComponent />
       </PageLayout>
@@ -36,7 +36,6 @@ function EmbedComponent() {
   return (
     <>
       <CodeExample
-        preview={<StyledConnectEmbed />}
         code={`import { createThirdwebClient } from "thirdweb";
 import { ConnectEmbed } from "thirdweb/react";
 
@@ -50,6 +49,7 @@ return (
 );
 };`}
         lang="tsx"
+        preview={<StyledConnectEmbed />}
       />
     </>
   );

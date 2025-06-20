@@ -44,12 +44,37 @@ async function getSingleChain(chainIdOrSlug) {
 
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL || "https://thirdweb.com",
+  additionalPaths: async (config) => {
+    const [framerUrls, allChains] = await Promise.all([
+      getFramerXML(),
+      fetchChainsFromApi(),
+    ]);
+
+    return [
+      ...framerUrls.map((url) => {
+        return {
+          changefreq: config.changefreq,
+          lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
+          loc: url.loc,
+          priority: config.priority,
+        };
+      }),
+      ...allChains.map((chain) => {
+        return {
+          changefreq: config.changefreq,
+          lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
+          loc: `/${chain.slug}`,
+          priority: config.priority,
+        };
+      }),
+      ...(await createSearchRecordSitemaps(config)),
+    ];
+  },
+  exclude: ["/chain/validate"],
   generateRobotsTxt: true,
   robotsTxtOptions: {
     policies: [
       {
-        userAgent: "*",
         // allow all if production
         allow: process.env.VERCEL_ENV === "production" ? ["/"] : [],
         // disallow all if not production
@@ -58,10 +83,11 @@ module.exports = {
             ? ["/"]
             : // disallow `/team` and `/team/*` if production
               ["/team", "/team/*"],
+        userAgent: "*",
       },
     ],
   },
-  exclude: ["/chain/validate"],
+  siteUrl: process.env.SITE_URL || "https://thirdweb.com",
   transform: async (config, _path) => {
     let path = _path;
 
@@ -75,39 +101,13 @@ module.exports = {
       path = path.replace("deployer.thirdweb.eth", "thirdweb.eth");
     }
     return {
+      alternateRefs: config.alternateRefs ?? [],
+      changefreq: config.changefreq,
+      lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
       // => this will be exported as http(s)://<config.siteUrl>/<path>
       loc: path,
-      changefreq: config.changefreq,
       priority: config.priority,
-      lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
-      alternateRefs: config.alternateRefs ?? [],
     };
-  },
-  additionalPaths: async (config) => {
-    const [framerUrls, allChains] = await Promise.all([
-      getFramerXML(),
-      fetchChainsFromApi(),
-    ]);
-
-    return [
-      ...framerUrls.map((url) => {
-        return {
-          loc: url.loc,
-          changefreq: config.changefreq,
-          priority: config.priority,
-          lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
-        };
-      }),
-      ...allChains.map((chain) => {
-        return {
-          loc: `/${chain.slug}`,
-          changefreq: config.changefreq,
-          priority: config.priority,
-          lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
-        };
-      }),
-      ...(await createSearchRecordSitemaps(config)),
-    ];
   },
 };
 /**
@@ -131,10 +131,10 @@ async function createSearchRecordSitemaps(config) {
     parsedLines.map((parsedLine) => {
       return getSingleChain(parsedLine.chain_id)
         .then((parsedLineChain) => ({
-          loc: `/${parsedLineChain.slug}/${parsedLine.contract_address}`,
           changefreq: config.changefreq,
-          priority: config.priority,
           lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
+          loc: `/${parsedLineChain.slug}/${parsedLine.contract_address}`,
+          priority: config.priority,
         }))
         .catch(() => null);
     }),

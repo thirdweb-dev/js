@@ -1,13 +1,13 @@
 "use client";
 
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import {
   type Account,
   useUpdateNotifications,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useState } from "react";
+import { useId, useState } from "react";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 interface NotificationsProps {
   account: Account;
@@ -34,8 +34,8 @@ export const Notifications: React.FC<NotificationsProps> = ({ account }) => {
     setPreferences(newPreferences);
 
     updateMutation.mutate(newPreferences, {
-      onSuccess,
       onError,
+      onSuccess,
     });
   };
 
@@ -43,18 +43,16 @@ export const Notifications: React.FC<NotificationsProps> = ({ account }) => {
     <div>
       <SettingSwitch
         checked={preferences?.billing === "email"}
-        onCheckedChange={(v) => handleChange("billing", v)}
-        label="Reminders"
         description="Approaching and exceeding usage credits"
-        id="reminders"
+        label="Reminders"
+        onCheckedChange={(v) => handleChange("billing", v)}
       />
 
       <SettingSwitch
         checked={preferences?.updates === "email"}
-        onCheckedChange={(v) => handleChange("updates", v)}
-        label="Product Updates"
         description="New features and key product updates"
-        id="product-updates"
+        label="Product Updates"
+        onCheckedChange={(v) => handleChange("updates", v)}
       />
     </div>
   );
@@ -65,20 +63,20 @@ function SettingSwitch(props: {
   onCheckedChange: (checked: boolean) => void;
   label: string;
   description: string;
-  id: string;
 }) {
+  const id = useId();
   return (
     <div className="flex items-center justify-between gap-6 border-border border-b py-6">
       <div>
-        <Label className="text-foreground text-lg" htmlFor={props.id}>
+        <Label className="text-foreground text-lg" htmlFor={id}>
           {props.label}
         </Label>
         <p className="text-muted-foreground text-sm"> {props.description}</p>
       </div>
       <Switch
         checked={props.checked}
+        id={id}
         onCheckedChange={props.onCheckedChange}
-        id={props.id}
       />
     </div>
   );

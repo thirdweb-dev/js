@@ -5,8 +5,7 @@ import {
   updateAccountClient,
   verifyEmailClient,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { useActiveWallet } from "thirdweb/react";
-import { useDisconnect } from "thirdweb/react";
+import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { doLogout } from "../auth-actions";
 import { AccountOnboardingUI } from "./account-onboarding-ui";
 
@@ -19,7 +18,10 @@ function AccountOnboarding(props: {
   const { disconnect } = useDisconnect();
   return (
     <AccountOnboardingUI
-      onComplete={props.onComplete}
+      accountAddress={props.accountAddress}
+      loginOrSignup={async (params) => {
+        await updateAccountClient(params);
+      }}
       logout={async () => {
         if (activeWallet) {
           disconnect(activeWallet);
@@ -27,20 +29,17 @@ function AccountOnboarding(props: {
         await doLogout();
         props.onLogout();
       }}
-      accountAddress={props.accountAddress}
-      loginOrSignup={async (params) => {
-        await updateAccountClient(params);
-      }}
-      verifyEmail={verifyEmailClient}
-      resendEmailConfirmation={async () => {
-        await resendEmailClient();
-      }}
+      onComplete={props.onComplete}
       requestLinkWallet={async (email) => {
         await updateAccountClient({
           email,
           linkWallet: true,
         });
       }}
+      resendEmailConfirmation={async () => {
+        await resendEmailClient();
+      }}
+      verifyEmail={verifyEmailClient}
     />
   );
 }

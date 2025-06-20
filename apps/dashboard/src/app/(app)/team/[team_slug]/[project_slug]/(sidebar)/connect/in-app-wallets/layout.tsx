@@ -1,6 +1,6 @@
+import { redirect } from "next/navigation";
 import { getProject } from "@/api/projects";
 import { TabPathLinks } from "@/components/ui/tabs";
-import { redirect } from "next/navigation";
 import { InAppWalletsFooter } from "./_components/footer";
 import { InAppWalletsHeader } from "./_components/header";
 
@@ -29,24 +29,24 @@ export default async function Layout(props: {
         </div>
         <div className="h-3" />
         <TabPathLinks
-          scrollableClassName="container max-w-7xl"
           links={[
             {
+              exactMatch: true,
               name: "Analytics",
               path: `/team/${team_slug}/${project_slug}/connect/in-app-wallets`,
-              exactMatch: true,
             },
             {
+              exactMatch: true,
               name: "Users",
               path: `/team/${team_slug}/${project_slug}/connect/in-app-wallets/users`,
-              exactMatch: true,
             },
             {
+              exactMatch: true,
               name: "Settings",
               path: `/team/${team_slug}/${project_slug}/connect/in-app-wallets/settings`,
-              exactMatch: true,
             },
           ]}
+          scrollableClassName="container max-w-7xl"
         />
       </div>
 

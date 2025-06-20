@@ -1,12 +1,12 @@
+import { notFound, redirect } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
 import { getTeamInvites } from "@/api/team-invites";
 import { getMembers } from "@/api/team-members";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { notFound, redirect } from "next/navigation";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
-import { TeamMembersSettingsPage } from "./TeamMembersSettingsPage";
 import { getRecommendedMembers } from "./getRecommendedMembers";
+import { TeamMembersSettingsPage } from "./TeamMembersSettingsPage";
 
 export default async function Page(props: {
   params: Promise<{
@@ -58,19 +58,19 @@ export default async function Page(props: {
 
   const recommendedMembers = team.verifiedDomain
     ? await getRecommendedMembers({
-        teamId: team.id,
         authToken,
+        teamId: team.id,
       })
     : [];
 
   return (
     <TeamMembersSettingsPage
-      team={team}
-      members={members}
-      userHasEditPermission={accountMemberInfo.role === "OWNER"}
       client={client}
-      teamInvites={pendingOrExpiredInvites}
+      members={members}
       recommendedMembers={recommendedMembers}
+      team={team}
+      teamInvites={pendingOrExpiredInvites}
+      userHasEditPermission={accountMemberInfo.role === "OWNER"}
     />
   );
 }

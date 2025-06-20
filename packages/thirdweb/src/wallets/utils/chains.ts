@@ -45,9 +45,11 @@ function getValidChainRPCs(
     }
 
     // Replace API_KEY placeholder with value
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: this is valid
     if (rpc.includes("${THIRDWEB_API_KEY}")) {
       if (clientId) {
         processedRPCs.push(
+          // biome-ignore lint/suspicious/noTemplateCurlyInString: this is what the string to replace looks like in this case
           rpc.replace("${THIRDWEB_API_KEY}", clientId) +
             (typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
               ? // @ts-expect-error
@@ -58,6 +60,7 @@ function getValidChainRPCs(
         // if no client id, let it through with empty string
         // if secretKey is present, it will be used in header
         // if none are passed, will have reduced access
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: this is what the string to replace looks like in this case
         processedRPCs.push(rpc.replace("${THIRDWEB_API_KEY}", ""));
       }
     }

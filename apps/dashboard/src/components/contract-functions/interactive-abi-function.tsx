@@ -1,11 +1,5 @@
 "use client";
 
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { Badge } from "@/components/ui/badge";
-import { CodeClient } from "@/components/ui/code/code.client";
-import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
-import { InlineCode } from "@/components/ui/inline-code";
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   ButtonGroup,
   Divider,
@@ -25,10 +19,10 @@ import { useEffect, useId, useMemo, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
-  type ThirdwebContract,
   prepareContractCall,
   readContract,
   simulateTransaction,
+  type ThirdwebContract,
   toSerializableTransaction,
   toWei,
 } from "thirdweb";
@@ -43,6 +37,12 @@ import {
   Heading,
   Text,
 } from "tw-components";
+import { Badge } from "@/components/ui/badge";
+import { CodeClient } from "@/components/ui/code/code.client";
+import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
+import { InlineCode } from "@/components/ui/inline-code";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 
 function formatResponseData(data: unknown): {
   type: "json" | "text";
@@ -53,14 +53,14 @@ function formatResponseData(data: unknown): {
   if (typeof data === "string") {
     // "" is a valid response. For example, some token has `symbol` === ""
     if (data === "") {
-      return { type: "text", data: `""` };
+      return { data: `""`, type: "text" };
     }
-    return { type: "text", data };
+    return { data, type: "text" };
   }
   if (typeof data === "bigint") {
     return {
-      type: "text",
       data: data.toString(),
+      type: "text",
     };
   }
 
@@ -68,19 +68,18 @@ function formatResponseData(data: unknown): {
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
     const receipt: any = (data as any).receipt;
     if (receipt) {
-      // biome-ignore lint/style/noParameterAssign: FIXME
       data = {
-        to: receipt.to,
-        from: receipt.from,
-        transactionHash: receipt.transactionHash,
         events: receipt.events,
+        from: receipt.from,
+        to: receipt.to,
+        transactionHash: receipt.transactionHash,
       };
     }
   }
 
   return {
-    type: "json",
     data: stringify(data, null, 2),
+    type: "json",
   };
 }
 
@@ -143,7 +142,10 @@ function useAsyncRead(contract: ThirdwebContract, abiFunction: AbiFunction) {
     mutationFn: async ({
       args,
       types,
-    }: { args: unknown[]; types: string[] }) => {
+    }: {
+      args: unknown[];
+      types: string[];
+    }) => {
       const params = parseAbiParams(types, args);
       return readContract({
         contract,
@@ -236,10 +238,10 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
     defaultValues: {
       params:
         abiFunction.inputs.map((i) => ({
-          key: i.name || "key",
-          value: "",
-          type: i.type,
           components: "components" in i ? i.components : undefined,
+          key: i.name || "key",
+          type: i.type,
+          value: "",
         })) || [],
       value: "0",
     },
@@ -359,9 +361,9 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
     const formatted = formatContractCall(d.params);
     const params = parseAbiParams(types, formatted);
     txSimulation.mutate({
+      abiFunction,
       contract,
       params,
-      abiFunction,
       value: d.value ? toWei(d.value) : undefined,
     });
   });
@@ -369,25 +371,25 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
   return (
     <FormProvider {...form}>
       <Card
-        gridColumn={{ base: "span 12", md: "span 9" }}
-        borderRadius="none"
+        as={Flex}
         bg="transparent"
         border="none"
-        as={Flex}
-        flexDirection="column"
-        gap={4}
+        borderRadius="none"
         boxShadow="none"
+        flexDirection="column"
         flexGrow={1}
-        w="100%"
+        gap={4}
+        gridColumn={{ base: "span 12", md: "span 9" }}
         p={0}
+        w="100%"
       >
         <Flex
-          position="relative"
-          w="100%"
+          as="form"
           direction="column"
           gap={2}
-          as="form"
           id={formId}
+          position="relative"
+          w="100%"
         >
           {fields.length > 0 && (
             <>
@@ -395,24 +397,24 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
               {fields.map((item, index) => {
                 return (
                   <FormControl
-                    key={item.id}
-                    mb="8px"
                     isInvalid={
                       !!form.getFieldState(
                         `params.${index}.value`,
                         form.formState,
                       ).error
                     }
+                    key={item.id}
+                    mb="8px"
                   >
                     <Flex justify="space-between">
                       <FormLabel>{camelToTitle(item.key)}</FormLabel>
                       <Text fontSize="12px">{item.key}</Text>
                     </Flex>
                     <SolidityInput
-                      solidityName={item.key}
-                      solidityType={item.type}
                       // @ts-expect-error - old types, need to update
                       solidityComponents={item.components}
+                      solidityName={item.key}
+                      solidityType={item.type}
                       {...form.register(`params.${index}.value`)}
                       functionName={abiFunction.name}
                     />
@@ -449,9 +451,9 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
               <Divider />
               <Heading size="label.sm">Error</Heading>
               <InlineCode
+                className="relative w-full whitespace-pre-wrap rounded-md border border-border p-4 text-red-500"
                 //  biome-ignore lint/suspicious/noExplicitAny: FIXME
                 code={formatError(error as any)}
-                className="relative w-full whitespace-pre-wrap rounded-md border border-border p-4 text-red-500"
               />
             </>
           ) : formattedResponseData ? (
@@ -471,8 +473,8 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
                 <PlainTextCodeBlock code={formattedResponseData.data} />
               ) : (
                 <CodeClient
-                  lang={formattedResponseData.type}
                   code={formattedResponseData.data}
+                  lang={formattedResponseData.type}
                 />
               )}
 
@@ -485,8 +487,8 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
                         formattedResponseData.data,
                         contract.client,
                       )}
-                      target="_blank"
                       rel="noopener noreferrer"
+                      target="_blank"
                     >
                       Open in gateway
                     </UnderlineLink>
@@ -497,10 +499,10 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
                 formattedResponseData.data.startsWith("https://")) ||
                 formattedResponseData.data.startsWith("http://")) && (
                 <Link
-                  href={formattedResponseData.data}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="mt-1 inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
+                  href={formattedResponseData.data}
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
                   Open link
                   <ExternalLinkIcon className="size-4" />
@@ -514,23 +516,23 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
         <ButtonGroup ml="auto">
           {isView ? (
             <Button
-              isDisabled={!abiFunction}
-              rightIcon={<PlayIcon className="size-4" />}
               colorScheme="primary"
+              form={formId}
+              isDisabled={!abiFunction}
               isLoading={readLoading}
               onClick={handleContractRead}
-              form={formId}
+              rightIcon={<PlayIcon className="size-4" />}
             >
               Run
             </Button>
           ) : (
             <>
               <Button
-                onClick={handleContractSimulation}
                 isDisabled={
                   !abiFunction || txSimulation.isPending || mutationLoading
                 }
                 isLoading={txSimulation.isPending}
+                onClick={handleContractSimulation}
               >
                 <ToolTipLabel label="Simulate the transaction to see its potential outcome without actually sending it to the network. This action doesn't cost gas.">
                   <span className="mr-3">
@@ -544,12 +546,12 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
                 disabled={
                   !abiFunction || txSimulation.isPending || mutationLoading
                 }
-                transactionCount={1}
-                isPending={mutationLoading}
                 form={formId}
-                onClick={handleContractWrite}
-                txChainID={contract.chain.id}
                 isLoggedIn={props.isLoggedIn}
+                isPending={mutationLoading}
+                onClick={handleContractWrite}
+                transactionCount={1}
+                txChainID={contract.chain.id}
               >
                 Execute
               </TransactionButton>

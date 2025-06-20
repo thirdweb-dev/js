@@ -23,10 +23,29 @@ const DirectPaymentWithTheme = (props: DirectPaymentWithThemeProps) => {
 };
 
 const meta = {
-  title: "Bridge/DirectPayment",
+  args: {
+    client: storyClient,
+    onContinue: (_amount, _token, _receiverAddress) => {},
+    theme: "dark",
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.digitalArt,
+  },
+  argTypes: {
+    onContinue: {
+      action: "continue clicked",
+      description: "Called when user continues with the payment",
+    },
+    theme: {
+      control: "select",
+      description: "Theme for the component",
+      options: ["light", "dark"],
+    },
+    uiOptions: {
+      description:
+        "UI configuration for direct payment mode including payment info and metadata",
+    },
+  },
   component: DirectPaymentWithTheme,
   parameters: {
-    layout: "centered",
     docs: {
       description: {
         component:
@@ -40,29 +59,10 @@ const meta = {
           "This component is used in the 'direct_payment' mode of BridgeOrchestrator for purchasing specific items or services. It now accepts uiOptions directly to configure payment info and metadata.",
       },
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  args: {
-    client: storyClient,
-    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.digitalArt,
-    onContinue: (_amount, _token, _receiverAddress) => {},
-    theme: "dark",
-  },
-  argTypes: {
-    theme: {
-      control: "select",
-      options: ["light", "dark"],
-      description: "Theme for the component",
-    },
-    onContinue: {
-      action: "continue clicked",
-      description: "Called when user continues with the payment",
-    },
-    uiOptions: {
-      description:
-        "UI configuration for direct payment mode including payment info and metadata",
-    },
-  },
+  title: "Bridge/DirectPayment",
 } satisfies Meta<typeof DirectPaymentWithTheme>;
 
 export default meta;

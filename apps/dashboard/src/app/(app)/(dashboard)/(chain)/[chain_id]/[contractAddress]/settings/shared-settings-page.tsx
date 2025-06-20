@@ -17,8 +17,8 @@ export async function SharedContractSettingsPage(props: {
   isLoggedIn: boolean;
 }) {
   const info = await getContractPageParamsInfo({
-    contractAddress: props.contractAddress,
     chainIdOrSlug: props.chainIdOrSlug,
+    contractAddress: props.contractAddress,
     teamId: props.projectMeta?.teamId,
   });
 
@@ -31,8 +31,8 @@ export async function SharedContractSettingsPage(props: {
     const shouldHide = await shouldRenderNewPublicPage(info.serverContract);
     if (shouldHide) {
       redirectToContractLandingPage({
-        contractAddress: props.contractAddress,
         chainIdOrSlug: props.chainIdOrSlug,
+        contractAddress: props.contractAddress,
         projectMeta: props.projectMeta,
       });
     }
@@ -58,8 +58,8 @@ export async function SharedContractSettingsPage(props: {
     <ContractSettingsPage
       contract={clientContract}
       functionSelectors={metadata.functionSelectors}
-      isLoggedIn={props.isLoggedIn}
       hasDefaultFeeConfig={hasDefaultFeeConfig}
+      isLoggedIn={props.isLoggedIn}
     />
   );
 }

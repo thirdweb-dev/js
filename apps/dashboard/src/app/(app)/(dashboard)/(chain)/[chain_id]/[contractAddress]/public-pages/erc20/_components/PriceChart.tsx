@@ -1,15 +1,14 @@
 "use client";
 
+import { differenceInCalendarDays, format } from "date-fns";
+import { ArrowDownIcon, ArrowUpIcon, InfoIcon } from "lucide-react";
+import { useMemo, useState } from "react";
 import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { differenceInCalendarDays, format } from "date-fns";
-import { ArrowUpIcon, InfoIcon } from "lucide-react";
-import { ArrowDownIcon } from "lucide-react";
-import { useMemo, useState } from "react";
 import { useTokenPriceData } from "../_hooks/useTokenPriceData";
 
 function PriceChartUI(props: {
@@ -28,18 +27,18 @@ function PriceChartUI(props: {
 
   return (
     <ThirdwebAreaChart
-      className="border-none bg-background p-0"
       cardContentClassName="p-0"
+      chartClassName="aspect-[1.5] lg:aspect-[3]"
+      className="border-none bg-background p-0"
       config={{
         price: {
-          label: "Price",
           color: "hsl(var(--chart-1))",
+          label: "Price",
         },
       }}
       data={data}
-      isPending={props.isPending}
-      chartClassName="aspect-[1.5] lg:aspect-[3]"
       hideLabel={false}
+      isPending={props.isPending}
       toolTipLabelFormatter={getTooltipLabelFormatter(props.showTimeOfDay)}
       toolTipValueFormatter={(value) => {
         return tokenPriceUSDFormatter.format(value as number);
@@ -49,32 +48,32 @@ function PriceChartUI(props: {
 }
 
 const tokenPriceUSDFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
   currency: "USD",
-  minimumFractionDigits: 0,
   maximumFractionDigits: 10,
-  roundingMode: "halfEven",
+  minimumFractionDigits: 0,
   notation: "compact",
+  roundingMode: "halfEven",
+  style: "currency",
 });
 
 const marketCapFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
   currency: "USD",
-  minimumFractionDigits: 0,
   maximumFractionDigits: 0,
-  roundingMode: "halfEven",
+  minimumFractionDigits: 0,
   notation: "compact",
+  roundingMode: "halfEven",
+  style: "currency",
 });
 
 const holdersFormatter = new Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 0,
   maximumFractionDigits: 0,
+  minimumFractionDigits: 0,
   notation: "compact",
 });
 
 const percentChangeFormatter = new Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 0,
   maximumFractionDigits: 2,
+  minimumFractionDigits: 0,
 });
 
 function getTooltipLabelFormatter(includeTimeOfDay: boolean) {
@@ -152,7 +151,6 @@ export function TokenStats(params: {
           <div className="flex items-center gap-2">
             <SkeletonContainer
               loadedData={priceUsd}
-              skeletonData={10.0001}
               render={(v) => {
                 return (
                   <p className="font-bold text-4xl tracking-tight">
@@ -162,10 +160,10 @@ export function TokenStats(params: {
                   </p>
                 );
               }}
+              skeletonData={10.0001}
             />
             <SkeletonContainer
               loadedData={percentChange24h}
-              skeletonData={0.001}
               render={(data) => {
                 if (typeof data === "string") {
                   return null;
@@ -180,6 +178,7 @@ export function TokenStats(params: {
 
                 return (
                   <Badge
+                    className="gap-2 text-sm"
                     variant={
                       isAlmostZero
                         ? "default"
@@ -187,7 +186,6 @@ export function TokenStats(params: {
                           ? "success"
                           : "destructive"
                     }
-                    className="gap-2 text-sm"
                   >
                     <div className="flex items-center gap-0.5">
                       {isAlmostZero ? null : data > 0 ? (
@@ -203,6 +201,7 @@ export function TokenStats(params: {
                   </Badge>
                 );
               }}
+              skeletonData={0.001}
             />
           </div>
         </div>
@@ -212,25 +211,27 @@ export function TokenStats(params: {
 
       <div className="h-4" />
       <PriceChartUI
-        showTimeOfDay={interval === "24h"}
-        isPending={tokenPriceQuery.isPending}
         data={filteredHistoricalPrices || []}
+        isPending={tokenPriceQuery.isPending}
+        showTimeOfDay={interval === "24h"}
       />
 
       <div className="mt-8 flex gap-6 border-y border-dashed py-4 [&>*:not(:first-child)]:border-l [&>*:not(:first-child)]:border-dashed [&>*:not(:first-child)]:pl-5 [&>*]:grow">
         <TokenStat
+          label="Market Cap"
+          skeletonData={"1000000000"}
+          tooltip="Market capitalization is the total value of all tokens in circulation, calculated by multiplying the current price by the circulating supply"
           value={
             typeof marketCap === "number"
               ? marketCapFormatter.format(marketCap)
               : marketCap
           }
-          skeletonData={"1000000000"}
-          label="Market Cap"
-          tooltip="Market capitalization is the total value of all tokens in circulation, calculated by multiplying the current price by the circulating supply"
         />
 
         <TokenStat
+          label="Number of Holders"
           skeletonData={"1000000000"}
+          tooltip="The total number of unique wallet addresses that currently hold this token on the blockchain"
           value={
             // show 0 value as N/A
             holders === 0
@@ -239,8 +240,6 @@ export function TokenStats(params: {
                 ? holdersFormatter.format(holders)
                 : holders
           }
-          label="Number of Holders"
-          tooltip="The total number of unique wallet addresses that currently hold this token on the blockchain"
         />
       </div>
     </div>
@@ -263,7 +262,6 @@ function TokenStat<T extends string | number>(props: {
       </div>
       <div className="flex">
         <SkeletonContainer
-          skeletonData={props.skeletonData}
           loadedData={props.value}
           render={(v) => {
             return (
@@ -272,6 +270,7 @@ function TokenStat<T extends string | number>(props: {
               </p>
             );
           }}
+          skeletonData={props.skeletonData}
         />
       </div>
     </div>
@@ -285,10 +284,10 @@ function IntervalSelector(props: {
   setInterval: (timeframe: Interval) => void;
 }) {
   const intervals: Record<Interval, string> = {
-    "24h": "1D",
-    "7d": "1W",
-    "30d": "1M",
     "1y": "1Y",
+    "7d": "1W",
+    "24h": "1D",
+    "30d": "1M",
     max: "MAX",
   };
 
@@ -296,15 +295,15 @@ function IntervalSelector(props: {
     <div className="flex gap-2">
       {Object.entries(intervals).map(([key, value]) => (
         <Button
-          key={key}
-          variant="outline"
           className={cn(
             "rounded-full",
             props.interval === key && "border-active-border bg-accent",
           )}
-          size="sm"
+          key={key}
           onClick={() => props.setInterval(key as Interval)}
+          size="sm"
           tabIndex={0}
+          variant="outline"
         >
           {value}
         </Button>

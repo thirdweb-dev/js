@@ -1,5 +1,13 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { CheckIcon, UploadIcon, XIcon } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { upload } from "thirdweb/storage";
+import { isAddress, shortenAddress } from "thirdweb/utils";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,14 +20,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { THIRDWEB_CLIENT } from "@/lib/client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CheckIcon, UploadIcon, XIcon } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { upload } from "thirdweb/storage";
-import { isAddress, shortenAddress } from "thirdweb/utils";
-import * as z from "zod";
 import { UploadImage } from "../../../../components/blocks/upload-image";
 import { Spinner } from "../../../../components/ui/Spinner/Spinner";
 import { tryCatch } from "../../../../lib/try-catch";
@@ -29,8 +29,21 @@ import type { EngineTxStatus } from "../../types";
 import { mintExample } from "../constants";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Required"),
   description: z.string().optional(),
+  image: z
+    .instanceof(File, {
+      message: "Required",
+    })
+    .refine((file) => {
+      // file must not be larger than 500kb
+      if (file.size > 500 * 1024) {
+        return "Image must not be larger than 500kb";
+      }
+
+      return true;
+    }),
+  name: z.string().min(1, "Required"),
+  supply: z.coerce.number().int("Must be Integer").min(1, "Required"),
   walletAddress: z
     .string()
     .min(1, "Required")
@@ -47,19 +60,6 @@ const formSchema = z.object({
         message: "Invalid wallet address",
       },
     ),
-  supply: z.coerce.number().int("Must be Integer").min(1, "Required"),
-  image: z
-    .instanceof(File, {
-      message: "Required",
-    })
-    .refine((file) => {
-      // file must not be larger than 500kb
-      if (file.size > 500 * 1024) {
-        return "Image must not be larger than 500kb";
-      }
-
-      return true;
-    }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -67,7 +67,10 @@ type FormValues = z.infer<typeof formSchema>;
 function TransactionStatusIcon({
   status,
   isPending,
-}: { status?: string; isPending: boolean }) {
+}: {
+  status?: string;
+  isPending: boolean;
+}) {
   function getIcon() {
     if (isPending) {
       return <Spinner className="size-4" />;
@@ -99,7 +102,10 @@ function TransactionStatusIcon({
 function TransactionStatusMessage({
   status,
   isPending,
-}: { status?: string; isPending: boolean }) {
+}: {
+  status?: string;
+  isPending: boolean;
+}) {
   if (isPending) {
     return "Sending Transaction Request";
   }
@@ -122,17 +128,20 @@ function TransactionStatusMessage({
 function TransactionHashLink({
   hash,
   explorer,
-}: { hash: string; explorer: string }) {
+}: {
+  hash: string;
+  explorer: string;
+}) {
   const shortHash = `${hash.slice(0, 6)}...${hash.slice(-4)}`;
 
   return (
     <span className="block text-muted-foreground text-sm">
       Transaction Hash:{" "}
       <a
-        href={`${explorer}/tx/${hash}`}
-        target="_blank"
-        rel="noreferrer"
         className="font-mono underline decoration-muted-foreground/50 decoration-dotted underline-offset-[5px] hover:text-foreground"
+        href={`${explorer}/tx/${hash}`}
+        rel="noreferrer"
+        target="_blank"
       >
         {shortHash}
       </a>
@@ -151,17 +160,17 @@ function TransactionStatus({
 }) {
   return (
     <div className="flex items-center gap-2 text-foreground">
-      <TransactionStatusIcon status={status} isPending={isPending} />
+      <TransactionStatusIcon isPending={isPending} status={status} />
 
       <p className="space-y-0.5">
         <span className="block">
-          <TransactionStatusMessage status={status} isPending={isPending} />
+          <TransactionStatusMessage isPending={isPending} status={status} />
         </span>
 
         {transactionHash && (
           <TransactionHashLink
-            hash={transactionHash}
             explorer={mintExample.chainExplorer}
+            hash={transactionHash}
           />
         )}
       </p>
@@ -176,13 +185,13 @@ export function EngineMintPreview() {
   const [hasSentTx, setHasSentTx] = useState(false);
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
       description: "",
-      walletAddress: "",
+      name: "",
       supply: 1,
+      walletAddress: "",
     },
+    resolver: zodResolver(formSchema),
   });
 
   const mintMutation = useMutation({
@@ -205,17 +214,17 @@ export function EngineMintPreview() {
       }
 
       return mint_erc1155_nft_with_engine({
-        contractAddress: mintExample.contractAddress,
         chainId: mintExample.chainId,
-        toAddress: params.address,
+        contractAddress: mintExample.contractAddress,
         metadataWithSupply: {
           metadata: {
-            name: params.name,
             description: params.description,
             image: uploadResult.data,
+            name: params.name,
           },
           supply: params.supply,
         },
+        toAddress: params.address,
       });
     },
   });
@@ -224,22 +233,22 @@ export function EngineMintPreview() {
     setHasSentTx(true);
     const result = await mintMutation.mutateAsync({
       address: data.walletAddress,
-      name: data.name,
       description: data.description || "",
       image: data.image,
+      name: data.name,
       supply: data.supply.toString(),
     });
 
     // optimistic update
     queryClient.setQueryData(["engineTxStatus", result], {
-      status: "queued",
-      chainId: mintExample.chainId.toString(),
-      queueId: result,
-      transactionHash: null,
-      queuedAt: new Date().toISOString(),
-      sentAt: null,
-      minedAt: null,
       cancelledAt: null,
+      chainId: mintExample.chainId.toString(),
+      minedAt: null,
+      queuedAt: new Date().toISOString(),
+      queueId: result,
+      sentAt: null,
+      status: "queued",
+      transactionHash: null,
     } satisfies EngineTxStatus);
 
     setQueueId(result);
@@ -251,10 +260,10 @@ export function EngineMintPreview() {
       <p className="mb-4 text-muted-foreground">
         Mint ERC1155 NFTs in{" "}
         <a
-          href={`https://thirdweb.com/${mintExample.chainId}/${mintExample.contractAddress}`}
-          target="_blank"
           className="font-mono underline decoration-muted-foreground/50 decoration-dotted underline-offset-[5px] hover:text-foreground"
+          href={`https://thirdweb.com/${mintExample.chainId}/${mintExample.contractAddress}`}
           rel="noopener noreferrer"
+          target="_blank"
         >
           {shortenAddress(mintExample.contractAddress)}
         </a>{" "}
@@ -263,7 +272,7 @@ export function EngineMintPreview() {
 
       <div className="w-full rounded-lg border bg-card">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-6 p-4 lg:p-6">
               <div className="space-y-4">
                 <div className="flex flex-col gap-6 lg:flex-row">
@@ -276,11 +285,10 @@ export function EngineMintPreview() {
                         <FormLabel>Image</FormLabel>
                         <FormControl>
                           <UploadImage
-                            id="image"
+                            className="w-full bg-background lg:w-[300px]"
                             onImageUpload={(file) =>
                               form.setValue("image", file)
                             }
-                            className="w-full bg-background lg:w-[300px]"
                           />
                         </FormControl>
                         <FormMessage />
@@ -327,8 +335,8 @@ export function EngineMintPreview() {
                             <FormLabel>Receiver Address</FormLabel>
                             <FormControl>
                               <Input
-                                placeholder="0x..."
                                 className="font-mono"
+                                placeholder="0x..."
                                 {...field}
                               />
                             </FormControl>
@@ -344,7 +352,7 @@ export function EngineMintPreview() {
                           <FormItem className="lg:w-32">
                             <FormLabel>Supply</FormLabel>
                             <FormControl>
-                              <Input type="number" min="1" {...field} />
+                              <Input min="1" type="number" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -358,16 +366,16 @@ export function EngineMintPreview() {
 
             <div className="flex items-center justify-between gap-6 border-t p-4 lg:p-6">
               <TransactionStatus
-                status={engineTxStatusQuery.data?.status}
                 isPending={mintMutation.isPending}
+                status={engineTxStatusQuery.data?.status}
                 transactionHash={engineTxStatusQuery.data?.transactionHash}
               />
 
               {!hasSentTx && (
                 <Button
-                  type="submit"
-                  disabled={mintMutation.isPending}
                   className="min-w-36 gap-2"
+                  disabled={mintMutation.isPending}
+                  type="submit"
                 >
                   {mintMutation.isPending ? (
                     <Spinner className="size-4" />

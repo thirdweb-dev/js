@@ -10,9 +10,9 @@ import { iconSize } from "../../../core/design-system/index.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import { FingerPrintIcon } from "../../ui/ConnectWallet/icons/FingerPrintIcon.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
-import { Spacer } from "../../ui/components/Spacer.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
+import { Spacer } from "../../ui/components/Spacer.js";
 import { ErrorState } from "./ErrorState.js";
 import { LoadingScreen } from "./LoadingScreen.js";
 import { LoadingState } from "./LoadingState.js";
@@ -61,23 +61,23 @@ export function PassKeyLogin(props: {
   }, [client, wallet.id]);
 
   return (
-    <Container animate="fadein" fullHeight flex="column">
+    <Container animate="fadein" flex="column" fullHeight>
       <Container p="lg">
         <ModalHeader
+          onBack={props.onBack}
           title={
             props.isLinking
               ? locale.passkeys.linkPasskey
               : locale.passkeys.title
           }
-          onBack={props.onBack}
         />
       </Container>
 
       <Container
-        px={size === "wide" ? "xxl" : "lg"}
+        center="y"
         expand
         flex="column"
-        center="y"
+        px={size === "wide" ? "xxl" : "lg"}
       >
         <div>
           {screen === "loading" && (
@@ -100,24 +100,24 @@ export function PassKeyLogin(props: {
 
           {screen === "login" && (
             <LoginScreen
-              wallet={wallet}
+              chain={chain}
               client={client}
               done={done}
+              isLinking={props.isLinking}
               onCreate={() => {
                 setScreen("signup");
               }}
-              chain={chain}
-              isLinking={props.isLinking}
+              wallet={wallet}
             />
           )}
 
           {screen === "signup" && (
             <SignupScreen
-              wallet={wallet}
+              chain={chain}
               client={client}
               done={done}
-              chain={chain}
               isLinking={props.isLinking}
+              wallet={wallet}
             />
           )}
         </div>
@@ -152,10 +152,10 @@ function LoginScreen(props: {
         });
       } else {
         await wallet.connect({
+          chain,
           client: client,
           strategy: "passkey",
           type: "sign-in",
-          chain,
         });
         await setLastAuthProvider("passkey", webLocalStorage);
       }
@@ -179,9 +179,9 @@ function LoginScreen(props: {
   if (status === "loading") {
     return (
       <LoadingState
-        title="Requesting Passkey"
-        subtitle="A pop-up prompt will appear to sign-in and verify your passkey"
         icon={<FingerPrintIcon size={iconSize.xxl} />}
+        subtitle="A pop-up prompt will appear to sign-in and verify your passkey"
+        title="Requesting Passkey"
       />
     );
   }
@@ -191,7 +191,7 @@ function LoginScreen(props: {
       <>
         <ErrorState onTryAgain={login} title={error || "Failed to Login"} />
         <Spacer y="sm" />
-        <Button variant="outline" fullWidth onClick={props.onCreate}>
+        <Button fullWidth onClick={props.onCreate} variant="outline">
           Create a new Passkey
         </Button>
         <Spacer y="lg" />
@@ -225,16 +225,16 @@ function SignupScreen(props: {
       if (props.isLinking) {
         await linkProfile({
           client,
+          ecosystem,
           strategy: "passkey",
           type: "sign-up",
-          ecosystem,
         });
       } else {
         await wallet.connect({
+          chain,
           client: client,
           strategy: "passkey",
           type: "sign-up",
-          chain,
         });
         await setLastAuthProvider("passkey", webLocalStorage);
       }
@@ -261,9 +261,9 @@ function SignupScreen(props: {
   if (status === "loading") {
     return (
       <LoadingState
-        title="Creating Passkey"
-        subtitle="A pop-up prompt will appear to sign-in and verify your passkey"
         icon={<FingerPrintIcon size={iconSize.xxl} />}
+        subtitle="A pop-up prompt will appear to sign-in and verify your passkey"
+        title="Creating Passkey"
       />
     );
   }
@@ -290,18 +290,18 @@ function SelectLoginMethod(props: {
   return (
     <Container>
       <Spacer y="xxl" />
-      <Container flex="row" center="x" color="accentText">
+      <Container center="x" color="accentText" flex="row">
         <FingerPrintIcon size={iconSize["4xl"]} />
       </Container>
       <Spacer y="xl" />
       <Spacer y="xxl" />
 
-      <Button variant="accent" onClick={props.onSignup} fullWidth>
+      <Button fullWidth onClick={props.onSignup} variant="accent">
         Create a Passkey
       </Button>
 
       <Spacer y="sm" />
-      <Button variant="outline" onClick={props.onSignin} fullWidth>
+      <Button fullWidth onClick={props.onSignin} variant="outline">
         I have a Passkey
       </Button>
 

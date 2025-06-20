@@ -1,14 +1,14 @@
-import { ChainIconClient } from "@/components/blocks/ChainIcon";
-import { Skeleton } from "@/components/ui/skeleton";
-import { isProd } from "@/constants/env-utils";
-import { nebulaAppThirdwebClient } from "@/constants/nebula-client";
-import { useAllChainsData } from "@/hooks/chains";
 import { useQuery } from "@tanstack/react-query";
 import { XIcon } from "lucide-react";
 import Link from "next/link";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
+import { ChainIconClient } from "@/components/blocks/ChainIcon";
+import { Skeleton } from "@/components/ui/skeleton";
+import { isProd } from "@/constants/env-utils";
+import { nebulaAppThirdwebClient } from "@/constants/nebula-client";
+import { useAllChainsData } from "@/hooks/chains";
 
 // Note: this is not the full object type returned from insight API, it only includes fields we care about
 export type WalletTransaction = {
@@ -45,15 +45,15 @@ export function TransactionSectionUI(props: {
       {!props.isPending &&
         props.data.map((asset) => (
           <TransactionInfo
+            client={props.client}
             key={asset.hash}
             transaction={asset}
-            client={props.client}
           />
         ))}
 
       {props.isPending &&
         new Array(10).fill(null).map((_, index) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+          // biome-ignore lint/suspicious/noArrayIndexKey: TODO
           <SkeletonAssetItem key={index} />
         ))}
     </div>
@@ -87,16 +87,16 @@ function TransactionInfo(props: {
   return (
     <div className="relative flex h-[48px] items-center gap-2.5 rounded-lg px-2 py-1 hover:bg-accent">
       <ChainIconClient
-        client={props.client}
         className="size-8 rounded-full border"
+        client={props.client}
         src={chainMeta?.icon?.url || ""}
       />
 
       <div className="flex min-w-0 flex-col text-sm">
         <Link
+          className="truncate font-medium capitalize before:absolute before:inset-0"
           href={`${explorer}/tx/${props.transaction.hash}`}
           target="_blank"
-          className="truncate font-medium capitalize before:absolute before:inset-0"
         >
           {title}
         </Link>
@@ -151,14 +151,12 @@ function getTransactionDescription(transaction: WalletTransaction) {
   return `To: ${shortenAddress(transaction.to_address)}`;
 }
 
-export function TransactionsSection(props: {
-  client: ThirdwebClient;
-}) {
+export function TransactionsSection(props: { client: ThirdwebClient }) {
   const account = useActiveAccount();
   const activeChain = useActiveWalletChain();
 
   const txQuery = useQuery({
-    queryKey: ["v1/wallets/transactions", account?.address, activeChain?.id],
+    enabled: !!account && !!activeChain,
     queryFn: async () => {
       if (!account || !activeChain) {
         return [];
@@ -191,15 +189,15 @@ export function TransactionsSection(props: {
 
       return json.data ?? [];
     },
+    queryKey: ["v1/wallets/transactions", account?.address, activeChain?.id],
     retry: false,
-    enabled: !!account && !!activeChain,
   });
 
   return (
     <TransactionSectionUI
+      client={props.client}
       data={txQuery.data ?? []}
       isPending={txQuery.isPending}
-      client={props.client}
     />
   );
 }

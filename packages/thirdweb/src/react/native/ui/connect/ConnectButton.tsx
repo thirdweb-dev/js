@@ -20,9 +20,9 @@ import { useAutoConnect } from "../../hooks/wallets/useAutoConnect.js";
 import { ThemedButton } from "../components/button.js";
 import { ThemedSpinner } from "../components/spinner.js";
 import { ThemedText } from "../components/text.js";
-import { ConnectModal } from "./ConnectModal.js";
 import { ConnectedButton } from "./ConnectedButton.js";
 import { ConnectedModal } from "./ConnectedModal.js";
+import { ConnectModal } from "./ConnectModal.js";
 
 /**
  * A component that allows the user to connect their wallet.
@@ -59,15 +59,15 @@ export function ConnectButton(props: ConnectButtonProps) {
     setVisible(true);
     Animated.parallel([
       Animated.timing(fadeAnim.current, {
-        toValue: 1,
         duration: 300,
+        toValue: 1,
         useNativeDriver: true,
       }),
       Animated.timing(slideAnim.current, {
-        toValue: 0,
         duration: 300,
-        useNativeDriver: true,
         easing: Easing.out(Easing.exp),
+        toValue: 0,
+        useNativeDriver: true,
       }),
     ]).start();
   }, []);
@@ -88,15 +88,15 @@ export function ConnectButton(props: ConnectButtonProps) {
   const closeModal = useCallback(() => {
     Animated.parallel([
       Animated.timing(fadeAnim.current, {
-        toValue: 0,
         duration: 300,
+        toValue: 0,
         useNativeDriver: true,
       }),
       Animated.timing(slideAnim.current, {
-        toValue: screenHeight,
         duration: 300,
-        useNativeDriver: true,
         easing: Easing.in(Easing.exp),
+        toValue: screenHeight,
+        useNativeDriver: true,
       }),
     ]).start(() => {
       setVisible(false);
@@ -113,26 +113,24 @@ export function ConnectButton(props: ConnectButtonProps) {
     <View>
       {isConnectedAndAuth ? (
         <ConnectedButton
-          openModal={() => openModal()}
-          onClose={closeModal}
-          wallet={wallet}
           account={account}
+          onClose={closeModal}
+          openModal={() => openModal()}
+          wallet={wallet}
           {...props}
         />
       ) : (
-        <ThemedButton theme={theme} onPress={() => openModal()}>
+        <ThemedButton onPress={() => openModal()} theme={theme}>
           {status === "connecting" ||
           siweAuth.isLoggingIn ||
           siweAuth.isLoading ||
           siweAuth.isLoggingOut ? (
-            <>
-              <ThemedSpinner color={theme.colors.primaryButtonText} />
-            </>
+            <ThemedSpinner color={theme.colors.primaryButtonText} />
           ) : (
             <ThemedText
+              style={{ color: theme.colors.primaryButtonText }}
               theme={theme}
               type="defaultSemiBold"
-              style={{ color: theme.colors.primaryButtonText }}
             >
               {isConnectedAndNotAuth
                 ? props.signInButton?.label || "Sign In"
@@ -142,10 +140,10 @@ export function ConnectButton(props: ConnectButtonProps) {
         </ThemedButton>
       )}
       <Modal
-        visible={visible}
         animationType="none"
-        transparent={true}
         onRequestClose={closeModal}
+        transparent={true}
+        visible={visible}
       >
         <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
           <Animated.View
@@ -156,24 +154,24 @@ export function ConnectButton(props: ConnectButtonProps) {
               { flex: 1, transform: [{ translateY: slideAnim.current }] },
             ]}
           >
-            <Pressable style={styles.dismissArea} onPress={closeModal} />
+            <Pressable onPress={closeModal} style={styles.dismissArea} />
             <View style={styles.bottomSheetContainer}>
               {isConnectedAndAuth ? (
                 <ConnectedModal
                   {...props}
-                  theme={theme}
-                  onClose={closeModal}
-                  containerType="modal"
-                  wallet={wallet}
                   account={account}
+                  containerType="modal"
+                  onClose={closeModal}
+                  theme={theme}
+                  wallet={wallet}
                 />
               ) : (
                 <ConnectModal
                   {...props}
-                  theme={theme}
-                  onClose={closeModal}
                   containerType="modal"
+                  onClose={closeModal}
                   siweAuth={siweAuth}
+                  theme={theme}
                 />
               )}
             </View>
@@ -189,19 +187,19 @@ const modalHeight = 520;
 const screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
-  modalOverlay: {
-    position: "absolute",
-    width: screenWidth,
-    height: screenHeight,
-    backgroundColor: "rgba(0,0,0,0.8)",
-  },
-  dismissArea: {
-    width: "100%",
-    flex: 1,
-  },
   bottomSheetContainer: {
+    flexDirection: "column",
     height: modalHeight,
     width: screenWidth,
-    flexDirection: "column",
+  },
+  dismissArea: {
+    flex: 1,
+    width: "100%",
+  },
+  modalOverlay: {
+    backgroundColor: "rgba(0,0,0,0.8)",
+    height: screenHeight,
+    position: "absolute",
+    width: screenWidth,
   },
 });

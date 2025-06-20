@@ -18,10 +18,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("toSerializableTransaction", () => {
   let transaction: PreparedTransaction;
   beforeAll(() => {
     transaction = prepareTransaction({
-      to: TEST_WALLET_B,
       chain: FORKED_ETHEREUM_CHAIN,
-      value: toWei("10"),
       client: TEST_CLIENT,
+      to: TEST_WALLET_B,
+      value: toWei("10"),
     });
   });
 
@@ -286,11 +286,11 @@ describe.runIf(process.env.TW_SECRET_KEY)("toSerializableTransaction", () => {
       });
 
       const serializableTransaction = await toSerializableTransaction({
+        from: TEST_ACCOUNT_A,
         transaction: {
           ...transaction,
           authorizationList: [authorization],
         },
-        from: TEST_ACCOUNT_A,
       });
 
       expect(serializableTransaction.authorizationList).toMatchInlineSnapshot(`
@@ -318,11 +318,11 @@ describe.runIf(process.env.TW_SECRET_KEY)("toSerializableTransaction", () => {
       });
 
       const serializableTransaction = await toSerializableTransaction({
+        from: TEST_ACCOUNT_A,
         transaction: {
           ...transaction,
           authorizationList: async () => Promise.resolve([authorization]),
         },
-        from: TEST_ACCOUNT_A,
       });
 
       expect(serializableTransaction.authorizationList).toMatchInlineSnapshot(`
@@ -350,8 +350,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("toSerializableTransaction", () => {
       const serializableTransaction = await toSerializableTransaction({
         transaction: {
           ...transaction,
-          gas,
           extraGas: BigInt(50_000),
+          gas,
         },
       });
       expect(serializableTransaction.gas).toBe(gas + BigInt(50_000));
@@ -361,8 +361,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("toSerializableTransaction", () => {
       const serializableTransaction = await toSerializableTransaction({
         transaction: {
           ...transaction,
-          gas,
           extraGas: () => Promise.resolve(BigInt(50_000)),
+          gas,
         },
       });
       expect(serializableTransaction.gas).toBe(gas + BigInt(50_000));
@@ -372,8 +372,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("toSerializableTransaction", () => {
       const serializableTransaction = await toSerializableTransaction({
         transaction: {
           ...transaction,
-          gas,
           extraGas: () => Promise.resolve(undefined),
+          gas,
         },
       });
 
@@ -474,10 +474,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("toSerializableTransaction", () => {
   test("should respect 0 maxPriorityFeePerGas chains", async () => {
     const serializableTransaction = await toSerializableTransaction({
       transaction: prepareTransaction({
-        to: TEST_WALLET_B,
         chain: arbitrumSepolia,
-        value: 0n,
         client: TEST_CLIENT,
+        to: TEST_WALLET_B,
+        value: 0n,
       }),
     });
 

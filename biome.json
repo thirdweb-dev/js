@@ -1,55 +1,42 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
-  "organizeImports": {
-    "enabled": true
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "nursery": {
-        "noEnum": "warn",
-        "noDuplicateElseIf": "error",
-        "noDynamicNamespaceImportAccess": "error",
-        "noExportedImports": "error",
-        "noMissingVarFunction": "error",
-        "useSortedClasses": "error"
-      },
-      "correctness": {
-        "useHookAtTopLevel": "error",
-        "noNewSymbol": "error",
-        "noUnusedImports": "error",
-        "noUnusedVariables": "error",
-        "useArrayLiterals": "error"
-      },
-      "a11y": {
-        "useSemanticElements": "off"
-      },
-      "style": {
-        "noRestrictedGlobals": {
-          "options": { "deniedGlobals": ["Buffer"] },
-          "level": "error"
-        },
-        "noUselessElse": "off"
+  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on",
+        "useSortedAttributes": "on",
+        "useSortedKeys": "on"
       }
-    }
+    },
+    "enabled": true
   },
   "formatter": {
     "enabled": true,
     "indentStyle": "space"
   },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "correctness": {
+        "noUnusedImports": "error"
+      },
+      "performance": {
+        "noImgElement": "off"
+      },
+      "recommended": true
+    }
+  },
   "overrides": [
     {
-      "include": [
-        "packages/thirdweb/src/crypto/aes/lib/md5.ts",
-        "packages/thirdweb/src/utils/promise/p-limit.ts",
-        "packages/thirdweb/src/utils/bytecode/cbor-decode.ts",
-        "packages/thirdweb/src/wallets/in-app/native/helpers/wallet/sss.ts",
-        "packages/thirdweb/src/**/__generated__/**"
-      ],
-      "linter": {
-        "enabled": false
-      }
+      "assist": {
+        "actions": {
+          "source": {
+            "useSortedAttributes": "off",
+            "useSortedKeys": "off"
+          }
+        }
+      },
+      "includes": ["packages/**/package.json"]
     }
   ]
 }

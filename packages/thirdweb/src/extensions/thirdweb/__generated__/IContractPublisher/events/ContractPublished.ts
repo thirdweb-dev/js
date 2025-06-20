@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "ContractPublished" event.
@@ -42,8 +42,8 @@ export function contractPublishedEvent(
   filters: ContractPublishedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event ContractPublished(address indexed operator, address indexed publisher, (string contractId, uint256 publishTimestamp, string publishMetadataUri, bytes32 bytecodeHash, address implementation) publishedContract)",
-    filters,
   });
 }

@@ -6,12 +6,16 @@ export function usePartners({
   ecosystem,
   authToken,
   teamId,
-}: { ecosystem: Ecosystem; authToken: string; teamId: string }) {
+}: {
+  ecosystem: Ecosystem;
+  authToken: string;
+  teamId: string;
+}) {
   const partnersQuery = useQuery({
-    queryKey: ["ecosystem", ecosystem.id, "partners"],
     queryFn: async () => {
-      return fetchPartners({ ecosystem, authToken, teamId });
+      return fetchPartners({ authToken, ecosystem, teamId });
     },
+    queryKey: ["ecosystem", ecosystem.id, "partners"],
     retry: false,
   });
 

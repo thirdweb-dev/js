@@ -46,9 +46,9 @@ export async function FaucetSection(props: {
           <div className="h-8" />
 
           <FaucetButton
-            client={client}
-            chain={chain}
             amount={amountToGive}
+            chain={chain}
+            client={client}
             isLoggedIn={isLoggedIn}
           />
         </div>

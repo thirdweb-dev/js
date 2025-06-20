@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { pollWithTimeout } from "utils/pollWithTimeout";
 import {
   reportOnboardingPlanSelected,
   reportOnboardingPlanSelectionSkipped,
@@ -9,8 +11,6 @@ import { PricingCard } from "@/components/blocks/pricing-card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import Link from "next/link";
-import { pollWithTimeout } from "utils/pollWithTimeout";
 import { useStripeRedirectEvent } from "../../../../../(stripe)/stripe-redirect/stripeRedirectChannel";
 
 export function PlanSelector(props: {
@@ -40,18 +40,18 @@ export function PlanSelector(props: {
     <PricingCard
       billingPlan="starter"
       billingStatus={props.team.billingStatus}
-      teamSlug={props.team.slug}
       cta={{
         label: "Get Started",
-        type: "checkout",
         onClick() {
           reportOnboardingPlanSelected({
             plan: "starter",
           });
         },
+        type: "checkout",
       }}
       getTeam={props.getTeam}
       teamId={props.team.id}
+      teamSlug={props.team.slug}
     />
   );
 
@@ -59,19 +59,19 @@ export function PlanSelector(props: {
     <PricingCard
       billingPlan="growth"
       billingStatus={props.team.billingStatus}
-      teamSlug={props.team.slug}
       cta={{
         label: "Get Started",
-        type: "checkout",
         onClick() {
           reportOnboardingPlanSelected({
             plan: "growth",
           });
         },
+        type: "checkout",
       }}
-      highlighted
       getTeam={props.getTeam}
+      highlighted
       teamId={props.team.id}
+      teamSlug={props.team.slug}
     />
   );
 
@@ -79,18 +79,18 @@ export function PlanSelector(props: {
     <PricingCard
       billingPlan="scale"
       billingStatus={props.team.billingStatus}
-      teamSlug={props.team.slug}
       cta={{
         label: "Get started",
-        type: "checkout",
         onClick() {
           reportOnboardingPlanSelected({
             plan: "scale",
           });
         },
+        type: "checkout",
       }}
       getTeam={props.getTeam}
       teamId={props.team.id}
+      teamSlug={props.team.slug}
     />
   );
 
@@ -98,18 +98,18 @@ export function PlanSelector(props: {
     <PricingCard
       billingPlan="pro"
       billingStatus={props.team.billingStatus}
-      teamSlug={props.team.slug}
       cta={{
         label: "Get started",
-        type: "checkout",
         onClick() {
           reportOnboardingPlanSelected({
             plan: "pro",
           });
         },
+        type: "checkout",
       }}
       getTeam={props.getTeam}
       teamId={props.team.id}
+      teamSlug={props.team.slug}
     />
   );
 
@@ -127,16 +127,16 @@ export function PlanSelector(props: {
           </div>
         </div>
         <Button
-          variant="link"
-          className="self-center text-muted-foreground"
           asChild
+          className="self-center text-muted-foreground"
+          variant="link"
         >
           <Link
-            replace
             href={`/get-started/team/${props.team.slug}/add-members`}
             onClick={() => {
               reportOnboardingPlanSelectionSkipped();
             }}
+            replace
           >
             Skip picking a plan for now and upgrade later
           </Link>

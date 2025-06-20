@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
-import { cn } from "@/lib/utils";
 import { MessageCircleIcon, XIcon } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { createThirdwebClient } from "thirdweb";
+import { Button } from "@/components/ui/button";
+import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
+import { cn } from "@/lib/utils";
 import CustomChatContent from "./CustomChatContent";
 
 // Create a thirdweb client for the chat functionality
@@ -34,12 +34,12 @@ export function CustomChatButton(props: {
     <>
       {/* Inline Button (not floating) */}
       <Button
+        className="gap-2 rounded-full shadow-lg"
         onClick={() => {
           setIsOpen(true);
           setHasBeenOpened(true);
         }}
         variant="default"
-        className="gap-2 rounded-full shadow-lg"
       >
         <MessageCircleIcon className="size-4" />
         {props.label}
@@ -60,11 +60,11 @@ export function CustomChatButton(props: {
             {props.label}
           </div>
           <Button
-            variant="ghost"
-            size="icon"
-            onClick={closeModal}
-            className="h-auto w-auto p-1 text-muted-foreground"
             aria-label="Close chat"
+            className="h-auto w-auto p-1 text-muted-foreground"
+            onClick={closeModal}
+            size="icon"
+            variant="ghost"
           >
             <XIcon className="size-5" />
           </Button>
@@ -74,7 +74,6 @@ export function CustomChatButton(props: {
           {hasBeenOpened && isOpen && (
             <CustomChatContent
               authToken={props.authToken}
-              teamId={props.teamId}
               client={client}
               clientId={props.clientId}
               examplePrompts={props.examplePrompts.map((prompt) => ({
@@ -83,6 +82,7 @@ export function CustomChatButton(props: {
               }))}
               networks={props.networks}
               requireLogin={props.requireLogin}
+              teamId={props.teamId}
             />
           )}
         </div>

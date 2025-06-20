@@ -1,3 +1,4 @@
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import {
   Select,
   SelectContent,
@@ -7,12 +8,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Meta, StoryObj } from "@storybook/nextjs";
 import { BadgeContainer } from "../../../stories/utils";
 
 const meta = {
-  title: "Shadcn/Select",
   component: Component,
+  title: "Shadcn/Select",
 } satisfies Meta<typeof Component>;
 
 export default meta;

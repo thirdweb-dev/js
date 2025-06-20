@@ -1,6 +1,6 @@
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 
 export default async function Page(props: {
   searchParams: Promise<{

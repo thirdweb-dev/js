@@ -41,35 +41,15 @@ const baseNextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  productionBrowserSourceMaps: false,
   experimental: {
-    webpackBuildWorker: true,
-    webpackMemoryOptimizations: true,
     serverSourceMaps: false,
     taint: true,
-  },
-  serverExternalPackages: ["pino-pretty"],
-  async rewrites() {
-    return [
-      {
-        source: "/_ph/static/:path*",
-        destination: "https://us-assets.i.posthog.com/static/:path*",
-      },
-      {
-        source: "/_ph/:path*",
-        destination: "https://us.i.posthog.com/:path*",
-      },
-      {
-        source: "/_ph/decide",
-        destination: "https://us.i.posthog.com/decide",
-      },
-    ];
+    webpackBuildWorker: true,
+    webpackMemoryOptimizations: true,
   },
   async headers() {
     return [
       {
-        // Apply these headers to all routes in your application.
-        source: "/(.*)",
         headers: [
           ...securityHeaders,
           {
@@ -77,10 +57,30 @@ const baseNextConfig: NextConfig = {
             value: "sec-ch-viewport-width",
           },
         ],
+        // Apply these headers to all routes in your application.
+        source: "/(.*)",
       },
     ];
   },
+  productionBrowserSourceMaps: false,
   reactStrictMode: true,
+  async rewrites() {
+    return [
+      {
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+        source: "/_ph/static/:path*",
+      },
+      {
+        destination: "https://us.i.posthog.com/:path*",
+        source: "/_ph/:path*",
+      },
+      {
+        destination: "https://us.i.posthog.com/decide",
+        source: "/_ph/decide",
+      },
+    ];
+  },
+  serverExternalPackages: ["pino-pretty"],
 };
 
 export default baseNextConfig;

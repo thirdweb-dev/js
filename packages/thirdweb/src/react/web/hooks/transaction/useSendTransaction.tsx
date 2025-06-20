@@ -111,40 +111,40 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
     if (payModal === false) return;
     setRootEl(
       <TransactionModal
-        title={payModal?.metadata?.name || "Transaction"}
-        txId={randomBytesHex()}
-        tx={data.tx}
-        onComplete={data.sendTx}
+        client={data.tx.client}
+        localeId={payModal?.locale || "en_US"}
+        modalMode={data.mode}
         onClose={() => {
           setRootEl(null);
           data.rejectTx(
             new Error("User rejected transaction by closing modal"),
           );
         }}
+        onComplete={data.sendTx}
         onTxSent={data.resolveTx}
-        client={data.tx.client}
-        localeId={payModal?.locale || "en_US"}
-        supportedTokens={payModal?.supportedTokens}
-        theme={payModal?.theme || "dark"}
-        modalMode={data.mode}
         payOptions={{
           buyWithCrypto: payModal?.buyWithCrypto,
           buyWithFiat: payModal?.buyWithFiat,
-          purchaseData: payModal?.purchaseData,
-          mode: "transaction",
-          transaction: data.tx,
           metadata: payModal?.metadata,
+          mode: "transaction",
           onPurchaseSuccess: payModal?.onPurchaseSuccess,
+          purchaseData: payModal?.purchaseData,
           showThirdwebBranding: payModal?.showThirdwebBranding,
+          transaction: data.tx,
         }}
+        supportedTokens={payModal?.supportedTokens}
+        theme={payModal?.theme || "dark"}
+        title={payModal?.metadata?.name || "Transaction"}
+        tx={data.tx}
+        txId={randomBytesHex()}
       />,
     );
   };
 
   return useSendTransactionCore({
+    gasless: config.gasless,
     showPayModal:
       !payModalEnabled || payModal === false ? undefined : showPayModal,
-    gasless: config.gasless,
     switchChain,
     wallet,
   });

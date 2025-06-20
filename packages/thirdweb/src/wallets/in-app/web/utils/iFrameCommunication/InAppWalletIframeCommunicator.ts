@@ -24,22 +24,22 @@ export class InAppWalletIframeCommunicator<
     ecosystem?: Ecosystem;
   }) {
     super({
+      baseUrl,
+      clientId,
+      container: typeof document === "undefined" ? undefined : document.body,
+      ecosystem,
       iframeId: IN_APP_WALLET_IFRAME_ID + (ecosystem?.id || ""),
       link: createInAppWalletIframeLink({
-        clientId,
-        path: IN_APP_WALLET_PATH,
-        ecosystem,
         baseUrl,
-      }).href,
-      baseUrl,
-      container: typeof document === "undefined" ? undefined : document.body,
-      localStorage: new ClientScopedStorage({
-        storage: webLocalStorage,
         clientId,
         ecosystem,
+        path: IN_APP_WALLET_PATH,
+      }).href,
+      localStorage: new ClientScopedStorage({
+        clientId,
+        ecosystem,
+        storage: webLocalStorage,
       }),
-      clientId,
-      ecosystem,
     });
     this.clientId = clientId;
     this.ecosystem = ecosystem;

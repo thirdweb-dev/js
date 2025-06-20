@@ -53,14 +53,14 @@ export async function resolveName(
   return withCache(
     async () => {
       const contract = getContract({
-        client,
-        chain: resolverChain || polygon,
         address: resolverAddress || UD_POLYGON_MAINNET,
+        chain: resolverChain || polygon,
+        client,
       });
 
       // Note: if the given wallet address does not have any UD name, `reverseNameOf` will return an empty string
       // This can still happen if you have transferred a domain to a new address, and forgot to set up the Reverse Resolution on the new address
-      const domain = await reverseNameOf({ contract, addr: address });
+      const domain = await reverseNameOf({ addr: address, contract });
       if (!domain) {
         throw new Error(
           `Failed to retrieve domain for address: ${address}. Make sure you have set the Reverse Resolution address for your domain at https://unstoppabledomains.com/manage?page=reverseResolution&domain=your-domain`,

@@ -161,7 +161,7 @@ type CheckedSignTypedDataOptions<
   from: string;
 };
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: we truly want to accept anything here
 type SignedTypedDataOptions = CheckedSignTypedDataOptions<any, any>;
 
 // ========== User Operation Types ==========

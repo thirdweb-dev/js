@@ -1,18 +1,18 @@
 "use client";
 
-import { NavLink } from "@/components/ui/NavLink";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useMutation } from "@tanstack/react-query";
+import { EllipsisIcon, TrashIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { NavLink } from "@/components/ui/NavLink";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useMutation } from "@tanstack/react-query";
-import { EllipsisIcon, TrashIcon } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { toast } from "sonner";
 import { deleteSession } from "../api/session";
 import { useNewChatPageLink } from "../hooks/useNewChatPageLink";
 import { deletedSessionsStore } from "../stores";
@@ -51,10 +51,10 @@ export function ChatSidebarLink(props: {
     >
       <Button
         asChild
-        variant="ghost"
         className="h-auto w-full items-center justify-between px-2 py-1.5 text-left text-sm hover:bg-transparent"
+        variant="ghost"
       >
-        <NavLink href={`/chat/${props.sessionId}`} activeClassName="bg-muted">
+        <NavLink activeClassName="bg-muted" href={`/chat/${props.sessionId}`}>
           <span className="line-clamp-1 block truncate">{props.title}</span>
         </NavLink>
       </Button>
@@ -69,15 +69,15 @@ export function ChatSidebarLink(props: {
         </PopoverTrigger>
         <PopoverContent className="w-44 p-1" side="right">
           <Button
-            variant="ghost"
             className="!text-destructive-text flex w-full justify-start gap-2.5 px-2"
             onClick={() => {
               const promise = deleteChat.mutateAsync();
               toast.promise(promise, {
-                success: "Chat deleted successfully",
                 error: "Failed to delete chat",
+                success: "Chat deleted successfully",
               });
             }}
+            variant="ghost"
           >
             {deleteChat.isPending ? (
               <Spinner className="size-4" />

@@ -1,15 +1,15 @@
+import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
+import { notFound, redirect } from "next/navigation";
 import { getProject } from "@/api/projects";
 import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
-import { notFound, redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import { TransactionsAnalyticsPageContent } from "./analytics/analytics-page";
 import { EngineChecklist } from "./analytics/ftux.client";
 import { TransactionAnalyticsSummary } from "./analytics/summary";
 import {
-  type TransactionSummaryData,
   getTransactionAnalyticsSummary,
+  type TransactionSummaryData,
 } from "./lib/analytics";
 import type { Wallet } from "./server-wallets/wallet-table/types";
 
@@ -71,8 +71,8 @@ export default async function TransactionsAnalyticsPage(props: {
   let initialData: TransactionSummaryData | undefined;
   if (wallets && wallets.length > 0) {
     const summary = await getTransactionAnalyticsSummary({
-      teamId: project.teamId,
       clientId: project.publishableKey,
+      teamId: project.teamId,
     }).catch(() => undefined);
     initialData = summary;
   }
@@ -86,29 +86,29 @@ export default async function TransactionsAnalyticsPage(props: {
   return (
     <div className="flex grow flex-col">
       <EngineChecklist
-        teamSlug={params.team_slug}
-        managementAccessToken={managementAccessToken ?? undefined}
-        hasTransactions={hasTransactions}
-        project={project}
-        wallets={wallets ?? []}
-        testTxWithWallet={searchParams.testTxWithWallet as string | undefined}
         client={client}
+        hasTransactions={hasTransactions}
+        managementAccessToken={managementAccessToken ?? undefined}
+        project={project}
+        teamSlug={params.team_slug}
+        testTxWithWallet={searchParams.testTxWithWallet as string | undefined}
+        wallets={wallets ?? []}
       />
       {hasTransactions && !searchParams.testTxWithWallet && (
         <TransactionAnalyticsSummary
+          clientId={project.publishableKey}
           initialData={initialData}
           teamId={project.teamId}
-          clientId={project.publishableKey}
         />
       )}
       <div className="h-10" />
       <TransactionsAnalyticsPageContent
-        teamSlug={params.team_slug}
-        searchParams={searchParams}
-        project={project}
-        showAnalytics={hasTransactions && !searchParams.testTxWithWallet}
-        wallets={wallets}
         client={client}
+        project={project}
+        searchParams={searchParams}
+        showAnalytics={hasTransactions && !searchParams.testTxWithWallet}
+        teamSlug={params.team_slug}
+        wallets={wallets}
       />
     </div>
   );

@@ -1,15 +1,4 @@
 "use client";
-import { useIsClientMounted } from "@/components/blocks/client-only";
-import { DynamicHeight } from "@/components/ui/DynamicHeight";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { TabButtons } from "@/components/ui/tabs";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { nebulaAppThirdwebClient } from "@/constants/nebula-client";
-import { NebulaIcon } from "@/icons/NebulaIcon";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import {
   ChevronDownIcon,
@@ -20,8 +9,8 @@ import {
   PlusIcon,
   SunIcon,
 } from "lucide-react";
-import { useTheme } from "next-themes";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -29,9 +18,22 @@ import {
   AccountBlobbie,
   AccountProvider,
   useActiveWallet,
+  WalletIcon,
+  WalletName,
+  WalletProvider,
 } from "thirdweb/react";
-import { WalletIcon, WalletName, WalletProvider } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
+import { useIsClientMounted } from "@/components/blocks/client-only";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { TabButtons } from "@/components/ui/tabs";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { nebulaAppThirdwebClient } from "@/constants/nebula-client";
+import { NebulaIcon } from "@/icons/NebulaIcon";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import { doNebulaLogout } from "../../login/auth-actions";
 import type { TruncatedSessionInfo } from "../api/types";
 import { useNewChatPageLink } from "../hooks/useNewChatPageLink";
@@ -57,12 +59,12 @@ export function ChatSidebar(props: {
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-start gap-3 p-4 lg:justify-between">
-        <Link href="/" className="flex items-center gap-1">
-          <NebulaIcon className="size-6 text-foreground" aria-label="Nebula" />
+        <Link className="flex items-center gap-1" href="/">
+          <NebulaIcon aria-label="Nebula" className="size-6 text-foreground" />
           <span className="font-medium text-lg">Nebula</span>
         </Link>
 
-        <Badge variant="secondary" className="gap-1 py-1">
+        <Badge className="gap-1 py-1" variant="secondary">
           Beta
         </Badge>
       </div>
@@ -72,8 +74,8 @@ export function ChatSidebar(props: {
       <div className="flex flex-col gap-2 px-4">
         <Button
           asChild
-          variant="pink"
           className="w-full gap-2 rounded-lg border-nebula-pink-foreground"
+          variant="pink"
         >
           <Link href={newChatPage}>
             <PlusIcon className="size-4" />
@@ -90,8 +92,8 @@ export function ChatSidebar(props: {
             <h3 className="text-muted-foreground text-xs">Recent Chats</h3>
             {sessionsToShow.length < sessions.length && (
               <Link
-                href="/chat/history"
                 className="flex items-center gap-1 rounded-full text-foreground text-xs hover:underline"
+                href="/chat/history"
               >
                 View All
                 <ChevronRightIcon className="size-3.5 text-muted-foreground" />
@@ -103,10 +105,10 @@ export function ChatSidebar(props: {
             {sessionsToShow.map((session) => {
               return (
                 <ChatSidebarLink
+                  authToken={props.authToken}
+                  key={session.id}
                   sessionId={session.id}
                   title={session.title || "Untitled Chat"}
-                  key={session.id}
-                  authToken={props.authToken}
                 />
               );
             })}
@@ -129,6 +131,8 @@ export function ChatSidebar(props: {
         <ToggleThemeButton />
 
         <SidebarIconButton
+          icon={logoutMutation.isPending ? Spinner : LogOutIcon}
+          label="Log Out"
           onClick={async () => {
             try {
               await logoutMutation.mutateAsync();
@@ -137,8 +141,6 @@ export function ChatSidebar(props: {
               toast.error("Failed to log out");
             }
           }}
-          icon={logoutMutation.isPending ? Spinner : LogOutIcon}
-          label="Log Out"
         />
       </div>
     </div>
@@ -153,13 +155,13 @@ function WalletDetails() {
       <div className="flex items-center justify-between gap-2 border-t px-2 py-1.5">
         <CustomConnectButton />
         <Button
-          variant="ghost"
-          size="sm"
           className={cn(
             "h-auto w-auto p-1.5 transition-transform duration-300",
             isExpanded ? "rotate-180" : "",
           )}
           onClick={() => setIsExpanded(!isExpanded)}
+          size="sm"
+          variant="ghost"
         >
           <ChevronDownIcon className="size-4" />
         </Button>
@@ -168,18 +170,18 @@ function WalletDetails() {
       {isExpanded && (
         <div className="border-t border-dashed">
           <TabButtons
-            tabContainerClassName="px-2 pt-2"
             tabClassName="!text-sm py-1.5"
+            tabContainerClassName="px-2 pt-2"
             tabs={[
               {
+                isActive: tab === "assets",
                 name: "Assets",
                 onClick: () => setTab("assets"),
-                isActive: tab === "assets",
               },
               {
+                isActive: tab === "transactions",
                 name: "Recent Activity",
                 onClick: () => setTab("transactions"),
-                isActive: tab === "transactions",
               },
             ]}
           />
@@ -215,7 +217,6 @@ function CustomConnectButton() {
   return (
     <div className="[&>*]:!w-full grow">
       <NebulaConnectWallet
-        detailsButtonClassName="!bg-background hover:!border-active-border"
         customDetailsButton={
           activeWallet
             ? (address) => {
@@ -226,8 +227,8 @@ function CustomConnectButton() {
                       client={nebulaAppThirdwebClient}
                     >
                       <Button
-                        variant="ghost"
                         className="flex h-auto w-full items-center justify-start gap-2.5 rounded-lg px-2 hover:bg-accent"
+                        variant="ghost"
                       >
                         <AccountAvatar
                           className="size-8 rounded-full"
@@ -256,6 +257,7 @@ function CustomConnectButton() {
               }
             : undefined
         }
+        detailsButtonClassName="!bg-background hover:!border-active-border"
       />
     </div>
   );
@@ -267,13 +269,13 @@ function ToggleThemeButton() {
 
   return (
     <SidebarIconButton
-      onClick={() => {
-        setTheme(theme === "light" ? "dark" : "light");
-      }}
       icon={
         isClientMounted ? (theme === "light" ? SunIcon : MoonIcon) : Spinner
       }
       label="Toggle Theme"
+      onClick={() => {
+        setTheme(theme === "light" ? "dark" : "light");
+      }}
     />
   );
 }
@@ -288,14 +290,14 @@ function SidebarIconLink(props: {
     <ToolTipLabel label={props.label}>
       <Button
         asChild
-        variant="ghost"
         className="size-10 rounded-full p-0 text-muted-foreground hover:text-foreground"
+        variant="ghost"
       >
         <Link
-          href={props.href}
-          target={props.target}
-          prefetch={false}
           aria-label={props.label}
+          href={props.href}
+          prefetch={false}
+          target={props.target}
         >
           <props.icon className="size-5" />
         </Link>
@@ -312,10 +314,10 @@ function SidebarIconButton(props: {
   return (
     <ToolTipLabel label={props.label}>
       <Button
-        variant="ghost"
-        onClick={props.onClick}
         aria-label={props.label}
         className="size-10 rounded-full p-0 text-muted-foreground hover:text-foreground"
+        onClick={props.onClick}
+        variant="ghost"
       >
         <props.icon className="size-5" />
       </Button>

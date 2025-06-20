@@ -1,20 +1,24 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { PlugIcon } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 export function EmptyStateCard({
   metric,
   link,
   description,
-}: { metric: string; link?: string; description?: string }) {
+}: {
+  metric: string;
+  link?: string;
+  description?: string;
+}) {
   return (
     <Card className="container h-[300px] p-2 md:h-[400px]">
       <div className="flex h-full flex-col items-center justify-center gap-2 rounded-md border text-center">
         <EmptyStateContent
-          metric={metric}
-          link={link}
           description={description}
+          link={link}
+          metric={metric}
         />
       </div>
     </Card>
@@ -40,12 +44,12 @@ export function EmptyStateContent({
         {description ?? `Your app may not be configured to use ${metric}.`}
       </div>
       {link && (
-        <Button asChild variant="primary" size="sm" className="mt-4">
+        <Button asChild className="mt-4" size="sm" variant="primary">
           <Link
-            href={link}
-            target="_blank"
             className="text-sm"
+            href={link}
             rel="noopener noreferrer"
+            target="_blank"
           >
             Configure {metric}
           </Link>

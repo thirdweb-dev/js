@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "finance.panaroma",
-  name: "Panaroma Wallet",
-  homepage: "https://panaroma.finance",
-  image_id: "4394f728-0c57-4560-acba-48bfd82ddf00",
   app: {
-    browser: null,
-    ios: null,
     android: "http://play.google.com/store/apps/details?id=com.panaroma.wallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "panaromawallet://walletconnect",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://panaroma.finance",
+  id: "finance.panaroma",
+  image_id: "4394f728-0c57-4560-acba-48bfd82ddf00",
+  mobile: {
+    native: "panaromawallet://walletconnect",
+    universal: null,
+  },
+  name: "Panaroma Wallet",
+  rdns: null,
 } as const;

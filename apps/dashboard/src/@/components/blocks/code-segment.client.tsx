@@ -1,7 +1,7 @@
 "use client";
-import { CodeClient } from "@/components/ui/code/code.client";
 import type React from "react";
 import { type Dispatch, type SetStateAction, useMemo } from "react";
+import { CodeClient } from "@/components/ui/code/code.client";
 import { TabButtons } from "../ui/tabs";
 
 export type CodeEnvironment =
@@ -91,38 +91,36 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
     >
       {!hideTabs && (
         <TabButtons
-          tabs={environments.map((env) => ({
-            label: env.title,
-            onClick: () => setEnvironment(env.environment),
-            isActive: activeEnvironment === env.environment,
-            name: env.title,
-          }))}
-          tabClassName="text-sm gap-2 !text-sm"
-          tabIconClassName="size-4"
-          tabContainerClassName="px-3 pt-1.5 gap-0.5"
           hideBottomLine={!!onlyTabs}
+          tabClassName="text-sm gap-2 !text-sm"
+          tabContainerClassName="px-3 pt-1.5 gap-0.5"
+          tabIconClassName="size-4"
+          tabs={environments.map((env) => ({
+            isActive: activeEnvironment === env.environment,
+            label: env.title,
+            name: env.title,
+            onClick: () => setEnvironment(env.environment),
+          }))}
         />
       )}
 
       {onlyTabs ? null : (
-        <>
-          <CodeClient
-            code={code}
-            className="rounded-none border-none"
-            lang={
-              isInstallCommand
-                ? activeEnvironment === "react-native"
-                  ? "tsx"
-                  : "bash"
-                : activeEnvironment === "react" ||
-                    activeEnvironment === "react-native"
-                  ? "tsx"
-                  : activeEnvironment === "unity"
-                    ? "cpp"
-                    : activeEnvironment
-            }
-          />
-        </>
+        <CodeClient
+          className="rounded-none border-none"
+          code={code}
+          lang={
+            isInstallCommand
+              ? activeEnvironment === "react-native"
+                ? "tsx"
+                : "bash"
+              : activeEnvironment === "react" ||
+                  activeEnvironment === "react-native"
+                ? "tsx"
+                : activeEnvironment === "unity"
+                  ? "cpp"
+                  : activeEnvironment
+          }
+        />
       )}
     </div>
   );

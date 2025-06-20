@@ -25,14 +25,14 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
   const mockChain = baseSepolia;
   const mockAccount = TEST_ACCOUNT_A;
   const mockUser = {
+    account: mockAccount,
+    authDetails: {
+      email: "test@test.com",
+      recoveryShareManagement: "ENCLAVE",
+      userWalletId: TEST_ACCOUNT_A.address,
+    },
     status: "Logged In, Wallet Initialized",
     walletAddress: TEST_ACCOUNT_A.address,
-    authDetails: {
-      userWalletId: TEST_ACCOUNT_A.address,
-      recoveryShareManagement: "ENCLAVE",
-      email: "test@test.com",
-    },
-    account: mockAccount,
   } as const;
   const mockAuthResult: AuthLoginReturnType = {
     user: mockUser,
@@ -40,16 +40,16 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
 
   const mockConnectorFactory = vi.fn(() =>
     Promise.resolve({
-      connect: vi.fn().mockResolvedValue(mockAuthResult),
-      logout: vi.fn(() => Promise.resolve({ success: true })),
       authenticate: vi.fn(),
-      getAccounts: vi.fn(),
+      connect: vi.fn().mockResolvedValue(mockAuthResult),
       getAccount: vi.fn(),
+      getAccounts: vi.fn(),
       getProfiles: vi.fn(),
       getUser: vi.fn().mockResolvedValue(mockUser),
       linkProfile: vi.fn(),
-      unlinkProfile: vi.fn(),
+      logout: vi.fn(() => Promise.resolve({ success: true })),
       preAuthenticate: vi.fn(),
+      unlinkProfile: vi.fn(),
     } as InAppConnector),
   );
 
@@ -63,18 +63,18 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
     });
 
     const result = await wallet.connect({
-      client: mockClient,
       chain: mockChain,
-      strategy: "email",
+      client: mockClient,
       email: "",
+      strategy: "email",
       verificationCode: "",
     });
 
     expect(result).toBe(mockAccount);
     expect(InAppWallet.connectInAppWallet).toHaveBeenCalledWith(
       expect.objectContaining({
-        client: mockClient,
         chain: mockChain,
+        client: mockClient,
       }),
       undefined,
       expect.any(Object),
@@ -87,15 +87,15 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
     });
 
     const result = await wallet.autoConnect({
-      client: mockClient,
       chain: mockChain,
+      client: mockClient,
     });
 
     expect(result).toBe(mockAccount);
     expect(InAppWallet.autoConnectInAppWallet).toHaveBeenCalledWith(
       expect.objectContaining({
-        client: mockClient,
         chain: mockChain,
+        client: mockClient,
       }),
       undefined,
       expect.any(Object),
@@ -104,14 +104,14 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
 
   it("should handle ecosystem wallet connection with smart account settings", async () => {
     vi.mocked(getEcosystemInfo).mockResolvedValue({
-      smartAccountOptions: {
-        defaultChainId: mockChain.id,
-        sponsorGas: true,
-        accountFactoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
-      },
       authOptions: [],
       name: "hello world",
       slug: "test-ecosystem",
+      smartAccountOptions: {
+        accountFactoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
+        defaultChainId: mockChain.id,
+        sponsorGas: true,
+      },
     });
 
     const wallet = createInAppWallet({
@@ -120,30 +120,30 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
     });
 
     const result = await wallet.connect({
-      client: mockClient,
       chain: mockChain,
-      strategy: "email",
+      client: mockClient,
       email: "",
+      strategy: "email",
       verificationCode: "",
     });
 
     const expectedSmartAccountAddress = await predictSmartAccountAddress({
-      factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
-      chain: mockChain,
       adminAddress: TEST_ACCOUNT_A.address,
+      chain: mockChain,
       client: mockClient,
+      factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
     });
     expect(result.address).toBe(expectedSmartAccountAddress);
     expect(InAppWallet.connectInAppWallet).toHaveBeenCalledWith(
       expect.objectContaining({
-        client: mockClient,
         chain: mockChain,
+        client: mockClient,
       }),
       expect.objectContaining({
         smartAccount: expect.objectContaining({
           chain: mockChain,
-          sponsorGas: true,
           factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
+          sponsorGas: true,
         }),
       }),
       expect.any(Object),
@@ -151,14 +151,14 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
   });
   it("should handle ecosystem wallet connection with smart account settings even when no chain is set", async () => {
     vi.mocked(getEcosystemInfo).mockResolvedValue({
-      smartAccountOptions: {
-        defaultChainId: mockChain.id,
-        sponsorGas: true,
-        accountFactoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
-      },
       authOptions: [],
       name: "hello world",
       slug: "test-ecosystem",
+      smartAccountOptions: {
+        accountFactoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
+        defaultChainId: mockChain.id,
+        sponsorGas: true,
+      },
     });
 
     const wallet = createInAppWallet({
@@ -168,16 +168,16 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
 
     const result = await wallet.connect({
       client: mockClient,
-      strategy: "email",
       email: "",
+      strategy: "email",
       verificationCode: "",
     });
 
     const expectedSmartAccountAddress = await predictSmartAccountAddress({
-      factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
-      chain: mockChain,
       adminAddress: TEST_ACCOUNT_A.address,
+      chain: mockChain,
       client: mockClient,
+      factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
     });
     expect(result.address).toBe(expectedSmartAccountAddress);
     expect(InAppWallet.connectInAppWallet).toHaveBeenCalledWith(
@@ -187,8 +187,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
       expect.objectContaining({
         smartAccount: expect.objectContaining({
           chain: mockChain,
-          sponsorGas: true,
           factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
+          sponsorGas: true,
         }),
       }),
       expect.any(Object),
@@ -197,14 +197,14 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
 
   it("should handle ecosystem wallet auto connection with smart account settings", async () => {
     vi.mocked(getEcosystemInfo).mockResolvedValue({
-      smartAccountOptions: {
-        defaultChainId: mockChain.id,
-        sponsorGas: true,
-        accountFactoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
-      },
       authOptions: [],
       name: "hello world",
       slug: "test-ecosystem",
+      smartAccountOptions: {
+        accountFactoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
+        defaultChainId: mockChain.id,
+        sponsorGas: true,
+      },
     });
 
     const wallet = createInAppWallet({
@@ -213,27 +213,27 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
     });
 
     const result = await wallet.autoConnect({
-      client: mockClient,
       chain: mockChain,
+      client: mockClient,
     });
 
     const expectedSmartAccountAddress = await predictSmartAccountAddress({
-      factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
-      chain: mockChain,
       adminAddress: TEST_ACCOUNT_A.address,
+      chain: mockChain,
       client: mockClient,
+      factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
     });
     expect(result.address).toBe(expectedSmartAccountAddress);
     expect(InAppWallet.autoConnectInAppWallet).toHaveBeenCalledWith(
       expect.objectContaining({
-        client: mockClient,
         chain: mockChain,
+        client: mockClient,
       }),
       expect.objectContaining({
         smartAccount: expect.objectContaining({
           chain: mockChain,
-          sponsorGas: true,
           factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
+          sponsorGas: true,
         }),
       }),
       expect.any(Object),
@@ -242,14 +242,14 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
 
   it("should handle ecosystem wallet auto connection with smart account settings even when no chain is set", async () => {
     vi.mocked(getEcosystemInfo).mockResolvedValue({
-      smartAccountOptions: {
-        defaultChainId: mockChain.id,
-        sponsorGas: true,
-        accountFactoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
-      },
       authOptions: [],
       name: "hello world",
       slug: "test-ecosystem",
+      smartAccountOptions: {
+        accountFactoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
+        defaultChainId: mockChain.id,
+        sponsorGas: true,
+      },
     });
 
     const wallet = createInAppWallet({
@@ -262,10 +262,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
     });
 
     const expectedSmartAccountAddress = await predictSmartAccountAddress({
-      factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
-      chain: mockChain,
       adminAddress: TEST_ACCOUNT_A.address,
+      chain: mockChain,
       client: mockClient,
+      factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
     });
     expect(result.address).toBe(expectedSmartAccountAddress);
     expect(InAppWallet.autoConnectInAppWallet).toHaveBeenCalledWith(
@@ -275,8 +275,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
       expect.objectContaining({
         smartAccount: expect.objectContaining({
           chain: mockChain,
-          sponsorGas: true,
           factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
+          sponsorGas: true,
         }),
       }),
       expect.any(Object),
@@ -302,14 +302,14 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
   it("should return the admin account for a smart account", async () => {
     vi.unmock("./index.js");
     vi.mocked(getEcosystemInfo).mockResolvedValue({
-      smartAccountOptions: {
-        defaultChainId: mockChain.id,
-        sponsorGas: true,
-        accountFactoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
-      },
       authOptions: [],
       name: "hello world",
       slug: "test-ecosystem",
+      smartAccountOptions: {
+        accountFactoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
+        defaultChainId: mockChain.id,
+        sponsorGas: true,
+      },
     });
 
     const wallet = createInAppWallet({
@@ -319,8 +319,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("createInAppWallet", () => {
 
     const smartAccount = await wallet.connect({
       client: mockClient,
-      strategy: "email",
       email: "",
+      strategy: "email",
       verificationCode: "",
     });
 

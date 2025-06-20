@@ -34,14 +34,14 @@ export function ThemedInput(props: ThemedInputProps) {
     >
       {leftView && leftView}
       <TextInput
+        onBlur={() => setIsFocused(false)}
+        onFocus={() => setIsFocused(true)}
         placeholderTextColor={theme.colors.secondaryText}
         style={[
           styles.input,
           { color: theme.colors.primaryText },
           leftView ? { paddingLeft: 0 } : {},
         ]}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
         {...props}
       />
       {rightView && (
@@ -75,6 +75,9 @@ export function ThemedInputWithSubmit(
       ]}
     >
       <TextInput
+        onBlur={() => setIsFocused(false)}
+        onChangeText={setVal}
+        onFocus={() => setIsFocused(true)}
         placeholderTextColor={theme.colors.secondaryText}
         style={[
           styles.input,
@@ -83,27 +86,24 @@ export function ThemedInputWithSubmit(
           },
         ]}
         value={val}
-        onChangeText={setVal}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
         {...props}
       />
       {onSubmit && (
         <TouchableOpacity
-          onPress={() => onSubmit(val)}
           disabled={props.isSubmitting}
+          onPress={() => onSubmit(val)}
           style={{
             paddingHorizontal: spacing.lg,
           }}
         >
           {props.isSubmitting ? (
-            <ThemedSpinner size={24} color={theme.colors.secondaryIconColor} />
+            <ThemedSpinner color={theme.colors.secondaryIconColor} size={24} />
           ) : (
             <SvgXml
-              width={24}
-              height={24}
-              xml={RIGHT_ARROW}
               color={theme.colors.secondaryIconColor}
+              height={24}
+              width={24}
+              xml={RIGHT_ARROW}
             />
           )}
         </TouchableOpacity>
@@ -114,21 +114,21 @@ export function ThemedInputWithSubmit(
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
     alignItems: "center",
     borderRadius: radius.lg,
-    borderWidth: 1,
     borderStyle: "solid",
+    borderWidth: 1,
+    flexDirection: "row",
   },
   input: {
+    alignItems: "center",
     flex: 1,
     flexDirection: "row",
     fontSize: 16,
-    height: 56,
     gap: spacing.md,
+    height: 56,
+    justifyContent: "center",
     paddingLeft: spacing.lg,
     paddingVertical: spacing.md,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });

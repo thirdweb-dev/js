@@ -121,12 +121,12 @@ export async function verifyContractWalletSignature({
   })();
 
   return verifyHash({
+    accountFactory,
+    address,
+    chain,
+    client,
     hash: messageHash,
     signature: parsedSignature,
-    address,
-    client,
-    chain,
-    accountFactory,
   });
 }
 

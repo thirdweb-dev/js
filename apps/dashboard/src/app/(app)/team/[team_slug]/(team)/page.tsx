@@ -1,10 +1,10 @@
+import { subDays } from "date-fns";
+import { redirect } from "next/navigation";
 import { getWalletConnections } from "@/api/analytics";
-import { type Project, getProjects } from "@/api/projects";
+import { getProjects, type Project } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { DismissibleAlert } from "@/components/blocks/dismissible-alert";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { subDays } from "date-fns";
-import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../login/loginRedirect";
 import { Changelog } from "./_components/Changelog";
@@ -58,21 +58,21 @@ export default async function Page(props: {
         <div className="flex grow flex-col gap-6 pt-8 lg:pb-20">
           {team.billingPlan === "free" ? (
             <FreePlanUpsellBannerUI
-              teamSlug={team.slug}
               highlightPlan="growth"
+              teamSlug={team.slug}
             />
           ) : (
             <DismissibleAlert
-              title="Looking for Engines?"
               description="Engines, contracts, project settings, and more are now managed within projects. Open or create a project to access them."
               localStorageId={`${team.id}-engines-alert`}
+              title="Looking for Engines?"
             />
           )}
 
           <TeamProjectsPage
+            client={client}
             projects={projectsWithTotalWallets}
             team={team}
-            client={client}
           />
         </div>
 
@@ -99,10 +99,10 @@ async function getProjectsWithAnalytics(
         const thirtyDaysAgo = subDays(today, 30);
 
         const data = await getWalletConnections({
-          teamId: project.teamId,
-          projectId: project.id,
-          period: "all",
           from: thirtyDaysAgo,
+          period: "all",
+          projectId: project.id,
+          teamId: project.teamId,
           to: today,
         });
 

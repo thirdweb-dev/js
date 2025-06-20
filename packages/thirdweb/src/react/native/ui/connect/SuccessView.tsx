@@ -16,15 +16,15 @@ export const SuccessView = (props: SuccessViewProps) => {
   return (
     <View style={styles.container}>
       <RNImage
-        theme={theme}
+        color={theme.colors.success}
         data={CHECK_CIRCLE}
         size={64}
-        color={theme.colors.success}
+        theme={theme}
       />
       <ThemedText
-        type="defaultSemiBold"
-        theme={theme}
         style={{ color: theme.colors.success, textAlign: "center" }}
+        theme={theme}
+        type="defaultSemiBold"
       >
         {title}
       </ThemedText>
@@ -34,11 +34,11 @@ export const SuccessView = (props: SuccessViewProps) => {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: "center",
+    flexDirection: "column",
+    gap: spacing.lg,
+    justifyContent: "center",
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.xxl,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: spacing.lg,
   },
 });

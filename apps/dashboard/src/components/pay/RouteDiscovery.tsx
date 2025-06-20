@@ -1,14 +1,4 @@
 "use client";
-import { addUniversalBridgeTokenRoute } from "@/api/universal-bridge/tokens"; // Adjust the import path
-import { RouteDiscoveryCard } from "@/components/blocks/RouteDiscoveryCard";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import type { ProjectResponse } from "@thirdweb-dev/service-utils";
@@ -20,6 +10,16 @@ import {
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
+import { addUniversalBridgeTokenRoute } from "@/api/universal-bridge/tokens"; // Adjust the import path
+import { RouteDiscoveryCard } from "@/components/blocks/RouteDiscoveryCard";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 export const RouteDiscovery = ({
   project,
@@ -29,23 +29,20 @@ export const RouteDiscovery = ({
   client: ThirdwebClient;
 }) => {
   const form = useForm<RouteDiscoveryValidationSchema>({
-    resolver: zodResolver(routeDiscoveryValidationSchema),
     defaultValues: {
       chainId: 1,
       tokenAddress: undefined,
     },
+    resolver: zodResolver(routeDiscoveryValidationSchema),
   });
 
   const submitDiscoveryMutation = useMutation({
-    mutationFn: async (values: {
-      chainId: number;
-      tokenAddress: string;
-    }) => {
+    mutationFn: async (values: { chainId: number; tokenAddress: string }) => {
       // Call the API to add the route
       const result = await addUniversalBridgeTokenRoute({
         chainId: values.chainId,
-        tokenAddress: values.tokenAddress,
         project,
+        tokenAddress: values.tokenAddress,
       });
 
       return result;
@@ -60,16 +57,16 @@ export const RouteDiscovery = ({
           tokenAddress,
         },
         {
-          onSuccess: () => {
-            toast.success("Token submitted successfully!", {
-              description:
-                "Thank you for your submission. Contact support if your token doesn't appear after some time.",
-            });
-          },
           onError: () => {
             toast.error("Token submission failed!", {
               description:
                 "Please double check the network and token address. If issues persist, please reach out to our support team.",
+            });
+          },
+          onSuccess: () => {
+            toast.success("Token submitted successfully!", {
+              description:
+                "Thank you for your submission. Contact support if your token doesn't appear after some time.",
             });
           },
         },
@@ -82,20 +79,20 @@ export const RouteDiscovery = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit} autoComplete="off">
+      <form autoComplete="off" onSubmit={handleSubmit}>
         <RouteDiscoveryCard
           bottomText=""
           errorText={form.getFieldState("tokenAddress").error?.message}
+          noPermissionText={undefined}
           saveButton={
             // Only show the submit button in the default state
             {
-              type: "submit",
               disabled: !form.formState.isDirty,
               isPending: submitDiscoveryMutation.isPending,
+              type: "submit",
               variant: "outline",
             }
           }
-          noPermissionText={undefined}
         >
           <div>
             <h3 className="font-semibold text-xl tracking-tight">

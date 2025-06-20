@@ -1,13 +1,12 @@
 import type { Abi, AbiEvent } from "abitype";
-import {
-  type GetContractEventsOptionsDirect,
-  getContractEvents,
-} from "./get-events.js";
-
 import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
 import { retry } from "../../utils/retry.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { PreparedEvent } from "../prepare-event.js";
+import {
+  type GetContractEventsOptionsDirect,
+  getContractEvents,
+} from "./get-events.js";
 import type { ParseEventLogsResult } from "./parse-logs.js";
 
 export type WatchContractEventsOptions<
@@ -61,6 +60,7 @@ export function watchContractEvents<
   // returning this returns the underlying "unwatch" function
   return watchBlockNumber({
     ...options.contract,
+    latestBlockNumber: options.latestBlockNumber,
 
     /**
      * This function is called every time a new block is mined.
@@ -80,8 +80,8 @@ export function watchContractEvents<
             useIndexer: false,
           }),
         {
-          retries: 3,
           delay: 500,
+          retries: 3,
         },
       );
       // if there were any logs associated with our event(s)
@@ -89,6 +89,5 @@ export function watchContractEvents<
         options.onEvents(logs);
       }
     },
-    latestBlockNumber: options.latestBlockNumber,
   });
 }

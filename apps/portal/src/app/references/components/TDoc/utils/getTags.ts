@@ -10,10 +10,10 @@ export function getTags(blockTags?: BlockTag[]) {
   const prepareTag = blockTags?.find((t) => t.tag === "@prepare");
 
   return {
-    exampleTag,
     deprecatedTag,
+    exampleTag,
+    prepareTag,
     remarksTag,
     seeTag,
-    prepareTag,
   };
 }

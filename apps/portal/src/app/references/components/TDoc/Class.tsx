@@ -1,12 +1,12 @@
-import { Callout } from "@/components/Document";
-import { sluggerContext } from "@/contexts/slugger";
 import invariant from "tiny-invariant";
 import {
   type ClassDoc,
   type FunctionDoc,
-  type VariableDoc,
   getClassSignature,
+  type VariableDoc,
 } from "typedoc-better-json";
+import { Callout } from "@/components/Document";
+import { sluggerContext } from "@/contexts/slugger";
 import { CodeBlock } from "../../../../components/Document/Code";
 import { Details } from "../../../../components/Document/Details";
 import { Heading } from "../../../../components/Document/Heading";
@@ -15,9 +15,9 @@ import { DeprecatedCalloutTDoc } from "./Deprecated";
 import { FunctionTDoc } from "./Function";
 import { SourceLinkTypeDoc } from "./SourceLink";
 import { TypedocSummary } from "./Summary";
-import { VariableTDoc } from "./Variable";
 import { getTags } from "./utils/getTags";
 import { getTokenLinks } from "./utils/getTokenLinks";
+import { VariableTDoc } from "./Variable";
 
 export async function ClassTDoc(props: { doc: ClassDoc }) {
   const { doc } = props;
@@ -114,9 +114,9 @@ export async function ClassTDoc(props: { doc: ClassDoc }) {
       const flags = method.signatures?.[0]?.flags;
       return (
         <Details
+          anchorId={method.name}
           key={method.name}
           summary={method.name}
-          id={method.name}
           tags={[
             flags?.isOptional ? "optional" : "",
             flags?.isStatic ? "static" : "",
@@ -134,7 +134,7 @@ export async function ClassTDoc(props: { doc: ClassDoc }) {
 
   return (
     <div>
-      <Heading level={1} id={doc.name}>
+      <Heading anchorId={doc.name} level={1}>
         {doc.name}
       </Heading>
 
@@ -152,24 +152,24 @@ export async function ClassTDoc(props: { doc: ClassDoc }) {
 
       {exampleTag?.summary && (
         <>
-          <Heading level={3} id={slugger.slug("example")} noIndex>
+          <Heading anchorId={slugger.slug("example")} level={3} noIndex>
             Example
           </Heading>
           <TypedocSummary summary={exampleTag.summary} />
         </>
       )}
 
-      <Details summary="Signature" id={slugger.slug("signature")} noIndex>
+      <Details anchorId={slugger.slug("signature")} noIndex summary="Signature">
         <CodeBlock
-          lang="ts"
           code={signatureCode}
+          lang="ts"
           tokenLinks={tokens ? await getTokenLinks(tokens) : undefined}
         />
       </Details>
 
       {/* Constructor */}
       {doc.constructor && (
-        <Details id="constructor" level={2} summary="Constructor" noIndex>
+        <Details anchorId="constructor" level={2} noIndex summary="Constructor">
           <FunctionTDoc doc={doc.constructor} level={2} showHeading={false} />
         </Details>
       )}
@@ -177,7 +177,7 @@ export async function ClassTDoc(props: { doc: ClassDoc }) {
       {/* Methods */}
       {regularMethods && regularMethods.length > 0 && (
         <div>
-          <Heading level={2} id="methods" noIndex>
+          <Heading anchorId="methods" level={2} noIndex>
             Methods
           </Heading>
           <div>{renderMethods(regularMethods)}</div>
@@ -187,7 +187,7 @@ export async function ClassTDoc(props: { doc: ClassDoc }) {
       {/* Inherited methods */}
       {inheritedMethods && inheritedMethods.length > 0 && (
         <div>
-          <Heading level={2} id="methods" noIndex>
+          <Heading anchorId="methods" level={2} noIndex>
             Inherited Methods
           </Heading>
           <div>{renderMethods(inheritedMethods)}</div>
@@ -197,16 +197,16 @@ export async function ClassTDoc(props: { doc: ClassDoc }) {
       {/* Properties */}
       {properties && properties.length > 0 && (
         <div>
-          <Heading level={2} id="properties" noIndex>
+          <Heading anchorId="properties" level={2} noIndex>
             Properties
           </Heading>
           <div>
             {properties.map((property) => {
               return (
                 <Details
+                  anchorId={property.name}
                   key={property.name}
                   summary={property.name}
-                  id={property.name}
                 >
                   <VariableTDoc
                     doc={property}
@@ -224,22 +224,22 @@ export async function ClassTDoc(props: { doc: ClassDoc }) {
       {/* Accessor */}
       {accessors && accessors.length > 0 && (
         <div>
-          <Heading level={2} id="properties" className="text-5xl" noIndex>
+          <Heading anchorId="properties" className="text-5xl" level={2} noIndex>
             Accessors
           </Heading>
           <div>
             {accessors.map((accessor) => {
               return (
                 <Details
+                  anchorId={accessor.name}
                   key={accessor.name}
-                  id={accessor.name}
                   summary={accessor.name}
                 >
                   <AccessorTDoc
                     doc={accessor}
+                    hideHeading={true}
                     key={accessor.name}
                     level={3}
-                    hideHeading={true}
                   />
                 </Details>
               );

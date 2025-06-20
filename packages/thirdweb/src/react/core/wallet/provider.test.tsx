@@ -1,10 +1,11 @@
+/** biome-ignore-all lint/nursery/useUniqueElementIds: "id" is not the html attribute here (TODO: we should not use "id" as a key in the first place) */
 import { type FC, useContext } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { render, renderHook, screen } from "~test/react-render.js";
 import {
+  useWalletContext,
   WalletProvider,
   WalletProviderContext,
-  useWalletContext,
 } from "./provider.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("WalletProvider", () => {

@@ -45,14 +45,14 @@ export async function getTransactionAnalyticsSummary(props: {
     const response = await fetch(
       `${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/transactions/analytics-summary`,
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-team-id": props.teamId,
-          "x-client-id": props.clientId,
-          Authorization: `Bearer ${authToken}`,
-        },
         body: JSON.stringify(body),
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+          "x-client-id": props.clientId,
+          "x-team-id": props.teamId,
+        },
+        method: "POST",
       },
     );
 
@@ -96,22 +96,22 @@ export async function getTransactionsChart({
   const authToken = await getAuthToken();
 
   const filters = {
-    startDate: from,
     endDate: to,
     resolution: interval,
+    startDate: from,
   };
 
   const response = await fetch(
     `${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/transactions/analytics`,
     {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-team-id": teamId,
-        "x-client-id": clientId,
-        Authorization: `Bearer ${authToken}`,
-      },
       body: JSON.stringify(filters),
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+        "x-client-id": clientId,
+        "x-team-id": teamId,
+      },
+      method: "POST",
     },
   );
 
@@ -144,9 +144,9 @@ export async function getTransactionsChart({
   const data = (await response.json()) as TransactionsChartResponse;
 
   return data.result.analytics.map((stat) => ({
-    date: stat.timeBucket,
     chainId: Number(stat.chainId),
     count: stat.count,
+    date: stat.timeBucket,
   }));
 }
 
@@ -165,8 +165,8 @@ export async function getSingleTransaction({
     filters: [
       {
         field: "id",
-        values: [transactionId],
         operation: "OR",
+        values: [transactionId],
       },
     ],
   };
@@ -174,14 +174,14 @@ export async function getSingleTransaction({
   const response = await fetch(
     `${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/transactions/search`,
     {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-team-id": teamId,
-        "x-client-id": clientId,
-        Authorization: `Bearer ${authToken}`,
-      },
       body: JSON.stringify(filters),
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+        "x-client-id": clientId,
+        "x-team-id": teamId,
+      },
+      method: "POST",
     },
   );
 

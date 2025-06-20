@@ -17,8 +17,8 @@ export default async function NebulaLogin(props: {
       hasAuthToken={!!authToken}
       params={{
         chains: chains.map((c) => ({
-          slug: c.slug,
           id: c.chainId,
+          slug: c.slug,
         })),
         q: typeof searchParams.q === "string" ? searchParams.q : undefined,
       }}

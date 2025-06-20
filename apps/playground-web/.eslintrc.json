@@ -1,13 +1,13 @@
 {
   "extends": "next/core-web-vitals",
-  "rules": {
-    "react-compiler/react-compiler": "error"
-  },
-  "plugins": ["react-compiler"],
   "overrides": [
     {
-      "files": ["*.ts", "*.js", "*.tsx", "*.jsx"],
-      "extends": ["biome"]
+      "extends": ["biome"],
+      "files": ["*.ts", "*.js", "*.tsx", "*.jsx"]
     }
-  ]
+  ],
+  "plugins": ["react-compiler"],
+  "rules": {
+    "react-compiler/react-compiler": "error"
+  }
 }

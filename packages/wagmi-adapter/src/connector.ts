@@ -1,13 +1,13 @@
 import { type CreateConnectorFn, createConnector } from "@wagmi/core";
 import type { Prettify } from "@wagmi/core/chains";
-import { type ThirdwebClient, defineChain, getAddress } from "thirdweb";
+import { defineChain, getAddress, type ThirdwebClient } from "thirdweb";
 import {
   EIP1193,
+  ecosystemWallet,
   type InAppWalletConnectionOptions,
   type InAppWalletCreationOptions,
   type MultiStepAuthArgsType,
   type SingleStepAuthArgsType,
-  ecosystemWallet,
   inAppWallet as thirdwebInAppWallet,
 } from "thirdweb/wallets";
 
@@ -93,10 +93,6 @@ export function inAppWalletConnector(
     : thirdwebInAppWallet(args);
   const client = args.client;
   return createConnector<Provider, Properties, StorageItem>((config) => ({
-    id: "in-app-wallet",
-    name: args.metadata?.name || "In-App wallet",
-    type: "in-app",
-    icon: args.metadata?.icon,
     connect: async (params) => {
       const rawStorage =
         typeof window !== "undefined" && window.localStorage
@@ -107,8 +103,8 @@ export function inAppWalletConnector(
         const { autoConnect } = await import("thirdweb/wallets");
         const chainId = lastChainId || args.smartAccount?.chain?.id || 1;
         await autoConnect({
-          client,
           chain: defineChain(chainId),
+          client,
           wallets: [wallet],
         });
 
@@ -136,8 +132,8 @@ export function inAppWalletConnector(
       );
       const decoratedOptions = {
         ...inAppOptions,
-        client,
         chain,
+        client,
       } as InAppWalletConnectionOptions;
       const account = await wallet.connect(decoratedOptions);
       // setting up raw local storage value for autoConnect
@@ -167,18 +163,30 @@ export function inAppWalletConnector(
       if (!wallet.getAccount()) {
         const { autoConnect } = await import("thirdweb/wallets");
         await autoConnect({
-          client,
           chain,
+          client,
           wallets: [wallet],
         });
       }
       return EIP1193.toProvider({
-        wallet,
-        client,
         chain: wallet.getChain() || chain,
+        client,
+        wallet,
       });
     },
-    isAuthorized: async () => true, // always try to reconnect
+    icon: args.metadata?.icon,
+    id: "in-app-wallet",
+    isAuthorized: async () => true,
+    name: args.metadata?.name || "In-App wallet",
+    onAccountsChanged: () => {
+      // no-op
+    }, // always try to reconnect
+    onChainChanged: () => {
+      // no-op
+    },
+    onDisconnect: () => {
+      // no-op
+    },
     switchChain: async (params) => {
       const chain = config.chains.find((x) => x.id === params.chainId);
       if (!chain) {
@@ -191,14 +199,6 @@ export function inAppWalletConnector(
       await config.storage?.setItem("thirdweb:lastChainId", chain.id);
       return chain;
     },
-    onAccountsChanged: () => {
-      // no-op
-    },
-    onChainChanged: () => {
-      // no-op
-    },
-    onDisconnect: () => {
-      // no-op
-    },
+    type: "in-app",
   }));
 }

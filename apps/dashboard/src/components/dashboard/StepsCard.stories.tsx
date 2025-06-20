@@ -3,8 +3,8 @@ import { BadgeContainer } from "../../stories/utils";
 import { StepsCard } from "./StepsCard";
 
 const meta = {
-  title: "Blocks/Cards/StepsCard",
   component: Component,
+  title: "Blocks/Cards/StepsCard",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -16,8 +16,8 @@ const defaultCardDescription =
 
 export const Variants: Story = {
   args: {
-    cardTitle: defaultCardTitle,
     cardDescription: defaultCardDescription,
+    cardTitle: defaultCardTitle,
   },
 };
 
@@ -28,38 +28,35 @@ function stepStub(options: {
   description?: string;
 }) {
   return {
-    title: `This is step ${options.id} title`,
+    children: <ChildrenPlaceholder />,
+    completed: options.completed,
     description:
       options.description ?? `This is step ${options.id} description`,
-    completed: options.completed,
-    children: <ChildrenPlaceholder />,
     showCompletedChildren: options.showCompletedChildren,
+    title: `This is step ${options.id} title`,
   };
 }
 
-function Component(props: {
-  cardTitle: string;
-  cardDescription: string;
-}) {
+function Component(props: { cardTitle: string; cardDescription: string }) {
   const { cardTitle, cardDescription } = props;
   return (
     <div className="container flex max-w-6xl flex-col gap-10 py-10">
       <BadgeContainer label="2 steps, 0 Completed">
         <StepsCard
+          description={cardDescription}
           steps={[
-            stepStub({ id: 1, completed: false }),
-            stepStub({ id: 2, completed: false }),
+            stepStub({ completed: false, id: 1 }),
+            stepStub({ completed: false, id: 2 }),
           ]}
           title={cardTitle}
-          description={cardDescription}
         />
       </BadgeContainer>
 
       <BadgeContainer label="2 steps, 0 Completed, No Card desc">
         <StepsCard
           steps={[
-            stepStub({ id: 1, completed: false }),
-            stepStub({ id: 2, completed: false }),
+            stepStub({ completed: false, id: 1 }),
+            stepStub({ completed: false, id: 2 }),
           ]}
           title={cardTitle}
         />
@@ -67,37 +64,37 @@ function Component(props: {
 
       <BadgeContainer label="2 steps, 1 Completed">
         <StepsCard
+          description={cardDescription}
           steps={[
-            stepStub({ id: 1, completed: true }),
-            stepStub({ id: 2, completed: false }),
+            stepStub({ completed: true, id: 1 }),
+            stepStub({ completed: false, id: 2 }),
           ]}
           title={cardTitle}
-          description={cardDescription}
         />
       </BadgeContainer>
 
       <BadgeContainer label="2 steps, First Completed, Show Completed">
         <StepsCard
+          description={cardDescription}
           steps={[
-            stepStub({ id: 1, completed: true, showCompletedChildren: true }),
+            stepStub({ completed: true, id: 1, showCompletedChildren: true }),
             stepStub({
-              id: 2,
               completed: false,
+              id: 2,
             }),
           ]}
           title={cardTitle}
-          description={cardDescription}
         />
       </BadgeContainer>
 
       <BadgeContainer label="2 steps, All Complete - No render">
         <StepsCard
+          description={cardDescription}
           steps={[
-            stepStub({ id: 1, completed: true }),
-            stepStub({ id: 2, completed: true }),
+            stepStub({ completed: true, id: 1 }),
+            stepStub({ completed: true, id: 2 }),
           ]}
           title={cardTitle}
-          description={cardDescription}
         />
       </BadgeContainer>
     </div>

@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { lazy, Suspense } from "react";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { BuyScreenProps } from "./BuyScreen.js";
 

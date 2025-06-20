@@ -74,8 +74,8 @@ export async function getOwnedTokenIds(
   let ownedBalances = balances
     .map((b, i) => {
       return {
-        tokenId: BigInt(i),
         balance: b,
+        tokenId: BigInt(i),
       };
     })
     .filter((b) => b.balance > 0);

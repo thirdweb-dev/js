@@ -1,5 +1,5 @@
 import Papa from "papaparse";
-import { NATIVE_TOKEN_ADDRESS, getAddress, isAddress } from "thirdweb";
+import { getAddress, isAddress, NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import type { NFTInput } from "thirdweb/utils";
 import z from "zod";
 import {
@@ -34,8 +34,8 @@ const getAcceptedFiles = async (acceptedFiles: File[]) => {
     otherAssets: File[];
   } = {
     csv: undefined,
-    json: undefined,
     images: [],
+    json: undefined,
     otherAssets: [],
   };
 
@@ -109,20 +109,20 @@ const handleCSV = (params: {
     }
 
     const nft: NFTMetadataWithPrice = {
-      name: name,
+      animation_url:
+        otherAssets.find((asset) => asset?.name === animation_url) ||
+        (!isAnimationUrlMapped && otherAssets[index]) ||
+        animation_url,
+      attributes: getAttributes(),
+      background_color,
       description: description,
       external_url,
-      background_color,
-      attributes: getAttributes(),
       image:
         imageFiles.find((img) => img?.name === image) ||
         (!isImageMapped && imageFiles[index]) ||
         image ||
         undefined,
-      animation_url:
-        otherAssets.find((asset) => asset?.name === animation_url) ||
-        (!isAnimationUrlMapped && otherAssets[index]) ||
-        animation_url,
+      name: name,
       price_amount: price_amount || "1",
       price_currency: price_currency || getAddress(NATIVE_TOKEN_ADDRESS),
       supply: supply || "1",
@@ -151,15 +151,15 @@ function handleJson(params: {
 
     const nftWithPrice = {
       ...nft,
-      image:
-        imageFiles.find((img) => img?.name === nft?.image) ||
-        (!isImageMapped && imageFiles[index]) ||
-        nft.image ||
-        undefined,
       animation_url:
         otherAssets.find((x) => x.name === nft?.animation_url) ||
         (!isAnimationUrlMapped && otherAssets[index]) ||
         nft.animation_url ||
+        undefined,
+      image:
+        imageFiles.find((img) => img?.name === nft?.image) ||
+        (!isImageMapped && imageFiles[index]) ||
+        nft.image ||
         undefined,
       price_amount: nft.price_amount || "1",
       price_currency: nft.price_currency || getAddress(NATIVE_TOKEN_ADDRESS),
@@ -220,12 +220,15 @@ const supplySchema = z
   );
 
 const nftWithPriceInputJsonSchema = z.object({
-  name: z.string(),
-  description: z.string().optional(),
-  image: z.string().or(z.instanceof(File)).optional(),
   animation_url: z.string().or(z.instanceof(File)).optional(),
-  external_url: z.string().optional(),
+  attributes: z
+    .array(z.object({ trait_type: z.string(), value: z.string() }))
+    .optional(),
   background_color: z.string().optional(),
+  description: z.string().optional(),
+  external_url: z.string().optional(),
+  image: z.string().or(z.instanceof(File)).optional(),
+  name: z.string(),
   price_amount: priceAmountSchema,
   price_currency: z
     .string()
@@ -237,18 +240,15 @@ const nftWithPriceInputJsonSchema = z.object({
     })
     .optional(),
   supply: supplySchema,
-  attributes: z
-    .array(z.object({ trait_type: z.string(), value: z.string() }))
-    .optional(),
 });
 
 const nftWithPriceInputCsvSchema = z.object({
-  name: z.string(),
-  description: z.string().optional(),
-  image: z.string().or(z.instanceof(File)).optional(),
   animation_url: z.string().or(z.instanceof(File)).optional(),
-  external_url: z.string().optional(),
   background_color: z.string().optional(),
+  description: z.string().optional(),
+  external_url: z.string().optional(),
+  image: z.string().or(z.instanceof(File)).optional(),
+  name: z.string(),
   price_amount: priceAmountSchema,
   price_currency: z.string().optional(),
   supply: supplySchema,
@@ -266,20 +266,18 @@ export async function processBatchUploadFiles(
     const jsonData = JSON.parse(await json.text());
     if (Array.isArray(jsonData)) {
       return {
+        data: handleJson({ imageFiles: images, jsonData, otherAssets }),
         type: "data",
-        data: handleJson({ jsonData, imageFiles: images, otherAssets }),
       };
     } else {
       return {
-        type: "error",
         error: "Invalid JSON format",
+        type: "error",
       };
     }
   } else if (csv) {
     return new Promise<ProcessBatchUploadFilesResult>((res, rej) => {
       Papa.parse(csv, {
-        header: true,
-        transformHeader,
         complete: (results) => {
           try {
             const validRows: CSVRowData[] = [];
@@ -299,29 +297,31 @@ export async function processBatchUploadFiles(
 
             if (validRows.length > 0) {
               res({
-                type: "data",
                 data: handleCSV({
                   csvData: validRows,
                   imageFiles: images,
                   otherAssets,
                 }),
+                type: "data",
               });
             } else {
               res({
-                type: "error",
                 error: "No valid CSV data found",
+                type: "error",
               });
             }
           } catch (e) {
             rej(e);
           }
         },
+        header: true,
+        transformHeader,
       });
     });
   } else {
     return {
-      type: "error",
       error: "No valid files found. Please upload a '.csv' or '.json' file.",
+      type: "error",
     };
   }
 }

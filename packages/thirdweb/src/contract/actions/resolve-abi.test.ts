@@ -58,8 +58,8 @@ it("should throw error if contract bytecode is 0x", async () => {
     // This is a wallet address so the bytecode should be "0x"
     // and it should throw the expected error
     address: VITALIK_WALLET,
-    client: TEST_CLIENT,
     chain: FORKED_ETHEREUM_CHAIN,
+    client: TEST_CLIENT,
   });
   await expect(resolveAbiFromBytecode(wrongContract)).rejects.toThrowError(
     "Failed to load contract bytecode",

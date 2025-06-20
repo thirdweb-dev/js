@@ -1,8 +1,8 @@
-import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { getProject } from "@/api/projects";
+import { getTeamBySlug } from "@/api/team";
 import { AccountAbstractionLayout } from "./AccountAbstractionPage";
 
 export default async function Page(props: {
@@ -35,11 +35,11 @@ export default async function Page(props: {
 
   return (
     <AccountAbstractionLayout
-      projectSlug={project.slug}
-      teamSlug={team_slug}
-      projectKey={project.publishableKey}
       hasSmartWalletsWithoutBilling={hasSmartWalletsWithoutBilling}
       projectId={project.id}
+      projectKey={project.publishableKey}
+      projectSlug={project.slug}
+      teamSlug={team_slug}
     >
       {props.children}
     </AccountAbstractionLayout>
@@ -47,23 +47,23 @@ export default async function Page(props: {
 }
 
 const seo = {
-  title: "The Complete Account Abstraction Toolkit | thirdweb",
   desc: "Add account abstraction to your web3 app & unlock powerful features for seamless onboarding, customizable transactions, & maximum security. Get started.",
+  title: "The Complete Account Abstraction Toolkit | thirdweb",
 };
 
 export const metadata: Metadata = {
-  title: seo.title,
   description: seo.desc,
   openGraph: {
-    title: seo.title,
     description: seo.desc,
     images: [
       {
+        alt: seo.title,
+        height: 630,
         url: `${getAbsoluteUrl()}/assets/og-image/dashboard-wallets-smart-wallet.png`,
         width: 1200,
-        height: 630,
-        alt: seo.title,
       },
     ],
+    title: seo.title,
   },
+  title: seo.title,
 };

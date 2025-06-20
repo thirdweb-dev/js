@@ -1,11 +1,11 @@
-import { sluggerContext } from "@/contexts/slugger";
 import GithubSlugger from "github-slugger";
+import { sluggerContext } from "@/contexts/slugger";
 import { ClassTDoc } from "./Class";
 import { EnumTDoc } from "./Enum";
 import { FunctionTDoc } from "./Function";
 import { TypeTDoc } from "./Type";
-import { VariableTDoc } from "./Variable";
 import type { SomeDoc } from "./types";
+import { VariableTDoc } from "./Variable";
 
 export function RootTDoc(props: { doc: SomeDoc }) {
   sluggerContext.set(new GithubSlugger());

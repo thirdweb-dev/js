@@ -1,8 +1,8 @@
+import { cookies } from "next/headers";
 import {
   NEBULA_COOKIE_ACTIVE_ACCOUNT,
   NEBULA_COOKIE_PREFIX_TOKEN,
 } from "@/constants/cookies";
-import { cookies } from "next/headers";
 
 export async function getNebulaAuthToken() {
   const cookiesManager = await cookies();

@@ -4,14 +4,14 @@ import { defineChain } from "../utils.js";
  * @chain
  */
 export const blast = /* @__PURE__ */ defineChain({
-  id: 81457,
-  name: "Blast",
-  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
   blockExplorers: [
     {
+      apiUrl: "https://api.blastscan.io/api",
       name: "Blastscan",
       url: "https://blastscan.io",
-      apiUrl: "https://api.blastscan.io/api",
     },
   ],
+  id: 81457,
+  name: "Blast",
+  nativeCurrency: { decimals: 18, name: "Ether", symbol: "ETH" },
 });

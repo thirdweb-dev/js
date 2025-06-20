@@ -7,13 +7,13 @@ import {
 import { TokenSelector } from "./TokenSelector";
 
 const meta = {
-  title: "blocks/Cards/TokenSelector",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "blocks/Cards/TokenSelector",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -31,10 +31,7 @@ function Story() {
   );
 }
 
-function Variant(props: {
-  label: string;
-  selectedChainId?: number;
-}) {
+function Variant(props: { label: string; selectedChainId?: number }) {
   const [token, setToken] = useState<
     | {
         address: string;
@@ -47,8 +44,6 @@ function Variant(props: {
     <BadgeContainer label={props.label}>
       <TokenSelector
         addNativeTokenIfMissing={false}
-        showCheck={false}
-        selectedToken={token}
         chainId={props.selectedChainId}
         client={storybookThirdwebClient}
         onChange={(v) => {
@@ -57,6 +52,8 @@ function Variant(props: {
             chainId: v.chainId,
           });
         }}
+        selectedToken={token}
+        showCheck={false}
       />
     </BadgeContainer>
   );

@@ -1,20 +1,20 @@
 "use client";
-import {
-  type Payment,
-  type PaymentsResponse,
-  getPayments,
-} from "@/api/universal-bridge/developer";
-import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
-import { WalletAddress } from "@/components/blocks/wallet-address";
-import { PaginationButtons } from "@/components/pagination-buttons";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useMemo, useState } from "react";
 import { type ThirdwebClient, toTokens } from "thirdweb";
+import {
+  getPayments,
+  type Payment,
+  type PaymentsResponse,
+} from "@/api/universal-bridge/developer";
+import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { PaginationButtons } from "@/components/pagination-buttons";
+import { Badge } from "@/components/ui/badge";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import {
   CardHeading,
   TableData,
@@ -34,16 +34,16 @@ export function PaymentHistory(props: {
     PaymentsResponse,
     Error
   >({
-    queryKey: ["payments", props.projectClientId, page],
     queryFn: async () => {
       const res = await getPayments({
         clientId: props.projectClientId,
-        teamId: props.teamId,
         limit: pageSize,
         offset: (page - 1) * pageSize,
+        teamId: props.teamId,
       });
       return res;
     },
+    queryKey: ["payments", props.projectClientId, page],
     refetchInterval: 10_000,
   });
   const isEmpty = useMemo(
@@ -80,24 +80,20 @@ export function PaymentHistory(props: {
             </thead>
             <tbody>
               {(!isEmpty || isLoading) &&
-                (payPurchaseData && !isLoading ? (
-                  <>
-                    {payPurchaseData.data.map((purchase) => {
+                (payPurchaseData && !isLoading
+                  ? payPurchaseData.data.map((purchase) => {
                       return (
                         <TableRow
+                          client={props.client}
                           key={purchase.id}
                           purchase={purchase}
-                          client={props.client}
                         />
                       );
-                    })}
-                  </>
-                ) : (
-                  new Array(pageSize).fill(0).map((_, i) => (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: ok
-                    <SkeletonTableRow key={i} />
-                  ))
-                ))}
+                    })
+                  : new Array(pageSize).fill(0).map((_, i) => (
+                      // biome-ignore lint/suspicious/noArrayIndexKey: ok
+                      <SkeletonTableRow key={i} />
+                    )))}
             </tbody>
           </table>
 
@@ -109,10 +105,10 @@ export function PaymentHistory(props: {
             <div className="my-8">
               <PaginationButtons
                 activePage={page}
+                onPageClick={setPage}
                 totalPages={Math.ceil(
                   payPurchaseData.meta.totalCount / pageSize,
                 )}
-                onPageClick={setPage}
               />
             </div>
           ) : null}
@@ -144,8 +140,8 @@ function TableRow(props: { purchase: Payment; client: ThirdwebClient }) {
 
   return (
     <tr
-      key={purchase.id}
       className="fade-in-0 border-border border-b duration-300"
+      key={purchase.id}
     >
       {/* Paid */}
       <TableData>{`${formatTokenAmount(originAmount)} ${purchase.originToken.symbol}`}</TableData>
@@ -158,13 +154,13 @@ function TableRow(props: { purchase: Payment; client: ThirdwebClient }) {
       {/* Type */}
       <TableData>
         <Badge
-          variant="secondary"
           className={cn(
             "uppercase",
             type === "Transfer"
               ? "bg-fuchsia-200 text-fuchsia-800 dark:bg-fuchsia-950 dark:text-fuchsia-200"
               : "bg-indigo-200 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-200",
           )}
+          variant="secondary"
         >
           {type}
         </Badge>
@@ -173,6 +169,7 @@ function TableRow(props: { purchase: Payment; client: ThirdwebClient }) {
       {/* Status */}
       <TableData>
         <Badge
+          className="capitalize"
           variant={
             purchase.status === "COMPLETED"
               ? "success"
@@ -180,7 +177,6 @@ function TableRow(props: { purchase: Payment; client: ThirdwebClient }) {
                 ? "warning"
                 : "destructive"
           }
-          className="capitalize"
         >
           {purchase.status}
         </Badge>

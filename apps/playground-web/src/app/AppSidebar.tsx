@@ -1,18 +1,16 @@
-import thirdwebIconSrc from "@/../public/thirdweb.svg";
-import { Sidebar, type SidebarLink } from "@/components/ui/sidebar";
 import Image from "next/image";
 import Link from "next/link";
+import thirdwebIconSrc from "@/../public/thirdweb.svg";
+import { Sidebar, type SidebarLink } from "@/components/ui/sidebar";
 import { ScrollShadow } from "../components/ui/ScrollShadow/ScrollShadow";
 import { otherLinks } from "./otherLinks";
 
-export function AppSidebar(props: {
-  links: SidebarLink[];
-}) {
+export function AppSidebar(props: { links: SidebarLink[] }) {
   return (
     <div className="z-10 hidden h-dvh w-[300px] flex-col border-border/50 border-r-2 xl:flex">
       <div className="border-b px-6 py-5">
         <div className="flex items-center gap-2">
-          <Image src={thirdwebIconSrc} className="size-6" alt="thirdweb" />
+          <Image alt="thirdweb" className="size-6" src={thirdwebIconSrc} />
           <span className="font-bold text-lg leading-none tracking-tight">
             Playground
           </span>
@@ -32,10 +30,10 @@ export function AppSidebar(props: {
         {otherLinks.map((link) => {
           return (
             <Link
-              key={link.href}
-              href={link.href}
-              target="_blank"
               className="flex items-center gap-2 text-muted-foreground hover:text-foreground "
+              href={link.href}
+              key={link.href}
+              target="_blank"
             >
               {link.name}
             </Link>

@@ -23,13 +23,13 @@ export const ChainIcon = ({ ipfsSrc, ...restProps }: ChainIconProps) => {
     <Img
       {...restProps}
       // render different image element if src changes to avoid showing old image while loading new one
-      key={src}
-      className={cn("object-contain", restProps.className)}
-      src={src}
-      loading={restProps.loading || "lazy"}
       alt=""
-      fallback={<img src={fallbackChainIcon} alt="" />}
+      className={cn("object-contain", restProps.className)}
+      fallback={<img alt="" src={fallbackChainIcon} />}
+      key={src}
+      loading={restProps.loading || "lazy"}
       skeleton={<div className="animate-pulse rounded-full bg-border" />}
+      src={src}
     />
   );
 };
@@ -38,8 +38,8 @@ function replaceIpfsUrl(uri: string) {
   try {
     // eslint-disable-next-line no-restricted-syntax
     return resolveScheme({
-      uri,
       client: THIRDWEB_CLIENT,
+      uri,
     });
   } catch (err) {
     console.error("error resolving ipfs url", uri, err);

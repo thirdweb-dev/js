@@ -8,11 +8,11 @@ const Table = React.forwardRef<
   React.HTMLAttributes<HTMLTableElement>
 >(({ className, ...props }, ref) => (
   <table
-    ref={ref}
     className={cn(
       "w-full caption-bottom border-collapse align-top text-sm lining-nums tabular-nums",
       className,
     )}
+    ref={ref}
     {...props}
   />
 ));
@@ -23,8 +23,8 @@ const TableHeader = React.forwardRef<
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
   <thead
-    ref={ref}
     className={cn("relative border-b bg-background", className)}
+    ref={ref}
     {...props}
   />
 ));
@@ -36,8 +36,8 @@ const TableBody = React.forwardRef<
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
   <tbody
-    ref={ref}
     className={cn("[&_tr:last-child]:border-0", className)}
+    ref={ref}
     {...props}
   />
 ));
@@ -48,11 +48,11 @@ const TableFooter = React.forwardRef<
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
   <tfoot
-    ref={ref}
     className={cn(
       "border-border border-t bg-card font-medium [&>tr]:last:border-b-0",
       className,
     )}
+    ref={ref}
     {...props}
   />
 ));
@@ -69,12 +69,12 @@ const TableRow = React.forwardRef<
   }
 >(({ className, linkBox, ...props }, ref) => (
   <tr
-    ref={ref}
     className={cn(
       "border-border border-b last:border-0 data-[state=selected]:bg-muted",
       linkBox && "relative translate-x-0 translate-y-0",
       className,
     )}
+    ref={ref}
     {...props}
   />
 ));
@@ -85,11 +85,11 @@ const TableHead = React.forwardRef<
   React.ThHTMLAttributes<HTMLTableCellElement>
 >(({ className, ...props }, ref) => (
   <th
-    ref={ref}
     className={cn(
       "px-6 py-4 text-left align-middle font-medium text-muted-foreground text-xs uppercase tracking-wider [&:has([role=checkbox])]:pr-0",
       className,
     )}
+    ref={ref}
     {...props}
   />
 ));
@@ -100,11 +100,11 @@ const TableCell = React.forwardRef<
   React.TdHTMLAttributes<HTMLTableCellElement>
 >(({ className, ...props }, ref) => (
   <td
-    ref={ref}
     className={cn(
       "px-6 py-4 text-start align-middle text-sm [&:has([role=checkbox])]:pr-0",
       className,
     )}
+    ref={ref}
     {...props}
   />
 ));
@@ -115,8 +115,8 @@ const TableCaption = React.forwardRef<
   React.HTMLAttributes<HTMLTableCaptionElement>
 >(({ className, ...props }, ref) => (
   <caption
-    ref={ref}
     className={cn("py-4 text-muted-foreground text-sm", className)}
+    ref={ref}
     {...props}
   />
 ));
@@ -129,13 +129,13 @@ function TableContainer(props: {
 }) {
   return (
     <ScrollShadow
-      shadowClassName="z-30"
-      disableTopShadow
       className={cn(
         "relative whitespace-nowrap rounded-lg border border-border bg-card",
         props.className,
       )}
+      disableTopShadow
       scrollableClassName={props.scrollableContainerClassName}
+      shadowClassName="z-30"
       shadowColor="hsl(var(--muted))"
     >
       {props.children}

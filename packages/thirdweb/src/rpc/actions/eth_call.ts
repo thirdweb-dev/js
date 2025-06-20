@@ -42,8 +42,8 @@ function encodeStateOverrides(overrides: StateOverride): RpcStateOverride {
         address,
         {
           balance: override.balance ? numberToHex(override.balance) : undefined,
-          nonce: override.nonce ? numberToHex(override.nonce) : undefined,
           code: override.code,
+          nonce: override.nonce ? numberToHex(override.nonce) : undefined,
           state: override.state,
           stateDiff: override.stateDiff,
         },

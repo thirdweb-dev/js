@@ -1,6 +1,5 @@
-import { expect, test } from "vitest";
-
 import { pad } from "viem";
+import { expect, test } from "vitest";
 import { typedData } from "../../../test/src/typed-data.js";
 import { toHex } from "../encoding/hex.js";
 import { hashTypedData } from "./hashTypedData.js";
@@ -62,11 +61,11 @@ test("domain: empty name", () => {
 
 test("minimal valid typed message", () => {
   const hash = hashTypedData({
+    domain: {},
+    primaryType: "EIP712Domain",
     types: {
       EIP712Domain: [],
     },
-    primaryType: "EIP712Domain",
-    domain: {},
   });
 
   expect(hash).toMatchInlineSnapshot(
@@ -76,6 +75,14 @@ test("minimal valid typed message", () => {
 
 test("typed message with a domain separator that uses all fields.", () => {
   const hash = hashTypedData({
+    domain: {
+      chainId: 1n,
+      name: "example.metamask.io",
+      salt: pad(toHex(new Uint8Array([1, 2, 3])), { dir: "right" }),
+      verifyingContract: "0x0000000000000000000000000000000000000000",
+      version: "1",
+    },
+    primaryType: "EIP712Domain",
     types: {
       EIP712Domain: [
         {
@@ -100,14 +107,6 @@ test("typed message with a domain separator that uses all fields.", () => {
         },
       ],
     },
-    primaryType: "EIP712Domain",
-    domain: {
-      name: "example.metamask.io",
-      version: "1",
-      chainId: 1n,
-      verifyingContract: "0x0000000000000000000000000000000000000000",
-      salt: pad(toHex(new Uint8Array([1, 2, 3])), { dir: "right" }),
-    },
   });
 
   expect(hash).toMatchInlineSnapshot(
@@ -117,6 +116,15 @@ test("typed message with a domain separator that uses all fields.", () => {
 
 test("typed message with only custom domain separator fields", () => {
   const hash = hashTypedData({
+    domain: {
+      customChainId: 1n,
+      customName: "example.metamask.io",
+      customSalt: pad(toHex(new Uint8Array([1, 2, 3])), { dir: "right" }),
+      customVerifyingContract: "0x0000000000000000000000000000000000000000",
+      customVersion: "1",
+      extraField: "stuff",
+    },
+    primaryType: "EIP712Domain",
     types: {
       EIP712Domain: [
         {
@@ -145,15 +153,6 @@ test("typed message with only custom domain separator fields", () => {
         },
       ],
     },
-    primaryType: "EIP712Domain",
-    domain: {
-      customName: "example.metamask.io",
-      customVersion: "1",
-      customChainId: 1n,
-      customVerifyingContract: "0x0000000000000000000000000000000000000000",
-      customSalt: pad(toHex(new Uint8Array([1, 2, 3])), { dir: "right" }),
-      extraField: "stuff",
-    },
   });
 
   expect(hash).toMatchInlineSnapshot(
@@ -163,6 +162,17 @@ test("typed message with only custom domain separator fields", () => {
 
 test("typed message with data", () => {
   const hash = hashTypedData({
+    domain: {
+      chainId: 1n,
+      name: "example.metamask.io",
+      salt: pad(toHex(new Uint8Array([1, 2, 3])), { dir: "right" }),
+      verifyingContract: "0x0000000000000000000000000000000000000000",
+      version: "1",
+    },
+    message: {
+      data: "Hello!",
+    },
+    primaryType: "Message",
     types: {
       EIP712Domain: [
         {
@@ -187,17 +197,6 @@ test("typed message with data", () => {
         },
       ],
       Message: [{ name: "data", type: "string" }],
-    },
-    primaryType: "Message",
-    domain: {
-      name: "example.metamask.io",
-      version: "1",
-      chainId: 1n,
-      verifyingContract: "0x0000000000000000000000000000000000000000",
-      salt: pad(toHex(new Uint8Array([1, 2, 3])), { dir: "right" }),
-    },
-    message: {
-      data: "Hello!",
     },
   });
 

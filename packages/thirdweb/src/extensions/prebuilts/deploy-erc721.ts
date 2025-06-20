@@ -2,8 +2,8 @@ import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
 import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
-import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
+import { upload } from "../../storage/upload.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import { initialize as initLoyaltyCard } from "../erc721/__generated__/LoyaltyCard/write/initialize.js";
@@ -78,24 +78,24 @@ export async function deployERC721Contract(
 
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
+      account,
       chain,
       client,
-      account,
       contractId: type,
     });
 
   const initializeTransaction = await getInitializeTransaction({
+    accountAddress: account.address,
     client,
     implementationContract,
-    type,
     params,
-    accountAddress: account.address,
+    type,
   });
 
   return deployViaAutoFactory({
-    client,
-    chain,
     account,
+    chain,
+    client,
     cloneFactoryContract,
     initializeTransaction,
   });
@@ -116,14 +116,14 @@ async function getInitializeTransaction(options: {
       client,
       files: [
         {
-          name: params.name,
           description: params.description,
-          symbol: params.symbol,
-          image: params.image,
           external_link: params.external_link,
-          social_urls: params.social_urls,
-          seller_fee_basis_points: params.royaltyBps,
           fee_recipient: params.royaltyRecipient,
+          image: params.image,
+          name: params.name,
+          seller_fee_basis_points: params.royaltyBps,
+          social_urls: params.social_urls,
+          symbol: params.symbol,
         },
       ],
     })) ||
@@ -132,56 +132,56 @@ async function getInitializeTransaction(options: {
     case "DropERC721":
       return initDropERC721({
         contract: implementationContract,
-        name: params.name || "",
-        symbol: params.symbol || "",
         contractURI,
         defaultAdmin: params.defaultAdmin || accountAddress,
-        saleRecipient: params.saleRecipient || accountAddress,
+        name: params.name || "",
         platformFeeBps: params.platformFeeBps || 0n,
         platformFeeRecipient: params.platformFeeRecipient || accountAddress,
-        royaltyRecipient: params.royaltyRecipient || accountAddress,
         royaltyBps: params.royaltyBps || 0n,
+        royaltyRecipient: params.royaltyRecipient || accountAddress,
+        saleRecipient: params.saleRecipient || accountAddress,
+        symbol: params.symbol || "",
         trustedForwarders: params.trustedForwarders || [],
       });
     case "TokenERC721":
       return initTokenERC721({
         contract: implementationContract,
-        name: params.name || "",
-        symbol: params.symbol || "",
         contractURI,
         defaultAdmin: params.defaultAdmin || accountAddress,
-        saleRecipient: params.saleRecipient || accountAddress,
+        name: params.name || "",
         platformFeeBps: params.platformFeeBps || 0n,
         platformFeeRecipient: params.platformFeeRecipient || accountAddress,
-        royaltyRecipient: params.royaltyRecipient || accountAddress,
         royaltyBps: params.royaltyBps || 0n,
+        royaltyRecipient: params.royaltyRecipient || accountAddress,
+        saleRecipient: params.saleRecipient || accountAddress,
+        symbol: params.symbol || "",
         trustedForwarders: params.trustedForwarders || [],
       });
     case "OpenEditionERC721":
       return initOpenEditionERC721({
         contract: implementationContract,
-        name: params.name || "",
-        symbol: params.symbol || "",
         contractURI,
         defaultAdmin: params.defaultAdmin || accountAddress,
-        saleRecipient: params.saleRecipient || accountAddress,
-        royaltyRecipient: params.royaltyRecipient || accountAddress,
+        name: params.name || "",
         royaltyBps: params.royaltyBps || 0n,
+        royaltyRecipient: params.royaltyRecipient || accountAddress,
+        saleRecipient: params.saleRecipient || accountAddress,
+        symbol: params.symbol || "",
         trustedForwarders: params.trustedForwarders || [],
       });
     case "LoyaltyCard":
       return initLoyaltyCard({
         contract: implementationContract,
+        contractURI,
         defaultAdmin: params.defaultAdmin || accountAddress,
         name: params.name || "",
-        symbol: params.symbol || "",
-        contractURI,
-        royaltyRecipient: params.royaltyRecipient || accountAddress,
-        royaltyBps: params.royaltyBps || 0n,
-        trustedForwarders: params.trustedForwarders || [],
-        saleRecipient: params.saleRecipient || accountAddress,
         platformFeeBps: params.platformFeeBps || 0n,
         platformFeeRecipient: params.platformFeeRecipient || accountAddress,
+        royaltyBps: params.royaltyBps || 0n,
+        royaltyRecipient: params.royaltyRecipient || accountAddress,
+        saleRecipient: params.saleRecipient || accountAddress,
+        symbol: params.symbol || "",
+        trustedForwarders: params.trustedForwarders || [],
       });
   }
 }

@@ -1,8 +1,8 @@
-import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
-import { FormControl } from "@/components/ui/form";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import type { UseFormRegisterReturn } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { FormControl } from "@/components/ui/form";
 
 interface SequentialTokenIdFieldsetProps {
   isInvalid: boolean;
@@ -16,11 +16,11 @@ export const SequentialTokenIdFieldset: React.FC<
 > = (props) => {
   return (
     <FormFieldSetup
-      htmlFor="startTokenId"
-      label="Start Token ID"
-      isRequired={true}
       errorMessage={props.errorMessage}
       helperText="The starting token ID for the NFT collection."
+      htmlFor="startTokenId"
+      isRequired={true}
+      label="Start Token ID"
     >
       <FormControl>
         <SolidityInput

@@ -7,14 +7,14 @@ import { fontSize, iconSize } from "../../../../core/design-system/index.js";
 import type { ConnectButton_detailsModalOptions } from "../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
 import { useAdminWallet } from "../../../../core/hooks/wallets/useAdminWallet.js";
-import { Spacer } from "../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
+import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
-import { MenuButton } from "../MenuButton.js";
 import { KeyIcon } from "../icons/KeyIcon.js";
 import { MultiUserIcon } from "../icons/MultiUserIcon.js";
 import { WalletConnectIcon } from "../icons/WalletConnectIcon.js";
 import type { ConnectLocale } from "../locale/types.js";
+import { MenuButton } from "../MenuButton.js";
 import type { WalletDetailsModalScreen } from "./types.js";
 
 /**
@@ -40,8 +40,8 @@ export function ManageWalletScreen(props: {
     >
       <Container p="lg">
         <ModalHeader
-          title={props.locale.manageWallet.title}
           onBack={props.onBack}
+          title={props.locale.manageWallet.title}
         />
       </Container>
       <Line />
@@ -53,7 +53,7 @@ export function ManageWalletScreen(props: {
         }}
       >
         <Spacer y="md" />
-        <Container style={{ position: "relative", height: "250px" }}>
+        <Container style={{ height: "250px", position: "relative" }}>
           {/* Switch Metamask Account (only shows if the active wallet is MetaMask) */}
           <SwitchMetamaskAccount
             closeModal={props.closeModal}
@@ -137,7 +137,6 @@ function SwitchMetamaskAccount(props: {
 
   return (
     <MenuButton
-      type="button"
       onClick={async () => {
         await injectedMetamaskProvider.request({
           method: "wallet_requestPermissions",
@@ -145,8 +144,9 @@ function SwitchMetamaskAccount(props: {
         });
         props.closeModal();
       }}
+      type="button"
     >
-      <ShuffleIcon width={iconSize.md} height={iconSize.md} />
+      <ShuffleIcon height={iconSize.md} width={iconSize.md} />
       <Text color="primaryText">{connectLocale.switchAccount}</Text>
     </MenuButton>
   );

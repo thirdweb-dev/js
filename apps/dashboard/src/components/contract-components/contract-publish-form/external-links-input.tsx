@@ -1,9 +1,9 @@
+import { TrashIcon } from "lucide-react";
+import { useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { TrashIcon } from "lucide-react";
-import { useFormContext } from "react-hook-form";
 
 interface ExternalLinksInputProps {
   index: number;
@@ -20,7 +20,7 @@ export const ExternalLinksInput: React.FC<ExternalLinksInputProps> = ({
     <div className="flex flex-col gap-2">
       <div className="flex w-full flex-col gap-4 md:flex-row md:gap-2">
         <div className="flex flex-1 flex-col gap-1">
-          <Label htmlFor={`externalLinks.${index}.name`} className="capitalize">
+          <Label className="capitalize" htmlFor={`externalLinks.${index}.name`}>
             Resource Name
           </Label>
           <Input
@@ -41,7 +41,7 @@ export const ExternalLinksInput: React.FC<ExternalLinksInputProps> = ({
           )}
         </div>
         <div className="flex flex-1 flex-col gap-1">
-          <Label htmlFor={`externalLinks.${index}.url`} className="capitalize">
+          <Label className="capitalize" htmlFor={`externalLinks.${index}.url`}>
             Link
           </Label>
           <Input
@@ -68,11 +68,11 @@ export const ExternalLinksInput: React.FC<ExternalLinksInputProps> = ({
           )}
         </div>
         <Button
-          variant="ghost"
-          size="icon"
           aria-label="Remove row"
-          onClick={() => remove(index)}
           className="self-end"
+          onClick={() => remove(index)}
+          size="icon"
+          variant="ghost"
         >
           <TrashIcon className="size-5" />
           <span className="sr-only">Remove row</span>

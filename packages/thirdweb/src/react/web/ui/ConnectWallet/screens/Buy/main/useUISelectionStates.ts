@@ -75,13 +75,13 @@ export function useToTokenSelectionStates(options: {
   );
 
   return {
-    toChain,
-    setToChain,
-    toToken,
-    setToToken,
-    tokenAmount,
-    setTokenAmount,
     deferredTokenAmount,
+    setToChain,
+    setTokenAmount,
+    setToToken,
+    toChain,
+    tokenAmount,
+    toToken,
   };
 }
 
@@ -118,8 +118,8 @@ export function useFromTokenSelectionStates(options: {
 
   return {
     fromChain,
-    setFromChain,
     fromToken,
+    setFromChain,
     setFromToken,
   };
 }

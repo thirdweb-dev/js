@@ -1,3 +1,5 @@
+/* biome-ignore-all lint: IGNORED */
+
 // original source: https://github.com/kriszyp/cbor-x/blob/master/decode.js
 // heavily modified to remove all non-essential code
 
@@ -28,62 +30,62 @@ let packedValues;
 let dataView;
 
 const defaultOptions = {
-  useRecords: false,
   mapsAsObjects: true,
+  useRecords: false,
 };
 
 function readFixedString(length) {
-	let result
-	if (length < 16) {
-		if (result = shortStringInJS(length))
-			return result
-	}
-	if (length > 64 && decoder)
-		return decoder.decode(src.subarray(position, position += length))
-	const end = position + length
-	const units = []
-	result = ''
-	while (position < end) {
-		const byte1 = src[position++]
-		if ((byte1 & 0x80) === 0) {
-			// 1 byte
-			units.push(byte1)
-		} else if ((byte1 & 0xe0) === 0xc0) {
-			// 2 bytes
-			const byte2 = src[position++] & 0x3f
-			units.push(((byte1 & 0x1f) << 6) | byte2)
-		} else if ((byte1 & 0xf0) === 0xe0) {
-			// 3 bytes
-			const byte2 = src[position++] & 0x3f
-			const byte3 = src[position++] & 0x3f
-			units.push(((byte1 & 0x1f) << 12) | (byte2 << 6) | byte3)
-		} else if ((byte1 & 0xf8) === 0xf0) {
-			// 4 bytes
-			const byte2 = src[position++] & 0x3f
-			const byte3 = src[position++] & 0x3f
-			const byte4 = src[position++] & 0x3f
-			let unit = ((byte1 & 0x07) << 0x12) | (byte2 << 0x0c) | (byte3 << 0x06) | byte4
-			if (unit > 0xffff) {
-				unit -= 0x10000
-				units.push(((unit >>> 10) & 0x3ff) | 0xd800)
-				unit = 0xdc00 | (unit & 0x3ff)
-			}
-			units.push(unit)
-		} else {
-			units.push(byte1)
-		}
+  let result;
+  if (length < 16) {
+    if ((result = shortStringInJS(length))) return result;
+  }
+  if (length > 64 && decoder)
+    return decoder.decode(src.subarray(position, (position += length)));
+  const end = position + length;
+  const units = [];
+  result = "";
+  while (position < end) {
+    const byte1 = src[position++];
+    if ((byte1 & 0x80) === 0) {
+      // 1 byte
+      units.push(byte1);
+    } else if ((byte1 & 0xe0) === 0xc0) {
+      // 2 bytes
+      const byte2 = src[position++] & 0x3f;
+      units.push(((byte1 & 0x1f) << 6) | byte2);
+    } else if ((byte1 & 0xf0) === 0xe0) {
+      // 3 bytes
+      const byte2 = src[position++] & 0x3f;
+      const byte3 = src[position++] & 0x3f;
+      units.push(((byte1 & 0x1f) << 12) | (byte2 << 6) | byte3);
+    } else if ((byte1 & 0xf8) === 0xf0) {
+      // 4 bytes
+      const byte2 = src[position++] & 0x3f;
+      const byte3 = src[position++] & 0x3f;
+      const byte4 = src[position++] & 0x3f;
+      let unit =
+        ((byte1 & 0x07) << 0x12) | (byte2 << 0x0c) | (byte3 << 0x06) | byte4;
+      if (unit > 0xffff) {
+        unit -= 0x10000;
+        units.push(((unit >>> 10) & 0x3ff) | 0xd800);
+        unit = 0xdc00 | (unit & 0x3ff);
+      }
+      units.push(unit);
+    } else {
+      units.push(byte1);
+    }
 
-		if (units.length >= 0x1000) {
-			result += fromCharCode.apply(String, units)
-			units.length = 0
-		}
-	}
+    if (units.length >= 0x1000) {
+      result += fromCharCode.apply(String, units);
+      units.length = 0;
+    }
+  }
 
-	if (units.length > 0) {
-		result += fromCharCode.apply(String, units)
-	}
+  if (units.length > 0) {
+    result += fromCharCode.apply(String, units);
+  }
 
-	return result
+  return result;
 }
 
 class Decoder {
@@ -95,7 +97,7 @@ class Decoder {
     return key;
   }
 
-  decode(source, end? = -1) {
+  decode(source, end = -1) {
     srcEnd = end > -1 ? end : source.length;
     position = 0;
     stringPosition = 0;
@@ -122,9 +124,11 @@ class Decoder {
         throw error;
       }
       throw new Error(
-        `Source must be a Uint8Array or Buffer but was a ${source && typeof source === "object"
+        `Source must be a Uint8Array or Buffer but was a ${
+          source && typeof source === "object"
             ? source.constructor.name
-            : typeof source}`,
+            : typeof source
+        }`,
       );
     }
     if (this instanceof Decoder) {
@@ -230,7 +234,8 @@ function read() {
         }
       }
       return readFixedString(token);
-    case 4: { // array
+    case 4: {
+      // array
       const array = new Array(token);
       for (let i = 0; i < token; i++) {
         array[i] = read();
@@ -238,7 +243,8 @@ function read() {
       return array;
     }
 
-    case 5: { // map
+    case 5: {
+      // map
       const object = {};
       for (let i = 0; i < token; i++) {
         object[safeKey(read())] = read();
@@ -287,143 +293,135 @@ function shortStringInJS(length) {
       if (length === 0) {
         return "";
       }
-        const a = src[position++];
-        if ((a & 0x80) > 1) {
-          position -= 1;
-          return;
-        }
-        return fromCharCode(a);
-    }
       const a = src[position++];
-      const b = src[position++];
-      if ((a & 0x80) > 0 || (b & 0x80) > 0) {
-        position -= 2;
+      if ((a & 0x80) > 1) {
+        position -= 1;
         return;
       }
-      if (length < 3) {
-        return fromCharCode(a, b);
-      }
-      const c = src[position++];
-      if ((c & 0x80) > 0) {
-        position -= 3;
-        return;
-      }
-      return fromCharCode(a, b, c);
-  }
+      return fromCharCode(a);
+    }
     const a = src[position++];
     const b = src[position++];
-    const c = src[position++];
-    const d = src[position++];
-    if ((a & 0x80) > 0 || (b & 0x80) > 0 || (c & 0x80) > 0 || (d & 0x80) > 0) {
-      position -= 4;
+    if ((a & 0x80) > 0 || (b & 0x80) > 0) {
+      position -= 2;
       return;
     }
-    if (length < 6) {
-      if (length === 4) {
-        return fromCharCode(a, b, c, d);
-      }
-        const e = src[position++];
-        if ((e & 0x80) > 0) {
-          position -= 5;
-          return;
-        }
-        return fromCharCode(a, b, c, d, e);
-    }if (length < 8) {
-      const e = src[position++];
-      const f = src[position++];
-      if ((e & 0x80) > 0 || (f & 0x80) > 0) {
-        position -= 6;
-        return;
-      }
-      if (length < 7) {
-        return fromCharCode(a, b, c, d, e, f);
-      }
-      const g = src[position++];
-      if ((g & 0x80) > 0) {
-        position -= 7;
-        return;
-      }
-      return fromCharCode(a, b, c, d, e, f, g);
+    if (length < 3) {
+      return fromCharCode(a, b);
     }
-      const e = src[position++];
-      const f = src[position++];
-      const g = src[position++];
-      const h = src[position++];
-      if (
-        (e & 0x80) > 0 ||
-        (f & 0x80) > 0 ||
-        (g & 0x80) > 0 ||
-        (h & 0x80) > 0
-      ) {
-        position -= 8;
-        return;
-      }
-      if (length < 10) {
-        if (length === 8) {
-          return fromCharCode(a, b, c, d, e, f, g, h);
-        }
-          const i = src[position++];
-          if ((i & 0x80) > 0) {
-            position -= 9;
-            return;
-          }
-          return fromCharCode(a, b, c, d, e, f, g, h, i);
-      }if (length < 12) {
-        const i = src[position++];
-        const j = src[position++];
-        if ((i & 0x80) > 0 || (j & 0x80) > 0) {
-          position -= 10;
-          return;
-        }
-        if (length < 11) {
-          return fromCharCode(a, b, c, d, e, f, g, h, i, j);
-        }
-        const k = src[position++];
-        if ((k & 0x80) > 0) {
-          position -= 11;
-          return;
-        }
-        return fromCharCode(a, b, c, d, e, f, g, h, i, j, k);
-      }
-        const i = src[position++];
-        const j = src[position++];
-        const k = src[position++];
-        const l = src[position++];
-        if (
-          (i & 0x80) > 0 ||
-          (j & 0x80) > 0 ||
-          (k & 0x80) > 0 ||
-          (l & 0x80) > 0
-        ) {
-          position -= 12;
-          return;
-        }
-        if (length < 14) {
-          if (length === 12) {
-            return fromCharCode(a, b, c, d, e, f, g, h, i, j, k, l);
-          }
-            const m = src[position++];
-            if ((m & 0x80) > 0) {
-              position -= 13;
-              return;
-            }
-            return fromCharCode(a, b, c, d, e, f, g, h, i, j, k, l, m);
-        }
-          const m = src[position++];
-          const n = src[position++];
-          if ((m & 0x80) > 0 || (n & 0x80) > 0) {
-            position -= 14;
-            return;
-          }
-          if (length < 15) {
-            return fromCharCode(a, b, c, d, e, f, g, h, i, j, k, l, m, n);
-          }
-          const o = src[position++];
-          if ((o & 0x80) > 0) {
-            position -= 15;
-            return;
-          }
-          return fromCharCode(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o);
+    const c = src[position++];
+    if ((c & 0x80) > 0) {
+      position -= 3;
+      return;
+    }
+    return fromCharCode(a, b, c);
+  }
+  const a = src[position++];
+  const b = src[position++];
+  const c = src[position++];
+  const d = src[position++];
+  if ((a & 0x80) > 0 || (b & 0x80) > 0 || (c & 0x80) > 0 || (d & 0x80) > 0) {
+    position -= 4;
+    return;
+  }
+  if (length < 6) {
+    if (length === 4) {
+      return fromCharCode(a, b, c, d);
+    }
+    const e = src[position++];
+    if ((e & 0x80) > 0) {
+      position -= 5;
+      return;
+    }
+    return fromCharCode(a, b, c, d, e);
+  }
+  if (length < 8) {
+    const e = src[position++];
+    const f = src[position++];
+    if ((e & 0x80) > 0 || (f & 0x80) > 0) {
+      position -= 6;
+      return;
+    }
+    if (length < 7) {
+      return fromCharCode(a, b, c, d, e, f);
+    }
+    const g = src[position++];
+    if ((g & 0x80) > 0) {
+      position -= 7;
+      return;
+    }
+    return fromCharCode(a, b, c, d, e, f, g);
+  }
+  const e = src[position++];
+  const f = src[position++];
+  const g = src[position++];
+  const h = src[position++];
+  if ((e & 0x80) > 0 || (f & 0x80) > 0 || (g & 0x80) > 0 || (h & 0x80) > 0) {
+    position -= 8;
+    return;
+  }
+  if (length < 10) {
+    if (length === 8) {
+      return fromCharCode(a, b, c, d, e, f, g, h);
+    }
+    const i = src[position++];
+    if ((i & 0x80) > 0) {
+      position -= 9;
+      return;
+    }
+    return fromCharCode(a, b, c, d, e, f, g, h, i);
+  }
+  if (length < 12) {
+    const i = src[position++];
+    const j = src[position++];
+    if ((i & 0x80) > 0 || (j & 0x80) > 0) {
+      position -= 10;
+      return;
+    }
+    if (length < 11) {
+      return fromCharCode(a, b, c, d, e, f, g, h, i, j);
+    }
+    const k = src[position++];
+    if ((k & 0x80) > 0) {
+      position -= 11;
+      return;
+    }
+    return fromCharCode(a, b, c, d, e, f, g, h, i, j, k);
+  }
+  const i = src[position++];
+  const j = src[position++];
+  const k = src[position++];
+  const l = src[position++];
+  if ((i & 0x80) > 0 || (j & 0x80) > 0 || (k & 0x80) > 0 || (l & 0x80) > 0) {
+    position -= 12;
+    return;
+  }
+  if (length < 14) {
+    if (length === 12) {
+      return fromCharCode(a, b, c, d, e, f, g, h, i, j, k, l);
+    }
+    const m = src[position++];
+    if ((m & 0x80) > 0) {
+      position -= 13;
+      return;
+    }
+    return fromCharCode(a, b, c, d, e, f, g, h, i, j, k, l, m);
+  }
+  const m = src[position++];
+  const n = src[position++];
+  if ((m & 0x80) > 0 || (n & 0x80) > 0) {
+    position -= 14;
+    return;
+  }
+  if (length < 15) {
+    return fromCharCode(a, b, c, d, e, f, g, h, i, j, k, l, m, n);
+  }
+  const o = src[position++];
+  if ((o & 0x80) > 0) {
+    position -= 15;
+    return;
+  }
+  return fromCharCode(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o);
 }
 
 function readBin(length) {

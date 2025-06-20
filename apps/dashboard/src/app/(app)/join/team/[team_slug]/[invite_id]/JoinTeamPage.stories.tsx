@@ -2,13 +2,13 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import { JoinTeamPageUI } from "./JoinTeamPage";
 
 const meta = {
-  title: "Team/Join Team",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Team/Join Team",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -22,10 +22,10 @@ function Story() {
   return (
     <div>
       <JoinTeamPageUI
-        teamName="XYZ Inc"
         invite={async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
+        teamName="XYZ Inc"
       />
     </div>
   );

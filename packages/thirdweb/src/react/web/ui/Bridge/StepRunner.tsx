@@ -17,11 +17,11 @@ import {
   type CompletedStatusResult,
   useStepExecutor,
 } from "../../../core/hooks/useStepExecutor.js";
+import { Container, ModalHeader } from "../components/basic.js";
+import { Button } from "../components/buttons.js";
 import { ChainName } from "../components/ChainName.js";
 import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
-import { Container, ModalHeader } from "../components/basic.js";
-import { Button } from "../components/buttons.js";
 import { Text } from "../components/text.js";
 
 interface StepRunnerProps {
@@ -87,14 +87,14 @@ export function StepRunner({
     cancel,
     retry,
   } = useStepExecutor({
-    request,
-    wallet,
-    client,
-    windowAdapter,
     autoStart,
+    client,
     onComplete: (completedStatuses: CompletedStatusResult[]) => {
       onComplete(completedStatuses);
     },
+    request,
+    wallet,
+    windowAdapter,
   });
 
   const handleCancel = () => {
@@ -139,23 +139,23 @@ export function StepRunner({
       case "completed":
         return (
           <CheckIcon
-            width={iconSize.sm}
-            height={iconSize.sm}
             color={theme.colors.accentButtonText}
+            height={iconSize.sm}
+            width={iconSize.sm}
           />
         );
       case "executing":
-        return <Spinner size="sm" color={"accentButtonText"} />;
+        return <Spinner color={"accentButtonText"} size="sm" />;
       case "failed":
         return (
-          <Cross1Icon width={iconSize.sm} height={iconSize.sm} color="white" />
+          <Cross1Icon color="white" height={iconSize.sm} width={iconSize.sm} />
         );
       default:
         return (
           <ClockIcon
-            width={iconSize.sm}
-            height={iconSize.sm}
             color={theme.colors.primaryText}
+            height={iconSize.sm}
+            width={iconSize.sm}
           />
         );
     }
@@ -198,15 +198,15 @@ export function StepRunner({
     if (originToken.chainId !== destinationToken.chainId) {
       return (
         <Container flex="row" gap="3xs">
-          <Text size="sm" color="primaryText">
+          <Text color="primaryText" size="sm">
             Bridge {originToken.symbol} to{" "}
           </Text>
           <ChainName
             chain={getDestinationChain(request)}
-            size="sm"
             client={client}
-            short
             color="primaryText"
+            short
+            size="sm"
           />
         </Container>
       );
@@ -215,7 +215,7 @@ export function StepRunner({
     // If different tokens on same chain, it's a swap
     if (originToken.symbol !== destinationToken.symbol) {
       return (
-        <Text size="sm" color="primaryText">
+        <Text color="primaryText" size="sm">
           Swap {originToken.symbol} to {destinationToken.symbol}
         </Text>
       );
@@ -223,7 +223,7 @@ export function StepRunner({
 
     // Fallback to step number
     return (
-      <Text size="sm" color="primaryText">
+      <Text color="primaryText" size="sm">
         Process transaction
       </Text>
     );
@@ -248,40 +248,40 @@ export function StepRunner({
 
   return (
     <Container flex="column" fullHeight p="lg">
-      <ModalHeader title="Processing Payment" onBack={onBack} />
+      <ModalHeader onBack={onBack} title="Processing Payment" />
 
       <Spacer y="xl" />
 
       <Container flex="column">
         {/* Progress Bar */}
         <Container flex="column" gap="sm">
-          <Container flex="row" center="y">
-            <Text size="sm" color="secondaryText" style={{ flex: 1 }}>
+          <Container center="y" flex="row">
+            <Text color="secondaryText" size="sm" style={{ flex: 1 }}>
               Progress
             </Text>
-            <Text size="sm" color="primaryText">
+            <Text color="primaryText" size="sm">
               {progress}%
             </Text>
           </Container>
 
           <Container
             style={{
-              width: "100%",
-              height: "8px",
               backgroundColor: theme.colors.tertiaryBg,
               border: `1px solid ${theme.colors.borderColor}`,
               borderRadius: "4px",
+              height: "8px",
               overflow: "hidden",
+              width: "100%",
             }}
           >
             <Container
               style={{
-                width: `${progress}%`,
-                height: "100%",
                 backgroundColor: error
                   ? theme.colors.danger
                   : theme.colors.accentButtonBg,
+                height: "100%",
                 transition: "width 0.3s ease",
+                width: `${progress}%`,
               }}
             >
               <Text />
@@ -299,32 +299,32 @@ export function StepRunner({
               gap="md"
               style={{
                 alignItems: "center",
-                padding: `${spacing.sm} ${spacing.md}`,
-                borderRadius: radius.md,
                 backgroundColor: getStepBackgroundColor(onrampStatus),
                 border: `1px solid ${theme.colors.borderColor}`,
+                borderRadius: radius.md,
+                padding: `${spacing.sm} ${spacing.md}`,
               }}
             >
               <Container
                 center="both"
                 flex="row"
                 style={{
-                  width: `${iconSize.lg}px`,
-                  height: `${iconSize.lg}px`,
-                  borderRadius: "50%",
                   backgroundColor: getIconBackgroundColor(onrampStatus),
+                  borderRadius: "50%",
                   color: theme.colors.primaryButtonText,
                   flexShrink: 0,
+                  height: `${iconSize.lg}px`,
+                  width: `${iconSize.lg}px`,
                 }}
               >
                 {getStatusIcon(onrampStatus)}
               </Container>
 
               <Container flex="column" gap="3xs" style={{ flex: 1 }}>
-                <Text size="sm" color="primaryText">
+                <Text color="primaryText" size="sm">
                   TEST
                 </Text>
-                <Text size="xs" color="secondaryText">
+                <Text color="secondaryText" size="xs">
                   {getStepStatusText(onrampStatus)}
                 </Text>
               </Container>
@@ -335,27 +335,27 @@ export function StepRunner({
 
             return (
               <Container
-                key={`${step.originToken.chainId}-${step.destinationToken.chainId}-${index}`}
                 flex="row"
                 gap="md"
+                key={`${step.originToken.chainId}-${step.destinationToken.chainId}-${index}`}
                 style={{
                   alignItems: "center",
-                  padding: `${spacing.sm} ${spacing.md}`,
-                  borderRadius: radius.md,
                   backgroundColor: getStepBackgroundColor(status),
                   border: `1px solid ${theme.colors.borderColor}`,
+                  borderRadius: radius.md,
+                  padding: `${spacing.sm} ${spacing.md}`,
                 }}
               >
                 <Container
                   center="both"
                   flex="row"
                   style={{
-                    width: `${iconSize.lg}px`,
-                    height: `${iconSize.lg}px`,
-                    borderRadius: "50%",
                     backgroundColor: getIconBackgroundColor(status),
+                    borderRadius: "50%",
                     color: theme.colors.primaryButtonText,
                     flexShrink: 0,
+                    height: `${iconSize.lg}px`,
+                    width: `${iconSize.lg}px`,
                   }}
                 >
                   {getStatusIcon(status)}
@@ -363,7 +363,7 @@ export function StepRunner({
 
                 <Container flex="column" gap="3xs" style={{ flex: 1 }}>
                   {getStepDescription(step)}
-                  <Text size="xs" color="secondaryText">
+                  <Text color="secondaryText" size="xs">
                     {getStepStatusText(status)}
                   </Text>
                 </Container>
@@ -373,7 +373,7 @@ export function StepRunner({
         </Container>
 
         <Spacer y="md" />
-        <Text size="xs" color="secondaryText" center>
+        <Text center color="secondaryText" size="xs">
           Keep this window open until all
           <br /> transactions are complete.
         </Text>
@@ -383,17 +383,17 @@ export function StepRunner({
         {/* Action Buttons */}
         {error ? (
           <Container flex="row" gap="md">
-            <Button variant="primary" fullWidth onClick={handleRetry}>
+            <Button fullWidth onClick={handleRetry} variant="primary">
               Retry
             </Button>
           </Container>
         ) : executionState === "idle" && progress === 0 ? (
-          <Button variant="accent" fullWidth onClick={start}>
+          <Button fullWidth onClick={start} variant="accent">
             Start Transaction
           </Button>
         ) : executionState === "executing" ||
           executionState === "auto-starting" ? (
-          <Button variant="secondary" fullWidth onClick={handleCancel}>
+          <Button fullWidth onClick={handleCancel} variant="secondary">
             Cancel Transaction
           </Button>
         ) : null}

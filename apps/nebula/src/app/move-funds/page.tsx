@@ -1,6 +1,6 @@
+import Link from "next/link";
 import { ToggleThemeButton } from "@/components/color-mode-toggle";
 import { NebulaIcon } from "@/icons/NebulaIcon";
-import Link from "next/link";
 import { MoveFundsConnectButton } from "./connect-button";
 import { MoveFundsPage } from "./move-funds";
 
@@ -18,8 +18,8 @@ export default function RecoverPage() {
             <ToggleThemeButton />
 
             <Link
-              href="https://thirdweb.com/support"
               className="hidden text-muted-foreground text-sm hover:text-foreground lg:block"
+              href="https://thirdweb.com/support"
               target="_blank"
             >
               Support

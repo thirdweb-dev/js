@@ -1,10 +1,10 @@
 "use client";
 
+import { useCallback, useMemo } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { MultiSelect } from "@/components/blocks/multi-select";
 import { SelectWithSearch } from "@/components/blocks/select-with-search";
 import { Badge } from "@/components/ui/badge";
-import { useCallback, useMemo } from "react";
-import type { ThirdwebClient } from "thirdweb";
 import { useAllChainsData } from "../../hooks/chains";
 import { ChainIconClient } from "./ChainIcon";
 
@@ -98,15 +98,15 @@ export function MultiNetworkSelector(props: {
           <span className="flex grow gap-2 truncate text-left">
             <ChainIconClient
               className="size-5"
+              client={props.client}
               loading="lazy"
               src={chain.icon?.url}
-              client={props.client}
             />
             {cleanChainName(chain.name)}
           </span>
 
           {!props.disableChainId && (
-            <Badge variant="outline" className="gap-2">
+            <Badge className="gap-2" variant="outline">
               <span className="text-muted-foreground">Chain ID</span>
               {chain.chainId}
             </Badge>
@@ -119,24 +119,24 @@ export function MultiNetworkSelector(props: {
 
   return (
     <MultiSelect
-      searchPlaceholder="Search by Name or Chain Id"
-      selectedValues={props.selectedChainIds.map(String)}
-      popoverContentClassName={props.popoverContentClassName}
-      customTrigger={props.customTrigger}
-      options={options}
       align={props.align}
-      side={props.side}
-      showSelectedValuesInModal={props.showSelectedValuesInModal}
+      className={props.className}
+      customTrigger={props.customTrigger}
+      disabled={allChains.length === 0}
       onSelectedValuesChange={(chainIds) => {
         props.onChange(chainIds.map(Number));
       }}
+      options={options}
+      overrideSearchFn={searchFn}
       placeholder={
         allChains.length === 0 ? "Loading Chains..." : "Select Chains"
       }
-      disabled={allChains.length === 0}
-      overrideSearchFn={searchFn}
+      popoverContentClassName={props.popoverContentClassName}
       renderOption={renderOption}
-      className={props.className}
+      searchPlaceholder="Search by Name or Chain Id"
+      selectedValues={props.selectedChainIds.map(String)}
+      showSelectedValuesInModal={props.showSelectedValuesInModal}
+      side={props.side}
     />
   );
 }
@@ -208,15 +208,15 @@ export function SingleNetworkSelector(props: {
           <span className="flex grow gap-2 truncate text-left">
             <ChainIconClient
               className="size-5"
-              src={chain.icon?.url}
               client={props.client}
               loading="lazy"
+              src={chain.icon?.url}
             />
             {cleanChainName(chain.name)}
           </span>
 
           {!props.disableChainId && (
-            <Badge variant="outline" className="gap-2 max-sm:hidden">
+            <Badge className="gap-2 max-sm:hidden" variant="outline">
               <span className="text-muted-foreground">Chain ID</span>
               {chain.chainId}
             </Badge>
@@ -231,26 +231,26 @@ export function SingleNetworkSelector(props: {
 
   return (
     <SelectWithSearch
-      searchPlaceholder="Search by Name or Chain ID"
-      value={props.chainId?.toString()}
-      showCheck={false}
-      options={options}
+      align={props.align}
+      className={props.className}
+      closeOnSelect={true}
+      disabled={isLoadingChains}
       onValueChange={(chainId) => {
         props.onChange(Number(chainId));
       }}
-      closeOnSelect={true}
+      options={options}
+      overrideSearchFn={searchFn}
       placeholder={
         isLoadingChains
           ? "Loading Chains..."
           : props.placeholder || "Select Chain"
       }
-      overrideSearchFn={searchFn}
-      renderOption={renderOption}
-      className={props.className}
       popoverContentClassName={props.popoverContentClassName}
-      disabled={isLoadingChains}
+      renderOption={renderOption}
+      searchPlaceholder="Search by Name or Chain ID"
+      showCheck={false}
       side={props.side}
-      align={props.align}
+      value={props.chainId?.toString()}
     />
   );
 }

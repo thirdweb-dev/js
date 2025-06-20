@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.dolletwallet",
-  name: "Dollet",
-  homepage: "https://dolletwallet.com/",
-  image_id: "21679e58-e829-44f6-78d3-6a9d6e9ce900",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/dollet/id6451143361",
     android:
       "https://play.google.com/store/apps/details?id=com.dolllet.mainnet&pli=1",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/dollet/id6451143361",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "dolletwc://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://dolletwallet.com/",
+  id: "com.dolletwallet",
+  image_id: "21679e58-e829-44f6-78d3-6a9d6e9ce900",
+  mobile: {
+    native: "dolletwc://",
+    universal: null,
+  },
+  name: "Dollet",
+  rdns: null,
 } as const;

@@ -13,8 +13,8 @@ export async function SharedCodePage(props: {
   projectMeta: ProjectMeta | undefined;
 }) {
   const info = await getContractPageParamsInfo({
-    contractAddress: props.contractAddress,
     chainIdOrSlug: props.chainIdOrSlug,
+    contractAddress: props.contractAddress,
     teamId: props.projectMeta?.teamId,
   });
 
@@ -27,8 +27,8 @@ export async function SharedCodePage(props: {
     const shouldHide = await shouldRenderNewPublicPage(info.serverContract);
     if (shouldHide) {
       redirectToContractLandingPage({
-        contractAddress: props.contractAddress,
         chainIdOrSlug: props.chainIdOrSlug,
+        contractAddress: props.contractAddress,
         projectMeta: props.projectMeta,
       });
     }
@@ -40,8 +40,8 @@ export async function SharedCodePage(props: {
   if (isLocalhostChain) {
     return (
       <ContractCodePageClient
-        contract={clientContract}
         chainMetadata={chainMetadata}
+        contract={clientContract}
       />
     );
   }
@@ -51,8 +51,8 @@ export async function SharedCodePage(props: {
   return (
     <ContractCodePage
       abi={abi}
-      contract={clientContract}
       chainMetadata={chainMetadata}
+      contract={clientContract}
     />
   );
 }

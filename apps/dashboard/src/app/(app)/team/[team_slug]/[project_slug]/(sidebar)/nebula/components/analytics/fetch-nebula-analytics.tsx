@@ -1,6 +1,6 @@
 import "server-only";
-import { ANALYTICS_SERVICE_URL } from "@/constants/server-envs";
 import { unstable_cache } from "next/cache";
+import { ANALYTICS_SERVICE_URL } from "@/constants/server-envs";
 
 export type NebulaAnalyticsDataItem = {
   date: string;
@@ -36,16 +36,16 @@ export const fetchNebulaAnalytics = unstable_cache(
     if (!res.ok) {
       const error = await res.text();
       return {
-        ok: false as const,
         error: error,
+        ok: false as const,
       };
     }
 
     const resData = await res.json();
 
     return {
-      ok: true as const,
       data: resData.data as NebulaAnalyticsDataItem[],
+      ok: true as const,
     };
   },
   ["nebula-analytics"],

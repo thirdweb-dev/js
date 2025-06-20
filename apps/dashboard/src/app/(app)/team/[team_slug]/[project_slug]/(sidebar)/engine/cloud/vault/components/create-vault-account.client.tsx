@@ -1,9 +1,13 @@
 "use client";
+import { useMutation } from "@tanstack/react-query";
+import { createServiceAccount } from "@thirdweb-dev/vault-sdk";
+import { CheckIcon, DownloadIcon, Loader2Icon, LockIcon } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import type { Project } from "@/api/projects";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import {
   Dialog,
@@ -11,13 +15,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import { useMutation } from "@tanstack/react-query";
-import { createServiceAccount } from "@thirdweb-dev/vault-sdk";
-import { CheckIcon, DownloadIcon, Loader2Icon, LockIcon } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
 import { storeUserAccessToken } from "../../analytics/utils";
 import {
   createManagementAccessToken,
@@ -47,8 +47,8 @@ export default function CreateVaultAccountButton(props: {
           options: {
             metadata: {
               projectId: props.project.id,
-              teamId: props.project.teamId,
               purpose: "Thirdweb Project Server Wallet Service Account",
+              teamId: props.project.teamId,
             },
           },
         },
@@ -59,15 +59,15 @@ export default function CreateVaultAccountButton(props: {
       }
 
       const managementAccessTokenPromise = createManagementAccessToken({
-        project: props.project,
         adminKey: serviceAccount.data.adminKey,
+        project: props.project,
         rotationCode: serviceAccount.data.rotationCode,
         vaultClient,
       });
 
       const userAccesTokenPromise = createWalletAccessToken({
-        project: props.project,
         adminKey: serviceAccount.data.adminKey,
+        project: props.project,
         vaultClient,
       });
 
@@ -143,10 +143,10 @@ export default function CreateVaultAccountButton(props: {
   return (
     <>
       <Button
-        variant={"primary"}
-        onClick={handleCreateServerWallet}
-        disabled={isLoading}
         className="flex flex-row items-center gap-2"
+        disabled={isLoading}
+        onClick={handleCreateServerWallet}
+        variant={"primary"}
       >
         {isLoading ? (
           <Loader2Icon className="size-4 animate-spin" />
@@ -156,7 +156,7 @@ export default function CreateVaultAccountButton(props: {
         {"Create Vault Admin Account"}
       </Button>
 
-      <Dialog open={modalOpen} onOpenChange={handleCloseModal} modal={true}>
+      <Dialog modal={true} onOpenChange={handleCloseModal} open={modalOpen}>
         <DialogContent
           className="overflow-hidden p-0"
           dialogCloseClassName={cn(!keysConfirmed && "hidden")}
@@ -188,16 +188,16 @@ export default function CreateVaultAccountButton(props: {
                   <div>
                     <div className="flex flex-col gap-2">
                       <CopyTextButton
+                        className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
+                        copyIconPosition="right"
                         textToCopy={
                           initialiseProjectWithVaultMutation.data.serviceAccount
                             .adminKey
                         }
-                        className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
                         textToShow={maskSecret(
                           initialiseProjectWithVaultMutation.data.serviceAccount
                             .adminKey,
                         )}
-                        copyIconPosition="right"
                         tooltip="Copy Admin Key"
                       />
                       <p className="text-muted-foreground text-xs">
@@ -242,9 +242,9 @@ export default function CreateVaultAccountButton(props: {
                   <div className="h-4" />
                   <div className="flex items-center gap-2">
                     <Button
-                      variant="link"
-                      onClick={handleDownloadKeys}
                       className="flex h-auto items-center gap-2 p-0 text-sm text-success-text"
+                      onClick={handleDownloadKeys}
+                      variant="link"
                     >
                       <DownloadIcon className="size-4" />
                       {keysDownloaded ? "Key Downloaded" : "Download Admin Key"}
@@ -268,8 +268,8 @@ export default function CreateVaultAccountButton(props: {
 
               <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
                 <Button
-                  onClick={handleCloseModal}
                   disabled={!keysConfirmed}
+                  onClick={handleCloseModal}
                   variant={"primary"}
                 >
                   Close

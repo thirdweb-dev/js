@@ -28,21 +28,21 @@ export const AbiSelector: React.FC<AbiSelectorProps> = ({
   return (
     <div className="flex w-full flex-row items-center gap-2">
       <Select
-        placeholder="Select function"
-        options={options}
-        defaultValue={options.find((o) => o.value === defaultValue)}
         chakraStyles={{
           container: (provided) => ({
             ...provided,
             width: "full",
           }),
         }}
-        value={options.find((o) => o.value === value)}
+        defaultValue={options.find((o) => o.value === defaultValue)}
         onChange={(selectedFn) => {
           if (selectedFn) {
             onChange((selectedFn as { label: string; value: string }).value);
           }
         }}
+        options={options}
+        placeholder="Select function"
+        value={options.find((o) => o.value === value)}
       />
     </div>
   );

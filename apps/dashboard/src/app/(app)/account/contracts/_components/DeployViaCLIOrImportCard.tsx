@@ -1,12 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { ImportModal } from "components/contract-components/import-contract/modal";
-
 import { ArrowUpRightIcon, DownloadIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { Button } from "@/components/ui/button";
 
 export function DeployViaCLIOrImportCard(props: {
   teamId: string;
@@ -18,14 +17,14 @@ export function DeployViaCLIOrImportCard(props: {
   return (
     <div className="rounded-lg border bg-card p-4 lg:p-6">
       <ImportModal
-        type="contract"
         client={props.client}
         isOpen={importModalOpen}
         onClose={() => {
           setImportModalOpen(false);
         }}
-        teamId={props.teamId}
         projectId={props.projectId}
+        teamId={props.teamId}
+        type="contract"
       />
 
       <h2 className="mb-0.5 font-semibold text-lg">
@@ -39,25 +38,25 @@ export function DeployViaCLIOrImportCard(props: {
 
       <div className="mt-6 flex flex-col gap-3 lg:flex-row">
         <Button
-          variant="outline"
-          className="gap-2 bg-background lg:px-10"
           asChild
+          className="gap-2 bg-background lg:px-10"
+          variant="outline"
         >
           <Link
             href="https://portal.thirdweb.com/contracts/deploy/overview"
-            target="_blank"
             rel="noopener noreferrer"
+            target="_blank"
           >
             Deploy via CLI
             <ArrowUpRightIcon className="size-4" />
           </Link>
         </Button>
         <Button
-          variant="outline"
           className="gap-2 bg-background"
           onClick={() => {
             setImportModalOpen(true);
           }}
+          variant="outline"
         >
           <DownloadIcon className="size-4" />
           Import Contract

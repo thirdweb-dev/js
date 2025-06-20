@@ -26,19 +26,19 @@ export function ContractOverviewPageClient(props: {
 
   return (
     <ContractOverviewPage
+      chainSlug={chainMetadata.slug}
       contract={contract}
-      projectMeta={projectMeta}
+      functionSelectors={contractPageMetadata.functionSelectors}
       hasDirectListings={contractPageMetadata.isDirectListingSupported}
       hasEnglishAuctions={contractPageMetadata.isEnglishAuctionSupported}
-      isErc1155={contractPageMetadata.supportedERCs.isERC1155}
+      isAnalyticsSupported={contractPageMetadata.isInsightSupported}
       isErc20={contractPageMetadata.supportedERCs.isERC20}
       isErc721={contractPageMetadata.supportedERCs.isERC721}
+      isErc1155={contractPageMetadata.supportedERCs.isERC1155}
       isPermissionsEnumerable={
         contractPageMetadata.isPermissionsEnumerableSupported
       }
-      chainSlug={chainMetadata.slug}
-      isAnalyticsSupported={contractPageMetadata.isInsightSupported}
-      functionSelectors={contractPageMetadata.functionSelectors}
+      projectMeta={projectMeta}
       // TODO - create a fully client rendered version of publishedBy and ContractCard and plug it here
       publishedBy={undefined}
     />

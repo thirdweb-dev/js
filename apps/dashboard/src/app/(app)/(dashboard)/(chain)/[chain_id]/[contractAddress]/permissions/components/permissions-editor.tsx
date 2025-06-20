@@ -1,4 +1,3 @@
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   AdminOnly,
   AdminOrSelfOnly,
@@ -24,8 +23,9 @@ import {
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { type ThirdwebContract, ZERO_ADDRESS, isAddress } from "thirdweb";
+import { isAddress, type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { Button, FormErrorMessage, Text } from "tw-components";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 
 interface PermissionEditorProps {
   role: string;
@@ -75,12 +75,12 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
       )}
       {fields?.map((field, index) => (
         <PermissionAddress
-          key={field.id}
+          contract={contract}
           isSubmitting={isSubmitting}
-          role={role}
+          key={field.id}
           member={watch(`${role}.${index}`)}
           removeAddress={() => remove(index)}
-          contract={contract}
+          role={role}
         />
       ))}
       <AdminOnly contract={contract}>
@@ -89,15 +89,14 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
           isInvalid={address && isDisabled}
         >
           <InputGroup>
-            <InputLeftAddon p={0} border="none">
+            <InputLeftAddon border="none" p={0}>
               <ToolTipLabel label="Paste address from clipboard">
                 <IconButton
-                  borderRadius="sm"
-                  borderLeftRadius="md"
                   aria-label="paste address"
-                  icon={<ClipboardPasteIcon className="size-4" />}
-                  width="100%"
+                  borderLeftRadius="md"
+                  borderRadius="sm"
                   height="100%"
+                  icon={<ClipboardPasteIcon className="size-4" />}
                   onClick={() => {
                     navigator.clipboard
                       .readText()
@@ -110,30 +109,31 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
                         toast.error("Failed to paste from clipboard");
                       });
                   }}
+                  width="100%"
                 />
               </ToolTipLabel>
             </InputLeftAddon>
             <Input
-              variant="filled"
               fontFamily="mono"
-              value={address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder={ZERO_ADDRESS}
               px={2}
+              value={address}
+              variant="filled"
             />
-            <InputRightAddon p={0} border="none">
+            <InputRightAddon border="none" p={0}>
               <Button
-                leftIcon={<PlusIcon className="size-4" />}
-                size="sm"
+                alignItems="center"
                 borderLeftRadius="none"
                 borderRightRadius="md"
                 colorScheme="primary"
-                isDisabled={isDisabled}
-                onClick={addAddress}
                 height="100%"
-                width="100%"
+                isDisabled={isDisabled}
                 justifyContent="center"
-                alignItems="center"
+                leftIcon={<PlusIcon className="size-4" />}
+                onClick={addAddress}
+                size="sm"
+                width="100%"
               >
                 Add Address
               </Button>
@@ -169,46 +169,46 @@ const PermissionAddress: React.FC<PermissionAddressProps> = ({
   const { onCopy } = useClipboard(member);
 
   return (
-    <Flex gap={0} align="center">
+    <Flex align="center" gap={0}>
       <InputGroup>
-        <InputLeftAddon p={0} border="none">
+        <InputLeftAddon border="none" p={0}>
           <ToolTipLabel label="Copy address to clipboard">
             <IconButton
-              borderRadius="sm"
-              borderLeftRadius="md"
               aria-label="copy address"
-              icon={<CopyIcon className="size-4" />}
-              width="100%"
+              borderLeftRadius="md"
+              borderRadius="sm"
               height="100%"
+              icon={<CopyIcon className="size-4" />}
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
                 onCopy();
                 toast.info("Address copied.");
               }}
+              width="100%"
             />
           </ToolTipLabel>
         </InputLeftAddon>
         <Input
-          variant="filled"
-          fontFamily="mono"
           defaultValue={member}
+          fontFamily="mono"
           px={2}
+          variant="filled"
         />
         <AdminOrSelfOnly contract={contract} self={member}>
-          <InputRightAddon p={0} border="none">
+          <InputRightAddon border="none" p={0}>
             <Button
-              leftIcon={<TrashIcon className="size-3" />}
-              size="sm"
+              alignItems="center"
               borderLeftRadius="none"
               borderRightRadius="md"
               colorScheme="red"
-              isDisabled={isSubmitting}
-              onClick={removeAddress}
               height="100%"
-              width="100%"
+              isDisabled={isSubmitting}
               justifyContent="center"
-              alignItems="center"
+              leftIcon={<TrashIcon className="size-3" />}
+              onClick={removeAddress}
+              size="sm"
+              width="100%"
             >
               Remove
             </Button>

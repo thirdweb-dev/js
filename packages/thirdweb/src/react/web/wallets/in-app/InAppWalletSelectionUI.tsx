@@ -3,10 +3,10 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
-import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
-import { WalletEntryButton } from "../../ui/ConnectWallet/WalletEntryButton.js";
 import { reservedScreens } from "../../ui/ConnectWallet/constants.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
+import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
+import { WalletEntryButton } from "../../ui/ConnectWallet/WalletEntryButton.js";
 import { ConnectWalletSocialOptions } from "../shared/ConnectWalletSocialOptions.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
 import { useInAppWalletLocale } from "./useInAppWalletLocale.js";
@@ -41,16 +41,16 @@ function InAppWalletSelectionUI(props: {
   ) {
     return (
       <WalletEntryButton
-        wallet={props.wallet}
+        badge={undefined}
+        client={props.client}
+        connectLocale={props.connectLocale}
+        isActive={screen === props.wallet}
+        recommendedWallets={props.recommendedWallets}
         selectWallet={() => {
           setData({});
           props.select();
         }}
-        client={props.client}
-        connectLocale={props.connectLocale}
-        recommendedWallets={props.recommendedWallets}
-        isActive={screen === props.wallet}
-        badge={undefined}
+        wallet={props.wallet}
       />
     );
   }
@@ -61,15 +61,15 @@ function InAppWalletSelectionUI(props: {
 
   return (
     <ConnectWalletSocialOptions
-      disabled={props.disabled}
-      locale={locale}
-      wallet={props.wallet}
-      done={props.done}
-      select={props.select}
-      goBack={props.goBack}
       chain={props.chain}
       client={props.client}
+      disabled={props.disabled}
+      done={props.done}
+      goBack={props.goBack}
+      locale={locale}
+      select={props.select}
       size={props.size}
+      wallet={props.wallet}
     />
   );
 }

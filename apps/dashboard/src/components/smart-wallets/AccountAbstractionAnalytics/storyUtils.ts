@@ -11,11 +11,11 @@ export function createUserOpStatsStub(days: number): UserOpStats[] {
     const sponsoredUsd = Math.random() * 100;
 
     stubbedData.push({
+      chainId: Math.floor(Math.random() * 100).toString(),
       date: new Date(2024, 11, d).toLocaleString(),
-      successful,
       failed,
       sponsoredUsd,
-      chainId: Math.floor(Math.random() * 100).toString(),
+      successful,
     });
 
     if (Math.random() > 0.7) {

@@ -1,4 +1,3 @@
-import { InlineCode } from "@/components/ui/inline-code";
 import {
   useEngineIpAllowlistConfiguration,
   useEngineSetIpAllowlistConfiguration,
@@ -9,6 +8,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { isValid } from "ipaddr.js";
 import { useForm } from "react-hook-form";
 import { Button, Heading, Text } from "tw-components";
+import { InlineCode } from "@/components/ui/inline-code";
 
 interface EngineIpAllowlistConfigProps {
   instanceUrl: string;
@@ -23,12 +23,12 @@ export const EngineIpAllowlistConfig: React.FC<
   EngineIpAllowlistConfigProps
 > = ({ instanceUrl, authToken }) => {
   const { data: existingIpAllowlist } = useEngineIpAllowlistConfiguration({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
   const { mutateAsync: setIpAllowlist } = useEngineSetIpAllowlistConfiguration({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
 
   const { onSuccess, onError } = useTxNotifications(
@@ -96,13 +96,13 @@ export const EngineIpAllowlistConfig: React.FC<
         {...form.register("raw")}
       />
 
-      <Flex justifyContent="end" gap={4} alignItems="center">
+      <Flex alignItems="center" gap={4} justifyContent="end">
         <Button
-          isDisabled={!form.formState.isDirty}
           colorScheme="primary"
-          w={{ base: "full", md: "inherit" }}
+          isDisabled={!form.formState.isDirty}
           px={12}
           type="submit"
+          w={{ base: "full", md: "inherit" }}
         >
           {form.formState.isSubmitting ? "Saving..." : "Save"}
         </Button>

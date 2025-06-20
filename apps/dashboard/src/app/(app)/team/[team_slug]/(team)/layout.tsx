@@ -1,14 +1,14 @@
+import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getProjects } from "@/api/projects";
 import { getTeamBySlug, getTeams } from "@/api/team";
 import { AppFooter } from "@/components/blocks/app-footer";
 import { Button } from "@/components/ui/button";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { siwaExamplePrompts } from "../../../(dashboard)/support/definitions";
 import { CustomChatButton } from "../../../../../components/CustomChat/CustomChatButton";
+import { siwaExamplePrompts } from "../../../(dashboard)/support/definitions";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import {
   getAuthToken,
@@ -36,8 +36,8 @@ export default async function TeamLayout(props: {
 
   const teamsAndProjects = await Promise.all(
     teams.map(async (team) => ({
-      team,
       projects: await getProjects(team.slug),
+      team,
     })),
   );
 
@@ -57,7 +57,7 @@ export default async function TeamLayout(props: {
                 You can only view this team, not take any actions.
               </p>
             </div>
-            <Button variant="default" asChild>
+            <Button asChild variant="default">
               <Link href="/team/~">Leave Staff Mode</Link>
             </Button>
           </div>
@@ -66,58 +66,58 @@ export default async function TeamLayout(props: {
       <AnnouncementBanner />
       <div className="bg-card">
         <TeamHeaderLoggedIn
-          currentTeam={team}
-          teamsAndProjects={teamsAndProjects}
-          currentProject={undefined}
           account={account}
           accountAddress={accountAddress}
           client={client}
+          currentProject={undefined}
+          currentTeam={team}
+          teamsAndProjects={teamsAndProjects}
         />
 
         <TabPathLinks
-          tabContainerClassName="px-4 lg:px-6"
           links={[
             {
-              path: `/team/${params.team_slug}`,
-              name: "Overview",
               exactMatch: true,
+              name: "Overview",
+              path: `/team/${params.team_slug}`,
             },
             {
-              path: `/team/${params.team_slug}/~/analytics`,
               name: "Analytics",
+              path: `/team/${params.team_slug}/~/analytics`,
             },
             {
-              path: `/team/${params.team_slug}/~/ecosystem`,
               name: "Ecosystems",
+              path: `/team/${params.team_slug}/~/ecosystem`,
             },
             {
-              path: `/team/${params.team_slug}/~/usage`,
               name: "Usage",
+              path: `/team/${params.team_slug}/~/usage`,
             },
             {
-              path: `/team/${params.team_slug}/~/audit-log`,
               name: "Audit Log",
+              path: `/team/${params.team_slug}/~/audit-log`,
             },
             {
-              path: `/team/${params.team_slug}/~/settings`,
               name: "Settings",
+              path: `/team/${params.team_slug}/~/settings`,
             },
           ]}
+          tabContainerClassName="px-4 lg:px-6"
         />
       </div>
 
       <main className="flex grow flex-col">{props.children}</main>
       <div className="fixed right-6 bottom-6 z-50">
         <CustomChatButton
-          clientId={undefined}
-          isLoggedIn={true}
-          networks="all"
-          isFloating={true}
-          pageType="support"
-          label="Ask AI Assistant"
-          examplePrompts={siwaExamplePrompts}
-          teamId={team.id}
           authToken={authToken}
+          clientId={undefined}
+          examplePrompts={siwaExamplePrompts}
+          isFloating={true}
+          isLoggedIn={true}
+          label="Ask AI Assistant"
+          networks="all"
+          pageType="support"
+          teamId={team.id}
         />
       </div>
       <AppFooter />

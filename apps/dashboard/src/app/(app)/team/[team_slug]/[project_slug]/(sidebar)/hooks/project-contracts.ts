@@ -1,7 +1,7 @@
 "use client";
 
-import { apiServerProxy } from "@/actions/proxies";
 import { useMutation } from "@tanstack/react-query";
+import { apiServerProxy } from "@/actions/proxies";
 
 export function useAddContractToProject() {
   return useMutation({
@@ -14,17 +14,17 @@ export function useAddContractToProject() {
       contractType: "DropERC20" | "DropERC721" | "DropERC1155" | undefined;
     }) => {
       const res = await apiServerProxy({
-        pathname: `/v1/teams/${params.teamId}/projects/${params.projectId}/contracts`,
-        method: "POST",
         body: JSON.stringify({
-          contractAddress: params.contractAddress,
           chainId: params.chainId,
-          deploymentType: params.deploymentType,
+          contractAddress: params.contractAddress,
           contractType: params.contractType,
+          deploymentType: params.deploymentType,
         }),
         headers: {
           "Content-Type": "application/json",
         },
+        method: "POST",
+        pathname: `/v1/teams/${params.teamId}/projects/${params.projectId}/contracts`,
       });
 
       if (!res.ok) {
@@ -52,8 +52,8 @@ export async function removeContractFromProject(params: {
   contractId: string;
 }) {
   const res = await apiServerProxy({
-    pathname: `/v1/teams/${params.teamId}/projects/${params.projectId}/contracts/${params.contractId}`,
     method: "DELETE",
+    pathname: `/v1/teams/${params.teamId}/projects/${params.projectId}/contracts/${params.contractId}`,
   });
 
   if (!res.ok) {

@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "network.haqq",
-  name: "HAQQ Wallet",
-  homepage: "https://haqq.network/wallet",
-  image_id: "99fe539d-6a2a-4f52-2211-42fd04a9f300",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/haqq-wallet-by-bored-gen/id6443843352",
     android: "https://play.google.com/store/apps/details?id=com.haqq.wallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/haqq-wallet-by-bored-gen/id6443843352",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "haqq://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://haqq.network/wallet",
+  id: "network.haqq",
+  image_id: "99fe539d-6a2a-4f52-2211-42fd04a9f300",
+  mobile: {
+    native: "haqq://",
+    universal: null,
+  },
+  name: "HAQQ Wallet",
+  rdns: null,
 } as const;

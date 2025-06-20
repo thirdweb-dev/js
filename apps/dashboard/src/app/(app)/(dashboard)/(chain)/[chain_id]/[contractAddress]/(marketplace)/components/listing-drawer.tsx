@@ -1,10 +1,3 @@
-import { WalletAddress } from "@/components/blocks/wallet-address";
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import { CodeClient } from "@/components/ui/code/code.client";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Flex, GridItem, SimpleGrid, usePrevious } from "@chakra-ui/react";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
@@ -14,6 +7,13 @@ import type {
 } from "thirdweb/extensions/marketplace";
 import { BuyDirectListingButton, useActiveAccount } from "thirdweb/react";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Badge } from "@/components/ui/badge";
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Card } from "@/components/ui/card";
+import { CodeClient } from "@/components/ui/code/code.client";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { CancelTab } from "./cancel-tab";
 import { LISTING_STATUS } from "./types";
 
@@ -46,15 +46,15 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
   }
 
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
+    <Sheet onOpenChange={onClose} open={isOpen}>
       <SheetContent className="flex w-full flex-col gap-6 py-6 md:min-w-[600px]">
         <div className="flex flex-row gap-6">
           <NFTMediaWithEmptyState
-            metadata={renderData.asset.metadata}
             client={contract.client}
+            height="150px"
+            metadata={renderData.asset.metadata}
             requireInteraction
             width="150px"
-            height="150px"
           />
           <Flex flexDir="column" gap={2} w="70%">
             <p className="font-bold text-lg">
@@ -68,7 +68,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
 
         <Flex flexDir="column" gap={4}>
           <Card className="flex flex-col gap-3 p-4">
-            <SimpleGrid rowGap={3} columns={12} placeItems="center left">
+            <SimpleGrid columns={12} placeItems="center left" rowGap={3}>
               <GridItem colSpan={3}>
                 <p className="font-bold">Asset contract address</p>
               </GridItem>
@@ -83,9 +83,9 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
               </GridItem>
               <GridItem colSpan={9}>
                 <CopyTextButton
+                  copyIconPosition="right"
                   textToCopy={tokenId}
                   textToShow={tokenId}
-                  copyIconPosition="right"
                   tooltip="Token ID"
                 />
               </GridItem>
@@ -103,9 +103,9 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
               </GridItem>
               <GridItem colSpan={9}>
                 <CopyTextButton
+                  copyIconPosition="right"
                   textToCopy={renderData.id.toString()}
                   textToShow={renderData.id.toString()}
-                  copyIconPosition="right"
                   tooltip="Listing ID"
                 />
               </GridItem>
@@ -169,12 +169,11 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
 
         {!isOwner && renderData.status === "ACTIVE" && (
           <BuyDirectListingButton
-            listingId={renderData.id}
-            contractAddress={renderData.assetContractAddress}
             chain={contract.chain}
-            client={contract.client}
             className="w-full"
-            quantity={1n}
+            client={contract.client}
+            contractAddress={renderData.assetContractAddress}
+            listingId={renderData.id}
             onError={(error) => {
               toast.error("Failed to buy listing", {
                 description: error.message,
@@ -183,6 +182,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
             onTransactionConfirmed={() => {
               toast.success("Listing bought successfully");
             }}
+            quantity={1n}
           >
             Buy Listing
           </BuyDirectListingButton>

@@ -1,5 +1,12 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { XIcon } from "lucide-react";
+import { useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
+import { createWebhook } from "@/api/insight/webhooks";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,35 +16,26 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { toast } from "sonner";
-
-import BasicInfoStep from "./BasicInfoStep";
-import { FilterDetailsStep } from "./FilterDetailsStep";
-import ReviewStep from "./ReviewStep";
-
-import { createWebhook } from "@/api/insight/webhooks";
-import { XIcon } from "lucide-react";
-import type { ThirdwebClient } from "thirdweb";
 import { useAbiMultiFetch } from "../hooks/useAbiProcessing";
 import { useTestWebhook } from "../hooks/useTestWebhook";
 import {
   extractEventSignatures,
   extractFunctionSignatures,
 } from "../utils/abiUtils";
+import type { WebhookPayload } from "../utils/webhookPayloadUtils";
 import {
   buildEventWebhookPayload,
   buildTransactionWebhookPayload,
 } from "../utils/webhookPayloadUtils";
-import type { WebhookPayload } from "../utils/webhookPayloadUtils";
 import {
   type WebhookFormStep,
   WebhookFormSteps,
   type WebhookFormValues,
   webhookFormSchema,
 } from "../utils/webhookTypes";
+import BasicInfoStep from "./BasicInfoStep";
+import { FilterDetailsStep } from "./FilterDetailsStep";
+import ReviewStep from "./ReviewStep";
 
 interface CreateWebhookModalProps {
   projectClientId: string;
@@ -57,22 +55,22 @@ export function CreateWebhookModal({
   );
 
   const formHook = useForm<WebhookFormValues>({
-    resolver: zodResolver(webhookFormSchema),
     defaultValues: {
-      name: "",
-      webhookUrl: "",
-      filterType: "event",
-      chainIds: [],
+      abi: "",
       addresses: "",
+      chainIds: [],
+      eventTypes: [],
+      filterType: "event",
       fromAddresses: "",
-      toAddresses: "",
+      inputAbi: [],
+      name: "",
+      secret: "",
       sigHash: "",
       sigHashAbi: "",
-      abi: "",
-      inputAbi: [],
-      secret: "",
-      eventTypes: [],
+      toAddresses: "",
+      webhookUrl: "",
     },
+    resolver: zodResolver(webhookFormSchema),
   });
 
   const chainIds = useWatch({ control: formHook.control, name: "chainIds" });
@@ -83,20 +81,20 @@ export function CreateWebhookModal({
   });
 
   const eventAbi = useAbiMultiFetch({
+    addresses: addresses || "",
+    chainIds,
+    extractSignatures: extractEventSignatures,
     isOpen,
     thirdwebClient: client,
-    chainIds,
-    addresses: addresses || "",
-    extractSignatures: extractEventSignatures,
     type: "event",
   });
 
   const txAbi = useAbiMultiFetch({
+    addresses: toAddresses || "",
+    chainIds,
+    extractSignatures: extractFunctionSignatures,
     isOpen,
     thirdwebClient: client,
-    chainIds,
-    addresses: toAddresses || "",
-    extractSignatures: extractFunctionSignatures,
     type: "transaction",
   });
 
@@ -228,18 +226,18 @@ export function CreateWebhookModal({
       </DialogTrigger>
 
       <DialogContent
-        dialogCloseClassName="hidden"
         className="max-h-[85vh] max-w-5xl overflow-y-auto"
+        dialogCloseClassName="hidden"
       >
         <div className="flex items-center justify-between">
           <DialogTitle className="font-medium text-lg">
             Create New Webhook
           </DialogTitle>
           <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleCloseModal}
             className="h-6 w-6"
+            onClick={handleCloseModal}
+            size="icon"
+            variant="ghost"
           >
             <XIcon className="h-4 w-4" />
             <span className="sr-only">Close</span>
@@ -248,8 +246,8 @@ export function CreateWebhookModal({
 
         <Form {...formHook}>
           <form
-            onSubmit={formHook.handleSubmit(handleSubmit)}
             className="space-y-4"
+            onSubmit={formHook.handleSubmit(handleSubmit)}
           >
             {/* Step Content */}
             <div className="min-h-[300px]">
@@ -263,33 +261,33 @@ export function CreateWebhookModal({
 
               {currentStep === WebhookFormSteps.FilterDetails && (
                 <FilterDetailsStep
-                  client={client}
-                  form={formHook}
-                  eventSignatures={eventAbi.signatures}
-                  functionSignatures={txAbi.signatures}
-                  fetchedAbis={eventAbi.fetchedAbis}
                   abiErrors={eventAbi.errors}
+                  client={client}
+                  eventSignatures={eventAbi.signatures}
+                  fetchedAbis={eventAbi.fetchedAbis}
                   fetchedTxAbis={txAbi.fetchedAbis}
-                  txAbiErrors={txAbi.errors}
-                  isFetchingEventAbi={eventAbi.isFetching}
-                  isFetchingTxAbi={txAbi.isFetching}
+                  form={formHook}
+                  functionSignatures={txAbi.signatures}
                   goToNextStep={goToNextStep}
                   goToPreviousStep={goToPreviousStep}
+                  isFetchingEventAbi={eventAbi.isFetching}
+                  isFetchingTxAbi={txAbi.isFetching}
                   isLoading={isLoading}
                   supportedChainIds={supportedChainIds}
+                  txAbiErrors={txAbi.errors}
                 />
               )}
 
               {currentStep === WebhookFormSteps.Review && (
                 <ReviewStep
                   form={formHook}
+                  goToPreviousStep={goToPreviousStep}
+                  handleCreateButtonClick={handleCreateButtonClick}
+                  isLoading={isLoading}
+                  isRecentResult={isRecentResult}
                   isTestingMap={isTestingMap}
                   testResults={testResults}
-                  isRecentResult={isRecentResult}
                   testWebhookEndpoint={handleTestWebhook}
-                  goToPreviousStep={goToPreviousStep}
-                  isLoading={isLoading}
-                  handleCreateButtonClick={handleCreateButtonClick}
                 />
               )}
             </div>

@@ -1,19 +1,21 @@
+import { notFound } from "next/navigation";
 import {
-  type WebhookResponse,
   getSupportedWebhookChains,
   getWebhooks,
+  type WebhookResponse,
 } from "@/api/insight/webhooks";
 import { getProject } from "@/api/projects";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { notFound } from "next/navigation";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { CreateWebhookModal } from "./components/CreateWebhookModal";
 import { WebhooksTable } from "./components/WebhooksTable";
 
 export default async function WebhooksPage({
   params,
-}: { params: Promise<{ team_slug: string; project_slug: string }> }) {
+}: {
+  params: Promise<{ team_slug: string; project_slug: string }>;
+}) {
   let webhooks: WebhookResponse[] = [];
   let errorMessage = "";
   let supportedChainIds: number[] = [];
@@ -69,9 +71,9 @@ export default async function WebhooksPage({
             Create and manage webhooks to get notified about blockchain events,
             transactions and more.{" "}
             <UnderlineLink
-              target="_blank"
-              rel="noopener noreferrer"
               href="https://portal.thirdweb.com/insight/webhooks"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Learn more about webhooks.
             </UnderlineLink>
@@ -91,10 +93,10 @@ export default async function WebhooksPage({
           </div>
         ) : webhooks.length > 0 ? (
           <WebhooksTable
-            webhooks={webhooks}
-            projectClientId={projectClientId}
             client={client}
+            projectClientId={projectClientId}
             supportedChainIds={supportedChainIds}
+            webhooks={webhooks}
           />
         ) : (
           <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-border p-12 text-center">

@@ -1,31 +1,31 @@
 [
   {
-    "name": "thirdweb (esm)",
-    "path": "./dist/esm/exports/thirdweb.js",
+    "import": "*",
     "limit": "65 kB",
-    "import": "*"
+    "name": "thirdweb (esm)",
+    "path": "./dist/esm/exports/thirdweb.js"
   },
   {
+    "limit": "375 kB",
     "name": "thirdweb (cjs)",
-    "path": "./dist/cjs/exports/thirdweb.js",
-    "limit": "375 kB"
+    "path": "./dist/cjs/exports/thirdweb.js"
   },
   {
-    "name": "thirdweb (minimal + tree-shaking)",
-    "path": "./dist/esm/exports/thirdweb.js",
+    "import": "{ createThirdwebClient, getRpcClient, defineChain }",
     "limit": "7.5 kB",
-    "import": "{ createThirdwebClient, getRpcClient, defineChain }"
+    "name": "thirdweb (minimal + tree-shaking)",
+    "path": "./dist/esm/exports/thirdweb.js"
   },
   {
-    "name": "thirdweb/chains (tree-shaking)",
-    "path": "./dist/esm/exports/chains.js",
+    "import": "{ ethereum }",
     "limit": "650 B",
-    "import": "{ ethereum }"
+    "name": "thirdweb/chains (tree-shaking)",
+    "path": "./dist/esm/exports/chains.js"
   },
   {
-    "name": "thirdweb/react (minimal + tree-shaking)",
-    "path": "./dist/esm/exports/react.js",
+    "import": "{ ThirdwebProvider, useConnect }",
     "limit": "25 kB",
-    "import": "{ ThirdwebProvider, useConnect }"
+    "name": "thirdweb/react (minimal + tree-shaking)",
+    "path": "./dist/esm/exports/react.js"
   }
 ]

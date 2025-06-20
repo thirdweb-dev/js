@@ -1,17 +1,16 @@
 "use client";
-import {
-  reportAssetBuyFailed,
-  reportAssetBuySuccessful,
-} from "@/analytics/report";
 import { toast } from "sonner";
-import type { ThirdwebContract } from "thirdweb";
-import type { NFT } from "thirdweb";
+import type { NFT, ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo, getNFT } from "thirdweb/extensions/erc721";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { getClaimParams } from "thirdweb/utils";
 import { parseError } from "utils/errorParser";
+import {
+  reportAssetBuyFailed,
+  reportAssetBuySuccessful,
+} from "@/analytics/report";
 import { getCurrencyMeta } from "../../../erc20/_utils/getCurrencyMeta";
 import {
   type BuyNFTDropForm,
@@ -40,14 +39,14 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
 
       const transaction = claimTo({
         contract: props.contract,
-        to: account.address,
-        quantity: BigInt(nftAmountToClaim),
         from: account.address,
+        quantity: BigInt(nftAmountToClaim),
+        to: account.address,
       });
 
       const approveTx = await getApprovalForTransaction({
-        transaction,
         account,
+        transaction,
       });
 
       if (approveTx) {
@@ -58,12 +57,12 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
         });
 
         toast.promise(approveTxPromise, {
+          error: (err) => ({
+            description: parseError(err),
+            message: "Approval to spend ERC20 tokens failed",
+          }),
           loading: "Requesting approval to spend ERC20 tokens for NFT purchase",
           success: "ERC20 token spending request approved successfully",
-          error: (err) => ({
-            message: "Approval to spend ERC20 tokens failed",
-            description: parseError(err),
-          }),
         });
 
         try {
@@ -73,9 +72,9 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
           const errorMessage = parseError(err);
 
           reportAssetBuyFailed({
+            assetType: "nft",
             chainId: props.contract.chain.id,
             contractType: "DropERC721",
-            assetType: "nft",
             error: errorMessage,
           });
 
@@ -88,21 +87,21 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
       const nftOrNfts = nftAmountToClaim > 1 ? "NFTs" : "NFT";
 
       toast.promise(claimTxPromise, {
+        error: (err) => ({
+          description: parseError(err),
+          message: `Failed to buy ${nftAmountToClaim} ${nftOrNfts}`,
+        }),
         loading: `Buying ${nftAmountToClaim} ${nftOrNfts}`,
         success: `${nftOrNfts} bought successfully`,
-        error: (err) => ({
-          message: `Failed to buy ${nftAmountToClaim} ${nftOrNfts}`,
-          description: parseError(err),
-        }),
       });
 
       try {
         await claimTxPromise;
 
         reportAssetBuySuccessful({
+          assetType: "nft",
           chainId: props.contract.chain.id,
           contractType: "DropERC721",
-          assetType: "nft",
         });
 
         props.onSuccess?.();
@@ -111,9 +110,9 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
         const errorMessage = parseError(err);
 
         reportAssetBuyFailed({
+          assetType: "nft",
           chainId: props.contract.chain.id,
           contractType: "DropERC721",
-          assetType: "nft",
           error: errorMessage,
         });
 
@@ -127,9 +126,9 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
         description: errorMessage,
       });
       reportAssetBuyFailed({
+        assetType: "nft",
         chainId: props.contract.chain.id,
         contractType: "DropERC721",
-        assetType: "nft",
         error: errorMessage,
       });
     }
@@ -137,16 +136,16 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
 
   return (
     <BuyNFTDropUI
-      contract={props.contract}
       activeAccountAddress={account?.address}
       chainMetadata={props.chainMetadata}
       claimCondition={props.claimCondition}
-      totalNFTs={props.totalNFTs}
-      nextTokenIdToClaim={props.nextTokenIdToClaim}
-      totalUnclaimedSupply={props.totalUnclaimedSupply}
+      contract={props.contract}
       getNFTDropClaimParams={getNFTDropClaimParams}
       getNFTsToClaim={getNFTsToClaim}
       handleSubmit={handleSubmit}
+      nextTokenIdToClaim={props.nextTokenIdToClaim}
+      totalNFTs={props.totalNFTs}
+      totalUnclaimedSupply={props.totalUnclaimedSupply}
     />
   );
 }
@@ -157,24 +156,24 @@ async function getNFTDropClaimParams(params: {
   accountAddress: string;
 }) {
   const claimParams = await getClaimParams({
-    type: "erc721",
     contract: params.contract,
+    from: params.accountAddress,
     quantity: BigInt(1),
     to: params.accountAddress,
-    from: params.accountAddress,
+    type: "erc721",
   });
 
   const meta = await getCurrencyMeta({
-    currencyAddress: claimParams.currency,
-    chainMetadata: params.chainMetadata,
     chain: params.contract.chain,
+    chainMetadata: params.chainMetadata,
     client: params.contract.client,
+    currencyAddress: claimParams.currency,
   });
 
   return {
-    pricePerTokenWei: claimParams.pricePerToken,
     currencyAddress: claimParams.currency,
     decimals: meta.decimals,
+    pricePerTokenWei: claimParams.pricePerToken,
     symbol: meta.symbol,
   };
 }
@@ -188,9 +187,9 @@ async function getNFTsToClaim(params: {
   for (let i = 0; i < params.count; i++) {
     const nftPromise = getNFT({
       contract: params.contract,
-      tokenId: params.nextTokenIdToClaim + BigInt(i),
       includeOwner: true,
       tokenByIndex: true,
+      tokenId: params.nextTokenIdToClaim + BigInt(i),
     });
     nftPromises.push(nftPromise);
   }

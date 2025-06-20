@@ -6,11 +6,11 @@ import { defineChain } from "../utils.js";
 export const hardhat = /* @__PURE__ */ defineChain({
   id: 31337,
   name: "Hardhat",
-  rpc: "http://127.0.0.1:8545",
-  testnet: true,
   nativeCurrency: {
+    decimals: 18,
     name: "Hardhat Ether",
     symbol: "ETH",
-    decimals: 18,
   },
+  rpc: "http://127.0.0.1:8545",
+  testnet: true,
 });

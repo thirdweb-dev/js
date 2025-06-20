@@ -1,8 +1,8 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { getAllRecipientsAddresses } from "./getAllRecipientsAddresses.js";
 import {
-  type SplitRecipient,
   getRecipientSplitPercentage,
+  type SplitRecipient,
 } from "./getRecipientSplitPercentage.js";
 
 /**

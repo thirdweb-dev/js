@@ -1,4 +1,4 @@
-import { type EIP6963ProviderDetail, type Store, createStore } from "mipd";
+import { createStore, type EIP6963ProviderDetail, type Store } from "mipd";
 import { isBrowser } from "../../utils/platform.js";
 import type { InjectedSupportedWalletIds } from "../__generated__/wallet-ids.js";
 import { METAMASK } from "../constants.js";

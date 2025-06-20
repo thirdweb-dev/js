@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.pierwallet",
-  name: "pier",
-  homepage: "https://www.pierwallet.com",
-  image_id: "cf3f0da1-40ec-4940-aebe-df075513d100",
   app: {
-    browser: "https://www.pierwallet.com",
-    ios: "https://apps.apple.com/lb/app/id1613187762",
     android: "https://play.google.com/store/apps/details?id=one.nobank.app",
-    mac: "",
-    windows: null,
-    linux: null,
+    browser: "https://www.pierwallet.com",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/lb/app/id1613187762",
+    linux: null,
+    mac: "",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: null,
-    universal: "https://pierwallet.xyz/wc",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://www.pierwallet.com",
   },
+  homepage: "https://www.pierwallet.com",
+  id: "com.pierwallet",
+  image_id: "cf3f0da1-40ec-4940-aebe-df075513d100",
+  mobile: {
+    native: null,
+    universal: "https://pierwallet.xyz/wc",
+  },
+  name: "pier",
+  rdns: null,
 } as const;

@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.alicebob",
-  name: "Alicebob Wallet",
-  homepage: "https://alicebob.com/",
-  image_id: "15be8ddd-0bef-4948-56d1-6101347a6b00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/alicebob-crypto-btc-wallet/id6467197622",
     android:
       "https://play.google.com/store/apps/details?id=com.crypto.ab.wallet.app",
-    mac: "https://apps.apple.com/us/app/alicebob-crypto-btc-wallet/id6467197622",
-    windows: null,
-    linux: null,
+    browser: null,
     chrome:
       "https://chromewebstore.google.com/detail/alicebob-wallet/mjmpkbeecljmaoojijflpfpmpdhnpabd",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/alicebob-crypto-btc-wallet/id6467197622",
+    linux: null,
+    mac: "https://apps.apple.com/us/app/alicebob-crypto-btc-wallet/id6467197622",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "crypto.ab.wallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://alicebob.com/",
+  id: "com.alicebob",
+  image_id: "15be8ddd-0bef-4948-56d1-6101347a6b00",
+  mobile: {
+    native: "crypto.ab.wallet://",
+    universal: null,
+  },
+  name: "Alicebob Wallet",
+  rdns: null,
 } as const;

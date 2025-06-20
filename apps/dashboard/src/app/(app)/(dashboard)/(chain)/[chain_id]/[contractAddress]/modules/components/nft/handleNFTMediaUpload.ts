@@ -66,13 +66,13 @@ export function getUploadedNFTMediaMeta<T extends MinimalNFTMetadata>(
   const errors = form.formState.errors;
 
   return {
-    media: stringOrFile(_media),
+    animation_url: stringOrFile(_animation_url),
+    external_url: stringOrFile(_external_url),
     image: stringOrFile(_image),
+    media: stringOrFile(_media),
     mediaFileError:
       errors?.animation_url || errors.external_url || errors?.image,
     showCoverImageUpload: !!_animation_url || !!_external_url,
-    animation_url: stringOrFile(_animation_url),
-    external_url: stringOrFile(_external_url),
   };
 }
 

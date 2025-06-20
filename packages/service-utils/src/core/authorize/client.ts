@@ -16,10 +16,10 @@ export function authorizeClient(
   const { team, project, authMethod } = teamAndProjectResponse;
 
   const authResult: AuthorizationResult = {
-    authorized: true,
-    team,
-    project,
     authMethod,
+    authorized: true,
+    project,
+    team,
   };
 
   if (authMethod === "jwt") {
@@ -61,8 +61,8 @@ export function authorizeClient(
 
     return {
       authorized: false,
-      errorMessage: `Invalid request: Unauthorized domain: ${origin}. You can view the restrictions on this API key at https://thirdweb.com/create-api-key`,
       errorCode: "ORIGIN_UNAUTHORIZED",
+      errorMessage: `Invalid request: Unauthorized domain: ${origin}. You can view the restrictions on this API key at https://thirdweb.com/create-api-key`,
       status: 401,
     };
   }
@@ -71,8 +71,8 @@ export function authorizeClient(
   if (bundleId) {
     if (
       authorizeBundleId({
-        bundleIds: project.bundleIds,
         bundleId,
+        bundleIds: project.bundleIds,
       })
     ) {
       return authResult;
@@ -80,17 +80,17 @@ export function authorizeClient(
 
     return {
       authorized: false,
-      errorMessage: `Invalid request: Unauthorized Bundle ID: ${bundleId}. You can view the restrictions on this API key at https://thirdweb.com/create-api-key`,
       errorCode: "BUNDLE_UNAUTHORIZED",
+      errorMessage: `Invalid request: Unauthorized Bundle ID: ${bundleId}. You can view the restrictions on this API key at https://thirdweb.com/create-api-key`,
       status: 401,
     };
   }
 
   return {
     authorized: false,
+    errorCode: "UNAUTHORIZED",
     errorMessage:
       "The keys are invalid. Please check the secret-key/clientId and try again.",
-    errorCode: "UNAUTHORIZED",
     status: 401,
   };
 }
@@ -99,7 +99,10 @@ export function authorizeClient(
 export function authorizeDomain({
   domains,
   origin,
-}: { domains: string[]; origin: string }): boolean {
+}: {
+  domains: string[];
+  origin: string;
+}): boolean {
   // find matching domain, or if all domains allowed
   // embedded-wallet.thirdweb(-dev).com is automatically allowed
   // because the rpc is passed from user's domain to embedded-wallet.thirdweb.com iframe for use.
@@ -136,7 +139,10 @@ export function authorizeDomain({
 export function authorizeBundleId({
   bundleIds,
   bundleId,
-}: { bundleIds: string[]; bundleId: string }): boolean {
+}: {
+  bundleIds: string[];
+  bundleId: string;
+}): boolean {
   // find matching bundle id, or if all bundles allowed
   return !!bundleIds.find((b) => {
     if (b === "*") {

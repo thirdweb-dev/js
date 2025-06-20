@@ -26,7 +26,7 @@ describe.sequential("injected wallet", async () => {
   const wallet: Wallet<typeof METAMASK> = createWallet(METAMASK);
 
   test("should run", async () => {
-    await showCallsStatus({ wallet, id: "test" });
+    await showCallsStatus({ id: "test", wallet });
 
     expect(mocks.injectedRequest).toHaveBeenCalledWith({
       method: "wallet_showCallsStatus",
@@ -37,8 +37,8 @@ describe.sequential("injected wallet", async () => {
   test("without support returns clean failed response", async () => {
     mocks.injectedRequest.mockRejectedValue(RAW_UNSUPPORTED_ERROR);
     const promise = showCallsStatus({
-      wallet: wallet as Wallet<InjectedSupportedWalletIds>,
       id: "test",
+      wallet: wallet as Wallet<InjectedSupportedWalletIds>,
     });
 
     await expect(promise).rejects.toMatchInlineSnapshot(
@@ -52,8 +52,8 @@ describe.sequential("other wallets", async () => {
 
   test("do not support", async () => {
     const promise = showCallsStatus({
-      wallet: wallet as Wallet<InjectedSupportedWalletIds>,
       id: "test",
+      wallet: wallet as Wallet<InjectedSupportedWalletIds>,
     });
 
     await expect(promise).rejects.toMatchInlineSnapshot(

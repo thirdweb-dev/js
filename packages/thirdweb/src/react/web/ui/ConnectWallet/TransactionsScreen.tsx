@@ -9,13 +9,13 @@ import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.j
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../../core/hooks/wallets/useActiveWalletChain.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
-import { Spacer } from "../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../components/basic.js";
 import { ButtonLink } from "../components/buttons.js";
+import { Spacer } from "../components/Spacer.js";
 import type { ConnectLocale } from "./locale/types.js";
 import type { PayerInfo } from "./screens/Buy/types.js";
-import { WalletTransactionHistory } from "./screens/WalletTransactionHistory.js";
 import type { WalletDetailsModalScreen } from "./screens/types.js";
+import { WalletTransactionHistory } from "./screens/WalletTransactionHistory.js";
 
 /**
  * @internal
@@ -35,7 +35,7 @@ export function TransactionsScreen(props: {
 
   const payer: PayerInfo | undefined =
     activeChain && activeAccount && activeWallet
-      ? { chain: activeChain, account: activeAccount, wallet: activeWallet }
+      ? { account: activeAccount, chain: activeChain, wallet: activeWallet }
       : undefined;
 
   if (!payer) {
@@ -45,7 +45,7 @@ export function TransactionsScreen(props: {
   return (
     <Container animate="fadein">
       <Container p="lg">
-        <ModalHeader title={props.locale.transactions} onBack={props.onBack} />
+        <ModalHeader onBack={props.onBack} title={props.locale.transactions} />
       </Container>
       <Line />
       <Container
@@ -57,30 +57,30 @@ export function TransactionsScreen(props: {
       >
         <Spacer y="md" />
         <WalletTransactionHistory
-          locale={props.locale}
-          client={props.client}
           address={payer.account.address}
+          client={props.client}
+          locale={props.locale}
         />
       </Container>
       <Line />
       <Container p="lg">
         <ButtonLink
+          as="a"
           fullWidth
-          variant="outline"
+          gap="xs"
           href={formatExplorerAddressUrl(
             chainExplorers.explorers[0]?.url ?? "",
             activeAccount?.address ?? "",
           )}
-          target="_blank"
-          as="a"
-          gap="xs"
           style={{
-            textDecoration: "none",
             color: "inherit",
+            textDecoration: "none",
           }}
+          target="_blank"
+          variant="outline"
         >
           View on Explorer
-          <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
+          <ExternalLinkIcon height={iconSize.sm} width={iconSize.sm} />
         </ButtonLink>
       </Container>
     </Container>

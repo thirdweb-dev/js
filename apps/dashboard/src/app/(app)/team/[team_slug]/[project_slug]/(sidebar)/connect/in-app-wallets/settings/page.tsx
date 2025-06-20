@@ -1,9 +1,9 @@
+import { InAppWalletSettingsPage } from "components/embedded-wallets/Configure";
+import { redirect } from "next/navigation";
 import { getProject } from "@/api/projects";
 import { getSMSCountryTiers } from "@/api/sms";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { InAppWalletSettingsPage } from "components/embedded-wallets/Configure";
-import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../login/loginRedirect";
 import { getValidTeamPlan } from "../../../../../../components/TeamHeader/getValidTeamPlan";
@@ -39,12 +39,12 @@ export default async function Page(props: {
 
   return (
     <InAppWalletSettingsPage
-      project={project}
-      teamId={team.id}
-      teamSlug={team_slug}
-      teamPlan={getValidTeamPlan(team)}
       client={client}
+      project={project}
       smsCountryTiers={smsCountryTiers}
+      teamId={team.id}
+      teamPlan={getValidTeamPlan(team)}
+      teamSlug={team_slug}
     />
   );
 }

@@ -1,6 +1,6 @@
-import { fetchChain } from "@/utils/fetchChain";
 import { unstable_cache } from "next/cache";
 import type { ChainMetadata } from "thirdweb/chains";
+import { fetchChain } from "@/utils/fetchChain";
 
 export const getChainsForNebula = unstable_cache(
   async (chainNamesOrIds: string[] | string | undefined) => {

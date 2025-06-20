@@ -1,5 +1,5 @@
-import { getTeamBySlug } from "@/api/team";
 import { notFound } from "next/navigation";
+import { getTeamBySlug } from "@/api/team";
 import { EcosystemCreatePage } from "./EcosystemCreatePage";
 
 export default async function Page(props: {
@@ -12,5 +12,5 @@ export default async function Page(props: {
     return notFound();
   }
 
-  return <EcosystemCreatePage teamSlug={team_slug} teamId={team.id} />;
+  return <EcosystemCreatePage teamId={team.id} teamSlug={team_slug} />;
 }

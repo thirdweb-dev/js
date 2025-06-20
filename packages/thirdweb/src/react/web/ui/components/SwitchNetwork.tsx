@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Spinner } from "./Spinner.js";
 import { Button, type ButtonProps } from "./buttons.js";
+import { Spinner } from "./Spinner.js";
 
 export function SwitchNetworkButton(
   props: ButtonProps & {
@@ -25,7 +25,7 @@ export function SwitchNetworkButton(
       {isSwitching ? (
         <>
           Switching
-          <Spinner size="sm" color="accentButtonText" />
+          <Spinner color="accentButtonText" size="sm" />
         </>
       ) : (
         "Switch Network"

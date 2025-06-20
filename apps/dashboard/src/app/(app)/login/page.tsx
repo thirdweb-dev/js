@@ -1,7 +1,7 @@
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getRawAccount } from "../account/settings/getAccount";
-import { LoginAndOnboardingPage } from "./LoginPage";
 import { isValidEncodedRedirectPath } from "./isValidEncodedRedirectPath";
+import { LoginAndOnboardingPage } from "./LoginPage";
 
 export default async function Page(props: {
   searchParams: Promise<{
@@ -26,9 +26,9 @@ export default async function Page(props: {
   return (
     <LoginAndOnboardingPage
       account={account}
-      redirectPath={redirectPath}
-      loginWithInAppWallet={searchParams["in-app-wallet"] === "true"}
       client={getClientThirdwebClient()}
+      loginWithInAppWallet={searchParams["in-app-wallet"] === "true"}
+      redirectPath={redirectPath}
     />
   );
 }

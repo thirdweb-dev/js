@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.cosmostation",
-  name: "Cosmostation",
-  homepage: "https://www.cosmostation.io/",
-  image_id: "ea26c3c8-adb6-4dc4-ee02-35d6eee02800",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/kr/app/cosmostation/id1459830339",
     android:
       "https://play.google.com/store/apps/details?id=wannabit.io.cosmostaion",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/kr/app/cosmostation/id1459830339",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "cosmostation://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.cosmostation.io/",
+  id: "io.cosmostation",
+  image_id: "ea26c3c8-adb6-4dc4-ee02-35d6eee02800",
+  mobile: {
+    native: "cosmostation://",
+    universal: null,
+  },
+  name: "Cosmostation",
+  rdns: null,
 } as const;

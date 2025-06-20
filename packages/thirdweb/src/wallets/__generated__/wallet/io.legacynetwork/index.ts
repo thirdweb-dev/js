@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.legacynetwork",
-  name: "Legacy Wallet",
-  homepage: "https://www.legacynetwork.io/",
-  image_id: "ed181b1b-e4c0-4a2e-4a4c-f380a9f13c00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/legacy-wallet/id6443578674",
     android:
       "https://play.google.com/store/apps/details?id=io.legacynetwork.app",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome:
       "https://chrome.google.com/webstore/detail/legacy-wallet/ammjlinfekkoockogfhdkgcohjlbhmff",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/legacy-wallet/id6443578674",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "legacy://network.io",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.legacynetwork.io/",
+  id: "io.legacynetwork",
+  image_id: "ed181b1b-e4c0-4a2e-4a4c-f380a9f13c00",
+  mobile: {
+    native: "legacy://network.io",
+    universal: null,
+  },
+  name: "Legacy Wallet",
+  rdns: null,
 } as const;

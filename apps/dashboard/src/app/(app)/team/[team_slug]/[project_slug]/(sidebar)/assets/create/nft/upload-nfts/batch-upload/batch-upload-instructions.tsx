@@ -1,9 +1,9 @@
+import { ArrowDownToLineIcon } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { InlineCode } from "@/components/ui/inline-code";
 import { TabButtons } from "@/components/ui/tabs";
-import { ArrowDownToLineIcon } from "lucide-react";
-import { useState } from "react";
 import { handleDownload } from "../../../_common/download-file-button";
 
 export function BatchUploadInstructions() {
@@ -13,14 +13,14 @@ export function BatchUploadInstructions() {
       <TabButtons
         tabs={[
           {
+            isActive: tab === "csv",
             name: "CSV",
             onClick: () => setTab("csv"),
-            isActive: tab === "csv",
           },
           {
+            isActive: tab === "json",
             name: "JSON",
             onClick: () => setTab("json"),
-            isActive: tab === "json",
           },
         ]}
       />
@@ -77,10 +77,10 @@ export function BatchUploadInstructions() {
 
           <ExampleCode
             code={tab === "csv" ? csv_example_basic : json_example_basic}
-            lang={tab === "csv" ? "csv" : "json"}
             fileNameWithExtension={
               tab === "csv" ? "example.csv" : "example.json"
             }
+            lang={tab === "csv" ? "csv" : "json"}
           />
         </Section>
 
@@ -96,12 +96,12 @@ export function BatchUploadInstructions() {
                   ? csv_with_image_number_example
                   : json_with_image_number_example
               }
-              lang={tab === "csv" ? "csv" : "json"}
               fileNameWithExtension={
                 tab === "csv"
                   ? "example-with-maps.csv"
                   : "example-with-maps.json"
               }
+              lang={tab === "csv" ? "csv" : "json"}
             />
           </p>
         </Section>
@@ -122,12 +122,12 @@ export function BatchUploadInstructions() {
                   ? csv_with_image_link_example
                   : json_with_image_link_example
               }
-              lang={tab === "csv" ? "csv" : "json"}
               fileNameWithExtension={
                 tab === "csv"
                   ? "example-with-ipfs.csv"
                   : "example-with-ipfs.json"
               }
+              lang={tab === "csv" ? "csv" : "json"}
             />
           </p>
         </Section>
@@ -151,12 +151,12 @@ export function BatchUploadInstructions() {
                   ? csv_example_price_supply
                   : json_example_price_supply
               }
-              lang={tab === "csv" ? "csv" : "json"}
               fileNameWithExtension={
                 tab === "csv"
                   ? "example-with-price-supply.csv"
                   : "example-with-price-supply.json"
               }
+              lang={tab === "csv" ? "csv" : "json"}
             />
           </p>
         </Section>
@@ -165,10 +165,7 @@ export function BatchUploadInstructions() {
   );
 }
 
-function Section(props: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function Section(props: { title: string; children: React.ReactNode }) {
   return (
     <section>
       <h2 className="mb-1 font-medium text-base text-foreground">
@@ -399,16 +396,16 @@ function ExampleCode(props: {
       />
 
       <Button
-        variant="outline"
-        size="sm"
         className="absolute top-3.5 right-14 mt-[1px] h-auto bg-background p-2"
         onClick={() => {
           handleDownload({
             fileContent: props.code,
-            fileNameWithExtension: props.fileNameWithExtension,
             fileFormat: props.lang === "csv" ? "text/csv" : "application/json",
+            fileNameWithExtension: props.fileNameWithExtension,
           });
         }}
+        size="sm"
+        variant="outline"
       >
         <ArrowDownToLineIcon className="size-3" />
       </Button>

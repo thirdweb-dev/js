@@ -21,9 +21,9 @@ export default async function Page() {
       accountAddress={accountAddress}
       authToken={authToken}
       client={nebulaAppThirdwebClient}
+      initialParams={undefined}
       session={undefined}
       type="new-chat"
-      initialParams={undefined}
     />
   );
 }

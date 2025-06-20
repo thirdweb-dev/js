@@ -40,29 +40,29 @@ export async function activateStylusContract(
 ) {
   const { chain, client, contractAddress } = options;
   const arbWasmPrecompile = getContract({
-    client,
-    chain,
     address: ARB_WASM_ADDRESS,
+    chain,
+    client,
   });
 
   const dataFee = await estimateDataFee({
     transaction: activateProgram({
-      program: contractAddress,
       contract: arbWasmPrecompile,
+      program: contractAddress,
     }),
   });
 
   return activateProgram({
-    program: contractAddress,
     contract: arbWasmPrecompile,
     overrides: {
       value: dataFee,
     },
+    program: contractAddress,
   });
 }
 
 async function estimateDataFee(options: {
-  // biome-ignore lint/suspicious/noExplicitAny:
+  // biome-ignore lint/suspicious/noExplicitAny: TODO
   transaction: PreparedTransaction<any>;
 }) {
   const data = await encode(options.transaction);

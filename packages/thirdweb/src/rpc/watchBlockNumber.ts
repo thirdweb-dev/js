@@ -42,7 +42,7 @@ function createBlockNumberPoller(
   let lastBlockNumber: bigint | undefined;
   let lastBlockAt: number | undefined;
 
-  const rpcRequest = getRpcClient({ client, chain });
+  const rpcRequest = getRpcClient({ chain, client });
 
   /**
    * TODO: document
@@ -67,7 +67,7 @@ function createBlockNumberPoller(
           newBlockNumbers = [blockNumber];
         }
         lastBlockNumber = blockNumber;
-        const currentTime = new Date().getTime();
+        const currentTime = Date.now();
         if (lastBlockAt) {
           // if we skipped a block we need to adjust the block time down to that level
           const blockTime =

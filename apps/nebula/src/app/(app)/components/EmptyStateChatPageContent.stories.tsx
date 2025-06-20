@@ -3,13 +3,13 @@ import { ThirdwebProvider } from "thirdweb/react";
 import { EmptyStateChatPageContent } from "./EmptyStateChatPageContent";
 
 const meta = {
-  title: "Nebula/EmptyStateChatPage",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Nebula/EmptyStateChatPage",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -27,23 +27,21 @@ export const PrefilledMessage: Story = {
   },
 };
 
-function Story(props: {
-  prefillMessage: string | undefined;
-}) {
+function Story(props: { prefillMessage: string | undefined }) {
   return (
     <ThirdwebProvider>
       <div className="container flex max-w-[800px] grow flex-col justify-center overflow-hidden">
         <EmptyStateChatPageContent
-          onLoginClick={undefined}
-          showAurora={false}
-          isConnectingWallet={false}
-          sendMessage={() => {}}
-          prefillMessage={props.prefillMessage}
-          context={undefined}
-          setContext={() => {}}
-          connectedWallets={[]}
-          setActiveWallet={() => {}}
           allowImageUpload={true}
+          connectedWallets={[]}
+          context={undefined}
+          isConnectingWallet={false}
+          onLoginClick={undefined}
+          prefillMessage={props.prefillMessage}
+          sendMessage={() => {}}
+          setActiveWallet={() => {}}
+          setContext={() => {}}
+          showAurora={false}
         />
       </div>
     </ThirdwebProvider>

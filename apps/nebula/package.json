@@ -1,22 +1,4 @@
 {
-  "name": "nebula",
-  "version": "0.0.2",
-  "private": true,
-  "scripts": {
-    "preinstall": "npx only-allow pnpm",
-    "dev": "next dev --turbopack",
-    "build": "NODE_OPTIONS=--max-old-space-size=6144 next build",
-    "start": "next start",
-    "format": "biome format ./src --write",
-    "lint": "biome check ./src && knip && eslint ./src",
-    "fix": "biome check ./src --fix && eslint ./src --fix",
-    "typecheck": "tsc --noEmit",
-    "postbuild": "next-sitemap",
-    "build:analyze": "ANALYZE=true pnpm run build",
-    "knip": "knip",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
-  },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
     "@marsidev/react-turnstile": "^1.1.0",
@@ -58,6 +40,7 @@
     "zod": "3.25.62"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.0.0",
     "@chromatic-com/storybook": "4.0.0",
     "@next/eslint-plugin-next": "15.3.3",
     "@storybook/addon-docs": "9.0.8",
@@ -80,5 +63,23 @@
     "storybook": "9.0.8",
     "tailwindcss": "3.4.17",
     "typescript": "5.8.3"
-  }
+  },
+  "name": "nebula",
+  "private": true,
+  "scripts": {
+    "build": "NODE_OPTIONS=--max-old-space-size=6144 next build",
+    "build-storybook": "storybook build",
+    "build:analyze": "ANALYZE=true pnpm run build",
+    "dev": "next dev --turbopack",
+    "fix": "biome check ./src --fix && eslint ./src --fix",
+    "format": "biome format ./src --write",
+    "knip": "knip",
+    "lint": "biome check ./src && knip && eslint ./src",
+    "postbuild": "next-sitemap",
+    "preinstall": "npx only-allow pnpm",
+    "start": "next start",
+    "storybook": "storybook dev -p 6006",
+    "typecheck": "tsc --noEmit"
+  },
+  "version": "0.0.2"
 }

@@ -76,8 +76,8 @@ export const SharedMetadataForm: React.FC<{
 
           const dataWithCustom = {
             ...data,
-            image: data.image,
             animation_url: data.animation_url,
+            image: data.image,
           };
 
           try {
@@ -86,11 +86,11 @@ export const SharedMetadataForm: React.FC<{
               nft: parseAttributes(dataWithCustom),
             });
             await sendAndConfirmTx.mutateAsync(transaction, {
-              onSuccess: () => {
-                setOpen(false);
-              },
               onError: (error) => {
                 console.error(error);
+              },
+              onSuccess: () => {
+                setOpen(false);
               },
             });
 
@@ -105,7 +105,7 @@ export const SharedMetadataForm: React.FC<{
           <Heading size="subtitle.md">Metadata</Heading>
           <Divider />
         </div>
-        <FormControl isRequired isInvalid={!!errors.name}>
+        <FormControl isInvalid={!!errors.name} isRequired>
           <FormLabel>Name</FormLabel>
           <Input autoFocus {...register("name")} />
           <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
@@ -114,15 +114,15 @@ export const SharedMetadataForm: React.FC<{
           <FormLabel>Media</FormLabel>
           <div>
             <FileInput
-              previewMaxWidth="200px"
-              value={media}
-              client={contract.client}
-              showUploadButton
-              showPreview={true}
-              setValue={setFile}
               className="shrink-0 rounded border border-border transition-all duration-200"
-              selectOrUpload="Upload"
+              client={contract.client}
               helperText="Media"
+              previewMaxWidth="200px"
+              selectOrUpload="Upload"
+              setValue={setFile}
+              showPreview={true}
+              showUploadButton
+              value={media}
             />
           </div>
           <FormHelperText>
@@ -137,13 +137,13 @@ export const SharedMetadataForm: React.FC<{
           <FormControl isInvalid={!!errors.image}>
             <FormLabel>Cover Image</FormLabel>
             <FileInput
+              accept={{ "image/*": [] }}
+              className="shrink-0 rounded border border-border transition-all"
               client={contract.client}
               previewMaxWidth="200px"
-              accept={{ "image/*": [] }}
-              value={image}
-              showUploadButton
               setValue={(file) => setValue("image", file)}
-              className="shrink-0 rounded border border-border transition-all"
+              showUploadButton
+              value={image}
             />
             <FormHelperText>
               You can optionally upload an image as the cover of your NFT.
@@ -165,7 +165,7 @@ export const SharedMetadataForm: React.FC<{
           }
         >
           <AccordionItem>
-            <AccordionButton px={0} justifyContent="space-between">
+            <AccordionButton justifyContent="space-between" px={0}>
               <Heading size="subtitle.md">Advanced Options</Heading>
               <AccordionIcon />
             </AccordionButton>
@@ -174,10 +174,10 @@ export const SharedMetadataForm: React.FC<{
                 <FormControl isInvalid={!!errors.image}>
                   <FormLabel>Image URL</FormLabel>
                   <Input
-                    value={image}
                     onChange={(e) => {
                       setValue("image", e.target.value);
                     }}
+                    value={image}
                   />
                   <FormHelperText>
                     If you already have your NFT image pre-uploaded, you can set
@@ -191,10 +191,10 @@ export const SharedMetadataForm: React.FC<{
                 <FormControl isInvalid={!!errors.animation_url}>
                   <FormLabel>Animation URL</FormLabel>
                   <Input
-                    value={animation_url}
                     onChange={(e) => {
                       setValue("animation_url", e.target.value);
                     }}
+                    value={animation_url}
                   />
                   <FormHelperText>
                     If you already have your NFT Animation URL pre-uploaded, you
@@ -212,21 +212,21 @@ export const SharedMetadataForm: React.FC<{
       <div className="mt-8 flex flex-row justify-end gap-3">
         <Button
           isDisabled={sendAndConfirmTx.isPending}
-          variant="outline"
           mr={3}
           onClick={() => setOpen(false)}
+          variant="outline"
         >
           Cancel
         </Button>
         <TransactionButton
           client={contract.client}
-          txChainID={contract.chain.id}
-          transactionCount={1}
-          isPending={sendAndConfirmTx.isPending}
-          form={SHARED_METADATA_FORM_ID}
-          type="submit"
           disabled={!isDirty}
+          form={SHARED_METADATA_FORM_ID}
           isLoggedIn={isLoggedIn}
+          isPending={sendAndConfirmTx.isPending}
+          transactionCount={1}
+          txChainID={contract.chain.id}
+          type="submit"
         >
           Set NFT Metadata
         </TransactionButton>

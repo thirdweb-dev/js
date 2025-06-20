@@ -7,8 +7,8 @@ import { fetchConstructorParams } from "./constructor-params.js";
 import { fetchSourceFilesFromMetadata } from "./source-files.js";
 
 const RequestStatus = {
-  OK: "1",
   NOTOK: "0",
+  OK: "1",
 };
 
 /**
@@ -60,8 +60,8 @@ export async function verifyContract(
     );
   }
   const res = await download({
-    uri: ipfsUri,
     client: options.contract.client,
+    uri: ipfsUri,
   });
   const compilerMetadata = formatCompilerMetadata(await res.json());
 
@@ -84,13 +84,12 @@ export async function verifyContract(
 
   const compilerInput = {
     language: "Solidity",
-    sources: sourcesWithContents,
     settings: {
-      optimizer: compilerMetadata.metadata.settings.optimizer,
       evmVersion: compilerMetadata.metadata.settings.evmVersion,
-      remappings: compilerMetadata.metadata.settings.remappings,
+      optimizer: compilerMetadata.metadata.settings.optimizer,
       outputSelection: {
         "*": {
+          "": ["ast"],
           "*": [
             "abi",
             "evm.bytecode",
@@ -98,10 +97,11 @@ export async function verifyContract(
             "evm.methodIdentifiers",
             "metadata",
           ],
-          "": ["ast"],
         },
       },
+      remappings: compilerMetadata.metadata.settings.remappings,
     },
+    sources: sourcesWithContents,
   };
 
   const compilationTarget =
@@ -129,8 +129,8 @@ export async function verifyContract(
     const result = await fetch(
       `${options.explorerApiUrl}/v2/smart-contracts/${options.contract.address.toLowerCase()}/verification/via/standard-input`,
       {
-        method: "POST",
         body: formData,
+        method: "POST",
       },
     );
     const data = await result.json();
@@ -145,27 +145,27 @@ export async function verifyContract(
     : await fetchConstructorParams({
         abi: compilerMetadata?.metadata?.output?.abi || [],
         contract: options.contract,
-        explorerApiUrl: options.explorerApiUrl,
         explorerApiKey: options.explorerApiKey,
+        explorerApiUrl: options.explorerApiUrl,
       });
 
   const requestBody: Record<string, string> = {
-    apikey: options.explorerApiKey,
-    module: "contract",
     action: "verifysourcecode",
-    contractaddress: options.contract.address,
-    sourceCode: JSON.stringify(compilerInput),
+    apikey: options.explorerApiKey,
     codeformat: "solidity-standard-json-input",
-    contractname: `${contractPath}:${compilerMetadata.name}`,
     compilerversion: `v${compilerMetadata.metadata.compiler.version}`,
     constructorArguements: encodedArgs,
+    contractaddress: options.contract.address,
+    contractname: `${contractPath}:${compilerMetadata.name}`,
+    module: "contract",
+    sourceCode: JSON.stringify(compilerInput),
   };
 
   const parameters = new URLSearchParams({ ...requestBody });
   const result = await fetch(options.explorerApiUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: parameters.toString(),
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    method: "POST",
   });
   const data = await result.json();
   if (data.status === RequestStatus.OK) {
@@ -175,12 +175,12 @@ export async function verifyContract(
 }
 
 const VerificationStatus = {
-  FAILED: "Fail - Unable to verify",
-  SUCCESS: "Pass - Verified",
-  PENDING: "Pending in queue",
-  IN_PROGRESS: "In progress",
   ALREADY_VERIFIED: "Contract source code already verified",
   AUTOMATICALLY_VERIFIED: "Already Verified",
+  FAILED: "Fail - Unable to verify",
+  IN_PROGRESS: "In progress",
+  PENDING: "Pending in queue",
+  SUCCESS: "Pass - Verified",
 };
 
 type CheckVerificationStatusOptions = {

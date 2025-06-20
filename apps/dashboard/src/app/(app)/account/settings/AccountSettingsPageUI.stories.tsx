@@ -1,3 +1,6 @@
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { useState } from "react";
+import { mobileViewport, storybookThirdwebClient } from "stories/utils";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
@@ -7,19 +10,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Meta, StoryObj } from "@storybook/nextjs";
-import { useState } from "react";
-import { mobileViewport, storybookThirdwebClient } from "stories/utils";
 import { AccountSettingsPageUI } from "./AccountSettingsPageUI";
 
 const meta = {
-  title: "Account/Pages/Settings",
   component: Variants,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Account/Pages/Settings",
 } satisfies Meta<typeof Variants>;
 
 export default meta;
@@ -82,12 +82,12 @@ function Variants() {
         <div className="mt-3 flex flex-col gap-2">
           <Label>Delete Account Response</Label>
           <Select
-            value={String(deleteAccountStatusResponse)}
             onValueChange={(value) =>
               setDeleteAccountStatusResponse(
                 Number(value) as 400 | 402 | 500 | 200,
               )
             }
+            value={String(deleteAccountStatusResponse)}
           >
             <SelectTrigger className="min-w-[320px]">
               <SelectValue placeholder="Select status" />
@@ -103,16 +103,29 @@ function Variants() {
       </div>
 
       <AccountSettingsPageUI
-        defaultTeamSlug="foo"
-        defaultTeamName="Foo"
         account={{
-          name: "John Doe",
           email: "johndoe@gmail.com",
           emailConfirmedAt: isVerifiedEmail
             ? new Date().toISOString()
             : undefined,
+          name: "John Doe",
+        }}
+        cancelSubscriptions={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
         client={storybookThirdwebClient}
+        defaultTeamName="Foo"
+        defaultTeamSlug="foo"
+        deleteAccount={deleteAccountStub}
+        onAccountDeleted={() => {
+          console.log("Account deleted");
+        }}
+        sendEmail={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          if (sendEmailFails) {
+            throw new Error("Email already exists");
+          }
+        }}
         updateAccountAvatar={async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
@@ -123,19 +136,6 @@ function Variants() {
           }
         }}
         updateName={async () => {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-        }}
-        sendEmail={async () => {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          if (sendEmailFails) {
-            throw new Error("Email already exists");
-          }
-        }}
-        deleteAccount={deleteAccountStub}
-        onAccountDeleted={() => {
-          console.log("Account deleted");
-        }}
-        cancelSubscriptions={async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
       />

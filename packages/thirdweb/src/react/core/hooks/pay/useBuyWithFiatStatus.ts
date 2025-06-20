@@ -39,14 +39,14 @@ export function useBuyWithFiatStatus(
   params?: WithPickedOnceQueryOptions<GetBuyWithFiatStatusParams>,
 ): UseQueryResult<BuyWithFiatStatus> {
   return useQuery({
-    queryKey: ["useBuyWithFiatStatus", params],
+    enabled: !!params,
     queryFn: async () => {
       if (!params) {
         throw new Error("No params provided");
       }
       return getBuyWithFiatStatus(params);
     },
-    enabled: !!params,
+    queryKey: ["useBuyWithFiatStatus", params],
     refetchInterval: (query) => {
       const data = query.state.data as BuyWithFiatStatus;
       const status = data?.status;

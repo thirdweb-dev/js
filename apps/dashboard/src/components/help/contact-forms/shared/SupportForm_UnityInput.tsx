@@ -22,26 +22,26 @@ export const UnitySupportForm = () => {
       <SupportForm_SelectInput
         formLabel="OS"
         name="extraInfo_OS"
-        required={true}
-        promptText="Select an operating system"
-        options={OPERATING_SYSTEMS}
-        value={selectedOS}
         onValueChange={setSelectedOS}
+        options={OPERATING_SYSTEMS}
+        promptText="Select an operating system"
+        required={true}
+        value={selectedOS}
       />
       <SupportForm_SelectInput
         formLabel="Target platform"
         name="extraInfo_Target_Platform"
-        required={true}
-        promptText="Select the target platform"
-        options={TARGET_PLATFORMS}
-        value={selectedTargetPlatform}
         onValueChange={setSelectedTargetPlatform}
+        options={TARGET_PLATFORMS}
+        promptText="Select the target platform"
+        required={true}
+        value={selectedTargetPlatform}
       />
       <SupportForm_TextInput
         formLabel="Unity version"
         formValue="extraInfo_Unity_Version"
-        required={true}
         inputType="text"
+        required={true}
       />
     </>
   );

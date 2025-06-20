@@ -1,8 +1,8 @@
-import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { DeployableContractTable } from "components/contract-components/contract-table";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 
 export default async function DeployMultipleContractsPage(props: {
   searchParams?: Promise<{
@@ -25,9 +25,9 @@ export default async function DeployMultipleContractsPage(props: {
         Welcome to the thirdweb contract deployment flow.{" "}
         <Link
           className="text-link-foreground hover:text-foreground"
-          target="_blank"
-          rel="noopener noreferrer"
           href="https://portal.thirdweb.com/contracts/deploy/overview"
+          rel="noopener noreferrer"
+          target="_blank"
         >
           Learn more about deploying your contracts.
         </Link>
@@ -36,7 +36,7 @@ export default async function DeployMultipleContractsPage(props: {
       <div className="h-6" />
 
       <Suspense fallback={<GenericLoadingPage />}>
-        <DeployableContractTable contractIds={ipfsHashes} context="deploy" />
+        <DeployableContractTable context="deploy" contractIds={ipfsHashes} />
       </Suspense>
     </div>
   );

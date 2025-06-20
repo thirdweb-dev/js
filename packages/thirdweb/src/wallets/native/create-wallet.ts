@@ -90,8 +90,8 @@ export function createWallet<const ID extends WalletId>(
      */
     default: {
       const emitter = createWalletEmitter<ID>();
-      let account: Account | undefined = undefined;
-      let chain: Chain | undefined = undefined;
+      let account: Account | undefined;
+      let chain: Chain | undefined;
 
       const unsubscribeChain = emitter.subscribe("chainChanged", (newChain) => {
         chain = newChain;
@@ -129,18 +129,6 @@ export function createWallet<const ID extends WalletId>(
       };
 
       const wallet: Wallet<ID> = {
-        id,
-        subscribe: emitter.subscribe,
-        getConfig: () => args[1],
-        getChain() {
-          if (!chain) {
-            return undefined;
-          }
-
-          chain = getCachedChainIfExists(chain.id) || chain;
-          return chain;
-        },
-        getAccount: () => account,
         autoConnect: async (
           options: WalletAutoConnectionOption<WCSupportedWalletIds>,
         ) => {
@@ -166,10 +154,10 @@ export function createWallet<const ID extends WalletId>(
             handleDisconnect = doDisconnect;
             handleSwitchChain = doSwitchChain;
             trackConnect({
-              client: options.client,
-              walletType: id,
-              walletAddress: account.address,
               chainId: chain.id,
+              client: options.client,
+              walletAddress: account.address,
+              walletType: id,
             });
             // return account
             return account;
@@ -200,10 +188,10 @@ export function createWallet<const ID extends WalletId>(
             handleDisconnect = doDisconnect;
             handleSwitchChain = doSwitchChain;
             trackConnect({
-              client: wcOptions.client,
-              walletType: id,
-              walletAddress: account.address,
               chainId: chain.id,
+              client: wcOptions.client,
+              walletAddress: account.address,
+              walletType: id,
             });
             return account;
           }
@@ -212,8 +200,8 @@ export function createWallet<const ID extends WalletId>(
             const { client, chain: _chain, ...walletConnectOptions } = options;
 
             return wcConnect({
-              client,
               chain: _chain,
+              client,
               walletConnect: {
                 ...walletConnectOptions,
               },
@@ -230,6 +218,18 @@ export function createWallet<const ID extends WalletId>(
           reset();
           await handleDisconnect();
         },
+        getAccount: () => account,
+        getChain() {
+          if (!chain) {
+            return undefined;
+          }
+
+          chain = getCachedChainIfExists(chain.id) || chain;
+          return chain;
+        },
+        getConfig: () => args[1],
+        id,
+        subscribe: emitter.subscribe,
         switchChain: (c) => handleSwitchChain(c),
       };
       return wallet;

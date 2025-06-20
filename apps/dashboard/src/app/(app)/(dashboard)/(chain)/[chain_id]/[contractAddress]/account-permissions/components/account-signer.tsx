@@ -1,11 +1,11 @@
-import { WalletAddress } from "@/components/blocks/wallet-address";
-import { Badge } from "@/components/ui/badge";
 import { Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
 import { formatDistance } from "date-fns";
 import { useAllChainsData } from "hooks/chains/allChains";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { Card, Heading, Text } from "tw-components";
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Badge } from "@/components/ui/badge";
 
 export type AccountSignerType = {
   signer: string;
@@ -37,19 +37,19 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({
     endTimestamp,
   } = item;
   return (
-    <Card position="relative" p={8}>
+    <Card p={8} position="relative">
       <Flex direction="column" gap={8}>
         <Flex flexDir="column" gap={2} mt={{ base: 4, md: 0 }}>
           <Flex
-            gap={3}
             alignItems="center"
             flexDir={{ base: "column", lg: "row" }}
+            gap={3}
           >
             <Heading size="label.lg">
               <WalletAddress
-                shortenAddress={isMobile}
                 address={signer}
                 client={client}
+                shortenAddress={isMobile}
               />
             </Heading>
             <div className="flex flex-row gap-2">

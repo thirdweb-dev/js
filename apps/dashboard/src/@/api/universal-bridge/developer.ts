@@ -14,19 +14,16 @@ type Webhook = {
   version?: number; // TODO (UB) make this mandatory after migration
 };
 
-export async function getWebhooks(props: {
-  clientId: string;
-  teamId: string;
-}) {
+export async function getWebhooks(props: { clientId: string; teamId: string }) {
   const authToken = await getAuthToken();
   const res = await fetch(`${UB_BASE_URL}/v1/developer/webhooks`, {
-    method: "GET",
     headers: {
+      Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",
       "x-client-id": props.clientId,
       "x-team-id": props.teamId,
-      Authorization: `Bearer ${authToken}`,
     },
+    method: "GET",
   });
 
   if (!res.ok) {
@@ -49,19 +46,19 @@ export async function createWebhook(props: {
   const authToken = await getAuthToken();
 
   const res = await fetch(`${UB_BASE_URL}/v1/developer/webhooks`, {
-    method: "POST",
     body: JSON.stringify({
-      url: props.url,
       label: props.label,
-      version: props.version,
       secret: props.secret,
+      url: props.url,
+      version: props.version,
     }),
     headers: {
+      Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",
       "x-client-id": props.clientId,
       "x-team-id": props.teamId,
-      Authorization: `Bearer ${authToken}`,
     },
+    method: "POST",
   });
 
   if (!res.ok) {
@@ -81,13 +78,13 @@ export async function deleteWebhook(props: {
   const res = await fetch(
     `${UB_BASE_URL}/v1/developer/webhooks/${props.webhookId}`,
     {
-      method: "DELETE",
       headers: {
+        Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
         "x-client-id": props.clientId,
         "x-team-id": props.teamId,
-        Authorization: `Bearer ${authToken}`,
       },
+      method: "DELETE",
     },
   );
 
@@ -106,19 +103,16 @@ export type Fee = {
   updatedAt: string;
 };
 
-export async function getFees(props: {
-  clientId: string;
-  teamId: string;
-}) {
+export async function getFees(props: { clientId: string; teamId: string }) {
   const authToken = await getAuthToken();
   const res = await fetch(`${UB_BASE_URL}/v1/developer/fees`, {
-    method: "GET",
     headers: {
-      "Content-Type": "application/json",
-      "x-team-id": props.teamId,
-      "x-client-id": props.clientId,
       Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+      "x-client-id": props.clientId,
+      "x-team-id": props.teamId,
     },
+    method: "GET",
   });
 
   if (!res.ok) {
@@ -138,17 +132,17 @@ export async function updateFee(props: {
 }) {
   const authToken = await getAuthToken();
   const res = await fetch(`${UB_BASE_URL}/v1/developer/fees`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "x-team-id": props.teamId,
-      "x-client-id": props.clientId,
-      Authorization: `Bearer ${authToken}`,
-    },
     body: JSON.stringify({
-      feeRecipient: props.feeRecipient,
       feeBps: props.feeBps,
+      feeRecipient: props.feeRecipient,
     }),
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+      "x-client-id": props.clientId,
+      "x-team-id": props.teamId,
+    },
+    method: "PUT",
   });
 
   if (!res.ok) {
@@ -225,13 +219,13 @@ export async function getPayments(props: {
   }
 
   const res = await fetch(url, {
-    method: "GET",
     headers: {
+      Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",
       "x-client-id": props.clientId,
       "x-team-id": props.teamId,
-      Authorization: `Bearer ${authToken}`,
     },
+    method: "GET",
   });
 
   if (!res.ok) {

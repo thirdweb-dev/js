@@ -1,8 +1,8 @@
+import { CustomContractForm } from "components/contract-components/contract-deploy-form/custom-contract";
+import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
-import { CustomContractForm } from "components/contract-components/contract-deploy-form/custom-contract";
-import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import { getUserThirdwebClient } from "../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../login/loginRedirect";
 
@@ -33,18 +33,18 @@ export async function DeployFormForUri(props: DeployFormForUriProps) {
 
   const teamsAndProjects = await Promise.all(
     teams.map(async (team) => ({
-      team: {
-        id: team.id,
-        name: team.name,
-        slug: team.slug,
-        image: team.image,
-      },
       projects: (await getProjects(team.slug)).map((x) => ({
         id: x.id,
-        name: x.name,
         image: x.image,
+        name: x.name,
         slug: x.slug,
       })),
+      team: {
+        id: team.id,
+        image: team.image,
+        name: team.name,
+        slug: team.slug,
+      },
     })),
   );
 
@@ -52,12 +52,12 @@ export async function DeployFormForUri(props: DeployFormForUriProps) {
   return (
     <ChakraProviderSetup>
       <CustomContractForm
+        client={client}
+        isLoggedIn={true}
         metadata={contractMetadata}
         metadataNoFee={contractMetadataNoFee}
         modules={modules?.filter((m) => m !== null)}
-        isLoggedIn={true}
         teamsAndProjects={teamsAndProjects}
-        client={client}
       />
     </ChakraProviderSetup>
   );

@@ -1,216 +1,208 @@
 // READ
-export { isERC1155 } from "../../extensions/erc1155/read/isERC1155.js";
+
 export {
-  balanceOfBatch,
+  type BalanceOfParams,
+  balanceOf,
+} from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
+export {
   type BalanceOfBatchParams,
+  balanceOfBatch,
 } from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOfBatch.js";
 export {
-  getNFT,
-  isGetNFTSupported,
-  type GetNFTParams,
-} from "../../extensions/erc1155/read/getNFT.js";
+  type IsApprovedForAllParams,
+  isApprovedForAll,
+} from "../../extensions/erc1155/__generated__/IERC1155/read/isApprovedForAll.js";
 export {
-  getNFTs,
-  type GetNFTsParams,
-  isGetNFTsSupported,
-} from "../../extensions/erc1155/read/getNFTs.js";
+  isTotalSupplySupported,
+  type TotalSupplyParams,
+  totalSupply,
+} from "../../extensions/erc1155/__generated__/IERC1155/read/totalSupply.js";
 export {
-  getOwnedNFTs,
-  type GetOwnedNFTsParams,
-} from "../../extensions/erc1155/read/getOwnedNFTs.js";
-export {
-  nextTokenIdToMint,
-  isNextTokenIdToMintSupported,
-} from "../../extensions/erc1155/__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
-export {
-  getOwnedTokenIds,
-  type GetOwnedTokenIdsParams,
-} from "../../extensions/erc1155/read/getOwnedTokenIds.js";
-export {
+  type UriParams,
   uri,
   /**
    * @alias for `uri`
    */
   uri as tokenUri,
-  type UriParams,
 } from "../../extensions/erc1155/__generated__/IERC1155/read/uri.js";
 export {
-  totalSupply,
-  type TotalSupplyParams,
-  isTotalSupplySupported,
-} from "../../extensions/erc1155/__generated__/IERC1155/read/totalSupply.js";
+  isNextTokenIdToMintSupported,
+  nextTokenIdToMint,
+} from "../../extensions/erc1155/__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
 export {
-  balanceOf,
-  type BalanceOfParams,
-} from "../../extensions/erc1155/__generated__/IERC1155/read/balanceOf.js";
+  type GetNFTParams,
+  getNFT,
+  isGetNFTSupported,
+} from "../../extensions/erc1155/read/getNFT.js";
 export {
-  isApprovedForAll,
-  type IsApprovedForAllParams,
-} from "../../extensions/erc1155/__generated__/IERC1155/read/isApprovedForAll.js";
+  type GetNFTsParams,
+  getNFTs,
+  isGetNFTsSupported,
+} from "../../extensions/erc1155/read/getNFTs.js";
+export {
+  type GetOwnedNFTsParams,
+  getOwnedNFTs,
+} from "../../extensions/erc1155/read/getOwnedNFTs.js";
+export {
+  type GetOwnedTokenIdsParams,
+  getOwnedTokenIds,
+} from "../../extensions/erc1155/read/getOwnedTokenIds.js";
+export { isERC1155 } from "../../extensions/erc1155/read/isERC1155.js";
 
 //WRITE
 
 export {
-  burn,
   type BurnParams,
+  burn,
   isBurnSupported,
 } from "../../extensions/erc1155/__generated__/IBurnableERC1155/write/burn.js";
 export {
-  burnBatch,
   type BurnBatchParams,
+  burnBatch,
 } from "../../extensions/erc1155/__generated__/IBurnableERC1155/write/burnBatch.js";
+export { tokensClaimedEvent } from "../../extensions/erc1155/__generated__/IDrop1155/events/TokensClaimed.js";
 export {
-  setApprovalForAll,
-  type SetApprovalForAllParams,
-} from "../../extensions/erc1155/__generated__/IERC1155/write/setApprovalForAll.js";
+  type GetClaimConditionByIdParams,
+  getClaimConditionById,
+  isGetClaimConditionByIdSupported,
+} from "../../extensions/erc1155/__generated__/IDrop1155/read/getClaimConditionById.js";
+export { claimCondition } from "../../extensions/erc1155/__generated__/IDropSinglePhase1155/read/claimCondition.js";
 export {
-  safeTransferFrom,
-  encodeSafeTransferFrom,
-  type SafeTransferFromParams,
-} from "../../extensions/erc1155/__generated__/IERC1155/write/safeTransferFrom.js";
+  type ApprovalForAllEventFilters,
+  approvalForAllEvent,
+} from "../../extensions/erc1155/__generated__/IERC1155/events/ApprovalForAll.js";
 export {
-  safeBatchTransferFrom,
+  type TransferBatchEventFilters,
+  transferBatchEvent,
+} from "../../extensions/erc1155/__generated__/IERC1155/events/TransferBatch.js";
+export {
+  type TransferSingleEventFilters,
+  transferSingleEvent,
+} from "../../extensions/erc1155/__generated__/IERC1155/events/TransferSingle.js";
+export {
   type SafeBatchTransferFromParams,
+  safeBatchTransferFrom,
 } from "../../extensions/erc1155/__generated__/IERC1155/write/safeBatchTransferFrom.js";
 export {
-  mintTo,
-  type MintToParams,
-  isMintToSupported,
-} from "../../extensions/erc1155/write/mintTo.js";
+  encodeSafeTransferFrom,
+  type SafeTransferFromParams,
+  safeTransferFrom,
+} from "../../extensions/erc1155/__generated__/IERC1155/write/safeTransferFrom.js";
 export {
-  mintAdditionalSupplyTo,
-  type MintAdditionalSupplyToParams,
-  isMintAdditionalSupplyToSupported,
-} from "../../extensions/erc1155/write/mintAdditionalSupplyTo.js";
-export {
-  setTokenURI,
-  type SetTokenURIParams,
-} from "../../extensions/erc1155/__generated__/INFTMetadata/write/setTokenURI.js";
+  type SetApprovalForAllParams,
+  setApprovalForAll,
+} from "../../extensions/erc1155/__generated__/IERC1155/write/setApprovalForAll.js";
+// EVENTS
+export { tokensLazyMintedEvent } from "../../extensions/erc1155/__generated__/ILazyMint/events/TokensLazyMinted.js";
+export { batchMetadataUpdateEvent } from "../../extensions/erc1155/__generated__/INFTMetadata/events/BatchMetadataUpdate.js";
+export { metadataFrozenEvent } from "../../extensions/erc1155/__generated__/INFTMetadata/events/MetadataFrozen.js";
+export { metadataUpdateEvent } from "../../extensions/erc1155/__generated__/INFTMetadata/events/MetadataUpdate.js";
 export { freezeMetadata } from "../../extensions/erc1155/__generated__/INFTMetadata/write/freezeMetadata.js";
-
+export {
+  type SetTokenURIParams,
+  setTokenURI,
+} from "../../extensions/erc1155/__generated__/INFTMetadata/write/setTokenURI.js";
+// Packs
+export {
+  type PackCreatedEventFilters,
+  packCreatedEvent,
+} from "../../extensions/erc1155/__generated__/IPack/events/PackCreated.js";
+export {
+  type PackOpenedEventFilters,
+  packOpenedEvent,
+} from "../../extensions/erc1155/__generated__/IPack/events/PackOpened.js";
+export {
+  type PackUpdatedEventFilters,
+  packUpdatedEvent,
+} from "../../extensions/erc1155/__generated__/IPack/events/PackUpdated.js";
+export {
+  type CreatePackParams,
+  createPack,
+} from "../../extensions/erc1155/__generated__/IPack/write/createPack.js";
+export {
+  type OpenPackParams,
+  openPack,
+} from "../../extensions/erc1155/__generated__/IPack/write/openPack.js";
+export {
+  type TokensMintedWithSignatureEventFilters,
+  tokensMintedWithSignatureEvent,
+} from "../../extensions/erc1155/__generated__/ISignatureMintERC1155/events/TokensMintedWithSignature.js";
+// Zora 1155 contract
+export { nextTokenId } from "../../extensions/erc1155/__generated__/Zora1155/read/nextTokenId.js";
+export {
+  type CanClaimParams,
+  type CanClaimResult,
+  canClaim,
+} from "../../extensions/erc1155/drops/read/canClaim.js";
 /**
  * DROPS extension for ERC1155
  */
 // READ
 export {
+  type GetActiveClaimConditionParams,
   getActiveClaimCondition,
   isGetActiveClaimConditionSupported,
-  type GetActiveClaimConditionParams,
 } from "../../extensions/erc1155/drops/read/getActiveClaimCondition.js";
 export {
-  getClaimConditionById,
-  type GetClaimConditionByIdParams,
-  isGetClaimConditionByIdSupported,
-} from "../../extensions/erc1155/__generated__/IDrop1155/read/getClaimConditionById.js";
-export {
-  getClaimConditions,
   type GetClaimConditionsParams,
+  getClaimConditions,
   isGetClaimConditionsSupported,
 } from "../../extensions/erc1155/drops/read/getClaimConditions.js";
-export {
-  canClaim,
-  type CanClaimParams,
-  type CanClaimResult,
-} from "../../extensions/erc1155/drops/read/canClaim.js";
-export { claimCondition } from "../../extensions/erc1155/__generated__/IDropSinglePhase1155/read/claimCondition.js";
-
 // WRITE
 export {
-  claimTo,
   type ClaimToParams,
+  claimTo,
   isClaimToSupported,
 } from "../../extensions/erc1155/drops/write/claimTo.js";
 export {
-  lazyMint,
-  type LazyMintParams,
-  isLazyMintSupported,
-} from "../../extensions/erc1155/write/lazyMint.js";
-export {
-  setClaimConditions,
-  type SetClaimConditionsParams,
-  isSetClaimConditionsSupported,
-} from "../../extensions/erc1155/drops/write/setClaimConditions.js";
-export {
-  resetClaimEligibility,
-  type ResetClaimEligibilityParams,
   isResetClaimEligibilitySupported,
+  type ResetClaimEligibilityParams,
+  resetClaimEligibility,
 } from "../../extensions/erc1155/drops/write/resetClaimEligibility.js";
-
+export {
+  isSetClaimConditionsSupported,
+  type SetClaimConditionsParams,
+  setClaimConditions,
+} from "../../extensions/erc1155/drops/write/setClaimConditions.js";
 // METADATA
 export {
-  updateMetadata,
-  type UpdateMetadataParams,
   isUpdateMetadataSupported,
+  type UpdateMetadataParams,
+  updateMetadata,
 } from "../../extensions/erc1155/drops/write/updateMetadata.js";
 export {
-  updateTokenURI,
-  type UpdateTokenURIParams,
-  isUpdateTokenURISupported,
-} from "../../extensions/erc1155/write/updateTokenURI.js";
-
+  isLazyMintSupported,
+  type LazyMintParams,
+  lazyMint,
+} from "../../extensions/erc1155/write/lazyMint.js";
+export {
+  isMintAdditionalSupplyToSupported,
+  type MintAdditionalSupplyToParams,
+  mintAdditionalSupplyTo,
+} from "../../extensions/erc1155/write/mintAdditionalSupplyTo.js";
+export {
+  type MintAdditionalSupplyToBatchParams,
+  mintAdditionalSupplyToBatch,
+} from "../../extensions/erc1155/write/mintAdditionalSupplyToBatch.js";
+export {
+  isMintToSupported,
+  type MintToParams,
+  mintTo,
+} from "../../extensions/erc1155/write/mintTo.js";
+export {
+  type MintToBatchParams,
+  mintToBatch,
+} from "../../extensions/erc1155/write/mintToBatch.js";
 /**
  * SIGNATURE extension for ERC1155
  */
 export {
-  mintWithSignature,
   type GenerateMintSignatureOptions,
   generateMintSignature,
+  mintWithSignature,
 } from "../../extensions/erc1155/write/sigMint.js";
-
-// EVENTS
-export { tokensLazyMintedEvent } from "../../extensions/erc1155/__generated__/ILazyMint/events/TokensLazyMinted.js";
-export { tokensClaimedEvent } from "../../extensions/erc1155/__generated__/IDrop1155/events/TokensClaimed.js";
 export {
-  transferSingleEvent,
-  type TransferSingleEventFilters,
-} from "../../extensions/erc1155/__generated__/IERC1155/events/TransferSingle.js";
-export {
-  transferBatchEvent,
-  type TransferBatchEventFilters,
-} from "../../extensions/erc1155/__generated__/IERC1155/events/TransferBatch.js";
-export {
-  approvalForAllEvent,
-  type ApprovalForAllEventFilters,
-} from "../../extensions/erc1155/__generated__/IERC1155/events/ApprovalForAll.js";
-export { metadataUpdateEvent } from "../../extensions/erc1155/__generated__/INFTMetadata/events/MetadataUpdate.js";
-export { metadataFrozenEvent } from "../../extensions/erc1155/__generated__/INFTMetadata/events/MetadataFrozen.js";
-export { batchMetadataUpdateEvent } from "../../extensions/erc1155/__generated__/INFTMetadata/events/BatchMetadataUpdate.js";
-export {
-  tokensMintedWithSignatureEvent,
-  type TokensMintedWithSignatureEventFilters,
-} from "../../extensions/erc1155/__generated__/ISignatureMintERC1155/events/TokensMintedWithSignature.js";
-
-// Packs
-export {
-  packCreatedEvent,
-  type PackCreatedEventFilters,
-} from "../../extensions/erc1155/__generated__/IPack/events/PackCreated.js";
-export {
-  packOpenedEvent,
-  type PackOpenedEventFilters,
-} from "../../extensions/erc1155/__generated__/IPack/events/PackOpened.js";
-export {
-  packUpdatedEvent,
-  type PackUpdatedEventFilters,
-} from "../../extensions/erc1155/__generated__/IPack/events/PackUpdated.js";
-export {
-  createPack,
-  type CreatePackParams,
-} from "../../extensions/erc1155/__generated__/IPack/write/createPack.js";
-export {
-  openPack,
-  type OpenPackParams,
-} from "../../extensions/erc1155/__generated__/IPack/write/openPack.js";
-
-// Zora 1155 contract
-export { nextTokenId } from "../../extensions/erc1155/__generated__/Zora1155/read/nextTokenId.js";
-
-export {
-  mintToBatch,
-  type MintToBatchParams,
-} from "../../extensions/erc1155/write/mintToBatch.js";
-
-export {
-  mintAdditionalSupplyToBatch,
-  type MintAdditionalSupplyToBatchParams,
-} from "../../extensions/erc1155/write/mintAdditionalSupplyToBatch.js";
+  isUpdateTokenURISupported,
+  type UpdateTokenURIParams,
+  updateTokenURI,
+} from "../../extensions/erc1155/write/updateTokenURI.js";

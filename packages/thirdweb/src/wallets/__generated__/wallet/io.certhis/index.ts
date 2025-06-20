@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.certhis",
-  name: "Certhis",
-  homepage: "https://certhis.io",
-  image_id: "fbd441cc-e861-46dc-48ae-a04228ddb500",
   app: {
-    browser: "https://explorer.certhis.io",
-    ios: null,
     android: null,
-    mac: "",
-    windows: null,
-    linux: "https://certhis.io/",
+    browser: "https://explorer.certhis.io",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: "https://certhis.io/",
+    mac: "",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: null,
-    universal: "https://certhis.io/",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://certhis.io",
   },
+  homepage: "https://certhis.io",
+  id: "io.certhis",
+  image_id: "fbd441cc-e861-46dc-48ae-a04228ddb500",
+  mobile: {
+    native: null,
+    universal: "https://certhis.io/",
+  },
+  name: "Certhis",
+  rdns: null,
 } as const;

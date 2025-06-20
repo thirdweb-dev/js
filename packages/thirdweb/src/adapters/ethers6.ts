@@ -6,7 +6,7 @@ import type { AccessList, Hex } from "viem";
 import type { Chain } from "../chains/types.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
-import { type ThirdwebContract, getContract } from "../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../contract/contract.js";
 import { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
 import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
 import type { SerializableTransaction } from "../transaction/serialize-transaction.js";
@@ -80,6 +80,63 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
 
   return {
     /**
+     * Converts a ThirdwebContract to an ethers.js Contract or the other way around.
+     * @example
+     *
+     * ### toEthers
+     * ```ts
+     * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
+     * const ethersContract = await ethers6Adapter.contract.toEthers({ thirdwebContract, account });
+     * ```
+     *
+     * ### fromEthers
+     * ```ts
+     * import { ethers6Adapter } from "thirdweb/adapters";
+     * const contract = ethers6Adapter.contract.fromEthers({ client, chain, ethersContract });
+     * ```
+     */
+    contract: {
+      /**
+       * Creates a ThirdwebContract from an ethers.js Contract.
+       * @param options - The options for creating a ThirdwebContract from an ethers.js Contract.
+       * @param options.ethersContract - The ethers.js Contract to convert.
+       * @param options.chain - The chain.
+       * @returns The ThirdwebContract.
+       * @example
+       * ```ts
+       * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
+       * const contract = ethers6Adapter.contract.fromEthers({ ethersContract, chain });
+       * ```
+       */
+      fromEthers: (options: FromEthersContractOptions) => {
+        assertEthers6(ethers);
+        return fromEthersContract(options);
+      },
+      /**
+       * Converts a ThirdwebContract to an ethers.js Contract.
+       * @param options - The options for converting a ThirdwebContract to an ethers.js Contract.
+       * @param options.thirdwebContract - The ThirdwebContract to convert.
+       * @param options.account - The account to use for signing the transaction.
+       * @returns The ethers.js Contract.
+       * @example
+       * ```ts
+       * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
+       * const ethersContract = await ethers6Adapter.contract.toEthers({ thirdwebContract });
+       * ```
+       */
+      toEthers: (options: {
+        thirdwebContract: ThirdwebContract;
+        account?: Account;
+      }) => {
+        assertEthers6(ethers);
+        return toEthersContract(
+          ethers,
+          options.thirdwebContract,
+          options.account,
+        );
+      },
+    },
+    /**
      * Converts a Thirdweb client and chain ID into an ethers.js provider.
      * @param options - The options for converting the Thirdweb client and chain ID into an ethers.js provider.
      * @param options.client - The Thirdweb client.
@@ -107,63 +164,6 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
       toEthers: (options: { client: ThirdwebClient; chain: Chain }) => {
         assertEthers6(ethers);
         return toEthersProvider(ethers, options.client, options.chain);
-      },
-    },
-    /**
-     * Converts a ThirdwebContract to an ethers.js Contract or the other way around.
-     * @example
-     *
-     * ### toEthers
-     * ```ts
-     * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
-     * const ethersContract = await ethers6Adapter.contract.toEthers({ thirdwebContract, account });
-     * ```
-     *
-     * ### fromEthers
-     * ```ts
-     * import { ethers6Adapter } from "thirdweb/adapters";
-     * const contract = ethers6Adapter.contract.fromEthers({ client, chain, ethersContract });
-     * ```
-     */
-    contract: {
-      /**
-       * Converts a ThirdwebContract to an ethers.js Contract.
-       * @param options - The options for converting a ThirdwebContract to an ethers.js Contract.
-       * @param options.thirdwebContract - The ThirdwebContract to convert.
-       * @param options.account - The account to use for signing the transaction.
-       * @returns The ethers.js Contract.
-       * @example
-       * ```ts
-       * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
-       * const ethersContract = await ethers6Adapter.contract.toEthers({ thirdwebContract });
-       * ```
-       */
-      toEthers: (options: {
-        thirdwebContract: ThirdwebContract;
-        account?: Account;
-      }) => {
-        assertEthers6(ethers);
-        return toEthersContract(
-          ethers,
-          options.thirdwebContract,
-          options.account,
-        );
-      },
-      /**
-       * Creates a ThirdwebContract from an ethers.js Contract.
-       * @param options - The options for creating a ThirdwebContract from an ethers.js Contract.
-       * @param options.ethersContract - The ethers.js Contract to convert.
-       * @param options.chain - The chain.
-       * @returns The ThirdwebContract.
-       * @example
-       * ```ts
-       * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
-       * const contract = ethers6Adapter.contract.fromEthers({ ethersContract, chain });
-       * ```
-       */
-      fromEthers: (options: FromEthersContractOptions) => {
-        assertEthers6(ethers);
-        return fromEthersContract(options);
       },
     },
     /**
@@ -242,7 +242,7 @@ export function toEthersProvider(
   client: ThirdwebClient,
   chain: Chain,
 ) {
-  const url = getRpcUrlForChain({ client, chain });
+  const url = getRpcUrlForChain({ chain, client });
 
   const fetchRequest = new ethers.FetchRequest(url);
   if (client.secretKey) {
@@ -310,10 +310,10 @@ export async function fromEthersContract<abi extends Abi>({
   chain,
 }: FromEthersContractOptions): Promise<ThirdwebContract<abi>> {
   return getContract({
-    client,
-    address: await ethersContract.getAddress(),
     abi: JSON.parse(ethersContract.interface.formatJson()) as abi,
+    address: await ethersContract.getAddress(),
     chain,
+    client,
   });
 }
 
@@ -329,14 +329,6 @@ export async function fromEthersSigner(
   const address = await signer.getAddress();
   const account: Account = {
     address: getAddress(address),
-    signMessage: async ({ message }) => {
-      return signer.signMessage(
-        typeof message === "string" ? message : message.raw,
-      ) as Promise<Hex>;
-    },
-    signTransaction: async (tx) => {
-      return signer.signTransaction(alignTxToEthers(tx)) as Promise<Hex>;
-    },
     sendTransaction: async (tx) => {
       const transactionHash = (
         await signer.sendTransaction(alignTxToEthers(tx))
@@ -344,6 +336,14 @@ export async function fromEthersSigner(
       return {
         transactionHash,
       };
+    },
+    signMessage: async ({ message }) => {
+      return signer.signMessage(
+        typeof message === "string" ? message : message.raw,
+      ) as Promise<Hex>;
+    },
+    signTransaction: async (tx) => {
+      return signer.signTransaction(alignTxToEthers(tx)) as Promise<Hex>;
     },
     signTypedData: async (data) => {
       return (await signer.signTypedData(
@@ -402,19 +402,19 @@ export function toEthersSigner(
         tx,
       });
       const serializableTx = await toSerializableTransaction({
-        transaction: ethersTx,
         from: account.address,
+        transaction: ethersTx,
       });
       const result = await account.sendTransaction(serializableTx);
 
       const txResponseParams: ethers6.TransactionResponseParams = {
         ...serializableTx,
         blockHash: null,
-        from: this.address,
-        hash: result.transactionHash as string,
         blockNumber: null,
-        index: 0,
+        from: this.address,
         gasLimit: serializableTx.gas as bigint,
+        hash: result.transactionHash as string,
+        index: 0,
         // @ts-expect-error - we don't have this reliably so we'll just not include it
         signature: null,
       };
@@ -437,8 +437,8 @@ export function toEthersSigner(
         tx,
       });
       const serializableTx = await toSerializableTransaction({
-        transaction: ethersTx,
         from: account.address,
+        transaction: ethersTx,
       });
       return account.signTransaction(serializableTx);
     }
@@ -464,7 +464,6 @@ export function toEthersSigner(
       const typedDataEncoder = new ethers.TypedDataEncoder(types);
 
       const typedData = {
-        primaryType: typedDataEncoder.primaryType,
         domain: {
           chainId: domain.chainId
             ? bigNumberIshToNumber(domain.chainId)
@@ -474,8 +473,9 @@ export function toEthersSigner(
           verifyingContract: domain.verifyingContract ?? undefined,
           version: domain.version ?? undefined,
         },
-        types,
         message: value,
+        primaryType: typedDataEncoder.primaryType,
+        types,
       };
 
       return account.signTypedData(typedData);
@@ -555,14 +555,14 @@ async function alignTxFromEthers(options: {
         throw new Error("ChainId is required for EIP-2930 transactions");
       }
       return {
-        client,
-        chain,
         accessList: accessList as AccessList,
-        to: (to ?? undefined) as string | undefined,
+        chain,
+        client,
         data: (data ?? undefined) as Hex | undefined,
-        gasPrice: gasPrice ? bigNumberIshToBigint(gasPrice) : undefined,
         gas: gasLimit ? bigNumberIshToBigint(gasLimit) : undefined,
+        gasPrice: gasPrice ? bigNumberIshToBigint(gasPrice) : undefined,
         nonce: nonce ?? undefined,
+        to: (to ?? undefined) as string | undefined,
         value: value ? bigNumberIshToBigint(value) : undefined,
       };
     }
@@ -571,33 +571,33 @@ async function alignTxFromEthers(options: {
         throw new Error("ChainId is required for EIP-1559 transactions");
       }
       return {
-        client,
-        chain,
         accessList: accessList as AccessList,
-        to: (to ?? undefined) as string | undefined,
+        chain,
+        client,
         data: (data ?? undefined) as Hex | undefined,
         gas: gasLimit ? bigNumberIshToBigint(gasLimit) : undefined,
-        nonce: nonce ?? undefined,
-        value: value ? bigNumberIshToBigint(value) : undefined,
         maxFeePerGas: maxFeePerGas
           ? bigNumberIshToBigint(maxFeePerGas)
           : undefined,
         maxPriorityFeePerGas: maxPriorityFeePerGas
           ? bigNumberIshToBigint(maxPriorityFeePerGas)
           : undefined,
+        nonce: nonce ?? undefined,
+        to: (to ?? undefined) as string | undefined,
+        value: value ? bigNumberIshToBigint(value) : undefined,
       };
     }
     default: {
       // fall back to legacy
       return {
-        client,
         chain,
-        to: (to ?? undefined) as string | undefined,
+        client,
         data: (data ?? undefined) as Hex | undefined,
-        nonce: nonce ?? undefined,
-        value: value ? bigNumberIshToBigint(value) : undefined,
-        gasPrice: gasPrice ? bigNumberIshToBigint(gasPrice) : undefined,
         gas: gasLimit ? bigNumberIshToBigint(gasLimit) : undefined,
+        gasPrice: gasPrice ? bigNumberIshToBigint(gasPrice) : undefined,
+        nonce: nonce ?? undefined,
+        to: (to ?? undefined) as string | undefined,
+        value: value ? bigNumberIshToBigint(value) : undefined,
       };
     }
   }

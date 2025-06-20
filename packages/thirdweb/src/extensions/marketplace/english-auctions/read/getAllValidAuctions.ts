@@ -58,13 +58,13 @@ export async function getAllValidAuctions(
       (startId, endId) =>
         getAllValidAuctionsGenerated({
           contract: options.contract,
-          startId,
           endId,
+          startId,
         }),
       {
-        start,
         end,
         maxSize: DEFAULT_QUERY_ALL_COUNT,
+        start,
       },
       // flatten the array of arrays
     ).then((listings) => listings.flat()),

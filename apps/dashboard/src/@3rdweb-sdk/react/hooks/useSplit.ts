@@ -1,4 +1,3 @@
-import { getTokenBalancesFromMoralis } from "@/actions/getBalancesFromMoralis";
 import {
   queryOptions,
   useMutation,
@@ -6,14 +5,14 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { type ThirdwebContract, sendAndConfirmTransaction } from "thirdweb";
+import { sendAndConfirmTransaction, type ThirdwebContract } from "thirdweb";
 import { distribute, distributeByToken } from "thirdweb/extensions/split";
 import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
+import { getTokenBalancesFromMoralis } from "@/actions/getBalancesFromMoralis";
 
 function getTokenBalancesQuery(contract: ThirdwebContract) {
   return queryOptions({
-    queryKey: ["split-balances", contract.chain.id, contract.address],
     queryFn: async () => {
       const res = await getTokenBalancesFromMoralis({
         chainId: contract.chain.id,
@@ -25,6 +24,7 @@ function getTokenBalancesQuery(contract: ThirdwebContract) {
       }
       return res.data;
     },
+    queryKey: ["split-balances", contract.chain.id, contract.address],
     retry: false,
   });
 }
@@ -56,13 +56,13 @@ export function useSplitDistributeFunds(contract: ThirdwebContract) {
                   tokenAddress: currency.token_address,
                 });
           const promise = sendAndConfirmTransaction({
-            transaction,
             account,
+            transaction,
           });
           toast.promise(promise, {
-            success: `Successfully distributed ${currency.name}`,
             error: `Error distributing ${currency.name}`,
             loading: `Distributing ${currency.name}`,
+            success: `Successfully distributed ${currency.name}`,
           });
         });
 

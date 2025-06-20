@@ -1,4 +1,4 @@
-import { type Status, status as bridgeStatus } from "../../bridge/index.js";
+import { status as bridgeStatus, type Status } from "../../bridge/index.js";
 import type { Token } from "../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Hex } from "../../utils/encoding/hex.js";
@@ -136,9 +136,9 @@ export async function getBuyWithCryptoStatus(
       throw new Error("Transaction hash is required");
     }
     const result = await bridgeStatus({
-      transactionHash: buyWithCryptoTransaction.transactionHash as Hex,
       chainId: buyWithCryptoTransaction.chainId,
       client: buyWithCryptoTransaction.client,
+      transactionHash: buyWithCryptoTransaction.transactionHash as Hex,
     });
 
     switch (result.status) {
@@ -151,37 +151,37 @@ export async function getBuyWithCryptoStatus(
         );
 
         return toBuyWithCryptoStatus({
-          originTransaction,
+          destinationAmount: result.destinationAmount,
+          destinationChainId: result.destinationChainId,
+          destinationToken: result.destinationToken,
+          destinationTokenAddress: result.destinationTokenAddress,
           destinationTransaction,
           originAmount: result.originAmount,
-          destinationAmount: result.destinationAmount,
-          originTokenAddress: result.originTokenAddress,
-          destinationTokenAddress: result.destinationTokenAddress,
           originChainId: result.originChainId,
-          destinationChainId: result.destinationChainId,
-          status: result.status,
-          sender: result.sender,
-          receiver: result.receiver,
-          paymentId: result.paymentId,
           originToken: result.originToken,
-          destinationToken: result.destinationToken,
+          originTokenAddress: result.originTokenAddress,
+          originTransaction,
+          paymentId: result.paymentId,
           purchaseData: result.purchaseData as object | undefined,
+          receiver: result.receiver,
+          sender: result.sender,
+          status: result.status,
         });
       }
       case "PENDING": {
         return toBuyWithCryptoStatus({
-          originAmount: result.originAmount,
-          originTokenAddress: result.originTokenAddress,
-          destinationTokenAddress: result.destinationTokenAddress,
-          originChainId: result.originChainId,
           destinationChainId: result.destinationChainId,
-          status: result.status,
-          sender: result.sender,
-          receiver: result.receiver,
-          paymentId: result.paymentId,
-          originToken: result.originToken,
           destinationToken: result.destinationToken,
+          destinationTokenAddress: result.destinationTokenAddress,
+          originAmount: result.originAmount,
+          originChainId: result.originChainId,
+          originToken: result.originToken,
+          originTokenAddress: result.originTokenAddress,
+          paymentId: result.paymentId,
           purchaseData: result.purchaseData as object | undefined,
+          receiver: result.receiver,
+          sender: result.sender,
+          status: result.status,
         });
       }
       case "FAILED": {
@@ -192,20 +192,20 @@ export async function getBuyWithCryptoStatus(
           (tx) => tx.chainId !== buyWithCryptoTransaction.chainId,
         );
         return toBuyWithCryptoStatus({
-          originTransaction,
-          destinationTransaction,
-          originAmount: BigInt(0), // TODO: get from API
-          originTokenAddress: "", // TODO: get from API
-          destinationTokenAddress: "", // TODO: get from API
-          originChainId: 0, // TODO: get from API
-          destinationChainId: 0, // TODO: get from API
-          status: result.status,
-          sender: "",
-          receiver: "",
-          paymentId: "",
-          originToken: undefined,
+          destinationChainId: 0,
           destinationToken: undefined,
+          destinationTokenAddress: "", // TODO: get from API
+          destinationTransaction, // TODO: get from API
+          originAmount: BigInt(0), // TODO: get from API
+          originChainId: 0, // TODO: get from API
+          originToken: undefined, // TODO: get from API
+          originTokenAddress: "",
+          originTransaction,
+          paymentId: "",
           purchaseData: result.purchaseData as object | undefined,
+          receiver: "",
+          sender: "",
+          status: result.status,
         });
       }
       default: {
@@ -254,59 +254,6 @@ function toBuyWithCryptoStatus(args: {
     destinationToken,
   } = args;
   return {
-    fromAddress: sender,
-    toAddress: receiver,
-    quote: {
-      createdAt: new Date().toISOString(),
-      estimated: {
-        fromAmountUSDCents: 0,
-        toAmountMinUSDCents: 0,
-        toAmountUSDCents: 0,
-        slippageBPS: 0,
-        feesUSDCents: 0,
-        gasCostUSDCents: 0,
-        durationSeconds: 0,
-      },
-      fromAmount: originToken
-        ? toTokens(originAmount, originToken.decimals).toString()
-        : "",
-      fromAmountWei: originAmount.toString(),
-      toAmount:
-        destinationToken && destinationAmount
-          ? toTokens(destinationAmount, destinationToken.decimals).toString()
-          : "",
-      toAmountWei: destinationAmount ? destinationAmount.toString() : "",
-      toAmountMin: destinationToken
-        ? toTokens(
-            destinationAmount ?? BigInt(0),
-            destinationToken.decimals,
-          ).toString()
-        : "",
-      toAmountMinWei: destinationAmount ? destinationAmount.toString() : "",
-      fromToken: {
-        tokenAddress: originTokenAddress,
-        chainId: originChainId,
-        decimals: originToken?.decimals ?? 18,
-        name: originToken?.name ?? "",
-        symbol: originToken?.symbol ?? "",
-        priceUSDCents: 0,
-      },
-      toToken: {
-        tokenAddress: destinationTokenAddress,
-        chainId: destinationChainId,
-        decimals: destinationToken?.decimals ?? 18,
-        name: destinationToken?.name ?? "",
-        symbol: destinationToken?.symbol ?? "",
-        priceUSDCents: 0,
-      },
-    },
-    swapType:
-      originTransaction?.chainId === destinationTransaction?.chainId
-        ? "SAME_CHAIN"
-        : "CROSS_CHAIN", // TODO transfer type?
-    status: status,
-    subStatus: status === "COMPLETED" ? "SUCCESS" : "NONE",
-    purchaseData: purchaseData as object | undefined,
     bridge: "STARPORT",
     destination: {
       amount: destinationToken
@@ -315,37 +262,90 @@ function toBuyWithCryptoStatus(args: {
             destinationToken.decimals,
           ).toString()
         : "",
+      amountUSDCents: 0,
       amountWei: destinationAmount?.toString() ?? "",
+      completedAt: new Date().toISOString(),
+      explorerLink: "",
       token: {
-        tokenAddress: destinationTokenAddress,
         chainId: destinationChainId,
         decimals: destinationToken?.decimals ?? 18,
         name: destinationToken?.name ?? "",
-        symbol: destinationToken?.symbol ?? "",
         priceUSDCents: 0,
+        symbol: destinationToken?.symbol ?? "",
+        tokenAddress: destinationTokenAddress,
       },
-      amountUSDCents: 0,
-      completedAt: new Date().toISOString(),
-      explorerLink: "",
       transactionHash: destinationTransaction?.transactionHash ?? "",
+    },
+    fromAddress: sender,
+    purchaseData: purchaseData as object | undefined, // TODO transfer type?
+    quote: {
+      createdAt: new Date().toISOString(),
+      estimated: {
+        durationSeconds: 0,
+        feesUSDCents: 0,
+        fromAmountUSDCents: 0,
+        gasCostUSDCents: 0,
+        slippageBPS: 0,
+        toAmountMinUSDCents: 0,
+        toAmountUSDCents: 0,
+      },
+      fromAmount: originToken
+        ? toTokens(originAmount, originToken.decimals).toString()
+        : "",
+      fromAmountWei: originAmount.toString(),
+      fromToken: {
+        chainId: originChainId,
+        decimals: originToken?.decimals ?? 18,
+        name: originToken?.name ?? "",
+        priceUSDCents: 0,
+        symbol: originToken?.symbol ?? "",
+        tokenAddress: originTokenAddress,
+      },
+      toAmount:
+        destinationToken && destinationAmount
+          ? toTokens(destinationAmount, destinationToken.decimals).toString()
+          : "",
+      toAmountMin: destinationToken
+        ? toTokens(
+            destinationAmount ?? BigInt(0),
+            destinationToken.decimals,
+          ).toString()
+        : "",
+      toAmountMinWei: destinationAmount ? destinationAmount.toString() : "",
+      toAmountWei: destinationAmount ? destinationAmount.toString() : "",
+      toToken: {
+        chainId: destinationChainId,
+        decimals: destinationToken?.decimals ?? 18,
+        name: destinationToken?.name ?? "",
+        priceUSDCents: 0,
+        symbol: destinationToken?.symbol ?? "",
+        tokenAddress: destinationTokenAddress,
+      },
     },
     source: {
       amount: originToken
         ? toTokens(originAmount, originToken.decimals).toString()
         : "",
+      amountUSDCents: 0,
       amountWei: originAmount.toString(),
+      completedAt: new Date().toISOString(),
+      explorerLink: "",
       token: {
-        tokenAddress: originTokenAddress,
         chainId: originChainId,
         decimals: originToken?.decimals ?? 18,
         name: originToken?.name ?? "",
-        symbol: originToken?.symbol ?? "",
         priceUSDCents: 0,
+        symbol: originToken?.symbol ?? "",
+        tokenAddress: originTokenAddress,
       },
-      amountUSDCents: 0,
-      completedAt: new Date().toISOString(),
-      explorerLink: "",
       transactionHash: originTransaction?.transactionHash ?? "",
     },
+    status: status,
+    subStatus: status === "COMPLETED" ? "SUCCESS" : "NONE",
+    swapType:
+      originTransaction?.chainId === destinationTransaction?.chainId
+        ? "SAME_CHAIN"
+        : "CROSS_CHAIN",
+    toAddress: receiver,
   };
 }

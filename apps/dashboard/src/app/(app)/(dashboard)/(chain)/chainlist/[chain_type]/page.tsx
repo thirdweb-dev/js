@@ -1,3 +1,6 @@
+import { ChevronDownIcon } from "lucide-react";
+import { headers } from "next/headers";
+import Link from "next/link";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,9 +14,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDownIcon } from "lucide-react";
-import { headers } from "next/headers";
-import Link from "next/link";
 import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import {
   AllFilters,
@@ -34,22 +34,22 @@ export async function generateMetadata(props: {
   const params = await props.params;
   if (params.chain_type === "mainnets") {
     return {
-      title: "List of Mainnets | Explorers, Popular Contracts & Chain IDs",
       description:
         "A list of EVM mainnets with RPCs, smart contracts, block explorers & faucets. Deploy smart contracts to all EVM chains with thirdweb.",
+      title: "List of Mainnets | Explorers, Popular Contracts & Chain IDs",
     };
   }
   if (params.chain_type === "testnets") {
     return {
-      title: "List of Testnets | Explorers, Popular Contracts & Chain IDs",
       description:
         "Browse all Testnets across web3 ecosystems, BNB Smart Chain Testnet, Ethereum Sepolia Testnets, Chain IDs, Enabled Services and more. ",
+      title: "List of Testnets | Explorers, Popular Contracts & Chain IDs",
     };
   }
   return {
-    title: "Chainlist: RPCs, Block Explorers, Faucets",
     description:
       "A list of EVM networks with RPCs, smart contracts, block explorers & faucets. Deploy smart contracts to all EVM chains with thirdweb.",
+    title: "Chainlist: RPCs, Block Explorers, Faucets",
   };
 }
 
@@ -147,9 +147,9 @@ export default async function ChainListLayout(props: {
         <div className="h-10" />
         {/* we used to have suspense + spinner here, that feels more jarring than the page loading _minutely_ slower */}
         <ChainsData
-          searchParams={searchParams}
           activeView={activeView}
           isLoggedIn={!!authToken}
+          searchParams={searchParams}
         />
       </section>
     </>

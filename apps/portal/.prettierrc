@@ -1,17 +1,17 @@
 {
-	"tabWidth": 2,
-	"useTabs": true,
-	"tailwindFunctions": ["clsx", "cn"],
-	"singleQuote": false,
-	"trailingComma": "all",
-	"printWidth": 80,
-	"semi": true,
-	"overrides": [
-		{
-			"files": "redirects.mjs",
-			"options": {
-				"printWidth": 200
-			}
-		}
-	]
+  "overrides": [
+    {
+      "files": "redirects.mjs",
+      "options": {
+        "printWidth": 200
+      }
+    }
+  ],
+  "printWidth": 80,
+  "semi": true,
+  "singleQuote": false,
+  "tabWidth": 2,
+  "tailwindFunctions": ["clsx", "cn"],
+  "trailingComma": "all",
+  "useTabs": true
 }

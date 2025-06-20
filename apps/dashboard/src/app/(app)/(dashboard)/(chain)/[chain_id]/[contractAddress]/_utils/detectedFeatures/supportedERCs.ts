@@ -7,8 +7,8 @@ export function supportedERCs(functionSelectors: string[]) {
   const isERC1155 = isGetNFTSupported_ERC1155(functionSelectors);
   const isERC20 = isERC20_ERC20(functionSelectors);
   return {
+    isERC20,
     isERC721,
     isERC1155,
-    isERC20,
   };
 }

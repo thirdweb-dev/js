@@ -1,5 +1,3 @@
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { cn } from "@/lib/utils";
 import { MarkdownRenderer } from "components/contract-components/published-contract/markdown-renderer";
 import {
   AlertCircleIcon,
@@ -9,6 +7,8 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { cn } from "@/lib/utils";
 import { Reasoning } from "./Reasoning";
 
 // Define local types
@@ -94,8 +94,8 @@ export function CustomChats(props: {
       <ScrollShadow
         className="flex-1"
         scrollableClassName="max-h-full overscroll-contain"
-        shadowColor="hsl(var(--background))"
         shadowClassName="z-[1]"
+        shadowColor="hsl(var(--background))"
       >
         <div className="container max-w-[800px]">
           <div className={cn("flex flex-col gap-5 py-4", props.className)}>
@@ -113,15 +113,15 @@ export function CustomChats(props: {
                   key={index}
                 >
                   <RenderMessage
+                    authToken={props.authToken}
+                    client={props.client}
+                    isMessagePending={isMessagePending}
                     message={message}
                     messageIndex={index}
-                    isMessagePending={isMessagePending}
-                    client={props.client}
-                    sendMessage={props.sendMessage}
                     nextMessage={props.messages[index + 1]}
-                    authToken={props.authToken}
-                    sessionId={props.sessionId}
                     onFeedback={props.onFeedback}
+                    sendMessage={props.sendMessage}
+                    sessionId={props.sessionId}
                   />
                 </div>
               );
@@ -153,12 +153,12 @@ function RenderMessage(props: {
         {props.message.content.map((msg, index) => {
           if (msg.type === "text") {
             return (
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              // biome-ignore lint/suspicious/noArrayIndexKey: EXPECTED
               <div className="flex justify-end" key={index}>
                 <div className="max-w-[80%] overflow-auto rounded-xl border bg-card px-4 py-2">
                   <StyledMarkdownRenderer
-                    text={msg.text}
                     isMessagePending={props.isMessagePending}
+                    text={msg.text}
                     type="user"
                   />
                 </div>
@@ -198,13 +198,13 @@ function RenderMessage(props: {
       <div className="min-w-0 grow">
         <ScrollShadow className="rounded-lg">
           <RenderResponse
-            message={message}
-            isMessagePending={props.isMessagePending}
-            client={props.client}
-            sendMessage={props.sendMessage}
-            nextMessage={props.nextMessage}
-            sessionId={props.sessionId}
             authToken={props.authToken}
+            client={props.client}
+            isMessagePending={props.isMessagePending}
+            message={message}
+            nextMessage={props.nextMessage}
+            sendMessage={props.sendMessage}
+            sessionId={props.sessionId}
           />
         </ScrollShadow>
 
@@ -213,10 +213,10 @@ function RenderMessage(props: {
           !props.isMessagePending &&
           props.onFeedback && (
             <CustomFeedbackButtons
+              className="mt-4"
               message={message}
               messageIndex={props.messageIndex}
               onFeedback={props.onFeedback}
-              className="mt-4"
             />
           )}
       </div>
@@ -253,20 +253,20 @@ function CustomFeedbackButtons(props: {
   return (
     <div className={cn("flex gap-2", props.className)}>
       <button
-        type="button"
         aria-label="Thumbs up"
         className="text-muted-foreground transition-colors hover:text-green-500 disabled:opacity-50"
-        onClick={() => handleFeedback(1)}
         disabled={isSubmitting}
+        onClick={() => handleFeedback(1)}
+        type="button"
       >
         <ThumbsUpIcon className="size-5" />
       </button>
       <button
-        type="button"
         aria-label="Thumbs down"
         className="text-muted-foreground transition-colors hover:text-red-500 disabled:opacity-50"
-        onClick={() => handleFeedback(-1)}
         disabled={isSubmitting}
+        onClick={() => handleFeedback(-1)}
+        type="button"
       >
         <ThumbsDownIcon className="size-5" />
       </button>
@@ -289,8 +289,8 @@ function RenderResponse(props: {
     case "assistant":
       return (
         <StyledMarkdownRenderer
-          text={message.text}
           isMessagePending={isMessagePending}
+          text={message.text}
           type="assistant"
         />
       );
@@ -325,21 +325,21 @@ function StyledMarkdownRenderer(props: {
 }) {
   return (
     <MarkdownRenderer
-      skipHtml
-      markdownText={props.text}
       className="text-foreground [&>*:first-child]:mt-0 [&>*:first-child]:border-none [&>*:first-child]:pb-0 [&>*:last-child]:mb-0"
       code={{
-        ignoreFormattingErrors: true,
         className: "bg-transparent",
+        ignoreFormattingErrors: true,
       }}
+      inlineCode={{ className: "border-none" }}
+      li={{ className: "text-foreground" }}
+      markdownText={props.text}
       p={{
         className:
           props.type === "assistant"
             ? "text-foreground"
             : "text-foreground leading-normal",
       }}
-      li={{ className: "text-foreground" }}
-      inlineCode={{ className: "border-none" }}
+      skipHtml
     />
   );
 }

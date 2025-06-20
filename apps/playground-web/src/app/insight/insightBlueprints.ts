@@ -7,19 +7,19 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     name: "Events",
     paths: [
       {
+        deprecated: false,
         name: "Get events",
         path: "/v1/events",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get contract events",
         path: "/v1/events/{contractAddress}",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get contract events with specific signature",
         path: "/v1/events/{contractAddress}/{signature}",
-        deprecated: false,
       },
     ],
   },
@@ -28,19 +28,19 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     name: "Transactions",
     paths: [
       {
+        deprecated: false,
         name: "Get transactions",
         path: "/v1/transactions",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get contract transactions",
         path: "/v1/transactions/{contractAddress}",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get contract transactions with specific signature",
         path: "/v1/transactions/{contractAddress}/{signature}",
-        deprecated: false,
       },
     ],
   },
@@ -49,9 +49,9 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     name: "Blocks",
     paths: [
       {
+        deprecated: false,
         name: "Get blocks",
         path: "/v1/blocks",
-        deprecated: false,
       },
     ],
   },
@@ -60,59 +60,59 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     name: "Tokens",
     paths: [
       {
+        deprecated: false,
         name: "Get token owners by contract",
         path: "/v1/tokens/owners",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get token transfers by transaction",
         path: "/v1/tokens/transfers/transaction/{transaction_hash}",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get token transfers by contract",
         path: "/v1/tokens/transfers/{contract_address}",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get token transfers",
         path: "/v1/tokens/transfers",
-        deprecated: false,
       },
       {
+        deprecated: true,
         name: "Get ERC-20 balances by address",
         path: "/v1/tokens/erc20/{ownerAddress}",
-        deprecated: true,
       },
       {
+        deprecated: false,
         name: "Get tokens",
         path: "/v1/tokens",
-        deprecated: false,
       },
       {
+        deprecated: true,
         name: "Get ERC-721 balances by address",
         path: "/v1/tokens/erc721/{ownerAddress}",
-        deprecated: true,
       },
       {
+        deprecated: true,
         name: "Get ERC-1155 balances by address",
         path: "/v1/tokens/erc1155/{ownerAddress}",
-        deprecated: true,
       },
       {
+        deprecated: false,
         name: "Get supported tokens for price data",
         path: "/v1/tokens/price/supported",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get token price",
         path: "/v1/tokens/price",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Token lookup",
         path: "/v1/tokens/lookup",
-        deprecated: false,
       },
     ],
   },
@@ -121,69 +121,69 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     name: "Nfts",
     paths: [
       {
+        deprecated: false,
         name: "Get NFT balances by address",
         path: "/v1/nfts/balance/{ownerAddress}",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get collection",
         path: "/v1/nfts/collections/{contract_address}",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get NFTs",
         path: "/v1/nfts",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get NFT owners by contract",
         path: "/v1/nfts/owners/{contract_address}",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get NFT owners by token",
         path: "/v1/nfts/owners/{contract_address}/{token_id}",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get NFT transfers",
         path: "/v1/nfts/transfers",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get NFT transfers by transaction",
         path: "/v1/nfts/transfers/transaction/{transaction_hash}",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get NFT transfers by contract",
         path: "/v1/nfts/transfers/{contract_address}",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get NFTs by contract",
         path: "/v1/nfts/{contract_address}",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get NFT transfers by token",
         path: "/v1/nfts/transfers/{contract_address}/{token_id}",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get NFT by token ID",
         path: "/v1/nfts/{contract_address}/{token_id}",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Force refresh collection metadata",
         path: "/v1/nfts/metadata/refresh/{contract_address}",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Force refresh token metadata",
         path: "/v1/nfts/metadata/refresh/{contract_address}/{token_id}",
-        deprecated: false,
       },
     ],
   },
@@ -192,9 +192,9 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     name: "Wallets",
     paths: [
       {
+        deprecated: false,
         name: "Get wallet transactions",
         path: "/v1/wallets/{wallet_address}/transactions",
-        deprecated: false,
       },
     ],
   },
@@ -203,14 +203,14 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     name: "Contracts",
     paths: [
       {
+        deprecated: false,
         name: "Get contract ABI​",
         path: "/v1/contracts/abi/{contractAddress}",
-        deprecated: false,
       },
       {
+        deprecated: false,
         name: "Get contract metadata​",
         path: "/v1/contracts/metadata/{contractAddress}",
-        deprecated: false,
       },
     ],
   },
@@ -219,9 +219,9 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     name: "Decode",
     paths: [
       {
+        deprecated: false,
         name: "Decode logs and transactions​",
         path: "/v1/decode/{contractAddress}",
-        deprecated: false,
       },
     ],
   },
@@ -230,9 +230,9 @@ export const insightBlueprints: MinimalBlueprintSpec[] = [
     name: "Resolve",
     paths: [
       {
+        deprecated: false,
         name: "Resolve",
         path: "/v1/resolve/{input}",
-        deprecated: false,
       },
     ],
   },

@@ -7,8 +7,8 @@ import {
   getOrDeployInfraContract,
   getOrDeployInfraForPublishedContract,
 } from "../../contract/deployment/utils/bootstrap.js";
-import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
+import { upload } from "../../storage/upload.js";
 import { getRoyaltyEngineV1ByChainId } from "../../utils/royalty-engine.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
@@ -76,9 +76,9 @@ export async function deployMarketplaceContract(
 ) {
   const { chain, client, account, params, version } = options;
   const WETH = await getOrDeployInfraContract({
+    account,
     chain,
     client,
-    account,
     contractId: "WETH9",
   });
 
@@ -87,27 +87,27 @@ export async function deployMarketplaceContract(
   if (options.version !== "6.0.0") {
     const isFeeExempt = chain.id === 232 || chain.id === 37111;
     const direct = await getOrDeployInfraForPublishedContract({
+      account,
       chain,
       client,
-      account,
-      contractId: "DirectListingsLogic",
       constructorParams: { _nativeTokenWrapper: WETH.address },
+      contractId: "DirectListingsLogic",
       version: isFeeExempt ? "0.1.2" : "latest",
     });
 
     const english = await getOrDeployInfraForPublishedContract({
+      account,
       chain,
       client,
-      account,
-      contractId: "EnglishAuctionsLogic",
       constructorParams: { _nativeTokenWrapper: WETH.address },
+      contractId: "EnglishAuctionsLogic",
       version: isFeeExempt ? "0.0.11" : "latest",
     });
 
     const offers = await getOrDeployInfraForPublishedContract({
+      account,
       chain,
       client,
-      account,
       contractId: "OffersLogic",
       version: isFeeExempt ? "0.0.8" : "latest",
     });
@@ -126,59 +126,59 @@ export async function deployMarketplaceContract(
       ]);
     extensions = [
       {
-        metadata: {
-          name: "Direct Listings",
-          metadataURI: "",
-          implementation: direct.implementationContract.address,
-        },
         functions: directFunctions,
+        metadata: {
+          implementation: direct.implementationContract.address,
+          metadataURI: "",
+          name: "Direct Listings",
+        },
       },
       {
-        metadata: {
-          name: "English Auctions",
-          metadataURI: "",
-          implementation: english.implementationContract.address,
-        },
         functions: englishFunctions,
+        metadata: {
+          implementation: english.implementationContract.address,
+          metadataURI: "",
+          name: "English Auctions",
+        },
       },
       {
-        metadata: {
-          name: "Offers",
-          metadataURI: "",
-          implementation: offers.implementationContract.address,
-        },
         functions: offersFunctions,
+        metadata: {
+          implementation: offers.implementationContract.address,
+          metadataURI: "",
+          name: "Offers",
+        },
       },
     ];
   }
 
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
+      account,
       chain,
       client,
-      account,
-      contractId: "MarketplaceV3",
       constructorParams: {
         _marketplaceV3Params: {
           extensions,
-          royaltyEngineAddress: getRoyaltyEngineV1ByChainId(chain.id),
           nativeTokenWrapper: WETH.address,
+          royaltyEngineAddress: getRoyaltyEngineV1ByChainId(chain.id),
         } as MarketplaceConstructorParams[number],
       },
+      contractId: "MarketplaceV3",
       version,
     });
 
   const initializeTransaction = await getInitializeTransaction({
+    accountAddress: account.address,
     client,
     implementationContract,
     params,
-    accountAddress: account.address,
   });
 
   return deployViaAutoFactory({
-    client,
-    chain,
     account,
+    chain,
+    client,
     cloneFactoryContract,
     initializeTransaction,
   });
@@ -197,10 +197,10 @@ async function getInitializeTransaction(options: {
       client,
       files: [
         {
-          name: params.name,
           description: params.description,
-          image: params.image,
           external_link: params.external_link,
+          image: params.image,
+          name: params.name,
           social_urls: params.social_urls,
         },
       ],

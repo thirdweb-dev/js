@@ -5,12 +5,6 @@ export function Profiles() {
   return (
     <div>
       <CodeExample
-        header={{
-          title: "View Linked Profiles",
-          description:
-            "View all web2 and web3 linked profiles for a user along with specific details for each profile type, including name, email, profile picture and more.",
-        }}
-        preview={<LinkedAccounts />}
         code={`\
 import { useProfiles, useActiveAccount, ConnectButton } from "thirdweb/react";
 
@@ -26,24 +20,18 @@ function App() {
 
   return <code> {JSON.stringify(profiles || [], null, 2)}</code>;
 }`}
+        header={{
+          description:
+            "View all web2 and web3 linked profiles for a user along with specific details for each profile type, including name, email, profile picture and more.",
+          title: "View Linked Profiles",
+        }}
         lang="tsx"
+        preview={<LinkedAccounts />}
       />
 
       <div className="h-14" />
 
       <CodeExample
-        header={{
-          title: "Link a Profile",
-          description: (
-            <>
-              Link a web2 or web3 profile to the connected account.
-              <br />
-              You can do this with hooks like shown here or from the prebuilt
-              connect UI.
-            </>
-          ),
-        }}
-        preview={<LinkAccount />}
         code={`\
 import { useLinkProfile, useActiveAccount, ConnectButton } from "thirdweb/react";
 
@@ -80,7 +68,19 @@ function App() {
     </div>
   );
 }`}
+        header={{
+          description: (
+            <>
+              Link a web2 or web3 profile to the connected account.
+              <br />
+              You can do this with hooks like shown here or from the prebuilt
+              connect UI.
+            </>
+          ),
+          title: "Link a Profile",
+        }}
         lang="tsx"
+        preview={<LinkAccount />}
       />
     </div>
   );

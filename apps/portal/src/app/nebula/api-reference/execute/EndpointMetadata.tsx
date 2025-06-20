@@ -26,7 +26,6 @@ export function EndpointMetadata() {
   return (
     <ApiEndpoint
       metadata={{
-        title: "Execute Action",
         description: (
           <>
             Executes a specified action. <br /> It is similar to /chat but it
@@ -34,43 +33,44 @@ export function EndpointMetadata() {
             history context.
           </>
         ),
-        path: "/execute",
-        origin: "https://nebula-api.thirdweb.com",
         method: "POST",
+        origin: "https://nebula-api.thirdweb.com",
+        path: "/execute",
         request: {
-          pathParameters: [],
-          headers: [nebulaSecretKeyHeaderParameter],
           bodyParameters: [
             {
+              description: "The message to be processed.",
+              example: "Hello",
               name: "message",
               required: true,
-              description: "The message to be processed.",
               type: "string",
-              example: "Hello",
             },
             {
+              description: "Whether to stream the response or not",
+              example: false,
               name: "stream",
               required: false,
-              description: "Whether to stream the response or not",
               type: "boolean",
-              example: false,
             },
             {
-              name: "session_id",
-              type: "string",
-              example: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-              required: false,
               description:
                 "The session ID to associate with the message. If not provided, a new session will be created.",
+              example: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+              name: "session_id",
+              required: false,
+              type: "string",
             },
             nebulaContextParameter,
           ],
+          headers: [nebulaSecretKeyHeaderParameter],
+          pathParameters: [],
         },
         responseExamples: {
           200: response200Example,
           401: nebulaAPI401Response,
           422: nebulaAPI422Response,
         },
+        title: "Execute Action",
       }}
     />
   );

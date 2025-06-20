@@ -1,16 +1,16 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import {
-  type Chain,
-  type ChainMetadata,
   arbitrumSepolia,
   baseSepolia,
+  type Chain,
+  type ChainMetadata,
   mumbai,
   optimismSepolia,
   polygonAmoy,
   sepolia,
 } from "thirdweb/chains";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface DeprecatedAlertProps {
   chain: ChainMetadata | undefined;
@@ -24,15 +24,15 @@ const TO_BE_DEPRECATED_CHAINS: Record<number, { date: Date }> = {
 
 const RECOMMENDED_CHAINS: Record<number, Chain> = {
   // ethereum goerli
-  [5]: sepolia,
-  // base goerli
-  [84531]: baseSepolia,
+  5: sepolia,
   // optimism goerli
-  [420]: optimismSepolia,
-  // arbitrum goerli
-  [421613]: arbitrumSepolia,
+  420: optimismSepolia,
   // polygon mumbai
-  [80001]: polygonAmoy,
+  80001: polygonAmoy,
+  // base goerli
+  84531: baseSepolia,
+  // arbitrum goerli
+  421613: arbitrumSepolia,
 };
 
 export const DeprecatedAlert: React.FC<DeprecatedAlertProps> = ({ chain }) => {
@@ -51,8 +51,7 @@ export const DeprecatedAlert: React.FC<DeprecatedAlertProps> = ({ chain }) => {
   }
 
   const isDeprecatedSoon =
-    tobeDeprecatedChain &&
-    tobeDeprecatedChain.date.getTime() > new Date().getTime();
+    tobeDeprecatedChain && tobeDeprecatedChain.date.getTime() > Date.now();
   const message = isDeprecatedSoon
     ? `thirdweb services won't be available on this network after ${tobeDeprecatedChain.date.toLocaleDateString()}.`
     : "thirdweb services are not available on this network.";
@@ -73,8 +72,8 @@ export const DeprecatedAlert: React.FC<DeprecatedAlertProps> = ({ chain }) => {
             <br />
             We recommend switching to{" "}
             <Link
-              href={`/${recommendedChain.id}`}
               className="text-link-foreground hover:text-foreground"
+              href={`/${recommendedChain.id}`}
             >
               {recommendedChain.name}
             </Link>{" "}

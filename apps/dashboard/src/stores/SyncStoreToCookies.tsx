@@ -1,5 +1,5 @@
-import { type Store, useStore } from "@/lib/reactive";
 import { useEffect } from "react";
+import { type Store, useStore } from "@/lib/reactive";
 import { getCookie, setCookie } from "../lib/cookie";
 
 const loadedStoreKeys = new Set<string>();

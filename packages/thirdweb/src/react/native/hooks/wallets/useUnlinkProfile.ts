@@ -72,10 +72,10 @@ export function useUnlinkProfile() {
         : undefined;
 
       await unlinkProfile({
+        allowAccountDeletion,
         client,
         ecosystem,
         profileToUnlink,
-        allowAccountDeletion,
       });
     },
     onSuccess: () => {

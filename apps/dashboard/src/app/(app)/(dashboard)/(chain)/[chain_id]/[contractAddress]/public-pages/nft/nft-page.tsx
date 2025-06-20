@@ -1,10 +1,10 @@
-import { ResponsiveLayout } from "@/components/Responsive";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { isTokenByIndexSupported } from "thirdweb/extensions/erc721";
+import { ResponsiveLayout } from "@/components/Responsive";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { resolveFunctionSelectors } from "../../../../../../../../lib/selectors";
 import { NFTPublicPageLayout } from "./nft-page-layout";
 import {
@@ -30,17 +30,17 @@ export async function NFTPublicPage(props: {
       }),
       resolveFunctionSelectors(props.serverContract),
       getTotalNFTCount({
-        type: props.type,
         contract: props.serverContract,
+        type: props.type,
       }),
     ]);
 
   const nftDropClaimParams =
     props.type === "erc721"
       ? await getNFTDropClaimParams({
-          serverContract: props.serverContract,
           chainMetadata: props.chainMetadata,
           functionSelectors,
+          serverContract: props.serverContract,
           totalNFTCount,
         })
       : undefined;
@@ -50,10 +50,7 @@ export async function NFTPublicPage(props: {
 
   const buyNFTDropCard = nftDropClaimParams ? (
     <BuyNFTDropCardServer
-      serverContract={props.serverContract}
       chainMetadata={props.chainMetadata}
-      functionSelectors={functionSelectors}
-      totalNFTCount={totalNFTCount}
       clientContract={props.clientContract}
       erc721ActiveClaimCondition={nftDropClaimParams.erc721ActiveClaimCondition}
       erc721ClaimConditionCurrencyMeta={
@@ -61,35 +58,38 @@ export async function NFTPublicPage(props: {
       }
       erc721NextTokenIdToClaim={nftDropClaimParams.erc721NextTokenIdToClaim}
       erc721TotalUnclaimedSupply={nftDropClaimParams.erc721TotalUnclaimedSupply}
+      functionSelectors={functionSelectors}
+      serverContract={props.serverContract}
+      totalNFTCount={totalNFTCount}
     />
   ) : null;
 
   const nftsGrid = (
     <NFTsGrid
-      isTokenByIndexSupported={_isTokenByIndexSupported}
-      collectionMetadata={contractMetadata}
-      type={props.type}
-      clientContract={props.clientContract}
       chainMetadata={props.chainMetadata}
-      totalNFTCount={totalNFTCount}
+      clientContract={props.clientContract}
+      collectionMetadata={contractMetadata}
       gridClassName={
         buyNFTDropCard
           ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           : undefined
       }
+      isTokenByIndexSupported={_isTokenByIndexSupported}
+      totalNFTCount={totalNFTCount}
+      type={props.type}
     />
   );
 
   const nftGridSkeleton = (
     <NFTGridSkeleton
-      clientContract={props.clientContract}
       chainMetadata={props.chainMetadata}
-      type={props.type}
+      clientContract={props.clientContract}
       gridClassName={
         buyNFTDropCard
           ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           : undefined
       }
+      type={props.type}
     />
   );
 
@@ -99,39 +99,39 @@ export async function NFTPublicPage(props: {
 
   return (
     <NFTPublicPageLayout
-      clientContract={props.clientContract}
       chainMetadata={props.chainMetadata}
+      clientContract={props.clientContract}
       contractMetadata={contractMetadata}
     >
       <ResponsiveLayout
+        desktop={
+          <DesktopLayout buyEmbed={buyNFTDropCard} nftsGrid={nftsGrid} />
+        }
         fallback={
           <div className="flex grow flex-col">
             <DesktopLayout
+              buyEmbed={buyEmbedSkeleton}
               className="max-sm:hidden"
               nftsGrid={nftGridSkeleton}
-              buyEmbed={buyEmbedSkeleton}
             />
 
             <MobileLayout
+              buyEmbed={buyEmbedSkeleton}
               className="sm:hidden"
               nftsGrid={nftGridSkeleton}
-              buyEmbed={buyEmbedSkeleton}
             />
           </div>
         }
-        desktop={
-          <DesktopLayout nftsGrid={nftsGrid} buyEmbed={buyNFTDropCard} />
-        }
-        mobile={<MobileLayout nftsGrid={nftsGrid} buyEmbed={buyNFTDropCard} />}
+        mobile={<MobileLayout buyEmbed={buyNFTDropCard} nftsGrid={nftsGrid} />}
       />
       {props.tokenId && (
         <PageLoadTokenViewerSheet
-          clientContract={props.clientContract}
           chainMetadata={props.chainMetadata}
-          type={props.type}
-          tokenId={BigInt(props.tokenId)}
-          tokenByIndexSupported={_isTokenByIndexSupported}
+          clientContract={props.clientContract}
           collectionMetadata={contractMetadata}
+          tokenByIndexSupported={_isTokenByIndexSupported}
+          tokenId={BigInt(props.tokenId)}
+          type={props.type}
         />
       )}
     </NFTPublicPageLayout>
@@ -163,12 +163,12 @@ function MobileLayout(props: {
   return (
     <div className={cn("pt-2 pb-10", props.className)}>
       <NFTPublicPageTabs
-        nftsPage={<div className="pt-2">{props.nftsGrid}</div>}
         buyPage={
           props.buyEmbed ? (
             <div className="pt-2">{props.buyEmbed}</div>
           ) : undefined
         }
+        nftsPage={<div className="pt-2">{props.nftsGrid}</div>}
       />
     </div>
   );

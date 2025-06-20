@@ -1,6 +1,7 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { type JSX, useMemo } from "react";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardContent,
@@ -14,8 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { type JSX, useMemo } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import type { ResultItem } from "./StatusCodes";
 
 function transformPrometheusData(timeseriesDatapoints: ResultItem[]) {
@@ -40,8 +40,8 @@ export function ErrorRate({ datapoints }: { datapoints: ResultItem[] }) {
 
   const chartConfig: { [key: string]: { label: string; color: string } } = {
     value: {
-      label: "Errors",
       color: "hsl(var(--chart-5))",
+      label: "Errors",
     },
   } satisfies ChartConfig;
 
@@ -53,13 +53,13 @@ export function ErrorRate({ datapoints }: { datapoints: ResultItem[] }) {
     for (const tag of monitorData.tags) {
       charts.push(
         <Bar
-          key={tag}
           dataKey={tag}
-          type="natural"
           fill={`var(--color-${tag})`}
           fillOpacity={0.3}
-          stroke={`var(--color-${tag})`}
+          key={tag}
           stackId="a"
+          stroke={`var(--color-${tag})`}
+          type="natural"
         />,
       );
     }
@@ -74,33 +74,33 @@ export function ErrorRate({ datapoints }: { datapoints: ResultItem[] }) {
       </CardHeader>
       <CardContent>
         <ChartContainer
-          config={chartConfig}
           className="aspect-auto h-[250px] w-full"
+          config={chartConfig}
         >
           <BarChart accessibilityLayer data={monitorData.data}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="time"
-              tickLine={false}
               axisLine={false}
-              tickMargin={8}
+              dataKey="time"
               tickFormatter={(value) => {
                 const date = new Date(value);
                 return date.toLocaleTimeString("en-US", {
                   hour: "numeric",
+                  localeMatcher: "lookup",
                   minute: "numeric",
                   second: undefined,
-                  localeMatcher: "lookup",
                 });
               }}
+              tickLine={false}
+              tickMargin={8}
             />
             <YAxis
-              tickLine={false}
               axisLine={false}
-              tickMargin={8}
               tickCount={3}
+              tickLine={false}
+              tickMargin={8}
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <ChartTooltip content={<ChartTooltipContent />} cursor={false} />
             {areaCharts}
           </BarChart>
         </ChartContainer>

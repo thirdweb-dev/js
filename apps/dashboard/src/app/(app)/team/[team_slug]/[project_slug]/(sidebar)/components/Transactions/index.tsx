@@ -1,8 +1,8 @@
-import { getClientTransactions } from "@/api/analytics";
 import { LoadingChartState } from "components/analytics/empty-chart-state";
 import { Suspense } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { AnalyticsQueryParams } from "types/analytics";
+import { getClientTransactions } from "@/api/analytics";
 import { TransactionsChartsUI } from "./TransactionCharts";
 
 export function TransactionsCharts(
@@ -39,10 +39,10 @@ async function TransactionsChartCardAsync(
 
   return (
     <TransactionsChartsUI
-      data={data}
       aggregatedData={aggregatedData}
-      searchParams={props.searchParams}
       client={props.client}
+      data={data}
+      searchParams={props.searchParams}
     />
   );
 }

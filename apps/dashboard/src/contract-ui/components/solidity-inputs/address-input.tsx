@@ -1,12 +1,12 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Input } from "@/components/ui/input";
 import { useEns } from "components/contract-components/hooks";
 import { CheckIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
 import { isAddress, isValidENSName } from "thirdweb/utils";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import type { SolidityInputProps } from ".";
 import { validateAddress } from "./helpers";
 
@@ -23,8 +23,8 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
   const address = useActiveAccount()?.address;
 
   const ensQuery = useEns({
-    client,
     addressOrEnsName: localInput,
+    client,
   });
 
   const { setValue, clearErrors } = form;
@@ -54,8 +54,8 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
   useEffect(() => {
     if (ensQuery.isError) {
       form.setError(inputName, {
-        type: "pattern",
         message: "Failed to resolve ENS name.",
+        type: "pattern",
       });
     }
   }, [ensQuery.isError, form, inputName]);
@@ -128,9 +128,9 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
   return (
     <>
       <Input
-        placeholder="address"
-        // probably OK but obviously can be longer if ens name is passed?
         maxLength={42}
+        // probably OK but obviously can be longer if ens name is passed?
+        placeholder="address"
         {...restOfInputProps}
         onChange={(e) => handleChange(e.target.value)}
         // if we don't have a value from the form, use the local input (but if value is empty string then that's valid)

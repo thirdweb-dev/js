@@ -1,6 +1,6 @@
 import notFound from "../../../not-found";
-import { RootTDoc } from "../../../references/components/TDoc/Root";
 import { fetchTypeScriptDoc } from "../../../references/components/TDoc/fetchDocs/fetchTypeScriptDoc";
+import { RootTDoc } from "../../../references/components/TDoc/Root";
 import { getSlugToDocMap } from "../../../references/components/TDoc/utils/slugs";
 
 type PageProps = { params: Promise<{ slug: string[] }> };

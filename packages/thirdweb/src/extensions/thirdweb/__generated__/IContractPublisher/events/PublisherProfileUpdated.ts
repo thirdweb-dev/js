@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "PublisherProfileUpdated" event.
@@ -36,8 +36,8 @@ export function publisherProfileUpdatedEvent(
   filters: PublisherProfileUpdatedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event PublisherProfileUpdated(address indexed publisher, string prevURI, string newURI)",
-    filters,
   });
 }

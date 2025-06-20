@@ -56,7 +56,6 @@ describe("getMimeTypeFromUrl", () => {
   });
 
   it("should return correct mime type for all defined extensions", () => {
-    // biome-ignore lint/complexity/noForEach: Relax just a test
     Object.entries(extensionsToMimeType).forEach(([extension, mimeType]) => {
       expect(getMimeTypeFromUrl(`https://example.com/file.${extension}`)).toBe(
         mimeType,

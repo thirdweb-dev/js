@@ -1,6 +1,7 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { type JSX, useMemo } from "react";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardContent,
@@ -15,8 +16,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { type JSX, useMemo } from "react";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 
 export interface ResultItem {
   metric: {
@@ -70,13 +70,13 @@ export function StatusCodes({ datapoints }: { datapoints: ResultItem[] }) {
     const config: { [key: string]: { label: string; color: string } } = {};
     for (const tag of monitorData.tags) {
       config[tag] = {
-        label: tag,
         color:
           Number.parseInt(tag) < 400
             ? "hsl(var(--chart-2))"
             : Number.parseInt(tag) < 500
               ? "hsl(var(--chart-3))"
               : "hsl(var(--chart-5))",
+        label: tag,
       };
     }
 
@@ -92,13 +92,13 @@ export function StatusCodes({ datapoints }: { datapoints: ResultItem[] }) {
     for (const tag of monitorData.tags) {
       charts.push(
         <Area
-          key={tag}
           dataKey={tag}
-          type="step"
           fill={`var(--color-${tag})`}
           fillOpacity={0.3}
-          stroke={`var(--color-${tag})`}
+          key={tag}
           stackId="a"
+          stroke={`var(--color-${tag})`}
+          type="step"
         />,
       );
     }
@@ -115,33 +115,33 @@ export function StatusCodes({ datapoints }: { datapoints: ResultItem[] }) {
       </CardHeader>
       <CardContent>
         <ChartContainer
-          config={chartConfig}
           className="aspect-auto h-[250px] w-full"
+          config={chartConfig}
         >
           <AreaChart accessibilityLayer data={monitorData.data}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="time"
-              tickLine={false}
               axisLine={false}
-              tickMargin={8}
+              dataKey="time"
               tickFormatter={(value) => {
                 const date = new Date(value);
                 return date.toLocaleTimeString("en-US", {
                   hour: "numeric",
+                  localeMatcher: "lookup",
                   minute: "numeric",
                   second: undefined,
-                  localeMatcher: "lookup",
                 });
               }}
+              tickLine={false}
+              tickMargin={8}
             />
             <YAxis
-              tickLine={false}
               axisLine={false}
-              tickMargin={8}
               tickCount={3}
+              tickLine={false}
+              tickMargin={8}
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <ChartTooltip content={<ChartTooltipContent />} cursor={false} />
             {areaCharts}
             <ChartLegend content={<ChartLegendContent />} />
           </AreaChart>

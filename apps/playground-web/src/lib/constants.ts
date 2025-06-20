@@ -17,6 +17,7 @@ const getDomain = () => {
 export const WALLETS = [
   createWallet("inApp", {
     auth: {
+      mode: "redirect",
       options: [
         "google",
         "discord",
@@ -27,7 +28,6 @@ export const WALLETS = [
         "farcaster",
         "line",
       ],
-      mode: "redirect",
       passkeyDomain: getDomain(),
     },
   }),

@@ -1,4 +1,4 @@
-import { TBody, Table, Td, Th, Tr } from "@/components/Document/Table";
+import { Table, TBody, Td, Th, Tr } from "@/components/Document/Table";
 import {
   DocLink,
   Heading,
@@ -25,7 +25,7 @@ export default async function ModulesPage() {
   ];
   return (
     <>
-      <Heading level={1} id="built-in-extensions">
+      <Heading anchorId="built-in-extensions" level={1}>
         Built-in modules
       </Heading>
       <Paragraph>

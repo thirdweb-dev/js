@@ -68,22 +68,22 @@ export async function inAppWalletGetCallsStatus(args: {
     throw new Error("Failed to get calls status, unknown bundle id");
   }
 
-  const request = getRpcClient({ client, chain });
+  const request = getRpcClient({ chain, client });
   let status: "pending" | "success" | "failure" = "success";
   const receipts: (WalletCallReceipt<bigint, "success" | "reverted"> | null)[] =
     await Promise.all(
       bundle.map((hash) =>
         eth_getTransactionReceipt(request, { hash })
           .then((receipt) => ({
+            blockHash: receipt.blockHash,
+            blockNumber: receipt.blockNumber,
+            gasUsed: receipt.gasUsed,
             logs: receipt.logs.map((l) => ({
               address: l.address,
               data: l.data,
               topics: l.topics,
             })),
             status: receipt.status,
-            blockHash: receipt.blockHash,
-            blockNumber: receipt.blockNumber,
-            gasUsed: receipt.gasUsed,
             transactionHash: receipt.transactionHash,
           }))
           .catch(() => {
@@ -94,12 +94,12 @@ export async function inAppWalletGetCallsStatus(args: {
     );
 
   return {
-    status,
-    statusCode: 200,
     atomic: false,
     chainId: chain.id,
     id,
-    version: "2.0.0",
     receipts: receipts.filter((r) => r !== null),
+    status,
+    statusCode: 200,
+    version: "2.0.0",
   };
 }

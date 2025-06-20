@@ -1,9 +1,4 @@
 "use client";
-import { revalidatePathAction } from "@/actions/revalidate";
-import {
-  reportAssetCreationFailed,
-  reportContractDeployed,
-} from "@/analytics/report";
 import {
   DEFAULT_FEE_BPS_NEW,
   DEFAULT_FEE_RECIPIENT,
@@ -13,11 +8,11 @@ import { defineDashboardChain } from "lib/defineDashboardChain";
 import { useRef } from "react";
 import { toast } from "sonner";
 import {
-  NATIVE_TOKEN_ADDRESS,
-  type ThirdwebClient,
   getAddress,
   getContract,
+  NATIVE_TOKEN_ADDRESS,
   sendAndConfirmTransaction,
+  type ThirdwebClient,
   toUnits,
 } from "thirdweb";
 import { deployERC20Contract } from "thirdweb/deploys";
@@ -31,6 +26,11 @@ import {
 import { useActiveAccount } from "thirdweb/react";
 import { parseError } from "utils/errorParser";
 import { pollWithTimeout } from "utils/pollWithTimeout";
+import { revalidatePathAction } from "@/actions/revalidate";
+import {
+  reportAssetCreationFailed,
+  reportContractDeployed,
+} from "@/analytics/report";
 import { useAddContractToProject } from "../../../hooks/project-contracts";
 import type { CreateAssetFormValues } from "./_common/form";
 import { CreateTokenAssetPageUI } from "./create-token-page.client";
@@ -73,38 +73,38 @@ export function CreateTokenAssetPage(props: {
           idToChain.get(Number(formValues.chain)),
         ),
         client: props.client,
-        type: "DropERC20",
         params: {
+          description: formValues.description,
+          image: formValues.image,
           // metadata
           name: formValues.name,
-          description: formValues.description,
-          symbol: formValues.symbol,
-          image: formValues.image,
           // platform fees
           platformFeeBps: BigInt(DEFAULT_FEE_BPS_NEW),
           platformFeeRecipient: DEFAULT_FEE_RECIPIENT,
           // primary sale
           saleRecipient: account.address,
           social_urls: socialUrls,
+          symbol: formValues.symbol,
         },
+        type: "DropERC20",
       });
 
       // add contract to project in background
       addContractToProject.mutateAsync({
-        teamId: props.teamId,
-        projectId: props.projectId,
-        contractAddress: contractAddress,
         chainId: formValues.chain,
-        deploymentType: "asset",
+        contractAddress: contractAddress,
         contractType: "DropERC20",
+        deploymentType: "asset",
+        projectId: props.projectId,
+        teamId: props.teamId,
       });
 
       reportContractDeployed({
         address: contractAddress,
         chainId: Number(formValues.chain),
-        publisher: "deployer.thirdweb.eth",
         contractName: "DropERC20",
         deploymentType: "asset",
+        publisher: "deployer.thirdweb.eth",
       });
 
       contractAddressRef.current = contractAddress;
@@ -147,23 +147,23 @@ export function CreateTokenAssetPage(props: {
     );
 
     const contract = getContract({
-      client: props.client,
       address: contractAddress,
       chain,
+      client: props.client,
     });
 
     try {
       const airdropTx = transferBatch({
-        contract,
         batch: formValues.airdropAddresses.map((recipient) => ({
-          to: recipient.address,
           amount: recipient.quantity,
+          to: recipient.address,
         })),
+        contract,
       });
 
       await sendAndConfirmTransaction({
-        transaction: airdropTx,
         account,
+        transaction: airdropTx,
       });
     } catch (e) {
       console.error(e);
@@ -196,9 +196,9 @@ export function CreateTokenAssetPage(props: {
     );
 
     const contract = getContract({
-      client: props.client,
       address: contractAddress,
       chain,
+      client: props.client,
     });
 
     // poll until claim conditions are set before moving on to minting
@@ -223,13 +223,13 @@ export function CreateTokenAssetPage(props: {
     try {
       const claimTx = claimTo({
         contract,
-        to: account.address,
         quantity: ownerSupplyTokens.toString(),
+        to: account.address,
       });
 
       await sendAndConfirmTransaction({
-        transaction: claimTx,
         account,
+        transaction: claimTx,
       });
     } catch (e) {
       const errorMessage = parseError(e);
@@ -264,9 +264,9 @@ export function CreateTokenAssetPage(props: {
     );
 
     const contract = getContract({
-      client: props.client,
       address: contractAddress,
       chain,
+      client: props.client,
     });
 
     const salePercent = formValues.saleEnabled
@@ -278,18 +278,13 @@ export function CreateTokenAssetPage(props: {
 
     const phases: ClaimConditionsInput[] = [
       {
-        maxClaimablePerWallet: formValues.saleEnabled ? undefined : 0n,
-        maxClaimableSupply: totalSupplyWei,
-        price:
-          formValues.saleEnabled && salePercent > 0
-            ? formValues.salePrice
-            : "0",
         currencyAddress:
           getAddress(formValues.saleTokenAddress) ===
           getAddress(NATIVE_TOKEN_ADDRESS)
             ? undefined
             : formValues.saleTokenAddress,
-        startTime: new Date(),
+        maxClaimablePerWallet: formValues.saleEnabled ? undefined : 0n,
+        maxClaimableSupply: totalSupplyWei,
         metadata: {
           name:
             formValues.saleEnabled && salePercent > 0
@@ -303,6 +298,11 @@ export function CreateTokenAssetPage(props: {
             price: "0",
           },
         ],
+        price:
+          formValues.saleEnabled && salePercent > 0
+            ? formValues.salePrice
+            : "0",
+        startTime: new Date(),
       },
     ];
 
@@ -313,8 +313,8 @@ export function CreateTokenAssetPage(props: {
 
     try {
       await sendAndConfirmTransaction({
-        transaction: preparedTx,
         account,
+        transaction: preparedTx,
       });
     } catch (e) {
       const errorMessage = parseError(e);
@@ -334,20 +334,20 @@ export function CreateTokenAssetPage(props: {
     <CreateTokenAssetPageUI
       accountAddress={props.accountAddress}
       client={props.client}
-      teamSlug={props.teamSlug}
-      projectSlug={props.projectSlug}
+      createTokenFunctions={{
+        airdropTokens,
+        deployContract,
+        mintTokens,
+        setClaimConditions,
+      }}
       onLaunchSuccess={() => {
         revalidatePathAction(
           `/team/${props.teamSlug}/project/${props.projectId}/assets`,
           "page",
         );
       }}
-      createTokenFunctions={{
-        deployContract,
-        airdropTokens,
-        mintTokens,
-        setClaimConditions,
-      }}
+      projectSlug={props.projectSlug}
+      teamSlug={props.teamSlug}
     />
   );
 }

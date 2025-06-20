@@ -88,8 +88,8 @@ export function useSendToken(client: ThirdwebClient) {
           value: toWei(amount),
         });
         const gasEstimate = await estimateGas({
-          transaction: sendNativeTokenTx,
           account,
+          transaction: sendNativeTokenTx,
         });
         const balance = await getWalletBalance({
           address: account.address,
@@ -101,16 +101,16 @@ export function useSendToken(client: ThirdwebClient) {
         }
 
         return await sendTransaction({
-          transaction: sendNativeTokenTx,
           account,
+          transaction: sendNativeTokenTx,
         });
       }
       // erc20 token transfer
       else {
         const contract = getContract({
           address: tokenAddress,
-          client,
           chain: activeChain,
+          client,
         });
 
         const tx = transfer({
@@ -120,8 +120,8 @@ export function useSendToken(client: ThirdwebClient) {
         });
 
         return await sendTransaction({
-          transaction: tx,
           account,
+          transaction: tx,
         });
       }
     },
@@ -131,10 +131,10 @@ export function useSendToken(client: ThirdwebClient) {
       }
       if (data?.transactionHash) {
         await waitForReceipt({
-          transactionHash: data.transactionHash,
-          client,
           chain: data.chain,
+          client,
           maxBlocksWaitTime: 10_000,
+          transactionHash: data.transactionHash,
         });
       }
       invalidateWalletBalance(queryClient);

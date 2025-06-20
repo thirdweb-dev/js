@@ -6,10 +6,10 @@ import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectB
 import { useActiveWalletChain } from "../../../core/hooks/wallets/useActiveWalletChain.js";
 import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
 import { fontSize, spacing } from "../../design-system/index.js";
-import { Skeleton } from "../components/Skeleton.js";
-import { WalletImage } from "../components/WalletImage.js";
 import { ThemedButton } from "../components/button.js";
+import { Skeleton } from "../components/Skeleton.js";
 import { ThemedText } from "../components/text.js";
+import { WalletImage } from "../components/WalletImage.js";
 
 export function ConnectedButton(
   props: ConnectButtonProps & {
@@ -30,7 +30,6 @@ export function ConnectedButton(
   );
   return (
     <ThemedButton
-      theme={theme}
       onPress={() => {
         props.openModal();
       }}
@@ -38,41 +37,42 @@ export function ConnectedButton(
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.smd,
       }}
+      theme={theme}
     >
       <View style={styles.row}>
         <WalletImage
-          theme={theme}
-          size={40}
-          wallet={wallet}
           avatar={pfp}
           client={client}
+          size={40}
+          theme={theme}
+          wallet={wallet}
         />
         <View style={styles.col}>
           <ThemedText
-            theme={theme}
-            type="defaultSemiBold"
             style={{
               color: theme.colors.primaryButtonText,
             }}
+            theme={theme}
+            type="defaultSemiBold"
           >
             {name}
           </ThemedText>
           {balanceQuery.data ? (
             <ThemedText
-              theme={theme}
-              type="subtext"
               style={{
                 fontSize: fontSize.sm,
               }}
+              theme={theme}
+              type="subtext"
             >
               {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}{" "}
               {balanceQuery.data?.symbol}
             </ThemedText>
           ) : (
             <Skeleton
-              theme={theme}
-              style={{ width: 80, height: 16 }}
               color={theme.colors.secondaryText}
+              style={{ height: 16, width: 80 }}
+              theme={theme}
             />
           )}
         </View>
@@ -86,14 +86,14 @@ function formatBalanceOnButton(num: number) {
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    flex: 1,
-    gap: spacing.md,
-    alignItems: "center",
-  },
   col: {
     flexDirection: "column",
     gap: spacing.xxs,
+  },
+  row: {
+    alignItems: "center",
+    flex: 1,
+    flexDirection: "row",
+    gap: spacing.md,
   },
 });

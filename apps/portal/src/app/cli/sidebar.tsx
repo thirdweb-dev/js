@@ -1,47 +1,47 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
 
 export const sidebar: SideBar = {
-  name: "thirdweb CLI",
   links: [
     {
-      name: "Overview",
       href: "/cli",
+      name: "Overview",
     },
     {
-      name: "Create",
       href: "/cli/create",
+      name: "Create",
     },
     {
-      name: "Install",
       href: "/cli/install",
+      name: "Install",
     },
     {
-      name: "Build",
       href: "/cli/build",
+      name: "Build",
     },
     {
-      name: "Generate",
       href: "/cli/generate",
+      name: "Generate",
     },
     {
-      name: "Login",
       href: "/cli/login",
+      name: "Login",
     },
     {
-      name: "Logout",
       href: "/cli/logout",
+      name: "Logout",
     },
     {
-      name: "Upload",
       href: "/cli/upload",
+      name: "Upload",
     },
     {
-      name: "Deploy",
       href: "/contracts/deploy/overview",
+      name: "Deploy",
     },
     {
-      name: "Publish",
       href: "/contracts/publish/overview",
+      name: "Publish",
     },
   ],
+  name: "thirdweb CLI",
 };

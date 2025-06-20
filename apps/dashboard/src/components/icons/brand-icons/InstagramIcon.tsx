@@ -3,12 +3,12 @@ import type { SVGProps } from "react";
 export const InstagramIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
+      fill="currentColor"
+      height={24}
       role="img"
       viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="currentColor"
       width={24}
-      height={24}
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <title>Instagram</title>

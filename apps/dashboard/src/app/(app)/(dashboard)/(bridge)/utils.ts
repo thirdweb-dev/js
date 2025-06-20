@@ -1,8 +1,8 @@
 import "server-only";
 
+import type { Address } from "thirdweb";
 import { NEXT_PUBLIC_THIRDWEB_BRIDGE_HOST } from "@/constants/public-envs";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
-import type { Address } from "thirdweb";
 import type { Route } from "./types/route";
 
 export async function getRoutes({

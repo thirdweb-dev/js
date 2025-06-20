@@ -1,9 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { nebulaAppThirdwebClient } from "@/constants/nebula-client";
 
-function StoryBadge(props: {
-  label: string;
-}) {
+function StoryBadge(props: { label: string }) {
   return (
     <Badge
       className="mb-3 self-start border-none bg-muted px-3 py-1 font-normal text-muted-foreground text-xs"

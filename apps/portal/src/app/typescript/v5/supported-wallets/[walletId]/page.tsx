@@ -1,20 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GlobeIcon } from "lucide-react";
 import Image from "next/image";
 import {
-  type WalletId,
   getAllWalletsList,
   getWalletInfo,
+  type WalletId,
 } from "thirdweb/wallets";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Breadcrumb,
   CodeBlock,
+  createMetadata,
   DocLink,
   Heading,
   Paragraph,
-  createMetadata,
 } from "../../../../../components/Document";
 import appStoreSvg from "./assets/appstore.svg";
 import chromeStoreSvg from "./assets/chromestore.svg";
@@ -31,12 +31,12 @@ export async function generateMetadata(props: PageProps) {
   const walletMetadata = await getWalletInfo(params.walletId);
 
   return createMetadata({
-    title: walletMetadata.name,
     description: `Connect ${walletMetadata.name} with thirdweb Connect SDK`,
     image: {
-      title: walletMetadata.name,
       icon: "wallets",
+      title: walletMetadata.name,
     },
+    title: walletMetadata.name,
   });
 }
 
@@ -68,19 +68,19 @@ export default async function Page(props: PageProps) {
       />
       <div className="mb-10 flex items-center gap-3 [&_h1]:m-0">
         <Image
-          src={walletImage}
-          width={36}
-          height={36}
           alt=""
           className="rounded-lg"
+          height={36}
+          src={walletImage}
+          width={36}
         />
-        <Heading level={1} id="title">
+        <Heading anchorId="title" level={1}>
           {walletMetadata.name}
         </Heading>
       </div>
       <DocLink
-        href={walletMetadata.homepage}
         className="flex items-center gap-2"
+        href={walletMetadata.homepage}
       >
         <GlobeIcon className="size-5" />
         {walletMetadata.homepage}
@@ -88,30 +88,30 @@ export default async function Page(props: PageProps) {
       <div className="mt-6 mb-12 flex gap-4">
         {walletMetadata.app.android && (
           <DocLink
-            href={walletMetadata.app.android}
             className="transition-transform"
+            href={walletMetadata.app.android}
           >
-            <Image src={playStoreSvg} height={50} alt="Play Store" />
+            <Image alt="Play Store" height={50} src={playStoreSvg} />
           </DocLink>
         )}
 
         {walletMetadata.app.chrome && (
           <DocLink href={walletMetadata.app.chrome}>
-            <Image src={chromeStoreSvg} height={50} alt="Play Store" />
+            <Image alt="Play Store" height={50} src={chromeStoreSvg} />
           </DocLink>
         )}
 
         {walletMetadata.app.ios && (
           <DocLink href={walletMetadata.app.ios}>
-            <Image src={appStoreSvg} height={50} alt="Play Store" />
+            <Image alt="Play Store" height={50} src={appStoreSvg} />
           </DocLink>
         )}
       </div>
-      <Heading level={2} id="wallet-id">
+      <Heading anchorId="wallet-id" level={2}>
         Wallet ID
       </Heading>
-      <CodeBlock lang="ts" code={`"${params.walletId}"`} />
-      <Heading level={2} id="wallet-id">
+      <CodeBlock code={`"${params.walletId}"`} lang="ts" />
+      <Heading anchorId="connect-wallet" level={2}>
         Connect Wallet
       </Heading>
       <Tabs defaultValue="tab-1">
@@ -122,7 +122,6 @@ export default async function Page(props: PageProps) {
         </TabsList>
         <TabsContent value="tab-1">
           <CodeBlock
-            lang="ts"
             code={
               isWCSupported && isInjectedSupported
                 ? injectedAndWCSupportedCodeTS(params.walletId)
@@ -132,11 +131,11 @@ export default async function Page(props: PageProps) {
                     ? WCSupportedTS(params.walletId)
                     : "Code not available"
             }
+            lang="ts"
           />
         </TabsContent>
         <TabsContent value="tab-2">
           <CodeBlock
-            lang="ts"
             code={
               isWCSupported && isInjectedSupported
                 ? injectedAndWCSupportedCodeReact(params.walletId)
@@ -146,6 +145,7 @@ export default async function Page(props: PageProps) {
                     ? WCSupportedCodeReact(params.walletId)
                     : "Code not available"
             }
+            lang="ts"
           />
         </TabsContent>
         <TabsContent value="tab-3">
@@ -159,10 +159,10 @@ export default async function Page(props: PageProps) {
               ConnectEmbed
             </DocLink>{" "}
             component to get a pre-built UI for connecting the wallet.
-            <Heading level={3} id="connect-component">
+            <Heading anchorId="connect-component" level={3}>
               Example
             </Heading>
-            <CodeBlock lang="tsx" code={componentCode(params.walletId)} />
+            <CodeBlock code={componentCode(params.walletId)} lang="tsx" />
           </Paragraph>
         </TabsContent>
       </Tabs>

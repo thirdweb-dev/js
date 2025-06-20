@@ -1,7 +1,3 @@
-import type { Team } from "@/api/team";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { Select as ChakraSelect } from "chakra-react-select";
@@ -10,6 +6,10 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FormHelperText, FormLabel } from "tw-components";
+import type { Team } from "@/api/team";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { PlanToCreditsRecord } from "./ApplyForOpCreditsModal";
 import { applyOpSponsorship } from "./applyOpSponsorship";
 
@@ -44,16 +44,16 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
   );
   const transformedQueryData = useMemo(
     () => ({
+      company: "",
+      email: account?.email || "",
       firstname: "",
       lastname: "",
-      thirdweb_account_id: account?.id || "",
       plan_type: PlanToCreditsRecord[plan].plan,
-      email: account?.email || "",
-      company: "",
-      website: "",
-      twitterhandle: "",
-      superchain_verticals: "",
       superchain_chain: "",
+      superchain_verticals: "",
+      thirdweb_account_id: account?.id || "",
+      twitterhandle: "",
+      website: "",
       what_would_you_like_to_meet_about_: "",
     }),
     [account, plan],
@@ -71,9 +71,9 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
 
   return (
     <Flex
+      as="form"
       direction="column"
       gap={4}
-      as="form"
       onSubmit={form.handleSubmit(async (data) => {
         const fields = Object.keys(data).map((key) => ({
           name: key,
@@ -133,6 +133,12 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
         <FormControl gap={6} isRequired>
           <FormLabel>Industry</FormLabel>
           <ChakraSelect
+            isRequired
+            onChange={(value) => {
+              if (value?.value) {
+                form.setValue("superchain_verticals", value.value);
+              }
+            }}
             options={[
               "DAOs",
               "Education & Community",
@@ -150,17 +156,19 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
                 vertical === "Payments & Finance (DeFi)" ? "DeFi" : vertical,
             }))}
             placeholder="Select industry"
-            isRequired
-            onChange={(value) => {
-              if (value?.value) {
-                form.setValue("superchain_verticals", value.value);
-              }
-            }}
           />
         </FormControl>
         <FormControl gap={6} isRequired>
           <FormLabel>Chain</FormLabel>
           <ChakraSelect
+            isMulti
+            isRequired
+            onChange={(values) => {
+              form.setValue(
+                "superchain_chain",
+                values.map(({ value }) => value).join(";"),
+              );
+            }}
             options={[
               "Optimism",
               "Base",
@@ -181,16 +189,8 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
               label: chain === "Optimism" ? "OP Mainnet" : chain,
               value: chain,
             }))}
-            onChange={(values) => {
-              form.setValue(
-                "superchain_chain",
-                values.map(({ value }) => value).join(";"),
-              );
-            }}
-            isMulti
-            selectedOptionStyle="check"
             placeholder="Select chains"
-            isRequired
+            selectedOptionStyle="check"
           />
         </FormControl>
         <FormControl gap={6}>
@@ -205,8 +205,8 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
       <div className="flex flex-row">
         <Button
           className="w-full"
-          type="submit"
           disabled={form.formState.isSubmitting}
+          type="submit"
         >
           {form.formState.isSubmitting ? "Applying..." : "Apply now"}
         </Button>

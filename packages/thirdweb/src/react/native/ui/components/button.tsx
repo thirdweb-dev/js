@@ -23,15 +23,15 @@ export function ThemedButton(props: ThemedButtonProps) {
       style={[
         styles.button,
         {
-          borderColor:
-            variant === "secondary" ? theme.colors.borderColor : "transparent",
-          borderWidth: variant === "secondary" ? 1 : 0,
           backgroundColor:
             variant === "secondary"
               ? "transparent"
               : variant === "accent"
                 ? props.theme.colors.accentButtonBg
                 : props.theme.colors.primaryButtonBg,
+          borderColor:
+            variant === "secondary" ? theme.colors.borderColor : "transparent",
+          borderWidth: variant === "secondary" ? 1 : 0,
         },
         styleOverride,
       ]}
@@ -50,21 +50,21 @@ export function ThemedButtonWithIcon(
 ) {
   const { theme, title, icon, onPress } = props;
   return (
-    <ThemedButton theme={theme} variant="secondary" onPress={onPress}>
+    <ThemedButton onPress={onPress} theme={theme} variant="secondary">
       <View
         style={{
+          alignContent: "center",
           flexDirection: "row",
           gap: spacing.md,
           paddingLeft: spacing.sm,
-          alignContent: "center",
           width: "100%",
         }}
       >
         <RNImage
-          theme={theme}
-          size={24}
-          data={icon}
           color={theme.colors.accentButtonBg}
+          data={icon}
+          size={24}
+          theme={theme}
         />
         <ThemedText theme={theme}>{title}</ThemedText>
       </View>
@@ -74,10 +74,10 @@ export function ThemedButtonWithIcon(
 
 const styles = StyleSheet.create({
   button: {
-    flexDirection: "row",
-    padding: spacing.md,
-    borderRadius: radius.lg,
-    justifyContent: "center",
     alignItems: "center",
+    borderRadius: radius.lg,
+    flexDirection: "row",
+    justifyContent: "center",
+    padding: spacing.md,
   },
 });

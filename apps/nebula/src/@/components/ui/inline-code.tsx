@@ -3,7 +3,10 @@ import { cn } from "@/lib/utils";
 export function InlineCode({
   code,
   className,
-}: { code: string; className?: string }) {
+}: {
+  code: string;
+  className?: string;
+}) {
   return (
     <code
       className={cn(

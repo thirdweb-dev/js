@@ -1,9 +1,9 @@
 "use client";
-import { LoadingDots } from "@/components/ui/LoadingDots";
-import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { cn } from "@/lib/utils";
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 import { Area, AreaChart, Bar, BarChart } from "recharts";
+import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
+import { LoadingDots } from "@/components/ui/LoadingDots";
+import { cn } from "@/lib/utils";
 
 type FakeCartData = {
   value: number;
@@ -17,15 +17,18 @@ function generateRandomData(): FakeCartData[] {
 
 const skeletonChartConfig = {
   value: {
-    label: "Value",
     color: "hsl(var(--muted)/90%)",
+    label: "Value",
   },
 } satisfies ChartConfig;
 
 export function EmptyChartState({
   children,
   type,
-}: { children?: React.ReactNode; type: "bar" | "area" }) {
+}: {
+  children?: React.ReactNode;
+  type: "bar" | "area";
+}) {
   const barChartData = useMemo(() => generateRandomData(), []);
 
   return (
@@ -55,10 +58,11 @@ function SkeletonBarChart(props: {
   data: FakeCartData[];
   type: "bar" | "area";
 }) {
+  const fillAreaSkeletonId = useId();
   return (
     <ChartContainer
-      config={skeletonChartConfig}
       className="pointer-events-none h-full w-full blur-[5px]"
+      config={skeletonChartConfig}
     >
       {props.type === "bar" ? (
         <BarChart
@@ -77,7 +81,7 @@ function SkeletonBarChart(props: {
           }}
         >
           <defs>
-            <linearGradient id="fill_area_skeleton" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id={fillAreaSkeletonId} x1="0" x2="0" y1="0" y2="1">
               <stop
                 offset="5%"
                 stopColor={"hsl(var(--muted-foreground)/0.5)"}
@@ -87,11 +91,11 @@ function SkeletonBarChart(props: {
             </linearGradient>
           </defs>
           <Area
-            type="natural"
             dataKey="value"
-            stroke="hsl(var(--muted-foreground))"
-            fill="url(#fill_area_skeleton)"
+            fill={`url(#${fillAreaSkeletonId})`}
             radius={8}
+            stroke="hsl(var(--muted-foreground))"
+            type="natural"
           />
         </AreaChart>
       )}

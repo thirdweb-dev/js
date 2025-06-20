@@ -1,24 +1,4 @@
 "use client";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   type CreateNotificationChannelInput,
   type EngineAlertRule,
@@ -32,6 +12,26 @@ import { format } from "date-fns";
 import { EllipsisVerticalIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { EngineAlertDialogForm } from "./EngineAlertDialogForm";
 import { EngineDeleteAlertModal } from "./EngineDeleteAlertModal";
 
@@ -70,16 +70,16 @@ export function ManageEngineAlertsSection(props: {
   return (
     <ManageEngineAlertsSectionUI
       alertRules={props.alertRules}
+      createAlertMutation={createAlertMutation}
+      deleteAlert={deleteAlert}
       engineId={props.engineId}
-      notificationChannels={notificationChannelsQuery.data ?? []}
       isLoading={
         notificationChannelsQuery.isLoading || props.alertRulesIsLoading
       }
+      notificationChannels={notificationChannelsQuery.data ?? []}
       onAlertsUpdated={() => {
         notificationChannelsQuery.refetch();
       }}
-      createAlertMutation={createAlertMutation}
-      deleteAlert={deleteAlert}
     />
   );
 }
@@ -115,10 +115,10 @@ export function ManageEngineAlertsSectionUI(props: {
         </div>
 
         <CreateAlertButton
-          engineId={engineId}
           alertRules={props.alertRules}
-          onSuccess={onAlertsUpdated}
           createAlertMutation={createAlertMutation}
+          engineId={engineId}
+          onSuccess={onAlertsUpdated}
         />
       </div>
 
@@ -130,11 +130,11 @@ export function ManageEngineAlertsSectionUI(props: {
         </div>
       ) : (
         <EngineAlertsTableUI
-          engineId={engineId}
           alertRules={props.alertRules}
+          deleteAlert={deleteAlert}
+          engineId={engineId}
           notificationChannels={notificationChannels}
           onAlertsUpdated={props.onAlertsUpdated}
-          deleteAlert={deleteAlert}
         />
       )}
     </section>
@@ -168,8 +168,8 @@ function EngineAlertsTableUI(props: {
               <TableRow key={notificationChannel.id}>
                 <TableCell>
                   <Badge
-                    variant={isPaused ? "warning" : "default"}
                     className="text-sm"
+                    variant={isPaused ? "warning" : "default"}
                   >
                     {isPaused ? "Paused" : "Active"}
                   </Badge>
@@ -185,18 +185,18 @@ function EngineAlertsTableUI(props: {
                 </TableCell>
 
                 <TableCell>
-                  <Badge variant="outline" className="text-sm capitalize">
+                  <Badge className="text-sm capitalize" variant="outline">
                     {notificationChannel.type}
                   </Badge>
 
                   <CopyTextButton
+                    className="-translate-x-2 max-w-[250px] text-muted-foreground"
+                    copyIconPosition="left"
+                    iconClassName="size-3"
                     textToCopy={notificationChannel.value}
                     textToShow={truncateValue(notificationChannel.value)}
-                    copyIconPosition="left"
                     tooltip="Copy"
                     variant="ghost"
-                    iconClassName="size-3"
-                    className="-translate-x-2 max-w-[250px] text-muted-foreground"
                   />
                 </TableCell>
 
@@ -210,10 +210,10 @@ function EngineAlertsTableUI(props: {
                 <TableCell className="text-muted-foreground">
                   <AlertOptionsButton
                     alertRules={props.alertRules}
+                    deleteAlert={props.deleteAlert}
                     engineId={props.engineId}
                     notificationChannel={notificationChannel}
                     onDeleteSuccess={props.onAlertsUpdated}
-                    deleteAlert={props.deleteAlert}
                   />
                 </TableCell>
               </TableRow>
@@ -244,11 +244,11 @@ function CreateAlertButton(props: {
         }
       >
         <Button
+          className="gap-2"
+          disabled={props.alertRules.length === 0}
           onClick={() => {
             setIsModalOpen(true);
           }}
-          className="gap-2"
-          disabled={props.alertRules.length === 0}
         >
           <PlusIcon className="size-4" />
           Add Alert
@@ -257,18 +257,17 @@ function CreateAlertButton(props: {
 
       <EngineAlertDialogForm
         alertRules={props.alertRules}
-        open={isModalOpen}
         onOpenChange={setIsModalOpen}
-        title="Add Alert"
+        open={isModalOpen}
         submitButton={{
-          label: "Add Alert",
           isLoading: createAlertMutation.isPending,
+          label: "Add Alert",
           onSubmit: (values) => {
             const addPromise = createAlertMutation.mutateAsync(values);
 
             toast.promise(addPromise, {
-              success: "Alert added successfully",
               error: "Failed to add alert",
+              success: "Alert added successfully",
             });
 
             addPromise.then(() => {
@@ -277,6 +276,7 @@ function CreateAlertButton(props: {
             });
           },
         }}
+        title="Add Alert"
         values={null}
       />
     </>
@@ -323,16 +323,16 @@ function AlertOptionsButton(props: {
           );
 
           toast.promise(deletePromise, {
-            success: "Alert Deleted Successfully",
             error: "Failed To Delete Alert",
+            success: "Alert Deleted Successfully",
           });
           deletePromise.then(() => {
             setIsDeleteModalOpen(false);
             props.onDeleteSuccess();
           });
         }}
-        open={isDeleteModalOpen}
         onOpenChange={setIsDeleteModalOpen}
+        open={isDeleteModalOpen}
       />
     </>
   );

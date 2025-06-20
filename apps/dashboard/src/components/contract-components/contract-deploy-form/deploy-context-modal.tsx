@@ -1,4 +1,7 @@
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { CircleCheckIcon, CircleIcon } from "lucide-react";
+import Link from "next/link";
+import { useCallback, useState } from "react";
+import { useActiveWallet } from "thirdweb/react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -6,11 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { cn } from "@/lib/utils";
-import { CircleCheckIcon, CircleIcon } from "lucide-react";
-import Link from "next/link";
-import { useCallback, useState } from "react";
-import { useActiveWallet } from "thirdweb/react";
 
 export type DeployModalStep = {
   type: "deploy" | "setNFTMetadata";
@@ -55,15 +55,15 @@ export function useDeployStatusModal(): DeployStatusModal {
   }, []);
 
   return {
-    open,
-    close,
-    nextStep,
-    isModalOpen,
-    steps,
     activeStep,
+    close,
+    isModalOpen,
+    nextStep,
+    open,
     setIsModalOpen,
-    viewContractLink,
     setViewContractLink,
+    steps,
+    viewContractLink,
   };
 }
 
@@ -77,8 +77,8 @@ export function DeployStatusModal(props: {
   return (
     <Dialog open={isModalOpen}>
       <DialogContent
-        dialogCloseClassName="hidden"
         className="gap-0 p-0 md:max-w-[480px]"
+        dialogCloseClassName="hidden"
       >
         <div className="flex flex-col gap-5 p-6">
           <DialogHeader>
@@ -93,10 +93,10 @@ export function DeployStatusModal(props: {
               const hasCompleted = i < activeStep;
               return (
                 <RenderDeployModalStep
+                  hasCompleted={hasCompleted}
+                  isActive={isActive}
                   key={step.type}
                   step={step}
-                  isActive={isActive}
-                  hasCompleted={hasCompleted}
                 />
               );
             })}
@@ -105,7 +105,7 @@ export function DeployStatusModal(props: {
 
         {viewContractLink && (
           <div className="mt-2 flex justify-end gap-4 border-border border-t p-6">
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+            <Button onClick={() => setIsModalOpen(false)} variant="outline">
               Close
             </Button>
             <Button asChild>
@@ -169,19 +169,18 @@ function getStepInfo(
   switch (step.type) {
     case "deploy": {
       return {
-        title: "Deploying contract",
         description:
           step.signatureCount > 0 && requiresSignature
             ? `Your wallet will prompt you to sign ${
                 step.signatureCount === 1 ? "the" : step.signatureCount || 1
               } transaction${step.signatureCount > 1 ? "s" : ""}.`
             : "This may take a few seconds",
+        title: "Deploying contract",
       };
     }
 
     case "setNFTMetadata": {
       return {
-        title: "Setting NFT metadata",
         description: (
           <>
             {step.signatureCount > 0 && requiresSignature
@@ -189,6 +188,7 @@ function getStepInfo(
               : "This may take a few seconds."}
           </>
         ),
+        title: "Setting NFT metadata",
       };
     }
   }

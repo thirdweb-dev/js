@@ -1,10 +1,6 @@
+/** biome-ignore-all lint/nursery/noNestedComponentDefinitions: FIXME */
 "use client";
 
-import { UnexpectedValueErrorMessage } from "@/components/blocks/error-fallbacks/unexpect-value-error-message";
-import { WalletAddress } from "@/components/blocks/wallet-address";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { cn } from "@/lib/utils";
 import {
   Flex,
   IconButton,
@@ -41,6 +37,11 @@ import type { NFT, ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
+import { UnexpectedValueErrorMessage } from "@/components/blocks/error-fallbacks/unexpect-value-error-message";
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 
@@ -64,31 +65,30 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   const tableColumns = useMemo(() => {
     const cols: Column<NFT>[] = [
       {
-        Header: "Token Id",
         accessor: (row) =>
           row.id?.toString().length > 8
             ? `${row.id.toString().slice(0, 4)}...${row.id.toString().slice(-4)}`
             : row.id?.toString(),
         Cell: (cell: CellProps<NFT, string>) => <p>{cell.value}</p>,
+        Header: "Token Id",
       },
       {
-        Header: "Media",
         accessor: (row) => row.metadata,
         Cell: (cell: CellProps<NFT, NFT["metadata"]>) => (
           <MediaCell cell={cell} client={contract.client} />
         ),
+        Header: "Media",
       },
       {
-        Header: "Name",
         accessor: (row) => row.metadata.name,
         Cell: (cell: CellProps<NFT, string>) => {
           if (typeof cell.value !== "string") {
             return (
               <UnexpectedValueErrorMessage
-                title="Invalid Name"
-                description="Name is not a string"
-                value={cell.value}
                 className="w-[300px] py-3"
+                description="Name is not a string"
+                title="Invalid Name"
+                value={cell.value}
               />
             );
           }
@@ -99,18 +99,18 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
             </p>
           );
         },
+        Header: "Name",
       },
       {
-        Header: "Description",
         accessor: (row) => row.metadata.description,
         Cell: (cell: CellProps<NFT, string>) => {
           if (cell.value && typeof cell.value !== "string") {
             return (
               <UnexpectedValueErrorMessage
-                title="Invalid description"
-                description="Description is not a string"
-                value={cell.value}
                 className="w-[300px] py-3"
+                description="Description is not a string"
+                title="Invalid description"
+                value={cell.value}
               />
             );
           }
@@ -126,20 +126,20 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
             </p>
           );
         },
+        Header: "Description",
       },
     ];
     if (isErc721) {
       cols.push({
-        Header: "Owner",
         accessor: (row) => row.owner,
         Cell: (cell: CellProps<NFT, string>) => (
           <WalletAddress address={cell.value} client={contract.client} />
         ),
+        Header: "Owner",
       });
     }
     if (isErc1155) {
       cols.push({
-        Header: "Circulating Supply",
         accessor: (row) => row,
         Cell: (cell: CellProps<NFT, number>) => {
           if (cell.row.original.type === "ERC1155") {
@@ -150,6 +150,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
             );
           }
         },
+        Header: "Circulating Supply",
       });
     }
     return cols;
@@ -161,9 +162,9 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
     isErc1155 ? ERC1155Ext.getNFTs : ERC721Ext.getNFTs,
     {
       contract,
-      start: queryParams.start,
       count: queryParams.count,
       includeOwners: true,
+      start: queryParams.start,
       tokenByIndex,
     },
   );
@@ -227,8 +228,8 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
       columns: tableColumns,
       data: getNFTsQuery.data || [],
       initialState: {
-        pageSize: queryParams.count,
         pageIndex: 0,
+        pageSize: queryParams.count,
       },
       manualPagination: true,
       pageCount: Math.max(
@@ -242,22 +243,22 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   // FIXME: re-work tables and pagination with @tanstack/table@latest - which (I believe) does not need this workaround anymore
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    setQueryParams({ start: pageIndex * pageSize, count: pageSize });
+    setQueryParams({ count: pageSize, start: pageIndex * pageSize });
   }, [pageIndex, pageSize]);
 
   return (
-    <Flex gap={4} direction="column">
+    <Flex direction="column" gap={4}>
       <TableContainer
-        maxW="100%"
         className="relative rounded-lg border border-border bg-card"
+        maxW="100%"
       >
         {getNFTsQuery.isFetching && (
           <Spinner
             color="primary"
-            size="xs"
             position="absolute"
-            top={2}
             right={4}
+            size="xs"
+            top={2}
           />
         )}
         <Table {...getTableProps()}>
@@ -284,8 +285,8 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
           </Thead>
           <Tbody
             {...getTableBodyProps()}
-            position="relative"
             className="!bg-card"
+            position="relative"
           >
             {page.map((row, rowIndex) => {
               const failedToLoad = !row.original.tokenURI;
@@ -293,9 +294,13 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
               return (
                 <Tr
                   {...row.getRowProps()}
-                  role="group"
+                  _last={{ borderBottomWidth: 0 }}
+                  borderBottomWidth={1}
+                  borderColor="borderColor"
                   className="bg-card hover:bg-accent/50"
-                  style={{ cursor: "pointer" }}
+                  cursor={failedToLoad ? "not-allowed" : "pointer"}
+                  // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+                  key={rowIndex}
                   onClick={() => {
                     const tokenId = row.original.id;
                     if (!tokenId && tokenId !== 0n) {
@@ -303,9 +308,9 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                     }
 
                     const path = buildContractPagePath({
-                      projectMeta,
                       chainIdOrSlug: chainSlug.toString(),
                       contractAddress: contract.address,
+                      projectMeta,
                       subpath: `/nfts/${tokenId.toString()}`,
                     });
 
@@ -313,14 +318,11 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                       scroll: true,
                     });
                   }}
-                  borderBottomWidth={1}
-                  _last={{ borderBottomWidth: 0 }}
-                  pointerEvents={failedToLoad ? "none" : "auto"}
                   opacity={failedToLoad ? 0.3 : 1}
-                  cursor={failedToLoad ? "not-allowed" : "pointer"}
-                  borderColor="borderColor"
-                  // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                  key={rowIndex}
+                  pointerEvents={failedToLoad ? "none" : "auto"}
+                  // biome-ignore lint/a11y/useSemanticElements: FIXME
+                  role="group"
+                  style={{ cursor: "pointer" }}
                 >
                   {row.cells.map((cell, cellIndex) => {
                     return (
@@ -328,9 +330,9 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                         {...cell.getCellProps()}
                         borderBottomWidth="inherit"
                         borderColor="borderColor"
-                        maxW="sm"
                         // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                         key={cellIndex}
+                        maxW="sm"
                       >
                         <ErrorBoundary FallbackComponent={NFTCellErrorBoundary}>
                           {cell.render("Cell")}
@@ -346,19 +348,19 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
             })}
             {getNFTsQuery.isPlaceholderData && (
               <Flex
-                zIndex="above"
-                position="absolute"
-                top={0}
-                bottom={0}
-                left={0}
-                right={0}
+                _dark={{ bg: "whiteAlpha.50" }}
+                align="flex-end"
                 backdropFilter="blur(5px)"
                 bg="blackAlpha.100"
-                _dark={{ bg: "whiteAlpha.50" }}
                 borderRadius="md"
-                align="flex-end"
+                bottom={0}
                 justify="center"
+                left={0}
                 p={8}
+                position="absolute"
+                right={0}
+                top={0}
+                zIndex="above"
               >
                 <Flex align="center" gap={4}>
                   <Spinner size="sm" />
@@ -372,15 +374,15 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
       <div className="flex w-full items-center justify-center">
         <div className="flex flex-row items-center gap-1">
           <IconButton
-            isDisabled={!canPreviousPage || queryLoading}
             aria-label="first page"
             icon={<ChevronFirstIcon className="size-4" />}
+            isDisabled={!canPreviousPage || queryLoading}
             onClick={() => gotoPage(0)}
           />
           <IconButton
-            isDisabled={!canPreviousPage || queryLoading}
             aria-label="previous page"
             icon={<ChevronLeftIcon className="size-4" />}
+            isDisabled={!canPreviousPage || queryLoading}
             onClick={() => previousPage()}
           />
           <p className="whitespace-nowrap">
@@ -390,24 +392,24 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
             </Skeleton>
           </p>
           <IconButton
-            isDisabled={!canNextPage || queryLoading}
             aria-label="next page"
             icon={<ChevronRightIcon className="size-4" />}
+            isDisabled={!canNextPage || queryLoading}
             onClick={() => nextPage()}
           />
           <IconButton
-            isDisabled={!canNextPage || queryLoading}
             aria-label="last page"
             icon={<ChevronLastIcon className="size-4" />}
+            isDisabled={!canNextPage || queryLoading}
             onClick={() => gotoPage(pageCount - 1)}
           />
 
           <Select
+            isDisabled={queryLoading}
             onChange={(e) => {
               setPageSize(Number.parseInt(e.target.value as string, 10));
             }}
             value={pageSize}
-            isDisabled={queryLoading}
           >
             <option value="25">25</option>
             <option value="50">50</option>
@@ -434,11 +436,11 @@ function NFTCellErrorBoundary(errorProps: FallbackProps) {
 
   return (
     <CopyTextButton
-      textToShow={errorProps.error.message}
-      textToCopy={errorProps.error.message}
-      copyIconPosition="left"
-      tooltip={errorProps.error.message}
       className="max-w-[250px] truncate text-destructive-text"
+      copyIconPosition="left"
+      textToCopy={errorProps.error.message}
+      textToShow={errorProps.error.message}
+      tooltip={errorProps.error.message}
     />
   );
 }

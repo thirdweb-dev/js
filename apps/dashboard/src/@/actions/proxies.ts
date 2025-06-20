@@ -47,35 +47,35 @@ async function proxy<T>(
   }
 
   const res = await fetch(url, {
-    method: params.method,
+    body: params.body,
     headers: {
       ...params.headers,
       ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
     },
-    body: params.body,
+    method: params.method,
   });
 
   if (!res.ok) {
     try {
       const errorMessage = await res.text();
       return {
-        status: res.status,
-        ok: false,
         error: errorMessage || res.statusText,
+        ok: false,
+        status: res.status,
       };
     } catch {
       return {
-        status: res.status,
-        ok: false,
         error: res.statusText,
+        ok: false,
+        status: res.status,
       };
     }
   }
 
   return {
-    status: res.status,
-    ok: true,
     data: params.parseAsText ? await res.text() : await res.json(),
+    ok: true,
+    status: res.status,
   };
 }
 

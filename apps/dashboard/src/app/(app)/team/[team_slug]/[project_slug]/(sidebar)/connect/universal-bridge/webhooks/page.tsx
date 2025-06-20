@@ -1,6 +1,6 @@
+import { redirect } from "next/navigation";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
-import { redirect } from "next/navigation";
 import { PayWebhooksPage } from "./components/webhooks.client";
 
 export default async function Page(props: {

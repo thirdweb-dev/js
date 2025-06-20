@@ -14,12 +14,6 @@ export function useContractFunctionComment(
   functionName: string,
 ) {
   return useQuery({
-    queryKey: [
-      "contract-function-comment",
-      contract?.chain.id || "",
-      contract?.address || "",
-      functionName,
-    ],
     queryFn: async (): Promise<string> => {
       const data = await getCompilerMetadata(contract);
       let comment = "";
@@ -77,8 +71,8 @@ export function useContractFunctionComment(
           if (ipfsLink) {
             const ipfsHash = ipfsLink.split("ipfs/")[1];
             const source = await download({
-              uri: `ipfs://${ipfsHash}`,
               client: contract.client,
+              uri: `ipfs://${ipfsHash}`,
             })
               .then((r) => r.text())
               .catch(() => "Failed to fetch source from IPFS");
@@ -99,6 +93,12 @@ export function useContractFunctionComment(
       }
       return extractFunctionComment(file.source, functionName);
     },
+    queryKey: [
+      "contract-function-comment",
+      contract?.chain.id || "",
+      contract?.address || "",
+      functionName,
+    ],
   });
 }
 

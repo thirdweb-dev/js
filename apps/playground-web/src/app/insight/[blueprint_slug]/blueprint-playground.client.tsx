@@ -1,20 +1,4 @@
 "use client";
-import { CodeClient, CodeLoading } from "@/components/code/code.client";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -33,6 +17,22 @@ import {
   useForm,
 } from "react-hook-form";
 import { z } from "zod";
+import { CodeClient, CodeLoading } from "@/components/code/code.client";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { MultiNetworkSelector } from "../../../components/blocks/NetworkSelectors";
 import type { BlueprintParameter, BlueprintPathMetadata } from "../utils";
 import { AggregateParameterInput } from "./aggregate-parameter-input.client";
@@ -55,14 +55,14 @@ export function BlueprintPlayground(props: {
       const start = performance.now();
       try {
         const res = await fetch(url, {
-          signal: controller.signal,
           headers: {
             "x-client-id": props.clientId,
           },
+          signal: controller.signal,
         });
         return {
-          status: res.status,
           data: await res.text(),
+          status: res.status,
           time: performance.now() - start,
         };
       } catch (e) {
@@ -83,24 +83,24 @@ export function BlueprintPlayground(props: {
 
   return (
     <BlueprintPlaygroundUI
-      backLink={props.backLink}
-      clientId={props.clientId}
-      metadata={props.metadata}
-      isPending={requestMutation.isPending}
-      onRun={(url) => {
-        requestMutation.mutate(url);
-      }}
-      response={
-        abortController?.signal.aborted ? undefined : requestMutation.data
-      }
       abortRequest={() => {
         if (abortController) {
           // just abort it - don't set a new controller
           abortController.abort();
         }
       }}
+      backLink={props.backLink}
+      clientId={props.clientId}
       domain={props.domain}
+      isPending={requestMutation.isPending}
+      metadata={props.metadata}
+      onRun={(url) => {
+        requestMutation.mutate(url);
+      }}
       path={props.path}
+      response={
+        abortController?.signal.aborted ? undefined : requestMutation.data
+      }
       supportedChainIds={props.supportedChainIds}
     />
   );
@@ -180,18 +180,18 @@ function BlueprintPlaygroundUI(props: {
   }, [parameters]);
 
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
     defaultValues: defaultValues,
+    resolver: zodResolver(formSchema),
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const url = createBlueprintUrl({
-      parameters: parameters,
-      values: values,
       clientId: props.clientId,
       domain: props.domain,
-      path: props.path,
       intent: "run",
+      parameters: parameters,
+      path: props.path,
+      values: values,
     });
 
     props.onRun(url);
@@ -204,29 +204,29 @@ function BlueprintPlaygroundUI(props: {
           <div className="flex grow flex-col">
             <div className="flex grow flex-col overflow-hidden rounded-xl border bg-card">
               <PlaygroundHeader
+                clientId={props.clientId}
                 domain={props.domain}
+                getFormValues={() => form.getValues()}
+                isPending={props.isPending}
                 parameters={parameters}
                 path={props.path}
-                isPending={props.isPending}
-                getFormValues={() => form.getValues()}
-                clientId={props.clientId}
               />
               <div className="grid grow grid-cols-1 lg:grid-cols-2">
                 <div className="flex max-h-[500px] grow flex-col max-sm:border-b lg:max-h-[740px] lg:border-r">
                   <RequestConfigSection
                     domain={props.domain}
+                    form={form}
                     parameters={parameters}
                     path={props.path}
-                    form={form}
                     supportedChainIds={props.supportedChainIds}
                   />
                 </div>
 
                 <div className="flex h-[500px] grow flex-col lg:h-[740px]">
                   <ResponseSection
+                    abortRequest={props.abortRequest}
                     isPending={props.isPending}
                     response={props.response}
-                    abortRequest={props.abortRequest}
                   />
                 </div>
               </div>
@@ -253,17 +253,16 @@ function PlaygroundHeader(props: {
         <div className="flex items-center gap-2 overflow-hidden rounded-xl border bg-muted/50 p-2 lg:justify-center">
           {/* copy url */}
           <Button
-            variant="ghost"
             className="hover:accent h-auto w-auto p-1"
             onClick={() => {
               setHasCopied(true);
               const url = createBlueprintUrl({
                 clientId: props.clientId,
-                parameters: props.parameters,
                 domain: props.domain,
+                intent: "copy",
+                parameters: props.parameters,
                 path: props.path,
                 values: props.getFormValues(),
-                intent: "copy",
               });
 
               setTimeout(() => {
@@ -271,6 +270,7 @@ function PlaygroundHeader(props: {
               }, 500);
               navigator.clipboard.writeText(url);
             }}
+            variant="ghost"
           >
             {hasCopied ? (
               <CheckIcon className="size-4 text-green-500" />
@@ -309,10 +309,10 @@ function PlaygroundHeader(props: {
         </div>
 
         <Button
-          size="sm"
           className="gap-2 rounded-lg lg:hidden"
-          type="submit"
           disabled={props.isPending}
+          size="sm"
+          type="submit"
         >
           {props.isPending ? (
             <Spinner className="size-4" />
@@ -353,9 +353,9 @@ function RequestConfigSection(props: {
     }
 
     return {
+      filterQueryParams,
       pathVariables,
       queryParams,
-      filterQueryParams,
     };
   }, [props.parameters]);
 
@@ -377,36 +377,36 @@ function RequestConfigSection(props: {
       <ScrollShadow className="flex-1" scrollableClassName="max-h-full">
         {pathVariables.length > 0 && (
           <ParameterSection
-            parameters={pathVariables}
             className="border-b"
-            title="Path Variables"
-            form={props.form}
             domain={props.domain}
+            form={props.form}
+            parameters={pathVariables}
             path={props.path}
             supportedChainIds={props.supportedChainIds}
+            title="Path Variables"
           />
         )}
 
         {queryParams.length > 0 && (
           <ParameterSection
             className="border-b"
-            parameters={queryParams}
-            title="Query Parameters"
-            form={props.form}
             domain={props.domain}
+            form={props.form}
+            parameters={queryParams}
             path={props.path}
             supportedChainIds={props.supportedChainIds}
+            title="Query Parameters"
           />
         )}
 
         {filterQueryParams.length > 0 && (
           <ParameterSection
-            parameters={filterQueryParams}
-            title="Filter Query Parameters"
-            form={props.form}
             domain={props.domain}
+            form={props.form}
+            parameters={filterQueryParams}
             path={props.path}
             supportedChainIds={props.supportedChainIds}
+            title="Filter Query Parameters"
           />
         )}
       </ScrollShadow>
@@ -452,8 +452,8 @@ function ParameterSection(props: {
 
           return (
             <FormField
-              key={param.name}
               control={props.form.control}
+              key={param.name}
               name={param.name}
               render={({ field }) => (
                 <FormItem
@@ -463,13 +463,13 @@ function ParameterSection(props: {
                   )}
                 >
                   <div
-                    key={param.name}
                     className={cn(
                       "grid items-center",
                       param.name === "chain_id"
                         ? "grid-cols-1 lg:grid-cols-2"
                         : "grid-cols-2",
                     )}
+                    key={param.name}
                   >
                     <div className="flex h-full flex-row flex-wrap items-center justify-between gap-1 border-r px-3 py-2">
                       <div className="font-medium font-mono text-sm">
@@ -487,42 +487,42 @@ function ParameterSection(props: {
                     <div className="relative">
                       {param.name === "chain_id" ? (
                         <MultiNetworkSelector
-                          selectedBadgeClassName="bg-background"
-                          selectedChainIds={
-                            props.form.watch("chain_id") as number[]
-                          }
-                          onChange={(chainIds) => {
-                            props.form.setValue("chain_id", chainIds, {
-                              shouldValidate: true,
-                              shouldDirty: true,
-                            });
-                          }}
-                          className="rounded-none border-0 border-t lg:border-none"
-                          popoverContentClassName="min-w-[calc(100vw-20px)] lg:min-w-[500px]"
                           chainIds={
                             props.supportedChainIds.length > 0
                               ? props.supportedChainIds
                               : undefined
                           }
+                          className="rounded-none border-0 border-t lg:border-none"
+                          onChange={(chainIds) => {
+                            props.form.setValue("chain_id", chainIds, {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
+                          }}
+                          popoverContentClassName="min-w-[calc(100vw-20px)] lg:min-w-[500px]"
+                          selectedBadgeClassName="bg-background"
+                          selectedChainIds={
+                            props.form.watch("chain_id") as number[]
+                          }
                         />
                       ) : !Array.isArray(field.value) ? (
                         <>
                           <ParameterInput
-                            param={param}
+                            endpointPath={props.path}
                             field={{
                               ...field,
                               value: field.value,
                             }}
-                            showTip={showTip}
                             hasError={hasError}
+                            param={param}
                             placeholder={param.description || param.name}
-                            endpointPath={props.path}
+                            showTip={showTip}
                           />
 
                           {showTip && (
                             <ToolTipLabel
-                              hoverable
                               contentClassName="max-w-[100vw] break-all"
+                              hoverable
                               label={
                                 <div className="flex flex-col gap-2">
                                   {description && (
@@ -550,8 +550,8 @@ function ParameterSection(props: {
                             >
                               <Button
                                 asChild
-                                variant="ghost"
                                 className="-translate-y-1/2 absolute top-1/2 right-2 hidden h-auto w-auto p-1.5 text-muted-foreground opacity-50 hover:opacity-100 lg:flex"
+                                variant="ghost"
                               >
                                 <div>
                                   <InfoIcon className="size-4" />
@@ -594,17 +594,17 @@ function ParameterInput(props: {
     return (
       <Select
         {...restField}
-        value={value.toString()}
         onValueChange={(v) => {
           onChange({ target: { value: v } });
         }}
+        value={value.toString()}
       >
         <SelectTrigger
+          chevronClassName="hidden"
           className={cn(
             "border-none bg-transparent pr-10 font-mono focus:ring-0 focus:ring-offset-0",
             value === "" && "text-muted-foreground",
           )}
-          chevronClassName="hidden"
         >
           <SelectValue placeholder="Select" />
         </SelectTrigger>
@@ -612,7 +612,7 @@ function ParameterInput(props: {
         <SelectContent className="font-mono">
           {param.schema.enum.map((val) => {
             return (
-              <SelectItem value={val} key={val}>
+              <SelectItem key={val} value={val}>
                 {val}
               </SelectItem>
             );
@@ -625,10 +625,10 @@ function ParameterInput(props: {
   if (param.name === "aggregate") {
     return (
       <AggregateParameterInput
-        field={field}
-        showTip={showTip}
-        placeholder={placeholder}
         endpointPath={props.endpointPath}
+        field={field}
+        placeholder={placeholder}
+        showTip={showTip}
       />
     );
   }
@@ -698,7 +698,7 @@ function ResponseSection(props: {
       {props.isPending && (
         <div className="flex grow flex-col items-center justify-center gap-4">
           <Spinner className="size-14 text-muted-foreground" />
-          <Button variant="ghost" onClick={props.abortRequest} size="sm">
+          <Button onClick={props.abortRequest} size="sm" variant="ghost">
             Cancel
           </Button>
         </div>
@@ -721,12 +721,12 @@ function ResponseSection(props: {
 
       {!props.isPending && props.response && (
         <CodeClient
-          loader={<CodeLoading />}
-          lang="json"
-          code={formattedData || ""}
           className="rounded-none border-none bg-transparent"
-          scrollableContainerClassName="h-full"
+          code={formattedData || ""}
+          lang="json"
+          loader={<CodeLoading />}
           scrollableClassName="h-full"
+          scrollableContainerClassName="h-full"
           // shadowColor="hsl(var(--muted)/50%)"
         />
       )}
@@ -805,7 +805,7 @@ function openAPIV3ParamToZodFormSchema(
 
     case "array": {
       if ("type" in schema.items) {
-        let itemSchema: z.ZodTypeAny | undefined = undefined;
+        let itemSchema: z.ZodTypeAny | undefined;
         if (schema.items.type === "number") {
           itemSchema = z.number();
         } else if (schema.items.type === "integer") {

@@ -15,12 +15,12 @@ export default async function Layout(props: {
   }
   return (
     <UpsellWrapper
+      currentPlan={team.billingPlan}
+      featureDescription="Monitor and review every action performed in your team with detailed audit logs."
+      featureName="Audit Log"
       isLocked={team.billingPlan !== "scale" && team.billingPlan !== "pro"}
       requiredPlan="scale"
-      featureName="Audit Log"
-      featureDescription="Monitor and review every action performed in your team with detailed audit logs."
       teamSlug={params.team_slug}
-      currentPlan={team.billingPlan}
     >
       <div className="flex grow flex-col">
         <div className="border-border border-b py-10">

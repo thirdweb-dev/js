@@ -1,5 +1,7 @@
 "use client";
 
+import { ArrowUpRightIcon } from "lucide-react";
+import { useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -9,8 +11,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { ArrowUpRightIcon } from "lucide-react";
-import { useState } from "react";
 import { cn } from "../lib/utils";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -179,27 +179,27 @@ export const PaginationButtons = (props: {
 
         <div className="relative flex items-center">
           <Input
-            value={pageNumberInput}
-            onChange={(e) => {
-              setInputHasError(false);
-              setPageNumberInput(e.target.value);
-            }}
-            type="number"
-            placeholder="Page"
             className={cn(
               "w-[60px] bg-transparent [appearance:textfield] max-sm:placeholder:text-sm lg:w-[100px] lg:pr-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
               inputHasError && "text-red-500",
             )}
+            onChange={(e) => {
+              setInputHasError(false);
+              setPageNumberInput(e.target.value);
+            }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handlePageInputSubmit();
               }
             }}
+            placeholder="Page"
+            type="number"
+            value={pageNumberInput}
           />
           <Button
-            variant="ghost"
             className="absolute right-1 h-auto w-auto p-2 max-sm:hidden"
             onClick={handlePageInputSubmit}
+            variant="ghost"
           >
             <ArrowUpRightIcon className="size-4" />
           </Button>

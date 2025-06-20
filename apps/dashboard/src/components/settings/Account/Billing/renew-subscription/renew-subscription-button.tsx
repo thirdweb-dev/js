@@ -1,14 +1,14 @@
 "use client";
 
-import { reSubscribePlan } from "@/actions/billing";
-import type { Team } from "@/api/team";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useMutation } from "@tanstack/react-query";
 import { RefreshCwIcon } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
+import { reSubscribePlan } from "@/actions/billing";
+import type { Team } from "@/api/team";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { pollWithTimeout } from "../../../../../utils/pollWithTimeout";
 import { tryCatch } from "../../../../../utils/try-catch";
 
@@ -68,11 +68,11 @@ export function RenewSubscriptionButton(props: {
 
   return (
     <Button
-      onClick={handleRenewSubscription}
-      variant="default"
-      size="sm"
       className="gap-2"
       disabled={showSpinner || props.disabled}
+      onClick={handleRenewSubscription}
+      size="sm"
+      variant="default"
     >
       {showSpinner ? (
         <Spinner className="size-4" />

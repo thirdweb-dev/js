@@ -1,15 +1,15 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { SkeletonContainer } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 import { useDashboardContractMetadata } from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import Link from "next/link";
 import { memo } from "react";
-import { type ThirdwebClient, getContract } from "thirdweb";
+import { getContract, type ThirdwebClient } from "thirdweb";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { Badge } from "@/components/ui/badge";
+import { SkeletonContainer } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { THIRDWEB_DEPLOYER_ADDRESS } from "../../../constants/addresses";
 import { usePublishedContractsFromDeploy } from "../hooks";
 
@@ -25,9 +25,9 @@ export const ContractNameCell = memo(function ContractNameCell(props: {
   const chain = useV5DashboardChain(Number(props.chainId));
 
   const contract = getContract({
-    client: props.client,
     address: props.contractAddress,
     chain,
+    client: props.client,
   });
 
   const contractMetadata = useDashboardContractMetadata(contract);
@@ -37,21 +37,21 @@ export const ContractNameCell = memo(function ContractNameCell(props: {
       loadedData={
         contractMetadata.isFetching ? undefined : contractMetadata.data?.name
       }
-      skeletonData="Custom Contract"
       render={(v) => {
         return (
           <Link
-            href={`/team/${props.teamSlug}/${props.projectSlug}/contract/${chainSlug}/${props.contractAddress}`}
-            passHref
             className={cn(
               "text-foreground",
               props.linkOverlay && "before:absolute before:inset-0",
             )}
+            href={`/team/${props.teamSlug}/${props.projectSlug}/contract/${chainSlug}/${props.contractAddress}`}
+            passHref
           >
             {v || shortenIfAddress(props.contractAddress)}
           </Link>
         );
       }}
+      skeletonData="Custom Contract"
     />
   );
 });
@@ -63,9 +63,9 @@ export const ContractTypeCell = memo(function ContractTypeCell(props: {
 }) {
   const chain = useV5DashboardChain(Number(props.chainId));
   const contract = getContract({
-    client: props.client,
     address: props.contractAddress,
     chain,
+    client: props.client,
   });
 
   const publishedContractsFromDeployQuery =
@@ -101,21 +101,19 @@ export const ContractTypeCell = memo(function ContractTypeCell(props: {
   return (
     <SkeletonContainer
       loadedData={contractType || contractMetadata.data?.contractType}
-      skeletonData="Custom Contract"
       render={(v) => {
         return <ContractTypeCellUI name={v} />;
       }}
+      skeletonData="Custom Contract"
     />
   );
 });
 
-export function ContractTypeCellUI(props: {
-  name: string | undefined;
-}) {
+export function ContractTypeCellUI(props: { name: string | undefined }) {
   return (
     <Badge
-      variant="outline"
       className="line-clamp-1 inline-block max-w-[200px] truncate py-1"
+      variant="outline"
     >
       {props.name || "Custom"}
     </Badge>

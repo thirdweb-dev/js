@@ -20,12 +20,12 @@ export const AuthorizedWalletRevokeModal: React.FC<
 > = ({ isOpen, onClose, onSubmit, authorizedWalletId }) => {
   return (
     <Dialog
-      open={isOpen}
       onOpenChange={(open) => {
         if (!open) {
           onClose();
         }
       }}
+      open={isOpen}
     >
       <DialogContent className="p-0">
         <DialogHeader className="p-6">
@@ -36,12 +36,12 @@ export const AuthorizedWalletRevokeModal: React.FC<
         </DialogHeader>
 
         <DialogFooter className="gap-4 border-border border-t bg-card p-6">
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose} variant="outline">
             Cancel
           </Button>
           <Button
-            variant="destructive"
             onClick={() => onSubmit(authorizedWalletId)}
+            variant="destructive"
           >
             Revoke
           </Button>

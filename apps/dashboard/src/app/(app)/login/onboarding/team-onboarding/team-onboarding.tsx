@@ -1,4 +1,8 @@
 "use client";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
+import { upload } from "thirdweb/storage";
 import { apiServerProxy } from "@/actions/proxies";
 import { sendTeamInvites } from "@/actions/sendTeamInvite";
 import {
@@ -7,10 +11,6 @@ import {
 } from "@/analytics/report";
 import type { Team } from "@/api/team";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useEffect } from "react";
-import { toast } from "sonner";
-import type { ThirdwebClient } from "thirdweb";
-import { upload } from "thirdweb/storage";
 import { updateTeam } from "../../../team/[team_slug]/(team)/~/settings/general/updateTeam";
 import { InviteTeamMembersUI } from "./InviteTeamMembers";
 import { TeamInfoFormUI } from "./TeamInfoForm";
@@ -29,15 +29,16 @@ export function TeamInfoForm(props: {
 
   return (
     <TeamInfoFormUI
+      client={props.client}
       isTeamSlugAvailable={async (slug) => {
         const res = await apiServerProxy<{
           result: boolean;
         }>({
+          method: "GET",
           pathname: "/v1/teams/check-slug",
           searchParams: {
             slug,
           },
-          method: "GET",
         });
 
         if (!res.ok) {
@@ -46,11 +47,10 @@ export function TeamInfoForm(props: {
 
         return res.data.result;
       }}
-      teamSlug={props.teamSlug}
-      client={props.client}
       onComplete={(updatedTeam) => {
         router.replace(`/get-started/team/${updatedTeam.slug}/select-plan`);
       }}
+      teamSlug={props.teamSlug}
       updateTeam={async (data) => {
         const teamValue: Partial<Team> = {
           name: data.name,
@@ -93,17 +93,12 @@ export function InviteTeamMembers(props: {
   return (
     <InviteTeamMembersUI
       client={props.client}
-      onComplete={() => {
-        // at this point the team onboarding is complete
-        reportOnboardingCompleted();
-        router.replace(`/team/${props.team.slug}`);
-      }}
       getTeam={async () => {
         const res = await apiServerProxy<{
           result: Team;
         }>({
-          pathname: `/v1/teams/${props.team.slug}`,
           method: "GET",
+          pathname: `/v1/teams/${props.team.slug}`,
         });
 
         if (!res.ok) {
@@ -112,11 +107,10 @@ export function InviteTeamMembers(props: {
 
         return res.data.result;
       }}
-      team={props.team}
       inviteTeamMembers={async (params) => {
         const res = await sendTeamInvites({
-          teamId: props.team.id,
           invites: params,
+          teamId: props.team.id,
         });
 
         if (!res.ok) {
@@ -127,6 +121,12 @@ export function InviteTeamMembers(props: {
           results: res.results,
         };
       }}
+      onComplete={() => {
+        // at this point the team onboarding is complete
+        reportOnboardingCompleted();
+        router.replace(`/team/${props.team.slug}`);
+      }}
+      team={props.team}
     />
   );
 }

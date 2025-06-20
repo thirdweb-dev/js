@@ -1,16 +1,16 @@
 export function DotNetIcon(props: { className?: string }) {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      x="0px"
-      y="0px"
-      width="24"
+      className={props.className}
       height="24"
       viewBox="0 0 456 456"
-      className={props.className}
+      width="24"
+      x="0px"
+      xmlns="http://www.w3.org/2000/svg"
+      y="0px"
     >
       <title>.NET</title>
-      <rect width="456" height="456" fill="currentColor" />
+      <rect fill="currentColor" height="456" width="456" />
       <path
         d="M81.2738 291.333C78.0496 291.333 75.309 290.259 73.052 288.11C70.795 285.906 69.6665 283.289 69.6665 280.259C69.6665 277.173 70.795 274.529 73.052 272.325C75.309 270.121 78.0496 269.019 81.2738 269.019C84.5518 269.019 87.3193 270.121 89.5763 272.325C91.887 274.529 93.0424 277.173 93.0424 280.259C93.0424 283.289 91.887 285.906 89.5763 288.11C87.3193 290.259 84.5518 291.333 81.2738 291.333Z"
         fill="hsl(var(--background))"

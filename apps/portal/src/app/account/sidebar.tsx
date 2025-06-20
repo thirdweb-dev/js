@@ -1,75 +1,76 @@
 const accountSlug = "/account";
+
 import type { SideBar } from "@/components/Layouts/DocLayout";
 
 export const sidebar: SideBar = {
-  name: "Teams & Accounts",
   links: [
     {
-      name: "Account",
       links: [
         {
-          name: "Create Account",
           href: `${accountSlug}/create-account`,
+          name: "Create Account",
         },
         {
-          name: "Link Accounts",
           href: `${accountSlug}/link-accounts`,
+          name: "Link Accounts",
         },
       ],
+      name: "Account",
     },
     {
-      name: "Teams",
       links: [
         {
-          name: "Manage Teams",
           href: `${accountSlug}/teams/manage-teams`,
+          name: "Manage Teams",
         },
         {
-          name: "Manage Team Members",
           href: `${accountSlug}/teams/manage-team-members`,
+          name: "Manage Team Members",
         },
         {
-          name: "Manage Billing",
           href: `${accountSlug}/billing/manage-billing`,
+          name: "Manage Billing",
         },
       ],
+      name: "Teams",
     },
     {
-      name: "Projects",
       links: [
         {
-          name: "Overview",
           href: `${accountSlug}/api-keys`,
+          name: "Overview",
         },
         {
-          name: "Create API Key",
           href: `${accountSlug}/api-keys/create`,
+          name: "Create API Key",
         },
         {
-          name: "Use API Key",
           href: `${accountSlug}/api-keys/use`,
+          name: "Use API Key",
         },
         {
-          name: "Edit enabled services",
           href: `${accountSlug}/api-keys/edit-services`,
+          name: "Edit enabled services",
         },
         {
-          name: "Delete API Key",
           href: `${accountSlug}/api-keys/delete`,
+          name: "Delete API Key",
         },
         {
-          name: "Access Restrictions",
           href: `${accountSlug}/api-keys/access`,
+          name: "Access Restrictions",
         },
         {
-          name: "Transfer Projects",
           href: `${accountSlug}/api-keys/transfer-projects`,
+          name: "Transfer Projects",
         },
       ],
+      name: "Projects",
     },
     {
-      name: "FAQs",
       href: `${accountSlug}/faq`,
+      name: "FAQs",
     },
   ],
+  name: "Teams & Accounts",
 };

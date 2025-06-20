@@ -1,12 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { useSplitDistributeFunds } from "@3rdweb-sdk/react/hooks/useSplit";
 import { TransactionButton } from "components/buttons/TransactionButton";
-
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
+import { Button } from "@/components/ui/button";
 import type { Balance } from "../ContractSplitPage";
 
 interface DistributeButtonProps {
@@ -52,12 +51,12 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
 
   const distributeFunds = () => {
     mutation.mutate(undefined, {
-      onSuccess: () => {
-        onSuccess();
-      },
       onError: (error) => {
         console.error(error);
         onError(error);
+      },
+      onSuccess: () => {
+        onSuccess();
       },
     });
   };
@@ -65,13 +64,13 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
   if (balancesIsError) {
     return (
       <TransactionButton
-        isLoggedIn={isLoggedIn}
         client={contract.client}
+        isLoggedIn={isLoggedIn}
         isPending={mutation.isPending}
         onClick={distributeFunds}
-        txChainID={contract.chain.id}
-        // if we fail to get the balances, we can't know how many transactions there are going to be
         transactionCount={undefined}
+        // if we fail to get the balances, we can't know how many transactions there are going to be
+        txChainID={contract.chain.id}
         {...restButtonProps}
       >
         Distribute Funds
@@ -89,11 +88,11 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
 
   return (
     <TransactionButton
-      isLoggedIn={isLoggedIn}
       client={contract.client}
-      transactionCount={numTransactions}
+      isLoggedIn={isLoggedIn}
       isPending={mutation.isPending}
       onClick={distributeFunds}
+      transactionCount={numTransactions}
       {...restButtonProps}
       txChainID={contract.chain.id}
     >

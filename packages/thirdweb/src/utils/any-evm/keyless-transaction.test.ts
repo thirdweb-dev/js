@@ -8,10 +8,10 @@ import { getKeylessTransaction } from "./keyless-transaction.js";
 
 describe("getKeylessTransaction", () => {
   const mockTransaction = {
-    to: "0x1234567890123456789012345678901234567890",
-    value: 1000n,
     chainId: 1,
     gasPrice: 10n,
+    to: "0x1234567890123456789012345678901234567890",
+    value: 1000n,
   };
 
   const mockSignature = {
@@ -36,15 +36,15 @@ describe("getKeylessTransaction", () => {
     });
 
     const result = await getKeylessTransaction({
-      transaction: mockTransaction,
       signature: mockSignature,
+      transaction: mockTransaction,
     });
 
     expect(result.signerAddress).toBe(expectedAddress);
     expect(result.transaction).toBe(
       serializeTransaction({
-        transaction: mockTransaction,
         signature: mockSignature,
+        transaction: mockTransaction,
       }),
     );
   });
@@ -58,9 +58,9 @@ describe("getKeylessTransaction", () => {
 
     await expect(
       getKeylessTransaction({
-        transaction: mockTransaction,
         // biome-ignore lint/suspicious/noExplicitAny: Testing invalid data
         signature: invalidSignature as any,
+        transaction: mockTransaction,
       }),
     ).rejects.toThrow();
   });
@@ -70,9 +70,9 @@ describe("getKeylessTransaction", () => {
 
     await expect(
       getKeylessTransaction({
-        transaction: mockTransaction,
         // biome-ignore lint/suspicious/noExplicitAny: Testing invalid data
         signature: invalidSignature as any,
+        transaction: mockTransaction,
       }),
     ).rejects.toThrow();
   });
@@ -82,9 +82,9 @@ describe("getKeylessTransaction", () => {
 
     await expect(
       getKeylessTransaction({
+        signature: mockSignature,
         // biome-ignore lint/suspicious/noExplicitAny: Testing invalid data
         transaction: invalidTransaction as any,
-        signature: mockSignature,
       }),
     ).rejects.toThrow();
   });

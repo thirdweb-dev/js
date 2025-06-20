@@ -1,12 +1,12 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type {
   BaseTransactionOptions,
   WithOverrides,
 } from "../../../../../transaction/types.js";
-import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { once } from "../../../../../utils/promise/once.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "openPack" function.
@@ -22,35 +22,35 @@ export type OpenPackParams = WithOverrides<{
 export const FN_SELECTOR = "0x914e126a" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "packId",
+    type: "uint256",
   },
   {
-    type: "uint256",
     name: "amountToOpen",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple[]",
     components: [
       {
-        type: "address",
         name: "assetContract",
+        type: "address",
       },
       {
-        type: "uint8",
         name: "tokenType",
+        type: "uint8",
       },
       {
-        type: "uint256",
         name: "tokenId",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "totalAmount",
+        type: "uint256",
       },
     ],
+    type: "tuple[]",
   },
 ] as const;
 
@@ -148,23 +148,23 @@ export function openPack(
   });
 
   return prepareContractCall({
-    contract: options.contract,
-    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params: async () => {
-      const resolvedOptions = await asyncOptions();
-      return [resolvedOptions.packId, resolvedOptions.amountToOpen] as const;
-    },
-    value: async () => (await asyncOptions()).overrides?.value,
     accessList: async () => (await asyncOptions()).overrides?.accessList,
+    authorizationList: async () =>
+      (await asyncOptions()).overrides?.authorizationList,
+    contract: options.contract,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
     gas: async () => (await asyncOptions()).overrides?.gas,
     gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
     maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
     maxPriorityFeePerGas: async () =>
       (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     nonce: async () => (await asyncOptions()).overrides?.nonce,
-    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
-    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
-    authorizationList: async () =>
-      (await asyncOptions()).overrides?.authorizationList,
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.packId, resolvedOptions.amountToOpen] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

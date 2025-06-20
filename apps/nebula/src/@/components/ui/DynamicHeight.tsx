@@ -1,8 +1,8 @@
 "use client";
 
-import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import type React from "react";
 import { useRef, useState } from "react";
+import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 
 export function DynamicHeight(props: {
   children: React.ReactNode;
@@ -14,12 +14,12 @@ export function DynamicHeight(props: {
   return (
     <div
       style={{
+        boxSizing: "border-box",
         height: height ? `${height}px` : "auto",
+        overflow: "hidden",
         transition:
           props.transition ||
           "height 210ms cubic-bezier(0.175, 0.885, 0.32, 1.1)",
-        overflow: "hidden",
-        boxSizing: "border-box",
       }}
     >
       <div
@@ -55,5 +55,5 @@ function useHeightObserver() {
     };
   }, []);
 
-  return { height, elementRef };
+  return { elementRef, height };
 }

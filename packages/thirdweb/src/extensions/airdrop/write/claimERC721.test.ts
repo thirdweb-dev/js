@@ -8,8 +8,8 @@ import {
   TEST_ACCOUNT_D,
 } from "../../../../test/src/test-wallets.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import {
   ownerOf,
@@ -37,11 +37,11 @@ describe.runIf(process.env.TW_SECRET_KEY).skip("claimERC721", () => {
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
         contractId: "Airdrop",
-        publisher: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
         contractParams: {
-          defaultAdmin: TEST_ACCOUNT_A.address,
           contractURI: "",
+          defaultAdmin: TEST_ACCOUNT_A.address,
         },
+        publisher: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
       }),
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
@@ -65,49 +65,49 @@ describe.runIf(process.env.TW_SECRET_KEY).skip("claimERC721", () => {
     const mintTransactions = [
       mintTo({
         contract: erc721TokenContract,
-        to: TEST_ACCOUNT_A.address,
         nft: {
           name: "Test 0",
         },
+        to: TEST_ACCOUNT_A.address,
       }),
       mintTo({
         contract: erc721TokenContract,
-        to: TEST_ACCOUNT_A.address,
         nft: {
           name: "Test 1",
         },
+        to: TEST_ACCOUNT_A.address,
       }),
       mintTo({
         contract: erc721TokenContract,
-        to: TEST_ACCOUNT_A.address,
         nft: {
           name: "Test 2",
         },
+        to: TEST_ACCOUNT_A.address,
       }),
       mintTo({
         contract: erc721TokenContract,
-        to: TEST_ACCOUNT_A.address,
         nft: {
           name: "Test 3",
         },
+        to: TEST_ACCOUNT_A.address,
       }),
     ];
 
     for (const tx of mintTransactions) {
       await sendAndConfirmTransaction({
-        transaction: tx,
         account: TEST_ACCOUNT_A,
+        transaction: tx,
       });
     }
 
     const approvalTx = setApprovalForAll({
+      approved: true,
       contract: erc721TokenContract,
       operator: airdropContract.address,
-      approved: true,
     });
     await sendAndConfirmTransaction({
-      transaction: approvalTx,
       account: TEST_ACCOUNT_A,
+      transaction: approvalTx,
     });
   }, 60000);
 
@@ -119,39 +119,39 @@ describe.runIf(process.env.TW_SECRET_KEY).skip("claimERC721", () => {
     ];
 
     const { merkleRoot, snapshotUri } = await generateMerkleTreeInfoERC721({
+      contract: airdropContract,
       snapshot,
       tokenAddress: erc721TokenContract.address,
-      contract: airdropContract,
     });
     const saveSnapshotTransaction = saveSnapshot({
+      contract: airdropContract,
       merkleRoot,
       snapshotUri,
-      contract: airdropContract,
     });
     await sendAndConfirmTransaction({
-      transaction: saveSnapshotTransaction,
       account: TEST_ACCOUNT_A,
+      transaction: saveSnapshotTransaction,
     });
 
     const setMerkleRootTransaction = setMerkleRoot({
+      contract: airdropContract,
+      resetClaimStatus: true,
       token: erc721TokenContract.address,
       tokenMerkleRoot: merkleRoot as `0x${string}`,
-      resetClaimStatus: true,
-      contract: airdropContract,
     });
     await sendAndConfirmTransaction({
-      transaction: setMerkleRootTransaction,
       account: TEST_ACCOUNT_A,
+      transaction: setMerkleRootTransaction,
     });
 
     const claimTransaction = claimERC721({
-      tokenAddress: erc721TokenContract.address,
-      recipient: TEST_ACCOUNT_B.address,
       contract: airdropContract,
+      recipient: TEST_ACCOUNT_B.address,
+      tokenAddress: erc721TokenContract.address,
     });
     const { transactionHash } = await sendAndConfirmTransaction({
-      transaction: claimTransaction,
       account: TEST_ACCOUNT_A,
+      transaction: claimTransaction,
     });
 
     const ownerZero = await ownerOf({

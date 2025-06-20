@@ -1,7 +1,52 @@
 "use client";
-import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  WalletIcon as LucideWalletIcon,
+  PlusIcon,
+  SearchIcon,
+  TrashIcon,
+} from "lucide-react";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import {
+  type Chain,
+  defineChain,
+  getAddress,
+  getContract,
+  isAddress,
+  NATIVE_TOKEN_ADDRESS,
+  prepareTransaction,
+  toWei,
+} from "thirdweb";
+import { transfer } from "thirdweb/extensions/erc20";
+import {
+  AccountAvatar,
+  AccountBlobbie,
+  AccountProvider,
+  Blobbie,
+  TokenIcon,
+  TokenProvider,
+  useActiveAccount,
+  useActiveWallet,
+  useActiveWalletChain,
+  useConnectedWallets,
+  useSendAndConfirmTransaction,
+  useSendBatchTransaction,
+  useSetActiveWallet,
+  useWalletBalance,
+  WalletIcon,
+  WalletName,
+  WalletProvider,
+} from "thirdweb/react";
+import { shortenAddress, toTokens } from "thirdweb/utils";
+import { type Account, getWalletBalance, type Wallet } from "thirdweb/wallets";
+import { z } from "zod";
 import { TransactionButton } from "@/components/blocks/buttons/TransactionButton";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Button } from "@/components/ui/button";
 import { DecimalInput } from "@/components/ui/decimal-input";
 import {
@@ -19,6 +64,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import {
   Select,
   SelectContent,
@@ -32,52 +78,6 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import { isProd } from "@/constants/env-utils";
 import { cn } from "@/lib/utils";
 import { parseError } from "@/utils/parse-error";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  CheckIcon,
-  ChevronDownIcon,
-  WalletIcon as LucideWalletIcon,
-  PlusIcon,
-  SearchIcon,
-  TrashIcon,
-} from "lucide-react";
-import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import {
-  type Chain,
-  NATIVE_TOKEN_ADDRESS,
-  defineChain,
-  getAddress,
-  getContract,
-  isAddress,
-  prepareTransaction,
-  toWei,
-} from "thirdweb";
-import { transfer } from "thirdweb/extensions/erc20";
-import {
-  AccountAvatar,
-  AccountBlobbie,
-  AccountProvider,
-  Blobbie,
-  TokenIcon,
-  TokenProvider,
-  WalletIcon,
-  WalletName,
-  WalletProvider,
-  useActiveAccount,
-  useActiveWallet,
-  useActiveWalletChain,
-  useConnectedWallets,
-  useSendAndConfirmTransaction,
-  useSendBatchTransaction,
-  useSetActiveWallet,
-  useWalletBalance,
-} from "thirdweb/react";
-import { shortenAddress, toTokens } from "thirdweb/utils";
-import { type Account, type Wallet, getWalletBalance } from "thirdweb/wallets";
-import { z } from "zod";
 import { MoveFundsConnectButton } from "./connect-button";
 import { getClientDashboardThirdwebClient } from "./dashboard-client";
 
@@ -138,10 +138,7 @@ export function MoveFundsPage() {
   );
 }
 
-function WalletDetails(props: {
-  wallet: Wallet;
-  account: Account;
-}) {
+function WalletDetails(props: { wallet: Wallet; account: Account }) {
   const accountBlobbie = <AccountBlobbie className="size-8 rounded-full" />;
   const accountAvatarFallback = (
     <WalletIcon
@@ -183,37 +180,34 @@ function WalletDetails(props: {
 
 const formSchema = z.object({
   chainId: z.number(),
-  tokens: z.array(
-    z.object({
-      token: z
-        .object({
-          token_address: z.string(),
-          balance: z.string(),
-          name: z.string(),
-          symbol: z.string(),
-          decimals: z.number(),
-        })
-        .nullable(),
-      amount: z.string().refine((val) => {
-        const amount = Number.parseFloat(val);
-        return !Number.isNaN(amount) && amount > 0;
-      }, "Amount must be a positive number"),
-    }),
-  ),
   receiverAddress: z.string().refine((val) => {
     if (isAddress(val)) {
       return true;
     }
     return false;
   }, "Invalid address"),
+  tokens: z.array(
+    z.object({
+      amount: z.string().refine((val) => {
+        const amount = Number.parseFloat(val);
+        return !Number.isNaN(amount) && amount > 0;
+      }, "Amount must be a positive number"),
+      token: z
+        .object({
+          balance: z.string(),
+          decimals: z.number(),
+          name: z.string(),
+          symbol: z.string(),
+          token_address: z.string(),
+        })
+        .nullable(),
+    }),
+  ),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-function SendFunds(props: {
-  accountAddress: string;
-  initialChainId: number;
-}) {
+function SendFunds(props: { accountAddress: string; initialChainId: number }) {
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const setActiveWallet = useSetActiveWallet();
@@ -230,12 +224,12 @@ function SendFunds(props: {
   const sendAndConfirmTransaction = useSendAndConfirmTransaction();
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
     defaultValues: {
       chainId: props.initialChainId,
-      tokens: [{ token: null, amount: "" }],
       receiverAddress: "",
+      tokens: [{ amount: "", token: null }],
     },
+    resolver: zodResolver(formSchema),
   });
 
   function getTokenTransferTransaction(params: {
@@ -265,9 +259,9 @@ function SendFunds(props: {
     });
 
     return transfer({
-      to: receiverAddress,
       amount: amount,
       contract: erc20Contract,
+      to: receiverAddress,
     });
   }
 
@@ -281,23 +275,23 @@ function SendFunds(props: {
 
     const transactions = tokens.map(({ token, amount }) => {
       return getTokenTransferTransaction({
-        token,
         amount,
         chain,
         receiverAddress,
+        token,
       });
     });
 
     const txPromise = sendBatchTransactions.mutateAsync(transactions);
     toast.promise(txPromise, {
-      loading: `Sending ${tokens.length} tokens`,
-      success: `${tokens.length} tokens sent successfully`,
       error: (result) => {
         return {
-          message: "Failed to send tokens. Please try again",
           description: parseError(result),
+          message: "Failed to send tokens. Please try again",
         };
       },
+      loading: `Sending ${tokens.length} tokens`,
+      success: `${tokens.length} tokens sent successfully`,
     });
 
     await txPromise;
@@ -315,23 +309,23 @@ function SendFunds(props: {
     for (const { token, amount } of tokens.values()) {
       try {
         const tx = getTokenTransferTransaction({
-          token,
           amount,
           chain,
           receiverAddress,
+          token,
         });
 
         const txPromise = sendAndConfirmTransaction.mutateAsync(tx);
 
         toast.promise(txPromise, {
-          loading: `Sending Token ${token.name}`,
-          success: `${token.name} sent successfully`,
           error: (result) => {
             return {
-              message: `Failed to send ${token.name}. Please try again`,
               description: parseError(result),
+              message: `Failed to send ${token.name}. Please try again`,
             };
           },
+          loading: `Sending Token ${token.name}`,
+          success: `${token.name} sent successfully`,
         });
 
         await txPromise;
@@ -377,17 +371,17 @@ function SendFunds(props: {
     try {
       if (activeAccount.sendBatchTransaction) {
         await handleBatchSubmit({
-          tokens: validTokens,
-          chain,
           activeAccount,
+          chain,
           receiverAddress: values.receiverAddress,
+          tokens: validTokens,
         });
       } else {
         await handleSingleSubmit({
-          tokens: validTokens,
-          chain,
           activeAccount,
+          chain,
           receiverAddress: values.receiverAddress,
+          tokens: validTokens,
         });
       }
     } catch {
@@ -406,20 +400,20 @@ function SendFunds(props: {
     <div className="rounded-xl border bg-card">
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(handleSubmit)}
           className="space-y-3 p-4"
+          onSubmit={form.handleSubmit(handleSubmit)}
         >
           <div className="space-y-1.5">
             <Label>Wallet</Label>
             <Select
-              value={activeWallet?.id}
               onValueChange={(value) => {
                 const wallet = connectedWallets.find((w) => w.id === value);
                 if (wallet) {
                   setActiveWallet(wallet);
-                  form.setValue("tokens", [{ token: null, amount: "" }]);
+                  form.setValue("tokens", [{ amount: "", token: null }]);
                 }
               }}
+              value={activeWallet?.id}
             >
               <SelectTrigger className="h-auto">
                 <SelectValue placeholder="Select Wallet" />
@@ -430,7 +424,7 @@ function SendFunds(props: {
                   if (!account) return null;
                   return (
                     <SelectItem key={wallet.id} value={wallet.id}>
-                      <WalletDetails wallet={wallet} account={account} />
+                      <WalletDetails account={account} wallet={wallet} />
                     </SelectItem>
                   );
                 })}
@@ -446,14 +440,14 @@ function SendFunds(props: {
                 <FormLabel>Chain</FormLabel>
                 <FormControl>
                   <SingleNetworkSelector
-                    client={dashboardClient}
                     chainId={field.value}
+                    className="bg-background"
+                    client={dashboardClient}
                     disableChainId
                     onChange={(chain) => {
                       field.onChange(chain);
-                      form.setValue("tokens", [{ token: null, amount: "" }]);
+                      form.setValue("tokens", [{ amount: "", token: null }]);
                     }}
-                    className="bg-background"
                   />
                 </FormControl>
                 <FormMessage />
@@ -480,9 +474,9 @@ function SendFunds(props: {
                             <div className="relative w-full">
                               <DecimalInput
                                 className="truncate bg-background pr-14"
-                                value={field.value}
-                                placeholder="0.0"
                                 onChange={field.onChange}
+                                placeholder="0.0"
+                                value={field.value}
                               />
                               <div className="-translate-y-1/2 absolute top-1/2 right-3 text-muted-foreground text-sm">
                                 {
@@ -506,12 +500,12 @@ function SendFunds(props: {
                           <FormLabel className="text-xs">Token</FormLabel>
                           <FormControl>
                             <TokenSelectorPopover
-                              token={field.value}
-                              chainId={form.getValues("chainId")}
                               accountAddress={props.accountAddress}
+                              chainId={form.getValues("chainId")}
                               setToken={(token) => {
                                 field.onChange(token);
                               }}
+                              token={field.value}
                             />
                           </FormControl>
                           <FormMessage />
@@ -522,8 +516,6 @@ function SendFunds(props: {
                     {form.watch("tokens").length > 1 && (
                       <ToolTipLabel label="Remove">
                         <Button
-                          type="button"
-                          variant="outline"
                           className="mt-7 h-[38px] w-[38px] bg-background p-0"
                           onClick={() => {
                             const currentTokens = form.getValues("tokens");
@@ -532,6 +524,8 @@ function SendFunds(props: {
                               currentTokens.filter((_, i) => i !== index),
                             );
                           }}
+                          type="button"
+                          variant="outline"
                         >
                           <TrashIcon className="size-4" />
                         </Button>
@@ -544,11 +538,11 @@ function SendFunds(props: {
                       Balance:{" "}
                       <RenderTokenBalance
                         accountAddress={props.accountAddress}
+                        chainId={form.getValues("chainId")}
                         className="text-xs"
                         tokenAddress={form.getValues(
                           `tokens.${index}.token.token_address`,
                         )}
-                        chainId={form.getValues("chainId")}
                       />
                     </div>
                   )}
@@ -559,17 +553,17 @@ function SendFunds(props: {
 
           <div className="flex justify-start gap-2">
             <Button
-              type="button"
-              size="sm"
-              variant="outline"
               className="h-auto gap-1.5 rounded-lg bg-background px-3 py-2 text-xs"
               onClick={() => {
                 const currentTokens = form.getValues("tokens");
                 form.setValue("tokens", [
                   ...currentTokens,
-                  { token: null, amount: "" },
+                  { amount: "", token: null },
                 ]);
               }}
+              size="sm"
+              type="button"
+              variant="outline"
             >
               <PlusIcon className="size-4" />
               Add Token
@@ -596,14 +590,14 @@ function SendFunds(props: {
 
           <div className="!mt-6">
             <TransactionButton
-              disableNoFundsPopup={true}
-              txChainID={form.watch("chainId")}
-              isPending={isPending}
-              type="submit"
-              isLoggedIn={true}
-              client={dashboardClient}
-              transactionCount={undefined}
               className="w-full"
+              client={dashboardClient}
+              disableNoFundsPopup={true}
+              isLoggedIn={true}
+              isPending={isPending}
+              transactionCount={undefined}
+              txChainID={form.watch("chainId")}
+              type="submit"
               variant="default"
             >
               Move Funds
@@ -624,20 +618,20 @@ function TokenSelectorPopover(props: {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   return (
-    <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+    <Popover onOpenChange={setIsPopoverOpen} open={isPopoverOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
           className="h-auto w-full justify-start bg-background px-3 text-left"
+          variant="outline"
         >
           {props.token ? (
             <TokenDetails
-              token={props.token}
-              chainId={props.chainId}
-              showBalance={false}
-              iconClassName="size-5"
-              className="gap-2"
               accountAddress={props.accountAddress}
+              chainId={props.chainId}
+              className="gap-2"
+              iconClassName="size-5"
+              showBalance={false}
+              token={props.token}
             />
           ) : (
             <div className="flex items-center gap-2">
@@ -709,12 +703,7 @@ function TokenSelectorPopoverContent(props: {
   });
 
   const manualTokenQuery = useQuery({
-    queryKey: [
-      "manual-token",
-      manualAddress,
-      props.chainId,
-      props.accountAddress,
-    ],
+    enabled: isAddress(manualAddress),
     queryFn: async () => {
       const balance = await getWalletBalance({
         address: props.accountAddress,
@@ -728,16 +717,21 @@ function TokenSelectorPopoverContent(props: {
       });
 
       const tokenInfo: WalletToken = {
-        token_address: manualAddress,
         balance: balance.value.toString(),
+        decimals: balance.decimals,
         name: balance.name,
         symbol: balance.symbol,
-        decimals: balance.decimals,
+        token_address: manualAddress,
       };
 
       return tokenInfo;
     },
-    enabled: isAddress(manualAddress),
+    queryKey: [
+      "manual-token",
+      manualAddress,
+      props.chainId,
+      props.accountAddress,
+    ],
   });
 
   const tokensToShow = useMemo(() => {
@@ -754,18 +748,18 @@ function TokenSelectorPopoverContent(props: {
   return (
     <div>
       <TabButtons
-        tabContainerClassName="pt-2 px-2"
         tabClassName="!text-sm"
+        tabContainerClassName="pt-2 px-2"
         tabs={[
           {
+            isActive: tab === "owned",
             name: "Owned Tokens",
             onClick: () => setTab("owned"),
-            isActive: tab === "owned",
           },
           {
+            isActive: tab === "custom",
             name: "Custom",
             onClick: () => setTab("custom"),
-            isActive: tab === "custom",
           },
         ]}
       />
@@ -775,10 +769,10 @@ function TokenSelectorPopoverContent(props: {
           <div className="relative">
             <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
             <Input
-              placeholder="Enter token address"
               className="h-12 rounded-none border-x-0 border-t-0 pl-10 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-offset-background"
-              value={manualAddress}
               onChange={(e) => setManualAddress(e.target.value)}
+              placeholder="Enter token address"
+              value={manualAddress}
             />
           </div>
 
@@ -792,19 +786,19 @@ function TokenSelectorPopoverContent(props: {
             <div className="p-2">
               {manualTokenQuery.data && (
                 <Button
-                  variant="ghost"
                   className="h-auto w-full justify-start gap-3 p-2 text-left"
                   onClick={() => {
                     if (manualTokenQuery.data) {
                       props.onSelect(manualTokenQuery.data);
                     }
                   }}
+                  variant="ghost"
                 >
                   <TokenDetails
-                    token={manualTokenQuery.data}
-                    chainId={props.chainId}
                     accountAddress={props.accountAddress}
+                    chainId={props.chainId}
                     showBalance={true}
+                    token={manualTokenQuery.data}
                   />
                   {props.selectedToken?.token_address ===
                     manualTokenQuery.data.token_address && (
@@ -826,20 +820,20 @@ function TokenSelectorPopoverContent(props: {
           <div className="relative">
             <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
             <Input
-              placeholder="Search owned tokens"
               className="h-12 rounded-none border-x-0 border-t-0 pl-10 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-offset-background"
-              value={search}
               onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search owned tokens"
+              value={search}
             />
           </div>
           <ScrollShadow scrollableClassName="h-[350px] flex flex-col">
             <TokenList
               accountAddress={props.accountAddress}
               chainId={props.chainId}
-              onSelect={props.onSelect}
               className="flex grow flex-col overflow-y-auto p-2"
-              selectedToken={props.selectedToken}
               isPending={walletTokensQuery.isPending}
+              onSelect={props.onSelect}
+              selectedToken={props.selectedToken}
               tokens={tokensToShow || []}
             />
           </ScrollShadow>
@@ -862,7 +856,7 @@ function TokenList(props: {
     <div className={props.className}>
       {props.isPending &&
         new Array(10).fill(0).map((_, index) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+          // biome-ignore lint/suspicious/noArrayIndexKey: TODO
           <TokenSkeletonRow key={index} />
         ))}
 
@@ -872,16 +866,16 @@ function TokenList(props: {
             props.tokens.map((token) => {
               return (
                 <Button
-                  key={token.token_address + token.name + token.symbol}
-                  variant="ghost"
                   className="h-auto w-full justify-start gap-3 p-2 text-left"
+                  key={token.token_address + token.name + token.symbol}
                   onClick={() => props.onSelect(token)}
+                  variant="ghost"
                 >
                   <TokenDetails
-                    token={token}
-                    chainId={props.chainId}
                     accountAddress={props.accountAddress}
+                    chainId={props.chainId}
                     showBalance={true}
+                    token={token}
                   />
                   {props.selectedToken?.token_address ===
                     token.token_address && (
@@ -920,14 +914,14 @@ function TokenDetails(props: {
     <div className={cn("flex items-center gap-2.5", props.className)}>
       <TokenProvider
         address={props.token.token_address}
-        client={dashboardClient}
-        // eslint-disable-next-line no-restricted-syntax
         chain={defineChain(props.chainId)}
+        // eslint-disable-next-line no-restricted-syntax
+        client={dashboardClient}
       >
         <TokenIcon
           className={cn("size-8 rounded-full", props.iconClassName)}
-          loadingComponent={blobbie}
           fallbackComponent={blobbie}
+          loadingComponent={blobbie}
         />
       </TokenProvider>
       <div>
@@ -935,8 +929,8 @@ function TokenDetails(props: {
         {props.showBalance && (
           <RenderTokenBalance
             accountAddress={props.accountAddress}
-            tokenAddress={props.token.token_address}
             chainId={props.chainId}
+            tokenAddress={props.token.token_address}
           />
         )}
       </div>
@@ -966,12 +960,8 @@ type WalletToken = {
   decimals: number;
 };
 
-function useWalletTokens(params: {
-  address: string;
-  chainId: number;
-}) {
+function useWalletTokens(params: { address: string; chainId: number }) {
   return useQuery({
-    queryKey: ["v1/tokens", params],
     queryFn: async () => {
       const url = new URL(
         `https://insight.${isProd ? "thirdweb" : "thirdweb-dev"}.com/v1/tokens`,
@@ -1005,5 +995,6 @@ function useWalletTokens(params: {
 
       return uniqueTokens;
     },
+    queryKey: ["v1/tokens", params],
   });
 }

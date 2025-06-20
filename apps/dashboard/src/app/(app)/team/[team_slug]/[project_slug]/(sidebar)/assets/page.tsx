@@ -1,11 +1,11 @@
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { ClientOnly } from "@/components/blocks/client-only";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { redirect } from "next/navigation";
-import { Suspense } from "react";
-import type { ThirdwebClient } from "thirdweb";
 import { ContractTable } from "../../../../../../../components/contract-components/tables/contract-table";
 import { getSortedDeployedContracts } from "../../../../../account/contracts/_components/getSortedDeployedContracts";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
@@ -45,11 +45,11 @@ export default async function Page(props: {
       <AssetsHeader />
       <div className="container max-w-7xl pt-8 pb-20">
         <Cards
-          teamSlug={params.team_slug}
-          projectSlug={params.project_slug}
           client={client}
-          teamId={team.id}
           projectId={project.id}
+          projectSlug={params.project_slug}
+          teamId={team.id}
+          teamSlug={params.team_slug}
         />
 
         <div className="mt-10 mb-3">
@@ -61,12 +61,12 @@ export default async function Page(props: {
 
         <Suspense fallback={<GenericLoadingPage />}>
           <AssetsPageAsync
-            teamId={team.id}
-            projectId={project.id}
             authToken={authToken}
             client={client}
-            teamSlug={params.team_slug}
+            projectId={project.id}
             projectSlug={params.project_slug}
+            teamId={team.id}
+            teamSlug={params.team_slug}
           />
         </Suspense>
       </div>
@@ -98,23 +98,23 @@ async function AssetsPageAsync(props: {
   projectSlug: string;
 }) {
   const deployedContracts = await getSortedDeployedContracts({
-    teamId: props.teamId,
-    projectId: props.projectId,
     authToken: props.authToken,
     deploymentType: "asset",
+    projectId: props.projectId,
+    teamId: props.teamId,
   });
 
   return (
     <ClientOnly ssr={<GenericLoadingPage />}>
       <ContractTable
-        variant="asset"
+        client={props.client}
         contracts={deployedContracts}
         pageSize={10}
-        teamId={props.teamId}
         projectId={props.projectId}
-        client={props.client}
-        teamSlug={props.teamSlug}
         projectSlug={props.projectSlug}
+        teamId={props.teamId}
+        teamSlug={props.teamSlug}
+        variant="asset"
       />
     </ClientOnly>
   );

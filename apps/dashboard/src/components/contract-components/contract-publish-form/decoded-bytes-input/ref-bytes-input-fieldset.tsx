@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
 import type { AbiParameter } from "abitype";
 import { PlusIcon } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
+import { Button } from "@/components/ui/button";
 import { RefBytesContractInput } from "./ref-bytes-input";
 
 interface RefBytesInputFieldsetProps {
@@ -21,39 +21,39 @@ export const RefBytesInputFieldset: React.FC<RefBytesInputFieldsetProps> = ({
   const form = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
-    name: `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.dynamicValue.refContracts`,
     control: form.control,
+    name: `constructorParams.${param.name ? param.name : "*"}.dynamicValue.paramsToEncode.${setIndex}.${paramIndex}.dynamicValue.refContracts`,
   });
 
   return (
     <div className="flex flex-col gap-5">
       {fields.map((item, index) => (
         <RefBytesContractInput
-          key={item.id}
-          remove={remove}
-          index={index}
-          param={param}
-          paramIndex={paramIndex}
-          setIndex={setIndex}
           className="border-border border-b pb-6"
           client={client}
+          index={index}
+          key={item.id}
+          param={param}
+          paramIndex={paramIndex}
+          remove={remove}
+          setIndex={setIndex}
         />
       ))}
 
       <div>
         <Button
-          type="button"
-          size="sm"
-          variant="outline"
           className="gap-2"
           onClick={() =>
             append({
               contractId: "",
-              version: "",
               publisherAddress: "",
               salt: "",
+              version: "",
             })
           }
+          size="sm"
+          type="button"
+          variant="outline"
         >
           <PlusIcon className="size-4" />
           Add Reference

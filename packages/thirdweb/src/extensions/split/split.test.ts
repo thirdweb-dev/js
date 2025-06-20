@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_D } from "~test/test-wallets.js";
-import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import { isAddress } from "../../utils/address.js";
 import { deploySplitContract } from "../prebuilts/deploy-split.js";
 import { getAllRecipientsAddresses } from "./read/getAllRecipientsAddresses.js";
@@ -17,8 +17,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("Split contract tests", () => {
   beforeAll(async () => {
     const address = await deploySplitContract({
       account: TEST_ACCOUNT_D,
-      client,
       chain,
+      client,
       params: {
         name: "split-contract",
         payees: [
@@ -35,8 +35,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("Split contract tests", () => {
     expect(isAddress(address)).toBe(true);
     contract = getContract({
       address,
-      client,
       chain,
+      client,
     });
   }, 60_000);
 

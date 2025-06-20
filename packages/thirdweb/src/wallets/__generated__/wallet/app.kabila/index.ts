@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.kabila",
-  name: "Kabila Wallet",
-  homepage: "https://kabila.app/",
-  image_id: "e6263e25-7f31-4186-5ad4-75e17312c500",
   app: {
-    browser: "https://wallet.kabila.app/",
-    ios: "https://apps.apple.com/es/app/kabila-wallet/id6467106529",
     android:
       "https://play.google.com/store/apps/details?id=wallet.kabila.app&hl=es_419&gl=US",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://wallet.kabila.app/",
     chrome:
       "https://chromewebstore.google.com/detail/kabila-wallet/cnoepnljjcacmnjnopbhjelpmfokpijm",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/es/app/kabila-wallet/id6467106529",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: null,
-    universal: "https://wallet.kabila.app",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://wallet.kabila.app",
   },
+  homepage: "https://kabila.app/",
+  id: "app.kabila",
+  image_id: "e6263e25-7f31-4186-5ad4-75e17312c500",
+  mobile: {
+    native: null,
+    universal: "https://wallet.kabila.app",
+  },
+  name: "Kabila Wallet",
+  rdns: null,
 } as const;

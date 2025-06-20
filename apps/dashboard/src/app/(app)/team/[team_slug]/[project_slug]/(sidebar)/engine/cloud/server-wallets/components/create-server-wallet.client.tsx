@@ -1,4 +1,9 @@
 "use client";
+import { useMutation } from "@tanstack/react-query";
+import { createEoa } from "@thirdweb-dev/vault-sdk";
+import { Loader2Icon, WalletIcon } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { engineCloudProxy } from "@/actions/proxies";
 import type { Project } from "@/api/projects";
 import { Button } from "@/components/ui/button";
@@ -11,11 +16,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useMutation } from "@tanstack/react-query";
-import { createEoa } from "@thirdweb-dev/vault-sdk";
-import { Loader2Icon, WalletIcon } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
 import { initVaultClient } from "../../lib/vault.client";
 
 export default function CreateServerWallet(props: {
@@ -38,20 +38,20 @@ export default function CreateServerWallet(props: {
       const vaultClient = await initVaultClient();
 
       const eoa = await createEoa({
+        client: vaultClient,
         request: {
-          options: {
-            metadata: {
-              projectId: props.project.id,
-              teamId: props.project.teamId,
-              type: "server-wallet",
-              label,
-            },
-          },
           auth: {
             accessToken: managementAccessToken,
           },
+          options: {
+            metadata: {
+              label,
+              projectId: props.project.id,
+              teamId: props.project.teamId,
+              type: "server-wallet",
+            },
+          },
         },
-        client: vaultClient,
       });
 
       if (!eoa.success) {
@@ -60,16 +60,16 @@ export default function CreateServerWallet(props: {
 
       // no need to await this, it's not blocking
       engineCloudProxy({
-        pathname: "/cache/smart-account",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-team-id": props.project.teamId,
-          "x-client-id": props.project.publishableKey,
-        },
         body: JSON.stringify({
           signerAddress: eoa.data.address,
         }),
+        headers: {
+          "Content-Type": "application/json",
+          "x-client-id": props.project.publishableKey,
+          "x-team-id": props.project.teamId,
+        },
+        method: "POST",
+        pathname: "/cache/smart-account",
       }).catch((err) => {
         console.warn("failed to cache server wallet", err);
       });
@@ -91,8 +91,8 @@ export default function CreateServerWallet(props: {
       );
     } else {
       await createEoaMutation.mutateAsync({
-        managementAccessToken: props.managementAccessToken,
         label,
+        managementAccessToken: props.managementAccessToken,
       });
     }
   };
@@ -102,7 +102,7 @@ export default function CreateServerWallet(props: {
   return (
     <>
       <Button
-        variant={"primary"}
+        className="flex flex-row items-center gap-2"
         onClick={() =>
           props.managementAccessToken
             ? setModalOpen(true)
@@ -110,7 +110,7 @@ export default function CreateServerWallet(props: {
                 `/team/${props.teamSlug}/${props.project.slug}/engine/cloud/vault`,
               )
         }
-        className="flex flex-row items-center gap-2"
+        variant={"primary"}
       >
         {isLoading ? (
           <Loader2Icon className="size-4 animate-spin" />
@@ -124,7 +124,7 @@ export default function CreateServerWallet(props: {
           : "Get Started"}
       </Button>
 
-      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+      <Dialog onOpenChange={setModalOpen} open={modalOpen}>
         <DialogContent className="p-0">
           <DialogHeader className="px-6 pt-6">
             <DialogTitle>Create server wallet</DialogTitle>
@@ -135,25 +135,25 @@ export default function CreateServerWallet(props: {
           <div className="flex flex-col gap-4 px-6">
             <div>
               <Input
+                className="w-full"
+                onChange={(e) => setLabel(e.target.value)}
                 placeholder="Wallet label (optional)"
                 value={label}
-                onChange={(e) => setLabel(e.target.value)}
-                className="w-full"
               />
             </div>
           </div>
           <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
             <Button
-              variant="outline"
-              onClick={() => setModalOpen(false)}
               disabled={isLoading}
+              onClick={() => setModalOpen(false)}
+              variant="outline"
             >
               Cancel
             </Button>
             <Button
-              variant="primary"
-              onClick={handleCreateServerWallet}
               disabled={isLoading}
+              onClick={handleCreateServerWallet}
+              variant="primary"
             >
               {isLoading ? (
                 <>

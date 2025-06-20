@@ -42,9 +42,9 @@ export async function sendGaslessTransaction({
     );
     result = await relayBiconomyTransaction({
       account,
-      transaction,
-      serializableTransaction,
       gasless,
+      serializableTransaction,
+      transaction,
     });
   }
 
@@ -55,9 +55,9 @@ export async function sendGaslessTransaction({
     );
     result = await relayOpenZeppelinTransaction({
       account,
-      transaction,
-      serializableTransaction,
       gasless,
+      serializableTransaction,
+      transaction,
     });
   }
 
@@ -65,9 +65,9 @@ export async function sendGaslessTransaction({
     const { relayEngineTransaction } = await import("./providers/engine.js");
     result = await relayEngineTransaction({
       account,
-      transaction,
-      serializableTransaction,
       gasless,
+      serializableTransaction,
+      transaction,
     });
   }
 
@@ -76,8 +76,8 @@ export async function sendGaslessTransaction({
   }
   addTransactionToStore({
     address: account.address,
-    transactionHash: result.transactionHash,
     chainId: transaction.chain.id,
+    transactionHash: result.transactionHash,
   });
   return result;
 }

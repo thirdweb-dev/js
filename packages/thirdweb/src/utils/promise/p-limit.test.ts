@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Queue, pLimit } from "./p-limit.js";
+import { pLimit, Queue } from "./p-limit.js";
 
 describe("p-limit queue", () => {
   it("should enqueue and dequeue items in the correct order", () => {

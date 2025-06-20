@@ -1,9 +1,17 @@
 "use client";
 
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  type InternalTransaction,
+  useActivity,
+} from "@3rdweb-sdk/react/hooks/useActivity";
+import { ArrowRightIcon } from "lucide-react";
+import Link from "next/link";
+import type { ThirdwebContract } from "thirdweb";
+import { shortenString } from "utils/usedapp-external";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Table,
   TableBody,
@@ -13,14 +21,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  type InternalTransaction,
-  useActivity,
-} from "@3rdweb-sdk/react/hooks/useActivity";
-import { ArrowRightIcon } from "lucide-react";
-import Link from "next/link";
-import type { ThirdwebContract } from "thirdweb";
-import { shortenString } from "utils/usedapp-external";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 
@@ -33,9 +33,9 @@ export function LatestEvents(props: {
   const allEvents = useActivity(props.contract, autoUpdate);
 
   const eventsHref = buildContractPagePath({
-    projectMeta: props.projectMeta,
     chainIdOrSlug: props.chainSlug,
     contractAddress: props.contract.address,
+    projectMeta: props.projectMeta,
     subpath: "/events",
   });
 
@@ -64,8 +64,8 @@ export function LatestEventsUI(props: {
           </h2>
           {autoUpdate && (
             <Badge
-              variant="outline"
               className="hidden gap-2 bg-background text-sm lg:flex"
+              variant="outline"
             >
               <span className="!pointer-events-auto relative flex size-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
@@ -75,10 +75,10 @@ export function LatestEventsUI(props: {
             </Badge>
           )}
         </div>
-        <Button asChild variant="outline" size="sm" className="bg-background">
+        <Button asChild className="bg-background" size="sm" variant="outline">
           <Link
-            href={eventsHref}
             className="flex items-center gap-2 text-muted-foreground text-sm"
+            href={eventsHref}
           >
             View all <ArrowRightIcon className="size-4" />
           </Link>
@@ -101,23 +101,23 @@ export function LatestEventsUI(props: {
                 <TableRow key={transaction.transactionHash}>
                   <TableCell>
                     <CopyTextButton
-                      textToShow={shortenString(transaction.transactionHash)}
-                      textToCopy={transaction.transactionHash}
-                      tooltip="Copy transaction hash"
-                      copyIconPosition="left"
-                      variant="ghost"
                       className="-translate-x-2 font-mono"
+                      copyIconPosition="left"
+                      textToCopy={transaction.transactionHash}
+                      textToShow={shortenString(transaction.transactionHash)}
+                      tooltip="Copy transaction hash"
+                      variant="ghost"
                     />
                   </TableCell>
                   <TableCell>
                     <div className="flex w-max flex-wrap gap-2">
                       {transaction.events.slice(0, 3).map((e) => (
                         <Button
-                          key={e.logIndex + e.address + e.eventName}
-                          variant="outline"
-                          size="sm"
-                          className="h-auto rounded-full py-1"
                           asChild
+                          className="h-auto rounded-full py-1"
+                          key={e.logIndex + e.address + e.eventName}
+                          size="sm"
+                          variant="outline"
                         >
                           <Link href={`${eventsHref}?event=${e.eventName}`}>
                             {e.eventName}
@@ -127,10 +127,10 @@ export function LatestEventsUI(props: {
 
                       {transaction.events.length > 3 && (
                         <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-auto rounded-full py-1 hover:bg-transparent"
                           asChild
+                          className="h-auto rounded-full py-1 hover:bg-transparent"
+                          size="sm"
+                          variant="outline"
                         >
                           <div>+ {transaction.events.length - 3}</div>
                         </Button>

@@ -1,30 +1,3 @@
-import type { Project } from "@/api/projects";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { DynamicHeight } from "@/components/ui/DynamicHeight";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Form } from "@/components/ui/form";
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { createProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogDescription } from "@radix-ui/react-dialog";
@@ -37,6 +10,33 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { toArrFromList } from "utils/string";
 import { z } from "zod";
+import type { Project } from "@/api/projects";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Textarea } from "@/components/ui/textarea";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { projectDomainsSchema, projectNameSchema } from "../validations";
 
 const ALL_PROJECT_SERVICES = SERVICES.filter(
@@ -97,7 +97,6 @@ export const CreateProjectDialogUI = (props: {
 
   return (
     <Dialog
-      open={open}
       onOpenChange={(v) => {
         // Prevent closing the dialog when the API key is created - to make sure user does not accidentally close the dialog without copying the secret key
         if (screen.id === "api-details") {
@@ -106,6 +105,7 @@ export const CreateProjectDialogUI = (props: {
 
         onOpenChange(v);
       }}
+      open={open}
     >
       <DialogContent
         className="overflow-hidden p-0"
@@ -115,6 +115,7 @@ export const CreateProjectDialogUI = (props: {
           {screen.id === "create" && (
             <CreateProjectForm
               createProject={props.createProject}
+              enableNebulaServiceByDefault={props.enableNebulaServiceByDefault}
               onProjectCreated={(params) => {
                 setScreen({
                   id: "api-details",
@@ -123,20 +124,19 @@ export const CreateProjectDialogUI = (props: {
                 });
               }}
               prefill={props.prefill}
-              enableNebulaServiceByDefault={props.enableNebulaServiceByDefault}
             />
           )}
 
           {screen.id === "api-details" && (
             <CreatedProjectDetails
-              project={screen.project}
-              secret={screen.secret}
-              teamSlug={props.teamSlug}
               onComplete={() => {
                 onOpenChange(false);
                 setScreen({ id: "create" });
                 props.onCreateAndComplete?.();
               }}
+              project={screen.project}
+              secret={screen.secret}
+              teamSlug={props.teamSlug}
             />
           )}
         </DynamicHeight>
@@ -146,8 +146,8 @@ export const CreateProjectDialogUI = (props: {
 };
 
 const createProjectFormSchema = z.object({
-  name: projectNameSchema,
   domains: projectDomainsSchema,
+  name: projectNameSchema,
 });
 
 type CreateProjectFormSchema = z.infer<typeof createProjectFormSchema>;
@@ -159,10 +159,7 @@ function CreateProjectForm(props: {
   }>;
   prefill?: CreateProjectPrefillOptions;
   enableNebulaServiceByDefault: boolean;
-  onProjectCreated: (params: {
-    project: Project;
-    secret: string;
-  }) => void;
+  onProjectCreated: (params: { project: Project; secret: string }) => void;
 }) {
   const [showAlert, setShowAlert] = useState<"no-domain" | "any-domain">();
 
@@ -171,55 +168,52 @@ function CreateProjectForm(props: {
   });
 
   const form = useForm<CreateProjectFormSchema>({
-    resolver: zodResolver(createProjectFormSchema),
     defaultValues: {
-      name: props.prefill?.name || "",
       domains: props.prefill?.domains || "",
+      name: props.prefill?.name || "",
     },
+    resolver: zodResolver(createProjectFormSchema),
   });
 
-  function handleAPICreation(values: {
-    name: string;
-    domains: string;
-  }) {
+  function handleAPICreation(values: { name: string; domains: string }) {
     const servicesToEnableByDefault = props.enableNebulaServiceByDefault
       ? ALL_PROJECT_SERVICES
       : ALL_PROJECT_SERVICES.filter((srv) => srv.name !== "nebula");
 
     const formattedValues: Partial<Project> = {
-      name: values.name,
       domains: toArrFromList(values.domains),
+      name: values.name,
       // enable all services
       services: servicesToEnableByDefault.map((srv) => {
         if (srv.name === "storage") {
           return {
-            name: srv.name,
             actions: srv.actions.map((sa) => sa.name),
+            name: srv.name,
           } satisfies ProjectService;
         }
 
         if (srv.name === "pay") {
           return {
+            actions: [],
             name: "pay",
             payoutAddress: null,
-            actions: [],
           } satisfies ProjectService;
         }
 
         return {
-          name: srv.name,
           actions: [],
+          name: srv.name,
         } satisfies ProjectService;
       }),
     };
 
     createProject.mutate(formattedValues, {
+      onError: () => {
+        toast.error("Failed to create a project");
+      },
       onSuccess: (data) => {
         props.onProjectCreated(data);
         toast.success("Project created successfully");
-      },
-      onError: () => {
-        toast.error("Failed to create a project");
       },
     });
   }
@@ -231,8 +225,8 @@ function CreateProjectForm(props: {
       setShowAlert("any-domain");
     } else {
       handleAPICreation({
-        name: values.name,
         domains: values.domains,
+        name: values.name,
       });
     }
   });
@@ -240,22 +234,22 @@ function CreateProjectForm(props: {
   if (showAlert) {
     return (
       <DomainsAlert
-        type={showAlert}
         isCreating={createProject.isPending}
+        onGoBack={() => setShowAlert(undefined)}
         onProceed={() => {
           handleAPICreation({
-            name: form.getValues("name"),
             domains: form.getValues("domains"),
+            name: form.getValues("name"),
           });
         }}
-        onGoBack={() => setShowAlert(undefined)}
+        type={showAlert}
       />
     );
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit} autoComplete="off">
+      <form autoComplete="off" onSubmit={handleSubmit}>
         <div className="p-6">
           <DialogHeader className="mb-4">
             <DialogTitle className="text-2xl">Create Project</DialogTitle>
@@ -351,14 +345,14 @@ function CreateProjectForm(props: {
 
         <DialogFooter className="flex gap-4 border-border border-t bg-card p-6 md:gap-2">
           <DialogClose asChild>
-            <Button variant="outline" className="min-w-28 gap-2">
+            <Button className="min-w-28 gap-2" variant="outline">
               Cancel
             </Button>
           </DialogClose>
           <Button
-            type="submit"
-            disabled={createProject.isPending}
             className="min-w-28 gap-2"
+            disabled={createProject.isPending}
+            type="submit"
           >
             {createProject.isPending && <Spinner className="size-4" />}
             Create
@@ -394,19 +388,19 @@ function DomainsAlert(props: {
 
       <DialogFooter className="!justify-between flex gap-4 border-border border-t bg-card p-6">
         <Button
-          variant="outline"
-          onClick={props.onGoBack}
           className="min-w-28 gap-2"
+          onClick={props.onGoBack}
+          variant="outline"
         >
           <ArrowLeftIcon className="size-4" />
           Update Domains
         </Button>
 
         <Button
-          type="button"
-          onClick={props.onProceed}
-          disabled={props.isCreating}
           className="min-w-28 gap-2"
+          disabled={props.isCreating}
+          onClick={props.onProceed}
+          type="button"
           variant="destructive"
         >
           {props.isCreating && <Spinner className="size-4" />}
@@ -444,10 +438,10 @@ function CreatedProjectDetails(props: {
           </p>
 
           <CopyTextButton
-            textToCopy={clientId}
             className="!h-auto w-full justify-between truncate bg-card px-3 py-3 font-mono"
-            textToShow={clientId}
             copyIconPosition="right"
+            textToCopy={clientId}
+            textToShow={clientId}
             tooltip="Copy Client ID"
           />
         </section>
@@ -461,10 +455,10 @@ function CreatedProjectDetails(props: {
           </p>
 
           <CopyTextButton
-            textToCopy={props.secret || ""}
             className="!h-auto w-full justify-between truncate bg-card px-3 py-3 font-mono"
-            textToShow={props.secret || ""}
             copyIconPosition="right"
+            textToCopy={props.secret || ""}
+            textToShow={props.secret || ""}
             tooltip="Copy Secret Key"
           />
         </section>
@@ -493,22 +487,22 @@ function CreatedProjectDetails(props: {
 
       <DialogFooter className="flex border-border border-t bg-card p-6">
         <Button
-          type="button"
-          onClick={props.onComplete}
-          disabled={!secretStored}
-          variant="outline"
           className="min-w-28 gap-2"
+          disabled={!secretStored}
+          onClick={props.onComplete}
+          type="button"
+          variant="outline"
         >
           {props.teamSlug ? "Close" : "Complete"}
         </Button>
 
         {props.teamSlug && (
           <Button
+            className="min-w-28 gap-2"
+            disabled={!secretStored}
             onClick={() => {
               router.push(`/team/${props.teamSlug}/${props.project.slug}`);
             }}
-            disabled={!secretStored}
-            className="min-w-28 gap-2"
           >
             View Project
             <ArrowRightIcon className="size-4" />

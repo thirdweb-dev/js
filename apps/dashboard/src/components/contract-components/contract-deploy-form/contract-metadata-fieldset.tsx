@@ -1,8 +1,9 @@
+import { FileInput } from "components/shared/FileInput";
+import { useId } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { FileInput } from "components/shared/FileInput";
-import type { ThirdwebClient } from "thirdweb";
 import { Fieldset } from "./common";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 
@@ -14,6 +15,10 @@ interface ContractMetadataFieldsetProps {
 export const ContractMetadataFieldset: React.FC<
   ContractMetadataFieldsetProps
 > = ({ form, client }) => {
+  const nameId = useId();
+  const symbolId = useId();
+  const descriptionId = useId();
+
   return (
     <Fieldset legend="Contract Metadata">
       <div className="flex flex-col gap-6 md:grid md:grid-cols-[200px_1fr]">
@@ -22,19 +27,19 @@ export const ContractMetadataFieldset: React.FC<
             form.getFieldState("contractMetadata.image", form.formState).error
               ?.message
           }
-          label="Image"
           isRequired={false}
+          label="Image"
         >
           <FileInput
-            client={client}
             accept={{ "image/*": [] }}
-            value={form.watch("contractMetadata.image")}
+            className="rounded border-border bg-background transition-all duration-200 hover:border-active-border hover:bg-background"
+            client={client}
             setValue={(file) =>
               form.setValue("contractMetadata.image", file, {
                 shouldTouch: true,
               })
             }
-            className="rounded border-border bg-background transition-all duration-200 hover:border-active-border hover:bg-background"
+            value={form.watch("contractMetadata.image")}
           />
         </FormFieldSetup>
 
@@ -43,16 +48,16 @@ export const ContractMetadataFieldset: React.FC<
           <div className="flex flex-col gap-6 lg:flex-row lg:gap-4">
             <FormFieldSetup
               className="grow"
-              label="Name"
-              isRequired
-              htmlFor="contractMetadata-name"
               errorMessage={
                 form.getFieldState("contractMetadata.name", form.formState)
                   .error?.message
               }
+              htmlFor={nameId}
+              isRequired
+              label="Name"
             >
               <Input
-                id="contractMetadata-name"
+                id={nameId}
                 {...form.register("contractMetadata.name", {
                   required: "Name is Required",
                 })}
@@ -61,35 +66,35 @@ export const ContractMetadataFieldset: React.FC<
 
             <FormFieldSetup
               className="lg:max-w-[300px]"
-              isRequired={false}
-              label="Symbol"
-              htmlFor="contractMetadata-symbol"
               errorMessage={
                 form.getFieldState("contractMetadata.symbol", form.formState)
                   .error?.message
               }
+              htmlFor={symbolId}
+              isRequired={false}
+              label="Symbol"
             >
               <Input
                 {...form.register("contractMetadata.symbol")}
-                id="contractMetadata-symbol"
+                id={symbolId}
               />
             </FormFieldSetup>
           </div>
 
           <FormFieldSetup
             className="flex grow flex-col"
-            label="Description"
-            isRequired={false}
-            htmlFor="contractMetadata-description"
             errorMessage={
               form.getFieldState("contractMetadata.description", form.formState)
                 .error?.message
             }
+            htmlFor={descriptionId}
+            isRequired={false}
+            label="Description"
           >
             <Textarea
               {...form.register("contractMetadata.description")}
               className="grow"
-              id="contractMetadata-description"
+              id={descriptionId}
             />
           </FormFieldSetup>
         </div>

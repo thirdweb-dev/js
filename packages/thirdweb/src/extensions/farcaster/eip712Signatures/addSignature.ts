@@ -4,10 +4,10 @@ import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { KEY_GATEWAY_ADDRESS } from "../constants.js";
 
 const KEY_GATEWAY_EIP_712_DOMAIN = {
-  name: "Farcaster KeyGateway",
-  version: "1",
   chainId: 10,
+  name: "Farcaster KeyGateway",
   verifyingContract: KEY_GATEWAY_ADDRESS,
+  version: "1",
 } as const;
 
 const KEY_GATEWAY_ADD_TYPE = [
@@ -76,8 +76,8 @@ export type SignAddOptions = {
 export function getAddData(message: AddMessage) {
   return {
     ...KEY_GATEWAY_EIP_712_TYPES,
-    primaryType: "Add" as const,
     message,
+    primaryType: "Add" as const,
   };
 }
 

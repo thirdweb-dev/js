@@ -1,5 +1,5 @@
-import { Img } from "@/components/blocks/Img";
 import type { ThirdwebClient } from "thirdweb";
+import { Img } from "@/components/blocks/Img";
 import { resolveSchemeWithErrorHandler } from "../../../lib/resolveSchemeWithErrorHandler";
 import { cn } from "../../../lib/utils";
 import { GradientBlobbie } from "./GradientBlobbie";
@@ -19,9 +19,9 @@ export function GradientAvatar(props: {
 
   return (
     <Img
-      src={resolvedSrc}
       className={cn("rounded-full", props.className)}
       fallback={props.id ? <GradientBlobbie id={props.id} /> : undefined}
+      src={resolvedSrc}
     />
   );
 }

@@ -1,6 +1,6 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import Link from "next/link";
 import { getBridgePaths } from "./utils";
 
 export default async function Page() {
@@ -28,7 +28,6 @@ export default async function Page() {
 
         <div className="flex flex-col gap-8">
           <BlueprintSection
-            title="Available GET endpoints"
             blueprints={paths
               .filter(
                 ([_pathName, pathObj]) => typeof pathObj?.get !== "undefined",
@@ -38,11 +37,12 @@ export default async function Page() {
                   throw new Error(`Path not found: ${pathName}`);
                 }
                 return {
-                  name: pathName,
                   description: pathObj.get?.description || "",
                   link: `/connect/pay/backend/reference?route=${pathName}`,
+                  name: pathName,
                 };
               })}
+            title="Available GET endpoints"
           />
         </div>
       </div>
@@ -66,15 +66,15 @@ function BlueprintSection(props: {
         <TableBody>
           {props.blueprints.map((item) => (
             <TableRow
-              key={item.link}
               className="group hover:bg-accent/50"
+              key={item.link}
               linkBox
             >
               <TableCell>
                 <span className="flex items-center gap-3">
                   <Link
-                    href={item.link}
                     className="before:absolute before:inset-0"
+                    href={item.link}
                   >
                     <div className="flex flex-col">
                       <p className="font-semibold text-base">{item.name}</p>

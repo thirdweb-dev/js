@@ -14,8 +14,8 @@ export async function SharedNFTPage(props: {
   isLoggedIn: boolean;
 }) {
   const info = await getContractPageParamsInfo({
-    contractAddress: props.contractAddress,
     chainIdOrSlug: props.chainIdOrSlug,
+    contractAddress: props.contractAddress,
     teamId: props.projectMeta?.teamId,
   });
 
@@ -50,8 +50,8 @@ export async function SharedNFTPage(props: {
     const shouldHide = await shouldRenderNewPublicPage(info.serverContract);
     if (shouldHide) {
       redirectToContractLandingPage({
-        contractAddress: props.contractAddress,
         chainIdOrSlug: props.chainIdOrSlug,
+        contractAddress: props.contractAddress,
         projectMeta: props.projectMeta,
       });
     }
@@ -60,8 +60,8 @@ export async function SharedNFTPage(props: {
   return (
     <ContractNFTPage
       contract={clientContract}
-      isErc721={supportedERCs.isERC721}
       functionSelectors={functionSelectors}
+      isErc721={supportedERCs.isERC721}
       isLoggedIn={props.isLoggedIn}
       projectMeta={props.projectMeta}
     />

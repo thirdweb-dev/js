@@ -38,7 +38,6 @@ export function uploadMetadata(
   options: BaseTransactionOptions<UploadMetadataParams>,
 ) {
   return generatedUploadMetadata({
-    contract: options.contract,
     asyncParams: async () => {
       const batchOfUris = await uploadOrExtractURIs(
         options.metadatas,
@@ -51,5 +50,6 @@ export function uploadMetadata(
         baseURI,
       } as const;
     },
+    contract: options.contract,
   });
 }

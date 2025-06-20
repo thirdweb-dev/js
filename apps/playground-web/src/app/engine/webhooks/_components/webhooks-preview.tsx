@@ -1,5 +1,13 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { Code2Icon, ExternalLinkIcon, PlayIcon, RssIcon } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { MediaRenderer } from "thirdweb/react";
+import { isAddress, shortenAddress } from "thirdweb/utils";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,18 +19,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { Code2Icon, ExternalLinkIcon, PlayIcon, RssIcon } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { MediaRenderer } from "thirdweb/react";
-import { isAddress, shortenAddress } from "thirdweb/utils";
-import * as z from "zod";
 import CodeClient from "../../../../components/code/code.client";
 import { LoadingDots } from "../../../../components/ui/LoadingDots";
-import { Spinner } from "../../../../components/ui/Spinner/Spinner";
 import { Label } from "../../../../components/ui/label";
+import { Spinner } from "../../../../components/ui/Spinner/Spinner";
 import { THIRDWEB_CLIENT } from "../../../../lib/client";
 import { useEngineTxStatus } from "../../_hooks/useEngineTxStatus";
 import { claim_erc1155_nft_with_engine } from "../../actions";
@@ -50,20 +50,20 @@ export function EngineWebhooksPreview() {
   const engineTxStatusQuery = useEngineTxStatus(queueId);
 
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
     defaultValues: {
       receiverAddress: "",
     },
+    resolver: zodResolver(formSchema),
   });
 
   const claimMutation = useMutation({
     mutationFn: async (address: string) => {
       const response = await claim_erc1155_nft_with_engine({
-        contractAddress: claimExample.contractAddress,
         chainId: claimExample.chainId,
+        contractAddress: claimExample.contractAddress,
+        quantity: 1,
         receiverAddress: address,
         tokenId: claimExample.tokenId,
-        quantity: 1,
       });
       return response;
     },
@@ -77,11 +77,11 @@ export function EngineWebhooksPreview() {
   return (
     <div className="grid w-full grid-cols-1 rounded-lg border bg-card lg:grid-cols-[500px_1fr]">
       <div>
-        <TabName name="Claim NFT" icon={PlayIcon} />
+        <TabName icon={PlayIcon} name="Claim NFT" />
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
             className="w-full space-y-6 p-6"
+            onSubmit={form.handleSubmit(onSubmit)}
           >
             {/* contract & Network */}
             <div className="space-y-1">
@@ -89,8 +89,8 @@ export function EngineWebhooksPreview() {
               <a
                 className="flex items-center gap-2 font-mono text-muted-foreground text-sm underline decoration-muted-foreground/50 underline-offset-4 hover:text-foreground"
                 href={`https://thirdweb.com/${claimExample.chainId}/${claimExample.contractAddress}`}
-                target="_blank"
                 rel="noreferrer"
+                target="_blank"
               >
                 {shortenAddress(claimExample.contractAddress)}{" "}
                 <ExternalLinkIcon className="size-3" />
@@ -100,12 +100,12 @@ export function EngineWebhooksPreview() {
             <div className="space-y-1">
               <Label htmlFor="receiver-address">NFT</Label>
               <MediaRenderer
+                className="aspect-square w-48 rounded-lg border"
                 client={THIRDWEB_CLIENT}
                 src={claimExample.mediaURI}
-                className="aspect-square w-48 rounded-lg border"
                 style={{
-                  width: "192px",
                   height: "192px",
+                  width: "192px",
                 }}
               />
             </div>
@@ -128,9 +128,9 @@ export function EngineWebhooksPreview() {
             />
 
             <Button
-              type="submit"
-              disabled={claimMutation.isPending}
               className="w-full gap-2"
+              disabled={claimMutation.isPending}
+              type="submit"
             >
               {claimMutation.isPending && <Spinner className="size-4" />}
               Claim NFT
@@ -140,18 +140,18 @@ export function EngineWebhooksPreview() {
       </div>
 
       <div className="flex min-h-[400px] grow flex-col border-t lg:border-t-0 lg:border-l">
-        <TabName name="Webhook payload" icon={Code2Icon} />
+        <TabName icon={Code2Icon} name="Webhook payload" />
         {engineTxStatusQuery.data ? (
           <div className="flex grow flex-col">
             <CodeClient
-              lang="json"
+              className="grow rounded-none border-none"
               code={JSON.stringify(engineTxStatusQuery.data, null, 2)}
+              lang="json"
               loader={
                 <div className="flex grow items-center justify-center">
                   <LoadingDots />
                 </div>
               }
-              className="grow rounded-none border-none"
               scrollableContainerClassName="h-full"
             />
           </div>

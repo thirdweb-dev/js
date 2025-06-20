@@ -24,11 +24,11 @@ export async function getCognitoRecoveryPasswordV1(args: {
 }) {
   const idTokenResponse = await authFetchEmbeddedWalletUser({
     client: args.client,
-    url: ROUTE_AUTH_COGNITO_ID_TOKEN_V1,
     props: {
       method: "GET",
     },
     storage: args.storage,
+    url: ROUTE_AUTH_COGNITO_ID_TOKEN_V1,
   });
   if (!idTokenResponse.ok) {
     throw new Error(
@@ -55,8 +55,8 @@ export async function getCognitoRecoveryPasswordV1(args: {
 
   // ? Figure out how to potentially route things through API Gateway
   const lambdaClient = new LambdaClient({
-    region: AWS_REGION,
     credentials: credentials,
+    region: AWS_REGION,
   });
 
   const params = {
@@ -85,11 +85,11 @@ export async function getCognitoRecoveryPasswordV2(args: {
 }) {
   const idTokenResponse = await authFetchEmbeddedWalletUser({
     client: args.client,
-    url: ROUTE_AUTH_COGNITO_ID_TOKEN_V2,
     props: {
       method: "GET",
     },
     storage: args.storage,
+    url: ROUTE_AUTH_COGNITO_ID_TOKEN_V2,
   });
   if (!idTokenResponse.ok) {
     throw new Error(
@@ -115,8 +115,8 @@ export async function getCognitoRecoveryPasswordV2(args: {
 
   // ? Figure out how to potentially route things through API Gateway
   const lambdaClient = new LambdaClient({
-    region: AWS_REGION,
     credentials: cognitoIdentity,
+    region: AWS_REGION,
   });
 
   const params = {

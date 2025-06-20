@@ -25,17 +25,17 @@ export function Header({
       <TouchableOpacity
         onPress={onBack}
         style={{
+          alignItems: "center",
           flexDirection: "row",
           gap: spacing.sm,
-          alignItems: "center",
           paddingTop: spacing.lg,
         }}
       >
         <RNImage
-          theme={theme}
+          color={theme.colors.secondaryIconColor}
           data={BACK_ICON}
           size={14}
-          color={theme.colors.secondaryIconColor}
+          theme={theme}
         />
         <ThemedText theme={theme} type="subtext">
           Back
@@ -49,10 +49,10 @@ export function Header({
       {onBack && (
         <TouchableOpacity onPress={onBack}>
           <RNImage
-            theme={theme}
+            color={theme.colors.secondaryIconColor}
             data={BACK_ICON}
             size={24}
-            color={theme.colors.secondaryIconColor}
+            theme={theme}
           />
         </TouchableOpacity>
       )}
@@ -62,10 +62,10 @@ export function Header({
       {onClose && (
         <TouchableOpacity onPress={onClose}>
           <RNImage
-            theme={theme}
+            color={theme.colors.secondaryIconColor}
             data={CLOSE_ICON}
             size={24}
-            color={theme.colors.secondaryIconColor}
+            theme={theme}
           />
         </TouchableOpacity>
       )}
@@ -75,8 +75,8 @@ export function Header({
 
 const styles = StyleSheet.create({
   headerModal: {
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,

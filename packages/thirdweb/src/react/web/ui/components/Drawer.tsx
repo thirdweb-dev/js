@@ -12,10 +12,10 @@ import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.
 import { iconSize, radius } from "../../../core/design-system/index.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledDiv } from "../design-system/elements.js";
-import { DynamicHeight } from "./DynamicHeight.js";
-import { CrossContainer } from "./Modal.js";
 import { Container } from "./basic.js";
 import { IconButton } from "./buttons.js";
+import { DynamicHeight } from "./DynamicHeight.js";
+import { CrossContainer } from "./Modal.js";
 
 type DrawerProps = {
   children: React.ReactNode;
@@ -33,16 +33,16 @@ export const Drawer = /* @__PURE__ */ forwardRef<HTMLDivElement, DrawerProps>(
           <Container p="lg">
             <CrossContainer>
               <IconButton
-                type="button"
                 aria-label="Close"
                 onClick={props.close}
+                type="button"
               >
                 <Cross2Icon
-                  width={iconSize.md}
                   height={iconSize.md}
                   style={{
                     color: "inherit",
                   }}
+                  width={iconSize.md}
                 />
               </IconButton>
             </CrossContainer>
@@ -58,16 +58,16 @@ export const Drawer = /* @__PURE__ */ forwardRef<HTMLDivElement, DrawerProps>(
 const DrawerContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
-    zIndex: 10000,
+    animation: `${drawerOpenAnimation} 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1)`,
+    background: theme.colors.modalBg,
+    borderTop: `1px solid ${theme.colors.borderColor}`,
     borderTopLeftRadius: radius.xl,
     borderTopRightRadius: radius.xl,
-    background: theme.colors.modalBg,
-    position: "absolute",
     bottom: 0,
     left: 0,
+    position: "absolute",
     right: 0,
-    animation: `${drawerOpenAnimation} 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1)`,
-    borderTop: `1px solid ${theme.colors.borderColor}`,
+    zIndex: 10000,
   };
 });
 
@@ -85,11 +85,11 @@ const drawerOpenAnimation = keyframes`
 export const DrawerOverlay = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
-    backgroundColor: theme.colors.modalOverlayBg,
-    zIndex: 9999,
-    position: "absolute",
-    inset: 0,
     animation: `${fadeInAnimation} 400ms cubic-bezier(0.16, 1, 0.3, 1)`,
+    backgroundColor: theme.colors.modalOverlayBg,
+    inset: 0,
+    position: "absolute",
+    zIndex: 9999,
   };
 });
 
@@ -106,13 +106,13 @@ export function useDrawer() {
     return new Promise<void>((resolve) => {
       if (drawerRef.current) {
         const animOptions = {
+          duration: 300,
           easing: "cubic-bezier(0.175, 0.885, 0.32, 1.1)",
           fill: "forwards",
-          duration: 300,
         } as const;
 
         const closeAnimation = drawerRef.current.animate(
-          [{ transform: "translateY(100%)", opacity: 0 }],
+          [{ opacity: 0, transform: "translateY(100%)" }],
           animOptions,
         );
 
@@ -163,9 +163,9 @@ export function useDrawer() {
   }, [isOpen, setIsOpen]);
 
   return {
-    drawerRef,
     drawerOverlayRef,
-    setIsOpen,
+    drawerRef,
     isOpen,
+    setIsOpen,
   };
 }

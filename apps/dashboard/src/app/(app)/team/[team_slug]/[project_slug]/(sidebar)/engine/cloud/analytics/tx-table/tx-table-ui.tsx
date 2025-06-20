@@ -1,12 +1,20 @@
 "use client";
 
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { ChainIconClient } from "components/icons/ChainIcon";
+import { format, formatDistanceToNowStrict } from "date-fns";
+import { useAllChainsData } from "hooks/chains/allChains";
+import { ExternalLinkIcon, InfoIcon } from "lucide-react";
+import Link from "next/link";
+import { useId, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import type { Project } from "@/api/projects";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { PaginationButtons } from "@/components/pagination-buttons";
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -29,14 +37,6 @@ import {
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ChainIconClient } from "components/icons/ChainIcon";
-import { format, formatDistanceToNowStrict } from "date-fns";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { ExternalLinkIcon, InfoIcon } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import type { ThirdwebClient } from "thirdweb";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
 import type {
   Transaction,
@@ -61,11 +61,11 @@ export function TransactionsTableUI(props: {
 
   const pageSize = 10;
   const transactionsQuery = useQuery({
-    queryKey: ["transactions", props.project.id, page],
-    queryFn: () => props.getData({ page }),
-    refetchInterval: autoUpdate ? 4_000 : false,
-    placeholderData: keepPreviousData,
     enabled: !!props.wallets && props.wallets.length > 0,
+    placeholderData: keepPreviousData,
+    queryFn: () => props.getData({ page }),
+    queryKey: ["transactions", props.project.id, page],
+    refetchInterval: autoUpdate ? 4_000 : false,
   });
 
   const transactions = transactionsQuery.data?.transactions ?? [];
@@ -77,6 +77,8 @@ export function TransactionsTableUI(props: {
   const showSkeleton =
     (transactionsQuery.isPlaceholderData && transactionsQuery.isFetching) ||
     (transactionsQuery.isLoading && !transactionsQuery.isPlaceholderData);
+
+  const autoUpdateId = useId();
 
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
@@ -92,20 +94,20 @@ export function TransactionsTableUI(props: {
 
         <div className="flex items-center justify-end gap-5 border-border border-t pt-4 lg:border-none lg:pt-0">
           <div className="flex shrink-0 items-center gap-2">
-            <Label htmlFor="auto-update">Auto Update</Label>
+            <Label htmlFor={autoUpdateId}>Auto Update</Label>
             <Switch
               checked={autoUpdate}
+              id={autoUpdateId}
               onCheckedChange={(v) => setAutoUpdate(!!v)}
-              id="auto-update"
             />
           </div>
           <StatusSelector
-            status={status}
             setStatus={(v) => {
               setStatus(v);
               // reset page
               setPage(1);
             }}
+            status={status}
           />
         </div>
       </div>
@@ -123,19 +125,15 @@ export function TransactionsTableUI(props: {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {showSkeleton ? (
-              <>
-                {new Array(pageSize).fill(0).map((_, i) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+            {showSkeleton
+              ? new Array(pageSize).fill(0).map((_, i) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: EXPECTED
                   <SkeletonRow key={i} />
-                ))}
-              </>
-            ) : (
-              <>
-                {transactions.map((tx) => (
+                ))
+              : transactions.map((tx) => (
                   <TableRow
-                    key={`${tx.id}${tx.chainId}`}
                     className="cursor-pointer hover:bg-accent/50"
+                    key={`${tx.id}${tx.chainId}`}
                     onClick={() => {
                       router.push(
                         `/team/${props.teamSlug}/${props.project.slug}/engine/cloud/tx/${tx.id}`,
@@ -146,9 +144,9 @@ export function TransactionsTableUI(props: {
                     <TableCell className="font-medium">
                       <CopyAddressButton
                         address={tx.id ? tx.id : ""}
+                        className="text-muted-foreground"
                         copyIconPosition="left"
                         variant="ghost"
-                        className="text-muted-foreground"
                       />
                     </TableCell>
 
@@ -188,8 +186,6 @@ export function TransactionsTableUI(props: {
                     </TableCell>
                   </TableRow>
                 ))}
-              </>
-            )}
           </TableBody>
         </Table>
 
@@ -214,25 +210,25 @@ export function TransactionsTableUI(props: {
 }
 
 export const statusDetails = {
-  QUEUED: {
-    name: "Queued",
-    type: "warning",
-  },
-  SUBMITTED: {
-    name: "Submitted",
-    type: "warning",
-  },
   CONFIRMED: {
     name: "Confirmed",
     type: "success",
+  },
+  FAILED: {
+    name: "Failed",
+    type: "destructive",
+  },
+  QUEUED: {
+    name: "Queued",
+    type: "warning",
   },
   REVERTED: {
     name: "Reverted",
     type: "destructive",
   },
-  FAILED: {
-    name: "Failed",
-    type: "destructive",
+  SUBMITTED: {
+    name: "Submitted",
+    type: "warning",
   },
 } as const;
 
@@ -244,7 +240,6 @@ function StatusSelector(props: {
 
   return (
     <Select
-      value={props.status || "all"}
       onValueChange={(v) => {
         if (v === "all") {
           props.setStatus(undefined);
@@ -252,6 +247,7 @@ function StatusSelector(props: {
           props.setStatus(v as TransactionStatus);
         }
       }}
+      value={props.status || "all"}
     >
       <SelectTrigger className="min-w-[160px]">
         <SelectValue placeholder="All" />
@@ -358,7 +354,7 @@ function TxStatusCell(props: { transaction: Transaction }) {
 
   return (
     <ToolTipLabel hoverable label={tooltip}>
-      <Badge variant={statusDetails[status].type} className="gap-2">
+      <Badge className="gap-2" variant={statusDetails[status].type}>
         {statusDetails[status].name}
         {errorMessage && <InfoIcon className="size-3" />}
       </Badge>
@@ -380,30 +376,30 @@ function TxHashCell(props: { transaction: Transaction }) {
   if (!explorer) {
     return (
       <CopyTextButton
-        textToCopy={transactionHash}
-        copyIconPosition="left"
-        textToShow={shortHash}
-        variant="ghost"
-        tooltip="Copy transaction hash"
         className="font-mono text-muted-foreground text-sm"
+        copyIconPosition="left"
+        textToCopy={transactionHash}
+        textToShow={shortHash}
+        tooltip="Copy transaction hash"
+        variant="ghost"
       />
     );
   }
 
   return (
     <Button
-      variant="ghost"
       asChild
       className="-translate-x-2 gap-2 font-mono"
       size="sm"
+      variant="ghost"
     >
       <Link
         href={`${explorer.url}/tx/${transactionHash}`}
-        target="_blank"
-        rel="noopener noreferrer"
         onClick={(e) => {
           e.stopPropagation();
         }}
+        rel="noopener noreferrer"
+        target="_blank"
       >
         {shortHash}{" "}
         <ExternalLinkIcon className="size-4 text-muted-foreground" />

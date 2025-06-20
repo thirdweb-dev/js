@@ -32,12 +32,12 @@ export async function zkDeployContract(
 
   const data = encodeDeployData({
     abi: options.abi,
-    bytecode,
-    deploymentType: options.deploymentType ?? "create",
     args: normalizeFunctionParams(
       options.abi.find((abi) => abi.type === "constructor"),
       options.params,
     ),
+    bytecode,
+    deploymentType: options.deploymentType ?? "create",
   });
 
   const receipt = await sendAndConfirmTransaction({
@@ -45,18 +45,18 @@ export async function zkDeployContract(
     transaction: prepareTransaction({
       chain: options.chain,
       client: options.client,
-      to: CONTRACT_DEPLOYER_ADDRESS,
       data,
       eip712: {
         factoryDeps: [bytecode],
         // TODO (zksync): allow passing in a paymaster
       },
+      to: CONTRACT_DEPLOYER_ADDRESS,
     }),
   });
 
   const events = parseEventLogs({
-    logs: receipt.logs,
     events: [contractDeployedEvent()],
+    logs: receipt.logs,
   });
 
   const contractAddress = events[0]?.args.contractAddress;

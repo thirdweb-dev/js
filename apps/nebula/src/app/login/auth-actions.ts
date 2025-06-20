@@ -1,6 +1,13 @@
 "use server";
 import "server-only";
 
+import { cookies } from "next/headers";
+import { getAddress } from "thirdweb";
+import type {
+  GenerateLoginPayloadParams,
+  LoginPayload,
+  VerifyLoginPayloadParams,
+} from "thirdweb/auth";
 import {
   NEBULA_COOKIE_ACTIVE_ACCOUNT,
   NEBULA_COOKIE_PREFIX_TOKEN,
@@ -9,13 +16,6 @@ import { NEXT_PUBLIC_NEBULA_URL } from "@/constants/public-envs";
 import { NEBULA_APP_SECRET_KEY } from "@/constants/server-envs";
 import { isVercel } from "@/utils/vercel-utils";
 import { verifyTurnstileToken } from "@/utils/verifyTurnstileToken";
-import { cookies } from "next/headers";
-import { getAddress } from "thirdweb";
-import type {
-  GenerateLoginPayloadParams,
-  LoginPayload,
-  VerifyLoginPayloadParams,
-} from "thirdweb/auth";
 
 const FOURTEEN_DAYS_IN_SECONDS = 14 * 24 * 60 * 60;
 
@@ -23,15 +23,15 @@ export async function getNebulaLoginPayload(
   params: GenerateLoginPayloadParams,
 ): Promise<LoginPayload> {
   const res = await fetch(`${NEXT_PUBLIC_NEBULA_URL}/auth/delegate/payload`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Secret-Key": NEBULA_APP_SECRET_KEY,
-    },
     body: JSON.stringify({
       address: params.address,
       chain_id: params.chainId?.toString(),
     }),
+    headers: {
+      "Content-Type": "application/json",
+      "X-Secret-Key": NEBULA_APP_SECRET_KEY,
+    },
+    method: "POST",
   });
 
   if (!res.ok) {
@@ -68,8 +68,8 @@ export async function doNebulaLogin(
     const result = await verifyTurnstileToken(params.turnstileToken);
     if (!result.success) {
       return {
-        error: "Invalid captcha. Please try again.",
         context: result.context,
+        error: "Invalid captcha. Please try again.",
       };
     }
   }
@@ -78,12 +78,12 @@ export async function doNebulaLogin(
 
   // forward the request to the API server
   const res = await fetch(`${NEXT_PUBLIC_NEBULA_URL}/auth/delegate/login`, {
-    method: "POST",
+    body: JSON.stringify(params.loginPayload),
     headers: {
       "Content-Type": "application/json",
       "X-Secret-Key": NEBULA_APP_SECRET_KEY,
     },
-    body: JSON.stringify(params.loginPayload),
+    method: "POST",
   });
 
   // if the request failed, log the error and throw an error
@@ -145,9 +145,9 @@ export async function doNebulaLogin(
     jwt,
     {
       httpOnly: true,
-      secure: true,
-      sameSite: "strict",
       maxAge: FOURTEEN_DAYS_IN_SECONDS,
+      sameSite: "strict",
+      secure: true,
     },
   );
 
@@ -157,9 +157,9 @@ export async function doNebulaLogin(
     getAddress(params.loginPayload.payload.address),
     {
       httpOnly: true,
-      secure: true,
-      sameSite: "strict",
       maxAge: FOURTEEN_DAYS_IN_SECONDS,
+      sameSite: "strict",
+      secure: true,
     },
   );
 
@@ -192,11 +192,11 @@ export async function isNebulaLoggedIn(address: string) {
   }
 
   const res = await fetch(`${NEXT_PUBLIC_NEBULA_URL}/auth/verify`, {
-    method: "GET",
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
+    method: "GET",
   });
 
   if (!res.ok) {
@@ -222,9 +222,9 @@ export async function isNebulaLoggedIn(address: string) {
   // set the active account cookie again
   cookieStore.set(NEBULA_COOKIE_ACTIVE_ACCOUNT, getAddress(address), {
     httpOnly: false,
-    secure: true,
-    sameSite: "strict",
     maxAge: FOURTEEN_DAYS_IN_SECONDS,
+    sameSite: "strict",
+    secure: true,
   });
   return true;
 }

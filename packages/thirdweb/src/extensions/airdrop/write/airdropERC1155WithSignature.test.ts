@@ -8,8 +8,8 @@ import {
   TEST_ACCOUNT_D,
 } from "../../../../test/src/test-wallets.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import {
   balanceOf,
@@ -40,8 +40,8 @@ describe
           client: TEST_CLIENT,
           contractId: "Airdrop",
           contractParams: {
-            defaultAdmin: TEST_ACCOUNT_A.address,
             contractURI: "",
+            defaultAdmin: TEST_ACCOUNT_A.address,
           },
         }),
         chain: ANVIL_CHAIN,
@@ -66,52 +66,52 @@ describe
       const mintTransactions = [
         mintTo({
           contract: erc1155TokenContract,
-          to: TEST_ACCOUNT_A.address,
-          supply: 100000n,
           nft: {
             name: "Test 0",
           },
+          supply: 100000n,
+          to: TEST_ACCOUNT_A.address,
         }),
         mintTo({
           contract: erc1155TokenContract,
-          to: TEST_ACCOUNT_A.address,
-          supply: 100000n,
           nft: {
             name: "Test 1",
           },
+          supply: 100000n,
+          to: TEST_ACCOUNT_A.address,
         }),
       ];
 
       for (const tx of mintTransactions) {
         await sendAndConfirmTransaction({
-          transaction: tx,
           account: TEST_ACCOUNT_A,
+          transaction: tx,
         });
       }
 
       const approvalTx = setApprovalForAll({
+        approved: true,
         contract: erc1155TokenContract,
         operator: airdropContract.address,
-        approved: true,
       });
       await sendAndConfirmTransaction({
-        transaction: approvalTx,
         account: TEST_ACCOUNT_A,
+        transaction: approvalTx,
       });
     }, 60000);
 
     it("should send airdrop of ERC1155 tokens with signature", async () => {
       const contents = [
-        { recipient: TEST_ACCOUNT_B.address, tokenId: 0n, amount: 10n },
-        { recipient: TEST_ACCOUNT_C.address, tokenId: 0n, amount: 12n },
-        { recipient: TEST_ACCOUNT_D.address, tokenId: 1n, amount: 5n },
+        { amount: 10n, recipient: TEST_ACCOUNT_B.address, tokenId: 0n },
+        { amount: 12n, recipient: TEST_ACCOUNT_C.address, tokenId: 0n },
+        { amount: 5n, recipient: TEST_ACCOUNT_D.address, tokenId: 1n },
       ];
       const { req, signature } = await generateAirdropSignatureERC1155({
-        airdropRequest: {
-          tokenAddress: erc1155TokenContract.address,
-          contents,
-        },
         account: TEST_ACCOUNT_A,
+        airdropRequest: {
+          contents,
+          tokenAddress: erc1155TokenContract.address,
+        },
         contract: airdropContract,
       });
 
@@ -121,8 +121,8 @@ describe
         signature,
       });
       const { transactionHash } = await sendAndConfirmTransaction({
-        transaction,
         account: TEST_ACCOUNT_A,
+        transaction,
       });
 
       const balanceB = await balanceOf({

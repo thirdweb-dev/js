@@ -14,11 +14,11 @@ import type { Theme } from "../../../../core/design-system/index.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
 import type { SupportedNFTs } from "../../../../core/utils/defaultTokens.js";
-import { MediaRenderer } from "../../MediaRenderer/MediaRenderer.js";
+import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
-import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
+import { MediaRenderer } from "../../MediaRenderer/MediaRenderer.js";
 import type { ConnectLocale } from "../locale/types.js";
 
 const fetchNFTs = async (
@@ -45,17 +45,17 @@ const fetchNFTs = async (
     });
     return result.map((nft) => ({
       ...nft,
-      quantityOwned: BigInt(1),
       address: contract.address,
       chain,
+      quantityOwned: BigInt(1),
     }));
   }
 
   const erc1155 = await isERC1155({ contract }).catch(() => false);
   if (erc1155) {
     const result = await getErc1155OwnedNFTs({
-      contract,
       address: owner,
+      contract,
     });
     return result.map((nft) => ({ ...nft, address: contract.address, chain }));
   }
@@ -83,8 +83,8 @@ export function ViewNFTs(props: {
     >
       <Container p="lg">
         <ModalHeader
-          title={props.connectLocale.viewFunds.viewNFTs}
           onBack={props.onBack}
+          title={props.connectLocale.viewFunds.viewNFTs}
         />
       </Container>
       <Line />
@@ -112,7 +112,7 @@ export function ViewNFTsContent(props: {
   const activeChain = useActiveWalletChain();
 
   const nftQuery = useQuery({
-    queryKey: ["nfts", activeChain?.id, activeAccount?.address],
+    enabled: !!activeChain && !!activeAccount,
     queryFn: async (): Promise<
       (NFT & { chain: Chain; address: Address; quantityOwned: bigint })[]
     > => {
@@ -124,8 +124,8 @@ export function ViewNFTsContent(props: {
       }
 
       const result = await getOwnedNFTs({
-        client: props.client,
         chains: [activeChain],
+        client: props.client,
         ownerAddress: activeAccount.address,
       });
 
@@ -133,13 +133,13 @@ export function ViewNFTsContent(props: {
         .filter((nft) => !!nft.metadata.name && !!nft.metadata.image)
         .map((nft) => {
           return {
-            chain: getCachedChain(nft.chainId),
             address: nft.tokenAddress as Address,
+            chain: getCachedChain(nft.chainId),
             ...nft,
           };
         });
     },
-    enabled: !!activeChain && !!activeAccount,
+    queryKey: ["nfts", activeChain?.id, activeAccount?.address],
   });
 
   if (!activeChain?.id || !activeAccount?.address) {
@@ -158,13 +158,13 @@ export function ViewNFTsContent(props: {
     <>
       {nftQuery.error ? (
         <Container center="both" py="lg">
-          <Text size="sm" color="secondaryText" center>
+          <Text center color="secondaryText" size="sm">
             Error loading NFTs
           </Text>
         </Container>
       ) : nftQuery.data?.length === 0 && !nftQuery.isLoading ? (
         <Container center="both" py="lg">
-          <Text size="sm" color="secondaryText" center>
+          <Text center color="secondaryText" size="sm">
             No NFTs found on this chain
           </Text>
         </Container>
@@ -172,8 +172,8 @@ export function ViewNFTsContent(props: {
         <Container
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
             gap: "12px",
+            gridTemplateColumns: "1fr 1fr",
           }}
         >
           {nftQuery.isLoading || !filteredNFTs ? (
@@ -187,8 +187,8 @@ export function ViewNFTsContent(props: {
               <NftCard
                 key={`${nft.chain.id}:${nft.address}:${nft.id}`}
                 {...nft}
-                client={props.client}
                 chain={nft.chain}
+                client={props.client}
                 theme={props.theme}
               />
             ))
@@ -213,54 +213,54 @@ function NftCard(
   const content = (
     <div
       style={{
+        alignItems: "center",
         display: "flex",
-        width: "150px",
         flexDirection: "column",
         gap: "4px",
-        alignItems: "center",
+        width: "150px",
       }}
     >
       <div
         style={{
-          position: "relative",
-          display: "flex",
-          flexShrink: 0,
           alignItems: "center",
-          width: "150px",
-          height: "150px",
-          borderRadius: "8px",
-          overflow: "hidden",
           background:
             theme === "light" ? "rgba(0, 0, 0, 0.10)" : "rgba(0, 0, 0, 0.20)",
+          borderRadius: "8px",
+          display: "flex",
+          flexShrink: 0,
+          height: "150px",
+          overflow: "hidden",
+          position: "relative",
+          width: "150px",
         }}
       >
         {props.metadata.image && (
           <MediaRenderer
+            client={props.client}
             src={props.metadata.image}
             style={{
-              width: "100%",
               height: "100%",
+              width: "100%",
             }}
-            client={props.client}
           />
         )}
         {props.quantityOwned > 1 && (
           <div
             style={{
-              position: "absolute",
-              bottom: "4px",
-              right: "4px",
+              alignItems: "center",
               background:
                 themeObject?.colors?.modalBg ??
                 (theme === "light" ? "white" : "black"),
-              fontSize: "10px",
-              padding: "4px 4px",
-              width: "20px",
-              height: "20px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               borderRadius: "100%",
+              bottom: "4px",
+              display: "flex",
+              fontSize: "10px",
+              height: "20px",
+              justifyContent: "center",
+              padding: "4px 4px",
+              position: "absolute",
+              right: "4px",
+              width: "20px",
             }}
           >
             {props.quantityOwned.toString()}
@@ -269,24 +269,24 @@ function NftCard(
         {props.chain.icon && (
           <img
             alt={props.chain.name}
-            style={{
-              position: "absolute",
-              bottom: "4px",
-              left: "4px",
-              width: "20px",
-              height: "20px",
-            }}
             src={props.chain.icon.url}
+            style={{
+              bottom: "4px",
+              height: "20px",
+              left: "4px",
+              position: "absolute",
+              width: "20px",
+            }}
           />
         )}
       </div>
       <Text
-        size="xs"
         color="primaryText"
+        size="xs"
         style={{
           fontWeight: 600,
-          textAlign: "center",
           maxLines: 2,
+          textAlign: "center",
         }}
       >
         {props.metadata.name}
@@ -298,8 +298,8 @@ function NftCard(
     return (
       <a
         href={`https://thirdweb.com/${props.chain.id}/${props.address}/nfts/${props.id}`}
-        target="_blank"
         rel="noreferrer"
+        target="_blank"
       >
         {content}
       </a>

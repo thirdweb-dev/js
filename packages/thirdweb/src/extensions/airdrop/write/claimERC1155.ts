@@ -39,7 +39,6 @@ export function claimERC1155(
   options: BaseTransactionOptions<ClaimERC1155Params>,
 ) {
   return generatedClaimERC1155({
-    contract: options.contract,
     asyncParams: async () => {
       const merkleRoot = await tokenMerkleRoot({
         contract: options.contract,
@@ -50,8 +49,8 @@ export function claimERC1155(
 
       const merkleProof = await fetchProofsERC1155({
         contract: options.contract,
-        recipient: options.recipient,
         merkleRoot,
+        recipient: options.recipient,
       });
 
       if (!merkleProof) {
@@ -59,12 +58,13 @@ export function claimERC1155(
       }
 
       return {
-        token: tokenAddress as Address,
-        receiver: merkleProof.recipient as Address,
-        tokenId: merkleProof.tokenId,
-        quantity: merkleProof.quantity,
         proofs: merkleProof.proof,
+        quantity: merkleProof.quantity,
+        receiver: merkleProof.recipient as Address,
+        token: tokenAddress as Address,
+        tokenId: merkleProof.tokenId,
       } as const;
     },
+    contract: options.contract,
   });
 }

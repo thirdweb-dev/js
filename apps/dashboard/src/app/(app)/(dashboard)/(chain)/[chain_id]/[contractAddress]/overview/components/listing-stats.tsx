@@ -20,11 +20,11 @@ const TotalListingsStat: React.FC<{ contract: ThirdwebContract }> = ({
 
   return (
     <Stat
-      value={combinedListingCount.toString()}
-      label="Total Listings"
       isPending={
         directListingsQuery.isPending || englishAuctionsQuery.isPending
       }
+      label="Total Listings"
+      value={combinedListingCount.toString()}
     />
   );
 };
@@ -38,9 +38,9 @@ const DirectListingsStat: React.FC<{ contract: ThirdwebContract }> = ({
 
   return (
     <Stat
-      value={(directListingsQuery.data || 0n).toString()}
       isPending={directListingsQuery.isPending}
       label="Direct Listings"
+      value={(directListingsQuery.data || 0n).toString()}
     />
   );
 };
@@ -54,9 +54,9 @@ const EnglishAuctionsStat: React.FC<{ contract: ThirdwebContract }> = ({
 
   return (
     <Stat
-      value={(englishAuctionsQuery.data || 0n).toString()}
       isPending={englishAuctionsQuery.isPending}
       label="English Auctions"
+      value={(englishAuctionsQuery.data || 0n).toString()}
     />
   );
 };

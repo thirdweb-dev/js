@@ -1,10 +1,10 @@
 "use client";
 
-import { Img } from "@/components/blocks/Img";
-import { cn } from "@/lib/utils";
 /* eslint-disable @next/next/no-img-element */
 import { replaceIpfsUrl } from "lib/sdk";
 import type { ThirdwebClient } from "thirdweb";
+import { Img } from "@/components/blocks/Img";
+import { cn } from "@/lib/utils";
 import { fallbackChainIcon } from "../../utils/chain-icons";
 
 type ImageProps = React.ComponentProps<"img">;
@@ -25,13 +25,13 @@ export const ChainIconClient = ({
     <Img
       {...restProps}
       // render different image element if src changes to avoid showing old image while loading new one
-      key={resolvedSrc}
-      className={cn("object-contain", restProps.className)}
-      src={resolvedSrc}
-      loading={restProps.loading || "lazy"}
       alt=""
-      fallback={<img src={fallbackChainIcon} alt="" />}
+      className={cn("object-contain", restProps.className)}
+      fallback={<img alt="" src={fallbackChainIcon} />}
+      key={resolvedSrc}
+      loading={restProps.loading || "lazy"}
       skeleton={<div className="animate-pulse rounded-full bg-border" />}
+      src={resolvedSrc}
     />
   );
 };

@@ -1,9 +1,9 @@
-import { getEcosystemWalletUsage } from "@/api/analytics";
 import {
-  type Range,
   getLastNDaysRange,
+  type Range,
 } from "components/analytics/date-range-selector";
 import { RangeSelector } from "components/analytics/range-selector";
+import { getEcosystemWalletUsage } from "@/api/analytics";
 import type { Partner } from "../../../../types";
 import { EcosystemWalletUsersChartCard } from "./EcosystemWalletUsersChartCard";
 import { EcosystemWalletsSummary } from "./Summary";
@@ -27,26 +27,26 @@ export async function EcosystemAnalyticsPage({
 
   const allTimeStatsPromise = getEcosystemWalletUsage({
     ecosystemSlug,
-    teamId,
     from: new Date(2022, 0, 1),
-    to: new Date(),
     period: "all",
+    teamId,
+    to: new Date(),
   });
 
   const monthlyStatsPromise = getEcosystemWalletUsage({
     ecosystemSlug,
-    teamId,
     from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-    to: new Date(),
     period: "month",
+    teamId,
+    to: new Date(),
   });
 
   const statsPromise = getEcosystemWalletUsage({
     ecosystemSlug,
-    teamId,
     from: range.from,
-    to: range.to,
     period: interval,
+    teamId,
+    to: range.to,
   }).catch(() => null);
 
   const [allTimeStats, monthlyStats, stats] = await Promise.all([
@@ -64,21 +64,21 @@ export async function EcosystemAnalyticsPage({
 
       <div className="h-6" />
 
-      <RangeSelector range={range} interval={interval} />
+      <RangeSelector interval={interval} range={range} />
 
       <div className="h-6" />
 
       <div className="flex flex-col gap-4 lg:gap-6">
         <EcosystemWalletUsersChartCard
           ecosystemWalletStats={stats || []}
-          isPending={false}
           groupBy="authenticationMethod"
+          isPending={false}
           partners={partners}
         />
         <EcosystemWalletUsersChartCard
           ecosystemWalletStats={stats || []}
-          isPending={false}
           groupBy="ecosystemPartnerId"
+          isPending={false}
           partners={partners}
         />
       </div>

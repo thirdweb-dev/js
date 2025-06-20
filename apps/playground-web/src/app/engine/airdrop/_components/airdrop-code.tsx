@@ -36,8 +36,8 @@ export function AirdropCode() {
 const engineAirdropSendCode = `\
 const addresses = ${JSON.stringify(
   airdropExample.receivers.map((x) => ({
-    recipient: x.toAddress,
     amount: x.amount,
+    recipient: x.toAddress,
   })),
   null,
   2,

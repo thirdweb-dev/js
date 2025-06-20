@@ -1,10 +1,10 @@
+import { AlertCircleIcon } from "lucide-react";
+import { useEffect, useRef } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { MarkdownRenderer } from "@/components/blocks/MarkdownRenderer/markdown-renderer";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { NebulaIcon } from "@/icons/NebulaIcon";
 import { cn } from "@/lib/utils";
-import { AlertCircleIcon } from "lucide-react";
-import { useEffect, useRef } from "react";
-import type { ThirdwebClient } from "thirdweb";
 import type { NebulaSwapData } from "../api/chat";
 import type {
   NebulaTxData,
@@ -116,8 +116,8 @@ export function Chats(props: {
       <ScrollShadow
         className="flex-1"
         scrollableClassName="max-h-full overscroll-contain"
-        shadowColor="hsl(var(--background))"
         shadowClassName="z-[1]"
+        shadowColor="hsl(var(--background))"
       >
         <div className="container max-w-[800px]">
           <div className={cn("flex flex-col gap-5 py-4", props.className)}>
@@ -143,12 +143,12 @@ export function Chats(props: {
                   key={index}
                 >
                   <RenderMessage
-                    message={message}
-                    isMessagePending={isMessagePending}
-                    client={props.client}
-                    sendMessage={props.sendMessage}
-                    nextMessage={props.messages[index + 1]}
                     authToken={props.authToken}
+                    client={props.client}
+                    isMessagePending={isMessagePending}
+                    message={message}
+                    nextMessage={props.messages[index + 1]}
+                    sendMessage={props.sendMessage}
                     sessionId={props.sessionId}
                   />
                 </div>
@@ -179,12 +179,12 @@ function RenderMessage(props: {
         {props.message.content.map((msg, index) => {
           if (msg.type === "text") {
             return (
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              // biome-ignore lint/suspicious/noArrayIndexKey: TODO
               <div className="flex justify-end" key={index}>
                 <div className="max-w-[80%] overflow-auto rounded-xl border bg-card px-4 py-2">
                   <StyledMarkdownRenderer
-                    text={msg.text}
                     isMessagePending={props.isMessagePending}
+                    text={msg.text}
                     type="user"
                   />
                 </div>
@@ -194,9 +194,10 @@ function RenderMessage(props: {
 
           if (msg.type === "image") {
             return (
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              // biome-ignore lint/suspicious/noArrayIndexKey: TODO
               <div className="flex justify-end" key={index}>
                 <NebulaImage
+                  client={props.client}
                   type="submitted"
                   url={
                     typeof msg.b64 === "string"
@@ -205,7 +206,6 @@ function RenderMessage(props: {
                         : `data:image/png;base64,${msg.b64}`
                       : (msg.image_url ?? "")
                   }
-                  client={props.client}
                 />
               </div>
             );
@@ -251,13 +251,13 @@ function RenderMessage(props: {
       <div className="min-w-0 grow">
         <ScrollShadow className="rounded-lg">
           <RenderResponse
-            message={message}
-            isMessagePending={props.isMessagePending}
-            client={props.client}
-            sendMessage={props.sendMessage}
-            nextMessage={props.nextMessage}
-            sessionId={props.sessionId}
             authToken={props.authToken}
+            client={props.client}
+            isMessagePending={props.isMessagePending}
+            message={message}
+            nextMessage={props.nextMessage}
+            sendMessage={props.sendMessage}
+            sessionId={props.sessionId}
           />
         </ScrollShadow>
 
@@ -267,11 +267,11 @@ function RenderMessage(props: {
           props.sessionId &&
           message.request_id && (
             <MessageActions
-              messageText={message.text}
               authToken={props.authToken}
+              className="mt-4"
+              messageText={message.text}
               requestId={message.request_id}
               sessionId={props.sessionId}
-              className="mt-4"
             />
           )}
       </div>
@@ -294,8 +294,8 @@ function RenderResponse(props: {
     case "assistant":
       return (
         <StyledMarkdownRenderer
-          text={message.text}
           isMessagePending={isMessagePending}
+          text={message.text}
           type="assistant"
         />
       );
@@ -312,14 +312,14 @@ function RenderResponse(props: {
     case "image": {
       return (
         <NebulaImage
+          authToken={props.authToken}
+          client={client}
+          height={message.data.height}
+          requestId={message.request_id}
+          sessionId={props.sessionId}
           type="response"
           url={message.data.url}
           width={message.data.width}
-          height={message.data.height}
-          client={client}
-          requestId={message.request_id}
-          sessionId={props.sessionId}
-          authToken={props.authToken}
         />
       );
     }
@@ -328,7 +328,6 @@ function RenderResponse(props: {
       if (message.subtype === "sign_transaction") {
         return (
           <ExecuteTransactionCard
-            txData={message.data}
             client={client}
             onTxSettled={(txHash) => {
               // do not send automatic prompt if there is another transaction after this one
@@ -337,16 +336,17 @@ function RenderResponse(props: {
               }
 
               sendMessage({
-                role: "user",
                 content: [
                   {
-                    type: "transaction",
-                    transaction_hash: txHash,
                     chain_id: message.data.chainId,
+                    transaction_hash: txHash,
+                    type: "transaction",
                   },
                 ],
+                role: "user",
               });
             }}
+            txData={message.data}
           />
         );
       }
@@ -354,13 +354,12 @@ function RenderResponse(props: {
       if (message.subtype === "sign_swap") {
         if (message.data.action === "approval") {
           return (
-            <ApproveTransactionCard swapData={message.data} client={client} />
+            <ApproveTransactionCard client={client} swapData={message.data} />
           );
         }
 
         return (
           <SwapTransactionCard
-            swapData={message.data}
             client={client}
             onTxSettled={(txHash) => {
               // do not send automatic prompt if there is another transaction after this one
@@ -369,16 +368,17 @@ function RenderResponse(props: {
               }
 
               sendMessage({
-                role: "user",
                 content: [
                   {
-                    type: "transaction",
-                    transaction_hash: txHash,
                     chain_id: message.data.transaction.chainId,
+                    transaction_hash: txHash,
+                    type: "transaction",
                   },
                 ],
+                role: "user",
               });
             }}
+            swapData={message.data}
           />
         );
       }
@@ -401,21 +401,21 @@ function StyledMarkdownRenderer(props: {
 }) {
   return (
     <MarkdownRenderer
-      skipHtml
-      markdownText={props.text}
       className="text-foreground [&>*:first-child]:mt-0 [&>*:first-child]:border-none [&>*:first-child]:pb-0 [&>*:last-child]:mb-0"
       code={{
-        ignoreFormattingErrors: true,
         className: "bg-transparent",
+        ignoreFormattingErrors: true,
       }}
+      inlineCode={{ className: "border-none" }}
+      li={{ className: "text-foreground" }}
+      markdownText={props.text}
       p={{
         className:
           props.type === "assistant"
             ? "text-foreground"
             : "text-foreground leading-normal",
       }}
-      li={{ className: "text-foreground" }}
-      inlineCode={{ className: "border-none" }}
+      skipHtml
     />
   );
 }

@@ -57,9 +57,9 @@ export function useSetupScreen(props: {
   }, [activeAccount, screen]);
 
   return {
+    initialScreen,
     screen,
     setScreen,
-    initialScreen,
   };
 }
 

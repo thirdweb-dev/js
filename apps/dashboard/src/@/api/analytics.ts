@@ -175,9 +175,9 @@ export async function getAggregateUserOpUsage(
     },
     {
       date: (params.from || new Date()).toISOString(),
-      successful: 0,
       failed: 0,
       sponsoredUsd: 0,
+      successful: 0,
     },
   );
 }
@@ -279,14 +279,14 @@ export async function isProjectActive(params: {
     );
     return {
       bundler: false,
-      storage: false,
-      rpc: false,
-      nebula: false,
-      sdk: false,
-      insight: false,
-      pay: false,
-      inAppWallet: false,
       ecosystemWallet: false,
+      inAppWallet: false,
+      insight: false,
+      nebula: false,
+      pay: false,
+      rpc: false,
+      sdk: false,
+      storage: false,
     } as ActiveStatus;
   }
 

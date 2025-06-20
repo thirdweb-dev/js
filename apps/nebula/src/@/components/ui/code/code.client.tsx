@@ -1,9 +1,9 @@
 "use client";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { BundledLanguage } from "shiki";
-import { RenderCode } from "./RenderCode";
 import { getCodeHtml } from "./getCodeHtml";
 import { PlainTextCodeBlock } from "./plaintext-code";
+import { RenderCode } from "./RenderCode";
 
 export type CodeProps = {
   code: string;
@@ -31,41 +31,41 @@ export const CodeClient: React.FC<CodeProps> = ({
   onCopy,
 }) => {
   const codeQuery = useQuery({
-    queryKey: ["getCodeHtml", code, lang],
+    placeholderData: keepPreviousDataOnCodeChange
+      ? keepPreviousData
+      : undefined,
     queryFn: () =>
       getCodeHtml(code, lang, {
         ignoreFormattingErrors: ignoreFormattingErrors,
       }),
-    placeholderData: keepPreviousDataOnCodeChange
-      ? keepPreviousData
-      : undefined,
+    queryKey: ["getCodeHtml", code, lang],
     retry: false,
   });
 
   if (!codeQuery.data) {
     return (
       <PlainTextCodeBlock
-        code={code}
         className={className}
-        scrollableClassName={scrollableClassName}
+        code={code}
         copyButtonClassName={copyButtonClassName}
+        onCopy={onCopy}
+        scrollableClassName={scrollableClassName}
         scrollableContainerClassName={scrollableContainerClassName}
         shadowColor={shadowColor}
-        onCopy={onCopy}
       />
     );
   }
 
   return (
     <RenderCode
-      code={codeQuery.data.formattedCode}
-      html={codeQuery.data.html}
       className={className}
-      scrollableClassName={scrollableClassName}
+      code={codeQuery.data.formattedCode}
       copyButtonClassName={copyButtonClassName}
+      html={codeQuery.data.html}
+      onCopy={onCopy}
+      scrollableClassName={scrollableClassName}
       scrollableContainerClassName={scrollableContainerClassName}
       shadowColor={shadowColor}
-      onCopy={onCopy}
     />
   );
 };

@@ -1,13 +1,12 @@
-import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
-
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,
 } from "@app/api/lib/getAuthToken";
 import { loginRedirect } from "@app/login/loginRedirect";
 import { redirect } from "next/navigation";
+import { getProject } from "@/api/projects";
+import { getTeamBySlug } from "@/api/team";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { CreateAssetPageHeader } from "../_common/PageHeader";
 import { CreateNFTPage } from "./create-nft-page";
 
@@ -45,20 +44,20 @@ export default async function Page(props: {
   return (
     <div className="flex grow flex-col">
       <CreateAssetPageHeader
-        title="Create NFT Collection"
-        description="Launch an NFT collection for your project"
-        teamSlug={params.team_slug}
-        projectSlug={params.project_slug}
         containerClassName="container max-w-5xl"
+        description="Launch an NFT collection for your project"
+        projectSlug={params.project_slug}
+        teamSlug={params.team_slug}
+        title="Create NFT Collection"
       />
       <div className="container max-w-5xl pt-8 pb-32">
         <CreateNFTPage
           accountAddress={accountAddress}
           client={client}
-          teamSlug={params.team_slug}
+          projectId={project.id}
           projectSlug={params.project_slug}
           teamId={team.id}
-          projectId={project.id}
+          teamSlug={params.team_slug}
         />
       </div>
     </div>

@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.tofee",
-  name: "Tofee Wallet Official",
-  homepage: "https://tofee.app/",
-  image_id: "d4dbb723-b1ec-4cfc-daab-1d559a151f00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/in/app/tofee/id6504269605",
     android: null,
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/in/app/tofee/id6504269605",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "tofee://wallet",
-    universal: "https://tofee.app/",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://tofee.app/",
+  id: "app.tofee",
+  image_id: "d4dbb723-b1ec-4cfc-daab-1d559a151f00",
+  mobile: {
+    native: "tofee://wallet",
+    universal: "https://tofee.app/",
+  },
+  name: "Tofee Wallet Official",
+  rdns: null,
 } as const;

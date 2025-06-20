@@ -13,38 +13,38 @@ type DropPageData = {
 
 export const DROP_PAGES: DropPageData[] = [
   {
-    slug: "test",
-    type: "erc1155",
-    contractAddress: "0xBD9d7f15f3C850B35c30b8F9F698B511c20b7263",
-    tokenId: 0n,
     chainId: 11155111,
-    hideQuantitySelector: true,
+    contractAddress: "0xBD9d7f15f3C850B35c30b8F9F698B511c20b7263",
     hideMintToCustomAddress: true,
-    thumbnail: "/drops/zerion.mp4",
+    hideQuantitySelector: true,
     metadata: {
-      title: "Test mint page",
       description: "none",
+      title: "Test mint page",
     },
+    slug: "test",
+    thumbnail: "/drops/zerion.mp4",
+    tokenId: 0n,
+    type: "erc1155",
   },
   {
-    slug: "zero-chain-announcement",
-    type: "erc1155",
-    contractAddress: "0x78264a0af02d894f2d9ae3e11E4a503b352CC437",
-    tokenId: 0n,
     chainId: 543210,
+    contractAddress: "0x78264a0af02d894f2d9ae3e11E4a503b352CC437",
     hideMintToCustomAddress: true,
     hideQuantitySelector: true,
-    thumbnail: "/drops/zerion.mp4",
     metadata: {
-      title: "ZERO x thirdweb",
       description:
         "This exclusive commemorative NFT marks the official launch of ZERϴ's mainnet and our exciting partnership with thirdweb. Own a piece of this milestone in blockchain history as we make onchain transactions free with zero.network",
       openGraph: {
-        title: "ZERO x thirdweb",
         description:
           "This exclusive commemorative NFT marks the official launch of ZERϴ's mainnet and our exciting partnership with thirdweb. Own a piece of this milestone in blockchain history as we make onchain transactions free with zero.network",
+        title: "ZERO x thirdweb",
       },
+      title: "ZERO x thirdweb",
     },
+    slug: "zero-chain-announcement",
+    thumbnail: "/drops/zerion.mp4",
+    tokenId: 0n,
+    type: "erc1155",
   },
 
   // Add more chains here

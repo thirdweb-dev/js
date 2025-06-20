@@ -57,13 +57,13 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
 
     if (!isValidSemver) {
       form.setError("version", {
-        type: "pattern",
         message: "Version must be valid semver.",
+        type: "pattern",
       });
     } else if (!isValidVersion) {
       form.setError("version", {
-        type: "manual",
         message: "Version must be greater than latest version.",
+        type: "manual",
       });
     } else {
       form.clearErrors("version");
@@ -71,8 +71,8 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
   };
 
   return (
-    <Flex gap={16} direction="column" as="fieldset" mt={{ base: 4, md: 12 }}>
-      <Flex gap={2} direction="column">
+    <Flex as="fieldset" direction="column" gap={16} mt={{ base: 4, md: 12 }}>
+      <Flex direction="column" gap={2}>
         <Heading size="title.lg">
           {!latestVersion ? "Publish" : "Edit"} your contract
         </Heading>
@@ -81,8 +81,8 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
           deployable in a single click.{" "}
           <Link
             color="blue.500"
-            isExternal
             href="https://portal.thirdweb.com/contracts/publish/overview"
+            isExternal
           >
             Learn more
           </Link>
@@ -94,12 +94,12 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
           <Box width="141px">
             <FileInput
               accept={{ "image/*": [] }}
+              className="rounded border border-border transition-all duration-200"
               client={client}
-              value={logoUrl}
+              helperText="Image"
               // @ts-expect-error - we upload the file later this is fine
               setValue={(file) => form.setValue("logo", file)}
-              className="rounded border border-border transition-all duration-200"
-              helperText="Image"
+              value={logoUrl}
             />
           </Box>
           <FormErrorMessage>
@@ -113,9 +113,9 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
           >
             <FormLabel>Contract Name</FormLabel>
             <Input
+              onChange={(e) => form.setValue("displayName", e.target.value)}
               placeholder="Ex. MyContract"
               value={form.watch("displayName")}
-              onChange={(e) => form.setValue("displayName", e.target.value)}
             />
             <FormErrorMessage>
               {form.formState.errors?.displayName?.message}
@@ -124,10 +124,10 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
           <FormControl isInvalid={!!form.formState.errors.description}>
             <FormLabel>Description</FormLabel>
             <Textarea
-              rows={2}
-              placeholder="Briefly describe what your contract does."
-              value={form.watch("description")}
               onChange={(e) => form.setValue("description", e.target.value)}
+              placeholder="Briefly describe what your contract does."
+              rows={2}
+              value={form.watch("description")}
             />
 
             <FormErrorMessage>
@@ -138,19 +138,19 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
       </Flex>
 
       <div>
-        <Heading size="title.md" mb={2}>
+        <Heading mb={2} size="title.md">
           README
         </Heading>
-        <Text size="body.md" mb={4}>
+        <Text mb={4} size="body.md">
           Describe what your contract does and how it should be used. Markdown
           formatting is supported.
         </Text>
         <FormControl isInvalid={!!form.formState.errors.readme}>
-          <Tabs isLazy lazyBehavior="keepMounted" colorScheme="gray">
+          <Tabs colorScheme="gray" isLazy lazyBehavior="keepMounted">
             <TabList
-              px={0}
               borderBottomColor="borderColor"
               borderBottomWidth="1px"
+              px={0}
             >
               <Tab gap={2}>
                 <Heading size="label.lg">Write</Heading>
@@ -160,17 +160,17 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
               </Tab>
             </TabList>
             <TabPanels pt={2}>
-              <TabPanel px={0} pb={0}>
+              <TabPanel pb={0} px={0}>
                 <Textarea
                   {...form.register("readme")}
-                  rows={12}
                   placeholder="Describe how users can use this contract. Add links if relevant."
+                  rows={12}
                 />
                 <FormErrorMessage>
                   {form.formState.errors?.readme?.message}
                 </FormErrorMessage>
               </TabPanel>
-              <TabPanel px={0} pb={0}>
+              <TabPanel pb={0} px={0}>
                 <Card>
                   <MarkdownRenderer markdownText={form.watch("readme") || ""} />
                 </Card>
@@ -181,15 +181,15 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
       </div>
       <ExternalLinksFieldset />
       <div>
-        <Heading size="title.md" mb={2}>
+        <Heading mb={2} size="title.md">
           Version information
         </Heading>
-        <Text size="body.md" mb={4}>
+        <Text mb={4} size="body.md">
           Set your contract version number, add release notes, and link to your
           contract&apos;s audit report.
         </Text>
         <Flex flexDir="column" gap={6}>
-          <FormControl isRequired isInvalid={!!form.formState.errors.version}>
+          <FormControl isInvalid={!!form.formState.errors.version} isRequired>
             <Flex alignItems="center" mb={1}>
               <FormLabel flex="1" mb={0}>
                 Version
@@ -199,9 +199,9 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
               )}
             </Flex>
             <Input
+              onChange={handleVersionChange}
               placeholder={placeholderVersion}
               value={form.watch("version")}
-              onChange={handleVersionChange}
             />
             <FormErrorMessage>
               {form.formState.errors?.version?.message}
@@ -210,11 +210,11 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
           {latestVersion && (
             <FormControl isInvalid={!!form.formState.errors.changelog}>
               <FormLabel>Release notes</FormLabel>
-              <Tabs isLazy lazyBehavior="keepMounted" colorScheme="gray">
+              <Tabs colorScheme="gray" isLazy lazyBehavior="keepMounted">
                 <TabList
-                  px={0}
                   borderBottomColor="borderColor"
                   borderBottomWidth="1px"
+                  px={0}
                 >
                   <Tab gap={2}>
                     <Heading size="label.lg">Write</Heading>
@@ -224,7 +224,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
                   </Tab>
                 </TabList>
                 <TabPanels pt={2}>
-                  <TabPanel px={0} pb={0}>
+                  <TabPanel pb={0} px={0}>
                     <Textarea
                       {...form.register("changelog")}
                       placeholder="Mention what is new in this version of your contract."
@@ -233,7 +233,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
                       {form.formState.errors?.changelog?.message}
                     </FormErrorMessage>
                   </TabPanel>
-                  <TabPanel px={0} pb={0}>
+                  <TabPanel pb={0} px={0}>
                     <Card>
                       <MarkdownRenderer
                         markdownText={form.watch("changelog") || ""}
@@ -247,8 +247,8 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
           <FormControl isInvalid={!!form.formState.errors.audit}>
             <FormLabel>Audit report</FormLabel>
             <SolidityInput
-              solidityType="string"
               client={client}
+              solidityType="string"
               {...form.register("audit")}
               placeholder="ipfs://... or https://..."
             />
@@ -262,29 +262,29 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
         </Flex>
       </div>
       <div>
-        <Heading size="title.md" mb={2}>
+        <Heading mb={2} size="title.md">
           Deployment options
         </Heading>
-        <Text size="body.md" mb={4}>
+        <Text mb={4} size="body.md">
           Choose how users will deploy your published contract.
         </Text>
         <Flex flexDir="column" gap={2} width="full">
           <SelectOption
-            name="Direct deploy"
-            description="Users will directly deploy the full contract."
-            onClick={() => form.setValue("deployType", "standard")}
-            isActive={form.watch("deployType") === "standard"}
             className="w-full"
+            description="Users will directly deploy the full contract."
+            isActive={form.watch("deployType") === "standard"}
+            name="Direct deploy"
+            onClick={() => form.setValue("deployType", "standard")}
           />
           <SelectOption
-            name="Deploy via factory"
+            className="w-full"
             description="Users will deploy your contract through a default or custom factory contract."
-            onClick={() => form.setValue("deployType", "autoFactory")}
             isActive={
               form.watch("deployType") === "autoFactory" ||
               form.watch("deployType") === "customFactory"
             }
-            className="w-full"
+            name="Deploy via factory"
+            onClick={() => form.setValue("deployType", "autoFactory")}
           />
         </Flex>
       </div>

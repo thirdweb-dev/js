@@ -19,42 +19,42 @@ describe.runIf(process.env.TW_SECRET_KEY)("ERC20 transferFrom", () => {
   it("should work with `amount`", async () => {
     const contract = getContract({
       address: await deployERC20Contract({
+        account,
         chain,
         client,
-        account,
         params: {
-          name: "erc20token",
           contractURI: TEST_CONTRACT_URI,
+          name: "erc20token",
         },
         type: "TokenERC20",
       }),
-      client,
       chain,
+      client,
     });
 
     await sendAndConfirmTransaction({
-      transaction: mintTo({ contract, to: account.address, amount: 1000 }),
       account,
+      transaction: mintTo({ amount: 1000, contract, to: account.address }),
     });
 
     await sendAndConfirmTransaction({
-      transaction: approve({ contract, amount: 999, spender: account.address }),
       account,
+      transaction: approve({ amount: 999, contract, spender: account.address }),
     });
 
     await sendAndConfirmTransaction({
+      account,
       transaction: transferFrom({
-        contract,
         amount: 999,
-        to: TEST_ACCOUNT_B.address,
+        contract,
         from: account.address,
+        to: TEST_ACCOUNT_B.address,
       }),
-      account,
     });
 
     const balance = await balanceOf({
-      contract,
       address: TEST_ACCOUNT_B.address,
+      contract,
     });
     expect(balance).toBe(999n * 10n ** 18n);
   });
@@ -62,42 +62,42 @@ describe.runIf(process.env.TW_SECRET_KEY)("ERC20 transferFrom", () => {
   it("should work with `amountWei`", async () => {
     const contract = getContract({
       address: await deployERC20Contract({
+        account,
         chain,
         client,
-        account,
         params: {
-          name: "erc20token",
           contractURI: TEST_CONTRACT_URI,
+          name: "erc20token",
         },
         type: "TokenERC20",
       }),
-      client,
       chain,
+      client,
     });
 
     await sendAndConfirmTransaction({
-      transaction: mintTo({ contract, to: account.address, amount: 1000 }),
       account,
+      transaction: mintTo({ amount: 1000, contract, to: account.address }),
     });
 
     await sendAndConfirmTransaction({
-      transaction: approve({ contract, amount: 999, spender: account.address }),
       account,
+      transaction: approve({ amount: 999, contract, spender: account.address }),
     });
 
     await sendAndConfirmTransaction({
+      account,
       transaction: transferFrom({
-        contract,
         amountWei: 999n * 10n ** 18n,
-        to: TEST_ACCOUNT_B.address,
+        contract,
         from: account.address,
+        to: TEST_ACCOUNT_B.address,
       }),
-      account,
     });
 
     const balance = await balanceOf({
-      contract,
       address: TEST_ACCOUNT_B.address,
+      contract,
     });
     expect(balance).toBe(999n * 10n ** 18n);
   });

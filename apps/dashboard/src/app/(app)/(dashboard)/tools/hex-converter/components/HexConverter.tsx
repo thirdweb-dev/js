@@ -1,11 +1,11 @@
 "use client";
 
+import { useId, useState } from "react";
+import { fromHex, type Hex, toHex } from "thirdweb";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
-import { type Hex, fromHex, toHex } from "thirdweb";
 import { ShareButton } from "../../components/share";
 
 export const HexConverter = () => {
@@ -24,30 +24,33 @@ export const HexConverter = () => {
     } catch {}
   };
 
+  const hexInputId = useId();
+  const decInputId = useId();
+
   return (
     <div className="space-y-24">
       <div className="space-y-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Label htmlFor="hex-input" className="min-w-60 text-xl">
+          <Label className="min-w-60 text-xl" htmlFor={hexInputId}>
             Hex
           </Label>
           <Input
-            id="hex-input"
-            value={hex}
-            onChange={(e) => onChange({ hex: e.target.value })}
             className="p-6 text-xl"
+            id={hexInputId}
+            onChange={(e) => onChange({ hex: e.target.value })}
+            value={hex}
           />
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Label htmlFor="dec-input" className="min-w-60 text-xl">
+          <Label className="min-w-60 text-xl" htmlFor={decInputId}>
             Decimal
           </Label>
           <Input
-            id="dec-input"
+            className="p-6 text-xl"
+            id={decInputId}
+            onChange={(e) => onChange({ dec: e.target.valueAsNumber })}
             type="number"
             value={dec}
-            onChange={(e) => onChange({ dec: e.target.valueAsNumber })}
-            className="p-6 text-xl"
           />
         </div>
         <div className="mt-4 flex justify-end">
@@ -62,10 +65,10 @@ export const HexConverter = () => {
         <p>
           Or use the
           <a
-            href="https://portal.thirdweb.com/typescript/v5"
-            target="_blank"
-            rel="noopener noreferrer"
             className="underline"
+            href="https://portal.thirdweb.com/typescript/v5"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             Connect SDK
           </a>
@@ -73,18 +76,18 @@ export const HexConverter = () => {
         </p>
         <div>
           <CopyTextButton
-            textToShow={`fromHex("${hex}", "number")`}
-            textToCopy={`fromHex("${hex}", "number")`}
-            tooltip="Copy"
             copyIconPosition="right"
+            textToCopy={`fromHex("${hex}", "number")`}
+            textToShow={`fromHex("${hex}", "number")`}
+            tooltip="Copy"
           />
         </div>
         <div>
           <CopyTextButton
-            textToShow={`toHex(${dec})`}
-            textToCopy={`toHex(${dec})`}
-            tooltip="Copy"
             copyIconPosition="right"
+            textToCopy={`toHex(${dec})`}
+            textToShow={`toHex(${dec})`}
+            tooltip="Copy"
           />
         </div>
       </Card>

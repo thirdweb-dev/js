@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import {
   type BaseTransactionOptions,
-  type ThirdwebContract,
   getAddress,
   getContract,
+  type ThirdwebContract,
   toTokens,
 } from "thirdweb";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
@@ -27,8 +27,8 @@ export async function tokensDelegated(
     address: tokenAddress,
   });
   const delegatedAddress = await ERC20Ext.delegates({
-    contract: tokenContract,
     account: options.account.address,
+    contract: tokenContract,
   });
   return getAddress(delegatedAddress) === getAddress(options.account.address);
 }
@@ -49,7 +49,7 @@ export async function voteTokenBalances(
     ERC20Ext.decimals({ contract: tokenContract }),
     Promise.all(
       options.addresses.map((address) =>
-        ERC20Ext.balanceOf({ contract: tokenContract, address }),
+        ERC20Ext.balanceOf({ address, contract: tokenContract }),
       ),
     ),
   ]);

@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import { AlertCircleIcon, AlertTriangleIcon, InfoIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export function Callout(props: {
   children: React.ReactNode;
@@ -9,8 +9,8 @@ export function Callout(props: {
 }) {
   return (
     <div
-      role="alert"
       className={cn("my-5 flex flex-col gap-1 rounded-lg border bg-card p-4")}
+      role="alert"
     >
       {/* Icon + title */}
       {props.title && (

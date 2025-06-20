@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.internetmoney",
-  name: "Internet Money Wallet",
-  homepage: "https://internetmoney.io",
-  image_id: "204b2240-5ce4-4996-6ec4-f06a22726900",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/id1641771042",
     android:
       "https://play.google.com/store/apps/details?id=com.internetmoneywallet.app",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome:
       "https://chrome.google.com/webstore/detail/ckklhkaabbmdjkahiaaplikpdddkenic",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/id1641771042",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "internetmoney://",
-    universal: "https://internetmoney.io",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://internetmoney.io",
   },
+  homepage: "https://internetmoney.io",
+  id: "io.internetmoney",
+  image_id: "204b2240-5ce4-4996-6ec4-f06a22726900",
+  mobile: {
+    native: "internetmoney://",
+    universal: "https://internetmoney.io",
+  },
+  name: "Internet Money Wallet",
+  rdns: null,
 } as const;

@@ -1,15 +1,15 @@
+import { redirect } from "next/navigation";
 import { getStripeBalance } from "@/actions/stripe-actions";
-import { type Team, getTeamBySlug } from "@/api/team";
+import { getTeamBySlug, type Team } from "@/api/team";
 import { getMemberByAccountId } from "@/api/team-members";
 import { getTeamSubscriptions } from "@/api/team-subscription";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { redirect } from "next/navigation";
 import { CreditsInfoCard } from "../../../../../../../../components/settings/Account/Billing/PlanCard";
 import { Coupons } from "../../../../../../../../components/settings/Account/Billing/SubscriptionCoupons/Coupons";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
-import { PlanInfoCardClient } from "./components/PlanInfoCard.client";
 import { CreditBalanceSection } from "./components/credit-balance-section.client";
+import { PlanInfoCardClient } from "./components/PlanInfoCard.client";
 
 export default async function Page(props: {
   params: Promise<{
@@ -67,29 +67,29 @@ export default async function Page(props: {
     <div className="flex flex-col gap-12">
       <div>
         <PlanInfoCardClient
-          team={team}
-          subscriptions={subscriptions}
-          openPlanSheetButtonByDefault={searchParams.showPlans === "true"}
           highlightPlan={highlightPlan}
           isOwnerAccount={isOwnerAccount}
+          openPlanSheetButtonByDefault={searchParams.showPlans === "true"}
+          subscriptions={subscriptions}
+          team={team}
         />
       </div>
 
       {/* Credit Balance Section */}
       {team.stripeCustomerId && (
         <CreditBalanceSection
-          teamSlug={team.slug}
           balancePromise={getStripeBalance(team.stripeCustomerId)}
           isOwnerAccount={isOwnerAccount}
+          teamSlug={team.slug}
         />
       )}
 
       <CreditsInfoCard
-        twAccount={account}
         client={client}
         teamSlug={team.slug}
+        twAccount={account}
       />
-      <Coupons teamId={team.id} isPaymentSetup={validPayment} />
+      <Coupons isPaymentSetup={validPayment} teamId={team.id} />
     </div>
   );
 }

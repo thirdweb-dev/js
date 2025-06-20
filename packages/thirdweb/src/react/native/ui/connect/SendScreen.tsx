@@ -11,8 +11,8 @@ import type {
   TokenInfo,
 } from "../../../core/utils/defaultTokens.js";
 import { radius, spacing } from "../../design-system/index.js";
-import { type ContainerType, Header } from "../components/Header.js";
 import { ThemedButton } from "../components/button.js";
+import { type ContainerType, Header } from "../components/Header.js";
 import { ThemedInput } from "../components/input.js";
 import { Spacer } from "../components/spacer.js";
 import { ThemedSpinner } from "../components/spinner.js";
@@ -56,11 +56,11 @@ export const SendScreen = (props: SendScreenProps) => {
         tokenAddress: selectedToken?.address,
       },
       {
-        onSuccess() {
-          setScreen("success");
-        },
         onError() {
           setScreen("error");
+        },
+        onSuccess() {
+          setScreen("success");
         },
       },
     );
@@ -70,10 +70,10 @@ export const SendScreen = (props: SendScreenProps) => {
     return (
       <>
         <Header
-          theme={theme}
-          onClose={onClose}
-          onBack={() => setScreen("base")}
           containerType={containerType}
+          onBack={() => setScreen("base")}
+          onClose={onClose}
+          theme={theme}
           title="Funds Sent"
         />
         <Spacer size="xl" />
@@ -88,10 +88,10 @@ export const SendScreen = (props: SendScreenProps) => {
     return (
       <>
         <Header
-          theme={theme}
-          onClose={onClose}
-          onBack={() => setScreen("base")}
           containerType={containerType}
+          onBack={() => setScreen("base")}
+          onClose={onClose}
+          theme={theme}
           title="Error Sending Funds"
         />
         <Spacer size="xl" />
@@ -109,22 +109,22 @@ export const SendScreen = (props: SendScreenProps) => {
     return (
       <>
         <Header
-          theme={theme}
-          onClose={onClose}
-          onBack={() => setScreen("base")}
           containerType={containerType}
+          onBack={() => setScreen("base")}
+          onClose={onClose}
+          theme={theme}
           title="Token to Send"
         />
         <Spacer size="xl" />
         <View style={{ flex: 1 }}>
           <TokenListScreen
-            theme={theme}
             client={client}
-            supportedTokens={supportedTokens}
             onTokenSelected={(t) => {
               setSelectedToken(t);
               setScreen("base");
             }}
+            supportedTokens={supportedTokens}
+            theme={theme}
           />
         </View>
       </>
@@ -134,10 +134,10 @@ export const SendScreen = (props: SendScreenProps) => {
   return (
     <>
       <Header
-        theme={theme}
-        onClose={onClose}
-        onBack={onBack}
         containerType={containerType}
+        onBack={onBack}
+        onClose={onClose}
+        theme={theme}
         title="Send Funds"
       />
       <View style={styles.container}>
@@ -148,19 +148,19 @@ export const SendScreen = (props: SendScreenProps) => {
           <View
             style={{
               borderColor: theme.colors.borderColor,
+              borderRadius: radius.lg,
               borderWidth: 1,
               paddingHorizontal: spacing.md,
               paddingVertical: spacing.smd,
-              borderRadius: radius.lg,
             }}
           >
             <TokenRow
-              theme={theme}
-              client={client}
               address={account?.address}
               chain={chain}
-              token={selectedToken}
+              client={client}
               onTokenSelected={handleTokenClicked}
+              theme={theme}
+              token={selectedToken}
             />
           </View>
         </View>
@@ -169,13 +169,13 @@ export const SendScreen = (props: SendScreenProps) => {
             Send to
           </ThemedText>
           <ThemedInput
-            theme={theme}
+            autoCapitalize="none"
+            keyboardType="url"
             onChangeText={setReceiverAddress}
-            value={receiverAddress}
             placeholder="0x... / ENS name"
             textContentType="URL"
-            keyboardType="url"
-            autoCapitalize="none"
+            theme={theme}
+            value={receiverAddress}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -183,37 +183,37 @@ export const SendScreen = (props: SendScreenProps) => {
             Amount
           </ThemedText>
           <ThemedInput
-            theme={theme}
-            onChangeText={setAmount}
-            value={amount}
             inputMode="numeric"
+            onChangeText={setAmount}
             rightView={
               <ThemedText
+                style={{ marginRight: spacing.md }}
                 theme={theme}
                 type="subtext"
-                style={{ marginRight: spacing.md }}
               >
                 {selectedToken?.symbol || symbol}
               </ThemedText>
             }
+            theme={theme}
+            value={amount}
           />
         </View>
         <View style={styles.inputContainer}>
           <ThemedButton
+            disabled={sendMutation.isPending}
+            onPress={handleSend}
             theme={theme}
             variant="accent"
-            onPress={handleSend}
-            disabled={sendMutation.isPending}
           >
             {sendMutation.isPending ? (
               <ThemedSpinner color={theme.colors.accentButtonText} />
             ) : (
               <ThemedText
-                theme={theme}
-                type="defaultSemiBold"
                 style={{
                   color: theme.colors.accentButtonText,
                 }}
+                theme={theme}
+                type="defaultSemiBold"
               >
                 Send
               </ThemedText>
@@ -227,10 +227,10 @@ export const SendScreen = (props: SendScreenProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.lg,
     flexDirection: "column",
     gap: spacing.md,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
   },
   inputContainer: {
     gap: spacing.sm,

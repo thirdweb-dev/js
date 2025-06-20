@@ -24,22 +24,22 @@ export function EcosystemPermissionsPage({
   return (
     <div className="flex flex-col gap-8">
       <IntegrationPermissionsSection
-        ecosystem={ecosystem}
         authToken={authToken}
+        ecosystem={ecosystem}
         teamId={teamId}
       />
       <AuthOptionsSection
-        ecosystem={ecosystem}
         authToken={authToken}
-        teamId={teamId}
         client={client}
+        ecosystem={ecosystem}
+        teamId={teamId}
       />
       {ecosystem?.permission === "PARTNER_WHITELIST" && (
         <EcosystemPartnersSection
-          teamSlug={params.team_slug}
-          ecosystem={ecosystem}
           authToken={authToken}
+          ecosystem={ecosystem}
           teamId={teamId}
+          teamSlug={params.team_slug}
         />
       )}
     </div>

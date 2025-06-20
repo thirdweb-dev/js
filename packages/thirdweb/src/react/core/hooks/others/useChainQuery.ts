@@ -15,22 +15,22 @@ export function useChainName(chain?: Chain) {
   // only if we have a chain and no chain name!
   const isEnabled = !!chain && !chain.name;
   const chainQuery = useQuery({
-    queryKey: ["chain", chain?.id],
     enabled: isEnabled,
-    retry: false,
-    // 1 hour
-    staleTime: 60 * 60 * 1000,
     queryFn: async () => {
       if (!chain) {
         throw new Error("chain is required");
       }
       return convertApiChainToChain(await getChainMetadata(chain));
     },
+    queryKey: ["chain", chain?.id],
+    retry: false,
+    // 1 hour
+    staleTime: 60 * 60 * 1000,
   });
 
   return {
-    name: chain?.name ?? chainQuery.data?.name,
     isLoading: isEnabled && chainQuery.isLoading,
+    name: chain?.name ?? chainQuery.data?.name,
   };
 }
 
@@ -38,23 +38,23 @@ export function useChainIconUrl(chain?: Chain) {
   // only if we have a chain and no chain icon url!
   const isEnabled = !!chain && !chain.icon?.url;
   const chainQuery = useQuery({
-    queryKey: ["chain", chain?.id],
     // only if we have a chain and no chain icon url!
     enabled: isEnabled,
-    retry: false,
-    // 1 hour
-    staleTime: 60 * 60 * 1000,
     queryFn: async () => {
       if (!chain) {
         throw new Error("chain is required");
       }
       return convertApiChainToChain(await getChainMetadata(chain));
     },
+    queryKey: ["chain", chain?.id],
+    retry: false,
+    // 1 hour
+    staleTime: 60 * 60 * 1000,
   });
 
   return {
-    url: chain?.icon?.url ?? chainQuery.data?.icon?.url,
     isLoading: isEnabled && chainQuery.isLoading,
+    url: chain?.icon?.url ?? chainQuery.data?.icon?.url,
   };
 }
 
@@ -67,17 +67,17 @@ export function useChainFaucets(chain?: Chain) {
     chain.id !== 1337;
 
   const chainQuery = useQuery({
-    queryKey: ["chain", chain?.id],
     enabled: isEnabled,
-    retry: false,
-    // 1 hour
-    staleTime: 60 * 60 * 1000,
     queryFn: async () => {
       if (!chain) {
         throw new Error("chain is required");
       }
       return convertApiChainToChain(await getChainMetadata(chain));
     },
+    queryKey: ["chain", chain?.id],
+    retry: false,
+    // 1 hour
+    staleTime: 60 * 60 * 1000,
   });
 
   return {
@@ -90,24 +90,24 @@ export function useChainSymbol(chain?: Chain) {
   // only if we have a chain and no chain icon url!
   const isEnabled = !!chain && !chain.nativeCurrency?.symbol;
   const chainQuery = useQuery({
-    queryKey: ["chain", chain?.id],
     // only if we have a chain and no chain icon url!
     enabled: isEnabled,
-    retry: false,
-    // 1 hour
-    staleTime: 60 * 60 * 1000,
     queryFn: async () => {
       if (!chain) {
         throw new Error("chain is required");
       }
       return convertApiChainToChain(await getChainMetadata(chain));
     },
+    queryKey: ["chain", chain?.id],
+    retry: false,
+    // 1 hour
+    staleTime: 60 * 60 * 1000,
   });
 
   return {
+    isLoading: isEnabled && chainQuery.isLoading,
     symbol:
       chain?.nativeCurrency?.symbol ?? chainQuery.data?.nativeCurrency?.symbol,
-    isLoading: isEnabled && chainQuery.isLoading,
   };
 }
 
@@ -116,17 +116,17 @@ export function useChainExplorers(chain?: Chain) {
   const isEnabled = !!chain && !chain.blockExplorers?.length;
 
   const chainQuery = useQuery({
-    queryKey: ["chain", chain?.id],
     enabled: isEnabled,
-    retry: false,
-    // 1 hour
-    staleTime: 60 * 60 * 1000,
     queryFn: async () => {
       if (!chain) {
         throw new Error("chain is required");
       }
       return convertApiChainToChain(await getChainMetadata(chain));
     },
+    queryKey: ["chain", chain?.id],
+    retry: false,
+    // 1 hour
+    staleTime: 60 * 60 * 1000,
   });
 
   return {
@@ -137,8 +137,8 @@ export function useChainExplorers(chain?: Chain) {
 
 function getQueryOptions(chain?: Chain) {
   return {
-    queryKey: ["chain", chain?.id],
     enabled: !!chain,
+    queryKey: ["chain", chain?.id],
     staleTime: 1000 * 60 * 60, // 1 hour
   } as const;
 }

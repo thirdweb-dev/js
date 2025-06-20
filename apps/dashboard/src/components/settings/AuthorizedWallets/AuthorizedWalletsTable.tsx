@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   type AuthorizedWallet,
   useRevokeAuthorizedWallet,
@@ -13,6 +12,7 @@ import { toast } from "sonner";
 import { isAddress } from "thirdweb/utils";
 import type { ComponentWithChildren } from "types/component-with-children";
 import { shortenString } from "utils/usedapp-external";
+import { Button } from "@/components/ui/button";
 import { AuthorizedWalletRevokeModal } from "./AuthorizedWalletRevokeModal";
 
 interface AuthorizedWalletsTableProps {
@@ -34,7 +34,6 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
 
   const columns = [
     columnHelper.accessor("deviceName", {
-      header: "Device Name",
       cell: (cell) => {
         const value = cell.getValue();
         if (!value) {
@@ -45,10 +44,10 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
         }
         return <span className="text-sm">{value}</span>;
       },
+      header: "Device Name",
     }),
 
     columnHelper.accessor("createdAt", {
-      header: "Authorized at",
       cell: (cell) => {
         const value = cell.getValue();
 
@@ -58,10 +57,10 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
         const createdDate = format(new Date(value), "MMM dd, yyyy");
         return <span className="text-sm">{createdDate}</span>;
       },
+      header: "Authorized at",
     }),
 
     columnHelper.accessor("id", {
-      header: "",
       cell: (cell) => {
         const value = cell.getValue();
         if (!value) {
@@ -70,13 +69,14 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
         return (
           <Button
             onClick={() => handleOpen(value)}
-            variant="destructive"
             size="sm"
+            variant="destructive"
           >
             Revoke Access
           </Button>
         );
       },
+      header: "",
     }),
   ];
 
@@ -117,19 +117,19 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
     <>
       {revokeAuthorizedWalletId && (
         <AuthorizedWalletRevokeModal
+          authorizedWalletId={revokeAuthorizedWalletId || ""}
           isOpen={isOpen}
           onClose={handleClose}
-          authorizedWalletId={revokeAuthorizedWalletId || ""}
           onSubmit={handleSubmit}
         />
       )}
 
       <TWTable
-        title="Authorized Devices"
         columns={columns}
         data={authorizedWallets}
-        isPending={isPending}
         isFetched={isFetched}
+        isPending={isPending}
+        title="Authorized Devices"
       />
     </>
   );

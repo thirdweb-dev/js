@@ -1,4 +1,7 @@
 "use client";
+import { useId, useMemo, useState } from "react";
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
+import type { UniversalBridgeStats } from "types/analytics";
 import {
   Select,
   SelectContent,
@@ -6,10 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useId, useMemo, useState } from "react";
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
-import type { UniversalBridgeStats } from "types/analytics";
-import { CardHeading, NoDataOverlay, chartHeight } from "./common";
+import { CardHeading, chartHeight, NoDataOverlay } from "./common";
 
 type GraphData = {
   date: string;
@@ -80,10 +80,10 @@ export function TotalPayVolume(props: {
         {props.data && (
           <div className="flex gap-2">
             <Select
-              value={type}
               onValueChange={(value: "all" | "crypto" | "fiat") => {
                 setType(value);
               }}
+              value={type}
             >
               <SelectTrigger className="bg-transparent">
                 <SelectValue placeholder="Select" />
@@ -101,10 +101,10 @@ export function TotalPayVolume(props: {
       <div className="h-10" />
 
       <div className="relative flex w-full flex-1 justify-center">
-        <ResponsiveContainer width="100%" height={chartHeight}>
+        <ResponsiveContainer height={chartHeight} width="100%">
           <AreaChart data={isEmpty ? emptyGraphData : graphData}>
             <defs>
-              <linearGradient id={uniqueId} x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id={uniqueId} x1="0" x2="0" y1="0" y2="1">
                 <stop offset="5%" stopColor={chartColor} stopOpacity={0.4} />
                 <stop offset="95%" stopColor={chartColor} stopOpacity={0.0} />
               </linearGradient>
@@ -131,23 +131,23 @@ export function TotalPayVolume(props: {
             )}
 
             <Area
-              type="monotone"
               dataKey="value"
-              stroke={chartColor}
-              fillOpacity={1}
               fill={`url(#${uniqueId})`}
-              strokeWidth={2}
+              fillOpacity={1}
+              stroke={chartColor}
               strokeLinecap="round"
+              strokeWidth={2}
+              type="monotone"
             />
 
             {graphData && (
               <XAxis
-                dataKey="date"
                 axisLine={false}
-                tickLine={false}
                 className="font-sans text-xs"
-                stroke="hsl(var(--muted-foreground))"
+                dataKey="date"
                 dy={10}
+                stroke="hsl(var(--muted-foreground))"
+                tickLine={false}
               />
             )}
           </AreaChart>
@@ -162,7 +162,7 @@ const emptyGraphData: GraphData[] = [5, 9, 7, 15, 7, 20].map((x, i, arr) => {
   const date = new Date();
   date.setDate(date.getDate() + i - arr.length);
   return {
-    value: x,
     date: date.toISOString(),
+    value: x,
   };
 });

@@ -20,13 +20,13 @@ export async function fetchWithAuthToken(options: FetchWithKeyOptions) {
 
   try {
     const response = await fetch(options.endpoint, {
-      method: options.method,
+      body: "body" in options ? JSON.stringify(options.body) : undefined,
       headers: {
-        "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Bearer ${options.authToken}`,
+        "Content-Type": "application/json",
       },
-      body: "body" in options ? JSON.stringify(options.body) : undefined,
+      method: options.method,
       signal: controller.signal,
     });
 

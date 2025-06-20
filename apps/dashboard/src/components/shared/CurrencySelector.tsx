@@ -1,3 +1,7 @@
+import { CURRENCIES, type CurrencyMetadata } from "constants/currencies";
+import { useAllChainsData } from "hooks/chains/allChains";
+import { useMemo, useState } from "react";
+import { isAddress, NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from "thirdweb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -8,10 +12,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { CURRENCIES, type CurrencyMetadata } from "constants/currencies";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { useMemo, useState } from "react";
-import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS, isAddress } from "thirdweb";
 
 interface CurrencySelectorProps {
   value: string;
@@ -113,15 +113,15 @@ export function CurrencySelector({
         </Button>
         <Input
           className="w-full rounded-none"
-          required
-          placeholder="ERC20 Address"
-          value={editCustomCurrency}
           onChange={(e) => setEditCustomCurrency(e.target.value)}
+          placeholder="ERC20 Address"
+          required
+          value={editCustomCurrency}
         />
         <Button
           className="rounded-r-md rounded-l-none"
-          onClick={addCustomCurrency}
           disabled={!isAddress(editCustomCurrency)}
+          onClick={addCustomCurrency}
         >
           Save
         </Button>
@@ -139,13 +139,6 @@ export function CurrencySelector({
     >
       <Select
         disabled={isDisabled}
-        value={
-          isPaymentsSelector
-            ? value
-            : value?.toLowerCase() === ZERO_ADDRESS.toLowerCase()
-              ? NATIVE_TOKEN_ADDRESS.toLowerCase()
-              : value?.toLowerCase()
-        }
         onValueChange={(val) => {
           if (val === "custom") {
             setIsAddingCurrency(true);
@@ -155,6 +148,13 @@ export function CurrencySelector({
             } as React.ChangeEvent<HTMLSelectElement>);
           }
         }}
+        value={
+          isPaymentsSelector
+            ? value
+            : value?.toLowerCase() === ZERO_ADDRESS.toLowerCase()
+              ? NATIVE_TOKEN_ADDRESS.toLowerCase()
+              : value?.toLowerCase()
+        }
       >
         <SelectTrigger>
           <SelectValue placeholder="Select Currency" />

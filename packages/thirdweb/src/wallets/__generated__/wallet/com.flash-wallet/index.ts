@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.flash-wallet",
-  name: "Flash Wallet",
-  homepage: "https://flash-wallet.com/",
-  image_id: "ded6d2d1-85b0-4eac-5582-3aaeefa8ba00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/pk/app/flash-wallet/id6461013442",
     android:
       "https://play.google.com/store/apps/details?id=com.flashwallet.production",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/pk/app/flash-wallet/id6461013442",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "flashwallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://flash-wallet.com/",
+  id: "com.flash-wallet",
+  image_id: "ded6d2d1-85b0-4eac-5582-3aaeefa8ba00",
+  mobile: {
+    native: "flashwallet://",
+    universal: null,
+  },
+  name: "Flash Wallet",
+  rdns: null,
 } as const;

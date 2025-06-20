@@ -3,8 +3,28 @@ import { FooterLinksSection } from "../../../components/footer/FooterLinksSectio
 export function InAppWalletsFooter() {
   return (
     <FooterLinksSection
+      center={{
+        links: [
+          {
+            href: "https://www.youtube.com/watch?v=9s3Z-MvPv2I",
+            label: "Build your own custom connect component",
+          },
+          {
+            href: "https://www.youtube.com/watch?v=oUouNueoVFU",
+            label: "Learn to create wallets inside a Unity game",
+          },
+          {
+            href: "https://www.youtube.com/watch?v=xEp-fKba_cI",
+            label: "Pre-generate wallets for users",
+          },
+          {
+            href: "https://portal.thirdweb.com/connect/wallet/sign-in-methods/guest",
+            label: "Sign-in with guest mode",
+          },
+        ],
+        title: "Tutorials",
+      }}
       left={{
-        title: "Documentation",
         links: [
           {
             href: "https://portal.thirdweb.com/connect/wallet/overview",
@@ -35,30 +55,9 @@ export function InAppWalletsFooter() {
             label: "Unreal Engine",
           },
         ],
-      }}
-      center={{
-        title: "Tutorials",
-        links: [
-          {
-            href: "https://www.youtube.com/watch?v=9s3Z-MvPv2I",
-            label: "Build your own custom connect component",
-          },
-          {
-            label: "Learn to create wallets inside a Unity game",
-            href: "https://www.youtube.com/watch?v=oUouNueoVFU",
-          },
-          {
-            href: "https://www.youtube.com/watch?v=xEp-fKba_cI",
-            label: "Pre-generate wallets for users",
-          },
-          {
-            label: "Sign-in with guest mode",
-            href: "https://portal.thirdweb.com/connect/wallet/sign-in-methods/guest",
-          },
-        ],
+        title: "Documentation",
       }}
       right={{
-        title: "Demos",
         links: [
           {
             href: "https://playground.thirdweb.com/connect/in-app-wallet/ecosystem",
@@ -73,6 +72,7 @@ export function InAppWalletsFooter() {
             label: "Customized UI",
           },
         ],
+        title: "Demos",
       }}
     />
   );

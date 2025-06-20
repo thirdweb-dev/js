@@ -14,8 +14,8 @@ const NetworkInput = () => (
     formLabel="Network"
     formValue="extraInfo_Network"
     inputType="text"
-    required={true}
     placeholder="Network name or chain ID"
+    required={true}
   />
 );
 
@@ -23,8 +23,8 @@ const ContractAddressInput = () => (
   <SupportForm_TextInput
     formLabel="Contract address"
     formValue="extraInfo_Contract_Address"
-    required={true}
     inputType="text"
+    required={true}
   />
 );
 
@@ -32,8 +32,8 @@ const ContractFunctionInput = () => (
   <SupportForm_TextInput
     formLabel="Contract function"
     formValue="extraInfo_Contract_Function"
-    required={true}
     inputType="text"
+    required={true}
   />
 );
 
@@ -41,9 +41,9 @@ const ContractTypeInput = () => (
   <SupportForm_TextInput
     formLabel="Contract type"
     formValue="extraInfo_Contract_Type"
-    required={false}
     inputType="text"
     placeholder={`"MarketplaceV3 | "NFTDrop" | ...`}
+    required={false}
   />
 );
 
@@ -53,18 +53,17 @@ const ContractAffectedAreaInput = () => {
     <SupportForm_SelectInput
       formLabel="Contract affected area"
       name="extraInfo_Affected_Area"
-      options={["Dashboard", "SDK"]}
-      required={true}
-      promptText="Select an affected area"
-      value={selectedAffectedArea}
       onValueChange={setSelectedAffectedArea}
+      options={["Dashboard", "SDK"]}
+      promptText="Select an affected area"
+      required={true}
+      value={selectedAffectedArea}
     />
   );
 };
 
 const CONTRACT_PROBLEM_AREAS: ProblemAreaItem[] = [
   {
-    label: "Deploying a contract",
     component: (
       <>
         <NetworkInput />
@@ -74,9 +73,9 @@ const CONTRACT_PROBLEM_AREAS: ProblemAreaItem[] = [
         <AttachmentForm />
       </>
     ),
+    label: "Deploying a contract",
   },
   {
-    label: "Contract verification",
     component: (
       <>
         <NetworkInput />
@@ -86,9 +85,9 @@ const CONTRACT_PROBLEM_AREAS: ProblemAreaItem[] = [
         <AttachmentForm />
       </>
     ),
+    label: "Contract verification",
   },
   {
-    label: "Calling a function in my contract",
     component: (
       <>
         <NetworkInput />
@@ -99,24 +98,25 @@ const CONTRACT_PROBLEM_AREAS: ProblemAreaItem[] = [
         <AttachmentForm />
       </>
     ),
+    label: "Calling a function in my contract",
   },
   {
+    component: (
+      <>
+        <DescriptionInput />
+        <AttachmentForm />
+      </>
+    ),
     label: "Developing a custom contract",
-    component: (
-      <>
-        <DescriptionInput />
-        <AttachmentForm />
-      </>
-    ),
   },
   {
-    label: "Other",
     component: (
       <>
         <DescriptionInput />
         <AttachmentForm />
       </>
     ),
+    label: "Other",
   },
 ];
 
@@ -127,11 +127,11 @@ export default function ContractSupportForm() {
       <SupportForm_SelectInput
         formLabel="Problem area"
         name="extraInfo_Problem_Area"
-        promptText="Select a problem area"
+        onValueChange={setProblemArea}
         options={CONTRACT_PROBLEM_AREAS.map((o) => o.label)}
+        promptText="Select a problem area"
         required={true}
         value={problemArea}
-        onValueChange={setProblemArea}
       />
       {CONTRACT_PROBLEM_AREAS.find((o) => o.label === problemArea)?.component}
     </>

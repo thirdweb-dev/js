@@ -1,20 +1,5 @@
 "use client";
 
-import { Img } from "@/components/blocks/Img";
-import { CustomMediaRenderer } from "@/components/blocks/media-renderer";
-import { WalletAddress } from "@/components/blocks/wallet-address";
-import { DynamicHeight } from "@/components/ui/DynamicHeight";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
-import { TabButtons } from "@/components/ui/tabs";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import {
   BoxIcon,
   CircleSlashIcon,
@@ -29,6 +14,21 @@ import type { ChainMetadata } from "thirdweb/chains";
 import { getNFT as ERC721_getNFT } from "thirdweb/extensions/erc721";
 import { getNFT as ERC1155_getNFT } from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
+import { Img } from "@/components/blocks/Img";
+import { CustomMediaRenderer } from "@/components/blocks/media-renderer";
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Badge } from "@/components/ui/badge";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
+import { TabButtons } from "@/components/ui/tabs";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { useERC1155ClaimCondition } from "../client-utils";
 import { BuyEditionDrop } from "../overview/buy-edition-drop/buy-edition-drop.client";
 
@@ -59,12 +59,12 @@ export function TokenViewerSheet(
 
   return (
     <Dialog
-      open={props.open}
       onOpenChange={(open) => {
         if (!open) {
           props.onClose();
         }
       }}
+      open={props.open}
     >
       <DialogContent
         className="lg:!max-w-6xl !rounded-xl flex flex-col gap-0 p-0 max-sm:max-h-[calc(100dvh-60px)] max-sm:overflow-y-auto"
@@ -76,21 +76,21 @@ export function TokenViewerSheet(
 
         {props.variant === "fetch-data" ? (
           <FetchAndRenderTokenInfo
-            clientContract={props.clientContract}
             chainMetadata={props.chainMetadata}
-            type={props.type}
-            tokenId={props.tokenId}
-            tokenByIndexSupported={props.tokenByIndexSupported}
+            clientContract={props.clientContract}
             collectionMetadata={props.collectionMetadata}
+            tokenByIndexSupported={props.tokenByIndexSupported}
+            tokenId={props.tokenId}
+            type={props.type}
           />
         ) : (
           <TokenInfoUI
-            data={props.nft}
-            contract={props.clientContract}
-            type={props.type}
-            tokenId={tokenId}
             chainMetadata={props.chainMetadata}
             collectionMetadata={props.collectionMetadata}
+            contract={props.clientContract}
+            data={props.nft}
+            tokenId={tokenId}
+            type={props.type}
           />
         )}
       </DialogContent>
@@ -112,9 +112,9 @@ function FetchAndRenderTokenInfo(props: {
     props.type === "erc721" ? ERC721_getNFT : ERC1155_getNFT,
     {
       contract: props.clientContract,
-      tokenId: props.tokenId,
       includeOwner: true,
       tokenByIndex: props.tokenByIndexSupported,
+      tokenId: props.tokenId,
     },
   );
 
@@ -135,12 +135,12 @@ function FetchAndRenderTokenInfo(props: {
 
   return (
     <TokenInfoUI
-      data={nftQuery.data}
-      contract={props.clientContract}
-      type={props.type}
-      tokenId={props.tokenId}
       chainMetadata={props.chainMetadata}
       collectionMetadata={props.collectionMetadata}
+      contract={props.clientContract}
+      data={nftQuery.data}
+      tokenId={props.tokenId}
+      type={props.type}
     />
   );
 }
@@ -159,9 +159,9 @@ function TokenInfoUI(props: {
   const attributes = props.data ? getAttributes(props.data) : [];
   const { claimCondition } = useERC1155ClaimCondition({
     chainMetadata: props.chainMetadata,
-    tokenId: props.tokenId,
     contract: props.contract,
     enabled: props.type === "erc1155",
+    tokenId: props.tokenId,
   });
 
   const [tab, setTab] = useState<"traits" | "buy">("traits");
@@ -198,11 +198,11 @@ function TokenInfoUI(props: {
       <div className="p-4 lg:p-2">
         {props.data ? (
           <CustomMediaRenderer
-            client={props.contract.client}
-            src={props.data.metadata.animation_url || props.data.metadata.image}
             alt={props.data.metadata.name?.toString() || ""}
-            poster={props.data.metadata.image}
             className="[&>div]:!bg-accent [&_a]:!text-muted-foreground [&_a]:!no-underline [&_svg]:!size-6 [&_svg]:!text-muted-foreground aspect-square w-full rounded-lg"
+            client={props.contract.client}
+            poster={props.data.metadata.image}
+            src={props.data.metadata.animation_url || props.data.metadata.image}
           />
         ) : (
           <Skeleton className="aspect-square rounded-lg border" />
@@ -217,10 +217,10 @@ function TokenInfoUI(props: {
               {/* title */}
               <SkeletonContainer
                 loadedData={props.data?.metadata.name}
-                skeletonData="NFTCollection #0"
                 render={(title) => (
                   <h2 className="font-bold text-3xl tracking-tight">{title}</h2>
                 )}
+                skeletonData="NFTCollection #0"
               />
 
               {/* description */}
@@ -239,6 +239,11 @@ function TokenInfoUI(props: {
             <div className="flex flex-col gap-3 border-y border-dashed py-4 lg:flex-row lg:items-center lg:[&>*:not(:first-child)]:border-l lg:[&>*:not(:first-child)]:pl-3 ">
               <div className="flex items-center gap-1.5">
                 <Img
+                  alt={props.collectionMetadata.name}
+                  className="size-3.5 rounded-lg"
+                  fallback={
+                    <BoxIcon className="size-3.5 text-muted-foreground" />
+                  }
                   src={
                     props.collectionMetadata.image
                       ? resolveSchemeWithErrorHandler({
@@ -247,11 +252,6 @@ function TokenInfoUI(props: {
                         }) || ""
                       : ""
                   }
-                  alt={props.collectionMetadata.name}
-                  fallback={
-                    <BoxIcon className="size-3.5 text-muted-foreground" />
-                  }
-                  className="size-3.5 rounded-lg"
                 />
                 <span className="text-foreground text-sm ">
                   {props.collectionMetadata.name}
@@ -266,9 +266,9 @@ function TokenInfoUI(props: {
                   <span className="text-muted-foreground">Owned by</span>
                   <WalletAddress
                     address={props.data.owner}
+                    className="h-auto py-0 text-sm"
                     client={props.contract.client}
                     iconClassName="hidden"
-                    className="h-auto py-0 text-sm"
                     preventOpenOnFocus
                   />
                 </div>
@@ -300,24 +300,26 @@ function TokenInfoUI(props: {
             {/* badges */}
             <div className="flex flex-wrap gap-2">
               <Badge
-                variant="outline"
                 className="bg-muted/50 py-1 font-normal text-muted-foreground"
+                variant="outline"
               >
                 {props.type === "erc721" ? "ERC721" : "ERC1155"}
               </Badge>
 
               <Badge
-                variant="outline"
                 className="bg-muted/50 py-1 font-normal text-muted-foreground"
+                variant="outline"
               >
                 Token #{props.tokenId}
               </Badge>
 
               <Badge
-                variant="outline"
                 className="flex items-center gap-2 bg-muted/50 px-1.5 py-1 font-normal text-muted-foreground"
+                variant="outline"
               >
                 <Img
+                  alt={props.chainMetadata.name}
+                  className="size-3 rounded-full"
                   src={
                     props.chainMetadata.icon?.url
                       ? resolveSchemeWithErrorHandler({
@@ -326,8 +328,6 @@ function TokenInfoUI(props: {
                         })
                       : ""
                   }
-                  alt={props.chainMetadata.name}
-                  className="size-3 rounded-full"
                 />
                 <span className="text-muted-foreground text-xs">
                   {props.chainMetadata.name}
@@ -342,14 +342,14 @@ function TokenInfoUI(props: {
                   tabClassName="!text-sm"
                   tabs={[
                     {
+                      isActive: tab === "traits",
                       name: "Traits",
                       onClick: () => setTab("traits"),
-                      isActive: tab === "traits",
                     },
                     {
+                      isActive: tab === "buy",
                       name: "Buy NFT",
                       onClick: () => setTab("buy"),
-                      isActive: tab === "buy",
                     },
                   ]}
                 />
@@ -366,9 +366,9 @@ function TokenInfoUI(props: {
                       </div>
                     ) : (
                       <BuyEditionDrop
+                        chainMetadata={props.chainMetadata}
                         contract={props.contract}
                         tokenId={props.tokenId}
-                        chainMetadata={props.chainMetadata}
                       />
                     )}
                   </div>
@@ -410,15 +410,15 @@ export function PageLoadTokenViewerSheet(props: {
 
   return (
     <TokenViewerSheet
-      variant="fetch-data"
-      clientContract={props.clientContract}
       chainMetadata={props.chainMetadata}
-      type={props.type}
-      tokenId={props.tokenId}
+      clientContract={props.clientContract}
+      collectionMetadata={props.collectionMetadata}
+      onClose={() => setOpen(false)}
       open={open}
       tokenByIndexSupported={props.tokenByIndexSupported}
-      onClose={() => setOpen(false)}
-      collectionMetadata={props.collectionMetadata}
+      tokenId={props.tokenId}
+      type={props.type}
+      variant="fetch-data"
     />
   );
 }
@@ -462,10 +462,7 @@ function getAttributes(nft: NFT) {
   return attributes;
 }
 
-function TraitCard(props: {
-  trait_type: string;
-  value: string;
-}) {
+function TraitCard(props: { trait_type: string; value: string }) {
   return (
     <div className="relative rounded-md border bg-card px-3 py-2">
       <SparkleIcon className="absolute top-2 right-2 size-3 fill-muted-foreground text-muted-foreground opacity-30" />

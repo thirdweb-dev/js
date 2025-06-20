@@ -1,11 +1,11 @@
 "use client";
 
-import { THIRDWEB_CLIENT } from "@/lib/client";
 import { useMemo } from "react";
 import { getContract, toTokens } from "thirdweb";
 import { base } from "thirdweb/chains";
 import { transferEvent } from "thirdweb/extensions/erc20";
 import { useContractEvents } from "thirdweb/react";
+import { THIRDWEB_CLIENT } from "@/lib/client";
 import { shortenAddress } from "./shortenAddress";
 
 type Item = {
@@ -23,9 +23,9 @@ const usdcContractOnBase = getContract({
 
 export function WatchEventPreview() {
   const contractEvents = useContractEvents({
+    blockRange: 100,
     contract: usdcContractOnBase,
     events: [transferEvent()],
-    blockRange: 100,
   });
 
   const items: Item[] = useMemo(() => {
@@ -35,9 +35,9 @@ export function WatchEventPreview() {
         const { from, to, value } = item.args;
         return {
           from: shortenAddress(from),
+          hash: item.transactionHash,
           to: shortenAddress(to),
           value: Number(toTokens(value, 6)).toFixed(1),
-          hash: item.transactionHash,
         };
       })
       .filter(

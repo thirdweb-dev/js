@@ -8,9 +8,9 @@ import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { iconSize, radius } from "../../../../core/design-system/index.js";
 import type { InjectedWalletLocale } from "../../../wallets/injected/locale/types.js";
-import { WalletImage } from "../../components/WalletImage.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { ButtonLink } from "../../components/buttons.js";
+import { WalletImage } from "../../components/WalletImage.js";
 import { StyledDiv } from "../../design-system/elements.js";
 
 /**
@@ -38,16 +38,16 @@ export const DeepLinkConnectUI = (props: {
         <ModalHeader onBack={props.onBack} title={props.walletInfo.name} />
       </Container>
 
-      <Container flex="row" center="x" animate="fadein" py="3xl">
+      <Container animate="fadein" center="x" flex="row" py="3xl">
         <PulsatingContainer>
-          <WalletImage id={props.wallet.id} client={props.client} size="80" />
+          <WalletImage client={props.client} id={props.wallet.id} size="80" />
         </PulsatingContainer>
       </Container>
 
       <Container p="lg">
-        <ButtonLink fullWidth variant="accent" href={deeplink} gap="xs">
+        <ButtonLink fullWidth gap="xs" href={deeplink} variant="accent">
           Continue in {props.walletInfo.name}
-          <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
+          <ExternalLinkIcon height={iconSize.sm} width={iconSize.sm} />
         </ButtonLink>
       </Container>
     </Container>
@@ -67,19 +67,19 @@ const pulseAnimation = keyframes`
 const PulsatingContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
-    position: "relative",
     "&::before": {
+      animation: `${pulseAnimation} 2s cubic-bezier(0.175, 0.885, 0.32, 1.1) infinite`,
+      background: theme.colors.accentText,
+      borderRadius: radius.xl,
+      bottom: 0,
       content: '""',
       display: "block",
-      position: "absolute",
       left: 0,
-      top: 0,
-      bottom: 0,
+      position: "absolute",
       right: 0,
-      background: theme.colors.accentText,
-      animation: `${pulseAnimation} 2s cubic-bezier(0.175, 0.885, 0.32, 1.1) infinite`,
+      top: 0,
       zIndex: -1,
-      borderRadius: radius.xl,
     },
+    position: "relative",
   };
 });

@@ -8,15 +8,15 @@ export async function submitFeedback(params: {
   rating: "good" | "bad" | "neutral";
 }) {
   const res = await fetchWithAuthToken({
-    method: "POST",
-    endpoint: `${NEXT_PUBLIC_NEBULA_URL}/feedback`,
+    authToken: params.authToken,
     body: {
-      session_id: params.sessionId,
-      request_id: params.requestId,
       feedback_rating:
         params.rating === "good" ? 1 : params.rating === "bad" ? -1 : 0,
+      request_id: params.requestId,
+      session_id: params.sessionId,
     },
-    authToken: params.authToken,
+    endpoint: `${NEXT_PUBLIC_NEBULA_URL}/feedback`,
+    method: "POST",
   });
 
   if (!res.ok) {

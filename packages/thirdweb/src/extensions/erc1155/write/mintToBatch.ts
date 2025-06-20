@@ -82,7 +82,6 @@ export function mintToBatch(
   options: BaseTransactionOptions<MintToBatchParams>,
 ) {
   return multicall({
-    contract: options.contract,
     asyncParams: async () => {
       const data = await Promise.all(
         options.nfts.map(async (nft) => {
@@ -94,16 +93,17 @@ export function mintToBatch(
                   files: [nft.metadata],
                 });
           return encodeMintTo({
+            amount: nft.supply,
             to: options.to,
             // maxUint256 is used to indicate that this is a NEW token!
             tokenId: maxUint256,
             uri,
-            amount: nft.supply,
           });
         }),
       );
       return { data };
     },
+    contract: options.contract,
     overrides: options.overrides,
   });
 }

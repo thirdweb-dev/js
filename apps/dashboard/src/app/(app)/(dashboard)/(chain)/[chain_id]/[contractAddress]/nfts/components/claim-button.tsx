@@ -1,5 +1,17 @@
 "use client";
 
+import { FormControl, Input } from "@chakra-ui/react";
+import { TransactionButton } from "components/buttons/TransactionButton";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import { GemIcon } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { isAddress, type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
+import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
+import { claimTo } from "thirdweb/extensions/erc721";
+import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -8,18 +20,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { FormControl, Input } from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { GemIcon } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { type ThirdwebContract, ZERO_ADDRESS, isAddress } from "thirdweb";
-import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
-import { claimTo } from "thirdweb/extensions/erc721";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 const CLAIM_FORM_ID = "nft-claim-form";
 
@@ -50,9 +50,9 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
   );
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet onOpenChange={setOpen} open={open}>
       <SheetTrigger asChild>
-        <Button variant="primary" className="gap-2">
+        <Button className="gap-2" variant="primary">
           <GemIcon className="size-4" /> Claim
         </Button>
       </SheetTrigger>
@@ -62,11 +62,16 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
         </SheetHeader>
         <form className="mt-8 flex w-full flex-col gap-3 md:flex-row">
           <div className="flex w-full flex-col gap-6 md:flex-row">
-            <FormControl isRequired isInvalid={!!errors.to}>
+            <FormControl isInvalid={!!errors.to} isRequired>
               <FormLabel>To Address</FormLabel>
               <Input
                 placeholder={ZERO_ADDRESS}
                 {...register("to", {
+                  onChange: (e) => {
+                    setValue("to", e.target.value.trim(), {
+                      shouldValidate: true,
+                    });
+                  },
                   validate: (value) => {
                     if (!value) {
                       return "Enter a recipient address";
@@ -75,17 +80,12 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
                       return "Invalid EVM address";
                     }
                   },
-                  onChange: (e) => {
-                    setValue("to", e.target.value.trim(), {
-                      shouldValidate: true,
-                    });
-                  },
                 })}
               />
               <FormHelperText>Enter the address to claim to.</FormHelperText>
               <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
             </FormControl>
-            <FormControl isRequired isInvalid={!!errors.amount}>
+            <FormControl isInvalid={!!errors.amount} isRequired>
               <FormLabel>Amount</FormLabel>
               <Input
                 type="text"
@@ -106,12 +106,9 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
         <div className="mt-4 flex justify-end">
           <TransactionButton
             client={contract.client}
-            isLoggedIn={isLoggedIn}
-            txChainID={contract.chain.id}
-            transactionCount={1}
             form={CLAIM_FORM_ID}
+            isLoggedIn={isLoggedIn}
             isPending={formState.isSubmitting}
-            type="submit"
             onClick={handleSubmit(async (d) => {
               try {
                 if (!account) {
@@ -125,14 +122,14 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
 
                 const transaction = claimTo({
                   contract,
-                  to: d.to.trim(),
-                  quantity: BigInt(d.amount),
                   from: account.address,
+                  quantity: BigInt(d.amount),
+                  to: d.to.trim(),
                 });
 
                 const approveTx = await getApprovalForTransaction({
-                  transaction,
                   account,
+                  transaction,
                 });
 
                 if (approveTx) {
@@ -142,20 +139,20 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
                     },
                   });
                   toast.promise(promise, {
+                    error: "Failed to approve token",
                     loading: "Approving ERC20 tokens for this claim",
                     success: "Tokens approved successfully",
-                    error: "Failed to approve token",
                   });
 
                   await promise;
                 }
 
                 await sendAndConfirmTx.mutateAsync(transaction, {
-                  onSuccess: () => {
-                    setOpen(false);
-                  },
                   onError: (error) => {
                     console.error(error);
+                  },
+                  onSuccess: () => {
+                    setOpen(false);
                   },
                 });
 
@@ -165,6 +162,9 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
                 claimNFTNotifications.onError(error);
               }
             })}
+            transactionCount={1}
+            txChainID={contract.chain.id}
+            type="submit"
           >
             Claim NFT
           </TransactionButton>

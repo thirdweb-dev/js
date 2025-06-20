@@ -53,30 +53,30 @@ export function Img(props: imgElementProps) {
       <img
         {...restProps}
         // avoid setting empty src string to prevent request to the entire page
-        src={restProps.src || undefined}
-        ref={imgRef}
-        onError={() => {
-          setStatus("fallback");
-        }}
-        style={{
-          opacity: status === "loaded" ? 1 : 0,
-          ...restProps.style,
-        }}
         alt={restProps.alt || ""}
         className={cn(
           "fade-in-0 object-cover transition-opacity duration-300",
           className,
         )}
         decoding="async"
+        onError={() => {
+          setStatus("fallback");
+        }}
+        ref={imgRef}
+        src={restProps.src || undefined}
+        style={{
+          opacity: status === "loaded" ? 1 : 0,
+          ...restProps.style,
+        }}
       />
 
       {status !== "loaded" && (
         <div
-          style={restProps.style}
           className={cn(
             "fade-in-0 absolute inset-0 overflow-hidden transition-opacity duration-300 [&>*]:h-full [&>*]:w-full",
             className,
           )}
+          style={restProps.style}
         >
           {status === "pending" && (skeleton || defaultSkeleton)}
           {status === "fallback" && (fallback || defaultFallback)}

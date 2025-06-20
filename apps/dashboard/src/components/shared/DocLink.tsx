@@ -7,10 +7,10 @@ export function DocLink(props: {
 }) {
   return (
     <Link
-      href={props.link}
-      target="_blank"
-      rel="noopener noreferrer"
       className="flex items-center gap-2 whitespace-nowrap text-muted-foreground text-sm hover:text-foreground"
+      href={props.link}
+      rel="noopener noreferrer"
+      target="_blank"
     >
       <props.icon className="size-4" />
       {props.label}

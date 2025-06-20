@@ -13,11 +13,11 @@ export default async function Page(props: {
 
   return (
     <SharedNFTTokenPage
-      contractAddress={params.contractAddress}
       chainIdOrSlug={params.chain_id}
-      tokenId={params.tokenId}
-      projectMeta={undefined}
+      contractAddress={params.contractAddress}
       isLoggedIn={!!account}
+      projectMeta={undefined}
+      tokenId={params.tokenId}
     />
   );
 }

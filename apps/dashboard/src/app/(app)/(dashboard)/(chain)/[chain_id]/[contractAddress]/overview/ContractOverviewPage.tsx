@@ -1,6 +1,6 @@
-import { UpsellBannerCard } from "@/components/blocks/UpsellBannerCard";
 import { ExternalLinkIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
+import { UpsellBannerCard } from "@/components/blocks/UpsellBannerCard";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { TokenDetailsCard } from "../tokens/components/supply";
 import { ContractAnalyticsOverviewCard } from "./components/Analytics";
@@ -45,54 +45,54 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
       <div className="flex grow flex-col gap-10 overflow-hidden">
         {isErc20 && (
           <UpsellBannerCard
-            title="Public asset page available"
-            description="A public page is available for this contract for anyone to buy this asset"
+            accentColor="blue"
             cta={{
-              text: "View asset page",
               icon: <ExternalLinkIcon className="size-4" />,
-              target: "_blank",
               link: `/${chainSlug}/${contract.address}`,
+              target: "_blank",
+              text: "View asset page",
             }}
+            description="A public page is available for this contract for anyone to buy this asset"
+            title="Public asset page available"
             trackingCategory="erc20-contract"
             trackingLabel="view-asset-page"
-            accentColor="blue"
           />
         )}
 
         <ContractChecklist
+          chainSlug={chainSlug}
+          contract={contract}
+          functionSelectors={functionSelectors}
+          isErc20={isErc20}
           isErc721={isErc721}
           isErc1155={isErc1155}
-          isErc20={isErc20}
-          contract={contract}
-          chainSlug={chainSlug}
-          functionSelectors={functionSelectors}
           projectMeta={projectMeta}
         />
 
         {isAnalyticsSupported && (
           <ContractAnalyticsOverviewCard
-            contractAddress={contract.address}
             chainId={contract.chain.id}
             chainSlug={chainSlug}
+            contractAddress={contract.address}
             projectMeta={projectMeta}
           />
         )}
 
         {(hasEnglishAuctions || hasDirectListings) && (
           <MarketplaceDetails
-            contract={contract}
-            projectMeta={projectMeta}
-            hasEnglishAuctions={hasEnglishAuctions}
-            hasDirectListings={hasDirectListings}
             chainSlug={chainSlug}
+            contract={contract}
+            hasDirectListings={hasDirectListings}
+            hasEnglishAuctions={hasEnglishAuctions}
+            projectMeta={projectMeta}
           />
         )}
 
         {(isErc1155 || isErc721) && (
           <NFTDetails
+            chainSlug={chainSlug}
             contract={contract}
             isErc721={isErc721}
-            chainSlug={chainSlug}
             projectMeta={projectMeta}
           />
         )}
@@ -100,15 +100,15 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
         {isErc20 && <TokenDetailsCard contract={contract} />}
 
         <LatestEvents
-          contract={contract}
           chainSlug={chainSlug}
+          contract={contract}
           projectMeta={projectMeta}
         />
 
         {isPermissionsEnumerable && (
           <PermissionsTable
-            contract={contract}
             chainSlug={chainSlug}
+            contract={contract}
             projectMeta={projectMeta}
           />
         )}

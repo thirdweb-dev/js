@@ -130,11 +130,6 @@ export function useStepExecutor(
   >(preparedQuote?.type === "onramp" ? "pending" : undefined);
 
   useQuery({
-    queryKey: [
-      "bridge-quote-execution-state",
-      stringify(preparedQuote?.steps),
-      isLoading,
-    ],
     queryFn: async () => {
       if (!isLoading) {
         setExecutionState("idle");
@@ -143,6 +138,11 @@ export function useStepExecutor(
       }
       return executionState;
     },
+    queryKey: [
+      "bridge-quote-execution-state",
+      stringify(preparedQuote?.steps),
+      isLoading,
+    ],
   });
 
   // Cancellation tracking
@@ -222,8 +222,8 @@ export function useStepExecutor(
       const preparedTx = prepareTransaction({
         chain: tx.chain,
         client: tx.client,
-        to: tx.to,
         data: tx.data,
+        to: tx.to,
         value: tx.value,
       });
 
@@ -244,9 +244,9 @@ export function useStepExecutor(
       const { status } = await import("../../../bridge/Status.js");
       await poller(async () => {
         const statusResult = await status({
-          transactionHash: hash,
           chainId: tx.chainId,
           client: tx.client,
+          transactionHash: hash,
         });
 
         if (statusResult.status === "COMPLETED") {
@@ -297,8 +297,8 @@ export function useStepExecutor(
           const preparedTx = prepareTransaction({
             chain: tx.chain,
             client: tx.client,
-            to: tx.to,
             data: tx.data,
+            to: tx.to,
             value: tx.value,
           });
           return preparedTx;
@@ -325,9 +325,9 @@ export function useStepExecutor(
       const { status } = await import("../../../bridge/Status.js");
       await poller(async () => {
         const statusResult = await status({
-          transactionHash: result.transactionHash,
           chainId: firstTx.chainId,
           client: firstTx.client,
+          transactionHash: result.transactionHash,
         });
 
         if (statusResult.status === "COMPLETED") {
@@ -365,8 +365,8 @@ export function useStepExecutor(
       const { Onramp } = await import("../../../bridge/index.js");
       await poller(async () => {
         const statusResult = await Onramp.status({
-          id: onrampQuote.id,
           client: client,
+          id: onrampQuote.id,
         });
 
         const status = statusResult.status;
@@ -592,15 +592,15 @@ export function useStepExecutor(
   }, []);
 
   return {
+    cancel,
     currentStep,
     currentTxIndex,
-    progress,
-    executionState,
-    steps: preparedQuote?.steps,
-    onrampStatus,
     error,
-    start,
-    cancel,
+    executionState,
+    onrampStatus,
+    progress,
     retry,
+    start,
+    steps: preparedQuote?.steps,
   };
 }

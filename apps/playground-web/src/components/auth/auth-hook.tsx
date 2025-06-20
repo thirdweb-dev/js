@@ -1,26 +1,26 @@
 "use client";
 
 import {
-  generatePayload,
-  isLoggedIn,
-  login,
-  logout,
-} from "@/app/connect/auth/server/actions/auth";
-import {
   type SiweAuthOptions,
   useActiveWallet,
   useConnectModal,
   useSiweAuth,
 } from "thirdweb/react";
+import {
+  generatePayload,
+  isLoggedIn,
+  login,
+  logout,
+} from "@/app/connect/auth/server/actions/auth";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { Button } from "../ui/button";
 
 const auth: SiweAuthOptions = {
-  isLoggedIn: (address) => isLoggedIn(address),
   doLogin: (params) => login(params),
+  doLogout: () => logout(),
   getLoginPayload: ({ address }) =>
     generatePayload({ address, chainId: 84532 }),
-  doLogout: () => logout(),
+  isLoggedIn: (address) => isLoggedIn(address),
 };
 
 export function AuthHook() {
@@ -37,14 +37,14 @@ export function AuthHook() {
       await doLogout();
     } else {
       await connect({
-        client: THIRDWEB_CLIENT,
         auth,
+        client: THIRDWEB_CLIENT,
       });
     }
   };
 
   return (
-    <Button type="button" onClick={onClick}>
+    <Button onClick={onClick} type="button">
       {isLoggedIn ? "Sign out" : "Sign in"}
     </Button>
   );

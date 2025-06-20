@@ -1,8 +1,36 @@
 "use client";
 
+import {
+  type DeleteCloudHostedEngineParams,
+  deleteCloudHostedEngine,
+  type EditEngineInstanceParams,
+  type EngineInstance,
+  editEngineInstance,
+  type RemoveEngineFromDashboardIParams,
+  removeEngineFromDashboard,
+} from "@3rdweb-sdk/react/hooks/useEngine";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import {
+  ArrowRightIcon,
+  CheckIcon,
+  CircleAlertIcon,
+  DatabaseIcon,
+  InfinityIcon,
+  InfoIcon,
+  MoreHorizontalIcon,
+  PencilIcon,
+  ShieldCheckIcon,
+  Trash2Icon,
+  WalletIcon,
+} from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import type { Team } from "@/api/team";
 import { CheckoutButton } from "@/components/billing";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -40,8 +68,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {} from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Table,
   TableBody,
@@ -55,35 +83,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import {
-  type DeleteCloudHostedEngineParams,
-  type EditEngineInstanceParams,
-  type EngineInstance,
-  type RemoveEngineFromDashboardIParams,
-  deleteCloudHostedEngine,
-  editEngineInstance,
-  removeEngineFromDashboard,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import {
-  CheckIcon,
-  CircleAlertIcon,
-  DatabaseIcon,
-  InfinityIcon,
-  InfoIcon,
-  PencilIcon,
-  ShieldCheckIcon,
-  Trash2Icon,
-  WalletIcon,
-} from "lucide-react";
-import { MoreHorizontalIcon } from "lucide-react";
-import { ArrowRightIcon } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 import { EngineIcon } from "../../../../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 
 type DeletedCloudHostedEngine = (
@@ -106,10 +105,6 @@ export function EngineInstancesTable(props: {
 
   return (
     <EngineInstancesTableUI
-      team={props.team}
-      instances={props.instances}
-      engineLinkPrefix={props.engineLinkPrefix}
-      projectSlug={props.projectSlug}
       deleteCloudHostedEngine={async (params) => {
         await deleteCloudHostedEngine(params);
         router.refresh();
@@ -118,10 +113,14 @@ export function EngineInstancesTable(props: {
         await editEngineInstance(params);
         router.refresh();
       }}
+      engineLinkPrefix={props.engineLinkPrefix}
+      instances={props.instances}
+      projectSlug={props.projectSlug}
       removeEngineFromDashboard={async (params) => {
         await removeEngineFromDashboard(params);
         router.refresh();
       }}
+      team={props.team}
     />
   );
 }
@@ -167,7 +166,7 @@ function DedicatedEngineSubscriptionButton(props: { team: Team }) {
 
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={setOpen}>
+      <Drawer onOpenChange={setOpen} open={open}>
         <DrawerTrigger asChild>{trigger}</DrawerTrigger>
         <DrawerContent className="max-h-[90vh]">
           <DrawerHeader>
@@ -180,8 +179,8 @@ function DedicatedEngineSubscriptionButton(props: { team: Team }) {
           <DrawerFooter>
             <CheckoutButton
               billingStatus={props.team.billingStatus}
-              teamSlug={props.team.slug}
               sku="product:engine_standard"
+              teamSlug={props.team.slug}
             >
               Deploy Now · $299 / month
             </CheckoutButton>
@@ -192,7 +191,7 @@ function DedicatedEngineSubscriptionButton(props: { team: Team }) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -205,8 +204,8 @@ function DedicatedEngineSubscriptionButton(props: { team: Team }) {
         <DialogFooter>
           <CheckoutButton
             billingStatus={props.team.billingStatus}
-            teamSlug={props.team.slug}
             sku="product:engine_standard"
+            teamSlug={props.team.slug}
           >
             Deploy Now · $299 / month
           </CheckoutButton>
@@ -235,7 +234,7 @@ export function EngineInstancesTableUI(props: {
       </div>
 
       {props.instances.length === 0 ? (
-        <EmptyEngineState team={props.team} projectSlug={props.projectSlug} />
+        <EmptyEngineState projectSlug={props.projectSlug} team={props.team} />
       ) : (
         <TableContainer>
           <Table>
@@ -249,13 +248,13 @@ export function EngineInstancesTableUI(props: {
             <TableBody>
               {props.instances.map((instance) => (
                 <EngineInstanceRow
-                  key={instance.id}
-                  teamIdOrSlug={props.team.slug}
-                  instance={instance}
-                  engineLinkPrefix={props.engineLinkPrefix}
                   deleteCloudHostedEngine={props.deleteCloudHostedEngine}
                   editEngineInstance={props.editEngineInstance}
+                  engineLinkPrefix={props.engineLinkPrefix}
+                  instance={instance}
+                  key={instance.id}
                   removeEngineFromDashboard={props.removeEngineFromDashboard}
+                  teamIdOrSlug={props.team.slug}
                 />
               ))}
             </TableBody>
@@ -288,8 +287,8 @@ function EngineInstanceRow(props: {
           <div className="flex items-center justify-between">
             <div className="flex-grow space-y-0.5">
               <InstanceNameLink
-                instance={instance}
                 engineLinkPrefix={engineLinkPrefix}
+                instance={instance}
               />
               <EngineURL url={instance.url} />
             </div>
@@ -313,20 +312,20 @@ function EngineInstanceRow(props: {
       </TableRow>
 
       <EditModal
-        teamIdOrSlug={props.teamIdOrSlug}
-        instance={instance}
-        open={isEditModalOpen}
-        onOpenChange={setIsEditModalOpen}
         editEngineInstance={props.editEngineInstance}
+        instance={instance}
+        onOpenChange={setIsEditModalOpen}
+        open={isEditModalOpen}
+        teamIdOrSlug={props.teamIdOrSlug}
       />
 
       <RemoveModal
-        teamIdOrSlug={props.teamIdOrSlug}
+        deleteCloudHostedEngine={props.deleteCloudHostedEngine}
         instance={instance}
         onOpenChange={setIsRemoveModalOpen}
         open={isRemoveModalOpen}
-        deleteCloudHostedEngine={props.deleteCloudHostedEngine}
         removeEngineFromDashboard={props.removeEngineFromDashboard}
+        teamIdOrSlug={props.teamIdOrSlug}
       />
     </>
   );
@@ -350,8 +349,8 @@ function InstanceNameLink(props: {
         <span>{name}</span>
       ) : (
         <Link
-          href={`${props.engineLinkPrefix}/${props.instance.id}`}
           className="flex items-center text-foreground before:absolute before:inset-0 before:bg-transparent"
+          href={`${props.engineLinkPrefix}/${props.instance.id}`}
         >
           {name}
         </Link>
@@ -376,44 +375,42 @@ const engineStatusMeta: Record<
     icon: React.FC<{ className?: string }>;
   }
 > = {
-  requested: {
-    label: "Pending",
-    variant: "outline",
-    icon: Spinner,
-  },
-  deploying: {
-    label: "Deploying",
-    variant: "default",
-    icon: Spinner,
-  },
   active: {
+    icon: CheckIcon,
     label: "Active",
     variant: "default",
-    icon: CheckIcon,
   },
-  pending: {
-    label: "Pending",
-    variant: "outline",
+  deploying: {
     icon: Spinner,
-  },
-  paymentFailed: {
-    label: "Payment Failed",
-    variant: "destructive",
-    icon: CircleAlertIcon,
+    label: "Deploying",
+    variant: "default",
   },
   deploymentFailed: {
+    icon: CircleAlertIcon,
     label: "Deployment Failed",
     variant: "destructive",
+  },
+  paymentFailed: {
     icon: CircleAlertIcon,
+    label: "Payment Failed",
+    variant: "destructive",
+  },
+  pending: {
+    icon: Spinner,
+    label: "Pending",
+    variant: "outline",
+  },
+  requested: {
+    icon: Spinner,
+    label: "Pending",
+    variant: "outline",
   },
 };
 
-function EngineStatusBadge(props: {
-  status: EngineInstance["status"];
-}) {
+function EngineStatusBadge(props: { status: EngineInstance["status"] }) {
   const statusMeta = engineStatusMeta[props.status];
   return (
-    <Badge variant={statusMeta.variant} className="gap-2 px-3 py-2">
+    <Badge className="gap-2 px-3 py-2" variant={statusMeta.variant}>
       <statusMeta.icon className="size-3" />
       {statusMeta.label}
     </Badge>
@@ -434,7 +431,7 @@ function EngineActionsDropdown(props: {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="size-10 p-1">
+        <Button className="size-10 p-1" variant="ghost">
           <MoreHorizontalIcon className="size-5" />
         </Button>
       </DropdownMenuTrigger>
@@ -475,13 +472,13 @@ function EditModal(props: {
   editEngineInstance: EditedEngineInstance;
 }) {
   return (
-    <Dialog open={props.open} onOpenChange={props.onOpenChange}>
+    <Dialog onOpenChange={props.onOpenChange} open={props.open}>
       <DialogContent className="overflow-hidden p-0">
         <EditModalContent
-          teamIdOrSlug={props.teamIdOrSlug}
-          instance={props.instance}
-          editEngineInstance={props.editEngineInstance}
           closeModal={() => props.onOpenChange(false)}
+          editEngineInstance={props.editEngineInstance}
+          instance={props.instance}
+          teamIdOrSlug={props.teamIdOrSlug}
         />
       </DialogContent>
     </Dialog>
@@ -506,11 +503,11 @@ function EditModalContent(props: {
 
   const form = useForm<z.infer<typeof editEngineFormSchema>>({
     resolver: zodResolver(editEngineFormSchema),
+    reValidateMode: "onChange",
     values: {
       name: instance.name,
       url: instance.url,
     },
-    reValidateMode: "onChange",
   });
 
   return (
@@ -519,18 +516,18 @@ function EditModalContent(props: {
         onSubmit={form.handleSubmit((data) =>
           editInstance.mutate(
             {
-              teamIdOrSlug: props.teamIdOrSlug,
               instanceId: props.instance.id,
               name: data.name,
+              teamIdOrSlug: props.teamIdOrSlug,
               url: data.url,
             },
             {
+              onError: () => {
+                toast.error("Failed to update Engine");
+              },
               onSuccess: () => {
                 toast.success("Engine updated successfully");
                 props.closeModal();
-              },
-              onError: () => {
-                toast.error("Failed to update Engine");
               },
             },
           ),
@@ -550,9 +547,9 @@ function EditModalContent(props: {
                 <FormControl>
                   <Input
                     {...field}
-                    type="text"
-                    placeholder="Enter a descriptive label"
                     className="bg-card"
+                    placeholder="Enter a descriptive label"
+                    type="text"
                   />
                 </FormControl>
                 <FormMessage />
@@ -571,9 +568,9 @@ function EditModalContent(props: {
                   <FormControl>
                     <Input
                       {...field}
-                      type="url"
-                      placeholder="Enter your Engine URL"
                       className="bg-card"
+                      placeholder="Enter your Engine URL"
+                      type="url"
                     />
                   </FormControl>
                   <FormMessage />
@@ -588,9 +585,9 @@ function EditModalContent(props: {
             Close
           </Button>
           <Button
-            type="submit"
             className="gap-2"
             disabled={!form.formState.isDirty}
+            type="submit"
           >
             {editInstance.isPending && <Spinner className="size-4" />}
             Update
@@ -612,22 +609,22 @@ function RemoveModal(props: {
   const { instance, open, onOpenChange } = props;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent className="overflow-hidden p-0">
         {instance.status === "paymentFailed" ||
         instance.status === "deploymentFailed" ||
         (instance.status === "active" && !instance.deploymentId) ? (
           <RemoveEngineFromDashboardModalContent
-            instance={instance}
-            teamIdOrSlug={props.teamIdOrSlug}
             close={() => onOpenChange(false)}
+            instance={instance}
             removeEngineFromDashboard={props.removeEngineFromDashboard}
+            teamIdOrSlug={props.teamIdOrSlug}
           />
         ) : instance.deploymentId ? (
           <DeleteEngineSubscriptionModalContent
-            instance={instance}
             close={() => onOpenChange(false)}
             deleteCloudHostedEngine={props.deleteCloudHostedEngine}
+            instance={instance}
           />
         ) : null}
       </DialogContent>
@@ -678,6 +675,7 @@ function RemoveEngineFromDashboardModalContent(props: {
           Close
         </Button>
         <Button
+          className="gap-2"
           onClick={() => {
             removeFromDashboard.mutate(
               {
@@ -685,22 +683,21 @@ function RemoveEngineFromDashboardModalContent(props: {
                 teamIdOrSlug: props.teamIdOrSlug,
               },
               {
+                onError: () => {
+                  toast.error(
+                    "Error removing an Engine instance from your dashboard",
+                  );
+                },
                 onSuccess: () => {
                   toast.success(
                     "Removed an Engine instance from your dashboard",
                   );
                   close();
                 },
-                onError: () => {
-                  toast.error(
-                    "Error removing an Engine instance from your dashboard",
-                  );
-                },
               },
             );
           }}
           variant="destructive"
-          className="gap-2"
         >
           {removeFromDashboard.isPending ? (
             <Spinner className="size-4" />
@@ -718,21 +715,21 @@ const deleteEngineReasons: Array<{
   value: DeleteCloudHostedEngineParams["reason"];
   label: string;
 }> = [
-  { value: "USING_SELF_HOSTED", label: "Migrating to self-hosted" },
-  { value: "TOO_EXPENSIVE", label: "Too expensive" },
-  { value: "MISSING_FEATURES", label: "Missing features" },
-  { value: "OTHER", label: "Other" },
+  { label: "Migrating to self-hosted", value: "USING_SELF_HOSTED" },
+  { label: "Too expensive", value: "TOO_EXPENSIVE" },
+  { label: "Missing features", value: "MISSING_FEATURES" },
+  { label: "Other", value: "OTHER" },
 ];
 
 const deleteEngineFormSchema = z.object({
+  confirmDeletion: z.boolean(),
+  feedback: z.string(),
   reason: z.enum([
     "USING_SELF_HOSTED",
     "TOO_EXPENSIVE",
     "MISSING_FEATURES",
     "OTHER",
   ]),
-  feedback: z.string(),
-  confirmDeletion: z.boolean(),
 });
 
 function DeleteEngineSubscriptionModalContent(props: {
@@ -746,11 +743,11 @@ function DeleteEngineSubscriptionModalContent(props: {
   });
 
   const form = useForm<z.infer<typeof deleteEngineFormSchema>>({
-    resolver: zodResolver(deleteEngineFormSchema),
     defaultValues: {
-      feedback: "",
       confirmDeletion: false,
+      feedback: "",
     },
+    resolver: zodResolver(deleteEngineFormSchema),
     reValidateMode: "onChange",
   });
 
@@ -766,10 +763,15 @@ function DeleteEngineSubscriptionModalContent(props: {
     deleteCloudHostedEngine.mutate(
       {
         deploymentId: instance.deploymentId,
-        reason: data.reason,
         feedback: data.feedback,
+        reason: data.reason,
       },
       {
+        onError: () => {
+          toast.error(
+            "Error deleting Engine. Please visit https://thirdweb.com/support.",
+          );
+        },
         onSuccess: () => {
           toast.success(
             "Deleting Engine. Please check again in a few minutes.",
@@ -780,11 +782,6 @@ function DeleteEngineSubscriptionModalContent(props: {
           );
 
           close();
-        },
-        onError: () => {
-          toast.error(
-            "Error deleting Engine. Please visit https://thirdweb.com/support.",
-          );
         },
       },
     );
@@ -815,14 +812,14 @@ function DeleteEngineSubscriptionModalContent(props: {
                   </FormLabel>
                   <FormControl>
                     <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
                       className="flex flex-col gap-1"
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
                     >
                       {deleteEngineReasons.map((reason) => (
                         <FormItem
-                          key={reason.value}
                           className="flex items-center space-x-3 space-y-0"
+                          key={reason.value}
                         >
                           <FormControl>
                             <RadioGroupItem value={reason.value} />
@@ -884,13 +881,13 @@ function DeleteEngineSubscriptionModalContent(props: {
               Close
             </Button>
             <Button
-              type="submit"
-              variant="destructive"
+              className="gap-2"
               disabled={
                 !form.watch("confirmDeletion") ||
                 deleteCloudHostedEngine.isPending
               }
-              className="gap-2"
+              type="submit"
+              variant="destructive"
             >
               {deleteCloudHostedEngine.isPending && (
                 <Spinner className="size-4" />
@@ -904,10 +901,7 @@ function DeleteEngineSubscriptionModalContent(props: {
   );
 }
 
-function EmptyEngineState(props: {
-  team: Team;
-  projectSlug: string;
-}) {
+function EmptyEngineState(props: { team: Team; projectSlug: string }) {
   const [selectedTab, setSelectedTab] = useState<
     "self-hosted" | "cloud-hosted"
   >("cloud-hosted");
@@ -924,86 +918,84 @@ function EmptyEngineState(props: {
         instance.
       </p>
 
-      <>
-        <div className="w-full max-w-md">
-          <div className="mx-auto max-w-sm">
-            <div className="grid grid-cols-2 gap-1 rounded-lg border p-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                className={cn(selectedTab === "cloud-hosted" && "bg-accent")}
-                onClick={() => setSelectedTab("cloud-hosted")}
-              >
-                Managed
-              </Button>
+      <div className="w-full max-w-md">
+        <div className="mx-auto max-w-sm">
+          <div className="grid grid-cols-2 gap-1 rounded-lg border p-1">
+            <Button
+              className={cn(selectedTab === "cloud-hosted" && "bg-accent")}
+              onClick={() => setSelectedTab("cloud-hosted")}
+              size="sm"
+              variant="ghost"
+            >
+              Managed
+            </Button>
 
+            <Button
+              className={cn(selectedTab === "self-hosted" && "bg-accent")}
+              onClick={() => setSelectedTab("self-hosted")}
+              size="sm"
+              variant="ghost"
+            >
+              Self-hosted
+            </Button>
+          </div>
+        </div>
+
+        <div className="h-5" />
+
+        {selectedTab === "self-hosted" && (
+          <div className="flex flex-col text-center">
+            <h3 className="mb-0.5 font-semibold text-base">
+              Self-Hosted Engine
+            </h3>
+            <p className="text-muted-foreground text-sm">
+              Add engine instance running on your own infrastructure.
+            </p>
+            <div className="h-4" />
+            <div className="mt-auto">
               <Button
-                variant="ghost"
+                asChild
+                className="w-full gap-2"
                 size="sm"
-                className={cn(selectedTab === "self-hosted" && "bg-accent")}
-                onClick={() => setSelectedTab("self-hosted")}
+                variant="default"
               >
-                Self-hosted
+                <Link
+                  href={`/team/${props.team.slug}/${props.projectSlug}/engine/dedicated/import`}
+                >
+                  Import self-hosted Engine
+                  <ArrowRightIcon size={16} />
+                </Link>
               </Button>
             </div>
           </div>
+        )}
 
-          <div className="h-5" />
-
-          {selectedTab === "self-hosted" && (
-            <div className="flex flex-col text-center">
-              <h3 className="mb-0.5 font-semibold text-base">
-                Self-Hosted Engine
-              </h3>
-              <p className="text-muted-foreground text-sm">
-                Add engine instance running on your own infrastructure.
-              </p>
-              <div className="h-4" />
-              <div className="mt-auto">
-                <Button
-                  className="w-full gap-2"
-                  variant="default"
-                  size="sm"
-                  asChild
-                >
-                  <Link
-                    href={`/team/${props.team.slug}/${props.projectSlug}/engine/dedicated/import`}
-                  >
-                    Import self-hosted Engine
-                    <ArrowRightIcon size={16} />
-                  </Link>
-                </Button>
-              </div>
+        {selectedTab === "cloud-hosted" && (
+          <div className="flex flex-col text-center">
+            <h3 className="mb-0.5 font-semibold text-base">Managed Engine</h3>
+            <p className="text-muted-foreground text-sm">
+              Deploy a managed engine instance to your team. <br /> We recommend
+              using Engine Cloud in most cases.
+            </p>
+            <div className="h-4" />
+            <div className="mt-auto">
+              <DedicatedEngineSubscriptionButton team={props.team} />
             </div>
-          )}
+          </div>
+        )}
+      </div>
 
-          {selectedTab === "cloud-hosted" && (
-            <div className="flex flex-col text-center">
-              <h3 className="mb-0.5 font-semibold text-base">Managed Engine</h3>
-              <p className="text-muted-foreground text-sm">
-                Deploy a managed engine instance to your team. <br /> We
-                recommend using Engine Cloud in most cases.
-              </p>
-              <div className="h-4" />
-              <div className="mt-auto">
-                <DedicatedEngineSubscriptionButton team={props.team} />
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="mt-4 text-center text-muted-foreground text-sm">
-          Need help getting started? <br className="lg:hidden" />
-          <Link
-            href="https://portal.thirdweb.com/engine"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-foreground hover:underline"
-          >
-            View documentation
-          </Link>
-        </div>
-      </>
+      <div className="mt-4 text-center text-muted-foreground text-sm">
+        Need help getting started? <br className="lg:hidden" />
+        <Link
+          className="text-foreground hover:underline"
+          href="https://portal.thirdweb.com/engine"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          View documentation
+        </Link>
+      </div>
     </div>
   );
 }

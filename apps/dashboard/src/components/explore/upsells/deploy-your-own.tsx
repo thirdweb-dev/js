@@ -1,6 +1,6 @@
-import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
+import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 
 export const DeployUpsellCard: React.FC = () => {
   return (
@@ -16,8 +16,8 @@ export const DeployUpsellCard: React.FC = () => {
         <Link
           className="inline-flex items-center gap-1.5 text-link-foreground"
           href="https://portal.thirdweb.com/contracts/build/overview"
-          target="_blank"
           rel="noopener noreferrer"
+          target="_blank"
         >
           Learn more about the Solidity SDK
           <ExternalLinkIcon className="size-4" />
@@ -35,8 +35,8 @@ export const DeployUpsellCard: React.FC = () => {
         <Link
           className="inline-flex items-center gap-1.5 text-link-foreground"
           href="https://portal.thirdweb.com/contracts/deploy/overview"
-          target="_blank"
           rel="noopener noreferrer"
+          target="_blank"
         >
           Learn more about Deploy
           <ExternalLinkIcon className="size-4" />

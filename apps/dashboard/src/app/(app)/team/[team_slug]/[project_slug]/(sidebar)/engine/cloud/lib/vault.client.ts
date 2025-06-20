@@ -1,13 +1,13 @@
 "use client";
 
-import type { Project } from "@/api/projects";
-import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
 import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
 import {
-  type VaultClient,
   createAccessToken,
   createVaultClient,
+  type VaultClient,
 } from "@thirdweb-dev/vault-sdk";
+import type { Project } from "@/api/projects";
+import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
 
 const SERVER_WALLET_ACCESS_TOKEN_PURPOSE =
   "Access Token for All Server Wallets";
@@ -35,13 +35,20 @@ export async function createWalletAccessToken(props: {
   return createAccessToken({
     client: props.vaultClient,
     request: {
+      auth: {
+        adminKey: props.adminKey,
+      },
       options: {
         expiresAt: new Date(
           Date.now() + 60 * 60 * 1000 * 24 * 365 * 1000,
         ).toISOString(), // 100 years from now
+        metadata: {
+          projectId: props.project.id,
+          purpose: SERVER_WALLET_ACCESS_TOKEN_PURPOSE,
+          teamId: props.project.teamId,
+        },
         policies: [
           {
-            type: "eoa:read",
             metadataPatterns: [
               {
                 key: "projectId",
@@ -62,9 +69,9 @@ export async function createWalletAccessToken(props: {
                 },
               },
             ],
+            type: "eoa:read",
           },
           {
-            type: "eoa:create",
             requiredMetadataPatterns: [
               {
                 key: "projectId",
@@ -85,9 +92,32 @@ export async function createWalletAccessToken(props: {
                 },
               },
             ],
+            type: "eoa:create",
           },
           {
+            metadataPatterns: [
+              {
+                key: "projectId",
+                rule: {
+                  pattern: props.project.id,
+                },
+              },
+              {
+                key: "teamId",
+                rule: {
+                  pattern: props.project.teamId,
+                },
+              },
+              {
+                key: "type",
+                rule: {
+                  pattern: "server-wallet",
+                },
+              },
+            ],
             type: "eoa:signMessage",
+          },
+          {
             metadataPatterns: [
               {
                 key: "projectId",
@@ -108,10 +138,10 @@ export async function createWalletAccessToken(props: {
                 },
               },
             ],
-          },
-          {
-            type: "eoa:signTransaction",
             payloadPatterns: {},
+            type: "eoa:signTransaction",
+          },
+          {
             metadataPatterns: [
               {
                 key: "projectId",
@@ -132,9 +162,9 @@ export async function createWalletAccessToken(props: {
                 },
               },
             ],
-          },
-          {
             type: "eoa:signTypedData",
+          },
+          {
             metadataPatterns: [
               {
                 key: "projectId",
@@ -155,13 +185,13 @@ export async function createWalletAccessToken(props: {
                 },
               },
             ],
-          },
-          {
-            type: "eoa:signStructuredMessage",
             structuredPatterns: {
               useropV06: {},
               useropV07: {},
             },
+            type: "eoa:signStructuredMessage",
+          },
+          {
             metadataPatterns: [
               {
                 key: "projectId",
@@ -182,32 +212,9 @@ export async function createWalletAccessToken(props: {
                 },
               },
             ],
-          },
-          {
             type: "eoa:read",
-            metadataPatterns: [
-              {
-                key: "projectId",
-                rule: {
-                  pattern: props.project.id,
-                },
-              },
-              {
-                key: "teamId",
-                rule: {
-                  pattern: props.project.teamId,
-                },
-              },
-              {
-                key: "type",
-                rule: {
-                  pattern: "server-wallet",
-                },
-              },
-            ],
           },
           {
-            type: "eoa:create",
             requiredMetadataPatterns: [
               {
                 key: "projectId",
@@ -228,16 +235,9 @@ export async function createWalletAccessToken(props: {
                 },
               },
             ],
+            type: "eoa:create",
           },
         ],
-        metadata: {
-          projectId: props.project.id,
-          teamId: props.project.teamId,
-          purpose: SERVER_WALLET_ACCESS_TOKEN_PURPOSE,
-        },
-      },
-      auth: {
-        adminKey: props.adminKey,
       },
     },
   });
@@ -252,13 +252,20 @@ export async function createManagementAccessToken(props: {
   const res = await createAccessToken({
     client: props.vaultClient,
     request: {
+      auth: {
+        adminKey: props.adminKey,
+      },
       options: {
         expiresAt: new Date(
           Date.now() + 60 * 60 * 1000 * 24 * 365 * 1000,
         ).toISOString(), // 100 years from now
+        metadata: {
+          projectId: props.project.id,
+          purpose: SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
+          teamId: props.project.teamId,
+        },
         policies: [
           {
-            type: "eoa:read",
             metadataPatterns: [
               {
                 key: "projectId",
@@ -279,9 +286,9 @@ export async function createManagementAccessToken(props: {
                 },
               },
             ],
+            type: "eoa:read",
           },
           {
-            type: "eoa:create",
             requiredMetadataPatterns: [
               {
                 key: "projectId",
@@ -302,9 +309,9 @@ export async function createManagementAccessToken(props: {
                 },
               },
             ],
+            type: "eoa:create",
           },
           {
-            type: "accessToken:read",
             metadataPatterns: [
               {
                 key: "projectId",
@@ -320,16 +327,9 @@ export async function createManagementAccessToken(props: {
               },
             ],
             revealSensitive: false,
+            type: "accessToken:read",
           },
         ],
-        metadata: {
-          projectId: props.project.id,
-          teamId: props.project.teamId,
-          purpose: SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
-        },
-      },
-      auth: {
-        adminKey: props.adminKey,
       },
     },
   });
@@ -344,11 +344,11 @@ export async function createManagementAccessToken(props: {
         services: [
           ...props.project.services,
           {
-            name: "engineCloud",
+            actions: [],
             managementAccessToken: data.accessToken,
             maskedAdminKey: maskSecret(props.adminKey),
+            name: "engineCloud",
             rotationCode: props.rotationCode,
-            actions: [],
           },
         ],
       },

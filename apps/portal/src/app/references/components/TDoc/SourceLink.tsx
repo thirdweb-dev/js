@@ -4,8 +4,8 @@ export function SourceLinkTypeDoc(props: { href: string }) {
   return (
     <div className="mb-6" data-noindex>
       <Link
-        href={props.href}
         className="text-muted-foreground text-sm hover:text-foreground"
+        href={props.href}
         target="_blank"
       >
         <span className="text-muted-foreground"> Defined in </span>

@@ -12,9 +12,9 @@ describe("getCurrencyMetadata", () => {
   it("should return valid result if the contract is ERC20", async () => {
     const result = await getCurrencyMetadata({ contract: USDT_CONTRACT });
     expect(result).toStrictEqual({
+      decimals: 6,
       name: "Tether USD",
       symbol: "USDT",
-      decimals: 6,
     });
   });
 });

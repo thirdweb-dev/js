@@ -2,10 +2,10 @@
  * Write
  */
 export {
-  installPublishedExtension,
   type InstallPublishedExtensionOptions,
+  installPublishedExtension,
 } from "../../extensions/dynamic-contracts/write/installPublishedExtension.js";
 export {
-  uninstallExtension,
   type UninstallExtensionOptions,
+  uninstallExtension,
 } from "../../extensions/dynamic-contracts/write/uninstallExtension.js";

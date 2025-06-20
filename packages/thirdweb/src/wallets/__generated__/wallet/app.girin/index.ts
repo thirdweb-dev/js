@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.girin",
-  name: "Girin Wallet",
-  homepage: "https://girin.app",
-  image_id: "4a7f0768-f2b9-48be-f4a1-44c4c158e700",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/kr/app/girin-wallet/id6670226485",
     android: "https://play.google.com/store/apps/details?id=app.girinwallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/kr/app/girin-wallet/id6670226485",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "girinwallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: "girinwallet://",
     universal: null,
   },
+  homepage: "https://girin.app",
+  id: "app.girin",
+  image_id: "4a7f0768-f2b9-48be-f4a1-44c4c158e700",
+  mobile: {
+    native: "girinwallet://",
+    universal: null,
+  },
+  name: "Girin Wallet",
+  rdns: null,
 } as const;

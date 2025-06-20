@@ -34,7 +34,6 @@ type MintParams = {
  */
 export function mint(options: BaseTransactionOptions<MintParams>) {
   return generatedMint({
-    contract: options.contract,
     asyncParams: async () => {
       const cc = await getClaimConditionByTokenId({
         contract: options.contract,
@@ -74,10 +73,8 @@ export function mint(options: BaseTransactionOptions<MintParams>) {
           // fetch proofs
           if (merkleTreeUri) {
             const allowlistProof = await fetchProofsForClaimer({
-              contract: options.contract,
               claimer: options.to,
-              merkleTreeUri,
-              tokenDecimals: 18, // unused here
+              contract: options.contract,
               async hashEntry(options) {
                 return keccak256(
                   encodePacked(
@@ -86,6 +83,8 @@ export function mint(options: BaseTransactionOptions<MintParams>) {
                   ),
                 );
               },
+              merkleTreeUri, // unused here
+              tokenDecimals: 18,
             });
             recipientAllowlistProof = allowlistProof?.proof || [];
           }
@@ -93,8 +92,6 @@ export function mint(options: BaseTransactionOptions<MintParams>) {
       }
 
       return {
-        to: getAddress(options.to),
-        tokenId: options.tokenId,
         amount: BigInt(options.quantity),
         baseURI: "",
         data: encodeBytesBeforeMintERC1155Params({
@@ -105,11 +102,14 @@ export function mint(options: BaseTransactionOptions<MintParams>) {
           },
         }),
         overrides: {
-          value,
           erc20Value,
+          value,
         },
+        to: getAddress(options.to),
+        tokenId: options.tokenId,
       };
     },
+    contract: options.contract,
   });
 }
 

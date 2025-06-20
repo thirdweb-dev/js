@@ -1,7 +1,7 @@
-import { getProject } from "@/api/projects";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { TabPathLinks } from "@/components/ui/tabs";
 import { redirect } from "next/navigation";
+import { getProject } from "@/api/projects";
+import { TabPathLinks } from "@/components/ui/tabs";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { FooterLinksSection } from "../../components/footer/FooterLinksSection";
 
 export default async function Layout(props: {
@@ -32,9 +32,9 @@ export default async function Layout(props: {
             cryptocurrencies and execute transactions with any fiat options or
             tokens via cross-chain routing.{" "}
             <UnderlineLink
-              target="_blank"
-              rel="noopener noreferrer"
               href="https://portal.thirdweb.com/pay"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Learn more
             </UnderlineLink>
@@ -43,13 +43,12 @@ export default async function Layout(props: {
 
         <div className="h-4" />
         <TabPathLinks
-          scrollableClassName="container max-w-7xl"
           className="w-full"
           links={[
             {
+              exactMatch: true,
               name: "Analytics",
               path: payLayoutPath,
-              exactMatch: true,
             },
             {
               name: "Webhooks",
@@ -60,6 +59,7 @@ export default async function Layout(props: {
               path: `${payLayoutPath}/settings`,
             },
           ]}
+          scrollableClassName="container max-w-7xl"
         />
       </div>
 
@@ -81,8 +81,28 @@ export default async function Layout(props: {
 function UBFooter() {
   return (
     <FooterLinksSection
+      center={{
+        links: [
+          {
+            href: "https://playground.thirdweb.com/connect/pay",
+            label: "UI Component",
+          },
+          {
+            href: "https://playground.thirdweb.com/connect/pay/fund-wallet",
+            label: "Buy Crypto",
+          },
+          {
+            href: "https://playground.thirdweb.com/connect/pay/commerce",
+            label: "Checkout",
+          },
+          {
+            href: "https://playground.thirdweb.com/connect/pay/transactions",
+            label: "Transactions",
+          },
+        ],
+        title: "Demos",
+      }}
       left={{
-        title: "Documentation",
         links: [
           {
             href: "https://portal.thirdweb.com/connect/pay/overview",
@@ -101,36 +121,16 @@ function UBFooter() {
             label: ".NET",
           },
         ],
+        title: "Documentation",
       }}
       right={{
-        title: "Tutorials",
         links: [
           {
-            label: "Implement cross-chain payments in any app",
             href: "https://www.youtube.com/watch?v=aBu175-VsNY",
+            label: "Implement cross-chain payments in any app",
           },
         ],
-      }}
-      center={{
-        title: "Demos",
-        links: [
-          {
-            label: "UI Component",
-            href: "https://playground.thirdweb.com/connect/pay",
-          },
-          {
-            label: "Buy Crypto",
-            href: "https://playground.thirdweb.com/connect/pay/fund-wallet",
-          },
-          {
-            label: "Checkout",
-            href: "https://playground.thirdweb.com/connect/pay/commerce",
-          },
-          {
-            label: "Transactions",
-            href: "https://playground.thirdweb.com/connect/pay/transactions",
-          },
-        ],
+        title: "Tutorials",
       }}
     />
   );

@@ -11,9 +11,9 @@ import { useAccountContext } from "../../../../core/account/provider.js";
 import {
   type AccountBalanceInfo,
   formatAccountFiatBalance,
+  formatAccountTokenBalance,
   loadAccountBalance,
 } from "../../../../core/utils/account.js";
-import { formatAccountTokenBalance } from "../../../../core/utils/account.js";
 
 /**
  * Props for the AccountBalance component
@@ -172,6 +172,14 @@ export function AccountBalance({
   const walletChain = useActiveWalletChain();
   const chainToLoad = chain || walletChain;
   const balanceQuery = useQuery({
+    queryFn: async (): Promise<AccountBalanceInfo> =>
+      loadAccountBalance({
+        address: getAddress(address),
+        chain: chainToLoad,
+        client,
+        showBalanceInFiat,
+        tokenAddress: tokenAddress ? getAddress(tokenAddress) : undefined,
+      }),
     queryKey: [
       "internal_account_balance",
       chainToLoad?.id || -1,
@@ -179,14 +187,6 @@ export function AccountBalance({
       { tokenAddress },
       showBalanceInFiat,
     ] as const,
-    queryFn: async (): Promise<AccountBalanceInfo> =>
-      loadAccountBalance({
-        chain: chainToLoad,
-        client,
-        address: getAddress(address),
-        tokenAddress: tokenAddress ? getAddress(tokenAddress) : undefined,
-        showBalanceInFiat,
-      }),
     retry: false,
     ...queryOptions,
   });

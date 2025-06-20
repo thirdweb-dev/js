@@ -3,10 +3,10 @@ import { formatTokenBalance } from "./formatTokenBalance.js";
 
 describe("formatTokenBalance", () => {
   const mockBalanceData = {
-    symbol: "ETH",
-    name: "Ethereum",
     decimals: 18,
     displayValue: "1.23456789",
+    name: "Ethereum",
+    symbol: "ETH",
   };
 
   it("formats balance with symbol by default", () => {
@@ -51,8 +51,8 @@ describe("formatTokenBalance", () => {
   it("handles different token symbols", () => {
     const usdcBalance = {
       ...mockBalanceData,
-      symbol: "USDC",
       displayValue: "100.5",
+      symbol: "USDC",
     };
     const result = formatTokenBalance(usdcBalance);
     expect(result).toBe("100.5 USDC");

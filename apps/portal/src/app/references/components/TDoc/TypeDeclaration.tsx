@@ -1,10 +1,10 @@
-import { Callout } from "@/components/Document";
-import { sluggerContext } from "@/contexts/slugger";
 import invariant from "tiny-invariant";
 import type {
   SubTypeDeclarationDoc,
   TypeDeclarationDoc,
 } from "typedoc-better-json";
+import { Callout } from "@/components/Document";
+import { sluggerContext } from "@/contexts/slugger";
 import { CodeBlock } from "../../../../components/Document/Code";
 import { Heading } from "../../../../components/Document/Heading";
 import { DeprecatedCalloutTDoc } from "./Deprecated";
@@ -58,7 +58,7 @@ async function SubtypeDeclarationTDoc(props: {
   return (
     <>
       {showHeading !== false && (
-        <Heading level={level} id={doc.name}>
+        <Heading anchorId={doc.name} level={level}>
           {doc.name}
         </Heading>
       )}
@@ -74,8 +74,8 @@ async function SubtypeDeclarationTDoc(props: {
       )}
 
       <CodeBlock
-        lang="ts"
         code={`type ${doc.name} = ${doc.type.code}`}
+        lang="ts"
         tokenLinks={
           doc.type.tokens ? await getTokenLinks(doc.type.tokens) : undefined
         }
@@ -83,7 +83,7 @@ async function SubtypeDeclarationTDoc(props: {
 
       {exampleTag?.summary && (
         <>
-          <Heading level={subLevel} id={slugger.slug("example")} noIndex>
+          <Heading anchorId={slugger.slug("example")} level={subLevel} noIndex>
             Example
           </Heading>
           <TypedocSummary summary={exampleTag.summary} />

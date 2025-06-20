@@ -2,13 +2,13 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import { SidebarLayout } from "./SidebarLayout";
 
 const meta = {
-  title: "blocks/SidebarLayout",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "blocks/SidebarLayout",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -35,8 +35,8 @@ function Story() {
           label: "eiusmod",
         },
         {
-          label: "incididunt",
           href: "https://playground.thirdweb.com/",
+          label: "incididunt",
         },
       ]}
     >

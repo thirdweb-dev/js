@@ -7,8 +7,8 @@ import {
   TEST_ACCOUNT_B,
 } from "../../../../test/src/test-wallets.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { getAddress } from "../../../utils/address.js";
@@ -17,24 +17,19 @@ import { getNFTs } from "../../erc1155/read/getNFTs.js";
 import { getOwnedNFTs } from "../../erc1155/read/getOwnedNFTs.js";
 import * as BatchMetadataERC1155 from "../../modules/BatchMetadataERC1155/index.js";
 import { deployModularContract } from "../../prebuilts/deploy-modular.js";
-import * as SequentialTokenIdERC1155 from "../SequentialTokenIdERC1155/index.js";
 import { getInstalledModules } from "../__generated__/IModularCore/read/getInstalledModules.js";
 import { grantMinterRole } from "../common/grantMinterRole.js";
+import * as SequentialTokenIdERC1155 from "../SequentialTokenIdERC1155/index.js";
 import * as MintableERC1155 from "./index.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("ModularTokenERC1155", () => {
   let contract: ThirdwebContract;
   beforeAll(async () => {
     const address = await deployModularContract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       core: "ERC1155",
-      params: {
-        name: "TestTokenERC1155",
-        symbol: "TT",
-        contractURI: TEST_CONTRACT_URI,
-      },
       modules: [
         MintableERC1155.module({
           primarySaleRecipient: TEST_ACCOUNT_A.address,
@@ -44,11 +39,16 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularTokenERC1155", () => {
           startTokenId: 0n,
         }),
       ],
+      params: {
+        contractURI: TEST_CONTRACT_URI,
+        name: "TestTokenERC1155",
+        symbol: "TT",
+      },
     });
     contract = getContract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       address,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
   }, 11155000);
 
@@ -61,48 +61,48 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularTokenERC1155", () => {
     // should throw
     await expect(
       sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
         transaction: MintableERC1155.mintWithRole({
+          amount: 10n,
           contract,
           nft: "ipfs://Qma4g1c8e9c7a6a4c5a1a5c1a3a2a4a5a6a7a8a9a0a",
-          amount: 10n,
           to: TEST_ACCOUNT_A.address,
         }),
-        account: TEST_ACCOUNT_A,
       }),
     ).rejects.toThrowError(/MintableRequestUnauthorized/);
   });
 
   it("should mint tokens with permissions", async () => {
     let balance = await balanceOf({
+      contract,
       owner: TEST_ACCOUNT_A.address,
       tokenId: 0n,
-      contract,
     });
     expect(balance).toBe(0n);
 
     // grant minter role
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: grantMinterRole({
         contract,
         user: TEST_ACCOUNT_A.address,
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     // mint
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: MintableERC1155.mintWithRole({
+        amount: 10n,
         contract,
         nft: "ipfs://Qmah4ePps7cKPVydfrSme3NkiAfrWM8jSmirsKwyZCaQm4/0",
-        amount: 10n,
         to: TEST_ACCOUNT_A.address,
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     balance = await balanceOf({
-      owner: TEST_ACCOUNT_A.address,
       contract,
+      owner: TEST_ACCOUNT_A.address,
       tokenId: 0n,
     });
 
@@ -124,31 +124,31 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularTokenERC1155", () => {
     const result = await MintableERC1155.generateMintSignature({
       account: TEST_ACCOUNT_A,
       contract,
-      nft: "ipfs://Qmah4ePps7cKPVydfrSme3NkiAfrWM8jSmirsKwyZCaQm4/0",
       mintRequest: {
-        recipient: getAddress(TEST_ACCOUNT_B.address),
         quantity: 10n,
+        recipient: getAddress(TEST_ACCOUNT_B.address),
       },
+      nft: "ipfs://Qmah4ePps7cKPVydfrSme3NkiAfrWM8jSmirsKwyZCaQm4/0",
     });
 
     let balance = await balanceOf({
-      owner: TEST_ACCOUNT_B.address,
       contract,
+      owner: TEST_ACCOUNT_B.address,
       tokenId: 1n,
     });
     expect(balance).toBe(0n);
 
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_B,
       transaction: MintableERC1155.mintWithSignature({
         contract,
         ...result,
-      }),
-      account: TEST_ACCOUNT_B, // diff account can mint
+      }), // diff account can mint
     });
 
     balance = await balanceOf({
-      owner: TEST_ACCOUNT_B.address,
       contract,
+      owner: TEST_ACCOUNT_B.address,
       tokenId: 1n,
     });
     expect(balance).toBe(10n);
@@ -156,27 +156,27 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularTokenERC1155", () => {
 
   it.skip("should mint additional supply of tokens with permissions", async () => {
     let balance = await balanceOf({
+      contract,
       owner: TEST_ACCOUNT_A.address,
       tokenId: 0n,
-      contract,
     });
     expect(balance).toBe(10n);
 
     // mint
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: MintableERC1155.mintWithRole({
+        amount: 5n,
         contract,
         nft: "ipfs://Qmah4ePps7cKPVydfrSme3NkiAfrWM8jSmirsKwyZCaQm4/0",
-        amount: 5n,
-        tokenId: 0n,
         to: TEST_ACCOUNT_A.address,
+        tokenId: 0n,
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     balance = await balanceOf({
-      owner: TEST_ACCOUNT_A.address,
       contract,
+      owner: TEST_ACCOUNT_A.address,
       tokenId: 0n,
     });
 

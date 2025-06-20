@@ -6,13 +6,13 @@ import { getContractPageMetadataSetup } from "../_utils/getContractPageMetadataS
 
 export function useContractPageMetadata(contract: ThirdwebContract) {
   return useQuery({
-    queryKey: ["getContractPageMetadataSetup", contract],
     queryFn: () => {
       return getContractPageMetadataSetup(contract, () =>
         Promise.resolve(false),
       );
     },
-    retry: false,
+    queryKey: ["getContractPageMetadataSetup", contract],
     refetchOnWindowFocus: false,
+    retry: false,
   });
 }

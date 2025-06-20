@@ -20,9 +20,9 @@ export const SolidityTupleInput: React.FC<SolidityInputWithTypeProps> = ({
     form.setValue(inputName, value);
 
     const invalidInputError = {
-      type: "pattern",
       message:
         "Invalid input. Input must be in JSON format and all the keys on the object should be present.",
+      type: "pattern",
     };
 
     const trimmedValue = value.trim();
@@ -56,9 +56,9 @@ export const SolidityTupleInput: React.FC<SolidityInputWithTypeProps> = ({
       <Textarea
         placeholder={solidityType}
         {...(restOfInputProps as TextareaProps)}
-        value={form.watch(inputName)}
         className={cn("font-mono", restOfInputProps.className)}
         onChange={handleChange}
+        value={form.watch(inputName)}
       />
       <p className="mt-2 text-muted-foreground text-sm">
         Input should be passed in JSON format - Ex:{" "}

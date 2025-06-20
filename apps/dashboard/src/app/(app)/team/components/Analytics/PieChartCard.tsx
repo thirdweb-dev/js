@@ -1,10 +1,10 @@
+import Link from "next/link";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import Link from "next/link";
 import { PieChart } from "./PieChart";
 import { Stat } from "./Stat";
 
@@ -41,9 +41,9 @@ export function PieChartCard({
 
     if (otherValue > 0) {
       top10.push({
+        fill: "orange",
         label: "Other",
         value: otherValue,
-        fill: "orange",
       });
     }
 
@@ -56,10 +56,10 @@ export function PieChartCard({
   return (
     <Card className="flex flex-col">
       <CardHeader className="border-border border-b p-0">
-        <Stat value={aggregateFn(data)} label={title} />
+        <Stat label={title} value={aggregateFn(data)} />
       </CardHeader>
       <CardContent className="flex-1 p-4">
-        <PieChart title={title} data={processedData} />
+        <PieChart data={processedData} title={title} />
       </CardContent>
       <CardFooter className="no-scrollbar flex max-w-full justify-center p-6 pt-0 max-md:overflow-x-auto">
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-2.5">
@@ -68,18 +68,22 @@ export function PieChartCard({
               label,
               fill,
               link,
-            }: { label: string; fill?: string; link?: string }) => (
-              <div key={fill} className="flex items-center gap-2">
+            }: {
+              label: string;
+              fill?: string;
+              link?: string;
+            }) => (
+              <div className="flex items-center gap-2" key={fill}>
                 <div
                   className="size-2 rounded-full"
                   style={{ background: fill }}
                 />
                 {link ? (
                   <Link
-                    href={link}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="text-muted-foreground text-xs hover:text-link-foreground"
+                    href={link}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     {label}
                   </Link>

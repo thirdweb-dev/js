@@ -11,7 +11,7 @@ import {
 } from "../../../test/src/test-wallets.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
-import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { toEther } from "../../utils/units.js";
@@ -45,8 +45,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
         params: {
-          name: "EditionDrop",
           contractURI: TEST_CONTRACT_URI,
+          name: "EditionDrop",
         },
         type: "DropERC1155",
       });
@@ -54,9 +54,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(contractAddress).toBeDefined();
       const deployedName = await name({
         contract: getContract({
-          client: TEST_CLIENT,
-          chain: ANVIL_CHAIN,
           address: contractAddress,
+          chain: ANVIL_CHAIN,
+          client: TEST_CLIENT,
         }),
       });
       expect(deployedName).toBe("EditionDrop");
@@ -82,8 +82,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         ],
       });
       await sendAndConfirmTransaction({
-        transaction: mintTx,
         account: TEST_ACCOUNT_C,
+        transaction: mintTx,
       });
 
       await expect(nextTokenIdToMint({ contract })).resolves.toBe(6n);
@@ -95,12 +95,12 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     it("should update metadata", async () => {
       const updateTx = updateMetadata({
         contract,
-        targetTokenId: 0n,
         newMetadata: { name: "Test NFT 1" },
+        targetTokenId: 0n,
       });
       await sendAndConfirmTransaction({
-        transaction: updateTx,
         account: TEST_ACCOUNT_C,
+        transaction: updateTx,
       });
       const token0 = await getNFT({ contract, tokenId: 0n });
       expect(token0.metadata.name).toBe("Test NFT 1");
@@ -111,18 +111,18 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         balanceOf({ contract, owner: TEST_ACCOUNT_C.address, tokenId: 0n }),
       ).resolves.toBe(0n);
       await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_C,
         transaction: setClaimConditions({
           contract,
           phases: [{}],
           tokenId: 0n,
         }),
-        account: TEST_ACCOUNT_C,
       });
 
       expect(
         await canClaim({
-          contract,
           claimer: TEST_ACCOUNT_C.address,
+          contract,
           quantity: 1n,
           tokenId: 0n,
         }),
@@ -134,13 +134,13 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
       const claimTx = claimTo({
         contract,
+        quantity: 1n,
         to: TEST_ACCOUNT_C.address,
         tokenId: 0n,
-        quantity: 1n,
       });
       await sendAndConfirmTransaction({
-        transaction: claimTx,
         account: TEST_ACCOUNT_C,
+        transaction: claimTx,
       });
       await expect(
         balanceOf({ contract, owner: TEST_ACCOUNT_C.address, tokenId: 0n }),
@@ -152,6 +152,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         balanceOf({ contract, owner: TEST_ACCOUNT_C.address, tokenId: 0n }),
       ).resolves.toBe(1n);
       await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_C,
         transaction: setClaimConditions({
           contract,
           phases: [
@@ -161,13 +162,12 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           ],
           tokenId: 0n,
         }),
-        account: TEST_ACCOUNT_C,
       });
       const claimTx = claimTo({
         contract,
+        quantity: 1n,
         to: TEST_ACCOUNT_C.address,
         tokenId: 0n,
-        quantity: 1n,
       });
       // assert value is set correctly
       const value = await resolvePromisedValue(claimTx.value);
@@ -175,8 +175,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       if (!value) throw new Error("value is undefined");
       expect(toEther(value)).toBe("0.001");
       await sendAndConfirmTransaction({
-        transaction: claimTx,
         account: TEST_ACCOUNT_C,
+        transaction: claimTx,
       });
       await expect(
         balanceOf({ contract, owner: TEST_ACCOUNT_C.address, tokenId: 0n }),
@@ -187,20 +187,20 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       it("should allow to claim tokens with an allowlist", async () => {
         const tokenId = 1n;
         await sendAndConfirmTransaction({
+          account: TEST_ACCOUNT_C,
           transaction: setClaimConditions({
             contract,
             phases: [
               {
+                maxClaimablePerWallet: 0n,
                 overrideList: [
                   { address: TEST_ACCOUNT_C.address, maxClaimable: "100" },
                   { address: VITALIK_WALLET, maxClaimable: "100" },
                 ],
-                maxClaimablePerWallet: 0n,
               },
             ],
             tokenId,
           }),
-          account: TEST_ACCOUNT_C,
         });
 
         await expect(
@@ -209,8 +209,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
         expect(
           await canClaim({
-            contract,
             claimer: TEST_ACCOUNT_C.address,
+            contract,
             quantity: 1n,
             tokenId,
           }),
@@ -222,8 +222,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
         expect(
           await canClaim({
-            contract,
             claimer: TEST_ACCOUNT_B.address,
+            contract,
             quantity: 1n,
             tokenId,
           }),
@@ -239,9 +239,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           transaction: claimTo({
             contract,
             from: TEST_ACCOUNT_C.address,
+            quantity: 1n,
             to: TEST_ACCOUNT_B.address,
             tokenId,
-            quantity: 1n,
           }),
         });
 
@@ -254,9 +254,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
             account: TEST_ACCOUNT_B,
             transaction: claimTo({
               contract,
+              quantity: 1n,
               to: TEST_ACCOUNT_B.address,
               tokenId,
-              quantity: 1n,
             }),
           }),
         ).rejects.toThrowErrorMatchingInlineSnapshot(`
@@ -270,20 +270,20 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       it("should respect max claimable", async () => {
         const tokenId = 2n;
         await sendAndConfirmTransaction({
+          account: TEST_ACCOUNT_C,
           transaction: setClaimConditions({
             contract,
             phases: [
               {
+                maxClaimablePerWallet: 0n,
                 overrideList: [
                   { address: TEST_ACCOUNT_C.address, maxClaimable: "1" },
                   { address: VITALIK_WALLET, maxClaimable: "3" },
                 ],
-                maxClaimablePerWallet: 0n,
               },
             ],
             tokenId,
           }),
-          account: TEST_ACCOUNT_C,
         });
 
         await expect(
@@ -295,9 +295,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
             account: TEST_ACCOUNT_C,
             transaction: claimTo({
               contract,
+              quantity: 2n,
               to: TEST_ACCOUNT_C.address,
               tokenId,
-              quantity: 2n,
             }),
           }),
         ).rejects.toThrowErrorMatchingInlineSnapshot(`
@@ -311,9 +311,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           account: TEST_ACCOUNT_C,
           transaction: claimTo({
             contract,
+            quantity: 1n,
             to: TEST_ACCOUNT_C.address,
             tokenId,
-            quantity: 1n,
           }),
         });
 
@@ -326,10 +326,12 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     it("should respect price", async () => {
       const tokenId = 3n;
       await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_C,
         transaction: setClaimConditions({
           contract,
           phases: [
             {
+              maxClaimablePerWallet: 0n,
               overrideList: [
                 {
                   address: TEST_ACCOUNT_C.address,
@@ -337,13 +339,11 @@ describe.runIf(process.env.TW_SECRET_KEY)(
                   price: "0",
                 },
               ],
-              maxClaimablePerWallet: 0n,
               price: "1000",
             },
           ],
           tokenId,
         }),
-        account: TEST_ACCOUNT_C,
       });
 
       await expect(
@@ -354,9 +354,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         account: TEST_ACCOUNT_C,
         transaction: claimTo({
           contract,
+          quantity: 1n,
           to: TEST_ACCOUNT_C.address,
           tokenId,
-          quantity: 1n,
         }),
       });
 
@@ -367,9 +367,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
     it("should be able to retrieve multiple phases", async () => {
       await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_C,
         transaction: setClaimConditions({
           contract,
-          tokenId: 5n,
           phases: [
             {
               maxClaimablePerWallet: 1n,
@@ -380,8 +380,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
               startTime: new Date(),
             },
           ],
+          tokenId: 5n,
         }),
-        account: TEST_ACCOUNT_C,
       });
 
       const phases = await getClaimConditions({ contract, tokenId: 5n });
@@ -393,43 +393,43 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     it("should be able to reset claim eligibility", async () => {
       // set claim conditions to only allow one claim
       await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_C,
         transaction: setClaimConditions({
           contract,
-          tokenId: 6n,
           phases: [
             {
               maxClaimablePerWallet: 1n,
             },
           ],
+          tokenId: 6n,
         }),
-        account: TEST_ACCOUNT_C,
       });
       // claim one token
       await sendAndConfirmTransaction({
-        transaction: claimTo({
-          tokenId: 6n,
-          contract,
-          // fresh account to avoid any previous claims
-          to: TEST_ACCOUNT_D.address,
-          quantity: 1n,
-        }),
         // fresh account to avoid any previous claims
         account: TEST_ACCOUNT_D,
+        transaction: claimTo({
+          contract,
+          quantity: 1n,
+          // fresh account to avoid any previous claims
+          to: TEST_ACCOUNT_D.address,
+          tokenId: 6n,
+        }),
       });
       // check that the account has claimed one token
       await expect(
-        balanceOf({ tokenId: 6n, contract, owner: TEST_ACCOUNT_D.address }),
+        balanceOf({ contract, owner: TEST_ACCOUNT_D.address, tokenId: 6n }),
       ).resolves.toBe(1n);
       // attempt to claim another token (this should fail)
       await expect(
         sendAndConfirmTransaction({
-          transaction: claimTo({
-            tokenId: 6n,
-            contract,
-            to: TEST_ACCOUNT_D.address,
-            quantity: 1n,
-          }),
           account: TEST_ACCOUNT_D,
+          transaction: claimTo({
+            contract,
+            quantity: 1n,
+            to: TEST_ACCOUNT_D.address,
+            tokenId: 6n,
+          }),
         }),
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         [TransactionError: DropClaimExceedLimit - 1,2
@@ -440,25 +440,25 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
       // reset claim eligibility
       await sendAndConfirmTransaction({
-        transaction: resetClaimEligibility({
-          tokenId: 6n,
-          contract,
-        }),
         account: TEST_ACCOUNT_C,
+        transaction: resetClaimEligibility({
+          contract,
+          tokenId: 6n,
+        }),
       });
       // attempt to claim another token (this should succeed)
       await sendAndConfirmTransaction({
-        transaction: claimTo({
-          tokenId: 6n,
-          contract,
-          to: TEST_ACCOUNT_D.address,
-          quantity: 1n,
-        }),
         account: TEST_ACCOUNT_D,
+        transaction: claimTo({
+          contract,
+          quantity: 1n,
+          to: TEST_ACCOUNT_D.address,
+          tokenId: 6n,
+        }),
       });
       // check that the account has claimed two tokens
       await expect(
-        balanceOf({ tokenId: 6n, contract, owner: TEST_ACCOUNT_D.address }),
+        balanceOf({ contract, owner: TEST_ACCOUNT_D.address, tokenId: 6n }),
       ).resolves.toBe(2n);
     });
 
@@ -474,42 +474,42 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       // Create a public allowlist claim phase
       const snapshot = [
         {
+          amount: 5,
           recipient: TEST_ACCOUNT_B.address,
           tokenId: 4,
-          amount: 5,
         },
         {
+          amount: 5,
           recipient: TEST_ACCOUNT_D.address,
           tokenId: 4,
-          amount: 5,
         },
       ];
 
       const { merkleRoot } = await generateMerkleTreeInfoERC1155({
         contract,
-        tokenAddress: NATIVE_TOKEN_ADDRESS,
         snapshot,
+        tokenAddress: NATIVE_TOKEN_ADDRESS,
       });
 
       const startTime = new Date();
       const setCC = setClaimConditions({
         contract,
-        tokenId: 4n,
         phases: [
           {
-            maxClaimableSupply: 100n,
-            maxClaimablePerWallet: 5n,
             currencyAddress: NATIVE_TOKEN_ADDRESS,
+            maxClaimablePerWallet: 5n,
+            maxClaimableSupply: 100n,
+            merkleRootHash: merkleRoot,
             price: 0.006,
             startTime,
-            merkleRootHash: merkleRoot,
           },
         ],
+        tokenId: 4n,
       });
 
       await sendAndConfirmTransaction({
-        transaction: setCC,
         account: TEST_ACCOUNT_C,
+        transaction: setCC,
       });
 
       const activeCC = await getActiveClaimCondition({ contract, tokenId: 4n });

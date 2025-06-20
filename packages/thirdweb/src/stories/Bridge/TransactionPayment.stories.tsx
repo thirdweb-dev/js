@@ -27,10 +27,29 @@ const TransactionPaymentWithTheme = (
 };
 
 const meta = {
-  title: "Bridge/TransactionPayment",
+  args: {
+    client: storyClient,
+    onContinue: (_amount, _token, _receiverAddress) => {},
+    theme: "dark",
+    uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,
+  },
+  argTypes: {
+    onContinue: {
+      action: "continue clicked",
+      description: "Called when user continues with the transaction",
+    },
+    theme: {
+      control: "select",
+      description: "Theme for the component",
+      options: ["light", "dark"],
+    },
+    uiOptions: {
+      description:
+        "UI configuration for transaction mode including prepared transaction",
+    },
+  },
   component: TransactionPaymentWithTheme,
   parameters: {
-    layout: "centered",
     docs: {
       description: {
         component:
@@ -45,29 +64,10 @@ const meta = {
           "This component now accepts uiOptions directly to configure the transaction and metadata. Supports both native token and ERC20 token transactions with proper function name extraction.",
       },
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  args: {
-    uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,
-    client: storyClient,
-    onContinue: (_amount, _token, _receiverAddress) => {},
-    theme: "dark",
-  },
-  argTypes: {
-    theme: {
-      control: "select",
-      options: ["light", "dark"],
-      description: "Theme for the component",
-    },
-    onContinue: {
-      action: "continue clicked",
-      description: "Called when user continues with the transaction",
-    },
-    uiOptions: {
-      description:
-        "UI configuration for transaction mode including prepared transaction",
-    },
-  },
+  title: "Bridge/TransactionPayment",
 } satisfies Meta<typeof TransactionPaymentWithTheme>;
 
 export default meta;
@@ -75,8 +75,8 @@ type Story = StoryObj<typeof meta>;
 
 export const EthereumTransfer: Story = {
   args: {
-    uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,
     theme: "dark",
+    uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -91,8 +91,8 @@ export const EthereumTransfer: Story = {
 
 export const EthereumTransferLight: Story = {
   args: {
-    uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,
     theme: "light",
+    uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -107,8 +107,8 @@ export const EthereumTransferLight: Story = {
 
 export const ERC20TokenTransfer: Story = {
   args: {
-    uiOptions: TRANSACTION_UI_OPTIONS.erc20Transfer,
     theme: "dark",
+    uiOptions: TRANSACTION_UI_OPTIONS.erc20Transfer,
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -123,8 +123,8 @@ export const ERC20TokenTransfer: Story = {
 
 export const ERC20TokenTransferLight: Story = {
   args: {
-    uiOptions: TRANSACTION_UI_OPTIONS.erc20Transfer,
     theme: "light",
+    uiOptions: TRANSACTION_UI_OPTIONS.erc20Transfer,
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -139,8 +139,8 @@ export const ERC20TokenTransferLight: Story = {
 
 export const ContractInteraction: Story = {
   args: {
-    uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
     theme: "dark",
+    uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -155,8 +155,8 @@ export const ContractInteraction: Story = {
 
 export const ContractInteractionLight: Story = {
   args: {
-    uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
     theme: "light",
+    uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
   },
   parameters: {
     backgrounds: { default: "light" },

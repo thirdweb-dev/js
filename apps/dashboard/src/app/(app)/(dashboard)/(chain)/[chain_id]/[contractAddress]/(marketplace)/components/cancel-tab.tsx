@@ -19,16 +19,15 @@ export const CancelTab: React.FC<CancelTabProps> = ({
   isLoggedIn,
 }) => {
   const transaction = isAuction
-    ? cancelAuction({ contract, auctionId: BigInt(id) })
+    ? cancelAuction({ auctionId: BigInt(id), contract })
     : cancelListing({ contract, listingId: BigInt(id) });
   const cancelQuery = useSendAndConfirmTransaction();
   return (
     <div className="flex flex-col gap-3 pt-3">
       <TransactionButton
+        className="self-end"
         client={contract.client}
         isLoggedIn={isLoggedIn}
-        txChainID={contract.chain.id}
-        transactionCount={1}
         isPending={cancelQuery.isPending}
         onClick={() => {
           const promise = cancelQuery.mutateAsync(transaction, {
@@ -37,12 +36,13 @@ export const CancelTab: React.FC<CancelTabProps> = ({
             },
           });
           toast.promise(promise, {
+            error: "Failed to cancel",
             loading: `Cancelling ${isAuction ? "auction" : "listing"}`,
             success: "Item cancelled successfully",
-            error: "Failed to cancel",
           });
         }}
-        className="self-end"
+        transactionCount={1}
+        txChainID={contract.chain.id}
       >
         Cancel {isAuction ? "Auction" : "Listing"}
       </TransactionButton>

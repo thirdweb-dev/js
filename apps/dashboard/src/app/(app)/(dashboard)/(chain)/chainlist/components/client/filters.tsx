@@ -1,5 +1,9 @@
 "use client";
 
+import { ChevronDownIcon, FilterIcon, XIcon } from "lucide-react";
+import { usePathname, useSearchParams } from "next/navigation";
+import type React from "react";
+import { type PropsWithChildren, useCallback, useId, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -11,10 +15,6 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { ChevronDownIcon, FilterIcon, XIcon } from "lucide-react";
-import { usePathname, useSearchParams } from "next/navigation";
-import type React from "react";
-import { type PropsWithChildren, useCallback, useMemo } from "react";
 import { products } from "../../../components/server/products";
 
 function cleanUrl(url: string) {
@@ -29,10 +29,10 @@ export function AllFilters(props: { hideChainType?: boolean }) {
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
           className="h-10 w-auto gap-2 p-2 lg:h-10 lg:border-0 lg:px-4 lg:py-2"
+          variant="outline"
         >
-          <FilterIcon strokeWidth={1} className="lg:size-4" />
+          <FilterIcon className="lg:size-4" strokeWidth={1} />
           <span className="hidden lg:inline">All Filters</span>
         </Button>
       </PopoverTrigger>
@@ -83,8 +83,6 @@ const FilterResetButton: React.FC<
 
   return (
     <Button
-      variant="outline"
-      size="sm"
       className="font-semibold"
       onClick={() => {
         // delete every filter (however keep the search term)
@@ -96,6 +94,8 @@ const FilterResetButton: React.FC<
         const url = cleanUrl(`${pathname}?${mutableSearchParams.toString()}`);
         router.push(url);
       }}
+      size="sm"
+      variant="outline"
     >
       {children}
     </Button>
@@ -147,26 +147,30 @@ export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
     }
   }, []);
 
+  const allId = useId();
+  const mainnetsId = useId();
+  const testnetsId = useId();
+
   const section = (
     <FilterSection title="Chain Type">
       <RadioGroup
-        value={value}
         onValueChange={(newValue) => {
           const url = makeUrl(newValue);
           router.replace(url);
         }}
+        value={value}
       >
         <div className="flex items-center gap-2">
-          <RadioGroupItem value="all" id="all" />
-          <Label htmlFor="all">All Chains</Label>
+          <RadioGroupItem id={allId} value="all" />
+          <Label htmlFor={allId}>All Chains</Label>
         </div>
         <div className="flex items-center gap-2">
-          <RadioGroupItem value="mainnets" id="mainnets" />
-          <Label htmlFor="mainnets">Mainnets Only</Label>
+          <RadioGroupItem id={mainnetsId} value="mainnets" />
+          <Label htmlFor={mainnetsId}>Mainnets Only</Label>
         </div>
         <div className="flex items-center gap-2">
-          <RadioGroupItem value="testnets" id="testnets" />
-          <Label htmlFor="testnets">Testnets Only</Label>
+          <RadioGroupItem id={testnetsId} value="testnets" />
+          <Label htmlFor={testnetsId}>Testnets Only</Label>
         </div>
       </RadioGroup>
     </FilterSection>
@@ -181,10 +185,10 @@ export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
       <div className="relative">
         <PopoverTrigger asChild>
           <Button
-            variant="outline"
             className={
               value === "all" ? "bg-card" : "border-active-border bg-card pr-11"
             }
+            variant="outline"
           >
             {value === "mainnets"
               ? "Mainnets Only"
@@ -196,13 +200,13 @@ export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
         </PopoverTrigger>
         {value !== "all" && (
           <Button
-            variant="ghost"
-            size="icon"
             className="absolute top-[1px] right-[1px] bottom-[1px] h-auto w-10 bg-card"
             onClick={() => {
               const url = makeUrl("all");
               router.replace(url);
             }}
+            size="icon"
+            variant="ghost"
           >
             <XIcon className="size-4" />
           </Button>
@@ -235,12 +239,14 @@ export const ChainOptionsFilter: React.FC<ChainOptionsFilterProps> = ({
     return searchParams?.has("includeDeprecated") || false;
   }, [searchParams]);
 
+  const deprecatedId = useId();
+
   const section = (
     <FilterSection title="Options">
       <div className="flex items-center gap-2">
         <Checkbox
-          id="deprecated"
           checked={hasDeprecated}
+          id={deprecatedId}
           onClick={() => {
             if (!hasDeprecated) {
               mutableSearchParams.set("includeDeprecated", "true");
@@ -255,8 +261,8 @@ export const ChainOptionsFilter: React.FC<ChainOptionsFilterProps> = ({
           }}
         />
         <Label
-          htmlFor="deprecated"
           className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          htmlFor={deprecatedId}
         >
           Include Deprecated
         </Label>
@@ -276,10 +282,10 @@ export const ChainOptionsFilter: React.FC<ChainOptionsFilterProps> = ({
       <div className="relative">
         <PopoverTrigger asChild>
           <Button
-            variant="outline"
             className={
               hasFilters ? "border-active-border bg-card pr-11" : "bg-card"
             }
+            variant="outline"
           >
             Chain Options
             {!hasFilters && <ChevronDownIcon className="ml-2 size-4" />}
@@ -287,8 +293,6 @@ export const ChainOptionsFilter: React.FC<ChainOptionsFilterProps> = ({
         </PopoverTrigger>
         {hasFilters && (
           <Button
-            variant="ghost"
-            size="icon"
             className="absolute top-[1px] right-[1px] bottom-[1px] h-auto w-10 bg-card"
             onClick={() => {
               mutableSearchParams.delete("includeDeprecated");
@@ -298,6 +302,8 @@ export const ChainOptionsFilter: React.FC<ChainOptionsFilterProps> = ({
               );
               router.replace(url);
             }}
+            size="icon"
+            variant="ghost"
           >
             <XIcon className="size-4" />
           </Button>
@@ -342,8 +348,8 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
       {products.map((product) => (
         <div className="group flex items-center gap-2" key={product.id}>
           <Checkbox
-            id={product.id}
             checked={isServiceActive(mutableSearchParams, product.id)}
+            id={product.id}
             onClick={() => {
               toggleService(mutableSearchParams, product.id);
               mutableSearchParams.delete("page");
@@ -354,12 +360,13 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
             }}
           />
           <Label
-            htmlFor={product.id}
             className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            htmlFor={product.id}
           >
             {product.name}
           </Label>
           <Button
+            className="ml-auto rounded-full group-hover:opacity-100 lg:opacity-0"
             onClick={() => {
               mutableSearchParams.delete("service");
               mutableSearchParams.append("service", product.id);
@@ -370,7 +377,6 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
               router.push(url);
             }}
             size="sm"
-            className="ml-auto rounded-full group-hover:opacity-100 lg:opacity-0"
             variant="ghost"
           >
             Only
@@ -402,10 +408,10 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
       <div className="relative">
         <PopoverTrigger asChild>
           <Button
-            variant="outline"
             className={
               hasActiveFilter ? "border-active-border bg-card pr-11" : "bg-card"
             }
+            variant="outline"
           >
             {buttonTitle}
             {!hasActiveFilter && <ChevronDownIcon className="ml-2 size-4" />}
@@ -413,8 +419,6 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
         </PopoverTrigger>
         {hasActiveFilter && (
           <Button
-            variant="ghost"
-            size="icon"
             className="absolute top-[1px] right-[1px] bottom-[1px] h-auto w-10"
             onClick={() => {
               mutableSearchParams.delete("service");
@@ -424,6 +428,8 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
               );
               router.replace(url);
             }}
+            size="icon"
+            variant="ghost"
           >
             <XIcon className="size-4" />
           </Button>

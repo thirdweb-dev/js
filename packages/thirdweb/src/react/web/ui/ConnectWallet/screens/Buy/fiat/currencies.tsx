@@ -17,53 +17,53 @@ export type CurrencyMeta = {
 };
 
 export const usdCurrency: CurrencyMeta = {
-  shorthand: "USD",
   countryCode: "US",
-  name: "US Dollar",
-  symbol: "$",
   icon: USDIcon,
+  name: "US Dollar",
+  shorthand: "USD",
+  symbol: "$",
 };
 
 export const currencies: CurrencyMeta[] = [
   usdCurrency,
   {
-    shorthand: "CAD",
     countryCode: "CA",
-    name: "Canadian Dollar",
-    symbol: "$",
     icon: CADIcon,
+    name: "Canadian Dollar",
+    shorthand: "CAD",
+    symbol: "$",
   },
   {
-    shorthand: "GBP",
     countryCode: "GB",
-    name: "British Pound",
-    symbol: "£",
     icon: GBPIcon,
+    name: "British Pound",
+    shorthand: "GBP",
+    symbol: "£",
   },
   {
-    shorthand: "EUR",
     countryCode: "EU",
-    name: "Euro",
-    symbol: "€",
     icon: EURIcon,
+    name: "Euro",
+    shorthand: "EUR",
+    symbol: "€",
   },
   {
-    shorthand: "JPY",
     countryCode: "JP",
-    name: "Japanese Yen",
-    symbol: "¥",
     icon: JPYIcon,
+    name: "Japanese Yen",
+    shorthand: "JPY",
+    symbol: "¥",
   },
   {
-    shorthand: "AUD",
     countryCode: "AU",
     name: "Australian Dollar",
+    shorthand: "AUD",
     symbol: "$",
   },
   {
-    shorthand: "NZD",
     countryCode: "NZ",
     name: "New Zealand Dollar",
+    shorthand: "NZD",
     symbol: "$",
   },
 ];
@@ -74,12 +74,12 @@ export function getCurrencyMeta(shorthand: string): CurrencyMeta {
       (currency) =>
         currency.shorthand.toLowerCase() === shorthand.toLowerCase(),
     ) ?? {
+      countryCode: "US",
       // This should never happen
       icon: UnknownCurrencyIcon,
-      countryCode: "US",
       name: shorthand,
-      symbol: "$",
       shorthand: shorthand as CurrencyMeta["shorthand"],
+      symbol: "$",
     }
   );
 }
@@ -92,10 +92,10 @@ export function getFiatIcon(
     <currency.icon size={iconSize[size]} />
   ) : (
     <img
-      src={`https://flagsapi.com/${currency.countryCode.toUpperCase()}/flat/64.png`}
       alt={currency.shorthand}
-      width={iconSize[size]}
       height={iconSize[size]}
+      src={`https://flagsapi.com/${currency.countryCode.toUpperCase()}/flat/64.png`}
+      width={iconSize[size]}
     />
   );
 }
@@ -108,5 +108,5 @@ export function getFiatCurrencyIcon(props: {
 }
 
 const UnknownCurrencyIcon: IconFC = (props) => {
-  return <RadiobuttonIcon width={props.size} height={props.size} />;
+  return <RadiobuttonIcon height={props.size} width={props.size} />;
 };

@@ -1,6 +1,5 @@
 "use client";
 
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { Flex, IconButton, Select, Skeleton } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
@@ -16,6 +15,7 @@ import type { ThirdwebContract } from "thirdweb";
 import { getAccounts, totalAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
 import { Legacy_CopyButton, Text } from "tw-components";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 
@@ -23,17 +23,17 @@ const columnHelper = createColumnHelper<{ account: string }>();
 
 const columns = [
   columnHelper.accessor("account", {
-    header: "Account",
     cell: (info) => (
-      <Flex gap={2} align="center">
+      <Flex align="center" gap={2}>
         <Text fontFamily="mono">{info.getValue()}</Text>
         <Legacy_CopyButton
-          value={info.getValue()}
           aria-label="Copy account address"
           colorScheme="primary"
+          value={info.getValue()}
         />
       </Flex>
     ),
+    header: "Account",
   }),
 ];
 
@@ -75,9 +75,9 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({
 
   const accountsQuery = useReadContract(getAccounts, {
     contract,
-    start: BigInt(currentPage * pageSize),
     // of we have the total accounts, limit the end to the total accounts
     end: BigInt(maxQueryEndValue),
+    start: BigInt(currentPage * pageSize),
   });
 
   const totalPages = Math.ceil(totalAccountsNum / pageSize);
@@ -91,34 +91,34 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({
     <Flex direction="column" gap={4}>
       {/* TODO add a skeleton when loading*/}
       <TWTable
-        title="account"
         columns={columns}
         data={data.map((account) => ({ account }))}
-        isPending={accountsQuery.isPending}
         isFetched={accountsQuery.isFetched}
+        isPending={accountsQuery.isPending}
         onRowClick={(row) => {
           const accountContractPagePath = buildContractPagePath({
-            projectMeta,
             chainIdOrSlug: chainSlug.toString(),
             contractAddress: row.account,
+            projectMeta,
           });
 
           router.push(accountContractPagePath);
         }}
+        title="account"
       />
       {/* pagination */}
       <div className="flex w-full items-center justify-center">
-        <Flex gap={2} direction="row" align="center">
+        <Flex align="center" direction="row" gap={2}>
           <IconButton
-            isDisabled={totalAccountsQuery.isPending}
             aria-label="first page"
             icon={<ChevronFirstIcon className="size-4" />}
+            isDisabled={totalAccountsQuery.isPending}
             onClick={() => setCurrentPage(0)}
           />
           <IconButton
-            isDisabled={totalAccountsQuery.isPending || !canPreviousPage}
             aria-label="previous page"
             icon={<ChevronLeftIcon className="size-4" />}
+            isDisabled={totalAccountsQuery.isPending || !canPreviousPage}
             onClick={() => {
               setCurrentPage((curr) => {
                 if (curr > 0) {
@@ -139,9 +139,9 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({
             </Skeleton>
           </Text>
           <IconButton
-            isDisabled={totalAccountsQuery.isPending || !canNextPage}
             aria-label="next page"
             icon={<ChevronRightIcon className="size-4" />}
+            isDisabled={totalAccountsQuery.isPending || !canNextPage}
             onClick={() =>
               setCurrentPage((curr) => {
                 if (curr < totalPages - 1) {
@@ -152,13 +152,14 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({
             }
           />
           <IconButton
-            isDisabled={totalAccountsQuery.isPending || !canNextPage}
             aria-label="last page"
             icon={<ChevronLastIcon className="size-4" />}
+            isDisabled={totalAccountsQuery.isPending || !canNextPage}
             onClick={() => setCurrentPage(totalPages - 1)}
           />
 
           <Select
+            isDisabled={totalAccountsQuery.isPending}
             onChange={(e) => {
               const newPageSize = Number.parseInt(e.target.value as string, 10);
               // compute the new page number based on the new page size
@@ -169,7 +170,6 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({
               setPageSize(newPageSize);
             }}
             value={pageSize}
-            isDisabled={totalAccountsQuery.isPending}
           >
             <option value="25">25</option>
             <option value="50">50</option>

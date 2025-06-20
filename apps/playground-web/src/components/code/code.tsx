@@ -1,6 +1,6 @@
 import type { BundledLanguage } from "shiki";
-import { RenderCode } from "./RenderCode";
 import { getCodeHtml } from "./getCodeHtml";
+import { RenderCode } from "./RenderCode";
 
 type CodeProps = {
   code: string;
@@ -18,9 +18,9 @@ export const Code: React.FC<CodeProps> = async ({
   const { html, formattedCode } = await getCodeHtml(code, lang);
   return (
     <RenderCode
+      className={className}
       code={formattedCode}
       html={html}
-      className={className}
       scrollableClassName={scrollableClassName}
     />
   );

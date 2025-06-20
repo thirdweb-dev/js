@@ -1,6 +1,6 @@
+import { getAddress } from "thirdweb";
 import { AutoConnectWalletConnect } from "@/components/AutoConnectWalletConnect";
 import NftGallery from "@/components/NftGallery";
-import { getAddress } from "thirdweb";
 
 export default async function Page(props: {
   params: Promise<{ address: string }>;
@@ -17,7 +17,7 @@ export default async function Page(props: {
   return (
     <>
       <AutoConnectWalletConnect uri={uri} />
-      <NftGallery owner={getAddress(address)} chainId={Number(chainId)} />
+      <NftGallery chainId={Number(chainId)} owner={getAddress(address)} />
     </>
   );
 }

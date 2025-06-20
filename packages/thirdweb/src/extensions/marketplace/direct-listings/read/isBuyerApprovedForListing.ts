@@ -42,8 +42,8 @@ export async function isBuyerApprovedForListing(
       "../../__generated__/IDirectListings/read/isBuyerApprovedForListing.js"
     );
   return await generatedIsBuyerApprovedForListing({
-    contract: options.contract,
     buyer: options.buyer,
+    contract: options.contract,
     listingId: options.listingId,
   });
 }

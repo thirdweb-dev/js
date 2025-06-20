@@ -121,7 +121,7 @@ export async function fetchProofsERC20(options: {
 
   return {
     proof,
-    recipient: recipient as Address,
     quantity,
+    recipient: recipient as Address,
   };
 }

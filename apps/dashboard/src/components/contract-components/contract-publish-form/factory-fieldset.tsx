@@ -21,31 +21,31 @@ export const FactoryFieldset: React.FC<FactoryFieldsetProps> = ({
   const form = useFormContext();
 
   return (
-    <Flex gap={12} direction="column" as="fieldset">
-      <Flex gap={6} direction="column">
+    <Flex as="fieldset" direction="column" gap={12}>
+      <Flex direction="column" gap={6}>
         <Heading size="title.lg">Factory deploy settings</Heading>
-        <ButtonGroup size="sm" variant="ghost" spacing={{ base: 0.5, md: 2 }}>
+        <ButtonGroup size="sm" spacing={{ base: 0.5, md: 2 }} variant="ghost">
           <Button
-            type="button"
-            isActive={form.watch("deployType") === "autoFactory"}
             _active={{
               bg: "bgBlack",
               color: "bgWhite",
             }}
-            rounded="lg"
+            isActive={form.watch("deployType") === "autoFactory"}
             onClick={() => form.setValue("deployType", "autoFactory")}
+            rounded="lg"
+            type="button"
           >
             Default Factory
           </Button>
           <Button
-            type="button"
-            isActive={form.watch("deployType") === "customFactory"}
             _active={{
               bg: "bgBlack",
               color: "bgWhite",
             }}
-            rounded="lg"
+            isActive={form.watch("deployType") === "customFactory"}
             onClick={() => form.setValue("deployType", "customFactory")}
+            rounded="lg"
+            type="button"
           >
             Custom Factory (Advanced)
           </Button>
@@ -55,8 +55,8 @@ export const FactoryFieldset: React.FC<FactoryFieldsetProps> = ({
         )}
         {form.watch("deployType") === "customFactory" && (
           <CustomFactory
-            setCustomFactoryAbi={setCustomFactoryAbi}
             client={client}
+            setCustomFactoryAbi={setCustomFactoryAbi}
           />
         )}
       </Flex>

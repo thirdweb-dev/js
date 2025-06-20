@@ -12,11 +12,11 @@ export async function getEngineAccessPermission(params: {
       : `${params.instanceUrl}/`;
 
     const res = await fetch(`${instanceUrl}auth/permissions/get-all`, {
-      method: "GET",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${params.authToken}`,
+        "Content-Type": "application/json",
       },
+      method: "GET",
     });
 
     return {
@@ -25,9 +25,9 @@ export async function getEngineAccessPermission(params: {
     };
   } catch {
     return {
+      fetchFailed: true,
       ok: false,
       status: 500,
-      fetchFailed: true,
     };
   }
 }

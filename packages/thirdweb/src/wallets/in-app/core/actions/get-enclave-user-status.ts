@@ -22,11 +22,11 @@ export async function getUserStatus({
   const response = await clientFetch(
     `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/accounts`,
     {
-      method: "GET",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer embedded-wallet-token:${authToken}`,
+        "Content-Type": "application/json",
       },
+      method: "GET",
     },
   );
 

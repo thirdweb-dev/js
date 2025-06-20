@@ -1,8 +1,8 @@
-import { ClientOnly } from "@/components/blocks/client-only";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { ContractTable } from "components/contract-components/tables/contract-table";
 import { Suspense } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { ClientOnly } from "@/components/blocks/client-only";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { DeployedContractsPageHeader } from "../DeployedContractsPageHeader";
 import { DeployViaCLIOrImportCard } from "./DeployViaCLIOrImportCard";
 import { getSortedDeployedContracts } from "./getSortedDeployedContracts";
@@ -18,9 +18,9 @@ export function DeployedContractsPage(props: {
   return (
     <div className="flex grow flex-col">
       <DeployedContractsPageHeader
-        teamId={props.teamId}
-        projectId={props.projectId}
         client={props.client}
+        projectId={props.projectId}
+        teamId={props.teamId}
       />
       <div className="h-6" />
       <div className="container flex max-w-7xl grow flex-col">
@@ -30,8 +30,8 @@ export function DeployedContractsPage(props: {
         <div className="h-8" />
         <DeployViaCLIOrImportCard
           client={props.client}
-          teamId={props.teamId}
           projectId={props.projectId}
+          teamId={props.teamId}
         />
       </div>
     </div>
@@ -47,23 +47,23 @@ async function DeployedContractsPageAsync(props: {
   projectSlug: string;
 }) {
   const deployedContracts = await getSortedDeployedContracts({
-    teamId: props.teamId,
-    projectId: props.projectId,
     authToken: props.authToken,
     deploymentType: undefined,
+    projectId: props.projectId,
+    teamId: props.teamId,
   });
 
   return (
     <ClientOnly ssr={<Loading />}>
       <ContractTable
-        variant="contract"
+        client={props.client}
         contracts={deployedContracts}
         pageSize={10}
-        teamId={props.teamId}
         projectId={props.projectId}
-        client={props.client}
-        teamSlug={props.teamSlug}
         projectSlug={props.projectSlug}
+        teamId={props.teamId}
+        teamSlug={props.teamSlug}
+        variant="contract"
       />
     </ClientOnly>
   );

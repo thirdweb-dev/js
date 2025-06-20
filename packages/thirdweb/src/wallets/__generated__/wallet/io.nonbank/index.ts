@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.nonbank",
-  name: "NonBank",
-  homepage: "https://nonbank.io/",
-  image_id: "fe06c7ed-3df1-4cc7-9686-c920914abd00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/nonbank-defi-crypto-wallet-app/id6477441479",
     android: "https://play.google.com/store/apps/details?id=io.nonbank",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/nonbank-defi-crypto-wallet-app/id6477441479",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "nonbank://",
-    universal: "https://id.nonbank.io/wc",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://nonbank.io/",
+  id: "io.nonbank",
+  image_id: "fe06c7ed-3df1-4cc7-9686-c920914abd00",
+  mobile: {
+    native: "nonbank://",
+    universal: "https://id.nonbank.io/wc",
+  },
+  name: "NonBank",
+  rdns: null,
 } as const;

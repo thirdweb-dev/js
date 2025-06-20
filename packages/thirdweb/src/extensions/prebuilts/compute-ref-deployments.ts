@@ -43,12 +43,12 @@ export async function computeRefDeployments(
             : "";
 
         const addr = await computePublishedContractAddress({
-          client,
           chain,
+          client,
           contractId: contracts[0]?.contractId,
           publisher: contracts[0]?.publisherAddress,
-          version: contracts[0]?.version,
           salt,
+          version: contracts[0]?.version,
         });
 
         return addr;
@@ -65,12 +65,12 @@ export async function computeRefDeployments(
 
           addressArray.push(
             await computePublishedContractAddress({
-              client,
               chain,
+              client,
               contractId: c.contractId,
               publisher: c.publisherAddress,
-              version: c.version,
               salt,
+              version: c.version,
             }),
           );
         }
@@ -95,8 +95,8 @@ export async function computeRefDeployments(
             } else if (v.dynamicValue) {
               values.push(
                 await computeRefDeployments({
-                  client,
                   chain,
+                  client,
                   paramValue: v,
                 }),
               );
@@ -133,8 +133,8 @@ export async function computeRefDeployments(
               } else if (v.dynamicValue) {
                 values.push(
                   await computeRefDeployments({
-                    client,
                     chain,
+                    client,
                     paramValue: v,
                   }),
                 );

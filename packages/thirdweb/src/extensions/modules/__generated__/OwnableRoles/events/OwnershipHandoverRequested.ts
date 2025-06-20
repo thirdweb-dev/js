@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "OwnershipHandoverRequested" event.
@@ -36,7 +36,7 @@ export function ownershipHandoverRequestedEvent(
   filters: OwnershipHandoverRequestedEventFilters = {},
 ) {
   return prepareEvent({
-    signature: "event OwnershipHandoverRequested(address indexed pendingOwner)",
     filters,
+    signature: "event OwnershipHandoverRequested(address indexed pendingOwner)",
   });
 }

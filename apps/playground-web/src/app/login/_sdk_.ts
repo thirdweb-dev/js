@@ -26,18 +26,18 @@ export async function handleLogin(code: string) {
   const redirectUri = window.location.href;
 
   fetch(`${LOGIN_URL}/api/token`, {
-    method: "POST",
     body: JSON.stringify({
+      client_id: CLIENT_ID,
       code,
       code_verifier: codeVerifier,
-      state,
-      client_id: CLIENT_ID,
-      redirect_uri: redirectUri,
       grant_type: "authorization_code",
+      redirect_uri: redirectUri,
+      state,
     }),
     headers: {
       "Content-Type": "application/json",
     },
+    method: "POST",
   })
     .then((res) => res.json())
     .then((data) => {
@@ -58,8 +58,8 @@ async function generateCodeChallenge() {
     new TextEncoder().encode(codeVerifier),
   );
   return {
-    codeVerifier: codeVerifier,
     codeChallenge: base64UrlEncode(codeChallenge),
+    codeVerifier: codeVerifier,
   };
 }
 

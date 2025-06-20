@@ -13,11 +13,11 @@ export function FeatureCard(props: FeatureCardItem) {
       <div>
         {typeof iconUrl === "string" ? (
           <Image
-            src={iconUrl}
             alt=""
-            width={24}
-            height={24}
             className="mt-0.5"
+            height={24}
+            src={iconUrl}
+            width={24}
           />
         ) : (
           iconUrl

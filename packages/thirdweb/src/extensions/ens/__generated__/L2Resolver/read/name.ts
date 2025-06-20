@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { decodeAbiParameters } from "viem";
-import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the "name" function.
@@ -16,8 +16,8 @@ export type NameParams = {
 export const FN_SELECTOR = "0x691f3431" as const;
 const FN_INPUTS = [
   {
-    type: "bytes32",
     name: "node",
+    type: "bytes32",
   },
 ] as const;
 const FN_OUTPUTS = [

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { PageLayout } from "@/components/blocks/APIHeader";
 import {
   ChainIconExample,
@@ -5,24 +6,23 @@ import {
 } from "@/components/headless-ui/chain-examples";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  description: "Headless UI components for rendering chain name and icon",
   metadataBase,
   title: "Chain Components",
-  description: "Headless UI components for rendering chain name and icon",
 };
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="Chain Components"
+        containerClassName="space-y-12"
         description={
           <>Headless UI components for rendering chain name and icon</>
         }
         docsLink="https://portal.thirdweb.com/react/v5/components/onchain#chains?utm_source=playground"
-        containerClassName="space-y-12"
+        title="Chain Components"
       >
         <ChainIconExample />
         <ChainNameExample />

@@ -4,7 +4,7 @@ import { CheckIcon, Loader2, OctagonXIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useMemo, useSyncExternalStore } from "react";
 import { Toaster, toast } from "sonner";
-import { type Hex, ZERO_ADDRESS, defineChain, waitForReceipt } from "thirdweb";
+import { defineChain, type Hex, waitForReceipt, ZERO_ADDRESS } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { getTransactionStore } from "thirdweb/transaction";
 import { shortenHex } from "thirdweb/utils";
@@ -30,42 +30,45 @@ export function TransactionToastProvider() {
     async ({
       transactionHash,
       chainId,
-    }: { transactionHash: Hex; chainId: number }) => {
+    }: {
+      transactionHash: Hex;
+      chainId: number;
+    }) => {
       const chainData = await getChain(chainId.toString());
       toast("Transaction pending", {
-        id: toast(transactionHash),
-        description: shortenHex(transactionHash),
-        duration: Number.POSITIVE_INFINITY,
-        icon: <Loader2 className="h-4 w-4 animate-spin" />,
         action: chainData.explorers?.length ? (
           <Link
-            target="_blank"
             href={`${chainData.explorers[0].url}/tx/${transactionHash}`}
+            target="_blank"
           >
             <Button>View</Button>
           </Link>
         ) : undefined,
+        description: shortenHex(transactionHash),
+        duration: Number.POSITIVE_INFINITY,
+        icon: <Loader2 className="h-4 w-4 animate-spin" />,
+        id: toast(transactionHash),
       });
 
       waitForReceipt({
-        client,
         chain: defineChain(chainId),
+        client,
         transactionHash,
       })
         .then((receipt) => {
           toast.success("Transaction confirmed", {
-            id: toast(transactionHash),
-            description: shortenHex(receipt.transactionHash),
-            duration: 5000,
-            icon: <CheckIcon className="h-4 w-4" />,
             action: chainData.explorers?.length ? (
               <Link
-                target="_blank"
                 href={`${chainData.explorers[0].url}/tx/${receipt.transactionHash}`}
+                target="_blank"
               >
                 <Button>View</Button>
               </Link>
             ) : undefined,
+            description: shortenHex(receipt.transactionHash),
+            duration: 5000,
+            icon: <CheckIcon className="h-4 w-4" />,
+            id: toast(transactionHash),
           });
           setTimeout(() => {
             // Wait a minute for the indexer to catch up
@@ -74,18 +77,18 @@ export function TransactionToastProvider() {
         })
         .catch((e) => {
           toast.error("Transaction failed", {
-            id: toast(transactionHash),
-            description: e.message,
-            icon: <OctagonXIcon className="h-4 w-4" />,
-            duration: 5000,
             action: chainData.explorers?.length ? (
               <Link
-                target="_blank"
                 href={`${chainData.explorers[0].url}/tx/${transactionHash}`}
+                target="_blank"
               >
                 <Button>View</Button>
               </Link>
             ) : undefined,
+            description: e.message,
+            duration: 5000,
+            icon: <OctagonXIcon className="h-4 w-4" />,
+            id: toast(transactionHash),
           });
         });
     },
@@ -93,7 +96,7 @@ export function TransactionToastProvider() {
   );
 
   useQuery({
-    queryKey: [snapshot],
+    enabled: !!account?.address,
     queryFn: async () => {
       if (!account?.address) return false;
       if (snapshot.length === 0) return false;
@@ -104,11 +107,11 @@ export function TransactionToastProvider() {
 
       for (const { transactionHash, chainId } of newTransactions) {
         transactionQueue.add(transactionHash);
-        handleTransactionToast({ transactionHash, chainId });
+        handleTransactionToast({ chainId, transactionHash });
       }
       return true;
     },
-    enabled: !!account?.address,
+    queryKey: [snapshot],
     staleTime: Number.POSITIVE_INFINITY,
   });
 

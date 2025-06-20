@@ -1,13 +1,18 @@
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
 import { Grid2x2XIcon } from "lucide-react";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 
 const settingTypeMap = {
   metadata: {
     name: "Contract Metadata",
     portalLink:
       "https://portal.thirdweb.com/contracts/build/extensions/general/ContractMetadata",
+  },
+  platformFee: {
+    name: "Platform Fee",
+    portalLink:
+      "https://portal.thirdweb.com/contracts/build/extensions/general/PlatformFee",
   },
   primarySale: {
     name: "Primary Sales",
@@ -18,11 +23,6 @@ const settingTypeMap = {
     name: "Royalties",
     portalLink:
       "https://portal.thirdweb.com/contracts/build/extensions/general/Royalty",
-  },
-  platformFee: {
-    name: "Platform Fee",
-    portalLink:
-      "https://portal.thirdweb.com/contracts/build/extensions/general/PlatformFee",
   },
 } as const;
 
@@ -55,10 +55,10 @@ export function SettingDetectedState({
               <span className="text-foreground">{metadata.name}</span>
             </p>
             <UnderlineLink
-              href={metadata.portalLink}
-              target="_blank"
-              rel="noopener noreferrer"
               className="text-muted-foreground text-sm"
+              href={metadata.portalLink}
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Learn how to enable this extension
             </UnderlineLink>

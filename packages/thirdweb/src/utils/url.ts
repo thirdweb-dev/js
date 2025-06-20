@@ -27,8 +27,8 @@ export function formatUniversalUrl(
   const encodedWcUrl = encodeURIComponent(wcUri);
 
   return {
-    redirect: `${safeAppUrl}wc?uri=${encodedWcUrl}`,
     href: safeAppUrl,
+    redirect: `${safeAppUrl}wc?uri=${encodedWcUrl}`,
   };
 }
 
@@ -50,8 +50,8 @@ export function formatNativeUrl(appUrl: string, wcUri: string): LinkingRecord {
   const encodedWcUrl = encodeURIComponent(wcUri);
 
   return {
-    redirect: `${safeAppUrl}wc?uri=${encodedWcUrl}`,
     href: safeAppUrl,
+    redirect: `${safeAppUrl}wc?uri=${encodedWcUrl}`,
   };
 }
 

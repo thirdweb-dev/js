@@ -46,40 +46,40 @@ export function registerFid(options: RegisterFidParams) {
 
   return prepareContractCall({
     contract: getIdGateway({
-      client: options.client,
       chain: options.chain,
+      client: options.client,
     }),
     method: [
       "0x6d705ebb",
       [
         {
-          type: "address",
           name: "recovery",
+          type: "address",
         },
         {
-          type: "uint256",
           name: "extraStorage",
+          type: "uint256",
         },
       ],
       [
         {
-          type: "uint256",
           name: "fid",
+          type: "uint256",
         },
         {
-          type: "uint256",
           name: "overpayment",
+          type: "uint256",
         },
       ],
     ],
+    params: [options.recoveryAddress, extraStorage],
     value: async () => {
       return await getRegistrationPrice({
-        client: options.client,
         chain: options.chain,
-        extraStorage: extraStorage,
+        client: options.client,
         disableCache: options.disableCache,
+        extraStorage: extraStorage,
       });
     },
-    params: [options.recoveryAddress, extraStorage],
   });
 }

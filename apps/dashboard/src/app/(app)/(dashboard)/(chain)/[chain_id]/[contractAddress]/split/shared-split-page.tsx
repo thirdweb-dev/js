@@ -13,8 +13,8 @@ export async function SharedContractSplitPage(props: {
   isLoggedIn: boolean;
 }) {
   const info = await getContractPageParamsInfo({
-    contractAddress: props.contractAddress,
     chainIdOrSlug: props.chainIdOrSlug,
+    contractAddress: props.contractAddress,
     teamId: props.projectMeta?.teamId,
   });
 
@@ -26,9 +26,9 @@ export async function SharedContractSplitPage(props: {
   if (isLocalhostChain) {
     return (
       <ContractSplitPageClient
-        projectMeta={props.projectMeta}
         contract={clientContract}
         isLoggedIn={props.isLoggedIn}
+        projectMeta={props.projectMeta}
       />
     );
   }

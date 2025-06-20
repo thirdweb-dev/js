@@ -38,7 +38,6 @@ export function setContractMetadata({
   ...restParams
 }: BaseTransactionOptions<SetContractMetadataParams>) {
   return setContractURI({
-    contract,
     asyncParams: async () => {
       const uri = await upload({
         client: contract.client,
@@ -49,5 +48,6 @@ export function setContractMetadata({
         uri,
       };
     },
+    contract,
   });
 }

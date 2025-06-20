@@ -34,18 +34,18 @@ export const CodeExample: React.FC<CodeExampleProps> = ({
       )}
       <div className="grid grid-cols-1 overflow-hidden rounded-lg border bg-card md:grid-cols-2">
         <div className="flex grow flex-col border-b md:border-r md:border-b-0">
-          <TabName name="Code" icon={Code2Icon} />
+          <TabName icon={Code2Icon} name="Code" />
           <Code
+            className="h-full rounded-none border-none"
             code={code}
             lang={lang}
-            className="h-full rounded-none border-none"
           />
         </div>
         <div className="flex grow flex-col">
-          <TabName name="Preview" icon={EyeIcon} />
+          <TabName icon={EyeIcon} name="Preview" />
           <ClientOnly
-            ssr={null}
             className="relative grid h-full min-h-[300px] place-items-center bg-background py-20"
+            ssr={null}
           >
             {preview}
           </ClientOnly>

@@ -34,14 +34,14 @@ export function useEnsName(options: {
 }) {
   const { client, address } = options;
   return useQuery({
-    queryKey: ["ens-name", address],
     enabled: !!address,
     queryFn: () =>
       resolveName({
-        client,
         address: address || "",
+        client,
         resolverChain: ethereum,
       }),
+    queryKey: ["ens-name", address],
   });
 }
 
@@ -66,13 +66,13 @@ export function useEnsAvatar(options: {
 }) {
   const { client, ensName } = options;
   return useQuery({
-    queryKey: ["ens-avatar", ensName],
     enabled: !!ensName,
     queryFn: async () =>
       resolveAvatar({
         client,
         name: ensName || "",
       }),
+    queryKey: ["ens-avatar", ensName],
   });
 }
 
@@ -92,8 +92,8 @@ export function useConnectedWalletDetails(
       : undefined;
 
   const ensNameQuery = useEnsName({
-    client,
     address: activeAccount?.address,
+    client,
   });
 
   const ensAvatarQuery = useEnsAvatar({
@@ -102,8 +102,8 @@ export function useConnectedWalletDetails(
   });
 
   const socialProfileQuery = useSocialProfiles({
-    client,
     address: activeAccount?.address,
+    client,
   });
 
   const shortAddress = activeAccount?.address
@@ -111,10 +111,10 @@ export function useConnectedWalletDetails(
     : "";
 
   const balanceQuery = useWalletBalance({
-    chain: walletChain ? walletChain : undefined,
-    tokenAddress,
     address: activeAccount?.address,
+    chain: walletChain ? walletChain : undefined,
     client,
+    tokenAddress,
   });
 
   const addressOrENS = ensNameQuery.data || shortAddress;
@@ -122,29 +122,29 @@ export function useConnectedWalletDetails(
     ?.avatar;
 
   const { data: pfp } = useQuery({
-    queryKey: ["ens-avatar", pfpUnresolved],
+    enabled: !!pfpUnresolved,
     queryFn: async () => {
       if (!pfpUnresolved) {
         return undefined;
       }
       return parseAvatarRecord({ client, uri: pfpUnresolved });
     },
-    enabled: !!pfpUnresolved,
-    refetchOnWindowFocus: false,
+    queryKey: ["ens-avatar", pfpUnresolved],
     refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
   const name =
     socialProfileQuery.data?.filter((p) => p.name)[0]?.name || addressOrENS;
 
   return {
-    socialProfileQuery,
-    ensNameQuery,
-    ensAvatarQuery,
     addressOrENS,
-    pfp,
-    name,
-    shortAddress,
     balanceQuery,
+    ensAvatarQuery,
+    ensNameQuery,
+    name,
+    pfp,
+    shortAddress,
+    socialProfileQuery,
   };
 }
 
@@ -162,17 +162,17 @@ export function useConnectedWalletDetails(
  */
 export function useWalletInfo(id: WalletId | undefined) {
   return useQuery<WalletInfo>({
-    queryKey: ["wallet-info", id],
+    enabled: !!id,
     queryFn: () => {
       if (!id) {
         throw new Error("Wallet id is required");
       }
       return getWalletInfo(id, false);
     },
-    retry: false,
-    refetchOnWindowFocus: false,
+    queryKey: ["wallet-info", id],
     refetchOnMount: false,
-    enabled: !!id,
+    refetchOnWindowFocus: false,
+    retry: false,
   });
 }
 
@@ -192,7 +192,7 @@ export function useWalletInfo(id: WalletId | undefined) {
  */
 export function useWalletImage(id: WalletId | undefined) {
   return useQuery({
-    queryKey: ["wallet-image", id],
+    enabled: !!id,
     queryFn: async () => {
       if (!id) {
         throw new Error("Wallet id is required");
@@ -208,9 +208,9 @@ export function useWalletImage(id: WalletId | undefined) {
       }
       return getWalletInfo(id, true);
     },
-    retry: false,
-    refetchOnWindowFocus: false,
+    queryKey: ["wallet-image", id],
     refetchOnMount: false,
-    enabled: !!id,
+    refetchOnWindowFocus: false,
+    retry: false,
   });
 }

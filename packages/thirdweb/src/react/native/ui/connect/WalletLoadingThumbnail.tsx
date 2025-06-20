@@ -31,10 +31,10 @@ function WalletLoadingThumbnail({
   useEffect(() => {
     if (!animate) return;
     const animation = Animated.timing(spinValue.current, {
-      toValue: 1,
       duration: 1150,
-      useNativeDriver: true,
       easing: Easing.linear,
+      toValue: 1,
+      useNativeDriver: true,
     });
 
     const loop = Animated.loop(animation);
@@ -55,23 +55,23 @@ function WalletLoadingThumbnail({
   return (
     <View style={styles.container}>
       <Svg
-        width={imageSize + PADDING}
         height={imageSize + PADDING}
-        viewBox={`0 0 ${imageSize + PADDING} ${imageSize + PADDING}`}
         style={styles.loader}
+        viewBox={`0 0 ${imageSize + PADDING} ${imageSize + PADDING}`}
+        width={imageSize + PADDING}
       >
         {animate && (
           <AnimatedRect
-            x="2"
-            y="2"
-            width={imageSize + INTERNAL_PADDING}
+            fill="transparent"
             height={imageSize + INTERNAL_PADDING}
             rx={rx}
             stroke={showError ? "transparent" : theme.colors.accentText}
-            strokeWidth={3}
-            fill="transparent"
             strokeDasharray="100 300"
             strokeDashoffset={spin}
+            strokeWidth={3}
+            width={imageSize + INTERNAL_PADDING}
+            x="2"
+            y="2"
           />
         )}
       </Svg>
@@ -79,12 +79,12 @@ function WalletLoadingThumbnail({
         <View
           style={[
             {
-              position: "absolute",
+              borderColor: theme.colors.borderColor,
+              borderRadius: radius.lg,
               borderWidth: 3,
               height: imageSize + INTERNAL_PADDING,
+              position: "absolute",
               width: imageSize + INTERNAL_PADDING,
-              borderRadius: radius.lg,
-              borderColor: theme.colors.borderColor,
             },
           ]}
         />

@@ -4,12 +4,12 @@ import { socialUrlsSchema } from "../../_common/schema";
 import type { NFTMetadataWithPrice } from "../upload-nfts/batch-upload/process-files";
 
 export const nftCollectionInfoFormSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  symbol: z.string(),
   chain: z.string().min(1, "Chain is required"),
   description: z.string().optional(),
   image: z.instanceof(File).optional(),
+  name: z.string().min(1, "Name is required"),
   socialUrls: socialUrlsSchema,
+  symbol: z.string(),
 });
 
 const addressSchema = z.string().refine((value) => {
@@ -21,9 +21,9 @@ const addressSchema = z.string().refine((value) => {
 });
 
 export const nftSalesSettingsFormSchema = z.object({
-  royaltyRecipient: addressSchema,
   primarySaleRecipient: addressSchema,
   royaltyBps: z.coerce.number().min(0).max(10000),
+  royaltyRecipient: addressSchema,
 });
 
 export type NFTCollectionInfoFormValues = z.infer<

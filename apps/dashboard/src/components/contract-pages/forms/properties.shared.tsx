@@ -20,8 +20,8 @@ import {
   type UseFormRegister,
   type UseFormSetValue,
   type UseFormWatch,
-  type WatchObserver,
   useFieldArray,
+  type WatchObserver,
 } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import { Button, FormErrorMessage, FormLabel } from "tw-components";
@@ -71,15 +71,15 @@ export const PropertiesFormControl = <
 
   return (
     <div className="flex flex-col gap-4">
-      <Flex justify="space-between" align="center" direction="row">
+      <Flex align="center" direction="row" justify="space-between">
         <FormLabel m={0}>Attributes</FormLabel>
         <Button
-          rightIcon={<BanIcon className="size-4" />}
-          variant="outline"
           colorScheme="red"
-          size="xs"
           // biome-ignore lint/suspicious/noExplicitAny: FIXME
           onClick={() => replace([{ trait_type: "", value: "" } as any])}
+          rightIcon={<BanIcon className="size-4" />}
+          size="xs"
+          variant="outline"
         >
           Reset
         </Button>
@@ -96,8 +96,8 @@ export const PropertiesFormControl = <
         return (
           <div className="flex flex-row items-center gap-2" key={field.id}>
             <FormControl
-              isInvalid={isInvalid}
               className="flex flex-row items-start gap-3"
+              isInvalid={isInvalid}
             >
               <FormControl isInvalid={!!keyError}>
                 <Input
@@ -164,25 +164,25 @@ export const PropertiesFormControl = <
               </FormControl>
             </FormControl>
             <IconButton
-              onClick={() => remove(index)}
-              colorScheme="red"
-              variant="ghost"
               aria-label="remove key value pair"
-              size="xs"
+              colorScheme="red"
               icon={<XIcon />}
+              onClick={() => remove(index)}
+              size="xs"
+              variant="ghost"
             />
           </div>
         );
       })}
       <div className="flex flex-row gap-2">
         <Button
-          leftIcon={<PlusIcon className="size-5" />}
           colorScheme="purple"
-          size="sm"
+          leftIcon={<PlusIcon className="size-5" />}
           onClick={() =>
             // biome-ignore lint/suspicious/noExplicitAny: FIXME
             append({ trait_type: undefined, value: undefined } as any)
           }
+          size="sm"
         >
           Add Row
         </Button>

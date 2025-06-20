@@ -1,5 +1,5 @@
-import { Heading } from "..";
 import { cn } from "../../../lib/utils";
+import { Heading } from "..";
 import styles from "./Steps.module.css";
 
 export function Steps(props: { children: React.ReactNode }) {
@@ -20,7 +20,7 @@ export function Step(props: {
   return (
     <li>
       <div data-step>
-        <Heading level={3} id={props.id || props.title}>
+        <Heading anchorId={props.id || props.title} level={3}>
           {props.title}
         </Heading>
       </div>

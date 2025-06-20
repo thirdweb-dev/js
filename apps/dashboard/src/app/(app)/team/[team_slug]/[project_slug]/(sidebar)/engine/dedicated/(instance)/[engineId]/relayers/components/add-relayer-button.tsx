@@ -1,4 +1,3 @@
-import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import {
   type CreateRelayerInput,
   useEngineBackendWallets,
@@ -27,6 +26,7 @@ import { useForm } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import { isAddress, shortenAddress } from "thirdweb/utils";
 import { Button, FormHelperText, FormLabel } from "tw-components";
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 
 interface AddRelayerButtonProps {
   instanceUrl: string;
@@ -44,11 +44,11 @@ export const AddRelayerButton: React.FC<AddRelayerButtonProps> = ({
   return (
     <>
       <Button
-        onClick={disclosure.onOpen}
-        variant="ghost"
-        size="sm"
-        leftIcon={<CirclePlusIcon className="size-6" />}
         colorScheme="primary"
+        leftIcon={<CirclePlusIcon className="size-6" />}
+        onClick={disclosure.onOpen}
+        size="sm"
+        variant="ghost"
         w="fit-content"
       >
         Add Relayer
@@ -56,10 +56,10 @@ export const AddRelayerButton: React.FC<AddRelayerButtonProps> = ({
 
       {disclosure.isOpen && (
         <AddModal
-          instanceUrl={instanceUrl}
-          disclosure={disclosure}
           authToken={authToken}
           client={client}
+          disclosure={disclosure}
+          instanceUrl={instanceUrl}
         />
       )}
     </>
@@ -86,12 +86,12 @@ const AddModal = ({
   client: ThirdwebClient;
 }) => {
   const { mutate: createRelayer } = useEngineCreateRelayer({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
   const { data: backendWallets } = useEngineBackendWallets({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
   const { idToChain } = useAllChainsData();
   const { onSuccess, onError } = useTxNotifications(
@@ -107,31 +107,31 @@ const AddModal = ({
 
   const onSubmit = (data: AddModalInput) => {
     const createRelayerData: CreateRelayerInput = {
-      chain: idToChain.get(data.chainId)?.slug ?? "unknown",
-      backendWalletAddress: data.backendWalletAddress,
-      name: data.name,
       allowedContracts: parseAddressListRaw(data.allowedContractsRaw),
       allowedForwarders: parseAddressListRaw(data.allowedForwardersRaw),
+      backendWalletAddress: data.backendWalletAddress,
+      chain: idToChain.get(data.chainId)?.slug ?? "unknown",
+      name: data.name,
     };
 
     createRelayer(createRelayerData, {
-      onSuccess: () => {
-        onSuccess();
-        disclosure.onClose();
-      },
       onError: (error) => {
         onError(error);
         console.error(error);
+      },
+      onSuccess: () => {
+        onSuccess();
+        disclosure.onClose();
       },
     });
   };
 
   return (
-    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
       <ModalOverlay />
       <ModalContent
-        className="!bg-background rounded-lg border border-border"
         as="form"
+        className="!bg-background rounded-lg border border-border"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <ModalHeader>Add Relayer</ModalHeader>
@@ -143,8 +143,8 @@ const AddModal = ({
               <FormLabel>Chain</FormLabel>
               <SingleNetworkSelector
                 chainId={form.watch("chainId")}
-                onChange={(val) => form.setValue("chainId", val)}
                 client={client}
+                onChange={(val) => form.setValue("chainId", val)}
               />
             </FormControl>
             <FormControl isRequired>
@@ -152,7 +152,7 @@ const AddModal = ({
               <Select
                 {...form.register("backendWalletAddress", { required: true })}
               >
-                <option value="" disabled selected hidden>
+                <option disabled hidden selected value="">
                   Select a backend wallet to use as a relayer
                 </option>
                 {backendWallets?.map((wallet) => (
@@ -166,8 +166,8 @@ const AddModal = ({
             <FormControl>
               <FormLabel>Label</FormLabel>
               <Input
-                type="text"
                 placeholder="Enter a description for this relayer"
+                type="text"
                 {...form.register("name")}
               />
             </FormControl>
@@ -193,13 +193,13 @@ const AddModal = ({
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>
-          <Button type="button" onClick={disclosure.onClose} variant="ghost">
+          <Button onClick={disclosure.onClose} type="button" variant="ghost">
             Cancel
           </Button>
           <Button
-            type="submit"
             colorScheme="primary"
             isDisabled={!form.formState.isValid}
+            type="submit"
           >
             Add
           </Button>

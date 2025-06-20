@@ -1,5 +1,9 @@
 "use client";
 
+import { ArrowRightIcon, CircleArrowUpIcon } from "lucide-react";
+import { useState, useTransition } from "react";
+import type { ThirdwebClient } from "thirdweb";
+import { pollWithTimeout } from "utils/pollWithTimeout";
 import {
   reportOnboardingMembersInvited,
   reportOnboardingMembersSkipped,
@@ -8,9 +12,8 @@ import {
 } from "@/analytics/report";
 import type { Team } from "@/api/team";
 import { PricingCard } from "@/components/blocks/pricing-card";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Sheet,
   SheetContent,
@@ -19,11 +22,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { TabButtons } from "@/components/ui/tabs";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { ArrowRightIcon, CircleArrowUpIcon } from "lucide-react";
-import { useState, useTransition } from "react";
-import type { ThirdwebClient } from "thirdweb";
-import { pollWithTimeout } from "utils/pollWithTimeout";
 import { useStripeRedirectEvent } from "../../../(stripe)/stripe-redirect/stripeRedirectChannel";
 import {
   InviteSection,
@@ -72,40 +72,31 @@ export function InviteTeamMembersUI(props: {
 
   return (
     <div className="relative flex grow flex-col">
-      <Sheet open={showPlanModal} onOpenChange={setShowPlanModal}>
+      <Sheet onOpenChange={setShowPlanModal} open={showPlanModal}>
         <SheetContent className="!max-w-[1300px] w-full overflow-auto">
           <InviteModalContent
             billingStatus={props.team.billingStatus}
-            teamSlug={props.team.slug}
             getTeam={props.getTeam}
             teamId={props.team.id}
+            teamSlug={props.team.slug}
           />
         </SheetContent>
       </Sheet>
 
       <InviteSection
-        inviteTeamMembers={props.inviteTeamMembers}
-        team={props.team}
-        userHasEditPermission={true}
-        onInviteSuccess={(count) =>
-          setSuccessCount((prevCount) => prevCount + count)
-        }
-        shouldHideInviteButton={hasSentInvites}
         client={props.client}
-        // its a new team, there's no recommended members
-        recommendedMembers={[]}
         customCTASection={
           <div className="flex gap-3">
             {(props.team.billingPlan === "free" ||
               props.team.billingPlan === "starter") && (
               <Button
-                size="sm"
-                variant="default"
                 className="gap-2"
                 onClick={() => {
                   setShowPlanModal(true);
                   reportOnboardingMembersUpsellButtonClicked();
                 }}
+                size="sm"
+                variant="default"
               >
                 <CircleArrowUpIcon className="size-4" />
                 Upgrade
@@ -113,6 +104,7 @@ export function InviteTeamMembersUI(props: {
             )}
 
             <Button
+              className="gap-2"
               onClick={() => {
                 props.onComplete();
                 if (successCount === 0) {
@@ -123,7 +115,6 @@ export function InviteTeamMembersUI(props: {
                   });
                 }
               }}
-              className="gap-2"
               size="sm"
               variant={hasSentInvites ? "default" : "outline"}
             >
@@ -132,6 +123,15 @@ export function InviteTeamMembersUI(props: {
             </Button>
           </div>
         }
+        inviteTeamMembers={props.inviteTeamMembers}
+        onInviteSuccess={(count) =>
+          setSuccessCount((prevCount) => prevCount + count)
+        }
+        recommendedMembers={[]}
+        shouldHideInviteButton={hasSentInvites}
+        // its a new team, there's no recommended members
+        team={props.team}
+        userHasEditPermission={true}
       />
 
       {showSpinner && (
@@ -157,19 +157,19 @@ function InviteModalContent(props: {
     <PricingCard
       billingPlan="growth"
       billingStatus={props.billingStatus}
-      teamSlug={props.teamSlug}
       cta={{
         label: "Get Started",
-        type: "checkout",
         onClick() {
           reportOnboardingMembersUpsellPlanSelected({
             plan: "growth",
           });
         },
+        type: "checkout",
       }}
-      highlighted
       getTeam={props.getTeam}
+      highlighted
       teamId={props.teamId}
+      teamSlug={props.teamSlug}
     />
   );
 
@@ -177,18 +177,18 @@ function InviteModalContent(props: {
     <PricingCard
       billingPlan="scale"
       billingStatus={props.billingStatus}
-      teamSlug={props.teamSlug}
       cta={{
         label: "Get started",
-        type: "checkout",
         onClick() {
           reportOnboardingMembersUpsellPlanSelected({
             plan: "scale",
           });
         },
+        type: "checkout",
       }}
       getTeam={props.getTeam}
       teamId={props.teamId}
+      teamSlug={props.teamSlug}
     />
   );
 
@@ -196,18 +196,18 @@ function InviteModalContent(props: {
     <PricingCard
       billingPlan="pro"
       billingStatus={props.billingStatus}
-      teamSlug={props.teamSlug}
       cta={{
         label: "Get started",
-        type: "checkout",
         onClick() {
           reportOnboardingMembersUpsellPlanSelected({
             plan: "pro",
           });
         },
+        type: "checkout",
       }}
       getTeam={props.getTeam}
       teamId={props.teamId}
+      teamSlug={props.teamSlug}
     />
   );
 
@@ -222,8 +222,8 @@ function InviteModalContent(props: {
           features.{" "}
           <UnderlineLink
             href="https://thirdweb.com/pricing"
-            target="_blank"
             rel="noopener noreferrer"
+            target="_blank"
           >
             Learn more about pricing
           </UnderlineLink>
@@ -244,19 +244,19 @@ function InviteModalContent(props: {
         <TabButtons
           tabs={[
             {
+              isActive: planToShow === "growth",
               name: "Growth",
               onClick: () => setPlanToShow("growth"),
-              isActive: planToShow === "growth",
             },
             {
+              isActive: planToShow === "scale",
               name: "Scale",
               onClick: () => setPlanToShow("scale"),
-              isActive: planToShow === "scale",
             },
             {
+              isActive: planToShow === "pro",
               name: "Pro",
               onClick: () => setPlanToShow("pro"),
-              isActive: planToShow === "pro",
             },
           ]}
         />

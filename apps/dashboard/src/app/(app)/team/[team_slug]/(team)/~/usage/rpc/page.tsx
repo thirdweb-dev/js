@@ -1,7 +1,3 @@
-import { getTeamBySlug } from "@/api/team";
-import { getLast24HoursRPCUsage } from "@/api/usage/rpc";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format, parseISO } from "date-fns";
 import {
   AlertTriangleIcon,
@@ -10,6 +6,10 @@ import {
   XCircleIcon,
 } from "lucide-react";
 import { redirect } from "next/navigation";
+import { getTeamBySlug } from "@/api/team";
+import { getLast24HoursRPCUsage } from "@/api/usage/rpc";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import { TeamPlanBadge } from "../../../../../../components/TeamPlanBadge";
 import { loginRedirect } from "../../../../../../login/loginRedirect";
@@ -37,8 +37,8 @@ export default async function RPCUsage(props: {
   const currentRateLimit = team.capabilities.rpc.rateLimit;
 
   const apiData = await getLast24HoursRPCUsage({
-    teamId: team.id,
     authToken,
+    teamId: team.id,
   });
 
   if (!apiData.ok) {
@@ -202,7 +202,7 @@ export default async function RPCUsage(props: {
       )}
 
       {peakPercentage > 80 && peakPercentage <= 100 && (
-        <Alert variant="warning" className="border-yellow-500 text-yellow-700">
+        <Alert className="border-yellow-500 text-yellow-700" variant="warning">
           <AlertTriangleIcon className="h-4 w-4" />
           <AlertTitle>Approaching Rate Limit</AlertTitle>
           <AlertDescription>
@@ -213,15 +213,15 @@ export default async function RPCUsage(props: {
       )}
 
       <RateGraph
-        peakPercentage={peakPercentage}
         currentRateLimit={currentRateLimit}
         data={averageRate}
+        peakPercentage={peakPercentage}
       />
 
       <CountGraph
-        peakPercentage={peakPercentage}
         currentRateLimit={currentRateLimit}
         data={averageRate}
+        peakPercentage={peakPercentage}
       />
     </div>
   );

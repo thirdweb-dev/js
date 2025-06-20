@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { normalizeTimeISOString } from "@/lib/time";
 import { FileCode2Icon, MessageSquareQuoteIcon } from "lucide-react";
 import Link from "next/link";
 import {
   ResponsiveSearchParamsProvider,
   ResponsiveSuspense,
 } from "responsive-rsc";
+import { Button } from "@/components/ui/button";
+import { normalizeTimeISOString } from "@/lib/time";
 import { fetchNebulaAnalytics } from "./fetch-nebula-analytics";
 import { NebulaAnalyticsFilter } from "./nebula-analytics-filter";
 import { NebulaAnalyticsDashboardUI } from "./nebula-analytics-ui";
@@ -28,22 +28,22 @@ export function NebulaAnalyticsPage(props: {
           <h1 className="font-semibold text-3xl tracking-tight">Nebula</h1>
 
           <div className="flex gap-3">
-            <Button variant="outline" className="gap-2 bg-card" asChild>
+            <Button asChild className="gap-2 bg-card" variant="outline">
               <Link
                 href="https://nebula.thirdweb.com"
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 <MessageSquareQuoteIcon className="size-4 text-muted-foreground" />
                 Playground
               </Link>
             </Button>
 
-            <Button variant="outline" className="gap-2 bg-card" asChild>
+            <Button asChild className="gap-2 bg-card" variant="outline">
               <Link
                 href="https://portal.thirdweb.com/nebula"
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 <FileCode2Icon className="size-4 text-muted-foreground" />
                 API Reference
@@ -59,14 +59,14 @@ export function NebulaAnalyticsPage(props: {
           <NebulaAnalyticsFilter />
         </div>
         <ResponsiveSuspense
-          searchParamsUsed={["from", "to", "interval"]}
           fallback={<NebulaAnalyticsDashboardUI data={[]} isPending={true} />}
+          searchParamsUsed={["from", "to", "interval"]}
         >
           <NebulaAnalyticDashboard
+            authToken={props.authToken}
+            projectId={props.projectId}
             searchParams={props.searchParams}
             teamId={props.teamId}
-            projectId={props.projectId}
-            authToken={props.authToken}
           />
         </ResponsiveSuspense>
       </div>
@@ -89,13 +89,13 @@ async function NebulaAnalyticDashboard(props: {
   );
 
   const res = await fetchNebulaAnalytics({
-    teamId: props.teamId,
     authToken: props.authToken,
-    projectId: props.projectId,
     from: normalizeTimeISOString(range.from),
-    to: normalizeTimeISOString(range.to),
     // internally renamed
     period: interval,
+    projectId: props.projectId,
+    teamId: props.teamId,
+    to: normalizeTimeISOString(range.to),
   });
 
   if (!res.ok) {

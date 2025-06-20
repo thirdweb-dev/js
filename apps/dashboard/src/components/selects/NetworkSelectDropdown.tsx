@@ -1,3 +1,7 @@
+import { ChainIconClient } from "components/icons/ChainIcon";
+import { useAllChainsData } from "hooks/chains/allChains";
+import { useMemo } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import {
   Select,
   SelectContent,
@@ -5,10 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChainIconClient } from "components/icons/ChainIcon";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { useMemo } from "react";
-import type { ThirdwebClient } from "thirdweb";
 
 interface NetworkSelectDropdownProps {
   enabledChainIds?: number[];
@@ -55,10 +55,10 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
   return (
     <Select
       disabled={isDisabled}
-      value={selectedChain || "all-chains"}
       onValueChange={(v) => {
         onSelect(v === "all-chains" ? undefined : v);
       }}
+      value={selectedChain || "all-chains"}
     >
       <SelectTrigger className="-translate-x-3 !h-auto inline-flex w-auto border-none bg-transparent px-1 py-0.5 font-medium hover:bg-accent focus:ring-0 focus:ring-offset-0">
         <SelectValue />
@@ -71,9 +71,9 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
         <SelectItem value="all-chains">
           <div className="flex items-center gap-2 py-1" data-all-chains>
             <ChainIconClient
-              src={undefined}
-              client={client}
               className="size-5"
+              client={client}
+              src={undefined}
             />
             All Networks
           </div>
@@ -83,9 +83,9 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
           <SelectItem key={chain.chainId} value={String(chain.chainId)}>
             <div className="flex items-center gap-2 py-1">
               <ChainIconClient
-                src={chain.icon?.url}
-                client={client}
                 className="size-5"
+                client={client}
+                src={chain.icon?.url}
               />
               {useCleanChainName ? cleanChainName(chain.name) : chain.name}
             </div>

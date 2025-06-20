@@ -9,8 +9,8 @@ export function TWAutoConnect(props: {
 }) {
   return (
     <AutoConnect
-      client={props.client}
       accountAbstraction={props.accountAbstraction}
+      client={props.client}
     />
   );
 }

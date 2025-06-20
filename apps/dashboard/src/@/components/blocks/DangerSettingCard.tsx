@@ -1,4 +1,4 @@
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { cn } from "../../lib/utils";
 import { DynamicHeight } from "../ui/DynamicHeight";
 
@@ -58,19 +58,19 @@ export function DangerSettingCard(props: {
         )}
       >
         <Dialog
-          open={isConfirmationDialogOpen}
           onOpenChange={(v) => {
             setIsConfirmationDialogOpen(v);
             if (!v) {
               props.confirmationDialog.onClose?.();
             }
           }}
+          open={isConfirmationDialogOpen}
         >
           <DialogTrigger asChild>
             <Button
-              variant="destructive"
               className="gap-2 bg-red-600 font-semibold text-white hover:bg-red-600/80"
               disabled={props.isDisabled || props.isPending}
+              variant="destructive"
             >
               {props.isPending && <Spinner className="size-3" />}
               {props.buttonLabel}
@@ -99,10 +99,10 @@ export function DangerSettingCard(props: {
               </DialogClose>
 
               <Button
-                variant="destructive"
                 className="gap-2 bg-red-600 font-semibold text-white hover:bg-red-600/80"
-                onClick={props.buttonOnClick}
                 disabled={props.isPending}
+                onClick={props.buttonOnClick}
+                variant="destructive"
               >
                 {props.isPending && <Spinner className="size-3" />}
                 {props.buttonLabel}

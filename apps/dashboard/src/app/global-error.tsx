@@ -18,8 +18,8 @@ export default function GlobalError({
       scope.setLevel("fatal");
       Sentry.captureException(error, {
         extra: {
-          crashedPage: true,
           boundary: "global",
+          crashedPage: true,
           router: "app",
         },
       });
@@ -30,7 +30,7 @@ export default function GlobalError({
     <html lang="en" suppressHydrationWarning>
       <body>
         <h2>Something went wrong!</h2>
-        <button type="button" onClick={() => reset()}>
+        <button onClick={() => reset()} type="button">
           Try again
         </button>
       </body>

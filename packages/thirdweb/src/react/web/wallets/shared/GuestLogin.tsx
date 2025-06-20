@@ -6,10 +6,10 @@ import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wa
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
-import { Spacer } from "../../ui/components/Spacer.js";
-import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
+import { Spacer } from "../../ui/components/Spacer.js";
+import { Spinner } from "../../ui/components/Spinner.js";
 import { Text } from "../../ui/components/text.js";
 import type { ConnectWalletSelectUIState } from "./ConnectWalletSocialOptions.js";
 import type { InAppWalletLocale } from "./locale/types.js";
@@ -93,33 +93,33 @@ export function GuestLogin(props: {
   return (
     <Container animate="fadein" flex="column" fullHeight>
       <Container
-        flex="column"
         expand
+        flex="column"
         p="lg"
         style={{
           paddingBottom: 0,
         }}
       >
         {props.goBack && (
-          <ModalHeader title={locale.title} onBack={props.goBack} />
+          <ModalHeader onBack={props.goBack} title={locale.title} />
         )}
 
         {props.size === "compact" ? <Spacer y="xl" /> : null}
 
         <Container
-          flex="column"
           center="both"
           expand
+          flex="column"
           style={{
-            textAlign: "center",
             minHeight: "250px",
+            textAlign: "center",
           }}
         >
           {status !== "error" && (
             <Container animate="fadein">
               <Text
-                color="primaryText"
                 center
+                color="primaryText"
                 multiline
                 style={{
                   maxWidth: "250px",
@@ -129,7 +129,7 @@ export function GuestLogin(props: {
               </Text>
               <Spacer y="xl" />
               <Container center="x" flex="row">
-                <Spinner size="lg" color="accentText" />
+                <Spinner color="accentText" size="lg" />
               </Container>
 
               <Spacer y="xxl" />
@@ -146,7 +146,7 @@ export function GuestLogin(props: {
                 <Text color="danger">{locale.failed}</Text>
               )}
               <Spacer y="lg" />
-              <Button variant="primary" onClick={handleGuestLogin}>
+              <Button onClick={handleGuestLogin} variant="primary">
                 {locale.retry}
               </Button>
               <Spacer y="xxl" />

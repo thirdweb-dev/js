@@ -1,9 +1,6 @@
 import { cn } from "../../lib/utils";
 
-export function TextShimmer(props: {
-  text: string;
-  className?: string;
-}) {
+export function TextShimmer(props: { text: string; className?: string }) {
   return (
     <div className="flex">
       <p

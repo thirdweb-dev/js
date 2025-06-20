@@ -43,13 +43,13 @@ export function useBuyHistory(
 ): UseQueryResult<BuyHistoryData> {
   return useQuery({
     ...queryParams,
-    queryKey: ["getBuyHistory", params],
+    enabled: !!params,
     queryFn: () => {
       if (!params) {
         throw new Error("params are required");
       }
       return getBuyHistory(params);
     },
-    enabled: !!params,
+    queryKey: ["getBuyHistory", params],
   });
 }

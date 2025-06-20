@@ -51,9 +51,9 @@ export function useNFTDrawerTabs({
     isERC721 ? ERC721Ext.getNFT : ERC1155Ext.getNFT,
     {
       contract,
-      tokenId: BigInt(tokenId || 0),
       includeOwner: true,
       queryOptions: { enabled: isERC721 || isERC1155 },
+      tokenId: BigInt(tokenId || 0),
     },
   );
   const isMinterRole = useIsMinter(contract);
@@ -122,117 +122,117 @@ export function useNFTDrawerTabs({
     if (hasERC1155ClaimConditions) {
       tabs = tabs.concat([
         {
-          title: "Claim Conditions",
-          isDisabled: false,
           children: (
             <ClaimConditionTab
-              isERC20={false}
               contract={contract}
-              tokenId={tokenId}
               isColumn
+              isERC20={false}
               isLoggedIn={isLoggedIn}
               isMultiphase={isERC1155Multiphase}
+              tokenId={tokenId}
             />
           ),
+          isDisabled: false,
+          title: "Claim Conditions",
         },
       ]);
     }
 
     tabs = tabs.concat([
       {
-        title: "Transfer",
-        isDisabled: !isOwner,
-        disabledText: isERC1155
-          ? "You don't own any copy of this NFT"
-          : "You don't own this NFT",
         children: (
           <TransferTab
             contract={contract}
-            tokenId={tokenId}
             isLoggedIn={isLoggedIn}
+            tokenId={tokenId}
           />
         ),
+        disabledText: isERC1155
+          ? "You don't own any copy of this NFT"
+          : "You don't own this NFT",
+        isDisabled: !isOwner,
+        title: "Transfer",
       },
     ]);
 
     if (isERC1155) {
       tabs = tabs.concat([
         {
-          title: "Airdrop",
-          isDisabled: !isOwner,
-          disabledText: "You don't own any copy of this NFT",
           children: (
             <AirdropTab
               contract={contract}
-              tokenId={tokenId}
               isLoggedIn={isLoggedIn}
+              tokenId={tokenId}
             />
           ),
+          disabledText: "You don't own any copy of this NFT",
+          isDisabled: !isOwner,
+          title: "Airdrop",
         },
       ]);
     }
     if (isBurnable) {
       tabs = tabs.concat([
         {
-          title: "Burn",
-          isDisabled: !isOwner,
-          disabledText: "You don't own this NFT",
           children: (
             <BurnTab
               contract={contract}
-              tokenId={tokenId}
               isLoggedIn={isLoggedIn}
+              tokenId={tokenId}
             />
           ),
+          disabledText: "You don't own this NFT",
+          isDisabled: !isOwner,
+          title: "Burn",
         },
       ]);
     }
     if (ERC1155Ext.isMintAdditionalSupplyToSupported(functionSelectors)) {
       tabs = tabs.concat([
         {
-          title: "Mint",
-          isDisabled: false,
-          disabledText: "You don't have minter permissions",
           children: (
             <MintSupplyTab
               contract={contract}
-              tokenId={tokenId}
               isLoggedIn={isLoggedIn}
+              tokenId={tokenId}
             />
           ),
+          disabledText: "You don't have minter permissions",
+          isDisabled: false,
+          title: "Mint",
         },
       ]);
     }
     if (hasERC1155ClaimConditions) {
       tabs = tabs.concat([
         {
-          title: "Claim",
-          isDisabled: false,
           children: (
             <ClaimTabERC1155
               contract={contract}
-              tokenId={tokenId}
               isLoggedIn={isLoggedIn}
+              tokenId={tokenId}
             />
           ),
+          isDisabled: false,
+          title: "Claim",
         },
       ]);
     }
     if ((supportsUpdateTokenURI || supportsUpdateMetadata) && nft) {
       tabs = tabs.concat([
         {
-          title: "Update Metadata",
-          isDisabled: !isMinterRole,
-          disabledText:
-            "You don't have minter permissions to be able to update metadata",
           children: (
             <UpdateMetadataTab
               contract={contract}
+              isLoggedIn={isLoggedIn}
               nft={nft}
               useUpdateMetadata={supportsUpdateMetadata}
-              isLoggedIn={isLoggedIn}
             />
           ),
+          disabledText:
+            "You don't have minter permissions to be able to update metadata",
+          isDisabled: !isMinterRole,
+          title: "Update Metadata",
         },
       ]);
     }

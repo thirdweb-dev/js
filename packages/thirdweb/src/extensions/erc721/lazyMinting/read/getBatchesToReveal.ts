@@ -79,9 +79,9 @@ export async function getBatchesToReveal(
         tokenId: BigInt(i),
       });
       return await fetchTokenMetadata({
+        client: options.contract.client,
         tokenId: BigInt(i),
         tokenUri: uri,
-        client: options.contract.client,
       }).catch(() => undefined);
     }),
   );

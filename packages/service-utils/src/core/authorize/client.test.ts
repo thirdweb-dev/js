@@ -3,14 +3,14 @@ import {
   validProjectResponse,
   validTeamAndProjectResponse,
 } from "../../mocks.js";
-import { type ClientAuthorizationPayload, authorizeClient } from "./client.js";
+import { authorizeClient, type ClientAuthorizationPayload } from "./client.js";
 
 describe("authorizeClient", () => {
   const validAuthOptions: ClientAuthorizationPayload = {
-    secretKeyHash: "secret-hash",
     bundleId: null,
-    origin: "example.com",
     incomingServiceApiKey: null,
+    origin: "example.com",
+    secretKeyHash: "secret-hash",
   };
 
   it("should authorize client with valid secret key", () => {
@@ -25,10 +25,10 @@ describe("authorizeClient", () => {
 
   it("should authorize client with matching wildcard domain", () => {
     const authOptionsWithWildcardDomain: ClientAuthorizationPayload = {
-      secretKeyHash: null,
       bundleId: null,
-      origin: "sub.example.com",
       incomingServiceApiKey: null,
+      origin: "sub.example.com",
+      secretKeyHash: null,
     };
 
     const result = authorizeClient(
@@ -42,10 +42,10 @@ describe("authorizeClient", () => {
 
   it("should authorize client with any domain w/o origin check", () => {
     const authOptionsWithAnyDomain: ClientAuthorizationPayload = {
-      secretKeyHash: null,
       bundleId: null,
-      origin: null,
       incomingServiceApiKey: null,
+      origin: null,
+      secretKeyHash: null,
     };
 
     const validProjectResponseAnyDomain = {
@@ -67,10 +67,10 @@ describe("authorizeClient", () => {
 
   it("should not authorize client with non-matching bundle id", () => {
     const authOptionsWithBundleId: ClientAuthorizationPayload = {
-      secretKeyHash: null,
       bundleId: "com.foo.bar",
-      origin: null,
       incomingServiceApiKey: null,
+      origin: null,
+      secretKeyHash: null,
     };
 
     const result = authorizeClient(
@@ -88,10 +88,10 @@ describe("authorizeClient", () => {
 
   it("should not authorize client with unauthorized origin", () => {
     const authOptionsWithUnauthorizedOrigin: ClientAuthorizationPayload = {
-      secretKeyHash: null,
       bundleId: null,
-      origin: "unauthorized.com",
       incomingServiceApiKey: null,
+      origin: "unauthorized.com",
+      secretKeyHash: null,
     };
 
     const result = authorizeClient(
@@ -109,10 +109,10 @@ describe("authorizeClient", () => {
 
   it("should authorize client with incoming service api key", () => {
     const authOptionsWithServiceKey: ClientAuthorizationPayload = {
-      secretKeyHash: null,
       bundleId: null,
-      origin: "unauthorized.com", // Even unauthorized origin should work with service key
       incomingServiceApiKey: "test-service-key",
+      origin: "unauthorized.com", // Even unauthorized origin should work with service key
+      secretKeyHash: null,
     };
 
     const result = authorizeClient(

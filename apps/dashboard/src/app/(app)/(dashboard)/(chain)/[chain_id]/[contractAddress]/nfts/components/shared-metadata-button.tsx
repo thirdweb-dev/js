@@ -1,4 +1,8 @@
 "use client";
+import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
+import { PlusIcon } from "lucide-react";
+import { useState } from "react";
+import type { ThirdwebContract } from "thirdweb";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -7,10 +11,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
-import { PlusIcon } from "lucide-react";
-import { useState } from "react";
-import type { ThirdwebContract } from "thirdweb";
 import { SharedMetadataForm } from "./shared-metadata-form";
 
 interface NFTSharedMetadataButtonProps {
@@ -24,9 +24,9 @@ export const NFTSharedMetadataButton: React.FC<
   const [open, setOpen] = useState(false);
   return (
     <MinterOnly contract={contract}>
-      <Sheet open={open} onOpenChange={setOpen}>
+      <Sheet onOpenChange={setOpen} open={open}>
         <SheetTrigger asChild>
-          <Button variant="primary" className="gap-2" {...restButtonProps}>
+          <Button className="gap-2" variant="primary" {...restButtonProps}>
             <PlusIcon className="size-5" /> Set NFT Metadata
           </Button>
         </SheetTrigger>
@@ -36,8 +36,8 @@ export const NFTSharedMetadataButton: React.FC<
           </SheetHeader>
           <SharedMetadataForm
             contract={contract}
-            setOpen={setOpen}
             isLoggedIn={isLoggedIn}
+            setOpen={setOpen}
           />
         </SheetContent>
       </Sheet>

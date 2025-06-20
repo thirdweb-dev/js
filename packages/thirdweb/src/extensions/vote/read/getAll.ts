@@ -4,8 +4,8 @@ import { getAllProposals } from "../__generated__/Vote/read/getAllProposals.js";
 import { state } from "../__generated__/Vote/read/state.js";
 import { ProposalState } from "../types.js";
 import {
-  type ProposalVoteInfo,
   getProposalVoteCounts,
+  type ProposalVoteInfo,
 } from "./getProposalVoteCounts.js";
 
 /**
@@ -88,19 +88,19 @@ export async function getAll(
       throw new Error(`Proposal not found for index: ${index}`);
     }
     return {
+      description: data.description,
+      endBlock: data.endBlock,
+      executions: data.targets.map((_, index) => ({
+        nativeTokenValue: data.values[index],
+        toAddress: data.targets[index],
+        transactionData: data.calldatas[index],
+      })),
       proposalId: data.proposalId,
       proposer: data.proposer,
-      description: data.description,
       startBlock: data.startBlock,
-      endBlock: data.endBlock,
       state: state,
       stateLabel: ProposalState[state],
       votes: votes,
-      executions: data.targets.map((_, index) => ({
-        toAddress: data.targets[index],
-        nativeTokenValue: data.values[index],
-        transactionData: data.calldatas[index],
-      })),
     };
   });
 }

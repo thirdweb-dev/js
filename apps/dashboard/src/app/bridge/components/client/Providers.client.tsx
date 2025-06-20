@@ -8,9 +8,9 @@ export function BridgeProviders({ children }: { children: React.ReactNode }) {
     <ThirdwebProvider>
       <ThemeProvider
         attribute="class"
+        defaultTheme="dark"
         disableTransitionOnChange
         enableSystem={false}
-        defaultTheme="dark"
       >
         {children}
         <Toaster richColors theme="dark" />

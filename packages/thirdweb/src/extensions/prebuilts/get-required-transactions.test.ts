@@ -20,8 +20,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         contractId: "AccountFactory",
       });
       const results = await getRequiredTransactions({
-        client: TEST_CLIENT,
         chain: CLEAN_ANVIL_CHAIN,
+        client: TEST_CLIENT,
         deployMetadata,
       });
       expect(results.length).toBe(1);
@@ -33,8 +33,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         contractId: "Airdrop",
       });
       const results = await getRequiredTransactions({
-        client: TEST_CLIENT,
         chain: CLEAN_ANVIL_CHAIN,
+        client: TEST_CLIENT,
         deployMetadata,
       });
       expect(results.length).toBe(4);
@@ -46,8 +46,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         contractId: "ERC721CoreInitializable",
       });
       const results = await getRequiredTransactions({
-        client: TEST_CLIENT,
         chain: CLEAN_ANVIL_CHAIN,
+        client: TEST_CLIENT,
         deployMetadata,
         modules: await Promise.all(
           ["ClaimableERC721", "BatchMetadataERC721", "RoyaltyERC721"].map(
@@ -70,8 +70,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         contractId: "EvolvingNFT",
       });
       const results = await getRequiredTransactions({
-        client: TEST_CLIENT,
         chain: CLEAN_ANVIL_CHAIN,
+        client: TEST_CLIENT,
         deployMetadata,
       });
 

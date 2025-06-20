@@ -2,9 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import pLimit from "p-limit";
 import Papa from "papaparse";
 import { useCallback, useState } from "react";
-import { type ThirdwebClient, ZERO_ADDRESS, isAddress } from "thirdweb";
+import { isAddress, type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import { csvMimeTypes } from "utils/batch";
+
 /**
  * Validate if the item.address is a valid ethereum address
  * Take in an { address: string, ...rest } object and return a new object, with 2 new props: `isValid` and `resolvedAddress`
@@ -25,8 +26,8 @@ async function checkIsAddress<T extends { address: string }>(props: {
     // if user wants to burn, they should use the Burn tab
     return {
       address,
-      resolvedAddress: address,
       isValid: false,
+      resolvedAddress: address,
       ...rest,
     };
   }
@@ -35,15 +36,15 @@ async function checkIsAddress<T extends { address: string }>(props: {
   try {
     resolvedAddress = isAddress(address)
       ? address
-      : await resolveAddress({ name: address, client: props.thirdwebClient });
+      : await resolveAddress({ client: props.thirdwebClient, name: address });
     isValid = !!resolvedAddress;
   } catch {
     isValid = false;
   }
   return {
     address,
-    resolvedAddress,
     isValid,
+    resolvedAddress,
     ...rest,
   };
 }
@@ -117,7 +118,6 @@ export function useCsvUpload<
         return;
       }
       Papa.parse(csv, {
-        header: true,
         complete: (results) => {
           const data = props.csvParser(results.data as T[]);
           if (!data[0]?.address) {
@@ -126,13 +126,13 @@ export function useCsvUpload<
           }
           setRawData(data);
         },
+        header: true,
       });
     },
     [props.csvParser],
   );
 
   const normalizeQuery = useQuery({
-    queryKey: ["snapshot-check-isAddress", rawData],
     queryFn: async () => {
       const limit = pLimit(50);
       const results = await Promise.all(
@@ -143,10 +143,11 @@ export function useCsvUpload<
         }),
       );
       return {
-        result: processAirdropData(results),
         invalidFound: !!results.find((item) => !item?.isValid),
+        result: processAirdropData(results),
       };
     },
+    queryKey: ["snapshot-check-isAddress", rawData],
     retry: false,
   });
 
@@ -173,12 +174,12 @@ export function useCsvUpload<
   );
 
   return {
-    normalizeQuery,
-    setFiles,
-    rawData,
     noCsv,
-    reset,
-    removeInvalid,
+    normalizeQuery,
     processData,
+    rawData,
+    removeInvalid,
+    reset,
+    setFiles,
   };
 }

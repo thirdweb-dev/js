@@ -16,23 +16,23 @@ const RAW_UNSUPPORTED_ERROR = {
 const SEND_CALLS_OPTIONS: Omit<SendCallsOptions, "wallet"> = {
   calls: [
     {
-      to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
-      data: "0xabcdef",
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
+      data: "0xabcdef",
+      to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
     },
     {
-      to: "0xa922b54716264130634d6ff183747a8ead91a40b",
-      value: 123n,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
+      to: "0xa922b54716264130634d6ff183747a8ead91a40b",
+      value: 123n,
     },
   ],
 };
 
 const mocks = vi.hoisted(() => ({
-  injectedRequest: vi.fn(),
   getTransactionReceipt: vi.fn(),
+  injectedRequest: vi.fn(),
 }));
 
 vi.mock("../injected/index.js", () => {
@@ -46,14 +46,14 @@ vi.mock("../injected/index.js", () => {
 vi.mock("../../rpc/actions/eth_getTransactionReceipt.js", () => {
   return {
     eth_getTransactionReceipt: mocks.getTransactionReceipt.mockResolvedValue({
-      logs: [],
-      status: "success",
       blockHash:
         "0xf19bbafd9fd0124ec110b848e8de4ab4f62bf60c189524e54213285e7f540d4a",
       blockNumber: 12345n,
+      gasUsed: 12345n,
+      logs: [],
+      status: "success",
       transactionHash:
         "0x9b7bb827c2e5e3c1a0a44dc53e573aa0b3af3bd1f9f5ed03071b100bb039eaff",
-      gasUsed: 12345n,
     }),
   };
 });
@@ -87,9 +87,9 @@ describe.sequential("injected wallet", async () => {
     wallet.getAccount = vi.fn().mockReturnValue(undefined);
 
     const promise = getCallsStatus({
-      wallet: wallet,
       client: TEST_CLIENT,
       id: "test",
+      wallet: wallet,
     });
 
     await expect(promise).rejects.toMatchInlineSnapshot(
@@ -100,14 +100,14 @@ describe.sequential("injected wallet", async () => {
   test("should successfully make request", async () => {
     wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
     mocks.injectedRequest.mockResolvedValue({
-      status: "CONFIRMED",
       receipts: [],
+      status: "CONFIRMED",
     });
 
     const result = await getCallsStatus({
-      wallet: wallet,
       client: TEST_CLIENT,
       id: "test",
+      wallet: wallet,
     });
 
     expect(mocks.injectedRequest).toHaveBeenCalledWith({
@@ -131,9 +131,9 @@ describe.sequential("injected wallet", async () => {
     wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
 
     const promise = getCallsStatus({
-      wallet: wallet,
       client: TEST_CLIENT,
       id: "test",
+      wallet: wallet,
     });
 
     await expect(promise).rejects.toMatchInlineSnapshot(
@@ -213,9 +213,9 @@ describe.sequential("in-app wallet", async () => {
 
   test("unknown bundle id should fail", async () => {
     const promise = getCallsStatus({
-      wallet: wallet,
       client: TEST_CLIENT,
       id: "unknown",
+      wallet: wallet,
     });
 
     await expect(promise).rejects.toMatchInlineSnapshot(
@@ -227,9 +227,9 @@ describe.sequential("in-app wallet", async () => {
     wallet.getChain = vi.fn().mockReturnValue(undefined);
 
     const promise = getCallsStatus({
-      wallet: wallet,
       client: TEST_CLIENT,
       id: "test",
+      wallet: wallet,
     });
 
     await expect(promise).rejects.toMatchInlineSnapshot(

@@ -7,7 +7,7 @@ import type { FetchDeployMetadataResult } from "../../../utils/any-evm/deploy-me
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 import type { ClientAndChain } from "../../../utils/types.js";
-import { type ThirdwebContract, getContract } from "../../contract.js";
+import { getContract, type ThirdwebContract } from "../../contract.js";
 import { fetchPublishedContractMetadata } from "../publisher.js";
 import { computeCreate2FactoryAddress } from "./create-2-factory.js";
 
@@ -50,10 +50,10 @@ export async function getDeployedInfraContract(
     version: options.version,
   });
   return getDeployedInfraContractFromMetadata({
-    client: options.client,
     chain: options.chain,
-    contractMetadata,
+    client: options.client,
     constructorParams: options.constructorParams,
+    contractMetadata,
   });
 }
 
@@ -90,17 +90,17 @@ export function prepareInfraContractDeployTransactionFromMetadata(options: {
 }) {
   const { client, chain } = options;
   return prepareTransaction({
-    client,
     chain,
-    to: () =>
-      computeCreate2FactoryAddress({
-        client,
-        chain,
-      }),
+    client,
     data: async () => {
       const infraContractInfo =
         await computeDeploymentInfoFromMetadata(options);
       return infraContractInfo.initCalldata;
     },
+    to: () =>
+      computeCreate2FactoryAddress({
+        chain,
+        client,
+      }),
   });
 }

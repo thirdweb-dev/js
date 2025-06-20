@@ -38,10 +38,27 @@ const StepRunnerWithTheme = (props: StepRunnerWithThemeProps) => {
 };
 
 const meta = {
-  title: "Bridge/StepRunner",
+  args: {
+    client: storyClient,
+    onCancel: () => {},
+    onComplete: (_completedStatuses: CompletedStatusResult[]) => {},
+    onError: (error: Error) => console.error("Error:", error),
+    theme: "dark",
+    wallet: STORY_MOCK_WALLET,
+    windowAdapter: mockWindowAdapter,
+  },
+  argTypes: {
+    onCancel: { action: "execution cancelled" },
+    onComplete: { action: "execution completed" },
+    onError: { action: "error occurred" },
+    theme: {
+      control: "select",
+      description: "Theme for the component",
+      options: ["light", "dark"],
+    },
+  },
   component: StepRunnerWithTheme,
   parameters: {
-    layout: "centered",
     docs: {
       description: {
         component:
@@ -62,27 +79,10 @@ const meta = {
           "This component is typically used within the BridgeOrchestrator after route preparation.",
       },
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  args: {
-    wallet: STORY_MOCK_WALLET,
-    client: storyClient,
-    windowAdapter: mockWindowAdapter,
-    onComplete: (_completedStatuses: CompletedStatusResult[]) => {},
-    onError: (error: Error) => console.error("Error:", error),
-    onCancel: () => {},
-    theme: "dark",
-  },
-  argTypes: {
-    theme: {
-      control: "select",
-      options: ["light", "dark"],
-      description: "Theme for the component",
-    },
-    onComplete: { action: "execution completed" },
-    onError: { action: "error occurred" },
-    onCancel: { action: "execution cancelled" },
-  },
+  title: "Bridge/StepRunner",
 } satisfies Meta<typeof StepRunnerWithTheme>;
 
 export default meta;
@@ -90,8 +90,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Light: Story = {
   args: {
-    theme: "light",
     request: simpleBuyRequest,
+    theme: "light",
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -100,8 +100,8 @@ export const Light: Story = {
 
 export const Dark: Story = {
   args: {
-    theme: "dark",
     request: simpleBuyRequest,
+    theme: "dark",
   },
   parameters: {
     backgrounds: { default: "dark" },

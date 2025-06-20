@@ -1,9 +1,9 @@
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 /* eslint-disable @next/next/no-img-element */
 import { replaceIpfsUrl } from "lib/sdk";
 import type { StaticImageData } from "next/image";
 import Image from "next/image";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import generalContractIcon from "../../../../public/assets/tw-icons/general.png";
 
 type ContractIdImageProps = {
@@ -31,8 +31,8 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
   }
 
   if (typeof img !== "string") {
-    return <Image className="size-8" src={img as StaticImageData} alt={""} />;
+    return <Image alt={""} className="size-8" src={img as StaticImageData} />;
   }
 
-  return <img className="size-8" src={img} alt={""} />;
+  return <img alt={""} className="size-8" src={img} />;
 };

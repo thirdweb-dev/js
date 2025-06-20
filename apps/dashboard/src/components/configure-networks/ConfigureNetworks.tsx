@@ -2,9 +2,9 @@ import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { reportChainConfigurationAdded } from "../../@/analytics/report";
 import {
-  type StoredChain,
   addChainOverrides,
   addRecentlyUsedChainId,
+  type StoredChain,
 } from "../../stores/chainStores";
 import { ConfigureNetworkForm } from "./ConfigureNetworkForm";
 
@@ -29,8 +29,8 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
         reportChainConfigurationAdded({
           chainId: chain.chainId,
           chainName: chain.name,
-          rpcURLs: chain.rpc,
           nativeCurrency: chain.nativeCurrency,
+          rpcURLs: chain.rpc,
         });
         props.onNetworkAdded(chain);
       }
@@ -57,19 +57,19 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
         {/* Modify the given chain */}
         {editChain && (
           <ConfigureNetworkForm
+            client={props.client}
             editingChain={editChain}
             onSubmit={handleSubmit}
-            client={props.client}
           />
         )}
 
         {/* Custom chain */}
         {!editChain && (
           <ConfigureNetworkForm
-            prefillSlug={props.prefillSlug}
-            prefillChainId={props.prefillChainId}
-            onSubmit={handleSubmit}
             client={props.client}
+            onSubmit={handleSubmit}
+            prefillChainId={props.prefillChainId}
+            prefillSlug={props.prefillSlug}
           />
         )}
       </div>

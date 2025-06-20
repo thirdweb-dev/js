@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
 import { useEngineCreateWalletCredential } from "@3rdweb-sdk/react/hooks/useEngine";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import { CredentialForm } from "./credential-form";
 import type { CredentialFormData } from "./types";
 
@@ -17,21 +17,21 @@ export const CreateWalletCredentialButton: React.FC<
   const [isOpen, setIsOpen] = useState(false);
 
   const createCredential = useEngineCreateWalletCredential({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
 
   const handleSubmit = async (data: CredentialFormData) => {
     const promise = createCredential.mutateAsync(data);
 
     toast.promise(promise, {
-      success: () => {
-        setIsOpen(false);
-        return "Wallet credential created successfully";
-      },
       error: (error) => {
         console.error(error);
         return "Failed to create wallet credential";
+      },
+      success: () => {
+        setIsOpen(false);
+        return "Wallet credential created successfully";
       },
     });
   };
@@ -49,11 +49,11 @@ export const CreateWalletCredentialButton: React.FC<
 
       <CredentialForm
         isOpen={isOpen}
+        isPending={createCredential.isPending}
         onOpenChange={setIsOpen}
         onSubmit={async (data) => handleSubmit(data as CredentialFormData)}
-        title="Create Wallet Credential"
         submitButtonText="Create"
-        isPending={createCredential.isPending}
+        title="Create Wallet Credential"
       />
     </>
   );

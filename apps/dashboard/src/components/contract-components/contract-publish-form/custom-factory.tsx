@@ -1,4 +1,3 @@
-import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import {
   Box,
   Flex,
@@ -14,6 +13,7 @@ import { type Dispatch, type SetStateAction, useEffect } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import { Button, Heading, Text } from "tw-components";
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { useCustomFactoryAbi } from "../hooks";
 import { AbiSelector } from "./abi-selector";
 
@@ -43,8 +43,8 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
   }, [customFactoryAbi, setCustomFactoryAbi]);
 
   const { fields, append, remove } = useFieldArray({
-    name: "customFactoryAddresses",
     control: form.control,
+    name: "customFactoryAddresses",
   });
 
   // FIXME: all of this logic needs to be reworked
@@ -56,7 +56,7 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
   }, [fields, append]);
 
   return (
-    <Flex px={0} pb={0} flexDir="column" gap={12}>
+    <Flex flexDir="column" gap={12} pb={0} px={0}>
       <UnorderedList>
         <Text as={ListItem}>
           Use this if you want to invoke your own function with custom logic
@@ -77,16 +77,16 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
         </Flex>
         {fields.map((field, index) => (
           <div key={field.id}>
-            <FormControl isRequired as={Flex} gap={4}>
+            <FormControl as={Flex} gap={4} isRequired>
               <Box w={{ base: "full", md: "40%" }}>
                 <Controller
-                  name={`customFactoryAddresses[${index}].key`}
                   control={form.control}
+                  name={`customFactoryAddresses[${index}].key`}
                   render={({ field: _field }) => {
                     return (
                       <SingleNetworkSelector
-                        client={client}
                         chainId={_field.value}
+                        client={client}
                         onChange={(value) => {
                           _field.onChange(value);
                         }}
@@ -103,9 +103,9 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
                 />
               </Box>
               <IconButton
-                isDisabled={fields.length === 1 || form.formState.isSubmitting}
-                icon={<TrashIcon className="size-5" />}
                 aria-label="Remove row"
+                icon={<TrashIcon className="size-5" />}
+                isDisabled={fields.length === 1 || form.formState.isSubmitting}
                 onClick={() => remove(index)}
               />
             </FormControl>
@@ -113,12 +113,12 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
         ))}
         <div>
           <Button
-            type="button"
-            size="sm"
-            colorScheme="primary"
             borderRadius="md"
+            colorScheme="primary"
             leftIcon={<PlusIcon className="size-5" />}
             onClick={() => append({ key: "", value: "" })}
+            size="sm"
+            type="button"
           >
             Add Network
           </Button>
@@ -132,17 +132,17 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
         <FormControl isRequired>
           {customFactoryAbi?.data ? (
             <AbiSelector
-              defaultValue="deployProxyByImplementation"
               abi={customFactoryAbi.data}
-              value={form.watch(
-                "factoryDeploymentData.customFactoryInput.factoryFunction",
-              )}
+              defaultValue="deployProxyByImplementation"
               onChange={(selectedFn) =>
                 form.setValue(
                   "factoryDeploymentData.customFactoryInput.factoryFunction",
                   selectedFn,
                 )
               }
+              value={form.watch(
+                "factoryDeploymentData.customFactoryInput.factoryFunction",
+              )}
             />
           ) : (
             <Text fontStyle="italic">

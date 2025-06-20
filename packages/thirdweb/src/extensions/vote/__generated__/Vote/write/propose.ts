@@ -1,12 +1,12 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type {
   BaseTransactionOptions,
   WithOverrides,
 } from "../../../../../transaction/types.js";
-import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { once } from "../../../../../utils/promise/once.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "propose" function.
@@ -27,26 +27,26 @@ export type ProposeParams = WithOverrides<{
 export const FN_SELECTOR = "0x7d5e81e2" as const;
 const FN_INPUTS = [
   {
-    type: "address[]",
     name: "targets",
+    type: "address[]",
   },
   {
-    type: "uint256[]",
     name: "values",
+    type: "uint256[]",
   },
   {
-    type: "bytes[]",
     name: "calldatas",
+    type: "bytes[]",
   },
   {
-    type: "string",
     name: "description",
+    type: "string",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "proposalId",
+    type: "uint256",
   },
 ] as const;
 
@@ -155,8 +155,19 @@ export function propose(
   });
 
   return prepareContractCall({
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    authorizationList: async () =>
+      (await asyncOptions()).overrides?.authorizationList,
     contract: options.contract,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
     params: async () => {
       const resolvedOptions = await asyncOptions();
       return [
@@ -167,16 +178,5 @@ export function propose(
       ] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
-    accessList: async () => (await asyncOptions()).overrides?.accessList,
-    gas: async () => (await asyncOptions()).overrides?.gas,
-    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
-    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
-    maxPriorityFeePerGas: async () =>
-      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
-    nonce: async () => (await asyncOptions()).overrides?.nonce,
-    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
-    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
-    authorizationList: async () =>
-      (await asyncOptions()).overrides?.authorizationList,
   });
 }

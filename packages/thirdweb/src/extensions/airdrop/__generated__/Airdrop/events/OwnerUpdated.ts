@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "OwnerUpdated" event.
@@ -40,8 +40,8 @@ export type OwnerUpdatedEventFilters = Partial<{
  */
 export function ownerUpdatedEvent(filters: OwnerUpdatedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event OwnerUpdated(address indexed prevOwner, address indexed newOwner)",
-    filters,
   });
 }

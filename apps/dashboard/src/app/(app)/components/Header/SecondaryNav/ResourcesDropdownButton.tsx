@@ -1,5 +1,7 @@
 "use client";
 
+import { ChevronDownIcon } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,8 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDownIcon } from "lucide-react";
-import Link from "next/link";
 
 export function ResourcesDropdownButton() {
   // const [isCMDSearchModalOpen, setIsCMDSearchModalOpen] = useState(false);
@@ -21,8 +21,8 @@ export function ResourcesDropdownButton() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            variant="link"
             className="!p-0 !h-auto hover:!no-underline gap-1 font-normal text-muted-foreground text-sm hover:text-foreground"
+            variant="link"
           >
             Resources
             <ChevronDownIcon className="size-4" />
@@ -30,24 +30,24 @@ export function ResourcesDropdownButton() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="min-w-[230px]" sideOffset={14}>
           <DropdownMenuItem>
-            <Link href="/chainlist" className="w-full p-1">
+            <Link className="w-full p-1" href="/chainlist">
               Chainlist
             </Link>
           </DropdownMenuItem>
 
           <DropdownMenuItem>
             <Link
-              href="https://playground.thirdweb.com/"
-              target="_blank"
-              rel="noopener noreferrer"
               className="w-full p-1"
+              href="https://playground.thirdweb.com/"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Playground
             </Link>
           </DropdownMenuItem>
 
           <DropdownMenuItem>
-            <Link href="/explore" className="w-full p-1">
+            <Link className="w-full p-1" href="/explore">
               Explore Contracts
             </Link>
           </DropdownMenuItem>

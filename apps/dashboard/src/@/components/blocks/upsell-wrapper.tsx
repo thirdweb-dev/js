@@ -1,5 +1,8 @@
 "use client";
 
+import { CrownIcon, LockIcon, SparklesIcon } from "lucide-react";
+import Link from "next/link";
+import type React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,9 +12,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { CrownIcon, LockIcon, SparklesIcon } from "lucide-react";
-import Link from "next/link";
-import type React from "react";
 import { TeamPlanBadge } from "../../../app/(app)/components/TeamPlanBadge";
 import type { Team } from "../../api/team";
 import { Badge } from "../ui/badge";
@@ -69,8 +69,8 @@ export function UpsellWrapper({
             <div className="space-y-2">
               <TeamPlanBadge
                 plan="scale"
-                teamSlug={teamSlug}
                 postfix=" Feature"
+                teamSlug={teamSlug}
               />
               <CardTitle className="font-bold text-2xl text-foreground md:text-3xl">
                 Unlock {featureName}
@@ -90,15 +90,15 @@ export function UpsellWrapper({
                 <div className="grid gap-2">
                   {benefits.map((benefit) => (
                     <div
-                      key={benefit.description}
                       className="flex items-center gap-3"
+                      key={benefit.description}
                     >
                       <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-accent">
                         <SparklesIcon className="h-3 w-3 text-success-text" />
                       </div>
                       <span className="text-sm">{benefit.description}</span>
                       {benefit.status === "soon" && (
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge className="text-xs" variant="secondary">
                           Coming Soon
                         </Badge>
                       )}
@@ -109,7 +109,7 @@ export function UpsellWrapper({
             )}
 
             <div className="flex flex-col gap-3 pt-4 sm:flex-row">
-              <Button className="flex-1 py-3 font-semibold" size="lg" asChild>
+              <Button asChild className="flex-1 py-3 font-semibold" size="lg">
                 <Link
                   href={`/team/${teamSlug}/~/settings/billing?showPlans=true&highlight=${requiredPlan}`}
                 >
@@ -118,7 +118,7 @@ export function UpsellWrapper({
                   <span className="ml-1 capitalize">{requiredPlan}</span>
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" className="md:flex-1" asChild>
+              <Button asChild className="md:flex-1" size="lg" variant="outline">
                 <Link
                   href={`/team/${teamSlug}/~/settings/billing?showPlans=true`}
                 >

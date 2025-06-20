@@ -1,22 +1,22 @@
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { useState } from "react";
+import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import {
   BadgeContainer,
   storybookLog,
   storybookThirdwebClient,
 } from "@/storybook/utils";
-import type { Meta, StoryObj } from "@storybook/nextjs";
-import { useState } from "react";
-import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { ExecuteTransactionCardLayout } from "./ExecuteTransactionCard";
 import type { TxStatus } from "./Swap/common";
 
 const meta = {
-  title: "Nebula/actions/ExecuteTransactionCard",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Nebula/actions/ExecuteTransactionCard",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -40,40 +40,37 @@ function Story() {
         <Variant label="Sending" status={{ type: "sending" }} />
         <Variant
           label="Confirming"
-          status={{ type: "confirming", txHash: exampleTxHash }}
+          status={{ txHash: exampleTxHash, type: "confirming" }}
         />
         <Variant
           label="Confirmed"
-          status={{ type: "confirmed", txHash: exampleTxHash }}
+          status={{ txHash: exampleTxHash, type: "confirmed" }}
         />
         <Variant
           label="Failed"
-          status={{ type: "failed", txHash: exampleTxHash }}
+          status={{ txHash: exampleTxHash, type: "failed" }}
         />
       </div>
     </ThirdwebProvider>
   );
 }
 
-function Variant(props: {
-  label: string;
-  status: TxStatus;
-}) {
+function Variant(props: { label: string; status: TxStatus }) {
   const [status, setStatus] = useState<TxStatus>(props.status);
   return (
     <BadgeContainer label={props.label}>
       <ExecuteTransactionCardLayout
+        client={storybookThirdwebClient}
         onTxSettled={(txHash) => {
           storybookLog(`onTxSettled called with ${txHash}`);
         }}
         sendTx={async () => {}}
         setStatus={setStatus}
         status={status}
-        client={storybookThirdwebClient}
         txData={{
           chainId: 1,
-          to: "0xEb0effdFB4dC5b3d5d3aC6ce29F3ED213E95d675", // thirdweb.eth
-          data: "0x",
+          data: "0x", // thirdweb.eth
+          to: "0xEb0effdFB4dC5b3d5d3aC6ce29F3ED213E95d675",
           value: "0x16345785d8a0000", // 0.1 eth
         }}
       />

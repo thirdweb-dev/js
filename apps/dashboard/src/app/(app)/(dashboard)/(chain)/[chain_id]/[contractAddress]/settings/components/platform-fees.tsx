@@ -55,14 +55,14 @@ export const SettingsPlatformFees = ({
   const platformFeesQuery = useReadContract(getPlatformFeeInfo, { contract });
   const platformFeeInfo = platformFeesQuery.data
     ? {
-        platform_fee_recipient: platformFeesQuery.data[0],
         platform_fee_basis_points: platformFeesQuery.data[1],
+        platform_fee_recipient: platformFeesQuery.data[0],
       }
     : undefined;
 
   const form = useForm<z.input<typeof CommonPlatformFeeSchema>>({
-    resolver: zodResolver(CommonPlatformFeeSchema),
     defaultValues: platformFeeInfo,
+    resolver: zodResolver(CommonPlatformFeeSchema),
     values: platformFeeInfo,
   });
 
@@ -73,48 +73,48 @@ export const SettingsPlatformFees = ({
   );
 
   return (
-    <Card p={0} position="relative" overflow="hidden">
-      <SettingDetectedState type="platformFee" detectedState={detectedState} />
+    <Card overflow="hidden" p={0} position="relative">
+      <SettingDetectedState detectedState={detectedState} type="platformFee" />
       <Flex
         as="form"
+        direction="column"
         onSubmit={form.handleSubmit((data) => {
           const transaction = setPlatformFeeInfo({
             contract,
-            platformFeeRecipient: data.platform_fee_recipient,
             platformFeeBps: BigInt(data.platform_fee_basis_points),
+            platformFeeRecipient: data.platform_fee_recipient,
           });
           sendAndConfirmTx.mutate(transaction, {
-            onSuccess: () => {
-              form.reset(data);
-              onSuccess();
-            },
             onError: (error) => {
               console.error(error);
               onError(error);
             },
+            onSuccess: () => {
+              form.reset(data);
+              onSuccess();
+            },
           });
         })}
-        direction="column"
       >
-        <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
+        <Flex as="section" direction="column" gap={4} p={{ base: 6, md: 10 }}>
           <Heading size="title.sm">Platform fee</Heading>
-          <Text size="body.md" fontStyle="italic">
+          <Text fontStyle="italic" size="body.md">
             The wallet address that should receive the revenue from platform
             fees.
           </Text>
-          <Flex gap={4} direction={{ base: "column", md: "row" }}>
+          <Flex direction={{ base: "column", md: "row" }} gap={4}>
             <FormControl
+              isDisabled={!address}
               isInvalid={
                 !!form.getFieldState("platform_fee_recipient", form.formState)
                   .error
               }
-              isDisabled={!address}
             >
               <FormLabel>Recipient Address</FormLabel>
               <SolidityInput
                 client={contract.client}
-                solidityType="address"
                 formContext={form}
+                solidityType="address"
                 {...form.register("platform_fee_recipient")}
                 disabled={!address || sendAndConfirmTx.isPending}
               />
@@ -127,24 +127,24 @@ export const SettingsPlatformFees = ({
             </FormControl>
             <FormControl
               isDisabled={!address}
-              maxW={{ base: "100%", md: "200px" }}
               isInvalid={
                 !!form.getFieldState(
                   "platform_fee_basis_points",
                   form.formState,
                 ).error
               }
+              maxW={{ base: "100%", md: "200px" }}
             >
               <FormLabel>Percentage</FormLabel>
               <BasisPointsInput
-                value={form.watch("platform_fee_basis_points")}
+                disabled={sendAndConfirmTx.isPending}
                 onChange={(value) =>
                   form.setValue("platform_fee_basis_points", value, {
                     shouldDirty: true,
                     shouldTouch: true,
                   })
                 }
-                disabled={sendAndConfirmTx.isPending}
+                value={form.watch("platform_fee_basis_points")}
               />
               <FormErrorMessage>
                 {
@@ -159,14 +159,14 @@ export const SettingsPlatformFees = ({
         </Flex>
         <AdminOnly contract={contract}>
           <TransactionButton
-            client={contract.client}
-            isLoggedIn={isLoggedIn}
-            txChainID={contract.chain.id}
-            transactionCount={1}
-            disabled={platformFeesQuery.isPending || !form.formState.isDirty}
-            type="submit"
-            isPending={sendAndConfirmTx.isPending}
             className="!rounded-t-none rounded-xl"
+            client={contract.client}
+            disabled={platformFeesQuery.isPending || !form.formState.isDirty}
+            isLoggedIn={isLoggedIn}
+            isPending={sendAndConfirmTx.isPending}
+            transactionCount={1}
+            txChainID={contract.chain.id}
+            type="submit"
           >
             {sendAndConfirmTx.isPending
               ? "Updating Platform Fee Settings"

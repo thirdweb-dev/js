@@ -5,8 +5,8 @@ import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_B } from "~test/test-wallets.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { deployERC721Contract } from "../../prebuilts/deploy-erc721.js";
@@ -23,19 +23,19 @@ describe.runIf(process.env.TW_SECRET_KEY)(
   () => {
     beforeEach(async () => {
       const address = await deployERC721Contract({
-        client: TEST_CLIENT,
         account,
-        type: "DropERC721",
         chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
         params: {
-          name: "",
           contractURI: TEST_CONTRACT_URI,
+          name: "",
         },
+        type: "DropERC721",
       });
 
       contract = getContract({
-        chain: ANVIL_CHAIN,
         address,
+        chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
       });
 
@@ -49,15 +49,15 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         ],
       });
 
-      await sendAndConfirmTransaction({ transaction: lazyMintTx, account });
+      await sendAndConfirmTransaction({ account, transaction: lazyMintTx });
 
       const setClaimTx = setClaimConditions({
         contract,
         phases: [
           {
-            maxClaimableSupply: 100n,
-            maxClaimablePerWallet: 100n,
             currencyAddress: NATIVE_TOKEN_ADDRESS,
+            maxClaimablePerWallet: 100n,
+            maxClaimableSupply: 100n,
             price: 0,
             startTime: new Date(),
           },
@@ -65,18 +65,18 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
 
       await sendAndConfirmTransaction({
-        transaction: setClaimTx,
         account,
+        transaction: setClaimTx,
       });
     });
 
     it("should return the correct claimed amount", async () => {
       const tx = claimTo({
         contract,
-        to: account.address,
         quantity: 1n,
+        to: account.address,
       });
-      await sendAndConfirmTransaction({ transaction: tx, account });
+      await sendAndConfirmTransaction({ account, transaction: tx });
       const result = await getTotalClaimedSupply({ contract });
       expect(result).toBe(1n);
     });

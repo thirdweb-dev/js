@@ -1,15 +1,15 @@
 "use client";
 
-import { reportAssetCreationStepConfigured } from "@/analytics/report";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
+  getAddress,
   NATIVE_TOKEN_ADDRESS,
   type ThirdwebClient,
-  getAddress,
 } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
+import { reportAssetCreationStepConfigured } from "@/analytics/report";
 import {
   type CreateNFTCollectionFunctions,
   type NFTCollectionInfoFormValues,
@@ -21,7 +21,6 @@ import { nftCreationPages } from "./_common/pages";
 import { NFTCollectionInfoFieldset } from "./collection-info/nft-collection-info-fieldset";
 import { LaunchNFT } from "./launch/launch-nft";
 import { SalesSettings } from "./sales/sales-settings";
-import type {} from "./upload-nfts/batch-upload/process-files";
 import { type NFTData, UploadNFTsFieldset } from "./upload-nfts/upload-nfts";
 
 export function CreateNFTPageUI(props: {
@@ -38,17 +37,17 @@ export function CreateNFTPageUI(props: {
   const activeAccount = useActiveAccount();
 
   const [nftData, setNFTData] = useState<NFTData>({
-    type: "single",
     nft: null,
+    type: "single",
   });
 
   const nftSalesSettingsForm = useForm<NFTSalesSettingsFormValues>({
-    resolver: zodResolver(nftSalesSettingsFormSchema),
     defaultValues: {
-      royaltyRecipient: activeAccount?.address || "",
       primarySaleRecipient: activeAccount?.address || "",
       royaltyBps: 0,
+      royaltyRecipient: activeAccount?.address || "",
     },
+    resolver: zodResolver(nftSalesSettingsFormSchema),
   });
 
   const nftCollectionInfoForm = useNFTCollectionInfoForm();
@@ -57,35 +56,35 @@ export function CreateNFTPageUI(props: {
     <div>
       {step === nftCreationPages["collection-info"] && (
         <NFTCollectionInfoFieldset
+          client={props.client}
+          form={nftCollectionInfoForm}
           onChainUpdated={() => {
             // reset price currency to native token when chain is updated
             if (nftData.type === "single" && nftData.nft) {
               setNFTData({
-                type: "single",
                 nft: {
                   ...nftData.nft,
                   price_currency: getAddress(NATIVE_TOKEN_ADDRESS),
                 },
+                type: "single",
               });
             }
 
             if (nftData.type === "multiple" && nftData.nfts?.type === "data") {
               setNFTData({
-                type: "multiple",
                 nfts: {
-                  type: "data",
                   data: nftData.nfts.data.map((x) => {
                     return {
                       ...x,
                       price_currency: getAddress(NATIVE_TOKEN_ADDRESS),
                     };
                   }),
+                  type: "data",
                 },
+                type: "multiple",
               });
             }
           }}
-          client={props.client}
-          form={nftCollectionInfoForm}
           onNext={() => {
             reportAssetCreationStepConfigured({
               assetType: "nft",
@@ -98,8 +97,9 @@ export function CreateNFTPageUI(props: {
 
       {step === nftCreationPages["upload-assets"] && (
         <UploadNFTsFieldset
+          chainId={Number(nftCollectionInfoForm.watch("chain"))}
+          client={props.client}
           nftData={nftData}
-          setNFTData={setNFTData}
           onNext={() => {
             reportAssetCreationStepConfigured({
               assetType: "nft",
@@ -110,15 +110,14 @@ export function CreateNFTPageUI(props: {
           onPrev={() => {
             setStep(nftCreationPages["collection-info"]);
           }}
-          client={props.client}
-          chainId={Number(nftCollectionInfoForm.watch("chain"))}
+          setNFTData={setNFTData}
         />
       )}
 
       {step === nftCreationPages["sales-settings"] && (
         <SalesSettings
-          form={nftSalesSettingsForm}
           client={props.client}
+          form={nftSalesSettingsForm}
           onNext={() => {
             reportAssetCreationStepConfigured({
               assetType: "nft",
@@ -134,9 +133,16 @@ export function CreateNFTPageUI(props: {
 
       {step === nftCreationPages["launch-nft"] && (
         <LaunchNFT
+          client={props.client}
+          createNFTFunctions={props.createNFTFunctions}
+          onLaunchSuccess={props.onLaunchSuccess}
+          onPrevious={() => {
+            setStep(nftCreationPages["sales-settings"]);
+          }}
+          projectSlug={props.projectSlug}
+          teamSlug={props.teamSlug}
           values={{
             collectionInfo: nftCollectionInfoForm.watch(),
-            sales: nftSalesSettingsForm.watch(),
             nfts:
               nftData.type === "multiple"
                 ? nftData.nfts?.type === "data"
@@ -145,15 +151,8 @@ export function CreateNFTPageUI(props: {
                 : nftData.nft
                   ? [nftData.nft]
                   : [],
+            sales: nftSalesSettingsForm.watch(),
           }}
-          onPrevious={() => {
-            setStep(nftCreationPages["sales-settings"]);
-          }}
-          projectSlug={props.projectSlug}
-          client={props.client}
-          onLaunchSuccess={props.onLaunchSuccess}
-          teamSlug={props.teamSlug}
-          createNFTFunctions={props.createNFTFunctions}
         />
       )}
     </div>
@@ -163,12 +162,12 @@ export function CreateNFTPageUI(props: {
 function useNFTCollectionInfoForm() {
   return useForm<NFTCollectionInfoFormValues>({
     resolver: zodResolver(nftCollectionInfoFormSchema),
+    reValidateMode: "onChange",
     values: {
-      name: "",
-      description: "",
-      symbol: "",
-      image: undefined,
       chain: "1",
+      description: "",
+      image: undefined,
+      name: "",
       socialUrls: [
         {
           platform: "Website",
@@ -179,7 +178,7 @@ function useNFTCollectionInfoForm() {
           url: "",
         },
       ],
+      symbol: "",
     },
-    reValidateMode: "onChange",
   });
 }

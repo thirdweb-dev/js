@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.universaleverything",
-  name: "UniversalProfiles",
-  homepage: "https://universaleverything.io",
-  image_id: "4537fb11-ada3-4009-37c2-c70ed4b46300",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/universalprofiles/id6702018631",
     android:
       "https://play.google.com/store/apps/details?id=io.universaleverything.universalprofiles",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/universalprofiles/id6702018631",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "io.universaleverything.universalprofiles://wallet-connect",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://universaleverything.io",
+  id: "io.universaleverything",
+  image_id: "4537fb11-ada3-4009-37c2-c70ed4b46300",
+  mobile: {
+    native: "io.universaleverything.universalprofiles://wallet-connect",
+    universal: null,
+  },
+  name: "UniversalProfiles",
+  rdns: null,
 } as const;

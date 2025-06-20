@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.gamic",
-  name: "Gamic",
-  homepage: "https://gamic.app",
-  image_id: "cf404c15-391c-4144-1ec0-17f1b119ed00",
   app: {
-    browser: "https://gamic.app/",
-    ios: "https://apps.apple.com/us/app/gamic-spaces-chat-connect/id1673683070",
     android:
       "https://play.google.com/store/apps/details?id=app.gamic.guild.gamic_guild_mobile",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://gamic.app/",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/gamic-spaces-chat-connect/id1673683070",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "gamic://",
-    universal: "https://www.gamic.app/wc",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: "gamic://",
     universal: "https://gamic.app/",
   },
+  homepage: "https://gamic.app",
+  id: "app.gamic",
+  image_id: "cf404c15-391c-4144-1ec0-17f1b119ed00",
+  mobile: {
+    native: "gamic://",
+    universal: "https://www.gamic.app/wc",
+  },
+  name: "Gamic",
+  rdns: null,
 } as const;

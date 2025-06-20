@@ -6,13 +6,7 @@ import { ThirdwebProvider } from "thirdweb/react";
 import { ContractHeaderUI } from "./ContractHeader";
 
 const meta = {
-  title: "ERC20/ContractHeader",
   component: ContractHeaderUI,
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
-  },
   decorators: [
     (Story) => (
       <ThirdwebProvider>
@@ -22,6 +16,12 @@ const meta = {
       </ThirdwebProvider>
     ),
   ],
+  parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
+  },
+  title: "ERC20/ContractHeader",
 } satisfies Meta<typeof ContractHeaderUI>;
 
 export default meta;
@@ -31,169 +31,169 @@ const mockTokenImage =
   "ipfs://ipfs/QmXYgTEavjF6c9X1a2pt5E379MYqSwFzzKvsUbSnRiSUEc/ea207d218948137.67aa26cfbd956.png";
 
 const ethereumChainMetadata: ChainMetadata = {
-  name: "Ethereum Mainnet",
   chain: "ethereum",
   chainId: 1,
-  networkId: 1,
-  nativeCurrency: {
-    name: "Ether",
-    symbol: "ETH",
-    decimals: 18,
-  },
-  rpc: ["https://eth.llamarpc.com"],
-  shortName: "eth",
-  slug: "ethereum",
-  testnet: false,
-  icon: {
-    url: "https://thirdweb.com/chain-icons/ethereum.svg",
-    width: 24,
-    height: 24,
-    format: "svg",
-  },
   explorers: [
     {
       name: "Etherscan",
-      url: "https://etherscan.io",
       standard: "EIP3091",
+      url: "https://etherscan.io",
     },
   ],
+  icon: {
+    format: "svg",
+    height: 24,
+    url: "https://thirdweb.com/chain-icons/ethereum.svg",
+    width: 24,
+  },
+  name: "Ethereum Mainnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  networkId: 1,
+  rpc: ["https://eth.llamarpc.com"],
+  shortName: "eth",
+  slug: "ethereum",
   stackType: "evm",
+  testnet: false,
 };
 
 const mockContract = getContract({
-  client: storybookThirdwebClient,
+  address: "0x1234567890123456789012345678901234567890",
   chain: {
     id: 1,
     name: "Ethereum",
     rpc: "https://eth.llamarpc.com",
   },
-  address: "0x1234567890123456789012345678901234567890",
+  client: storybookThirdwebClient,
 });
 
 const mockSocialUrls = {
-  twitter: "https://twitter.com",
-  discord: "https://discord.gg",
-  telegram: "https://web.telegram.org/",
-  website: "https://example.com",
-  github: "https://github.com",
-  linkedin: "https://linkedin.com",
-  tiktok: "https://tiktok.com",
-  instagram: "https://instagram.com",
   custom: "https://example.com",
+  discord: "https://discord.gg",
+  github: "https://github.com",
+  instagram: "https://instagram.com",
+  linkedin: "https://linkedin.com",
   reddit: "https://reddit.com",
+  telegram: "https://web.telegram.org/",
+  tiktok: "https://tiktok.com",
+  twitter: "https://twitter.com",
+  website: "https://example.com",
   youtube: "https://youtube.com",
 };
 
 export const WithImageAndMultipleSocialUrls: Story = {
   args: {
-    name: "Sample Token",
-    symbol: "SMPL",
-    image: mockTokenImage,
     chainMetadata: ethereumChainMetadata,
     clientContract: mockContract,
+    image: mockTokenImage,
+    name: "Sample Token",
     socialUrls: {
-      twitter: mockSocialUrls.twitter,
       discord: mockSocialUrls.discord,
-      telegram: mockSocialUrls.telegram,
-      website: mockSocialUrls.website,
       github: mockSocialUrls.github,
+      telegram: mockSocialUrls.telegram,
+      twitter: mockSocialUrls.twitter,
+      website: mockSocialUrls.website,
     },
+    symbol: "SMPL",
   },
 };
 
 export const WithBrokenImageAndSingleSocialUrl: Story = {
   args: {
-    name: "Sample Token",
-    symbol: "SMPL",
-    image: "broken-image.png",
     chainMetadata: ethereumChainMetadata,
     clientContract: mockContract,
+    image: "broken-image.png",
+    name: "Sample Token",
     socialUrls: {
       website: mockSocialUrls.website,
     },
+    symbol: "SMPL",
   },
 };
 
 export const WithoutImageAndNoSocialUrls: Story = {
   args: {
-    name: "Sample Token",
-    symbol: "SMPL",
-    image: undefined,
     chainMetadata: ethereumChainMetadata,
     clientContract: mockContract,
+    image: undefined,
+    name: "Sample Token",
     socialUrls: {},
+    symbol: "SMPL",
   },
 };
 
 export const LongNameAndLotsOfSocialUrls: Story = {
   args: {
-    name: "This is a very long token name that should wrap to multiple lines",
-    symbol: "LONG",
-    image: "https://thirdweb.com/chain-icons/ethereum.svg",
     chainMetadata: ethereumChainMetadata,
     clientContract: mockContract,
+    image: "https://thirdweb.com/chain-icons/ethereum.svg",
+    name: "This is a very long token name that should wrap to multiple lines",
     socialUrls: {
-      twitter: mockSocialUrls.twitter,
       discord: mockSocialUrls.discord,
-      telegram: mockSocialUrls.telegram,
-      reddit: mockSocialUrls.reddit,
-      youtube: mockSocialUrls.youtube,
-      website: mockSocialUrls.website,
       github: mockSocialUrls.github,
+      reddit: mockSocialUrls.reddit,
+      telegram: mockSocialUrls.telegram,
+      twitter: mockSocialUrls.twitter,
+      website: mockSocialUrls.website,
+      youtube: mockSocialUrls.youtube,
     },
+    symbol: "LONG",
   },
 };
 
 export const AllSocialUrls: Story = {
   args: {
-    name: "Sample Token",
-    symbol: "SMPL",
-    image: "https://thirdweb.com/chain-icons/ethereum.svg",
     chainMetadata: ethereumChainMetadata,
     clientContract: mockContract,
+    image: "https://thirdweb.com/chain-icons/ethereum.svg",
+    name: "Sample Token",
     socialUrls: {
-      twitter: mockSocialUrls.twitter,
-      discord: mockSocialUrls.discord,
-      telegram: mockSocialUrls.telegram,
-      reddit: mockSocialUrls.reddit,
-      youtube: mockSocialUrls.youtube,
-      website: mockSocialUrls.website,
-      github: mockSocialUrls.github,
-      linkedin: mockSocialUrls.linkedin,
-      tiktok: mockSocialUrls.tiktok,
-      instagram: mockSocialUrls.instagram,
       custom: mockSocialUrls.custom,
+      discord: mockSocialUrls.discord,
+      github: mockSocialUrls.github,
+      instagram: mockSocialUrls.instagram,
+      linkedin: mockSocialUrls.linkedin,
+      reddit: mockSocialUrls.reddit,
+      telegram: mockSocialUrls.telegram,
+      tiktok: mockSocialUrls.tiktok,
+      twitter: mockSocialUrls.twitter,
+      website: mockSocialUrls.website,
+      youtube: mockSocialUrls.youtube,
     },
+    symbol: "SMPL",
   },
 };
 
 export const InvalidSocialUrls: Story = {
   args: {
-    name: "Sample Token",
-    symbol: "SMPL",
-    image: "https://thirdweb.com/chain-icons/ethereum.svg",
     chainMetadata: ethereumChainMetadata,
     clientContract: mockContract,
+    image: "https://thirdweb.com/chain-icons/ethereum.svg",
+    name: "Sample Token",
     socialUrls: {
-      twitter: "invalid-url",
       discord: "invalid-url",
-      telegram: "invalid-url",
       reddit: "",
+      telegram: "invalid-url",
+      twitter: "invalid-url",
       youtube: mockSocialUrls.youtube,
     },
+    symbol: "SMPL",
   },
 };
 
 export const SomeSocialUrls: Story = {
   args: {
-    name: "Sample Token",
-    symbol: "SMPL",
-    image: "https://thirdweb.com/chain-icons/ethereum.svg",
     chainMetadata: ethereumChainMetadata,
     clientContract: mockContract,
+    image: "https://thirdweb.com/chain-icons/ethereum.svg",
+    name: "Sample Token",
     socialUrls: {
-      website: mockSocialUrls.website,
       twitter: mockSocialUrls.twitter,
+      website: mockSocialUrls.website,
     },
+    symbol: "SMPL",
   },
 };

@@ -7,7 +7,7 @@ export function getNebulaAnalyticsRangeFromSearchParams(searchParams: {
 }) {
   return getNebulaFiltersFromSearchParams({
     from: searchParams.from,
-    to: searchParams.to,
     interval: searchParams.interval,
+    to: searchParams.to,
   });
 }

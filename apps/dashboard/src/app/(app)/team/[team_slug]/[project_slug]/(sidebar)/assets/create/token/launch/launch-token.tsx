@@ -1,4 +1,15 @@
 "use client";
+import { TransactionButton } from "components/buttons/TransactionButton";
+import {
+  ArrowRightIcon,
+  ArrowUpFromLineIcon,
+  ImageOffIcon,
+} from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
+import { useActiveWallet } from "thirdweb/react";
+import { parseError } from "utils/errorParser";
 import {
   reportAssetCreationFailed,
   reportAssetCreationSuccessful,
@@ -15,17 +26,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import {
-  ArrowRightIcon,
-  ArrowUpFromLineIcon,
-  ImageOffIcon,
-} from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import type { ThirdwebClient } from "thirdweb";
-import { useActiveWallet } from "thirdweb/react";
-import { parseError } from "utils/errorParser";
 import { ChainOverview } from "../../_common/chain-overview";
 import { FilePreview } from "../../_common/file-preview";
 import { StepCard } from "../../_common/step-card";
@@ -34,10 +34,10 @@ import type { CreateTokenFunctions } from "../create-token-page.client";
 import { TokenDistributionBarChart } from "../distribution/token-distribution";
 
 const stepIds = {
-  "deploy-contract": "deploy-contract",
-  "set-claim-conditions": "set-claim-conditions",
-  "mint-tokens": "mint-tokens",
   "airdrop-tokens": "airdrop-tokens",
+  "deploy-contract": "deploy-contract",
+  "mint-tokens": "mint-tokens",
+  "set-claim-conditions": "set-claim-conditions",
 } as const;
 
 type StepId = keyof typeof stepIds;
@@ -75,26 +75,26 @@ export function LaunchTokenStatus(props: {
   async function handleSubmitClick() {
     const initialSteps: MultiStepState<StepId>[] = [
       {
-        label: "Deploy contract",
         id: stepIds["deploy-contract"],
+        label: "Deploy contract",
         status: { type: "idle" },
       },
       {
-        label: "Set claim conditions",
         id: stepIds["set-claim-conditions"],
+        label: "Set claim conditions",
         status: { type: "idle" },
       },
       {
-        label: "Mint tokens",
         id: stepIds["mint-tokens"],
+        label: "Mint tokens",
         status: { type: "idle" },
       },
     ];
 
     if (formValues.airdropEnabled && formValues.airdropAddresses.length > 0) {
       initialSteps.push({
-        label: "Airdrop tokens",
         id: stepIds["airdrop-tokens"],
+        label: "Airdrop tokens",
         status: { type: "idle" },
       });
     }
@@ -153,8 +153,8 @@ export function LaunchTokenStatus(props: {
         });
 
         updateStatus(i, {
-          type: "error",
           message: errorMessage,
+          type: "error",
         });
 
         throw error;
@@ -180,40 +180,40 @@ export function LaunchTokenStatus(props: {
 
   return (
     <StepCard
-      title="Launch Coin"
-      prevButton={{
-        onClick: props.onPrevious,
-      }}
       nextButton={{
-        type: "custom",
         custom: (
           <TransactionButton
             client={props.client}
-            variant="default"
-            txChainID={Number(formValues.chain)}
             isLoggedIn={true}
             isPending={false}
-            transactionCount={undefined}
             onClick={handleSubmitClick}
+            transactionCount={undefined}
+            txChainID={Number(formValues.chain)}
+            variant="default"
           >
             <ArrowUpFromLineIcon className="size-4" />
             Launch Coin
           </TransactionButton>
         ),
+        type: "custom",
       }}
+      prevButton={{
+        onClick: props.onPrevious,
+      }}
+      title="Launch Coin"
     >
       {/* Token info */}
       <div className="flex flex-col gap-6 border-b border-dashed px-4 py-6 pb-6 md:px-6 lg:flex-row">
-        <OverviewField name="Image" className="shrink-0">
+        <OverviewField className="shrink-0" name="Image">
           <FilePreview
-            client={props.client}
-            srcOrFile={formValues.image}
             className="size-24 rounded-lg border object-cover"
+            client={props.client}
             fallback={
               <div className="flex items-center justify-center bg-muted/50">
                 <ImageOffIcon className="size-5 text-muted-foreground" />
               </div>
             }
+            srcOrFile={formValues.image}
           />
         </OverviewField>
 
@@ -228,7 +228,7 @@ export function LaunchTokenStatus(props: {
             </OverviewField>
 
             <OverviewField name="Chain">
-              <ChainOverview client={props.client} chainId={formValues.chain} />
+              <ChainOverview chainId={formValues.chain} client={props.client} />
             </OverviewField>
           </div>
 
@@ -271,7 +271,7 @@ export function LaunchTokenStatus(props: {
               )}
             </DialogHeader>
 
-            <MultiStepStatus steps={steps} onRetry={handleRetry} />
+            <MultiStepStatus onRetry={handleRetry} steps={steps} />
           </div>
 
           <div className="mt-2 flex justify-between gap-4 border-border border-t bg-card p-6">
@@ -288,13 +288,13 @@ export function LaunchTokenStatus(props: {
             )}
 
             <Button
-              variant="outline"
               disabled={isPending}
               onClick={() => {
                 setIsModalOpen(false);
                 // reset steps
                 setSteps([]);
               }}
+              variant="outline"
             >
               {isComplete ? "Close" : "Cancel"}
             </Button>
@@ -306,8 +306,8 @@ export function LaunchTokenStatus(props: {
 }
 
 const compactNumberFormatter = new Intl.NumberFormat("en-US", {
-  notation: "compact",
   maximumFractionDigits: 10,
+  notation: "compact",
 });
 
 function OverviewField(props: {
@@ -323,8 +323,6 @@ function OverviewField(props: {
   );
 }
 
-function OverviewFieldValue(props: {
-  value: string;
-}) {
+function OverviewFieldValue(props: { value: string }) {
   return <p className="text-foreground text-sm">{props.value}</p>;
 }

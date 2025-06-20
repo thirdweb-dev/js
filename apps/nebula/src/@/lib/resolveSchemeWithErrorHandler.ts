@@ -11,8 +11,8 @@ export function resolveSchemeWithErrorHandler(options: {
   try {
     // eslint-disable-next-line no-restricted-syntax
     return resolveScheme({
-      uri: options.uri,
       client: options.client,
+      uri: options.uri,
     });
   } catch (err) {
     console.error("error resolving ipfs url", options.uri, err);

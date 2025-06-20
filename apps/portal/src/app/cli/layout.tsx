@@ -3,7 +3,7 @@ import { sidebar } from "./sidebar";
 
 export default async function Layout(props: { children: React.ReactNode }) {
   return (
-    <DocLayout sideBar={sidebar} editPageButton={true} noLLM={true}>
+    <DocLayout editPageButton={true} noLLM={true} sideBar={sidebar}>
       {props.children}
     </DocLayout>
   );

@@ -1,12 +1,12 @@
 "use client";
 
-import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
-import { ScrollShadow } from "./ScrollShadow/ScrollShadow";
+import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
+import { cn } from "@/lib/utils";
 import { Button } from "./button";
+import { ScrollShadow } from "./ScrollShadow/ScrollShadow";
 import { ToolTipLabel } from "./tooltip";
 
 export type TabLink = {
@@ -49,14 +49,11 @@ export function TabLinks(props: {
             return (
               <Button
                 asChild
-                key={tab.href}
                 disabled={tab.isDisabled}
+                key={tab.href}
                 variant="ghost"
               >
                 <Link
-                  data-active={tab.isActive}
-                  ref={tab.isActive ? activeTabRef : undefined}
-                  href={tab.href}
                   aria-disabled={tab.isDisabled}
                   className={cn(
                     "relative h-auto rounded-lg px-3 font-normal text-muted-foreground text-sm hover:bg-accent lg:text-sm",
@@ -64,6 +61,9 @@ export function TabLinks(props: {
                     tab.isDisabled && "pointer-events-none",
                     tab.isActive && "!text-foreground",
                   )}
+                  data-active={tab.isActive}
+                  href={tab.href}
+                  ref={tab.isActive ? activeTabRef : undefined}
                 >
                   {tab.name}
                 </Link>
@@ -74,8 +74,8 @@ export function TabLinks(props: {
 
         {/* Active line */}
         <div
-          ref={lineRef}
           className="fade-in-0 absolute bottom-0 left-0 h-[2px] animate-in rounded-lg bg-foreground"
+          ref={lineRef}
         />
       </ScrollShadow>
     </div>
@@ -124,8 +124,6 @@ export function TabButtons(props: {
                 label={tab.toolTip}
               >
                 <Button
-                  variant="ghost"
-                  ref={tab.isActive ? activeTabRef : undefined}
                   className={cn(
                     "relative inline-flex h-auto items-center gap-1.5 rounded-lg px-2 font-medium text-sm hover:bg-accent lg:px-3 lg:text-base",
                     !tab.isActive &&
@@ -135,6 +133,8 @@ export function TabButtons(props: {
                     tab.isActive && props.activeTabClassName,
                   )}
                   onClick={!tab.isDisabled ? tab.onClick : undefined}
+                  ref={tab.isActive ? activeTabRef : undefined}
+                  variant="ghost"
                 >
                   {tab.icon && (
                     <tab.icon
@@ -150,8 +150,8 @@ export function TabButtons(props: {
 
         {/* Active line */}
         <div
-          ref={lineRef}
           className="fade-in-0 absolute bottom-0 left-0 h-[2px] animate-in rounded-lg bg-foreground"
+          ref={lineRef}
         />
       </ScrollShadow>
     </div>
@@ -188,7 +188,7 @@ function useUnderline<El extends HTMLElement>() {
     }
 
     update();
-    let resizeObserver: ResizeObserver | undefined = undefined;
+    let resizeObserver: ResizeObserver | undefined;
 
     if (containerRef.current) {
       resizeObserver = new ResizeObserver(() => {
@@ -207,7 +207,7 @@ function useUnderline<El extends HTMLElement>() {
     };
   }, [activeTabEl]);
 
-  return { containerRef, lineRef, activeTabRef };
+  return { activeTabRef, containerRef, lineRef };
 }
 
 export function TabPathLinks(props: {
@@ -230,7 +230,6 @@ export function TabPathLinks(props: {
     <TabLinks
       {...restProps}
       links={links.map((l) => ({
-        name: l.name,
         href: l.path,
         isActive: l.isActive
           ? l.isActive(pathname)
@@ -238,6 +237,7 @@ export function TabPathLinks(props: {
             ? pathname === l.path
             : pathname.startsWith(l.path),
         isDisabled: l.isDisabled,
+        name: l.name,
       }))}
     />
   );

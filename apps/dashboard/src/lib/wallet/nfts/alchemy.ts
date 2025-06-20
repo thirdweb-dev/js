@@ -1,14 +1,14 @@
 import "server-only";
 
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { download } from "thirdweb/storage";
 import type { NFTMetadata } from "thirdweb/utils";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
 import {
   type AlchemySupportedChainId,
+  alchemySupportedChainIdsMap,
   type GenerateURLParams,
   type WalletNFT,
-  alchemySupportedChainIdsMap,
 } from "./types";
 
 export function generateAlchemyUrl({ chainId, owner }: GenerateURLParams) {
@@ -32,20 +32,20 @@ export async function transformAlchemyResponseToNFT(
 
         try {
           return {
-            id: alchemyNFT.id.tokenId,
             contractAddress: alchemyNFT.contract.address,
+            id: alchemyNFT.id.tokenId,
             metadata: shouldDownloadURI(rawUri)
               ? await download({
-                  uri: handleArbitraryTokenURI(rawUri),
                   client: serverThirdwebClient,
+                  uri: handleArbitraryTokenURI(rawUri),
                 })
                   .then((res) => res.json())
                   .catch(() => ({}))
               : rawUri,
             owner,
             supply: alchemyNFT.balance || "1",
-            type: alchemyNFT.id.tokenMetadata.tokenType,
             tokenURI: rawUri,
+            type: alchemyNFT.id.tokenMetadata.tokenType,
           } as WalletNFT;
         } catch {
           return undefined as unknown as WalletNFT;

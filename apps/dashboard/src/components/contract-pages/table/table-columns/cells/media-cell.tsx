@@ -14,12 +14,12 @@ export const MediaCell: React.FC<MediaCellProps> = ({ cell, client }) => {
 
   return (
     <NFTMediaWithEmptyState
-      client={client}
       className="pointer-events-none"
+      client={client}
+      height="120px"
       metadata={nftMetadata}
       requireInteraction
       width="120px"
-      height="120px"
     />
   );
 };

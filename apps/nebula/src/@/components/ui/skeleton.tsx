@@ -22,12 +22,12 @@ function SkeletonContainer<T>(props: {
   const isLoading = props.loadedData === undefined;
   return (
     <div
-      style={props.style}
       aria-hidden={isLoading ? "true" : "false"}
       className={cn(
         isLoading && "inline-block animate-pulse rounded-lg bg-muted",
         props.className,
       )}
+      style={props.style}
     >
       <div className={cn(isLoading && "invisible")}>
         <div

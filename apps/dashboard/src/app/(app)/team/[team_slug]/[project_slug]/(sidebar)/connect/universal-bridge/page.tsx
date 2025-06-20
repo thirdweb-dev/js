@@ -1,8 +1,5 @@
-import { getProject } from "@/api/projects";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { PayAnalytics } from "components/pay/PayAnalytics/PayAnalytics";
 import { PayAnalyticsFilter } from "components/pay/PayAnalytics/components/PayAnalyticsFilter";
+import { PayAnalytics } from "components/pay/PayAnalytics/PayAnalytics";
 import { getUniversalBridgeFiltersFromSearchParams } from "lib/time";
 import { ArrowUpRightIcon } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -10,6 +7,9 @@ import {
   ResponsiveSearchParamsProvider,
   ResponsiveSuspense,
 } from "responsive-rsc";
+import { getProject } from "@/api/projects";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../login/loginRedirect";
 
@@ -40,10 +40,10 @@ export default async function Page(props: {
 
   const searchParams = await props.searchParams;
   const { range, interval } = getUniversalBridgeFiltersFromSearchParams({
-    from: searchParams.from,
-    to: searchParams.to,
-    interval: searchParams.interval,
     defaultRange: "last-30",
+    from: searchParams.from,
+    interval: searchParams.interval,
+    to: searchParams.to,
   });
 
   const client = getClientThirdwebClient({
@@ -58,20 +58,20 @@ export default async function Page(props: {
           <PayAnalyticsFilter />
         </div>
         <ResponsiveSuspense
-          searchParamsUsed={["from", "to", "interval"]}
           fallback={
             <div className="flex w-full items-center justify-center py-24">
               <Spinner className="size-8" />
             </div>
           }
+          searchParamsUsed={["from", "to", "interval"]}
         >
           <PayAnalytics
-            projectClientId={project.publishableKey}
             client={client}
-            projectId={project.id}
-            teamId={project.teamId}
-            range={range}
             interval={interval}
+            projectClientId={project.publishableKey}
+            projectId={project.id}
+            range={range}
+            teamId={project.teamId}
           />
         </ResponsiveSuspense>
 
@@ -88,10 +88,10 @@ export default async function Page(props: {
               </p>
             </div>
             <a
-              href="https://portal.thirdweb.com/pay"
-              target="_blank"
-              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 font-medium text-sm text-white transition-all hover:bg-green-600/90 hover:shadow-sm"
+              href="https://portal.thirdweb.com/pay"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Learn More
               <ArrowUpRightIcon className="size-4" />

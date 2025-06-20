@@ -1,10 +1,9 @@
 "use client";
-import * as React from "react";
-
-import { cn } from "@/lib/utils";
 import { UploadIcon } from "lucide-react";
 import Image from "next/image";
+import * as React from "react";
 import { useDropzone } from "react-dropzone";
+import { cn } from "@/lib/utils";
 
 export interface ImageUploadProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -42,10 +41,10 @@ const ImageUpload = React.forwardRef<HTMLInputElement, ImageUploadProps>(
           <input ref={ref} {...getInputProps()} {...props} />
           {activeFile ? (
             <Image
-              className="object-contain object-center "
-              src={URL.createObjectURL(activeFile)}
-              fill
               alt=""
+              className="object-contain object-center "
+              fill
+              src={URL.createObjectURL(activeFile)}
             />
           ) : (
             <>

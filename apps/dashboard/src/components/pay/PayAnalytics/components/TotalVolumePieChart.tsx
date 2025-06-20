@@ -1,8 +1,8 @@
 "use client";
-import { SkeletonContainer } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 import { Cell, Pie, PieChart } from "recharts";
 import type { UniversalBridgeStats } from "types/analytics";
+import { SkeletonContainer } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { toUSD } from "../../../../utils/number";
 import { chartHeight } from "./common";
 
@@ -12,22 +12,20 @@ type VolData = {
   color: string;
 };
 
-export function TotalVolumePieChart(props: {
-  data: UniversalBridgeStats[];
-}) {
+export function TotalVolumePieChart(props: { data: UniversalBridgeStats[] }) {
   const data = props.data;
   const isEmpty =
     data.length === 0 || data.every((x) => x.amountUsdCents === 0);
   const skeletonData: VolData[] = [
     {
-      name: "Crypto",
       amount: 50,
       color: !isEmpty ? "hsl(var(--accent))" : "hsl(var(--muted))",
+      name: "Crypto",
     },
     {
-      name: "Fiat",
       amount: 50,
       color: !isEmpty ? "hsl(var(--accent))" : "hsl(var(--muted))",
+      name: "Fiat",
     },
   ];
 
@@ -41,14 +39,14 @@ export function TotalVolumePieChart(props: {
   const volumeData: VolData[] = !isEmpty
     ? [
         {
-          name: "Crypto",
           amount: cryptoTotalUSD,
           color: "hsl(var(--chart-1))",
+          name: "Crypto",
         },
         {
-          name: "Fiat",
           amount: fiatTotalUSD,
           color: "hsl(var(--chart-2))",
+          name: "Fiat",
         },
       ]
     : skeletonData;
@@ -58,25 +56,25 @@ export function TotalVolumePieChart(props: {
       <div className="flex flex-col justify-center gap-6 lg:flex-row">
         {/* Left */}
         <div className="relative flex justify-center">
-          <PieChart width={250} height={chartHeight}>
+          <PieChart height={chartHeight} width={250}>
             <Pie
+              activeIndex={0}
+              cornerRadius={100}
+              cx="50%"
+              cy="50%"
+              data={volumeData}
+              dataKey="amount"
+              innerRadius="80%"
+              outerRadius="100%"
+              paddingAngle={5}
+              stroke="none"
               style={{
                 outline: "none",
               }}
-              activeIndex={0}
-              data={volumeData}
-              dataKey="amount"
-              cx="50%"
-              cy="50%"
-              innerRadius="80%"
-              outerRadius="100%"
-              stroke="none"
-              cornerRadius={100}
-              paddingAngle={5}
             >
               {volumeData.map((entry, index) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: ok
-                <Cell key={index} fill={entry.color} />
+                <Cell fill={entry.color} key={index} />
               ))}
             </Pie>
           </PieChart>
@@ -93,7 +91,6 @@ export function TotalVolumePieChart(props: {
                       ? toUSD(cryptoTotalUSD + fiatTotalUSD)
                       : "NA"
                 }
-                skeletonData="$100"
                 render={(totalAmount) => {
                   return (
                     <p
@@ -106,6 +103,7 @@ export function TotalVolumePieChart(props: {
                     </p>
                   );
                 }}
+                skeletonData="$100"
               />
             </div>
           </div>
@@ -115,12 +113,12 @@ export function TotalVolumePieChart(props: {
           <div className="flex justify-center gap-10 lg:flex-col lg:gap-4">
             {volumeData.map((v) => (
               <VolumeLegend
-                key={v.name}
-                color={v.color}
-                label={v.name}
                 amount={
                   !data ? undefined : data.length > 0 ? toUSD(v.amount) : "NA"
                 }
+                color={v.color}
+                key={v.name}
+                label={v.name}
               />
             ))}
           </div>
@@ -148,7 +146,6 @@ function VolumeLegend(props: {
 
         <SkeletonContainer
           loadedData={props.amount}
-          skeletonData="$50"
           render={(amount) => {
             return (
               <p className="font-semibold text-2xl text-foreground tracking-tight">
@@ -156,6 +153,7 @@ function VolumeLegend(props: {
               </p>
             );
           }}
+          skeletonData="$50"
         />
       </div>
     </div>

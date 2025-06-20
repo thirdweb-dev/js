@@ -1,5 +1,5 @@
 import type { Chain } from "../chains/types.js";
-import { type Emitter, createEmitter } from "../utils/tiny-emitter.js";
+import { createEmitter, type Emitter } from "../utils/tiny-emitter.js";
 import type { Account } from "./interfaces/wallet.js";
 import type { WalletAutoConnectionOption, WalletId } from "./wallet-types.js";
 

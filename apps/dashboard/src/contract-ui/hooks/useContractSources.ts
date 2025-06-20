@@ -8,11 +8,7 @@ import invariant from "tiny-invariant";
 
 export function useContractSources(contract?: ThirdwebContract) {
   return useQuery({
-    queryKey: [
-      "contract-sources",
-      contract?.chain.id || "",
-      contract?.address || "",
-    ],
+    enabled: !!contract,
     queryFn: async (): Promise<Array<{ filename: string; source: string }>> => {
       invariant(contract, "contract is required");
       const data = await getCompilerMetadata(contract);
@@ -34,8 +30,8 @@ export function useContractSources(contract?: ThirdwebContract) {
           if (ipfsLink) {
             const ipfsHash = ipfsLink.split("ipfs/")[1];
             const source = await download({
-              uri: `ipfs://${ipfsHash}`,
               client: contract.client,
+              uri: `ipfs://${ipfsHash}`,
             })
               .then((r) => r.text())
               .catch(() => "Failed to fetch source from IPFS");
@@ -51,6 +47,10 @@ export function useContractSources(contract?: ThirdwebContract) {
         }),
       );
     },
-    enabled: !!contract,
+    queryKey: [
+      "contract-sources",
+      contract?.chain.id || "",
+      contract?.address || "",
+    ],
   });
 }

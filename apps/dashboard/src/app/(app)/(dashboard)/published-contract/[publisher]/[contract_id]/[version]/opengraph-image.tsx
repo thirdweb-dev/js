@@ -1,16 +1,16 @@
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { format } from "date-fns";
 import { resolveEns } from "lib/ens";
 import { correctAndUniqueLicenses } from "lib/licenses";
 import { getSocialProfiles } from "thirdweb/social";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { getPublishedContractsWithPublisherMapping } from "../utils/getPublishedContractsWithPublisherMapping";
 import { publishedContractOGImageTemplate } from "../utils/publishedContractOGImageTemplate";
 
 export const runtime = "edge";
 
 export const size = {
-  width: 1200,
   height: 630,
+  width: 1200,
 };
 
 export default async function Image(props: {
@@ -24,9 +24,9 @@ export default async function Image(props: {
 
   const [publishedContracts, socialProfiles] = await Promise.all([
     getPublishedContractsWithPublisherMapping({
-      publisher: publisher,
-      contract_id: contract_id,
       client: serverThirdwebClient,
+      contract_id: contract_id,
+      publisher: publisher,
     }),
     getSocialProfiles({
       address:
@@ -44,8 +44,8 @@ export default async function Image(props: {
     const name = socialProfiles.find((p) => p.name)?.name || publisher;
     const avatar = socialProfiles.find((p) => p.avatar)?.avatar;
     return {
-      name,
       avatar,
+      name,
     };
   })();
 
@@ -61,11 +61,9 @@ export default async function Image(props: {
     publishedContract?.displayName || publishedContract?.name;
 
   return publishedContractOGImageTemplate({
-    title: publishedContractName,
     description: publishedContract.description,
-    version: publishedContract.version || "latest",
-    publisher: publisherProfile?.name || publisher,
     license: correctAndUniqueLicenses(publishedContract.licenses),
+    logo: publishedContract.logo,
     publishDate: format(
       new Date(
         Number.parseInt(publishedContract.publishTimestamp.toString() || "0") *
@@ -73,7 +71,9 @@ export default async function Image(props: {
       ),
       "MMM dd, yyyy",
     ),
-    logo: publishedContract.logo,
+    publisher: publisherProfile?.name || publisher,
     publisherAvatar: publisherProfile?.avatar,
+    title: publishedContractName,
+    version: publishedContract.version || "latest",
   });
 }

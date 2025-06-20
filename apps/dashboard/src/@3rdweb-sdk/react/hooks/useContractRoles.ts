@@ -6,9 +6,9 @@ export function useIsAdmin(contract: ThirdwebContract, failOpen = true) {
   const address = useActiveAccount()?.address;
   const { data: userIsAdmin, isError } = useReadContract(hasRole, {
     contract,
-    targetAccountAddress: address ?? "",
-    role: "admin",
     queryOptions: { enabled: !!address },
+    role: "admin",
+    targetAccountAddress: address ?? "",
   });
 
   // If the request results in an error, it's likely that the contract is a non-thirdweb contract
@@ -32,15 +32,15 @@ export function useIsMinter(contract: ThirdwebContract) {
   const address = useActiveAccount()?.address;
   const userCanMintQuery = useReadContract(hasRole, {
     contract,
-    targetAccountAddress: address ?? "",
-    role: "minter",
     queryOptions: { enabled: !!address },
+    role: "minter",
+    targetAccountAddress: address ?? "",
   });
 
   const anyoneCanMintQuery = useReadContract(hasRole, {
     contract,
-    targetAccountAddress: ZERO_ADDRESS,
     role: "minter",
+    targetAccountAddress: ZERO_ADDRESS,
   });
 
   // If both requests "error out", we can safely assume that
@@ -57,15 +57,15 @@ export function useIsLister(contract: ThirdwebContract) {
   const address = useActiveAccount()?.address;
   const { data: userCanList } = useReadContract(hasRole, {
     contract,
-    targetAccountAddress: address ?? "",
-    role: "lister",
     queryOptions: { enabled: !!address },
+    role: "lister",
+    targetAccountAddress: address ?? "",
   });
 
   const { data: anyoneCanList } = useReadContract(hasRole, {
     contract,
-    targetAccountAddress: ZERO_ADDRESS,
     role: "lister",
+    targetAccountAddress: ZERO_ADDRESS,
   });
 
   return anyoneCanList || userCanList;

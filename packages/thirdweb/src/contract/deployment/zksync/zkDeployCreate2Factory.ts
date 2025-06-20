@@ -3,9 +3,9 @@ import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and
 import { prepareTransaction } from "../../../transaction/prepare-transaction.js";
 import {
   PUBLISHED_PRIVATE_KEY,
-  ZKSYNC_SINGLETON_FACTORY,
   singletonFactoryAbi,
   singletonFactoryBytecode,
+  ZKSYNC_SINGLETON_FACTORY,
 } from "../../../utils/any-evm/zksync/constants.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import type { ClientAndChainAndAccount } from "../../../utils/types.js";
@@ -61,11 +61,11 @@ export async function zkDeployCreate2Factory(
   }
 
   await zkDeployContract({
-    client: options.client,
-    chain: options.chain,
-    account: create2Signer,
     abi: parseAbi(singletonFactoryAbi),
+    account: create2Signer,
     bytecode: singletonFactoryBytecode,
+    chain: options.chain,
+    client: options.client,
     deploymentType: "create2",
   });
 

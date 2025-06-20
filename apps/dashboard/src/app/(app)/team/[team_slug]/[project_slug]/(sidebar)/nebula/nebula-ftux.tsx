@@ -9,46 +9,46 @@ export function NebulaFTUX(props: {
 }) {
   return (
     <WaitingForIntegrationCard
-      title="Integrate Nebula"
       codeTabs={[
         {
-          label: "JavaScript",
           code: (
-            <CodeServer code={jsCode} className="bg-background" lang="ts" />
+            <CodeServer className="bg-background" code={jsCode} lang="ts" />
           ),
+          label: "JavaScript",
         },
         {
-          label: "Python",
           code: (
             <CodeServer
-              code={pythonCode}
               className="bg-background"
+              code={pythonCode}
               lang="python"
             />
           ),
+          label: "Python",
         },
         {
-          label: "Curl",
           code: (
-            <CodeServer code={curlCode} className="bg-background" lang="bash" />
+            <CodeServer className="bg-background" code={curlCode} lang="bash" />
           ),
+          label: "Curl",
         },
       ]}
       ctas={[
         {
-          label: "Try on Playground",
           href: "https://nebula.thirdweb.com/",
+          label: "Try on Playground",
         },
         {
-          label: "View Docs",
           href: "https://portal.thirdweb.com/nebula",
+          label: "View Docs",
         },
       ]}
+      title="Integrate Nebula"
     >
       <SecretKeySection
+        projectId={props.projectId}
         secretKeyMasked={props.secretKeyMasked}
         teamId={props.teamId}
-        projectId={props.projectId}
       />
       <div className="h-4" />
     </WaitingForIntegrationCard>

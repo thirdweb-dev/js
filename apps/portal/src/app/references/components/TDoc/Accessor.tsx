@@ -1,7 +1,7 @@
-import { Callout, Details } from "@/components/Document";
-import { sluggerContext } from "@/contexts/slugger";
 import invariant from "tiny-invariant";
 import { type AccessorDoc, getAccessorSignature } from "typedoc-better-json";
+import { Callout, Details } from "@/components/Document";
+import { sluggerContext } from "@/contexts/slugger";
 import { CodeBlock } from "../../../../components/Document/Code";
 import { Heading } from "../../../../components/Document/Heading";
 import { DeprecatedCalloutTDoc } from "./Deprecated";
@@ -29,7 +29,7 @@ export async function AccessorTDoc(props: {
   return (
     <>
       {props.hideHeading !== true && (
-        <Heading level={props.level} id={doc.name}>
+        <Heading anchorId={doc.name} level={props.level}>
           {doc.name}
         </Heading>
       )}
@@ -46,17 +46,17 @@ export async function AccessorTDoc(props: {
         </Callout>
       )}
 
-      <Details id="signature" summary="Signature" noIndex>
+      <Details anchorId="signature" noIndex summary="Signature">
         <CodeBlock
-          lang="ts"
           code={signatureCode}
+          lang="ts"
           tokenLinks={tokens ? await getTokenLinks(tokens) : undefined}
         />
       </Details>
 
       {exampleTag?.summary && (
         <>
-          <Heading level={subLevel} id={slugger.slug("example")} noIndex>
+          <Heading anchorId={slugger.slug("example")} level={subLevel} noIndex>
             Example
           </Heading>
           <TypedocSummary summary={exampleTag.summary} />
@@ -65,7 +65,7 @@ export async function AccessorTDoc(props: {
 
       {doc.returns?.summary && (
         <>
-          <Heading id="returns" level={props.level + 1} noIndex>
+          <Heading anchorId="returns" level={props.level + 1} noIndex>
             Returns
           </Heading>
           {doc.returns?.summary && (

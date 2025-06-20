@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import { EmptyState } from "./EmptyState";
 
 const meta = {
-  title: "Analytics/EmptyState",
   component: Component,
+  title: "Analytics/EmptyState",
 } satisfies Meta<typeof Component>;
 
 export default meta;

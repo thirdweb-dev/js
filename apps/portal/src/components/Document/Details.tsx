@@ -8,7 +8,7 @@ export function Details(props: {
   children: React.ReactNode;
   level?: number;
   headingClassName?: string;
-  id?: string;
+  anchorId?: string;
   tags?: string[];
   noIndex?: boolean;
   startExpanded?: boolean;
@@ -16,19 +16,16 @@ export function Details(props: {
   accordionTriggerClassName?: string;
 }) {
   const id =
-    props.id || (typeof props.summary === "string" ? props.summary : "");
+    props.anchorId || (typeof props.summary === "string" ? props.summary : "");
 
   return (
     <CustomAccordion
-      defaultOpen={props.startExpanded}
+      anchorId={id ? `${id}` : undefined}
       containerClassName={cn(
         "group/details border-b-0 border-l transition-colors hover:border-active-border my-4",
         props.accordionItemClassName,
       )}
-      triggerContainerClassName={cn(
-        "flex px-3 py-1 text-foreground group",
-        props.accordionTriggerClassName,
-      )}
+      defaultOpen={props.startExpanded}
       trigger={
         <div className="flex gap-3">
           <h4
@@ -56,7 +53,10 @@ export function Details(props: {
           )}
         </div>
       }
-      id={id ? `${id}` : undefined}
+      triggerContainerClassName={cn(
+        "flex px-3 py-1 text-foreground group",
+        props.accordionTriggerClassName,
+      )}
     >
       <div className="pt-4 pl-4 [&>:first-child]:mt-0">{props.children}</div>
     </CustomAccordion>

@@ -5,12 +5,12 @@ const GHOST_THIRDWEB_BLOG_KEY = "49c62b5137df1c17ab6b9e46e3";
 
 export async function fetchChangeLogs() {
   const queryParamsString = Object.entries({
-    key: GHOST_THIRDWEB_BLOG_KEY,
     fields: ["title", "slug", "published_at"].join(","),
     filter: "tag:changelog",
+    include: ["authors", "tags"].join(","),
+    key: GHOST_THIRDWEB_BLOG_KEY,
     limit: "20",
     order: "published_at DESC",
-    include: ["authors", "tags"].join(","),
   })
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
@@ -30,9 +30,9 @@ export async function fetchChangeLogs() {
 
 export async function fetchPost(slug: string) {
   const queryParamsString = Object.entries({
-    key: GHOST_THIRDWEB_BLOG_KEY,
     filter: `slug:${slug}`,
     include: ["authors", "tags"].join(","),
+    key: GHOST_THIRDWEB_BLOG_KEY,
     limit: "1",
   })
     .map(([key, value]) => `${key}=${value}`)

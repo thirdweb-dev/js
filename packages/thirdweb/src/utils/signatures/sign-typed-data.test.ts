@@ -20,12 +20,12 @@ test("default", async () => {
 test("minimal", async () => {
   expect(
     signTypedData({
+      domain: {},
+      primaryType: "EIP712Domain",
+      privateKey: ANVIL_PKEY_A,
       types: {
         EIP712Domain: [],
       },
-      primaryType: "EIP712Domain",
-      domain: {},
-      privateKey: ANVIL_PKEY_A,
     }),
   ).toEqual(
     "0xda87197eb020923476a6d0149ca90bc1c894251cc30b38e0dd2cdd48567e12386d3ed40a509397410a4fd2d66e1300a39ac42f828f8a5a2cb948b35c22cf29e81c",
@@ -146,17 +146,17 @@ test("domain: salt", async () => {
 test("mixed-case strings and addresses", async () => {
   const typedData = (name: string, addr: string) =>
     ({
+      message: {
+        addr,
+        name,
+      },
+      primaryType: "WalletData",
       types: {
         WalletData: [
           { name: "name", type: "string" },
           { name: "addr", type: "address" },
         ],
       },
-      message: {
-        name,
-        addr,
-      },
-      primaryType: "WalletData",
     }) as const;
 
   const name = "0xDEADBEEF";

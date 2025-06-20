@@ -27,5 +27,5 @@ export function useClipboard(text: string) {
     };
   }, [hasCopied]);
 
-  return { onCopy, hasCopied };
+  return { hasCopied, onCopy };
 }

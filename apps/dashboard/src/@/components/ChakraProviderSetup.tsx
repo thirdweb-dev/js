@@ -5,9 +5,7 @@ import { useTheme } from "next-themes";
 import { useEffect } from "react";
 import chakraTheme from "../../theme";
 
-export function ChakraProviderSetup(props: {
-  children: React.ReactNode;
-}) {
+export function ChakraProviderSetup(props: { children: React.ReactNode }) {
   return (
     <ChakraProvider theme={chakraTheme}>
       {props.children}

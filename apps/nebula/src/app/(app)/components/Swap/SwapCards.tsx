@@ -1,15 +1,15 @@
-import { ChainIconClient } from "@/components/blocks/ChainIcon";
-import { TransactionButton } from "@/components/blocks/buttons/TransactionButton";
 import { ArrowRightLeftIcon, CheckIcon } from "lucide-react";
 import {
-  NATIVE_TOKEN_ADDRESS,
-  type PreparedTransaction,
-  type ThirdwebClient,
   defineChain,
   getAddress,
+  NATIVE_TOKEN_ADDRESS,
+  type PreparedTransaction,
   prepareTransaction,
+  type ThirdwebClient,
   toTokens,
 } from "thirdweb";
+import { TransactionButton } from "@/components/blocks/buttons/TransactionButton";
+import { ChainIconClient } from "@/components/blocks/ChainIcon";
 import type { NebulaSwapData } from "../../api/chat";
 import { TxHashRow, type TxStatus, TxStatusRow, useTxSetup } from "./common";
 
@@ -22,11 +22,11 @@ export function SwapTransactionCard(props: {
 
   return (
     <SwapTransactionCardLayout
-      swapData={props.swapData}
       client={props.client}
-      status={status}
-      setStatus={setStatus}
       sendTx={(tx) => sendTx(tx, props.onTxSettled)}
+      setStatus={setStatus}
+      status={status}
+      swapData={props.swapData}
     />
   );
 }
@@ -58,20 +58,20 @@ export function SwapTransactionCardLayout(props: {
         <div className="px-4 text-sm lg:px-5 [&>*:not(:last-child)]:border-b [&>*]:min-h-14 [&>*]:py-3.5">
           <TokenRow
             amount={swapData.from.amount}
-            symbol={swapData.from.symbol}
             chainId={swapData.from.chain_id}
-            title="Sell"
             client={props.client}
             decimals={swapData.from.decimals}
+            symbol={swapData.from.symbol}
+            title="Sell"
           />
 
           <TokenRow
             amount={swapData.to.amount}
-            symbol={swapData.to.symbol}
             chainId={swapData.to.chain_id}
-            title="Buy"
             client={props.client}
             decimals={swapData.to.decimals}
+            symbol={swapData.to.symbol}
+            title="Buy"
           />
 
           {/* Status */}
@@ -92,34 +92,34 @@ export function SwapTransactionCardLayout(props: {
         {props.status.type !== "confirmed" && (
           <div className="flex items-center justify-end border-t px-4 py-4 lg:px-5">
             <TransactionButton
+              className="gap-2"
               client={props.client}
-              isPending={props.status.type === "sending"}
-              transactionCount={undefined}
-              txChainID={swapData.transaction.chainId}
-              variant="default"
               disabled={
                 props.status.type === "sending" ||
                 props.status.type === "confirming"
               }
-              size="sm"
+              isLoggedIn={true}
+              isPending={props.status.type === "sending"}
               onClick={async () => {
                 const tx = prepareTransaction({
                   chain: txChain,
                   client: props.client,
                   data: swapData.transaction.data,
-                  to: swapData.transaction.to,
                   erc20Value: isSellingNativeToken
                     ? undefined
                     : {
                         amountWei: BigInt(swapData.from.amount),
                         tokenAddress: swapData.from.address,
                       },
+                  to: swapData.transaction.to,
                 });
 
                 props.sendTx(tx);
               }}
-              className="gap-2"
-              isLoggedIn={true}
+              size="sm"
+              transactionCount={undefined}
+              txChainID={swapData.transaction.chainId}
+              variant="default"
             >
               <ArrowRightLeftIcon className="size-4" />
               Swap Tokens
@@ -139,11 +139,11 @@ export function ApproveTransactionCard(props: {
 
   return (
     <ApproveTransactionCardLayout
-      swapData={props.swapData}
       client={props.client}
-      status={status}
-      setStatus={setStatus}
       sendTx={(tx) => sendTx(tx, undefined)}
+      setStatus={setStatus}
+      status={status}
+      swapData={props.swapData}
     />
   );
 }
@@ -178,20 +178,20 @@ export function ApproveTransactionCardLayout(props: {
         <div className="px-4 text-sm lg:px-5 [&>*:not(:last-child)]:border-b [&>*]:min-h-14 [&>*]:py-3.5">
           <TokenRow
             amount={swapData.from.amount}
-            symbol={swapData.from.symbol}
             chainId={swapData.from.chain_id}
-            title="Approve Spending"
             client={props.client}
             decimals={swapData.from.decimals}
+            symbol={swapData.from.symbol}
+            title="Approve Spending"
           />
 
           <TokenRow
             amount={swapData.to.amount}
-            symbol={swapData.to.symbol}
             chainId={swapData.to.chain_id}
-            title="To Buy"
             client={props.client}
             decimals={swapData.to.decimals}
+            symbol={swapData.to.symbol}
+            title="To Buy"
           />
 
           {/* Status */}
@@ -212,13 +212,11 @@ export function ApproveTransactionCardLayout(props: {
         {props.status.type !== "confirmed" && (
           <div className="flex items-center justify-end border-t px-4 py-4 lg:px-5">
             <TransactionButton
+              className="gap-2"
               client={props.client}
-              isPending={isTransactionPending}
-              transactionCount={undefined}
-              txChainID={swapData.transaction.chainId}
-              variant="default"
               disabled={isTransactionPending}
-              size="sm"
+              isLoggedIn={true}
+              isPending={isTransactionPending}
               onClick={async () => {
                 const tx = prepareTransaction({
                   chain: txChain,
@@ -229,8 +227,10 @@ export function ApproveTransactionCardLayout(props: {
 
                 props.sendTx(tx);
               }}
-              className="gap-2"
-              isLoggedIn={true}
+              size="sm"
+              transactionCount={undefined}
+              txChainID={swapData.transaction.chainId}
+              variant="default"
             >
               <CheckIcon className="size-4" />
               Approve
@@ -263,9 +263,9 @@ function TokenRow(props: {
       <div>
         <div className="flex items-center gap-1.5">
           <ChainIconClient
-            src={chain.icon?.url || ""}
-            client={props.client}
             className="size-4"
+            client={props.client}
+            src={chain.icon?.url || ""}
           />
           <div>{chain.name}</div>
         </div>

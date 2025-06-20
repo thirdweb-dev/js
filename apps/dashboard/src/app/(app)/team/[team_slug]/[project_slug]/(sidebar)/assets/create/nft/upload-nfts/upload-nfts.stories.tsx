@@ -1,13 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useState } from "react";
 import { storybookThirdwebClient } from "stories/utils";
-import { NATIVE_TOKEN_ADDRESS, getAddress } from "thirdweb";
+import { getAddress, NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { ThirdwebProvider } from "thirdweb/react";
 import type { NFTMetadataWithPrice } from "./batch-upload/process-files";
 import { type NFTData, UploadNFTsFieldset } from "./upload-nfts";
 
 const meta = {
-  title: "Asset/CreateNFT/UploadNFTsFieldset",
   component: Variant,
   decorators: [
     (Story) => (
@@ -18,6 +17,7 @@ const meta = {
       </div>
     ),
   ],
+  title: "Asset/CreateNFT/UploadNFTsFieldset",
 } satisfies Meta<typeof Variant>;
 
 export default meta;
@@ -25,18 +25,18 @@ type Story = StoryObj<typeof meta>;
 
 function getMockNFTData(params?: Partial<NFTMetadataWithPrice>) {
   const mockNFTData: NFTMetadataWithPrice = {
-    name: "Test NFT",
-    description: "Test Description",
-    image: "https://picsum.photos/500/500",
-    price_amount: "0.1",
-    price_currency: getAddress(NATIVE_TOKEN_ADDRESS),
-    supply: "1",
     attributes: [
       {
         trait_type: "test",
         value: "value",
       },
     ],
+    description: "Test Description",
+    image: "https://picsum.photos/500/500",
+    name: "Test NFT",
+    price_amount: "0.1",
+    price_currency: getAddress(NATIVE_TOKEN_ADDRESS),
+    supply: "1",
     ...params,
   };
 
@@ -46,8 +46,8 @@ function getMockNFTData(params?: Partial<NFTMetadataWithPrice>) {
 export const MultipleNFTsNull: Story = {
   args: {
     nftData: {
-      type: "multiple",
       nfts: null,
+      type: "multiple",
     },
   },
 };
@@ -55,8 +55,8 @@ export const MultipleNFTsNull: Story = {
 export const SingleNFTNull: Story = {
   args: {
     nftData: {
-      type: "single",
       nft: null,
+      type: "single",
     },
   },
 };
@@ -64,9 +64,7 @@ export const SingleNFTNull: Story = {
 export const MultipleNFTsSet: Story = {
   args: {
     nftData: {
-      type: "multiple",
       nfts: {
-        type: "data",
         data: Array(5)
           .fill(null)
           .map((_, i) =>
@@ -75,7 +73,9 @@ export const MultipleNFTsSet: Story = {
               price_amount: Math.random().toFixed(2),
             }),
           ),
+        type: "data",
       },
+      type: "multiple",
     },
   },
 };
@@ -83,11 +83,11 @@ export const MultipleNFTsSet: Story = {
 export const MultipleNFTsError: Story = {
   args: {
     nftData: {
-      type: "multiple",
       nfts: {
-        type: "error",
         error: "This is some error message",
+        type: "error",
       },
+      type: "multiple",
     },
   },
 };
@@ -95,24 +95,22 @@ export const MultipleNFTsError: Story = {
 export const SingleNFTSet: Story = {
   args: {
     nftData: {
-      type: "single",
       nft: getMockNFTData(),
+      type: "single",
     },
   },
 };
 
-function Variant(props: {
-  nftData: NFTData;
-}) {
+function Variant(props: { nftData: NFTData }) {
   const [nftData, setNFTData] = useState<NFTData>(props.nftData);
 
   return (
     <UploadNFTsFieldset
-      client={storybookThirdwebClient}
       chainId={1}
+      client={storybookThirdwebClient}
+      nftData={nftData}
       onNext={() => console.log("next")}
       onPrev={() => console.log("prev")}
-      nftData={nftData}
       setNFTData={setNFTData}
     />
   );

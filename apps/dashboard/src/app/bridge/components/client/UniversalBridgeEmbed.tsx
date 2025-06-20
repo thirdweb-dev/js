@@ -2,15 +2,19 @@
 
 import { useTheme } from "next-themes";
 import { PayEmbed, type TokenInfo } from "thirdweb/react";
-import { getSDKTheme } from "../../../(app)/components/sdk-component-theme";
 import { useV5DashboardChain } from "../../../../lib/v5-adapter";
+import { getSDKTheme } from "../../../(app)/components/sdk-component-theme";
 import { bridgeAppThirdwebClient } from "../../constants";
 
 export function UniversalBridgeEmbed({
   chainId,
   token,
   amount,
-}: { chainId?: number; token: TokenInfo | undefined; amount?: string }) {
+}: {
+  chainId?: number;
+  token: TokenInfo | undefined;
+  amount?: string;
+}) {
   const { theme } = useTheme();
   const chain = useV5DashboardChain(chainId || 1);
 
@@ -22,9 +26,9 @@ export function UniversalBridgeEmbed({
         prefillBuy:
           chainId && token
             ? {
+                amount,
                 chain,
                 token,
-                amount,
               }
             : undefined,
       }}

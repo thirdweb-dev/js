@@ -1,11 +1,11 @@
 "use client";
 
+import type { ThirdwebClient } from "thirdweb";
+import { upload } from "thirdweb/storage";
 import { apiServerProxy } from "@/actions/proxies";
 import type { Team } from "@/api/team";
 import type { VerifiedDomainResponse } from "@/api/verified-domain";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import type { ThirdwebClient } from "thirdweb";
-import { upload } from "thirdweb/storage";
 import { TeamGeneralSettingsPageUI } from "./TeamGeneralSettingsPageUI";
 import { updateTeam } from "./updateTeam";
 
@@ -20,8 +20,22 @@ export function TeamGeneralSettingsPage(props: {
 
   return (
     <TeamGeneralSettingsPageUI
-      team={props.team}
       client={props.client}
+      initialVerification={props.initialVerification}
+      isOwnerAccount={props.isOwnerAccount}
+      leaveTeam={async () => {
+        const res = await apiServerProxy({
+          method: "DELETE",
+          pathname: `/v1/teams/${props.team.id}/members/${props.accountId}`,
+        });
+
+        if (!res.ok) {
+          throw new Error(res.error);
+        }
+
+        router.replace("/team");
+      }}
+      team={props.team}
       updateTeamField={async (teamValue) => {
         const res = await updateTeam({
           teamId: props.team.id,
@@ -39,20 +53,8 @@ export function TeamGeneralSettingsPage(props: {
           router.refresh();
         }
       }}
-      leaveTeam={async () => {
-        const res = await apiServerProxy({
-          pathname: `/v1/teams/${props.team.id}/members/${props.accountId}`,
-          method: "DELETE",
-        });
-
-        if (!res.ok) {
-          throw new Error(res.error);
-        }
-
-        router.replace("/team");
-      }}
       updateTeamImage={async (file) => {
-        let uri: string | undefined = undefined;
+        let uri: string | undefined;
 
         if (file) {
           // upload to IPFS
@@ -75,8 +77,6 @@ export function TeamGeneralSettingsPage(props: {
 
         router.refresh();
       }}
-      initialVerification={props.initialVerification}
-      isOwnerAccount={props.isOwnerAccount}
     />
   );
 }

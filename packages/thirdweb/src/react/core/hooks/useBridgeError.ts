@@ -85,13 +85,13 @@ export function useBridgeError(
   // No error case
   if (!error) {
     return {
-      mappedError: null,
-      isRetryable: false,
-      userMessage: "",
       errorCode: null,
-      statusCode: null,
       isClientError: false,
+      isRetryable: false,
       isServerError: false,
+      mappedError: null,
+      statusCode: null,
+      userMessage: "",
     };
   }
 
@@ -117,13 +117,13 @@ export function useBridgeError(
   const userMessage = getUserFriendlyMessage(apiError);
 
   return {
-    mappedError: apiError,
-    isRetryable: isRetryable(apiError.code),
-    userMessage,
     errorCode: apiError.code,
-    statusCode,
     isClientError,
+    isRetryable: isRetryable(apiError.code),
     isServerError,
+    mappedError: apiError,
+    statusCode,
+    userMessage,
   };
 }
 

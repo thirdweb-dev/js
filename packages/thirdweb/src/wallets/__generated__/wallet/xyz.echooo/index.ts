@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "xyz.echooo",
-  name: "Echooo Wallet",
-  homepage: "https://www.echooo.xyz/",
-  image_id: "a7b1de20-bafd-4ab9-c31d-7d398cc90a00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/echooo-crypto-aa-wallet-defi/id6446883725",
     android:
       "https://play.google.com/store/apps/details?id=com.smartwallet.app&hl=en_US&gl=US",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome:
       "https://chromewebstore.google.com/detail/echooo-wallet/lcmncloheoekhbmljjlhdlaobkedjbgd",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/echooo-crypto-aa-wallet-defi/id6446883725",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "echooo://echooo.valleysound.xyz/vss/walletconnect",
-    universal: "https://api.valleysound.xyz/vss/*",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.echooo.xyz/",
+  id: "xyz.echooo",
+  image_id: "a7b1de20-bafd-4ab9-c31d-7d398cc90a00",
+  mobile: {
+    native: "echooo://echooo.valleysound.xyz/vss/walletconnect",
+    universal: "https://api.valleysound.xyz/vss/*",
+  },
+  name: "Echooo Wallet",
+  rdns: null,
 } as const;

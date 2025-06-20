@@ -10,21 +10,21 @@ export function EndpointMetadata() {
   return (
     <ApiEndpoint
       metadata={{
-        title: "Clear Session",
         description:
           "Clears all messages for a specific session using the session ID.",
+        method: "POST",
         origin: "https://nebula-api.thirdweb.com",
         path: "/session/{session_id}/clear",
-        method: "POST",
         request: {
-          pathParameters: [nebulaSessionIdPathParameter],
-          headers: [nebulaSecretKeyHeaderParameter],
           bodyParameters: [],
+          headers: [nebulaSecretKeyHeaderParameter],
+          pathParameters: [nebulaSessionIdPathParameter],
         },
         responseExamples: {
           200: nebulaFullSessionResponse,
           401: nebulaAPI401Response,
         },
+        title: "Clear Session",
       }}
     />
   );

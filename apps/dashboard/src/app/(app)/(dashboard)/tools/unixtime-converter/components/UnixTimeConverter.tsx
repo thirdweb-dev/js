@@ -1,8 +1,5 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   formatDistanceToNow,
   formatISO9075,
@@ -10,7 +7,10 @@ import {
   formatRFC7231,
   fromUnixTime,
 } from "date-fns";
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function UnixTimeConverter() {
   const [unixTime, setUnixTime] = useState(() => {
@@ -20,8 +20,8 @@ export function UnixTimeConverter() {
   const { date, error } = useMemo(() => {
     if (Number.isNaN(unixTime) || !Number.isInteger(unixTime)) {
       return {
-        error: "Invalid Unix Timestamp",
         date: null,
+        error: "Invalid Unix Timestamp",
       };
     }
 
@@ -40,6 +40,8 @@ export function UnixTimeConverter() {
     };
   }, [unixTime]);
 
+  const unixTimeId = useId();
+
   return (
     <div className="mx-auto max-w-2xl">
       <Card>
@@ -51,16 +53,16 @@ export function UnixTimeConverter() {
 
         <CardContent>
           <div className="mb-4">
-            <Label htmlFor="unixTime">Enter Unix Timestamp</Label>
+            <Label htmlFor={unixTimeId}>Enter Unix Timestamp</Label>
             <Input
-              id="unixTime"
-              type="number"
-              value={unixTime}
+              className="mt-1"
+              id={unixTimeId}
               onChange={(e) => {
                 setUnixTime(Number(e.target.value));
               }}
               placeholder="e.g., 1609459200"
-              className="mt-1"
+              type="number"
+              value={unixTime}
             />
             {error && (
               <p className="mt-2 text-destructive-text text-sm">{error}</p>

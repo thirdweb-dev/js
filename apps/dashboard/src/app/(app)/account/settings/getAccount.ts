@@ -1,5 +1,5 @@
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { getAuthToken } from "../../api/lib/getAuthToken";
 import { loginRedirect } from "../../login/loginRedirect";
 import { isAccountOnboardingComplete } from "../../login/onboarding/isOnboardingRequired";
@@ -16,10 +16,10 @@ export async function getRawAccount() {
   }
 
   const res = await fetch(`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/account/me`, {
-    method: "GET",
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
+    method: "GET",
   });
 
   if (!res.ok) {

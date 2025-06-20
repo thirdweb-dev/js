@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { decodeAbiParameters } from "viem";
-import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the "getNonce" function.
@@ -17,18 +17,18 @@ export type GetNonceParams = {
 export const FN_SELECTOR = "0x35567e1a" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "sender",
+    type: "address",
   },
   {
-    type: "uint192",
     name: "key",
+    type: "uint192",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "nonce",
+    type: "uint256",
   },
 ] as const;
 

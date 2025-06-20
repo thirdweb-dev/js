@@ -1,9 +1,5 @@
 "use client";
 
-import { WalletAddress } from "@/components/blocks/wallet-address";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { SkeletonContainer } from "@/components/ui/skeleton";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
@@ -23,6 +19,10 @@ import {
 import { useReadContract } from "thirdweb/react";
 import { min } from "thirdweb/utils";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 import { ListingStatsV3 } from "./listing-stats";
@@ -55,9 +55,9 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
   projectMeta,
 }) => {
   const directListingsHref = buildContractPagePath({
-    projectMeta,
     chainIdOrSlug: chainSlug,
     contractAddress: contract.address,
+    projectMeta,
     subpath: "/direct-listings",
   });
 
@@ -77,9 +77,9 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
       listingsQuery?.data
         ?.map((v) => ({
           ...v,
+          currencyValue: v.currencyValuePerToken,
           sellerAddress: v.creatorAddress,
           type: "direct-listing" as const,
-          currencyValue: v.currencyValuePerToken,
         }))
         .reverse() || [],
     [listingsQuery?.data],
@@ -100,9 +100,9 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
         </h2>
         <Button
           asChild
-          variant="outline"
-          size="sm"
           className="gap-2 bg-background text-muted-foreground"
+          size="sm"
+          variant="outline"
         >
           <Link href={directListingsHref}>
             View all <ArrowRightIcon className="size-4" />
@@ -112,12 +112,12 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
 
       <div className="p-6">
         <ListingCards
-          listings={listings}
-          isPending={listingsQuery.isPending}
           chainSlug={chainSlug}
-          contractAddress={contract.address}
-          projectMeta={projectMeta}
           client={contract.client}
+          contractAddress={contract.address}
+          isPending={listingsQuery.isPending}
+          listings={listings}
+          projectMeta={projectMeta}
         />
       </div>
     </div>
@@ -130,9 +130,9 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
   projectMeta,
 }) => {
   const englishAuctionsHref = buildContractPagePath({
-    projectMeta,
     chainIdOrSlug: chainSlug,
     contractAddress: contract.address,
+    projectMeta,
     subpath: "/english-auctions",
   });
 
@@ -152,9 +152,9 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
       auctionsQuery?.data
         ?.map<ListingData>((v) => ({
           ...v,
+          currencyValue: v.buyoutCurrencyValue,
           sellerAddress: v.creatorAddress,
           type: "english-auction",
-          currencyValue: v.buyoutCurrencyValue,
         }))
         .reverse() || [],
     [auctionsQuery?.data],
@@ -175,9 +175,9 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
         </h2>
         <Button
           asChild
-          variant="outline"
-          size="sm"
           className="gap-2 bg-background text-muted-foreground"
+          size="sm"
+          variant="outline"
         >
           <Link href={englishAuctionsHref}>
             View all <ArrowRightIcon className="size-4" />
@@ -186,11 +186,11 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
       </div>
       <div className="p-6">
         <ListingCards
-          client={contract.client}
-          listings={auctions}
-          isPending={auctionsQuery.isPending}
           chainSlug={chainSlug}
+          client={contract.client}
           contractAddress={contract.address}
+          isPending={auctionsQuery.isPending}
+          listings={auctions}
           projectMeta={projectMeta}
         />
       </div>
@@ -223,16 +223,16 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
 
       {hasDirectListings && (
         <DirectListingCards
-          contract={contract}
           chainSlug={chainSlug}
+          contract={contract}
           projectMeta={projectMeta}
         />
       )}
 
       {hasEnglishAuctions && (
         <EnglishAuctionCards
-          contract={contract}
           chainSlug={chainSlug}
+          contract={contract}
           projectMeta={projectMeta}
         />
       )}
@@ -241,37 +241,37 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
 };
 
 const dummyMetadata: (idx: number) => ListingData = (idx) => ({
-  id: BigInt(idx),
   asset: {
+    chainId: 1,
     id: BigInt(idx),
-    metadata: { name: `NFT #${idx}`, id: BigInt(idx), uri: "" },
+    metadata: { id: BigInt(idx), name: `NFT #${idx}`, uri: "" },
     owner: "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
     supply: BigInt(1),
+    tokenAddress: ZERO_ADDRESS,
     tokenURI: "",
     type: "ERC721",
-    tokenAddress: ZERO_ADDRESS,
-    chainId: 1,
-  },
-  currencyValuePerToken: {
-    decimals: 18,
-    displayValue: "0.0",
-    name: "Ether",
-    symbol: "ETH",
-    value: 0n,
-    tokenAddress: ZERO_ADDRESS,
-    chainId: 1,
   },
   creatorAddress: "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
-  type: "direct-listing",
   currencyValue: {
+    chainId: 1,
+    decimals: 18,
+    displayValue: "0.0",
     name: "Ether",
     symbol: "ETH",
-    value: 0n,
-    displayValue: "0.0",
-    decimals: 18,
     tokenAddress: ZERO_ADDRESS,
-    chainId: 1,
+    value: 0n,
   },
+  currencyValuePerToken: {
+    chainId: 1,
+    decimals: 18,
+    displayValue: "0.0",
+    name: "Ether",
+    symbol: "ETH",
+    tokenAddress: ZERO_ADDRESS,
+    value: 0n,
+  },
+  id: BigInt(idx),
+  type: "direct-listing",
 });
 
 interface ListingCardsProps {
@@ -293,9 +293,9 @@ const ListingCards: React.FC<ListingCardsProps> = ({
   client,
 }) => {
   const contractLayout = buildContractPagePath({
-    projectMeta,
     chainIdOrSlug: chainSlug,
     contractAddress,
+    projectMeta,
   });
 
   listings = isPending
@@ -319,20 +319,20 @@ const ListingCards: React.FC<ListingCardsProps> = ({
           <div className="relative aspect-square w-full overflow-hidden rounded-lg">
             {/* Image */}
             <SkeletonContainer
-              loadedData={isPending ? undefined : listing.asset.metadata}
-              skeletonData={listing.asset.metadata}
               className="block h-full w-full"
+              loadedData={isPending ? undefined : listing.asset.metadata}
               render={(v) => {
                 return (
                   <NFTMediaWithEmptyState
                     client={client}
+                    height="100%"
                     metadata={v}
                     requireInteraction
                     width="100%"
-                    height="100%"
                   />
                 );
               }}
+              skeletonData={listing.asset.metadata}
             />
           </div>
 
@@ -340,7 +340,6 @@ const ListingCards: React.FC<ListingCardsProps> = ({
             {/* Card Link + Title */}
             <SkeletonContainer
               loadedData={isPending ? undefined : listing.asset.metadata.name}
-              skeletonData="Listing Title"
               render={(v) => (
                 <Link
                   className="before:absolute before:inset-0"
@@ -353,6 +352,7 @@ const ListingCards: React.FC<ListingCardsProps> = ({
                   {v}
                 </Link>
               )}
+              skeletonData="Listing Title"
             />
 
             {isMarketplaceV1 && (
@@ -365,35 +365,35 @@ const ListingCards: React.FC<ListingCardsProps> = ({
                       ? "Direct Listing"
                       : "English Auction"
                 }
-                skeletonData={listing.type}
                 render={(v) => (
                   <p className="text-muted-foreground text-sm">{v}</p>
                 )}
+                skeletonData={listing.type}
               />
             )}
 
             {/* seller */}
             <SkeletonContainer
-              loadedData={isPending ? undefined : listing.creatorAddress}
-              skeletonData={listing.creatorAddress}
               className="mt-4 border-t pt-4"
+              loadedData={isPending ? undefined : listing.creatorAddress}
               render={(v) => (
                 <div>
                   <p className="text-muted-foreground text-xs">Seller</p>
                   <WalletAddress
-                    className="relative z-[1] self-start text-xs"
                     address={v}
+                    className="relative z-[1] self-start text-xs"
                     client={client}
                   />
                 </div>
               )}
+              skeletonData={listing.creatorAddress}
             />
 
             {/* price */}
             {!isPending && (
               <Badge
-                variant="outline"
                 className="absolute top-2 right-2 bg-background py-1.5"
+                variant="outline"
               >
                 <p className="line-clamp-1">
                   <b>{listing.currencyValue.displayValue}</b>{" "}

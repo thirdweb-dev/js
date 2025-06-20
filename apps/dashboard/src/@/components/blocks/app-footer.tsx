@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { ThirdwebMiniLogo } from "app/(app)/components/ThirdwebMiniLogo";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 import { InstagramIcon } from "components/icons/brand-icons/InstagramIcon";
@@ -9,6 +7,8 @@ import { TiktokIcon } from "components/icons/brand-icons/TiktokIcon";
 import { XIcon } from "components/icons/brand-icons/XIcon";
 import { YoutubeIcon } from "components/icons/brand-icons/YoutubeIcon";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type AppFooterProps = {
   className?: string;
@@ -69,34 +69,34 @@ export function AppFooter(props: AppFooterProps) {
             </p>
           </div>
           <div className="flex flex-row gap-3">
-            <Button size="icon" variant="ghost" asChild className="size-9">
+            <Button asChild className="size-9" size="icon" variant="ghost">
               <Link
                 href="https://github.com/thirdweb-dev"
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 <GithubIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
-            <Button size="icon" variant="ghost" asChild className="size-9">
+            <Button asChild className="size-9" size="icon" variant="ghost">
               <Link
                 href="https://www.tiktok.com/@thirdweb"
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 <TiktokIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
-            <Button size="icon" variant="ghost" asChild className="size-9">
+            <Button asChild className="size-9" size="icon" variant="ghost">
               <Link
                 href="https://www.instagram.com/thirdweb/"
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 <InstagramIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
-            <Button size="icon" variant="ghost" asChild className="size-9">
+            <Button asChild className="size-9" size="icon" variant="ghost">
               <Link
                 href="hhttps://www.linkedin.com/company/third-web/"
                 target="_blank"
@@ -104,29 +104,29 @@ export function AppFooter(props: AppFooterProps) {
                 <LinkedInIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
-            <Button size="icon" variant="ghost" asChild className="size-9">
+            <Button asChild className="size-9" size="icon" variant="ghost">
               <Link
                 href="https://www.youtube.com/@thirdweb_"
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 <YoutubeIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
-            <Button size="icon" variant="ghost" asChild className="size-9">
+            <Button asChild className="size-9" size="icon" variant="ghost">
               <Link
                 href="https://www.reddit.com/r/thirdweb/"
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 <RedditIcon className="size-5 text-muted-foreground" />
               </Link>
             </Button>
-            <Button size="icon" variant="ghost" asChild className="size-9">
+            <Button asChild className="size-9" size="icon" variant="ghost">
               <Link
                 href="https://x.com/thirdweb"
-                target="_blank"
                 rel="noopener noreferrer"
+                target="_blank"
               >
                 <XIcon className="size-5 text-muted-foreground" />
               </Link>
@@ -151,9 +151,9 @@ function FooterLink(props: {
 }) {
   return (
     <Link
+      className="px-0 py-[6px] text-muted-foreground text-sm hover:underline"
       href={props.href}
       prefetch={false}
-      className="px-0 py-[6px] text-muted-foreground text-sm hover:underline"
       target="_blank"
     >
       {props.label}

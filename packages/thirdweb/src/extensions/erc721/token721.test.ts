@@ -5,7 +5,7 @@ import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_B } from "~test/test-wallets.js";
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
-import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import { name } from "../../extensions/common/read/name.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { parseNFT } from "../../utils/nft/parseNft.js";
@@ -24,20 +24,20 @@ let token721Contract: ThirdwebContract;
 describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
   it("should deploy ERC721 token", async () => {
     const address = await deployERC721Contract({
-      client,
-      chain,
       account,
-      type: "TokenERC721",
+      chain,
+      client,
       params: {
-        name: "NFTCollection",
         contractURI: TEST_CONTRACT_URI,
+        name: "NFTCollection",
       },
+      type: "TokenERC721",
     });
     expect(address).toBeDefined();
     token721Contract = getContract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       address,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
     const deployedName = await name({ contract: token721Contract });
     expect(deployedName).toBe("NFTCollection");
@@ -50,8 +50,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
       to: account.address,
     });
     await sendAndConfirmTransaction({
-      transaction,
       account,
+      transaction,
     });
 
     const nft = await getNFT({ contract: token721Contract, tokenId: 0n });
@@ -65,8 +65,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
       to: account.address,
     });
     await sendAndConfirmTransaction({
-      transaction,
       account,
+      transaction,
     });
     const _uri = await tokenURI({ contract: token721Contract, tokenId: 1n });
     expect(_uri).toBe("ipfs://fake-token-uri");
@@ -85,13 +85,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
      * mint a token, then purposefully change that token's URI to an empty string, using setTokenURI
      */
     await sendAndConfirmTransaction({
+      account,
       transaction: setTokenURI({
         contract: token721Contract,
         tokenId: 1n,
         // Need to have some spaces because NFTMetadata.sol does not allow to update an empty value
         uri: "  ",
       }),
-      account,
     });
 
     expect(
@@ -104,12 +104,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployERC721", () => {
           uri: "",
         },
         {
+          chainId: token721Contract.chain.id,
+          owner: null,
+          tokenAddress: token721Contract.address,
           tokenId: 1n,
           tokenUri: "",
           type: "ERC721",
-          owner: null,
-          tokenAddress: token721Contract.address,
-          chainId: token721Contract.chain.id,
         },
       ),
     );

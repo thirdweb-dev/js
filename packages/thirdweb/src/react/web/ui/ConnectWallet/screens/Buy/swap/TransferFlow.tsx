@@ -32,17 +32,17 @@ export function TransferFlow(props: TransferFlowProps) {
   if (transferTxHash) {
     return (
       <SwapStatusScreen
-        title={props.title}
-        onBack={props.onBack}
-        onTryAgain={props.onTryAgain}
-        swapTxHash={transferTxHash}
-        fromChain={props.chain}
         client={props.client}
-        onDone={props.onDone}
-        transactionMode={false}
+        fromChain={props.chain}
         isEmbed={props.isEmbed}
-        quote={undefined}
+        onBack={props.onBack}
+        onDone={props.onDone}
         onSuccess={props.onSuccess}
+        onTryAgain={props.onTryAgain}
+        quote={undefined}
+        swapTxHash={transferTxHash}
+        title={props.title}
+        transactionMode={false}
       />
     );
   }

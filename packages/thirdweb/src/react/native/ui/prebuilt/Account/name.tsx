@@ -137,18 +137,12 @@ export function AccountName({
 }: AccountNameProps) {
   const { address, client } = useAccountContext();
   const nameQuery = useQuery({
-    queryKey: [
-      "account-name",
-      address,
-      { socialType },
-      { resolverAddress, resolverChain },
-    ],
     queryFn: async () => {
       const [socialData, ensName] = await Promise.all([
         getSocialProfiles({ address, client }),
         resolveName({
-          client,
           address,
+          client,
           resolverAddress,
           resolverChain,
         }),
@@ -164,6 +158,12 @@ export function AccountName({
       }
       return formatFn ? formatFn(name) : name;
     },
+    queryKey: [
+      "account-name",
+      address,
+      { socialType },
+      { resolverAddress, resolverChain },
+    ],
     retry: false,
     ...queryOptions,
   });

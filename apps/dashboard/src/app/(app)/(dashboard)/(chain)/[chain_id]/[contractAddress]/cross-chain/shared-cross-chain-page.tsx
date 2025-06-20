@@ -33,17 +33,17 @@ export async function SharedCrossChainPage(props: {
   projectMeta: ProjectMeta | undefined;
 }) {
   const info = await getContractPageParamsInfo({
-    contractAddress: props.contractAddress,
     chainIdOrSlug: props.chainIdOrSlug,
+    contractAddress: props.contractAddress,
     teamId: props.projectMeta?.teamId,
   });
 
   const ProxyDeployedEvent = prepareEvent({
-    signature:
-      "event ProxyDeployedV2(address indexed implementation, address indexed proxy, address indexed deployer, bytes32 inputSalt, bytes data, bytes extraData)",
     filters: {
       proxy: props.contractAddress.toLowerCase(),
     },
+    signature:
+      "event ProxyDeployedV2(address indexed implementation, address indexed proxy, address indexed deployer, bytes32 inputSalt, bytes data, bytes extraData)",
   });
 
   if (!info) {
@@ -55,8 +55,8 @@ export async function SharedCrossChainPage(props: {
     const shouldHide = await shouldRenderNewPublicPage(info.serverContract);
     if (shouldHide) {
       redirectToContractLandingPage({
-        contractAddress: props.contractAddress,
         chainIdOrSlug: props.chainIdOrSlug,
+        contractAddress: props.contractAddress,
         projectMeta: props.projectMeta,
       });
     }
@@ -79,8 +79,8 @@ export async function SharedCrossChainPage(props: {
 
   const originalCode = await eth_getCode(
     getRpcClient({
-      client: serverContract.client,
       chain: serverContract.chain,
+      client: serverContract.client,
     }),
     {
       address: serverContract.address,
@@ -98,8 +98,8 @@ export async function SharedCrossChainPage(props: {
 
     if (creationData.status === "1" && creationData.result[0]?.txHash) {
       const rpcClient = getRpcClient({
-        client: serverContract.client,
         chain: serverContract.chain,
+        client: serverContract.client,
       });
       creationTxReceipt = await eth_getTransactionReceipt(rpcClient, {
         hash: creationData.result[0]?.txHash,
@@ -150,17 +150,17 @@ export async function SharedCrossChainPage(props: {
           const chainMetadata = await getChainMetadata(chain);
 
           const rpcRequest = getRpcClient({
-            client: serverContract.client,
             chain,
+            client: serverContract.client,
           });
           const code = await eth_getCode(rpcRequest, {
             address: props.contractAddress,
           });
 
           return {
+            chainId: chain.id,
             id: chain.id,
             network: chainMetadata.name,
-            chainId: chain.id,
             status:
               code === originalCode
                 ? ("DEPLOYED" as const)
@@ -168,9 +168,9 @@ export async function SharedCrossChainPage(props: {
           };
         } catch {
           return {
+            chainId: chain.id,
             id: chain.id,
             network: "",
-            chainId: chain.id,
             status: "NOT_DEPLOYED" as const,
           };
         }
@@ -251,9 +251,9 @@ export async function SharedCrossChainPage(props: {
             (
               await fetchPublishedContractsFromDeploy({
                 contract: getContract({
+                  address: m,
                   chain: serverContract.chain,
                   client: serverContract.client,
-                  address: m,
                 }),
               })
             ).at(-1),
@@ -279,14 +279,14 @@ export async function SharedCrossChainPage(props: {
       </div>
       <div className="h-10" />
       <DataTable
+        coreContract={clientContract}
         coreMetadata={coreMetadata}
-        modulesMetadata={modulesMetadata}
+        data={chainsDeployedOn}
+        initCode={initCode}
         initializeData={initializeData}
         inputSalt={inputSalt}
-        data={chainsDeployedOn}
-        coreContract={clientContract}
-        initCode={initCode}
         isDirectDeploy={isDirectDeploy}
+        modulesMetadata={modulesMetadata}
         projectMeta={props.projectMeta}
       />
     </>

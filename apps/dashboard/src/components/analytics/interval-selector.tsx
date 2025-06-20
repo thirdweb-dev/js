@@ -14,10 +14,10 @@ export function IntervalSelector(props: {
 }) {
   return (
     <Select
-      value={props.intervalType}
       onValueChange={(value: "day" | "week") => {
         props.setIntervalType(value);
       }}
+      value={props.intervalType}
     >
       <SelectTrigger
         className={cn("w-auto bg-card md:w-[120px]", props.className)}

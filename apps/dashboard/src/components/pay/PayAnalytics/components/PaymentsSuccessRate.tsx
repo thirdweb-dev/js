@@ -1,4 +1,6 @@
 "use client";
+import { useMemo, useState } from "react";
+import type { UniversalBridgeStats } from "types/analytics";
 import {
   Select,
   SelectContent,
@@ -9,16 +11,11 @@ import {
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
-import { useMemo } from "react";
-import type { UniversalBridgeStats } from "types/analytics";
 import { CardHeading } from "./common";
 
 type PayVolumeType = "all" | "crypto" | "fiat";
 
-export function PaymentsSuccessRate(props: {
-  data: UniversalBridgeStats[];
-}) {
+export function PaymentsSuccessRate(props: { data: UniversalBridgeStats[] }) {
   const [type, setType] = useState<PayVolumeType>("all");
   const isEmpty = useMemo(() => {
     return props.data.length === 0 || props.data.every((x) => x.count === 0);
@@ -41,17 +38,17 @@ export function PaymentsSuccessRate(props: {
     const total = succeeded + failed;
     if (total === 0) {
       return {
-        succeeded: 0,
         failed: 0,
         rate: 0,
+        succeeded: 0,
         total: 0,
       };
     }
     const rate = (succeeded / (succeeded + failed)) * 100;
     return {
-      succeeded,
       failed,
       rate,
+      succeeded,
       total,
     };
   }, [props.data, type]);
@@ -61,10 +58,10 @@ export function PaymentsSuccessRate(props: {
       <div className="flex items-center justify-between gap-2">
         <CardHeading> Payments </CardHeading>
         <Select
-          value={type}
           onValueChange={(value: PayVolumeType) => {
             setType(value);
           }}
+          value={type}
         >
           <SelectTrigger className="w-auto bg-transparent">
             <SelectValue placeholder="Select" />
@@ -84,27 +81,27 @@ export function PaymentsSuccessRate(props: {
         ) : (
           <SkeletonContainer
             loadedData={graphData.rate}
-            skeletonData={50}
             render={(rate) => <Bar rate={rate} />}
+            skeletonData={50}
           />
         )}
 
         <div className="h-6" />
 
         <InfoRow
-          label="Succeeded"
-          type="success"
           amount={graphData.succeeded}
           isEmpty={isEmpty}
+          label="Succeeded"
+          type="success"
         />
 
         <div className="h-3" />
 
         <InfoRow
-          label="Failed"
-          type="failure"
           amount={graphData.failed}
           isEmpty={isEmpty}
+          label="Failed"
+          type="failure"
         />
       </div>
     </div>
@@ -145,10 +142,10 @@ function InfoRow(props: {
         <div
           className={cn("size-5 rounded-lg", {
             "bg-accent": props.amount === undefined,
-            "bg-success-text":
-              props.amount !== undefined && props.type === "success",
             "bg-destructive-text":
               props.amount !== undefined && props.type === "failure",
+            "bg-success-text":
+              props.amount !== undefined && props.type === "success",
           })}
         />
         <p className="text-base text-muted-foreground">{props.label}</p>
@@ -161,10 +158,10 @@ function InfoRow(props: {
               ? props.amount.toLocaleString()
               : undefined
         }
-        skeletonData="50"
         render={(v) => {
           return <p className="font-medium text-base">{v}</p>;
         }}
+        skeletonData="50"
       />
     </div>
   );

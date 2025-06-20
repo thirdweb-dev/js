@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "RulesEngineOverriden" event.
@@ -36,7 +36,7 @@ export function rulesEngineOverridenEvent(
   filters: RulesEngineOverridenEventFilters = {},
 ) {
   return prepareEvent({
-    signature: "event RulesEngineOverriden(address indexed newRulesEngine)",
     filters,
+    signature: "event RulesEngineOverriden(address indexed newRulesEngine)",
   });
 }

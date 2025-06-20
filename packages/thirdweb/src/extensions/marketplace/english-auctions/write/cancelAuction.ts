@@ -36,11 +36,10 @@ export function cancelAuction(
   options: BaseTransactionOptions<CancelAuctionParams>,
 ) {
   return CancelAuction.cancelAuction({
-    contract: options.contract,
     asyncParams: async () => {
       const winningBid = await getWinningBid({
-        contract: options.contract,
         auctionId: options.auctionId,
+        contract: options.contract,
       });
       if (winningBid) {
         throw new Error("Cannot cancel an auction with an existing bid");
@@ -52,6 +51,7 @@ export function cancelAuction(
         },
       };
     },
+    contract: options.contract,
   });
 }
 

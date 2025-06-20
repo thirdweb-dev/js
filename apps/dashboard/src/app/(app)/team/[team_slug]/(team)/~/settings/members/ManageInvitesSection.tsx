@@ -1,8 +1,13 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { EllipsisIcon, MailIcon } from "lucide-react";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import type { Team } from "@/api/team";
 import type { TeamInvite } from "@/api/team-invites";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,13 +23,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { BASE_URL } from "@/constants/env-utils";
-import { useMutation } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { EllipsisIcon, MailIcon } from "lucide-react";
-import { useMemo, useState } from "react";
-import { toast } from "sonner";
-import type { ThirdwebClient } from "thirdweb";
 import {
   FiltersSection,
   type MemberSortId,
@@ -94,12 +94,12 @@ export function ManageInvitesSection(props: {
         // don't use invitesToShow here
         disabled={props.teamInvites.length === 0}
         role={role}
+        searchPlaceholder="Search Email"
+        searchTerm={searchTerm}
         setRole={setRole}
+        setSearchTerm={setSearchTerm}
         setSortBy={setSortBy}
         sortBy={sortBy}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        searchPlaceholder="Search Email"
       />
 
       <div className="h-3" />
@@ -114,18 +114,18 @@ export function ManageInvitesSection(props: {
             {invitesToShow.map((invite) => {
               return (
                 <li
-                  key={invite.id}
                   className="border-border border-b last:border-b-0"
+                  key={invite.id}
                 >
                   <InviteRow
-                    teamSlug={props.team.slug}
-                    invite={invite}
                     client={props.client}
-                    userHasEditPermission={props.userHasEditPermission}
                     deleteInvite={props.deleteInvite}
+                    invite={invite}
                     onInviteDeleted={() => {
                       setDeletedInviteIds([...deletedInviteIds, invite.id]);
                     }}
+                    teamSlug={props.team.slug}
+                    userHasEditPermission={props.userHasEditPermission}
                   />
                 </li>
               );
@@ -201,11 +201,11 @@ function InviteRow(props: {
         {/* Options */}
         {props.userHasEditPermission && (
           <ManageInviteButton
-            teamSlug={props.teamSlug}
-            invite={props.invite}
-            userHasEditPermission={props.userHasEditPermission}
             deleteInvite={props.deleteInvite}
+            invite={props.invite}
             onInviteDeleted={props.onInviteDeleted}
+            teamSlug={props.teamSlug}
+            userHasEditPermission={props.userHasEditPermission}
           />
         )}
       </div>
@@ -231,10 +231,10 @@ function ManageInviteButton(props: {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            size="icon"
-            variant="ghost"
             className="!h-auto !w-auto p-1.5"
             disabled={!props.userHasEditPermission}
+            size="icon"
+            variant="ghost"
           >
             <EllipsisIcon className="size-4 text-muted-foreground" />
           </Button>
@@ -261,7 +261,7 @@ function ManageInviteButton(props: {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+      <Dialog onOpenChange={setShowDeleteDialog} open={showDeleteDialog}>
         <DialogContent className="overflow-hidden p-0">
           <DialogHeader className="p-6">
             <DialogTitle className="text-xl">Delete Invite</DialogTitle>
@@ -274,26 +274,26 @@ function ManageInviteButton(props: {
           </DialogHeader>
           <div className="flex justify-end gap-3 border-t bg-card p-6">
             <Button
-              variant="outline"
               onClick={() => setShowDeleteDialog(false)}
+              variant="outline"
             >
               Cancel
             </Button>
             <Button
-              type="button"
               className="gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90"
               disabled={deleteMutation.isPending}
               onClick={() => {
                 const promise = deleteMutation.mutateAsync();
                 toast.promise(promise, {
-                  success: "Invite deleted successfully",
                   error: "Failed to delete invite",
+                  success: "Invite deleted successfully",
                 });
                 promise.then(() => {
                   setShowDeleteDialog(false);
                   props.onInviteDeleted();
                 });
               }}
+              type="button"
             >
               {deleteMutation.isPending && <Spinner className="size-4" />}
               Delete Invite

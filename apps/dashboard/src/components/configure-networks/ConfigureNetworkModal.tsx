@@ -1,8 +1,8 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import type { ThirdwebClient } from "thirdweb";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import {
-  type StoredChain,
   addRecentlyUsedChainId,
+  type StoredChain,
 } from "../../stores/chainStores";
 import { ConfigureNetworks } from "./ConfigureNetworks";
 
@@ -22,17 +22,17 @@ export const ConfigureNetworkModal: React.FC<ConfigureNetworkModalProps> = (
   };
 
   return (
-    <Dialog open={props.open} onOpenChange={props.onOpenChange}>
+    <Dialog onOpenChange={props.onOpenChange} open={props.open}>
       <DialogContent className="max-w-[480px] p-0">
         <ConfigureNetworks
+          client={props.client}
+          editChain={props.editChain}
           onNetworkAdded={(chain) => {
             addRecentlyUsedChainId(chain.chainId);
             props.onNetworkAdded?.(chain);
             onModalClose();
           }}
           onNetworkConfigured={onModalClose}
-          editChain={props.editChain}
-          client={props.client}
         />
       </DialogContent>
     </Dialog>

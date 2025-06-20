@@ -105,22 +105,22 @@ export class EnclaveWallet implements IWebWallet {
       phoneNumber: userStatus.linkedAccounts.find(
         (account) => account.details.phone !== undefined,
       )?.details.phone,
-      userWalletId: userStatus.id || "",
       recoveryShareManagement: "ENCLAVE",
+      userWalletId: userStatus.id || "",
     };
 
     if (!wallet) {
       return {
-        status: "Logged In, Wallet Uninitialized",
         authDetails,
+        status: "Logged In, Wallet Uninitialized",
       };
     }
 
     return {
+      account: await this.getAccount(),
+      authDetails,
       status: "Logged In, Wallet Initialized",
       walletAddress: wallet.address,
-      authDetails,
-      account: await this.getAccount(),
     };
   }
 
@@ -136,13 +136,12 @@ export class EnclaveWallet implements IWebWallet {
 
     const _signTransaction = async (tx: SendTransactionOption) => {
       const rpcRequest = getRpcClient({
-        client,
         chain: getCachedChain(tx.chainId),
+        client,
       });
       const transaction: Record<string, unknown> = {
-        to: tx.to ? getAddress(tx.to) : undefined,
+        chainId: toHex(tx.chainId),
         data: tx.data,
-        value: hexlify(tx.value),
         gas: hexlify(tx.gas),
         nonce:
           hexlify(tx.nonce) ||
@@ -156,7 +155,8 @@ export class EnclaveWallet implements IWebWallet {
               }),
             ),
           ),
-        chainId: toHex(tx.chainId),
+        to: tx.to ? getAddress(tx.to) : undefined,
+        value: hexlify(tx.value),
       };
 
       if (tx.authorizationList && tx.authorizationList.length > 0) {
@@ -175,26 +175,16 @@ export class EnclaveWallet implements IWebWallet {
 
       return signEnclaveTransaction({
         client,
-        storage,
         payload: transaction,
+        storage,
       });
     };
     return {
       address: getAddress(address),
-      async signTransaction(tx) {
-        if (!tx.chainId) {
-          throw new Error("chainId required in tx to sign");
-        }
-
-        return _signTransaction({
-          chainId: tx.chainId,
-          ...tx,
-        });
-      },
       async sendTransaction(tx) {
         const rpcRequest = getRpcClient({
-          client,
           chain: getCachedChain(tx.chainId),
+          client,
         });
         const signedTx = await _signTransaction(tx);
 
@@ -204,50 +194,17 @@ export class EnclaveWallet implements IWebWallet {
         );
 
         trackTransaction({
-          client,
-          ecosystem,
           chainId: tx.chainId,
+          client,
+          contractAddress: tx.to ?? undefined,
+          ecosystem,
+          gasPrice: tx.gasPrice,
+          transactionHash,
           walletAddress: address,
           walletType: "inApp",
-          transactionHash,
-          contractAddress: tx.to ?? undefined,
-          gasPrice: tx.gasPrice,
         });
 
         return { transactionHash };
-      },
-      async signMessage({ message, originalMessage, chainId }) {
-        const messagePayload = (() => {
-          if (typeof message === "string") {
-            return { message, isRaw: false, originalMessage, chainId };
-          }
-          return {
-            message:
-              typeof message.raw === "string"
-                ? message.raw
-                : bytesToHex(message.raw),
-            isRaw: true,
-            originalMessage,
-            chainId,
-          };
-        })();
-
-        const { signature } = await signEnclaveMessage({
-          client,
-          payload: messagePayload,
-          storage,
-        });
-        return signature as Hex;
-      },
-      async signTypedData(_typedData) {
-        const parsedTypedData = parseTypedData(_typedData);
-        const { signature } = await signEnclaveTypedData({
-          client,
-          payload: parsedTypedData,
-          storage,
-        });
-
-        return signature as Hex;
       },
       async signAuthorization(payload) {
         const authorization = await signEnclaveAuthorization({
@@ -263,6 +220,49 @@ export class EnclaveWallet implements IWebWallet {
           s: BigInt(authorization.s),
           yParity: Number.parseInt(authorization.yParity),
         };
+      },
+      async signMessage({ message, originalMessage, chainId }) {
+        const messagePayload = (() => {
+          if (typeof message === "string") {
+            return { chainId, isRaw: false, message, originalMessage };
+          }
+          return {
+            chainId,
+            isRaw: true,
+            message:
+              typeof message.raw === "string"
+                ? message.raw
+                : bytesToHex(message.raw),
+            originalMessage,
+          };
+        })();
+
+        const { signature } = await signEnclaveMessage({
+          client,
+          payload: messagePayload,
+          storage,
+        });
+        return signature as Hex;
+      },
+      async signTransaction(tx) {
+        if (!tx.chainId) {
+          throw new Error("chainId required in tx to sign");
+        }
+
+        return _signTransaction({
+          chainId: tx.chainId,
+          ...tx,
+        });
+      },
+      async signTypedData(_typedData) {
+        const parsedTypedData = parseTypedData(_typedData);
+        const { signature } = await signEnclaveTypedData({
+          client,
+          payload: parsedTypedData,
+          storage,
+        });
+
+        return signature as Hex;
       },
     };
   }

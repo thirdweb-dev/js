@@ -1,3 +1,4 @@
+import { CircleAlertIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -5,7 +6,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { CircleAlertIcon } from "lucide-react";
 
 export const metadata = {
   robots: "noindex, nofollow",
@@ -105,10 +105,10 @@ function Colors() {
       <div className="my-10" />
 
       <div className="flex flex-col gap-6">
-        <AlertPreview variant="default" showDescription />
-        <AlertPreview variant="destructive" showDescription />
-        <AlertPreview variant="info" showDescription />
-        <AlertPreview variant="warning" showDescription />
+        <AlertPreview showDescription variant="default" />
+        <AlertPreview showDescription variant="destructive" />
+        <AlertPreview showDescription variant="info" />
+        <AlertPreview showDescription variant="warning" />
       </div>
 
       <div className="my-14" />
@@ -135,7 +135,7 @@ function Colors() {
 
         <div>
           <Label className="mb-2 block">Disabled</Label>
-          <Input value="some value" disabled />
+          <Input disabled value="some value" />
         </div>
       </div>
 
@@ -151,25 +151,23 @@ function Colors() {
   );
 }
 
-function ButtonsPreview(props: {
-  disabled?: boolean;
-}) {
+function ButtonsPreview(props: { disabled?: boolean }) {
   return (
     <div className="flex items-center gap-4">
       <Button disabled={props.disabled}> Default </Button>
-      <Button variant="outline" disabled={props.disabled}>
+      <Button disabled={props.disabled} variant="outline">
         Outline
       </Button>
-      <Button variant="secondary" disabled={props.disabled}>
+      <Button disabled={props.disabled} variant="secondary">
         Secondary
       </Button>
-      <Button variant="destructive" disabled={props.disabled}>
+      <Button disabled={props.disabled} variant="destructive">
         Destructive
       </Button>
-      <Button variant="primary" disabled={props.disabled}>
+      <Button disabled={props.disabled} variant="primary">
         Primary
       </Button>
-      <Button variant="ghost" disabled={props.disabled}>
+      <Button disabled={props.disabled} variant="ghost">
         Ghost
       </Button>
     </div>

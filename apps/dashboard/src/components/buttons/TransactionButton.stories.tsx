@@ -1,3 +1,8 @@
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { useMutation } from "@tanstack/react-query";
+import { StarIcon } from "lucide-react";
+import { useId, useState } from "react";
+import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import {
   Select,
@@ -8,22 +13,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import type { Meta, StoryObj } from "@storybook/nextjs";
-import { useMutation } from "@tanstack/react-query";
-import { StarIcon } from "lucide-react";
-import { useState } from "react";
-import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { BadgeContainer, storybookThirdwebClient } from "../../stories/utils";
 import { TransactionButton } from "./TransactionButton";
 
 const meta = {
-  title: "blocks/TransactionButton",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "blocks/TransactionButton",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -37,22 +37,24 @@ function Story() {
   const [chainId, setChainId] = useState(137);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const elementId = useId();
+
   return (
     <ThirdwebProvider>
       <div className="container flex max-w-6xl flex-col gap-10 py-10">
         <FormFieldSetup
-          htmlFor="chain-id"
-          label="Transaction Chain Id"
-          isRequired={false}
           errorMessage={undefined}
+          htmlFor={elementId}
+          isRequired={false}
+          label="Transaction Chain Id"
         >
           <Select
-            value={`${chainId}`}
             onValueChange={(v) => {
               setChainId(Number.parseInt(v));
             }}
+            value={`${chainId}`}
           >
-            <SelectTrigger className="w-[180px]" id="chain-id">
+            <SelectTrigger className="w-[180px]" id={elementId}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -82,24 +84,24 @@ function Story() {
         </div>
 
         <Variant
+          chainId={chainId}
+          isLoggedIn={isLoggedIn}
           label="No Transactions"
           transactionCount={undefined}
-          chainId={chainId}
-          isLoggedIn={isLoggedIn}
         />
 
         <Variant
+          chainId={chainId}
+          isLoggedIn={isLoggedIn}
           label="1 Transaction"
           transactionCount={1}
-          chainId={chainId}
-          isLoggedIn={isLoggedIn}
         />
 
         <Variant
+          chainId={chainId}
+          isLoggedIn={isLoggedIn}
           label="1 Transaction + children"
           transactionCount={1}
-          chainId={chainId}
-          isLoggedIn={isLoggedIn}
         >
           <div className="flex items-center gap-2">
             <StarIcon className="size-4" />
@@ -108,10 +110,10 @@ function Story() {
         </Variant>
 
         <Variant
+          chainId={chainId}
+          isLoggedIn={isLoggedIn}
           label="No Transaction count + children"
           transactionCount={undefined}
-          chainId={chainId}
-          isLoggedIn={isLoggedIn}
         >
           <div className="flex items-center gap-2">
             <StarIcon className="size-4" />
@@ -120,50 +122,50 @@ function Story() {
         </Variant>
 
         <Variant
+          chainId={chainId}
+          isLoggedIn={isLoggedIn}
           label="10 Transaction"
           transactionCount={10}
-          chainId={chainId}
-          isLoggedIn={isLoggedIn}
         />
 
         <Variant
+          chainId={chainId}
+          isLoggedIn={isLoggedIn}
           label="Destructive Variant"
           transactionCount={1}
-          chainId={chainId}
           variant="destructive"
-          isLoggedIn={isLoggedIn}
         />
 
         <Variant
+          chainId={chainId}
+          isLoggedIn={isLoggedIn}
           label="Destructive Variant, No Tx count"
           transactionCount={undefined}
-          chainId={chainId}
           variant="destructive"
-          isLoggedIn={isLoggedIn}
         />
 
         <Variant
-          label="class applied"
-          transactionCount={undefined}
           chainId={chainId}
           className="min-w-[300px]"
           isLoggedIn={isLoggedIn}
+          label="class applied"
+          transactionCount={undefined}
         />
 
         <Variant
-          label="size - sm"
-          transactionCount={undefined}
           chainId={chainId}
-          size="sm"
           isLoggedIn={isLoggedIn}
+          label="size - sm"
+          size="sm"
+          transactionCount={undefined}
         />
 
         <Variant
-          label="disabled"
-          transactionCount={undefined}
           chainId={chainId}
           disabled
           isLoggedIn={isLoggedIn}
+          label="disabled"
+          transactionCount={undefined}
         />
       </div>
     </ThirdwebProvider>
@@ -190,18 +192,18 @@ function Variant(props: {
   return (
     <BadgeContainer label={props.label}>
       <TransactionButton
+        className={props.className}
         client={storybookThirdwebClient}
         disabled={props.disabled}
-        className={props.className}
-        variant={props.variant}
+        isLoggedIn={props.isLoggedIn}
         isPending={sendTx.isPending}
         onClick={() => {
           sendTx.mutate();
         }}
+        size={props.size}
         transactionCount={props.transactionCount}
         txChainID={props.chainId}
-        size={props.size}
-        isLoggedIn={props.isLoggedIn}
+        variant={props.variant}
       >
         {props.children || "Execute Tx"}
       </TransactionButton>

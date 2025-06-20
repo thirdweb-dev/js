@@ -95,8 +95,8 @@ export abstract class AbstractLogin<
     email,
   }: LoginQuerierTypes["sendThirdwebEmailLoginOtp"]): Promise<SendEmailOtpReturnType> {
     const result = await this.LoginQuerier.call<SendEmailOtpReturnType>({
-      procedureName: "sendThirdwebEmailLoginOtp",
       params: { email },
+      procedureName: "sendThirdwebEmailLoginOtp",
     });
     return result;
   }
@@ -109,8 +109,8 @@ export abstract class AbstractLogin<
     phoneNumber,
   }: LoginQuerierTypes["sendThirdwebSmsLoginOtp"]): Promise<SendEmailOtpReturnType> {
     const result = await this.LoginQuerier.call<SendEmailOtpReturnType>({
-      procedureName: "sendThirdwebSmsLoginOtp",
       params: { phoneNumber },
+      procedureName: "sendThirdwebSmsLoginOtp",
     });
     return result;
   }

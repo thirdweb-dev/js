@@ -1,8 +1,8 @@
-import { cn } from "@/lib/utils";
 import { EmptyAccountAbstractionChartContent } from "components/smart-wallets/AccountAbstractionAnalytics/SponsoredTransactionsChartCard";
 import { defineChain } from "thirdweb";
 import { type ChainMetadata, getChainMetadata } from "thirdweb/chains";
 import type { TransactionStats } from "types/analytics";
+import { cn } from "@/lib/utils";
 import { BarChart } from "../../../components/Analytics/BarChart";
 import { CombinedBarChartCard } from "../../../components/Analytics/CombinedBarChartCard";
 
@@ -73,16 +73,16 @@ export async function TransactionsChartCardUI({
 
   const chartConfig = {
     mainnet: {
-      label: "Mainnet Chains",
       color: "hsl(var(--chart-1))",
+      label: "Mainnet Chains",
     },
     testnet: {
-      label: "Testnet Chains",
       color: "hsl(var(--chart-2))",
+      label: "Testnet Chains",
     },
     total: {
-      label: "All Chains",
       color: "hsl(var(--chart-3))",
+      label: "All Chains",
     },
   };
 
@@ -95,9 +95,9 @@ export async function TransactionsChartCardUI({
         </h3>
         <p className="text-muted-foreground"> {description}</p>
         <BarChart
+          activeKey="mainnet"
           chartConfig={chartConfig}
           data={filteredData}
-          activeKey="mainnet"
           emptyChartContent={<EmptyAccountAbstractionChartContent />}
         />
       </div>
@@ -106,17 +106,17 @@ export async function TransactionsChartCardUI({
 
   return (
     <CombinedBarChartCard
-      title={title || "Transactions"}
-      chartConfig={chartConfig}
-      data={timeSeriesData}
       activeChart={
         (searchParams?.client_transactions as keyof typeof chartConfig) ??
         "mainnet"
       }
-      queryKey="client_transactions"
-      existingQueryParams={searchParams}
       aggregateFn={(_data, key) => processedAggregatedData[key]}
+      chartConfig={chartConfig}
       className={className}
+      data={timeSeriesData}
+      existingQueryParams={searchParams}
+      queryKey="client_transactions"
+      title={title || "Transactions"}
       // Get the trend from the last two COMPLETE periods
       trendFn={(data, key) =>
         data.filter((d) => (d[key] as number) > 0).length >= 2

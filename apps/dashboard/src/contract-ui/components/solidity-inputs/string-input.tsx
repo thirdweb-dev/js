@@ -1,9 +1,9 @@
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import { useDashboardStorageUpload } from "@3rdweb-sdk/react/hooks/useDashboardStorageUpload";
 import { useQueryClient } from "@tanstack/react-query";
 import { PINNED_FILES_QUERY_KEY_ROOT } from "app/(app)/team/[team_slug]/(team)/~/usage/storage/your-files";
 import { IpfsUploadButton } from "components/ipfs-upload/button";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import type { SolidityInputWithTypeProps } from ".";
 
 export const SolidityStringInput: React.FC<SolidityInputWithTypeProps> = ({
@@ -36,12 +36,12 @@ export const SolidityStringInput: React.FC<SolidityInputWithTypeProps> = ({
   return (
     <div className="relative flex">
       <Input
-        placeholder="string"
-        disabled={storageUpload.isPending}
         className={cn("pr-[90px] md:pr-[160px]", restOfInputProps.className)}
+        disabled={storageUpload.isPending}
+        placeholder="string"
         {...restOfInputProps}
-        value={form.watch(inputName)}
         onChange={handleChange}
+        value={form.watch(inputName)}
       />
       {showButton && (
         <div className="absolute inset-y-0 right-0 flex items-center pr-1">
@@ -55,7 +55,6 @@ export const SolidityStringInput: React.FC<SolidityInputWithTypeProps> = ({
                   // 2. Make sure there's a trailing slash at the end
                   // Otherwise the token URI will become `${uri}${tokenId}` when it should be `${uri}/${tokenId}`
                   if (!uri.endsWith("/")) {
-                    // biome-ignore lint/style/noParameterAssign: FIXME
                     uri += "/";
                   }
                 }

@@ -33,14 +33,14 @@ export function inAppWalletGetCapabilities(args: {
 
   return {
     [chain.id]: {
-      paymasterService: {
-        supported: sponsorGas,
-      },
       atomic: {
         status:
           account?.sendBatchTransaction !== undefined
             ? "supported"
             : "unsupported",
+      },
+      paymasterService: {
+        supported: sponsorGas,
       },
     },
   };

@@ -1,16 +1,14 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
-import { useClaimConditionsFormContext } from "..";
 import { PriceInput } from "../../price-input";
+import { useClaimConditionsFormContext } from "..";
 import { CustomFormControl } from "../common";
 
 /**
  * Allows the user to select how much they want to charge to claim each NFT
  */
-export const ClaimPriceInput = (props: {
-  contractChainId: number;
-}) => {
+export const ClaimPriceInput = (props: { contractChainId: number }) => {
   const {
     formDisabled,
     isErc20,
@@ -28,32 +26,32 @@ export const ClaimPriceInput = (props: {
   return (
     <CustomFormControl
       disabled={formDisabled}
-      label={`How much do you want to charge to claim each ${
-        isErc20 ? "token" : "NFT"
-      }?`}
       error={
         form.getFieldState(`phases.${phaseIndex}.price`, form.formState).error
       }
+      label={`How much do you want to charge to claim each ${
+        isErc20 ? "token" : "NFT"
+      }?`}
     >
-      <Flex gap={2} flexDir={{ base: "column", md: "row" }}>
-        <Box w={{ base: "100%", md: "50%" }} minW="70px">
+      <Flex flexDir={{ base: "column", md: "row" }} gap={2}>
+        <Box minW="70px" w={{ base: "100%", md: "50%" }}>
           <PriceInput
-            w="full"
-            value={field.price?.toString() || ""}
             onChange={(val) => form.setValue(`phases.${phaseIndex}.price`, val)}
+            value={field.price?.toString() || ""}
+            w="full"
           />
         </Box>
         <Box w={{ base: "100%", md: isColumn ? "50%" : "100%" }}>
           <CurrencySelector
             contractChainId={props.contractChainId}
             isDisabled={formDisabled}
-            value={field?.currencyAddress || NATIVE_TOKEN_ADDRESS}
             onChange={(e) =>
               form.setValue(
                 `phases.${phaseIndex}.currencyAddress`,
                 e.target.value,
               )
             }
+            value={field?.currencyAddress || NATIVE_TOKEN_ADDRESS}
           />
         </Box>
       </Flex>

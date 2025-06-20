@@ -1,5 +1,3 @@
-import { WalletAddress } from "@/components/blocks/wallet-address";
-import { Badge } from "@/components/ui/badge";
 import {
   type EngineAdmin,
   useEngineGrantPermissions,
@@ -26,6 +24,8 @@ import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { Button, FormLabel, Text } from "tw-components";
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Badge } from "@/components/ui/badge";
 
 interface AdminsTableProps {
   instanceUrl: string;
@@ -53,14 +53,13 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
   const columns = useMemo(() => {
     return [
       columnHelper.accessor("walletAddress", {
-        header: "Address",
         cell: (cell) => {
           const address = cell.getValue();
           return <WalletAddress address={address} client={client} />;
         },
+        header: "Address",
       }),
       columnHelper.accessor("label", {
-        header: "Label",
         cell: (cell) => {
           return (
             <Text isTruncated maxW={300}>
@@ -68,12 +67,13 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
             </Text>
           );
         },
+        header: "Label",
       }),
       columnHelper.accessor("permissions", {
-        header: "Role",
         cell: (cell) => {
           return <Badge variant="default">{cell.getValue()}</Badge>;
         },
+        header: "Role",
       }),
     ];
   }, [client]);
@@ -81,46 +81,46 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
   return (
     <>
       <TWTable
-        title="admins"
-        data={admins}
         columns={columns}
-        isPending={isPending}
+        data={admins}
         isFetched={isFetched}
+        isPending={isPending}
         onMenuClick={[
           {
             icon: <PencilIcon className="size-4" />,
-            text: "Edit",
             onClick: (admin) => {
               setSelectedAdmin(admin);
               editDisclosure.onOpen();
             },
+            text: "Edit",
           },
           {
             icon: <Trash2Icon className="size-4" />,
-            text: "Remove",
+            isDestructive: true,
             onClick: (admin) => {
               setSelectedAdmin(admin);
               removeDisclosure.onOpen();
             },
-            isDestructive: true,
+            text: "Remove",
           },
         ]}
+        title="admins"
       />
 
       {selectedAdmin && editDisclosure.isOpen && (
         <EditModal
           admin={selectedAdmin}
+          authToken={authToken}
           disclosure={editDisclosure}
           instanceUrl={instanceUrl}
-          authToken={authToken}
         />
       )}
       {selectedAdmin && removeDisclosure.isOpen && (
         <RemoveModal
           admin={selectedAdmin}
+          authToken={authToken}
           disclosure={removeDisclosure}
           instanceUrl={instanceUrl}
-          authToken={authToken}
         />
       )}
     </>
@@ -139,8 +139,8 @@ const EditModal = ({
   authToken: string;
 }) => {
   const { mutate: updatePermissions } = useEngineGrantPermissions({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
 
   const { onSuccess, onError } = useTxNotifications(
@@ -153,25 +153,25 @@ const EditModal = ({
   const onClick = () => {
     updatePermissions(
       {
-        walletAddress: admin.walletAddress,
-        permissions: admin.permissions,
         label,
+        permissions: admin.permissions,
+        walletAddress: admin.walletAddress,
       },
       {
-        onSuccess: () => {
-          onSuccess();
-          disclosure.onClose();
-        },
         onError: (error) => {
           onError(error);
           console.error(error);
+        },
+        onSuccess: () => {
+          onSuccess();
+          disclosure.onClose();
         },
       },
     );
   };
 
   return (
-    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
       <ModalOverlay />
       <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Update Admin</ModalHeader>
@@ -185,20 +185,20 @@ const EditModal = ({
             <FormControl>
               <FormLabel>Label</FormLabel>
               <Input
-                type="text"
-                value={label}
                 onChange={(e) => setLabel(e.target.value)}
                 placeholder="Enter a description for this admin"
+                type="text"
+                value={label}
               />
             </FormControl>
           </div>
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>
-          <Button type="button" onClick={disclosure.onClose} variant="ghost">
+          <Button onClick={disclosure.onClose} type="button" variant="ghost">
             Cancel
           </Button>
-          <Button type="submit" colorScheme="blue" onClick={onClick}>
+          <Button colorScheme="blue" onClick={onClick} type="submit">
             Save
           </Button>
         </ModalFooter>
@@ -219,8 +219,8 @@ const RemoveModal = ({
   authToken: string;
 }) => {
   const { mutate: revokePermissions } = useEngineRevokePermissions({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
 
   const { onSuccess, onError } = useTxNotifications(
@@ -234,20 +234,20 @@ const RemoveModal = ({
         walletAddress: admin.walletAddress,
       },
       {
-        onSuccess: () => {
-          onSuccess();
-          disclosure.onClose();
-        },
         onError: (error) => {
           onError(error);
           console.error(error);
+        },
+        onSuccess: () => {
+          onSuccess();
+          disclosure.onClose();
         },
       },
     );
   };
 
   return (
-    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
       <ModalOverlay />
       <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Remove Admin</ModalHeader>
@@ -267,10 +267,10 @@ const RemoveModal = ({
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>
-          <Button type="button" onClick={disclosure.onClose} variant="ghost">
+          <Button onClick={disclosure.onClose} type="button" variant="ghost">
             Cancel
           </Button>
-          <Button type="submit" colorScheme="red" onClick={onClick}>
+          <Button colorScheme="red" onClick={onClick} type="submit">
             Remove
           </Button>
         </ModalFooter>

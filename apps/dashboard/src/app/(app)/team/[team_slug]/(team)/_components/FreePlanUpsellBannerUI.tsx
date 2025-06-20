@@ -1,8 +1,8 @@
 "use client";
 
+import { ArrowRightIcon, RocketIcon } from "lucide-react";
 import type { Team } from "@/api/team";
 import { UpsellBannerCard } from "@/components/blocks/UpsellBannerCard";
-import { ArrowRightIcon, RocketIcon } from "lucide-react";
 
 /**
  * Banner shown to teams on the free plan encouraging them to upgrade.
@@ -15,19 +15,19 @@ export function FreePlanUpsellBannerUI(props: {
 }) {
   return (
     <UpsellBannerCard
-      title="Unlock more with thirdweb"
-      description="Upgrade to increase limits and access advanced features."
+      accentColor="green"
       cta={{
-        text: "View plans",
         icon: <ArrowRightIcon className="size-4" />,
         link: `/team/${props.teamSlug}/~/settings/billing?showPlans=true&highlight=${
           props.highlightPlan || "growth"
         }`,
+        text: "View plans",
       }}
+      description="Upgrade to increase limits and access advanced features."
+      icon={<RocketIcon className="size-5" />}
+      title="Unlock more with thirdweb"
       trackingCategory="billingBanner"
       trackingLabel="freePlan_viewPlans"
-      icon={<RocketIcon className="size-5" />}
-      accentColor="green"
     />
   );
 }

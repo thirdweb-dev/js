@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "network.over",
-  name: "OverFlex",
-  homepage: "https://over.network/overflex",
-  image_id: "ac442ec8-206d-4885-41dc-005aa94bc500",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/overwallet-for-over-protocol/id6447250892",
     android:
       "https://play.google.com/store/apps/details?id=com.superblock.overmobile",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/overwallet-for-over-protocol/id6447250892",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "overflex://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://over.network/overflex",
+  id: "network.over",
+  image_id: "ac442ec8-206d-4885-41dc-005aa94bc500",
+  mobile: {
+    native: "overflex://",
+    universal: null,
+  },
+  name: "OverFlex",
+  rdns: null,
 } as const;

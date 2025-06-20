@@ -1,5 +1,14 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { FileInput } from "components/shared/FileInput";
+import { ArrowRightIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
+import { useDebounce } from "use-debounce";
+import { z } from "zod";
 import type { Team } from "@/api/team";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,16 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { FileInput } from "components/shared/FileInput";
-import { ArrowRightIcon } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import type { ThirdwebClient } from "thirdweb";
-import { useDebounce } from "use-debounce";
-import { z } from "zod";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   maxTeamNameLength,
   maxTeamSlugLength,
@@ -35,9 +35,9 @@ type TeamData = {
 };
 
 const formSchema = z.object({
+  image: z.instanceof(File).optional(),
   name: teamNameSchema,
   slug: teamSlugSchema,
-  image: z.instanceof(File).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -50,12 +50,12 @@ export function TeamInfoFormUI(props: {
   client: ThirdwebClient;
 }) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
     defaultValues: {
+      image: undefined,
       name: "",
       slug: "",
-      image: undefined,
     },
+    resolver: zodResolver(formSchema),
   });
 
   const [disableSlugSuggestion, setDisableSlugSuggestion] = useState(false);
@@ -65,7 +65,7 @@ export function TeamInfoFormUI(props: {
   const [debouncedName] = useDebounce(name, 500);
 
   const { data: suggestedSlug, isFetching: isCalculatingSlug } = useQuery({
-    queryKey: ["suggest-team-slug", debouncedName],
+    enabled: !!debouncedName && !disableSlugSuggestion,
     queryFn: async () => {
       for (let attempt = 0; attempt < 3; attempt++) {
         const computedSlug = computeSlug(name, attempt);
@@ -81,7 +81,7 @@ export function TeamInfoFormUI(props: {
 
       return null;
     },
-    enabled: !!debouncedName && !disableSlugSuggestion,
+    queryKey: ["suggest-team-slug", debouncedName],
     retry: false,
   });
 
@@ -101,11 +101,11 @@ export function TeamInfoFormUI(props: {
     suggestedSlug !== debouncedSlug;
 
   const { data: isSlugAvailable, isFetching: isCheckingSlug } = useQuery({
-    queryKey: ["checkTeamSlug", debouncedSlug],
+    enabled: shouldValidateSlug,
     queryFn: () => {
       return props.isTeamSlugAvailable(debouncedSlug);
     },
-    enabled: shouldValidateSlug,
+    queryKey: ["checkTeamSlug", debouncedSlug],
     retry: false,
   });
 
@@ -116,8 +116,8 @@ export function TeamInfoFormUI(props: {
     }
     if (!isSlugAvailable) {
       form.setError("slug", {
-        type: "manual",
         message: "This URL is already taken",
+        type: "manual",
       });
     } else {
       const isValidSlugError = form.formState.errors.slug?.type === "manual";
@@ -161,12 +161,12 @@ export function TeamInfoFormUI(props: {
                   <div className="h-3" />
                   <FormControl>
                     <FileInput
-                      client={props.client}
                       accept={{ "image/*": [] }}
-                      value={value}
-                      setValue={(file) => onChange(file)}
                       className="w-28 rounded-full bg-background"
+                      client={props.client}
                       disableHelperText
+                      setValue={(file) => onChange(file)}
+                      value={value}
                     />
                   </FormControl>
                   <div className="h-3" />
@@ -185,8 +185,8 @@ export function TeamInfoFormUI(props: {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Company Inc."
                       autoComplete="off"
+                      placeholder="Company Inc."
                       {...field}
                       maxLength={maxTeamNameLength}
                     />
@@ -215,13 +215,13 @@ export function TeamInfoFormUI(props: {
                       </div>
                       <Input
                         {...field}
+                        className="truncate border-0 font-mono"
+                        maxLength={maxTeamSlugLength}
                         onChange={(e) => {
                           setDisableSlugSuggestion(true);
                           field.onChange(e);
                         }}
-                        className="truncate border-0 font-mono"
                         placeholder="my-team"
-                        maxLength={maxTeamSlugLength}
                       />
                       {(isCheckingSlug || isCalculatingSlug) && (
                         <div className="-translate-y-1/2 fade-in-0 absolute top-1/2 right-3 duration-300">
@@ -240,7 +240,7 @@ export function TeamInfoFormUI(props: {
           </div>
 
           <div className="flex justify-end border-t p-4 lg:px-6">
-            <Button type="submit" className="gap-2" size="sm">
+            <Button className="gap-2" size="sm" type="submit">
               Continue
               {submit.isPending ? (
                 <Spinner className="size-4" />

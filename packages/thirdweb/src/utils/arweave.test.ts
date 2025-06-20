@@ -26,7 +26,7 @@ describe("resolveArweaveScheme", () => {
   it("should resolve when passing a custom gatewayUrl WITHOUT a trailing slash", () => {
     const gatewayUrl = "https://customArweave-gateway.com";
     const uri = "ar://...";
-    const url = resolveArweaveScheme({ uri, gatewayUrl });
+    const url = resolveArweaveScheme({ gatewayUrl, uri });
     expect(url).toMatchInlineSnapshot(
       `"https://customArweave-gateway.com/..."`,
     );
@@ -35,7 +35,7 @@ describe("resolveArweaveScheme", () => {
   it("should resolve when passing a custom gatewayUrl WITH a trailing slash", () => {
     const gatewayUrl = "https://customArweave-gateway.com/";
     const uri = "ar://...";
-    const url = resolveArweaveScheme({ uri, gatewayUrl });
+    const url = resolveArweaveScheme({ gatewayUrl, uri });
     expect(url).toMatchInlineSnapshot(
       `"https://customArweave-gateway.com/..."`,
     );

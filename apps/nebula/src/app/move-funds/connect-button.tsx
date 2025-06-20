@@ -1,10 +1,10 @@
 "use client";
 
-import { nebulaAAOptions } from "@/config/nebula-aa";
-import { getSDKTheme } from "@/config/sdk-component-theme";
 import { useTheme } from "next-themes";
 import { ConnectButton } from "thirdweb/react";
 import { inAppWallet } from "thirdweb/wallets";
+import { nebulaAAOptions } from "@/config/nebula-aa";
+import { getSDKTheme } from "@/config/sdk-component-theme";
 import { getClientDashboardThirdwebClient } from "./dashboard-client";
 
 // use dashboard client to allow users to connect to their original wallet and move funds to a different wallet
@@ -36,10 +36,8 @@ export function MoveFundsConnectButton(props: {
 
   return (
     <ConnectButton
-      wallets={loginOptions}
-      client={dashboardClient}
-      theme={getSDKTheme(theme === "light" ? "light" : "dark")}
       accountAbstraction={nebulaAAOptions}
+      client={dashboardClient}
       connectButton={{
         className: props.btnClassName,
         label: props.connectLabel,
@@ -47,6 +45,8 @@ export function MoveFundsConnectButton(props: {
       detailsButton={{
         className: props.btnClassName,
       }}
+      theme={getSDKTheme(theme === "light" ? "light" : "dark")}
+      wallets={loginOptions}
     />
   );
 }

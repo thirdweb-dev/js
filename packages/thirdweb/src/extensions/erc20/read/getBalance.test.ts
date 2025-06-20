@@ -7,8 +7,8 @@ import { getBalance } from "./getBalance.js";
 describe.runIf(process.env.TW_SECRET_KEY)("erc20.getBalance", () => {
   it("should return the getBalance result", async () => {
     const balance = await getBalance({
-      contract: USDT_CONTRACT,
       address: VITALIK_WALLET,
+      contract: USDT_CONTRACT,
     });
     expect(balance.displayValue).toBe("1544.900798");
     expect(balance.name).toBe("Tether USD");

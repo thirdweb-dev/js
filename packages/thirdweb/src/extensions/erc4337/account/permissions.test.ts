@@ -9,8 +9,8 @@ import {
 } from "../../../../test/src/test-wallets.js";
 import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import { getOrDeployInfraContract } from "../../../contract/deployment/utils/bootstrap.js";
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
@@ -35,24 +35,24 @@ describe.runIf(process.env.TW_SECRET_KEY)("Account Permissions", () => {
       account: TEST_ACCOUNT_A,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      contractId: "AccountFactory",
       constructorParams: {
         defaultAdmin: TEST_ACCOUNT_A.address,
         entrypoint: ENTRYPOINT_ADDRESS_v0_6,
       },
+      contractId: "AccountFactory",
     });
     const transaction = createAccount({
-      contract: accountFactoryContract,
       admin: TEST_ACCOUNT_A.address,
+      contract: accountFactoryContract,
       data: "0x",
     });
     const accountAddress = await simulateTransaction({
-      transaction,
       account: TEST_ACCOUNT_A,
+      transaction,
     });
     await sendAndConfirmTransaction({
-      transaction,
       account: TEST_ACCOUNT_A,
+      transaction,
     });
     accountContract = getContract({
       address: accountAddress,
@@ -67,12 +67,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("Account Permissions", () => {
     });
     expect(admins).toEqual([TEST_ACCOUNT_A.address]);
     let receipt = await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: addAdmin({
         account: TEST_ACCOUNT_A,
-        contract: accountContract,
         adminAddress: TEST_ACCOUNT_B.address,
+        contract: accountContract,
       }),
-      account: TEST_ACCOUNT_A,
     });
     let logs = parseEventLogs({
       events: [adminUpdatedEvent()],
@@ -90,12 +90,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("Account Permissions", () => {
       TEST_ACCOUNT_B.address,
     ]);
     receipt = await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_B,
       transaction: removeAdmin({
         account: TEST_ACCOUNT_B,
-        contract: accountContract,
         adminAddress: TEST_ACCOUNT_A.address,
+        contract: accountContract,
       }),
-      account: TEST_ACCOUNT_B,
     });
     logs = parseEventLogs({
       events: [adminUpdatedEvent()],
@@ -112,15 +112,15 @@ describe.runIf(process.env.TW_SECRET_KEY)("Account Permissions", () => {
 
   it("should allow adding session keys", async () => {
     const receipt = await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_B,
       transaction: addSessionKey({
         account: TEST_ACCOUNT_B,
         contract: accountContract,
-        sessionKeyAddress: TEST_ACCOUNT_A.address,
         permissions: {
           approvedTargets: "*",
         },
+        sessionKeyAddress: TEST_ACCOUNT_A.address,
       }),
-      account: TEST_ACCOUNT_B,
     });
     const logs = parseEventLogs({
       events: [signerPermissionsUpdatedEvent()],
@@ -135,42 +135,42 @@ describe.runIf(process.env.TW_SECRET_KEY)("Account Permissions", () => {
     expect(
       await shouldUpdateSessionKey({
         accountContract,
-        sessionKeyAddress: TEST_ACCOUNT_A.address,
         newPermissions: {
           approvedTargets: "*",
         },
+        sessionKeyAddress: TEST_ACCOUNT_A.address,
       }),
     ).toBe(false);
 
     expect(
       await shouldUpdateSessionKey({
         accountContract,
-        sessionKeyAddress: TEST_ACCOUNT_A.address,
         newPermissions: {
           approvedTargets: "*",
           nativeTokenLimitPerTransaction: 0,
         },
+        sessionKeyAddress: TEST_ACCOUNT_A.address,
       }),
     ).toBe(false);
 
     expect(
       await shouldUpdateSessionKey({
         accountContract,
-        sessionKeyAddress: TEST_ACCOUNT_A.address,
         newPermissions: {
           approvedTargets: [USDT_CONTRACT_ADDRESS],
         },
+        sessionKeyAddress: TEST_ACCOUNT_A.address,
       }),
     ).toBe(true);
 
     expect(
       await shouldUpdateSessionKey({
         accountContract,
-        sessionKeyAddress: TEST_ACCOUNT_A.address,
         newPermissions: {
           approvedTargets: "*",
           nativeTokenLimitPerTransaction: 0.1,
         },
+        sessionKeyAddress: TEST_ACCOUNT_A.address,
       }),
     ).toBe(true);
   });
@@ -182,10 +182,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("Account Permissions", () => {
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
       }),
-      sessionKeyAddress: TEST_ACCOUNT_A.address,
       newPermissions: {
         approvedTargets: "*",
       },
+      sessionKeyAddress: TEST_ACCOUNT_A.address,
     });
     expect(shouldUpdate).toBe(true);
   });

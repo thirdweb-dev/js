@@ -27,7 +27,7 @@ export function useWaitForCallsReceipt(
     | undefined,
 ) {
   return useQuery({
-    queryKey: ["waitForCallsReceipt", args?.id] as const,
+    enabled: !!args?.id && (args?.queryOptions?.enabled ?? true),
     queryFn: async () => {
       if (!args?.id) {
         throw new Error("No call result provided");
@@ -37,7 +37,7 @@ export function useWaitForCallsReceipt(
         maxBlocksWaitTime: args.maxBlocksWaitTime,
       });
     },
-    enabled: !!args?.id && (args?.queryOptions?.enabled ?? true),
+    queryKey: ["waitForCallsReceipt", args?.id] as const,
     retry: false,
   });
 }

@@ -1,9 +1,9 @@
+import { PublishedContract } from "components/contract-components/published-contract";
+import { notFound } from "next/navigation";
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Separator } from "@/components/ui/separator";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { PublishedContract } from "components/contract-components/published-contract";
-import { notFound } from "next/navigation";
 import { getRawAccount } from "../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { PublishedActions } from "../../components/contract-actions-published.client";
@@ -23,9 +23,9 @@ export default async function PublishedContractPage(
   const params = await props.params;
   const publishedContractVersions =
     await getPublishedContractsWithPublisherMapping({
-      publisher: params.publisher,
-      contract_id: params.contract_id,
       client: serverThirdwebClient,
+      contract_id: params.contract_id,
+      publisher: params.publisher,
     });
 
   if (!publishedContractVersions) {
@@ -47,8 +47,8 @@ export default async function PublishedContractPage(
     <>
       <DeployContractHeader
         {...params}
-        allVersions={publishedContractVersions}
         activeVersion={publishedContract}
+        allVersions={publishedContractVersions}
       >
         <PublishedActions
           {...params}
@@ -60,12 +60,12 @@ export default async function PublishedContractPage(
       <ChakraProviderSetup>
         <div className="grid w-full grid-cols-12 gap-6 md:gap-10">
           <PublishedContract
-            publishedContract={publishedContract}
-            isLoggedIn={!!account}
             client={getClientThirdwebClient({
               jwt: authToken,
               teamId: undefined,
             })}
+            isLoggedIn={!!account}
+            publishedContract={publishedContract}
           />
         </div>
       </ChakraProviderSetup>

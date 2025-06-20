@@ -72,16 +72,16 @@ export class Auth {
     this.localStorage = localStorage;
     this.onAuthSuccess = onAuthSuccess;
     this.BaseLogin = new BaseLogin({
+      baseUrl,
+      client,
+      ecosystem,
       postLogin: async (result) => {
         return this.postLogin(result);
       },
       preLogin: async () => {
         await this.preLogin();
       },
-      ecosystem,
       querier: querier,
-      client,
-      baseUrl,
     });
   }
 
@@ -148,11 +148,11 @@ export class Auth {
 
     // If this is an existing sharded wallet or in-app wallet, we'll login with the sharded wallet
     const result = await this.AuthQuerier.call<AuthAndWalletRpcReturnType>({
-      procedureName: "loginWithStoredTokenDetails",
       params: {
-        storedToken: authToken.storedToken,
         recoveryCode,
+        storedToken: authToken.storedToken,
       },
+      procedureName: "loginWithStoredTokenDetails",
     });
     return this.postLogin(result);
   }

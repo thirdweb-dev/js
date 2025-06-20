@@ -1,4 +1,4 @@
-import { type Hex, encodePacked } from "viem";
+import { encodePacked, type Hex } from "viem";
 import { getAddress } from "../address.js";
 import { ensureBytecodePrefix } from "../bytecode/prefix.js";
 import { isHex } from "../encoding/hex.js";

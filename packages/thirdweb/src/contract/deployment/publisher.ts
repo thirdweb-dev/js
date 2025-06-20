@@ -10,7 +10,7 @@ import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
 import { resolveImplementation } from "../../utils/bytecode/resolveImplementation.js";
 import { withCache } from "../../utils/promise/withCache.js";
 
-import { type ThirdwebContract, getContract } from "../contract.js";
+import { getContract, type ThirdwebContract } from "../contract.js";
 
 export const CONTRACT_PUBLISHER_ADDRESS =
   "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808"; // Polygon only
@@ -30,8 +30,8 @@ export async function fetchPublishedContractMetadata(options: {
     async () => {
       const publishedContract = await fetchPublishedContract({
         client: options.client,
-        publisherAddress: options.publisher || THIRDWEB_DEPLOYER,
         contractId: options.contractId,
+        publisherAddress: options.publisher || THIRDWEB_DEPLOYER,
         version: options.version,
       });
       if (!publishedContract.publishMetadataUri) {
@@ -66,9 +66,9 @@ export async function fetchDeployBytecodeFromPublishedContractMetadata(
     return undefined;
   }
   const contractPublisher = getContract({
-    client: contract.client,
-    chain: polygon,
     address: CONTRACT_PUBLISHER_ADDRESS,
+    chain: polygon,
+    client: contract.client,
   });
   const publishedMetadataUri = await readContract({
     contract: contractPublisher,
@@ -86,7 +86,7 @@ export async function fetchDeployBytecodeFromPublishedContractMetadata(
     publishedMetadataUri
       .filter((uri) => uri.length > 0)
       .map((uri) =>
-        download({ uri, client: contract.client })
+        download({ client: contract.client, uri })
           .then((res) => res.text())
           .then(JSON.parse),
       ),
@@ -94,7 +94,7 @@ export async function fetchDeployBytecodeFromPublishedContractMetadata(
 
   return pubmeta.length > 0
     ? await (
-        await download({ uri: pubmeta[0].bytecodeUri, client: contract.client })
+        await download({ client: contract.client, uri: pubmeta[0].bytecodeUri })
       ).text()
     : undefined;
 }
@@ -233,9 +233,9 @@ export async function fetchPublishedContract(
   options: FetchPublishedContractOptions,
 ) {
   const contractPublisher = getContract({
-    client: options.client,
-    chain: polygon,
     address: CONTRACT_PUBLISHER_ADDRESS,
+    chain: polygon,
+    client: options.client,
   });
   if (!options.version || options.version === "latest") {
     return await readContract({
@@ -254,16 +254,16 @@ export async function fetchPublishedContract(
     await Promise.all(
       allVersions.map((version) => {
         return download({
-          uri: version.publishMetadataUri,
           client: options.client,
+          uri: version.publishMetadataUri,
         }).then((res) => res.json());
       }),
     )
   ).map((item, index) => {
     return {
       name: allVersions[index]?.contractId,
-      publishedTimestamp: allVersions[index]?.publishTimestamp,
       publishedMetadata: item,
+      publishedTimestamp: allVersions[index]?.publishTimestamp,
     };
   });
 

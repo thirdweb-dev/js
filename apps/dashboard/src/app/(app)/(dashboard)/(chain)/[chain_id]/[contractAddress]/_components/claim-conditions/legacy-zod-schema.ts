@@ -1,4 +1,4 @@
-import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS, toHex } from "thirdweb";
+import { NATIVE_TOKEN_ADDRESS, toHex, ZERO_ADDRESS } from "thirdweb";
 import { z } from "zod";
 
 const RawDateSchema = /* @__PURE__ */ (() =>
@@ -38,9 +38,9 @@ const BigNumberishSchema = /* @__PURE__ */ (() =>
 const SnapshotEntryInput = /* @__PURE__ */ (() =>
   z.object({
     address: z.string(),
-    maxClaimable: QuantitySchema.default(0), // defaults to 0
-    price: QuantitySchema.optional(), // defaults to unlimited, but can be undefined in old snapshots
-    currencyAddress: z.string().default(ZERO_ADDRESS).optional(), // defaults to AddressZero, but can be undefined for old snapshots
+    currencyAddress: z.string().default(ZERO_ADDRESS).optional(), // defaults to 0
+    maxClaimable: QuantitySchema.default(0), // defaults to unlimited, but can be undefined in old snapshots
+    price: QuantitySchema.optional(), // defaults to AddressZero, but can be undefined for old snapshots
   }))();
 
 const SnapshotInputSchema = /* @__PURE__ */ (() =>
@@ -60,15 +60,15 @@ const SnapshotInputSchema = /* @__PURE__ */ (() =>
 
 export const ClaimConditionInputSchema = /* @__PURE__ */ (() =>
   z.object({
-    startTime: StartDateSchema,
     currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
-    price: AmountSchema.default(0),
-    maxClaimableSupply: QuantitySchema,
     maxClaimablePerWallet: QuantitySchema,
-    waitInSeconds: BigNumberishSchema.default(0),
+    maxClaimableSupply: QuantitySchema,
     merkleRootHash: z.string().default(toHex("", { size: 32 })),
-    snapshot: z.optional(SnapshotInputSchema).nullable(),
     metadata: ClaimConditionMetadataSchema.optional(),
+    price: AmountSchema.default(0),
+    snapshot: z.optional(SnapshotInputSchema).nullable(),
+    startTime: StartDateSchema,
+    waitInSeconds: BigNumberishSchema.default(0),
   }))();
 
 const PartialClaimConditionInputSchema = /* @__PURE__ */ (() =>
@@ -79,9 +79,9 @@ const PartialClaimConditionInputSchema = /* @__PURE__ */ (() =>
  */
 const CurrencySchema = /* @__PURE__ */ (() =>
   z.object({
+    decimals: z.number(),
     name: z.string(),
     symbol: z.string(),
-    decimals: z.number(),
   }))();
 
 /**
@@ -89,25 +89,25 @@ const CurrencySchema = /* @__PURE__ */ (() =>
  */
 const CurrencyValueSchema = /* @__PURE__ */ (() =>
   CurrencySchema.extend({
-    value: BigNumberSchema,
     displayValue: z.string(),
+    value: BigNumberSchema,
   }))();
 
 const ClaimConditionOutputSchema = /* @__PURE__ */ (() =>
   ClaimConditionInputSchema.extend({
     availableSupply: QuantitySchema,
-    currentMintSupply: QuantitySchema,
     currencyMetadata: CurrencyValueSchema.default({
-      value: 0n,
-      displayValue: "0",
-      symbol: "",
       decimals: 18,
+      displayValue: "0",
       name: "",
+      symbol: "",
+      value: 0n,
     }),
+    currentMintSupply: QuantitySchema,
     price: BigNumberSchema,
-    waitInSeconds: BigNumberSchema,
-    startTime: BigNumberSchema.transform((n) => new Date(Number(n) * 1000)),
     snapshot: SnapshotInputSchema.optional().nullable(),
+    startTime: BigNumberSchema.transform((n) => new Date(Number(n) * 1000)),
+    waitInSeconds: BigNumberSchema,
   }))();
 
 export type SnapshotEntry = z.output<typeof SnapshotEntryInput>;

@@ -1,8 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useStore } from "@/lib/reactive";
-import { cn } from "@/lib/utils";
 import { popularChains } from "@3rdweb-sdk/react/components/popularChains";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { useAllChainsData } from "hooks/chains/allChains";
@@ -11,15 +8,17 @@ import { ChevronDownIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { useActiveWallet } from "thirdweb/react";
-import { useNetworkSwitcherModal } from "thirdweb/react";
+import { useActiveWallet, useNetworkSwitcherModal } from "thirdweb/react";
+import { Button } from "@/components/ui/button";
+import { useStore } from "@/lib/reactive";
+import { cn } from "@/lib/utils";
 import { useFavoriteChainIds } from "../../app/(app)/(dashboard)/(chain)/components/client/star-button";
 import { getSDKTheme } from "../../app/(app)/components/sdk-component-theme";
 import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
 import {
-  type StoredChain,
   addRecentlyUsedChainId,
   recentlyUsedChainIdsStore,
+  type StoredChain,
 } from "../../stores/chainStores";
 import { LazyConfigureNetworkModal } from "../configure-networks/LazyConfigureNetworkModal";
 import { CustomChainRenderer } from "./CustomChainRenderer";
@@ -144,44 +143,11 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
   return (
     <>
       <Button
-        variant="outline"
-        disabled={isDisabled || !wallet}
         className={cn("w-full justify-start gap-2 text-left", className)}
+        disabled={isDisabled || !wallet}
         onClick={() => {
           networkSwitcherModal.open({
-            theme: getSDKTheme(theme === "light" ? "light" : "dark"),
-            sections: [
-              {
-                label: "Recently Used",
-                chains: (filteredRecentlyUsedChains ?? []).map(
-                  mapV4ChainToV5Chain,
-                ),
-              },
-              {
-                label: "Favorites",
-                chains: favoriteChainsWithMetadata,
-              },
-              {
-                label: "Popular",
-                chains: networksEnabled ? [] : popularChainsWithMetadata,
-              },
-              {
-                label: "All Networks",
-                chains: (chains ?? []).map(mapV4ChainToV5Chain),
-              },
-            ],
-            renderChain(props) {
-              return (
-                <CustomChainRenderer
-                  {...props}
-                  client={client}
-                  openEditChainModal={(c) => {
-                    setIsNetworkConfigModalOpen(true);
-                    setEditChain(c);
-                  }}
-                />
-              );
-            },
+            client,
             onCustomClick: networksEnabled
               ? undefined
               : () => {
@@ -197,14 +163,47 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
                 }
               }
             },
-            client,
+            renderChain(props) {
+              return (
+                <CustomChainRenderer
+                  {...props}
+                  client={client}
+                  openEditChainModal={(c) => {
+                    setIsNetworkConfigModalOpen(true);
+                    setEditChain(c);
+                  }}
+                />
+              );
+            },
+            sections: [
+              {
+                chains: (filteredRecentlyUsedChains ?? []).map(
+                  mapV4ChainToV5Chain,
+                ),
+                label: "Recently Used",
+              },
+              {
+                chains: favoriteChainsWithMetadata,
+                label: "Favorites",
+              },
+              {
+                chains: networksEnabled ? [] : popularChainsWithMetadata,
+                label: "Popular",
+              },
+              {
+                chains: (chains ?? []).map(mapV4ChainToV5Chain),
+                label: "All Networks",
+              },
+            ],
+            theme: getSDKTheme(theme === "light" ? "light" : "dark"),
           });
         }}
+        variant="outline"
       >
         <ChainIconClient
-          src={chain?.icon?.url}
-          client={client}
           className="size-5"
+          client={client}
+          src={chain?.icon?.url}
         />
         {chain?.name || "Select Network"}
 
@@ -212,10 +211,10 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
       </Button>
 
       <LazyConfigureNetworkModal
-        open={isNetworkConfigModalOpen}
-        onOpenChange={setIsNetworkConfigModalOpen}
-        editChain={editChain}
         client={client}
+        editChain={editChain}
+        onOpenChange={setIsNetworkConfigModalOpen}
+        open={isNetworkConfigModalOpen}
       />
     </>
   );

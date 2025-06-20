@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { teamsAndProjectsStub } from "stories/stubs";
 import {
@@ -7,19 +6,20 @@ import {
   storybookThirdwebClient,
 } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
+import { Button } from "@/components/ui/button";
 import {
   AccountHeaderDesktopUI,
   AccountHeaderMobileUI,
 } from "./AccountHeaderUI";
 
 const meta = {
-  title: "Headers/AccountHeader",
   component: Variants,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Headers/AccountHeader",
 } satisfies Meta<typeof Variants>;
 
 export default meta;
@@ -42,9 +42,7 @@ export const Mobile: Story = {
 
 const accountAddressStub = "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37";
 
-function Variants(props: {
-  type: "mobile" | "desktop";
-}) {
+function Variants(props: { type: "mobile" | "desktop" }) {
   const Comp =
     props.type === "mobile" ? AccountHeaderMobileUI : AccountHeaderDesktopUI;
 
@@ -54,17 +52,17 @@ function Variants(props: {
         <BadgeContainer label="Account Loaded">
           <div className="border-y bg-card">
             <Comp
-              teamsAndProjects={teamsAndProjectsStub}
-              logout={() => {}}
+              account={{
+                email: "foo@example.com",
+                id: "foo",
+              }}
               accountAddress={accountAddressStub}
+              client={storybookThirdwebClient}
               connectButton={<ConnectButtonStub />}
               createProject={() => {}}
               createTeam={() => {}}
-              account={{
-                id: "foo",
-                email: "foo@example.com",
-              }}
-              client={storybookThirdwebClient}
+              logout={() => {}}
+              teamsAndProjects={teamsAndProjectsStub}
             />
           </div>
         </BadgeContainer>

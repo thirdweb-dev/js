@@ -1,7 +1,7 @@
+import { redirect } from "next/navigation";
 import { isProjectActive } from "@/api/analytics";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
-import { redirect } from "next/navigation";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../login/loginRedirect";
 import { NebulaAnalyticsPage } from "./components/analytics/nebula-analytics-page";
@@ -42,8 +42,8 @@ export default async function Page(props: {
   }
 
   const activeResponse = await isProjectActive({
-    teamId: team.id,
     projectId: project.id,
+    teamId: team.id,
   });
 
   const showFTUX = !activeResponse.nebula;
@@ -59,9 +59,9 @@ export default async function Page(props: {
 
         <div className="container mt-6 max-w-7xl">
           <NebulaFTUX
+            projectId={project.id}
             secretKeyMasked={project.secretKeys[0]?.masked || ""}
             teamId={team.id}
-            projectId={project.id}
           />
         </div>
       </div>
@@ -70,10 +70,10 @@ export default async function Page(props: {
 
   return (
     <NebulaAnalyticsPage
-      teamId={team.id}
       authToken={authToken}
-      searchParams={searchParams}
       projectId={project.id}
+      searchParams={searchParams}
+      teamId={team.id}
     />
   );
 }

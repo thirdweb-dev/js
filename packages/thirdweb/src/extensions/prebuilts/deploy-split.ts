@@ -2,8 +2,8 @@ import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
 import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
-import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
+import { upload } from "../../storage/upload.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import { initialize } from "./__generated__/Split/write/initialize.js";
@@ -79,22 +79,22 @@ export async function deploySplitContract(options: DeploySplitContractOptions) {
   const { chain, client, account, params } = options;
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
+      account,
       chain,
       client,
-      account,
       contractId: "Split",
     });
   const initializeTransaction = await getInitializeTransaction({
+    accountAddress: account.address,
     client,
     implementationContract,
     params,
-    accountAddress: account.address,
   });
 
   return deployViaAutoFactory({
-    client,
-    chain,
     account,
+    chain,
+    client,
     cloneFactoryContract,
     initializeTransaction,
   });
@@ -123,22 +123,22 @@ async function getInitializeTransaction(options: {
       client,
       files: [
         {
-          name,
           description,
-          symbol,
-          image,
           external_link,
+          image,
+          name,
           social_urls,
+          symbol,
         },
       ],
     })) ||
     "";
   return initialize({
     contract: implementationContract,
-    defaultAdmin: params.defaultAdmin || accountAddress,
     contractURI,
-    trustedForwarders: params.trustedForwarders || [],
+    defaultAdmin: params.defaultAdmin || accountAddress,
     payees,
     shares,
+    trustedForwarders: params.trustedForwarders || [],
   });
 }

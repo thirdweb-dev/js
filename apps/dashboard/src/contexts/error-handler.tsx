@@ -1,13 +1,5 @@
 "use client";
 
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { CircleAlertIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { createContext, useCallback, useContext, useState } from "react";
@@ -15,6 +7,14 @@ import { toast } from "sonner";
 import type { ComponentWithChildren } from "types/component-with-children";
 import { useDebounce } from "use-debounce";
 import { parseErrorToMessage } from "utils/errorParser";
+import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface ErrorContext {
   onError: (error: unknown, errorTitle?: string) => void;
@@ -24,8 +24,8 @@ interface ErrorContext {
 // TODO: figure out a way to remove this context
 // eslint-disable-next-line no-restricted-syntax
 const ErrorContext = createContext<ErrorContext>({
-  onError: () => undefined,
   dismissError: () => undefined,
+  onError: () => undefined,
 });
 
 // We have decided to not export this class from v5 because that area need to be reworked
@@ -70,12 +70,12 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
     <>
       <Dialog
         // Use the original for opening/closing modal
-        open={!!currentErrorOriginal}
         onOpenChange={(isOpen) => {
           if (!isOpen) {
             dismissError();
           }
         }}
+        open={!!currentErrorOriginal}
       >
         <DialogContent className="max-w-[480px] gap-0 p-0">
           {/* min-w-0 is actually required here  */}
@@ -142,16 +142,16 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
           <div className="flex justify-end gap-2 border-border border-t p-6">
             {currentError?.reason && (
               <CopyTextButton
+                className="px-4 py-2 text-sm"
                 copyIconPosition="left"
                 textToCopy={currentError.reason}
                 textToShow="Copy Error"
                 tooltip="Copy root cause of the error shown above"
-                className="px-4 py-2 text-sm"
               />
             )}
 
-            <Button variant="primary" asChild className="py-2 text-sm">
-              <Link href="/support" target="_blank" rel="noopener noreferrer">
+            <Button asChild className="py-2 text-sm" variant="primary">
+              <Link href="/support" rel="noopener noreferrer" target="_blank">
                 Visit support site
               </Link>
             </Button>
@@ -161,8 +161,8 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
 
       <ErrorContext.Provider
         value={{
-          onError,
           dismissError,
+          onError,
         }}
       >
         {children}
@@ -176,12 +176,12 @@ function CopyAddressFormControl(props: { address: string; label: string }) {
     <div className="flex flex-col gap-1.5">
       <p className="font-semibold text-sm">{props.label}</p>
       <CopyTextButton
-        textToCopy={props.address}
-        textToShow={props.address}
+        className="justify-start px-3 py-2 font-mono text-muted-foreground text-sm"
         copyIconPosition="left"
         iconClassName="size-3"
+        textToCopy={props.address}
+        textToShow={props.address}
         tooltip="Copy Address"
-        className="justify-start px-3 py-2 font-mono text-muted-foreground text-sm"
       />
     </div>
   );

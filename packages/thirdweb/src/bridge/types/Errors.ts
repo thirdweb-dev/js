@@ -28,9 +28,9 @@ export class ApiError extends Error {
   override toString() {
     return stringify({
       code: this.code,
+      correlationId: this.correlationId,
       message: this.message,
       statusCode: this.statusCode,
-      correlationId: this.correlationId,
     });
   }
 }

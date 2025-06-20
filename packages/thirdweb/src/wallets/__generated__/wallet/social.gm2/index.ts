@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "social.gm2",
-  name: "GM² Social",
-  homepage: "https://gm2.social/",
-  image_id: "f5c2218d-56b4-4fc8-63bf-0ece7276d600",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/gm-social/id6502584673",
     android:
       "https://play.google.com/store/apps/details?id=com.gm2.app.prod&hl=en",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/gm-social/id6502584673",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "gm2://home",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://gm2.social/",
+  id: "social.gm2",
+  image_id: "f5c2218d-56b4-4fc8-63bf-0ece7276d600",
+  mobile: {
+    native: "gm2://home",
+    universal: null,
+  },
+  name: "GM² Social",
+  rdns: null,
 } as const;

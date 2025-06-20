@@ -39,14 +39,14 @@ export async function getClaimConditions(
           metadata,
         ]) => [
           {
-            startTimestamp,
-            maxClaimableSupply,
-            supplyClaimed,
-            quantityLimitPerWallet,
-            merkleRoot,
-            pricePerToken,
             currency,
+            maxClaimableSupply,
+            merkleRoot,
             metadata,
+            pricePerToken,
+            quantityLimitPerWallet,
+            startTimestamp,
+            supplyClaimed,
           },
         ],
       );

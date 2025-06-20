@@ -8,18 +8,22 @@ const fetchAccountList = ({
   jwt,
   clientId,
   pageNumber,
-}: { jwt: string; clientId: string; pageNumber: number }) => {
+}: {
+  jwt: string;
+  clientId: string;
+  pageNumber: number;
+}) => {
   return async () => {
     const url = new URL(`${THIRDWEB_EWS_API_HOST}/api/2024-05-05/account/list`);
     url.searchParams.append("clientId", clientId);
     url.searchParams.append("page", pageNumber.toString());
 
     const res = await fetch(url.href, {
-      method: "GET",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
       },
+      method: "GET",
     });
     if (!res.ok) {
       throw new Error(`Failed to fetch wallets: ${await res.text()}`);
@@ -41,24 +45,22 @@ export function useEmbeddedWallets(params: {
   const address = useActiveAccount()?.address;
 
   return useQuery({
+    enabled: !!address && !!clientId,
+    queryFn: fetchAccountList({
+      clientId,
+      jwt: authToken,
+      pageNumber: page,
+    }),
     queryKey: embeddedWalletsKeys.embeddedWallets(
       address || "",
       clientId,
       page,
     ),
-    queryFn: fetchAccountList({
-      jwt: authToken,
-      clientId,
-      pageNumber: page,
-    }),
-    enabled: !!address && !!clientId,
   });
 }
 
 // TODO: fetching list of all users needs to be improved
-export function useAllEmbeddedWallets(params: {
-  authToken: string;
-}) {
+export function useAllEmbeddedWallets(params: { authToken: string }) {
   const { authToken } = params;
   const queryClient = useQueryClient();
   const address = useActiveAccount()?.address;
@@ -72,16 +74,16 @@ export function useAllEmbeddedWallets(params: {
         const res = await queryClient.fetchQuery<{
           users: WalletUser[];
         }>({
+          queryFn: fetchAccountList({
+            clientId,
+            jwt: authToken,
+            pageNumber: page,
+          }),
           queryKey: embeddedWalletsKeys.embeddedWallets(
             address || "",
             clientId,
             page,
           ),
-          queryFn: fetchAccountList({
-            jwt: authToken,
-            clientId,
-            pageNumber: page,
-          }),
         });
 
         if (res.users.length === 0) {

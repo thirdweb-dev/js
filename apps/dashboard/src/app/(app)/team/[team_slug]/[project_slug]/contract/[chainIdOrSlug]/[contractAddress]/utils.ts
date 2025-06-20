@@ -10,9 +10,9 @@ export function redirectToContractLandingPage(params: {
 }): never {
   redirect(
     buildContractPagePath({
-      projectMeta: params.projectMeta,
       chainIdOrSlug: params.chainIdOrSlug,
       contractAddress: params.contractAddress,
+      projectMeta: params.projectMeta,
     }),
   );
 }

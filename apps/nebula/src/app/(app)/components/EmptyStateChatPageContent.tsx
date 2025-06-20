@@ -1,10 +1,10 @@
 "use client";
 
+import { ArrowUpRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { nebulaAppThirdwebClient } from "@/constants/nebula-client";
 import { NebulaIcon } from "@/icons/NebulaIcon";
 import { cn } from "@/lib/utils";
-import { ArrowUpRightIcon } from "lucide-react";
 import type { NebulaContext } from "../api/chat";
 import type { NebulaUserMessage } from "../api/types";
 import { examplePrompts } from "../data/examplePrompts";
@@ -43,22 +43,22 @@ export function EmptyStateChatPageContent(props: {
         <div className="h-5" />
         <div className="mx-auto max-w-[600px]">
           <ChatBar
-            placeholder={"Ask Nebula"}
-            onLoginClick={props.onLoginClick}
-            isConnectingWallet={props.isConnectingWallet}
-            showContextSelector={true}
-            context={props.context}
-            setContext={props.setContext}
-            sendMessage={props.sendMessage}
-            isChatStreaming={false}
-            client={nebulaAppThirdwebClient}
-            connectedWallets={props.connectedWallets}
-            setActiveWallet={props.setActiveWallet}
             abortChatStream={() => {
               // the page will switch so, no need to handle abort here
             }}
-            prefillMessage={props.prefillMessage}
             allowImageUpload={props.allowImageUpload}
+            client={nebulaAppThirdwebClient}
+            connectedWallets={props.connectedWallets}
+            context={props.context}
+            isChatStreaming={false}
+            isConnectingWallet={props.isConnectingWallet}
+            onLoginClick={props.onLoginClick}
+            placeholder={"Ask Nebula"}
+            prefillMessage={props.prefillMessage}
+            sendMessage={props.sendMessage}
+            setActiveWallet={props.setActiveWallet}
+            setContext={props.setContext}
+            showContextSelector={true}
           />
           <div className="h-5" />
           <div className="flex flex-wrap justify-center gap-2.5">
@@ -69,8 +69,8 @@ export function EmptyStateChatPageContent(props: {
                   label={prompt.title}
                   onClick={() =>
                     props.sendMessage({
+                      content: [{ text: prompt.message, type: "text" }],
                       role: "user",
-                      content: [{ type: "text", text: prompt.message }],
                     })
                   }
                 />
@@ -86,9 +86,9 @@ export function EmptyStateChatPageContent(props: {
 function ExamplePrompt(props: { label: string; onClick: () => void }) {
   return (
     <Button
-      variant="outline"
       className="h-auto gap-1.5 rounded-full bg-card px-3 py-1 text-muted-foreground text-xs"
       onClick={props.onClick}
+      variant="outline"
     >
       {props.label} <ArrowUpRightIcon className="size-3" />
     </Button>

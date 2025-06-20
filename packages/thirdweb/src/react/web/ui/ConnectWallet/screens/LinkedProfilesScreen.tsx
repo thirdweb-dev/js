@@ -9,18 +9,18 @@ import { useSocialProfiles } from "../../../../core/social/useSocialProfiles.js"
 import { getSocialIcon } from "../../../../core/utils/walletIcon.js";
 import { useProfiles } from "../../../hooks/wallets/useProfiles.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
-import { Img } from "../../components/Img.js";
-import { Spacer } from "../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { IconButton } from "../../components/buttons.js";
+import { Img } from "../../components/Img.js";
+import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
 import { Blobbie } from "../Blobbie.js";
-import { MenuButton } from "../MenuButton.js";
 import { AddUserIcon } from "../icons/AddUserIcon.js";
 import { EmailIcon } from "../icons/EmailIcon.js";
 import { FingerPrintIcon } from "../icons/FingerPrintIcon.js";
 import { PhoneIcon } from "../icons/PhoneIcon.js";
 import type { ConnectLocale } from "../locale/types.js";
+import { MenuButton } from "../MenuButton.js";
 import type { WalletDetailsModalScreen } from "./types.js";
 
 function getProfileDisplayName(profile: Profile) {
@@ -68,8 +68,8 @@ export function LinkedProfilesScreen(props: {
     >
       <Container p="lg">
         <ModalHeader
-          title={props.locale.manageWallet.linkedProfiles}
           onBack={props.onBack}
+          title={props.locale.manageWallet.linkedProfiles}
         />
       </Container>
       <Line />
@@ -106,10 +106,10 @@ export function LinkedProfilesScreen(props: {
             )
             .map((profile) => (
               <LinkedProfile
-                key={`${JSON.stringify(profile)}`}
-                enableUnlinking={connectedProfiles.length > 1}
-                profile={profile}
                 client={props.client}
+                enableUnlinking={connectedProfiles.length > 1}
+                key={`${JSON.stringify(profile)}`}
+                profile={profile}
               />
             ))}
         </Container>
@@ -129,38 +129,38 @@ function LinkedProfile({
   client: ThirdwebClient;
 }) {
   const { data: socialProfiles } = useSocialProfiles({
-    client,
     address: profile.details.address,
+    client,
   });
   const { mutate: unlinkProfileMutation, isPending } = useUnlinkProfile();
 
   return (
     <MenuButton
-      style={{
-        fontSize: fontSize.sm,
-        cursor: "default",
-      }}
       as={"div"}
-      disabled // disabled until we have more data to show on a dedicated profile screen
+      disabled
+      style={{
+        cursor: "default",
+        fontSize: fontSize.sm,
+      }} // disabled until we have more data to show on a dedicated profile screen
     >
       {socialProfiles?.some((p) => p.avatar) ? (
         <Img
-          src={socialProfiles?.find((p) => p.avatar)?.avatar}
-          width={iconSize.lg}
+          client={client}
           height={iconSize.lg}
           loading="eager"
-          client={client}
+          src={socialProfiles?.find((p) => p.avatar)?.avatar}
           style={{
             borderRadius: "100%",
           }}
+          width={iconSize.lg}
         />
       ) : profile.details.address !== undefined ? (
         <Container
           style={{
-            width: "32px",
-            height: "32px",
             borderRadius: "100%",
+            height: "32px",
             overflow: "hidden",
+            width: "32px",
           }}
         >
           <Blobbie address={profile.details.address} size={32} />
@@ -173,20 +173,20 @@ function LinkedProfile({
         <PhoneIcon size={iconSize.lg} />
       ) : (
         <Img
-          src={getSocialIcon(profile.type)}
-          width={iconSize.lg}
+          client={client}
           height={iconSize.lg}
           loading="eager"
-          client={client}
+          src={getSocialIcon(profile.type)}
+          width={iconSize.lg}
         />
       )}
       <div
         style={{
+          alignItems: "center",
           display: "flex",
           flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
           flexGrow: 1,
+          justifyContent: "space-between",
         }}
       >
         <Text color="primaryText">
@@ -195,9 +195,9 @@ function LinkedProfile({
         </Text>
         <div
           style={{
+            alignItems: "center",
             display: "flex",
             flexDirection: "row",
-            alignItems: "center",
             gap: "8px",
           }}
         >
@@ -209,9 +209,9 @@ function LinkedProfile({
             )}
           {enableUnlinking && (
             <IconButton
-              autoFocus
-              type="button"
               aria-label="Unlink"
+              autoFocus
+              disabled={isPending}
               onClick={() =>
                 unlinkProfileMutation({
                   client,
@@ -221,14 +221,14 @@ function LinkedProfile({
               style={{
                 pointerEvents: "auto",
               }}
-              disabled={isPending}
+              type="button"
             >
               <Cross2Icon
-                width={iconSize.md}
                 height={iconSize.md}
                 style={{
                   color: "inherit",
                 }}
+                width={iconSize.md}
               />
             </IconButton>
           )}

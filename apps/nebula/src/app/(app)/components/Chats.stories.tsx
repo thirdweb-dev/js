@@ -1,17 +1,11 @@
-import { randomLorem } from "@/storybook/stubs";
-import { storybookThirdwebClient } from "@/storybook/utils";
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
+import { randomLorem } from "@/storybook/stubs";
+import { storybookThirdwebClient } from "@/storybook/utils";
 import { type ChatMessage, Chats } from "./Chats";
 
 const meta = {
-  title: "Nebula/Chats",
   component: Variant,
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
-  },
   decorators: [
     (Story) => (
       <ThirdwebProvider>
@@ -24,6 +18,12 @@ const meta = {
       </ThirdwebProvider>
     ),
   ],
+  parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
+  },
+  title: "Nebula/Chats",
 } satisfies Meta<typeof Variant>;
 
 export default meta;
@@ -35,8 +35,8 @@ export const UserPresenceError: Story = {
       {
         content: [
           {
-            type: "text",
             text: randomLorem(10),
+            type: "text",
           },
         ],
         type: "user",
@@ -57,20 +57,20 @@ export const SendTransaction: Story = {
   args: {
     messages: [
       {
+        request_id: undefined,
         text: randomLorem(40),
         type: "assistant",
-        request_id: undefined,
       },
       {
-        type: "action",
-        subtype: "sign_transaction",
-        request_id: "xxxxx",
         data: {
           chainId: 1,
-          to: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
           data: "0x",
+          to: "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37",
           value: "0x16345785d8a0000",
         },
+        request_id: "xxxxx",
+        subtype: "sign_transaction",
+        type: "action",
       },
     ],
   },
@@ -80,14 +80,14 @@ export const WithAndWithoutRequestId: Story = {
   args: {
     messages: [
       {
+        request_id: "xxxxx",
         text: randomLorem(40),
         type: "assistant",
-        request_id: "xxxxx",
       },
       {
+        request_id: undefined,
         text: randomLorem(50),
         type: "assistant",
-        request_id: undefined,
       },
     ],
   },
@@ -205,36 +205,34 @@ export const Markdown: Story = {
   args: {
     messages: [
       {
+        request_id: undefined,
         text: responseWithCodeMarkdown,
         type: "assistant",
-        request_id: undefined,
       },
       {
-        type: "user",
         content: [
           {
-            type: "text",
             text: responseWithCodeMarkdown,
+            type: "text",
           },
         ],
+        type: "user",
       },
     ],
   },
 };
 
-function Variant(props: {
-  messages: ChatMessage[];
-}) {
+function Variant(props: { messages: ChatMessage[] }) {
   return (
     <Chats
-      enableAutoScroll={false}
-      setEnableAutoScroll={() => {}}
-      client={storybookThirdwebClient}
-      sendMessage={() => {}}
       authToken="xxxxx"
+      client={storybookThirdwebClient}
+      enableAutoScroll={false}
       isChatStreaming={false}
-      sessionId="xxxxx"
       messages={props.messages}
+      sendMessage={() => {}}
+      sessionId="xxxxx"
+      setEnableAutoScroll={() => {}}
     />
   );
 }

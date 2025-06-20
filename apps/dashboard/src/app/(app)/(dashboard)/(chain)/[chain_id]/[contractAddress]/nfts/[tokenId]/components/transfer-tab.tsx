@@ -1,6 +1,5 @@
 "use client";
 
-import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -15,6 +14,7 @@ import {
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
+import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 
 interface TransferTabProps {
   contract: ThirdwebContract;
@@ -30,7 +30,7 @@ const TransferTab: React.FC<TransferTabProps> = ({
   const account = useActiveAccount();
 
   const form = useForm<{ to: string; amount: string }>({
-    defaultValues: { to: "", amount: "1" },
+    defaultValues: { amount: "1", to: "" },
   });
 
   const { onSuccess, onError } = useTxNotifications(
@@ -57,38 +57,38 @@ const TransferTab: React.FC<TransferTabProps> = ({
           const transaction = isErc1155
             ? safeTransferFrom({
                 contract,
+                data: "0x",
+                from: account?.address ?? "",
                 to: data.to,
                 tokenId: BigInt(tokenId),
                 value: BigInt(data.amount),
-                data: "0x",
-                from: account?.address ?? "",
               })
             : transferFrom({
                 contract,
+                from: account?.address ?? "",
                 to: data.to,
                 tokenId: BigInt(tokenId),
-                from: account?.address ?? "",
               });
           sendTxAndConfirm.mutate(transaction, {
+            onError: (error) => {
+              onError(error);
+            },
             onSuccess: () => {
               onSuccess();
               form.reset();
-            },
-            onError: (error) => {
-              onError(error);
             },
           });
         })}
       >
         <div className="flex flex-col gap-3">
           <div className="flex w-full flex-col gap-6 md:flex-row">
-            <FormControl isRequired isInvalid={!!form.formState.errors.to}>
+            <FormControl isInvalid={!!form.formState.errors.to} isRequired>
               <FormLabel>To Address</FormLabel>
               <SolidityInput
                 client={contract.client}
-                solidityType="address"
                 formContext={form}
                 placeholder={ZERO_ADDRESS}
+                solidityType="address"
                 {...form.register("to")}
               />
               <FormHelperText>Enter the address to transfer to.</FormHelperText>
@@ -98,8 +98,8 @@ const TransferTab: React.FC<TransferTabProps> = ({
             </FormControl>
             {isErc1155 && (
               <FormControl
-                isRequired={isErc1155}
                 isInvalid={!!form.formState.errors.to}
+                isRequired={isErc1155}
               >
                 <FormLabel>Amount</FormLabel>
                 <Input placeholder="1" {...form.register("amount")} />
@@ -113,19 +113,19 @@ const TransferTab: React.FC<TransferTabProps> = ({
             )}
           </div>
           <TransactionButton
-            client={contract.client}
-            isLoggedIn={isLoggedIn}
-            txChainID={contract.chain.id}
-            transactionCount={1}
-            isPending={sendTxAndConfirm.isPending}
-            type="submit"
             className="self-end"
+            client={contract.client}
             disabled={
               !form.formState.isDirty ||
               checking1155 ||
               sendTxAndConfirm.isPending ||
               !account
             }
+            isLoggedIn={isLoggedIn}
+            isPending={sendTxAndConfirm.isPending}
+            transactionCount={1}
+            txChainID={contract.chain.id}
+            type="submit"
           >
             Transfer
           </TransactionButton>

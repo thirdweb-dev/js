@@ -2,29 +2,29 @@ import { defineConfig } from "checkly";
 import { Frequency } from "checkly/constructs";
 
 export default defineConfig({
-  projectName: "thirdweb.com",
-  logicalId: "thirdweb-www",
-  repoUrl: "https://github.com/thirdweb-dev/dashboard",
   checks: {
     activated: true,
-    muted: false,
-    runtimeId: "2023.09",
-    frequency: Frequency.EVERY_24H,
-    locations: ["us-east-1", "eu-west-1"],
-    tags: ["website"],
+    browserChecks: {
+      frequency: Frequency.EVERY_24H,
+      testMatch: "./tests/**/*.spec.ts",
+    },
     checkMatch: "./**/*.check.ts",
+    frequency: Frequency.EVERY_24H,
     ignoreDirectoriesMatch: [],
+    locations: ["us-east-1", "eu-west-1"],
+    muted: false,
     playwrightConfig: {
       use: {
         baseURL: process.env.ENVIRONMENT_URL || "https://thirdweb.com",
       },
     },
-    browserChecks: {
-      frequency: Frequency.EVERY_24H,
-      testMatch: "./tests/**/*.spec.ts",
-    },
+    runtimeId: "2023.09",
+    tags: ["website"],
   },
   cli: {
     runLocation: "eu-west-1",
   },
+  logicalId: "thirdweb-www",
+  projectName: "thirdweb.com",
+  repoUrl: "https://github.com/thirdweb-dev/dashboard",
 });

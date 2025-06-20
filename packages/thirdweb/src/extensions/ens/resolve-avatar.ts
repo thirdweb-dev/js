@@ -44,7 +44,7 @@ export async function resolveAvatar(options: ResolveAvatarOptions) {
         return null;
       }
       try {
-        return parseAvatarRecord({ uri: record, client });
+        return parseAvatarRecord({ client, uri: record });
       } catch (e) {
         console.error("Error parsing avatar record", e);
         return null;

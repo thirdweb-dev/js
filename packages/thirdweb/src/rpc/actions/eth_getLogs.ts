@@ -3,10 +3,10 @@ import {
   type BlockTag,
   type EIP1193RequestFn,
   type EIP1474Methods,
+  formatLog,
   type Hash,
   type LogTopic,
   type RpcLog,
-  formatLog,
 } from "viem";
 import { type Address, getAddress } from "../../utils/address.js";
 import { numberToHex } from "../../utils/encoding/hex.js";
@@ -79,8 +79,8 @@ export async function eth_getLogs(
       topics: LogTopic[];
       blockHash: `0x${string}`;
     } = {
-      topics,
       blockHash: params.blockHash,
+      topics,
     };
     if (params.address) {
       param.address = getAddress(params.address);

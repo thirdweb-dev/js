@@ -1,12 +1,12 @@
 "use client";
 
-import { DismissibleAlert } from "@/components/blocks/dismissible-alert";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { Button } from "@/components/ui/button";
-import { TabPathLinks } from "@/components/ui/tabs";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
+import { DismissibleAlert } from "@/components/blocks/dismissible-alert";
+import { Button } from "@/components/ui/button";
+import { TabPathLinks } from "@/components/ui/tabs";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { AAFooter } from "./AAFooterSection";
 
 export function AccountAbstractionLayout(props: {
@@ -33,9 +33,9 @@ export function AccountAbstractionLayout(props: {
               Integrate ERC-4337 compliant smart accounts for gasless
               sponsorships and more. <br className="lg:hidden" />
               <UnderlineLink
-                target="_blank"
-                rel="noopener noreferrer"
                 href="https://portal.thirdweb.com/wallets/smart-wallet"
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 Learn more about Account Abstraction
               </UnderlineLink>
@@ -45,8 +45,8 @@ export function AccountAbstractionLayout(props: {
             <SmartWalletsBillingAlert teamSlug={props.teamSlug} />
           )}
           <GasCreditAlert
-            teamSlug={props.teamSlug}
             projectId={props.projectId}
+            teamSlug={props.teamSlug}
           />
         </div>
 
@@ -54,12 +54,11 @@ export function AccountAbstractionLayout(props: {
 
         {/* Nav */}
         <TabPathLinks
-          scrollableClassName="container max-w-7xl"
           links={[
             {
+              exactMatch: true,
               name: "Analytics",
               path: `${smartWalletsLayoutSlug}`,
-              exactMatch: true,
             },
             {
               name: "Account Factories",
@@ -70,6 +69,7 @@ export function AccountAbstractionLayout(props: {
               path: `${smartWalletsLayoutSlug}/settings`,
             },
           ]}
+          scrollableClassName="container max-w-7xl"
         />
       </div>
 
@@ -90,35 +90,30 @@ export function AccountAbstractionLayout(props: {
   );
 }
 
-function GasCreditAlert(props: {
-  teamSlug: string;
-  projectId: string;
-}) {
+function GasCreditAlert(props: { teamSlug: string; projectId: string }) {
   return (
     <DismissibleAlert
-      localStorageId={`${props.projectId}-gas-credit-alert`}
-      title="OP Gas Credit Program"
       description={
         <>
           Redeem credits towards gas Sponsorship. <br className="lg:hidden" />
           <UnderlineLink
-            target="_blank"
             href="https://thirdweb.com/superchain"
             rel="noopener noreferrer"
+            target="_blank"
           >
             Learn More
           </UnderlineLink>
           <div className="mt-4 flex items-center gap-4">
             <Button
               asChild
-              variant="outline"
-              size="sm"
               className="bg-background"
+              size="sm"
+              variant="outline"
             >
               <Link
+                className="gap-2"
                 href={`/team/${props.teamSlug}/~/settings/credits`}
                 target="_blank"
-                className="gap-2"
               >
                 Claim your credits <ArrowRightIcon className="size-4" />
               </Link>
@@ -126,6 +121,8 @@ function GasCreditAlert(props: {
           </div>
         </>
       }
+      localStorageId={`${props.projectId}-gas-credit-alert`}
+      title="OP Gas Credit Program"
     />
   );
 }

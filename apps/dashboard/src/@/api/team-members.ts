@@ -3,8 +3,8 @@ import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
 
 const TeamAccountRole = {
-  OWNER: "OWNER",
   MEMBER: "MEMBER",
+  OWNER: "OWNER",
 } as const;
 
 export type TeamAccountRole =

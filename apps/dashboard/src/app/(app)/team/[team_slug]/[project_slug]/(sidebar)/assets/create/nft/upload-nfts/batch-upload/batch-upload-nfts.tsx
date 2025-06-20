@@ -1,9 +1,24 @@
-import { TokenSelector } from "@/components/blocks/TokenSelector";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ImageOffIcon,
+  RotateCcwIcon,
+  TagIcon,
+} from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import {
+  getAddress,
+  NATIVE_TOKEN_ADDRESS,
+  type ThirdwebClient,
+} from "thirdweb";
+import { MediaRenderer } from "thirdweb/react";
 import { DropZone } from "@/components/blocks/drop-zone/drop-zone";
+import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { PaginationButtons } from "@/components/pagination-buttons";
-import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { DecimalInput } from "@/components/ui/decimal-input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -17,21 +32,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ImageOffIcon,
-  RotateCcwIcon,
-  TagIcon,
-} from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
-import {
-  NATIVE_TOKEN_ADDRESS,
-  type ThirdwebClient,
-  getAddress,
-} from "thirdweb";
-import { MediaRenderer } from "thirdweb/react";
 import { FilePreview } from "../../../_common/file-preview";
 import { nftWithPriceSchema } from "../schema";
 import { BatchUploadInstructions } from "./batch-upload-instructions";
@@ -55,6 +55,13 @@ export function BatchUploadNFTs(props: {
         <div>
           <div className="p-4 md:p-6">
             <DropZone
+              accept={undefined}
+              className="bg-background py-20"
+              description={
+                props.results?.type === "error"
+                  ? props.results.error
+                  : "Drag and drop the files or folder"
+              }
               isError={props.results?.type === "error"}
               onDrop={async (files) => {
                 try {
@@ -63,41 +70,34 @@ export function BatchUploadNFTs(props: {
                 } catch (e) {
                   console.error(e);
                   props.setResults({
-                    type: "error",
                     error: e instanceof Error ? e.message : "Unknown error",
+                    type: "error",
                   });
                 }
               }}
-              accept={undefined}
-              title={
-                props.results?.type === "error"
-                  ? "Invalid files"
-                  : "Upload Files"
-              }
-              description={
-                props.results?.type === "error"
-                  ? props.results.error
-                  : "Drag and drop the files or folder"
-              }
               resetButton={{
                 label: "Remove files",
                 onClick: () => {
                   props.setResults(null);
                 },
               }}
-              className="bg-background py-20"
+              title={
+                props.results?.type === "error"
+                  ? "Invalid files"
+                  : "Upload Files"
+              }
             />
             <div className="h-6" />
             <BatchUploadInstructions />
           </div>
 
           <div className="flex justify-end gap-3 border-t px-6 py-4">
-            <Button variant="outline" onClick={props.onPrev} className="gap-2">
+            <Button className="gap-2" onClick={props.onPrev} variant="outline">
               <ArrowLeftIcon className="size-4" />
               Back
             </Button>
 
-            <Button disabled className="gap-2">
+            <Button className="gap-2" disabled>
               Next
               <ArrowRightIcon className="size-4" />
             </Button>
@@ -105,10 +105,14 @@ export function BatchUploadNFTs(props: {
         </div>
       ) : (
         <BatchUploadResultsTable
-          onPrev={props.onPrev}
-          onNext={props.onNext}
           chainId={props.chainId}
+          client={props.client}
           data={props.results.data}
+          onNext={props.onNext}
+          onPrev={props.onPrev}
+          onReset={() => {
+            props.setResults(null);
+          }}
           setData={(dataOrFn) => {
             const data =
               typeof dataOrFn === "function"
@@ -118,14 +122,10 @@ export function BatchUploadNFTs(props: {
                 : dataOrFn;
 
             props.setResults({
-              type: "data",
               data,
+              type: "data",
             });
           }}
-          onReset={() => {
-            props.setResults(null);
-          }}
-          client={props.client}
         />
       )}
     </div>
@@ -168,19 +168,15 @@ function BatchUploadResultsTable(props: {
               </p>
             </div>
 
-            <Switch
-              id="batch-mode"
-              checked={batchMode}
-              onCheckedChange={setBatchMode}
-            />
+            <Switch checked={batchMode} onCheckedChange={setBatchMode} />
           </div>
 
           {batchMode && (
             <BatchUpdateFieldset
+              chainId={props.chainId}
+              client={client}
               data={data}
               setData={setData}
-              client={client}
-              chainId={props.chainId}
             />
           )}
         </div>
@@ -207,22 +203,22 @@ function BatchUploadResultsTable(props: {
                       <div className="flex shrink-0 flex-col gap-4">
                         {item.image instanceof File ? (
                           <FilePreview
-                            srcOrFile={item.image}
                             className="size-20 rounded-lg border object-cover"
                             client={client}
+                            srcOrFile={item.image}
                           />
                         ) : typeof item.image === "string" ? (
                           <MediaRenderer
+                            className="size-20 rounded-lg border object-cover"
+                            client={client}
                             src={
                               item.image
                                 ? resolveSchemeWithErrorHandler({
-                                    uri: item.image,
                                     client,
+                                    uri: item.image,
                                   })
                                 : ""
                             }
-                            className="size-20 rounded-lg border object-cover"
-                            client={client}
                           />
                         ) : (
                           imageFallback
@@ -232,15 +228,15 @@ function BatchUploadResultsTable(props: {
                           <div>
                             {typeof item.animation_url === "string" ? (
                               <MediaRenderer
+                                className="size-20 rounded-lg border object-cover"
                                 client={client}
                                 src={item.animation_url}
-                                className="size-20 rounded-lg border object-cover"
                               />
                             ) : item.animation_url instanceof File ? (
                               <FilePreview
-                                srcOrFile={item.animation_url}
                                 className="size-20 rounded-lg border object-cover"
                                 client={client}
+                                srcOrFile={item.animation_url}
                               />
                             ) : (
                               imageFallback
@@ -287,9 +283,9 @@ function BatchUploadResultsTable(props: {
                               ) {
                                 return (
                                   <Badge
+                                    className="gap-2 text-sm"
                                     key={`${property.trait_type}-${property.value}`}
                                     variant="secondary"
-                                    className="gap-2 text-sm"
                                   >
                                     <TagIcon className="size-3 text-muted-foreground" />
                                     <span className="text-foreground">
@@ -309,10 +305,10 @@ function BatchUploadResultsTable(props: {
                           typeof item.external_url === "string" && (
                             <div>
                               <a
-                                href={item.external_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
                                 className="inline whitespace-pre-wrap break-all text-muted-foreground underline decoration-muted-foreground/50 decoration-dotted underline-offset-4 hover:text-foreground"
+                                href={item.external_url}
+                                rel="noopener noreferrer"
+                                target="_blank"
                               >
                                 {item.external_url}
                               </a>
@@ -326,7 +322,6 @@ function BatchUploadResultsTable(props: {
                   <TableCell className="whitespace-normal">
                     <div className="flex items-center">
                       <DecimalInput
-                        value={item.price_amount}
                         className="w-24 rounded-r-none border-r-0 disabled:opacity-100"
                         onChange={(value) => {
                           setData((v) => {
@@ -340,32 +335,33 @@ function BatchUploadResultsTable(props: {
                             return newData;
                           });
                         }}
+                        value={item.price_amount}
                       />
 
                       <TokenSelector
-                        className="w-36 rounded-l-none bg-background disabled:opacity-100"
                         addNativeTokenIfMissing={true}
-                        showCheck={true}
+                        chainId={props.chainId}
+                        className="w-36 rounded-l-none bg-background disabled:opacity-100"
+                        client={props.client}
                         disableAddress={true}
-                        selectedToken={{
-                          address: item.price_currency || nativeTokenAddress,
-                          chainId: props.chainId,
-                        }}
-                        popoverContentClassName="!w-64"
                         onChange={(token) => {
                           setData((v) => {
                             const newData = [...v];
                             newData[itemIndex] = {
                               ...newData[itemIndex],
-                              price_currency: token.address,
                               price_amount: item.price_amount,
+                              price_currency: token.address,
                               supply: item.supply,
                             };
                             return newData;
                           });
                         }}
-                        client={props.client}
-                        chainId={props.chainId}
+                        popoverContentClassName="!w-64"
+                        selectedToken={{
+                          address: item.price_currency || nativeTokenAddress,
+                          chainId: props.chainId,
+                        }}
+                        showCheck={true}
                       />
                     </div>
                   </TableCell>
@@ -374,21 +370,21 @@ function BatchUploadResultsTable(props: {
                   <TableCell className="whitespace-normal">
                     <div className="space-y-2">
                       <DecimalInput
-                        value={item.supply}
                         className="w-32 disabled:opacity-100"
-                        // disabled={batchMode}
                         onChange={(value) => {
                           setData((v) => {
                             const newData = [...v];
                             newData[itemIndex] = {
                               ...newData[itemIndex],
-                              supply: value,
-                              price_currency: item.price_currency,
                               price_amount: item.price_amount,
+                              price_currency: item.price_currency,
+                              supply: value,
                             };
                             return newData;
                           });
                         }}
+                        // disabled={batchMode}
+                        value={item.supply}
                       />
 
                       {item.supply === "0" && (
@@ -407,20 +403,20 @@ function BatchUploadResultsTable(props: {
         <div className="border-t px-4 py-6">
           <PaginationButtons
             activePage={page}
-            totalPages={totalPages}
             onPageClick={setPage}
+            totalPages={totalPages}
           />
         </div>
       )}
 
       <div className="flex flex-col items-center justify-between gap-3 border-t px-6 py-6 lg:flex-row">
-        <Button variant="outline" className="gap-2" onClick={onReset}>
+        <Button className="gap-2" onClick={onReset} variant="outline">
           <RotateCcwIcon className="size-4 text-muted-foreground" />
           Reset
         </Button>
         <div className="flex gap-3">
           {/* back */}
-          <Button variant="outline" className="gap-2" onClick={onPrev}>
+          <Button className="gap-2" onClick={onPrev} variant="outline">
             <ArrowLeftIcon className="size-4" />
             Back
           </Button>
@@ -477,8 +473,6 @@ function BatchUpdateFieldset(props: {
           <Label>Price</Label>
           <div className="flex w-full">
             <DecimalInput
-              value={globalPriceAmount}
-              placeholder="Custom"
               className="!text-xl h-12 w-32 rounded-r-none border-r-0 bg-card font-bold placeholder:font-semibold placeholder:text-xl"
               onChange={(value) => {
                 setData((v) => {
@@ -488,22 +482,16 @@ function BatchUpdateFieldset(props: {
                   }));
                 });
               }}
+              placeholder="Custom"
+              value={globalPriceAmount}
             />
 
             <TokenSelector
-              className="h-12 w-48 rounded-l-none bg-card"
-              popoverContentClassName="!w-64"
               addNativeTokenIfMissing={true}
-              showCheck={true}
+              chainId={chainId}
+              className="h-12 w-48 rounded-l-none bg-card"
+              client={client}
               disableAddress={true}
-              selectedToken={
-                globalPriceCurrency
-                  ? {
-                      address: globalPriceCurrency,
-                      chainId: chainId,
-                    }
-                  : undefined
-              }
               onChange={(token) => {
                 setData((v) => {
                   return v.map((item) => ({
@@ -512,8 +500,16 @@ function BatchUpdateFieldset(props: {
                   }));
                 });
               }}
-              client={client}
-              chainId={chainId}
+              popoverContentClassName="!w-64"
+              selectedToken={
+                globalPriceCurrency
+                  ? {
+                      address: globalPriceCurrency,
+                      chainId: chainId,
+                    }
+                  : undefined
+              }
+              showCheck={true}
             />
           </div>
         </div>
@@ -522,8 +518,6 @@ function BatchUpdateFieldset(props: {
           <Label>Supply</Label>
           <DecimalInput
             className="!text-xl h-12 bg-card font-bold placeholder:font-semibold placeholder:text-xl lg:w-40"
-            value={globalSupply}
-            placeholder="Custom"
             onChange={(value) => {
               setData((v) => {
                 return v.map((item) => ({
@@ -532,6 +526,8 @@ function BatchUpdateFieldset(props: {
                 }));
               });
             }}
+            placeholder="Custom"
+            value={globalSupply}
           />
 
           {globalSupply === "0" && (

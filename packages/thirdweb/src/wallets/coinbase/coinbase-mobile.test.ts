@@ -17,10 +17,10 @@ vi.mock("@mobile-wallet-protocol/client", () => ({
       };
     }
   },
+  handleResponse: vi.fn(),
   Wallets: {
     CoinbaseSmartWallet: {},
   },
-  handleResponse: vi.fn(),
 }));
 
 vi.mock("@coinbase/wallet-mobile-sdk", () => ({
@@ -48,8 +48,8 @@ describe("Coinbase Mobile", () => {
 
   test("getCoinbaseMobileProvider initializes smart wallet provider", async () => {
     const options: CoinbaseWalletCreationOptions = {
-      walletConfig: { options: "smartWalletOnly" },
       mobileConfig: { callbackURL: "https://example.com" },
+      walletConfig: { options: "smartWalletOnly" },
     };
 
     provider = await getCoinbaseMobileProvider(options);

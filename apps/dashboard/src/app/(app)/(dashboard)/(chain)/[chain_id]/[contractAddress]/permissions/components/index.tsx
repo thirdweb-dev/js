@@ -60,9 +60,9 @@ export function Permissions({
   return (
     <FormProvider {...form}>
       <Flex
-        gap={4}
-        direction="column"
         as="form"
+        direction="column"
+        gap={4}
         onSubmit={form.handleSubmit((d) => {
           if (!account) {
             onError(new Error("Wallet not connected!"));
@@ -74,12 +74,12 @@ export function Permissions({
             roleMemberMap: d,
           });
           sendTx.mutate(tx, {
+            onError: (error) => {
+              onError(error);
+            },
             onSuccess: () => {
               form.reset(d);
               onSuccess();
-            },
-            onError: (error) => {
-              onError(error);
             },
           });
         })}
@@ -87,11 +87,11 @@ export function Permissions({
         {roles.map((role) => {
           return (
             <ContractPermission
+              contract={contract}
+              description={ROLE_DESCRIPTION_MAP[role] || ""}
               isPending={allRoleMembers.isPending}
               key={role}
               role={role}
-              description={ROLE_DESCRIPTION_MAP[role] || ""}
-              contract={contract}
             />
           );
         })}
@@ -108,13 +108,13 @@ export function Permissions({
             Reset
           </Button>
           <TransactionButton
-            isLoggedIn={isLoggedIn}
             client={contract.client}
-            txChainID={contract.chain.id}
-            transactionCount={1}
             disabled={!form.formState.isDirty}
-            type="submit"
+            isLoggedIn={isLoggedIn}
             isPending={sendTx.isPending}
+            transactionCount={1}
+            txChainID={contract.chain.id}
+            type="submit"
           >
             {sendTx.isPending ? "Updating permissions" : "Update permissions"}
           </TransactionButton>

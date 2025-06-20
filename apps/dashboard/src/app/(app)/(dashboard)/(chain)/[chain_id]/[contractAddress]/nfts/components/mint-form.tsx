@@ -101,25 +101,25 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           try {
             const dataWithCustom = {
               ...data,
-              image: data.image,
               animation_url: data.animation_url,
+              image: data.image,
             };
 
             const nft = parseAttributes(dataWithCustom);
             const transaction = isErc721
-              ? erc721MintTo({ contract, to: address, nft })
+              ? erc721MintTo({ contract, nft, to: address })
               : erc1155MintTo({
                   contract,
-                  to: address,
                   nft,
                   supply: BigInt(supply),
+                  to: address,
                 });
             await sendAndConfirmTx.mutateAsync(transaction, {
-              onSuccess: () => {
-                setOpen(false);
-              },
               onError: (error) => {
                 console.error(error);
+              },
+              onSuccess: () => {
+                setOpen(false);
               },
             });
 
@@ -134,7 +134,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           <Heading size="subtitle.md">Metadata xx</Heading>
           <Divider />
         </div>
-        <FormControl isRequired isInvalid={!!errors.name}>
+        <FormControl isInvalid={!!errors.name} isRequired>
           <FormLabel>Name</FormLabel>
           <Input autoFocus {...register("name")} />
           <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
@@ -143,15 +143,15 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           <FormLabel>Media</FormLabel>
           <div>
             <FileInput
-              previewMaxWidth="200px"
-              client={contract.client}
-              value={media}
-              showUploadButton
-              showPreview={true}
-              setValue={setFile}
               className="shrink-0 rounded border border-border transition-all duration-200"
-              selectOrUpload="Upload"
+              client={contract.client}
               helperText="Media"
+              previewMaxWidth="200px"
+              selectOrUpload="Upload"
+              setValue={setFile}
+              showPreview={true}
+              showUploadButton
+              value={media}
             />
           </div>
           <FormHelperText>
@@ -166,13 +166,13 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           <FormControl isInvalid={!!errors.image}>
             <FormLabel>Cover Image</FormLabel>
             <FileInput
+              accept={{ "image/*": [] }}
+              className="shrink-0 rounded border border-border transition-all"
               client={contract.client}
               previewMaxWidth="200px"
-              accept={{ "image/*": [] }}
-              value={image}
-              showUploadButton
               setValue={(file) => setValue("image", file)}
-              className="shrink-0 rounded border border-border transition-all"
+              showUploadButton
+              value={image}
             />
             <FormHelperText>
               You can optionally upload an image as the cover of your NFT.
@@ -188,25 +188,25 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
         </FormControl>
         {!isErc721 && (
-          <FormControl isRequired isInvalid={!!errors.supply}>
+          <FormControl isInvalid={!!errors.supply} isRequired>
             <FormLabel>Initial Supply</FormLabel>
             <Input
-              type="number"
-              step="1"
               pattern="[0-9]"
+              step="1"
+              type="number"
               {...register("supply")}
             />
             <FormErrorMessage>{errors?.supply?.message}</FormErrorMessage>
           </FormControl>
         )}
         <PropertiesFormControl
-          watch={watch}
           client={contract.client}
+          control={control}
           // biome-ignore lint/suspicious/noExplicitAny: FIXME
           errors={errors as any}
-          control={control}
           register={register}
           setValue={setValue}
+          watch={watch}
         />
         <Accordion
           allowToggle={!(errors.background_color || errors.external_url)}
@@ -215,7 +215,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           }
         >
           <AccordionItem>
-            <AccordionButton px={0} justifyContent="space-between">
+            <AccordionButton justifyContent="space-between" px={0}>
               <Heading size="subtitle.md">Advanced Options</Heading>
               <AccordionIcon />
             </AccordionButton>
@@ -254,10 +254,10 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                 <FormControl isInvalid={!!errors.image}>
                   <FormLabel>Image URL</FormLabel>
                   <Input
-                    value={image}
                     onChange={(e) => {
                       setValue("image", e.target.value);
                     }}
+                    value={image}
                   />
                   <FormHelperText>
                     If you already have your NFT image pre-uploaded to a URL,
@@ -271,10 +271,10 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                 <FormControl isInvalid={!!errors.animation_url}>
                   <FormLabel>Animation URL</FormLabel>
                   <Input
-                    value={animation_url}
                     onChange={(e) => {
                       setValue("animation_url", e.target.value);
                     }}
+                    value={animation_url}
                   />
                   <FormHelperText>
                     If you already have your NFT Animation URL pre-uploaded to a
@@ -292,21 +292,21 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
       <div className="mt-8 flex flex-row justify-end gap-3">
         <Button
           isDisabled={sendAndConfirmTx.isPending}
-          variant="outline"
           mr={3}
           onClick={() => setOpen(false)}
+          variant="outline"
         >
           Cancel
         </Button>
         <TransactionButton
-          txChainID={contract.chain.id}
           client={contract.client}
-          transactionCount={1}
-          isPending={sendAndConfirmTx.isPending}
-          form={MINT_FORM_ID}
-          type="submit"
           disabled={!isDirty}
+          form={MINT_FORM_ID}
           isLoggedIn={isLoggedIn}
+          isPending={sendAndConfirmTx.isPending}
+          transactionCount={1}
+          txChainID={contract.chain.id}
+          type="submit"
         >
           Mint NFT
         </TransactionButton>

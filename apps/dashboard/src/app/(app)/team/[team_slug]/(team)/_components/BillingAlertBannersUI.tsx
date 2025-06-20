@@ -1,11 +1,11 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useTransition } from "react";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import { useStripeRedirectEvent } from "../../../../(stripe)/stripe-redirect/stripeRedirectChannel";
 
 function BillingAlertBanner(props: {
@@ -62,14 +62,10 @@ function BillingAlertBanner(props: {
   );
 }
 
-export function PastDueBannerUI(props: {
-  teamSlug: string;
-}) {
+export function PastDueBannerUI(props: { teamSlug: string }) {
   return (
     <BillingAlertBanner
       ctaLabel="View Invoices"
-      variant="warning"
-      title="Unpaid Invoices"
       description={
         <>
           You have unpaid invoices. Service may be suspended if not paid
@@ -77,18 +73,16 @@ export function PastDueBannerUI(props: {
         </>
       }
       teamSlug={props.teamSlug}
+      title="Unpaid Invoices"
+      variant="warning"
     />
   );
 }
 
-export function ServiceCutOffBannerUI(props: {
-  teamSlug: string;
-}) {
+export function ServiceCutOffBannerUI(props: { teamSlug: string }) {
   return (
     <BillingAlertBanner
       ctaLabel="Pay Now"
-      variant="error"
-      title="Service Suspended"
       description={
         <>
           Your service has been suspended due to unpaid invoices. Pay now to
@@ -96,6 +90,8 @@ export function ServiceCutOffBannerUI(props: {
         </>
       }
       teamSlug={props.teamSlug}
+      title="Service Suspended"
+      variant="error"
     />
   );
 }

@@ -1,14 +1,14 @@
 "use client";
 
-import { reportAssetCreationStepConfigured } from "@/analytics/report";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
+  getAddress,
   NATIVE_TOKEN_ADDRESS,
   type ThirdwebClient,
-  getAddress,
 } from "thirdweb";
+import { reportAssetCreationStepConfigured } from "@/analytics/report";
 import {
   type CreateAssetFormValues,
   type TokenDistributionFormValues,
@@ -45,12 +45,12 @@ export function CreateTokenAssetPageUI(props: {
 
   const tokenInfoForm = useForm<TokenInfoFormValues>({
     resolver: zodResolver(tokenInfoFormSchema),
+    reValidateMode: "onChange",
     values: {
-      name: "",
-      description: "",
-      symbol: "",
-      image: undefined,
       chain: "1",
+      description: "",
+      image: undefined,
+      name: "",
       socialUrls: [
         {
           platform: "Website",
@@ -61,30 +61,32 @@ export function CreateTokenAssetPageUI(props: {
           url: "",
         },
       ],
+      symbol: "",
     },
-    reValidateMode: "onChange",
   });
 
   const tokenDistributionForm = useForm<TokenDistributionFormValues>({
     resolver: zodResolver(tokenDistributionFormSchema),
+    reValidateMode: "onChange",
     values: {
-      // sale fieldset
-      saleAllocationPercentage: "0",
-      saleTokenAddress: checksummedNativeTokenAddress,
-      salePrice: "0.1",
-      supply: "1000000",
-      saleEnabled: false,
+      airdropAddresses: [],
       // airdrop
       airdropEnabled: false,
-      airdropAddresses: [],
+      // sale fieldset
+      saleAllocationPercentage: "0",
+      saleEnabled: false,
+      salePrice: "0.1",
+      saleTokenAddress: checksummedNativeTokenAddress,
+      supply: "1000000",
     },
-    reValidateMode: "onChange",
   });
 
   return (
     <div>
       {step === "token-info" && (
         <TokenInfoFieldset
+          client={props.client}
+          form={tokenInfoForm}
           onChainUpdated={() => {
             // if the chain is updated, set the sale token address to the native token address
             tokenDistributionForm.setValue(
@@ -92,8 +94,6 @@ export function CreateTokenAssetPageUI(props: {
               checksummedNativeTokenAddress,
             );
           }}
-          client={props.client}
-          form={tokenInfoForm}
           onNext={() => {
             reportAssetCreationStepConfigured({
               assetType: "coin",
@@ -106,14 +106,10 @@ export function CreateTokenAssetPageUI(props: {
 
       {step === "distribution" && (
         <TokenDistributionFieldset
-          tokenSymbol={tokenInfoForm.watch("symbol")}
-          client={props.client}
-          form={tokenDistributionForm}
           accountAddress={props.accountAddress}
           chainId={tokenInfoForm.watch("chain")}
-          onPrevious={() => {
-            setStep("token-info");
-          }}
+          client={props.client}
+          form={tokenDistributionForm}
           onNext={() => {
             reportAssetCreationStepConfigured({
               assetType: "coin",
@@ -121,19 +117,23 @@ export function CreateTokenAssetPageUI(props: {
             });
             setStep("launch");
           }}
+          onPrevious={() => {
+            setStep("token-info");
+          }}
+          tokenSymbol={tokenInfoForm.watch("symbol")}
         />
       )}
 
       {step === "launch" && (
         <LaunchTokenStatus
-          teamSlug={props.teamSlug}
-          projectSlug={props.projectSlug}
           client={props.client}
+          createTokenFunctions={props.createTokenFunctions}
           onLaunchSuccess={props.onLaunchSuccess}
           onPrevious={() => {
             setStep("distribution");
           }}
-          createTokenFunctions={props.createTokenFunctions}
+          projectSlug={props.projectSlug}
+          teamSlug={props.teamSlug}
           values={{
             ...tokenInfoForm.getValues(),
             ...tokenDistributionForm.getValues(),

@@ -1,11 +1,9 @@
 "use client";
-import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
-import { SkeletonContainer } from "@/components/ui/skeleton";
 import type { UseQueryResult } from "@tanstack/react-query";
 import {
   DateRangeSelector,
-  type Range,
   getLastNDaysRange,
+  type Range,
 } from "components/analytics/date-range-selector";
 import {
   type AnalyticsQueryParams,
@@ -22,6 +20,8 @@ import {
 import { format } from "date-fns";
 import { useMemo, useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
+import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import { SkeletonContainer } from "@/components/ui/skeleton";
 
 interface ContractAnalyticsPageProps {
   contract: ThirdwebContract;
@@ -46,26 +46,26 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
         <AnalyticsStat
           chainId={contract.chain.id}
           contractAddress={contract.address}
+          label="Unique Wallets"
           // FIXME
           // eslint-disable-next-line react-compiler/react-compiler
           useTotal={useTotalContractUniqueWallets}
-          label="Unique Wallets"
         />
         <AnalyticsStat
           chainId={contract.chain.id}
           contractAddress={contract.address}
+          label="Total Transactions"
           // FIXME
           // eslint-disable-next-line react-compiler/react-compiler
           useTotal={useTotalContractTransactionAnalytics}
-          label="Total Transactions"
         />
         <AnalyticsStat
           chainId={contract.chain.id}
           contractAddress={contract.address}
+          label="Total Events"
           // FIXME
           // eslint-disable-next-line react-compiler/react-compiler
           useTotal={useTotalContractEvents}
-          label="Total Events"
         />
       </div>
 
@@ -77,38 +77,38 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
         <UniqueWalletsChart
           chainId={contract.chain.id}
           contractAddress={contract.address}
-          startDate={range.from}
           endDate={range.to}
+          startDate={range.from}
         />
 
         <TotalTransactionsChart
           chainId={contract.chain.id}
           contractAddress={contract.address}
-          startDate={range.from}
           endDate={range.to}
+          startDate={range.from}
         />
 
         <TotalEventsChart
           chainId={contract.chain.id}
           contractAddress={contract.address}
-          startDate={range.from}
           endDate={range.to}
+          startDate={range.from}
         />
 
         <FunctionBreakdownChart
           chainId={contract.chain.id}
           contractAddress={contract.address}
-          startDate={range.from}
           endDate={range.to}
+          startDate={range.from}
           writeFnSelectorToNameRecord={writeFnSelectorToNameRecord}
         />
 
         <EventBreakdownChart
           chainId={contract.chain.id}
           contractAddress={contract.address}
-          startDate={range.from}
           endDate={range.to}
           eventSelectorToNameRecord={eventSelectorToNameRecord}
+          startDate={range.from}
         />
       </div>
     </div>
@@ -135,22 +135,22 @@ function UniqueWalletsChart(props: ChartProps) {
 
   return (
     <ThirdwebBarChart
-      header={{
-        title: "Unique Wallets",
-        titleClassName: "mb-0.5 text-xl",
-        description:
-          "The number of unique wallet addresses that have sent a transaction to this contract.",
-      }}
-      data={analyticsQuery.data || []}
-      isPending={analyticsQuery.isPending}
+      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
       config={{
         count: {
-          label: "Unique Wallets",
           color: "hsl(var(--chart-1))",
+          label: "Unique Wallets",
         },
       }}
-      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
+      data={analyticsQuery.data || []}
+      header={{
+        description:
+          "The number of unique wallet addresses that have sent a transaction to this contract.",
+        title: "Unique Wallets",
+        titleClassName: "mb-0.5 text-xl",
+      }}
       hideLabel={false}
+      isPending={analyticsQuery.isPending}
       toolTipLabelFormatter={toolTipLabelFormatter}
     />
   );
@@ -166,22 +166,22 @@ function TotalTransactionsChart(props: ChartProps) {
 
   return (
     <ThirdwebBarChart
-      header={{
-        title: "Total Transactions",
-        titleClassName: "mb-0.5 text-xl",
-        description:
-          "The number of transactions that have been sent to this contract.",
-      }}
-      data={analyticsQuery.data || []}
-      isPending={analyticsQuery.isPending}
+      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
       config={{
         count: {
-          label: "Transactions",
           color: "hsl(var(--chart-1))",
+          label: "Transactions",
         },
       }}
-      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
+      data={analyticsQuery.data || []}
+      header={{
+        description:
+          "The number of transactions that have been sent to this contract.",
+        title: "Total Transactions",
+        titleClassName: "mb-0.5 text-xl",
+      }}
       hideLabel={false}
+      isPending={analyticsQuery.isPending}
       toolTipLabelFormatter={toolTipLabelFormatter}
     />
   );
@@ -192,22 +192,22 @@ function TotalEventsChart(props: ChartProps) {
 
   return (
     <ThirdwebBarChart
-      header={{
-        title: "Total Events",
-        titleClassName: "mb-0.5 text-xl",
-        description:
-          "The number of on-chain events that have been emitted from this contract.",
-      }}
-      data={analyticsQuery.data || []}
-      isPending={analyticsQuery.isPending}
+      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
       config={{
         count: {
-          label: "Events",
           color: "hsl(var(--chart-1))",
+          label: "Events",
         },
       }}
-      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
+      data={analyticsQuery.data || []}
+      header={{
+        description:
+          "The number of on-chain events that have been emitted from this contract.",
+        title: "Total Events",
+        titleClassName: "mb-0.5 text-xl",
+      }}
       hideLabel={false}
+      isPending={analyticsQuery.isPending}
       toolTipLabelFormatter={toolTipLabelFormatter}
     />
   );
@@ -243,30 +243,30 @@ function FunctionBreakdownChart(
 
   return (
     <ThirdwebBarChart
-      header={{
-        title: "Function Breakdown",
-        titleClassName: "mb-0.5 text-xl",
-        description:
-          "The breakdown of calls to each write function from transactions.",
-      }}
-      data={mappedQueryData || []}
-      isPending={analyticsQuery.isPending}
+      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
       config={Object.keys(mappedQueryData?.[0] || {}).reduce(
         (acc, key) => {
           if (key === "time") {
             return acc;
           }
           acc[key] = {
-            label: key,
             color: `hsl(var(--chart-${(Object.keys(acc).length % 15) + 1}))`,
+            label: key,
           };
           return acc;
         },
         {} as Record<string, { label: string; color: string }>,
       )}
-      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
-      showLegend
+      data={mappedQueryData || []}
+      header={{
+        description:
+          "The breakdown of calls to each write function from transactions.",
+        title: "Function Breakdown",
+        titleClassName: "mb-0.5 text-xl",
+      }}
       hideLabel={false}
+      isPending={analyticsQuery.isPending}
+      showLegend
       toolTipLabelFormatter={toolTipLabelFormatter}
     />
   );
@@ -302,29 +302,29 @@ function EventBreakdownChart(
 
   return (
     <ThirdwebBarChart
-      header={{
-        title: "Event Breakdown",
-        titleClassName: "mb-0.5 text-xl",
-        description: "The breakdown of events emitted by this contract.",
-      }}
-      data={mappedQueryData || []}
-      isPending={analyticsQuery.isPending}
+      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
       config={Object.keys(mappedQueryData?.[0] || {}).reduce(
         (acc, key) => {
           if (key === "time") {
             return acc;
           }
           acc[key] = {
-            label: key,
             color: `hsl(var(--chart-${(Object.keys(acc).length % 15) + 1}))`,
+            label: key,
           };
           return acc;
         },
         {} as Record<string, { label: string; color: string }>,
       )}
-      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
-      showLegend
+      data={mappedQueryData || []}
+      header={{
+        description: "The breakdown of events emitted by this contract.",
+        title: "Event Breakdown",
+        titleClassName: "mb-0.5 text-xl",
+      }}
       hideLabel={false}
+      isPending={analyticsQuery.isPending}
+      showLegend
       toolTipLabelFormatter={toolTipLabelFormatter}
     />
   );
@@ -347,8 +347,8 @@ const AnalyticsStat: React.FC<AnalyticsStatProps> = ({
     <AnalyticsData
       chainId={chainId}
       contractAddress={contractAddress}
-      useTotal={useTotal}
       label={label}
+      useTotal={useTotal}
     />
   );
 };
@@ -362,26 +362,23 @@ const AnalyticsData: React.FC<AnalyticsStatProps> = ({
   // FIXME: re-work this to not pass the hook down
   // eslint-disable-next-line react-compiler/react-compiler
   const totalQuery = useTotal({
-    contractAddress,
     chainId,
+    contractAddress,
   });
 
-  return <AnalyticsStatUI label={label} data={totalQuery.data?.count} />;
+  return <AnalyticsStatUI data={totalQuery.data?.count} label={label} />;
 };
 
-function AnalyticsStatUI(props: {
-  label: string;
-  data: number | undefined;
-}) {
+function AnalyticsStatUI(props: { label: string; data: number | undefined }) {
   return (
     <dl className="rounded-lg border bg-card p-4">
       <dt className="font-semibold">{props.label}</dt>
       <SkeletonContainer
-        skeletonData={10000}
         loadedData={props.data}
         render={(v) => {
           return <dd className="font-normal text-xl">{v.toLocaleString()}</dd>;
         }}
+        skeletonData={10000}
       />
     </dl>
   );

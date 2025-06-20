@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { ArrowDownToLineIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function handleDownload(params: {
   fileContent: string;
@@ -25,15 +25,15 @@ export function DownloadFileButton(props: {
 }) {
   return (
     <Button
-      size="sm"
       className="gap-2"
       onClick={() => {
         handleDownload({
           fileContent: props.fileContent,
-          fileNameWithExtension: props.fileNameWithExtension,
           fileFormat: props.fileFormat,
+          fileNameWithExtension: props.fileNameWithExtension,
         });
       }}
+      size="sm"
     >
       <ArrowDownToLineIcon className="size-4" />
       {props.label}

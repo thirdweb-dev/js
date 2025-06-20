@@ -7,10 +7,10 @@ export function getNebulaFiltersFromSearchParams(params: {
   interval: string | undefined | string[];
 }) {
   return getFiltersFromSearchParams({
-    from: params.from,
-    to: params.to,
-    interval: params.interval,
     defaultRange: "last-30",
+    from: params.from,
+    interval: params.interval,
+    to: params.to,
   });
 }
 
@@ -21,9 +21,9 @@ export function getUniversalBridgeFiltersFromSearchParams(params: {
   defaultRange: DurationId;
 }) {
   return getFiltersFromSearchParams({
-    from: params.from,
-    to: params.to,
-    interval: params.interval,
     defaultRange: params.defaultRange,
+    from: params.from,
+    interval: params.interval,
+    to: params.to,
   });
 }

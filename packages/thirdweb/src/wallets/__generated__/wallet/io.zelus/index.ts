@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.zelus",
-  name: "Zelus Wallet",
-  homepage: "https://zelus.io",
-  image_id: "a173eba6-05b4-43f4-0df6-400563637b00",
   app: {
-    browser: "https://rollingloud.bridge.zelus.io",
-    ios: "https://apps.apple.com/us/app/zelus/id1588430343",
     android: "https://play.google.com/store/apps/details?id=com.zelus.wallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://rollingloud.bridge.zelus.io",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/zelus/id1588430343",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "zeluswallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://rollingloud.bridge.zelus.io",
   },
+  homepage: "https://zelus.io",
+  id: "io.zelus",
+  image_id: "a173eba6-05b4-43f4-0df6-400563637b00",
+  mobile: {
+    native: "zeluswallet://",
+    universal: null,
+  },
+  name: "Zelus Wallet",
+  rdns: null,
 } as const;

@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.walletverse",
-  name: "Walletverse",
-  homepage: "https://walletverse.io/",
-  image_id: "ca91138e-0546-4cfe-071d-2181241dc600",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/wallet-verse-defi-buy-crypto/id6462672660",
     android: "https://play.google.com/store/apps/details?id=com.walletverse",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/wallet-verse-defi-buy-crypto/id6462672660",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "walletverse://",
-    universal: "https://walletverse.io",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://walletverse.io/",
+  id: "io.walletverse",
+  image_id: "ca91138e-0546-4cfe-071d-2181241dc600",
+  mobile: {
+    native: "walletverse://",
+    universal: "https://walletverse.io",
+  },
+  name: "Walletverse",
+  rdns: null,
 } as const;

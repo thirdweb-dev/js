@@ -1,5 +1,8 @@
+import { type Account, accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
+import { useLocalStorage } from "hooks/useLocalStorage";
+import { ArrowRightIcon, CircleAlertIcon } from "lucide-react";
+import { useState } from "react";
 import type { Team } from "@/api/team";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,10 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { type Account, accountPlan } from "@3rdweb-sdk/react/hooks/useApi";
-import { useLocalStorage } from "hooks/useLocalStorage";
-import { ArrowRightIcon, CircleAlertIcon } from "lucide-react";
-import { useState } from "react";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { TeamPlanBadge } from "../../app/(app)/components/TeamPlanBadge";
 import { getValidTeamPlan } from "../../app/(app)/team/components/TeamHeader/getValidTeamPlan";
 import { ApplyForOpCreditsForm } from "./ApplyForOpCreditsForm";
@@ -26,7 +26,6 @@ export type CreditsRecord = {
 };
 
 const tier2Credits: Omit<CreditsRecord, "plan"> = {
-  upTo: true,
   credits: "$2,500",
   features: [
     "10k monthly active wallets",
@@ -34,20 +33,21 @@ const tier2Credits: Omit<CreditsRecord, "plan"> = {
     "Custom Auth",
     "Custom Branding",
   ],
+  upTo: true,
 };
 
 const tier1Credits: Omit<CreditsRecord, "plan"> = {
-  upTo: true,
   credits: "$250",
+  upTo: true,
 };
 
 export const PlanToCreditsRecord: Record<Team["billingPlan"], CreditsRecord> = {
+  accelerate: {
+    plan: "accelerate",
+    ...tier2Credits,
+  },
   free: {
     plan: "free",
-    ...tier1Credits,
-  },
-  starter: {
-    plan: "starter",
     ...tier1Credits,
   },
 
@@ -59,30 +59,27 @@ export const PlanToCreditsRecord: Record<Team["billingPlan"], CreditsRecord> = {
     plan: "growth_legacy",
     ...tier2Credits,
   },
-  accelerate: {
-    plan: "accelerate",
-    ...tier2Credits,
-  },
-  scale: {
-    plan: "scale",
-    ...tier2Credits,
-  },
   pro: {
-    plan: "pro",
-    upTo: true,
     credits: "$3,000+",
     features: [
       "Custom rate limits for APIs & Infra",
       "Enterprise grade SLAs",
       "Dedicated support",
     ],
+    plan: "pro",
+    upTo: true,
+  },
+  scale: {
+    plan: "scale",
+    ...tier2Credits,
+  },
+  starter: {
+    plan: "starter",
+    ...tier1Credits,
   },
 };
 
-export function ApplyForOpCredits(props: {
-  team: Team;
-  account: Account;
-}) {
+export function ApplyForOpCredits(props: { team: Team; account: Account }) {
   const { account, team } = props;
   const validTeamPlan = getValidTeamPlan(team);
   const hasValidPaymentMethod = validTeamPlan !== "free";
@@ -116,7 +113,7 @@ export function ApplyForOpCredits(props: {
           {/* alert */}
           {!hasValidPaymentMethod && (
             <div className="px-6 pb-6">
-              <Alert variant="warning" className="bg-background">
+              <Alert className="bg-background" variant="warning">
                 <CircleAlertIcon className="size-5" />
                 <AlertTitle>Payment method required</AlertTitle>
                 <AlertDescription>
@@ -135,10 +132,10 @@ export function ApplyForOpCredits(props: {
 
           <div className="flex justify-end border-t p-4">
             <ApplyOpCreditsButton
+              account={account}
               hasAppliedForOpGrant={hasAppliedForOpGrant}
               hasValidPaymentMethod={hasValidPaymentMethod}
               validTeamPlan={validTeamPlan}
-              account={account}
             />
           </div>
         </div>
@@ -187,11 +184,11 @@ function ApplyOpCreditsButton(props: {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+    <Sheet onOpenChange={setIsOpen} open={isOpen}>
       <SheetTrigger asChild>
         <Button
-          disabled={!hasValidPaymentMethod || hasAppliedForOpGrant}
           className="gap-2"
+          disabled={!hasValidPaymentMethod || hasAppliedForOpGrant}
           size="sm"
         >
           {hasAppliedForOpGrant ? (
@@ -210,11 +207,11 @@ function ApplyOpCreditsButton(props: {
         </SheetHeader>
         <div className="h-5" />
         <ApplyForOpCreditsForm
+          account={account}
           onClose={() => {
             setIsOpen(false);
           }}
           plan={validTeamPlan}
-          account={account}
         />
       </SheetContent>
     </Sheet>

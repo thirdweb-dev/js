@@ -14,14 +14,14 @@ export async function authEndpoint(args: {
   const clientFetch = getClientFetch(args.client, args.ecosystem);
 
   const res = await clientFetch(ROUTE_AUTH_ENDPOINT_CALLBACK, {
-    method: "POST",
+    body: stringify({
+      developerClientId: args.client.clientId,
+      payload: args.payload,
+    }),
     headers: {
       "Content-Type": "application/json",
     },
-    body: stringify({
-      payload: args.payload,
-      developerClientId: args.client.clientId,
-    }),
+    method: "POST",
   });
 
   if (!res.ok) {

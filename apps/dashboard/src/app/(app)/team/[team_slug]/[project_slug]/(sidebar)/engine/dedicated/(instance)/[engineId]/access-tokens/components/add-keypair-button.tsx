@@ -1,4 +1,3 @@
-import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import {
   type KeypairAlgorithm,
   useEngineAddKeypair,
@@ -22,6 +21,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { CirclePlusIcon } from "lucide-react";
 import { useState } from "react";
 import { Button, FormLabel, Text } from "tw-components";
+import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 
 const KEYPAIR_ALGORITHM_DETAILS: Record<
   KeypairAlgorithm,
@@ -37,17 +37,17 @@ const KEYPAIR_ALGORITHM_DETAILS: Record<
       "openssl ecparam -name prime256v1 -genkey -noout -out private.key",
     publicKeyInstructions: "openssl ec -in private.key -pubout -out public.key",
   },
-  RS256: {
-    name: "RSASSA-PKCS1-v1_5",
-    privateKeyInstructions:
-      "openssl genpkey -algorithm RSA -out private.key -pkeyopt rsa_keygen_bits:2048",
-    publicKeyInstructions:
-      "openssl rsa -pubout -in private.key -out public.key",
-  },
   PS256: {
     name: "RSASSA-PSS",
     privateKeyInstructions:
       "openssl genpkey -algorithm RSA-PSS -out private.key -pkeyopt rsa_keygen_bits:2048 -pkeyopt rsa_pss_keygen_md:sha256",
+    publicKeyInstructions:
+      "openssl rsa -pubout -in private.key -out public.key",
+  },
+  RS256: {
+    name: "RSASSA-PKCS1-v1_5",
+    privateKeyInstructions:
+      "openssl genpkey -algorithm RSA -out private.key -pkeyopt rsa_keygen_bits:2048",
     publicKeyInstructions:
       "openssl rsa -pubout -in private.key -out public.key",
   },
@@ -67,8 +67,8 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
   const [label, setLabel] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutateAsync: importKeypair } = useEngineAddKeypair({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
 
   const { onSuccess, onError } = useTxNotifications(
@@ -79,9 +79,9 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
   const onClick = async () => {
     try {
       await importKeypair({
-        publicKey,
         algorithm,
         label,
+        publicKey,
       });
 
       onSuccess();
@@ -97,22 +97,22 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
   return (
     <>
       <Button
-        onClick={onOpen}
-        variant="ghost"
-        size="sm"
-        leftIcon={<CirclePlusIcon className="size-6" />}
         colorScheme="primary"
+        leftIcon={<CirclePlusIcon className="size-6" />}
+        onClick={onOpen}
+        size="sm"
+        variant="ghost"
         w="fit-content"
       >
         Add Public Key
       </Button>
 
       <Modal
+        closeOnEsc={false}
+        closeOnOverlayClick={false}
+        isCentered
         isOpen={isOpen}
         onClose={onClose}
-        closeOnOverlayClick={false}
-        closeOnEsc={false}
-        isCentered
         size="2xl"
       >
         <ModalOverlay />
@@ -124,18 +124,18 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
                 <div className="flex flex-row gap-2">
                   <Text>Create a private key using:</Text>
                   <Select
-                    w="fit-content"
-                    value={algorithm}
+                    color="primary.500"
+                    fontFamily="mono"
+                    fontSize="small"
+                    mt="-1px"
                     onChange={(e) =>
                       setAlgorithm(e.target.value as KeypairAlgorithm)
                     }
-                    fontSize="small"
                     size="sm"
-                    variant="unstyled"
                     // fontWeight="bold"
-                    fontFamily="mono"
-                    color="primary.500"
-                    mt="-1px"
+                    value={algorithm}
+                    variant="unstyled"
+                    w="fit-content"
                   >
                     {(
                       Object.keys(
@@ -171,20 +171,20 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
               </FormLabel>
               <Textarea
                 fontFamily="mono"
-                value={publicKey}
+                fontSize="small"
                 onChange={(e) => setPublicKey(e.target.value)}
                 placeholder="-----BEGIN PUBLIC KEY-----\n...\n...\n...\n...\n-----END PUBLIC KEY-----"
                 rows={6}
-                fontSize="small"
+                value={publicKey}
               />
             </FormControl>
 
             <FormControl>
               <FormLabel>Label</FormLabel>
               <Input
-                value={label}
                 onChange={(e) => setLabel(e.target.value)}
                 placeholder="Enter a description for this keypair"
+                value={label}
               />
             </FormControl>
 
@@ -201,14 +201,14 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
           </ModalBody>
 
           <ModalFooter as={Flex} gap={3}>
-            <Button variant="ghost" onClick={onClose}>
+            <Button onClick={onClose} variant="ghost">
               Cancel
             </Button>
             <Button
-              type="submit"
               colorScheme="primary"
-              onClick={onClick}
               isDisabled={!publicKey}
+              onClick={onClick}
+              type="submit"
             >
               Add Public Key
             </Button>

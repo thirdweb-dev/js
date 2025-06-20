@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.safemoon",
-  name: "SafeMoon",
-  homepage: "https://safemoon.com/",
-  image_id: "ea0140c7-787c-43a4-838f-d5ab6a342000",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/safemoon/id1579735495",
     android:
       "https://play.google.com/store/apps/details?id=net.safemoon.androidwallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/safemoon/id1579735495",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "safemoon://",
-    universal: "https://safemoon.com/wc/wc",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: "safemoon://",
     universal: "https://safemoon.com/wc/wc",
   },
+  homepage: "https://safemoon.com/",
+  id: "com.safemoon",
+  image_id: "ea0140c7-787c-43a4-838f-d5ab6a342000",
+  mobile: {
+    native: "safemoon://",
+    universal: "https://safemoon.com/wc/wc",
+  },
+  name: "SafeMoon",
+  rdns: null,
 } as const;

@@ -27,11 +27,11 @@ export class PasskeyWebClient implements PasskeyClient {
   }): Promise<RegisterResult> {
     const { name, challenge, rp } = args;
     const registration = await client.register({
-      user: name,
-      challenge,
-      userVerification: "required",
-      domain: rp.id,
       attestation: true,
+      challenge,
+      domain: rp.id,
+      user: name,
+      userVerification: "required",
     });
     const clientDataB64 = base64UrlToBase64(
       registration.response.clientDataJSON,
@@ -39,14 +39,14 @@ export class PasskeyWebClient implements PasskeyClient {
     const clientDataParsed = JSON.parse(base64ToString(clientDataB64));
     return {
       authenticatorData: registration.response.authenticatorData,
-      credentialId: registration.id,
       clientData: registration.response.clientDataJSON,
       credential: {
-        publicKey: registration.response.publicKey,
         algorithm: parsers.getAlgoName(
           registration.response.publicKeyAlgorithm,
         ),
+        publicKey: registration.response.publicKey,
       },
+      credentialId: registration.id,
       origin: clientDataParsed.origin,
     };
   }
@@ -60,17 +60,17 @@ export class PasskeyWebClient implements PasskeyClient {
     const result = await client.authenticate({
       allowCredentials: credentialId ? [credentialId] : [],
       challenge,
-      userVerification: "required",
       domain: rp.id,
+      userVerification: "required",
     });
     const clientDataB64 = base64UrlToBase64(result.response.clientDataJSON);
     const clientDataParsed = JSON.parse(base64ToString(clientDataB64));
     return {
       authenticatorData: result.response.authenticatorData,
-      credentialId: result.id,
       clientData: result.response.clientDataJSON,
-      signature: result.response.signature,
+      credentialId: result.id,
       origin: clientDataParsed.origin,
+      signature: result.response.signature,
     };
   }
 }
@@ -87,9 +87,9 @@ export async function hasStoredPasskey(
   storage?: AsyncStorage,
 ) {
   const clientStorage = new ClientScopedStorage({
-    storage: storage ?? webLocalStorage, // TODO (passkey) react native variant of this fn
-    clientId: client.clientId,
+    clientId: client.clientId, // TODO (passkey) react native variant of this fn
     ecosystem: ecosystemId ? { id: ecosystemId } : undefined,
+    storage: storage ?? webLocalStorage,
   });
   const credId = await clientStorage.getPasskeyCredentialId();
   return !!credId;

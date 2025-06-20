@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "co.xellar",
-  name: "Xellar",
-  homepage: "https://xellar.co",
-  image_id: "67b5a91d-a9ce-4268-d73d-b2f924a0b400",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/xellar-crypto-wallet/id1671215861",
     android: "https://play.google.com/store/apps/details?id=com.xellar.wallets",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/xellar-crypto-wallet/id1671215861",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "xellar://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://xellar.co",
+  id: "co.xellar",
+  image_id: "67b5a91d-a9ce-4268-d73d-b2f924a0b400",
+  mobile: {
+    native: "xellar://",
+    universal: null,
+  },
+  name: "Xellar",
+  rdns: null,
 } as const;

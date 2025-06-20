@@ -4,12 +4,12 @@ import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import type { PreparedTransaction } from "../../../../../transaction/prepare-transaction.js";
 import type { Address } from "../../../../../utils/address.js";
 import type { Account } from "../../../../../wallets/interfaces/wallet.js";
+import { getOrDeployModule } from "../../../common/getOrDeployModule.js";
+import { installPublishedModule } from "../../../common/installPublishedModule.js";
 import {
   type EncodeBytesOnInstallParams,
   encodeBytesOnInstallParams,
 } from "../encode/encodeBytesOnInstall.js";
-import { getOrDeployModule } from "../../../common/getOrDeployModule.js";
-import { installPublishedModule } from "../../../common/installPublishedModule.js";
 
 const contractId = "RoyaltyERC1155";
 
@@ -57,8 +57,8 @@ export function module(
       publisher: params?.publisher,
     });
     return {
-      module: moduleContract.address as Address,
       data: encodeInstall(params),
+      module: moduleContract.address as Address,
     };
   };
 }
@@ -96,8 +96,8 @@ export function install(options: {
   return installPublishedModule({
     account: options.account,
     contract: options.contract,
-    moduleName: contractId,
     moduleData: encodeInstall(options.params),
+    moduleName: contractId,
     publisher: options.params?.publisher,
   });
 }

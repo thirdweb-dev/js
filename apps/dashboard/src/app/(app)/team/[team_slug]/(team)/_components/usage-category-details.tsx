@@ -49,8 +49,8 @@ export function UsageCategoryDetails({ category }: UsageCategoryDetailsProps) {
             {filteredLineItems.length > 0 ? (
               filteredLineItems.map((item, index) => (
                 <TableRow
-                  key={`${item.description}_${index}`}
                   className="hover:bg-accent"
+                  key={`${item.description}_${index}`}
                 >
                   <TableCell className="py-3 pl-6 font-medium">
                     {item.description}
@@ -60,8 +60,8 @@ export function UsageCategoryDetails({ category }: UsageCategoryDetailsProps) {
                   </TableCell>
                   <TableCell className="py-3 text-right">
                     {formatPrice(item.unitAmountUsdCents, {
-                      isUnitPrice: true,
                       inCents: true,
+                      isUnitPrice: true,
                     })}
                   </TableCell>
                   <TableCell className="py-3 pr-6 text-right">
@@ -76,8 +76,8 @@ export function UsageCategoryDetails({ category }: UsageCategoryDetailsProps) {
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={4}
                   className="h-24 pl-6 text-center text-muted-foreground"
+                  colSpan={4}
                 >
                   No usage during this period.
                 </TableCell>
@@ -113,9 +113,9 @@ export function formatPrice(
   const amountInDollars = inCents ? numericValue / 100 : numericValue;
 
   return amountInDollars.toLocaleString("en-US", {
-    style: "currency",
     currency: "USD",
+    maximumFractionDigits: isUnitPrice ? 10 : 2,
     minimumFractionDigits: 2,
-    maximumFractionDigits: isUnitPrice ? 10 : 2, // Allow more precision for unit prices
+    style: "currency", // Allow more precision for unit prices
   });
 }

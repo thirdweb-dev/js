@@ -1,11 +1,10 @@
-import { randomLorem } from "@/storybook/stubs";
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { ThirdwebProvider } from "thirdweb/react";
+import { randomLorem } from "@/storybook/stubs";
 import type { TruncatedSessionInfo } from "../api/types";
 import { ChatPageLayout } from "./ChatPageLayout";
 
 const meta = {
-  title: "Nebula/ChatPageLayout",
   component: Variant,
   decorators: [
     (Story) => (
@@ -19,6 +18,7 @@ const meta = {
       appDirectory: true,
     },
   },
+  title: "Nebula/ChatPageLayout",
 } satisfies Meta<typeof Variant>;
 
 export default meta;
@@ -44,16 +44,14 @@ export const ThirtyChats: Story = {
 
 function generateRandomSessions(count: number): TruncatedSessionInfo[] {
   return Array.from({ length: count }, (_, i) => ({
+    created_at: new Date().toISOString(),
     id: i.toString(),
     title: randomLorem(Math.floor(Math.random() * 10) + 1),
-    created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   }));
 }
 
-function Variant(props: {
-  sessions: TruncatedSessionInfo[];
-}) {
+function Variant(props: { sessions: TruncatedSessionInfo[] }) {
   return (
     <ChatPageLayout
       accountAddress="0xC569B9FD77d132e10954cA5E6EF617414e314b11"

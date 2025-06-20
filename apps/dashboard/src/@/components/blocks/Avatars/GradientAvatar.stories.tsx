@@ -8,8 +8,8 @@ import { Button } from "../../ui/button";
 import { GradientAvatar } from "./GradientAvatar";
 
 const meta = {
-  title: "blocks/Avatars/GradientAvatar",
   component: Story,
+  title: "blocks/Avatars/GradientAvatar",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -26,64 +26,64 @@ function Story() {
 
       <BadgeContainer label="No Src, No id - Skeleton">
         <GradientAvatar
-          id={undefined}
-          src={undefined}
           className="size-20"
           client={storybookThirdwebClient}
+          id={undefined}
+          src={undefined}
         />
       </BadgeContainer>
 
       <BadgeContainer label="No Src, id=foo - Skeleton">
         <GradientAvatar
-          id={"foo"}
-          src={undefined}
           className="size-20"
           client={storybookThirdwebClient}
+          id={"foo"}
+          src={undefined}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Invalid Src, id=foo - Gradient">
         <GradientAvatar
-          id={"foo"}
-          src={""}
           className="size-20"
           client={storybookThirdwebClient}
+          id={"foo"}
+          src={""}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Invalid Src, id=bar - Gradient">
         <GradientAvatar
-          id={"bar"}
-          src={""}
           className="size-20"
           client={storybookThirdwebClient}
+          id={"bar"}
+          src={""}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Empty/Invalid Src, No id - default fallback">
         <GradientAvatar
-          src="invalid-src"
-          id={undefined}
           className="size-20"
           client={storybookThirdwebClient}
+          id={undefined}
+          src="invalid-src"
         />
       </BadgeContainer>
 
       <BadgeContainer label="Valid Src, https">
         <GradientAvatar
-          src="https://picsum.photos/200/300"
-          id={undefined}
           className="size-20"
           client={storybookThirdwebClient}
+          id={undefined}
+          src="https://picsum.photos/200/300"
         />
       </BadgeContainer>
 
       <BadgeContainer label="Valid Src, ipfs">
         <GradientAvatar
-          src="ipfs://QmZbeJYEs7kCJHyQxjxU2SJUtjSAr4m87wzJFJUyWomKdj/Smily.svg"
-          id={undefined}
           className="size-20"
           client={storybookThirdwebClient}
+          id={undefined}
+          src="ipfs://QmZbeJYEs7kCJHyQxjxU2SJUtjSAr4m87wzJFJUyWomKdj/Smily.svg"
         />
       </BadgeContainer>
 
@@ -100,7 +100,7 @@ function ToggleTest() {
   return (
     <div className="relative flex flex-col gap-10 border p-6">
       <Button
-        variant="outline"
+        className="absolute top-6 right-6 inline-flex"
         onClick={() => {
           if (data) {
             setData(undefined);
@@ -111,7 +111,7 @@ function ToggleTest() {
             });
           }
         }}
-        className="absolute top-6 right-6 inline-flex"
+        variant="outline"
       >
         Toggle Src
       </Button>
@@ -120,19 +120,19 @@ function ToggleTest() {
 
       <BadgeContainer label="Valid Src">
         <GradientAvatar
-          src={data?.src}
-          id={data?.id}
           className="size-20"
           client={storybookThirdwebClient}
+          id={data?.id}
+          src={data?.src}
         />
       </BadgeContainer>
 
       <BadgeContainer label="invalid Src">
         <GradientAvatar
           className="size-20"
-          src={data ? "invalid-src" : undefined}
-          id={undefined}
           client={storybookThirdwebClient}
+          id={undefined}
+          src={data ? "invalid-src" : undefined}
         />
       </BadgeContainer>
     </div>

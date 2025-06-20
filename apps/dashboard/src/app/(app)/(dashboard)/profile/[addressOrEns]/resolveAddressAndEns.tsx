@@ -1,6 +1,6 @@
 import { mapThirdwebPublisher } from "components/contract-components/fetch-contracts-with-versions";
 import { resolveEns } from "lib/ens";
-import { type ThirdwebClient, getAddress, isAddress } from "thirdweb";
+import { getAddress, isAddress, type ThirdwebClient } from "thirdweb";
 import { isValidENSName } from "thirdweb/utils";
 
 type ResolvedAddressInfo = {

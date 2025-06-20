@@ -1,16 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GlobeIcon } from "lucide-react";
 import Image from "next/image";
 import { getWalletInfo } from "thirdweb/wallets";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Breadcrumb,
   CodeBlock,
+  createMetadata,
   DocLink,
   Heading,
   Paragraph,
-  createMetadata,
 } from "../../../../../components/Document";
 
 const walletId = "com.coinbase.wallet";
@@ -19,12 +19,12 @@ export async function generateMetadata() {
   const walletMetadata = await getWalletInfo(walletId);
 
   return createMetadata({
-    title: walletMetadata.name,
     description: `Connect ${walletMetadata.name} with thirdweb Connect SDK`,
     image: {
-      title: walletMetadata.name,
       icon: "wallets",
+      title: walletMetadata.name,
     },
+    title: walletMetadata.name,
   });
 }
 
@@ -51,32 +51,32 @@ export default async function Page() {
 
       <div className="mb-10 flex items-center gap-3 [&_h1]:m-0">
         <Image
-          src={walletImage}
-          width={36}
-          height={36}
           alt=""
           className="rounded-lg"
+          height={36}
+          src={walletImage}
+          width={36}
         />
-        <Heading level={1} id="title">
+        <Heading anchorId="title" level={1}>
           {walletMetadata.name}
         </Heading>
       </div>
 
       <DocLink
-        href={walletMetadata.homepage}
         className="flex items-center gap-2"
+        href={walletMetadata.homepage}
       >
         <GlobeIcon className="size-5" />
         {walletMetadata.homepage}
       </DocLink>
 
-      <Heading level={2} id="wallet-id">
+      <Heading anchorId="wallet-id" level={2}>
         Wallet ID
       </Heading>
 
-      <CodeBlock lang="ts" code={`"${walletId}"`} />
+      <CodeBlock code={`"${walletId}"`} lang="ts" />
 
-      <Heading level={2} id="wallet-id">
+      <Heading anchorId="connect-wallet" level={2}>
         Connect Wallet
       </Heading>
 
@@ -87,10 +87,10 @@ export default async function Page() {
           <TabsTrigger value="tab-3"> React (Component) </TabsTrigger>
         </TabsList>
         <TabsContent value="tab-1">
-          <CodeBlock lang="ts" code={injectedSupportedTS()} />
+          <CodeBlock code={injectedSupportedTS()} lang="ts" />
         </TabsContent>
         <TabsContent value="tab-2">
-          <CodeBlock lang="ts" code={injectedSupportedCodeReact()} />
+          <CodeBlock code={injectedSupportedCodeReact()} lang="ts" />
         </TabsContent>
         <TabsContent value="tab-3">
           <Paragraph>
@@ -103,15 +103,15 @@ export default async function Page() {
               ConnectEmbed
             </DocLink>{" "}
             component to get a pre-built UI for connecting the wallet.{" "}
-            <Heading level={3} id="connect-component">
+            <Heading anchorId="connect-component" level={3}>
               Example
             </Heading>{" "}
-            <CodeBlock lang="tsx" code={componentCode()} />
+            <CodeBlock code={componentCode()} lang="tsx" />
           </Paragraph>
         </TabsContent>
       </Tabs>
 
-      <Heading level={2} id="reference">
+      <Heading anchorId="reference" level={2}>
         Reference
       </Heading>
 

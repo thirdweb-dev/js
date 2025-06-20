@@ -19,8 +19,8 @@ export async function SharedNFTTokenPage(props: {
 }) {
   const [info, accountAddress] = await Promise.all([
     getContractPageParamsInfo({
-      contractAddress: props.contractAddress,
       chainIdOrSlug: props.chainIdOrSlug,
+      contractAddress: props.contractAddress,
       teamId: props.projectMeta?.teamId,
     }),
     getAuthTokenWalletAddress(),
@@ -34,9 +34,9 @@ export async function SharedNFTTokenPage(props: {
   if (!isOnlyNumbers(props.tokenId)) {
     redirect(
       buildContractPagePath({
-        projectMeta: props.projectMeta,
         chainIdOrSlug: props.chainIdOrSlug,
         contractAddress: props.contractAddress,
+        projectMeta: props.projectMeta,
         subpath: "/nfts",
       }),
     );
@@ -48,9 +48,9 @@ export async function SharedNFTTokenPage(props: {
     if (meta && (meta.type === "erc721" || meta.type === "erc1155")) {
       return (
         <NFTPublicPage
-          serverContract={info.serverContract}
-          clientContract={info.clientContract}
           chainMetadata={info.chainMetadata}
+          clientContract={info.clientContract}
+          serverContract={info.serverContract}
           tokenId={props.tokenId}
           type={meta.type}
         />
@@ -62,11 +62,11 @@ export async function SharedNFTTokenPage(props: {
   if (isLocalhostChain) {
     return (
       <TokenIdPageClient
-        contract={clientContract}
-        tokenId={props.tokenId}
-        isLoggedIn={props.isLoggedIn}
         accountAddress={accountAddress || undefined}
+        contract={clientContract}
+        isLoggedIn={props.isLoggedIn}
         projectMeta={props.projectMeta}
+        tokenId={props.tokenId}
       />
     );
   }
@@ -83,12 +83,12 @@ export async function SharedNFTTokenPage(props: {
 
   return (
     <TokenIdPage
+      accountAddress={accountAddress || undefined}
       contract={clientContract}
       isErc721={supportedERCs.isERC721}
-      tokenId={props.tokenId}
       isLoggedIn={props.isLoggedIn}
-      accountAddress={accountAddress || undefined}
       projectMeta={props.projectMeta}
+      tokenId={props.tokenId}
     />
   );
 }

@@ -16,14 +16,7 @@ export function useERC1155ClaimCondition(params: {
 }) {
   const account = useActiveAccount();
   const claimConditionQuery = useQuery({
-    queryKey: [
-      ASSET_PAGE_ERC1155_QUERIES_ROOT_KEY,
-      "ERC1155_getActiveClaimCondition",
-      {
-        contract: params.contract,
-        tokenId: params.tokenId.toString(),
-      },
-    ],
+    enabled: params.enabled,
     queryFn: async () => {
       const activeClaimCondition = await ERC1155_getActiveClaimCondition({
         contract: params.contract,
@@ -37,8 +30,8 @@ export function useERC1155ClaimCondition(params: {
       const currencyMeta = await getCurrencyMeta({
         chain: params.contract.chain,
         chainMetadata: params.chainMetadata,
-        currencyAddress: activeClaimCondition.currency,
         client: params.contract.client,
+        currencyAddress: activeClaimCondition.currency,
       });
 
       if (!currencyMeta) {
@@ -47,77 +40,84 @@ export function useERC1155ClaimCondition(params: {
 
       return {
         ...activeClaimCondition,
-        symbol: currencyMeta.symbol,
         decimals: currencyMeta.decimals,
+        symbol: currencyMeta.symbol,
       };
     },
-    enabled: params.enabled,
+    queryKey: [
+      ASSET_PAGE_ERC1155_QUERIES_ROOT_KEY,
+      "ERC1155_getActiveClaimCondition",
+      {
+        contract: params.contract,
+        tokenId: params.tokenId.toString(),
+      },
+    ],
   });
 
   const publicPrice = claimConditionQuery.data
     ? {
-        pricePerTokenWei: claimConditionQuery.data.pricePerToken,
         currencyAddress: claimConditionQuery.data.currency,
         decimals: claimConditionQuery.data.decimals,
+        pricePerTokenWei: claimConditionQuery.data.pricePerToken,
         symbol: claimConditionQuery.data.symbol,
       }
     : null;
 
   const claimParamsQuery = useQuery({
-    queryKey: [
-      ASSET_PAGE_ERC1155_QUERIES_ROOT_KEY,
-      "ERC1155_getClaimParams",
-      {
-        contract: params.contract,
-        accountAddress: account?.address,
-        tokenId: params.tokenId.toString(),
-      },
-    ],
+    enabled: params.enabled,
     queryFn: async () => {
       if (!account) {
         return null;
       }
 
       const claimParams = await getClaimParams({
-        type: "erc1155",
-        tokenId: params.tokenId,
         contract: params.contract,
+        from: account?.address,
         quantity: BigInt(1),
         to: account?.address,
-        from: account?.address,
+        tokenId: params.tokenId,
+        type: "erc1155",
       });
 
       const meta = await getCurrencyMeta({
-        currencyAddress: claimParams.currency,
-        chainMetadata: params.chainMetadata,
         chain: params.contract.chain,
+        chainMetadata: params.chainMetadata,
         client: params.contract.client,
+        currencyAddress: claimParams.currency,
       });
 
       return {
-        pricePerTokenWei: claimParams.pricePerToken,
         currencyAddress: claimParams.currency,
         decimals: meta.decimals,
+        pricePerTokenWei: claimParams.pricePerToken,
         symbol: meta.symbol,
       };
     },
-    enabled: params.enabled,
+    queryKey: [
+      ASSET_PAGE_ERC1155_QUERIES_ROOT_KEY,
+      "ERC1155_getClaimParams",
+      {
+        accountAddress: account?.address,
+        contract: params.contract,
+        tokenId: params.tokenId.toString(),
+      },
+    ],
   });
 
   const publicPriceData = claimConditionQuery.data
     ? {
-        pricePerTokenWei: claimConditionQuery.data.pricePerToken,
         currencyAddress: claimConditionQuery.data.currency,
         decimals: claimConditionQuery.data.decimals,
+        pricePerTokenWei: claimConditionQuery.data.pricePerToken,
         symbol: claimConditionQuery.data.symbol,
       }
     : undefined;
 
   const userSpecificPriceData = claimParamsQuery.data
     ? {
-        pricePerTokenWei: claimParamsQuery.data.pricePerTokenWei,
         currencyAddress: claimParamsQuery.data.currencyAddress,
         decimals: claimParamsQuery.data.decimals,
+        pricePerTokenWei: claimParamsQuery.data.pricePerTokenWei,
         symbol: claimParamsQuery.data.symbol,
       }
     : undefined;
@@ -132,9 +132,9 @@ export function useERC1155ClaimCondition(params: {
     claimCondition: {
       data: claimConditionQuery.data
         ? {
+            maxClaimableSupply: claimConditionQuery.data?.maxClaimableSupply,
             quantityLimitPerWallet:
               claimConditionQuery.data?.quantityLimitPerWallet,
-            maxClaimableSupply: claimConditionQuery.data?.maxClaimableSupply,
             supplyClaimed: claimConditionQuery.data?.supplyClaimed,
           }
         : undefined,
@@ -144,6 +144,7 @@ export function useERC1155ClaimCondition(params: {
       data: claimParamsQuery.data || publicPrice,
       isPending: claimParamsQuery.isPending,
     },
+    isUserPriceDifferent,
     publicPriceQuery: {
       data: publicPriceData,
       isPending: claimConditionQuery.isPending,
@@ -152,6 +153,5 @@ export function useERC1155ClaimCondition(params: {
       data: userSpecificPriceData || publicPriceData,
       isPending: claimParamsQuery.isPending || claimConditionQuery.isPending,
     },
-    isUserPriceDifferent,
   };
 }

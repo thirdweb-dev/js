@@ -46,45 +46,43 @@ export const validateInt = (value: any, solidityType: string) => {
   const min = calculateIntMinValues(solidityType);
   const max = calculateIntMaxValues(solidityType);
 
-  // biome-ignore lint/style/noParameterAssign: FIXME
   value = value.toString();
 
-  // biome-ignore lint/style/noParameterAssign: FIXME
   value = value.replace(/,/g, ".");
 
   if (!value.match(new RegExp(/^(?!-0(\.0+)?$)-?(0|[1-9]\d*)(\.\d+)?$/))) {
     return {
-      type: "pattern",
       message: "Input is not a valid number.",
+      type: "pattern",
     };
   }
   if (value.includes(".") || value.includes(",")) {
     return {
-      type: "pattern",
       message:
         "Can't use decimals, you need to convert your input to Wei first.",
+      type: "pattern",
     };
   }
   try {
     const bigNumber = value || 0n;
     if (bigNumber < min) {
       return {
-        type: "minValue",
         message: solidityType.startsWith("uint")
           ? "Value must be a positive number for uint types."
           : `Value is lower than what ${solidityType} can store.}`,
+        type: "minValue",
       };
     }
     if (bigNumber > max) {
       return {
-        type: "maxValue",
         message: `Value is higher than what ${solidityType} can store.`,
+        type: "maxValue",
       };
     }
   } catch {
     return {
-      type: "pattern",
       message: "Input is not a valid number.",
+      type: "pattern",
     };
   }
 
@@ -130,15 +128,15 @@ const isValidBytes = (value: string, solidityType: string) => {
 export const validateBytes = (value: string, solidityType: string) => {
   if (!value?.startsWith("0x") && !value?.startsWith("[")) {
     return {
-      type: "pattern",
       message:
         "Invalid input. Accepted formats are hex strings (0x...) or array of numbers ([...]).",
+      type: "pattern",
     };
   }
   if (!isValidBytes(value, solidityType)) {
     return {
-      type: "pattern",
       message: `Value is not a valid ${solidityType}. Please check the length.`,
+      type: "pattern",
     };
   }
 
@@ -149,8 +147,8 @@ export const validateBytes = (value: string, solidityType: string) => {
 export const validateAddress = (value: string) => {
   if (!isAddress(value) && !isValidENSName(value)) {
     return {
-      type: "pattern",
       message: "Input is not a valid address or ENS name.",
+      type: "pattern",
     };
   }
 
@@ -179,7 +177,6 @@ export const validateSolidityInput = (value: string, solidityType: string) => {
 // other stuff
 export const camelToTitle = (string: string): string => {
   if (string[0] === "_") {
-    // biome-ignore lint/style/noParameterAssign: FIXME
     string = string.slice(1);
   }
   return string
@@ -210,7 +207,6 @@ function formatInputType(type: string, components?: FunctionComponents): any {
   if (type?.includes("tuple")) {
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
     const obj: any = {};
-    // biome-ignore lint/complexity/noForEach: FIXME
     components?.forEach((component) => {
       obj[component.name] = formatInputType(
         component.type,

@@ -1,9 +1,9 @@
 "use client";
 
-import { PaginationButtons } from "@/components/pagination-buttons";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
+import { PaginationButtons } from "@/components/pagination-buttons";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 
 type ChainlistPaginationProps = {
   totalPages: number;
@@ -30,8 +30,8 @@ export const ChainlistPagination: React.FC<ChainlistPaginationProps> = ({
   return (
     <PaginationButtons
       activePage={activePage}
-      totalPages={totalPages}
       onPageClick={(page) => router.push(createPageURL(page))}
+      totalPages={totalPages}
     />
   );
 };

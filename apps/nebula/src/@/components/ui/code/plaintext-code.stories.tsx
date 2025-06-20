@@ -1,11 +1,11 @@
-import { BadgeContainer } from "@/storybook/utils";
 import type { Meta, StoryObj } from "@storybook/nextjs";
+import { BadgeContainer } from "@/storybook/utils";
 import { PlainTextCodeBlock } from "./plaintext-code";
 
 const meta = {
-  title: "code/plaintext",
   component: Component,
   parameters: {},
+  title: "code/plaintext",
 } satisfies Meta<typeof Component>;
 
 export default meta;

@@ -1,4 +1,3 @@
-import { WalletAddress } from "@/components/blocks/wallet-address";
 import {
   type AccessToken,
   useEngineRevokeAccessToken,
@@ -26,6 +25,7 @@ import { useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { Button, FormLabel, Text } from "tw-components";
 import { toDateTimeLocal } from "utils/date-utils";
+import { WalletAddress } from "@/components/blocks/wallet-address";
 
 interface AccessTokensTableProps {
   instanceUrl: string;
@@ -53,15 +53,14 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
   const columns = useMemo(() => {
     return [
       columnHelper.accessor("tokenMask", {
-        header: "Access Token",
         cell: (cell) => {
           return (
             <p className="py-3 font-mono text-foreground">{cell.getValue()}</p>
           );
         },
+        header: "Access Token",
       }),
       columnHelper.accessor("label", {
-        header: "Label",
         cell: (cell) => {
           return (
             <Text isTruncated maxW={300}>
@@ -69,16 +68,16 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
             </Text>
           );
         },
+        header: "Label",
       }),
       columnHelper.accessor("walletAddress", {
-        header: "Created By",
         cell: (cell) => {
           const address = cell.getValue();
           return <WalletAddress address={address} client={client} />;
         },
+        header: "Created By",
       }),
       columnHelper.accessor("createdAt", {
-        header: "Created At",
         cell: (cell) => {
           const value = cell.getValue();
 
@@ -87,6 +86,7 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
           }
           return <Text>{toDateTimeLocal(value)}</Text>;
         },
+        header: "Created At",
       }),
     ];
   }, [client]);
@@ -94,46 +94,46 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
   return (
     <>
       <TWTable
-        title="access tokens"
-        data={accessTokens}
         columns={columns}
-        isPending={isPending}
+        data={accessTokens}
         isFetched={isFetched}
+        isPending={isPending}
         onMenuClick={[
           {
             icon: <PencilIcon className="size-4" />,
-            text: "Edit",
             onClick: (accessToken) => {
               setSelectedAccessToken(accessToken);
               editDisclosure.onOpen();
             },
+            text: "Edit",
           },
           {
             icon: <Trash2Icon className="size-4" />,
-            text: "Delete",
+            isDestructive: true,
             onClick: (accessToken) => {
               setSelectedAccessToken(accessToken);
               removeDisclosure.onOpen();
             },
-            isDestructive: true,
+            text: "Delete",
           },
         ]}
+        title="access tokens"
       />
 
       {selectedAccessToken && editDisclosure.isOpen && (
         <EditModal
           accessToken={selectedAccessToken}
+          authToken={authToken}
           disclosure={editDisclosure}
           instanceUrl={instanceUrl}
-          authToken={authToken}
         />
       )}
       {selectedAccessToken && removeDisclosure.isOpen && (
         <RemoveModal
           accessToken={selectedAccessToken}
+          authToken={authToken}
           disclosure={removeDisclosure}
           instanceUrl={instanceUrl}
-          authToken={authToken}
         />
       )}
     </>
@@ -152,8 +152,8 @@ const EditModal = ({
   authToken: string;
 }) => {
   const { mutate: updateAccessToken } = useEngineUpdateAccessToken({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
 
   const { onSuccess, onError } = useTxNotifications(
@@ -170,20 +170,20 @@ const EditModal = ({
         label,
       },
       {
-        onSuccess: () => {
-          onSuccess();
-          disclosure.onClose();
-        },
         onError: (error) => {
           onError(error);
           console.error(error);
+        },
+        onSuccess: () => {
+          onSuccess();
+          disclosure.onClose();
         },
       },
     );
   };
 
   return (
-    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
       <ModalOverlay />
       <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Update Access Token</ModalHeader>
@@ -197,20 +197,20 @@ const EditModal = ({
             <FormControl>
               <FormLabel>Label</FormLabel>
               <Input
-                type="text"
-                value={label}
                 onChange={(e) => setLabel(e.target.value)}
                 placeholder="Enter a description for this access token"
+                type="text"
+                value={label}
               />
             </FormControl>
           </div>
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>
-          <Button type="button" onClick={disclosure.onClose} variant="ghost">
+          <Button onClick={disclosure.onClose} type="button" variant="ghost">
             Cancel
           </Button>
-          <Button type="submit" colorScheme="blue" onClick={onClick}>
+          <Button colorScheme="blue" onClick={onClick} type="submit">
             Save
           </Button>
         </ModalFooter>
@@ -231,8 +231,8 @@ const RemoveModal = ({
   authToken: string;
 }) => {
   const { mutate: deleteAccessToken } = useEngineRevokeAccessToken({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
 
   const { onSuccess, onError } = useTxNotifications(
@@ -246,20 +246,20 @@ const RemoveModal = ({
         id: accessToken.id,
       },
       {
-        onSuccess: () => {
-          onSuccess();
-          disclosure.onClose();
-        },
         onError: (error) => {
           onError(error);
           console.error(error);
+        },
+        onSuccess: () => {
+          onSuccess();
+          disclosure.onClose();
         },
       },
     );
   };
 
   return (
-    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
       <ModalOverlay />
       <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Delete Access Token</ModalHeader>
@@ -279,10 +279,10 @@ const RemoveModal = ({
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>
-          <Button type="button" onClick={disclosure.onClose} variant="ghost">
+          <Button onClick={disclosure.onClose} type="button" variant="ghost">
             Cancel
           </Button>
-          <Button type="submit" colorScheme="red" onClick={onClick}>
+          <Button colorScheme="red" onClick={onClick} type="submit">
             Delete
           </Button>
         </ModalFooter>

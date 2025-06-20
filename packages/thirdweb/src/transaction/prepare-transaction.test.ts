@@ -32,11 +32,11 @@ describe.runIf(process.env.TW_SECRET_KEY)("prepareTransaction", () => {
       },
     });
     const preparedTx = prepareTransaction({
+      authorizationList: [authorization],
       chain: defineChain(911867),
       client: TEST_CLIENT,
       to: TEST_WALLET_B,
       value: 0n,
-      authorizationList: [authorization],
     });
 
     const serializableTx = await toSerializableTransaction({
@@ -58,8 +58,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("prepareTransaction", () => {
         value: toWei("0.1"),
       });
       const estimate = await estimateGas({
-        transaction: preparedTx,
         from: TEST_WALLET_A,
+        transaction: preparedTx,
       });
       // TODO: figure out why this is not `21000n`?
       // - a raw transfer SHOULD be 21000gwei always?

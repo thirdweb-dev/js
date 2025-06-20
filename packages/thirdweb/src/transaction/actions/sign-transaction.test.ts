@@ -18,8 +18,8 @@ describe("eip1559", () => {
 
   test("default", () => {
     const signature = signTransaction({
-      transaction: BASE_EIP1559_TRANSACTION,
       privateKey: ANVIL_PKEY_A,
+      transaction: BASE_EIP1559_TRANSACTION,
     });
 
     expect(signature).toMatchInlineSnapshot(
@@ -29,11 +29,11 @@ describe("eip1559", () => {
 
   test("with maxFeePerGas", () => {
     const signature = signTransaction({
+      privateKey: ANVIL_PKEY_A,
       transaction: {
         ...BASE_EIP1559_TRANSACTION,
         maxFeePerGas: 1n,
       },
-      privateKey: ANVIL_PKEY_A,
     });
 
     expect(signature).toMatchInlineSnapshot(
@@ -43,12 +43,12 @@ describe("eip1559", () => {
 
   test("with maxPriorityFeePerGas", () => {
     const signature = signTransaction({
+      privateKey: ANVIL_PKEY_A,
       transaction: {
         ...BASE_EIP1559_TRANSACTION,
         maxFeePerGas: fromGwei("20"),
         maxPriorityFeePerGas: fromGwei("2"),
       },
-      privateKey: ANVIL_PKEY_A,
     });
 
     expect(signature).toMatchInlineSnapshot(
@@ -58,6 +58,7 @@ describe("eip1559", () => {
 
   test("with accessList", () => {
     const signature = signTransaction({
+      privateKey: ANVIL_PKEY_A,
       transaction: {
         ...BASE_EIP1559_TRANSACTION,
         accessList: [
@@ -70,7 +71,6 @@ describe("eip1559", () => {
           },
         ],
       },
-      privateKey: ANVIL_PKEY_A,
     });
 
     expect(signature).toMatchInlineSnapshot(
@@ -80,11 +80,11 @@ describe("eip1559", () => {
 
   test("with data", () => {
     const signature = signTransaction({
+      privateKey: ANVIL_PKEY_A,
       transaction: {
         ...BASE_EIP1559_TRANSACTION,
         data: "0x1234",
       },
-      privateKey: ANVIL_PKEY_A,
     });
 
     expect(signature).toMatchInlineSnapshot(
@@ -102,8 +102,8 @@ describe("eip2930", () => {
 
   test("default", () => {
     const signature = signTransaction({
-      transaction: BASE_EIP2930_TRANSACTION,
       privateKey: ANVIL_PKEY_A,
+      transaction: BASE_EIP2930_TRANSACTION,
     });
     expect(signature).toMatchInlineSnapshot(
       '"0x01f84f0182031180825208808080c080a089cebce5c7f728febd1060b55837c894ec2a79dd7854350abce252fc2de96b5da039f2782c70b92f4b1916aa8db91453c7229f33458bd091b3e10a40f9a7e443d2"',
@@ -112,9 +112,9 @@ describe("eip2930", () => {
 
   test("with accessList and gasPrice", () => {
     const signature = signTransaction({
+      privateKey: ANVIL_PKEY_A,
       transaction: {
         ...BASE_EIP2930_TRANSACTION,
-        gasPrice: fromGwei("2"),
         accessList: [
           {
             address: ZERO_ADDRESS,
@@ -123,8 +123,8 @@ describe("eip2930", () => {
             ],
           },
         ],
+        gasPrice: fromGwei("2"),
       },
-      privateKey: ANVIL_PKEY_A,
     });
 
     expect(signature).toMatchInlineSnapshot(
@@ -134,11 +134,11 @@ describe("eip2930", () => {
 
   test("with data", () => {
     const signature = signTransaction({
+      privateKey: ANVIL_PKEY_A,
       transaction: {
         ...BASE_EIP2930_TRANSACTION,
         data: "0x1234",
       },
-      privateKey: ANVIL_PKEY_A,
     });
 
     expect(signature).toMatchInlineSnapshot(
@@ -156,8 +156,8 @@ describe("legacy", () => {
 
   test("default", () => {
     const signature = signTransaction({
-      transaction: BASE_LEGACY_TRANSACTION,
       privateKey: ANVIL_PKEY_A,
+      transaction: BASE_LEGACY_TRANSACTION,
     });
     expect(signature).toMatchInlineSnapshot(
       '"0xf85182031184773594008252088080801ba0462e5dabe6d0e82ac9d2832d5ecc815e317669ae2eb018c2a07ae6f3a4763618a003214adcddee51ee1d46cb12a694f5520c851581fe53c543c8999d45fa18de07"',
@@ -167,10 +167,10 @@ describe("legacy", () => {
   test("with gasPrice", () => {
     expect(
       signTransaction({
+        privateKey: ANVIL_PKEY_A,
         transaction: {
           gasPrice: fromGwei("2"),
         },
-        privateKey: ANVIL_PKEY_A,
       }),
     ).toMatchInlineSnapshot(
       '"0xf84d808477359400808080801ba07abf45a28c3ce5a1d79d5ab5362878be5411ac51b3c2316670e1263936ef869ea001ca38d1782880bff3e2056f4949e75418858195b06fa8b6b13910a789e51989"',

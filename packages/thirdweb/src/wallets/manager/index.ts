@@ -309,20 +309,20 @@ export function createConnectionManager(storage: AsyncStorage) {
   }
 
   return {
-    activeWalletStore,
     activeAccountStore,
-    connectedWallets,
-    addConnectedWallet,
-    disconnectWallet,
-    setActiveWallet,
-    connect,
-    handleConnection,
     activeWalletChainStore,
-    switchActiveWalletChain,
     activeWalletConnectionStatusStore,
+    activeWalletStore,
+    addConnectedWallet,
+    connect,
+    connectedWallets,
+    defineChains,
+    disconnectWallet,
+    handleConnection,
     isAutoConnecting,
     removeConnectedWallet,
-    defineChains,
+    setActiveWallet,
+    switchActiveWalletChain,
   };
 }
 
@@ -393,9 +393,9 @@ export const handleSmartWalletConnection = async (
   const wallet = smartWallet(options);
 
   await wallet.connect({
-    personalAccount: signer,
-    client: client,
     chain: options.chain,
+    client: client,
+    personalAccount: signer,
   });
 
   // Disconnect the active wallet when the EOA disconnects if it the active wallet is a smart wallet

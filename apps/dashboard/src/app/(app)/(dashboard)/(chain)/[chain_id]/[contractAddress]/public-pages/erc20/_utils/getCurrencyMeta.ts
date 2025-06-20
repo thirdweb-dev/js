@@ -1,6 +1,9 @@
-import { type ThirdwebClient, getContract } from "thirdweb";
-import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
-import { getAddress } from "thirdweb";
+import {
+  getAddress,
+  getContract,
+  NATIVE_TOKEN_ADDRESS,
+  type ThirdwebClient,
+} from "thirdweb";
 import type { Chain, ChainMetadata } from "thirdweb/chains";
 import { symbol } from "thirdweb/extensions/common";
 import { decimals } from "thirdweb/extensions/erc20";

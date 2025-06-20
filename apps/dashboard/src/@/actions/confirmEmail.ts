@@ -15,14 +15,14 @@ export async function confirmEmailWithOTP(otp: string) {
   const res = await fetch(
     `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/account/confirmEmail`,
     {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify({
         confirmationToken: otp,
       }),
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      method: "PUT",
     },
   );
 

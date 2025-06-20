@@ -1,6 +1,6 @@
 import {
-  ZERO_ADDRESS,
   isNativeTokenAddress,
+  ZERO_ADDRESS,
 } from "../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { processSnapshotERC20 } from "../../../utils/extensions/airdrop/process-snapshot-erc20.js";
@@ -69,8 +69,8 @@ export async function generateMerkleTreeInfoERC20(
 
   // generate merkle tree from snapshot
   const { shardedMerkleInfo, uri } = await processSnapshotERC20({
-    snapshot,
     client: contract.client,
+    snapshot,
     tokenDecimals,
   });
   return {

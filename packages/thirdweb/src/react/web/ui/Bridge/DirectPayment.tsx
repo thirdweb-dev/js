@@ -9,12 +9,12 @@ import { useEnsName } from "../../../core/utils/wallet.js";
 import { ConnectButton } from "../ConnectWallet/ConnectButton.js";
 import { PoweredByThirdweb } from "../ConnectWallet/PoweredByTW.js";
 import { FiatValue } from "../ConnectWallet/screens/Buy/swap/FiatValue.js";
-import type { PayEmbedConnectOptions } from "../PayEmbed.js";
-import { ChainName } from "../components/ChainName.js";
-import { Spacer } from "../components/Spacer.js";
 import { Container, Line } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
+import { ChainName } from "../components/ChainName.js";
+import { Spacer } from "../components/Spacer.js";
 import { Text } from "../components/text.js";
+import type { PayEmbedConnectOptions } from "../PayEmbed.js";
 import type { UIOptions } from "./BridgeOrchestrator.js";
 import { ChainIcon } from "./common/TokenAndChain.js";
 import { WithHeader } from "./common/WithHeader.js";
@@ -66,48 +66,48 @@ export function DirectPayment({
 
   const buyNow = (
     <Container flex="row" gap="3xs">
-      <Text size="md" color="primaryButtonText">
+      <Text color="primaryButtonText" size="md">
         Buy Now ·
       </Text>
       <FiatValue
-        tokenAmount={uiOptions.paymentInfo.amount}
-        token={uiOptions.paymentInfo.token}
         chain={chain}
         client={client}
         color="primaryButtonText"
         size="md"
+        token={uiOptions.paymentInfo.token}
+        tokenAmount={uiOptions.paymentInfo.amount}
       />
     </Container>
   );
 
   return (
     <WithHeader
-      uiOptions={uiOptions}
-      defaultTitle="Direct Payment"
       client={client}
+      defaultTitle="Direct Payment"
+      uiOptions={uiOptions}
     >
       {/* Price section */}
       <Container
-        flex="row"
         center="y"
+        flex="row"
         gap="3xs"
         style={{
           justifyContent: "space-between",
         }}
       >
         <FiatValue
-          tokenAmount={uiOptions.paymentInfo.amount}
-          token={uiOptions.paymentInfo.token}
           chain={chain}
           client={client}
           color="primaryText"
           size="xl"
+          token={uiOptions.paymentInfo.token}
+          tokenAmount={uiOptions.paymentInfo.amount}
           weight={700}
         />
         <Container flex="row" gap="3xs">
           <Text
-            size="xs"
             color="secondaryText"
+            size="xs"
             style={{
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -129,16 +129,16 @@ export function DirectPayment({
       <Container
         flex="row"
         style={{
-          justifyContent: "space-between",
           alignItems: "center",
+          justifyContent: "space-between",
         }}
       >
-        <Text size="sm" color="secondaryText">
+        <Text color="secondaryText" size="sm">
           Sold by
         </Text>
         <Text
-          size="sm"
           color="primaryText"
+          size="sm"
           style={{
             fontFamily: "monospace",
           }}
@@ -152,16 +152,16 @@ export function DirectPayment({
       <Container
         flex="row"
         style={{
-          justifyContent: "space-between",
           alignItems: "center",
+          justifyContent: "space-between",
         }}
       >
-        <Text size="sm" color="secondaryText">
+        <Text color="secondaryText" size="sm">
           Price
         </Text>
         <Text
-          size="sm"
           color="primaryText"
+          size="sm"
           style={{
             fontFamily: "monospace",
           }}
@@ -176,21 +176,21 @@ export function DirectPayment({
       <Container
         flex="row"
         style={{
-          justifyContent: "space-between",
           alignItems: "center",
+          justifyContent: "space-between",
         }}
       >
-        <Text size="sm" color="secondaryText">
+        <Text color="secondaryText" size="sm">
           Network
         </Text>
-        <Container flex="row" gap="3xs" center="y">
-          <ChainIcon chain={chain} size={"xs"} client={client} />
+        <Container center="y" flex="row" gap="3xs">
+          <ChainIcon chain={chain} client={client} size={"xs"} />
           <ChainName
             chain={chain}
             client={client}
-            size="sm"
             color="primaryText"
             short
+            size="sm"
             style={{
               fontFamily: "monospace",
             }}
@@ -207,19 +207,19 @@ export function DirectPayment({
       {/* Action button */}
       <Container flex="column">
         {activeAccount ? (
-          <Button variant="primary" fullWidth onClick={handleContinue}>
+          <Button fullWidth onClick={handleContinue} variant="primary">
             {buyNow}
           </Button>
         ) : (
           <ConnectButton
             client={client}
-            theme={theme}
             connectButton={{
               label: buyNow,
               style: {
                 width: "100%",
               },
             }}
+            theme={theme}
             {...connectOptions}
           />
         )}

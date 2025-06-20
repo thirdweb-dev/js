@@ -15,8 +15,8 @@ export function TeamSettingsMobileNav(props: {
     return (
       <div className="flex items-center gap-2 border-border border-b px-4 py-4 text-muted-foreground">
         <Link
-          href={teamLinks[0]?.href || "#"}
           className="inline-flex items-center gap-1"
+          href={teamLinks[0]?.href || "#"}
           onClick={() => {
             setShowFull(true);
           }}
@@ -42,8 +42,8 @@ export function TeamSettingsMobileNav(props: {
         {teamLinks.map((link) => (
           <li key={link.href}>
             <Link
-              href={link.href}
               className="flex border-border border-b p-4"
+              href={link.href}
               onClick={() => {
                 if (link === teamLinks[0]) {
                   setShowFull(false);

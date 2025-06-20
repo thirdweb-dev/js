@@ -1,5 +1,9 @@
 "use client";
 
+import { ChevronsUpDown } from "lucide-react";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
+import React from "react";
+import type { ChainMetadata } from "thirdweb/chains";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -16,10 +20,6 @@ import {
 } from "@/components/ui/popover";
 import { useRouter } from "@/hooks/useRouter";
 import { cn } from "@/lib/utils";
-import { ChevronsUpDown } from "lucide-react";
-import { useParams, usePathname, useSearchParams } from "next/navigation";
-import React from "react";
-import type { ChainMetadata } from "thirdweb/chains";
 import { ChainIcon } from "./ChainIcon";
 
 export function ChainCombobox({ chains }: { chains: ChainMetadata[] }) {
@@ -49,24 +49,25 @@ export function ChainCombobox({ chains }: { chains: ChainMetadata[] }) {
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
-          role="combobox"
           aria-expanded={open}
           className="h-full max-w-[250px] justify-between"
+          // biome-ignore lint/a11y/useSemanticElements: TODO
+          role="combobox"
+          variant="outline"
         >
           {value === "0" ? (
             "Select chain..."
           ) : (
             <div className="flex items-center truncate">
               <ChainIcon
+                className="mr-2 h-4 w-auto"
                 iconUrl={
                   chains.find((chain) => chain.chainId.toString() === value)
                     ?.icon?.url
                 }
-                className="mr-2 h-4 w-auto"
               />
               {value
                 ? chains.find((chain) => chain.chainId.toString() === value)
@@ -92,7 +93,6 @@ export function ChainCombobox({ chains }: { chains: ChainMetadata[] }) {
                       : "opacity-75",
                   )}
                   key={chain.chainId}
-                  value={chain.name}
                   onSelect={(currentValue) => {
                     const chainId =
                       chains.find((chain) => chain.name === currentValue)
@@ -101,10 +101,11 @@ export function ChainCombobox({ chains }: { chains: ChainMetadata[] }) {
                       chainId.toString() === value ? "0" : chainId?.toString(),
                     );
                   }}
+                  value={chain.name}
                 >
                   <ChainIcon
-                    iconUrl={chain.icon?.url}
                     className={cn("mr-3 h-4 w-auto")}
+                    iconUrl={chain.icon?.url}
                   />
                   {chain.name}
                 </CommandItem>

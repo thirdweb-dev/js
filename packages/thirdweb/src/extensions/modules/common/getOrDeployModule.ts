@@ -32,9 +32,9 @@ export async function getOrDeployModule(options: {
 }) {
   const { client, chain, account, contractId, publisher } = options;
   const contract = await getOrDeployInfraContract({
-    client,
-    chain,
     account,
+    chain,
+    client,
     contractId,
     publisher,
   });
@@ -67,8 +67,8 @@ export async function getDeployedModule(options: {
 }) {
   const { client, chain, contractId, publisher } = options;
   return getDeployedInfraContract({
-    client,
     chain,
+    client,
     contractId,
     publisher,
   });

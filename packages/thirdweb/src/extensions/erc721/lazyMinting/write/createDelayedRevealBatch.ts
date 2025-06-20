@@ -80,7 +80,6 @@ export function createDelayedRevealBatch(
   }
 
   return generatedLazyMint({
-    contract: options.contract,
     asyncParams: async () => {
       const [placeholderUris, startFileNumber] = await Promise.all([
         upload({
@@ -145,6 +144,7 @@ export function createDelayedRevealBatch(
         extraData: data,
       } as const;
     },
+    contract: options.contract,
   });
 }
 

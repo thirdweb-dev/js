@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 import { Anchor } from "./Anchor";
 import { DynamicHeight } from "./DynamicHeight";
 
@@ -89,14 +89,8 @@ export function CustomAccordion(props: CustomAccordionProps) {
       data-custom-accordion
     >
       <button
-        type="button"
-        data-open={isOpen}
-        id={buttonId}
         aria-controls={contentId}
         aria-expanded={isOpen}
-        onClick={() => {
-          setIsOpen((c) => !c);
-        }}
         className={cn(
           "flex w-full flex-1 cursor-pointer items-center gap-3",
           props.triggerContainerClassName,
@@ -105,6 +99,12 @@ export function CustomAccordion(props: CustomAccordionProps) {
             ? "flex-row-reverse justify-between"
             : "",
         )}
+        data-open={isOpen}
+        id={buttonId}
+        onClick={() => {
+          setIsOpen((c) => !c);
+        }}
+        type="button"
       >
         <ChevronDownIcon
           className={cn(
@@ -122,11 +122,12 @@ export function CustomAccordion(props: CustomAccordionProps) {
       </button>
 
       <DynamicHeight>
+        {/** biome-ignore lint/a11y/useAriaPropsSupportedByRole: TODO */}
         <div
-          id={contentId}
           aria-labelledby={buttonId}
-          data-open={isOpen}
           className="overflow-hidden"
+          data-open={isOpen}
+          id={contentId}
         >
           <div
             className={cn(
