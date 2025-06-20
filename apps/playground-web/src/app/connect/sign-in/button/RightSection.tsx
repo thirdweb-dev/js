@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import {
   arbitrumSepolia,
   baseSepolia,
+  defineChain,
   optimismSepolia,
   sepolia,
 } from "thirdweb/chains";
@@ -89,11 +90,11 @@ export function RightSection(props: {
   const themeObj =
     connectOptions.theme.type === "dark"
       ? darkTheme({
-          colors: connectOptions.theme.darkColorOverrides,
-        })
+        colors: connectOptions.theme.darkColorOverrides,
+      })
       : lightTheme({
-          colors: connectOptions.theme.lightColorOverrides,
-        });
+        colors: connectOptions.theme.lightColorOverrides,
+      });
 
   useEffect(() => {
     if (!connectOptions.enableAuth) {
@@ -119,15 +120,21 @@ export function RightSection(props: {
         showThirdwebBranding: connectOptions.ShowThirdwebBranding,
         requireApproval: connectOptions.requireApproval,
       }}
-      chains={[sepolia, baseSepolia, optimismSepolia, arbitrumSepolia]}
+      chains={[
+        defineChain(578),
+        sepolia,
+        baseSepolia,
+        optimismSepolia,
+        arbitrumSepolia,
+      ]}
       wallets={wallets}
       auth={connectOptions.enableAuth ? playgroundAuth : undefined}
       accountAbstraction={
         connectOptions.enableAccountAbstraction
           ? {
-              chain: sepolia,
-              sponsorGas: true,
-            }
+            chain: sepolia,
+            sponsorGas: true,
+          }
           : undefined
       }
     />
@@ -185,9 +192,9 @@ export function RightSection(props: {
                 accountAbstraction={
                   connectOptions.enableAccountAbstraction
                     ? {
-                        chain: sepolia,
-                        sponsorGas: true,
-                      }
+                      chain: sepolia,
+                      sponsorGas: true,
+                    }
                     : undefined
                 }
                 termsOfServiceUrl={connectOptions.termsOfServiceLink}
