@@ -263,7 +263,7 @@ export function SendTestTransaction(props: {
               onClick={() => {
                 if (props.walletId) {
                   router.replace(
-                    `/team/${props.teamSlug}/${props.project.slug}/engine/cloud`,
+                    `/team/${props.teamSlug}/${props.project.slug}/transactions`,
                   );
                 } else {
                   router.refresh();

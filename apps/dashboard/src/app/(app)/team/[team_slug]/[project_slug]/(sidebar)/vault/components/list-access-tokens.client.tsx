@@ -20,7 +20,7 @@ import {
   SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE,
   createWalletAccessToken,
   initVaultClient,
-} from "../../engine/cloud/lib/vault.client";
+} from "../../transactions/lib/vault.client";
 
 export default function ListAccessTokens(props: {
   project: Project;
