@@ -60,11 +60,8 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   const remainingTrialDays =
     (activeTrialEndsAt ? remainingDays(activeTrialEndsAt) : 0) || 0;
 
-  // if the team has just signed up and has not subscribed yet, and the billing plan is growth, then they get a 7 day trial
-  const has7DayTrial =
-    remainingTrialDays === 0 &&
-    billingStatus === "noPayment" &&
-    billingPlan === "growth";
+  // trials are disabled for now
+  const has7DayTrial = false;
 
   return (
     <div
