@@ -22,14 +22,16 @@ import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
 import { useConnectionManager } from "../../core/providers/connection-manager.js";
 import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
 import { AutoConnect } from "../../web/ui/AutoConnect/AutoConnect.js";
-import { webWindowAdapter } from "../adapters/WindowAdapter.js";
 import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
 import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
-import { ExecutingTxScreen } from "./TransactionButton/ExecutingScreen.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";
 import type { LocaleId } from "./types.js";
+import { BuyWidget } from "./Bridge/BuyWidget.js";
+import type { Address } from "../../../utils/address.js";
+import { CheckoutWidget } from "./Bridge/CheckoutWidget.js";
+import { TransactionWidget } from "./Bridge/TransactionWidget.js";
 
 /**
  * Props of [`PayEmbed`](https://portal.thirdweb.com/references/typescript/v5/PayEmbed) component
@@ -345,6 +347,55 @@ export function PayEmbed(props: PayEmbedProps) {
       ? props.payOptions.metadata
       : null;
 
+  if (
+    props.payOptions?.mode === "fund_wallet" &&
+    props.payOptions?.prefillBuy
+  ) {
+    return (
+      <BuyWidget
+        title={metadata?.name || "Buy"}
+        chain={props.payOptions.prefillBuy.chain}
+        amount={props.payOptions.prefillBuy.amount || "0.01"}
+        tokenAddress={
+          props.payOptions.prefillBuy.token?.address as Address | undefined
+        }
+        client={props.client}
+        theme={theme}
+      />
+    );
+  }
+
+  if (props.payOptions?.mode === "direct_payment") {
+    return (
+      <CheckoutWidget
+        name={metadata?.name || "Checkout"}
+        description={metadata?.description}
+        image={metadata?.image}
+        chain={props.payOptions.paymentInfo.chain}
+        tokenAddress={
+          props.payOptions.paymentInfo.token?.address as Address | undefined
+        }
+        amount={(props.payOptions.paymentInfo as { amount: string }).amount}
+        seller={props.payOptions.paymentInfo.sellerAddress as Address}
+        client={props.client}
+        theme={theme}
+      />
+    );
+  }
+
+  if (props.payOptions?.mode === "transaction") {
+    return (
+      <TransactionWidget
+        title={metadata?.name}
+        description={metadata?.description}
+        image={metadata?.image}
+        transaction={props.payOptions.transaction}
+        client={props.client}
+        theme={theme}
+      />
+    );
+  }
+
   if (!localeQuery.data) {
     content = (
       <div
@@ -386,28 +437,6 @@ export function PayEmbed(props: PayEmbedProps) {
             onBack={undefined}
           />
         )}
-
-        {screen === "execute-tx" &&
-          props.payOptions?.mode === "transaction" &&
-          props.payOptions.transaction && (
-            <ExecutingTxScreen
-              tx={props.payOptions.transaction}
-              closeModal={() => {
-                setScreen("buy");
-              }}
-              onBack={() => {
-                setScreen("buy");
-              }}
-              onTxSent={(data) => {
-                props.payOptions?.onPurchaseSuccess?.({
-                  type: "transaction",
-                  chainId: data.chain.id,
-                  transactionHash: data.transactionHash,
-                });
-              }}
-              windowAdapter={webWindowAdapter}
-            />
-          )}
       </>
     );
   }
