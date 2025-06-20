@@ -18,7 +18,7 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { useTestWebhook } from "../hooks/useTestWebhook";
-import { CreateWebhookModal } from "./CreateWebhookModal";
+import { CreateContractWebhookButton } from "./CreateWebhookModal";
 import { RelativeTime } from "./RelativeTime";
 
 function getEventType(filters: WebhookFilters): string {
@@ -37,7 +37,7 @@ interface WebhooksTableProps {
   client: ThirdwebClient;
 }
 
-export function WebhooksTable({
+export function ContractsWebhooksTable({
   webhooks,
   projectClientId,
   client,
@@ -216,22 +216,22 @@ export function WebhooksTable({
   }, [webhooks]);
 
   return (
-    <div className="w-full">
-      <div className="mb-4 flex items-center justify-end">
-        <CreateWebhookModal
-          projectClientId={projectClientId}
-          supportedChainIds={supportedChainIds}
-          client={client}
-        />
-      </div>
+    <div className="w-full overflow-hidden rounded-lg border">
       <TWTable
         data={sortedWebhooks}
         columns={columns}
         isPending={false}
         isFetched={true}
         title="Webhooks"
-        tableContainerClassName="mt-4"
+        tableContainerClassName="border-none rounded-none"
       />
+      <div className="flex items-end justify-end gap-3 border-t bg-card px-6 py-4">
+        <CreateContractWebhookButton
+          projectClientId={projectClientId}
+          supportedChainIds={supportedChainIds}
+          client={client}
+        />
+      </div>
     </div>
   );
 }

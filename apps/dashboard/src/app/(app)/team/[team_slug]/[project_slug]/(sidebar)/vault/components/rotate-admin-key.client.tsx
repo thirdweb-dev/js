@@ -31,7 +31,7 @@ import {
   createWalletAccessToken,
   initVaultClient,
   maskSecret,
-} from "../../engine/cloud/lib/vault.client";
+} from "../../transactions/lib/vault.client";
 
 export default function RotateAdminKeyButton(props: { project: Project }) {
   const [modalOpen, setModalOpen] = useState(false);

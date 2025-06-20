@@ -1,5 +1,6 @@
 import { CodeClient } from "@/components/ui/code/code.client";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { FilePreview } from "@app/team/[team_slug]/[project_slug]/(sidebar)/tokens/create/_common/file-preview";
 import {
   Flex,
   IconButton,
@@ -23,7 +24,6 @@ import { useMemo } from "react";
 import { type Column, usePagination, useTable } from "react-table";
 import type { ThirdwebClient } from "thirdweb";
 import type { NFTInput } from "thirdweb/utils";
-import { FilePreview } from "../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/assets/create/_common/file-preview";
 
 interface BatchTableProps {
   data: NFTInput[];

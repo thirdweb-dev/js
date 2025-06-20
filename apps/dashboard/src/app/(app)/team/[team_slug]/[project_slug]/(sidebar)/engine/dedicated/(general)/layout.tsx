@@ -52,26 +52,21 @@ export default async function Layout(props: {
         </div>
       </header>
 
-      <div className="relative">
-        <div className="absolute right-0 bottom-0 left-0 h-[1px] bg-border" />
-        <div className="container max-w-7xl">
-          <TabPathLinks
-            className="pt-2"
-            bottomLineClassName="hidden"
-            links={[
-              {
-                name: "Engine Instances",
-                path: `${linkPrefix}`,
-                exactMatch: true,
-              },
-              {
-                name: "Import Engine",
-                path: `${linkPrefix}/import`,
-              },
-            ]}
-          />
-        </div>
-      </div>
+      <TabPathLinks
+        className="pt-2"
+        scrollableClassName="container max-w-7xl"
+        links={[
+          {
+            name: "Engine Instances",
+            path: `${linkPrefix}`,
+            exactMatch: true,
+          },
+          {
+            name: "Import Engine",
+            path: `${linkPrefix}/import`,
+          },
+        ]}
+      />
 
       <div className="container max-w-7xl pt-8 pb-10">{props.children}</div>
     </div>
@@ -100,7 +95,7 @@ function EngineLegacyBannerUI(props: {
         <div className="flex justify-start gap-3">
           <Button className="flex items-center gap-2" asChild size="sm">
             <Link
-              href={`/team/${props.teamSlug}/${props.projectSlug}/engine/cloud`}
+              href={`/team/${props.teamSlug}/${props.projectSlug}/transactions`}
             >
               <EngineIcon className="size-4" /> Try Engine Cloud
             </Link>

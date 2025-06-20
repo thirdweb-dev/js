@@ -1,4 +1,4 @@
-import { getProject, getProjects } from "@/api/projects";
+import { type Project, getProject, getProjects } from "@/api/projects";
 import { getTeamBySlug, getTeams } from "@/api/team";
 import { Button } from "@/components/ui/button";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -16,6 +16,7 @@ import {
 import { TeamHeaderLoggedIn } from "../../../components/TeamHeader/team-header-logged-in.client";
 import { ProjectSidebarLayout } from "./components/ProjectSidebarLayout";
 import { SaveLastUsedProject } from "./components/SaveLastUsedProject";
+import { getEngineInstances } from "./engine/dedicated/_utils/getEngineInstances";
 
 export default async function ProjectLayout(props: {
   children: React.ReactNode;
@@ -59,6 +60,11 @@ export default async function ProjectLayout(props: {
     teamId: team.id,
   });
 
+  const engineLinkType = await getEngineLinkType({
+    authToken,
+    project,
+  });
+
   return (
     <SidebarProvider>
       <div className="flex h-dvh min-w-0 grow flex-col">
@@ -88,7 +94,10 @@ export default async function ProjectLayout(props: {
             client={client}
           />
         </div>
-        <ProjectSidebarLayout layoutPath={layoutPath}>
+        <ProjectSidebarLayout
+          layoutPath={layoutPath}
+          engineLinkType={engineLinkType}
+        >
           {props.children}
         </ProjectSidebarLayout>
       </div>
@@ -108,4 +117,33 @@ export default async function ProjectLayout(props: {
       <SaveLastUsedProject projectId={project.id} teamId={team.id} />
     </SidebarProvider>
   );
+}
+
+async function getEngineLinkType(params: {
+  authToken: string;
+  project: Project;
+}) {
+  const projectEngineCloudService = params.project.services.find(
+    (service) => service.name === "engineCloud",
+  );
+
+  const engineCloudToken = projectEngineCloudService?.managementAccessToken;
+
+  // if we have a management access token, link to engine cloud page
+  let engineLinkType: "cloud" | "dedicated" = "cloud";
+
+  // if we don't have a engine cloud management access token, check if there are any legacy engine instances
+  if (!engineCloudToken) {
+    const engineInstances = await getEngineInstances({
+      authToken: params.authToken,
+      teamIdOrSlug: params.project.teamId,
+    });
+
+    // if we have any legacy engine instances, link to the legacy engine page
+    if (engineInstances.data && engineInstances.data.length > 0) {
+      engineLinkType = "dedicated";
+    }
+  }
+
+  return engineLinkType;
 }
