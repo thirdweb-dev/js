@@ -55,16 +55,16 @@
     "build": "turbo run build --filter=./packages/*",
     "build:release": "turbo run build --filter=./packages/* --force",
     "changeset": "changeset",
-    "dashboard": "turbo run dev --filter=./apps/dashboard --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/vault-sdk --filter=./packages/engine",
+    "dashboard": "turbo run dev --filter=./apps/dashboard --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/vault-sdk --filter=./packages/engine --filter=./packages/nebula",
     "dashboard:build": "turbo run build --filter=./apps/dashboard",
     "e2e": "turbo run e2e --filter=./packages/*",
     "fix": "turbo run fix",
     "hotlink-init": "node ./scripts/hotlink/hotlink-init.mjs",
     "hotlink-revert": "node ./scripts/hotlink/hotlink-revert.mjs",
     "lint": "pnpm dlx sherif@latest -i remark-gfm -i eslint && turbo run lint",
-    "playground": "turbo run dev --filter=./apps/playground-web --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine",
+    "playground": "turbo run dev --filter=./apps/playground-web --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine --filter=./packages/nebula",
     "playground:build": "turbo run build --filter=./apps/playground-web",
-    "portal": "turbo run dev --filter=./apps/portal --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine",
+    "portal": "turbo run dev --filter=./apps/portal --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine --filter=./packages/nebula",
     "portal:build": "turbo run build --filter=./apps/portal",
     "prefix": "pnpm dlx sherif@latest -i remark-gfm -i eslint --fix",
     "preinstall": "npx only-allow pnpm",
@@ -75,8 +75,9 @@
     "typedoc": "turbo run typedoc",
     "version-packages": "changeset version",
     "version-packages:nightly": "node scripts/pre-nightly.mjs && changeset version --snapshot nightly",
-    "wallet-ui": "turbo run dev --filter=./apps/wallet-ui --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine",
-    "wallet-ui:build": "turbo run build --filter=./apps/wallet-ui --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine"
+    "wallet-ui": "turbo run dev --filter=./apps/wallet-ui --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine --filter=./packages/nebula",
+    "wallet-ui:build": "turbo run build --filter=./apps/wallet-ui --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine --filter=./packages/nebula"
   },
+
   "version": "1.0.0"
 }
