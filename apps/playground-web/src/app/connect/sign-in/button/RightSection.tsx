@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import {
   arbitrumSepolia,
   baseSepolia,
+  defineChain,
   optimismSepolia,
   sepolia,
 } from "thirdweb/chains";
@@ -119,7 +120,13 @@ export function RightSection(props: {
         showThirdwebBranding: connectOptions.ShowThirdwebBranding,
         requireApproval: connectOptions.requireApproval,
       }}
-      chains={[sepolia, baseSepolia, optimismSepolia, arbitrumSepolia]}
+      chains={[
+        defineChain(578),
+        sepolia,
+        baseSepolia,
+        optimismSepolia,
+        arbitrumSepolia,
+      ]}
       wallets={wallets}
       auth={connectOptions.enableAuth ? playgroundAuth : undefined}
       accountAbstraction={

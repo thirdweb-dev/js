@@ -60,7 +60,7 @@ export default async function BridgePage({
                 }
               : undefined
           }
-          amount={(amount || "0.01") as string}
+          amount={amount as string}
         />
       </main>
 

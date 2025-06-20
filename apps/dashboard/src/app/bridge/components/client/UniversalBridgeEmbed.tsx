@@ -10,7 +10,7 @@ export function UniversalBridgeEmbed({
   chainId,
   token,
   amount,
-}: { chainId?: number; token: TokenInfo | undefined; amount: string }) {
+}: { chainId?: number; token: TokenInfo | undefined; amount?: string }) {
   const { theme } = useTheme();
   const chain = useV5DashboardChain(chainId || 1);
 
@@ -19,11 +19,14 @@ export function UniversalBridgeEmbed({
       client={bridgeAppThirdwebClient}
       payOptions={{
         mode: "fund_wallet",
-        prefillBuy: {
-          chain,
-          token,
-          amount,
-        },
+        prefillBuy:
+          chainId && token
+            ? {
+                chain,
+                token,
+                amount,
+              }
+            : undefined,
       }}
       theme={getSDKTheme(theme === "light" ? "light" : "dark")}
     />
