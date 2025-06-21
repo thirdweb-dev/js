@@ -48,6 +48,7 @@ export const PaginationButtons = (props: {
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
+              className="rounded-full"
               disabled={activePage === 1}
               onClick={() => {
                 setPage(activePage - 1);
@@ -56,6 +57,7 @@ export const PaginationButtons = (props: {
           </PaginationItem>
           <PaginationItem>
             <PaginationNext
+              className="rounded-full"
               disabled={activePage === totalPages}
               onClick={() => {
                 setPage(activePage + 1);
@@ -76,6 +78,7 @@ export const PaginationButtons = (props: {
           {pages.map((page) => (
             <PaginationItem key={page}>
               <PaginationLink
+                className="rounded-full"
                 isActive={activePage === page}
                 onClick={() => {
                   setPage(page);
@@ -95,6 +98,7 @@ export const PaginationButtons = (props: {
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
+            className="rounded-full"
             disabled={activePage === 1}
             onClick={() => {
               setPage(activePage - 1);
@@ -107,6 +111,7 @@ export const PaginationButtons = (props: {
           <>
             <PaginationItem>
               <PaginationLink
+                className="rounded-full"
                 onClick={() => {
                   setPage(1);
                 }}
@@ -116,7 +121,7 @@ export const PaginationButtons = (props: {
             </PaginationItem>
 
             <PaginationItem>
-              <PaginationEllipsis className="max-sm:w-3" />
+              <PaginationEllipsis className="max-sm:w-3 rounded-full" />
             </PaginationItem>
           </>
         )}
@@ -124,6 +129,7 @@ export const PaginationButtons = (props: {
         {activePage - 1 > 0 && (
           <PaginationItem className="max-sm:hidden">
             <PaginationLink
+              className="rounded-full"
               onClick={() => {
                 setPage(activePage - 1);
               }}
@@ -134,12 +140,15 @@ export const PaginationButtons = (props: {
         )}
 
         <PaginationItem>
-          <PaginationLink isActive>{activePage}</PaginationLink>
+          <PaginationLink className="rounded-full" isActive>
+            {activePage}
+          </PaginationLink>
         </PaginationItem>
 
         {activePage + 1 <= totalPages && (
           <PaginationItem className="max-sm:hidden">
             <PaginationLink
+              className="rounded-full"
               onClick={() => {
                 setPage(activePage + 1);
               }}
@@ -153,11 +162,12 @@ export const PaginationButtons = (props: {
         {activePage + 3 <= totalPages && (
           <>
             <PaginationItem>
-              <PaginationEllipsis className="max-sm:w-3" />
+              <PaginationEllipsis className="max-sm:w-3 rounded-full" />
             </PaginationItem>
 
             <PaginationItem>
               <PaginationLink
+                className="rounded-full"
                 onClick={() => {
                   setPage(totalPages);
                 }}
@@ -170,6 +180,7 @@ export const PaginationButtons = (props: {
 
         <PaginationItem>
           <PaginationNext
+            className="rounded-full"
             disabled={activePage === totalPages}
             onClick={() => {
               setPage(activePage + 1);
@@ -180,7 +191,7 @@ export const PaginationButtons = (props: {
         <div className="relative flex items-center">
           <Input
             className={cn(
-              "w-[60px] bg-transparent [appearance:textfield] max-sm:placeholder:text-sm lg:w-[100px] lg:pr-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+              "w-[60px] bg-transparent [appearance:textfield] max-sm:placeholder:text-sm lg:w-[100px] lg:pr-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none rounded-full",
               inputHasError && "text-red-500",
             )}
             onChange={(e) => {
@@ -197,7 +208,7 @@ export const PaginationButtons = (props: {
             value={pageNumberInput}
           />
           <Button
-            className="absolute right-1 h-auto w-auto p-2 max-sm:hidden"
+            className="absolute right-1 h-auto w-auto rounded-full p-2 max-sm:hidden"
             onClick={handlePageInputSubmit}
             variant="ghost"
           >

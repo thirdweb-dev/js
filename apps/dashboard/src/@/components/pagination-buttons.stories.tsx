@@ -25,7 +25,8 @@ function Story() {
     <div className="container flex max-w-[1000px] flex-col gap-8 py-10">
       <Variant label="10 Pages" totalPages={10} />
       <Variant label="100 Pages" totalPages={100} />
-      <Variant label="3 Pages" totalPages={2} />
+      <Variant label="2 Pages" totalPages={2} />
+      <Variant label="3 Pages" totalPages={3} />
       <Variant label="6 Pages" totalPages={6} />
       <Variant label="1 Page - nothing rendered" totalPages={1} />
     </div>
