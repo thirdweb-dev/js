@@ -4,7 +4,7 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.0",
+    "@biomejs/biome": "2.0.4",
     "@wagmi/core": "2.17.3",
     "rimraf": "6.0.1",
     "thirdweb": "workspace:*"
