@@ -1,7 +1,7 @@
 {
   "author": "thirdweb eng <eng@thirdweb.com>",
   "devDependencies": {
-    "@biomejs/biome": "2.0.0",
+    "@biomejs/biome": "2.0.4",
     "@changesets/changelog-github": "0.5.1",
     "@changesets/cli": "2.29.4",
     "@manypkg/get-packages": "2.2.2",
