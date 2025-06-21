@@ -290,7 +290,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         ).resolves.toBe(1n);
 
         // we try to claim an extra `2` tokens
-        // this should faile because the max claimable is `3` and we have previously already claimed 2 tokens (one for ourselves, one for the other wallet)
+        // this should fail because the max claimable is `3` and we have previously already claimed 2 tokens (one for ourselves, one for the other wallet)
         // NOTE: this relies on the previous tests, we should extract this and properly re-set tests every time
         // this probably requires re-deploying contracts for every test => clean slate
         await expect(
