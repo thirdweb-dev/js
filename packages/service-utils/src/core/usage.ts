@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+/** @deprecated - Use UsageV2Event instead */
 export const usageEventSchema = z.object({
   /**
    * The following fields are optional.
@@ -81,4 +82,5 @@ export const usageEventSchema = z.object({
   walletAddress: z.string().optional(),
   walletType: z.string().optional(),
 });
+/** @deprecated - Use UsageV2Event instead */
 export type UsageEvent = z.infer<typeof usageEventSchema>;

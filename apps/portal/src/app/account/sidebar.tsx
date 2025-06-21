@@ -31,6 +31,10 @@ export const sidebar: SideBar = {
           href: `${accountSlug}/billing/manage-billing`,
           name: "Manage Billing",
         },
+        {
+          name: "Get Dedicated Support",
+          href: `${accountSlug}/teams/get-dedicated-support`,
+        },
       ],
       name: "Teams",
     },
