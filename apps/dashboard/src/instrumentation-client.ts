@@ -99,12 +99,11 @@ Sentry.init({
     "Non-Error promise rejection captured",
   ],
 
-  // You can remove this option if you're not planning to use the Sentry Session Replay feature:
+  // integrate sentry with posthog
   integrations: [
-    Sentry.replayIntegration({
-      blockAllMedia: true,
-      // Additional Replay configuration goes in here, for example:
-      maskAllText: true,
+    posthog.sentryIntegration({
+      organization: "thirdweb-dev",
+      projectId: 6690186,
     }),
   ],
 
