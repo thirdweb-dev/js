@@ -64,7 +64,7 @@
     "tailwindcss": "3.4.17",
     "typescript": "5.8.3"
   },
-  "name": "nebula",
+  "name": "nebula-app",
   "private": true,
   "scripts": {
     "build": "NODE_OPTIONS=--max-old-space-size=6144 next build",

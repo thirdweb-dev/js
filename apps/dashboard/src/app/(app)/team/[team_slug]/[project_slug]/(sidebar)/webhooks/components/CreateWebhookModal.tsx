@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { XIcon } from "lucide-react";
+import { PlusIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
@@ -43,7 +43,7 @@ interface CreateWebhookModalProps {
   client: ThirdwebClient;
 }
 
-export function CreateWebhookModal({
+export function CreateContractWebhookButton({
   projectClientId,
   supportedChainIds,
   client,
@@ -222,7 +222,10 @@ export function CreateWebhookModal({
   return (
     <Dialog open={isOpen}>
       <DialogTrigger asChild>
-        <Button onClick={handleOpenModal}>New Webhook</Button>
+        <Button className="gap-1.5" onClick={handleOpenModal} size="sm">
+          <PlusIcon className="size-4" />
+          Create Webhook
+        </Button>
       </DialogTrigger>
 
       <DialogContent

@@ -163,7 +163,7 @@ export function ContractTableUI(props: {
                 <TableHead>Contract Address</TableHead>
               )}
 
-              {props.variant === "asset" && <TableHead> Asset Page</TableHead>}
+              {props.variant === "asset" && <TableHead> Token Page</TableHead>}
 
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -262,7 +262,7 @@ export function ContractTableUI(props: {
           <div className="flex h-[350px] items-center justify-center text-muted-foreground">
             <div className="text-center">
               {props.variant === "asset" ? (
-                <p className="mb-3">No assets found</p>
+                <p className="mb-3">No tokens found</p>
               ) : (
                 <p className="mb-3">No contracts found</p>
               )}

@@ -1,4 +1,3 @@
-import { LinkIcon } from "lucide-react";
 import Link from "next/link";
 
 type FooterSectionProps = {
@@ -18,16 +17,16 @@ type FooterCardProps = {
 export function FooterLinksSection(props: FooterCardProps) {
   return (
     <div className="py-6">
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3 xl:gap-0 xl:divide-x xl:divide-border">
+      <div className="grid grid-cols-1 gap-6 divide-dashed max-sm:divide-y xl:grid-cols-3 xl:gap-0 xl:divide-x xl:divide-border">
         <div className="xl:pr-6">
           <FooterSection {...props.left} />
         </div>
 
-        <div className="xl:px-6">
+        <div className="max-sm:pt-4 xl:px-6">
           <FooterSection {...props.center} />
         </div>
 
-        <div className="xl:pl-6">
+        <div className="max-sm:pt-4 xl:pl-6">
           <FooterSection {...props.right} />
         </div>
       </div>
@@ -38,7 +37,7 @@ export function FooterLinksSection(props: FooterCardProps) {
 function FooterSection(props: FooterSectionProps) {
   return (
     <div>
-      <h3 className="mb-2.5 font-medium">{props.title}</h3>
+      <h3 className="mb-2.5 font-semibold text-lg">{props.title}</h3>
       <div className="flex flex-col gap-2.5">
         {props.links.map((link) => (
           <FooterLink href={link.href} key={link.label} label={link.label} />
@@ -56,7 +55,6 @@ function FooterLink({ href, label }: { href: string; label: string }) {
       rel="noopener noreferrer"
       target="_blank"
     >
-      <LinkIcon className="mt-1 size-3 shrink-0 opacity-70" />
       {label}
     </Link>
   );

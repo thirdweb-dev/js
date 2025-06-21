@@ -1,4 +1,4 @@
-import { FilePreview } from "@app/team/[team_slug]/[project_slug]/(sidebar)/assets/create/_common/file-preview";
+import { FilePreview } from "@app/team/[team_slug]/[project_slug]/(sidebar)/tokens/create/_common/file-preview";
 import { FilePlusIcon, UploadIcon } from "lucide-react";
 import { useCallback, useEffect, useRef } from "react";
 import {

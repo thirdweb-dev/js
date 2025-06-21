@@ -58,7 +58,7 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
       >
         <DialogHeader className="p-6">
           <DialogTitle className="font-semibold text-2xl tracking-tight">
-            Import {props.type === "contract" ? "Contract" : "Asset"}
+            Import {props.type === "contract" ? "Contract" : "Token"}
           </DialogTitle>
           <DialogDescription>
             Import a deployed contract in your project

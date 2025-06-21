@@ -1,27 +1,28 @@
 "use client";
 import {
+  ArrowLeftRightIcon,
   BellIcon,
   BookTextIcon,
   BoxIcon,
   CoinsIcon,
   HomeIcon,
+  LockIcon,
   SettingsIcon,
   WalletIcon,
 } from "lucide-react";
 import { FullWidthSidebarLayout } from "@/components/blocks/SidebarLayout";
 import { Badge } from "@/components/ui/badge";
 import { ContractIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/ContractIcon";
-import { EngineIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 import { InsightIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/InsightIcon";
-import { NebulaIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/NebulaIcon";
 import { PayIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/PayIcon";
 import { SmartAccountIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/SmartAccountIcon";
 
 export function ProjectSidebarLayout(props: {
   layoutPath: string;
+  engineLinkType: "cloud" | "dedicated";
   children: React.ReactNode;
 }) {
-  const { layoutPath, children } = props;
+  const { layoutPath, engineLinkType, children } = props;
 
   return (
     <FullWidthSidebarLayout
@@ -33,17 +34,17 @@ export function ProjectSidebarLayout(props: {
           label: "Overview",
         },
         {
-          href: `${layoutPath}/connect/in-app-wallets`,
+          href: `${layoutPath}/wallets`,
           icon: WalletIcon,
-          label: "In-App Wallets",
+          label: "Wallets",
         },
         {
-          href: `${layoutPath}/connect/account-abstraction`,
+          href: `${layoutPath}/account-abstraction`,
           icon: SmartAccountIcon,
           label: "Account Abstraction",
         },
         {
-          href: `${layoutPath}/connect/universal-bridge`,
+          href: `${layoutPath}/universal-bridge`,
           icon: PayIcon,
           label: "Universal Bridge",
         },
@@ -53,18 +54,27 @@ export function ProjectSidebarLayout(props: {
           label: "Contracts",
         },
         {
-          href: `${layoutPath}/assets`,
+          href: `${layoutPath}/tokens`,
           icon: CoinsIcon,
           label: (
             <span className="flex items-center gap-2">
-              Assets <Badge>New</Badge>
+              Tokens <Badge>New</Badge>
             </span>
           ),
         },
         {
-          href: `${layoutPath}/engine`,
-          icon: EngineIcon,
-          label: "Engine",
+          href:
+            engineLinkType === "cloud"
+              ? `${layoutPath}/transactions`
+              : `${layoutPath}/engine/dedicated`,
+          icon: ArrowLeftRightIcon,
+          isActive: (pathname) => {
+            return (
+              pathname.startsWith(`${layoutPath}/transactions`) ||
+              pathname.startsWith(`${layoutPath}/engine/dedicated`)
+            );
+          },
+          label: "Transactions",
         },
         {
           href: `${layoutPath}/insight`,
@@ -72,10 +82,12 @@ export function ProjectSidebarLayout(props: {
           label: "Insight",
         },
         {
-          href: `${layoutPath}/nebula`,
-          icon: NebulaIcon,
-          label: "Nebula",
+          href: `${layoutPath}/vault`,
+          icon: LockIcon,
+          label: "Vault",
         },
+      ]}
+      footerSidebarLinks={[
         {
           href: `${layoutPath}/webhooks`,
           icon: BellIcon,
@@ -85,8 +97,6 @@ export function ProjectSidebarLayout(props: {
             </span>
           ),
         },
-      ]}
-      footerSidebarLinks={[
         {
           href: `${layoutPath}/settings`,
           icon: SettingsIcon,

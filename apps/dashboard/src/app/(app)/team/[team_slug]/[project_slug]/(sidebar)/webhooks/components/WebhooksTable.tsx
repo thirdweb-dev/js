@@ -18,7 +18,7 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useTestWebhook } from "../hooks/useTestWebhook";
-import { CreateWebhookModal } from "./CreateWebhookModal";
+import { CreateContractWebhookButton } from "./CreateWebhookModal";
 import { RelativeTime } from "./RelativeTime";
 
 function getEventType(filters: WebhookFilters): string {
@@ -37,7 +37,7 @@ interface WebhooksTableProps {
   client: ThirdwebClient;
 }
 
-export function WebhooksTable({
+export function ContractsWebhooksTable({
   webhooks,
   projectClientId,
   client,
@@ -217,21 +217,20 @@ export function WebhooksTable({
 
   return (
     <div className="w-full">
-      <div className="mb-4 flex items-center justify-end">
-        <CreateWebhookModal
-          client={client}
-          projectClientId={projectClientId}
-          supportedChainIds={supportedChainIds}
-        />
-      </div>
       <TWTable
         columns={columns}
         data={sortedWebhooks}
         isFetched={true}
         isPending={false}
-        tableContainerClassName="mt-4"
         title="Webhooks"
       />
+      <div className="mt-4 flex justify-end">
+        <CreateContractWebhookButton
+          client={client}
+          projectClientId={projectClientId}
+          supportedChainIds={supportedChainIds}
+        />
+      </div>
     </div>
   );
 }

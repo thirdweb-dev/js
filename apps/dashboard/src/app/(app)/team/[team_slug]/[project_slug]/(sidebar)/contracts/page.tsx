@@ -1,10 +1,10 @@
+import { DeployedContractsPage } from "@app/account/contracts/_components/DeployedContractsPage";
+import { getAuthToken } from "@app/api/lib/getAuthToken";
+import { loginRedirect } from "@app/login/loginRedirect";
 import { redirect } from "next/navigation";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { DeployedContractsPage } from "../../../../../account/contracts/_components/DeployedContractsPage";
-import { getAuthToken } from "../../../../../api/lib/getAuthToken";
-import { loginRedirect } from "../../../../../login/loginRedirect";
 import { FooterLinksSection } from "../components/footer/FooterLinksSection";
 
 export default async function Page(props: {

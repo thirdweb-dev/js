@@ -36,7 +36,6 @@ const getUserIdentifier = (accounts: WalletUser["linkedAccounts"]) => {
 const columnHelper = createColumnHelper<WalletUser>();
 
 export function InAppWalletUsersPageContent(props: {
-  trackingCategory: string;
   authToken: string;
   projectClientId: string;
   client: ThirdwebClient;

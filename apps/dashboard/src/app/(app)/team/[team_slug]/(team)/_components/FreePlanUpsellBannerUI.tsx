@@ -26,8 +26,6 @@ export function FreePlanUpsellBannerUI(props: {
       description="Upgrade to increase limits and access advanced features."
       icon={<RocketIcon className="size-5" />}
       title="Unlock more with thirdweb"
-      trackingCategory="billingBanner"
-      trackingLabel="freePlan_viewPlans"
     />
   );
 }

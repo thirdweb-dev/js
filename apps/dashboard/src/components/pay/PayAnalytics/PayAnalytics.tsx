@@ -3,7 +3,9 @@ import {
   getUniversalBridgeUsage,
   getUniversalBridgeWalletUsage,
 } from "@/api/analytics";
+import { CodeServer } from "@/components/ui/code/code.server";
 import type { Range } from "../../analytics/date-range-selector";
+import { apiCode, embedCode, sdkCode } from "./code-examples";
 import { PayCustomersTable } from "./components/PayCustomersTable";
 import { PaymentHistory } from "./components/PaymentHistory";
 import { PaymentsSuccessRate } from "./components/PaymentsSuccessRate";
@@ -59,8 +61,38 @@ export async function PayAnalytics(props: {
 
   const hasVolume = volumeData.some((d) => d.amountUsdCents > 0);
   const hasWallet = walletData.some((d) => d.count > 0);
+
   if (!hasVolume && !hasWallet) {
-    return <PayEmbedFTUX clientId={props.projectClientId} />;
+    return (
+      <PayEmbedFTUX
+        clientId={props.projectClientId}
+        codeExamples={
+          {
+            api: (
+              <CodeServer
+                className="bg-background"
+                code={apiCode(props.projectClientId)}
+                lang="bash"
+              />
+            ),
+            embed: (
+              <CodeServer
+                className="bg-background"
+                code={embedCode(props.projectClientId)}
+                lang="tsx"
+              />
+            ),
+            sdk: (
+              <CodeServer
+                className="bg-background"
+                code={sdkCode(props.projectClientId)}
+                lang="ts"
+              />
+            ),
+          } as const
+        }
+      />
+    );
   }
 
   return (

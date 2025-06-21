@@ -17,8 +17,6 @@ function Story() {
           description="Upgrade to increase limits and access advanced features."
           icon={<RocketIcon className="size-5" />}
           title="Unlock more with thirdweb"
-          trackingCategory="storybook"
-          trackingLabel="green"
         />
       </BadgeContainer>
 
@@ -33,8 +31,6 @@ function Story() {
           description="Add additional space to your account."
           icon={<StarIcon className="size-5" />}
           title="Need more storage?"
-          trackingCategory="storybook"
-          trackingLabel="blue"
         />
       </BadgeContainer>
 
@@ -48,8 +44,6 @@ function Story() {
           }}
           description="Get early access to experimental features."
           title="Join the beta"
-          trackingCategory="storybook"
-          trackingLabel="purple"
         />
       </BadgeContainer>
     </div>

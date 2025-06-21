@@ -221,10 +221,10 @@ export function ProjectGeneralSettingsPageUI(props: {
   const projectLayout = `/team/${props.teamSlug}/${props.project.slug}`;
 
   const paths = {
-    aaConfig: `${projectLayout}/connect/account-abstraction/settings`,
+    aaConfig: `${projectLayout}/account-abstraction/settings`,
     afterDeleteRedirectTo: `/team/${props.teamSlug}`,
-    inAppConfig: `${projectLayout}/connect/in-app-wallets/settings`,
-    payConfig: `${projectLayout}/connect/universal-bridge/settings`,
+    inAppConfig: `${projectLayout}/wallets/settings`,
+    payConfig: `${projectLayout}/universal-bridge/settings`,
   };
 
   const { project } = props;
@@ -762,7 +762,7 @@ function EnabledServicesSetting(props: {
 
             return (
               <div
-                className="flex items-start justify-between gap-6 border-border border-t py-5"
+                className="flex items-start justify-between gap-6 border-t border-dashed py-5"
                 key={service.name}
               >
                 {/* Left */}
@@ -780,7 +780,7 @@ function EnabledServicesSetting(props: {
                     <div>
                       <Button
                         asChild
-                        className="min-w-32 justify-between gap-2"
+                        className="h-auto justify-between gap-2 rounded-full bg-background py-1"
                         size="sm"
                         variant="outline"
                       >

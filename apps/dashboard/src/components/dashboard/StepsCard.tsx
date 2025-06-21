@@ -37,7 +37,7 @@ export const StepsCard: React.FC<StepsCardProps> = ({
   return (
     <div className={cn("rounded-lg border border-border bg-card p-4 lg:p-6")}>
       {/* Title + Desc */}
-      <h2 className="mb-3 text-left font-semibold text-xl tracking-tight lg:text-2xl">
+      <h2 className="mb-3 text-left font-semibold text-xl tracking-tight">
         {title}
       </h2>
 

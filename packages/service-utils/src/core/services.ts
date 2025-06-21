@@ -18,15 +18,16 @@ export const SERVICE_DEFINITIONS = {
     actions: [],
     description: "E-mail and social login wallets for easy web3 onboarding",
     name: "embeddedWallets",
-    title: "In-App Wallets",
+    title: "Wallets",
   },
+
   engineCloud: {
     // all actions allowed
     actions: [],
     description:
       "Transaction API and Server wallets with high transaction throughput and low latency",
     name: "engineCloud",
-    title: "Engine Cloud",
+    title: "Transactions",
   },
   insight: {
     // all actions allowed

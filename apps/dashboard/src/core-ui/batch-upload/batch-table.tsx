@@ -1,4 +1,6 @@
 /** biome-ignore-all lint/nursery/noNestedComponentDefinitions: FIXME */
+
+import { FilePreview } from "@app/team/[team_slug]/[project_slug]/(sidebar)/tokens/create/_common/file-preview";
 import {
   Flex,
   IconButton,
@@ -24,7 +26,6 @@ import type { ThirdwebClient } from "thirdweb";
 import type { NFTInput } from "thirdweb/utils";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { FilePreview } from "../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/assets/create/_common/file-preview";
 
 interface BatchTableProps {
   data: NFTInput[];

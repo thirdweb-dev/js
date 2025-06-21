@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { ClientOnly } from "@/components/blocks/client-only";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { DeployedContractsPageHeader } from "../DeployedContractsPageHeader";
 import { DeployViaCLIOrImportCard } from "./DeployViaCLIOrImportCard";
 import { getSortedDeployedContracts } from "./getSortedDeployedContracts";
 
@@ -16,24 +15,16 @@ export function DeployedContractsPage(props: {
   projectSlug: string;
 }) {
   return (
-    <div className="flex grow flex-col">
-      <DeployedContractsPageHeader
+    <div className="container flex max-w-7xl grow flex-col">
+      <Suspense fallback={<Loading />}>
+        <DeployedContractsPageAsync {...props} />
+      </Suspense>
+      <div className="h-8" />
+      <DeployViaCLIOrImportCard
         client={props.client}
         projectId={props.projectId}
         teamId={props.teamId}
       />
-      <div className="h-6" />
-      <div className="container flex max-w-7xl grow flex-col">
-        <Suspense fallback={<Loading />}>
-          <DeployedContractsPageAsync {...props} />
-        </Suspense>
-        <div className="h-8" />
-        <DeployViaCLIOrImportCard
-          client={props.client}
-          projectId={props.projectId}
-          teamId={props.teamId}
-        />
-      </div>
     </div>
   );
 }

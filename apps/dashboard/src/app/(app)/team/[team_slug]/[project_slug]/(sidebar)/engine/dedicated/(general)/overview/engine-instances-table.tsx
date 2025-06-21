@@ -130,7 +130,7 @@ function DedicatedEngineSubscriptionButton(props: { team: Team }) {
   const isMobile = useIsMobile();
 
   const trigger = (
-    <Button>
+    <Button size="sm">
       <DatabaseIcon className="mr-2 size-4" />
       Deploy Dedicated Engine
     </Button>
@@ -225,8 +225,8 @@ export function EngineInstancesTableUI(props: {
   projectSlug: string;
 }) {
   return (
-    <div className="flex grow flex-col gap-2">
-      <div className="mb-4 flex flex-row items-center justify-between text-center">
+    <div className="flex grow flex-col gap-4">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <h2 className="font-semibold text-2xl tracking-tight">
           Engine Instances
         </h2>

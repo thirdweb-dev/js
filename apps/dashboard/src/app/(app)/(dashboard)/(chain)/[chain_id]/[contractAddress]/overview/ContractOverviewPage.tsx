@@ -50,12 +50,10 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
               icon: <ExternalLinkIcon className="size-4" />,
               link: `/${chainSlug}/${contract.address}`,
               target: "_blank",
-              text: "View asset page",
+              text: "View token page",
             }}
-            description="A public page is available for this contract for anyone to buy this asset"
-            title="Public asset page available"
-            trackingCategory="erc20-contract"
-            trackingLabel="view-asset-page"
+            description="A public page is available for this contract for anyone to buy this token"
+            title="Public token page available"
           />
         )}
 

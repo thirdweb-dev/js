@@ -90,7 +90,7 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
           rel="noopener noreferrer"
           target="_blank"
         >
-          View Asset Page <ExternalLinkIcon className="size-3.5" />
+          View Token Page <ExternalLinkIcon className="size-3.5" />
         </Link>
       </Button>
     );

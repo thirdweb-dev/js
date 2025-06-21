@@ -62,6 +62,56 @@ const legacyDashboardToTeamRedirects = [
   },
 ];
 
+const projectRoute = "/team/:team_slug/:project_slug";
+
+const projectPageRedirects = [
+  {
+    destination: `${projectRoute}/universal-bridge/:path*`,
+    permanent: false,
+    source: `${projectRoute}/connect/pay/:path*`,
+  },
+  {
+    destination: `${projectRoute}/universal-bridge/:path*`,
+    permanent: false,
+    source: `${projectRoute}/connect/universal-bridge/:path*`,
+  },
+  {
+    destination: `${projectRoute}/account-abstraction/:path*`,
+    permanent: false,
+    source: `${projectRoute}/connect/account-abstraction/:path*`,
+  },
+  {
+    destination: `${projectRoute}/wallets/:path*`,
+    permanent: false,
+    source: `${projectRoute}/connect/in-app-wallets/:path*`,
+  },
+  {
+    destination: `${projectRoute}/vault/:path*`,
+    permanent: false,
+    source: `${projectRoute}/engine/cloud/vault/:path*`,
+  },
+  {
+    destination: `${projectRoute}/transactions/:path*`,
+    permanent: false,
+    source: `${projectRoute}/engine/cloud/:path*`,
+  },
+  {
+    destination: `${projectRoute}/tokens/:path*`,
+    permanent: false,
+    source: `${projectRoute}/assets/:path*`,
+  },
+  {
+    destination: projectRoute,
+    permanent: false,
+    source: `${projectRoute}/nebula/:path*`,
+  },
+  {
+    source: `${projectRoute}/connect/analytics`,
+    destination: `${projectRoute}`,
+    permanent: false,
+  },
+];
+
 /** @type {import('next').NextConfig['redirects']} */
 async function redirects() {
   return [
@@ -326,14 +376,6 @@ async function redirects() {
       permanent: false,
       source: "/unlimited-wallets",
     },
-    // pay > universal-bridge redirect
-    {
-      destination:
-        "/team/:team_slug/:project_slug/connect/universal-bridge/:path*",
-      permanent: false,
-      source: "/team/:team_slug/:project_slug/connect/pay/:path*",
-    },
-
     // all /learn/tutorials (and sub-routes) -> /learn/guides
     {
       destination: "/learn/guides/:path*",
@@ -382,8 +424,8 @@ async function redirects() {
       permanent: false,
       source: "/engine",
     },
-
     ...legacyDashboardToTeamRedirects,
+    ...projectPageRedirects,
   ];
 }
 
