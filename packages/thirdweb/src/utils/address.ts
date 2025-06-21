@@ -52,15 +52,15 @@ export function checksumAddress(address: string): Address {
 
   const address_ = hexAddress.split("");
   for (let i = 0; i < 40; i += 2) {
-    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    // biome-ignore lint/style/noNonNullAssertion: TODO
     if (hash[i >> 1]! >> 4 >= 8 && address[i]) {
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
+      // biome-ignore lint/style/noNonNullAssertion: TODO
       address_[i] = address_[i]!.toUpperCase();
     }
 
-    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    // biome-ignore lint/style/noNonNullAssertion: TODO
     if ((hash[i >> 1]! & 0x0f) >= 8 && address[i + 1]) {
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
+      // biome-ignore lint/style/noNonNullAssertion: TODO
       address_[i + 1] = address_[i + 1]!.toUpperCase();
     }
   }

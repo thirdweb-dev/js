@@ -5,6 +5,8 @@ import { redirectToContractLandingPage } from "../../../../../../team/[team_slug
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 import { getContractPageParamsInfo } from "../../_utils/getContractFromParams";
 import { getContractPageMetadata } from "../../_utils/getContractPageMetadata";
+import { shouldRenderNewPublicPage } from "../../_utils/newPublicPage";
+import { NFTPublicPage } from "../../public-pages/nft/nft-page";
 import { TokenIdPageClient } from "./TokenIdPage.client";
 import { TokenIdPage } from "./token-id";
 
@@ -17,8 +19,8 @@ export async function SharedNFTTokenPage(props: {
 }) {
   const [info, accountAddress] = await Promise.all([
     getContractPageParamsInfo({
-      contractAddress: props.contractAddress,
       chainIdOrSlug: props.chainIdOrSlug,
+      contractAddress: props.contractAddress,
       teamId: props.projectMeta?.teamId,
     }),
     getAuthTokenWalletAddress(),
@@ -32,23 +34,39 @@ export async function SharedNFTTokenPage(props: {
   if (!isOnlyNumbers(props.tokenId)) {
     redirect(
       buildContractPagePath({
-        projectMeta: props.projectMeta,
         chainIdOrSlug: props.chainIdOrSlug,
         contractAddress: props.contractAddress,
+        projectMeta: props.projectMeta,
         subpath: "/nfts",
       }),
     );
+  }
+
+  // public /nfts/[tokenId] page
+  if (!props.projectMeta) {
+    const meta = await shouldRenderNewPublicPage(info.serverContract);
+    if (meta && (meta.type === "erc721" || meta.type === "erc1155")) {
+      return (
+        <NFTPublicPage
+          chainMetadata={info.chainMetadata}
+          clientContract={info.clientContract}
+          serverContract={info.serverContract}
+          tokenId={props.tokenId}
+          type={meta.type}
+        />
+      );
+    }
   }
 
   const { clientContract, serverContract, isLocalhostChain } = info;
   if (isLocalhostChain) {
     return (
       <TokenIdPageClient
-        contract={clientContract}
-        tokenId={props.tokenId}
-        isLoggedIn={props.isLoggedIn}
         accountAddress={accountAddress || undefined}
+        contract={clientContract}
+        isLoggedIn={props.isLoggedIn}
         projectMeta={props.projectMeta}
+        tokenId={props.tokenId}
       />
     );
   }
@@ -65,12 +83,12 @@ export async function SharedNFTTokenPage(props: {
 
   return (
     <TokenIdPage
+      accountAddress={accountAddress || undefined}
       contract={clientContract}
       isErc721={supportedERCs.isERC721}
-      tokenId={props.tokenId}
       isLoggedIn={props.isLoggedIn}
-      accountAddress={accountAddress || undefined}
       projectMeta={props.projectMeta}
+      tokenId={props.tokenId}
     />
   );
 }

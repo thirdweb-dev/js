@@ -1,5 +1,5 @@
-import { getProject } from "@/api/projects";
 import { notFound } from "next/navigation";
+import { getProject } from "@/api/projects";
 import { SharedNFTTokenPage } from "../../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/nfts/[tokenId]/shared-nfts-token-page";
 import type { ProjectContractPageParams } from "../../types";
 
@@ -19,15 +19,15 @@ export default async function Page(props: {
 
   return (
     <SharedNFTTokenPage
-      contractAddress={params.contractAddress}
       chainIdOrSlug={params.chainIdOrSlug}
+      contractAddress={params.contractAddress}
       isLoggedIn={true}
-      tokenId={params.tokenId}
       projectMeta={{
         projectSlug: project.slug,
         teamId: project.teamId,
         teamSlug: params.team_slug,
       }}
+      tokenId={params.tokenId}
     />
   );
 }

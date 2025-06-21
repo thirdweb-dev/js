@@ -1,10 +1,4 @@
 "use client";
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
 import { EmptyChartState } from "components/analytics/empty-chart-state";
 import { formatTickerNumber } from "lib/format-utils";
 import {
@@ -15,6 +9,12 @@ import {
   YAxis,
 } from "recharts";
 import { toUSD } from "utils/number";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 
 export function BarChart({
   chartConfig,
@@ -33,13 +33,13 @@ export function BarChart({
 }) {
   return (
     <ChartContainer
+      className="aspect-auto h-[250px] w-full pt-6"
       config={{
         [activeKey]: {
           label: tooltipLabel ?? chartConfig[activeKey]?.label,
         },
         ...chartConfig,
       }}
-      className="aspect-auto h-[250px] w-full pt-6"
     >
       {data.length === 0 || data.every((d) => d[activeKey] === 0) ? (
         <EmptyChartState type="bar"> {emptyChartContent} </EmptyChartState>
@@ -54,38 +54,38 @@ export function BarChart({
         >
           <CartesianGrid vertical={false} />
           <XAxis
-            dataKey="date"
-            tickLine={false}
             axisLine={false}
-            tickMargin={8}
+            dataKey="date"
             minTickGap={32}
             tickFormatter={(value: string) => {
               const date = new Date(value);
               return date.toLocaleDateString("en-US", {
-                month: "short",
                 day: "numeric",
+                month: "short",
               });
             }}
+            tickLine={false}
+            tickMargin={8}
           />
           <YAxis
-            width={48}
-            dataKey={activeKey}
-            tickLine={false}
             axisLine={false}
+            dataKey={activeKey}
             tickFormatter={(value: number) => formatTickerNumber(value)}
+            tickLine={false}
+            width={48}
           />
           <ChartTooltip
             content={
               <ChartTooltipContent
                 className="w-[200px]"
-                nameKey={activeKey}
                 labelFormatter={(value) => {
                   return new Date(value).toLocaleDateString("en-US", {
-                    month: "short",
                     day: "numeric",
+                    month: "short",
                     year: "numeric",
                   });
                 }}
+                nameKey={activeKey}
                 valueFormatter={(v: unknown) =>
                   isCurrency || chartConfig[activeKey]?.isCurrency
                     ? toUSD(v as number)
@@ -95,11 +95,11 @@ export function BarChart({
             }
           />
           <Bar
-            dataKey={activeKey}
-            radius={4}
-            fill={chartConfig[activeKey]?.color ?? "hsl(var(--chart-1))"}
-            strokeWidth={1}
             className="stroke-background"
+            dataKey={activeKey}
+            fill={chartConfig[activeKey]?.color ?? "hsl(var(--chart-1))"}
+            radius={4}
+            strokeWidth={1}
           />
         </RechartsBarChart>
       )}

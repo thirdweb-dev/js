@@ -43,7 +43,6 @@ export function mintWithRole(
   options: BaseTransactionOptions<EditionMintParams>,
 ) {
   return generatedMint({
-    contract: options.contract,
     asyncParams: async () => {
       let baseURI = "";
       if (options.nft) {
@@ -56,12 +55,13 @@ export function mintWithRole(
 
       const tokenId = options.tokenId ?? maxUint256;
       return {
-        to: getAddress(options.to),
-        tokenId,
         amount: options.amount,
         baseURI: baseURI,
         data: "0x",
+        to: getAddress(options.to),
+        tokenId,
       };
     },
+    contract: options.contract,
   });
 }

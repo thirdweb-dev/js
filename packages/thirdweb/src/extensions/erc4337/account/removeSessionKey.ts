@@ -44,23 +44,23 @@ export function removeSessionKey(
 ) {
   const { contract, account, sessionKeyAddress } = options;
   return setPermissionsForSigner({
-    contract,
     async asyncParams() {
       const { req, signature } = await signPermissionRequest({
         account,
         contract,
         req: await toContractPermissions({
-          target: sessionKeyAddress,
           permissions: {
             approvedTargets: [],
             nativeTokenLimitPerTransaction: 0,
-            permissionStartTimestamp: new Date(0),
             permissionEndTimestamp: new Date(0),
+            permissionStartTimestamp: new Date(0),
           },
+          target: sessionKeyAddress,
         }),
       });
-      return { signature, req };
+      return { req, signature };
     },
+    contract,
   });
 }
 

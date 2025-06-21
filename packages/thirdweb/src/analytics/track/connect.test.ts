@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -31,15 +31,15 @@ describe("trackConnect", () => {
 
     await trackConnect({
       client: mockClient,
-      walletType: "metamask",
       walletAddress: "0x1234567890123456789012345678901234567890",
+      walletType: "metamask",
     });
 
     expect(requestBody).toEqual({
-      source: "connectWallet",
       action: "connect",
-      walletType: "metamask",
+      source: "connectWallet",
       walletAddress: "0x1234567890123456789012345678901234567890",
+      walletType: "metamask",
     });
   });
 
@@ -63,8 +63,8 @@ describe("trackConnect", () => {
         id: "ecosystem.test-ecosystem-id",
         partnerId: "test-partner-id",
       },
-      walletType: "metamask",
       walletAddress: "0x1234567890123456789012345678901234567890",
+      walletType: "metamask",
     });
 
     expect(requestHeaders?.get("x-client-id")).toEqual("test-client-id");

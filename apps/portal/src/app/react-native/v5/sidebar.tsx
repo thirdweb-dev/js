@@ -5,44 +5,44 @@ import { ReactIcon, TypeScriptIcon } from "../../../icons";
 const slug = "/react-native/v5";
 
 export const sidebar: SideBar = {
-  name: "Connect React Native SDK",
   links: [
     {
       separator: true,
     },
     {
-      name: "Overview",
       href: slug,
+      name: "Overview",
     },
     {
-      name: "Getting Started",
       href: `${slug}/getting-started`,
       icon: <ZapIcon />,
+      name: "Getting Started",
     },
     {
-      name: "Troubleshooting",
       href: `${slug}/troubleshooting`,
       icon: <BugIcon />,
+      name: "Troubleshooting",
     },
     {
-      name: "Differences from React",
       href: `${slug}/differences`,
       icon: <BookIcon />,
+      name: "Differences from React",
     },
     {
-      name: "TypeScript docs",
       href: "/typescript/v5",
       icon: <TypeScriptIcon />,
+      name: "TypeScript docs",
     },
     {
-      name: "React docs",
       href: "/react/v5",
       icon: <ReactIcon />,
+      name: "React docs",
     },
     {
-      name: "API Reference",
       href: "/references/typescript/v5",
       icon: <CodeIcon />,
+      name: "API Reference",
     },
   ],
+  name: "Connect React Native SDK",
 };

@@ -1,8 +1,5 @@
 "use client";
 
-import type { Project } from "@/api/projects";
-import type { Team } from "@/api/team";
-import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Box,
@@ -19,27 +16,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import type { ProjectBundlerService } from "@thirdweb-dev/service-utils";
 import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { TrashIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { type ThirdwebClient, isAddress } from "thirdweb";
-import {
-  Button,
-  FormErrorMessage,
-  FormLabel,
-  Text,
-  TrackedLink,
-} from "tw-components";
+import { isAddress, type ThirdwebClient } from "thirdweb";
+import { Button, FormErrorMessage, FormLabel, Text } from "tw-components";
 import { joinWithComma, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
+import type { Project } from "@/api/projects";
+import type { Team } from "@/api/team";
+import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 
 type AccountAbstractionSettingsPageProps = {
   bundlerService: ProjectBundlerService;
   project: Project;
-  trackingCategory: string;
   teamId: string;
   teamSlug: string;
   validTeamPlan: Team["billingPlan"];
@@ -54,6 +47,7 @@ const aaSettingsFormSchema = z.object({
       message: "Some of the addresses are invalid",
     })
     .nullable(),
+  allowedOrBlockedWallets: z.string().nullable(),
   allowedWallets: z
     .string()
     .refine((str) => validStrList(str, isAddress), {
@@ -72,18 +66,6 @@ const aaSettingsFormSchema = z.object({
       message: "Some of the addresses are invalid",
     })
     .nullable(),
-  serverVerifier: z.object({
-    url: z
-      .string()
-      .refine((str) => str.startsWith("https://"), {
-        message: "URL must start with https://",
-      })
-      .nullable(),
-    headers: z
-      .array(z.object({ key: z.string(), value: z.string() }))
-      .nullable(),
-    enabled: z.boolean(),
-  }),
   globalLimit: z
     .object({
       maxSpend: z.string().refine((n) => Number.parseFloat(n) > 0, {
@@ -92,14 +74,23 @@ const aaSettingsFormSchema = z.object({
       maxSpendUnit: z.enum(["usd", "native"]),
     })
     .nullable(),
-  allowedOrBlockedWallets: z.string().nullable(),
+  serverVerifier: z.object({
+    enabled: z.boolean(),
+    headers: z
+      .array(z.object({ key: z.string(), value: z.string() }))
+      .nullable(),
+    url: z
+      .string()
+      .refine((str) => str.startsWith("https://"), {
+        message: "URL must start with https://",
+      })
+      .nullable(),
+  }),
 });
 
 export function AccountAbstractionSettingsPage(
   props: AccountAbstractionSettingsPageProps,
 ) {
-  const { trackingCategory } = props;
-  const trackEvent = useTrack();
   const updateProject = useMutation({
     mutationFn: async (projectValues: Partial<Project>) => {
       await updateProjectClient(
@@ -132,6 +123,12 @@ export function AccountAbstractionSettingsPage(
         allowedContractAddresses && allowedContractAddresses.length > 0
           ? joinWithComma(allowedContractAddresses)
           : null,
+      allowedOrBlockedWallets:
+        allowedWallets && allowedWallets?.length > 0
+          ? "allowed"
+          : blockedWallets && blockedWallets?.length > 0
+            ? "blocked"
+            : null,
       allowedWallets:
         allowedWallets && allowedWallets?.length > 0
           ? joinWithComma(allowedWallets)
@@ -144,30 +141,24 @@ export function AccountAbstractionSettingsPage(
         policy.bypassWallets && policy.bypassWallets?.length > 0
           ? joinWithComma(policy.bypassWallets)
           : null,
+      globalLimit: policy.limits?.global ?? null,
       serverVerifier: policy.serverVerifier?.url
         ? {
-            url: policy.serverVerifier.url,
-            headers: policy.serverVerifier.headers || null,
             enabled: true,
+            headers: policy.serverVerifier.headers || null,
+            url: policy.serverVerifier.url,
           }
         : {
-            url: null,
-            headers: null,
             enabled: false,
+            headers: null,
+            url: null,
           },
-      globalLimit: policy.limits?.global ?? null,
-      allowedOrBlockedWallets:
-        allowedWallets && allowedWallets?.length > 0
-          ? "allowed"
-          : blockedWallets && blockedWallets?.length > 0
-            ? "blocked"
-            : null,
     };
   }, [policy]);
 
   const form = useForm<z.infer<typeof aaSettingsFormSchema>>({
-    resolver: zodResolver(aaSettingsFormSchema),
     defaultValues: transformedQueryData,
+    resolver: zodResolver(aaSettingsFormSchema),
     values: transformedQueryData,
   });
 
@@ -184,29 +175,30 @@ export function AccountAbstractionSettingsPage(
   return (
     <Flex flexDir="column" gap={8}>
       <Flex
+        alignItems="left"
         flexDir={{ base: "column", lg: "row" }}
         gap={8}
         justifyContent="space-between"
-        alignItems="left"
       >
         <Flex flexDir="column" gap={2}>
           <Text>
             Configure the rules for your sponsored transactions.{" "}
-            <TrackedLink
-              category={trackingCategory}
+            <UnderlineLink
+              className="text-primary-500"
               href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules"
-              color="primary.500"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               View documentation
-            </TrackedLink>
+            </UnderlineLink>
             .
           </Text>
         </Flex>
       </Flex>
       <Flex
+        as="form"
         flexDir="column"
         gap={6}
-        as="form"
         onSubmit={form.handleSubmit((values) => {
           const limits: ProjectBundlerService["limits"] | null =
             values.globalLimit
@@ -220,12 +212,11 @@ export function AccountAbstractionSettingsPage(
 
           const parsedValues: Omit<ProjectBundlerService, "name" | "actions"> =
             {
+              // don't set null - `updateProject` API adds chainId 0 to the list if its null and makes it `[0]`
+              allowedChainIds: values.allowedChainIds || [],
               allowedContractAddresses: values.allowedContractAddresses
                 ? toArrFromList(values.allowedContractAddresses)
                 : null,
-
-              // don't set null - `updateProject` API adds chainId 0 to the list if its null and makes it `[0]`
-              allowedChainIds: values.allowedChainIds || [],
               allowedWallets:
                 values.allowedOrBlockedWallets === "allowed" &&
                 values.allowedWallets !== null
@@ -240,6 +231,7 @@ export function AccountAbstractionSettingsPage(
                 values.bypassWallets !== null
                   ? toArrFromList(values.bypassWallets)
                   : null,
+              limits,
               serverVerifier:
                 values.serverVerifier &&
                 typeof values.serverVerifier.url === "string" &&
@@ -249,13 +241,7 @@ export function AccountAbstractionSettingsPage(
                       url: values.serverVerifier.url,
                     }
                   : null,
-              limits,
             };
-          trackEvent({
-            category: trackingCategory,
-            action: "update-sponsorship-rules",
-            label: "attempt",
-          });
 
           const newServices = props.project.services.map((service) => {
             if (service.name === "bundler") {
@@ -276,23 +262,8 @@ export function AccountAbstractionSettingsPage(
               services: newServices,
             },
             {
-              onSuccess: () => {
-                trackEvent({
-                  category: trackingCategory,
-                  action: "update-sponsorship-rules",
-                  label: "success",
-                });
-                onSuccess();
-              },
-              onError: (error) => {
-                onError(error);
-                trackEvent({
-                  category: trackingCategory,
-                  action: "update-sponsorship-rules",
-                  label: "error",
-                  error,
-                });
-              },
+              onError,
+              onSuccess,
             },
           );
         })}
@@ -337,8 +308,8 @@ export function AccountAbstractionSettingsPage(
                   <FormLabel>Spend limit</FormLabel>
                   <div className="flex flex-row items-center gap-2">
                     <Input
-                      w="xs"
                       placeholder="Enter an amount"
+                      w="xs"
                       {...form.register("globalLimit.maxSpend")}
                     />
                     <Select
@@ -378,14 +349,14 @@ export function AccountAbstractionSettingsPage(
                 <Text>
                   Only sponsor transactions on the specified chains. <br /> By
                   default, transactions can be sponsored on any of the{" "}
-                  <TrackedLink
-                    color="primary.500"
-                    isExternal
-                    category={trackingCategory}
+                  <UnderlineLink
+                    className="text-primary-500"
                     href="https://portal.thirdweb.com/wallets/smart-wallet/infrastructure#supported-chains"
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     supported chains.
-                  </TrackedLink>
+                  </UnderlineLink>
                 </Text>
               </div>
 
@@ -404,10 +375,10 @@ export function AccountAbstractionSettingsPage(
               <Flex flexDir="column">
                 <MultiNetworkSelector
                   client={props.client}
-                  selectedChainIds={form.watch("allowedChainIds") || []}
                   onChange={(chainIds) =>
                     form.setValue("allowedChainIds", chainIds)
                   }
+                  selectedChainIds={form.watch("allowedChainIds") || []}
                 />
                 <FormErrorMessage>
                   {
@@ -550,8 +521,8 @@ export function AccountAbstractionSettingsPage(
             <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
               <div>
                 <FormLabel
-                  pointerEvents="none"
                   htmlFor="server-verifier-switch"
+                  pointerEvents="none"
                 >
                   Server verifier
                 </FormLabel>
@@ -560,33 +531,34 @@ export function AccountAbstractionSettingsPage(
                   and decide whether it should be sponsored or not. <br /> This
                   gives you fine grained control and lets you build your own
                   rules.{" "}
-                  <TrackedLink
-                    category={trackingCategory}
+                  <UnderlineLink
+                    className="text-primary-500"
                     href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules#setting-up-a-server-verifier"
-                    color="primary.500"
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     View server verifier documentation
-                  </TrackedLink>
+                  </UnderlineLink>
                   .
                 </Text>
               </div>
 
               <GatedSwitch
-                requiredPlan="starter"
                 currentPlan={props.validTeamPlan}
-                teamSlug={props.teamSlug}
+                requiredPlan="starter"
                 switchProps={{
-                  id: "server-verifier-switch",
                   checked: form.watch("serverVerifier").enabled,
+                  id: "server-verifier-switch",
                   onCheckedChange: (checked) => {
                     form.setValue(
                       "serverVerifier",
                       !checked
-                        ? { enabled: false, url: null, headers: null }
-                        : { enabled: true, url: "", headers: [] },
+                        ? { enabled: false, headers: null, url: null }
+                        : { enabled: true, headers: [], url: "" },
                     );
                   },
                 }}
+                teamSlug={props.teamSlug}
               />
             </div>
             {form.watch("serverVerifier").enabled && (
@@ -616,7 +588,7 @@ export function AccountAbstractionSettingsPage(
                     {customHeaderFields.fields.map((_, customHeaderIdx) => {
                       return (
                         // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                        <Flex key={customHeaderIdx} gap={2} w="full">
+                        <Flex gap={2} key={customHeaderIdx} w="full">
                           <Input
                             placeholder="Key"
                             type="text"
@@ -711,9 +683,9 @@ export function AccountAbstractionSettingsPage(
 
         <Box alignSelf="flex-end">
           <Button
-            type="submit"
             colorScheme="primary"
             isLoading={updateProject.isPending}
+            type="submit"
           >
             Save changes
           </Button>

@@ -1,8 +1,8 @@
-import { getAggregateUserOpUsage } from "@/api/analytics";
 import { StatCard } from "components/analytics/stat";
 import { ActivityIcon, CoinsIcon } from "lucide-react";
 import { Suspense } from "react";
 import type { UserOpStats } from "types/analytics";
+import { getAggregateUserOpUsage } from "@/api/analytics";
 
 function AccountAbstractionSummaryInner(props: {
   aggregateUserOpUsageQuery: UserOpStats | undefined;
@@ -11,22 +11,22 @@ function AccountAbstractionSummaryInner(props: {
   return (
     <div className="grid grid-cols-2 gap-4">
       <StatCard
-        label="Mainnet Sponsored Transactions"
-        value={props.aggregateUserOpUsageQuery?.successful || 0}
         icon={ActivityIcon}
         isPending={props.isPending}
+        label="Mainnet Sponsored Transactions"
+        value={props.aggregateUserOpUsageQuery?.successful || 0}
       />
       <StatCard
-        label="Mainnet Gas Sponsored"
-        value={props.aggregateUserOpUsageQuery?.sponsoredUsd || 0}
         formatter={(value: number) =>
           new Intl.NumberFormat("en-US", {
-            style: "currency",
             currency: "USD",
+            style: "currency",
           }).format(value)
         }
         icon={CoinsIcon}
         isPending={props.isPending}
+        label="Mainnet Gas Sponsored"
+        value={props.aggregateUserOpUsageQuery?.sponsoredUsd || 0}
       />
     </div>
   );
@@ -37,8 +37,8 @@ async function AsyncAccountAbstractionSummary(props: {
   projectId: string;
 }) {
   const aggregateUserOpStats = await getAggregateUserOpUsage({
-    teamId: props.teamId,
     projectId: props.projectId,
+    teamId: props.teamId,
   });
 
   return (
@@ -63,8 +63,8 @@ export function AccountAbstractionSummary(props: {
       }
     >
       <AsyncAccountAbstractionSummary
-        teamId={props.teamId}
         projectId={props.projectId}
+        teamId={props.teamId}
       />
     </Suspense>
   );

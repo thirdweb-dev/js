@@ -3,7 +3,6 @@ import { projectStub } from "stories/stubs";
 import { ProjectFTUX } from "./ProjectFTUX";
 
 const meta = {
-  title: "Project/ProjectFTUX",
   component: ProjectFTUX,
   decorators: [
     (Story) => (
@@ -12,6 +11,7 @@ const meta = {
       </div>
     ),
   ],
+  title: "Project/ProjectFTUX",
 } satisfies Meta<typeof ProjectFTUX>;
 
 export default meta;
@@ -24,9 +24,9 @@ export const Default: Story = {
       secretKeys: [
         {
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
           hash: "1234567890",
           masked: "1234567890",
+          updatedAt: new Date().toISOString(),
         },
       ],
     },

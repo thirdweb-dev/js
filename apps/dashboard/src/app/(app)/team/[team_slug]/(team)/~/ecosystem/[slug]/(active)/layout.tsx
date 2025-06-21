@@ -7,8 +7,8 @@ export default async function Layout(props: {
   const { team_slug } = await props.params;
   return (
     <EcosystemLayoutSlug
-      params={await props.params}
       ecosystemLayoutPath={`/team/${team_slug}/~/ecosystem`}
+      params={await props.params}
     >
       {props.children}
     </EcosystemLayoutSlug>

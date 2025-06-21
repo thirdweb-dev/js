@@ -21,8 +21,8 @@ export function coinbaseWalletSDK(args: {
 }): Wallet<typeof COINBASE> {
   const { createOptions } = args;
   const emitter = createWalletEmitter<typeof COINBASE>();
-  let account: Account | undefined = undefined;
-  let chain: Chain | undefined = undefined;
+  let account: Account | undefined;
+  let chain: Chain | undefined;
 
   function reset() {
     account = undefined;
@@ -53,18 +53,6 @@ export function coinbaseWalletSDK(args: {
   });
 
   return {
-    id: COINBASE,
-    subscribe: emitter.subscribe,
-    getChain() {
-      if (!chain) {
-        return undefined;
-      }
-
-      chain = getCachedChainIfExists(chain.id) || chain;
-      return chain;
-    },
-    getConfig: () => createOptions,
-    getAccount: () => account,
     autoConnect: async (options) => {
       const { autoConnectCoinbaseWalletSDK } = await import(
         "./coinbase-web.js"
@@ -78,10 +66,10 @@ export function coinbaseWalletSDK(args: {
       handleDisconnect = doDisconnect;
       handleSwitchChain = doSwitchChain;
       trackConnect({
-        client: options.client,
-        walletType: COINBASE,
-        walletAddress: account.address,
         chainId: chain.id,
+        client: options.client,
+        walletAddress: account.address,
+        walletType: COINBASE,
       });
       // return account
       return account;
@@ -98,10 +86,10 @@ export function coinbaseWalletSDK(args: {
       handleDisconnect = doDisconnect;
       handleSwitchChain = doSwitchChain;
       trackConnect({
-        client: options.client,
-        walletType: COINBASE,
-        walletAddress: account.address,
         chainId: chain.id,
+        client: options.client,
+        walletAddress: account.address,
+        walletType: COINBASE,
       });
       // return account
       return account;
@@ -110,14 +98,26 @@ export function coinbaseWalletSDK(args: {
       reset();
       await handleDisconnect();
     },
-    switchChain: async (newChain) => {
-      await handleSwitchChain(newChain);
+    getAccount: () => account,
+    getChain() {
+      if (!chain) {
+        return undefined;
+      }
+
+      chain = getCachedChainIfExists(chain.id) || chain;
+      return chain;
     },
+    getConfig: () => createOptions,
+    id: COINBASE,
     onConnectRequested: async () => {
       if (args.onConnectRequested) {
         const provider = await args.providerFactory();
         return args.onConnectRequested?.(provider);
       }
+    },
+    subscribe: emitter.subscribe,
+    switchChain: async (newChain) => {
+      await handleSwitchChain(newChain);
     },
   };
 }

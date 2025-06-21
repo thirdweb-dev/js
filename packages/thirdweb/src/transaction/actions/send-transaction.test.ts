@@ -17,8 +17,8 @@ describe("sendTransaction", () => {
     const transaction = prepareTransaction({
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      value: 100n,
       to: TEST_WALLET_B,
+      value: 100n,
     });
     const res = await sendTransaction({
       account: TEST_ACCOUNT_A,
@@ -32,8 +32,8 @@ describe("sendTransaction", () => {
     const transaction = prepareTransaction({
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      value: 100n,
       to: TEST_WALLET_B,
+      value: 100n,
     });
     await sendTransaction({
       account: TEST_ACCOUNT_A,

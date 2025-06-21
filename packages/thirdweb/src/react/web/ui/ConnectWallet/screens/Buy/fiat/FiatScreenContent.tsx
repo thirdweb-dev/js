@@ -12,6 +12,8 @@ import type { PayUIOptions } from "../../../../../../core/hooks/connection/Conne
 import { useBuyWithFiatQuote } from "../../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
 import { PREFERRED_FIAT_PROVIDER_STORAGE_KEY } from "../../../../../../core/utils/storage.js";
 import { getErrorMessage } from "../../../../../utils/errors.js";
+import { Container } from "../../../../components/basic.js";
+import { Button } from "../../../../components/buttons.js";
 import {
   Drawer,
   DrawerOverlay,
@@ -19,18 +21,16 @@ import {
 } from "../../../../components/Drawer.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
-import { Container } from "../../../../components/basic.js";
-import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { EstimatedTimeAndFees } from "../EstimatedTimeAndFees.js";
+import type { SelectedScreen } from "../main/types.js";
 import { PayProviderSelection } from "../PayProviderSelection.js";
 import { PayWithCreditCard } from "../PayWIthCreditCard.js";
-import type { SelectedScreen } from "../main/types.js";
 import { FiatFees } from "../swap/Fees.js";
 import type { PayerInfo } from "../types.js";
-import { Providers } from "./Providers.js";
 import type { CurrencyMeta } from "./currencies.js";
+import { Providers } from "./Providers.js";
 
 export function FiatScreenContent(props: {
   setScreen: (screen: SelectedScreen) => void;
@@ -99,21 +99,21 @@ export function FiatScreenContent(props: {
   const fiatQuoteQuery = useBuyWithFiatQuote(
     buyWithFiatOptions !== false && tokenAmount
       ? {
+          client,
+          fromAddress: payer.account.address,
           fromCurrencySymbol: selectedCurrency.shorthand,
-          toChainId: toChain.id,
+          isTestMode: buyWithFiatOptions?.testMode,
+          onrampChainId: buyWithFiatOptions?.onrampChainId,
+          onrampTokenAddress: buyWithFiatOptions?.onrampTokenAddress,
+          paymentLinkId: paymentLinkId,
+          preferredProvider: preferredProvider ?? supportedProviders[0],
+          purchaseData: props.payOptions.purchaseData,
           toAddress: receiverAddress,
+          toAmount: tokenAmount,
+          toChainId: toChain.id,
           toTokenAddress: isNativeToken(toToken)
             ? NATIVE_TOKEN_ADDRESS
             : toToken.address,
-          toAmount: tokenAmount,
-          client,
-          isTestMode: buyWithFiatOptions?.testMode,
-          purchaseData: props.payOptions.purchaseData,
-          fromAddress: payer.account.address,
-          paymentLinkId: paymentLinkId,
-          preferredProvider: preferredProvider ?? supportedProviders[0],
-          onrampChainId: buyWithFiatOptions?.onrampChainId,
-          onrampTokenAddress: buyWithFiatOptions?.onrampTokenAddress,
         }
       : undefined,
   );
@@ -151,14 +151,14 @@ export function FiatScreenContent(props: {
       : undefined;
 
   return (
-    <Container flex="column" gap="lg" animate="fadein">
+    <Container animate="fadein" flex="column" gap="lg">
       {isOpen && (
         <>
           <DrawerOverlay ref={drawerOverlayRef} />
-          <Drawer ref={drawerRef} close={() => setIsOpen(false)}>
+          <Drawer close={() => setIsOpen(false)} ref={drawerRef}>
             {drawerScreen === "fees" && fiatQuoteQuery.data && (
               <div>
-                <Text size="lg" color="primaryText">
+                <Text color="primaryText" size="lg">
                   Fees
                 </Text>
 
@@ -168,15 +168,11 @@ export function FiatScreenContent(props: {
             )}
             {drawerScreen === "providers" && (
               <div>
-                <Text size="lg" color="primaryText">
+                <Text color="primaryText" size="lg">
                   Providers
                 </Text>
                 <Spacer y="lg" />
                 <Providers
-                  supportedProviders={supportedProviders}
-                  preferredProvider={
-                    preferredProvider || fiatQuoteQuery.data?.provider
-                  }
                   onSelect={(provider) => {
                     setPreferredProvider(provider);
                     // save the pref in local storage
@@ -186,6 +182,10 @@ export function FiatScreenContent(props: {
                     );
                     setIsOpen(false);
                   }}
+                  preferredProvider={
+                    preferredProvider || fiatQuoteQuery.data?.provider
+                  }
+                  supportedProviders={supportedProviders}
                 />
               </div>
             )}
@@ -197,34 +197,34 @@ export function FiatScreenContent(props: {
         <Text size="sm">Pay with card</Text>
         <div>
           <PayWithCreditCard
-            isLoading={fiatQuoteQuery.isLoading}
-            value={fiatQuoteQuery.data?.fromCurrencyWithFees.amount}
             client={client}
             currency={selectedCurrency}
+            isLoading={fiatQuoteQuery.isLoading}
             onSelectCurrency={showCurrencySelector}
+            value={fiatQuoteQuery.data?.fromCurrencyWithFees.amount}
           />
           {/** Shows preferred or quoted provider and conditional selection */}
           <PayProviderSelection
             onShowProviders={showProviders}
-            quotedProvider={fiatQuoteQuery.data?.provider}
             preferredProvider={preferredProvider}
+            quotedProvider={fiatQuoteQuery.data?.provider}
             supportedProviders={supportedProviders}
           />
           {/* Estimated time + View fees button */}
           <EstimatedTimeAndFees
-            quoteIsLoading={fiatQuoteQuery.isLoading}
             estimatedSeconds={fiatQuoteQuery.data?.estimatedDurationSeconds}
             onViewFees={showFees}
+            quoteIsLoading={fiatQuoteQuery.isLoading}
           />
         </div>
 
         {/* Error message */}
         {errorMsg && (
           <div>
-            <Text color="danger" size="xs" center multiline>
+            <Text center color="danger" multiline size="xs">
               {errorMsg.title}
             </Text>
-            <Text size="xs" center multiline>
+            <Text center multiline size="xs">
               {errorMsg.message}
             </Text>
           </div>
@@ -232,22 +232,22 @@ export function FiatScreenContent(props: {
       </Container>
 
       <Button
-        variant={disableSubmit ? "outline" : "accent"}
         data-disabled={disableSubmit}
         disabled={disableSubmit}
         fullWidth
+        gap="xs"
         onClick={() => {
           trackPayEvent({
-            event: "confirm_onramp_quote",
             client: client,
-            walletAddress: payer.account.address,
-            walletType: payer.wallet.id,
+            event: "confirm_onramp_quote",
             toChainId: toChain.id,
             toToken: isNativeToken(toToken) ? undefined : toToken.address,
+            walletAddress: payer.account.address,
+            walletType: payer.wallet.id,
           });
           handleSubmit();
         }}
-        gap="xs"
+        variant={disableSubmit ? "outline" : "accent"}
       >
         {fiatQuoteQuery.isLoading ? (
           <>

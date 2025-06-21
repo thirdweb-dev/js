@@ -5,7 +5,10 @@ import { useEffect, useState } from "react";
 export function RelativeTime({
   date,
   className,
-}: { date: string; className?: string }) {
+}: {
+  date: string;
+  className?: string;
+}) {
   const [content, setContent] = useState(() => {
     const parsedDate = new Date(date);
     if (Number.isNaN(parsedDate.getTime())) return "-";

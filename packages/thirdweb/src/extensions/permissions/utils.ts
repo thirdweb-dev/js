@@ -7,17 +7,17 @@ import { type Hex, isHex, padHex } from "../../utils/encoding/hex.js";
  */
 export const roleMap = {
   admin: "",
-  transfer: "TRANSFER_ROLE",
+  asset: "ASSET_ROLE",
+  factory: "FACTORY_ROLE",
+  lister: "LISTER_ROLE",
+  metadata: "METADATA_ROLE",
+  migration: "MIGRATION_ROLE",
   minter: "MINTER_ROLE",
   pauser: "PAUSER_ROLE",
-  lister: "LISTER_ROLE",
-  asset: "ASSET_ROLE",
-  unwrap: "UNWRAP_ROLE",
-  factory: "FACTORY_ROLE",
-  signer: "SIGNER_ROLE",
-  metadata: "METADATA_ROLE",
   revoke: "REVOKE_ROLE",
-  migration: "MIGRATION_ROLE",
+  signer: "SIGNER_ROLE",
+  transfer: "TRANSFER_ROLE",
+  unwrap: "UNWRAP_ROLE",
 } as const;
 
 /**

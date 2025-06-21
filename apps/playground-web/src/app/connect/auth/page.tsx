@@ -1,25 +1,24 @@
+import type { Metadata } from "next";
 import { BasicAuthPreview } from "@/components/auth/basic-auth";
 import { GatedContentPreview } from "@/components/auth/gated-content";
 import { SmartAccountAuthPreview } from "@/components/auth/smart-account-auth";
 import { CodeExample } from "@/components/code/code-example";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
-import type { Metadata } from "next";
 import { BasicAuthHookPreview } from "../../../components/auth/basic-auth-hook";
 import { PageLayout } from "../../../components/blocks/APIHeader";
 
 export const metadata: Metadata = {
-  metadataBase,
-  title: "Auth | thirdweb Connect",
   description:
     "Authenticate users to your backend using only their wallet. This is a secure and easy way to authenticate users without requiring them to create an additional account.",
+  metadataBase,
+  title: "Auth | thirdweb Connect",
 };
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="Auth"
         description={
           <>
             Authenticate users to your backend using only their wallet. This is
@@ -28,6 +27,7 @@ export default function Page() {
           </>
         }
         docsLink="https://portal.thirdweb.com/typescript/v5/auth?utm_source=playground"
+        title="Auth"
       >
         <div className="flex flex-col gap-14">
           <BasicAuth />
@@ -43,11 +43,6 @@ export default function Page() {
 function BasicAuth() {
   return (
     <CodeExample
-      header={{
-        title: "Basic Auth",
-        description: "Add authentication to your app with a single component.",
-      }}
-      preview={<BasicAuthPreview />}
       code={`"use client";
 
 import {
@@ -78,7 +73,12 @@ export function AuthButton() {
   );
 }
 `}
+      header={{
+        description: "Add authentication to your app with a single component.",
+        title: "Basic Auth",
+      }}
       lang="tsx"
+      preview={<BasicAuthPreview />}
     />
   );
 }
@@ -86,12 +86,6 @@ export function AuthButton() {
 function BasicAuthHook() {
   return (
     <CodeExample
-      header={{
-        title: "Auth with your own UI",
-        description:
-          "Use the `useConnectModal` hook to add authentication to your app with your own UI.",
-      }}
-      preview={<BasicAuthHookPreview />}
       code={`"use client";
 
 import {
@@ -130,7 +124,13 @@ export function AuthHook() {
   return <Button type="button" onClick={onClick}>{isLoggedIn ? "Sign out" : "Sign in"}</Button>;
 }
 `}
+      header={{
+        description:
+          "Use the `useConnectModal` hook to add authentication to your app with your own UI.",
+        title: "Auth with your own UI",
+      }}
       lang="tsx"
+      preview={<BasicAuthHookPreview />}
     />
   );
 }
@@ -138,12 +138,6 @@ export function AuthHook() {
 function GatedContent() {
   return (
     <CodeExample
-      header={{
-        title: "Gating content with Auth",
-        description:
-          "Protect your page with thirdweb Auth. Deliver exclusive content to users who qualify.",
-      }}
-      preview={<GatedContentPreview />}
       code={`import { THIRDWEB_CLIENT } from "@/lib/client";
 import { cookies } from "next/headers";
 import { getAuthResult } from "@/app/connect/auth/server/actions/auth";
@@ -178,7 +172,13 @@ export async function GatedContentPreview() {
     </div>
   );
 }`}
+      header={{
+        description:
+          "Protect your page with thirdweb Auth. Deliver exclusive content to users who qualify.",
+        title: "Gating content with Auth",
+      }}
       lang="tsx"
+      preview={<GatedContentPreview />}
     />
   );
 }
@@ -186,11 +186,6 @@ export async function GatedContentPreview() {
 function SmartAccountAuth() {
   return (
     <CodeExample
-      header={{
-        title: "Smart Account Auth",
-        description: "Use smart accounts with Sign in with Ethereum (SIWE)",
-      }}
-      preview={<SmartAccountAuthPreview />}
       code={`"use client";
 
 import {
@@ -226,7 +221,12 @@ export function AuthButton() {
   );
 }
 `}
+      header={{
+        description: "Use smart accounts with Sign in with Ethereum (SIWE)",
+        title: "Smart Account Auth",
+      }}
       lang="tsx"
+      preview={<SmartAccountAuthPreview />}
     />
   );
 }

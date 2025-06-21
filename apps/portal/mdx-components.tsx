@@ -1,13 +1,13 @@
+import GithubSlugger from "github-slugger";
+import type { MDXComponents } from "mdx/types";
+import type { BuiltinLanguage } from "shiki";
 import { CodeBlock } from "@/components/Document/Code";
 import { DocLink } from "@/components/Document/DocLink";
 import { Heading } from "@/components/Document/Heading";
 import { OrderedList, UnorderedList } from "@/components/Document/List";
 import { Paragraph } from "@/components/Document/Paragraph";
 import { Separator } from "@/components/Document/Separator";
-import { TBody, Table, Td, Th, Tr } from "@/components/Document/Table";
-import GithubSlugger from "github-slugger";
-import type { MDXComponents } from "mdx/types";
-import type { BuiltinLanguage } from "shiki";
+import { Table, TBody, Td, Th, Tr } from "@/components/Document/Table";
 import { InlineCode } from "./src/components/Document";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
@@ -29,7 +29,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     },
   ) {
     return (
-      <Heading level={depth} id={props.id || nameToLink(props.children) || ""}>
+      <Heading
+        anchorId={props.id || nameToLink(props.children) || ""}
+        level={depth}
+      >
         {props.children}
       </Heading>
     );
@@ -40,6 +43,21 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     a(props) {
       const { href, children } = props;
       return <DocLink href={href || ""}>{children}</DocLink>;
+    },
+    code(props) {
+      const code = props.children;
+      const lang = props.className?.replace("language-", "");
+
+      if (!props.className) {
+        return <InlineCode code={typeof code === "string" ? code : ""} />;
+      }
+
+      return (
+        <CodeBlock
+          code={typeof code === "string" ? code : ""}
+          lang={lang as BuiltinLanguage}
+        />
+      );
     },
     h1(props) {
       return getHeading(1, props);
@@ -59,47 +77,32 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     h6(props) {
       return getHeading(6, props);
     },
-    code(props) {
-      const code = props.children;
-      const lang = props.className?.replace("language-", "");
-
-      if (!props.className) {
-        return <InlineCode code={typeof code === "string" ? code : ""} />;
-      }
-
-      return (
-        <CodeBlock
-          lang={lang as BuiltinLanguage}
-          code={typeof code === "string" ? code : ""}
-        />
-      );
-    },
-    p(props) {
-      return <Paragraph>{props.children}</Paragraph>;
-    },
-    ul(props) {
-      return <UnorderedList>{props.children}</UnorderedList>;
+    hr() {
+      return <Separator />;
     },
     ol(props) {
       return <OrderedList>{props.children}</OrderedList>;
     },
-    hr() {
-      return <Separator />;
+    p(props) {
+      return <Paragraph>{props.children}</Paragraph>;
     },
     table(props) {
       return <Table>{props.children}</Table>;
     },
-    th(props) {
-      return <Th>{props.children}</Th>;
+    tbody(props) {
+      return <TBody>{props.children}</TBody>;
     },
     td(props) {
       return <Td>{props.children}</Td>;
     },
+    th(props) {
+      return <Th>{props.children}</Th>;
+    },
     tr(props) {
       return <Tr>{props.children}</Tr>;
     },
-    tbody(props) {
-      return <TBody>{props.children}</TBody>;
+    ul(props) {
+      return <UnorderedList>{props.children}</UnorderedList>;
     },
   };
 }

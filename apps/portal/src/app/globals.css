@@ -108,6 +108,19 @@
   }
 }
 
+code span {
+  color: var(--code-light-color);
+}
+
+.dark code span {
+  color: var(--code-dark-color);
+}
+
+.shiki,
+.shiki span {
+  background-color: transparent !important;
+}
+
 .dark .shiki,
 .dark .shiki span {
   color: var(--shiki-dark) !important;
@@ -115,11 +128,6 @@
   font-style: var(--shiki-dark-font-style) !important;
   font-weight: var(--shiki-dark-font-weight) !important;
   text-decoration: var(--shiki-dark-text-decoration) !important;
-}
-
-.shiki,
-.shiki span {
-  background-color: transparent !important;
 }
 
 /* Fix colors on auto-filled inputs  */
@@ -191,12 +199,4 @@ button {
 
 html:not(.dark) .dark-only {
   display: none;
-}
-
-code span {
-  color: var(--code-light-color);
-}
-
-.dark code span {
-  color: var(--code-dark-color);
 }

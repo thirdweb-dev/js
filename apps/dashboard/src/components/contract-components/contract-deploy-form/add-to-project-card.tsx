@@ -1,10 +1,12 @@
 "use client";
 
+import { CircleAlertIcon, ExternalLinkIcon } from "lucide-react";
+import { useId } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
 import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -15,12 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CircleAlertIcon, ExternalLinkIcon } from "lucide-react";
-import type { ThirdwebClient } from "thirdweb";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Fieldset } from "./common";
 
 export type MinimalTeam = Pick<Team, "id" | "name" | "image" | "slug">;
-export type MinimalProject = Pick<Project, "id" | "name" | "image">;
+export type MinimalProject = Pick<Project, "id" | "name" | "image" | "slug">;
 
 export type TeamAndProjectSelection = {
   team: MinimalTeam | undefined;
@@ -50,29 +51,29 @@ export function AddToProjectCardUI(props: TeamAndProjectSelectorProps) {
 
   return (
     <Fieldset
-      legend="Add To Project"
       description="Save the deployed contract in a project's contract list on thirdweb dashboard"
-      headerClassName="pr-14"
       headerChildren={
         <div className="absolute top-4 right-4 lg:top-6 lg:right-6">
           <Checkbox
-            className="size-5"
             checked={props.enabled}
+            className="size-5"
             onCheckedChange={(checked) => {
               props.onSetEnabled(!!checked);
             }}
           />
         </div>
       }
+      headerClassName="pr-14"
+      legend="Add To Project"
     >
       <div className="flex flex-col gap-5">
         {/* Team & Project selectors */}
         {props.enabled && (
           <AddToProjectSelector
-            selection={props.selection}
-            onSelectionChange={props.onSelectionChange}
-            teamsAndProjects={props.teamsAndProjects}
             client={props.client}
+            onSelectionChange={props.onSelectionChange}
+            selection={props.selection}
+            teamsAndProjects={props.teamsAndProjects}
           />
         )}
 
@@ -83,8 +84,9 @@ export function AddToProjectCardUI(props: TeamAndProjectSelectorProps) {
             <AlertTitle> Selected team has no projects </AlertTitle>
             <AlertDescription>
               <UnderlineLink
-                href={`/team/${selectedTeam.team.slug}`}
                 className="inline-flex items-center gap-2"
+                href={`/team/${selectedTeam.team.slug}`}
+                rel="noopener noreferrer"
                 target="_blank"
               >
                 Create Project <ExternalLinkIcon className="size-3.5" />
@@ -122,15 +124,17 @@ export function AddToProjectSelector(props: {
     (t) => t.team.id === props.selection.team?.id,
   );
 
+  const teamSelectId = useId();
+  const projectSelectId = useId();
+
   return (
     <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-2">
       {/* Team */}
       <div>
-        <Label htmlFor="team-select" className="mb-2 inline-block">
+        <Label className="mb-2 inline-block" htmlFor={teamSelectId}>
           Team
         </Label>
         <Select
-          value={props.selection.team?.id}
           onValueChange={(v) => {
             const teamAndProjects = props.teamsAndProjects.find(
               (t) => t.team.id === v,
@@ -138,24 +142,25 @@ export function AddToProjectSelector(props: {
 
             if (teamAndProjects) {
               props.onSelectionChange({
-                team: teamAndProjects.team,
                 project: teamAndProjects.projects?.[0],
+                team: teamAndProjects.team,
               });
             }
           }}
+          value={props.selection.team?.id}
         >
-          <SelectTrigger id="team-select" className="min-w-[200px]">
+          <SelectTrigger className="min-w-[200px]" id={teamSelectId}>
             <SelectValue placeholder="Select a team" />
           </SelectTrigger>
           <SelectContent>
             {props.teamsAndProjects.map(({ team }) => (
-              <SelectItem key={team.id} value={team.id} className="py-2.5">
+              <SelectItem className="py-2.5" key={team.id} value={team.id}>
                 <div className="flex items-center gap-2">
                   <GradientAvatar
-                    src={team.image || ""}
                     className="size-5"
-                    id={team.id}
                     client={props.client}
+                    id={team.id}
+                    src={team.image || ""}
                   />
 
                   <span>{team.name}</span>
@@ -173,11 +178,10 @@ export function AddToProjectSelector(props: {
 
       {/* Project */}
       <div>
-        <Label htmlFor="project-select" className="mb-2 inline-block">
+        <Label className="mb-2 inline-block" htmlFor={projectSelectId}>
           Project
         </Label>
         <Select
-          value={props.selection.project?.id}
           onValueChange={(v) => {
             const project = selectedTeam?.projects?.find((p) => p.id === v);
             if (project) {
@@ -187,8 +191,9 @@ export function AddToProjectSelector(props: {
               });
             }
           }}
+          value={props.selection.project?.id}
         >
-          <SelectTrigger id="project-select" className="min-w-[200px]">
+          <SelectTrigger className="min-w-[200px]" id={projectSelectId}>
             <SelectValue placeholder="Select a project" />
           </SelectTrigger>
           <SelectContent>
@@ -201,15 +206,15 @@ export function AddToProjectSelector(props: {
 
             {selectedTeam?.projects.map((project) => (
               <SelectItem
+                className="py-2.5"
                 key={project.id}
                 value={project.id}
-                className="py-2.5"
               >
                 <div className="flex items-center gap-2">
                   <ProjectAvatar
-                    src={project.image || ""}
                     className="size-5"
                     client={props.client}
+                    src={project.image || ""}
                   />
                   <span>{project.name}</span>
                 </div>

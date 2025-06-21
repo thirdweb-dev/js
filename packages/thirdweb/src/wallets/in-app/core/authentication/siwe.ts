@@ -21,7 +21,7 @@ export async function siweAuthenticate(args: {
   const { wallet, chain, client, ecosystem } = args;
   // only connect if the wallet doesn't already have an account
   const account =
-    wallet.getAccount() || (await wallet.connect({ client, chain }));
+    wallet.getAccount() || (await wallet.connect({ chain, client }));
   const clientFetch = getClientFetch(client, ecosystem);
 
   const payload = await (async () => {
@@ -38,7 +38,7 @@ export async function siweAuthenticate(args: {
 
     return (await res.json()) satisfies LoginPayload;
   })();
-  const { signature } = await signLoginPayload({ payload, account });
+  const { signature } = await signLoginPayload({ account, payload });
 
   const authResult = await (async () => {
     const path = getLoginCallbackUrl({
@@ -49,14 +49,14 @@ export async function siweAuthenticate(args: {
     const res = await clientFetch(
       `${path}&signature=${signature}&payload=${encodeURIComponent(payload)}`,
       {
-        method: "POST",
+        body: stringify({
+          payload,
+          signature,
+        }),
         headers: {
           "Content-Type": "application/json",
         },
-        body: stringify({
-          signature,
-          payload,
-        }),
+        method: "POST",
       },
     );
 

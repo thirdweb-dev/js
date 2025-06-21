@@ -32,11 +32,11 @@ async function fetchBuySupportedDestinations({
     async () => {
       const routes = await Bridge.routes({
         client,
+        limit: 1_000_000,
+        maxSteps: 1,
         originChainId,
         originTokenAddress,
-        maxSteps: 1,
         sortBy: "popularity",
-        limit: 1_000_000,
       });
       const tokens = new Set<string>();
       const chains = new Set<number>();
@@ -71,9 +71,9 @@ async function fetchBuySupportedDestinations({
               // We support both options for all tokens
               buyWithCryptoEnabled: true,
               buyWithFiatEnabled: true,
+              icon: route.destinationToken.iconUri,
               name: route.destinationToken.name,
               symbol: route.destinationToken.symbol,
-              icon: route.destinationToken.iconUri,
             },
           ];
         }
@@ -99,10 +99,10 @@ export function useBuySupportedDestinations(
   _isTestMode?: boolean,
 ) {
   return useQuery({
-    queryKey: ["destination-tokens", client],
     queryFn: async () => {
       return fetchBuySupportedDestinations({ client });
     },
+    queryKey: ["destination-tokens", client],
   });
 }
 
@@ -112,15 +112,14 @@ export function useBuySupportedSources(options: {
   destinationTokenAddress: string;
 }) {
   return useQuery({
-    queryKey: ["source-tokens", options],
     queryFn: async () => {
       const routes = await Bridge.routes({
         client: options.client,
         destinationChainId: options.destinationChainId,
         destinationTokenAddress: options.destinationTokenAddress,
+        limit: 50,
         maxSteps: 1,
         sortBy: "popularity",
-        limit: 50,
       });
 
       const tokens = new Set<string>();
@@ -156,9 +155,9 @@ export function useBuySupportedSources(options: {
               // We support both options for all tokens
               buyWithCryptoEnabled: true,
               buyWithFiatEnabled: true,
+              icon: route.originToken.iconUri,
               name: route.originToken.name,
               symbol: route.originToken.symbol,
-              icon: route.originToken.iconUri,
             },
           ];
         }
@@ -169,5 +168,6 @@ export function useBuySupportedSources(options: {
         tokens: originTokens[chainId] || [],
       }));
     },
+    queryKey: ["source-tokens", options],
   });
 }

@@ -1,8 +1,8 @@
+import { defineChain } from "thirdweb";
+import { getChainMetadata } from "thirdweb/chains";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { defineChain } from "thirdweb";
-import { getChainMetadata } from "thirdweb/chains";
 
 type RouteListCardProps = {
   originChainId: number;
@@ -39,14 +39,14 @@ export async function RouteListCard({
     getChainMetadata(defineChain(destinationChainId)),
     originTokenIconUri
       ? resolveSchemeWithErrorHandler({
-          uri: originTokenIconUri,
           client: serverThirdwebClient,
+          uri: originTokenIconUri,
         })
       : undefined,
     destinationTokenIconUri
       ? resolveSchemeWithErrorHandler({
-          uri: destinationTokenIconUri,
           client: serverThirdwebClient,
+          uri: destinationTokenIconUri,
         })
       : undefined,
   ]);
@@ -59,9 +59,9 @@ export async function RouteListCard({
             {resolvedOriginTokenIconUri ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={resolvedOriginTokenIconUri}
                 alt={originTokenAddress}
                 className="size-8 rounded-full border border-muted-foreground"
+                src={resolvedOriginTokenIconUri}
               />
             ) : (
               <div className="size-8 rounded-full bg-muted-foreground" />
@@ -69,9 +69,9 @@ export async function RouteListCard({
             {resolvedDestinationTokenIconUri ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={resolvedDestinationTokenIconUri}
                 alt={destinationTokenAddress}
                 className="-translate-x-4 size-8 rounded-full border border-muted-foreground ring-2 ring-card"
+                src={resolvedDestinationTokenIconUri}
               />
             ) : (
               <div className="-translate-x-4 size-8 rounded-full bg-muted-foreground ring-2 ring-card" />

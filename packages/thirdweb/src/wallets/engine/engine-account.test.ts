@@ -17,10 +17,10 @@ describe.runIf(
     process.env.ENGINE_WALLET_ADDRESS,
 )("Engine", () => {
   const engineAcc = engineAccount({
-    engineUrl: process.env.ENGINE_URL as string,
     authToken: process.env.ENGINE_AUTH_TOKEN as string,
-    walletAddress: process.env.ENGINE_WALLET_ADDRESS as string,
     chain: sepolia,
+    engineUrl: process.env.ENGINE_URL as string,
+    walletAddress: process.env.ENGINE_WALLET_ADDRESS as string,
   });
 
   it("should sign a message", async () => {
@@ -41,8 +41,8 @@ describe.runIf(
     const tx = await sendTransaction({
       account: engineAcc,
       transaction: {
-        client: TEST_CLIENT,
         chain: sepolia,
+        client: TEST_CLIENT,
         to: TEST_ACCOUNT_B.address,
         value: 0n,
       },
@@ -52,15 +52,15 @@ describe.runIf(
 
   it("should send a extension tx", async () => {
     const nftContract = getContract({
-      client: TEST_CLIENT,
-      chain: sepolia,
       address: "0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
+      chain: sepolia,
+      client: TEST_CLIENT,
     });
     const claimTx = claimTo({
       contract: nftContract,
+      quantity: 1n,
       to: TEST_ACCOUNT_B.address,
       tokenId: 0n,
-      quantity: 1n,
     });
     const tx = await sendTransaction({
       account: engineAcc,
@@ -75,13 +75,13 @@ describe.runIf(
     });
     const smart = smartWallet({
       chain: sepolia,
-      sponsorGas: true,
       sessionKey: {
         address: process.env.ENGINE_WALLET_ADDRESS_EOA as string,
         permissions: {
           approvedTargets: "*",
         },
       },
+      sponsorGas: true,
     });
     const smartAccount = await smart.connect({
       client: TEST_CLIENT,
@@ -89,19 +89,19 @@ describe.runIf(
     });
 
     const engineAcc = engineAccount({
-      engineUrl: process.env.ENGINE_URL as string,
       authToken: process.env.ENGINE_AUTH_TOKEN as string,
-      walletAddress: process.env.ENGINE_WALLET_ADDRESS_EOA as string,
       chain: sepolia,
+      engineUrl: process.env.ENGINE_URL as string,
       overrides: {
         accountAddress: smartAccount.address,
       },
+      walletAddress: process.env.ENGINE_WALLET_ADDRESS_EOA as string,
     });
     const tx = await sendTransaction({
       account: engineAcc,
       transaction: {
-        client: TEST_CLIENT,
         chain: sepolia,
+        client: TEST_CLIENT,
         to: TEST_ACCOUNT_B.address,
         value: 0n,
       },

@@ -28,15 +28,15 @@ export async function signTypedData<
   const response = await clientFetch(
     `${getThirdwebBaseUrl("inAppWallet")}/api/v1/enclave-wallet/sign-typed-data`,
     {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-thirdweb-client-id": client.clientId,
-        Authorization: `Bearer embedded-wallet-token:${authToken}`,
-      },
       body: stringify({
         ...payload,
       }),
+      headers: {
+        Authorization: `Bearer embedded-wallet-token:${authToken}`,
+        "Content-Type": "application/json",
+        "x-thirdweb-client-id": client.clientId,
+      },
+      method: "POST",
     },
   );
 

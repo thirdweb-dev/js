@@ -12,7 +12,7 @@ import { getWalletBalance } from "./utils/getWalletBalance.js";
 
 test("default", () => {
   expect(
-    privateKeyToAccount({ privateKey: ANVIL_PKEY_A, client: TEST_CLIENT }),
+    privateKeyToAccount({ client: TEST_CLIENT, privateKey: ANVIL_PKEY_A }),
   ).toMatchInlineSnapshot(`
     {
       "address": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
@@ -27,8 +27,8 @@ test("default", () => {
 
 test("sign message", async () => {
   const account = privateKeyToAccount({
-    privateKey: ANVIL_PKEY_A,
     client: TEST_CLIENT,
+    privateKey: ANVIL_PKEY_A,
   });
   expect(
     await account.signMessage({ message: "hello world" }),
@@ -39,8 +39,8 @@ test("sign message", async () => {
 
 test("sign transaction", async () => {
   const account = privateKeyToAccount({
-    privateKey: ANVIL_PKEY_A,
     client: TEST_CLIENT,
+    privateKey: ANVIL_PKEY_A,
   });
 
   if (!account.signTransaction) {
@@ -51,8 +51,8 @@ test("sign transaction", async () => {
   expect(
     await account.signTransaction({
       chainId: 1,
-      maxFeePerGas: toUnits("20", 9),
       gas: 21000n,
+      maxFeePerGas: toUnits("20", 9),
       to: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
       value: toUnits("1", 18),
     }),
@@ -63,8 +63,8 @@ test("sign transaction", async () => {
 
 test("sign typed data", async () => {
   const account = privateKeyToAccount({
-    privateKey: ANVIL_PKEY_A,
     client: TEST_CLIENT,
+    privateKey: ANVIL_PKEY_A,
   });
   expect(
     await account.signTypedData({ ...typedData.basic, primaryType: "Mail" }),
@@ -75,8 +75,8 @@ test("sign typed data", async () => {
 
 test("send transaction", async () => {
   const account = privateKeyToAccount({
-    privateKey: ANVIL_PKEY_A,
     client: TEST_CLIENT,
+    privateKey: ANVIL_PKEY_A,
   });
   const startingBalance = await getWalletBalance({
     address: account.address,
@@ -89,8 +89,8 @@ test("send transaction", async () => {
     client: TEST_CLIENT,
   });
   const tx = prepareTransaction({
-    client: TEST_CLIENT,
     chain: ANVIL_CHAIN,
+    client: TEST_CLIENT,
     to: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
     value: toUnits("1", 18),
   });
@@ -104,13 +104,13 @@ test("send transaction", async () => {
 
   const endingBalance = await getWalletBalance({
     address: account.address,
-    client: TEST_CLIENT,
     chain: ANVIL_CHAIN,
+    client: TEST_CLIENT,
   });
   const endingBalanceRecipient = await getWalletBalance({
     address: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
-    client: TEST_CLIENT,
     chain: ANVIL_CHAIN,
+    client: TEST_CLIENT,
   });
   expect(endingBalance.value).toBeLessThan(startingBalance.value);
   expect(endingBalanceRecipient.value).toBeGreaterThan(

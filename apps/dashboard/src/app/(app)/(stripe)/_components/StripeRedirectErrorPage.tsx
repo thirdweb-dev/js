@@ -1,12 +1,10 @@
 "use client";
 
+import { AlertTriangleIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { AlertTriangleIcon } from "lucide-react";
 
-export function StripeRedirectErrorPage(props: {
-  errorMessage: string;
-}) {
+export function StripeRedirectErrorPage(props: { errorMessage: string }) {
   const router = useDashboardRouter();
 
   return (
@@ -18,9 +16,9 @@ export function StripeRedirectErrorPage(props: {
         <p className="font-medium text-base">{props.errorMessage}</p>
 
         <Button
-          variant="outline"
           className="mt-4"
           onClick={() => router.back()}
+          variant="outline"
         >
           Go back
         </Button>

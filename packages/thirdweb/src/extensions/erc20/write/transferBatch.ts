@@ -51,24 +51,24 @@ export function transferBatch(
   options: BaseTransactionOptions<TransferBatchParams>,
 ) {
   return multicall({
-    contract: options.contract,
     asyncParams: async () => {
       const content = await optimizeTransferContent(options);
       return {
         data: content.map((item) => {
           return encodeTransfer({
-            to: item.to,
-            value: item.amountWei,
             overrides: {
               erc20Value: {
                 amountWei: item.amountWei,
                 tokenAddress: options.contract.address,
               },
             },
+            to: item.to,
+            value: item.amountWei,
           });
         }),
       };
     },
+    contract: options.contract,
   });
 }
 
@@ -127,8 +127,8 @@ export async function optimizeTransferContent(
         existingRecord.amountWei = existingRecord.amountWei + amountInWei;
       } else {
         acc.push({
-          to: record.to,
           amountWei: amountInWei,
+          to: record.to,
         });
       }
 

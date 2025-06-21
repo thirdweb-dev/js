@@ -37,7 +37,6 @@ export function uninstallPublishedModule(
   const { contract, moduleName, publisherAddress, moduleData } = options;
 
   return uninstallModule({
-    contract,
     asyncParams: async () => {
       const deployedModule = await getDeployedInfraContract({
         chain: contract.chain,
@@ -46,9 +45,10 @@ export function uninstallPublishedModule(
         publisher: publisherAddress,
       });
       return {
-        moduleContract: deployedModule?.address as string,
         data: moduleData || "0x",
+        moduleContract: deployedModule?.address as string,
       };
     },
+    contract,
   });
 }

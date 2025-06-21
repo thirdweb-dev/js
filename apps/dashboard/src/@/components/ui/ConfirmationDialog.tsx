@@ -1,3 +1,5 @@
+import type { VariantProps } from "class-variance-authority";
+import type React from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,8 +13,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import type { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { VariantProps } from "class-variance-authority";
-import type React from "react";
 
 export interface ConfirmationDialogProps
   extends VariantProps<typeof buttonVariants> {
@@ -36,7 +36,7 @@ export function ConfirmationDialog({
   className,
 }: ConfirmationDialogProps) {
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog onOpenChange={onOpenChange} open={open}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
 
       <AlertDialogContent className={cn("w-[90vw] sm:w-auto", className)}>
@@ -48,12 +48,12 @@ export function ConfirmationDialog({
           <AlertDialogCancel>Cancel</AlertDialogCancel>
 
           <AlertDialogAction
-            variant={variant}
-            type="submit"
             onClick={() => {
               onSubmit?.();
               onOpenChange?.(false);
             }}
+            type="submit"
+            variant={variant}
           >
             Continue
           </AlertDialogAction>

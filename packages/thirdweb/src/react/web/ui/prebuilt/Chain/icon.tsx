@@ -123,8 +123,8 @@ export function ChainIcon({
 }: ChainIconProps) {
   const { chain } = useChainContext();
   const iconQuery = useQuery({
-    queryKey: getQueryKeys({ chainId: chain.id, iconResolver }),
     queryFn: async () => fetchChainIcon({ chain, client, iconResolver }),
+    queryKey: getQueryKeys({ chainId: chain.id, iconResolver }),
     ...queryOptions,
   });
 
@@ -156,7 +156,7 @@ export async function fetchChainIcon(props: {
   }
   // Check if the chain object already has "icon"
   if (chain.icon?.url) {
-    return resolveScheme({ uri: chain.icon.url, client });
+    return resolveScheme({ client, uri: chain.icon.url });
   }
   const possibleUrl = await getChainMetadata(chain)
     .then((data) => data.icon?.url)
@@ -164,7 +164,7 @@ export async function fetchChainIcon(props: {
   if (!possibleUrl) {
     throw new Error("Failed to resolve icon for chain");
   }
-  return resolveScheme({ uri: possibleUrl, client });
+  return resolveScheme({ client, uri: possibleUrl });
 }
 
 /**

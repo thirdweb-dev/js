@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { toUSD } from "utils/number";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart } from "./BarChart";
 import { Stat } from "./Stat";
 
@@ -62,26 +62,26 @@ export function CombinedBarChartCard<
               const key = chart as K;
               return (
                 <Link
+                  className="relative z-30 flex min-w-[200px] flex-1 flex-col justify-center gap-1 border-l first:border-l-0 hover:bg-card"
+                  data-active={activeChart === chart}
                   href={{
                     query: {
                       ...existingQueryParams,
                       [queryKey]: key,
                     },
                   }}
+                  key={chart}
                   prefetch
                   scroll={false}
-                  key={chart}
-                  data-active={activeChart === chart}
-                  className="relative z-30 flex min-w-[200px] flex-1 flex-col justify-center gap-1 border-l first:border-l-0 hover:bg-card"
                 >
                   <Stat
                     label={chartConfig[key].label}
+                    trend={trendFn(data, key) || undefined}
                     value={
                       isCurrency || chartConfig[key].isCurrency
                         ? toUSD(aggregateFn(data, key) ?? 0)
                         : (aggregateFn(data, key) ?? 0)
                     }
-                    trend={trendFn(data, key) || undefined}
                   />
                   <div
                     className="absolute right-0 bottom-0 left-0 h-0 bg-foreground transition-all duration-300 ease-out data-[active=true]:h-[3px]"
@@ -95,12 +95,12 @@ export function CombinedBarChartCard<
       </CardHeader>
       <CardContent className="px-2 sm:p-6 sm:pl-0">
         <BarChart
-          isCurrency={isCurrency}
-          tooltipLabel={title}
+          activeKey={activeChart}
           chartConfig={chartConfig}
           data={data}
-          activeKey={activeChart}
           emptyChartContent={chartConfig[activeChart].emptyContent}
+          isCurrency={isCurrency}
+          tooltipLabel={title}
         />
       </CardContent>
     </Card>

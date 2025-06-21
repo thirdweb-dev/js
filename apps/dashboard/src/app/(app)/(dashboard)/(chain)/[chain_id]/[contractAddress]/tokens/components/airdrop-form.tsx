@@ -1,7 +1,6 @@
 "use client";
 
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleCheckIcon, UploadIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useState } from "react";
@@ -29,7 +28,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
   }>({
     defaultValues: { addresses: [] },
   });
-  const trackEvent = useTrack();
+
   const sendTransaction = useSendAndConfirmTransaction();
   const addresses = watch("addresses");
   const [airdropFormOpen, setAirdropFormOpen] = useState(false);
@@ -48,43 +47,24 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
         <form
           onSubmit={handleSubmit(async (data) => {
             try {
-              trackEvent({
-                category: "token",
-                action: "airdrop",
-                label: "attempt",
-                contractAddress: contract.address,
-              });
               const tx = transferBatch({
-                contract,
                 batch: data.addresses
                   .filter((address) => address.quantity !== undefined)
                   .map((address) => ({
-                    to: address.address,
                     amount: address.quantity,
+                    to: address.address,
                   })),
+                contract,
               });
               await sendTransaction.mutateAsync(tx, {
+                onError: (error) => {
+                  console.error(error);
+                },
                 onSuccess: () => {
-                  trackEvent({
-                    category: "token",
-                    action: "airdrop",
-                    label: "success",
-                    contract_address: contract.address,
-                  });
                   // Close the sheet/modal on success
                   if (toggle) {
                     toggle(false);
                   }
-                },
-                onError: (error) => {
-                  trackEvent({
-                    category: "token",
-                    action: "airdrop",
-                    label: "success",
-                    contract_address: contract.address,
-                    error,
-                  });
-                  console.error(error);
                 },
               });
               airdropNotifications.onSuccess();
@@ -106,8 +86,8 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
             ) : (
               <div className="flex flex-col gap-4 md:flex-row">
                 <Button
-                  colorScheme="primary"
                   borderRadius="md"
+                  colorScheme="primary"
                   onClick={() => setAirdropFormOpen(true)}
                   rightIcon={<UploadIcon className="size-4" />}
                 >
@@ -116,7 +96,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                 {addresses.length > 0 && (
                   <div className="flex flex-row items-center justify-center gap-2 text-green-500">
                     <CircleCheckIcon className="text-green-500" size={16} />
-                    <Text size="body.sm" color="inherit">
+                    <Text color="inherit" size="body.sm">
                       <strong>{addresses.length} addresses</strong> ready to be
                       airdropped
                     </Text>
@@ -136,13 +116,13 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                 </Text>
               )}
               <TransactionButton
+                className="self-end"
                 client={contract.client}
                 isLoggedIn={isLoggedIn}
-                transactionCount={1}
                 isPending={sendTransaction.isPending}
-                type="submit"
-                className="self-end"
+                transactionCount={1}
                 txChainID={contract.chain.id}
+                type="submit"
               >
                 Airdrop
               </TransactionButton>

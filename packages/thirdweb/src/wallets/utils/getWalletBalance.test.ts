@@ -12,39 +12,39 @@ import { getWalletBalance } from "./getWalletBalance.js";
 describe.runIf(process.env.TW_SECRET_KEY)("getWalletBalance", () => {
   it("should work for erc20 token", async () => {
     const erc20Address = await deployERC20Contract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
-      type: "TokenERC20",
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       params: {
-        name: "",
         contractURI: TEST_CONTRACT_URI,
+        name: "",
       },
+      type: "TokenERC20",
     });
     const erc20Contract = getContract({
+      address: erc20Address,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      address: erc20Address,
     });
 
     const amount = 1000;
 
     // Mint some tokens
     const tx = mintTo({
+      amount,
       contract: erc20Contract,
       to: TEST_ACCOUNT_A.address,
-      amount,
     });
 
     await sendAndConfirmTransaction({
-      transaction: tx,
       account: TEST_ACCOUNT_A,
+      transaction: tx,
     });
 
     const result = await getWalletBalance({
       address: TEST_ACCOUNT_A.address,
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       tokenAddress: erc20Address,
     });
     const expectedDecimal = 18;
@@ -59,8 +59,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("getWalletBalance", () => {
   it("should work for native currency", async () => {
     const result = await getWalletBalance({
       address: TEST_ACCOUNT_A.address,
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
     expect(result).toBeDefined();
     expect(result.decimals).toBe(18);

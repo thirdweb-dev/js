@@ -1,6 +1,6 @@
+import { redirect } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
 import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
-import { redirect } from "next/navigation";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { SettingsGasCreditsPage } from "./SettingsCreditsPage";
 
@@ -21,7 +21,7 @@ export default async function Page(props: {
 
   return (
     <ChakraProviderSetup>
-      <SettingsGasCreditsPage team={team} account={account} />
+      <SettingsGasCreditsPage account={account} team={team} />
     </ChakraProviderSetup>
   );
 }

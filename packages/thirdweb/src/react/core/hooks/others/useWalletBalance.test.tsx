@@ -22,40 +22,40 @@ const createWrapper = () => {
 describe.runIf(process.env.TW_SECRET_KEY)("useWalletBalance", () => {
   it("should return the correct balance for erc20", async () => {
     const erc20Address = await deployERC20Contract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
-      type: "TokenERC20",
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       params: {
-        name: "",
         contractURI: TEST_CONTRACT_URI,
+        name: "",
       },
+      type: "TokenERC20",
     });
     const erc20Contract = getContract({
+      address: erc20Address,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      address: erc20Address,
     });
 
     const amount = 1000;
 
     // Mint some tokens
     const tx = mintTo({
+      amount,
       contract: erc20Contract,
       to: TEST_ACCOUNT_A.address,
-      amount,
     });
 
     await sendAndConfirmTransaction({
-      transaction: tx,
       account: TEST_ACCOUNT_A,
+      transaction: tx,
     });
 
     const { result } = renderHook(
       () =>
         useWalletBalance({
-          chain: ANVIL_CHAIN,
           address: TEST_ACCOUNT_A.address,
+          chain: ANVIL_CHAIN,
           client: TEST_CLIENT,
           tokenAddress: erc20Address,
         }),

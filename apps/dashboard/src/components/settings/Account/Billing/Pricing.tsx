@@ -1,10 +1,10 @@
 "use client";
 
+import { useTransition } from "react";
 import type { Team } from "@/api/team";
 import { PricingCard } from "@/components/blocks/pricing-card";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useTransition } from "react";
 
 import { useStripeRedirectEvent } from "../../../../app/(app)/(stripe)/stripe-redirect/stripeRedirectChannel";
 import { getValidTeamPlan } from "../../../../app/(app)/team/components/TeamHeader/getValidTeamPlan";
@@ -12,13 +12,13 @@ import { PRO_CONTACT_US_URL } from "../../../../constants/pro";
 
 // this is used to determine whether to show "Upgrade" or "Downgrade" label based on tier level
 const planToTierRecord: Record<Team["billingPlan"], number> = {
-  free: 0,
-  starter: 2,
-  growth_legacy: 3,
-  growth: 4,
   accelerate: 5,
-  scale: 6,
+  free: 0,
+  growth: 4,
+  growth_legacy: 3,
   pro: 7,
+  scale: 6,
+  starter: 2,
 };
 
 interface BillingPricingProps {
@@ -100,63 +100,63 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
         <PricingCard
           billingPlan="starter"
           billingStatus={team.billingStatus}
-          current={validTeamPlan === "starter"}
           cta={getPlanCta(
             validTeamPlan,
             "starter",
             isCurrentPlanScheduledToCancel,
           )}
-          teamSlug={team.slug}
-          teamId={team.id}
-          highlighted={highlightStarterPlan}
+          current={validTeamPlan === "starter"}
           getTeam={getTeam}
+          highlighted={highlightStarterPlan}
+          teamId={team.id}
+          teamSlug={team.slug}
         />
 
         {/* Growth */}
         <PricingCard
-          billingPlan="growth"
-          billingStatus={team.billingStatus}
           activeTrialEndsAt={
             validTeamPlan === "growth" ? trialPeriodEndedAt : undefined
           }
-          current={validTeamPlan === "growth"}
+          billingPlan="growth"
+          billingStatus={team.billingStatus}
           cta={getPlanCta(
             validTeamPlan,
             "growth",
             isCurrentPlanScheduledToCancel,
           )}
-          highlighted={highlightGrowthPlan}
-          teamSlug={team.slug}
-          teamId={team.id}
+          current={validTeamPlan === "growth"}
           getTeam={getTeam}
+          highlighted={highlightGrowthPlan}
+          teamId={team.id}
+          teamSlug={team.slug}
         />
 
         {/* Scale */}
         <PricingCard
           billingPlan="scale"
           billingStatus={team.billingStatus}
-          teamSlug={team.slug}
-          teamId={team.id}
-          current={validTeamPlan === "scale"}
           cta={getPlanCta(
             validTeamPlan,
             "scale",
             isCurrentPlanScheduledToCancel,
           )}
-          highlighted={highlightScalePlan}
+          current={validTeamPlan === "scale"}
           getTeam={getTeam}
+          highlighted={highlightScalePlan}
+          teamId={team.id}
+          teamSlug={team.slug}
         />
 
         {/* Pro */}
         <PricingCard
           billingPlan="pro"
           billingStatus={team.billingStatus}
-          teamSlug={team.slug}
-          teamId={team.id}
-          current={validTeamPlan === "pro"}
           cta={getPlanCta(validTeamPlan, "pro", isCurrentPlanScheduledToCancel)}
-          highlighted={highlightProPlan}
+          current={validTeamPlan === "pro"}
           getTeam={getTeam}
+          highlighted={highlightProPlan}
+          teamId={team.id}
+          teamSlug={team.slug}
         />
       </div>
     </div>
@@ -171,8 +171,8 @@ function getPlanCta(
   // if the CURRENT plan is pro, show contact us link
   if (currentPlan === "pro") {
     return {
-      label: "Contact us",
       href: PRO_CONTACT_US_URL,
+      label: "Contact us",
       type: "link",
     };
   }

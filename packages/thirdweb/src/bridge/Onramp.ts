@@ -170,10 +170,10 @@ export async function prepare(
   const url = `${getThirdwebBaseUrl("bridge")}/v1/onramp/prepare`;
 
   const apiRequestBody: OnrampApiRequestBody = {
-    onramp,
     chainId: Number(chainId),
-    tokenAddress,
+    onramp,
     receiver,
+    tokenAddress,
   };
 
   if (amount !== undefined) {
@@ -210,19 +210,19 @@ export async function prepare(
   }
 
   const response = await clientFetch(url, {
-    method: "POST",
+    body: stringify(apiRequestBody),
     headers: {
       "Content-Type": "application/json",
     },
-    body: stringify(apiRequestBody),
+    method: "POST",
   });
 
   if (!response.ok) {
     const errorJson = await response.json();
     throw new ApiError({
       code: errorJson.code || "UNKNOWN_ERROR",
-      message: errorJson.message || response.statusText,
       correlationId: errorJson.correlationId || undefined,
+      message: errorJson.message || response.statusText,
       statusCode: response.status,
     });
   }
@@ -233,8 +233,8 @@ export async function prepare(
   // Transform amounts from string to bigint where appropriate
   const transformedSteps = data.steps.map((step) => ({
     ...step,
-    originAmount: BigInt(step.originAmount),
     destinationAmount: BigInt(step.destinationAmount),
+    originAmount: BigInt(step.originAmount),
     transactions: step.transactions.map((tx) => ({
       ...tx,
       value: tx.value ? BigInt(tx.value) : undefined,
@@ -249,8 +249,8 @@ export async function prepare(
   return {
     ...data,
     destinationAmount: BigInt(data.destinationAmount),
-    steps: transformedSteps,
     intent: intentFromResponse,
+    steps: transformedSteps,
   };
 }
 

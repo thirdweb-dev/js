@@ -1,6 +1,5 @@
 "use client";
 
-import { THIRDWEB_CLIENT } from "@/lib/client";
 import Image from "next/image";
 import { useState } from "react";
 import { getContract } from "thirdweb";
@@ -11,6 +10,7 @@ import {
   TransactionButton,
   useActiveAccount,
 } from "thirdweb/react";
+import { THIRDWEB_CLIENT } from "@/lib/client";
 import { shortenAddress } from "./shortenAddress";
 
 const twCoinContract = getContract({
@@ -26,36 +26,36 @@ export function WriteContractExtensionPreview() {
   return (
     <div className="flex flex-col">
       <Image
-        src="/twcoin.svg"
-        className="mx-auto size-32 animate-bounce rounded-2xl"
-        width={50}
-        height={50}
         alt=""
+        className="mx-auto size-32 animate-bounce rounded-2xl"
+        height={50}
+        src="/twcoin.svg"
+        width={50}
       />
       <div className="my-3 text-center">Claim free testnet tokens</div>
       {account ? (
         <TransactionButton
-          transaction={() =>
-            claimTo({
-              contract: twCoinContract,
-              to: account.address,
-              quantity: "10",
-            })
-          }
-          onTransactionSent={(result) => {
-            console.log("Transaction submitted", result.transactionHash);
-            setTxHash(result.transactionHash);
-          }}
-          onTransactionConfirmed={(receipt) => {
-            console.log("Transaction confirmed", receipt.transactionHash);
-          }}
-          onError={(error) => {
-            setError(error.message);
-          }}
           onClick={() => {
             setError("");
             setTxHash("");
           }}
+          onError={(error) => {
+            setError(error.message);
+          }}
+          onTransactionConfirmed={(receipt) => {
+            console.log("Transaction confirmed", receipt.transactionHash);
+          }}
+          onTransactionSent={(result) => {
+            console.log("Transaction submitted", result.transactionHash);
+            setTxHash(result.transactionHash);
+          }}
+          transaction={() =>
+            claimTo({
+              contract: twCoinContract,
+              quantity: "10",
+              to: account.address,
+            })
+          }
         >
           Claim {txHash ? "more" : ""}
         </TransactionButton>
@@ -65,21 +65,17 @@ export function WriteContractExtensionPreview() {
 
       {error ? (
         <div className="mt-4 text-center text-red-600 text-sm">{error}</div>
-      ) : (
-        <>
-          {txHash && sepolia.blockExplorers && (
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href={`${sepolia.blockExplorers[0].url}/tx/${txHash}`}
-              className="mt-3 text-center text-green-400"
-            >
-              Tx sent:{" "}
-              <span className="underline">{shortenAddress(txHash, 6)}</span>
-            </a>
-          )}
-        </>
-      )}
+      ) : txHash && sepolia.blockExplorers ? (
+        <a
+          className="mt-3 text-center text-green-400"
+          href={`${sepolia.blockExplorers[0].url}/tx/${txHash}`}
+          rel="noreferrer"
+          target="_blank"
+        >
+          Tx sent:{" "}
+          <span className="underline">{shortenAddress(txHash, 6)}</span>
+        </a>
+      ) : null}
     </div>
   );
 }

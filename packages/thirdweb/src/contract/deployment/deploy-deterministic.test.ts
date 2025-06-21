@@ -19,20 +19,20 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
     const tx1 = prepareDeterministicDeployTransaction({
       chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
-      contractId: "AccountFactory",
       constructorParams: {
         defaultAdmin: TEST_ACCOUNT_A.address,
         entrypoint: ENTRYPOINT_ADDRESS_v0_6,
       },
+      contractId: "AccountFactory",
     });
     const tx2 = prepareDeterministicDeployTransaction({
       chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
-      contractId: "AccountFactory",
       constructorParams: {
         defaultAdmin: TEST_ACCOUNT_A.address,
         entrypoint: ENTRYPOINT_ADDRESS_v0_6,
       },
+      contractId: "AccountFactory",
     });
     const [tx1Result, tx2Result] = await Promise.all([
       simulateTransaction({ transaction: tx1 }),
@@ -45,31 +45,31 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
     const tx1 = prepareDeterministicDeployTransaction({
       chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
-      contractId: "AccountFactory",
       constructorParams: {
         defaultAdmin: TEST_ACCOUNT_A.address,
         entrypoint: ENTRYPOINT_ADDRESS_v0_6,
       },
+      contractId: "AccountFactory",
       salt: "some-salt",
     });
     const tx2 = prepareDeterministicDeployTransaction({
       chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
-      contractId: "AccountFactory",
       constructorParams: {
         defaultAdmin: TEST_ACCOUNT_A.address,
         entrypoint: ENTRYPOINT_ADDRESS_v0_6,
       },
+      contractId: "AccountFactory",
       salt: keccakId("some-salt"),
     });
     const tx3 = prepareDeterministicDeployTransaction({
       chain: FORKED_OPTIMISM_CHAIN,
       client: TEST_CLIENT,
-      contractId: "AccountFactory",
       constructorParams: {
         defaultAdmin: TEST_ACCOUNT_A.address,
         entrypoint: ENTRYPOINT_ADDRESS_v0_6,
       },
+      contractId: "AccountFactory",
     });
     const [tx1Result, tx2Result, tx3Result] = await Promise.all([
       simulateTransaction({ transaction: tx1 }),
@@ -84,21 +84,21 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
     const computedPromise = computePublishedContractAddress({
       chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
-      contractId: "AccountFactory",
       constructorParams: {
         defaultAdmin: TEST_ACCOUNT_A.address,
         entrypoint: ENTRYPOINT_ADDRESS_v0_6,
       },
+      contractId: "AccountFactory",
       salt: keccakId("some-salt"),
     });
     const tx = prepareDeterministicDeployTransaction({
       chain: FORKED_ETHEREUM_CHAIN,
       client: TEST_CLIENT,
-      contractId: "AccountFactory",
       constructorParams: {
         defaultAdmin: TEST_ACCOUNT_A.address,
         entrypoint: ENTRYPOINT_ADDRESS_v0_6,
       },
+      contractId: "AccountFactory",
       salt: keccakId("some-salt"),
     });
 
@@ -111,8 +111,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
   // TODO: Replace these tests' live contracts with mocks
   it("should deploy a published contract with no constructor", async () => {
     const tx = prepareDeterministicDeployTransaction({
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       contractId: "Counter",
       publisher: "0x4a706de5CE9bfe2f9C37BA945805e396d1810824",
     });

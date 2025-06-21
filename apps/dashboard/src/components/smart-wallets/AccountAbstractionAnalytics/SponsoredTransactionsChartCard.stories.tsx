@@ -4,8 +4,8 @@ import { SponsoredTransactionsChartCard } from "./SponsoredTransactionsChartCard
 import { createUserOpStatsStub } from "./storyUtils";
 
 const meta = {
-  title: "Charts/Connect/Sponsored Transactions",
   component: Component,
+  title: "Charts/Connect/Sponsored Transactions",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -20,36 +20,36 @@ function Component() {
     <div className="container flex max-w-6xl flex-col gap-10 py-10">
       <BadgeContainer label="30 days">
         <SponsoredTransactionsChartCard
-          userOpStats={createUserOpStatsStub(30)}
           isPending={false}
+          userOpStats={createUserOpStatsStub(30)}
         />
       </BadgeContainer>
 
       <BadgeContainer label="60 days">
         <SponsoredTransactionsChartCard
-          userOpStats={createUserOpStatsStub(60)}
           isPending={false}
+          userOpStats={createUserOpStatsStub(60)}
         />
       </BadgeContainer>
 
       <BadgeContainer label="10 days">
         <SponsoredTransactionsChartCard
-          userOpStats={createUserOpStatsStub(10)}
           isPending={false}
+          userOpStats={createUserOpStatsStub(10)}
         />
       </BadgeContainer>
 
       <BadgeContainer label="0 days">
         <SponsoredTransactionsChartCard
-          userOpStats={createUserOpStatsStub(0)}
           isPending={false}
+          userOpStats={createUserOpStatsStub(0)}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Loading">
         <SponsoredTransactionsChartCard
-          userOpStats={createUserOpStatsStub(0)}
           isPending={true}
+          userOpStats={createUserOpStatsStub(0)}
         />
       </BadgeContainer>
     </div>

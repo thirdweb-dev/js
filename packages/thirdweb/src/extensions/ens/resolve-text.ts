@@ -44,17 +44,17 @@ export async function resolveText(options: ResolveTextOptions) {
   return withCache(
     async () => {
       const contract = getContract({
-        client,
-        chain: resolverChain || ethereum,
         address: resolverAddress || UNIVERSAL_RESOLVER_ADDRESS,
+        chain: resolverChain || ethereum,
+        client,
       });
 
-      const data = encodeText({ name: namehash(name), key });
+      const data = encodeText({ key, name: namehash(name) });
 
       const result = await resolve({
         contract,
-        name: toHex(packetToBytes(name)),
         data,
+        name: toHex(packetToBytes(name)),
       });
 
       if (result[0] === "0x") {

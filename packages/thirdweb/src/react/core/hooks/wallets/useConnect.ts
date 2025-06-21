@@ -79,5 +79,5 @@ export function useConnect(options?: ConnectManagerOptions) {
     [connect, options, setConnectionStatus],
   );
 
-  return { connect: handleConnection, isConnecting, error } as const;
+  return { connect: handleConnection, error, isConnecting } as const;
 }

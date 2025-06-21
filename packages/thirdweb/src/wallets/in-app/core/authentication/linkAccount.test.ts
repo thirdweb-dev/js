@@ -18,9 +18,9 @@ describe("Account linking functions", () => {
   } as unknown as ClientScopedStorage;
   const mockFetch = vi.fn();
   const mockLinkedAccounts = [
-    { type: "email", details: { email: "user@example.com" } },
-    { type: "phone", details: { phone: "1234567890" } },
-    { type: "wallet", details: { address: "0x123456789" } },
+    { details: { email: "user@example.com" }, type: "email" },
+    { details: { phone: "1234567890" }, type: "phone" },
+    { details: { address: "0x123456789" }, type: "wallet" },
   ] satisfies Profile[];
 
   beforeEach(() => {
@@ -28,8 +28,8 @@ describe("Account linking functions", () => {
     vi.mocked(getClientFetch).mockReturnValue(mockFetch);
     vi.mocked(mockStorage.getAuthCookie).mockResolvedValue("mock-token");
     mockFetch.mockResolvedValue({
-      ok: true,
       json: () => Promise.resolve({ linkedAccounts: mockLinkedAccounts }),
+      ok: true,
     });
   });
 
@@ -37,21 +37,21 @@ describe("Account linking functions", () => {
     it("should successfully link an account", async () => {
       const result = await linkAccount({
         client: mockClient,
-        tokenToLink: "token-to-link",
         storage: mockStorage,
+        tokenToLink: "token-to-link",
       });
 
       expect(mockFetch).toHaveBeenCalledWith(
         "https://embedded-wallet.thirdweb.com/api/2024-05-05/account/connect",
         {
-          method: "POST",
+          body: JSON.stringify({
+            accountAuthTokenToConnect: "token-to-link",
+          }),
           headers: {
             Authorization: "Bearer iaw-auth-token:mock-token",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            accountAuthTokenToConnect: "token-to-link",
-          }),
+          method: "POST",
         },
       );
       expect(result).toEqual(mockLinkedAccounts);
@@ -63,8 +63,8 @@ describe("Account linking functions", () => {
       await expect(
         linkAccount({
           client: mockClient,
-          tokenToLink: "token-to-link",
           storage: mockStorage,
+          tokenToLink: "token-to-link",
         }),
       ).rejects.toThrow("Failed to link account, no user logged in");
     });
@@ -72,8 +72,8 @@ describe("Account linking functions", () => {
 
   describe("unlinkAccount", () => {
     const profileToUnlink = {
-      type: "email",
       details: { email: "user@example.com" },
+      type: "email",
     } satisfies Profile;
     it("should successfully unlink an account", async () => {
       const result = await unlinkAccount({
@@ -85,16 +85,16 @@ describe("Account linking functions", () => {
       expect(mockFetch).toHaveBeenCalledWith(
         "https://embedded-wallet.thirdweb.com/api/2024-05-05/account/disconnect",
         {
-          method: "POST",
+          body: JSON.stringify({
+            allowAccountDeletion: false,
+            details: profileToUnlink.details,
+            type: profileToUnlink.type,
+          }),
           headers: {
             Authorization: "Bearer iaw-auth-token:mock-token",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            type: profileToUnlink.type,
-            details: profileToUnlink.details,
-            allowAccountDeletion: false,
-          }),
+          method: "POST",
         },
       );
       expect(result).toEqual(mockLinkedAccounts);
@@ -102,25 +102,25 @@ describe("Account linking functions", () => {
 
     it("should successfully unlink an account with allowAccountDeletion", async () => {
       const result = await unlinkAccount({
+        allowAccountDeletion: true,
         client: mockClient,
         profileToUnlink,
         storage: mockStorage,
-        allowAccountDeletion: true,
       });
 
       expect(mockFetch).toHaveBeenCalledWith(
         "https://embedded-wallet.thirdweb.com/api/2024-05-05/account/disconnect",
         {
-          method: "POST",
+          body: JSON.stringify({
+            allowAccountDeletion: true,
+            details: profileToUnlink.details,
+            type: profileToUnlink.type,
+          }),
           headers: {
             Authorization: "Bearer iaw-auth-token:mock-token",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            type: profileToUnlink.type,
-            details: profileToUnlink.details,
-            allowAccountDeletion: true,
-          }),
+          method: "POST",
         },
       );
       expect(result).toEqual(mockLinkedAccounts);
@@ -139,8 +139,8 @@ describe("Account linking functions", () => {
     });
     it("should handle API errors", async () => {
       mockFetch.mockResolvedValue({
-        ok: false,
         json: () => Promise.resolve({ message: "API Error" }),
+        ok: false,
       });
 
       await expect(
@@ -163,11 +163,11 @@ describe("Account linking functions", () => {
       expect(mockFetch).toHaveBeenCalledWith(
         "https://embedded-wallet.thirdweb.com/api/2024-05-05/accounts",
         {
-          method: "GET",
           headers: {
             Authorization: "Bearer iaw-auth-token:mock-token",
             "Content-Type": "application/json",
           },
+          method: "GET",
         },
       );
       expect(result).toEqual(mockLinkedAccounts);
@@ -175,8 +175,8 @@ describe("Account linking functions", () => {
 
     it("should handle API errors", async () => {
       mockFetch.mockResolvedValue({
-        ok: false,
         json: () => Promise.resolve({ message: "API Error" }),
+        ok: false,
       });
 
       await expect(

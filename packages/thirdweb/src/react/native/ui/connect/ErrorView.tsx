@@ -16,15 +16,15 @@ export const ErrorView = (props: ErrorViewProps) => {
   return (
     <View style={styles.container}>
       <RNImage
-        theme={theme}
+        color={theme.colors.danger}
         data={CLOSE_CIRCLE}
         size={64}
-        color={theme.colors.danger}
+        theme={theme}
       />
       <ThemedText
-        type="defaultSemiBold"
-        theme={theme}
         style={{ color: theme.colors.danger, textAlign: "center" }}
+        theme={theme}
+        type="defaultSemiBold"
       >
         {title}
       </ThemedText>
@@ -34,11 +34,11 @@ export const ErrorView = (props: ErrorViewProps) => {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: "center",
+    flexDirection: "column",
+    gap: spacing.lg,
+    justifyContent: "center",
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.xxl,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: spacing.lg,
   },
 });

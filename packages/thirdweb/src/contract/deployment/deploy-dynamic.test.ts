@@ -11,34 +11,34 @@ import { deployCloneFactory } from "./utils/bootstrap.js";
 describe.runIf(process.env.TW_SECRET_KEY)("deploy dynamic", () => {
   it.sequential("should deploy dynamic contract with extensions", async () => {
     await deployCloneFactory({
+      account: TEST_ACCOUNT_A,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      account: TEST_ACCOUNT_A,
     });
 
     const deployed = await deployPublishedContract({
+      account: TEST_ACCOUNT_A,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      account: TEST_ACCOUNT_A,
       contractId: "EvolvingNFT",
       contractParams: {
-        name: "Evolving nft",
-        symbol: "ENFT",
+        contractURI: "",
         defaultAdmin: TEST_ACCOUNT_A.address,
+        name: "Evolving nft",
         royaltyBps: 0n,
         royaltyRecipient: TEST_ACCOUNT_A.address,
         saleRecipient: TEST_ACCOUNT_A.address,
+        symbol: "ENFT",
         trustedForwarders: [],
-        contractURI: "",
       },
     });
 
     expect(deployed).toBeDefined();
 
     const contract = getContract({
-      client: TEST_CLIENT,
       address: deployed,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
 
     const extensions = await readContract({

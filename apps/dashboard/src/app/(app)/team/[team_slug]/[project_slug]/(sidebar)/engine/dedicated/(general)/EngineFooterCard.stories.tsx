@@ -2,12 +2,11 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import { EngineFooterCard } from "./_components";
 
 const meta = {
-  title: "Engine/EngineFooterCard",
-  component: EngineFooterCard,
   args: {
-    teamSlug: "demo-team",
     projectSlug: "demo-project",
+    teamSlug: "demo-team",
   },
+  component: EngineFooterCard,
   decorators: [
     (Story) => (
       <div className="container max-w-6xl py-10">
@@ -15,6 +14,7 @@ const meta = {
       </div>
     ),
   ],
+  title: "Engine/EngineFooterCard",
 } satisfies Meta<typeof EngineFooterCard>;
 
 export default meta;

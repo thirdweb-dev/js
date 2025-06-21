@@ -1,15 +1,15 @@
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { OPSponsoredChains } from "constants/chains";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { SettingsIcon } from "lucide-react";
 import type { ThirdwebClient } from "thirdweb";
 import type { UseNetworkSwitcherModalOptions } from "thirdweb/react";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { cn } from "@/lib/utils";
 import {
-  type StoredChain,
   addRecentlyUsedChainId,
+  type StoredChain,
 } from "../../stores/chainStores";
 
 type ChainRenderProps = React.ComponentProps<
@@ -41,6 +41,7 @@ export const CustomChainRenderer = ({
     <div className="flex min-h-[48px] w-full cursor-pointer justify-start rounded-lg px-2 py-1 hover:bg-accent">
       <div className="group flex flex-1 items-center">
         {/* biome-ignore lint/a11y/useKeyWithClickEvents: FIXME */}
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: FIXME */}
         <div
           className={cn(
             "flex flex-1 items-center gap-4",
@@ -53,9 +54,9 @@ export const CustomChainRenderer = ({
           }}
         >
           <ChainIconClient
-            src={chain.icon?.url}
-            client={client}
             className="size-8"
+            client={client}
+            src={chain.icon?.url}
           />
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
@@ -74,10 +75,10 @@ export const CustomChainRenderer = ({
               )}
               {isSponsored && (
                 <div
+                  className="flex shrink-0 cursor-not-allowed items-center overflow-hidden rounded-xl px-2 py-1 font-medium text-xs"
                   style={{
                     background: "linear-gradient(to right, #701953, #5454B2)",
                   }}
-                  className="flex shrink-0 cursor-not-allowed items-center overflow-hidden rounded-xl px-2 py-1 font-medium text-xs"
                 >
                   Sponsored
                 </div>
@@ -100,9 +101,8 @@ export const CustomChainRenderer = ({
 
         {!disableChainConfig && storedChain && (
           <Button
-            variant="ghost"
-            className="ml-auto p-2 leading-4 transition-opacity hover:bg-transparent group-hover:opacity-100 md:opacity-0"
             aria-label="Configure Network"
+            className="ml-auto p-2 leading-4 transition-opacity hover:bg-transparent group-hover:opacity-100 md:opacity-0"
             onClick={() => {
               openEditChainModal(storedChain);
               addRecentlyUsedChainId(chain.id);
@@ -112,6 +112,7 @@ export const CustomChainRenderer = ({
                 console.error("close is undefined");
               }
             }}
+            variant="ghost"
           >
             <SettingsIcon className="size-4" />
           </Button>

@@ -27,8 +27,8 @@ function ExternalWalletConnectUI(props: {
     setErrorConnecting(false);
     wallet
       .connect({
-        client: props.client,
         chain: props.chain,
+        client: props.client,
       })
       .then(() => {
         done();
@@ -50,21 +50,21 @@ function ExternalWalletConnectUI(props: {
 
   return (
     <ConnectingScreen
+      client={props.client}
+      errorConnecting={errorConnecting}
       locale={{
+        failed: locale.connectionScreen.failed,
         getStartedLink: locale.getStartedLink,
+        inProgress: locale.connectionScreen.inProgress,
         instruction: locale.connectionScreen.instruction,
         tryAgain: locale.connectionScreen.retry,
-        inProgress: locale.connectionScreen.inProgress,
-        failed: locale.connectionScreen.failed,
       }}
       onBack={onBack}
-      walletName={walletInfo.name}
-      walletId={wallet.id}
-      errorConnecting={errorConnecting}
-      onRetry={connect}
       onGetStarted={onGetStarted}
-      client={props.client}
+      onRetry={connect}
       size={props.size}
+      walletId={wallet.id}
+      walletName={walletInfo.name}
     />
   );
 }

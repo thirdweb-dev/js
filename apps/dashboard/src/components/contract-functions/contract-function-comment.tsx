@@ -1,7 +1,7 @@
-import { Badge } from "@/components/ui/badge";
-import { CodeClient } from "@/components/ui/code/code.client";
 import { useContractFunctionComment } from "contract-ui/hooks/useContractFunctionComment";
 import type { ThirdwebContract } from "thirdweb";
+import { Badge } from "@/components/ui/badge";
+import { CodeClient } from "@/components/ui/code/code.client";
 
 /**
  * Take in a contract & function, try to fetch the comment of that function
@@ -9,7 +9,10 @@ import type { ThirdwebContract } from "thirdweb";
 export default function ContractFunctionComment({
   contract,
   functionName,
-}: { contract: ThirdwebContract; functionName: string }) {
+}: {
+  contract: ThirdwebContract;
+  functionName: string;
+}) {
   const query = useContractFunctionComment(contract, functionName);
 
   if (query.isLoading) {
@@ -24,9 +27,9 @@ export default function ContractFunctionComment({
         About this function <Badge>Beta</Badge>
       </p>
       <CodeClient
-        lang="wikitext"
         code={query.data}
         copyButtonClassName="hidden"
+        lang="wikitext"
       />
     </>
   );

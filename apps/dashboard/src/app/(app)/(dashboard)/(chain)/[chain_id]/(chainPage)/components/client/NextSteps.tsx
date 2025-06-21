@@ -1,5 +1,4 @@
 "use client";
-import { useTrack } from "hooks/analytics/useTrack";
 import { FileTextIcon } from "lucide-react";
 import Link from "next/link";
 import type { ChainMetadata } from "thirdweb/chains";
@@ -7,7 +6,6 @@ import { SectionTitle } from "../server/SectionTitle";
 
 export default function NextSteps(props: { chain: ChainMetadata }) {
   const { chain } = props;
-  const trackEvent = useTrack();
 
   return (
     <section>
@@ -18,19 +16,12 @@ export default function NextSteps(props: { chain: ChainMetadata }) {
           <div>
             <h3 className="mb-1.5 font-medium">
               <Link
+                className="before:absolute before:inset-0"
                 href={
                   "https://blog.thirdweb.com/supercharge-user-adoption-integrate-embedded-wallets-in-minutes/"
                 }
-                className="before:absolute before:inset-0"
+                rel="noopener noreferrer"
                 target="_blank"
-                onClick={() =>
-                  trackEvent({
-                    category: "nextSteps",
-                    action: "click-inapp",
-                    label: "success",
-                    chain_id: chain.chainId,
-                  })
-                }
               >
                 Create a login for {chain.name}
               </Link>

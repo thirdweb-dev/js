@@ -14,7 +14,7 @@ export async function BasicAuthPreview() {
         <table className="table-auto border-collapse rounded-lg backdrop-blur">
           <tbody>
             {Object.keys(jwt).map((key) => (
-              <tr key={key} className="">
+              <tr className="" key={key}>
                 <td className="rounded border p-2">{key}</td>
                 <td
                   className={cn(

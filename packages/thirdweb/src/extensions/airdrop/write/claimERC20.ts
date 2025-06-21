@@ -1,6 +1,6 @@
 import {
-  ZERO_ADDRESS,
   isNativeTokenAddress,
+  ZERO_ADDRESS,
 } from "../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { Address } from "../../../utils/address.js";
@@ -41,7 +41,6 @@ export type ClaimERC20Params = {
  */
 export function claimERC20(options: BaseTransactionOptions<ClaimERC20Params>) {
   return generatedClaimERC20({
-    contract: options.contract,
     asyncParams: async () => {
       const merkleRoot = await tokenMerkleRoot({
         contract: options.contract,
@@ -72,8 +71,8 @@ export function claimERC20(options: BaseTransactionOptions<ClaimERC20Params>) {
 
       const merkleProof = await fetchProofsERC20({
         contract: options.contract,
-        recipient: options.recipient,
         merkleRoot,
+        recipient: options.recipient,
         tokenDecimals,
       });
 
@@ -82,11 +81,12 @@ export function claimERC20(options: BaseTransactionOptions<ClaimERC20Params>) {
       }
 
       return {
-        token: tokenAddress as Address,
-        receiver: merkleProof.recipient as Address,
-        quantity: merkleProof.quantity,
         proofs: merkleProof.proof,
+        quantity: merkleProof.quantity,
+        receiver: merkleProof.recipient as Address,
+        token: tokenAddress as Address,
       } as const;
     },
+    contract: options.contract,
   });
 }

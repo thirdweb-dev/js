@@ -1,32 +1,30 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ImportModal } from "components/contract-components/import-contract/modal";
-import { useTrack } from "hooks/analytics/useTrack";
 import { ArrowUpRightIcon, DownloadIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { Button } from "@/components/ui/button";
 
 export function DeployViaCLIOrImportCard(props: {
   teamId: string;
   projectId: string;
   client: ThirdwebClient;
 }) {
-  const trackEvent = useTrack();
   const [importModalOpen, setImportModalOpen] = useState(false);
 
   return (
     <div className="rounded-lg border bg-card p-4 lg:p-6">
       <ImportModal
-        type="contract"
         client={props.client}
         isOpen={importModalOpen}
         onClose={() => {
           setImportModalOpen(false);
         }}
-        teamId={props.teamId}
         projectId={props.projectId}
+        teamId={props.teamId}
+        type="contract"
       />
 
       <h2 className="mb-0.5 font-semibold text-lg">
@@ -40,31 +38,25 @@ export function DeployViaCLIOrImportCard(props: {
 
       <div className="mt-6 flex flex-col gap-3 lg:flex-row">
         <Button
-          variant="outline"
-          className="gap-2 bg-background lg:px-10"
           asChild
+          className="gap-2 bg-background lg:px-10"
+          variant="outline"
         >
-          <TrackedLinkTW
+          <Link
             href="https://portal.thirdweb.com/contracts/deploy/overview"
+            rel="noopener noreferrer"
             target="_blank"
-            category="contracts-banner"
-            label="deploy-via-cli"
           >
             Deploy via CLI
             <ArrowUpRightIcon className="size-4" />
-          </TrackedLinkTW>
+          </Link>
         </Button>
         <Button
-          variant="outline"
           className="gap-2 bg-background"
           onClick={() => {
             setImportModalOpen(true);
-            trackEvent({
-              category: "contracts-banner",
-              action: "click",
-              label: "import-contract",
-            });
           }}
+          variant="outline"
         >
           <DownloadIcon className="size-4" />
           Import Contract

@@ -64,33 +64,24 @@ export function useWalletsAndBalances(props: {
   const chainInfo = useChainMetadata(props.toChain);
 
   return useQuery({
-    queryKey: [
-      "wallets-and-balances",
-      props.sourceSupportedTokens,
-      props.toChain.id,
-      props.toToken,
-      props.mode,
-      activeAccount?.address,
-      connectedWallets.map((w) => w.getAccount()?.address),
-    ],
     enabled:
       !!props.sourceSupportedTokens && !!chainInfo.data && !!activeAccount,
     queryFn: async () => {
       const entries = await Promise.all(
         connectedWallets.map(async (wallet) => {
           const balances = await fetchBalancesForWallet({
-            wallet,
             accountAddress: activeAccount?.address,
+            client: props.client,
+            mode: props.mode,
             sourceSupportedTokens: props.sourceSupportedTokens || [],
             toChain: props.toChain,
             toToken: props.toToken,
-            mode: props.mode,
-            client: props.client,
+            wallet,
           });
           return [
             {
-              id: wallet.id,
               address: wallet.getAccount()?.address || "",
+              id: wallet.id,
             } as WalletKey,
             balances,
           ] as const;
@@ -102,6 +93,15 @@ export function useWalletsAndBalances(props: {
       }
       return map;
     },
+    queryKey: [
+      "wallets-and-balances",
+      props.sourceSupportedTokens,
+      props.toChain.id,
+      props.toToken,
+      props.mode,
+      activeAccount?.address,
+      connectedWallets.map((w) => w.getAccount()?.address),
+    ],
   });
 }
 
@@ -147,9 +147,9 @@ async function fetchBalancesForWallet({
 
       while (true) {
         const batch = await getOwnedTokens({
-          ownerAddress: account.address,
           chains: chunk,
           client,
+          ownerAddress: account.address,
           queryOptions: {
             limit,
             page,
@@ -186,9 +186,9 @@ async function fetchBalancesForWallet({
   const destinationToken = isNativeToken(toToken)
     ? {
         address: NATIVE_TOKEN_ADDRESS,
+        icon: toChain.icon?.url,
         name: toChain.nativeCurrency?.name || "",
         symbol: toChain.nativeCurrency?.symbol || "",
-        icon: toChain.icon?.url,
       }
     : toToken;
 
@@ -228,8 +228,8 @@ async function fetchBalancesForWallet({
             const balance = await getWalletBalance({
               address: account.address,
               chain,
-              tokenAddress: isNative ? undefined : token.address,
               client,
+              tokenAddress: isNative ? undefined : token.address,
             });
 
             const include =

@@ -12,8 +12,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("simulate", async () => {
       params: [TEST_WALLET_B, 100n],
     });
     const result = await simulateTransaction({
-      transaction: tx,
       from: TEST_WALLET_A,
+      transaction: tx,
     });
     expect(result).toMatchInlineSnapshot("[]");
   });
@@ -25,8 +25,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("simulate", async () => {
       params: [TEST_WALLET_B],
     });
     const result = await simulateTransaction({
-      transaction: tx,
       from: TEST_WALLET_A,
+      transaction: tx,
     });
     expect(result).toMatchInlineSnapshot("1609000000n");
   });

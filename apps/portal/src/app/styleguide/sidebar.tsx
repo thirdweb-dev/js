@@ -1,31 +1,31 @@
 import type { SideBar } from "@/components/Layouts/DocLayout";
 
 export const sidebar: SideBar = {
-  name: "Styleguide",
   links: [
     {
-      name: "Basics",
       href: "/styleguide",
+      name: "Basics",
     },
     {
-      name: "Code",
       href: "/styleguide/code",
+      name: "Code",
     },
     {
-      name: "Tabs",
       href: "/styleguide/tabs",
+      name: "Tabs",
     },
     {
-      name: "Steps",
       href: "/styleguide/steps",
+      name: "Steps",
     },
     {
-      name: "Cards",
       href: "/styleguide/cards",
+      name: "Cards",
     },
     {
-      name: "Callouts",
       href: "/styleguide/callouts",
+      name: "Callouts",
     },
   ],
+  name: "Styleguide",
 };

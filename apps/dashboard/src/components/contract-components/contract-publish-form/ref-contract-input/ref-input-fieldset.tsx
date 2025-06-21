@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import type { AbiParameter } from "abitype";
 import { PlusIcon } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { RefContractInput } from "./ref-input";
 
 interface RefInputFieldsetProps {
@@ -18,8 +18,8 @@ export const RefInputFieldset: React.FC<RefInputFieldsetProps> = ({
   const form = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
-    name: `constructorParams.${param.name ? param.name : "*"}.dynamicValue.refContracts`,
     control: form.control,
+    name: `constructorParams.${param.name ? param.name : "*"}.dynamicValue.refContracts`,
   });
   const hideAddButton = param.type === "address" && fields.length >= 1;
 
@@ -27,30 +27,30 @@ export const RefInputFieldset: React.FC<RefInputFieldsetProps> = ({
     <div className="flex flex-col gap-5">
       {fields.map((item, index) => (
         <RefContractInput
-          key={item.id}
-          remove={remove}
-          index={index}
-          param={param}
           className={cn(!hideAddButton && "border-border border-b pb-5")}
           client={client}
+          index={index}
+          key={item.id}
+          param={param}
+          remove={remove}
         />
       ))}
 
       {!hideAddButton && (
         <div>
           <Button
-            type="button"
-            size="sm"
-            variant="outline"
             className="gap-2"
             onClick={() =>
               append({
                 contractId: "",
-                version: "",
                 publisherAddress: "",
                 salt: "",
+                version: "",
               })
             }
+            size="sm"
+            type="button"
+            variant="outline"
           >
             <PlusIcon className="size-4" />
             Add Reference

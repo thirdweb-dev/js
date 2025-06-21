@@ -1,9 +1,10 @@
+import { useRef } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { fontSize } from "../../../../../../core/design-system/index.js";
-import { Spacer } from "../../../../components/Spacer.js";
 import { Container } from "../../../../components/basic.js";
 import { Input } from "../../../../components/formElements.js";
+import { Spacer } from "../../../../components/Spacer.js";
 import { TokenRow } from "../../../../components/token/TokenRow.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
@@ -33,43 +34,30 @@ export function BuyTokenInput(props: {
     return `calc(${`${Math.max(1, chars)}ch`} + 6px)`;
   };
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   return (
     <Container>
       {/* Input */}
-
-      {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+      {/** biome-ignore lint/a11y/noStaticElementInteractions: TODO */}
+      {/** biome-ignore lint/a11y/useKeyWithClickEvents: TODO */}
       <div
-        onClick={(e) => {
-          e.currentTarget.querySelector("input")?.focus();
+        onClick={() => {
+          inputRef.current?.focus();
         }}
       >
         <Container
-          flex="row"
           center="both"
+          flex="row"
           gap="xs"
           style={{
             flexWrap: "nowrap",
           }}
         >
           <Input
-            variant="outline"
-            pattern="^[0-9]*[.,]?[0-9]*$"
-            inputMode="decimal"
-            tabIndex={-1}
-            placeholder="0"
-            type="text"
             data-placeholder={props.value === ""}
-            value={props.value || "0"}
             disabled={props.freezeAmount}
-            onClick={(e) => {
-              // put cursor at the end of the input
-              if (props.value === "") {
-                e.currentTarget.setSelectionRange(
-                  e.currentTarget.value.length,
-                  e.currentTarget.value.length,
-                );
-              }
-            }}
+            inputMode="decimal"
             onChange={(e) => {
               let value = e.target.value;
 
@@ -91,41 +79,57 @@ export function BuyTokenInput(props: {
                 props.onChange(value);
               }
             }}
+            onClick={(e) => {
+              // put cursor at the end of the input
+              if (props.value === "") {
+                e.currentTarget.setSelectionRange(
+                  e.currentTarget.value.length,
+                  e.currentTarget.value.length,
+                );
+              }
+            }}
+            pattern="^[0-9]*[.,]?[0-9]*$"
+            placeholder="0"
+            ref={inputRef}
             style={{
               border: "none",
-              fontSize: getBuyTokenAmountFontSize(props.value),
-              boxShadow: "none",
               borderRadius: "0",
+              boxShadow: "none",
+              fontSize: getBuyTokenAmountFontSize(props.value),
+              fontWeight: 600,
+              maxWidth: "calc(100% - 100px)",
               padding: "0",
               paddingBlock: "2px",
-              fontWeight: 600,
               textAlign: "right",
               width: getWidth(),
-              maxWidth: "calc(100% - 100px)",
             }}
+            tabIndex={-1}
+            type="text"
+            value={props.value || "0"}
+            variant="outline"
           />
           <TokenSymbol
-            token={props.token}
             chain={props.chain}
-            size="lg"
             color="secondaryText"
+            size="lg"
+            token={props.token}
           />
         </Container>
       </div>
 
       <Container
-        flex="row"
         center="both"
+        flex="row"
         style={{
           height: fontSize.xl,
         }}
       >
         <FiatValue
-          tokenAmount={props.value}
-          token={props.token}
           chain={props.chain}
           client={props.client}
           size="md"
+          token={props.token}
+          tokenAmount={props.value}
         />
       </Container>
 
@@ -134,13 +138,13 @@ export function BuyTokenInput(props: {
           <Spacer y="md" />
 
           {/* Token / Chain selector */}
-          <Container flex="row" center="x">
+          <Container center="x" flex="row">
             <TokenRow
-              token={props.token}
               chain={props.chain}
               client={props.client}
-              onSelectToken={props.onSelectToken}
               freezeChainAndToken={props.freezeChainAndToken}
+              onSelectToken={props.onSelectToken}
+              token={props.token}
             />
           </Container>
         </>

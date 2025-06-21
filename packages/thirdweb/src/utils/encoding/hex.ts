@@ -1,5 +1,6 @@
 import * as ox__Hex from "ox/Hex";
-export { isHex, type IsHexOptions } from "./helpers/is-hex.js";
+
+export { type IsHexOptions, isHex } from "./helpers/is-hex.js";
 
 export type Hex = ox__Hex.Hex;
 

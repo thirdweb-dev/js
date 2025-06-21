@@ -7,7 +7,6 @@ export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="Mint Dynamic NFTs"
         description={
           <>
             Allow your users to mint new tokens into any given contract. You
@@ -15,6 +14,7 @@ export default function Page() {
           </>
         }
         docsLink="https://thirdweb-engine.apidocumentation.com/reference#tag/erc1155/POST/contract/{chain}/{contractAddress}/erc1155/mint-to?utm_source=playground"
+        title="Mint Dynamic NFTs"
       >
         <EngineMintPreview />
         <div className="h-10" />

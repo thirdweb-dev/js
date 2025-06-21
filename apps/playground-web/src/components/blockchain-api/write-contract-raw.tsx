@@ -1,11 +1,10 @@
 "use client";
 
-import { THIRDWEB_CLIENT } from "@/lib/client";
 import Image from "next/image";
 import { useState } from "react";
 import {
-  type Hex,
   getContract,
+  type Hex,
   prepareContractCall,
   toTokens,
   toUnits,
@@ -18,6 +17,7 @@ import {
   useActiveAccount,
   useReadContract,
 } from "thirdweb/react";
+import { THIRDWEB_CLIENT } from "@/lib/client";
 import { shortenAddress } from "./shortenAddress";
 
 const twCoinContract = getContract({
@@ -32,8 +32,8 @@ export function WriteContractRawPreview() {
   const account = useActiveAccount();
   const [to, setTo] = useState<string>("");
   const { data: balance } = useReadContract(balanceOf, {
-    contract: twCoinContract,
     address: account?.address ?? "0x",
+    contract: twCoinContract,
     queryOptions: {
       enabled: !!account?.address,
     },
@@ -46,11 +46,11 @@ export function WriteContractRawPreview() {
             <div className="text-2xl">Your balance</div>
             <div className="flex flex-row justify-start gap-3">
               <Image
-                src="/twcoin.svg"
-                className="mx-auto size-5 animate-bounce rounded-2xl"
-                width={50}
-                height={50}
                 alt=""
+                className="mx-auto size-5 animate-bounce rounded-2xl"
+                height={50}
+                src="/twcoin.svg"
+                width={50}
               />
               <div>
                 <span className="text-green-600">
@@ -63,9 +63,9 @@ export function WriteContractRawPreview() {
 
           <input
             className="mb-3 rounded-lg border bg-transparent px-3 py-2"
-            type="text"
-            placeholder="0x..."
             onChange={(e) => setTo(e.target.value)}
+            placeholder="0x..."
+            type="text"
           />
         </>
       ) : (
@@ -74,22 +74,9 @@ export function WriteContractRawPreview() {
 
       {account ? (
         <TransactionButton
-          transaction={() =>
-            prepareContractCall({
-              contract: twCoinContract,
-              method:
-                "function transfer(address to, uint256 value) returns (bool)",
-              // In reality you should properly validate the params
-              // we keep it simple in this demo
-              params: [to as Hex, toUnits("5", 18)],
-            })
-          }
-          onTransactionSent={(result) => {
-            console.log("Transaction submitted", result.transactionHash);
-            setTxHash(result.transactionHash);
-          }}
-          onTransactionConfirmed={(receipt) => {
-            console.log("Transaction confirmed", receipt.transactionHash);
+          onClick={() => {
+            setError("");
+            setTxHash("");
           }}
           onError={(error) => {
             // Probably the most common error for this use case
@@ -101,10 +88,23 @@ export function WriteContractRawPreview() {
               : error.message;
             setError(_message);
           }}
-          onClick={() => {
-            setError("");
-            setTxHash("");
+          onTransactionConfirmed={(receipt) => {
+            console.log("Transaction confirmed", receipt.transactionHash);
           }}
+          onTransactionSent={(result) => {
+            console.log("Transaction submitted", result.transactionHash);
+            setTxHash(result.transactionHash);
+          }}
+          transaction={() =>
+            prepareContractCall({
+              contract: twCoinContract,
+              method:
+                "function transfer(address to, uint256 value) returns (bool)",
+              // In reality you should properly validate the params
+              // we keep it simple in this demo
+              params: [to as Hex, toUnits("5", 18)],
+            })
+          }
         >
           Send {txHash ? "more" : ""}
         </TransactionButton>
@@ -124,10 +124,10 @@ export function WriteContractRawPreview() {
         <>
           {txHash && sepolia.blockExplorers && (
             <a
-              target="_blank"
-              rel="noreferrer"
-              href={`${sepolia.blockExplorers[0].url}/tx/${txHash}`}
               className="mt-3 text-center text-green-400"
+              href={`${sepolia.blockExplorers[0].url}/tx/${txHash}`}
+              rel="noreferrer"
+              target="_blank"
             >
               Tx sent:{" "}
               <span className="underline">{shortenAddress(txHash, 6)}</span>

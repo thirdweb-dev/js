@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { decodeAbiParameters } from "viem";
-import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the "hashProposal" function.
@@ -25,20 +25,20 @@ export type HashProposalParams = {
 export const FN_SELECTOR = "0xc59057e4" as const;
 const FN_INPUTS = [
   {
-    type: "address[]",
     name: "targets",
+    type: "address[]",
   },
   {
-    type: "uint256[]",
     name: "values",
+    type: "uint256[]",
   },
   {
-    type: "bytes[]",
     name: "calldatas",
+    type: "bytes[]",
   },
   {
-    type: "bytes32",
     name: "descriptionHash",
+    type: "bytes32",
   },
 ] as const;
 const FN_OUTPUTS = [

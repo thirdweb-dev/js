@@ -4,7 +4,7 @@ import type {
   ExtractAbiEvent,
   ExtractAbiEventNames,
 } from "abitype";
-import { type Log, formatLog } from "viem";
+import { formatLog, type Log } from "viem";
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import {
@@ -13,9 +13,9 @@ import {
 } from "../../insight/get-events.js";
 import { eth_blockNumber } from "../../rpc/actions/eth_blockNumber.js";
 import {
+  eth_getLogs,
   type GetLogsBlockParams,
   type GetLogsParams,
-  eth_getLogs,
 } from "../../rpc/actions/eth_getLogs.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { getAddress } from "../../utils/address.js";
@@ -162,15 +162,15 @@ export async function getContractEvents<
     if (useIndexer) {
       // fetch all events from the indexer, no need to get events from ABI
       const events = await getContractEventsInsight({
-        client: contract.client,
         chains: [contract.chain],
+        client: contract.client,
         contractAddress: contract.address,
         decodeLogs: true,
         queryOptions: {
-          limit: 500,
           filter_block_hash: restParams.blockHash,
           filter_block_number_gte: restParams.fromBlock,
           filter_block_number_lte: restParams.toBlock,
+          limit: 500,
         },
       }).catch(() => {
         // chain might not support indexer
@@ -215,8 +215,8 @@ export async function getContractEvents<
       logs = await Promise.all(
         logsParams.map((p) =>
           getLogsFromInsight({
-            params: p,
             contract,
+            params: p,
           }),
         ),
       );
@@ -238,8 +238,8 @@ export async function getContractEvents<
     .flat()
     .sort((a, b) => Number((a.blockNumber ?? 0n) - (b.blockNumber ?? 0n)));
   return parseEventLogs({
-    logs: flattenLogs,
     events: resolvedEvents,
+    logs: flattenLogs,
   });
 }
 
@@ -256,11 +256,10 @@ async function getLogsFromInsight(options: {
     typeof params.toBlock === "bigint" ? Number(params.toBlock) : undefined;
 
   const r = await getContractEventsInsight({
-    client: contract.client,
     chains: [contract.chain],
+    client: contract.client,
     contractAddress: contract.address,
     queryOptions: {
-      limit: 500,
       filter_block_hash: params.blockHash,
       filter_block_number_gte: fromBlock,
       filter_block_number_lte: toBlock,
@@ -268,6 +267,7 @@ async function getLogsFromInsight(options: {
       filter_topic_1: params.topics?.[1] as Hex | undefined,
       filter_topic_2: params.topics?.[2] as Hex | undefined,
       filter_topic_3: params.topics?.[3] as Hex | undefined,
+      limit: 500,
     },
   });
 
@@ -276,23 +276,23 @@ async function getLogsFromInsight(options: {
 
 function toLog(r: ContractEvent[]) {
   const cleanedEventData = r.map((tx) => ({
-    chainId: tx.chain_id,
-    blockNumber: numberToHex(Number(tx.block_number)),
+    address: tx.address,
     blockHash: tx.block_hash as Hex,
+    blockNumber: numberToHex(Number(tx.block_number)),
     blockTimestamp: tx.block_timestamp,
+    chainId: tx.chain_id,
+    data: tx.data as Hex,
+    logIndex: numberToHex(tx.log_index),
+    topics: tx.topics as [`0x${string}`, ...`0x${string}`[]] | [] | undefined,
     transactionHash: tx.transaction_hash as Hex,
     transactionIndex: numberToHex(tx.transaction_index),
-    logIndex: numberToHex(tx.log_index),
-    address: tx.address,
-    data: tx.data as Hex,
-    topics: tx.topics as [`0x${string}`, ...`0x${string}`[]] | [] | undefined,
     ...(tx.decoded
       ? {
-          eventName: tx.decoded.name,
           args: {
             ...tx.decoded.indexed_params,
             ...tx.decoded.non_indexed_params,
           },
+          eventName: tx.decoded.name,
         }
       : {}),
   }));

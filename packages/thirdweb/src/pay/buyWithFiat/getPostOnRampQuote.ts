@@ -74,15 +74,15 @@ export async function getPostOnRampQuote({
 
   return getBuyWithCryptoQuote({
     client,
-    intentId: buyWithFiatStatus.intentId,
     // onramp always happens to fromAddress, and then swap is done from - fromAddress to toAddress
     fromAddress: buyWithFiatStatus.fromAddress,
-    toAddress: buyWithFiatStatus.toAddress,
     fromChainId: buyWithFiatStatus.quote.onRampToken.chainId,
     fromTokenAddress: buyWithFiatStatus.quote.onRampToken.tokenAddress,
+    intentId: buyWithFiatStatus.intentId,
+    paymentLinkId: paymentLinkId,
+    toAddress: buyWithFiatStatus.toAddress,
+    toAmount: buyWithFiatStatus.quote.estimatedToTokenAmount,
     toChainId: buyWithFiatStatus.quote.toToken.chainId,
     toTokenAddress: buyWithFiatStatus.quote.toToken.tokenAddress,
-    toAmount: buyWithFiatStatus.quote.estimatedToTokenAmount,
-    paymentLinkId: paymentLinkId,
   });
 }

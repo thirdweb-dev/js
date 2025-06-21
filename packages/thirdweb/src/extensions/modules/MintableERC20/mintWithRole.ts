@@ -29,7 +29,6 @@ export type TokenMintParams = {
  */
 export function mintWithRole(options: BaseTransactionOptions<TokenMintParams>) {
   return generatedMint({
-    contract: options.contract,
     asyncParams: async () => {
       let amount = 0n;
 
@@ -43,17 +42,18 @@ export function mintWithRole(options: BaseTransactionOptions<TokenMintParams>) {
         );
         amount = await convertErc20Amount({
           amount: options.quantity,
-          client: options.contract.client,
           chain: options.contract.chain,
+          client: options.contract.client,
           erc20Address: options.contract.address,
         });
       }
 
       return {
-        to: getAddress(options.to),
         amount: BigInt(amount),
         data: "0x",
+        to: getAddress(options.to),
       };
     },
+    contract: options.contract,
   });
 }

@@ -1,15 +1,16 @@
 "use client";
-import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { TrackedUnderlineLink } from "@/components/ui/tracked-link";
 import {
   type EngineInstance,
   useEngineBackendWallets,
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWalletChain } from "thirdweb/react";
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { Button } from "@/components/ui/button";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { BackendWalletsTable } from "./backend-wallets-table";
 import { CreateBackendWalletButton } from "./create-backend-wallet-button";
 import { ImportBackendWalletButton } from "./import-backend-wallet-button";
@@ -33,19 +34,19 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
   return (
     <div>
       <BackendWalletsSection
-        instance={instance}
-        teamSlug={teamSlug}
-        projectSlug={projectSlug}
         authToken={authToken}
         client={client}
+        instance={instance}
+        projectSlug={projectSlug}
+        teamSlug={teamSlug}
       />
       <div className="h-10" />
-      <TransactionCharts instanceUrl={instance.url} authToken={authToken} />
+      <TransactionCharts authToken={authToken} instanceUrl={instance.url} />
       <div className="h-10" />
       <TransactionsTable
-        instanceUrl={instance.url}
         authToken={authToken}
         client={client}
+        instanceUrl={instance.url}
       />
     </div>
   );
@@ -62,15 +63,24 @@ function BackendWalletsSection(props: {
   const activeWalletChain = useActiveWalletChain();
   const [_chainId, setChainId] = useState<number>();
   const chainId = _chainId || activeWalletChain?.id || 1;
+  const pageSize = 10;
+  const [page, setPage] = useState(1);
 
   const backendWallets = useEngineBackendWallets({
-    instanceUrl: instance.url,
     authToken,
+    instanceUrl: instance.url,
+    limit: pageSize,
+    page,
   });
+
   const { data: walletConfig } = useEngineWalletConfig({
-    instanceUrl: instance.url,
     authToken,
+    instanceUrl: instance.url,
   });
+
+  const disableNextButton = (backendWallets.data?.length || 0) < pageSize;
+  const disablePreviousButton = page === 1;
+  const showPagination = !disableNextButton || !disablePreviousButton;
 
   return (
     <section className="rounded-lg border border-border bg-card">
@@ -93,14 +103,13 @@ function BackendWalletsSection(props: {
               Configuration
             </UnderlineLink>{" "}
             tab, or{" "}
-            <TrackedUnderlineLink
+            <UnderlineLink
               href="https://portal.thirdweb.com/engine/v2/configure-wallets/server-wallet"
+              rel="noopener noreferrer"
               target="_blank"
-              label="learn-more"
-              category="engine"
             >
               learn more about server wallets.
-            </TrackedUnderlineLink>
+            </UnderlineLink>
           </p>
         </div>
 
@@ -108,18 +117,18 @@ function BackendWalletsSection(props: {
           {walletConfig && (
             <div className="flex flex-row justify-end gap-3 max-md:w-full">
               <ImportBackendWalletButton
-                instance={instance}
-                walletConfig={walletConfig}
-                teamSlug={teamSlug}
-                projectSlug={projectSlug}
                 authToken={authToken}
+                instance={instance}
+                projectSlug={projectSlug}
+                teamSlug={teamSlug}
+                walletConfig={walletConfig}
               />
               <CreateBackendWalletButton
-                instance={instance}
-                walletConfig={walletConfig}
-                teamSlug={teamSlug}
-                projectSlug={projectSlug}
                 authToken={authToken}
+                instance={instance}
+                projectSlug={projectSlug}
+                teamSlug={teamSlug}
+                walletConfig={walletConfig}
               />
             </div>
           )}
@@ -129,12 +138,13 @@ function BackendWalletsSection(props: {
               <span className="text-sm">Show balance for</span>
               <div className="flex flex-row">
                 <SingleNetworkSelector
-                  chainId={chainId}
-                  onChange={setChainId}
-                  className="min-w-40 max-w-52 lg:max-w-60"
-                  popoverContentClassName="!w-[80vw] md:!w-[500px]"
                   align="end"
+                  chainId={chainId}
+                  className="min-w-40 max-w-52 lg:max-w-60"
                   client={props.client}
+                  disableChainId
+                  onChange={setChainId}
+                  popoverContentClassName="!w-[80vw] md:!w-[500px]"
                 />
               </div>
             </div>
@@ -143,14 +153,38 @@ function BackendWalletsSection(props: {
       </div>
 
       <BackendWalletsTable
-        instanceUrl={instance.url}
-        wallets={backendWallets.data ?? []}
-        isPending={backendWallets.isPending}
-        isFetched={backendWallets.isFetched}
         authToken={authToken}
         chainId={chainId}
         client={props.client}
+        instanceUrl={instance.url}
+        isFetched={backendWallets.isFetched}
+        isPending={backendWallets.isPending}
+        wallets={backendWallets.data ?? []}
       />
+
+      {showPagination && (
+        <div className="flex justify-end gap-3 border-t px-4 py-5">
+          <Button
+            className="gap-2"
+            disabled={disablePreviousButton || backendWallets.isPending}
+            onClick={() => setPage(page - 1)}
+            variant="outline"
+          >
+            <ArrowLeftIcon className="h-4 w-4" />
+            Previous
+          </Button>
+
+          <Button
+            className="gap-2"
+            disabled={disableNextButton || backendWallets.isPending}
+            onClick={() => setPage(page + 1)}
+            variant="outline"
+          >
+            Next
+            <ArrowRightIcon className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
     </section>
   );
 }

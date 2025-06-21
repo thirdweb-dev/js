@@ -3,14 +3,13 @@
 import {
   Button as ChakraButton,
   type ButtonProps as ChakraButtonProps,
+  forwardRef,
   IconButton,
   type IconButtonProps,
   LightMode,
   Link,
-  forwardRef,
   useButtonGroup,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useClipboard } from "hooks/useClipboard";
 import { CheckIcon, CopyIcon, ExternalLinkIcon } from "lucide-react";
 import { forwardRef as reactForwardRef } from "react";
@@ -19,10 +18,10 @@ import { ChakraNextLink } from "./link";
 import { convertFontSizeToCSSVar } from "./utils/typography";
 
 const buttonSizesMap = {
-  xs: "sm",
-  sm: "md",
-  md: "lg",
   lg: "xl",
+  md: "lg",
+  sm: "md",
+  xs: "sm",
 } as const;
 
 type PossibleButtonSize = keyof typeof buttonSizesMap;
@@ -43,10 +42,10 @@ export const Button = forwardRef<ButtonProps, "button">(
       _size = "md";
     }
     const props: ButtonProps = {
-      fontWeight: fontWeights.label,
-      lineHeight: lineHeights.label,
-      letterSpacing: letterSpacings.label,
       fontSize: convertFontSizeToCSSVar(`label.${buttonSizesMap[_size]}`),
+      fontWeight: fontWeights.label,
+      letterSpacing: letterSpacings.label,
+      lineHeight: lineHeights.label,
       size: _size,
       ...buttonGroupContext,
       ...restButtonProps,
@@ -60,8 +59,8 @@ export const Button = forwardRef<ButtonProps, "button">(
         <LightMode>
           <ChakraButton
             fontWeight={fontWeights.label}
-            lineHeight={lineHeights.label}
             letterSpacing={letterSpacings.label}
+            lineHeight={lineHeights.label}
             {...props}
             ref={ref}
           />
@@ -73,8 +72,8 @@ export const Button = forwardRef<ButtonProps, "button">(
       <ChakraButton
         {...props}
         fontWeight={fontWeights.label}
-        lineHeight={lineHeights.label}
         letterSpacing={letterSpacings.label}
+        lineHeight={lineHeights.label}
         ref={ref}
       />
     );
@@ -96,10 +95,10 @@ export const LinkButton = reactForwardRef<HTMLButtonElement, LinkButtonProps>(
           href={href}
           isExternal
           ref={ref}
-          textDecoration="none!important"
           rightIcon={
             noIcon ? undefined : <ExternalLinkIcon className="size-4" />
           }
+          textDecoration="none!important"
           {...restButtonProps}
         >
           {children}
@@ -123,66 +122,11 @@ export const LinkButton = reactForwardRef<HTMLButtonElement, LinkButtonProps>(
 
 LinkButton.displayName = "LinkButton";
 
-interface TrackedLinkButtonProps extends LinkButtonProps {
-  category: string;
-  label?: string;
-}
-
-export const TrackedLinkButton = forwardRef<TrackedLinkButtonProps, "button">(
-  ({ category, label, ...restButtonProps }, ref) => {
-    const trackEvent = useTrack();
-    return (
-      <LinkButton
-        ref={ref}
-        onClick={() =>
-          trackEvent({
-            category,
-            action: "click",
-            label,
-          })
-        }
-        {...restButtonProps}
-      />
-    );
-  },
-);
-
-TrackedLinkButton.displayName = "TrackedLinkButton";
-
-interface TrackedIconButtonProps extends IconButtonProps {
-  category: string;
-  label?: string;
-  trackingProps?: Record<string, string>;
-}
-
-const TrackedIconButton = forwardRef<TrackedIconButtonProps, "button">(
-  ({ category, label, trackingProps, ...restButtonProps }, ref) => {
-    const trackEvent = useTrack();
-    return (
-      <IconButton
-        className="text-muted-foreground"
-        ref={ref}
-        onClick={() =>
-          trackEvent({
-            category,
-            action: "click",
-            label,
-            ...trackingProps,
-          })
-        }
-        {...restButtonProps}
-      />
-    );
-  },
-);
-
-TrackedIconButton.displayName = "TrackedIconButton";
-
-interface TrackedCopyButtonProps extends TrackedIconButtonProps {
+interface Legacy_CopyButtonProps extends IconButtonProps {
   value: string;
 }
 
-export const TrackedCopyButton = forwardRef<TrackedCopyButtonProps, "button">(
+export const Legacy_CopyButton = forwardRef<Legacy_CopyButtonProps, "button">(
   ({ value, ...restButtonProps }, ref) => {
     const { onCopy, hasCopied } = useClipboard(value);
 
@@ -193,20 +137,20 @@ export const TrackedCopyButton = forwardRef<TrackedCopyButtonProps, "button">(
     };
 
     return (
-      <TrackedIconButton
-        ref={ref}
+      <IconButton
         borderRadius="md"
-        variant="ghost"
         colorScheme="whiteAlpha"
-        size="sm"
-        onClick={copy}
         icon={
           hasCopied ? <CheckIcon className="text-success-text" /> : <CopyIcon />
         }
+        onClick={copy}
+        ref={ref}
+        size="sm"
+        variant="ghost"
         {...restButtonProps}
       />
     );
   },
 );
 
-TrackedCopyButton.displayName = "TrackedCopyButton";
+Legacy_CopyButton.displayName = "Legacy_CopyButton";

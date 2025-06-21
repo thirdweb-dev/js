@@ -1,5 +1,3 @@
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
-import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import {
   type Keypair,
   useEngineRemoveKeypair,
@@ -19,12 +17,13 @@ import {
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { Button, FormLabel, Text } from "tw-components";
 import { toDateTimeLocal } from "utils/date-utils";
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 
 interface KeypairsTableProps {
   instanceUrl: string;
@@ -38,42 +37,42 @@ const columnHelper = createColumnHelper<Keypair>();
 
 const columns = [
   columnHelper.accessor("label", {
-    header: "Label",
     cell: (cell) => {
       return <Text>{cell.getValue()}</Text>;
     },
+    header: "Label",
   }),
   columnHelper.accessor("hash", {
-    header: "Key ID",
     cell: (cell) => {
       return (
         <CopyAddressButton address={cell.getValue()} copyIconPosition="right" />
       );
     },
+    header: "Key ID",
   }),
   columnHelper.accessor("publicKey", {
-    header: "Public Key",
     cell: (cell) => {
       return (
         <PlainTextCodeBlock
-          code={cell.getValue()}
           className="max-w-[350px]"
+          code={cell.getValue()}
           codeClassName="text-xs"
         />
       );
     },
+    header: "Public Key",
   }),
   columnHelper.accessor("algorithm", {
-    header: "Type",
     cell: (cell) => {
       return <Text>{cell.getValue()}</Text>;
     },
+    header: "Type",
   }),
   columnHelper.accessor("createdAt", {
-    header: "Added At",
     cell: (cell) => {
       return <Text>{toDateTimeLocal(cell.getValue())}</Text>;
     },
+    header: "Added At",
   }),
 ];
 
@@ -90,30 +89,30 @@ export const KeypairsTable: React.FC<KeypairsTableProps> = ({
   return (
     <>
       <TWTable
-        title="public keys"
-        data={keypairs}
         columns={columns}
-        isPending={isPending}
+        data={keypairs}
         isFetched={isFetched}
+        isPending={isPending}
         onMenuClick={[
           {
             icon: <Trash2Icon className="size-4" />,
-            text: "Remove",
+            isDestructive: true,
             onClick: (keypair) => {
               setSelectedKeypair(keypair);
               removeDisclosure.onOpen();
             },
-            isDestructive: true,
+            text: "Remove",
           },
         ]}
+        title="public keys"
       />
 
       {selectedKeypair && removeDisclosure.isOpen && (
         <RemoveModal
-          keypair={selectedKeypair}
+          authToken={authToken}
           disclosure={removeDisclosure}
           instanceUrl={instanceUrl}
-          authToken={authToken}
+          keypair={selectedKeypair}
         />
       )}
     </>
@@ -132,10 +131,10 @@ const RemoveModal = ({
   authToken: string;
 }) => {
   const { mutate: revokeKeypair } = useEngineRemoveKeypair({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
-  const trackEvent = useTrack();
+
   const { onSuccess, onError } = useTxNotifications(
     "Successfully removed public key",
     "Failed to remove public key",
@@ -145,32 +144,20 @@ const RemoveModal = ({
     revokeKeypair(
       { hash: keypair.hash },
       {
+        onError: (error) => {
+          onError(error);
+          console.error(error);
+        },
         onSuccess: () => {
           onSuccess();
           disclosure.onClose();
-          trackEvent({
-            category: "engine",
-            action: "remove-keypair",
-            label: "success",
-            instance: instanceUrl,
-          });
-        },
-        onError: (error) => {
-          onError(error);
-          trackEvent({
-            category: "engine",
-            action: "remove-keypair",
-            label: "error",
-            instance: instanceUrl,
-            error,
-          });
         },
       },
     );
   };
 
   return (
-    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
       <ModalOverlay />
       <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Remove Keypair</ModalHeader>
@@ -205,10 +192,10 @@ const RemoveModal = ({
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>
-          <Button type="button" onClick={disclosure.onClose} variant="ghost">
+          <Button onClick={disclosure.onClose} type="button" variant="ghost">
             Cancel
           </Button>
-          <Button type="submit" colorScheme="red" onClick={onClick}>
+          <Button colorScheme="red" onClick={onClick} type="submit">
             Remove
           </Button>
         </ModalFooter>

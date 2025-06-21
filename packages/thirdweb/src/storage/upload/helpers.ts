@@ -139,8 +139,8 @@ export function buildFormData(
   }
 
   const metadata = {
-    name: "Storage SDK",
     keyvalues: { ...options?.metadata },
+    name: "Storage SDK",
   };
   form.append("pinataMetadata", JSON.stringify(metadata));
 
@@ -154,9 +154,9 @@ export function buildFormData(
   }
 
   return {
-    form,
     // encode the file names on the way out (which is what the upload backend expects)
     fileNames: fileNames.map((fName) => encodeURIComponent(fName)),
+    form,
   };
 }
 

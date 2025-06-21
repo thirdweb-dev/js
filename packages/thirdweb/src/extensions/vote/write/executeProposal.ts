@@ -22,8 +22,8 @@ export function executeProposal(
   options: BaseTransactionOptions<{ proposalId: bigint }>,
 ) {
   return execute({
-    contract: options.contract,
     asyncParams: async () => getExecuteParams(options),
+    contract: options.contract,
   });
 }
 
@@ -55,9 +55,9 @@ async function getExecuteParams(
   const { targets, values, calldatas, description } = proposal;
   const descriptionHash = keccak256(stringToBytes(description));
   return {
+    calldatas,
     descriptionHash,
     targets,
     values,
-    calldatas,
   };
 }

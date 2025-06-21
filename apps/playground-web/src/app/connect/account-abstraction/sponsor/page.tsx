@@ -1,6 +1,6 @@
+import type { Metadata } from "next";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
-import type { Metadata } from "next";
 import { ConnectSmartAccountCustomPreview } from "../../../../components/account-abstraction/connect-smart-account";
 import { SponsoredTxPreview } from "../../../../components/account-abstraction/sponsored-tx";
 import { PageLayout } from "../../../../components/blocks/APIHeader";
@@ -8,20 +8,20 @@ import { CodeExample } from "../../../../components/code/code-example";
 import { SponsoredInAppTxPreview } from "../../../../components/in-app-wallet/sponsored-tx";
 
 export const metadata: Metadata = {
+  description: "Turn any EOA into a smart contract wallet with EIP-4337.",
   metadataBase,
   title: "EIP-4337 Smart Contract Wallets | thirdweb Connect",
-  description: "Turn any EOA into a smart contract wallet with EIP-4337.",
 };
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="EIP-4337 Smart Contract Wallets"
         description={
           <>Turn any EOA into a smart contract wallet with EIP-4337.</>
         }
         docsLink="https://portal.thirdweb.com/connect/account-abstraction/overview?utm_source=playground"
+        title="EIP-4337 Smart Contract Wallets"
       >
         <div className="flex flex-col gap-14">
           <SponsoredTx />
@@ -36,12 +36,6 @@ export default function Page() {
 function SponsoredTx() {
   return (
     <CodeExample
-      header={{
-        title: "Usage with any external wallet",
-        description:
-          "Use the accountAbstraction flag on the ConnectButton or useConnect hook to automatically convert any external wallet to a EIP-4337 smart contract wallet.",
-      }}
-      preview={<SponsoredTxPreview />}
       code={`\
   import { useConnect } from "thirdweb/react";
   import { inAppWallet } from "thirdweb/wallets";
@@ -62,7 +56,13 @@ function SponsoredTx() {
 <TransactionButton transaction={() => claimTo({ contract, to: "0x123...", tokenId: 0n, quantity: 1n })}>Mint</TransactionButton>
 </>);
 };`}
+      header={{
+        description:
+          "Use the accountAbstraction flag on the ConnectButton or useConnect hook to automatically convert any external wallet to a EIP-4337 smart contract wallet.",
+        title: "Usage with any external wallet",
+      }}
       lang="tsx"
+      preview={<SponsoredTxPreview />}
     />
   );
 }
@@ -70,12 +70,6 @@ function SponsoredTx() {
 function SponsoredInAppTx() {
   return (
     <CodeExample
-      header={{
-        title: "Usage with in-app wallets",
-        description:
-          "Set the executionMode when creating your in-app wallet to turn it into a EIP-4337 smart contract wallet. Note that when set, the returned address will be the smart contract wallet address.",
-      }}
-      preview={<SponsoredInAppTxPreview />}
       code={`
 import { inAppWallet } from "thirdweb/wallets";
 import { claimTo } from "thirdweb/extensions/erc1155";
@@ -118,7 +112,13 @@ function App() {
     </>
   );
 }`}
+      header={{
+        description:
+          "Set the executionMode when creating your in-app wallet to turn it into a EIP-4337 smart contract wallet. Note that when set, the returned address will be the smart contract wallet address.",
+        title: "Usage with in-app wallets",
+      }}
       lang="tsx"
+      preview={<SponsoredInAppTxPreview />}
     />
   );
 }
@@ -126,11 +126,6 @@ function App() {
 function ConnectSmartAccount() {
   return (
     <CodeExample
-      header={{
-        title: "Build custom UI",
-        description: "Build your own UI to connect to 4337 smart accounts",
-      }}
-      preview={<ConnectSmartAccountCustomPreview />}
       code={`\
   import { useConnect } from "thirdweb/react";
   import { inAppWallet } from "thirdweb/wallets";
@@ -152,7 +147,12 @@ function ConnectSmartAccount() {
 })}>Connect with Google</button>
 </>);
 };`}
+      header={{
+        description: "Build your own UI to connect to 4337 smart accounts",
+        title: "Build custom UI",
+      }}
       lang="tsx"
+      preview={<ConnectSmartAccountCustomPreview />}
     />
   );
 }

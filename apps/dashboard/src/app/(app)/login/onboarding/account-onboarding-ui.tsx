@@ -1,14 +1,14 @@
 "use client";
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import type { TrackingParams } from "hooks/analytics/useTrack";
+
 import { useState } from "react";
 import { LinkWalletPrompt } from "./LinkWalletPrompt/LinkWalletPrompt";
 import { LoginOrSignup } from "./LoginOrSignup/LoginOrSignup";
+import { AccountOnboardingLayout } from "./onboarding-layout";
 import {
   LinkWalletVerifyEmail,
   SignupVerifyEmail,
 } from "./VerifyEmail/VerifyEmail";
-import { AccountOnboardingLayout } from "./onboarding-layout";
 
 type AccountOnboardingScreen =
   | { id: "login-or-signup" }
@@ -27,7 +27,6 @@ type AccountOnboardingScreen =
 type AccountOnboardingProps = {
   onComplete: (param: { account: Account }) => void;
   accountAddress: string;
-  trackEvent: (params: TrackingParams) => void;
   verifyEmail: (params: {
     confirmationToken: string;
   }) => Promise<{ account: Account }>;
@@ -48,27 +47,26 @@ export function AccountOnboardingUI(props: AccountOnboardingProps) {
 
   return (
     <AccountOnboardingLayout
-      logout={props.logout}
       currentStep={
         screen.id === "login-or-signup" || screen.id === "link-wallet" ? 1 : 2
       }
+      logout={props.logout}
     >
       {screen.id === "login-or-signup" && (
         <LoginOrSignup
           loginOrSignup={props.loginOrSignup}
-          trackEvent={props.trackEvent}
           onRequestSent={(params) => {
             if (params.isExistingEmail) {
               setScreen({
-                id: "link-wallet",
-                email: params.email,
                 backScreen: screen,
+                email: params.email,
+                id: "link-wallet",
               });
             } else {
               setScreen({
-                id: "signup-verify-email",
-                email: params.email,
                 backScreen: screen,
+                email: params.email,
+                id: "signup-verify-email",
               });
             }
           }}
@@ -78,41 +76,38 @@ export function AccountOnboardingUI(props: AccountOnboardingProps) {
       {screen.id === "link-wallet" && (
         <LinkWalletPrompt
           accountAddress={props.accountAddress}
-          requestLinkWallet={props.requestLinkWallet}
-          trackEvent={props.trackEvent}
+          email={screen.email}
+          onBack={() => setScreen(screen.backScreen)}
           onLinkWalletRequestSent={() => {
             setScreen({
-              id: "link-wallet-verify-email",
-              email: screen.email,
               backScreen: screen,
+              email: screen.email,
+              id: "link-wallet-verify-email",
             });
           }}
-          onBack={() => setScreen(screen.backScreen)}
-          email={screen.email}
+          requestLinkWallet={props.requestLinkWallet}
         />
       )}
 
       {screen.id === "signup-verify-email" && (
         <SignupVerifyEmail
           accountAddress={props.accountAddress}
-          verifyEmail={props.verifyEmail}
-          resendConfirmationEmail={props.resendEmailConfirmation}
-          trackEvent={props.trackEvent}
-          onEmailConfirmed={props.onComplete}
-          onBack={() => setScreen(screen.backScreen)}
           email={screen.email}
+          onBack={() => setScreen(screen.backScreen)}
+          onEmailConfirmed={props.onComplete}
+          resendConfirmationEmail={props.resendEmailConfirmation}
+          verifyEmail={props.verifyEmail}
         />
       )}
 
       {screen.id === "link-wallet-verify-email" && (
         <LinkWalletVerifyEmail
           accountAddress={props.accountAddress}
-          verifyEmail={props.verifyEmail}
-          resendConfirmationEmail={props.resendEmailConfirmation}
-          trackEvent={props.trackEvent}
-          onEmailConfirmed={props.onComplete}
-          onBack={() => setScreen(screen.backScreen)}
           email={screen.email}
+          onBack={() => setScreen(screen.backScreen)}
+          onEmailConfirmed={props.onComplete}
+          resendConfirmationEmail={props.resendEmailConfirmation}
+          verifyEmail={props.verifyEmail}
         />
       )}
     </AccountOnboardingLayout>

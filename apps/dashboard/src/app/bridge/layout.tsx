@@ -1,12 +1,12 @@
-import { cn } from "@/lib/utils";
 import { Inter } from "next/font/google";
+import { cn } from "@/lib/utils";
 import "../../global.css";
 import { BridgeProviders } from "./components/client/Providers.client";
 
 const fontSans = Inter({
+  display: "swap",
   subsets: ["latin"],
   variable: "--font-sans",
-  display: "swap",
 });
 
 export default function BridgeLayout({

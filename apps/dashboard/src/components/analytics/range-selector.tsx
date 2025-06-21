@@ -1,22 +1,25 @@
 "use client";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useQuery } from "@tanstack/react-query";
-import {
-  DateRangeSelector,
-  getLastNDaysRange,
-} from "components/analytics/date-range-selector";
 import type {
   DurationId,
   Range,
 } from "components/analytics/date-range-selector";
+import {
+  DateRangeSelector,
+  getLastNDaysRange,
+} from "components/analytics/date-range-selector";
 import { IntervalSelector } from "components/analytics/interval-selector";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 
 export function RangeSelector({
   range,
   interval,
-}: { range?: Range; interval: "day" | "week" }) {
+}: {
+  range?: Range;
+  interval: "day" | "week";
+}) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useDashboardRouter();
@@ -26,7 +29,6 @@ export function RangeSelector({
   const [localInterval, setInterval] = useState<"day" | "week">(interval);
 
   useQuery({
-    queryKey: ["analytics-range", searchParams?.toString(), range],
     queryFn: async () => {
       if (range) {
         setRange(range);
@@ -46,11 +48,11 @@ export function RangeSelector({
       }
       return getLastNDaysRange("last-120");
     },
+    queryKey: ["analytics-range", searchParams?.toString(), range],
   });
 
   // prefetch for each interval and default range
   useQuery({
-    queryKey: ["analytics-range", searchParams?.toString()],
     queryFn: async () => {
       const newSearchParams = new URLSearchParams(searchParams || {});
       for (const interval of ["day", "week"] as const) {
@@ -70,6 +72,7 @@ export function RangeSelector({
       }
       return true;
     },
+    queryKey: ["analytics-range", searchParams?.toString()],
   });
 
   return (

@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
 import { ArrowRightIcon, ExternalLinkIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../login/loginRedirect";
 import headerImage from "./assets/header.png";
@@ -33,18 +33,16 @@ export default async function Page(props: {
   return <EcosystemLandingPage ecosystemLayoutPath={ecosystemLayoutPath} />;
 }
 
-async function EcosystemLandingPage(props: {
-  ecosystemLayoutPath: string;
-}) {
+async function EcosystemLandingPage(props: { ecosystemLayoutPath: string }) {
   return (
     <div className="container flex grow flex-col items-center justify-center py-20">
       {/* Card */}
       <div className="flex max-w-lg flex-col rounded-lg border bg-card">
         <Image
-          src={headerImage}
           alt="Ecosystems"
-          sizes="100vw"
           className="w-full border-b"
+          sizes="100vw"
+          src={headerImage}
         />
 
         {/* body */}
@@ -63,11 +61,12 @@ async function EcosystemLandingPage(props: {
 
         {/* Footer */}
         <div className="mt-6 flex flex-col justify-end gap-4 border-t px-4 py-6 lg:flex-row lg:px-6">
-          <Button variant="outline" asChild>
+          <Button asChild variant="outline">
             <Link
-              href="https://portal.thirdweb.com/connect/ecosystems/overview"
-              target="_blank"
               className="flex flex-row gap-2"
+              href="https://portal.thirdweb.com/connect/ecosystems/overview"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Documentation
               <ExternalLinkIcon className="size-4" />

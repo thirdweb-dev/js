@@ -8,8 +8,8 @@ import {
   useSetSelectionData,
 } from "../../providers/wallet-ui-states-provider.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
-import { WalletAuth } from "../in-app/WalletAuth.js";
 import { useInAppWalletLocale } from "../in-app/useInAppWalletLocale.js";
+import { WalletAuth } from "../in-app/WalletAuth.js";
 import type { ConnectWalletSelectUIState } from "../shared/ConnectWalletSocialOptions.js";
 import { GuestLogin } from "../shared/GuestLogin.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
@@ -71,15 +71,15 @@ function EcosystemWalletConnectUI(props: {
   if (otpUserInfo) {
     return (
       <OTPLoginUI
-        userInfo={otpUserInfo}
-        locale={locale}
-        done={done}
-        goBack={goBackToMain}
-        wallet={props.wallet}
         chain={props.chain}
         client={props.client}
-        size={props.size}
+        done={done}
+        goBack={goBackToMain}
         isLinking={props.isLinking}
+        locale={locale}
+        size={props.size}
+        userInfo={otpUserInfo}
+        wallet={props.wallet}
       />
     );
   }
@@ -87,14 +87,14 @@ function EcosystemWalletConnectUI(props: {
   if (state?.passkeyLogin) {
     return (
       <PassKeyLogin
-        locale={props.connectLocale}
-        wallet={props.wallet}
-        done={done}
-        onBack={goBackToMain}
         chain={props.chain}
         client={props.client}
-        size={props.size}
+        done={done}
         isLinking={props.isLinking}
+        locale={props.connectLocale}
+        onBack={goBackToMain}
+        size={props.size}
+        wallet={props.wallet}
       />
     );
   }
@@ -102,17 +102,17 @@ function EcosystemWalletConnectUI(props: {
   if (state?.socialLogin) {
     return (
       <SocialLogin
-        socialAuth={state.socialLogin.type}
-        locale={locale}
-        done={done}
-        goBack={goBackToMain}
-        wallet={props.wallet}
-        state={state}
         chain={props.chain}
         client={props.client}
-        size={props.size}
         connectLocale={props.connectLocale}
+        done={done}
+        goBack={goBackToMain}
         isLinking={props.isLinking}
+        locale={locale}
+        size={props.size}
+        socialAuth={state.socialLogin.type}
+        state={state}
+        wallet={props.wallet}
       />
     );
   }
@@ -120,17 +120,17 @@ function EcosystemWalletConnectUI(props: {
   if (state?.walletLogin) {
     return (
       <WalletAuth
-        meta={props.meta}
         chain={props.chain}
-        inAppLocale={locale}
-        walletConnect={props.walletConnect}
-        wallet={props.wallet}
         client={props.client}
-        size={props.size}
         done={done}
-        onBack={goBackToMain || (() => setSelectionData({}))}
-        locale={props.connectLocale}
+        inAppLocale={locale}
         isLinking={state.walletLogin.linking}
+        locale={props.connectLocale}
+        meta={props.meta}
+        onBack={goBackToMain || (() => setSelectionData({}))}
+        size={props.size}
+        wallet={props.wallet}
+        walletConnect={props.walletConnect}
       />
     );
   }
@@ -138,31 +138,31 @@ function EcosystemWalletConnectUI(props: {
   if (state?.guestLogin) {
     return (
       <GuestLogin
-        locale={locale}
+        client={props.client}
+        connectLocale={props.connectLocale}
         done={done}
         goBack={goBackToMain}
-        wallet={props.wallet}
-        state={state}
-        client={props.client}
+        locale={locale}
         size={props.size}
-        connectLocale={props.connectLocale}
+        state={state}
+        wallet={props.wallet}
       />
     );
   }
 
   return (
     <EcosystemWalletFormUIScreen
-      select={() => {}}
-      locale={locale}
-      done={done}
-      goBack={props.goBack}
-      wallet={props.wallet}
       chain={props.chain}
       client={props.client}
-      size={props.size}
       connectLocale={props.connectLocale}
-      meta={props.meta}
+      done={done}
+      goBack={props.goBack}
       isLinking={props.isLinking}
+      locale={locale}
+      meta={props.meta}
+      select={() => {}}
+      size={props.size}
+      wallet={props.wallet}
     />
   );
 }

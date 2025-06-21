@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.pandoshi",
-  name: "Pandoshi Wallet",
-  homepage: "https://pandoshi.com",
-  image_id: "d5be0305-ff38-4412-6089-a94c2e445300",
   app: {
-    browser: null,
-    ios: null,
     android:
       "https://play.google.com/store/apps/details?id=com.pandoshi.wallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "pandoshiwallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://pandoshi.com",
+  id: "com.pandoshi",
+  image_id: "d5be0305-ff38-4412-6089-a94c2e445300",
+  mobile: {
+    native: "pandoshiwallet://",
+    universal: null,
+  },
+  name: "Pandoshi Wallet",
+  rdns: null,
 } as const;

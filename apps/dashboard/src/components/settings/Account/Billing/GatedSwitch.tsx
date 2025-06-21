@@ -1,13 +1,13 @@
+import { ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
 import type { Team } from "@/api/team";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { cn } from "@/lib/utils";
-import { ExternalLinkIcon } from "lucide-react";
 import {
-  TeamPlanBadge,
   getTeamPlanBadgeLabel,
+  TeamPlanBadge,
 } from "../../../../app/(app)/components/TeamPlanBadge";
 import { planToTierRecordForGating } from "./planToTierRecord";
 
@@ -45,16 +45,15 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
             </p>
 
             <div className="flex w-full flex-col gap-2">
-              <Button asChild size="sm" className="justify-start gap-2">
-                <TrackedLinkTW
-                  target="_blank"
+              <Button asChild className="justify-start gap-2" size="sm">
+                <Link
                   href={`/team/${props.teamSlug}/~/settings/billing?showPlans=true&highlight=${props.requiredPlan}`}
-                  category="advancedFeature"
-                  label="checkout"
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
-                  {`Upgrade to ${getTeamPlanBadgeLabel(props.requiredPlan)} plan`}
+                  Upgrade to {getTeamPlanBadgeLabel(props.requiredPlan)} plan
                   <ExternalLinkIcon className="size-4" />
-                </TrackedLinkTW>
+                </Link>
               </Button>
             </div>
           </div>
@@ -65,15 +64,15 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
         {isUpgradeRequired && (
           <TeamPlanBadge
             plan={props.requiredPlan}
-            teamSlug={props.teamSlug}
             postfix="+"
+            teamSlug={props.teamSlug}
           />
         )}
         <Switch
           {...props.switchProps}
           checked={props.switchProps?.checked && !isUpgradeRequired}
-          disabled={props.switchProps?.disabled || isUpgradeRequired}
           className={cn("disabled:opacity-100", props.switchProps?.className)}
+          disabled={props.switchProps?.disabled || isUpgradeRequired}
         />
       </div>
     </ToolTipLabel>

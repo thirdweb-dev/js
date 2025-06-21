@@ -23,8 +23,8 @@ import { type SendCallsOptions, sendCalls } from "./send-calls.js";
 const SEND_CALLS_OPTIONS: Omit<SendCallsOptions, "wallet"> = {
   calls: [
     {
-      to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
       data: "0xabcdef" as const,
+      to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
     },
     {
       to: "0xa922b54716264130634d6ff183747a8ead91a40b",
@@ -41,10 +41,10 @@ const RAW_UNSUPPORTED_ERROR = {
 };
 
 const mocks = vi.hoisted(() => ({
+  eth_estimateGas: vi.fn(),
   injectedRequest: vi.fn(),
   sendAndConfirmTransaction: vi.fn(),
   sendBatchTransaction: vi.fn(),
-  eth_estimateGas: vi.fn(),
 }));
 
 vi.mock("../injected/index.js", () => {
@@ -119,13 +119,13 @@ describe.sequential("injected wallet", () => {
           atomicRequired: false,
           calls: [
             {
-              to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
               data: "0xabcdef",
+              to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
               value: undefined,
             },
             {
-              to: "0xa922b54716264130634d6ff183747a8ead91a40b",
               data: "0x",
+              to: "0xa922b54716264130634d6ff183747a8ead91a40b",
               value: numberToHex(123n),
             },
           ],
@@ -143,20 +143,20 @@ describe.sequential("injected wallet", () => {
     wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
 
     const preparedTx = approve({
-      contract: USDT_CONTRACT,
       amount: 100,
+      contract: USDT_CONTRACT,
       spender: TEST_ACCOUNT_B.address,
     });
     const preparedTx2 = approve({
-      contract: USDT_CONTRACT,
       amount: 100,
+      contract: USDT_CONTRACT,
       spender: TEST_ACCOUNT_C.address,
     });
 
     const result = await sendCalls({
-      wallet,
-      chain: ANVIL_CHAIN,
       calls: [preparedTx, preparedTx2],
+      chain: ANVIL_CHAIN,
+      wallet,
     });
 
     expect(result.id).toEqual("0x123456");
@@ -167,13 +167,13 @@ describe.sequential("injected wallet", () => {
           atomicRequired: false,
           calls: [
             {
-              to: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
               data: "0x095ea7b300000000000000000000000070997970c51812dc3a010c7d01b50e0d17dc79c80000000000000000000000000000000000000000000000000000000005f5e100",
+              to: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
               value: undefined,
             },
             {
-              to: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
               data: "0x095ea7b30000000000000000000000003c44cdddb6a900fa2b585dd299e03d12fa4293bc0000000000000000000000000000000000000000000000000000000005f5e100",
+              to: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
               value: undefined,
             },
           ],
@@ -189,8 +189,8 @@ describe.sequential("injected wallet", () => {
   test("should override chainId", async () => {
     wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
     const result = await sendCalls({
-      wallet,
       chain: sepolia,
+      wallet,
       ...SEND_CALLS_OPTIONS,
     });
 
@@ -202,14 +202,14 @@ describe.sequential("injected wallet", () => {
           atomicRequired: false,
           calls: [
             {
-              to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
               data: "0xabcdef",
+              to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
               value: undefined,
             },
             {
+              data: "0x",
               to: "0xa922b54716264130634d6ff183747a8ead91a40b",
               value: numberToHex(123n),
-              data: "0x",
             },
           ],
           capabilities: undefined,

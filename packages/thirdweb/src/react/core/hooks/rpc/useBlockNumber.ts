@@ -31,14 +31,14 @@ export function useBlockNumber(options: UseBlockNumberOptions) {
 
   const queryKey = useMemo(() => [chain.id, "blockNumber"] as const, [chain]);
   const query = useQuery({
+    enabled,
+    queryFn: async () => {
+      const rpcRequest = getRpcClient({ chain, client });
+      return await eth_blockNumber(rpcRequest);
+    },
     // TODO: technically client should be part of the queryKey here...
 
     queryKey: queryKey,
-    queryFn: async () => {
-      const rpcRequest = getRpcClient({ client, chain });
-      return await eth_blockNumber(rpcRequest);
-    },
-    enabled,
   });
 
   useEffect(() => {
@@ -47,8 +47,8 @@ export function useBlockNumber(options: UseBlockNumberOptions) {
       return;
     }
     return watchBlockNumber({
-      client,
       chain,
+      client,
       onNewBlockNumber: (newBlockNumber) => {
         queryClient.setQueryData(queryKey, newBlockNumber);
       },

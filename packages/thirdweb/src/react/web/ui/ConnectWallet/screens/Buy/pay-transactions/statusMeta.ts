@@ -12,8 +12,8 @@ export function getBuyWithCryptoStatusMeta(
 ): StatusMeta {
   if (cryptoStatus.status === "NOT_FOUND") {
     return {
-      status: "Unknown",
       color: "secondaryText",
+      status: "Unknown",
     };
   }
 
@@ -22,44 +22,44 @@ export function getBuyWithCryptoStatusMeta(
 
   if (subStatus === "WAITING_BRIDGE") {
     return {
-      status: "Bridging",
       color: "accentText",
       loading: true,
+      status: "Bridging",
     };
   }
 
   if (subStatus === "PARTIAL_SUCCESS") {
     return {
-      status: "Incomplete",
       color: "secondaryText",
+      status: "Incomplete",
     };
   }
 
   if (status === "PENDING") {
     return {
-      status: "Pending",
       color: "accentText",
       loading: true,
+      status: "Pending",
     };
   }
 
   if (status === "FAILED") {
     return {
-      status: "Failed",
       color: "danger",
+      status: "Failed",
     };
   }
 
   if (status === "COMPLETED") {
     return {
-      status: "Completed",
       color: "success",
+      status: "Completed",
     };
   }
 
   return {
-    status: "Unknown",
     color: "secondaryText",
+    status: "Unknown",
   };
 }
 

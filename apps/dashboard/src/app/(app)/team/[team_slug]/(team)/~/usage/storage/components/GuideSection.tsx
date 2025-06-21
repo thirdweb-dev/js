@@ -1,6 +1,4 @@
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
-
-const TRACKING_CATEGORY = "storage";
+import Link from "next/link";
 
 const links = [
   {
@@ -27,8 +25,8 @@ const videos = [
 export function GuidesSection() {
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-      <LinkSectionCard title="Guides" links={links} />
-      <LinkSectionCard title="Videos" links={videos} />
+      <LinkSectionCard links={links} title="Guides" />
+      <LinkSectionCard links={videos} title="Videos" />
     </div>
   );
 }
@@ -46,13 +44,14 @@ function LinkSectionCard(props: {
         {props.links.map((link) => {
           return (
             <li key={link.url}>
-              <TrackedLinkTW
-                href={link.url}
-                category={TRACKING_CATEGORY}
+              <Link
                 className="inline-block text-muted-foreground hover:text-foreground"
+                href={link.url}
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 {link.title}
-              </TrackedLinkTW>
+              </Link>
             </li>
           );
         })}

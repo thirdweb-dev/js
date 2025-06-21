@@ -1,3 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { useState } from "react";
 import type { Team } from "@/api/team";
 import { Label } from "@/components/ui/label";
 import {
@@ -7,14 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Meta, StoryObj } from "@storybook/nextjs";
-import { useState } from "react";
 import { BadgeContainer } from "../../../../stories/utils";
 import { GatedSwitch } from "./GatedSwitch";
 
 const meta = {
-  title: "Billing/GatedSwitch",
   component: Variants,
+  title: "Billing/GatedSwitch",
 } satisfies Meta<typeof Variants>;
 
 export default meta;
@@ -46,10 +46,10 @@ function Variants() {
       <div className="flex items-center gap-2">
         <Label>Required Plan</Label>
         <Select
-          value={requiredPlan}
           onValueChange={(value) =>
             setRequiredPlan(value as typeof requiredPlan)
           }
+          value={requiredPlan}
         >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select plan" />
@@ -66,8 +66,8 @@ function Variants() {
       {plans.map((currentPlan) => (
         <BadgeContainer key={currentPlan} label={`plan: ${currentPlan}`}>
           <GatedSwitch
-            key={currentPlan}
             currentPlan={currentPlan}
+            key={currentPlan}
             requiredPlan={requiredPlan}
             teamSlug="foo"
           />

@@ -13,8 +13,8 @@ export async function SharedContractProposalsPage(props: {
   isLoggedIn: boolean;
 }) {
   const info = await getContractPageParamsInfo({
-    contractAddress: props.contractAddress,
     chainIdOrSlug: props.chainIdOrSlug,
+    contractAddress: props.contractAddress,
     teamId: props.projectMeta?.teamId,
   });
 
@@ -37,9 +37,9 @@ export async function SharedContractProposalsPage(props: {
 
   if (!isVoteContract) {
     redirectToContractLandingPage({
-      projectMeta: props.projectMeta,
       chainIdOrSlug: props.chainIdOrSlug,
       contractAddress: props.contractAddress,
+      projectMeta: props.projectMeta,
     });
   }
 

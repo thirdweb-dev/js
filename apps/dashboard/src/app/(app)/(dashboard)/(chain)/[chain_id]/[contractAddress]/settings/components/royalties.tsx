@@ -7,7 +7,6 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { AddressOrEnsSchema, BasisPointsSchema } from "constants/schemas";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import type { ThirdwebContract } from "thirdweb";
@@ -35,6 +34,13 @@ import { SettingDetectedState } from "./detected-state";
  */
 const CommonRoyaltySchema = z.object({
   /**
+   * The address of the royalty recipient. All royalties will be sent
+   * to this address.
+   * @internal
+   * @remarks used by OpenSea "fee_recipient"
+   */
+  fee_recipient: AddressOrEnsSchema,
+  /**
    * The amount of royalty collected on all royalties represented as basis points.
    * The default is 0 (no royalties).
    *
@@ -46,14 +52,6 @@ const CommonRoyaltySchema = z.object({
    * @remarks used by OpenSea "seller_fee_basis_points"
    */
   seller_fee_basis_points: BasisPointsSchema,
-
-  /**
-   * The address of the royalty recipient. All royalties will be sent
-   * to this address.
-   * @internal
-   * @remarks used by OpenSea "fee_recipient"
-   */
-  fee_recipient: AddressOrEnsSchema,
 });
 
 export const SettingsRoyalties = ({
@@ -65,17 +63,16 @@ export const SettingsRoyalties = ({
   detectedState: ExtensionDetectedState;
   isLoggedIn: boolean;
 }) => {
-  const trackEvent = useTrack();
   const query = useReadContract(getDefaultRoyaltyInfo, {
     contract,
   });
   const royaltyInfo = query.data
-    ? { seller_fee_basis_points: query.data[1], fee_recipient: query.data[0] }
+    ? { fee_recipient: query.data[0], seller_fee_basis_points: query.data[1] }
     : undefined;
   const mutation = useSendAndConfirmTransaction();
   const form = useForm<z.input<typeof CommonRoyaltySchema>>({
-    resolver: zodResolver(CommonRoyaltySchema),
     defaultValues: royaltyInfo,
+    resolver: zodResolver(CommonRoyaltySchema),
     values: royaltyInfo,
   });
 
@@ -88,62 +85,47 @@ export const SettingsRoyalties = ({
   );
 
   return (
-    <Card p={0} position="relative" overflow="hidden">
-      <SettingDetectedState type="royalties" detectedState={detectedState} />
+    <Card overflow="hidden" p={0} position="relative">
+      <SettingDetectedState detectedState={detectedState} type="royalties" />
       <Flex
         as="form"
+        direction="column"
         onSubmit={form.handleSubmit((d) => {
-          trackEvent({
-            category: "settings",
-            action: "set-royalty",
-            label: "attempt",
-          });
           const transaction = setDefaultRoyaltyInfo({
             contract,
-            royaltyRecipient: d.fee_recipient,
             royaltyBps: BigInt(d.seller_fee_basis_points),
+            royaltyRecipient: d.fee_recipient,
           });
           mutation.mutate(transaction, {
+            onError: (error) => {
+              console.error(error);
+              onError(error);
+            },
             onSuccess: () => {
-              trackEvent({
-                category: "settings",
-                action: "set-royalty",
-                label: "success",
-              });
               form.reset(d);
               onSuccess();
             },
-            onError: (error) => {
-              trackEvent({
-                category: "settings",
-                action: "set-royalty",
-                label: "error",
-                error,
-              });
-              onError(error);
-            },
           });
         })}
-        direction="column"
       >
-        <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
+        <Flex as="section" direction="column" gap={4} p={{ base: 6, md: 10 }}>
           <Heading size="title.sm">Royalties</Heading>
-          <Text size="body.md" fontStyle="italic">
+          <Text fontStyle="italic" size="body.md">
             The wallet address that should receive the revenue from royalties
             earned from secondary sales of the assets.
           </Text>
-          <Flex gap={4} direction={{ base: "column", md: "row" }}>
+          <Flex direction={{ base: "column", md: "row" }} gap={4}>
             <FormControl
+              isDisabled={!address}
               isInvalid={
                 !!form.getFieldState("fee_recipient", form.formState).error
               }
-              isDisabled={!address}
             >
               <FormLabel>Recipient Address</FormLabel>
               <SolidityInput
                 client={contract.client}
-                solidityType="address"
                 formContext={form}
+                solidityType="address"
                 {...form.register("fee_recipient")}
                 disabled={!address}
               />
@@ -155,22 +137,22 @@ export const SettingsRoyalties = ({
               </FormErrorMessage>
             </FormControl>
             <FormControl
-              maxW={{ base: "100%", md: "200px" }}
+              isDisabled={!address}
               isInvalid={
                 !!form.getFieldState("seller_fee_basis_points", form.formState)
                   .error
               }
-              isDisabled={!address}
+              maxW={{ base: "100%", md: "200px" }}
             >
               <FormLabel>Percentage</FormLabel>
               <BasisPointsInput
-                value={form.watch("seller_fee_basis_points")}
                 onChange={(value) =>
                   form.setValue("seller_fee_basis_points", value, {
                     shouldDirty: true,
                     shouldTouch: true,
                   })
                 }
+                value={form.watch("seller_fee_basis_points")}
               />
               <FormErrorMessage>
                 {
@@ -183,14 +165,14 @@ export const SettingsRoyalties = ({
         </Flex>
         <AdminOnly contract={contract}>
           <TransactionButton
-            client={contract.client}
-            txChainID={contract.chain.id}
-            transactionCount={1}
-            disabled={query.isPending || !form.formState.isDirty}
-            type="submit"
-            isPending={mutation.isPending}
             className="!rounded-t-none rounded-xl"
+            client={contract.client}
+            disabled={query.isPending || !form.formState.isDirty}
             isLoggedIn={isLoggedIn}
+            isPending={mutation.isPending}
+            transactionCount={1}
+            txChainID={contract.chain.id}
+            type="submit"
           >
             {mutation.isPending
               ? "Updating Royalty Settings"

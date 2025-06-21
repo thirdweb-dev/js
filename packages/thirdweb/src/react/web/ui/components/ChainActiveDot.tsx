@@ -6,12 +6,12 @@ import { StyledDiv } from "../design-system/elements.js";
  * @internal
  */
 export const ChainActiveDot = /* @__PURE__ */ StyledDiv({
-  width: "28%",
-  height: "28%",
-  borderRadius: "50%",
-  position: "absolute",
-  bottom: 0,
-  right: 0,
   backgroundColor: "#00d395",
+  borderRadius: "50%",
+  bottom: 0,
   boxShadow: "0 0 0 2px var(--bg)",
+  height: "28%",
+  position: "absolute",
+  right: 0,
+  width: "28%",
 });

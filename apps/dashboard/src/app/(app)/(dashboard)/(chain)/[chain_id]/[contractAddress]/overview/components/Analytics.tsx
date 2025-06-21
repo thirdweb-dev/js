@@ -1,17 +1,16 @@
 "use client";
 
-import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
-import { Button } from "@/components/ui/button";
 import {
   useContractEventAnalytics,
   useContractTransactionAnalytics,
   useContractUniqueWalletAnalytics,
 } from "data/analytics/hooks";
 import { differenceInCalendarDays, format } from "date-fns";
-import { useTrack } from "hooks/analytics/useTrack";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
+import { Button } from "@/components/ui/button";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 
@@ -28,11 +27,9 @@ function getDateKey(date: Date, precision: "day" | "hour") {
 export function ContractAnalyticsOverviewCard(props: {
   contractAddress: string;
   chainId: number;
-  trackingCategory: string;
   chainSlug: string;
   projectMeta: ProjectMeta | undefined;
 }) {
-  const trackEvent = useTrack();
   const [startDate] = useState(
     (() => {
       const date = new Date();
@@ -44,38 +41,34 @@ export function ContractAnalyticsOverviewCard(props: {
   const { data, precision, isPending } = useContractAnalyticsOverview({
     chainId: props.chainId,
     contractAddress: props.contractAddress,
-    startDate,
     endDate,
+    startDate,
   });
 
   const analyticsPath = buildContractPagePath({
-    projectMeta: props.projectMeta,
     chainIdOrSlug: props.chainSlug,
     contractAddress: props.contractAddress,
+    projectMeta: props.projectMeta,
     subpath: "/analytics",
   });
 
   return (
     <ThirdwebAreaChart
+      chartClassName="aspect-[1.5] lg:aspect-[3]"
       config={{
-        wallets: {
-          label: "Unique Wallets",
-          color: "hsl(var(--chart-1))",
+        events: {
+          color: "hsl(var(--chart-3))",
+          label: "Events",
         },
         transactions: {
-          label: "Transactions",
           color: "hsl(var(--chart-2))",
+          label: "Transactions",
         },
-        events: {
-          label: "Events",
-          color: "hsl(var(--chart-3))",
+        wallets: {
+          color: "hsl(var(--chart-1))",
+          label: "Unique Wallets",
         },
       }}
-      data={data || []}
-      isPending={isPending}
-      showLegend
-      chartClassName="aspect-[1.5] lg:aspect-[3]"
-      toolTipLabelFormatter={toolTipLabelFormatterWithPrecision(precision)}
       customHeader={
         <div className="flex items-center justify-between gap-4 border-b p-6 py-4">
           <h2 className="font-semibold text-xl tracking-tight">Analytics</h2>
@@ -84,13 +77,6 @@ export function ContractAnalyticsOverviewCard(props: {
             className="gap-2 bg-background text-muted-foreground"
             size="sm"
             variant="outline"
-            onClick={() => {
-              trackEvent({
-                category: props.trackingCategory,
-                action: "click",
-                label: "view_all_analytics",
-              });
-            }}
           >
             <Link href={analyticsPath}>
               <span>View All</span>
@@ -99,6 +85,10 @@ export function ContractAnalyticsOverviewCard(props: {
           </Button>
         </div>
       }
+      data={data || []}
+      isPending={isPending}
+      showLegend
+      toolTipLabelFormatter={toolTipLabelFormatterWithPrecision(precision)}
     />
   );
 }
@@ -113,22 +103,22 @@ export function useContractAnalyticsOverview(props: {
   const wallets = useContractUniqueWalletAnalytics({
     chainId: chainId,
     contractAddress: contractAddress,
-    startDate,
     endDate,
+    startDate,
   });
 
   const transactions = useContractTransactionAnalytics({
     chainId: chainId,
     contractAddress: contractAddress,
-    startDate,
     endDate,
+    startDate,
   });
 
   const events = useContractEventAnalytics({
     chainId: chainId,
     contractAddress: contractAddress,
-    startDate,
     endDate,
+    startDate,
   });
 
   const isPending =
@@ -179,10 +169,10 @@ export function useContractAnalyticsOverview(props: {
         });
 
         return {
-          time,
-          wallets: wallet?.count || 0,
-          transactions: transaction?.count || 0,
           events: event?.count || 0,
+          time,
+          transactions: transaction?.count || 0,
+          wallets: wallet?.count || 0,
         };
       }),
       precision,
@@ -191,8 +181,8 @@ export function useContractAnalyticsOverview(props: {
 
   return {
     data,
-    precision,
     isPending,
+    precision,
   };
 }
 

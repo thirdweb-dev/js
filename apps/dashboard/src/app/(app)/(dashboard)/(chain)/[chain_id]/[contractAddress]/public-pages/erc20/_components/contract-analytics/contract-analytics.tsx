@@ -1,8 +1,7 @@
 "use client";
 
-import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
-import {} from "data/analytics/hooks";
 import { useState } from "react";
+import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 import {
   toolTipLabelFormatterWithPrecision,
   useContractAnalyticsOverview,
@@ -25,8 +24,8 @@ export function ContractAnalyticsOverview(props: {
   const { data, precision, isPending } = useContractAnalyticsOverview({
     chainId: props.chainId,
     contractAddress: props.contractAddress,
-    startDate,
     endDate,
+    startDate,
   });
 
   return (
@@ -39,27 +38,27 @@ export function ContractAnalyticsOverview(props: {
         </p>
       </div>
       <ThirdwebAreaChart
-        className="border-none bg-background p-0"
         cardContentClassName="p-0"
+        chartClassName="aspect-[1.5] lg:aspect-[3]"
+        className="border-none bg-background p-0"
         config={{
-          wallets: {
-            label: "Unique Wallets",
-            color: "hsl(var(--chart-1))",
+          events: {
+            color: "hsl(var(--chart-3))",
+            label: "Events",
           },
           transactions: {
-            label: "Transactions",
             color: "hsl(var(--chart-2))",
+            label: "Transactions",
           },
-          events: {
-            label: "Events",
-            color: "hsl(var(--chart-3))",
+          wallets: {
+            color: "hsl(var(--chart-1))",
+            label: "Unique Wallets",
           },
         }}
         data={data || []}
+        hideLabel={false}
         isPending={isPending}
         showLegend
-        hideLabel={false}
-        chartClassName="aspect-[1.5] lg:aspect-[3]"
         toolTipLabelFormatter={toolTipLabelFormatterWithPrecision(precision)}
       />
     </div>

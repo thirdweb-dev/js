@@ -1,10 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import {
   type CodeEnvironment,
   CodeSegment,
 } from "@/components/blocks/code-segment.client";
-import { useState } from "react";
 
 export function SDKSection() {
   const [codeEnvironment, setCodeEnvironment] =
@@ -17,15 +17,38 @@ export function SDKSection() {
       </h2>
 
       <CodeSegment
-        snippet={storageSnippets}
         environment={codeEnvironment}
         setEnvironment={setCodeEnvironment}
+        snippet={storageSnippets}
       />
     </div>
   );
 }
 
 const storageSnippets = {
+  javascript: `// Check out the latest docs here: https://portal.thirdweb.com/typescript/v5/storage
+
+import { upload } from "thirdweb/storage";
+
+// Here we get the IPFS URI of where our metadata has been uploaded
+const uri = await upload({
+  client,
+  files: [
+    new File(["hello world"], "hello.txt"),
+  ],
+});
+
+// This will log a URL like ipfs://QmWgbcjKWCXhaLzMz4gNBxQpAHktQK6MkLvBkKXbsoWEEy/0
+console.info(uri);
+
+// Here we a URL with a gateway that we can look at in the browser
+const url = await download({
+  client,
+  uri,
+}).url;
+
+// This will log a URL like https://ipfs.thirdwebstorage.com/ipfs/QmWgbcjKWCXhaLzMz4gNBxQpAHktQK6MkLvBkKXbsoWEEy/0
+console.info(url);`,
   react: `// Check out the latest docs here: https://portal.thirdweb.com/typescript/v5/storage
 
 import { ThirdwebProvider } from "thirdweb/react";
@@ -61,29 +84,6 @@ function ShowFiles() {
     <MediaRenderer src="ipfs://QmamvVM5kvsYjQJYs7x8LXKYGFkwtGvuRvqZsuzvpHmQq9/0" />
   );
 }`,
-  javascript: `// Check out the latest docs here: https://portal.thirdweb.com/typescript/v5/storage
-
-import { upload } from "thirdweb/storage";
-
-// Here we get the IPFS URI of where our metadata has been uploaded
-const uri = await upload({
-  client,
-  files: [
-    new File(["hello world"], "hello.txt"),
-  ],
-});
-
-// This will log a URL like ipfs://QmWgbcjKWCXhaLzMz4gNBxQpAHktQK6MkLvBkKXbsoWEEy/0
-console.info(uri);
-
-// Here we a URL with a gateway that we can look at in the browser
-const url = await download({
-  client,
-  uri,
-}).url;
-
-// This will log a URL like https://ipfs.thirdwebstorage.com/ipfs/QmWgbcjKWCXhaLzMz4gNBxQpAHktQK6MkLvBkKXbsoWEEy/0
-console.info(url);`,
 
   unity: `using Thirdweb;
 

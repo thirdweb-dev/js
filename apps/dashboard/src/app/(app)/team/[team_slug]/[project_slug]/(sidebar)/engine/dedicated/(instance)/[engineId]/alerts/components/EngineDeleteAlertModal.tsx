@@ -1,4 +1,4 @@
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { DialogDescription } from "@radix-ui/react-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { DialogDescription } from "@radix-ui/react-dialog";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 
 export function EngineDeleteAlertModal(props: {
   onConfirm: () => void;
@@ -16,7 +16,7 @@ export function EngineDeleteAlertModal(props: {
   onOpenChange: (open: boolean) => void;
 }) {
   return (
-    <Dialog open={props.open} onOpenChange={props.onOpenChange}>
+    <Dialog onOpenChange={props.onOpenChange} open={props.open}>
       <DialogContent className="p-0">
         <DialogHeader className="mb-4 p-6">
           <DialogTitle className="font-semibold text-2xl tracking-tight">
@@ -30,17 +30,17 @@ export function EngineDeleteAlertModal(props: {
 
         <DialogFooter className="gap-4 border-border border-t bg-card p-6 lg:gap-2">
           <Button
-            variant="outline"
             onClick={() => {
               props.onOpenChange(false);
             }}
+            variant="outline"
           >
             Cancel
           </Button>
           <Button
             className="min-w-28 gap-2"
-            variant="destructive"
             onClick={props.onConfirm}
+            variant="destructive"
           >
             {props.isPending && <Spinner className="size-4" />}
             Delete Webhook

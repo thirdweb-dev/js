@@ -4,12 +4,10 @@ function prefixId(id: string, prefix?: string) {
   return prefix ? `${prefix}_${id}` : id;
 }
 
-export function ThirdwebMiniLogo(props: {
-  className?: string;
-}) {
+export function ThirdwebMiniLogo(props: { className?: string }) {
   const id = useId();
   return (
-    <svg viewBox="0 0 516 321" fill="none" className={props.className}>
+    <svg className={props.className} fill="none" viewBox="0 0 516 321">
       <title>thirdweb</title>
       <g clipPath={`url(#${prefixId("clip0_3:35)", id)}`}>
         <path
@@ -27,12 +25,12 @@ export function ThirdwebMiniLogo(props: {
       </g>
       <defs>
         <linearGradient
+          gradientUnits="userSpaceOnUse"
           id={prefixId("paint0_linear_3:35", id)}
           x1="7.40492"
-          y1="55.24"
           x2="260.485"
+          y1="55.24"
           y2="164.437"
-          gradientUnits="userSpaceOnUse"
         >
           <stop stopColor="#F213A4" />
           <stop offset="0.1517" stopColor="#E011A7" />
@@ -41,12 +39,12 @@ export function ThirdwebMiniLogo(props: {
           <stop offset="1" stopColor="#5204BF" />
         </linearGradient>
         <linearGradient
+          gradientUnits="userSpaceOnUse"
           id={prefixId("paint1_linear_3:35", id)}
           x1="175.093"
-          y1="54.447"
           x2="410.968"
+          y1="54.447"
           y2="148.471"
-          gradientUnits="userSpaceOnUse"
         >
           <stop stopColor="#F213A4" />
           <stop offset="0.1517" stopColor="#E011A7" />
@@ -55,12 +53,12 @@ export function ThirdwebMiniLogo(props: {
           <stop offset="1" stopColor="#5204BF" />
         </linearGradient>
         <linearGradient
+          gradientUnits="userSpaceOnUse"
           id={prefixId("paint2_linear_3:35", id)}
           x1="327.331"
-          y1="55.24"
           x2="580.411"
+          y1="55.24"
           y2="164.437"
-          gradientUnits="userSpaceOnUse"
         >
           <stop stopColor="#F213A4" />
           <stop offset="0.1517" stopColor="#E011A7" />
@@ -69,7 +67,7 @@ export function ThirdwebMiniLogo(props: {
           <stop offset="1" stopColor="#5204BF" />
         </linearGradient>
         <clipPath id={prefixId("clip0_3:35", id)}>
-          <rect width="516" height="321" fill="white" />
+          <rect fill="white" height="321" width="516" />
         </clipPath>
       </defs>
     </svg>

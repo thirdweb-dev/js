@@ -59,7 +59,7 @@ export function useEnabledPaymentMethods(options: {
   const buyWithCryptoEnabled = payOptions.buyWithCrypto !== false && swap;
 
   return {
-    buyWithFiatEnabled,
     buyWithCryptoEnabled,
+    buyWithFiatEnabled,
   };
 }

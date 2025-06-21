@@ -32,8 +32,8 @@ export const ContractProposalsPage: React.FC<ProposalsPageProps> = ({
     [proposalsQuery.data],
   );
   const voteTokenBalancesQuery = useReadContract(voteTokenBalances, {
-    contract,
     addresses: balanceAddresses,
+    contract,
     queryOptions: {
       enabled: balanceAddresses.length > 0,
     },
@@ -51,10 +51,10 @@ export const ContractProposalsPage: React.FC<ProposalsPageProps> = ({
       <div className="flex flex-col gap-4">
         {proposals.map((proposal) => (
           <Proposal
-            key={proposal.proposalId.toString()}
             contract={contract}
-            proposal={proposal}
             isLoggedIn={isLoggedIn}
+            key={proposal.proposalId.toString()}
+            proposal={proposal}
           />
         ))}
         <Divider />

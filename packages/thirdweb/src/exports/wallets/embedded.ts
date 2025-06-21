@@ -1,3 +1,4 @@
+export type { GetAuthenticatedUserParams } from "../../wallets/in-app/core/authentication/types.js";
 export {
   inAppWallet,
   /**
@@ -5,11 +6,8 @@ export {
    */
   inAppWallet as embeddedWallet,
 } from "../../wallets/in-app/web/in-app.js";
-
 export {
-  preAuthenticate,
   authenticate,
   getUserEmail,
+  preAuthenticate,
 } from "../../wallets/in-app/web/lib/auth/index.js";
-
-export type { GetAuthenticatedUserParams } from "../../wallets/in-app/core/authentication/types.js";

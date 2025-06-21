@@ -1,8 +1,8 @@
+import { defineChain, getChainMetadata } from "thirdweb/chains";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { defineChain, getChainMetadata } from "thirdweb/chains";
 
 type RouteListRowProps = {
   originChainId: number;
@@ -39,20 +39,20 @@ export async function RouteListRow({
     getChainMetadata(defineChain(destinationChainId)),
     originTokenIconUri
       ? resolveSchemeWithErrorHandler({
-          uri: originTokenIconUri,
           client: serverThirdwebClient,
+          uri: originTokenIconUri,
         })
       : undefined,
     destinationTokenIconUri
       ? resolveSchemeWithErrorHandler({
-          uri: destinationTokenIconUri,
           client: serverThirdwebClient,
+          uri: destinationTokenIconUri,
         })
       : undefined,
   ]);
 
   return (
-    <TableRow linkBox className="group transition-colors hover:bg-accent/50">
+    <TableRow className="group transition-colors hover:bg-accent/50" linkBox>
       <TableCell>
         <div className="flex flex-row items-center gap-3">
           <div className="flex items-center gap-2">
@@ -60,15 +60,17 @@ export async function RouteListRow({
               // For now we're using a normal img tag because the domain for these images is unknown
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={resolvedOriginTokenIconUri}
                 alt={originTokenAddress}
                 className="size-7 rounded-full border border-border/50 shadow-sm transition-transform group-hover:scale-105"
+                src={resolvedOriginTokenIconUri}
               />
             ) : (
               <div className="size-7 rounded-full bg-muted-foreground/20" />
             )}
             {originTokenSymbol && (
               <CopyTextButton
+                className="relative z-10 font-medium text-base"
+                copyIconPosition="right"
                 textToCopy={originTokenAddress}
                 textToShow={
                   originTokenSymbol === "ETH"
@@ -76,9 +78,7 @@ export async function RouteListRow({
                     : originTokenSymbol
                 }
                 tooltip="Copy Token Address"
-                className="relative z-10 font-medium text-base"
                 variant="ghost"
-                copyIconPosition="right"
               />
             )}
           </div>
@@ -95,15 +95,17 @@ export async function RouteListRow({
             {resolvedDestinationTokenIconUri ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={resolvedDestinationTokenIconUri}
                 alt={destinationTokenAddress}
                 className="size-7 rounded-full border border-border/50 shadow-sm transition-transform group-hover:scale-105"
+                src={resolvedDestinationTokenIconUri}
               />
             ) : (
               <div className="size-7 rounded-full bg-muted-foreground/20" />
             )}
             {destinationTokenSymbol && (
               <CopyTextButton
+                className="relative z-10 font-medium text-base"
+                copyIconPosition="right"
                 textToCopy={destinationTokenAddress}
                 textToShow={
                   destinationTokenSymbol === "ETH"
@@ -111,9 +113,7 @@ export async function RouteListRow({
                     : destinationTokenSymbol
                 }
                 tooltip="Copy Token Address"
-                className="relative z-10 font-medium text-base"
                 variant="ghost"
-                copyIconPosition="right"
               />
             )}
           </div>

@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import { CombinedBarChartCard } from "./CombinedBarChartCard";
 
 const meta = {
-  title: "Analytics/CombinedBarChartCard",
   component: CombinedBarChartCard,
   decorators: [
     (Story) => (
@@ -11,23 +10,24 @@ const meta = {
       </div>
     ),
   ],
+  title: "Analytics/CombinedBarChartCard",
 } satisfies Meta<typeof CombinedBarChartCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 const chartConfig = {
+  annualUsers: {
+    color: "hsl(var(--chart-3))",
+    label: "Annual Active Users",
+  },
   dailyUsers: {
-    label: "Daily Active Users",
     color: "hsl(var(--chart-1))",
+    label: "Daily Active Users",
   },
   monthlyUsers: {
-    label: "Monthly Active Users",
     color: "hsl(var(--chart-2))",
-  },
-  annualUsers: {
-    label: "Annual Active Users",
-    color: "hsl(var(--chart-3))",
+    label: "Monthly Active Users",
   },
 };
 
@@ -54,10 +54,10 @@ function generateTimeSeriesData(days: number) {
     annualBase += 50;
 
     data.push({
-      date: date.toISOString(),
-      dailyUsers: Math.max(0, Math.round(dailyBase + dailyVariation)),
-      monthlyUsers: Math.max(0, Math.round(monthlyBase + monthlyVariation)),
       annualUsers: Math.max(0, Math.round(annualBase + annualVariation)),
+      dailyUsers: Math.max(0, Math.round(dailyBase + dailyVariation)),
+      date: date.toISOString(),
+      monthlyUsers: Math.max(0, Math.round(monthlyBase + monthlyVariation)),
     });
   }
 
@@ -66,30 +66,30 @@ function generateTimeSeriesData(days: number) {
 
 export const UserActivity: Story = {
   args: {
-    title: "User Activity",
+    activeChart: "dailyUsers",
     chartConfig,
     data: generateTimeSeriesData(30),
-    activeChart: "dailyUsers",
     queryKey: "dailyUsers",
+    title: "User Activity",
   },
 };
 
 export const MonthlyUsers: Story = {
   args: {
-    title: "Monthly Users",
+    activeChart: "monthlyUsers",
     chartConfig,
     data: generateTimeSeriesData(30),
-    activeChart: "monthlyUsers",
     queryKey: "monthlyUsers",
+    title: "Monthly Users",
   },
 };
 
 export const AnnualUsers: Story = {
   args: {
-    title: "Annual Users",
+    activeChart: "annualUsers",
     chartConfig,
     data: generateTimeSeriesData(30),
-    activeChart: "annualUsers",
     queryKey: "annualUsers",
+    title: "Annual Users",
   },
 };

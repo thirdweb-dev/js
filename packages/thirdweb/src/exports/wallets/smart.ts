@@ -1,47 +1,41 @@
-export { smartWallet } from "../../wallets/smart/smart-wallet.js";
-
+export { create7702MinimalAccount } from "../../wallets/in-app/core/eip7702/minimal-account.js";
 export {
-  waitForUserOpReceipt,
-  createUnsignedUserOp,
-  signUserOp,
-  createAndSignUserOp,
-  prepareUserOp,
-  getUserOpHash,
-} from "../../wallets/smart/lib/userop.js";
-
-export {
-  getUserOpReceipt,
-  getUserOpReceiptRaw,
   bundleUserOp,
-  getUserOpGasFees,
   estimateUserOpGas,
   estimateUserOpGasCost,
+  getUserOpGasFees,
+  getUserOpReceipt,
+  getUserOpReceiptRaw,
+  getZkPaymasterData,
 } from "../../wallets/smart/lib/bundler.js";
 
 export {
   predictAddress,
   predictSmartAccountAddress,
 } from "../../wallets/smart/lib/calls.js";
-
+export {
+  DEFAULT_ACCOUNT_FACTORY_V0_6,
+  DEFAULT_ACCOUNT_FACTORY_V0_7,
+  ENTRYPOINT_ADDRESS_v0_6,
+  ENTRYPOINT_ADDRESS_v0_7,
+  TokenPaymaster,
+} from "../../wallets/smart/lib/constants.js";
 export { getPaymasterAndData } from "../../wallets/smart/lib/paymaster.js";
-export { getZkPaymasterData } from "../../wallets/smart/lib/bundler.js";
-
-export type {
-  SmartWalletConnectionOptions,
-  SmartWalletOptions,
-  UserOperationV06 as UserOperation,
-  PaymasterResult,
-} from "../../wallets/smart/types.js";
+export {
+  createAndSignUserOp,
+  createUnsignedUserOp,
+  getUserOpHash,
+  prepareUserOp,
+  signUserOp,
+  waitForUserOpReceipt,
+} from "../../wallets/smart/lib/userop.js";
 
 // all preset configs
 export * as Config from "../../wallets/smart/presets/index.js";
-
-export {
-  ENTRYPOINT_ADDRESS_v0_6,
-  ENTRYPOINT_ADDRESS_v0_7,
-  DEFAULT_ACCOUNT_FACTORY_V0_6,
-  DEFAULT_ACCOUNT_FACTORY_V0_7,
-  TokenPaymaster,
-} from "../../wallets/smart/lib/constants.js";
-
-export { create7702MinimalAccount } from "../../wallets/in-app/core/eip7702/minimal-account.js";
+export { smartWallet } from "../../wallets/smart/smart-wallet.js";
+export type {
+  PaymasterResult,
+  SmartWalletConnectionOptions,
+  SmartWalletOptions,
+  UserOperationV06 as UserOperation,
+} from "../../wallets/smart/types.js";

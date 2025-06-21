@@ -1,16 +1,15 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { cn } from "@/lib/utils";
 import { moduleToBase64 } from "app/(app)/(dashboard)/published-contract/utils/module-base-64";
 import { replaceDeployerAddress } from "lib/publisher-utils";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
-import { ClientOnly } from "../../ClientOnly/ClientOnly";
+import { ClientOnly } from "@/components/blocks/client-only";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import { cn } from "@/lib/utils";
 import { fetchPublishedContractVersion } from "../../contract-components/fetch-contracts-with-versions";
 import { ContractPublisher } from "../publisher";
 
@@ -20,10 +19,6 @@ interface ContractCardProps {
   titleOverride?: string;
   descriptionOverride?: string;
   version?: string;
-  tracking?: {
-    source: string;
-    itemIndex: `${number}`;
-  };
   isBeta: boolean | undefined;
   // for modular contracts to show the modules in the card
   // publisher and moduleId are required
@@ -85,7 +80,6 @@ export async function ContractCard({
   titleOverride,
   descriptionOverride,
   version = "latest",
-  tracking,
   modules = [],
   isBeta,
 }: ContractCardProps) {
@@ -101,8 +95,8 @@ export async function ContractCard({
   }
 
   const auditLink = resolveSchemeWithErrorHandler({
-    uri: publishedContractResult.audit,
     client: serverThirdwebClient,
+    uri: publishedContractResult.audit,
   });
 
   return (
@@ -118,9 +112,10 @@ export async function ContractCard({
           {auditLink && !isBeta && (
             <>
               <Link
-                target="_blank"
                 className="relative z-1 flex items-center gap-1 font-medium text-sm text-success-text hover:underline"
                 href={auditLink}
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 <ShieldCheckIcon className="size-4" />
                 Audited
@@ -150,30 +145,22 @@ export async function ContractCard({
 
       {/* Title */}
       <h3 className="font-semibold text-lg tracking-tight">
-        <TrackedLinkTW
+        <Link
           className="cursor-pointer before:absolute before:inset-0 before:z-0"
           href={getContractUrl({
-            publisher,
             contractId,
-            version,
             modules,
-            titleOverride,
-          })}
-          category="contract_card"
-          label={contractId}
-          trackingProps={{
             publisher,
-            contractId,
+            titleOverride,
             version,
-            ...(tracking || {}),
-          }}
+          })}
         >
           {(
             titleOverride ||
             publishedContractResult.displayName ||
             publishedContractResult.name
           ).replace("[Beta]", "")}
-        </TrackedLinkTW>
+        </Link>
       </h3>
 
       {/* Desc */}
@@ -184,7 +171,7 @@ export async function ContractCard({
       {modules.length ? (
         <div className="mt-auto flex flex-row flex-wrap gap-1 pt-3">
           {modules.slice(0, 2).map((m) => (
-            <Badge variant="outline" key={m.publisher + m.moduleId + m.version}>
+            <Badge key={m.publisher + m.moduleId + m.version} variant="outline">
               {m.moduleId.split("ERC")[0]}
             </Badge>
           ))}
@@ -210,18 +197,18 @@ export async function ContractCard({
 
         <div className="flex items-center justify-between">
           <Button
-            variant="outline"
-            size="sm"
-            className="relative z-10 h-auto gap-1.5 px-2.5 py-1.5 text-xs hover:bg-inverted hover:text-inverted-foreground"
             asChild
+            className="relative z-10 h-auto gap-1.5 px-2.5 py-1.5 text-xs hover:bg-inverted hover:text-inverted-foreground"
+            size="sm"
+            variant="outline"
           >
             <Link
               href={getContractUrl(
                 {
-                  publisher,
                   contractId,
-                  version,
                   modules,
+                  publisher,
+                  version,
                 },
                 true,
               )}

@@ -1,11 +1,11 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import Link from "next/link";
+import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import { useTransition } from "react";
 import { useStripeRedirectEvent } from "../../../../(stripe)/stripe-redirect/stripeRedirectChannel";
 
 function BillingAlertBanner(props: {
@@ -54,30 +54,18 @@ function BillingAlertBanner(props: {
             "border border-red-600 bg-red-100 text-red-800 hover:bg-red-200 dark:border-red-700 dark:bg-red-900 dark:text-red-100 dark:hover:bg-red-800",
         )}
       >
-        <TrackedLinkTW
-          href={`/team/${props.teamSlug}/~/settings/invoices`}
-          category="billingBanner"
-          label={
-            props.variant === "warning"
-              ? "pastDue_viewInvoices"
-              : "serviceCutoff_payNow"
-          }
-        >
+        <Link href={`/team/${props.teamSlug}/~/settings/invoices`}>
           {props.ctaLabel}
-        </TrackedLinkTW>
+        </Link>
       </Button>
     </div>
   );
 }
 
-export function PastDueBannerUI(props: {
-  teamSlug: string;
-}) {
+export function PastDueBannerUI(props: { teamSlug: string }) {
   return (
     <BillingAlertBanner
       ctaLabel="View Invoices"
-      variant="warning"
-      title="Unpaid Invoices"
       description={
         <>
           You have unpaid invoices. Service may be suspended if not paid
@@ -85,18 +73,16 @@ export function PastDueBannerUI(props: {
         </>
       }
       teamSlug={props.teamSlug}
+      title="Unpaid Invoices"
+      variant="warning"
     />
   );
 }
 
-export function ServiceCutOffBannerUI(props: {
-  teamSlug: string;
-}) {
+export function ServiceCutOffBannerUI(props: { teamSlug: string }) {
   return (
     <BillingAlertBanner
       ctaLabel="Pay Now"
-      variant="error"
-      title="Service Suspended"
       description={
         <>
           Your service has been suspended due to unpaid invoices. Pay now to
@@ -104,6 +90,8 @@ export function ServiceCutOffBannerUI(props: {
         </>
       }
       teamSlug={props.teamSlug}
+      title="Service Suspended"
+      variant="error"
     />
   );
 }

@@ -2,34 +2,34 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.metamask",
-  name: "MetaMask",
-  homepage: "https://metamask.io/",
-  image_id: "e30d09fe-c0dd-4b61-81e2-d6dc09eb9700",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/metamask/id1438144202",
     android: "https://play.google.com/store/apps/details?id=io.metamask",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome:
       "https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn",
-    firefox: "https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/",
-    safari: null,
     edge: "https://microsoftedge.microsoft.com/addons/detail/metamask/ejbalbakoplchlghecdalmeeeajnimhm?hl=en-US",
+    firefox: "https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/",
+    ios: "https://apps.apple.com/us/app/metamask/id1438144202",
+    linux: null,
+    mac: null,
     opera: "https://addons.opera.com/en-gb/extensions/details/metamask-10/",
+    safari: null,
+    windows: null,
   },
-  rdns: "io.metamask",
-  mobile: {
-    native: "metamask://",
-    universal: "https://metamask.app.link",
+  deepLink: {
+    mobile: "https://metamask.app.link/dapp/",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  deepLink: {
-    mobile: "https://metamask.app.link/dapp/",
+  homepage: "https://metamask.io/",
+  id: "io.metamask",
+  image_id: "e30d09fe-c0dd-4b61-81e2-d6dc09eb9700",
+  mobile: {
+    native: "metamask://",
+    universal: "https://metamask.app.link",
   },
+  name: "MetaMask",
+  rdns: "io.metamask",
 } as const;

@@ -41,8 +41,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("tokens", () => {
 
     // Test
     const result = await tokens({
-      client,
       chainId: 1,
+      client,
     });
 
     // Verify

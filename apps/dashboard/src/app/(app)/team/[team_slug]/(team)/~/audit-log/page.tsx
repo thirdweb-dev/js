@@ -1,6 +1,6 @@
+import { redirect } from "next/navigation";
 import { getAuditLogs } from "@/api/audit-log";
 import { getTeamBySlug } from "@/api/team";
-import { redirect } from "next/navigation";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { AuditLogList } from "./_components/list";
 import { searchParamLoader } from "./search-params";

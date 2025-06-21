@@ -7,20 +7,20 @@ import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance
 import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
 import {
-  type SupportedTokens,
   defaultTokens,
+  type SupportedTokens,
 } from "../../../../core/utils/defaultTokens.js";
+import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { TokenIcon } from "../../components/TokenIcon.js";
-import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { formatTokenBalance } from "./formatTokenBalance.js";
 import {
   type ERC20OrNativeToken,
-  NATIVE_TOKEN,
   isNativeToken,
+  NATIVE_TOKEN,
 } from "./nativeToken.js";
 
 /**
@@ -40,8 +40,8 @@ export function ViewTokens(props: {
     >
       <Container p="lg">
         <ModalHeader
-          title={props.connectLocale.viewFunds.viewTokens}
           onBack={props.onBack}
+          title={props.connectLocale.viewFunds.viewTokens}
         />
       </Container>
       <Line />
@@ -74,7 +74,11 @@ export function ViewTokensContent(props: {
     (activeChain?.id ? supportedTokens[activeChain.id] : undefined) || [];
 
   const erc20TokensQuery = useQuery({
-    queryKey: ["tokens", activeChain?.id, account?.address],
+    // only fetch tokens if no explicit supported tokens are provided
+    enabled:
+      !!activeChain &&
+      !!account &&
+      (!props.supportedTokens || !props.supportedTokens[activeChain.id]),
     queryFn: async () => {
       if (!activeChain) {
         throw new Error("No active chain");
@@ -85,8 +89,8 @@ export function ViewTokensContent(props: {
       }
 
       const result = await getOwnedTokens({
-        client: props.client,
         chains: [activeChain],
+        client: props.client,
         ownerAddress: account.address,
       });
 
@@ -97,11 +101,7 @@ export function ViewTokensContent(props: {
           ),
       );
     },
-    // only fetch tokens if no explicit supported tokens are provided
-    enabled:
-      !!activeChain &&
-      !!account &&
-      (!props.supportedTokens || !props.supportedTokens[activeChain.id]),
+    queryKey: ["tokens", activeChain?.id, account?.address],
   });
 
   if (!activeChain || !account) {
@@ -110,18 +110,18 @@ export function ViewTokensContent(props: {
   return (
     <>
       <TokenInfo
-        token={NATIVE_TOKEN}
         chain={activeChain}
         client={props.client}
+        token={NATIVE_TOKEN}
       />
 
       {tokenList.map((token) => {
         return (
           <TokenInfo
-            token={token}
-            key={token.address}
             chain={activeChain}
             client={props.client}
+            key={token.address}
+            token={token}
           />
         );
       })}
@@ -136,15 +136,15 @@ export function ViewTokensContent(props: {
       {erc20TokensQuery.data?.map((token) => {
         return (
           <TokenInfo
+            balanceData={token}
+            chain={activeChain}
+            client={props.client}
+            key={token.tokenAddress}
             token={{
               address: token.tokenAddress,
               name: token.name ?? "",
               symbol: token.symbol ?? "",
             }}
-            key={token.tokenAddress}
-            chain={activeChain}
-            client={props.client}
-            balanceData={token}
           />
         );
       })}
@@ -168,10 +168,10 @@ function TokenInfo(props: {
     {
       address: account?.address,
       chain: props.chain,
+      client: props.client,
       tokenAddress: isNativeToken(props.token)
         ? undefined
         : props.token.address,
-      client: props.client,
     },
     {
       enabled: props.balanceData === undefined,
@@ -185,15 +185,15 @@ function TokenInfo(props: {
   return (
     <Container flex="row" gap="sm" p="sm">
       <TokenIcon
-        token={props.token}
         chain={props.chain}
-        size="lg"
         client={props.client}
+        size="lg"
+        token={props.token}
       />
 
       <Container flex="column" gap="xxs">
         {tokenName ? (
-          <Text size="sm" color="primaryText">
+          <Text color="primaryText" size="sm">
             {tokenName}
           </Text>
         ) : (

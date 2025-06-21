@@ -11,8 +11,8 @@ import { createDelayedRevealBatch } from "./createDelayedRevealBatch.js";
 import { reveal } from "./reveal.js";
 
 const placeholderMetadata = {
-  name: "Hidden NFT",
   description: "Will be revealed next week!",
+  name: "Hidden NFT",
 };
 const account = TEST_ACCOUNT_D;
 const chain = ANVIL_CHAIN;
@@ -26,11 +26,11 @@ describe.runIf(process.env.TW_SECRET_KEY)("createDelayedRevealedBatch", () => {
         account,
         chain,
         client,
-        type: "DropERC721",
         params: {
-          name: "nftdrop",
           contractURI: TEST_CONTRACT_URI,
+          name: "nftdrop",
         },
+        type: "DropERC721",
       }),
       chain,
       client,
@@ -41,9 +41,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("createDelayedRevealedBatch", () => {
       account,
       transaction: createDelayedRevealBatch({
         contract,
-        placeholderMetadata,
-        password: "1234",
         metadata: [{ name: "token 0" }, { name: "token 1" }],
+        password: "1234",
+        placeholderMetadata,
       }),
     });
 
@@ -52,21 +52,21 @@ describe.runIf(process.env.TW_SECRET_KEY)("createDelayedRevealedBatch", () => {
       account,
       transaction: createDelayedRevealBatch({
         contract,
-        placeholderMetadata,
-        password,
         metadata: [{ name: "token 2" }, { name: "token 3" }],
+        password,
+        placeholderMetadata,
       }),
     });
 
     // Reveal batch #0
     await sendAndConfirmTransaction({
       account,
-      transaction: reveal({ contract, batchId: 0n, password }),
+      transaction: reveal({ batchId: 0n, contract, password }),
     });
     // Reveal batch #1
     await sendAndConfirmTransaction({
       account,
-      transaction: reveal({ contract, batchId: 1n, password }),
+      transaction: reveal({ batchId: 1n, contract, password }),
     });
 
     /**

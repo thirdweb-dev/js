@@ -1,7 +1,7 @@
-import { Heading } from "@/components/Document";
 import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 import Link from "next/link";
+import { Heading } from "@/components/Document";
 
 type WalletInfo = { href: string; label: string; icon: StaticImport };
 
@@ -10,19 +10,19 @@ export function WalletCard(props: WalletInfo) {
     <div className="group/wallet-card relative rounded-[26px] border bg-card px-5 py-2 transition-colors hover:border-active-border">
       <div className="mt-[-30px] flex flex-col justify-center gap-1">
         <Link
-          href={props.href}
-          className="absolute inset-0"
           aria-label={props.label}
+          className="absolute inset-0"
+          href={props.href}
         />
         <Image
-          src={props.icon}
           alt=""
           className="size-20 rounded-[16px] border bg-background p-2 transition-transform duration-300 group-hover/wallet-card:scale-110 group-hover/wallet-card:border-foreground"
+          src={props.icon}
         />
         <Heading
-          id={props.label}
-          level={3}
+          anchorId={props.label}
           className="font-medium text-base text-foreground group-hover/wallet-card:text-foreground md:text-base"
+          level={3}
         >
           {props.label}
         </Heading>

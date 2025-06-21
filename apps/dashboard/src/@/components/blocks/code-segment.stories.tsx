@@ -1,3 +1,6 @@
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { useState } from "react";
+import { BadgeContainer } from "stories/utils";
 import {
   Select,
   SelectContent,
@@ -6,19 +9,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Meta, StoryObj } from "@storybook/nextjs";
-import { useState } from "react";
-import { BadgeContainer } from "stories/utils";
 import { type CodeEnvironment, CodeSegment } from "./code-segment.client";
 
 const meta = {
-  title: "blocks/CodeSegment",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "blocks/CodeSegment",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -37,10 +37,10 @@ function Story() {
   return (
     <div className="container flex max-w-[700px] flex-col gap-10 py-10">
       <Select
-        value={mode}
         onValueChange={(v) => {
           setMode(v as Mode);
         }}
+        value={mode}
       >
         <SelectTrigger className="w-[180px]">
           <SelectValue />
@@ -58,12 +58,12 @@ function Story() {
         </SelectContent>
       </Select>
 
-      <Variant envsToShow={["javascript"]} storyLabel="1 env" mode={mode} />
+      <Variant envsToShow={["javascript"]} mode={mode} storyLabel="1 env" />
 
       <Variant
         envsToShow={["javascript", "typescript"]}
-        storyLabel="2 envs"
         mode={mode}
+        storyLabel="2 envs"
       />
 
       <Variant
@@ -74,8 +74,8 @@ function Story() {
           "react-native",
           "unity",
         ]}
-        storyLabel="5 envs"
         mode={mode}
+        storyLabel="5 envs"
       />
     </div>
   );
@@ -92,23 +92,23 @@ function Variant(props: {
   return (
     <BadgeContainer label={props.storyLabel}>
       <CodeSegment
+        environment={env}
+        hideTabs={props.mode === "no-tabs"}
+        onlyTabs={props.mode === "only-tabs"}
+        setEnvironment={setEnv}
         snippet={{
           javascript: props.envsToShow.includes("javascript")
             ? jsCode
             : undefined,
           react: props.envsToShow.includes("react") ? jsxCode : undefined,
-          unity: props.envsToShow.includes("unity") ? unityCode : undefined,
           "react-native": props.envsToShow.includes("react-native")
             ? jsxCode
             : undefined,
           typescript: props.envsToShow.includes("typescript")
             ? tsCode
             : undefined,
+          unity: props.envsToShow.includes("unity") ? unityCode : undefined,
         }}
-        environment={env}
-        setEnvironment={setEnv}
-        hideTabs={props.mode === "no-tabs"}
-        onlyTabs={props.mode === "only-tabs"}
       />
     </BadgeContainer>
   );

@@ -23,16 +23,16 @@ export type EncodeBytesOnInstallParams = {
 export const FN_SELECTOR = "0x2fbb2623" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "royaltyRecipient",
-  },
-  {
-    type: "uint16",
-    name: "royaltyBps",
-  },
-  {
     type: "address",
+  },
+  {
+    name: "royaltyBps",
+    type: "uint16",
+  },
+  {
     name: "transferValidator",
+    type: "address",
   },
 ] as const;
 

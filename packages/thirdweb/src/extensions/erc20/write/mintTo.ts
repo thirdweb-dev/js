@@ -47,7 +47,6 @@ export type MintToParams = Prettify<
  */
 export function mintTo(options: BaseTransactionOptions<MintToParams>) {
   return generatedMintTo({
-    contract: options.contract,
     asyncParams: async () => {
       let amount: bigint;
       if ("amount" in options) {
@@ -61,10 +60,11 @@ export function mintTo(options: BaseTransactionOptions<MintToParams>) {
         amount = options.amountWei;
       }
       return {
-        to: options.to,
         amount: amount,
         overrides: options.overrides,
+        to: options.to,
       } as const;
     },
+    contract: options.contract,
   });
 }

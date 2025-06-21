@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { Box, Flex, Select } from "@chakra-ui/react";
 import { UploadIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useClaimConditionsFormContext } from "..";
 import { CustomFormControl } from "../common";
 
@@ -82,21 +82,21 @@ export const ClaimerSelection = () => {
   return (
     <CustomFormControl
       disabled={formDisabled}
-      label={label}
       error={
         form.getFieldState(`phases.${phaseIndex}.snapshot`, form.formState)
           .error
       }
       helperText={helperText}
+      label={label}
     >
       <Flex direction={{ base: "column", md: "row" }} gap={4}>
         {claimConditionType === "overrides" ||
         claimConditionType === "specific" ? null : (
           <Select
             isDisabled={formDisabled}
-            w={{ base: "100%", md: "50%" }}
-            value={dropType}
             onChange={handleClaimerChange}
+            value={dropType}
+            w={{ base: "100%", md: "50%" }}
           >
             <option value="any">Any wallet</option>
             <option value="overrides">Any wallet (with overrides)</option>
@@ -115,26 +115,26 @@ export const ClaimerSelection = () => {
           >
             {/* disable the "Edit" button when form is disabled, but not when it's a "See" button */}
             <Button
-              variant="primary"
-              disabled={disabledSnapshotButton}
               className="gap-2 rounded-md"
+              disabled={disabledSnapshotButton}
               onClick={() => setOpenIndex(phaseIndex)}
+              variant="primary"
             >
               {isAdmin ? "Edit" : "See"} Claimer Snapshot
               <UploadIcon className="size-4" />
             </Button>
 
             <Flex
-              gap={2}
-              direction="row"
-              align="center"
-              justify="center"
-              opacity={disabledSnapshotButton ? 0.5 : 1}
-              color={field.snapshot?.length === 0 ? "red.400" : "green.400"}
               _light={{
                 color: field.snapshot?.length === 0 ? "red.500" : "green.500",
               }}
+              align="center"
+              color={field.snapshot?.length === 0 ? "red.400" : "green.400"}
+              direction="row"
+              gap={2}
+              justify="center"
               ml={2}
+              opacity={disabledSnapshotButton ? 0.5 : 1}
             >
               <p>
                 ●{" "}
@@ -148,8 +148,8 @@ export const ClaimerSelection = () => {
           </Flex>
         ) : (
           <Box
-            w={{ base: "100%", md: "50%" }}
             display={{ base: "none", md: "block" }}
+            w={{ base: "100%", md: "50%" }}
           />
         )}
       </Flex>

@@ -28,8 +28,8 @@ export async function getExistingUserAccount(args: {
 }) {
   const { client, storage } = args;
   const { authShare, deviceShare } = await getShares({
-    client,
     authShare: { toRetrieve: true },
+    client,
     deviceShare: { toRetrieve: true },
     recoveryShare: { toRetrieve: false },
     storage,
@@ -210,10 +210,10 @@ export async function setUpShareForNewDevice({
   storage: ClientScopedStorage;
 }): Promise<SetUpWalletRpcReturnType> {
   const { recoveryShare, authShare } = await getShares({
-    client,
     authShare: { toRetrieve: true },
-    recoveryShare: { toRetrieve: true, recoveryCode },
+    client,
     deviceShare: { toRetrieve: false },
+    recoveryShare: { recoveryCode, toRetrieve: true },
     storage,
   });
   // instead of recreating a new share, just save the recovery one as the new device share
@@ -225,17 +225,17 @@ export async function setUpShareForNewDevice({
 
   const maybeDeviceShare = await storeShares({
     client,
-    walletAddress,
     deviceShare,
     storage,
+    walletAddress,
   });
 
   if (!maybeDeviceShare?.deviceShareStored) {
     throw new Error(DEVICE_SHARE_MISSING_MESSAGE);
   }
   return {
-    walletAddress,
     deviceShareStored: maybeDeviceShare?.deviceShareStored,
     isIframeStorageEnabled: false,
+    walletAddress,
   };
 }

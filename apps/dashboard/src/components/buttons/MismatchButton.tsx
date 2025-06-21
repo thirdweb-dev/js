@@ -1,22 +1,5 @@
 "use client";
 
-import { apiServerProxy } from "@/actions/proxies";
-import { DynamicHeight } from "@/components/ui/DynamicHeight";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { FaucetButton } from "app/(app)/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
 import { GiftIcon } from "app/(app)/(dashboard)/(chain)/[chain_id]/(chainPage)/components/icons/GiftIcon";
@@ -26,19 +9,18 @@ import type {
 } from "app/(app)/(dashboard)/(chain)/types/chain";
 import { getSDKTheme } from "app/(app)/components/sdk-component-theme";
 import { LOCAL_NODE_PKEY } from "constants/misc";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { ExternalLinkIcon, UnplugIcon } from "lucide-react";
-import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 import type React from "react";
 import { forwardRef, useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
 import {
-  type ThirdwebClient,
   prepareTransaction,
   sendTransaction,
+  type ThirdwebClient,
   toWei,
 } from "thirdweb";
 import { type Chain, type ChainMetadata, localhost } from "thirdweb/chains";
@@ -51,7 +33,24 @@ import {
   useSwitchActiveWalletChain,
   useWalletBalance,
 } from "thirdweb/react";
-import { type Wallet, privateKeyToAccount } from "thirdweb/wallets";
+import { privateKeyToAccount, type Wallet } from "thirdweb/wallets";
+import { apiServerProxy } from "@/actions/proxies";
+import { Button } from "@/components/ui/button";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { cn } from "@/lib/utils";
 import { getFaucetClaimAmount } from "../../app/(app)/api/testnet-faucet/claim/claim-amount";
 import { useV5DashboardChain } from "../../lib/v5-adapter";
 
@@ -124,7 +123,6 @@ export const MismatchButton = forwardRef<
     networksMismatch && wallet && !canSwitchNetworkWithoutConfirmation(wallet);
 
   const [isMismatchPopoverOpen, setIsMismatchPopoverOpen] = useState(false);
-  const trackEvent = useTrack();
 
   const chainId = activeWalletChain?.id;
 
@@ -138,9 +136,9 @@ export const MismatchButton = forwardRef<
   if (connectionStatus === "connecting") {
     return (
       <Button
+        asChild
         className={props.className}
         size={props.size}
-        asChild
         variant="outline"
       >
         <div>
@@ -153,7 +151,7 @@ export const MismatchButton = forwardRef<
 
   if (!wallet || !chainId || !isLoggedIn) {
     return (
-      <Button className={props.className} size={props.size} asChild>
+      <Button asChild className={props.className} size={props.size}>
         <Link
           href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
         >
@@ -183,7 +181,6 @@ export const MismatchButton = forwardRef<
   return (
     <>
       <Popover
-        open={isMismatchPopoverOpen}
         onOpenChange={(v) => {
           if (v) {
             if (showSwitchChainPopover) {
@@ -193,17 +190,13 @@ export const MismatchButton = forwardRef<
             setIsMismatchPopoverOpen(false);
           }
         }}
+        open={isMismatchPopoverOpen}
       >
         <PopoverTrigger asChild>
           <Button
             {...buttonProps}
             className={cn("gap-2 disabled:opacity-100", buttonProps.className)}
             disabled={disabled}
-            type={
-              showSwitchChainPopover || showNoFundsPopup
-                ? "button"
-                : buttonProps.type
-            }
             onClick={async (e) => {
               e.stopPropagation();
 
@@ -213,11 +206,6 @@ export const MismatchButton = forwardRef<
               }
 
               if (notEnoughBalance && !props.disableNoFundsPopup) {
-                trackEvent({
-                  category: "no-funds",
-                  action: "popover",
-                  label: "evm",
-                });
                 setDialog("no-funds");
                 return;
               }
@@ -233,6 +221,11 @@ export const MismatchButton = forwardRef<
               }
             }}
             ref={ref}
+            type={
+              showSwitchChainPopover || showNoFundsPopup
+                ? "button"
+                : buttonProps.type
+            }
           >
             {buttonProps.children}
             {showSpinner && <Spinner className="size-4 shrink-0" />}
@@ -240,24 +233,24 @@ export const MismatchButton = forwardRef<
         </PopoverTrigger>
         <PopoverContent className="min-w-[350px]" side="top" sideOffset={10}>
           <MismatchNotice
-            txChainId={txChainId}
             onClose={(hasSwitched) => {
               if (hasSwitched) {
                 setIsMismatchPopoverOpen(false);
               }
             }}
+            txChainId={txChainId}
           />
         </PopoverContent>
       </Popover>
 
       {/* Not Enough Funds */}
       <Dialog
-        open={!!dialog}
         onOpenChange={(v) => {
           if (!v) {
             setDialog(undefined);
           }
         }}
+        open={!!dialog}
       >
         <DialogContent
           className={cn(
@@ -271,62 +264,26 @@ export const MismatchButton = forwardRef<
             {dialog === "no-funds" && (
               <NoFundsDialogContent
                 chain={txChain}
+                client={props.client}
+                isLoggedIn={props.isLoggedIn}
+                onCloseModal={() => setDialog(undefined)}
                 openPayModal={() => {
-                  trackEvent({
-                    category: "pay",
-                    action: "buy",
-                    label: "attempt",
-                  });
                   setDialog("pay");
                 }}
-                onCloseModal={() => setDialog(undefined)}
-                isLoggedIn={props.isLoggedIn}
-                client={props.client}
               />
             )}
 
             {dialog === "pay" && (
               <PayEmbed
-                client={props.client}
-                theme={getSDKTheme(theme === "dark" ? "dark" : "light")}
                 className="!w-auto"
+                client={props.client}
                 payOptions={{
-                  onPurchaseSuccess(info) {
-                    if (
-                      info.type === "crypto" &&
-                      info.status.status !== "NOT_FOUND"
-                    ) {
-                      trackEvent({
-                        category: "pay",
-                        action: "buy",
-                        label: "success",
-                        type: info.type,
-                        chainId: info.status.quote.toToken.chainId,
-                        tokenAddress: info.status.quote.toToken.tokenAddress,
-                        amount: info.status.quote.toAmount,
-                      });
-                    }
-
-                    if (
-                      info.type === "fiat" &&
-                      info.status.status !== "NOT_FOUND"
-                    ) {
-                      trackEvent({
-                        category: "pay",
-                        action: "buy",
-                        label: "success",
-                        type: info.type,
-                        chainId: info.status.quote.toToken.chainId,
-                        tokenAddress: info.status.quote.toToken.tokenAddress,
-                        amount: info.status.quote.estimatedToTokenAmount,
-                      });
-                    }
-                  },
                   prefillBuy: {
                     amount: "0.01",
                     chain: txChain,
                   },
                 }}
+                theme={getSDKTheme(theme === "dark" ? "dark" : "light")}
               />
             )}
           </DynamicHeight>
@@ -346,16 +303,16 @@ function NoFundsDialogContent(props: {
   client: ThirdwebClient;
 }) {
   const chainWithServiceInfoQuery = useQuery({
-    queryKey: ["chain-with-services", props.chain.id],
+    enabled: !!props.chain.id,
     queryFn: async () => {
       const [chainRes, chainServicesRes] = await Promise.all([
         apiServerProxy<{ data: ChainMetadata }>({
-          pathname: `/v1/chains/${props.chain.id}`,
           method: "GET",
+          pathname: `/v1/chains/${props.chain.id}`,
         }),
         apiServerProxy<{ data: ChainServices }>({
-          pathname: `/v1/chains/${props.chain.id}/services`,
           method: "GET",
+          pathname: `/v1/chains/${props.chain.id}/services`,
         }),
       ]);
 
@@ -368,7 +325,7 @@ function NoFundsDialogContent(props: {
         services: chainServicesRes.data.data.services,
       } satisfies ChainMetadataWithServices;
     },
-    enabled: !!props.chain.id,
+    queryKey: ["chain-with-services", props.chain.id],
   });
 
   return (
@@ -400,18 +357,18 @@ function NoFundsDialogContent(props: {
             ) : chainWithServiceInfoQuery.data.testnet ? (
               // faucet case
               <GetFundsFromFaucet
-                isLoggedIn={props.isLoggedIn}
                 chain={chainWithServiceInfoQuery.data}
                 client={props.client}
+                isLoggedIn={props.isLoggedIn}
               />
             ) : chainWithServiceInfoQuery.data.services.find(
                 (x) => x.enabled && x.service === "pay",
               ) ? (
               // pay case
               <Button
-                variant="primary"
                 className="w-full"
                 onClick={props.openPayModal}
+                variant="primary"
               >
                 Buy Funds
               </Button>
@@ -422,15 +379,16 @@ function NoFundsDialogContent(props: {
       </div>
       {/* Footer */}
       <div className="flex justify-between gap-4 border-border border-t p-6">
-        <Button variant="outline" onClick={props.onCloseModal}>
+        <Button onClick={props.onCloseModal} variant="outline">
           Close
         </Button>
 
-        <Button variant="outline" asChild>
+        <Button asChild variant="outline">
           <Link
-            href="https://portal.thirdweb.com/glossary/gas"
-            target="_blank"
             className="gap-2"
+            href="https://portal.thirdweb.com/glossary/gas"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             Learn about Gas <ExternalLinkIcon className="size-4" />
           </Link>
@@ -473,9 +431,9 @@ function GetFundsFromFaucet(props: {
         <div className="h-6" />
 
         <FaucetButton
+          amount={amountToGive}
           chain={props.chain}
           client={props.client}
-          amount={amountToGive}
           isLoggedIn={props.isLoggedIn}
         />
       </div>
@@ -547,11 +505,11 @@ const MismatchNotice: React.FC<{
       </div>
 
       <Button
-        size="sm"
-        onClick={onSwitchWallet}
-        disabled={!actuallyCanAttemptSwitch || switchNetworkMutation.isPending}
-        variant="default"
         className="gap-2 capitalize disabled:opacity-100"
+        disabled={!actuallyCanAttemptSwitch || switchNetworkMutation.isPending}
+        onClick={onSwitchWallet}
+        size="sm"
+        variant="default"
       >
         {switchNetworkMutation.isPending ? (
           <Spinner className="size-4 shrink-0" />
@@ -582,13 +540,13 @@ const GetLocalHostTestnetFunds = (props: { client: ThirdwebClient }) => {
       return toast.error("No active account detected");
     }
     const faucet = privateKeyToAccount({
-      privateKey: LOCAL_NODE_PKEY,
       client: props.client,
+      privateKey: LOCAL_NODE_PKEY,
     });
     const transaction = prepareTransaction({
-      to: address,
       chain: localhost,
       client: props.client,
+      to: address,
       value: toWei("10"),
     });
     const promise = sendTransaction({
@@ -597,13 +555,13 @@ const GetLocalHostTestnetFunds = (props: { client: ThirdwebClient }) => {
     });
     toast.promise(promise, {
       error: "Failed to get funds from localhost",
-      success: "Successfully got funds from localhost",
       loading: "Requesting funds",
+      success: "Successfully got funds from localhost",
     });
   };
 
   return (
-    <Button variant="primary" onClick={requestFunds} className="w-full">
+    <Button className="w-full" onClick={requestFunds} variant="primary">
       Get Funds from Localhost
     </Button>
   );

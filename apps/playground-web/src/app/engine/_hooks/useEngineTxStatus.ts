@@ -4,7 +4,7 @@ import type { EngineTxStatus } from "../types";
 
 export function useEngineTxStatus(queueId: string | undefined) {
   return useQuery({
-    queryKey: ["engineTxStatus", queueId],
+    enabled: !!queueId,
     queryFn: async () => {
       if (!queueId) throw new Error("No queue ID provided");
       const res = await get_engine_tx_status(queueId);
@@ -13,53 +13,53 @@ export function useEngineTxStatus(queueId: string | undefined) {
       switch (res.status) {
         case "QUEUED": {
           txStatus = {
-            queueId: queueId,
-            status: "queued",
-            chainId: res.chain.id.toString(),
-            transactionHash: null,
-            queuedAt: res.createdAt,
-            sentAt: null,
-            minedAt: null,
             cancelledAt: null,
+            chainId: res.chain.id.toString(),
+            minedAt: null,
+            queuedAt: res.createdAt,
+            queueId: queueId,
+            sentAt: null,
+            status: "queued",
+            transactionHash: null,
           };
           break;
         }
         case "SUBMITTED": {
           txStatus = {
-            queueId: queueId,
-            status: "sent",
-            chainId: res.chain.id.toString(),
-            transactionHash: null,
-            queuedAt: res.createdAt,
-            sentAt: res.createdAt,
-            minedAt: null,
             cancelledAt: null,
+            chainId: res.chain.id.toString(),
+            minedAt: null,
+            queuedAt: res.createdAt,
+            queueId: queueId,
+            sentAt: res.createdAt,
+            status: "sent",
+            transactionHash: null,
           };
           break;
         }
         case "CONFIRMED": {
           txStatus = {
-            queueId: queueId,
-            status: "mined",
-            chainId: res.chain.id.toString(),
-            transactionHash: res.transactionHash,
-            queuedAt: res.createdAt,
-            sentAt: res.confirmedAt,
-            minedAt: res.confirmedAt,
             cancelledAt: null,
+            chainId: res.chain.id.toString(),
+            minedAt: res.confirmedAt,
+            queuedAt: res.createdAt,
+            queueId: queueId,
+            sentAt: res.confirmedAt,
+            status: "mined",
+            transactionHash: res.transactionHash,
           };
           break;
         }
         case "FAILED": {
           txStatus = {
-            queueId: queueId,
-            status: "errored",
-            chainId: res.chain.id.toString(),
-            transactionHash: null,
-            queuedAt: res.createdAt,
-            sentAt: null,
-            minedAt: null,
             cancelledAt: res.cancelledAt,
+            chainId: res.chain.id.toString(),
+            minedAt: null,
+            queuedAt: res.createdAt,
+            queueId: queueId,
+            sentAt: null,
+            status: "errored",
+            transactionHash: null,
           };
           break;
         }
@@ -70,7 +70,7 @@ export function useEngineTxStatus(queueId: string | undefined) {
 
       return txStatus;
     },
-    enabled: !!queueId,
+    queryKey: ["engineTxStatus", queueId],
     refetchInterval(query) {
       const status = query.state.data?.status;
       const isFinalStatus =
@@ -78,27 +78,24 @@ export function useEngineTxStatus(queueId: string | undefined) {
 
       return isFinalStatus ? false : 2000;
     },
-    staleTime: 0,
     retry: false,
+    staleTime: 0,
   });
 }
 
 export function useOptimisticallyUpdateEngineTxStatus() {
   const queryClient = useQueryClient();
 
-  return (params: {
-    chainId: number;
-    queueId: string;
-  }) => {
+  return (params: { chainId: number; queueId: string }) => {
     queryClient.setQueryData(["engineTxStatus", params.queueId], {
-      status: "queued",
-      chainId: params.chainId.toString(),
-      queueId: params.queueId,
-      transactionHash: null,
-      queuedAt: new Date().toISOString(),
-      sentAt: null,
-      minedAt: null,
       cancelledAt: null,
+      chainId: params.chainId.toString(),
+      minedAt: null,
+      queuedAt: new Date().toISOString(),
+      queueId: params.queueId,
+      sentAt: null,
+      status: "queued",
+      transactionHash: null,
     } satisfies EngineTxStatus);
   };
 }

@@ -56,8 +56,8 @@ async function getUpdateMetadataParams(
       chunk.map((id) =>
         GetNFT.getNFT({
           contract,
-          tokenId: id,
           includeOwner: false,
+          tokenId: id,
           useIndexer: false,
         }),
       ),
@@ -132,8 +132,8 @@ export function updateMetadata(
 ) {
   const { contract } = options;
   return BatchBaseURI.updateBatchBaseURI({
-    contract,
     asyncParams: async () => getUpdateMetadataParams(options),
+    contract,
   });
 }
 

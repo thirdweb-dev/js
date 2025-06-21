@@ -10,40 +10,40 @@ type ProblemAreaItem = {
 
 const ACCOUNT_PROBLEM_AREAS: ProblemAreaItem[] = [
   {
+    component: (
+      <>
+        <DescriptionInput />
+        <AttachmentForm />
+      </>
+    ),
     label: "Pricing inquiry",
+  },
+  {
     component: (
       <>
         <DescriptionInput />
         <AttachmentForm />
       </>
     ),
-  },
-  {
     label: "Billing inquiry",
+  },
+  {
     component: (
       <>
         <DescriptionInput />
         <AttachmentForm />
       </>
     ),
-  },
-  {
     label: "Usage inquiry",
-    component: (
-      <>
-        <DescriptionInput />
-        <AttachmentForm />
-      </>
-    ),
   },
   {
-    label: "Other",
     component: (
       <>
         <DescriptionInput />
         <AttachmentForm />
       </>
     ),
+    label: "Other",
   },
 ];
 
@@ -55,11 +55,11 @@ export default function AccountSupportForm() {
       <SupportForm_SelectInput
         formLabel="Problem area"
         name="extraInfo_Problem_Area"
-        promptText="Select a problem area"
+        onValueChange={setProblemArea}
         options={ACCOUNT_PROBLEM_AREAS.map((o) => o.label)}
+        promptText="Select a problem area"
         required={true}
         value={problemArea}
-        onValueChange={setProblemArea}
       />
       {ACCOUNT_PROBLEM_AREAS.find((o) => o.label === problemArea)?.component}
     </>

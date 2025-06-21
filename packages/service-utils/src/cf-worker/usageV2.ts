@@ -63,9 +63,9 @@ export async function sendUsageV2Events<T extends UsageV2Options>(
   }
 
   const resp = await fetch(url, {
-    method: "POST",
-    headers,
     body: JSON.stringify({ events }),
+    headers,
+    method: "POST",
   });
   if (!resp.ok) {
     throw new Error(

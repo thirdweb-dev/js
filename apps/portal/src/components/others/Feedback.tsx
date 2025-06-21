@@ -1,14 +1,13 @@
 "use client";
 
+import { BadgeCheckIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
+import { useState } from "react";
+import { reportFeedback } from "@/analytics/report";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { BadgeCheckIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
-import posthog from "posthog-js";
-import { useState } from "react";
 
 export function Feedback() {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const feedbackEvent = "Portal Feedback";
   const [feedback, setFeedback] = useState("");
 
   if (!isSubmitted) {
@@ -18,14 +17,12 @@ export function Feedback() {
 
         <div className="flex gap-3">
           <Button
-            variant="outline"
             className="gap-2 bg-card"
             onClick={() => {
               setIsSubmitted(true);
-              posthog.capture(feedbackEvent, {
-                response: "yes",
-              });
+              reportFeedback({ helpful: true });
             }}
+            variant="outline"
           >
             Yes
             <ThumbsUpIcon className="size-4 text-muted-foreground" />
@@ -33,15 +30,7 @@ export function Feedback() {
 
           <Dialog>
             <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="gap-2 bg-card"
-                onClick={() => {
-                  posthog.capture(feedbackEvent, {
-                    response: "no",
-                  });
-                }}
-              >
+              <Button className="gap-2 bg-card" variant="outline">
                 No
                 <ThumbsDownIcon className="size-4 text-muted-foreground" />
               </Button>
@@ -57,19 +46,17 @@ export function Feedback() {
               </p>
               <textarea
                 className="mb-2 h-32 w-full rounded-sm border bg-card p-2 font-medium text-foreground outline-none placeholder:font-semibold"
-                value={feedback}
-                placeholder="Your feedback..."
                 onChange={(e) => {
                   setFeedback(e.target.value);
                 }}
+                placeholder="Your feedback..."
+                value={feedback}
               />
               <div className="mt-3 flex flex-row-reverse">
                 <Button
                   onClick={() => {
                     setIsSubmitted(true);
-                    posthog.capture("Portal Feedback", {
-                      feedback: feedback,
-                    });
+                    reportFeedback({ feedback, helpful: false });
                   }}
                 >
                   Submit

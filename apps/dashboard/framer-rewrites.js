@@ -6,13 +6,14 @@ module.exports = [
   "/bounties",
   "/contact-us",
   // -- product landing pages --
-  // -- connect
-  "/connect",
-  "/connect/sign-in",
-  "/connect/account-abstraction",
-  "/connect/universal-bridge",
-  "/connect/auth",
-  "/connect/in-app-wallets",
+  // -- build category
+  "/wallets",
+  "/account-abstraction",
+  "/universal-bridge",
+  "/auth",
+  "/in-app-wallets",
+  "/transactions",
+  // -- end build category
   // -- storage
   "/storage",
   // -- nebula
@@ -24,8 +25,7 @@ module.exports = [
   "/contracts/modular-contracts",
   "/contracts/explore",
   "/contracts/deployment-tool",
-  // -- engine
-  "/engine",
+
   // -- solutions pages --
   "/solutions/:solution_slug",
   // -- campaigns --

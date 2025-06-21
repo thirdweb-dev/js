@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import {
   Breadcrumb,
@@ -7,7 +8,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { cn } from "@/lib/utils";
-import { redirect } from "next/navigation";
 import { THIRDWEB_CLIENT } from "../../../lib/client";
 import { isProd } from "../../../lib/env";
 import { fetchBlueprintSpec } from "../utils";
@@ -64,7 +64,7 @@ export default async function Page(props: {
             {title}
           </span>
           {pathMetadata.deprecated && (
-            <Badge variant="destructive" className="text-xs">
+            <Badge className="text-xs" variant="destructive">
               Deprecated
             </Badge>
           )}
@@ -78,13 +78,13 @@ export default async function Page(props: {
         </div>
       )}
       <BlueprintPlayground
-        key={searchParams.path}
-        metadata={pathMetadata}
         backLink={"/insight"}
         clientId={THIRDWEB_CLIENT.clientId}
+        domain={domain}
+        key={searchParams.path}
+        metadata={pathMetadata}
         path={searchParams.path}
         supportedChainIds={supportedChainIds}
-        domain={domain}
       />
     </div>
   );

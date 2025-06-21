@@ -45,19 +45,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+  link: {
+    fontSize: 16,
+  },
   subtext: {
     fontSize: 14,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    lineHeight: 28,
   },
   subtitle: {
     fontSize: 18,
     fontWeight: "600",
   },
-  link: {
-    fontSize: 16,
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    lineHeight: 28,
   },
 });

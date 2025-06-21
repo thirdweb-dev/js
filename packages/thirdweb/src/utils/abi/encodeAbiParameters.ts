@@ -1,14 +1,14 @@
 import type {
   AbiParameter,
-  AbiParameterToPrimitiveType,
   AbiParametersToPrimitiveTypes,
+  AbiParameterToPrimitiveType,
 } from "abitype";
 import * as ox__Hex from "ox/Hex";
 import { isAddress } from "../address.js";
 import { byteSize } from "../encoding/helpers/byte-size.js";
 import {
-  type Hex,
   boolToHex,
+  type Hex,
   numberToHex,
   padHex,
   stringToHex,
@@ -256,8 +256,8 @@ function encodeNumber(
   return {
     dynamic: false,
     encoded: numberToHex(value, {
-      size: 32,
       signed,
+      size: 32,
     }),
   };
 }

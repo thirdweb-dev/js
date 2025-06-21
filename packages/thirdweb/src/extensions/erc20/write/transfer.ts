@@ -44,7 +44,6 @@ export type TransferParams = Prettify<
  */
 export function transfer(options: BaseTransactionOptions<TransferParams>) {
   return generatedTransfer({
-    contract: options.contract,
     asyncParams: async () => {
       let amount: bigint;
       if ("amount" in options) {
@@ -58,8 +57,6 @@ export function transfer(options: BaseTransactionOptions<TransferParams>) {
         amount = options.amountWei;
       }
       return {
-        to: options.to,
-        value: amount,
         overrides: {
           erc20Value: {
             amountWei: amount,
@@ -67,7 +64,10 @@ export function transfer(options: BaseTransactionOptions<TransferParams>) {
           },
           ...options.overrides,
         },
+        to: options.to,
+        value: amount,
       } as const;
     },
+    contract: options.contract,
   });
 }

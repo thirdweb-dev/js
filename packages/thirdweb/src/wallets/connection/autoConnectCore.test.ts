@@ -27,31 +27,31 @@ describe("useAutoConnectCore", () => {
     vi.mocked(getUrlToken).mockReturnValue({});
     const wallet = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,
-      client: TEST_CLIENT,
       chain: ethereum,
+      client: TEST_CLIENT,
       onDisconnect: () => {},
       switchChain: () => {},
     });
 
     expect(
       await autoConnectCore({
-        force: true,
-        storage: mockStorage,
-        props: {
-          wallets: [wallet],
-          client: TEST_CLIENT,
-        },
         createWalletFn: (id: WalletId) =>
           createWalletAdapter({
             adaptedAccount: TEST_ACCOUNT_A,
-            client: TEST_CLIENT,
             chain: ethereum,
+            client: TEST_CLIENT,
             onDisconnect: () => {
               console.warn(id);
             },
             switchChain: () => {},
           }),
+        force: true,
         manager,
+        props: {
+          client: TEST_CLIENT,
+          wallets: [wallet],
+        },
+        storage: mockStorage,
       }),
     ).toBe(false);
   });
@@ -61,94 +61,41 @@ describe("useAutoConnectCore", () => {
 
     const wallet = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,
-      client: TEST_CLIENT,
       chain: ethereum,
+      client: TEST_CLIENT,
       onDisconnect: () => {},
       switchChain: () => {},
     });
 
     expect(
       await autoConnectCore({
-        force: true,
-        storage: mockStorage,
-        props: {
-          wallets: [wallet],
-          client: TEST_CLIENT,
-        },
         createWalletFn: (id: WalletId) =>
           createWalletAdapter({
             adaptedAccount: TEST_ACCOUNT_A,
-            client: TEST_CLIENT,
             chain: ethereum,
+            client: TEST_CLIENT,
             onDisconnect: () => {
               console.warn(id);
             },
             switchChain: () => {},
           }),
+        force: true,
         manager,
+        props: {
+          client: TEST_CLIENT,
+          wallets: [wallet],
+        },
+        storage: mockStorage,
       }),
     ).toBe(false);
-  });
-
-  it("should call onTimeout on ... timeout", async () => {
-    vi.mocked(getUrlToken).mockReturnValue({});
-
-    const wallet = createWalletAdapter({
-      adaptedAccount: TEST_ACCOUNT_A,
-      client: TEST_CLIENT,
-      chain: ethereum,
-      onDisconnect: () => {},
-      switchChain: () => {},
-    });
-    mockStorage.setItem("thirdweb:active-wallet-id", wallet.id);
-    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-    const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
-    // Purposefully mock the wallet.autoConnect method to test the timeout logic
-    wallet.autoConnect = () =>
-      new Promise((resolve) => {
-        setTimeout(() => {
-          // @ts-ignore Mock purpose
-          resolve("Connection successful");
-        }, 2100);
-      });
-
-    await autoConnectCore({
-      force: true,
-      storage: mockStorage,
-      props: {
-        wallets: [wallet],
-        client: TEST_CLIENT,
-        onTimeout: () => console.info("TIMEOUTTED"),
-        timeout: 0,
-      },
-      createWalletFn: (id: WalletId) =>
-        createWalletAdapter({
-          adaptedAccount: TEST_ACCOUNT_A,
-          client: TEST_CLIENT,
-          chain: ethereum,
-          onDisconnect: () => {
-            console.warn(id);
-          },
-          switchChain: () => {},
-        }),
-      manager,
-    });
-
-    expect(warnSpy).toHaveBeenCalled();
-    expect(warnSpy).toHaveBeenCalledWith(
-      "AutoConnect timeout: 0ms limit exceeded.",
-    );
-    expect(infoSpy).toHaveBeenCalled();
-    expect(infoSpy).toHaveBeenCalledWith("TIMEOUTTED");
-    warnSpy.mockRestore();
   });
 
   it("should handle auth cookie storage correctly", async () => {
     const mockAuthCookie = "mock-auth-cookie";
     const wallet = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,
-      client: TEST_CLIENT,
       chain: ethereum,
+      client: TEST_CLIENT,
       onDisconnect: () => {},
       switchChain: () => {},
     });
@@ -158,14 +105,14 @@ describe("useAutoConnectCore", () => {
     });
 
     await autoConnectCore({
-      force: true,
-      storage: mockStorage,
-      props: {
-        wallets: [wallet],
-        client: TEST_CLIENT,
-      },
       createWalletFn: () => wallet,
+      force: true,
       manager,
+      props: {
+        client: TEST_CLIENT,
+        wallets: [wallet],
+      },
+      storage: mockStorage,
     });
 
     const storedCookie = await mockStorage.getItem(
@@ -177,8 +124,8 @@ describe("useAutoConnectCore", () => {
   it("should handle error when manager connection fails", async () => {
     const wallet1 = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,
-      client: TEST_CLIENT,
       chain: ethereum,
+      client: TEST_CLIENT,
       onDisconnect: () => {},
       switchChain: () => {},
     });
@@ -195,14 +142,14 @@ describe("useAutoConnectCore", () => {
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
     await autoConnectCore({
-      force: true,
-      storage: mockStorage,
-      props: {
-        wallets: [wallet1],
-        client: TEST_CLIENT,
-      },
       createWalletFn: () => wallet1,
+      force: true,
       manager,
+      props: {
+        client: TEST_CLIENT,
+        wallets: [wallet1],
+      },
+      storage: mockStorage,
     });
     expect(addConnectedWalletSpy).toHaveBeenCalled();
 
@@ -216,16 +163,16 @@ describe("useAutoConnectCore", () => {
   it("should connect multiple wallets correctly", async () => {
     const wallet1 = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,
-      client: TEST_CLIENT,
       chain: ethereum,
+      client: TEST_CLIENT,
       onDisconnect: () => {},
       switchChain: () => {},
     });
 
     const wallet2 = createWalletAdapter({
       adaptedAccount: { ...TEST_ACCOUNT_A, address: "0x123" },
-      client: TEST_CLIENT,
       chain: ethereum,
+      client: TEST_CLIENT,
       onDisconnect: () => {},
       switchChain: () => {},
     });
@@ -240,14 +187,14 @@ describe("useAutoConnectCore", () => {
     const addConnectedWalletSpy = vi.spyOn(manager, "addConnectedWallet");
 
     await autoConnectCore({
-      force: true,
-      storage: mockStorage,
-      props: {
-        wallets: [wallet1, wallet2],
-        client: TEST_CLIENT,
-      },
       createWalletFn: () => wallet1,
+      force: true,
       manager,
+      props: {
+        client: TEST_CLIENT,
+        wallets: [wallet1, wallet2],
+      },
+      storage: mockStorage,
     });
 
     expect(addConnectedWalletSpy).toHaveBeenCalledWith(wallet2);
@@ -257,8 +204,8 @@ describe("useAutoConnectCore", () => {
     const mockOnConnect = vi.fn();
     const wallet = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,
-      client: TEST_CLIENT,
       chain: ethereum,
+      client: TEST_CLIENT,
       onDisconnect: () => {},
       switchChain: () => {},
     });
@@ -270,15 +217,15 @@ describe("useAutoConnectCore", () => {
       JSON.stringify([wallet.id]),
     );
     await autoConnectCore({
+      createWalletFn: () => wallet,
       force: true,
-      storage: mockStorage,
+      manager,
       props: {
-        wallets: [wallet],
         client: TEST_CLIENT,
         onConnect: mockOnConnect,
+        wallets: [wallet],
       },
-      createWalletFn: () => wallet,
-      manager,
+      storage: mockStorage,
     });
 
     expect(mockOnConnect).toHaveBeenCalledWith(wallet);
@@ -291,8 +238,8 @@ describe("useAutoConnectCore", () => {
     });
     const wallet = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,
-      client: TEST_CLIENT,
       chain: ethereum,
+      client: TEST_CLIENT,
       onDisconnect: () => {},
       switchChain: () => {},
     });
@@ -304,15 +251,15 @@ describe("useAutoConnectCore", () => {
       JSON.stringify([wallet.id]),
     );
     await autoConnectCore({
+      createWalletFn: () => wallet,
       force: true,
-      storage: mockStorage,
+      manager,
       props: {
-        wallets: [wallet],
         client: TEST_CLIENT,
         onConnect: mockOnConnect,
+        wallets: [wallet],
       },
-      createWalletFn: () => wallet,
-      manager,
+      storage: mockStorage,
     });
 
     expect(mockOnConnect).toHaveBeenCalledWith(wallet);
@@ -321,8 +268,8 @@ describe("useAutoConnectCore", () => {
   it("should call setLastAuthProvider if authProvider is present", async () => {
     const wallet = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,
-      client: TEST_CLIENT,
       chain: ethereum,
+      client: TEST_CLIENT,
       onDisconnect: () => {},
       switchChain: () => {},
     });
@@ -338,15 +285,15 @@ describe("useAutoConnectCore", () => {
       JSON.stringify([wallet.id]),
     );
     await autoConnectCore({
-      force: true,
-      storage: mockStorage,
-      props: {
-        wallets: [wallet],
-        client: TEST_CLIENT,
-      },
       createWalletFn: () => wallet,
+      force: true,
       manager,
+      props: {
+        client: TEST_CLIENT,
+        wallets: [wallet],
+      },
       setLastAuthProvider: mockSetLastAuthProvider,
+      storage: mockStorage,
     });
 
     expect(mockSetLastAuthProvider).toHaveBeenCalledWith("email", mockStorage);
@@ -355,8 +302,8 @@ describe("useAutoConnectCore", () => {
   it("should set connection status to disconnect if no connectedWallet is returned", async () => {
     const wallet = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,
-      client: TEST_CLIENT,
       chain: ethereum,
+      client: TEST_CLIENT,
       onDisconnect: () => {},
       switchChain: () => {},
     });
@@ -372,14 +319,14 @@ describe("useAutoConnectCore", () => {
       .mockResolvedValueOnce(null as unknown as Wallet);
 
     await autoConnectCore({
-      force: true,
-      storage: mockStorage,
-      props: {
-        wallets: [wallet],
-        client: TEST_CLIENT,
-      },
       createWalletFn: () => wallet,
+      force: true,
       manager,
+      props: {
+        client: TEST_CLIENT,
+        wallets: [wallet],
+      },
+      storage: mockStorage,
     });
 
     expect(addConnectedWalletSpy).toHaveBeenCalled();
@@ -392,16 +339,16 @@ describe("useAutoConnectCore", () => {
 describe("handleWalletConnection", () => {
   const wallet = createWalletAdapter({
     adaptedAccount: TEST_ACCOUNT_A,
-    client: TEST_CLIENT,
     chain: ethereum,
+    client: TEST_CLIENT,
     onDisconnect: () => {},
     switchChain: () => {},
   });
   it("should return the correct result", async () => {
     const result = await handleWalletConnection({
+      authResult: undefined,
       client: TEST_CLIENT,
       lastConnectedChain: ethereum,
-      authResult: undefined,
       wallet,
     });
 

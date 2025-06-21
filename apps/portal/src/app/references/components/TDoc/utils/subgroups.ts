@@ -1,7 +1,7 @@
 export const subgroups = {
   components: "UI Components",
-  hooks: "React Hooks",
   functions: "Core Functions",
+  hooks: "React Hooks",
 };
 
 export const nameToSubgroupSlug = (() => {

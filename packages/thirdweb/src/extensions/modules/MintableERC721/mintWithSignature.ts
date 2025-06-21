@@ -61,17 +61,17 @@ export function mintWithSignature(
   >,
 ) {
   return generatedMint({
-    contract: options.contract,
     asyncParams: async () => {
       const { payload, signature } = options;
       return {
-        to: payload.to,
         amount: payload.amount,
         baseURI: payload.baseURI,
         data: payload.data,
         signature,
+        to: payload.to,
       };
     },
+    contract: options.contract,
   });
 }
 
@@ -142,31 +142,31 @@ export async function generateMintSignature(
   const baseURI = getBaseUriFromBatch(batchOfUris);
 
   const mintParams: EncodeBytesBeforeMintWithSignatureERC721Params["params"] = {
-    pricePerUnit,
-    uid,
     currency,
-    startTimestamp: Number(dateToSeconds(startTime)),
     endTimestamp: Number(dateToSeconds(endTime)),
+    pricePerUnit,
+    startTimestamp: Number(dateToSeconds(startTime)),
+    uid,
   };
   const payload = {
-    to: getAddress(mintRequest.recipient),
     amount: quantity,
     baseURI: baseURI,
     data: encodeBytesBeforeMintWithSignatureERC721Params({
       params: mintParams,
     }),
+    to: getAddress(mintRequest.recipient),
   };
 
   const signature = await account.signTypedData({
     domain: {
-      name: "ERC721Core",
-      version: "1",
       chainId: contract.chain.id,
+      name: "ERC721Core",
       verifyingContract: contract.address as Hex,
+      version: "1",
     },
-    types: { MintRequestERC721: MintRequestERC721 },
-    primaryType: "MintRequestERC721",
     message: payload,
+    primaryType: "MintRequestERC721",
+    types: { MintRequestERC721: MintRequestERC721 },
   });
 
   return { payload, signature };
@@ -182,8 +182,8 @@ type GeneratePayloadInput = {
 };
 
 const MintRequestERC721 = [
-  { type: "address", name: "to" },
-  { type: "uint256", name: "amount" },
-  { type: "string", name: "baseURI" },
-  { type: "bytes", name: "data" },
+  { name: "to", type: "address" },
+  { name: "amount", type: "uint256" },
+  { name: "baseURI", type: "string" },
+  { name: "data", type: "bytes" },
 ] as const;

@@ -49,17 +49,17 @@ export async function sendEip712Transaction(
 
   const hash = await signEip712Transaction({
     account,
-    eip712Transaction,
     chainId: transaction.chain.id,
+    eip712Transaction,
   });
 
   const rpc = getRpcClient(transaction);
   const result = await eth_sendRawTransaction(rpc, hash);
 
   return {
-    transactionHash: result,
     chain: transaction.chain,
     client: transaction.client,
+    transactionHash: result,
   };
 }
 
@@ -94,24 +94,24 @@ export async function populateEip712Transaction(
 ): Promise<EIP721TransactionSerializable> {
   const { account, transaction } = options;
   const { gas, maxFeePerGas, maxPriorityFeePerGas, gasPerPubdata } =
-    await getZkGasFees({ transaction, from: getAddress(account.address) });
+    await getZkGasFees({ from: getAddress(account.address), transaction });
 
   // serialize the transaction (with fees, gas, nonce)
   const serializableTransaction = await toSerializableTransaction({
+    from: account.address,
     transaction: {
       ...transaction,
       gas,
       maxFeePerGas,
       maxPriorityFeePerGas,
     },
-    from: account.address,
   });
 
   return {
     ...serializableTransaction,
     ...transaction.eip712,
-    gasPerPubdata,
     from: account.address as Hex,
+    gasPerPubdata,
   };
 }
 
@@ -179,7 +179,7 @@ export async function getZkGasFees(args: {
     maxPriorityFeePerGas === undefined
   ) {
     const rpc = getRpcClient(transaction);
-    const params = await formatTransaction({ transaction, from });
+    const params = await formatTransaction({ from, transaction });
     const result = (await rpc({
       // biome-ignore lint/suspicious/noExplicitAny: TODO add to RPC method types
       method: "zks_estimateFee" as any,
@@ -203,9 +203,9 @@ export async function getZkGasFees(args: {
   }
   return {
     gas,
+    gasPerPubdata,
     maxFeePerGas,
     maxPriorityFeePerGas,
-    gasPerPubdata,
   };
 }
 
@@ -222,18 +222,18 @@ async function formatTransaction(args: {
   ]);
   const gasPerPubdata = eip712?.gasPerPubdata;
   return {
-    from,
-    to,
     data,
-    value,
-    gasPerPubdata,
     eip712Meta: {
       ...eip712,
-      gasPerPubdata: gasPerPubdata || 50000n,
       factoryDeps: eip712?.factoryDeps?.map((dep) =>
         Array.from(hexToBytes(dep)),
       ),
+      gasPerPubdata: gasPerPubdata || 50000n,
     },
+    from,
+    gasPerPubdata,
+    to,
     type: "0x71",
+    value,
   };
 }

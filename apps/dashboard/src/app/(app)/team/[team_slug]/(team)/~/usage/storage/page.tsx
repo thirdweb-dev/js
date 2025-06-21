@@ -1,5 +1,5 @@
-import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import Link from "next/link";
+import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../login/loginRedirect";
 import { GuidesSection } from "./components/GuideSection";
@@ -41,8 +41,8 @@ function GatewaySection() {
       </p>
 
       <PlainTextCodeBlock
-        code="https://<your-client-id>.ipfscdn.io/ipfs/"
         className="my-2"
+        code="https://<your-client-id>.ipfscdn.io/ipfs/"
       />
 
       <p className="text-muted-foreground">
@@ -66,17 +66,18 @@ function CLISection() {
       </p>
 
       <PlainTextCodeBlock
-        code="npx thirdweb upload ./path/to/file-or-folder/"
         className="my-2"
+        code="npx thirdweb upload ./path/to/file-or-folder/"
       />
 
       <p className="text-muted-foreground">
         If this is the first time that you are running this command, you may
         have to first login using your secret key.{" "}
         <Link
-          href="https://portal.thirdweb.com/cli/upload"
-          target="_blank"
           className="text-foreground hover:underline"
+          href="https://portal.thirdweb.com/cli/upload"
+          rel="noopener noreferrer"
+          target="_blank"
         >
           Learn more about thirdweb CLI
         </Link>

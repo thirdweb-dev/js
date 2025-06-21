@@ -4,12 +4,12 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
-import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
-import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
-import { PoweredByThirdweb } from "../../ui/ConnectWallet/PoweredByTW.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
-import { Spacer } from "../../ui/components/Spacer.js";
+import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
+import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
+import { PoweredByThirdweb } from "../../ui/ConnectWallet/PoweredByTW.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
+import { Spacer } from "../../ui/components/Spacer.js";
 import { ConnectWalletSocialOptions } from "../shared/ConnectWalletSocialOptions.js";
 import type { InAppWalletLocale } from "../shared/locale/types.js";
 import { EcosystemWalletHeader } from "./EcosystemWalletHeader.js";
@@ -51,18 +51,18 @@ export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
 
   return (
     <Container
-      fullHeight
-      flex="column"
-      p="lg"
       animate="fadein"
+      flex="column"
+      fullHeight
+      p="lg"
       style={{
         minHeight: "250px",
       }}
     >
       {props.isLinking ? (
         <ModalHeader
-          title={props.connectLocale.manageWallet.linkProfile}
           onBack={onBack}
+          title={props.connectLocale.manageWallet.linkProfile}
         />
       ) : (
         <EcosystemWalletHeader
@@ -74,9 +74,9 @@ export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
       <Spacer y="lg" />
 
       <Container
+        center="y"
         expand
         flex="column"
-        center="y"
         p={isCompact ? undefined : "lg"}
       >
         <ConnectWalletSocialOptions
@@ -92,14 +92,14 @@ export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
 
       <Container flex="column" gap="lg">
         <TOS
-          termsOfServiceUrl={props.meta.termsOfServiceUrl}
-          privacyPolicyUrl={props.meta.privacyPolicyUrl}
+          isApproved={isApproved}
           locale={props.connectLocale.agreement}
-          requireApproval={props.meta.requireApproval}
           onApprove={() => {
             setIsApproved(!isApproved);
           }}
-          isApproved={isApproved}
+          privacyPolicyUrl={props.meta.privacyPolicyUrl}
+          requireApproval={props.meta.requireApproval}
+          termsOfServiceUrl={props.meta.termsOfServiceUrl}
         />
 
         {props.meta.showThirdwebBranding !== false && <PoweredByThirdweb />}

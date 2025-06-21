@@ -54,11 +54,11 @@ const useFormField = () => {
   const { id } = itemContext;
 
   return {
+    formDescriptionId: `${id}-form-item-description`,
+    formItemId: `${id}-form-item`,
+    formMessageId: `${id}-form-item-message`,
     id,
     name: fieldContext.name,
-    formItemId: `${id}-form-item`,
-    formDescriptionId: `${id}-form-item-description`,
-    formMessageId: `${id}-form-item-message`,
     ...fieldState,
   };
 };
@@ -79,7 +79,7 @@ const FormItem = React.forwardRef<
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn("space-y-2", className)} {...props} />
+      <div className={cn("space-y-2", className)} ref={ref} {...props} />
     </FormItemContext.Provider>
   );
 });
@@ -93,9 +93,9 @@ const FormLabel = React.forwardRef<
 
   return (
     <Label
-      ref={ref}
       className={cn(error && "text-destructive-text", className)}
       htmlFor={formItemId}
+      ref={ref}
       {...props}
     />
   );
@@ -111,9 +111,9 @@ const RequiredFormLabel = React.forwardRef<
   return (
     <ToolTipLabel label="Required">
       <Label
-        ref={ref}
         className={cn(error && "text-destructive-text", "relative", className)}
         htmlFor={formItemId}
+        ref={ref}
         {...props}
       >
         {props.children}
@@ -136,14 +136,14 @@ const FormControl = React.forwardRef<
 
   return (
     <Slot
-      ref={ref}
-      id={formItemId}
       aria-describedby={
         !error
           ? `${formDescriptionId}`
           : `${formDescriptionId} ${formMessageId}`
       }
       aria-invalid={!!error}
+      id={formItemId}
+      ref={ref}
       {...props}
     />
   );
@@ -158,9 +158,9 @@ const FormDescription = React.forwardRef<
 
   return (
     <p
-      ref={ref}
-      id={formDescriptionId}
       className={cn("text-muted-foreground text-sm", className)}
+      id={formDescriptionId}
+      ref={ref}
       {...props}
     />
   );
@@ -180,9 +180,9 @@ const FormMessage = React.forwardRef<
 
   return (
     <p
-      ref={ref}
-      id={formMessageId}
       className={cn("font-medium text-destructive-text text-sm", className)}
+      id={formMessageId}
+      ref={ref}
       {...props}
     >
       {body}

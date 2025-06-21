@@ -13,8 +13,8 @@ it.runIf(process.env.TW_SECRET_KEY)(
       params: [TEST_WALLET_B, 100n],
     });
     const gasEstimate = await estimateGas({
-      transaction: tx,
       from: TEST_WALLET_A,
+      transaction: tx,
     });
     expect(gasEstimate).toMatchInlineSnapshot("48297n");
   },

@@ -50,12 +50,12 @@ export async function getTokenBalance(
       "../../extensions/erc20/read/getBalance.js"
     );
     return getBalance({
-      contract: getContract({ client, chain, address: tokenAddress }),
       address: account.address,
+      contract: getContract({ address: tokenAddress, chain, client }),
     });
   }
   // native token case
-  const rpcRequest = getRpcClient({ client, chain });
+  const rpcRequest = getRpcClient({ chain, client });
 
   const [nativeSymbol, nativeDecimals, nativeName, nativeBalance] =
     await Promise.all([
@@ -66,10 +66,10 @@ export async function getTokenBalance(
     ]);
 
   return {
-    value: nativeBalance,
     decimals: nativeDecimals,
     displayValue: toTokens(nativeBalance, nativeDecimals),
-    symbol: nativeSymbol,
     name: nativeName,
+    symbol: nativeSymbol,
+    value: nativeBalance,
   };
 }

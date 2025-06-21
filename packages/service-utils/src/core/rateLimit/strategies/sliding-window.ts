@@ -25,9 +25,9 @@ export async function rateLimitSlidingWindow(
   // No rate limit is provided. Assume the request is not rate limited.
   if (options.limitPerSecond <= 0) {
     return {
+      rateLimit: 0,
       rateLimited: false,
       requestCount: INCREMENT_BY,
-      rateLimit: 0,
     };
   }
 
@@ -46,9 +46,9 @@ export async function rateLimitSlidingWindow(
 
   if (totalCount > limitPerWindow) {
     return {
+      rateLimit: limitPerWindow,
       rateLimited: true,
       requestCount: totalCount,
-      rateLimit: limitPerWindow,
     };
   }
 
@@ -70,9 +70,9 @@ export async function rateLimitSlidingWindow(
   })();
 
   return {
+    rateLimit: limitPerWindow,
     rateLimited: false,
     requestCount: totalCount + INCREMENT_BY,
-    rateLimit: limitPerWindow,
   };
 }
 

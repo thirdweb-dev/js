@@ -43,8 +43,8 @@ export function DocLayout(props: DocLayoutProps) {
       </div>
       <main
         className="relative flex w-full flex-col overflow-hidden"
-        data-noindex={props.noIndex}
         data-no-llm={props.noLLM}
+        data-noindex={props.noIndex}
       >
         <div className="grow xl:mt-6">{props.children}</div>
         <div className="mt-16 xl:mt-20">

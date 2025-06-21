@@ -1,5 +1,6 @@
-import { CodeClient } from "@/components/ui/code/code.client";
-import { ToolTipLabel } from "@/components/ui/tooltip";
+/** biome-ignore-all lint/nursery/noNestedComponentDefinitions: FIXME */
+
+import { FilePreview } from "@app/team/[team_slug]/[project_slug]/(sidebar)/tokens/create/_common/file-preview";
 import {
   Flex,
   IconButton,
@@ -23,7 +24,8 @@ import { useMemo } from "react";
 import { type Column, usePagination, useTable } from "react-table";
 import type { ThirdwebClient } from "thirdweb";
 import type { NFTInput } from "thirdweb/utils";
-import { FilePreview } from "../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/assets/create/_common/file-preview";
+import { CodeClient } from "@/components/ui/code/code.client";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 
 interface BatchTableProps {
   data: NFTInput[];
@@ -42,37 +44,36 @@ export const BatchTable: React.FC<BatchTableProps> = ({
     let cols: Column<NFTInput>[] = [];
     if (nextTokenIdToMint !== undefined) {
       cols = cols.concat({
-        Header: "Token ID",
         accessor: (_row, index) => String(nextTokenIdToMint + BigInt(index)),
+        Header: "Token ID",
       });
     }
 
     cols = cols.concat([
       {
-        Header: "Image",
         accessor: (row) => row.image,
         Cell: ({ cell: { value } }: { cell: { value?: string } }) => (
           <FilePreview
             className="size-24 shrink-0 rounded-lg object-contain"
-            srcOrFile={value}
             client={client}
+            srcOrFile={value}
           />
         ),
+        Header: "Image",
       },
       {
-        Header: "Animation Url",
         accessor: (row) => row.animation_url,
         Cell: ({ cell: { value } }: { cell: { value?: string } }) => (
           <FilePreview
             className="size-24 shrink-0 rounded-lg"
-            srcOrFile={value}
             client={client}
+            srcOrFile={value}
           />
         ),
+        Header: "Animation Url",
       },
-      { Header: "Name", accessor: (row) => row.name },
+      { accessor: (row) => row.name, Header: "Name" },
       {
-        Header: "Description",
         accessor: (row) => (
           <ToolTipLabel label={row.description}>
             <p className="line-clamp-6 whitespace-pre-wrap">
@@ -80,9 +81,9 @@ export const BatchTable: React.FC<BatchTableProps> = ({
             </p>
           </ToolTipLabel>
         ),
+        Header: "Description",
       },
       {
-        Header: "Attributes",
         accessor: (row) => row.attributes || row.properties,
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: ({ cell }: { cell: any }) =>
@@ -93,9 +94,10 @@ export const BatchTable: React.FC<BatchTableProps> = ({
               scrollableClassName="max-w-[300px]"
             />
           ) : null,
+        Header: "Attributes",
       },
-      { Header: "External URL", accessor: (row) => row.external_url },
-      { Header: "Background Color", accessor: (row) => row.background_color },
+      { accessor: (row) => row.external_url, Header: "External URL" },
+      { accessor: (row) => row.background_color, Header: "Background Color" },
     ]);
     return cols;
   }, [nextTokenIdToMint, client]);
@@ -124,8 +126,8 @@ export const BatchTable: React.FC<BatchTableProps> = ({
       columns,
       data,
       initialState: {
-        pageSize: 50,
         pageIndex: 0,
+        pageSize: 50,
       },
     },
     // will be fixed with @tanstack/react-table v8
@@ -136,7 +138,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
   // Render the UI for your table
   return (
     <Flex flexGrow={1} overflow="auto">
-      <TableContainer maxW="100%" className="w-full">
+      <TableContainer className="w-full" maxW="100%">
         <Table {...getTableProps()}>
           <Thead>
             {headerGroups.map((headerGroup, index) => (
@@ -159,8 +161,8 @@ export const BatchTable: React.FC<BatchTableProps> = ({
               return (
                 <Tr
                   {...row.getRowProps()}
-                  borderBottomWidth={1}
                   _last={{ borderBottomWidth: 0 }}
+                  borderBottomWidth={1}
                   // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                   key={rowIndex}
                 >
@@ -187,15 +189,15 @@ export const BatchTable: React.FC<BatchTableProps> = ({
         <div className="flex w-full items-center justify-center">
           <div className="flex flex-row items-center gap-2">
             <IconButton
-              isDisabled={!canPreviousPage}
               aria-label="first page"
               icon={<ChevronFirstIcon className="size-4" />}
+              isDisabled={!canPreviousPage}
               onClick={() => gotoPage(0)}
             />
             <IconButton
-              isDisabled={!canPreviousPage}
               aria-label="previous page"
               icon={<ChevronLeftIcon className="size-4" />}
+              isDisabled={!canPreviousPage}
               onClick={() => previousPage()}
             />
             <p className="whitespace-nowrap">
@@ -203,15 +205,15 @@ export const BatchTable: React.FC<BatchTableProps> = ({
               <strong>{pageOptions.length}</strong>
             </p>
             <IconButton
-              isDisabled={!canNextPage}
               aria-label="next page"
               icon={<ChevronRightIcon className="size-4" />}
+              isDisabled={!canNextPage}
               onClick={() => nextPage()}
             />
             <IconButton
-              isDisabled={!canNextPage}
               aria-label="last page"
               icon={<ChevronLastIcon className="size-4" />}
+              isDisabled={!canNextPage}
               onClick={() => gotoPage(pageCount - 1)}
             />
 

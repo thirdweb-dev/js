@@ -4,10 +4,10 @@ import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { ID_GATEWAY_ADDRESS } from "../constants.js";
 
 const ID_GATEWAY_EIP_712_DOMAIN = {
-  name: "Farcaster IdGateway",
-  version: "1",
   chainId: 10,
+  name: "Farcaster IdGateway",
   verifyingContract: ID_GATEWAY_ADDRESS,
+  version: "1",
 } as const;
 
 const ID_GATEWAY_REGISTER_TYPE = [
@@ -60,8 +60,8 @@ export type SignRegisterOptions = {
 export function getRegisterData(message: RegisterMessage) {
   return {
     ...ID_GATEWAY_EIP_712_TYPES,
-    primaryType: "Register" as const,
     message,
+    primaryType: "Register" as const,
   };
 }
 

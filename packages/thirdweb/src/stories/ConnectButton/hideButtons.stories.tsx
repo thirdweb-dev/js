@@ -3,14 +3,14 @@ import { ConnectButton } from "../../react/web/ui/ConnectWallet/ConnectButton.js
 import { storyClient } from "../utils.js";
 
 const meta = {
-  title: "Connect/ConnectButton/hide buttons",
+  args: {
+    client: storyClient,
+  },
   component: ConnectButton,
   parameters: {
     layout: "centered",
   },
-  args: {
-    client: storyClient,
-  },
+  title: "Connect/ConnectButton/hide buttons",
 } satisfies Meta<typeof ConnectButton>;
 
 type Story = StoryObj<typeof meta>;
@@ -46,8 +46,8 @@ export const HideBuy: Story = {
 export const HideSendReceive: Story = {
   args: {
     detailsModal: {
-      hideSendFunds: true,
       hideReceiveFunds: true,
+      hideSendFunds: true,
     },
   },
 };
@@ -55,8 +55,8 @@ export const HideSendReceive: Story = {
 export const HideSendBuy: Story = {
   args: {
     detailsModal: {
-      hideSendFunds: true,
       hideBuyFunds: true,
+      hideSendFunds: true,
     },
   },
 };
@@ -64,8 +64,8 @@ export const HideSendBuy: Story = {
 export const HideReceiveBuy: Story = {
   args: {
     detailsModal: {
-      hideReceiveFunds: true,
       hideBuyFunds: true,
+      hideReceiveFunds: true,
     },
   },
 };
@@ -73,9 +73,9 @@ export const HideReceiveBuy: Story = {
 export const HideSendReceiveBuy: Story = {
   args: {
     detailsModal: {
-      hideSendFunds: true,
-      hideReceiveFunds: true,
       hideBuyFunds: true,
+      hideReceiveFunds: true,
+      hideSendFunds: true,
     },
   },
 };

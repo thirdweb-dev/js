@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getTeams } from "@/api/team";
 import {
   Breadcrumb,
@@ -7,7 +8,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import Link from "next/link";
 import { loginRedirect } from "../../../login/loginRedirect";
 import { CreateTicket } from "./components/create-ticket.client";
 
@@ -38,8 +38,8 @@ export default async function Page() {
       <div className="container max-w-[750px] py-10">
         <CreateTicket
           teams={teams.map((t) => ({
-            name: t.name,
             id: t.id,
+            name: t.name,
           }))}
         />
       </div>

@@ -32,21 +32,21 @@ export async function createStylusProject() {
 
   // Step 3: Create the project
   const { projectName } = await prompts({
-    type: "text",
-    name: "projectName",
-    message: "Project name:",
     initial: "my-stylus-project",
+    message: "Project name:",
+    name: "projectName",
+    type: "text",
   });
 
   // Step 4: Select project type
   const { projectType } = await prompts({
-    type: "select",
-    name: "projectType",
-    message: "Select a template:",
     choices: [
       { title: "Default", value: "default" },
       { title: "ERC20", value: "erc20" },
     ],
+    message: "Select a template:",
+    name: "projectType",
+    type: "select",
   });
 
   // Step 5: Create the project

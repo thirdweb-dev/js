@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "SignerRemoved" event.
@@ -40,8 +40,8 @@ export type SignerRemovedEventFilters = Partial<{
  */
 export function signerRemovedEvent(filters: SignerRemovedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event SignerRemoved(address indexed account, address indexed signer)",
-    filters,
   });
 }

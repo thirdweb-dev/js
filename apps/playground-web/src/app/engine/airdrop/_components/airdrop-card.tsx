@@ -1,5 +1,8 @@
 "use client";
 
+import { formatDate } from "date-fns";
+import { CheckIcon, ExternalLinkIcon, SendIcon, XIcon } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,9 +12,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { formatDate } from "date-fns";
-import { CheckIcon, ExternalLinkIcon, SendIcon, XIcon } from "lucide-react";
-import { useState } from "react";
 import { Spinner } from "../../../../components/ui/Spinner/Spinner";
 import { cn } from "../../../../lib/utils";
 import type { EngineTxStatus } from "../../types";
@@ -78,12 +78,12 @@ export function EngineAirdropCard(props: {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <Progress value={progressPercentage} className="h-2" />
+          <Progress className="h-2" value={progressPercentage} />
           {airdropState && (
             <AirdropStateInfo
-              txStatus={props.txStatus}
               isAirdropping={props.isAirdropping}
               state={airdropState}
+              txStatus={props.txStatus}
             />
           )}
         </div>
@@ -122,12 +122,12 @@ function getAirdropState(
   if (!txStatus) {
     if (isAirdropping) {
       return {
-        title: "Sending Transaction Request",
         status: "pending",
         timestamp: {
           prefix: "Started at",
           value: new Date().toISOString(),
         },
+        title: "Sending Transaction Request",
       };
     }
     return undefined;
@@ -135,41 +135,41 @@ function getAirdropState(
 
   if (txStatus.status === "queued") {
     return {
-      title: "Transaction queued",
       status: "pending",
       timestamp: {
         prefix: "Queued at",
         value: txStatus.queuedAt as string,
       },
+      title: "Transaction queued",
     };
   }
 
   if (txStatus.status === "sent") {
     return {
-      title: "Transaction sent",
       status: "pending",
       timestamp: {
         prefix: "Sent at",
         value: txStatus.sentAt as string,
       },
+      title: "Transaction sent",
     };
   }
 
   if (txStatus.status === "mined") {
     return {
-      title: "Transaction mined",
       status: "success",
       timestamp: {
         prefix: "Mined at",
         value: txStatus.minedAt as string,
       },
+      title: "Transaction mined",
     };
   }
 
   if (txStatus.status === "cancelled" || txStatus.status === "errored") {
     return {
-      title: "Transaction failed",
       status: "error",
+      title: "Transaction failed",
     };
   }
 
@@ -202,10 +202,10 @@ function AirdropStateInfo(props: {
           <div className="flex items-center text-sm">
             <span className="mr-1 text-muted-foreground">Transaction Hash</span>
             <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href={`${airdropExample.chainExplorer}/tx/${props.txStatus.transactionHash}`}
               className="flex items-center gap-1 font-mono text-muted-foreground underline decoration-muted-foreground/50 decoration-dotted underline-offset-[5px] hover:text-foreground"
+              href={`${airdropExample.chainExplorer}/tx/${props.txStatus.transactionHash}`}
+              rel="noopener noreferrer"
+              target="_blank"
             >
               {props.txStatus.transactionHash.slice(0, 6)}...
               {props.txStatus.transactionHash.slice(-4)}

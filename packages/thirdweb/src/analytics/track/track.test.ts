@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -38,9 +38,9 @@ describe("track", () => {
     });
 
     expect(requestBody).toEqual({
-      source: "sdk",
       action: "test-action",
       data: "test-data",
+      source: "sdk",
     });
   });
 
@@ -86,13 +86,13 @@ describe("track", () => {
 
     await track({
       client: mockClient,
-      ecosystem: {
-        id: "ecosystem.test-ecosystem-id",
-        partnerId: "test-partner-id",
-      },
       data: {
         action: "test-action",
         data: "test-data",
+      },
+      ecosystem: {
+        id: "ecosystem.test-ecosystem-id",
+        partnerId: "test-partner-id",
       },
     });
 

@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "SignatureAggregatorChanged" event.
@@ -36,7 +36,7 @@ export function signatureAggregatorChangedEvent(
   filters: SignatureAggregatorChangedEventFilters = {},
 ) {
   return prepareEvent({
-    signature: "event SignatureAggregatorChanged(address indexed aggregator)",
     filters,
+    signature: "event SignatureAggregatorChanged(address indexed aggregator)",
   });
 }

@@ -1,73 +1,19 @@
 // --- KEEEP IN SYNC with exports/wallets.ts ---
 
-export {
-  createWallet,
-  walletConnect,
-} from "../wallets/native/create-wallet.js";
-export { inAppWallet } from "../wallets/in-app/native/in-app.js";
-export { ecosystemWallet } from "../wallets/in-app/native/ecosystem.js";
 export type {
-  EcosystemWalletCreationOptions,
-  EcosystemWalletConnectionOptions,
-  EcosystemWalletAutoConnectOptions,
-} from "../wallets/ecosystem/types.js";
-export { smartWallet } from "../wallets/smart/smart-wallet.js";
-
-export type { Wallet, Account } from "../wallets/interfaces/wallet.js";
-export type { ConnectionStatus } from "../wallets/manager/index.js";
-
-// utils
-export {
-  getWalletBalance,
-  type GetWalletBalanceOptions,
-} from "../wallets/utils/getWalletBalance.js";
-export {
-  generateAccount,
-  type GenerateAccountOptions,
-} from "../wallets/utils/generateAccount.js";
-
-// private-key
-export {
-  privateKeyToAccount,
-  /**
-   * @internal
-   * @deprecated - use {@link privateKeyToAccount} instead
-   */
-  privateKeyToAccount as privateKeyAccount,
-  type PrivateKeyToAccountOptions,
-  /**
-   * @internal
-   * @deprecated - use {@link PrivateKeyToAccountOptions} instead
-   */
-  type PrivateKeyToAccountOptions as PrivateKeyAccountOptions,
-} from "../wallets/private-key.js";
-
-export type {
-  WalletId,
-  WalletAutoConnectionOption,
-  WalletCreationOptions,
-  WalletConnectionOption,
-  CreateWalletArgs,
-  InjectedConnectOptions,
-  DeepLinkSupportedWalletCreationOptions,
-  StandaloneWCConnectOptions,
-} from "../wallets/wallet-types.js";
-
-export type {
-  WCSupportedWalletIds,
   InjectedSupportedWalletIds,
+  WCSupportedWalletIds,
 } from "../wallets/__generated__/wallet-ids.js";
-
 export type {
-  WCConnectOptions,
-  WCAutoConnectOptions,
-} from "../wallets/wallet-connect/types.js";
-
+  EcosystemWalletAutoConnectOptions,
+  EcosystemWalletConnectionOptions,
+  EcosystemWalletCreationOptions,
+} from "../wallets/ecosystem/types.js";
 export type {
-  SmartWalletConnectionOptions,
-  SmartWalletOptions,
-} from "../wallets/smart/types.js";
-
+  MultiStepAuthArgsType,
+  Profile,
+  SingleStepAuthArgsType,
+} from "../wallets/in-app/core/authentication/types.js";
 export type {
   InAppWalletAuth,
   /**
@@ -84,65 +30,105 @@ export type {
    * @deprecated use InAppWalletConnectionOptions instead
    */
   InAppWalletConnectionOptions as EmbeddedWalletConnectionOptions,
+  InAppWalletCreationOptions,
   InAppWalletSocialAuth,
   /**
    * @deprecated use InAppWalletSocialAuth instead
    */
   InAppWalletSocialAuth as EmbeddedWalletSocialAuth,
-  InAppWalletCreationOptions,
 } from "../wallets/in-app/core/wallet/types.js";
-
-export type {
-  MultiStepAuthArgsType,
-  SingleStepAuthArgsType,
-} from "../wallets/in-app/core/authentication/types.js";
-
 export {
-  preAuthenticate,
   authenticate,
+  getProfiles,
   getUserEmail,
   getUserPhoneNumber,
-  getProfiles,
   linkProfile,
+  preAuthenticate,
   unlinkProfile,
 } from "../wallets/in-app/native/auth/index.js";
-export type { Profile } from "../wallets/in-app/core/authentication/types.js";
+export { ecosystemWallet } from "../wallets/in-app/native/ecosystem.js";
+export { inAppWallet } from "../wallets/in-app/native/in-app.js";
+export type { Account, Wallet } from "../wallets/interfaces/wallet.js";
+export type { ConnectionStatus } from "../wallets/manager/index.js";
+export {
+  createWallet,
+  walletConnect,
+} from "../wallets/native/create-wallet.js";
+// private-key
+export {
+  type PrivateKeyToAccountOptions,
+  /**
+   * @internal
+   * @deprecated - use {@link PrivateKeyToAccountOptions} instead
+   */
+  type PrivateKeyToAccountOptions as PrivateKeyAccountOptions,
+  privateKeyToAccount,
+  /**
+   * @internal
+   * @deprecated - use {@link privateKeyToAccount} instead
+   */
+  privateKeyToAccount as privateKeyAccount,
+} from "../wallets/private-key.js";
+export { smartWallet } from "../wallets/smart/smart-wallet.js";
+
+export type {
+  SmartWalletConnectionOptions,
+  SmartWalletOptions,
+} from "../wallets/smart/types.js";
+export {
+  type GenerateAccountOptions,
+  generateAccount,
+} from "../wallets/utils/generateAccount.js";
+// utils
+export {
+  type GetWalletBalanceOptions,
+  getWalletBalance,
+} from "../wallets/utils/getWalletBalance.js";
+export type {
+  WCAutoConnectOptions,
+  WCConnectOptions,
+} from "../wallets/wallet-connect/types.js";
+export type {
+  CreateWalletArgs,
+  DeepLinkSupportedWalletCreationOptions,
+  InjectedConnectOptions,
+  StandaloneWCConnectOptions,
+  WalletAutoConnectionOption,
+  WalletConnectionOption,
+  WalletCreationOptions,
+  WalletId,
+} from "../wallets/wallet-types.js";
 export const authenticateWithRedirect = () => {
   throw new Error("Not supported in native");
 };
 
-export type {
-  CoinbaseWalletCreationOptions,
-  CoinbaseSDKWalletConnectionOptions,
-} from "../wallets/coinbase/coinbase-web.js";
-
-export type {
-  WalletEmitter,
-  WalletEmitterEvents,
-} from "../wallets/wallet-emitter.js";
-
-export { getAllWalletsList } from "../wallets/getAllWalletsList.js";
-export { getWalletInfo } from "../wallets/__generated__/getWalletInfo.js";
-export type { WalletInfo } from "../wallets/wallet-info.js";
-
-export { createWalletAdapter } from "../adapters/wallet-adapter.js";
+// eip1193
+export * as EIP1193 from "../adapters/eip1193/index.js";
 export type { AdapterWalletOptions } from "../adapters/wallet-adapter.js";
-
+export { createWalletAdapter } from "../adapters/wallet-adapter.js";
+export { getWalletInfo } from "../wallets/__generated__/getWalletInfo.js";
+export type {
+  CoinbaseSDKWalletConnectionOptions,
+  CoinbaseWalletCreationOptions,
+} from "../wallets/coinbase/coinbase-web.js";
+export { getAllWalletsList } from "../wallets/getAllWalletsList.js";
 // wallet connect
 export {
   createWalletConnectClient,
   createWalletConnectSession,
+  DefaultWalletConnectRequestHandlers,
   disconnectWalletConnectSession,
   getActiveWalletConnectSessions,
-  DefaultWalletConnectRequestHandlers,
 } from "../wallets/wallet-connect/receiver/index.js";
 export type {
   WalletConnectClient,
   WalletConnectSession,
 } from "../wallets/wallet-connect/receiver/types.js";
-
-// eip1193
-export * as EIP1193 from "../adapters/eip1193/index.js";
+export type {
+  WalletEmitter,
+  WalletEmitterEvents,
+} from "../wallets/wallet-emitter.js";
+export type { WalletInfo } from "../wallets/wallet-info.js";
 
 // NOT SUPPORTED
 

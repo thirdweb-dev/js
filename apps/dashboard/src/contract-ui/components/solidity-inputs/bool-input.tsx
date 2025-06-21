@@ -12,18 +12,18 @@ export const SolidityBoolInput: React.FC<SolidityInputProps> = ({
     <div className="flex flex-row">
       <div className="inline-flex overflow-hidden rounded-md border border-border">
         <Button
-          size="sm"
-          onClick={() => form.setValue(inputName, "true")}
-          variant={watchInput === "true" ? "default" : "outline"}
           className="rounded-none border-r-0"
+          onClick={() => form.setValue(inputName, "true")}
+          size="sm"
+          variant={watchInput === "true" ? "default" : "outline"}
         >
           True
         </Button>
         <Button
-          size="sm"
-          onClick={() => form.setValue(inputName, "false")}
-          variant={watchInput === "false" ? "default" : "outline"}
           className="rounded-none rounded-l-none"
+          onClick={() => form.setValue(inputName, "false")}
+          size="sm"
+          variant={watchInput === "false" ? "default" : "outline"}
         >
           False
         </Button>

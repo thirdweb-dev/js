@@ -1,8 +1,8 @@
 import type { AbiParameterToPrimitiveType, Address } from "abitype";
 import { type Hex, isHex, stringToHex } from "viem";
 import {
-  NATIVE_TOKEN_ADDRESS,
   isNativeTokenAddress,
+  NATIVE_TOKEN_ADDRESS,
 } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
@@ -12,12 +12,12 @@ import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import {
-  type MintWithSignatureParams,
   mintWithSignature as generatedMintWithSignature,
+  type MintWithSignatureParams,
 } from "../__generated__/ISignatureMintERC721/write/mintWithSignature.js";
 import {
-  type MintWithSignatureParams as MintWithSignatureParamsV2,
   mintWithSignature as generatedMintWithSignatureV2,
+  type MintWithSignatureParams as MintWithSignatureParamsV2,
 } from "../__generated__/ISignatureMintERC721_v2/write/mintWithSignature.js";
 
 /**
@@ -147,8 +147,8 @@ export async function generateMintSignature<
         );
         return await convertErc20Amount({
           amount: mintRequest.price,
-          client: contract.client,
           chain: contract.chain,
+          client: contract.client,
           erc20Address: currency,
         });
       }
@@ -217,31 +217,31 @@ export async function generateMintSignature<
 
   if (contractType === "LoyaltyCard") {
     return signPayloadV2({
-      mintRequest,
       account,
       contract,
-      uri,
       currency,
-      uid,
-      price,
-      royaltyRecipient,
-      primarySaleRecipient: saleRecipient,
-      startTime,
       endTime,
+      mintRequest,
+      price,
+      primarySaleRecipient: saleRecipient,
+      royaltyRecipient,
+      startTime,
+      uid,
+      uri,
     }) as Promise<SignPayloadResult<T>>;
   }
   return signPayloadV1({
-    mintRequest,
     account,
     contract,
-    uri,
     currency,
-    uid,
-    price,
-    royaltyRecipient,
-    primarySaleRecipient: saleRecipient,
-    startTime,
     endTime,
+    mintRequest,
+    price,
+    primarySaleRecipient: saleRecipient,
+    royaltyRecipient,
+    startTime,
+    uid,
+    uri,
   }) as Promise<SignPayloadResult<T>>;
 }
 
@@ -271,30 +271,30 @@ async function signPayloadV1({
   endTime: Date;
 }): Promise<{ payload: PayloadType; signature: Hex }> {
   const payload: PayloadType = {
-    uri,
     currency,
-    uid,
     price,
-    to: mintRequest.to,
-    royaltyRecipient,
-    royaltyBps: toBigInt(mintRequest.royaltyBps || 0),
     primarySaleRecipient,
-    validityStartTimestamp: dateToSeconds(startTime),
+    royaltyBps: toBigInt(mintRequest.royaltyBps || 0),
+    royaltyRecipient,
+    to: mintRequest.to,
+    uid,
+    uri,
     validityEndTimestamp: dateToSeconds(endTime),
+    validityStartTimestamp: dateToSeconds(startTime),
   };
 
   const signature = await account.signTypedData({
     domain: {
-      name: "TokenERC721",
-      version: "1",
       chainId: contract.chain.id,
+      name: "TokenERC721",
       verifyingContract: contract.address,
+      version: "1",
     },
+    message: payload,
+    primaryType: "MintRequest",
     types: {
       MintRequest: MintRequest721,
     },
-    primaryType: "MintRequest",
-    message: payload,
   });
   return { payload, signature };
 }
@@ -325,31 +325,31 @@ async function signPayloadV2({
   endTime: Date;
 }): Promise<{ payload: PayloadTypeV2; signature: Hex }> {
   const payload: PayloadTypeV2 = {
-    uri,
     currency,
-    uid,
-    quantity: toBigInt(1), // always 1 for 721 NFTs
     pricePerToken: price,
-    to: mintRequest.to,
-    royaltyRecipient,
-    royaltyBps: toBigInt(mintRequest.royaltyBps || 0),
     primarySaleRecipient,
-    validityStartTimestamp: dateToSeconds(startTime),
+    quantity: toBigInt(1), // always 1 for 721 NFTs
+    royaltyBps: toBigInt(mintRequest.royaltyBps || 0),
+    royaltyRecipient,
+    to: mintRequest.to,
+    uid,
+    uri,
     validityEndTimestamp: dateToSeconds(endTime),
+    validityStartTimestamp: dateToSeconds(startTime),
   };
 
   const signature = await account.signTypedData({
     domain: {
-      name: "SignatureMintERC721",
-      version: "1",
       chainId: contract.chain.id,
+      name: "SignatureMintERC721",
       verifyingContract: contract.address,
+      version: "1",
     },
+    message: payload,
+    primaryType: "MintRequest",
     types: {
       MintRequest: MintRequest721_V2,
     },
-    primaryType: "MintRequest",
-    message: payload,
   });
   return { payload, signature };
 }

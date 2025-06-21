@@ -15,8 +15,8 @@ export interface InternalTransaction {
 
 export function useActivity(contract: ThirdwebContract, autoUpdate?: boolean) {
   const eventsQuery = useContractEvents({
-    contract,
     blockRange: 20000,
+    contract,
     watch: autoUpdate,
   });
 
@@ -39,9 +39,9 @@ export function useActivity(contract: ThirdwebContract, autoUpdate?: boolean) {
             }
           } else {
             acc[curr.transactionHash] = {
-              transactionHash: curr.transactionHash,
               blockNumber: curr.blockNumber,
               events: [curr],
+              transactionHash: curr.transactionHash,
             };
           }
           return acc;

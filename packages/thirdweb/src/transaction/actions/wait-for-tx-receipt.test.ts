@@ -10,29 +10,29 @@ import { waitForReceipt } from "./wait-for-tx-receipt.js";
 const MOCK_TX_HASH = "0x1234567890abcdef";
 
 const MOCK_SUCCESS_RECEIPT: TransactionReceipt = {
-  transactionHash: MOCK_TX_HASH,
-  blockNumber: 1234n,
-  status: "success",
+  blobGasPrice: 123456n,
+  blobGasUsed: 123456n,
   blockHash: "0xabcdef1234567890",
+  blockNumber: 1234n,
   contractAddress: "0x1234567890abcdef",
   cumulativeGasUsed: 123456n,
+  effectiveGasPrice: 123456n,
   from: "0xabcdef1234567890",
   gasUsed: 123456n,
   logs: [],
   logsBloom: "0xabcdef1234567890",
-  to: "0x1234567890abcdef",
-  transactionIndex: 1234,
-  effectiveGasPrice: 123456n,
-  type: "legacy",
   root: "0xabcdef1234567890",
-  blobGasPrice: 123456n,
-  blobGasUsed: 123456n,
+  status: "success",
+  to: "0x1234567890abcdef",
+  transactionHash: MOCK_TX_HASH,
+  transactionIndex: 1234,
+  type: "legacy",
 };
 
 const TRANSACTION = transfer({
-  to: TEST_WALLET_B,
   amount: 100,
   contract: USDT_CONTRACT,
+  to: TEST_WALLET_B,
 });
 
 const mockEthGetTransactionReceipt = vi.spyOn(
@@ -92,8 +92,8 @@ describe("waitForReceipt", () => {
     const result = waitForReceipt({
       chain: TRANSACTION.chain,
       client: TRANSACTION.client,
-      transactionHash: MOCK_TX_HASH,
       maxBlocksWaitTime: 10,
+      transactionHash: MOCK_TX_HASH,
     });
 
     for (let i = 1; i <= 10 + 1; i++) {

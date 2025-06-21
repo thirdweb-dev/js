@@ -48,7 +48,7 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
   const wallet = useActiveWallet();
   const switchChain = useSwitchActiveWalletChain();
   return useSendTransactionCore({
-    wallet,
     switchChain,
+    wallet,
   });
 }

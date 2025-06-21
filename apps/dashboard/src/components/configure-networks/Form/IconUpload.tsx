@@ -1,5 +1,3 @@
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
 import { useDashboardStorageUpload } from "@3rdweb-sdk/react/hooks/useDashboardStorageUpload";
 import { useQueryClient } from "@tanstack/react-query";
 import { PINNED_FILES_QUERY_KEY_ROOT } from "app/(app)/team/[team_slug]/(team)/~/usage/storage/your-files";
@@ -7,6 +5,8 @@ import { FileInput } from "components/shared/FileInput";
 import { UploadIcon } from "lucide-react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 
 export const IconUpload: React.FC<{
   onUpload: (url: string) => void;
@@ -23,6 +23,10 @@ export const IconUpload: React.FC<{
     }
 
     storageUpload.mutate([file], {
+      onError(error) {
+        console.error(error);
+        toast.error("Failed to upload icon");
+      },
       onSuccess([uri]) {
         if (uri) {
           onUpload(uri);
@@ -34,24 +38,20 @@ export const IconUpload: React.FC<{
           queryKey: [PINNED_FILES_QUERY_KEY_ROOT],
         });
       },
-      onError(error) {
-        console.error(error);
-        toast.error("Failed to upload icon");
-      },
     });
   };
 
   return (
     <FileInput
-      client={client}
-      setValue={handleIconUpload}
       accept={{ "image/*": [] }}
       className="flex items-center"
+      client={client}
+      setValue={handleIconUpload}
     >
       <Button
-        variant="ghost"
         className="!h-auto gap-1.5 px-1 py-0 text-muted-foreground hover:bg-transparent hover:text-foreground"
         size="sm"
+        variant="ghost"
       >
         Upload Icon
         {storageUpload.isPending ? (

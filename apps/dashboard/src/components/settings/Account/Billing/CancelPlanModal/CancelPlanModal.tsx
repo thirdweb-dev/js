@@ -1,7 +1,11 @@
 "use client";
+import { CircleXIcon, ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import type { Team } from "@/api/team";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Sheet,
   SheetContent,
@@ -10,10 +14,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { CircleXIcon, ExternalLinkIcon } from "lucide-react";
-import Link from "next/link";
-import { useState, useTransition } from "react";
-import { toast } from "sonner";
 import { useStripeRedirectEvent } from "../../../../../app/(app)/(stripe)/stripe-redirect/stripeRedirectChannel";
 import { buildCancelPlanUrl } from "../../../../../app/(app)/(stripe)/utils/build-url";
 import { PRO_CONTACT_US_URL } from "../../../../../constants/pro";
@@ -32,9 +32,9 @@ export function CancelPlanButton(props: {
   if (props.billingStatus !== "invalidPayment" && props.currentPlan !== "pro") {
     return (
       <ImmediateCancelPlanButton
-        teamId={props.teamId}
-        getTeam={props.getTeam}
         disabled={props.disabled}
+        getTeam={props.getTeam}
+        teamId={props.teamId}
       />
     );
   }
@@ -43,10 +43,10 @@ export function CancelPlanButton(props: {
     <Sheet>
       <SheetTrigger asChild>
         <Button
-          variant="outline"
-          size="sm"
           className="gap-2 bg-background"
           disabled={props.disabled}
+          size="sm"
+          variant="outline"
         >
           <CircleXIcon className="size-4 text-muted-foreground" />
           Cancel Plan
@@ -80,9 +80,10 @@ function UnpaidInvoicesWarning({ teamSlug }: { teamSlug: string }) {
         You have unpaid invoices. Please pay them before cancelling your plan.
       </p>
 
-      <Button variant="outline" asChild className="w-full gap-2 bg-card">
+      <Button asChild className="w-full gap-2 bg-card" variant="outline">
         <Link
           href={`/team/${teamSlug}/~/settings/invoices?status=open`}
+          rel="noopener noreferrer"
           target="_blank"
         >
           See Invoices
@@ -102,7 +103,7 @@ function ProPlanCancelPlanSheetContent() {
         Please contact us to cancel your Pro plan
       </p>
 
-      <Button variant="outline" asChild className="w-full gap-2 bg-card">
+      <Button asChild className="w-full gap-2 bg-card" variant="outline">
         <Link href={PRO_CONTACT_US_URL} target="_blank">
           Contact Us <ExternalLinkIcon className="size-4" />
         </Link>
@@ -149,11 +150,11 @@ function ImmediateCancelPlanButton(props: {
 
   return (
     <Button
-      variant="outline"
-      size="sm"
+      asChild
       className="gap-2 bg-background"
       disabled={showPlanSpinner || props.disabled}
-      asChild
+      size="sm"
+      variant="outline"
     >
       <Link href={buildCancelPlanUrl({ teamId: props.teamId })} target="_blank">
         {showPlanSpinner ? (

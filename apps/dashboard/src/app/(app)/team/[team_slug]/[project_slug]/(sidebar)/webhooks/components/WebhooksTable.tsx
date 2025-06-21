@@ -1,15 +1,5 @@
 "use client";
 
-import {
-  type WebhookFilters,
-  type WebhookResponse,
-  deleteWebhook,
-} from "@/api/insight/webhooks";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { ColumnDef } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns";
@@ -17,8 +7,18 @@ import { PlayIcon, TrashIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
+import {
+  deleteWebhook,
+  type WebhookFilters,
+  type WebhookResponse,
+} from "@/api/insight/webhooks";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useTestWebhook } from "../hooks/useTestWebhook";
-import { CreateWebhookModal } from "./CreateWebhookModal";
+import { CreateContractWebhookButton } from "./CreateWebhookModal";
 import { RelativeTime } from "./RelativeTime";
 
 function getEventType(filters: WebhookFilters): string {
@@ -37,7 +37,7 @@ interface WebhooksTableProps {
   client: ThirdwebClient;
 }
 
-export function WebhooksTable({
+export function ContractsWebhooksTable({
   webhooks,
   projectClientId,
   client,
@@ -87,7 +87,6 @@ export function WebhooksTable({
   const columns: ColumnDef<WebhookResponse>[] = [
     {
       accessorKey: "name",
-      header: "Name",
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
           <span className="max-w-40 truncate" title={row.original.name}>
@@ -95,41 +94,41 @@ export function WebhooksTable({
           </span>
         </div>
       ),
+      header: "Name",
     },
     {
       accessorKey: "filters",
-      header: "Event Type",
       cell: ({ getValue }) => {
         const filters = getValue() as WebhookFilters;
         if (!filters) return <span>-</span>;
         const eventType = getEventType(filters);
         return <span>{eventType}</span>;
       },
+      header: "Event Type",
     },
     {
       accessorKey: "webhook_url",
-      header: "Webhook URL",
       cell: ({ getValue }) => {
         const url = getValue() as string;
         return (
           <div className="flex items-center gap-2">
             <span className="max-w-60 truncate">{url}</span>
             <CopyTextButton
+              className="flex h-6 w-6 items-center justify-center"
+              copyIconPosition="right"
+              iconClassName="h-3 w-3"
               textToCopy={url}
               textToShow=""
               tooltip="Copy URL"
               variant="ghost"
-              copyIconPosition="right"
-              className="flex h-6 w-6 items-center justify-center"
-              iconClassName="h-3 w-3"
             />
           </div>
         );
       },
+      header: "Webhook URL",
     },
     {
       accessorKey: "created_at",
-      header: "Created",
       cell: ({ getValue }) => {
         const date = getValue() as string;
         const dateObj = new Date(date);
@@ -145,11 +144,10 @@ export function WebhooksTable({
           </div>
         );
       },
+      header: "Created",
     },
     {
-      id: "status",
       accessorKey: "suspended_at",
-      header: "Status",
       cell: ({ row }) => {
         const webhook = row.original;
         const isSuspended = Boolean(webhook.suspended_at);
@@ -159,22 +157,22 @@ export function WebhooksTable({
           </Badge>
         );
       },
+      header: "Status",
+      id: "status",
     },
     {
-      id: "actions",
-      header: () => <div className="flex w-full justify-end pr-2">Actions</div>,
       cell: ({ row }) => {
         const webhook = row.original;
 
         return (
           <div className="flex items-center justify-end gap-2">
             <Button
-              variant="outline"
-              size="icon"
+              aria-label={`Test webhook ${webhook.name}`}
               className="h-8 w-8"
               disabled={isTestingMap[webhook.id] || isDeleting[webhook.id]}
               onClick={() => handleTestWebhook(webhook)}
-              aria-label={`Test webhook ${webhook.name}`}
+              size="icon"
+              variant="outline"
             >
               {isTestingMap[webhook.id] ? (
                 <Spinner className="h-4 w-4" />
@@ -183,12 +181,12 @@ export function WebhooksTable({
               )}
             </Button>
             <Button
+              aria-label={`Delete webhook ${webhook.name}`}
+              className="h-8 w-8 text-red-500 hover:border-red-700 hover:text-red-700"
+              disabled={isDeleting[webhook.id]}
+              onClick={() => handleDeleteWebhook(webhook.id)}
               size="icon"
               variant="outline"
-              className="h-8 w-8 text-red-500 hover:border-red-700 hover:text-red-700"
-              onClick={() => handleDeleteWebhook(webhook.id)}
-              disabled={isDeleting[webhook.id]}
-              aria-label={`Delete webhook ${webhook.name}`}
             >
               {isDeleting[webhook.id] ? (
                 <Spinner className="h-4 w-4" />
@@ -199,6 +197,8 @@ export function WebhooksTable({
           </div>
         );
       },
+      header: () => <div className="flex w-full justify-end pr-2">Actions</div>,
+      id: "actions",
     },
   ];
 
@@ -217,21 +217,20 @@ export function WebhooksTable({
 
   return (
     <div className="w-full">
-      <div className="mb-4 flex items-center justify-end">
-        <CreateWebhookModal
+      <TWTable
+        columns={columns}
+        data={sortedWebhooks}
+        isFetched={true}
+        isPending={false}
+        title="Webhooks"
+      />
+      <div className="mt-4 flex justify-end">
+        <CreateContractWebhookButton
+          client={client}
           projectClientId={projectClientId}
           supportedChainIds={supportedChainIds}
-          client={client}
         />
       </div>
-      <TWTable
-        data={sortedWebhooks}
-        columns={columns}
-        isPending={false}
-        isFetched={true}
-        title="Webhooks"
-        tableContainerClassName="mt-4"
-      />
     </div>
   );
 }

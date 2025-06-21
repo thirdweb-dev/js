@@ -1,21 +1,21 @@
 export {
-  prepareEvent,
-  type PrepareEventOptions,
-  type PreparedEvent,
-} from "../event/prepare-event.js";
+  type GetContractEventsOptions,
+  type GetContractEventsResult,
+  getContractEvents,
+} from "../event/actions/get-events.js";
 
 // actions
 export {
-  parseEventLogs,
   type ParseEventLogsOptions,
   type ParseEventLogsResult,
+  parseEventLogs,
 } from "../event/actions/parse-logs.js";
 export {
-  watchContractEvents,
   type WatchContractEventsOptions,
+  watchContractEvents,
 } from "../event/actions/watch-events.js";
 export {
-  getContractEvents,
-  type GetContractEventsOptions,
-  type GetContractEventsResult,
-} from "../event/actions/get-events.js";
+  type PreparedEvent,
+  type PrepareEventOptions,
+  prepareEvent,
+} from "../event/prepare-event.js";

@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "global.safe",
-  name: "Safe",
-  homepage: "https://safe.global/",
-  image_id: "a578bd45-b418-4111-2c56-8ddcd1417c00",
   app: {
-    browser: "https://app.safe.global/",
-    ios: "https://apps.apple.com/app/id1515759131",
     android: "https://play.google.com/store/apps/details?id=io.gnosis.safe",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://app.safe.global/",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/app/id1515759131",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "safe://",
-    universal: "https://app.safe.global/",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://app.safe.global/",
   },
+  homepage: "https://safe.global/",
+  id: "global.safe",
+  image_id: "a578bd45-b418-4111-2c56-8ddcd1417c00",
+  mobile: {
+    native: "safe://",
+    universal: "https://app.safe.global/",
+  },
+  name: "Safe",
+  rdns: null,
 } as const;

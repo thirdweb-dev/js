@@ -22,15 +22,15 @@ import { useTransactionCostAndData } from "../ConnectWallet/screens/Buy/main/use
 import { WalletRow } from "../ConnectWallet/screens/Buy/swap/WalletRow.js";
 import { formatTokenBalance } from "../ConnectWallet/screens/formatTokenBalance.js";
 import { isNativeToken } from "../ConnectWallet/screens/nativeToken.js";
+import { Container, ModalHeader } from "../components/basic.js";
+import { Button } from "../components/buttons.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { QRCode } from "../components/QRCode.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
-import { WalletImage } from "../components/WalletImage.js";
-import { Container, ModalHeader } from "../components/basic.js";
-import { Button } from "../components/buttons.js";
 import { Text } from "../components/text.js";
 import { TokenSymbol } from "../components/token/TokenSymbol.js";
+import { WalletImage } from "../components/WalletImage.js";
 import { StyledButton, StyledDiv } from "../design-system/elements.js";
 import { useClipboard } from "../hooks/useCopyClipboard.js";
 
@@ -48,25 +48,25 @@ const pulseAnimation = keyframes`
 const WaitingBadge = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
-    display: "flex",
+    "&::before": {
+      animation: `${pulseAnimation} 1s infinite`,
+      backgroundColor: theme.colors.accentText,
+      borderRadius: "50%",
+      content: '""',
+      height: "8px",
+      width: "8px",
+    },
     alignItems: "center",
-    gap: spacing.sm,
     backgroundColor: theme.colors.tertiaryBg,
     border: `1px solid ${theme.colors.borderColor}`,
-    padding: `${spacing.md} ${spacing.sm}`,
     borderRadius: radius.lg,
     color: theme.colors.secondaryText,
+    display: "flex",
     fontSize: fontSize.sm,
     fontWeight: 500,
+    gap: spacing.sm,
+    padding: `${spacing.md} ${spacing.sm}`,
     position: "relative" as const,
-    "&::before": {
-      content: '""',
-      width: "8px",
-      height: "8px",
-      borderRadius: "50%",
-      backgroundColor: theme.colors.accentText,
-      animation: `${pulseAnimation} 1s infinite`,
-    },
   };
 });
 
@@ -94,10 +94,10 @@ export function DepositScreen(props: {
     isFetching: transactionCostAndDataFetching,
     refetch: transactionCostAndDataRefetch,
   } = useTransactionCostAndData({
-    transaction: props.tx,
     account: activeAccount,
-    supportedDestinations: [],
     refetchIntervalMs: 10_000,
+    supportedDestinations: [],
+    transaction: props.tx,
   });
   const theme = useCustomTheme();
   const sponsoredTransactionsEnabled =
@@ -106,16 +106,16 @@ export function DepositScreen(props: {
   if (transactionCostAndDataError) {
     return (
       <Container
+        center="both"
+        flex="row"
+        fullHeight
         style={{
           minHeight: "350px",
         }}
-        fullHeight
-        flex="row"
-        center="both"
       >
         <ErrorState
-          title={transactionCostAndDataError?.message || "Something went wrong"}
           onTryAgain={transactionCostAndDataRefetch}
+          title={transactionCostAndDataError?.message || "Something went wrong"}
         />
       </Container>
     );
@@ -144,14 +144,14 @@ export function DepositScreen(props: {
 
   return (
     <Container p="lg">
-      <ModalHeader title={"Insufficient funds"} onBack={props.onBack} />
+      <ModalHeader onBack={props.onBack} title={"Insufficient funds"} />
 
       <Spacer y="lg" />
 
       <Container flex="column" gap="sm">
         {insufficientFunds && (
           <div>
-            <Text size="xs" center color="danger" multiline>
+            <Text center color="danger" multiline size="xs">
               You need{" "}
               {formatNumber(
                 Number.parseFloat(
@@ -166,70 +166,75 @@ export function DepositScreen(props: {
         <Container
           flex="row"
           style={{
+            border: `1px solid ${theme.colors.borderColor}`,
+            borderBottom: "none",
+            borderRadius: `${radius.md} ${radius.md} 0 0`,
             justifyContent: "space-between",
             padding: spacing.sm,
-            marginBottom: spacing.sm,
-            borderRadius: spacing.md,
-            backgroundColor: theme.colors.tertiaryBg,
-            border: `1px solid ${theme.colors.borderColor}`,
           }}
         >
           {activeAccount && (
             <WalletRow
               address={activeAccount?.address}
-              iconSize="md"
               client={client}
+              iconSize="md"
             />
           )}
           {transactionCostAndData.walletBalance.value !== undefined &&
           !transactionCostAndDataFetching ? (
-            <Container flex="row" gap="3xs" center="y">
-              <Text size="xs" color="secondaryText" weight={500}>
+            <Container center="y" flex="row" gap="3xs">
+              <Text color="secondaryText" size="xs" weight={500}>
                 {formatTokenBalance(
                   transactionCostAndData.walletBalance,
                   false,
                 )}
               </Text>
               <TokenSymbol
-                token={transactionCostAndData.token}
                 chain={props.tx.chain}
-                size="xs"
                 color="secondaryText"
+                size="xs"
+                token={transactionCostAndData.token}
               />
             </Container>
           ) : (
-            <Container flex="row" gap="3xs" center="y">
-              <Skeleton width="70px" height={fontSize.xs} />
+            <Container center="y" flex="row" gap="3xs">
+              <Skeleton height={fontSize.xs} width="70px" />
             </Container>
           )}
         </Container>
       </Container>
 
       <WalletAddressContainer onClick={onCopy}>
-        <Container flex="column" gap="md" center="both" expand>
-          <Container flex="row" center="x">
+        <Container center="both" expand flex="column" gap="md">
+          <Container center="x" flex="row">
             <QRCode
-              qrCodeUri={address}
-              size={250}
               QRIcon={
                 activeWallet && (
                   <WalletImage
+                    client={client}
                     id={activeWallet.id}
                     size={iconSize.xl}
-                    client={client}
                   />
                 )
               }
+              qrCodeUri={address}
+              size={250}
             />
           </Container>
-          <Container flex="row" center="x" gap="xs">
-            <Text color="primaryText" size="md">
+          <Container center="x" flex="row" gap="xs">
+            <Text
+              color="primaryText"
+              size="md"
+              style={{
+                fontFamily: "monospace",
+              }}
+            >
               {address ? shortenAddress(address) : ""}
             </Text>
             <CopyIcon
+              hasCopied={hasCopied}
               text={address || ""}
               tip="Copy address"
-              hasCopied={hasCopied}
             />
           </Container>
         </Container>
@@ -238,11 +243,11 @@ export function DepositScreen(props: {
       <Spacer y="md" />
 
       <Text
-        multiline
-        center
         balance
-        size="sm"
+        center
         className="receive_fund_screen_instruction"
+        multiline
+        size="sm"
       >
         {locale.instruction}
       </Text>
@@ -254,17 +259,17 @@ export function DepositScreen(props: {
           Waiting for funds on {transactionCostAndData.chainMetadata.name}...
         </WaitingBadge>
       ) : (
-        <Button variant="accent" onClick={props.onDone} fullWidth>
+        <Button fullWidth onClick={props.onDone} variant="accent">
           Continue
         </Button>
       )}
       {insufficientFunds && isTestnet && (
         <>
           <Spacer y="md" />
-          <Button variant="link" onClick={openFaucetLink} fullWidth>
-            <Container flex="row" center="x" gap="xs" color="accentText">
+          <Button fullWidth onClick={openFaucetLink} variant="link">
+            <Container center="x" color="accentText" flex="row" gap="xs">
               <CoinsIcon size={iconSize.sm} />
-              <Text size="xs" color="accentText" weight={500} center>
+              <Text center color="accentText" size="xs" weight={500}>
                 Get testnet funds
               </Text>
             </Container>
@@ -278,18 +283,18 @@ export function DepositScreen(props: {
 const WalletAddressContainer = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
-    all: "unset",
-    width: "100%",
-    boxSizing: "border-box",
-    cursor: "pointer",
-    padding: spacing.md,
-    display: "flex",
-    justifyContent: "space-between",
-    border: `1px solid ${theme.colors.borderColor}`,
-    borderRadius: radius.lg,
-    transition: "border-color 200ms ease",
     "&:hover": {
       borderColor: theme.colors.accentText,
     },
+    all: "unset",
+    border: `1px solid ${theme.colors.borderColor}`,
+    borderRadius: `0 0 ${radius.md} ${radius.md}`,
+    boxSizing: "border-box",
+    cursor: "pointer",
+    display: "flex",
+    justifyContent: "space-between",
+    padding: spacing.md,
+    transition: "border-color 200ms ease",
+    width: "100%",
   };
 });

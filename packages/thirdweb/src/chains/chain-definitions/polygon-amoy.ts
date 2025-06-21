@@ -4,15 +4,15 @@ import { defineChain } from "../utils.js";
  * @chain
  */
 export const polygonAmoy = /*@__PURE__*/ defineChain({
-  id: 80002,
-  name: "Polygon Amoy",
-  nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
   blockExplorers: [
     {
+      apiUrl: "https://api-amoy.polygonscan.com/api",
       name: "PolygonScan",
       url: "https://amoy.polygonscan.com",
-      apiUrl: "https://api-amoy.polygonscan.com/api",
     },
   ],
+  id: 80002,
+  name: "Polygon Amoy",
+  nativeCurrency: { decimals: 18, name: "MATIC", symbol: "MATIC" },
   testnet: true,
 });

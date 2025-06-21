@@ -67,8 +67,8 @@ async function getNFTsFromInsight(
 
   const [result, supply] = await Promise.all([
     getContractNFTs({
-      client: contract.client,
       chains: [contract.chain],
+      client: contract.client,
       contractAddress: contract.address,
       queryOptions: {
         limit: count,

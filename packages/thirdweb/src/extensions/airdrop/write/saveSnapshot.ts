@@ -59,7 +59,6 @@ export function saveSnapshot(
   options: BaseTransactionOptions<SaveSnapshotParams>,
 ) {
   return setContractURI({
-    contract: options.contract,
     asyncParams: async () => {
       const merkleInfos: Record<string, string> = {};
       // need to upload merkle tree info to the contract metadata
@@ -100,5 +99,6 @@ export function saveSnapshot(
         uri,
       } as const;
     },
+    contract: options.contract,
   });
 }

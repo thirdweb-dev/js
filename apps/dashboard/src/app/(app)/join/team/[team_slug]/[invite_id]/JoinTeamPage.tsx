@@ -1,26 +1,22 @@
 "use client";
 
-import { acceptInvite } from "@/actions/acceptInvite";
-import type { Team } from "@/api/team";
-import { ToggleThemeButton } from "@/components/color-mode-toggle";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { DotsBackgroundPattern } from "@/components/ui/background-patterns";
-import { Button } from "@/components/ui/button";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useMutation } from "@tanstack/react-query";
 import { CheckIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { acceptInvite } from "@/actions/acceptInvite";
+import type { Team } from "@/api/team";
+import { ToggleThemeButton } from "@/components/color-mode-toggle";
+import { DotsBackgroundPattern } from "@/components/ui/background-patterns";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { ThirdwebMiniLogo } from "../../../../components/ThirdwebMiniLogo";
 
-export function JoinTeamPage(props: {
-  team: Team;
-  inviteId: string;
-}) {
+export function JoinTeamPage(props: { team: Team; inviteId: string }) {
   const router = useDashboardRouter();
   return (
     <JoinTeamPageUI
-      teamName={props.team.name}
       invite={async () => {
         const res = await acceptInvite({
           inviteId: props.inviteId,
@@ -34,6 +30,7 @@ export function JoinTeamPage(props: {
 
         router.replace(`/team/${props.team.slug}`);
       }}
+      teamName={props.team.name}
     />
   );
 }
@@ -48,7 +45,7 @@ export function JoinTeamPageUI(props: {
 
       <div className="container flex grow flex-col items-center justify-center ">
         <div className="z-10">
-          <AcceptInviteCardUI teamName={props.teamName} invite={props.invite} />
+          <AcceptInviteCardUI invite={props.invite} teamName={props.teamName} />
         </div>
       </div>
 
@@ -71,9 +68,10 @@ function Header() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Link
-              href="/support"
-              target="_blank"
               className="px-2 text-muted-foreground text-sm hover:text-foreground"
+              href="/support"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Support
             </Link>
@@ -114,18 +112,18 @@ function AcceptInviteCardUI(props: {
       </div>
       <div className="flex justify-end border-t p-4 lg:p-6">
         <Button
-          disabled={invite.isPending}
           className="gap-2"
+          disabled={invite.isPending}
           onClick={() => {
             const promise = invite.mutateAsync();
             toast.promise(promise, {
-              success: "Invite accepted",
               error: (e) => {
                 if (e instanceof Error && e.message) {
                   return e.message;
                 }
                 return "Failed to accept invite";
               },
+              success: "Invite accepted",
             });
           }}
         >

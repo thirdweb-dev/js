@@ -96,9 +96,9 @@ export const extractEventSignatures = (
               const eventAbi = JSON.stringify(event);
 
               signatures.push({
-                name: readableSignature,
-                signature: hash, // Use the full hash, not a substring
-                abi: eventAbi, // Include the ABI for the selected event
+                abi: eventAbi,
+                name: readableSignature, // Use the full hash, not a substring
+                signature: hash, // Include the ABI for the selected event
               });
             }
           }
@@ -175,9 +175,9 @@ export const extractFunctionSignatures = (
               const funcAbi = JSON.stringify(func);
 
               signatures.push({
+                abi: funcAbi,
                 name: readableSignature,
-                signature: hash,
-                abi: funcAbi, // Include the ABI for the selected function
+                signature: hash, // Include the ABI for the selected function
               });
             }
           }

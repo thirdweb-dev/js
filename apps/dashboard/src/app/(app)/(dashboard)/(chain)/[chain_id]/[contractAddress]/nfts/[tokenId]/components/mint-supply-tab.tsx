@@ -1,5 +1,13 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TransactionButton } from "components/buttons/TransactionButton";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { isAddress, type ThirdwebContract } from "thirdweb";
+import { mintAdditionalSupplyTo } from "thirdweb/extensions/erc1155";
+import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -10,15 +18,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { type ThirdwebContract, isAddress } from "thirdweb";
-import { mintAdditionalSupplyTo } from "thirdweb/extensions/erc1155";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import { z } from "zod";
 
 interface MintSupplyTabProps {
   contract: ThirdwebContract;
@@ -27,10 +26,10 @@ interface MintSupplyTabProps {
 }
 
 const mintAdditionalSupplyFormSchema = z.object({
+  amount: z.coerce.number().int().min(1, "Amount must be at least 1"),
   to: z.string().refine((value) => isAddress(value), {
     message: "Invalid Ethereum address",
   }),
-  amount: z.coerce.number().int().min(1, "Amount must be at least 1"),
 });
 
 const MintSupplyTab: React.FC<MintSupplyTabProps> = ({
@@ -38,61 +37,42 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({
   tokenId,
   isLoggedIn,
 }) => {
-  const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
 
   const form = useForm<z.input<typeof mintAdditionalSupplyFormSchema>>({
-    resolver: zodResolver(mintAdditionalSupplyFormSchema),
     defaultValues: {
       amount: 1,
       to: address || "",
     },
+    resolver: zodResolver(mintAdditionalSupplyFormSchema),
   });
 
   const sendAndConfirmTx = useSendAndConfirmTransaction();
 
   function onSubmit(values: z.input<typeof mintAdditionalSupplyFormSchema>) {
-    trackEvent({
-      category: "nft",
-      action: "mint-supply",
-      label: "attempt",
-    });
     const transaction = mintAdditionalSupplyTo({
       contract,
+      supply: BigInt(values.amount),
       to: values.to,
       tokenId: BigInt(tokenId),
-      supply: BigInt(values.amount),
     });
     const promise = sendAndConfirmTx.mutateAsync(transaction, {
       onSuccess: () => {
-        trackEvent({
-          category: "nft",
-          action: "mint-supply",
-          label: "success",
-        });
         form.reset();
-      },
-      onError: (error) => {
-        trackEvent({
-          category: "nft",
-          action: "mint-supply",
-          label: "error",
-          error,
-        });
       },
     });
     toast.promise(promise, {
+      error: "Failed to mint",
       loading: "Minting NFT",
       success: "Minted successfully",
-      error: "Failed to mint",
     });
   }
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
         className="flex w-full flex-col gap-2"
+        onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
           control={form.control}
@@ -126,13 +106,13 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({
         />
 
         <TransactionButton
-          client={contract.client}
-          txChainID={contract.chain.id}
-          transactionCount={1}
-          isPending={sendAndConfirmTx.isPending}
-          type="submit"
           className="self-end"
+          client={contract.client}
           isLoggedIn={isLoggedIn}
+          isPending={sendAndConfirmTx.isPending}
+          transactionCount={1}
+          txChainID={contract.chain.id}
+          type="submit"
         >
           Mint
         </TransactionButton>

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { type ThirdwebContract, resolveContractAbi } from "thirdweb/contract";
+import { resolveContractAbi, type ThirdwebContract } from "thirdweb/contract";
 import { type Abi, toEventSelector, toFunctionSelector } from "thirdweb/utils";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { redirectToContractLandingPage } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/utils";
@@ -14,8 +14,8 @@ export async function SharedAnalyticsPage(props: {
   projectMeta: ProjectMeta | undefined;
 }) {
   const info = await getContractPageParamsInfo({
-    contractAddress: props.contractAddress,
     chainIdOrSlug: props.chainIdOrSlug,
+    contractAddress: props.contractAddress,
     teamId: props.projectMeta?.teamId,
   });
 
@@ -28,8 +28,8 @@ export async function SharedAnalyticsPage(props: {
     const shouldHide = await shouldRenderNewPublicPage(info.serverContract);
     if (shouldHide) {
       redirectToContractLandingPage({
-        contractAddress: props.contractAddress,
         chainIdOrSlug: props.chainIdOrSlug,
+        contractAddress: props.contractAddress,
         projectMeta: props.projectMeta,
       });
     }
@@ -54,8 +54,8 @@ export async function SharedAnalyticsPage(props: {
   return (
     <ContractAnalyticsPage
       contract={info.clientContract}
-      writeFnSelectorToNameRecord={writeFnSelectorToName}
       eventSelectorToNameRecord={eventSelectorToName}
+      writeFnSelectorToNameRecord={writeFnSelectorToName}
     />
   );
 }
@@ -80,13 +80,13 @@ async function getSelectors(contract: ThirdwebContract) {
     }
 
     return {
-      writeFnSelectorToName,
       eventSelectorToName,
+      writeFnSelectorToName,
     };
   } catch {
     return {
-      writeFnSelectorToName: {},
       eventSelectorToName: {},
+      writeFnSelectorToName: {},
     };
   }
 }

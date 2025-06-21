@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { decodeAbiParameters } from "viem";
-import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the "getPublishedUriFromCompilerUri" function.
@@ -19,14 +19,14 @@ export type GetPublishedUriFromCompilerUriParams = {
 export const FN_SELECTOR = "0x819e992f" as const;
 const FN_INPUTS = [
   {
-    type: "string",
     name: "compilerMetadataUri",
+    type: "string",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "string[]",
     name: "publishedMetadataUris",
+    type: "string[]",
   },
 ] as const;
 

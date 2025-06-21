@@ -1,14 +1,4 @@
 "use client";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Alert, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { verifyContract } from "app/(app)/(dashboard)/(chain)/[chain_id]/[contractAddress]/sources/ContractSourcesPage";
@@ -21,7 +11,6 @@ import {
 } from "constants/addresses";
 import { ZERO_FEE_CHAINS } from "constants/fee-config";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { replaceTemplateValues } from "lib/deployment/template-values";
 import {
@@ -33,7 +22,7 @@ import {
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
-import { type ThirdwebClient, ZERO_ADDRESS, getContract } from "thirdweb";
+import { getContract, type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import {
   deployContractfromDeployMetadata,
@@ -44,12 +33,27 @@ import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { upload } from "thirdweb/storage";
 import { isZkSyncChain } from "thirdweb/utils";
 import { FormHelperText, FormLabel, Text } from "tw-components";
+import {
+  reportContractDeployed,
+  reportContractDeployFailed,
+} from "@/analytics/report";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Alert, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useAddContractToProject } from "../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/hooks/project-contracts";
 import {
   LAST_USED_PROJECT_ID,
   LAST_USED_TEAM_ID,
 } from "../../../constants/cookies";
 import { getCookie } from "../../../lib/cookie";
+import { parseError } from "../../../utils/errorParser";
 import { useCustomFactoryAbi, useFunctionParamsFromABI } from "../hooks";
 import {
   AddToProjectCardUI,
@@ -65,8 +69,8 @@ import {
   useDeployStatusModal,
 } from "./deploy-context-modal";
 import {
-  ModularContractDefaultModulesFieldset,
   getModuleInstallParams,
+  ModularContractDefaultModulesFieldset,
   showPrimarySaleFieldset,
   showRoyaltyFieldset,
   showSuperchainBridgeFieldset,
@@ -166,8 +170,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
     project: MinimalProject | undefined;
   }>(() => {
     const defaultSelection = {
-      team: teamsAndProjects[0]?.team,
       project: teamsAndProjects[0]?.projects[0],
+      team: teamsAndProjects[0]?.team,
     };
 
     try {
@@ -187,8 +191,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
       if (teamWithProjects && project) {
         return {
-          team: teamWithProjects.team,
           project,
+          team: teamWithProjects.team,
         };
       }
     } catch {
@@ -204,7 +208,6 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
     "Successfully deployed contract",
     "Failed to deploy contract",
   );
-  const trackEvent = useTrack();
 
   const constructorParams =
     metadata.abi.find((a) => a.type === "constructor")?.inputs || [];
@@ -278,8 +281,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 : "",
             param.type,
             {
-              connectedWallet: activeAccount?.address,
               chainId: walletChain?.id,
+              connectedWallet: activeAccount?.address,
             },
           );
 
@@ -313,12 +316,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
     () =>
       ({
         deployDeterministic: isAccountFactory,
-        saltForCreate2: "",
-        signerAsSalt: true,
         deployParams: parsedDeployParams,
-        recipients: [
-          { address: activeAccount?.address || "", sharesBps: 10000 },
-        ],
         // set default values for modular contract modules with custom components
         moduleData:
           (activeAccount &&
@@ -352,6 +350,11 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               {} as Record<string, Record<string, string>>,
             )) ||
           {},
+        recipients: [
+          { address: activeAccount?.address || "", sharesBps: 10000 },
+        ],
+        saltForCreate2: "",
+        signerAsSalt: true,
       }) satisfies CustomContractDeploymentFormData,
     [
       parsedDeployParams,
@@ -364,11 +367,11 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   const form = useForm<CustomContractDeploymentFormData>({
     defaultValues: transformedQueryData,
-    values: transformedQueryData,
     resetOptions: {
       keepDirty: true,
       keepDirtyValues: true,
     },
+    values: transformedQueryData,
   });
   const formDeployParams = form.watch("deployParams");
 
@@ -461,12 +464,12 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
           return (
             <Param
               client={client}
-              key={paramKey}
-              paramKey={paramKey}
               deployParam={deployParam}
               extraMetadataParam={extraMetadataParam}
-              isRequired
               inputClassName="bg-background"
+              isRequired
+              key={paramKey}
+              paramKey={paramKey}
             />
           );
         })
@@ -523,9 +526,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
           chain: walletChain,
           client,
           params: {
-            name: params.contractMetadata?.name || "",
             contractURI: _contractURI,
             defaultAdmin: params.deployParams._defaultAdmin as string,
+            name: params.contractMetadata?.name || "",
             platformFeeBps: isFeeExempt
               ? Number(params.deployParams._platformFeeBps)
               : DEFAULT_FEE_BPS_NEW,
@@ -543,9 +546,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
       const initializeParams = {
         ...params.contractMetadata,
         ...params.deployParams,
-        payees,
-        shares,
         _contractURI,
+        payees,
         platformFeeBps: isFeeExempt
           ? Number(params.deployParams._platformFeeBps)
           : hasInbuiltDefaultFeeConfig
@@ -554,6 +556,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         platformFeeRecipient: isFeeExempt
           ? (params.deployParams._platformFeeRecipient as string)
           : DEFAULT_FEE_RECIPIENT,
+        shares,
       };
 
       const salt = params.deployDeterministic
@@ -572,10 +575,10 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         chain: walletChain,
         client,
         deployMetadata: isFeeExempt && metadataNoFee ? metadataNoFee : metadata,
-        initializeParams,
         implementationConstructorParams,
-        salt,
+        initializeParams,
         modules: moduleDeployData,
+        salt,
       });
 
       return coreContractAddress;
@@ -583,16 +586,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   });
 
   const deployTransactions = useQuery({
-    queryKey: [
-      "deployTransactions",
-      {
-        chainId: walletChain?.id,
-        name: metadata.name,
-        publisher: metadata.publisher,
-        uri: metadata.metadataUri,
-        moduleUris: modules?.map((m) => m.metadataUri),
-      },
-    ],
+    enabled: walletChain !== undefined && metadata !== undefined,
     queryFn: async () => {
       if (!walletChain) {
         throw new Error("no wallet chain");
@@ -607,7 +601,16 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
         })),
       });
     },
-    enabled: walletChain !== undefined && metadata !== undefined,
+    queryKey: [
+      "deployTransactions",
+      {
+        chainId: walletChain?.id,
+        moduleUris: modules?.map((m) => m.metadataUri),
+        name: metadata.name,
+        publisher: metadata.publisher,
+        uri: metadata.metadataUri,
+      },
+    ],
   });
 
   const shouldShowDeterministicDeployWarning =
@@ -618,13 +621,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   return (
     <>
       <FormProvider {...form}>
-        <Flex
-          flexGrow={1}
-          minH="full"
-          gap={8}
-          direction="column"
-          id="custom-contract-form"
-          as="form"
+        <form
+          className="flex grow flex-col gap-8 min-h-full"
           onSubmit={form.handleSubmit(async (formData) => {
             if (!walletChain?.id || !activeAccount || !isLoggedIn) {
               return;
@@ -633,25 +631,10 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             // open the status modal
             const steps: DeployModalStep[] = [
               {
-                type: "deploy",
                 signatureCount: deployTransactions.data?.length || 1,
+                type: "deploy",
               },
             ];
-
-            const publisherAnalyticsData = metadata.publisher
-              ? {
-                  publisherAndContractName: `${rewriteTwPublisher(metadata.publisher)}/${metadata.name}`,
-                }
-              : {};
-
-            trackEvent({
-              category: "custom-contract",
-              action: "deploy",
-              label: "attempt",
-              ...publisherAnalyticsData,
-              chainId: walletChain.id,
-              metadataUri: metadata.metadataUri,
-            });
 
             deployStatusModal.setViewContractLink("");
             deployStatusModal.open(steps);
@@ -668,19 +651,23 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 }),
               );
 
-              trackEvent({
-                category: "custom-contract",
-                action: "deploy",
-                label: "success",
-                ...publisherAnalyticsData,
-                contractAddress: contractAddr,
+              reportContractDeployed({
+                address: contractAddr,
                 chainId: walletChain.id,
-                metadataUri: metadata.metadataUri,
+                contractName: metadata.name,
+                publisher: rewriteTwPublisher(metadata.publisher),
               });
+
               deployStatusModal.nextStep();
-              deployStatusModal.setViewContractLink(
-                `/${walletChain.id}/${contractAddr}`,
-              );
+              if (importSelection.team && importSelection.project) {
+                deployStatusModal.setViewContractLink(
+                  `/team/${importSelection.team.slug}/${importSelection.project.slug}/contract/${walletChain.id}/${contractAddr}`,
+                );
+              } else {
+                deployStatusModal.setViewContractLink(
+                  `/${walletChain.id}/${contractAddr}`,
+                );
+              }
 
               // if the contract should be added to a project
               if (
@@ -692,24 +679,23 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 addContractToProjectMutation.mutateAsync({
                   chainId: walletChain.id.toString(),
                   contractAddress: contractAddr,
+                  contractType: undefined,
+                  deploymentType: undefined,
                   projectId: importSelection.project.id,
                   teamId: importSelection.team.id,
-                  deploymentType: undefined,
-                  contractType: undefined,
                 });
               }
             } catch (e) {
               onError(e);
               console.error("failed to deploy contract", e);
-              trackEvent({
-                category: "custom-contract",
-                action: "deploy",
-                label: "error",
-                ...publisherAnalyticsData,
+              const parsedError = parseError(e);
+              reportContractDeployFailed({
                 chainId: walletChain.id,
-                metadataUri: metadata.metadataUri,
-                error: e,
+                contractName: metadata.name,
+                errorMessage: parsedError,
+                publisher: rewriteTwPublisher(metadata.publisher),
               });
+
               deployStatusModal.close();
             }
           })}
@@ -718,12 +704,19 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
             <>
               {/* Contract Metadata */}
               {hasContractURI && (
-                <ContractMetadataFieldset form={form} client={client} />
+                <ContractMetadataFieldset client={client} form={form} />
               )}
 
               {/* Primary Sale */}
               {hasPrimarySale && (
                 <PrimarySaleFieldset
+                  client={client}
+                  errorMessage={
+                    form.getFieldState(
+                      "deployParams._saleRecipient",
+                      form.formState,
+                    ).error?.message
+                  }
                   isInvalid={
                     !!form.getFieldState(
                       "deployParams._saleRecipient",
@@ -731,18 +724,18 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                     ).error
                   }
                   register={form.register("deployParams._saleRecipient")}
-                  errorMessage={
-                    form.getFieldState(
-                      "deployParams._saleRecipient",
-                      form.formState,
-                    ).error?.message
-                  }
-                  client={client}
                 />
               )}
 
               {hasPrimarySaleRecipient && (
                 <PrimarySaleFieldset
+                  client={client}
+                  errorMessage={
+                    form.getFieldState(
+                      "deployParams._primarySaleRecipient",
+                      form.formState,
+                    ).error?.message
+                  }
                   isInvalid={
                     !!form.getFieldState(
                       "deployParams._primarySaleRecipient",
@@ -750,32 +743,18 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                     ).error
                   }
                   register={form.register("deployParams._primarySaleRecipient")}
-                  errorMessage={
-                    form.getFieldState(
-                      "deployParams._primarySaleRecipient",
-                      form.formState,
-                    ).error?.message
-                  }
-                  client={client}
                 />
               )}
 
               {/* Royalty */}
               {hasRoyalty && (
                 <RoyaltyFieldset
-                  royaltyRecipient={{
-                    isInvalid: !!form.getFieldState(
-                      "deployParams._royaltyRecipient",
-                      form.formState,
-                    ).error,
-                    register: form.register("deployParams._royaltyRecipient"),
+                  client={client}
+                  royaltyBps={{
                     errorMessage: form.getFieldState(
-                      "deployParams._royaltyRecipient",
+                      "deployParams._royaltyBps",
                       form.formState,
                     ).error?.message,
-                  }}
-                  royaltyBps={{
-                    value: form.watch("deployParams._royaltyBps") as string,
                     isInvalid: !!form.getFieldState(
                       "deployParams._royaltyBps",
                       form.formState,
@@ -785,28 +764,35 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                         shouldTouch: true,
                       });
                     },
+                    value: form.watch("deployParams._royaltyBps") as string,
+                  }}
+                  royaltyRecipient={{
                     errorMessage: form.getFieldState(
-                      "deployParams._royaltyBps",
+                      "deployParams._royaltyRecipient",
                       form.formState,
                     ).error?.message,
+                    isInvalid: !!form.getFieldState(
+                      "deployParams._royaltyRecipient",
+                      form.formState,
+                    ).error,
+                    register: form.register("deployParams._royaltyRecipient"),
                   }}
-                  client={client}
                 />
               )}
 
               {hasPlatformFee && (
                 <PlatformFeeFieldset
+                  client={client}
+                  disabled={!isFeeExempt}
                   form={form}
                   isMarketplace={isMarketplace}
-                  disabled={!isFeeExempt}
-                  client={client}
                 />
               )}
 
-              {isSplit && <SplitFieldset form={form} client={client} />}
+              {isSplit && <SplitFieldset client={client} form={form} />}
 
               {hasTrustedForwarders && (
-                <TrustedForwardersFieldset form={form} client={client} />
+                <TrustedForwardersFieldset client={client} form={form} />
               )}
 
               {/* for StakeERC721 */}
@@ -824,12 +810,12 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
                       return (
                         <Param
-                          key={paramKey}
-                          paramKey={paramKey}
+                          client={client}
                           deployParam={deployParam}
                           extraMetadataParam={extraMetadataParam}
                           isRequired
-                          client={client}
+                          key={paramKey}
+                          paramKey={paramKey}
                         />
                       );
                     })}
@@ -852,12 +838,12 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
                       return (
                         <Param
-                          key={paramKey}
-                          paramKey={paramKey}
+                          client={client}
                           deployParam={deployParam}
                           extraMetadataParam={extraMetadataParam}
                           isRequired
-                          client={client}
+                          key={paramKey}
+                          paramKey={paramKey}
                         />
                       );
                     })}
@@ -894,33 +880,33 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
                   return (
                     <Param
-                      key={paramKey}
-                      paramKey={paramKey}
+                      client={client}
                       deployParam={deployParam}
                       extraMetadataParam={extraMetadataParam}
                       inputClassName="bg-card"
                       isRequired
-                      client={client}
+                      key={paramKey}
+                      paramKey={paramKey}
                     />
                   );
                 })}
 
               {isModular && modules && modules.length > 0 && (
                 <ModularContractDefaultModulesFieldset
-                  form={form}
-                  modules={modules}
-                  isTWPublisher={isTWPublisher}
                   client={client}
+                  form={form}
+                  isTWPublisher={isTWPublisher}
+                  modules={modules}
                 />
               )}
 
               {advancedParams.length > 0 && (
                 <Accordion
-                  type="single"
-                  collapsible
                   className="rounded-lg border border-border bg-card"
+                  collapsible
+                  type="single"
                 >
-                  <AccordionItem value="advanced" className="border-b-0">
+                  <AccordionItem className="border-b-0" value="advanced">
                     <AccordionTrigger className="px-4 font-semibold text-xl tracking-tight lg:px-6">
                       Advanced Configuration
                     </AccordionTrigger>
@@ -935,11 +921,11 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
           <AddToProjectCardUI
             client={client}
-            teamsAndProjects={teamsAndProjects}
-            selection={importSelection}
             enabled={isImportEnabled}
             onSelectionChange={setImportSelection}
             onSetEnabled={setIsImportEnabled}
+            selection={importSelection}
+            teamsAndProjects={teamsAndProjects}
           />
 
           <Fieldset legend="Deploy Options">
@@ -956,8 +942,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 <div className="flex flex-col gap-3">
                   <div className="flex flex-col gap-4 md:flex-row">
                     <NetworkSelectorButton
-                      client={client}
                       className="bg-background"
+                      client={client}
                       networksEnabled={
                         metadata?.name === "AccountFactory" ||
                         metadata?.networksForDeployment?.allNetworks ||
@@ -968,7 +954,12 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                     />
 
                     <Button asChild variant="outline">
-                      <Link href="/chainlist" className="gap-3" target="_blank">
+                      <Link
+                        className="gap-3"
+                        href="/chainlist"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
                         View all chains
                         <ExternalLinkIcon className="size-4 bg-background text-muted-foreground" />
                       </Link>
@@ -1016,7 +1007,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   {isCreate2Deployment && (
                     <FormControl>
                       <Flex alignItems="center" my={1}>
-                        <FormLabel mb={0} flex="1" display="flex">
+                        <FormLabel display="flex" flex="1" mb={0}>
                           <Flex alignItems="baseline" gap={1}>
                             Optional Salt Input
                             <Text size="label.sm">(saltForCreate2)</Text>
@@ -1050,9 +1041,9 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               {/* Deploy */}
               <div className="flex border-border border-t pt-6 md:justify-end">
                 <Button
+                  className="gap-2"
                   disabled={!activeAccount || !walletChain}
                   type="submit"
-                  className="gap-2"
                 >
                   Deploy Now
                   <ArrowUpFromLineIcon className="size-4" />
@@ -1060,7 +1051,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
               </div>
             </div>
           </Fieldset>
-        </Flex>
+        </form>
       </FormProvider>
       <DeployStatusModal deployStatusModal={deployStatusModal} />
     </>

@@ -7,7 +7,7 @@ import {
   getRoleMemberCount,
   isGetRoleMemberCountSupported,
 } from "../__generated__/IPermissionsEnumerable/read/getRoleMemberCount.js";
-import { type RoleInput, getRoleHash } from "../utils.js";
+import { getRoleHash, type RoleInput } from "../utils.js";
 
 /**
  * @extension PERMISSIONS
@@ -47,7 +47,7 @@ export async function getAllRoleMembers(
 
   for (let i = 0n; i < count; i++) {
     promises.push(
-      getRoleMember({ contract: options.contract, role: roleHash, index: i }),
+      getRoleMember({ contract: options.contract, index: i, role: roleHash }),
     );
   }
 

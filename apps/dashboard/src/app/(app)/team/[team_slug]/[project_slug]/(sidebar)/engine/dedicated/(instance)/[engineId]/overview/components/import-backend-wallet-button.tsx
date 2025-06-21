@@ -1,5 +1,21 @@
+import {
+  type EngineInstance,
+  type ImportBackendWalletInput,
+  useEngineImportBackendWallet,
+  useHasEngineFeature,
+  type WalletConfigResponse,
+} from "@3rdweb-sdk/react/hooks/useEngine";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import {
+  EngineBackendWalletOptions,
+  type EngineBackendWalletType,
+} from "lib/engine";
+import { CircleAlertIcon, CloudDownloadIcon } from "lucide-react";
+import Link from "next/link";
+import { useId, useState } from "react";
+import { useForm } from "react-hook-form";
+import invariant from "tiny-invariant";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,9 +25,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { FormControl } from "@/components/ui/form";
-import { Form, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Select,
   SelectContent,
@@ -20,24 +42,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  type EngineInstance,
-  type ImportBackendWalletInput,
-  type WalletConfigResponse,
-  useEngineImportBackendWallet,
-  useHasEngineFeature,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import {
-  EngineBackendWalletOptions,
-  type EngineBackendWalletType,
-} from "lib/engine";
-import { CircleAlertIcon, CloudDownloadIcon } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import invariant from "tiny-invariant";
 
 interface ImportBackendWalletButtonProps {
   instance: EngineInstance;
@@ -56,15 +60,15 @@ export const ImportBackendWalletButton: React.FC<
   );
   const { mutate: importBackendWallet, isPending } =
     useEngineImportBackendWallet({
-      instanceUrl: instance.url,
       authToken,
+      instanceUrl: instance.url,
     });
 
   const { onSuccess, onError } = useTxNotifications(
     "Wallet imported successfully.",
     "Failed to import wallet.",
   );
-  const trackEvent = useTrack();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [walletType, setWalletType] = useState<EngineBackendWalletType>(
     walletConfig.type,
@@ -86,28 +90,14 @@ export const ImportBackendWalletButton: React.FC<
     }
 
     importBackendWallet(data, {
+      onError: (error) => {
+        onError(error);
+        console.error(error);
+      },
       onSuccess: () => {
         onSuccess();
         setIsModalOpen(false);
         form.reset();
-        trackEvent({
-          category: "engine",
-          action: "import-backend-wallet",
-          label: "success",
-          type: walletConfig?.type,
-          instance: instance.url,
-        });
-      },
-      onError: (error) => {
-        onError(error);
-        trackEvent({
-          category: "engine",
-          action: "import-backend-wallet",
-          label: "error",
-          type: walletConfig?.type,
-          instance: instance.url,
-          error,
-        });
       },
     });
   };
@@ -135,19 +125,25 @@ export const ImportBackendWalletButton: React.FC<
       values.gcpKmsKeyId &&
       values.gcpKmsKeyVersionId);
 
+  const walletLabelId = useId();
+  const privateKeyId = useId();
+  const awsKmsArnId = useId();
+  const gcpKmsKeyIdId = useId();
+  const gcpKmsKeyVersionIdId = useId();
+
   return (
     <>
       <Button
-        onClick={() => setIsModalOpen(true)}
-        variant="outline"
         className="gap-2"
+        onClick={() => setIsModalOpen(true)}
         size="sm"
+        variant="outline"
       >
         <CloudDownloadIcon className="size-4" />
         Import
       </Button>
 
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <Dialog onOpenChange={setIsModalOpen} open={isModalOpen}>
         <DialogContent className="p-0">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -197,8 +193,8 @@ export const ImportBackendWalletButton: React.FC<
                       <AlertDescription>
                         Provide your credentials on the{" "}
                         <Link
-                          href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}/configuration`}
                           className="text-link-foreground hover:text-foreground"
+                          href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}/configuration`}
                         >
                           Configuration
                         </Link>{" "}
@@ -210,20 +206,20 @@ export const ImportBackendWalletButton: React.FC<
                     <>
                       {/* Label */}
                       <FormFieldSetup
-                        key="label"
-                        label="Label"
                         errorMessage={
                           form.getFieldState("label", form.formState).error
                             ?.message
                         }
-                        htmlFor="wallet-label"
+                        htmlFor={walletLabelId}
                         isRequired={false}
+                        key="label"
+                        label="Label"
                         tooltip={null}
                       >
                         <Input
-                          id="wallet-label"
-                          type="text"
+                          id={walletLabelId}
                           placeholder="A description to identify this backend wallet"
+                          type="text"
                           {...form.register("label")}
                         />
                       </FormFieldSetup>
@@ -231,20 +227,20 @@ export const ImportBackendWalletButton: React.FC<
                       {/* Local */}
                       {walletType === "local" ? (
                         <FormFieldSetup
-                          key="privateKey"
-                          htmlFor="privateKey"
-                          label="Private key"
                           errorMessage={
                             form.getFieldState("privateKey", form.formState)
                               .error?.message
                           }
+                          htmlFor={privateKeyId}
                           isRequired
+                          key="privateKey"
+                          label="Private key"
                           tooltip={null}
                         >
                           <Input
-                            id="privateKey"
-                            placeholder="Your wallet private key"
                             autoComplete="off"
+                            id={privateKeyId}
+                            placeholder="Your wallet private key"
                             type="text"
                             {...form.register("privateKey", {
                               required: true,
@@ -254,20 +250,20 @@ export const ImportBackendWalletButton: React.FC<
                         </FormFieldSetup>
                       ) : walletType === "aws-kms" ? (
                         <FormFieldSetup
-                          key="awsKmsArn"
-                          label="AWS KMS ARN"
                           errorMessage={
                             form.getFieldState("awsKmsArn", form.formState)
                               .error?.message
                           }
-                          htmlFor="awsKmsArn"
+                          htmlFor={awsKmsArnId}
                           isRequired
+                          key="awsKmsArn"
+                          label="AWS KMS ARN"
                           tooltip={null}
                         >
                           <Input
-                            id="awsKmsArn"
-                            placeholder="arn:aws:kms:us-west-2:123456789012:key/2b7d8e0c-..."
                             autoComplete="off"
+                            id={awsKmsArnId}
+                            placeholder="arn:aws:kms:us-west-2:123456789012:key/2b7d8e0c-..."
                             type="text"
                             {...form.register("awsKmsArn", { required: true })}
                           />
@@ -275,20 +271,20 @@ export const ImportBackendWalletButton: React.FC<
                       ) : walletType === "gcp-kms" ? (
                         <>
                           <FormFieldSetup
-                            key="gcpKmsKeyId"
-                            htmlFor="gcpKmsKeyId"
                             errorMessage={
                               form.getFieldState("gcpKmsKeyId", form.formState)
                                 .error?.message
                             }
-                            label="GCP KMS Key ID"
+                            htmlFor={gcpKmsKeyIdId}
                             isRequired
+                            key="gcpKmsKeyId"
+                            label="GCP KMS Key ID"
                             tooltip={null}
                           >
                             <Input
-                              id="gcpKmsKeyId"
-                              placeholder="projects/my-project/locations/us-central1/keyRings/my-key-ring/cryptoKeys/my-key"
                               autoComplete="off"
+                              id={gcpKmsKeyIdId}
+                              placeholder="projects/my-project/locations/us-central1/keyRings/my-key-ring/cryptoKeys/my-key"
                               type="text"
                               {...form.register("gcpKmsKeyId", {
                                 required: true,
@@ -297,22 +293,22 @@ export const ImportBackendWalletButton: React.FC<
                           </FormFieldSetup>
 
                           <FormFieldSetup
-                            key="gcpKmsKeyVersionId"
-                            label="GCP KMS Version ID"
                             errorMessage={
                               form.getFieldState(
                                 "gcpKmsKeyVersionId",
                                 form.formState,
                               ).error?.message
                             }
-                            htmlFor="gcpKmsKeyVersionId"
+                            htmlFor={gcpKmsKeyVersionIdId}
                             isRequired
+                            key="gcpKmsKeyVersionId"
+                            label="GCP KMS Version ID"
                             tooltip={null}
                           >
                             <Input
-                              id="gcpKmsKeyVersionId"
-                              placeholder="1"
                               autoComplete="off"
+                              id={gcpKmsKeyVersionIdId}
+                              placeholder="1"
                               type="text"
                               {...form.register("gcpKmsKeyVersionId", {
                                 required: true,
@@ -327,13 +323,13 @@ export const ImportBackendWalletButton: React.FC<
               </div>
 
               <DialogFooter className="mt-4 gap-4 border-border border-t bg-card p-6 lg:gap-2 ">
-                <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+                <Button onClick={() => setIsModalOpen(false)} variant="outline">
                   Cancel
                 </Button>
                 <Button
-                  type="submit"
                   className="min-w-28 gap-2"
                   disabled={!isFormValid || isPending}
+                  type="submit"
                 >
                   {isPending && <Spinner className="size-4" />}
                   Import

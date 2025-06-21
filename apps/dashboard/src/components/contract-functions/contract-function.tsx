@@ -1,15 +1,6 @@
 "use client";
 
 import {
-  type CodeEnvironment,
-  CodeSegment,
-} from "@/components/blocks/code-segment.client";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { cn } from "@/lib/utils";
-import {
   Box,
   Divider,
   Flex,
@@ -19,9 +10,9 @@ import {
   SimpleGrid,
   Tab,
   TabList,
+  Table,
   TabPanel,
   TabPanels,
-  Table,
   Tabs,
   Tbody,
   Td,
@@ -35,8 +26,8 @@ import { SearchIcon } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import {
   type Dispatch,
-  type SetStateAction,
   lazy,
+  type SetStateAction,
   useMemo,
   useState,
 } from "react";
@@ -48,6 +39,15 @@ import { useReadContract } from "thirdweb/react";
 import { toFunctionSelector } from "thirdweb/utils";
 import { Button, Card, Heading, Text } from "tw-components";
 import { useDebounce } from "use-debounce";
+import {
+  type CodeEnvironment,
+  CodeSegment,
+} from "@/components/blocks/code-segment.client";
+import { Badge } from "@/components/ui/badge";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Input } from "@/components/ui/input";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import { useContractFunctionSelectors } from "../../contract-ui/hooks/useContractFunctionSelectors";
 import {
   COMMANDS,
@@ -129,45 +129,45 @@ function ContractFunctionInner(props: ContractFunctionProps) {
     : ("events" as const);
 
   const codeSnippet = formatSnippet(COMMANDS[commandsKey], {
-    contractAddress: contract.address,
-    fn,
     args: fn.inputs?.map((i) => i.name || ""),
     chainId: contract.chain.id,
+    contractAddress: contract.address,
     extensionNamespace,
+    fn,
   });
 
   return (
     <Flex direction="column" gap={1.5}>
-      <Flex alignItems="center" gap={2} direction="row" flexWrap="wrap">
-        <Flex alignItems="baseline" gap={1} flexWrap="wrap">
+      <Flex alignItems="center" direction="row" flexWrap="wrap" gap={2}>
+        <Flex alignItems="baseline" flexWrap="wrap" gap={1}>
           <Heading size="subtitle.md">{camelToTitle(fn.name)}</Heading>
-          <Heading size="subtitle.sm" className="text-muted-foreground">
+          <Heading className="text-muted-foreground" size="subtitle.sm">
             ({fn.name})
           </Heading>
         </Flex>
         {isFunction && <Badge variant="success">{fn.stateMutability}</Badge>}
         {functionSelector && (
           <CopyTextButton
+            className="ml-auto text-xs"
+            copyIconPosition="right"
             textToCopy={functionSelector}
             textToShow={functionSelector}
-            copyIconPosition="right"
             tooltip="The selector of this function"
-            className="ml-auto text-xs"
           />
         )}
       </Flex>
       {isFunction && (
         <InteractiveAbiFunction
-          key={JSON.stringify(fn)}
-          contract={contract}
           abiFunction={fn}
+          contract={contract}
           isLoggedIn={props.isLoggedIn}
+          key={JSON.stringify(fn)}
         />
       )}
 
       {codeSnippet && (
         <>
-          <Heading size="subtitle.md" mt={6}>
+          <Heading mt={6} size="subtitle.md">
             Use this function in your app
           </Heading>
           <Divider mb={2} />
@@ -183,9 +183,7 @@ function ContractFunctionInner(props: ContractFunctionProps) {
   );
 }
 
-function ContractFunctionInputs(props: {
-  fn: AbiFunction | AbiEvent;
-}) {
+function ContractFunctionInputs(props: { fn: AbiFunction | AbiEvent }) {
   const { fn } = props;
   const isFunction = "stateMutability" in fn;
 
@@ -193,12 +191,12 @@ function ContractFunctionInputs(props: {
     <Flex direction="column" gap={1.5}>
       <Flex
         alignItems={{ base: "start", md: "center" }}
-        gap={2}
         direction={{ base: "column", md: "row" }}
+        gap={2}
       >
-        <Flex alignItems="baseline" gap={1} flexWrap="wrap">
+        <Flex alignItems="baseline" flexWrap="wrap" gap={1}>
           <Heading size="subtitle.md">{camelToTitle(fn.name)}</Heading>
-          <Heading size="subtitle.sm" className="text-muted-foreground">
+          <Heading className="text-muted-foreground" size="subtitle.sm">
             ({fn.name})
           </Heading>
         </Flex>
@@ -212,20 +210,20 @@ function ContractFunctionInputs(props: {
             <Heading size="label.lg">Inputs</Heading>
             <Box
               borderTopRadius="lg"
-              p={0}
               overflowX="auto"
+              p={0}
               position="relative"
             >
               <Table size="sm">
                 <Thead>
                   <Tr>
                     <Th border="none">
-                      <Heading as="label" size="label.sm" color="faded">
+                      <Heading as="label" color="faded" size="label.sm">
                         Name
                       </Heading>
                     </Th>
                     <Th border="none">
-                      <Heading as="label" size="label.sm" color="faded">
+                      <Heading as="label" color="faded" size="label.sm">
                         Type
                       </Heading>
                     </Th>
@@ -234,28 +232,28 @@ function ContractFunctionInputs(props: {
                 <Tbody>
                   {fn.inputs.map((input, idx) => (
                     <Tr
-                      borderBottomWidth={1}
                       _last={{ borderBottomWidth: 0 }}
+                      borderBottomWidth={1}
                       key={`${input.name}+${idx}}`}
                     >
                       <Td
-                        borderBottomWidth="inherit"
                         borderBottomColor="borderColor"
+                        borderBottomWidth="inherit"
                       >
                         {input?.name ? (
                           <Text fontFamily="mono">{input.name}</Text>
                         ) : (
                           <Text
-                            fontStyle="italic"
                             className="text-muted-foreground"
+                            fontStyle="italic"
                           >
                             No name defined
                           </Text>
                         )}
                       </Td>
                       <Td
-                        borderBottomWidth="inherit"
                         borderBottomColor="borderColor"
+                        borderBottomWidth="inherit"
                       >
                         <Text fontFamily="mono">{input.type}</Text>
                       </Td>
@@ -372,15 +370,15 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
         )
       : e.functions;
     return (
-      <Flex key={e.extension} flexDir="column" mb={6}>
+      <Flex flexDir="column" key={e.extension} mb={6}>
         {e.extension ? (
           <>
-            <Flex alignItems="center" alignContent="center" gap={2}>
+            <Flex alignContent="center" alignItems="center" gap={2}>
               <Image
-                src="/assets/dashboard/extension-check.svg"
                 alt="Extension detected"
-                objectFit="contain"
                 mb="2px"
+                objectFit="contain"
+                src="/assets/dashboard/extension-check.svg"
               />
               <Heading as="label" size="label.md">
                 {e.extension}
@@ -390,7 +388,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
           </>
         ) : (
           <>
-            <Flex alignItems="center" alignContent="center" gap={2}>
+            <Flex alignContent="center" alignItems="center" gap={2}>
               <Heading as="label" size="label.md">
                 Other Functions
               </Heading>
@@ -401,8 +399,8 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
         {selectedFunction &&
           filteredFunctions.map((fn) => (
             <FunctionsOrEventsListItem
-              key={`${fn.name}_${fn.type}_${fn.inputs.length}`}
               fn={fn}
+              key={`${fn.name}_${fn.type}_${fn.inputs.length}`}
               selectedFunction={selectedFunction}
               setSelectedFunction={setSelectedFunction}
             />
@@ -412,37 +410,37 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   };
 
   return (
-    <SimpleGrid height="100%" columns={12} gap={5}>
+    <SimpleGrid columns={12} gap={5} height="100%">
       <GridItem
         as={Card}
-        px={0}
-        pt={0}
+        className="bg-card"
+        colSpan={{ base: 12, md: 4 }}
         height="100%"
         overflow="auto"
-        colSpan={{ base: 12, md: 4 }}
         overflowY="auto"
-        className="bg-card"
+        pt={0}
+        px={0}
       >
         <List height="100%" overflowX="hidden">
           {(writeFunctions.length > 0 || viewFunctions.length > 0) && (
             <Tabs
-              defaultIndex={_defaultTabIndex}
               colorScheme="gray"
-              h="100%"
-              position="relative"
+              defaultIndex={_defaultTabIndex}
               display="flex"
               flexDir="column"
+              h="100%"
+              position="relative"
             >
               <TabList as={Flex}>
                 {writeFunctions.length > 0 && (
-                  <Tab gap={2} flex="1 1 0">
+                  <Tab flex="1 1 0" gap={2}>
                     <Heading color="inherit" my={1} size="label.md">
                       Write
                     </Heading>
                   </Tab>
                 )}
                 {viewFunctions.length > 0 && (
-                  <Tab gap={2} flex="1 1 0">
+                  <Tab flex="1 1 0" gap={2}>
                     <Heading color="inherit" my={1} size="label.md">
                       Read
                     </Heading>
@@ -454,10 +452,10 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
                 <div className="relative w-full">
                   <SearchIcon className="-translate-y-1/2 absolute top-[50%] left-3 size-4 text-muted-foreground" />
                   <Input
-                    value={_keywordSearch}
-                    placeholder="Search"
                     className="h-auto rounded-none border-x-0 bg-card py-3 pl-9 focus-visible:ring-0 focus-visible:ring-offset-0"
                     onChange={(e) => setKeywordSearch(e.target.value)}
+                    placeholder="Search"
+                    value={_keywordSearch}
                   />
                 </div>
               </div>
@@ -478,11 +476,11 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
           )}
 
           {events.length > 0 && selectedFunction && (
-            <Box px={4} pt={2} overflowX="hidden">
+            <Box overflowX="hidden" pt={2} px={4}>
               {events.map((fn) => (
                 <FunctionsOrEventsListItem
-                  key={`${fn.name}_${fn.type}_${fn.inputs.length}`}
                   fn={fn}
+                  key={`${fn.name}_${fn.type}_${fn.inputs.length}`}
                   selectedFunction={selectedFunction}
                   setSelectedFunction={setSelectedFunction}
                 />
@@ -493,15 +491,15 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
       </GridItem>
       <GridItem
         as={Card}
+        className="bg-card"
+        colSpan={{ base: 12, md: 8 }}
         height="100%"
         overflow="auto"
-        colSpan={{ base: 12, md: 8 }}
-        className="bg-card"
       >
         {selectedFunction && (
           <ContractFunction
-            fn={selectedFunction}
             contract={contract}
+            fn={selectedFunction}
             isLoggedIn={isLoggedIn}
           />
         )}
@@ -531,7 +529,6 @@ const FunctionsOrEventsListItem: React.FC<FunctionsOrEventsListItemProps> = ({
   return (
     <li className="my-1">
       <Button
-        size="sm"
         className={cn(
           "!font-medium !text-muted-foreground hover:!text-foreground font-mono",
           {
@@ -547,6 +544,7 @@ const FunctionsOrEventsListItem: React.FC<FunctionsOrEventsListItemProps> = ({
             router.push(`${pathname}?selector=${selector}`);
           }
         }}
+        size="sm"
         variant="link"
       >
         {fn.name}

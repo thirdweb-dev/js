@@ -1,8 +1,8 @@
-import { cn } from "@/lib/utils";
 import { EmptyAccountAbstractionChartContent } from "components/smart-wallets/AccountAbstractionAnalytics/SponsoredTransactionsChartCard";
 import { defineChain } from "thirdweb";
 import { type ChainMetadata, getChainMetadata } from "thirdweb/chains";
 import type { UserOpStats } from "types/analytics";
+import { cn } from "@/lib/utils";
 import { BarChart } from "../../../components/Analytics/BarChart";
 import { CombinedBarChartCard } from "../../../components/Analytics/CombinedBarChartCard";
 
@@ -71,16 +71,16 @@ export async function TotalSponsoredChartCardUI({
 
   const chartConfig = {
     mainnet: {
-      label: "Mainnet Chains",
       color: "hsl(var(--chart-1))",
+      label: "Mainnet Chains",
     },
     testnet: {
-      label: "Testnet Chains",
       color: "hsl(var(--chart-2))",
+      label: "Testnet Chains",
     },
     total: {
-      label: "All Chains",
       color: "hsl(var(--chart-3))",
+      label: "All Chains",
     },
   };
 
@@ -93,11 +93,11 @@ export async function TotalSponsoredChartCardUI({
         </h3>
         <p className="text-muted-foreground text-sm"> {description}</p>
         <BarChart
-          isCurrency
+          activeKey="mainnet"
           chartConfig={chartConfig}
           data={filteredData}
-          activeKey="mainnet"
           emptyChartContent={<EmptyAccountAbstractionChartContent />}
+          isCurrency
         />
       </div>
     );
@@ -105,17 +105,17 @@ export async function TotalSponsoredChartCardUI({
 
   return (
     <CombinedBarChartCard
-      isCurrency
-      title={title || "Gas Sponsored"}
-      chartConfig={chartConfig}
-      data={timeSeriesData}
       activeChart={
         (searchParams?.totalSponsored as keyof typeof chartConfig) ?? "mainnet"
       }
-      queryKey="totalSponsored"
-      existingQueryParams={searchParams}
       aggregateFn={(_data, key) => processedAggregatedData[key]}
+      chartConfig={chartConfig}
       className={className}
+      data={timeSeriesData}
+      existingQueryParams={searchParams}
+      isCurrency
+      queryKey="totalSponsored"
+      title={title || "Gas Sponsored"}
       // Get the trend from the last two COMPLETE periods
       trendFn={(data, key) =>
         data.filter((d) => (d[key] as number) > 0).length >= 2

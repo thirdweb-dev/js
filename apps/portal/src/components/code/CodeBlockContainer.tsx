@@ -1,10 +1,10 @@
 "use client";
 
+import { CheckIcon, CopyIcon } from "lucide-react";
 import { useClipboard } from "@/hooks/useClipboard"; // Adjusted path for portal
 import { cn } from "@/lib/utils";
-import { CheckIcon, CopyIcon } from "lucide-react";
-import { ScrollShadow } from "../ui/ScrollShadow/ScrollShadow"; // Adjusted path for portal
 import { Button } from "../ui/button"; // Adjusted path for portal
+import { ScrollShadow } from "../ui/ScrollShadow/ScrollShadow"; // Adjusted path for portal
 
 export function CodeBlockContainer(props: {
   codeToCopy: string;
@@ -26,27 +26,27 @@ export function CodeBlockContainer(props: {
       )}
     >
       <ScrollShadow
-        scrollableClassName={cn("p-4", props.scrollableClassName)}
         className={cn(
           "text-xs md:text-sm [&_*]:leading-relaxed",
           props.scrollableContainerClassName,
         )}
+        scrollableClassName={cn("p-4", props.scrollableClassName)}
         shadowColor={props.shadowColor || "hsl(var(--muted))"}
       >
         {props.children}
       </ScrollShadow>
 
       <Button
-        size="sm"
-        variant="outline"
-        onClick={() => {
-          onClipboardCopy(); // Use renamed function
-          props.onCopy?.(props.codeToCopy);
-        }}
         className={cn(
           "absolute top-3.5 right-3.5 h-auto bg-background p-2",
           props.copyButtonClassName,
         )}
+        onClick={() => {
+          onClipboardCopy(); // Use renamed function
+          props.onCopy?.(props.codeToCopy);
+        }}
+        size="sm"
+        variant="outline"
       >
         {hasCopied ? (
           <CheckIcon className="size-3 text-green-500" />

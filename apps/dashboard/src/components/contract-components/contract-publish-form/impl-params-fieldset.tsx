@@ -1,6 +1,3 @@
-import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
-import { InlineCode } from "@/components/ui/inline-code";
-import { Switch } from "@/components/ui/switch";
 import { FormControl, useBreakpointValue } from "@chakra-ui/react";
 import type { AbiParameter } from "abitype";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -8,6 +5,9 @@ import { getTemplateValuesForType } from "lib/deployment/template-values";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import { InlineCode } from "@/components/ui/inline-code";
+import { Switch } from "@/components/ui/switch";
 import { RefInputImplFieldset } from "./ref-contract-impl-input/ref-input-impl-fieldset";
 
 interface ImplementationParamsFieldsetProps {
@@ -75,8 +75,8 @@ export const ImplementationParamsFieldset: React.FC<
           const paramTemplateValues = getTemplateValuesForType(param.type);
           return (
             <div
-              key={`implementation_${param.name}`}
               className="rounded-lg border border-border bg-card p-6"
+              key={`implementation_${param.name}`}
             >
               {/* Title + Type */}
               <div className="flex items-center gap-3">
@@ -121,9 +121,8 @@ export const ImplementationParamsFieldset: React.FC<
                 {!isCustomInputEnabled[idx] ? (
                   <FormControl>
                     <SolidityInput
-                      client={client}
                       className="!bg-background !text-sm placeholder:!text-sm"
-                      solidityType={param.type}
+                      client={client}
                       placeholder={
                         isMobile ||
                         paramTemplateValues?.[0]?.value ===
@@ -131,6 +130,7 @@ export const ImplementationParamsFieldset: React.FC<
                           ? "Pre-filled value."
                           : "This value will be pre-filled in the deploy form."
                       }
+                      solidityType={param.type}
                       {...form.register(
                         `implConstructorParams.${
                           param.name ? param.name : "*"
@@ -139,7 +139,7 @@ export const ImplementationParamsFieldset: React.FC<
                     />
                   </FormControl>
                 ) : (
-                  <RefInputImplFieldset param={param} client={client} />
+                  <RefInputImplFieldset client={client} param={param} />
                 )}
 
                 {paramTemplateValues.length > 0 &&

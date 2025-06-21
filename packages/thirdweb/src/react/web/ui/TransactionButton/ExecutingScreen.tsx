@@ -1,17 +1,19 @@
-import { CheckCircledIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
+import { CheckIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Hex } from "viem";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { formatExplorerTxUrl } from "../../../../utils/url.js";
+import type { WindowAdapter } from "../../../core/adapters/WindowAdapter.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useChainExplorers } from "../../../core/hooks/others/useChainQuery.js";
 import { useSendTransaction } from "../../hooks/transaction/useSendTransaction.js";
 import { AccentFailIcon } from "../ConnectWallet/icons/AccentFailIcon.js";
+import { Container, ModalHeader } from "../components/basic.js";
+import { Button } from "../components/buttons.js";
 import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
-import { Container, ModalHeader } from "../components/basic.js";
-import { Button, ButtonLink } from "../components/buttons.js";
 import { Text } from "../components/text.js";
 
 export function ExecutingTxScreen(props: {
@@ -19,6 +21,7 @@ export function ExecutingTxScreen(props: {
   closeModal: () => void;
   onTxSent: (data: WaitForReceiptOptions) => void;
   onBack?: () => void;
+  windowAdapter: WindowAdapter;
 }) {
   const sendTxCore = useSendTransaction({
     payModal: false,
@@ -29,6 +32,7 @@ export function ExecutingTxScreen(props: {
   const [status, setStatus] = useState<"loading" | "failed" | "sent">(
     "loading",
   );
+  const theme = useCustomTheme();
 
   const sendTx = useCallback(async () => {
     setStatus("loading");
@@ -59,72 +63,121 @@ export function ExecutingTxScreen(props: {
 
   return (
     <Container p="lg">
-      <ModalHeader title="Transaction" onBack={props.onBack} />
+      <ModalHeader onBack={props.onBack} title="Transaction" />
 
       <Spacer y="xxl" />
 
-      <Container flex="row" center="x">
-        {status === "loading" && <Spinner size="xxl" color="accentText" />}
+      <Container center="x" flex="row">
+        {status === "loading" && <Spinner color="accentText" size="xxl" />}
         {status === "failed" && <AccentFailIcon size={iconSize["3xl"]} />}
         {status === "sent" && (
-          <Container color="success" flex="row" center="both">
-            <CheckCircledIcon
-              width={iconSize["3xl"]}
-              height={iconSize["3xl"]}
+          <Container
+            center="both"
+            flex="row"
+            style={{
+              animation: "successBounce 0.6s ease-out",
+              backgroundColor: theme.colors.tertiaryBg,
+              border: `2px solid ${theme.colors.success}`,
+              borderRadius: "50%",
+              height: "64px",
+              marginBottom: "16px",
+              width: "64px",
+            }}
+          >
+            <CheckIcon
+              color={theme.colors.success}
+              height={iconSize.xl}
+              style={{
+                animation: "checkAppear 0.3s ease-out 0.3s both",
+              }}
+              width={iconSize.xl}
             />
           </Container>
         )}
       </Container>
-      <Spacer y="lg" />
 
-      <Text color="primaryText" center size="lg">
+      <Spacer y="md" />
+
+      <Text center color="primaryText" size="lg">
         {status === "loading" && "Sending transaction"}
         {status === "failed" && "Transaction failed"}
         {status === "sent" && "Transaction sent"}
       </Text>
       <Spacer y="sm" />
-      <Text color="danger" center size="sm">
+      <Text center color="danger" size="sm">
         {status === "failed" && txError ? txError.message || "" : ""}
       </Text>
 
-      <Spacer y="xxl" />
+      <Spacer y="xl" />
 
       {status === "failed" && (
-        <Button variant="accent" fullWidth onClick={sendTx}>
+        <Button fullWidth onClick={sendTx} variant="accent">
           Try Again
         </Button>
       )}
 
       {status === "sent" && (
         <>
-          <Button variant="accent" fullWidth onClick={props.closeModal}>
-            Done
-          </Button>
           {txHash && (
             <>
-              <Spacer y="sm" />
-              <ButtonLink
+              <Button
+                color="primaryText"
                 fullWidth
-                variant="outline"
-                href={formatExplorerTxUrl(
-                  chainExplorers.explorers[0]?.url ?? "",
-                  txHash,
-                )}
-                target="_blank"
-                as="a"
                 gap="xs"
-                style={{
-                  textDecoration: "none",
-                  color: "inherit",
+                onClick={() => {
+                  props.windowAdapter.open(
+                    formatExplorerTxUrl(
+                      chainExplorers.explorers[0]?.url ?? "",
+                      txHash,
+                    ),
+                  );
                 }}
+                variant="secondary"
               >
                 View on Explorer
-                <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
-              </ButtonLink>
+                <ExternalLinkIcon height={iconSize.sm} width={iconSize.sm} />
+              </Button>
+              <Spacer y="sm" />
             </>
           )}
+          <Button fullWidth onClick={props.closeModal} variant="accent">
+            Done
+          </Button>
         </>
       )}
+
+      {/* CSS Animations */}
+      <style>
+        {`
+          @keyframes successBounce {
+            0% {
+              transform: scale(0.3);
+              opacity: 0;
+            }
+            50% {
+              transform: scale(1.05);
+            }
+            70% {
+              transform: scale(0.9);
+            }
+            100% {
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+
+          @keyframes checkAppear {
+            0% {
+              transform: scale(0);
+              opacity: 0;
+            }
+            100% {
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+        `}
+      </style>
     </Container>
   );
 }

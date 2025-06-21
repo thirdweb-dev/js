@@ -1,14 +1,13 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import type { Account, BillingCredit } from "@3rdweb-sdk/react/hooks/useApi";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { formatDistance } from "date-fns";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { CircleAlertIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { ThirdwebClient } from "thirdweb";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { formatToDollars } from "./formatToDollars";
 
 interface CreditsItemProps {
@@ -28,8 +27,6 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
   client,
   teamSlug,
 }) => {
-  const trackEvent = useTrack();
-
   const [hasAppliedForOpGrant] = useLocalStorage(
     `appliedForOpGrant-${twAccount.id}`,
     false,
@@ -55,23 +52,23 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
           <div className="absolute top-0 right-0">
             {isOpCredit ? (
               <ChainIconClient
-                src="ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png"
                 className="size-6"
                 client={client}
+                src="ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png"
               />
             ) : isTwCredit ? (
               <Image
-                src={require("../../../../../public/brand/thirdweb-icon.svg")}
                 alt="tw-credit"
                 className="size-6"
                 objectFit="contain"
+                src={require("../../../../../public/brand/thirdweb-icon.svg")}
               />
             ) : isStartupCredit ? (
               <Image
-                src={require("../../../../../public/brand/thirdweb-icon.svg")}
                 alt="tw-credit"
                 className="size-6"
                 objectFit="contain"
+                src={require("../../../../../public/brand/thirdweb-icon.svg")}
               />
             ) : null}
           </div>
@@ -134,11 +131,6 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
             <Link
               href={`/team/${teamSlug}/~/settings/credits`}
               onClick={() => {
-                trackEvent({
-                  category: "op-sponsorship",
-                  action: "click",
-                  label: "apply-now",
-                });
                 if (onClickApply) {
                   onClickApply();
                 }

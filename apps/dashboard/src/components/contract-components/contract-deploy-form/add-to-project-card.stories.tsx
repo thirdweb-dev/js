@@ -13,13 +13,13 @@ import {
 } from "./add-to-project-card";
 
 const meta = {
-  title: "DeployContract/AddToProject",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "DeployContract/AddToProject",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -36,8 +36,8 @@ function teamsAndProjectsStub(teamCount: number, projectCount: number) {
   for (let i = 0; i < teamCount; i++) {
     const team: MinimalTeam = {
       id: `team_${i + 1}`,
-      name: `Team ${i + 1}`,
       image: `https://picsum.photos/200?random=${i}`,
+      name: `Team ${i + 1}`,
       slug: `team-${i + 1}`,
     };
 
@@ -45,12 +45,13 @@ function teamsAndProjectsStub(teamCount: number, projectCount: number) {
     for (let j = 0; j < projectCount; j++) {
       projects.push({
         id: `project_${i + 1}_${j + 1}`,
-        name: `Project ${i + 1}_${j + 1}`,
         image: `https://picsum.photos/200?random=${i}`,
+        name: `Project ${i + 1}_${j + 1}`,
+        slug: `project-${i + 1}-${j + 1}`,
       });
     }
 
-    teamsAndProjects.push({ team, projects });
+    teamsAndProjects.push({ projects, team });
   }
 
   return teamsAndProjects;
@@ -59,10 +60,10 @@ function teamsAndProjectsStub(teamCount: number, projectCount: number) {
 function Story() {
   return (
     <div className="container flex max-w-6xl flex-col gap-10 py-10">
-      <Variant label="1 Team, 0 Projects" teamCount={1} projectCount={0} />
-      <Variant label="1 Team, 1 Project" teamCount={1} projectCount={1} />
-      <Variant label="1 Team, 5 Projects" teamCount={1} projectCount={5} />
-      <Variant label="5 Teams, 5 Projects" teamCount={5} projectCount={5} />
+      <Variant label="1 Team, 0 Projects" projectCount={0} teamCount={1} />
+      <Variant label="1 Team, 1 Project" projectCount={1} teamCount={1} />
+      <Variant label="1 Team, 5 Projects" projectCount={5} teamCount={1} />
+      <Variant label="5 Teams, 5 Projects" projectCount={5} teamCount={5} />
     </div>
   );
 }
@@ -77,19 +78,19 @@ function Variant(props: {
   );
   const [isEnabled, setIsEnabled] = useState(true);
   const [selection, setSelection] = useState<TeamAndProjectSelection>({
-    team: teamsAndProjects[0]?.team,
     project: teamsAndProjects[0]?.projects[0],
+    team: teamsAndProjects[0]?.team,
   });
 
   return (
     <BadgeContainer label={props.label}>
       <AddToProjectCardUI
-        teamsAndProjects={teamsAndProjects}
         client={storybookThirdwebClient}
-        onSelectionChange={setSelection}
-        selection={selection}
         enabled={isEnabled}
+        onSelectionChange={setSelection}
         onSetEnabled={setIsEnabled}
+        selection={selection}
+        teamsAndProjects={teamsAndProjects}
       />
     </BadgeContainer>
   );

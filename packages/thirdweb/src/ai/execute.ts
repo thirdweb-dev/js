@@ -62,7 +62,7 @@ export async function execute(
     throw new Error(result.message);
   }
   return sendTransaction({
-    transaction: tx,
     account: input.account,
+    transaction: tx,
   });
 }

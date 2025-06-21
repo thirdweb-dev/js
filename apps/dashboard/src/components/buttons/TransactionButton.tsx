@@ -1,12 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import { CHAIN_ID_TO_GNOSIS } from "constants/mappings";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
 import { ArrowLeftRightIcon, ExternalLinkIcon } from "lucide-react";
@@ -20,6 +12,14 @@ import {
   useConnectedWallets,
 } from "thirdweb/react";
 import type { Wallet, WalletId } from "thirdweb/wallets";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { MismatchButton } from "./MismatchButton";
 
 type ButtonProps = React.ComponentProps<typeof Button>;
@@ -73,14 +73,14 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
           disableNoFundsPopup={
             disableNoFundsPopup === undefined ? false : disableNoFundsPopup
           }
-          isPending={isPending}
-          variant={variant || "primary"}
           isLoggedIn={isLoggedIn}
+          isPending={isPending}
           txChainId={txChainID}
+          variant={variant || "primary"}
           {...restButtonProps}
-          disabled={disabled}
           checkBalance={checkBalance}
           className={cn("relative overflow-hidden", restButtonProps.className)}
+          disabled={disabled}
           style={{
             paddingLeft: transactionCount
               ? `${txCountDivWidth + 16}px`
@@ -118,10 +118,10 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
         </MismatchButton>
       </PopoverTrigger>
 
-      <PopoverContent className="min-w-[300px]" sideOffset={10} side="top">
+      <PopoverContent className="min-w-[300px]" side="top" sideOffset={10}>
         <ExternalApprovalNotice
-          walletId={activeWallet?.id}
           initialFocusRef={initialFocusRef}
+          walletId={activeWallet?.id}
         />
       </PopoverContent>
     </Popover>
@@ -169,15 +169,16 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
 
         {isChainIdSupported && (
           <Button
-            ref={initialFocusRef}
             asChild
-            size="sm"
             className="mt-2 gap-2"
+            ref={initialFocusRef}
+            size="sm"
           >
             <Link
               href={`https://app.safe.global/${
                 CHAIN_ID_TO_GNOSIS[chainId as keyof typeof CHAIN_ID_TO_GNOSIS]
               }:${address}/transactions/queue`}
+              rel="noopener noreferrer"
               target="_blank"
             >
               Go To Safe <ExternalLinkIcon className="size-4" />

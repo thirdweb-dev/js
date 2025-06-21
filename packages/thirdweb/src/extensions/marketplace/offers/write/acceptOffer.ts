@@ -40,7 +40,6 @@ export function acceptOffer(
   options: BaseTransactionOptions<AcceptOfferParams>,
 ) {
   return generatedAcceptOffer({
-    contract: options.contract,
     asyncParams: async () => {
       const offer = await getOffer({
         contract: options.contract,
@@ -57,8 +56,8 @@ export function acceptOffer(
       });
       const [offerorBalance, offerorAllowance] = await Promise.all([
         balanceOf({
-          contract: currencyContract,
           address: offer.offerorAddress,
+          contract: currencyContract,
         }),
         allowance({
           contract: currencyContract,
@@ -76,5 +75,6 @@ export function acceptOffer(
       // if we get here we can accept!
       return { offerId: options.offerId };
     },
+    contract: options.contract,
   });
 }

@@ -27,15 +27,15 @@ const ContractSettingsPageInner: React.FC<ContractSettingsPageProps> = ({
   return (
     <Flex direction="column" gap={4}>
       <Flex gap={8} w="100%">
-        <SimpleGrid columns={1} w="100%" gap={8}>
+        <SimpleGrid columns={1} gap={8} w="100%">
           {contract && (
             <GridItem order={isContractMetadataSupported ? 0 : 100}>
               <SettingsMetadata
                 contract={contract}
-                isLoggedIn={isLoggedIn}
                 detectedState={
                   isContractMetadataSupported ? "enabled" : "disabled"
                 }
+                isLoggedIn={isLoggedIn}
               />
             </GridItem>
           )}
@@ -89,6 +89,14 @@ export function ContractSettingsPage(props: {
         CommonExt.isGetContractMetadataSupported(functionSelectors),
         CommonExt.isSetContractMetadataSupported(functionSelectors),
       ].every(Boolean)}
+      isLoggedIn={isLoggedIn}
+      isPlatformFeesSupported={
+        !hasDefaultFeeConfig &&
+        [
+          CommonExt.isGetPlatformFeeInfoSupported(functionSelectors),
+          CommonExt.isSetPlatformFeeInfoSupported(functionSelectors),
+        ].every(Boolean)
+      }
       isPrimarySaleSupported={[
         CommonExt.isPrimarySaleRecipientSupported(functionSelectors),
         CommonExt.isSetPrimarySaleRecipientSupported(functionSelectors),
@@ -97,14 +105,6 @@ export function ContractSettingsPage(props: {
         CommonExt.isGetDefaultRoyaltyInfoSupported(functionSelectors),
         CommonExt.isSetDefaultRoyaltyInfoSupported(functionSelectors),
       ].every(Boolean)}
-      isPlatformFeesSupported={
-        !hasDefaultFeeConfig &&
-        [
-          CommonExt.isGetPlatformFeeInfoSupported(functionSelectors),
-          CommonExt.isSetPlatformFeeInfoSupported(functionSelectors),
-        ].every(Boolean)
-      }
-      isLoggedIn={isLoggedIn}
     />
   );
 }

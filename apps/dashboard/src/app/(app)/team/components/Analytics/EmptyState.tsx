@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { DotNetIcon } from "components/icons/brand-icons/DotNetIcon";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
@@ -9,6 +7,8 @@ import { DocLink } from "components/shared/DocLink";
 import { ArrowRightIcon } from "lucide-react";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import accountAbstractionIcon from "../../../../../../public/assets/tw-icons/account-abstraction.svg";
 import authIcon from "../../../../../../public/assets/tw-icons/auth.svg";
 import payIcon from "../../../../../../public/assets/tw-icons/pay.svg";
@@ -30,40 +30,44 @@ export function EmptyState() {
         </div>
         <div className="flex flex-wrap items-center justify-center gap-2">
           <SDKBadge
+            href="https://portal.thirdweb.com/typescript/v5"
             icon={TypeScriptIcon}
             label="TypeScript"
-            href="https://portal.thirdweb.com/typescript/v5"
           />
           <SDKBadge
+            href="https://portal.thirdweb.com/react/v5"
             icon={ReactIcon}
             label="React"
-            href="https://portal.thirdweb.com/react/v5"
           />
           <SDKBadge
+            href="https://portal.thirdweb.com/react-native/v5"
             icon={ReactIcon}
             label="React Native"
-            href="https://portal.thirdweb.com/react-native/v5"
           />
           <SDKBadge
+            href="https://portal.thirdweb.com/unity/v5"
             icon={UnityIcon}
             label="Unity"
-            href="https://portal.thirdweb.com/unity/v5"
           />
           <SDKBadge
+            href="https://portal.thirdweb.com/unreal-engine"
             icon={UnrealIcon}
             label="Unreal"
-            href="https://portal.thirdweb.com/unreal-engine"
           />
           <SDKBadge
+            href="https://portal.thirdweb.com/dotnet"
             icon={DotNetIcon}
             label=".NET"
-            href="https://portal.thirdweb.com/dotnet"
           />
         </div>
       </div>
       <div className="flex gap-2">
-        <Button variant="primary" asChild className="min-w-36">
-          <Link href="https://portal.thirdweb.com/connect" target="_blank">
+        <Button asChild className="min-w-36" variant="primary">
+          <Link
+            href="https://portal.thirdweb.com/connect"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
             View Docs <ArrowRightIcon className="ml-2 h-4 w-auto" />
           </Link>
         </Button>
@@ -76,24 +80,24 @@ function AnimatedIcons() {
   return (
     <div className="-space-x-2 flex">
       <Icon
-        icon={walletsIcon}
         className="-rotate-[16deg] group-hover:-rotate-[32deg] group-hover:-translate-x-[44px] group-hover:-translate-y-[12px] z-[0] translate-x-[0px] translate-y-[0px] scale-1 group-hover:scale-[1.2]"
+        icon={walletsIcon}
       />
       <Icon
-        icon={payIcon}
         className="-rotate-[12deg] group-hover:-rotate-[24deg] group-hover:-translate-x-[28px] -translate-y-[12px] group-hover:-translate-y-[40px] z-[1] translate-x-[0px] scale-1 group-hover:scale-[1.2]"
+        icon={payIcon}
       />
       <Icon
-        icon={authIcon}
         className="-translate-y-[16px] group-hover:-translate-y-[52px] z-[2] scale-1 group-hover:scale-[1.2]"
+        icon={authIcon}
       />
       <Icon
-        icon={accountAbstractionIcon}
         className="-translate-y-[12px] group-hover:-translate-y-[40px] z-[1] translate-x-[0px] rotate-[12deg] scale-1 group-hover:translate-x-[28px] group-hover:rotate-[24deg] group-hover:scale-[1.2]"
+        icon={accountAbstractionIcon}
       />
       <Icon
-        icon={socialAuthIcon}
         className="group-hover:-translate-y-[12px] z-[0] translate-x-[0px] translate-y-[0px] rotate-[16deg] scale-1 group-hover:translate-x-[44px] group-hover:rotate-[32deg] group-hover:scale-[1.2]"
+        icon={socialAuthIcon}
       />
     </div>
   );
@@ -114,11 +118,11 @@ function Icon({
       )}
     >
       <Image
-        src={icon}
         alt=""
-        width={24}
-        height={24}
         className="rounded-full"
+        height={24}
+        src={icon}
+        width={24}
       />
     </div>
   );
@@ -128,10 +132,14 @@ function SDKBadge({
   icon,
   label,
   href,
-}: { icon: React.FC<{ className?: string }>; label: string; href: string }) {
+}: {
+  icon: React.FC<{ className?: string }>;
+  label: string;
+  href: string;
+}) {
   return (
     <div className="rounded-full bg-muted px-2.5 py-1">
-      <DocLink link={href} label={label} icon={icon} />
+      <DocLink icon={icon} label={label} link={href} />
     </div>
   );
 }

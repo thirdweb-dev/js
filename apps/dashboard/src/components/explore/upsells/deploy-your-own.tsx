@@ -1,6 +1,6 @@
-import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
+import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 
 export const DeployUpsellCard: React.FC = () => {
   return (
@@ -13,16 +13,15 @@ export const DeployUpsellCard: React.FC = () => {
 
       <p className="text-muted-foreground ">
         Create a contract with a single command.{" "}
-        <TrackedLinkTW
-          category="deploy_upsell"
-          label="contract_kit"
+        <Link
           className="inline-flex items-center gap-1.5 text-link-foreground"
           href="https://portal.thirdweb.com/contracts/build/overview"
+          rel="noopener noreferrer"
           target="_blank"
         >
           Learn more about the Solidity SDK
           <ExternalLinkIcon className="size-4" />
-        </TrackedLinkTW>
+        </Link>
       </p>
 
       <div className="h-2" />
@@ -33,16 +32,15 @@ export const DeployUpsellCard: React.FC = () => {
 
       <p className="text-muted-foreground ">
         Deploy a contract with a single command.{" "}
-        <TrackedLinkTW
-          category="deploy_upsell"
-          label="portal_deploy"
+        <Link
           className="inline-flex items-center gap-1.5 text-link-foreground"
           href="https://portal.thirdweb.com/contracts/deploy/overview"
+          rel="noopener noreferrer"
           target="_blank"
         >
           Learn more about Deploy
           <ExternalLinkIcon className="size-4" />
-        </TrackedLinkTW>
+        </Link>
       </p>
 
       <div className="h-2" />

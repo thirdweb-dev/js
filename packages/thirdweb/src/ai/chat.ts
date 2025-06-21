@@ -1,4 +1,4 @@
-import { type Input, type Output, nebulaFetch } from "./common.js";
+import { type Input, nebulaFetch, type Output } from "./common.js";
 
 /**
  * Chat with Nebula.

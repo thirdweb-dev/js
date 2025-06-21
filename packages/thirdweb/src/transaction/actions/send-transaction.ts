@@ -196,8 +196,8 @@ export async function sendTransaction(
   }
 
   const serializableTransaction = await toSerializableTransaction({
-    transaction: transaction,
     from: account,
+    transaction: transaction,
   });
   // branch for gasless transactions
   if (gasless) {
@@ -207,9 +207,9 @@ export async function sendTransaction(
     );
     return sendGaslessTransaction({
       account,
-      transaction,
-      serializableTransaction,
       gasless,
+      serializableTransaction,
+      transaction,
     });
   }
 
@@ -217,8 +217,8 @@ export async function sendTransaction(
   // Store the transaction
   addTransactionToStore({
     address: account.address,
-    transactionHash: result.transactionHash,
     chainId: transaction.chain.id,
+    transactionHash: result.transactionHash,
   });
   return { ...result, chain: transaction.chain, client: transaction.client };
 }

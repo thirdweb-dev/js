@@ -12,18 +12,18 @@ export const LoadingView = (props: LoadingViewProps) => {
 
   return (
     <View style={styles.container}>
-      <ThemedSpinner size="large" color={theme.colors.accentText} />
+      <ThemedSpinner color={theme.colors.accentText} size="large" />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: "center",
+    flexDirection: "column",
+    gap: spacing.lg,
+    justifyContent: "center",
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.xxl,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: spacing.lg,
   },
 });

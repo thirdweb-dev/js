@@ -43,6 +43,7 @@ export function createContractQuery<
     const { contract, queryOptions, ...params } = options;
 
     return useQuery({
+      queryFn: () => readCall(options),
       queryKey: [
         "readContract",
         contract.chain.id,
@@ -50,7 +51,6 @@ export function createContractQuery<
         getFunctionId(readCall),
         stringify(params),
       ] as const,
-      queryFn: () => readCall(options),
       ...queryOptions,
     });
   }

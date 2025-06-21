@@ -45,5 +45,5 @@ function useHeightObserver() {
     };
   }, []);
 
-  return { height, elementRef: elementRef };
+  return { elementRef: elementRef, height };
 }

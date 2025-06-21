@@ -1,78 +1,80 @@
 const accountSlug = "/account";
+
 import type { SideBar } from "@/components/Layouts/DocLayout";
 
 export const sidebar: SideBar = {
-  name: "Account",
   links: [
     {
-      name: "Create Account",
-      href: `${accountSlug}/create-account`,
-    },
-    {
-      name: "Link Accounts",
-      href: `${accountSlug}/link-accounts`,
-    },
-    {
-      name: "Billing",
       links: [
         {
-          name: "Manage Billing",
+          href: `${accountSlug}/create-account`,
+          name: "Create Account",
+        },
+        {
+          href: `${accountSlug}/link-accounts`,
+          name: "Link Accounts",
+        },
+      ],
+      name: "Account",
+    },
+    {
+      links: [
+        {
+          href: `${accountSlug}/teams/manage-teams`,
+          name: "Manage Teams",
+        },
+        {
+          href: `${accountSlug}/teams/manage-team-members`,
+          name: "Manage Team Members",
+        },
+        {
           href: `${accountSlug}/billing/manage-billing`,
+          name: "Manage Billing",
         },
         {
-          name: "View Usage",
-          href: `${accountSlug}/billing/view-usage`,
-        },
-        {
-          name: "Credits",
-          href: `${accountSlug}/billing/credits`,
-        },
-        {
-          name: "Upgrade Plan",
-          href: `${accountSlug}/billing/upgrade-plan`,
-        },
-        {
-          name: "Manage Team",
-          href: `${accountSlug}/billing/manage-team`,
+          href: `${accountSlug}/teams/get-dedicated-support`,
+          name: "Get Dedicated Support",
         },
       ],
+      name: "Teams",
     },
     {
-      name: "Projects",
       links: [
         {
-          name: "Overview",
           href: `${accountSlug}/api-keys`,
+          name: "Overview",
         },
         {
-          name: "Create API Key",
           href: `${accountSlug}/api-keys/create`,
+          name: "Create API Key",
         },
         {
-          name: "Use API Key",
           href: `${accountSlug}/api-keys/use`,
+          name: "Use API Key",
         },
         {
-          name: "Edit enabled services",
           href: `${accountSlug}/api-keys/edit-services`,
+          name: "Edit enabled services",
         },
         {
-          name: "Delete API Key",
           href: `${accountSlug}/api-keys/delete`,
+          name: "Delete API Key",
         },
         {
-          name: "Access Restrictions",
           href: `${accountSlug}/api-keys/access`,
+          name: "Access Restrictions",
         },
         {
-          name: "Transfer Projects",
           href: `${accountSlug}/api-keys/transfer-projects`,
+          name: "Transfer Projects",
         },
       ],
+      name: "Projects",
     },
     {
-      name: "FAQs",
       href: `${accountSlug}/faq`,
+      name: "FAQs",
     },
   ],
+  name: "Teams & Accounts",
 };

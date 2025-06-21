@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.coincircle",
-  name: "CoinCircle",
-  homepage: "https://coincircle.com",
-  image_id: "eae63a23-c7ba-4f7e-24b3-e6fc69215d00",
   app: {
-    browser: "https://coincircle.com",
-    ios: "https://coincircle.com/app",
     android: "https://coincircle.com/app",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://coincircle.com",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://coincircle.com/app",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: null,
-    universal: "https://coincircle.com/app/walletconnect",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://coincircle.com",
   },
+  homepage: "https://coincircle.com",
+  id: "com.coincircle",
+  image_id: "eae63a23-c7ba-4f7e-24b3-e6fc69215d00",
+  mobile: {
+    native: null,
+    universal: "https://coincircle.com/app/walletconnect",
+  },
+  name: "CoinCircle",
+  rdns: null,
 } as const;

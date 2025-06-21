@@ -118,8 +118,8 @@ export async function status(options: status.Options): Promise<status.Result> {
     const errorJson = await response.json();
     throw new ApiError({
       code: errorJson.code || "UNKNOWN_ERROR",
-      message: errorJson.message || response.statusText,
       correlationId: errorJson.correlationId || undefined,
+      message: errorJson.message || response.statusText,
       statusCode: response.status,
     });
   }
@@ -127,53 +127,53 @@ export async function status(options: status.Options): Promise<status.Result> {
   const { data }: { data: Status } = await response.json();
   if (data.status === "FAILED") {
     return {
-      status: "FAILED",
       paymentId: data.paymentId,
+      status: "FAILED",
       transactions: data.transactions,
     };
   }
 
   if (data.status === "PENDING") {
     return {
-      status: "PENDING",
+      destinationChainId: data.destinationChainId,
+      destinationToken: data.destinationToken,
+      destinationTokenAddress: data.destinationTokenAddress,
       originAmount: BigInt(data.originAmount),
       originChainId: data.originChainId,
-      destinationChainId: data.destinationChainId,
-      originTokenAddress: data.originTokenAddress,
-      destinationTokenAddress: data.destinationTokenAddress,
-      transactions: data.transactions,
       originToken: data.originToken,
-      destinationToken: data.destinationToken,
-      sender: data.sender,
-      receiver: data.receiver,
+      originTokenAddress: data.originTokenAddress,
       paymentId: data.paymentId,
       purchaseData: data.purchaseData,
+      receiver: data.receiver,
+      sender: data.sender,
+      status: "PENDING",
+      transactions: data.transactions,
     };
   }
 
   if (data.status === "NOT_FOUND") {
     return {
-      status: "NOT_FOUND",
       paymentId: data.paymentId,
+      status: "NOT_FOUND",
       transactions: [],
     };
   }
 
   return {
-    status: "COMPLETED",
-    originAmount: BigInt(data.originAmount),
     destinationAmount: BigInt(data.destinationAmount),
-    originChainId: data.originChainId,
     destinationChainId: data.destinationChainId,
-    originTokenAddress: data.originTokenAddress,
-    destinationTokenAddress: data.destinationTokenAddress,
-    transactions: data.transactions,
-    originToken: data.originToken,
     destinationToken: data.destinationToken,
-    sender: data.sender,
-    receiver: data.receiver,
+    destinationTokenAddress: data.destinationTokenAddress,
+    originAmount: BigInt(data.originAmount),
+    originChainId: data.originChainId,
+    originToken: data.originToken,
+    originTokenAddress: data.originTokenAddress,
     paymentId: data.paymentId,
     purchaseData: data.purchaseData,
+    receiver: data.receiver,
+    sender: data.sender,
+    status: "COMPLETED",
+    transactions: data.transactions,
   };
 }
 

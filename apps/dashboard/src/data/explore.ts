@@ -20,9 +20,6 @@ export interface ExploreCategory {
 }
 
 const POPULAR = {
-  id: "popular",
-  name: "Popular",
-  description: "A collection of our most deployed contracts.",
   contracts: [
     "thirdweb.eth/DropERC721",
     "thirdweb.eth/MarketplaceV3",
@@ -33,14 +30,12 @@ const POPULAR = {
     "thirdweb.eth/NFTStake",
     "unlock-protocol.eth/PublicLock",
   ],
+  description: "A collection of our most deployed contracts.",
+  id: "popular",
+  name: "Popular",
 } satisfies ExploreCategory;
 
 const NFTS = {
-  id: "nft",
-  name: "NFT",
-  displayName: "NFTs",
-  description:
-    "NFT Collections, Editions, Drops and everything else NFT-related.",
   contracts: [
     "thirdweb.eth/DropERC721",
     "thirdweb.eth/OpenEditionERC721",
@@ -53,49 +48,49 @@ const NFTS = {
     "thirdweb.eth/Multiwrap",
     "kronickatz.eth/ERC721NESDrop",
   ],
+  description:
+    "NFT Collections, Editions, Drops and everything else NFT-related.",
+  displayName: "NFTs",
+  id: "nft",
+  name: "NFT",
 } satisfies ExploreCategory;
 
 const GOVERNANCE = {
-  id: "daos-governance",
-  name: "DAOs & Governance",
-  description: "Create your own DAO, vote on proposals, and manage a treasury.",
   contracts: [
     "thirdweb.eth/VoteERC20",
     "thirdweb.eth/TokenERC20",
     "thirdweb.eth/Split",
   ],
+  description: "Create your own DAO, vote on proposals, and manage a treasury.",
+  id: "daos-governance",
+  name: "DAOs & Governance",
 } satisfies ExploreCategory;
 
 const DROPS = {
-  id: "drops",
-  name: "Drop",
-  displayName: "Drops",
-  description: "Release NFTs and Tokens based on preset Claim Conditions.",
   contracts: [
     "thirdweb.eth/DropERC721",
     "thirdweb.eth/DropERC1155",
     "thirdweb.eth/DropERC20",
   ],
+  description: "Release NFTs and Tokens based on preset Claim Conditions.",
+  displayName: "Drops",
+  id: "drops",
+  name: "Drop",
 } satisfies ExploreCategory;
 
 const MARKETS = {
-  id: "marketplace",
-  name: "Marketplace",
-  displayName: "Marketplaces",
-  description: "Quickly spin up your own on-chain marketplace for NFTs.",
   contracts: [
     "thirdweb.eth/MarketplaceV3",
     "thirdweb.eth/TokenERC20",
     "thirdweb.eth/Split",
   ],
+  description: "Quickly spin up your own on-chain marketplace for NFTs.",
+  displayName: "Marketplaces",
+  id: "marketplace",
+  name: "Marketplace",
 } satisfies ExploreCategory;
 
 const MODULAR_CONTRACTS = {
-  id: "modular-contracts",
-  name: "modular",
-  displayName: "Modular Contracts",
-  description:
-    "Collection of highly customizable and upgradeable smart contracts built with the modular contracts framework.",
   contracts: [
     // erc721 drop
     [
@@ -106,8 +101,8 @@ const MODULAR_CONTRACTS = {
         "deployer.thirdweb.eth/RoyaltyERC721",
       ],
       {
-        title: "Modular NFT Drop",
         description: "ERC721 NFTs that anyone can mint.",
+        title: "Modular NFT Drop",
       },
     ],
     // erc721 token
@@ -119,8 +114,8 @@ const MODULAR_CONTRACTS = {
         "deployer.thirdweb.eth/TransferableERC721",
       ],
       {
-        title: "Modular NFT Collection",
         description: "ERC721 NFTs that only owners can mint.",
+        title: "Modular NFT Collection",
       },
     ],
     // open edition 721
@@ -132,8 +127,8 @@ const MODULAR_CONTRACTS = {
         "deployer.thirdweb.eth/RoyaltyERC721",
       ],
       {
-        title: "Modular Open Edition",
         description: "ERC721 NFTs with identical metadata.",
+        title: "Modular Open Edition",
       },
     ],
     // erc1155 drop
@@ -146,8 +141,8 @@ const MODULAR_CONTRACTS = {
         "deployer.thirdweb.eth/SequentialTokenIdERC1155",
       ],
       {
-        title: "Modular Edition Drop",
         description: "ERC1155 NFTs that others can mint.",
+        title: "Modular Edition Drop",
       },
     ],
     // erc1155 token
@@ -160,8 +155,8 @@ const MODULAR_CONTRACTS = {
         "deployer.thirdweb.eth/SequentialTokenIdERC1155",
       ],
       {
-        title: "Modular Edition",
         description: "ERC1155 NFTs that only owners can mint.",
+        title: "Modular Edition",
       },
     ],
     // erc20 drop
@@ -172,8 +167,8 @@ const MODULAR_CONTRACTS = {
         "deployer.thirdweb.eth/TransferableERC20",
       ],
       {
-        title: "Modular Token Drop",
         description: "ERC20 Tokens that others can mint.",
+        title: "Modular Token Drop",
       },
     ],
     // erc20 token
@@ -184,18 +179,19 @@ const MODULAR_CONTRACTS = {
         "deployer.thirdweb.eth/TransferableERC20",
       ],
       {
-        title: "Modular Token",
         description: "ERC20 Tokens that only owners can mint.",
+        title: "Modular Token",
       },
     ],
   ],
+  description:
+    "Collection of highly customizable and upgradeable smart contracts built with the modular contracts framework.",
+  displayName: "Modular Contracts",
+  id: "modular-contracts",
+  name: "modular",
 } satisfies ExploreCategory;
 
 const SUPERCHAIN = {
-  id: "modular-superchain-contracts",
-  name: "Modular Superchain Contracts",
-  displayName: "Modular Superchain Contracts",
-  description: "Modular contracts with OP Superchain support",
   contracts: [
     // erc20 token + superchain
     [
@@ -206,8 +202,8 @@ const SUPERCHAIN = {
         "deployer.thirdweb.eth/SuperChainInterop",
       ],
       {
-        title: "Modular Superchain Token",
         description: "ERC20 Tokens that only owners can mint.",
+        title: "Modular Superchain Token",
       },
     ],
     // erc20 drop + superchain
@@ -219,30 +215,29 @@ const SUPERCHAIN = {
         "deployer.thirdweb.eth/SuperChainInterop",
       ],
       {
-        title: "Modular Superchain Token Drop",
         description: "ERC20 Tokens that others can mint.",
+        title: "Modular Superchain Token Drop",
       },
     ],
   ],
-  showInExplore: true,
+  description: "Modular contracts with OP Superchain support",
+  displayName: "Modular Superchain Contracts",
+  id: "modular-superchain-contracts",
   isBeta: true,
+  name: "Modular Superchain Contracts",
+  showInExplore: true,
 } satisfies ExploreCategory;
 
 const AIRDROP = {
-  id: "airdrop",
-  name: "Airdrop",
-  displayName: "Airdrops",
+  contracts: ["thirdweb.eth/Airdrop"],
   description:
     "Efficiently transfer large numbers of on-chain assets to a large number of recipients.",
-  contracts: ["thirdweb.eth/Airdrop"],
+  displayName: "Airdrops",
+  id: "airdrop",
+  name: "Airdrop",
 } satisfies ExploreCategory;
 
 const GAMING = {
-  id: "gaming",
-  name: "Gaming",
-  displayName: "Gaming",
-  description:
-    "A collection of contracts that are popular for building play-to-earn and free-to-own web3 games.",
   contracts: [
     "thirdweb.eth/MarketplaceV3",
     "thirdweb.eth/DropERC721",
@@ -251,65 +246,70 @@ const GAMING = {
     "thirdweb.eth/Multiwrap",
     "thirdweb.eth/NFTStake",
   ],
+  description:
+    "A collection of contracts that are popular for building play-to-earn and free-to-own web3 games.",
+  displayName: "Gaming",
+  id: "gaming",
+  name: "Gaming",
   showInExplore: false,
 } satisfies ExploreCategory;
 
 const LOYALTY = {
-  id: "loyalty",
-  name: "Loyalty",
-  displayName: "Loyalty",
-  description:
-    "A collection of contracts that are popular for building loyalty programs.",
   contracts: [
     "thirdweb.eth/LoyaltyCard",
     "thirdweb.eth/MarketplaceV3",
     "thirdweb.eth/TokenERC20",
   ],
+  description:
+    "A collection of contracts that are popular for building loyalty programs.",
+  displayName: "Loyalty",
+  id: "loyalty",
+  name: "Loyalty",
   showInExplore: false,
 } satisfies ExploreCategory;
 
 const COMMERCE = {
-  id: "commerce",
-  name: "Commerce",
-  displayName: "Commerce",
-  description:
-    "Most popular contracts for building web3 commerce apps. Reward loyal customers and sell NFTs through your storefront.",
   contracts: [
     "thirdweb.eth/TokenERC721",
     "thirdweb.eth/TokenERC1155",
     "thirdweb.eth/TokenERC20",
     "thirdweb.eth/Split",
   ],
+  description:
+    "Most popular contracts for building web3 commerce apps. Reward loyal customers and sell NFTs through your storefront.",
+  displayName: "Commerce",
+  id: "commerce",
+  name: "Commerce",
   showInExplore: false,
 } satisfies ExploreCategory;
 
 const STAKING = {
-  id: "staking",
-  name: "Staking",
-  displayName: "Staking",
-  description: "Stake your NFTs or tokens to earn ERC20 tokens in return.",
   contracts: [
     "thirdweb.eth/NFTStake",
     "thirdweb.eth/EditionStake",
     "thirdweb.eth/TokenStake",
   ],
+  description: "Stake your NFTs or tokens to earn ERC20 tokens in return.",
+  displayName: "Staking",
+  id: "staking",
+  name: "Staking",
   showInExplore: true,
 } satisfies ExploreCategory;
 
 const SMART_WALLET = {
-  id: "smart-wallet",
-  name: "Account Abstraction",
-  displayName: "Account Abstraction",
-  description:
-    "Account factories that let you spin up Account Abstraction (ERC-4337) wallets for your users. Not sure which factory is right for you?",
-  learnMore:
-    "https://portal.thirdweb.com/wallets/smart-wallet/get-started#1-deploy-a-smart-wallet-factory-contract",
   contracts: [
     "thirdweb.eth/AccountFactory",
     "thirdweb.eth/ManagedAccountFactory",
     "thirdweb.eth/AccountFactory_0_7",
     "thirdweb.eth/ManagedAccountFactory_0_7",
   ],
+  description:
+    "Account factories that let you spin up Account Abstraction (ERC-4337) wallets for your users. Not sure which factory is right for you?",
+  displayName: "Account Abstraction",
+  id: "smart-wallet",
+  learnMore:
+    "https://portal.thirdweb.com/wallets/smart-wallet/get-started#1-deploy-a-smart-wallet-factory-contract",
+  name: "Account Abstraction",
   showInExplore: true,
 } satisfies ExploreCategory;
 

@@ -19,10 +19,10 @@ describe("verifyHash", async () => {
       await expect(
         verifyHash({
           address: TEST_ACCOUNT_A.address,
+          chain: FORKED_ETHEREUM_CHAIN,
+          client: TEST_CLIENT,
           hash: hashMessage("hello world"),
           signature,
-          client: TEST_CLIENT,
-          chain: FORKED_ETHEREUM_CHAIN,
         }),
       ).resolves.toBe(true);
     });
@@ -36,10 +36,10 @@ describe("verifyHash", async () => {
       await expect(
         verifyHash({
           address: TEST_ACCOUNT_A.address,
+          chain: FORKED_ETHEREUM_CHAIN,
+          client: TEST_CLIENT,
           hash: hashMessage("hello world"),
           signature: toBytes(signature),
-          client: TEST_CLIENT,
-          chain: FORKED_ETHEREUM_CHAIN,
         }),
       ).resolves.toBe(true);
     });
@@ -53,10 +53,10 @@ describe("verifyHash", async () => {
       await expect(
         verifyHash({
           address: TEST_ACCOUNT_A.address,
+          chain: FORKED_ETHEREUM_CHAIN,
+          client: TEST_CLIENT,
           hash: hashMessage("hello world"),
           signature: parseSignature(signature),
-          client: TEST_CLIENT,
-          chain: FORKED_ETHEREUM_CHAIN,
         }),
       ).resolves.toBe(true);
     });

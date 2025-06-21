@@ -48,10 +48,7 @@ export function SiteLink({
   const activeWallet = useActiveWallet();
   const walletId = activeWallet?.id;
 
-  const {
-    data: { authProvider, authCookie } = {},
-  } = useQuery({
-    queryKey: ["site-link", walletId, href, client.clientId, ecosystem],
+  const { data: { authProvider, authCookie } = {} } = useQuery({
     enabled:
       activeWallet &&
       (isEcosystemWallet(activeWallet) ||
@@ -59,16 +56,17 @@ export function SiteLink({
         walletId === "smart"),
     queryFn: async () => {
       const storage = new ClientScopedStorage({
-        storage: webLocalStorage,
         clientId: client.clientId,
         ecosystem,
+        storage: webLocalStorage,
       });
 
       const authProvider = await getLastAuthProvider(webLocalStorage);
       const authCookie = await storage.getAuthCookie();
 
-      return { authProvider, authCookie };
+      return { authCookie, authProvider };
     },
+    queryKey: ["site-link", walletId, href, client.clientId, ecosystem],
   });
 
   const url = new URL(href);

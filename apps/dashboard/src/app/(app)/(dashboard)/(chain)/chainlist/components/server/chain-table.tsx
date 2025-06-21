@@ -1,3 +1,4 @@
+import Fuse from "fuse.js";
 import {
   Table,
   TableBody,
@@ -6,7 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Fuse from "fuse.js";
 import { StarButton } from "../../../components/client/star-button";
 import type {
   ChainMetadataWithServices,
@@ -126,14 +126,14 @@ async function getChainsToRender(params: SearchParams) {
           limit: DEFAULT_PAGE_SIZE,
         })
         .map((e) => e.item),
-      totalCount,
       filteredCount,
+      totalCount,
     };
   }
   return {
     chainsToRender: filteredChains,
-    totalCount,
     filteredCount,
+    totalCount,
   };
 }
 
@@ -177,7 +177,6 @@ export async function ChainsData(props: {
               <TableBody>
                 {paginatedChains.map((chain) => (
                   <ChainListRow
-                    key={chain.chainId}
                     chainId={chain.chainId}
                     chainName={chain.name}
                     chainSlug={chain.slug}
@@ -185,7 +184,6 @@ export async function ChainsData(props: {
                     enabledServices={chain.services
                       .filter((c) => c.enabled)
                       .map((c) => c.service)}
-                    isDeprecated={chain.status === "deprecated"}
                     favoriteButton={
                       props.isLoggedIn ? (
                         <div className="relative h-6 w-6">
@@ -197,6 +195,8 @@ export async function ChainsData(props: {
                       ) : undefined
                     }
                     iconUrl={chain.icon?.url}
+                    isDeprecated={chain.status === "deprecated"}
+                    key={chain.chainId}
                   />
                 ))}
               </TableBody>
@@ -205,9 +205,8 @@ export async function ChainsData(props: {
         ) : (
           <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {paginatedChains.map((chain) => (
-              <li key={chain.chainId} className="h-full">
+              <li className="h-full" key={chain.chainId}>
                 <ChainListCard
-                  key={chain.chainId}
                   chainId={chain.chainId}
                   chainName={chain.name}
                   chainSlug={chain.slug}
@@ -215,7 +214,6 @@ export async function ChainsData(props: {
                   enabledServices={chain.services
                     .filter((c) => c.enabled)
                     .map((c) => c.service)}
-                  isDeprecated={chain.status === "deprecated"}
                   favoriteButton={
                     props.isLoggedIn ? (
                       <div className="relative h-6 w-6">
@@ -227,6 +225,8 @@ export async function ChainsData(props: {
                     ) : undefined
                   }
                   iconUrl={chain.icon?.url}
+                  isDeprecated={chain.status === "deprecated"}
+                  key={chain.chainId}
                 />
               </li>
             ))}
@@ -235,7 +235,7 @@ export async function ChainsData(props: {
       </main>
       <div className="h-10" />
       {totalPages > 1 && (
-        <ChainlistPagination totalPages={totalPages} activePage={activePage} />
+        <ChainlistPagination activePage={activePage} totalPages={totalPages} />
       )}
       <div className="h-4" />
       <p className="text-balance text-center text-muted-foreground text-sm">

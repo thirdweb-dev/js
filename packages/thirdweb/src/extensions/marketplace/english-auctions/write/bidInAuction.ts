@@ -40,11 +40,10 @@ export function bidInAuction(
   options: BaseTransactionOptions<BidInAuctionParams>,
 ) {
   return BidInAuction.bidInAuction({
-    contract: options.contract,
     asyncParams: async () => {
       const auction = await GetAuction.getAuction({
-        contract: options.contract,
         auctionId: options.auctionId,
+        contract: options.contract,
       });
 
       const resolvedBidAmountWei = await (async () => {
@@ -59,8 +58,8 @@ export function bidInAuction(
         return await convertErc20Amount({
           amount: options.bidAmount,
           chain: options.contract.chain,
-          erc20Address: auction.currencyContractAddress,
           client: options.contract.client,
+          erc20Address: auction.currencyContractAddress,
         });
       })();
 
@@ -77,9 +76,9 @@ export function bidInAuction(
       if (existingWinningBid) {
         // check if the bid amount is sufficient to outbid the existing winning bid
         const isNewWinner = await IsNewWinningBid.isNewWinningBid({
-          contract: options.contract,
           auctionId: options.auctionId,
           bidAmount: resolvedBidAmountWei,
+          contract: options.contract,
         });
         if (!isNewWinner) {
           throw new Error(
@@ -97,13 +96,14 @@ export function bidInAuction(
         auctionId: options.auctionId,
         bidAmount: resolvedBidAmountWei,
         overrides: {
+          extraGas: 50_000n,
           value: isNativeTokenAddress(auction.currencyContractAddress)
             ? resolvedBidAmountWei
-            : undefined,
-          extraGas: 50_000n, // add extra gas to account for router call
+            : undefined, // add extra gas to account for router call
         },
       };
     },
+    contract: options.contract,
   });
 }
 

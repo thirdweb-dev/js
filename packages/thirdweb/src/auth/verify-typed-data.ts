@@ -96,17 +96,17 @@ export async function verifyTypedData<
   types,
 }: VerifyTypedDataParams<typedData, primaryType>): Promise<boolean> {
   const messageHash = ox__TypedData.getSignPayload({
-    message,
     domain,
+    message,
     primaryType,
     types,
   } as HashTypedDataParams);
   return verifyHash({
-    hash: messageHash,
-    signature,
+    accountFactory,
     address,
     chain,
     client,
-    accountFactory,
+    hash: messageHash,
+    signature,
   });
 }

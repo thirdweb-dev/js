@@ -11,9 +11,10 @@ import type { PayUIOptions } from "../../../core/hooks/connection/ConnectButtonP
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
+import { webWindowAdapter } from "../../adapters/WindowAdapter.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
+import { BridgeOrchestrator } from "../Bridge/BridgeOrchestrator.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
-import { LazyBuyScreen } from "../ConnectWallet/screens/Buy/LazyBuyScreen.js";
 import { Modal } from "../components/Modal.js";
 import type { LocaleId } from "../types.js";
 import { DepositScreen } from "./DepositScreen.js";
@@ -39,40 +40,40 @@ export function TransactionModal(props: ModalProps) {
   const wallet = useActiveWallet();
 
   useQuery({
-    queryKey: ["transaction-modal-event", props.txId],
+    enabled: !!wallet && !!account,
     queryFn: async () => {
       if (!account || !wallet) {
         throw new Error(); // never happens, because enabled is false
       }
       trackPayEvent({
         client: props.client,
-        walletAddress: account.address,
-        walletType: wallet.id,
-        toChainId: props.tx.chain.id,
-        toToken: props.tx.erc20Value
-          ? (await resolvePromisedValue(props.tx.erc20Value))?.tokenAddress
-          : undefined,
         event:
           props.modalMode === "buy"
             ? "open_pay_transaction_modal"
             : "open_pay_deposit_modal",
+        toChainId: props.tx.chain.id,
+        toToken: props.tx.erc20Value
+          ? (await resolvePromisedValue(props.tx.erc20Value))?.tokenAddress
+          : undefined,
+        walletAddress: account.address,
+        walletType: wallet.id,
       });
 
       return null;
     },
-    enabled: !!wallet && !!account,
+    queryKey: ["transaction-modal-event", props.txId],
   });
 
   return (
     <CustomThemeProvider theme={props.theme}>
       <Modal
         open={true}
-        size="compact"
         setOpen={(_open) => {
           if (!_open) {
             props.onClose();
           }
         }}
+        size="compact"
       >
         <TransactionModalContent {...props} />
       </Modal>
@@ -91,9 +92,10 @@ function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
   if (screen === "execute-tx") {
     return (
       <ExecutingTxScreen
-        tx={props.tx}
         closeModal={props.onClose}
         onTxSent={props.onTxSent}
+        tx={props.tx}
+        windowAdapter={webWindowAdapter}
       />
     );
   }
@@ -102,30 +104,34 @@ function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
     return (
       <DepositScreen
         client={props.client}
-        onBack={props.onBack}
-        tx={props.tx}
         connectLocale={localeQuery.data}
+        onBack={props.onBack}
         onDone={() => {
           setScreen("execute-tx");
         }}
+        tx={props.tx}
       />
     );
   }
 
   return (
-    <LazyBuyScreen
-      title={props.title}
-      isEmbed={false}
+    <BridgeOrchestrator
       client={props.client}
-      onBack={props.onBack}
-      supportedTokens={props.supportedTokens}
       connectLocale={localeQuery.data}
-      theme={typeof props.theme === "string" ? props.theme : props.theme.type}
-      payOptions={props.payOptions}
-      onDone={() => {
+      connectOptions={undefined}
+      onCancel={props.onClose}
+      onComplete={() => {
         setScreen("execute-tx");
       }}
-      connectOptions={undefined}
+      onError={(_error) => {}}
+      paymentLinkId={undefined}
+      presetOptions={undefined}
+      purchaseData={undefined}
+      receiverAddress={undefined}
+      uiOptions={{
+        mode: "transaction",
+        transaction: props.tx,
+      }}
     />
   );
 }

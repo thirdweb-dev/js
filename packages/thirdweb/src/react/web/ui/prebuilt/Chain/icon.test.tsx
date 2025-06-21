@@ -46,13 +46,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("ChainIcon", () => {
 
   it("fetchChainIcon should return a resolved url from the chain object, NOT the ipfs uri", async () => {
     const mockEthereum = defineChain({
-      id: 1,
-      name: "Ethereum",
-      nativeCurrency: {
-        name: "Ether",
-        symbol: "ETH",
-        decimals: 18,
-      },
       blockExplorers: [
         {
           name: "Etherscan",
@@ -60,10 +53,17 @@ describe.runIf(process.env.TW_SECRET_KEY)("ChainIcon", () => {
         },
       ],
       icon: {
-        url: "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
         format: "png",
-        width: 100,
         height: 100,
+        url: "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
+        width: 100,
+      },
+      id: 1,
+      name: "Ethereum",
+      nativeCurrency: {
+        decimals: 18,
+        name: "Ether",
+        symbol: "ETH",
       },
     });
     const resolvedUrl = await fetchChainIcon({ chain: mockEthereum, client });

@@ -14,13 +14,13 @@ type State = {
 const UNTHREAD_API_KEY = process.env.UNTHREAD_API_KEY || "";
 
 const planToCustomerId = {
+  accelerate: process.env.UNTHREAD_ACCELERATE_TIER_ID as string,
   free: process.env.UNTHREAD_FREE_TIER_ID as string,
+  growth: process.env.UNTHREAD_GROWTH_TIER_ID as string,
+  pro: process.env.UNTHREAD_PRO_TIER_ID as string,
+  scale: process.env.UNTHREAD_SCALE_TIER_ID as string,
   // treat starter as free
   starter: process.env.UNTHREAD_FREE_TIER_ID as string,
-  growth: process.env.UNTHREAD_GROWTH_TIER_ID as string,
-  accelerate: process.env.UNTHREAD_ACCELERATE_TIER_ID as string,
-  scale: process.env.UNTHREAD_SCALE_TIER_ID as string,
-  pro: process.env.UNTHREAD_PRO_TIER_ID as string,
 } as const;
 
 function isValidPlan(plan: string): plan is keyof typeof planToCustomerId {
@@ -88,8 +88,8 @@ export async function createTicketAction(
 
   if (!teamId) {
     return {
-      success: false,
       message: "teamId is required",
+      success: false,
     };
   }
 
@@ -97,8 +97,8 @@ export async function createTicketAction(
 
   if (!team) {
     return {
-      success: false,
       message: `Team with id "${teamId}" not found`,
+      success: false,
     };
   }
 
@@ -134,38 +134,38 @@ export async function createTicketAction(
   }
 
   const markdown = prepareEmailBody({
-    product,
-    markdownInput: keyVal.markdown || "",
     email: account.email || "",
-    name: account.name || "",
     extraInfoInput: keyVal,
-    walletAddress: walletAddress,
+    markdownInput: keyVal.markdown || "",
+    name: account.name || "",
+    product,
     telegramHandle: telegramHandle,
+    walletAddress: walletAddress,
   });
 
   const content = {
-    type: "email",
-    title,
-    markdown,
-    status: "open",
-    onBehalfOf: {
-      email: account.email,
-      name: account.name,
-      id: account.id,
-    },
     customerId,
     emailInboxId: process.env.UNTHREAD_EMAIL_INBOX_ID,
+    markdown,
+    onBehalfOf: {
+      email: account.email,
+      id: account.id,
+      name: account.name,
+    },
+    status: "open",
+    title,
     triageChannelId: process.env.UNTHREAD_TRIAGE_CHANNEL_ID,
+    type: "email",
   };
 
   // check files
   const files = formData.getAll("files") as File[];
 
   if (files.length > 10) {
-    return { success: false, message: "You can only attach 10 files at once." };
+    return { message: "You can only attach 10 files at once.", success: false };
   }
   if (files.some((file) => file.size > 10 * 1024 * 1024)) {
-    return { success: false, message: "The max file size is 20MB." };
+    return { message: "The max file size is 20MB.", success: false };
   }
 
   // add the content
@@ -182,11 +182,11 @@ export async function createTicketAction(
 
   // actually create the ticket
   const res = await fetch("https://api.unthread.io/api/conversations", {
-    method: "POST",
+    body: formData,
     headers: {
       "X-Api-Key": UNTHREAD_API_KEY,
     },
-    body: formData,
+    method: "POST",
   });
   if (!res.ok) {
     console.error(
@@ -196,13 +196,13 @@ export async function createTicketAction(
       await res.text(),
     );
     return {
-      success: false,
       message: "Failed to create ticket, please try again later.",
+      success: false,
     };
   }
 
   return {
-    success: true,
     message: "Ticket created successfully",
+    success: true,
   };
 }

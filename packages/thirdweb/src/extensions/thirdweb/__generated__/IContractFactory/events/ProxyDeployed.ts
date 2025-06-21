@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "ProxyDeployed" event.
@@ -40,8 +40,8 @@ export type ProxyDeployedEventFilters = Partial<{
  */
 export function proxyDeployedEvent(filters: ProxyDeployedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event ProxyDeployed(address indexed implementation, address proxy, address indexed deployer)",
-    filters,
   });
 }

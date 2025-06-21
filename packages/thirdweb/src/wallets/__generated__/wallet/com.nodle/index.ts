@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.nodle",
-  name: "Nodle",
-  homepage: "https://www.nodle.com/products/cash_app",
-  image_id: "39badb5c-adeb-4188-c803-a63a5cffdf00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/nodle-app-to-earn-crypto/id1480763553",
     android: "https://play.google.com/store/apps/details?id=io.nodle.cash",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/nodle-app-to-earn-crypto/id1480763553",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "nodle://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.nodle.com/products/cash_app",
+  id: "com.nodle",
+  image_id: "39badb5c-adeb-4188-c803-a63a5cffdf00",
+  mobile: {
+    native: "nodle://",
+    universal: null,
+  },
+  name: "Nodle",
+  rdns: null,
 } as const;

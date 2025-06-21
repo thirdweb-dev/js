@@ -2,33 +2,33 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.rabby",
-  name: "Rabby",
-  homepage: "https://rabby.io/",
-  image_id: "255e6ba2-8dfd-43ad-e88e-57cbb98f6800",
   app: {
+    android: null,
     browser:
       "https://chrome.google.com/webstore/detail/rabby/acmacodkjbdgmoleebolmdjonilkdbch",
-    ios: null,
-    android: null,
-    mac: null,
-    windows: null,
-    linux: null,
     chrome:
       "https://chrome.google.com/webstore/detail/rabby-wallet/acmacodkjbdgmoleebolmdjonilkdbch",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: "io.rabby",
-  mobile: {
-    native: null,
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal:
       "https://chrome.google.com/webstore/detail/rabby/acmacodkjbdgmoleebolmdjonilkdbch",
   },
+  homepage: "https://rabby.io/",
+  id: "io.rabby",
+  image_id: "255e6ba2-8dfd-43ad-e88e-57cbb98f6800",
+  mobile: {
+    native: null,
+    universal: null,
+  },
+  name: "Rabby",
+  rdns: "io.rabby",
 } as const;

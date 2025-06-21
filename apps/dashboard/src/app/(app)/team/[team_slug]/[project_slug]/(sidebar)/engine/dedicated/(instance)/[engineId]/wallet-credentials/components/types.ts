@@ -17,7 +17,7 @@ export type CredentialFormData = CircleCredentialFormData;
 export type CredentialUpdateFormData = CircleCredentialUpdateFormData;
 
 export const CREDENTIAL_TYPE_OPTIONS = [
-  { value: "circle", label: "Circle" },
+  { label: "Circle", value: "circle" },
 ] as const;
 
 export type CredentialType = (typeof CREDENTIAL_TYPE_OPTIONS)[number]["value"];

@@ -1,10 +1,22 @@
 "use client";
+import { useDashboardStorageUpload } from "@3rdweb-sdk/react/hooks/useDashboardStorageUpload";
+import {
+  AlertTriangleIcon,
+  CheckIcon,
+  ChevronsUpDownIcon,
+  ExternalLinkIcon,
+  PencilIcon,
+  PlusCircleIcon,
+} from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 /* eslint-disable */
 import { Img } from "@/components/blocks/Img";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import {
   Dialog,
   DialogClose,
@@ -24,23 +36,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
-import { useDashboardStorageUpload } from "@3rdweb-sdk/react/hooks/useDashboardStorageUpload";
-import {
-  AlertTriangleIcon,
-  CheckIcon,
-  ChevronsUpDownIcon,
-  ExternalLinkIcon,
-  PencilIcon,
-  PlusCircleIcon,
-} from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { toast } from "sonner";
-import type { ThirdwebClient } from "thirdweb";
 import { useEcosystemList } from "../../../hooks/use-ecosystem-list";
 import type { Ecosystem } from "../../../types";
 import { useUpdateEcosystem } from "../configuration/hooks/use-update-ecosystem";
@@ -93,8 +93,8 @@ function EcosystemSelect(props: {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="outline"
           className="relative flex w-full justify-start truncate pr-8 pl-3 md:w-48"
+          variant="outline"
         >
           <div className="truncate">{props.ecosystem?.name}</div>
           <ChevronsUpDownIcon className="absolute right-2 h-4 w-4 text-muted-foreground" />
@@ -103,10 +103,10 @@ function EcosystemSelect(props: {
       <DropdownMenuContent className="w-full md:w-48">
         <DropdownMenuGroup>
           {ecosystems?.map((ecosystem) => (
-            <DropdownMenuItem key={ecosystem.id} asChild>
+            <DropdownMenuItem asChild key={ecosystem.id}>
               <Link
-                href={`${props.ecosystemLayoutPath}/${ecosystem.slug}`}
                 className="relative flex cursor-pointer items-center pr-3 pl-8"
+                href={`${props.ecosystemLayoutPath}/${ecosystem.slug}`}
               >
                 {ecosystem.slug === props.ecosystem.slug && (
                   <CheckIcon className="absolute left-2 h-4 w-4 text-foreground" />
@@ -117,7 +117,7 @@ function EcosystemSelect(props: {
           ))}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <Link href={`${props.ecosystemLayoutPath}/create`} className="">
+        <Link className="" href={`${props.ecosystemLayoutPath}/create`}>
           <DropdownMenuItem className="relative flex cursor-pointer items-center pr-3 pl-8">
             <PlusCircleIcon className="absolute left-2 h-4 w-4" />
             <div className="truncate">New Ecosystem</div>
@@ -137,8 +137,7 @@ export function EcosystemHeader(props: {
   client: ThirdwebClient;
 }) {
   const { data: fetchedEcosystem } = useEcosystem({
-    teamIdOrSlug: props.teamIdOrSlug,
-    slug: props.ecosystem.slug,
+    initialData: props.ecosystem,
     refetchInterval:
       props.ecosystem.status === "requested"
         ? 3000
@@ -146,14 +145,15 @@ export function EcosystemHeader(props: {
           ? 60000
           : undefined,
     refetchOnWindowFocus: false,
-    initialData: props.ecosystem,
+    slug: props.ecosystem.slug,
+    teamIdOrSlug: props.teamIdOrSlug,
   });
 
   const ecosystem = fetchedEcosystem ?? props.ecosystem;
 
   const ecosystemImageLink = resolveSchemeWithErrorHandler({
-    uri: ecosystem.imageUrl,
     client: props.client,
+    uri: ecosystem.imageUrl,
   });
 
   // ------------------- Image Upload Logic -------------------
@@ -176,15 +176,15 @@ export function EcosystemHeader(props: {
         teamId: props.teamId,
       },
       {
-        onSuccess: () => {
-          toast.success("Ecosystem updated");
-          setIsDialogOpen(false);
-          router.refresh();
-        },
         onError: (error) => {
           const message =
             error instanceof Error ? error.message : "Failed to update image";
           toast.error(message);
+        },
+        onSuccess: () => {
+          toast.success("Ecosystem updated");
+          setIsDialogOpen(false);
+          router.refresh();
         },
       },
     );
@@ -248,7 +248,6 @@ export function EcosystemHeader(props: {
                 ecosystemImageLink && (
                   <div className="relative">
                     <Img
-                      src={ecosystemImageLink}
                       alt={ecosystem.name}
                       className={cn(
                         "size-24",
@@ -256,14 +255,14 @@ export function EcosystemHeader(props: {
                         "rounded-full",
                         "object-contain object-center",
                       )}
+                      src={ecosystemImageLink}
                     />
 
                     {/* Upload Dialog */}
-                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <Dialog onOpenChange={setIsDialogOpen} open={isDialogOpen}>
                       <DialogTrigger asChild>
                         <Button
-                          variant="ghost"
-                          size="icon"
+                          aria-label="Change logo"
                           className={cn(
                             "absolute",
                             "right-0 bottom-0",
@@ -273,7 +272,8 @@ export function EcosystemHeader(props: {
                             "bg-background",
                             "hover:bg-accent",
                           )}
-                          aria-label="Change logo"
+                          size="icon"
+                          variant="ghost"
                         >
                           <PencilIcon className="h-4 w-4" />
                         </Button>
@@ -285,24 +285,24 @@ export function EcosystemHeader(props: {
 
                         <div className="flex flex-col gap-4 py-2">
                           <ImageUpload
+                            accept="image/png,image/jpeg,image/webp"
                             onUpload={(files) => {
                               if (files?.[0]) {
                                 setSelectedFile(files[0]);
                               }
                             }}
-                            accept="image/png,image/jpeg,image/webp"
                           />
                         </div>
 
                         <DialogFooter className="mt-4">
                           <DialogClose asChild>
-                            <Button variant="outline" disabled={isUploading}>
+                            <Button disabled={isUploading} variant="outline">
                               Cancel
                             </Button>
                           </DialogClose>
                           <Button
-                            onClick={handleUpload}
                             disabled={isUploading || !selectedFile}
+                            onClick={handleUpload}
                           >
                             {isUploading ? (
                               <Spinner className="h-4 w-4" />
@@ -323,15 +323,15 @@ export function EcosystemHeader(props: {
                   <h2 className="font-semibold text-3xl text-foreground tracking-tight">
                     {ecosystem.name}
                     <Dialog
-                      open={isNameDialogOpen}
                       onOpenChange={setIsNameDialogOpen}
+                      open={isNameDialogOpen}
                     >
                       <DialogTrigger asChild>
                         <Button
-                          variant="ghost"
-                          size="icon"
-                          className="ml-2 h-5 w-5 rounded-full p-1 hover:bg-accent"
                           aria-label="Edit name"
+                          className="ml-2 h-5 w-5 rounded-full p-1 hover:bg-accent"
+                          size="icon"
+                          variant="ghost"
                         >
                           <PencilIcon className="h-4 w-4" />
                         </Button>
@@ -344,20 +344,20 @@ export function EcosystemHeader(props: {
 
                         <div className="flex flex-col gap-4 py-2">
                           <Input
-                            value={tempName}
                             onChange={(e) => setTempName(e.target.value)}
+                            value={tempName}
                           />
                         </div>
 
                         <DialogFooter className="mt-4">
                           <DialogClose asChild>
-                            <Button variant="outline" disabled={isUpdating}>
+                            <Button disabled={isUpdating} variant="outline">
                               Cancel
                             </Button>
                           </DialogClose>
                           <Button
-                            onClick={handleNameSave}
                             disabled={isUpdating || !tempName.trim()}
+                            onClick={handleNameSave}
                           >
                             {isUpdating ? (
                               <Spinner className="h-4 w-4" />
@@ -375,24 +375,24 @@ export function EcosystemHeader(props: {
                 ) : (
                   <div>
                     <CopyTextButton
+                      className="-translate-x-2 px-2 py-0.5 text-muted-foreground"
+                      copyIconPosition="right"
                       textToCopy={`ecosystem.${ecosystem.slug}`}
                       textToShow={`ecosystem.${ecosystem.slug}`}
-                      copyIconPosition="right"
                       tooltip="Copy Ecosystem slug"
                       variant="ghost"
-                      className="-translate-x-2 px-2 py-0.5 text-muted-foreground"
                     />
 
                     <Button
                       asChild
+                      className="-translate-x-2 h-auto w-auto gap-2 rounded-xl px-2 py-0.5 text-muted-foreground"
                       size="sm"
                       variant="ghost"
-                      className="-translate-x-2 h-auto w-auto gap-2 rounded-xl px-2 py-0.5 text-muted-foreground"
                     >
                       <Link
                         href={`https://${ecosystem.slug}.ecosystem.thirdweb.com`}
+                        rel="noopener noreferrer"
                         target="_blank"
-                        rel="noreferrer"
                       >
                         {`${ecosystem.slug}.ecosystem.thirdweb.com`}
                         <ExternalLinkIcon className="size-3" />

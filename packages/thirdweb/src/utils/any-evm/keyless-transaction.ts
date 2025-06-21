@@ -63,8 +63,8 @@ export async function getKeylessTransaction(
   // 3. Create the signed serialized txn string.
   // To be sent directly to the chain using a provider.
   const transaction = serializeTransaction({
-    transaction: options.transaction,
     signature: options.signature,
+    transaction: options.transaction,
   });
 
   return {

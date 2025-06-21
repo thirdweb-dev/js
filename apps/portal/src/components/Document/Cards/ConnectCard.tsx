@@ -9,13 +9,13 @@ export function ConnectCard(props: {
 }) {
   return (
     <Link
+      className="flex cursor-default"
       href={props.href}
       target={props.isExternal ? "_blank" : undefined}
-      className="flex cursor-default"
     >
       <article className="group/article flex w-full items-center overflow-hidden rounded-lg border bg-card transition-colors hover:border-active-border">
         <div className="flex w-full items-center gap-4 p-4">
-          <Image src={props.iconUrl} width={40} height={40} alt="" />
+          <Image alt="" height={40} src={props.iconUrl} width={40} />
           <h3 className="font-medium text-base">{props.title}</h3>
         </div>
       </article>

@@ -1,19 +1,19 @@
 import { useMemo, useState } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { type Theme, iconSize } from "../../../../core/design-system/index.js";
+import { iconSize, type Theme } from "../../../../core/design-system/index.js";
 import type {
   SupportedNFTs,
   SupportedTokens,
 } from "../../../../core/utils/defaultTokens.js";
+import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Spacer } from "../../components/Spacer.js";
 import Tabs from "../../components/Tabs.js";
-import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { CoinsIcon } from "../icons/CoinsIcon.js";
 import { ImageIcon } from "../icons/ImageIcon.js";
 import type { ConnectLocale } from "../locale/types.js";
+import type { WalletDetailsModalScreen } from "./types.js";
 import { ViewNFTsContent } from "./ViewNFTs.js";
 import { ViewTokensContent } from "./ViewTokens.js";
-import type { WalletDetailsModalScreen } from "./types.js";
 
 /**
  * @internal
@@ -82,8 +82,8 @@ export function ViewAssets(props: {
     >
       <Container p="lg">
         <ModalHeader
-          title={connectLocale.viewFunds.viewAssets}
           onBack={props.onBack}
+          title={connectLocale.viewFunds.viewAssets}
         />
       </Container>
       <Line />
@@ -95,7 +95,7 @@ export function ViewAssets(props: {
         }}
       >
         <Spacer y="md" />
-        <Tabs options={options} selected={activeTab} onSelect={setActiveTab}>
+        <Tabs onSelect={setActiveTab} options={options} selected={activeTab}>
           <Container
             scrollY
             style={{
@@ -111,10 +111,10 @@ export function ViewAssets(props: {
             )}
             {activeTab === "NFTs" && (
               <ViewNFTsContent
-                supportedNFTs={props.supportedNFTs}
                 client={props.client}
-                theme={props.theme}
                 connectLocale={connectLocale}
+                supportedNFTs={props.supportedNFTs}
+                theme={props.theme}
               />
             )}
           </Container>

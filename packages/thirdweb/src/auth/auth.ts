@@ -35,9 +35,9 @@ import { verifyLoginPayload } from "./core/verify-login-payload.js";
  */
 export function createAuth(options: AuthOptions) {
   return {
-    generatePayload: generateLoginPayload(options),
-    verifyPayload: verifyLoginPayload(options),
     generateJWT: generateJWT(options),
+    generatePayload: generateLoginPayload(options),
     verifyJWT: verifyJWT(options),
+    verifyPayload: verifyLoginPayload(options),
   };
 }

@@ -54,28 +54,28 @@ async function generateWallet({
   const walletDetails = await createWalletShares();
 
   const maybeDeviceShare = await storeShares({
-    client,
-    storage,
-    walletAddress: walletDetails.publicAddress,
     authShare: walletDetails.shares[AUTH_SHARE_INDEX],
+    client,
     deviceShare: walletDetails.shares[DEVICE_SHARE_INDEX],
     recoveryShares: [
       {
+        recoveryCode,
         // biome-ignore lint/style/noNonNullAssertion: its there
         share: walletDetails.shares[RECOVERY_SHARE_INDEX]!,
-        recoveryCode,
       },
     ],
+    storage,
+    walletAddress: walletDetails.publicAddress,
   });
 
   if (!maybeDeviceShare?.deviceShareStored) {
     throw new Error(DEVICE_SHARE_MISSING_MESSAGE);
   }
   return {
-    walletAddress: walletDetails.publicAddress,
     deviceShareStored: maybeDeviceShare?.deviceShareStored,
     isIframeStorageEnabled: false,
     recoveryCode,
+    walletAddress: walletDetails.publicAddress,
   };
 }
 
@@ -138,11 +138,11 @@ export async function storeShares<R extends string | undefined>({
     maybeEncryptedRecoveryShares = await Promise.all(
       recoveryShares.map(async (recoveryShare) => {
         return {
+          isClientEncrypted: true,
           share: await encryptShareWeb(
             recoveryShare.share,
             recoveryShare.recoveryCode,
           ),
-          isClientEncrypted: true,
         };
       }),
     );
@@ -152,15 +152,15 @@ export async function storeShares<R extends string | undefined>({
     authShare,
     client,
     maybeEncryptedRecoveryShares,
-    walletAddress,
     storage,
+    walletAddress,
   });
 
   try {
     if (deviceShare) {
       const deviceShareStored = await setDeviceShare({
-        deviceShare,
         clientId: client.clientId,
+        deviceShare,
       });
       return { deviceShareStored };
     }

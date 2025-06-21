@@ -24,9 +24,10 @@ export function ContractRow({ category }: ContractRowProps) {
             {category.description}{" "}
             {category.learnMore && (
               <Link
-                target="_blank"
-                href={category.learnMore}
                 className="inline text-link-foreground"
+                href={category.learnMore}
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 Learn more
               </Link>
@@ -36,8 +37,8 @@ export function ContractRow({ category }: ContractRowProps) {
 
         {category.contracts.length > 6 && (
           <Link
-            href={`/explore/${category.id}`}
             className="flex shrink-0 items-center gap-1 text-base text-link-foreground hover:text-foreground"
+            href={`/explore/${category.id}`}
           >
             View all
             <ArrowRightIcon className="size-4" />
@@ -48,7 +49,7 @@ export function ContractRow({ category }: ContractRowProps) {
       <div className="h-5" />
 
       <div className="relative z-0 grid grid-cols-1 gap-4 md:grid-cols-3">
-        {category.contracts.slice(0, 6).map((publishedContractId, idx) => {
+        {category.contracts.slice(0, 6).map((publishedContractId) => {
           const publisher: string | undefined = Array.isArray(
             publishedContractId,
           )
@@ -71,27 +72,23 @@ export function ContractRow({ category }: ContractRowProps) {
           }
           return (
             <Suspense
-              key={publisher + contractId + overrides?.title}
               fallback={<ContractCardSkeleton />}
+              key={publisher + contractId + overrides?.title}
             >
               <ContractCard
-                publisher={publisher}
                 contractId={contractId}
-                titleOverride={overrides?.title}
                 descriptionOverride={overrides?.description}
-                tracking={{
-                  source: category.id,
-                  itemIndex: `${idx}`,
-                }}
                 isBeta={category.isBeta}
                 modules={
                   modules?.length
                     ? modules.map((m) => ({
-                        publisher: m.split("/")[0] || "",
                         moduleId: m.split("/")[1] || "",
+                        publisher: m.split("/")[0] || "",
                       }))
                     : undefined
                 }
+                publisher={publisher}
+                titleOverride={overrides?.title}
               />
             </Suspense>
           );

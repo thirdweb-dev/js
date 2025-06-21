@@ -197,56 +197,56 @@ export async function prepare(
   const url = new URL(`${getThirdwebBaseUrl("bridge")}/v1/transfer/prepare`);
 
   const response = await clientFetch(url.toString(), {
-    method: "POST",
+    body: stringify({
+      amount: amount.toString(), // legacy
+      chainId: chainId.toString(),
+      feePayer,
+      paymentLinkId,
+      purchaseData,
+      receiver,
+      sender,
+      tokenAddress,
+      transferAmountWei: amount.toString(),
+    }),
     headers: {
       "Content-Type": "application/json",
     },
-    body: stringify({
-      transferAmountWei: amount.toString(), // legacy
-      amount: amount.toString(),
-      chainId: chainId.toString(),
-      tokenAddress,
-      sender,
-      receiver,
-      purchaseData,
-      feePayer,
-      paymentLinkId,
-    }),
+    method: "POST",
   });
   if (!response.ok) {
     const errorJson = await response.json();
     throw new ApiError({
       code: errorJson.code || "UNKNOWN_ERROR",
-      message: errorJson.message || response.statusText,
       correlationId: errorJson.correlationId || undefined,
+      message: errorJson.message || response.statusText,
       statusCode: response.status,
     });
   }
 
   const { data }: { data: PreparedQuote } = await response.json();
   return {
-    originAmount: BigInt(data.originAmount),
-    destinationAmount: BigInt(data.destinationAmount),
     blockNumber: data.blockNumber ? BigInt(data.blockNumber) : undefined,
-    timestamp: data.timestamp,
+    destinationAmount: BigInt(data.destinationAmount),
     estimatedExecutionTimeMs: data.estimatedExecutionTimeMs,
+    intent: {
+      amount,
+      chainId,
+      feePayer,
+      receiver,
+      sender,
+      tokenAddress,
+    },
+    originAmount: BigInt(data.originAmount),
     steps: data.steps.map((step) => ({
       ...step,
       transactions: step.transactions.map((transaction) => ({
         ...transaction,
-        value: transaction.value ? BigInt(transaction.value) : undefined,
-        client,
         chain: defineChain(transaction.chainId),
+        client,
+        value: transaction.value ? BigInt(transaction.value) : undefined,
       })),
     })),
-    intent: {
-      chainId,
-      tokenAddress,
-      amount,
-      sender,
-      receiver,
-      feePayer,
-    },
+    timestamp: data.timestamp,
   };
 }
 

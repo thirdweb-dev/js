@@ -1,12 +1,10 @@
 "use client";
-import { Image } from "@/components/ui/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2, OctagonXIcon } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useMemo } from "react";
-import React from "react";
+import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { Address } from "thirdweb";
@@ -17,6 +15,7 @@ import { useActiveAccount } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import { z } from "zod";
+import { Image } from "@/components/ui/image";
 import { client } from "../lib/client";
 import { revalidate } from "../lib/revalidate";
 import type { Erc721Token } from "../types/Erc721Token";
@@ -56,9 +55,9 @@ export function NftModal({
   const contract = useMemo(
     () =>
       getContract({
-        client,
         address: data.contractAddress,
         chain: defineChain(data.chainId),
+        client,
       }),
     [data.chainId, data.contractAddress],
   );
@@ -77,14 +76,10 @@ export function NftModal({
         tokenId: BigInt(data.tokenId),
       });
 
-      return sendTransaction({ transaction, account });
+      return sendTransaction({ account, transaction });
     },
     onError: (e, { recipient }) => {
       toast.error("Transaction failed", {
-        id: "fail",
-        description: e.message,
-        icon: <OctagonXIcon className="h-4 w-4" />,
-        duration: 5000,
         action: (
           <Button
             onClick={() => {
@@ -95,15 +90,19 @@ export function NftModal({
             Retry
           </Button>
         ),
+        description: e.message,
+        duration: 5000,
+        icon: <OctagonXIcon className="h-4 w-4" />,
+        id: "fail",
       });
     },
   });
 
   const form = useForm<z.infer<typeof TransferFormSchema>>({
-    resolver: zodResolver(TransferFormSchema),
     defaultValues: {
       recipient: "" as Address,
     },
+    resolver: zodResolver(TransferFormSchema),
   });
 
   async function onSubmit(values: z.infer<typeof TransferFormSchema>) {
@@ -115,16 +114,16 @@ export function NftModal({
   }
 
   return (
-    <Dialog open={open} onOpenChange={setIsOpen}>
+    <Dialog onOpenChange={setIsOpen} open={open}>
       <DialogTrigger asChild>
         <button type="button">{children}</button>
       </DialogTrigger>
       <DialogContent className="gap-0 overflow-hidden rounded-xl p-0 sm:w-[425px] md:rounded-xl">
         <div className="relative h-[425px] w-full">
           <Image
-            src={data.image_url || data.collection.image_url}
             alt={data.name}
             className="h-full w-full object-cover object-center"
+            src={data.image_url || data.collection.image_url}
           />
         </div>
 
@@ -137,9 +136,9 @@ export function NftModal({
               <DialogDescription>
                 {chainData?.explorers?.length ? (
                   <Link
-                    target="_blank"
                     className="hover:underline"
                     href={`${chainData.explorers[0].url}/address/${data.contractAddress}`}
+                    target="_blank"
                   >
                     {shortenAddress(data.contractAddress)}
                   </Link>
@@ -156,8 +155,8 @@ export function NftModal({
             <DialogFooter>
               <Form {...form}>
                 <form
-                  onSubmit={form.handleSubmit(onSubmit)}
                   className="flex w-full flex-col space-y-4"
+                  onSubmit={form.handleSubmit(onSubmit)}
                 >
                   <FormField
                     control={form.control}

@@ -1,9 +1,9 @@
 "use client";
 
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useEffect } from "react";
 import { useActiveAccount } from "thirdweb/react";
 import { checksumAddress } from "thirdweb/utils";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 
 export function EnsureValidConnectedWalletLoginClient(props: {
   loggedInAddress: string;

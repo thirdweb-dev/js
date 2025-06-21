@@ -40,7 +40,7 @@ export function getUrlToken():
       "",
       `${window.location.pathname}?${params.toString()}`,
     );
-    return { walletId, authResult, authProvider, authCookie };
+    return { authCookie, authProvider, authResult, walletId };
   }
   return undefined;
 }

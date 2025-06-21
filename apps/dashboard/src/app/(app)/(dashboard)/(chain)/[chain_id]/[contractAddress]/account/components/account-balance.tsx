@@ -20,7 +20,7 @@ export const AccountBalance: React.FC<AccountBalanceProps> = ({ contract }) => {
   const balanceQuery = useSplitBalances(contract);
 
   return (
-    <SimpleGrid spacing={{ base: 3, md: 6 }} columns={{ base: 2, md: 4 }}>
+    <SimpleGrid columns={{ base: 2, md: 4 }} spacing={{ base: 3, md: 6 }}>
       <Card as={Stat}>
         <StatLabel mb={{ base: 1, md: 0 }}>{balance?.symbol}</StatLabel>
         <StatNumber>{balance?.displayValue}</StatNumber>

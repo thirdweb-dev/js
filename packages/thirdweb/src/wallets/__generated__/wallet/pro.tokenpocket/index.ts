@@ -2,33 +2,33 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "pro.tokenpocket",
-  name: "TokenPocket",
-  homepage: "https://tokenpocket.pro/",
-  image_id: "d8e930b6-ccde-471e-ecbe-6967b1c0c400",
   app: {
+    android: "https://play.google.com/store/apps/details?id=vip.mytokenpocket",
     browser:
       "https://chrome.google.com/webstore/detail/tokenpocket/mfgccjchihfkkindfppnaooecgfneiii",
-    ios: "https://apps.apple.com/us/app/tp-wallet/id6444625622?l=en",
-    android: "https://play.google.com/store/apps/details?id=vip.mytokenpocket",
-    mac: null,
-    windows: null,
-    linux: null,
     chrome:
       "https://chrome.google.com/webstore/detail/tokenpocket/mfgccjchihfkkindfppnaooecgfneiii",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/tp-wallet/id6444625622?l=en",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: "pro.tokenpocket",
-  mobile: {
-    native: "tpoutside://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal:
       "https://chrome.google.com/webstore/detail/tokenpocket/mfgccjchihfkkindfppnaooecgfneiii",
   },
+  homepage: "https://tokenpocket.pro/",
+  id: "pro.tokenpocket",
+  image_id: "d8e930b6-ccde-471e-ecbe-6967b1c0c400",
+  mobile: {
+    native: "tpoutside://",
+    universal: null,
+  },
+  name: "TokenPocket",
+  rdns: "pro.tokenpocket",
 } as const;

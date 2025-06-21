@@ -14,17 +14,17 @@ type IFrameCommunicatorProps = {
 };
 
 const iframeBaseStyle = {
-  height: "100%",
-  width: "100%",
-  border: "none",
   backgroundColor: "transparent",
+  border: "none",
   colorScheme: "light",
-  position: "fixed",
-  top: "0px",
-  right: "0px",
-  zIndex: "2147483646",
   display: "none",
+  height: "100%",
   pointerEvents: "all",
+  position: "fixed",
+  right: "0px",
+  top: "0px",
+  width: "100%",
+  zIndex: "2147483646",
 };
 
 // Global var to help track iframe state
@@ -109,11 +109,11 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
   protected async onIframeLoadedInitVariables(): Promise<Record<string, any>> {
     return {
       authCookie: await this.localStorage.getAuthCookie(),
-      deviceShareStored: await this.localStorage.getDeviceShare(),
-      walletUserId: await this.localStorage.getWalletUserId(),
       clientId: this.clientId,
-      partnerId: this.ecosystem?.partnerId,
+      deviceShareStored: await this.localStorage.getDeviceShare(),
       ecosystemId: this.ecosystem?.id,
+      partnerId: this.ecosystem?.partnerId,
+      walletUserId: await this.localStorage.getWalletUserId(),
     };
   }
 
@@ -145,8 +145,8 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
 
       iframe?.contentWindow?.postMessage(
         {
-          eventType: "initIframe",
           data: await this.onIframeLoadedInitVariables(),
+          eventType: "initIframe",
         },
         this.iframeBaseUrl,
         [channel.port2],
@@ -205,12 +205,12 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
 
     this.iframe.contentWindow?.postMessage(
       {
-        eventType: procedureName,
         // Pass the initialization data on every request in case the iframe storage was reset (can happen in some environments such as iOS PWAs)
         data: {
           ...params,
           ...(await this.onIframeLoadedInitVariables()),
         },
+        eventType: procedureName,
       },
       this.iframeBaseUrl,
       [channel.port2],

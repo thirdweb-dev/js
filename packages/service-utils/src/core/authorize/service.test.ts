@@ -21,8 +21,8 @@ describe("authorizeService", () => {
   it("should not authorize service with unauthorized service scope", () => {
     const invalidServiceConfig: CoreServiceConfig = {
       apiUrl: "https://api.example.com",
-      serviceScope: "nebula",
       serviceApiKey: "service-api-key",
+      serviceScope: "nebula",
     };
 
     const result = authorizeService(
@@ -41,9 +41,9 @@ describe("authorizeService", () => {
   it("should not authorize service with unauthorized service action", () => {
     const invalidServiceConfig: CoreServiceConfig = {
       apiUrl: "https://api.example.com",
-      serviceScope: "storage",
-      serviceApiKey: "service-api-key",
       serviceAction: "unauthorized-action",
+      serviceApiKey: "service-api-key",
+      serviceScope: "storage",
     };
 
     const result = authorizeService(

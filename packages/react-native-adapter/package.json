@@ -1,29 +1,8 @@
 {
-  "name": "@thirdweb-dev/react-native-adapter",
-  "version": "1.5.4",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/thirdweb-dev/js.git#main"
-  },
-  "license": "Apache-2.0",
+  "author": "thirdweb eng <eng@thirdweb.com>",
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
-  "author": "thirdweb eng <eng@thirdweb.com>",
-  "type": "module",
-  "main": "./dist/cjs/exports/thirdweb.js",
-  "module": "./dist/esm/exports/thirdweb.js",
-  "types": "./dist/types/exports/thirdweb.d.ts",
-  "typings": "./dist/types/exports/thirdweb.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/types/exports/thirdweb.d.ts",
-      "import": "./dist/esm/exports/thirdweb.js",
-      "default": "./dist/cjs/exports/thirdweb.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "files": ["dist/*", "src/*"],
   "dependencies": {
     "@aws-sdk/client-kms": "3.592.0",
     "@aws-sdk/client-lambda": "3.592.0",
@@ -33,7 +12,27 @@
   "devDependencies": {
     "rimraf": "6.0.1"
   },
+  "engines": {
+    "node": ">=18"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/types/exports/thirdweb.d.ts",
+      "import": "./dist/esm/exports/thirdweb.js",
+      "default": "./dist/cjs/exports/thirdweb.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist/*",
+    "src/*"
+  ],
+  "license": "Apache-2.0",
+  "main": "./dist/cjs/exports/thirdweb.js",
+  "module": "./dist/esm/exports/thirdweb.js",
+  "name": "@thirdweb-dev/react-native-adapter",
   "peerDependencies": {
+    "@biomejs/biome": "2.0.4",
     "@coinbase/wallet-mobile-sdk": "^1",
     "@react-native-async-storage/async-storage": "^1 || ^2",
     "@react-native-community/netinfo": "^11",
@@ -53,17 +52,22 @@
       "optional": true
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thirdweb-dev/js.git#main"
+  },
   "scripts": {
-    "format": "biome format ./src --write",
-    "lint": "biome check ./src",
-    "fix": "biome check ./src --fix",
     "build": "pnpm clean && pnpm build:cjs && pnpm build:esm && pnpm build:types",
     "build:cjs": "tsc --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
     "build:esm": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
     "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "fix": "biome check ./src --fix",
+    "format": "biome format ./src --write",
+    "lint": "biome check ./src"
   },
-  "engines": {
-    "node": ">=18"
-  }
+  "type": "module",
+  "types": "./dist/types/exports/thirdweb.d.ts",
+  "typings": "./dist/types/exports/thirdweb.d.ts",
+  "version": "1.5.4"
 }

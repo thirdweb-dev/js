@@ -1,8 +1,7 @@
 "use client";
 import { spacing } from "../../../../core/design-system/index.js";
 import { Container } from "../../components/basic.js";
-import { Link } from "../../components/text.js";
-import { Text } from "../../components/text.js";
+import { Link, Text } from "../../components/text.js";
 import type { ConnectLocale } from "../locale/types.js";
 
 /**
@@ -26,39 +25,39 @@ export function TOS(props: {
   const bothGiven = termsOfServiceUrl && privacyPolicyUrl;
 
   return (
-    <Container flex="row" center="x">
+    <Container center="x" flex="row">
       <Text
-        size="xs"
-        multiline
         balance
-        inline
         center
+        inline
+        multiline
+        size="xs"
         style={{
           maxWidth: "250px",
         }}
       >
         {requireApproval && (
           <input
-            style={{
-              transform: "translateY(3px)",
-              marginRight: spacing["3xs"],
-            }}
-            type="checkbox"
-            onChange={props.onApprove}
             checked={props.isApproved}
             disabled={!requireApproval}
+            onChange={props.onApprove}
+            style={{
+              marginRight: spacing["3xs"],
+              transform: "translateY(3px)",
+            }}
+            type="checkbox"
           />
         )}
         {locale.prefix}{" "}
         {termsOfServiceUrl && (
           <Link
+            href={termsOfServiceUrl}
             inline
             size="xs"
-            href={termsOfServiceUrl}
-            target="_blank"
             style={{
               whiteSpace: "nowrap",
             }}
+            target="_blank"
           >
             {" "}
             {locale.termsOfService}{" "}
@@ -66,7 +65,7 @@ export function TOS(props: {
         )}
         {bothGiven && `${locale.and} `}
         {privacyPolicyUrl && (
-          <Link inline size="xs" href={privacyPolicyUrl} target="_blank">
+          <Link href={privacyPolicyUrl} inline size="xs" target="_blank">
             {locale.privacyPolicy}
           </Link>
         )}

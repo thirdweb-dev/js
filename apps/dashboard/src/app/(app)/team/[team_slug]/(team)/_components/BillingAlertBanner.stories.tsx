@@ -5,12 +5,12 @@ import {
 } from "./BillingAlertBannersUI";
 
 const meta = {
-  title: "Banners/Billing Alerts",
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Banners/Billing Alerts",
 } satisfies Meta;
 
 export default meta;

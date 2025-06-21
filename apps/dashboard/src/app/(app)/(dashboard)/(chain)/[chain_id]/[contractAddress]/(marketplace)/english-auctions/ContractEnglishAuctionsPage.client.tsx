@@ -34,8 +34,8 @@ export function ContractEnglishAuctionsPageClient(props: {
   return (
     <ContractEnglishAuctionsPage
       contract={props.contract}
-      isLoggedIn={props.isLoggedIn}
       isInsightSupported={metadataQuery.data.isInsightSupported}
+      isLoggedIn={props.isLoggedIn}
     />
   );
 }

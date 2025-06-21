@@ -29,17 +29,17 @@ export function EcosystemPartnersSection({
           </p>
         </div>
         <AddPartnerDialogButton
-          teamSlug={teamSlug}
-          ecosystem={ecosystem}
           authToken={authToken}
+          ecosystem={ecosystem}
+          teamSlug={teamSlug}
         />
       </div>
 
       <PartnersTable
-        ecosystem={ecosystem}
         authToken={authToken}
-        teamSlug={teamSlug}
+        ecosystem={ecosystem}
         teamId={teamId}
+        teamSlug={teamSlug}
       />
     </div>
   );

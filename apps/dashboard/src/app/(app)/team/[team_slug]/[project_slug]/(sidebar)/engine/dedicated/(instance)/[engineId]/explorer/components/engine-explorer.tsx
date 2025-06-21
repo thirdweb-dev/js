@@ -1,9 +1,9 @@
 "use client";
 
-import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import "./swagger-ui.css";
 import "swagger-ui-react/swagger-ui.css";
 import dynamic from "next/dynamic";
+import { ClientOnly } from "@/components/blocks/client-only";
 
 const SwaggerUI = dynamic(() => import("swagger-ui-react"), { ssr: false });
 
@@ -20,7 +20,6 @@ export const EngineExplorer: React.FC<EngineExplorerProps> = ({
     <ClientOnly ssr={null}>
       <div className="dark rounded-lg border border-border bg-background py-10 pt-4">
         <SwaggerUI
-          url={`${instanceUrl}${instanceUrl.endsWith("/") ? "" : "/"}json`}
           docExpansion="none"
           persistAuthorization={true}
           requestInterceptor={(req) => {
@@ -31,6 +30,7 @@ export const EngineExplorer: React.FC<EngineExplorerProps> = ({
             req.headers["ngrok-skip-browser-warning"] = "true";
             return req;
           }}
+          url={`${instanceUrl}${instanceUrl.endsWith("/") ? "" : "/"}json`}
         />
       </div>
     </ClientOnly>

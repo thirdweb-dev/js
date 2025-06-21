@@ -7,7 +7,6 @@ import {
   createSetAllRoleMembersTx,
   getAllRoleMembers,
 } from "contract-ui/hooks/permissions";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -31,7 +30,6 @@ export function Permissions({
   contract: ThirdwebContract;
   isLoggedIn: boolean;
 }) {
-  const trackEvent = useTrack();
   const account = useActiveAccount();
   const allRoleMembers = useReadContract(getAllRoleMembers, {
     contract,
@@ -62,42 +60,26 @@ export function Permissions({
   return (
     <FormProvider {...form}>
       <Flex
-        gap={4}
-        direction="column"
         as="form"
+        direction="column"
+        gap={4}
         onSubmit={form.handleSubmit((d) => {
           if (!account) {
             onError(new Error("Wallet not connected!"));
             return;
           }
-          trackEvent({
-            category: "permissions",
-            action: "set-permissions",
-            label: "attempt",
-          });
           const tx = createSetAllRoleMembersTx({
             account,
             contract,
             roleMemberMap: d,
           });
           sendTx.mutate(tx, {
+            onError: (error) => {
+              onError(error);
+            },
             onSuccess: () => {
-              trackEvent({
-                category: "permissions",
-                action: "set-permissions",
-                label: "success",
-              });
               form.reset(d);
               onSuccess();
-            },
-            onError: (error) => {
-              trackEvent({
-                category: "permissions",
-                action: "set-permissions",
-                label: "error",
-                error,
-              });
-              onError(error);
             },
           });
         })}
@@ -105,11 +87,11 @@ export function Permissions({
         {roles.map((role) => {
           return (
             <ContractPermission
+              contract={contract}
+              description={ROLE_DESCRIPTION_MAP[role] || ""}
               isPending={allRoleMembers.isPending}
               key={role}
               role={role}
-              description={ROLE_DESCRIPTION_MAP[role] || ""}
-              contract={contract}
             />
           );
         })}
@@ -126,13 +108,13 @@ export function Permissions({
             Reset
           </Button>
           <TransactionButton
-            isLoggedIn={isLoggedIn}
             client={contract.client}
-            txChainID={contract.chain.id}
-            transactionCount={1}
             disabled={!form.formState.isDirty}
-            type="submit"
+            isLoggedIn={isLoggedIn}
             isPending={sendTx.isPending}
+            transactionCount={1}
+            txChainID={contract.chain.id}
+            type="submit"
           >
             {sendTx.isPending ? "Updating permissions" : "Update permissions"}
           </TransactionButton>

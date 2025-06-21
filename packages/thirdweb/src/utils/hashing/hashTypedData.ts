@@ -83,9 +83,9 @@ function encodeData({
   if (!types[primaryType]) throw new Error("Invalid types");
   for (const field of types[primaryType]) {
     const [type, value] = encodeField({
-      types,
       name: field.name,
       type: field.type,
+      types,
       value: data[field.name],
     });
     encodedTypes.push(type);

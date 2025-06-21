@@ -21,7 +21,6 @@ export function setSharedMetadata(
   options: BaseTransactionOptions<SetSharedMetadataParams>,
 ) {
   return generatedSharedMetadata({
-    contract: options.contract,
     asyncParams: async () => {
       if (!options.nft.name) {
         throw new Error("NFT name is required");
@@ -62,13 +61,14 @@ export function setSharedMetadata(
 
       return {
         metadata: {
-          name: options.nft.name,
+          animationURI: animationURI ?? "",
           description: sanitizeJSONString(options.nft.description) ?? "",
           imageURI: imageURI ?? "",
-          animationURI: animationURI ?? "",
+          name: options.nft.name,
         },
       };
     },
+    contract: options.contract,
   });
 }
 

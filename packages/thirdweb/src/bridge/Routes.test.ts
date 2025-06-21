@@ -87,10 +87,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.routes", () => {
   it("should combine filters", async () => {
     const filteredRoutes = await routes({
       client: TEST_CLIENT,
-      originChainId: 1,
       destinationChainId: 10,
-      originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       destinationTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      originChainId: 1,
+      originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
     });
 
     expect(filteredRoutes).toBeDefined();

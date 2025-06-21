@@ -19,35 +19,35 @@ describe.runIf(process.env.TW_SECRET_KEY)(
   () => {
     it("should update token uri", async () => {
       const address = await deployERC721Contract({
-        client,
-        chain,
         account,
-        type: "TokenERC721",
+        chain,
+        client,
         params: {
-          name: "NFT collection",
           contractURI: TEST_CONTRACT_URI,
+          name: "NFT collection",
         },
+        type: "TokenERC721",
       });
       const contract = getContract({
         address,
-        client,
         chain,
+        client,
       });
       await sendAndConfirmTransaction({
+        account,
         transaction: mintTo({
           contract,
           nft: { name: "Test1" },
           to: account.address,
         }),
-        account,
       });
       await sendAndConfirmTransaction({
+        account,
         transaction: updateTokenURI({
           contract,
           newMetadata: { name: "Test1 Updated" },
           tokenId: 0n,
         }),
-        account,
       });
       const nft = await getNFT({ contract, tokenId: 0n });
       expect(nft.metadata.name).toBe("Test1 Updated");

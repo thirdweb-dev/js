@@ -11,13 +11,13 @@ const quotesIfString = (value: string | undefined) => {
 };
 
 export default defineConfig({
-  plugins: [react()],
   define: {
-    "process.env.STORYBOOK_CLIENT_ID": quotesIfString(
-      process.env.STORYBOOK_CLIENT_ID,
-    ),
     "process.env.STORYBOOK_ACCOUNT_PRIVATE_KEY": quotesIfString(
       process.env.STORYBOOK_ACCOUNT_PRIVATE_KEY,
     ),
+    "process.env.STORYBOOK_CLIENT_ID": quotesIfString(
+      process.env.STORYBOOK_CLIENT_ID,
+    ),
   },
+  plugins: [react()],
 });

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -8,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import Link from "next/link";
 import { fetchDeployMetadata } from "../fetchDeployMetadata";
 import { ContractIdImage } from "../shared/contract-id-image";
 
@@ -55,10 +55,10 @@ export async function DeployableContractTable(
           {deployedContractMetadata.map((metadata, i) => {
             return (
               <TableRow
-                linkBox
                 className="cursor-pointer hover:bg-card"
                 // biome-ignore lint/suspicious/noArrayIndexKey: static list
                 key={i}
+                linkBox
               >
                 {/* Icon */}
                 <TableCell>
@@ -68,9 +68,10 @@ export async function DeployableContractTable(
                 {/* name */}
                 <TableCell>
                   <Link
-                    target="_blank"
-                    href={`/contracts/${context}/${encodeURIComponent(metadata.contractId)}`}
                     className="text-left text-muted-foreground before:absolute before:inset-0"
+                    href={`/contracts/${context}/${encodeURIComponent(metadata.contractId)}`}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     {metadata.name}
                   </Link>

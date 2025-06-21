@@ -1,6 +1,5 @@
 "use client";
 
-import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import {
   Alert,
   AlertIcon,
@@ -28,11 +27,12 @@ import {
   FormLabel,
   Heading,
   Text,
-  TrackedLink,
 } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
 import { processInputData, shuffleData } from "utils/batch";
 import { z } from "zod";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { BatchTable } from "./batch-table";
 import { SelectOption } from "./lazy-mint-form/select-option";
 import { UploadStep } from "./upload-step";
@@ -60,27 +60,27 @@ type BatchLazyMintProps = BatchLazyMintEVMProps;
 
 const BatchLazyMintFormSchema = z
   .object({
-    // delayed reveal placeholder
-    placeHolder: z
-      .object({
-        name: z.string().min(1, "A name is required"),
-        image: z.any().optional(),
-        description: z.string().or(z.string().length(0)).optional(),
-      })
-      .optional(),
-    // delayed reveal password logic
-    password: z.string().min(1, "A password is required.").optional(),
     confirmPassword: z
       .string()
       .min(1, "Please confirm your password.")
       .optional(),
 
-    // shared logic
-    shuffle: z.boolean().default(false),
-    revealType: z.literal("instant").or(z.literal("delayed")).optional(),
-
     // metadata
     metadatas: z.array(z.any()),
+    // delayed reveal password logic
+    password: z.string().min(1, "A password is required.").optional(),
+    // delayed reveal placeholder
+    placeHolder: z
+      .object({
+        description: z.string().or(z.string().length(0)).optional(),
+        image: z.any().optional(),
+        name: z.string().min(1, "A name is required"),
+      })
+      .optional(),
+    revealType: z.literal("instant").or(z.literal("delayed")).optional(),
+
+    // shared logic
+    shuffle: z.boolean().default(false),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -93,12 +93,12 @@ type BatchLazyMintFormType = z.output<typeof BatchLazyMintFormSchema> & {
 
 function useBatchLazyMintForm() {
   return useForm<BatchLazyMintFormType>({
-    resolver: zodResolver(BatchLazyMintFormSchema),
     defaultValues: {
       metadatas: [],
       revealType: undefined,
       shuffle: false,
     },
+    resolver: zodResolver(BatchLazyMintFormSchema),
   });
 }
 
@@ -150,8 +150,8 @@ export const BatchLazyMint: ComponentWithChildren<
         // check submit is instant
         if (data.revealType === "instant") {
           return props.onSubmit({
-            revealType: "instant",
             data: { metadatas: shuffledMetadatas },
+            revealType: "instant",
           });
         }
         // validate password
@@ -171,16 +171,16 @@ export const BatchLazyMint: ComponentWithChildren<
         }
         // submit
         return props.onSubmit({
-          revealType: "delayed",
           data: {
             metadata: shuffledMetadatas,
             password: data.password,
             placeholderMetadata: {
-              name: data.placeHolder?.name,
               description: data.placeHolder?.description,
               image: data.placeHolder?.image,
+              name: data.placeHolder?.name,
             },
           },
+          revealType: "delayed",
         });
       })}
     >
@@ -189,10 +189,10 @@ export const BatchLazyMint: ComponentWithChildren<
           {nftMetadatas.length > 0 ? (
             <>
               <BatchTable
-                portalRef={paginationPortalRef}
+                client={props.client}
                 data={nftMetadatas}
                 nextTokenIdToMint={props.nextTokenIdToMint}
-                client={props.client}
+                portalRef={paginationPortalRef}
               />
               <div className="border-border border-t">
                 <div className="flex flex-col items-center justify-between p-0 md:flex-row md:p-4">
@@ -222,8 +222,8 @@ export const BatchLazyMint: ComponentWithChildren<
             </>
           ) : (
             <UploadStep
-              getRootProps={getRootProps}
               getInputProps={getInputProps}
+              getRootProps={getRootProps}
               hasFailed={hasError}
               isDragActive={isDragActive}
             />
@@ -231,31 +231,31 @@ export const BatchLazyMint: ComponentWithChildren<
         </div>
       ) : (
         <>
-          <Flex align="center" justify="space-between" py={4} w="100%" mb={2}>
+          <Flex align="center" justify="space-between" mb={2} py={4} w="100%">
             <div className="flex flex-row items-center gap-2">
               <Button
                 className="text-muted-foreground"
-                variant="ghost"
                 onClick={() => setStep(0)}
+                variant="ghost"
               >
                 <ChevronLeftIcon className="size-5 cursor-pointer" />
               </Button>
-              <Heading size="title.md" className="my-auto">
+              <Heading className="my-auto" size="title.md">
                 When will you reveal your NFTs?
               </Heading>
             </div>
           </Flex>
           <SelectReveal
-            form={form}
             canCreateDelayedRevealBatch={props.canCreateDelayedRevealBatch}
             client={props.client}
+            form={form}
           />
           {form.watch("revealType") && (
             <>
               <CheckboxWithLabel>
                 <Checkbox
-                  className="mt-3"
                   checked={form.watch("shuffle")}
+                  className="mt-3"
                   onCheckedChange={(val) => form.setValue("shuffle", !!val)}
                 />
                 <div className="flex flex-col items-center gap-1 md:flex-row">
@@ -265,14 +265,14 @@ export const BatchLazyMint: ComponentWithChildren<
               </CheckboxWithLabel>
               <div className="w-full md:w-[61%]">
                 <TransactionButton
-                  client={props.client}
-                  txChainID={props.chainId}
                   className="mt-4 w-full"
-                  transactionCount={1}
+                  client={props.client}
                   disabled={!nftMetadatas.length}
-                  type="submit"
-                  isPending={form.formState.isSubmitting}
                   isLoggedIn={props.isLoggedIn}
+                  isPending={form.formState.isSubmitting}
+                  transactionCount={1}
+                  txChainID={props.chainId}
+                  type="submit"
                 >
                   {form.formState.isSubmitting
                     ? `Uploading ${nftMetadatas.length} NFTs`
@@ -280,15 +280,15 @@ export const BatchLazyMint: ComponentWithChildren<
                 </TransactionButton>
                 {props.children}
               </div>
-              <Text size="body.sm" mt={2}>
-                <TrackedLink
+              <Text mt={2} size="body.sm">
+                <UnderlineLink
+                  className="text-primary-500"
                   href="https://support.thirdweb.com/dashboard/n5evQ4EfEjEifczEQaZ1hL/batch-upload-troubleshooting/5WMQFqfaUTU1C8NM8FtJ2X"
-                  isExternal
-                  category="batch-upload"
-                  label="issues"
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
                   Experiencing issues uploading your files?
-                </TrackedLink>
+                </UnderlineLink>
               </Text>
             </>
           )}
@@ -316,30 +316,30 @@ const SelectReveal: React.FC<SelectRevealProps> = ({
   return (
     <Flex flexDir="column">
       <Flex
+        flexDir={{ base: "column", md: "row" }}
         gap={{ base: 3, md: 6 }}
         mb={6}
-        flexDir={{ base: "column", md: "row" }}
       >
         <SelectOption
-          name="Reveal upon mint"
           description="Collectors will immediately see the final NFT when they complete the minting"
           isActive={form.watch("revealType") === "instant"}
+          name="Reveal upon mint"
           onClick={() => form.setValue("revealType", "instant")}
         />
         <SelectOption
-          name="Delayed Reveal"
           description="Collectors will mint your placeholder image, then you reveal at a later time"
-          isActive={form.watch("revealType") === "delayed"}
-          onClick={() => form.setValue("revealType", "delayed")}
           disabled={!canCreateDelayedRevealBatch}
           disabledText="This contract doesn't implement Delayed Reveal"
+          isActive={form.watch("revealType") === "delayed"}
+          name="Delayed Reveal"
+          onClick={() => form.setValue("revealType", "delayed")}
         />
       </Flex>
       <div className="flex flex-col gap-3">
         {form.watch("revealType") === "delayed" && (
           <>
             <Heading size="title.sm">Let&apos;s set a password</Heading>
-            <Alert status="warning" borderRadius="lg">
+            <Alert borderRadius="lg" status="warning">
               <AlertIcon />
               You&apos;ll need this password to reveal your NFTs. Please save it
               somewhere safe.
@@ -350,10 +350,10 @@ const SelectReveal: React.FC<SelectRevealProps> = ({
               gap={{ base: 4, md: 0 }}
             >
               <FormControl
-                isRequired
                 isInvalid={
                   !!form.getFieldState("password", form.formState).error
                 }
+                isRequired
                 mr={4}
               >
                 <FormLabel>Password</FormLabel>
@@ -366,13 +366,13 @@ const SelectReveal: React.FC<SelectRevealProps> = ({
                   <InputRightElement cursor="pointer">
                     {show ? (
                       <EyeIcon
-                        onClick={() => setShow(!show)}
                         className="size-3"
+                        onClick={() => setShow(!show)}
                       />
                     ) : (
                       <EyeOffIcon
-                        onClick={() => setShow(!show)}
                         className="size-3"
+                        onClick={() => setShow(!show)}
                       />
                     )}
                   </InputRightElement>
@@ -386,10 +386,10 @@ const SelectReveal: React.FC<SelectRevealProps> = ({
                 </FormErrorMessage>
               </FormControl>
               <FormControl
-                isRequired
                 isInvalid={
                   !!form.getFieldState("confirmPassword", form.formState).error
                 }
+                isRequired
               >
                 <FormLabel>Confirm password</FormLabel>
                 <Input
@@ -416,14 +416,14 @@ const SelectReveal: React.FC<SelectRevealProps> = ({
                 <FormLabel>Image</FormLabel>
                 <div className="w-auto md:w-[350px]">
                   <FileInput
-                    client={client}
                     accept={{ "image/*": [] }}
-                    value={imageUrl}
-                    showUploadButton
+                    className="rounded border border-border transition-all duration-200"
+                    client={client}
                     setValue={(file) =>
                       form.setValue("placeHolder.image", file)
                     }
-                    className="rounded border border-border transition-all duration-200"
+                    showUploadButton
+                    value={imageUrl}
                   />
                 </div>
                 <FormHelperText>
@@ -437,10 +437,10 @@ const SelectReveal: React.FC<SelectRevealProps> = ({
                 </FormErrorMessage>
               </FormControl>
               <FormControl
-                isRequired
                 isInvalid={
                   !!form.getFieldState("placeHolder.name", form.formState).error
                 }
+                isRequired
               >
                 <FormLabel>Name</FormLabel>
                 <Input

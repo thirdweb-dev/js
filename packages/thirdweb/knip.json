@@ -6,7 +6,6 @@
     "src/cli/bin.ts",
     "src/transaction/actions/send-batch-transaction.ts"
   ],
-  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs"],
   "ignore": ["src/**/__generated__/**", "**/*.bench.ts"],
   "ignoreBinaries": ["printf"],
   "ignoreDependencies": [
@@ -15,8 +14,9 @@
     "@thirdweb-dev/insight",
     "@thirdweb-dev/engine"
   ],
+  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs"],
   "rules": {
-    "optionalPeerDependencies": "off",
-    "enumMembers": "off"
+    "enumMembers": "off",
+    "optionalPeerDependencies": "off"
   }
 }

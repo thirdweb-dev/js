@@ -6,13 +6,13 @@ import {
 import { HeaderLoggedOut } from "./HeaderLoggedOut";
 
 const meta = {
-  title: "Headers/LoggedOut",
   component: Variants,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Headers/LoggedOut",
 } satisfies Meta<typeof Variants>;
 
 export default meta;

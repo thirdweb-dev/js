@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "PackCreated" event.
@@ -34,8 +34,8 @@ export type PackCreatedEventFilters = Partial<{
  */
 export function packCreatedEvent(filters: PackCreatedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event PackCreated(uint256 indexed packId, address recipient, uint256 totalPacksCreated)",
-    filters,
   });
 }

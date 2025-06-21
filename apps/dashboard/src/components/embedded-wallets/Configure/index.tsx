@@ -1,13 +1,29 @@
 "use client";
 
+import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import type { ProjectEmbeddedWalletsService } from "@thirdweb-dev/service-utils";
+import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
+import {
+  type ApiKeyEmbeddedWalletsValidationSchema,
+  apiKeyEmbeddedWalletsValidationSchema,
+} from "components/settings/ApiKeys/validations";
+import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
+import Link from "next/link";
+import type React from "react";
+import { useState } from "react";
+import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
+import { upload } from "thirdweb/storage";
+import { toArrFromList } from "utils/string";
 import type { Project } from "@/api/projects";
 import type { SMSCountryTiers } from "@/api/sms";
 import type { Team } from "@/api/team";
-import { DynamicHeight } from "@/components/ui/DynamicHeight";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import {
   Form,
   FormControl,
@@ -19,34 +35,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
-import { updateProjectClient } from "@3rdweb-sdk/react/hooks/useApi";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import type { ProjectEmbeddedWalletsService } from "@thirdweb-dev/service-utils";
-import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
-import {
-  type ApiKeyEmbeddedWalletsValidationSchema,
-  apiKeyEmbeddedWalletsValidationSchema,
-} from "components/settings/ApiKeys/validations";
-import { useTrack } from "hooks/analytics/useTrack";
-import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
-import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import type { ThirdwebClient } from "thirdweb";
-import { upload } from "thirdweb/storage";
-import { toArrFromList } from "utils/string";
 import { planToTierRecordForGating } from "../../settings/Account/Billing/planToTierRecord";
 import { FileInput } from "../../shared/FileInput";
 import CountrySelector from "./sms-country-select/country-selector";
 
 type InAppWalletSettingsPageProps = {
-  trackingCategory: string;
   project: Project;
   teamId: string;
   teamSlug: string;
@@ -54,8 +52,6 @@ type InAppWalletSettingsPageProps = {
   smsCountryTiers: SMSCountryTiers;
   client: ThirdwebClient;
 };
-
-const TRACKING_CATEGORY = "embedded-wallet";
 
 type UpdateAPIKeyTrackingData = {
   hasCustomBranding: boolean;
@@ -76,38 +72,14 @@ export function InAppWalletSettingsPage(props: InAppWalletSettingsPageProps) {
     },
   });
 
-  const { trackingCategory } = props;
-  const trackEvent = useTrack();
-
-  function handleUpdateProject(
-    projectValues: Partial<Project>,
-    trackingData: UpdateAPIKeyTrackingData,
-  ) {
-    trackEvent({
-      category: trackingCategory,
-      action: "configuration-update",
-      label: "attempt",
-    });
-
+  function handleUpdateProject(projectValues: Partial<Project>) {
     updateProject.mutate(projectValues, {
-      onSuccess: () => {
-        toast.success("In-App Wallet API Key configuration updated");
-        trackEvent({
-          category: trackingCategory,
-          action: "configuration-update",
-          label: "success",
-          data: trackingData,
-        });
-      },
       onError: (err) => {
         toast.error("Failed to update an API Key");
         console.error(err);
-        trackEvent({
-          category: trackingCategory,
-          action: "configuration-update",
-          label: "error",
-          error: err,
-        });
+      },
+      onSuccess: () => {
+        toast.success("In-App Wallet API Key configuration updated");
       },
     });
   }
@@ -115,9 +87,9 @@ export function InAppWalletSettingsPage(props: InAppWalletSettingsPageProps) {
   return (
     <InAppWalletSettingsPageUI
       {...props}
-      updateApiKey={handleUpdateProject}
       isUpdating={updateProject.isPending}
       smsCountryTiers={props.smsCountryTiers}
+      updateApiKey={handleUpdateProject}
     />
   );
 }
@@ -157,8 +129,8 @@ const InAppWalletSettingsPageUI: React.FC<
   return (
     <InAppWalletSettingsUI
       {...props}
-      embeddedWalletService={embeddedWalletService}
       client={props.client}
+      embeddedWalletService={embeddedWalletService}
     />
   );
 };
@@ -197,8 +169,8 @@ export const InAppWalletSettingsUI: React.FC<
       ...(hasCustomBranding
         ? {
             branding: {
-              applicationName: config.applicationName || undefined,
               applicationImageUrl: config.applicationImageUrl || undefined,
+              applicationName: config.applicationName || undefined,
             },
           }
         : undefined),
@@ -222,8 +194,8 @@ export const InAppWalletSettingsUI: React.FC<
       return toast.error("Custom JSON Web Token configuration is invalid", {
         description:
           "To use In-App Wallets with Custom JSON Web Token, provide JWKS URI and AUD.",
-        duration: 9000,
         dismissible: true,
+        duration: 9000,
       });
     }
 
@@ -233,8 +205,8 @@ export const InAppWalletSettingsUI: React.FC<
         {
           description:
             "To use In-App Wallets with Custom Authentication Endpoint, provide a valid URL.",
-          duration: 9000,
           dismissible: true,
+          duration: 9000,
         },
       );
     }
@@ -246,10 +218,10 @@ export const InAppWalletSettingsUI: React.FC<
 
       return {
         ...service,
-        customAuthentication,
-        customAuthEndpoint,
         applicationImageUrl: branding?.applicationImageUrl,
         applicationName: branding?.applicationName || props.project.name,
+        customAuthEndpoint,
+        customAuthentication,
         redirectUrls: toArrFromList(redirectUrls || "", true),
         smsEnabledCountryISOs: values.smsEnabledCountryISOs,
       };
@@ -260,9 +232,9 @@ export const InAppWalletSettingsUI: React.FC<
         services: newServices,
       },
       {
+        hasCustomAuthEndpoint: !!customAuthEndpoint,
         hasCustomBranding: !!branding,
         hasCustomJwt: !!customAuthentication,
-        hasCustomAuthEndpoint: !!customAuthEndpoint,
       },
     );
   });
@@ -270,17 +242,17 @@ export const InAppWalletSettingsUI: React.FC<
   return (
     <Form {...form}>
       <form
-        onSubmit={handleSubmit}
         autoComplete="off"
         className="flex flex-col gap-6"
+        onSubmit={handleSubmit}
       >
         {/* Branding */}
         <BrandingFieldset
-          form={form}
-          teamPlan={props.teamPlan}
           client={props.client}
-          teamSlug={props.teamSlug}
+          form={form}
           requiredPlan={brandingRequiredPlan}
+          teamPlan={props.teamPlan}
+          teamSlug={props.teamSlug}
         />
 
         <NativeAppsFieldset form={form} />
@@ -289,33 +261,33 @@ export const InAppWalletSettingsUI: React.FC<
         <Fieldset legend="Authentication">
           <JSONWebTokenFields
             form={form}
+            requiredPlan={authRequiredPlan}
             teamPlan={props.teamPlan}
             teamSlug={props.teamSlug}
-            requiredPlan={authRequiredPlan}
           />
 
           <div className="h-5" />
 
           <AuthEndpointFields
             form={form}
+            requiredPlan={authRequiredPlan}
             teamPlan={props.teamPlan}
             teamSlug={props.teamSlug}
-            requiredPlan={authRequiredPlan}
           />
 
           <div className="h-5" />
 
           <SMSCountryFields
             form={form}
+            requiredPlan={authRequiredPlan}
             smsCountryTiers={props.smsCountryTiers}
             teamPlan={props.teamPlan}
-            requiredPlan={authRequiredPlan}
             teamSlug={props.teamSlug}
           />
         </Fieldset>
 
         <div className="flex justify-end">
-          <Button type="submit" variant="primary" className="gap-2">
+          <Button className="gap-2" type="submit" variant="primary">
             {props.isUpdating && <Spinner className="size-4" />}
             Save changes
           </Button>
@@ -335,18 +307,16 @@ function BrandingFieldset(props: {
   return (
     <Fieldset legend="Branding">
       <SwitchContainer
+        description="Pass a custom logo and app name to be used in the emails sent to users."
         switchId="branding-switch"
         title="Custom email logo and name"
-        description="Pass a custom logo and app name to be used in the emails sent to users."
       >
         <GatedSwitch
-          requiredPlan={props.requiredPlan}
-          teamSlug={props.teamSlug}
-          trackingLabel="customEmailLogoAndName"
           currentPlan={props.teamPlan}
+          requiredPlan={props.requiredPlan}
           switchProps={{
-            id: "branding-switch",
             checked: !!props.form.watch("branding"),
+            id: "branding-switch",
             onCheckedChange: (checked) =>
               props.form.setValue(
                 "branding",
@@ -358,14 +328,16 @@ function BrandingFieldset(props: {
                   : undefined,
               ),
           }}
+          teamSlug={props.teamSlug}
+          trackingLabel="customEmailLogoAndName"
         />
       </SwitchContainer>
 
       <GatedCollapsibleContainer
-        requiredPlan={props.requiredPlan}
-        currentPlan={props.teamPlan}
         className="grid grid-cols-1 gap-6 lg:grid-cols-2"
+        currentPlan={props.teamPlan}
         isExpanded={!!props.form.watch("branding")}
+        requiredPlan={props.requiredPlan}
       >
         {/* Application Image */}
         <FormField
@@ -382,13 +354,13 @@ function BrandingFieldset(props: {
               <FormControl>
                 <AppImageFormControl
                   client={props.client}
-                  uri={props.form.watch("branding.applicationImageUrl")}
                   setUri={(uri) => {
                     props.form.setValue("branding.applicationImageUrl", uri, {
                       shouldDirty: true,
                       shouldTouch: true,
                     });
                   }}
+                  uri={props.form.watch("branding.applicationImageUrl")}
                 />
               </FormControl>
               <FormMessage />
@@ -446,9 +418,10 @@ function AppImageFormControl(props: {
     <div className="flex">
       <div className="relative">
         <FileInput
-          client={props.client}
           accept={{ "image/*": [] }}
-          value={image || resolveUrl}
+          className="w-24 rounded-full bg-background lg:w-28"
+          client={props.client}
+          disableHelperText
           setValue={async (v) => {
             try {
               setImage(v);
@@ -461,8 +434,7 @@ function AppImageFormControl(props: {
               });
             }
           }}
-          className="w-24 rounded-full bg-background lg:w-28"
-          disableHelperText
+          value={image || resolveUrl}
         />
 
         {uploadImage.isPending && (
@@ -485,17 +457,16 @@ function SMSCountryFields(props: {
   return (
     <div>
       <SwitchContainer
+        description="Optionally allow users in selected countries to login via SMS OTP."
         switchId="sms-switch"
         title="SMS"
-        description="Optionally allow users in selected countries to login via SMS OTP."
       >
         <GatedSwitch
           currentPlan={props.teamPlan}
           requiredPlan={props.requiredPlan}
-          teamSlug={props.teamSlug}
           switchProps={{
-            id: "sms-switch",
             checked: !!props.form.watch("smsEnabledCountryISOs").length,
+            id: "sms-switch",
             onCheckedChange: (checked) =>
               props.form.setValue(
                 "smsEnabledCountryISOs",
@@ -505,6 +476,7 @@ function SMSCountryFields(props: {
                   : [],
               ),
           }}
+          teamSlug={props.teamSlug}
           trackingLabel="sms"
         />
       </SwitchContainer>
@@ -512,8 +484,8 @@ function SMSCountryFields(props: {
       <GatedCollapsibleContainer
         className="grid grid-cols-1"
         currentPlan={props.teamPlan}
-        requiredPlan={props.requiredPlan}
         isExpanded={!!props.form.watch("smsEnabledCountryISOs").length}
+        requiredPlan={props.requiredPlan}
       >
         <FormField
           control={props.form.control}
@@ -521,8 +493,8 @@ function SMSCountryFields(props: {
           render={({ field }) => (
             <CountrySelector
               countryTiers={props.smsCountryTiers}
-              selected={field.value}
               onChange={field.onChange}
+              selected={field.value}
             />
           )}
         />
@@ -540,45 +512,44 @@ function JSONWebTokenFields(props: {
   return (
     <div>
       <SwitchContainer
-        switchId="authentication-switch"
-        title="Custom JSON Web Token"
         description={
           <>
             Optionally allow users to authenticate with a custom JWT.{" "}
-            <TrackedLinkTW
-              target="_blank"
-              href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-jwt-auth-server"
-              label="learn-more"
-              category={TRACKING_CATEGORY}
+            <Link
               className="text-link-foreground hover:text-foreground"
+              href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-jwt-auth-server"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Learn more
-            </TrackedLinkTW>
+            </Link>
           </>
         }
+        switchId="authentication-switch"
+        title="Custom JSON Web Token"
       >
         <GatedSwitch
-          trackingLabel="customAuthJWT"
           currentPlan={props.teamPlan}
           requiredPlan={props.requiredPlan}
-          teamSlug={props.teamSlug}
           switchProps={{
-            id: "authentication-switch",
             checked: !!props.form.watch("customAuthentication"),
+            id: "authentication-switch",
             onCheckedChange: (checked) => {
               props.form.setValue(
                 "customAuthentication",
-                checked ? { jwksUri: "", aud: "" } : undefined,
+                checked ? { aud: "", jwksUri: "" } : undefined,
               );
             },
           }}
+          teamSlug={props.teamSlug}
+          trackingLabel="customAuthJWT"
         />
       </SwitchContainer>
 
       <GatedCollapsibleContainer
         className="grid grid-cols-1 gap-6 lg:grid-cols-2"
-        isExpanded={!!props.form.watch("customAuthentication")}
         currentPlan={props.teamPlan}
+        isExpanded={!!props.form.watch("customAuthentication")}
         requiredPlan={props.requiredPlan}
       >
         <FormField
@@ -632,29 +603,29 @@ function AuthEndpointFields(props: {
   return (
     <div>
       <SwitchContainer
-        switchId="auth-endpoint-switch"
-        title="Custom Authentication Endpoint"
         description={
           <>
             Optionally allow users to authenticate with any arbitrary payload
             that you provide.{" "}
-            <TrackedLinkTW
-              target="_blank"
-              href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-auth-server"
-              label="learn-more"
-              category={TRACKING_CATEGORY}
+            <Link
               className="text-link-foreground hover:text-foreground"
+              href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-auth-server"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Learn more
-            </TrackedLinkTW>
+            </Link>
           </>
         }
+        switchId="auth-endpoint-switch"
+        title="Custom Authentication Endpoint"
       >
         <GatedSwitch
-          trackingLabel="customAuthEndpoint"
+          currentPlan={props.teamPlan}
+          requiredPlan={props.requiredPlan}
           switchProps={{
-            id: "auth-endpoint-switch",
             checked: expandCustomAuthEndpointField,
+            id: "auth-endpoint-switch",
             onCheckedChange: (checked) => {
               props.form.setValue(
                 "customAuthEndpoint",
@@ -667,9 +638,8 @@ function AuthEndpointFields(props: {
               );
             },
           }}
-          currentPlan={props.teamPlan}
-          requiredPlan={props.requiredPlan}
           teamSlug={props.teamSlug}
+          trackingLabel="customAuthEndpoint"
         />
       </SwitchContainer>
 
@@ -734,12 +704,12 @@ function AuthEndpointFieldsContent(props: {
                   )}
                 />
                 <Button
-                  variant="outline"
                   aria-label="Remove header"
+                  className="!w-auto px-3"
                   onClick={() => {
                     customHeaderFields.remove(customHeaderIdx);
                   }}
-                  className="!w-auto px-3"
+                  variant="outline"
                 >
                   <Trash2Icon className="size-4 shrink-0 text-destructive-text" />
                 </Button>
@@ -748,7 +718,6 @@ function AuthEndpointFieldsContent(props: {
           })}
 
           <Button
-            variant="outline"
             className="w-full gap-2 bg-background"
             onClick={() => {
               customHeaderFields.append({
@@ -756,6 +725,7 @@ function AuthEndpointFieldsContent(props: {
                 value: "",
               });
             }}
+            variant="outline"
           >
             <PlusIcon className="size-4" />
             Add header
@@ -823,10 +793,7 @@ function GatedCollapsibleContainer(props: {
   return <div className={cn("mt-6", props.className)}>{props.children}</div>;
 }
 
-function Fieldset(props: {
-  legend: string;
-  children: React.ReactNode;
-}) {
+function Fieldset(props: { legend: string; children: React.ReactNode }) {
   return (
     <DynamicHeight>
       <fieldset className="rounded-lg border border-border bg-card p-4 md:p-6">
@@ -850,7 +817,7 @@ function SwitchContainer(props: {
   return (
     <div className="flex items-center justify-between gap-6">
       <div>
-        <Label htmlFor={props.switchId} className="text-base">
+        <Label className="text-base" htmlFor={props.switchId}>
           {props.title}
         </Label>
         <p className="mt-0.5 text-muted-foreground text-sm ">

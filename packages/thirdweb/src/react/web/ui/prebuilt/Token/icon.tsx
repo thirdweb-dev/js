@@ -118,19 +118,6 @@ export function TokenIcon({
 }: TokenIconProps) {
   const { address, client, chain } = useTokenContext();
   const iconQuery = useQuery({
-    queryKey: [
-      "_internal_token_icon_",
-      chain.id,
-      address,
-      {
-        resolver:
-          typeof iconResolver === "string"
-            ? iconResolver
-            : typeof iconResolver === "function"
-              ? getFunctionId(iconResolver)
-              : undefined,
-      },
-    ] as const,
     queryFn: async () => {
       if (typeof iconResolver === "string") {
         return iconResolver;
@@ -145,7 +132,7 @@ export function TokenIcon({
         if (!possibleUrl) {
           throw new Error("Failed to resolve icon for native token");
         }
-        return resolveScheme({ uri: possibleUrl, client });
+        return resolveScheme({ client, uri: possibleUrl });
       }
 
       // Try to get the icon from the contractURI
@@ -165,10 +152,23 @@ export function TokenIcon({
       }
 
       return resolveScheme({
-        uri: contractMetadata.image,
         client,
+        uri: contractMetadata.image,
       });
     },
+    queryKey: [
+      "_internal_token_icon_",
+      chain.id,
+      address,
+      {
+        resolver:
+          typeof iconResolver === "string"
+            ? iconResolver
+            : typeof iconResolver === "function"
+              ? getFunctionId(iconResolver)
+              : undefined,
+      },
+    ] as const,
     ...queryOptions,
   });
 

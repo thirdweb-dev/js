@@ -1,7 +1,7 @@
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import type React from "react";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { cn } from "@/lib/utils";
 
 export function SettingsCard(
   props: React.PropsWithChildren<{
@@ -66,12 +66,12 @@ export function SettingsCard(
 
         {props.saveButton && !props.noPermissionText && (
           <Button
-            size="sm"
             className={cn("gap-2", props.saveButton.className)}
-            onClick={props.saveButton.onClick}
             disabled={props.saveButton.disabled || props.saveButton.isPending}
-            variant={props.saveButton.variant || "outline"}
+            onClick={props.saveButton.onClick}
+            size="sm"
             type={props.saveButton.type}
+            variant={props.saveButton.variant || "outline"}
           >
             {props.saveButton.isPending && <Spinner className="size-3" />}
             {props.saveButton.label ||

@@ -16,8 +16,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTMedia", () => {
       tokenId: 0n,
     });
     expect(desc).toStrictEqual({
-      src: "ipfs://QmUEfFfwAh4wyB5UfHCVPUxis4j4Q4kJXtm5x5p3g1fVUn",
       poster: undefined,
+      src: "ipfs://QmUEfFfwAh4wyB5UfHCVPUxis4j4Q4kJXtm5x5p3g1fVUn",
     });
   });
 
@@ -27,46 +27,46 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTMedia", () => {
       tokenId: 0n,
     });
     expect(desc).toStrictEqual({
-      src: "ipfs://QmeGCqV1mSHTZrvuFzW1XZdCRRGXB6AmSotTqHoxA2xfDo/1.mp4",
       poster: "ipfs://QmeGCqV1mSHTZrvuFzW1XZdCRRGXB6AmSotTqHoxA2xfDo/0.png",
+      src: "ipfs://QmeGCqV1mSHTZrvuFzW1XZdCRRGXB6AmSotTqHoxA2xfDo/1.mp4",
     });
   });
 
   it("fetchNftMedia should respect mediaResolver as a string", async () => {
     const desc = await fetchNftMedia({
       contract: DOODLES_CONTRACT,
-      tokenId: 0n,
       mediaResolver: {
-        src: "string",
         poster: undefined,
+        src: "string",
       },
+      tokenId: 0n,
     });
-    expect(desc).toStrictEqual({ src: "string", poster: undefined });
+    expect(desc).toStrictEqual({ poster: undefined, src: "string" });
   });
 
   it("fetchNftMedia should respect mediaResolver as a non-async function", async () => {
     const desc = await fetchNftMedia({
       contract: DOODLES_CONTRACT,
-      tokenId: 0n,
       mediaResolver: () => ({
-        src: "non-async",
         poster: undefined,
+        src: "non-async",
       }),
+      tokenId: 0n,
     });
-    expect(desc).toStrictEqual({ src: "non-async", poster: undefined });
+    expect(desc).toStrictEqual({ poster: undefined, src: "non-async" });
   });
 
   it("fetchNftMedia should respect mediaResolver as a async function", async () => {
     const desc = await fetchNftMedia({
       contract: DOODLES_CONTRACT,
-      tokenId: 0n,
       mediaResolver: async () =>
         await {
-          src: "async",
           poster: undefined,
+          src: "async",
         },
+      tokenId: 0n,
     });
-    expect(desc).toStrictEqual({ src: "async", poster: undefined });
+    expect(desc).toStrictEqual({ poster: undefined, src: "async" });
   });
 
   it("fetchNftMedia should throw error if failed to resolve nft info", async () => {
@@ -82,8 +82,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTMedia", () => {
     expect(
       getQueryKey({
         chainId: 1,
-        tokenId: 1n,
         contractAddress: testContractAddress,
+        tokenId: 1n,
       }),
     ).toStrictEqual([
       "_internal_nft_media_",
@@ -99,13 +99,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTMedia", () => {
   it("getQueryKey should work with mediaResolver being an object", () => {
     expect(
       getQueryKey({
-        contractAddress: testContractAddress,
         chainId: 1,
-        tokenId: 1n,
+        contractAddress: testContractAddress,
         mediaResolver: {
-          src: "test",
           poster: "test",
+          src: "test",
         },
+        tokenId: 1n,
       }),
     ).toStrictEqual([
       "_internal_nft_media_",
@@ -114,8 +114,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTMedia", () => {
       "1",
       {
         resolver: {
-          src: "test",
           poster: "test",
+          src: "test",
         },
       },
     ]);
@@ -123,16 +123,16 @@ describe.runIf(process.env.TW_SECRET_KEY)("NFTMedia", () => {
 
   it("getQueryKey should work with mediaResolver being a function", () => {
     const fn = () => ({
-      src: "test",
       poster: "test",
+      src: "test",
     });
     const fnId = getFunctionId(fn);
     expect(
       getQueryKey({
         chainId: 1,
         contractAddress: testContractAddress,
-        tokenId: 1n,
         mediaResolver: fn,
+        tokenId: 1n,
       }),
     ).toStrictEqual([
       "_internal_nft_media_",

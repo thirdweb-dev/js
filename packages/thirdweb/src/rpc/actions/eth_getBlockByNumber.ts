@@ -2,8 +2,8 @@ import {
   type BlockTag,
   type EIP1193RequestFn,
   type EIP1474Methods,
-  type GetBlockReturnType,
   formatBlock,
+  type GetBlockReturnType,
 } from "viem";
 import { numberToHex } from "../../utils/encoding/hex.js";
 

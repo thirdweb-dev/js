@@ -160,9 +160,9 @@ export function TokenName({
 }: TokenNameProps) {
   const { address, client, chain } = useTokenContext();
   const nameQuery = useQuery({
-    queryKey: getQueryKeys({ chainId: chain.id, nameResolver, address }),
     queryFn: async () =>
       fetchTokenName({ address, chain, client, nameResolver }),
+    queryKey: getQueryKeys({ address, chainId: chain.id, nameResolver }),
     ...queryOptions,
   });
 
@@ -204,7 +204,7 @@ export async function fetchTokenName(props: {
 
   // Try to fetch the name from both the `name` function and the contract metadata
   // then prioritize its result
-  const contract = getContract({ address, client, chain });
+  const contract = getContract({ address, chain, client });
   const [_name, contractMetadata] = await Promise.all([
     name({ contract }).catch(() => undefined),
     getContractMetadata({ contract }).catch(() => undefined),

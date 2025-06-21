@@ -44,29 +44,29 @@ export async function canClaim(
       }),
       getClaimParams({
         contract: options.contract,
+        from: options.from,
         quantity: options.quantity,
         to: options.claimer,
         type: "erc721",
-        from: options.from,
       }),
     ]);
   try {
     await verifyClaim({
-      contract: options.contract,
+      allowlistProof,
       claimer: options.claimer,
-      quantity,
+      conditionId,
+      contract: options.contract,
       currency,
       pricePerToken,
-      allowlistProof,
-      conditionId,
+      quantity,
     });
     return {
       result: true,
     };
   } catch (error) {
     return {
+      reason: await extractErrorResult({ contract: options.contract, error }),
       result: false,
-      reason: await extractErrorResult({ error, contract: options.contract }),
     };
   }
 }

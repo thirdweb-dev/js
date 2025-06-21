@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "DefaultRoyalty" event.
@@ -34,8 +34,8 @@ export type DefaultRoyaltyEventFilters = Partial<{
  */
 export function defaultRoyaltyEvent(filters: DefaultRoyaltyEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event DefaultRoyalty(address indexed newRoyaltyRecipient, uint256 newRoyaltyBps)",
-    filters,
   });
 }

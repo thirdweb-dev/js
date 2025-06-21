@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { cn } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import ReactHtmlParser from "react-html-parser";
+import { cn } from "@/lib/utils";
 import { fetchChangeLogs, fetchPost } from "../ghost";
 import "./styles.css";
 import { ArrowLeftIcon } from "lucide-react";
@@ -27,8 +27,8 @@ export default async function Page(props: {
     <div className="changelog-page">
       <Button asChild>
         <Link
-          href="/changelog"
           className="-translate-x-1/4 !p-2 !text-muted-foreground hover:!text-foreground mb-4 bg-transparent"
+          href="/changelog"
         >
           <ArrowLeftIcon className="size-6" />
         </Link>
@@ -56,9 +56,9 @@ export default async function Page(props: {
 
           return (
             <Author
+              key={author.id}
               name={author.name}
               profileImage={author.profile_image}
-              key={author.id}
             />
           );
         })}

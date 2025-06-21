@@ -1,5 +1,7 @@
 "use client";
 
+import { ArrowUpRightIcon } from "lucide-react";
+import { useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -9,8 +11,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { ArrowUpRightIcon } from "lucide-react";
-import { useState } from "react";
 import { cn } from "../lib/utils";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -19,6 +19,7 @@ export const PaginationButtons = (props: {
   activePage: number;
   totalPages: number;
   onPageClick: (page: number) => void;
+  className?: string;
 }) => {
   const { activePage, totalPages, onPageClick: setPage } = props;
   const [inputHasError, setInputHasError] = useState(false);
@@ -40,15 +41,44 @@ export const PaginationButtons = (props: {
     }
   }
 
+  // if only two pages, show "prev" and "next"
+  if (totalPages === 2) {
+    return (
+      <Pagination className={props.className}>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              className="rounded-full"
+              disabled={activePage === 1}
+              onClick={() => {
+                setPage(activePage - 1);
+              }}
+            />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext
+              className="rounded-full"
+              disabled={activePage === totalPages}
+              onClick={() => {
+                setPage(activePage + 1);
+              }}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    );
+  }
+
   // just render all the page buttons directly
   if (totalPages <= 6) {
     const pages = [...Array(totalPages)].map((_, i) => i + 1);
     return (
-      <Pagination>
+      <Pagination className={props.className}>
         <PaginationContent>
           {pages.map((page) => (
             <PaginationItem key={page}>
               <PaginationLink
+                className="rounded-full"
                 isActive={activePage === page}
                 onClick={() => {
                   setPage(page);
@@ -64,10 +94,11 @@ export const PaginationButtons = (props: {
   }
 
   return (
-    <Pagination>
+    <Pagination className={props.className}>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
+            className="rounded-full"
             disabled={activePage === 1}
             onClick={() => {
               setPage(activePage - 1);
@@ -80,6 +111,7 @@ export const PaginationButtons = (props: {
           <>
             <PaginationItem>
               <PaginationLink
+                className="rounded-full"
                 onClick={() => {
                   setPage(1);
                 }}
@@ -89,7 +121,7 @@ export const PaginationButtons = (props: {
             </PaginationItem>
 
             <PaginationItem>
-              <PaginationEllipsis className="max-sm:w-3" />
+              <PaginationEllipsis className="max-sm:w-3 rounded-full" />
             </PaginationItem>
           </>
         )}
@@ -97,6 +129,7 @@ export const PaginationButtons = (props: {
         {activePage - 1 > 0 && (
           <PaginationItem className="max-sm:hidden">
             <PaginationLink
+              className="rounded-full"
               onClick={() => {
                 setPage(activePage - 1);
               }}
@@ -107,12 +140,15 @@ export const PaginationButtons = (props: {
         )}
 
         <PaginationItem>
-          <PaginationLink isActive>{activePage}</PaginationLink>
+          <PaginationLink className="rounded-full" isActive>
+            {activePage}
+          </PaginationLink>
         </PaginationItem>
 
         {activePage + 1 <= totalPages && (
           <PaginationItem className="max-sm:hidden">
             <PaginationLink
+              className="rounded-full"
               onClick={() => {
                 setPage(activePage + 1);
               }}
@@ -126,11 +162,12 @@ export const PaginationButtons = (props: {
         {activePage + 3 <= totalPages && (
           <>
             <PaginationItem>
-              <PaginationEllipsis className="max-sm:w-3" />
+              <PaginationEllipsis className="max-sm:w-3 rounded-full" />
             </PaginationItem>
 
             <PaginationItem>
               <PaginationLink
+                className="rounded-full"
                 onClick={() => {
                   setPage(totalPages);
                 }}
@@ -143,6 +180,7 @@ export const PaginationButtons = (props: {
 
         <PaginationItem>
           <PaginationNext
+            className="rounded-full"
             disabled={activePage === totalPages}
             onClick={() => {
               setPage(activePage + 1);
@@ -152,27 +190,27 @@ export const PaginationButtons = (props: {
 
         <div className="relative flex items-center">
           <Input
-            value={pageNumberInput}
+            className={cn(
+              "w-[60px] bg-transparent [appearance:textfield] max-sm:placeholder:text-sm lg:w-[100px] lg:pr-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none rounded-full",
+              inputHasError && "text-red-500",
+            )}
             onChange={(e) => {
               setInputHasError(false);
               setPageNumberInput(e.target.value);
             }}
-            type="number"
-            placeholder="Page"
-            className={cn(
-              "w-[60px] bg-transparent [appearance:textfield] max-sm:placeholder:text-sm lg:w-[100px] lg:pr-8 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
-              inputHasError && "text-red-500",
-            )}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handlePageInputSubmit();
               }
             }}
+            placeholder="Page"
+            type="number"
+            value={pageNumberInput}
           />
           <Button
-            variant="ghost"
-            className="absolute right-1 h-auto w-auto p-2 max-sm:hidden"
+            className="absolute right-1 h-auto w-auto rounded-full p-2 max-sm:hidden"
             onClick={handlePageInputSubmit}
+            variant="ghost"
           >
             <ArrowUpRightIcon className="size-4" />
           </Button>

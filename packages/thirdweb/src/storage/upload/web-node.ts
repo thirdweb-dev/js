@@ -3,7 +3,7 @@ import { getThirdwebDomains } from "../../utils/domains.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { IS_TEST } from "../../utils/process.js";
 import { addToMockStorage } from "../mock.js";
-import type { UploadOptions, UploadableFile } from "./types.js";
+import type { UploadableFile, UploadOptions } from "./types.js";
 
 export async function uploadBatch<const TFiles extends UploadableFile[]>(
   client: ThirdwebClient,
@@ -20,9 +20,9 @@ export async function uploadBatch<const TFiles extends UploadableFile[]>(
   const res = await getClientFetch(client)(
     `https://${getThirdwebDomains().storage}/ipfs/upload`,
     {
-      method: "POST",
-      headers,
       body: form,
+      headers,
+      method: "POST",
       requestTimeoutMs:
         client.config?.storage?.fetch?.requestTimeoutMs || 120000,
       // force auth token usage for storage uploads

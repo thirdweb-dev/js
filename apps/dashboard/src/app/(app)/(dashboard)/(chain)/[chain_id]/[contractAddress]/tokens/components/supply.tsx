@@ -20,8 +20,8 @@ export const TokenDetailsCard: React.FC<TokenBalancesProps> = ({
   const address = useActiveAccount()?.address;
 
   const ownedTokenBalanceQuery = useReadContract(getBalance, {
-    contract,
     address: address || "",
+    contract,
     queryOptions: { enabled: !!address },
   });
 
@@ -41,13 +41,13 @@ export const TokenDetailsCard: React.FC<TokenBalancesProps> = ({
 
     return {
       ...tokenMetadataQuery.data,
-      value: tokenSupplyQuery.data,
+      chainId: contract.chain.id,
       displayValue: toTokens(
         tokenSupplyQuery.data,
         tokenMetadataQuery.data.decimals,
       ),
       tokenAddress: contract.address,
-      chainId: contract.chain.id,
+      value: tokenSupplyQuery.data,
     };
   }, [
     tokenMetadataQuery.data,
@@ -59,8 +59,8 @@ export const TokenDetailsCard: React.FC<TokenBalancesProps> = ({
   return (
     <TokenDetailsCardUI
       isWalletConnected={!!address}
-      tokenSupply={tokenSupply}
       ownedBalance={ownedTokenBalanceQuery.data}
+      tokenSupply={tokenSupply}
     />
   );
 };

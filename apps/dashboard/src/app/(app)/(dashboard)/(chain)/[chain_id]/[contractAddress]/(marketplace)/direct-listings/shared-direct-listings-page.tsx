@@ -13,8 +13,8 @@ export async function SharedDirectListingsPage(props: {
   isLoggedIn: boolean;
 }) {
   const info = await getContractPageParamsInfo({
-    contractAddress: props.contractAddress,
     chainIdOrSlug: props.chainIdOrSlug,
+    contractAddress: props.contractAddress,
     teamId: props.projectMeta?.teamId,
   });
 
@@ -46,8 +46,8 @@ export async function SharedDirectListingsPage(props: {
   return (
     <ContractDirectListingsPage
       contract={info.clientContract}
-      isLoggedIn={props.isLoggedIn}
       isInsightSupported={isInsightSupported}
+      isLoggedIn={props.isLoggedIn}
     />
   );
 }

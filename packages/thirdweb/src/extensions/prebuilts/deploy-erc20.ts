@@ -2,8 +2,8 @@ import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
 import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
-import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
+import { upload } from "../../storage/upload.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import { initialize as initDropERC20 } from "./__generated__/DropERC20/write/initialize.js";
@@ -65,24 +65,24 @@ export async function deployERC20Contract(options: DeployERC20ContractOptions) {
   const { chain, client, account, type, params, publisher } = options;
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
+      account,
       chain,
       client,
-      account,
       contractId: type,
       publisher,
     });
   const initializeTransaction = await getInitializeTransaction({
+    accountAddress: account.address,
     client,
     implementationContract,
-    type,
     params,
-    accountAddress: account.address,
+    type,
   });
 
   return deployViaAutoFactory({
-    client,
-    chain,
     account,
+    chain,
+    client,
     cloneFactoryContract,
     initializeTransaction,
   });
@@ -103,12 +103,12 @@ async function getInitializeTransaction(options: {
       client,
       files: [
         {
-          name: params.name,
           description: params.description,
-          symbol: params.symbol,
-          image: params.image,
           external_link: params.external_link,
+          image: params.image,
+          name: params.name,
           social_urls: params.social_urls,
+          symbol: params.symbol,
         },
       ],
     })) ||
@@ -117,25 +117,25 @@ async function getInitializeTransaction(options: {
     case "DropERC20":
       return initDropERC20({
         contract: implementationContract,
-        name: params.name || "",
-        symbol: params.symbol || "",
         contractURI,
         defaultAdmin: params.defaultAdmin || accountAddress,
-        saleRecipient: params.saleRecipient || accountAddress,
+        name: params.name || "",
         platformFeeBps: params.platformFeeBps || 0n,
         platformFeeRecipient: params.platformFeeRecipient || accountAddress,
+        saleRecipient: params.saleRecipient || accountAddress,
+        symbol: params.symbol || "",
         trustedForwarders: params.trustedForwarders || [],
       });
     case "TokenERC20":
       return initTokenERC20({
         contract: implementationContract,
-        name: params.name || "",
-        symbol: params.symbol || "",
         contractURI,
         defaultAdmin: params.defaultAdmin || accountAddress,
-        primarySaleRecipient: params.saleRecipient || accountAddress,
+        name: params.name || "",
         platformFeeBps: params.platformFeeBps || 0n,
         platformFeeRecipient: params.platformFeeRecipient || accountAddress,
+        primarySaleRecipient: params.saleRecipient || accountAddress,
+        symbol: params.symbol || "",
         trustedForwarders: params.trustedForwarders || [],
       });
   }

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { createThirdwebClient, defineChain, getContract } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { checksumAddress } from "thirdweb/utils";
-import { PayPageEmbed } from "./components/client/PayPageEmbed.client";
 import { PaymentLinkForm } from "./components/client/PaymentLinkForm.client";
+import { PayPageEmbed } from "./components/client/PayPageEmbed.client";
 import type { PayParams } from "./components/types";
 import { payAppThirdwebClient } from "./constants";
 
@@ -11,17 +11,19 @@ const title = "thirdweb Pay";
 const description = "Fast, secure, and simple payments.";
 
 export const metadata: Metadata = {
-  title,
   description,
   openGraph: {
-    title,
     description,
+    title,
   },
+  title,
 };
 
 export default async function PayPage({
   searchParams,
-}: { searchParams: Promise<PayParams> }) {
+}: {
+  searchParams: Promise<PayParams>;
+}) {
   const params = await searchParams;
 
   // If no query parameters are provided, show the form
@@ -61,10 +63,10 @@ export default async function PayPage({
       : payAppThirdwebClient;
 
   const tokenContract = getContract({
-    client: payAppThirdwebClient,
+    address: params.tokenAddress,
     // eslint-disable-next-line no-restricted-syntax
     chain: defineChain(Number(params.chainId)),
-    address: params.tokenAddress,
+    client: payAppThirdwebClient,
   });
   const {
     symbol,
@@ -74,25 +76,25 @@ export default async function PayPage({
     contract: tokenContract,
   });
   const token = {
-    symbol,
-    decimals,
-    name: tokenName,
     address: checksumAddress(params.tokenAddress),
     chainId: Number(params.chainId),
+    decimals,
+    name: tokenName,
+    symbol,
   };
 
   return (
     <PayPageEmbed
-      redirectUri={params.redirectUri}
-      chainId={Number(params.chainId)}
-      recipientAddress={params.recipientAddress}
       amount={BigInt(params.amount)}
-      token={token}
+      chainId={Number(params.chainId)}
       clientId={client.clientId}
-      name={params.name}
       image={params.image}
-      theme={params.theme}
+      name={params.name}
       purchaseData={undefined}
+      recipientAddress={params.recipientAddress}
+      redirectUri={params.redirectUri}
+      theme={params.theme}
+      token={token}
     />
   );
 }

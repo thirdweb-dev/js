@@ -1,10 +1,10 @@
 "use client";
 
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Alert, AlertTitle } from "@/components/ui/alert";
 import { CircleSlashIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb/contract";
 import type { Account } from "thirdweb/wallets";
+import { Alert, AlertTitle } from "@/components/ui/alert";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { ModuleCard } from "./module-card";
 import { useAllModuleContractInfo } from "./moduleContractInfo";
 
@@ -52,13 +52,13 @@ export const InstalledModulesTable = (props: {
         <div className="flex flex-col gap-6">
           {installedModules.data?.map((moduleAddress) => (
             <ModuleCard
-              key={moduleAddress}
-              moduleAddress={moduleAddress}
               allModuleContractInfo={allModuleContractInfo?.data || []}
               contract={props.contract}
+              isLoggedIn={props.isLoggedIn}
+              key={moduleAddress}
+              moduleAddress={moduleAddress}
               onRemoveModule={props.refetchModules}
               ownerAccount={ownerAccount}
-              isLoggedIn={props.isLoggedIn}
             />
           ))}
         </div>

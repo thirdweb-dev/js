@@ -1,9 +1,9 @@
 "use client";
 
-import { THIRDWEB_CLIENT } from "@/lib/client";
 import { getContract } from "thirdweb";
 import { ethereum } from "thirdweb/chains";
 import { NFTDescription, NFTMedia, NFTName, NFTProvider } from "thirdweb/react";
+import { THIRDWEB_CLIENT } from "@/lib/client";
 
 const nftContract = getContract({
   address: "0xbd3531da5cf5857e7cfaa92426877b022e612cf8",
@@ -13,7 +13,7 @@ const nftContract = getContract({
 
 export function NftMediaBasicPreview() {
   return (
-    <NFTProvider tokenId={0n} contract={nftContract}>
+    <NFTProvider contract={nftContract} tokenId={0n}>
       <NFTMedia
         className="h-40 w-40 rounded-md"
         loadingComponent={<span>Loading...</span>}
@@ -24,12 +24,12 @@ export function NftMediaBasicPreview() {
 
 export function NftMediaOverridePreview() {
   return (
-    <NFTProvider tokenId={0n} contract={nftContract}>
+    <NFTProvider contract={nftContract} tokenId={0n}>
       <NFTMedia
         className="h-40 w-40 rounded-md border"
         mediaResolver={{
-          src: "ipfs://QmeGCqV1mSHTZrvuFzW1XZdCRRGXB6AmSotTqHoxA2xfDo/1.mp4",
           poster: "ipfs://QmeGCqV1mSHTZrvuFzW1XZdCRRGXB6AmSotTqHoxA2xfDo/0.png",
+          src: "ipfs://QmeGCqV1mSHTZrvuFzW1XZdCRRGXB6AmSotTqHoxA2xfDo/1.mp4",
         }}
       />
     </NFTProvider>
@@ -38,7 +38,7 @@ export function NftMediaOverridePreview() {
 
 export function NftNameBasicPreview() {
   return (
-    <NFTProvider tokenId={0n} contract={nftContract}>
+    <NFTProvider contract={nftContract} tokenId={0n}>
       <NFTName loadingComponent={<span>Loading...</span>} />
     </NFTProvider>
   );
@@ -46,7 +46,7 @@ export function NftNameBasicPreview() {
 
 export function NftDescriptionBasicPreview() {
   return (
-    <NFTProvider tokenId={0n} contract={nftContract}>
+    <NFTProvider contract={nftContract} tokenId={0n}>
       <NFTDescription
         className="block px-6 text-center"
         loadingComponent={<span>Loading...</span>}
@@ -57,7 +57,7 @@ export function NftDescriptionBasicPreview() {
 
 export function NftCardDemoPreview() {
   return (
-    <NFTProvider tokenId={0n} contract={nftContract}>
+    <NFTProvider contract={nftContract} tokenId={0n}>
       <div className="flex w-[230px] flex-col gap-3 rounded-lg border bg-zinc-900 px-1 py-3">
         <NFTMedia className="rounded-md px-2 text-center" />
         <NFTName className="px-2 font-bold" />

@@ -1,12 +1,16 @@
 "use client";
-import { apiServerProxy } from "@/actions/proxies";
-import { sendTeamInvites } from "@/actions/sendTeamInvite";
-import type { Team } from "@/api/team";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useTrack } from "hooks/analytics/useTrack";
+import { useEffect } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { upload } from "thirdweb/storage";
+import { apiServerProxy } from "@/actions/proxies";
+import { sendTeamInvites } from "@/actions/sendTeamInvite";
+import {
+  reportOnboardingCompleted,
+  reportOnboardingStarted,
+} from "@/analytics/report";
+import type { Team } from "@/api/team";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { updateTeam } from "../../../team/[team_slug]/(team)/~/settings/general/updateTeam";
 import { InviteTeamMembersUI } from "./InviteTeamMembers";
 import { TeamInfoFormUI } from "./TeamInfoForm";
@@ -17,18 +21,24 @@ export function TeamInfoForm(props: {
   teamSlug: string;
 }) {
   const router = useDashboardRouter();
-  const trackEvent = useTrack();
+
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    reportOnboardingStarted();
+  }, []);
+
   return (
     <TeamInfoFormUI
+      client={props.client}
       isTeamSlugAvailable={async (slug) => {
         const res = await apiServerProxy<{
           result: boolean;
         }>({
+          method: "GET",
           pathname: "/v1/teams/check-slug",
           searchParams: {
             slug,
           },
-          method: "GET",
         });
 
         if (!res.ok) {
@@ -37,22 +47,15 @@ export function TeamInfoForm(props: {
 
         return res.data.result;
       }}
-      teamSlug={props.teamSlug}
-      client={props.client}
       onComplete={(updatedTeam) => {
         router.replace(`/get-started/team/${updatedTeam.slug}/select-plan`);
       }}
+      teamSlug={props.teamSlug}
       updateTeam={async (data) => {
         const teamValue: Partial<Team> = {
           name: data.name,
           slug: data.slug,
         };
-
-        trackEvent({
-          category: "teamOnboarding",
-          action: "updateTeam",
-          label: "attempt",
-        });
 
         if (data.image) {
           try {
@@ -72,20 +75,8 @@ export function TeamInfoForm(props: {
         });
 
         if (!res.ok) {
-          trackEvent({
-            category: "teamOnboarding",
-            action: "updateTeam",
-            label: "error",
-          });
-
           throw new Error(res.error);
         }
-
-        trackEvent({
-          category: "teamOnboarding",
-          action: "updateTeam",
-          label: "success",
-        });
 
         return res.data;
       }}
@@ -98,21 +89,16 @@ export function InviteTeamMembers(props: {
   client: ThirdwebClient;
 }) {
   const router = useDashboardRouter();
-  const trackEvent = useTrack();
 
   return (
     <InviteTeamMembersUI
-      trackEvent={trackEvent}
       client={props.client}
-      onComplete={() => {
-        router.replace(`/team/${props.team.slug}`);
-      }}
       getTeam={async () => {
         const res = await apiServerProxy<{
           result: Team;
         }>({
-          pathname: `/v1/teams/${props.team.slug}`,
           method: "GET",
+          pathname: `/v1/teams/${props.team.slug}`,
         });
 
         if (!res.ok) {
@@ -121,38 +107,26 @@ export function InviteTeamMembers(props: {
 
         return res.data.result;
       }}
-      team={props.team}
       inviteTeamMembers={async (params) => {
         const res = await sendTeamInvites({
-          teamId: props.team.id,
           invites: params,
-        });
-
-        trackEvent({
-          category: "teamOnboarding",
-          action: "inviteTeamMembers",
-          label: "attempt",
+          teamId: props.team.id,
         });
 
         if (!res.ok) {
-          trackEvent({
-            category: "teamOnboarding",
-            action: "inviteTeamMembers",
-            label: "error",
-          });
           throw new Error(res.errorMessage);
         }
-
-        trackEvent({
-          category: "teamOnboarding",
-          action: "inviteTeamMembers",
-          label: "success",
-        });
 
         return {
           results: res.results,
         };
       }}
+      onComplete={() => {
+        // at this point the team onboarding is complete
+        reportOnboardingCompleted();
+        router.replace(`/team/${props.team.slug}`);
+      }}
+      team={props.team}
     />
   );
 }

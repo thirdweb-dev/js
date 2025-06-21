@@ -1,6 +1,5 @@
 "use client";
 
-import { normalizeTimeISOString } from "@/lib/time";
 import { useQuery } from "@tanstack/react-query";
 import {
   DateRangeSelector,
@@ -12,6 +11,7 @@ import {
   useResponsiveSearchParams,
   useSetResponsiveSearchParams,
 } from "responsive-rsc";
+import { normalizeTimeISOString } from "@/lib/time";
 
 const STORAGE_KEY = "thirdweb:ub-analytics-range";
 
@@ -32,11 +32,7 @@ export function PayAnalyticsFilter() {
 
   // Load saved range from localStorage using useQuery
   useQuery<SavedRange | null>({
-    queryKey: [
-      "savedRange",
-      responsiveSearchParams.from,
-      responsiveSearchParams.to,
-    ],
+    enabled: !responsiveSearchParams.from && !responsiveSearchParams.to,
     queryFn: () => {
       const savedRangeString = localStorage.getItem(STORAGE_KEY);
       if (savedRangeString) {
@@ -44,20 +40,20 @@ export function PayAnalyticsFilter() {
           const savedRange = JSON.parse(savedRangeString) as SavedRange;
           // Get the current range based on the saved range type
           const { range } = getUniversalBridgeFiltersFromSearchParams({
-            from: undefined,
-            to: undefined,
-            interval: savedRange.interval,
             defaultRange:
               savedRange.rangeType === "custom"
                 ? "last-30"
                 : savedRange.rangeType || "last-30",
+            from: undefined,
+            interval: savedRange.interval,
+            to: undefined,
           });
 
           setResponsiveSearchParams((v) => ({
             ...v,
             from: normalizeTimeISOString(range.from),
-            to: normalizeTimeISOString(range.to),
             interval: savedRange.interval,
+            to: normalizeTimeISOString(range.to),
           }));
         } catch (e) {
           console.error("Failed to parse saved range:", e);
@@ -65,14 +61,18 @@ export function PayAnalyticsFilter() {
       }
       return null;
     },
-    enabled: !responsiveSearchParams.from && !responsiveSearchParams.to,
+    queryKey: [
+      "savedRange",
+      responsiveSearchParams.from,
+      responsiveSearchParams.to,
+    ],
   });
 
   const { range, interval } = getUniversalBridgeFiltersFromSearchParams({
-    from: responsiveSearchParams.from,
-    to: responsiveSearchParams.to,
-    interval: responsiveSearchParams.interval,
     defaultRange: "last-30",
+    from: responsiveSearchParams.from,
+    interval: responsiveSearchParams.interval,
+    to: responsiveSearchParams.to,
   });
 
   const saveToLocalStorage = (params: {
@@ -85,8 +85,8 @@ export function PayAnalyticsFilter() {
   return (
     <div className="no-scrollbar flex items-center gap-3 max-sm:overflow-auto">
       <DateRangeSelector
-        range={range}
         popoverAlign="end"
+        range={range}
         setRange={(newRange) => {
           setResponsiveSearchParams((v: SearchParams) => {
             const newParams = {
@@ -96,8 +96,8 @@ export function PayAnalyticsFilter() {
             };
             // Save to localStorage
             saveToLocalStorage({
-              rangeType: newRange.type || "last-30",
               interval: newParams.interval || "day",
+              rangeType: newRange.type || "last-30",
             });
             return newParams;
           });
@@ -114,8 +114,8 @@ export function PayAnalyticsFilter() {
             };
             // Save to localStorage
             saveToLocalStorage({
-              rangeType: range.type || "last-30",
               interval: newInterval,
+              rangeType: range.type || "last-30",
             });
             return newParams;
           });

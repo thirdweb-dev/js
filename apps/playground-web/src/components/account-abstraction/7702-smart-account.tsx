@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { getContract } from "thirdweb";
 import { baseSepolia } from "thirdweb/chains";
-import { claimTo } from "thirdweb/extensions/erc1155";
-import { getNFT, getOwnedNFTs } from "thirdweb/extensions/erc1155";
+import { claimTo, getNFT, getOwnedNFTs } from "thirdweb/extensions/erc1155";
 import {
   ConnectButton,
   MediaRenderer,
@@ -46,11 +45,11 @@ export function Eip7702SmartAccountPreview() {
     tokenId: editionDropTokenId,
   });
   const { data: ownedNfts } = useReadContract(getOwnedNFTs, {
-    contract: editionDropContract,
-    useIndexer: false,
     // biome-ignore lint/style/noNonNullAssertion: handled by queryOptions
     address: activeEOA?.address!,
+    contract: editionDropContract,
     queryOptions: { enabled: !!activeEOA },
+    useIndexer: false,
   });
 
   if (activeEOA && activeWallet && activeWallet?.id !== iaw.id) {
@@ -76,19 +75,19 @@ export function Eip7702SmartAccountPreview() {
         <>
           <div className="flex flex-col justify-center gap-2 p-2">
             <ConnectButton
-              client={THIRDWEB_CLIENT}
               chain={chain}
-              wallets={[iaw]}
+              client={THIRDWEB_CLIENT}
               connectButton={{
                 label: "Login to mint!",
               }}
+              wallets={[iaw]}
             />
           </div>
           {nft ? (
             <MediaRenderer
               client={THIRDWEB_CLIENT}
               src={nft.metadata.image}
-              style={{ width: "300px", marginTop: "10px" }}
+              style={{ marginTop: "10px", width: "300px" }}
             />
           ) : null}
           {activeEOA ? (
@@ -98,26 +97,26 @@ export function Eip7702SmartAccountPreview() {
                 {nft?.metadata?.name}
               </p>
               <TransactionButton
-                transaction={() =>
-                  claimTo({
-                    contract: editionDropContract,
-                    tokenId: editionDropTokenId,
-                    to: activeEOA.address,
-                    quantity: 1n,
-                  })
-                }
-                payModal={{
-                  metadata: nft?.metadata,
+                onClick={() => {
+                  setTxHash(null);
                 }}
                 onError={(error) => {
                   alert(`Error: ${error.message}`);
                 }}
-                onClick={() => {
-                  setTxHash(null);
-                }}
                 onTransactionSent={async (tx) => {
                   setTxHash(tx.transactionHash);
                 }}
+                payModal={{
+                  metadata: nft?.metadata,
+                }}
+                transaction={() =>
+                  claimTo({
+                    contract: editionDropContract,
+                    quantity: 1n,
+                    to: activeEOA.address,
+                    tokenId: editionDropTokenId,
+                  })
+                }
               >
                 Mint with EIP-7702
               </TransactionButton>
@@ -128,10 +127,10 @@ export function Eip7702SmartAccountPreview() {
               <p className="mb-2 text-center text-green-500">
                 Minted! Tx Hash:{" "}
                 <a
-                  href={`${chain.blockExplorers?.[0]?.url}/tx/${txHash}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="underline"
+                  href={`${chain.blockExplorers?.[0]?.url}/tx/${txHash}`}
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
                   {shortenHex(txHash)}
                 </a>

@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.didwallet",
-  name: "DIDWallet",
-  homepage: "https://www.didwallet.io/",
-  image_id: "bc66fa57-46f4-4e17-6cb7-5f2d9af9c000",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/app/id1460083542",
     android:
       "https://play.google.com/store/apps/details?id=com.arcblock.wallet.app.product",
-    mac: "",
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/app/id1460083542",
+    linux: null,
+    mac: "",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "abt://didwallet.io/i",
-    universal: "https://didwallet.io/i",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.didwallet.io/",
+  id: "io.didwallet",
+  image_id: "bc66fa57-46f4-4e17-6cb7-5f2d9af9c000",
+  mobile: {
+    native: "abt://didwallet.io/i",
+    universal: "https://didwallet.io/i",
+  },
+  name: "DIDWallet",
+  rdns: null,
 } as const;

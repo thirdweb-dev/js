@@ -1,22 +1,21 @@
+import type { Metadata } from "next";
 import { PageLayout } from "@/components/blocks/APIHeader";
 import { CodeExample } from "@/components/code/code-example";
-import { StyledPayEmbedPreview } from "@/components/pay/embed";
 import ThirdwebProvider from "@/components/thirdweb-provider";
+import { StyledBuyWidgetPreview } from "@/components/universal-bridge/buy";
 import { metadataBase } from "@/lib/constants";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  metadataBase,
-  title: "Buy Crypto | thirdweb Universal Bridge",
   description:
     "The easiest way for users to fund their wallets. Onramp users in clicks and generate revenue for each user transaction. Integrate for free.",
+  metadataBase,
+  title: "Buy Crypto | thirdweb Universal Bridge",
 };
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="The easiest way for users to fund their wallets"
         description={
           <>
             Onramp users with credit card &amp; cross-chain crypto payments —
@@ -24,18 +23,32 @@ export default function Page() {
           </>
         }
         docsLink="https://portal.thirdweb.com/connect/pay/get-started?utm_source=playground"
+        title="The easiest way for users to fund their wallets"
       >
-        <StyledPayEmbed />
+        <StyledPayWidget />
       </PageLayout>
     </ThirdwebProvider>
   );
 }
 
-function StyledPayEmbed() {
+function StyledPayWidget() {
   return (
     <CodeExample
+      code={`\
+import { BuyWidget } from "thirdweb/react";
+
+function App() {
+  return (
+      <BuyWidget
+        client={THIRDWEB_CLIENT}
+        title="Get Funds"
+        tokenAddress={NATIVE_TOKEN_ADDRESS}
+        chain={arbitrum}
+        amount={toWei("0.002")}
+      />
+  );
+}`}
       header={{
-        title: " Buy Crypto",
         description: (
           <>
             Inline component that allows users to buy any currency.
@@ -43,30 +56,10 @@ function StyledPayEmbed() {
             Customize theme, currency, amounts, payment methods and more.
           </>
         ),
+        title: "Buy Crypto",
       }}
-      preview={<StyledPayEmbedPreview />}
-      code={`\
-import { PayEmbed } from "thirdweb/react";
-
-function App() {
-  return (
-    <PayEmbed
-      client={client}
-      payOptions={{
-        mode: "fund_wallet",
-        metadata: {
-          name: "Get funds",
-        },
-        prefillBuy: {
-          chain: base,
-          amount: "0.01",
-        },
-        // ... theme, currency, amounts, payment methods, etc.
-      }}
-    />
-  );
-}`}
       lang="tsx"
+      preview={<StyledBuyWidgetPreview />}
     />
   );
 }

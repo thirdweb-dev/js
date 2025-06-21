@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.huddln",
-  name: "Huddln",
-  homepage: "https://www.huddln.io",
-  image_id: "7ba1571c-10c4-4284-b438-04dac27cb700",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/huddln-nft-social-network/id1503825604",
     android:
       "https://play.google.com/store/apps/details?id=com.huddln&hl=en_US&gl=US",
-    mac: "",
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/huddln-nft-social-network/id1503825604",
+    linux: null,
+    mac: "",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "huddln://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.huddln.io",
+  id: "io.huddln",
+  image_id: "7ba1571c-10c4-4284-b438-04dac27cb700",
+  mobile: {
+    native: "huddln://",
+    universal: null,
+  },
+  name: "Huddln",
+  rdns: null,
 } as const;

@@ -1,7 +1,7 @@
 "use client";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
-import { Suspense, lazy } from "react";
+import { lazy, Suspense } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
@@ -44,24 +44,24 @@ export function LinkProfileScreen(props: {
     return (
       <Suspense fallback={<LoadingScreen />}>
         <InAppWalletConnectUI
-          walletConnect={props.walletConnect}
-          wallet={wallet as Wallet<"inApp">}
+          chain={chain}
+          client={props.client}
+          connectLocale={props.locale}
           done={() => {
             setTimeout(() => {
               queryClient.invalidateQueries({ queryKey: ["profiles"] });
             }, 500);
             props.onBack();
           }}
-          connectLocale={props.locale}
-          client={props.client}
-          size="compact"
-          chain={chain}
-          meta={{
-            title: props.locale.manageWallet.linkProfile,
-            showThirdwebBranding: false,
-          }}
-          isLinking={true}
           goBack={props.onBack}
+          isLinking={true}
+          meta={{
+            showThirdwebBranding: false,
+            title: props.locale.manageWallet.linkProfile,
+          }}
+          size="compact"
+          wallet={wallet as Wallet<"inApp">}
+          walletConnect={props.walletConnect}
         />
       </Suspense>
     );
@@ -71,24 +71,24 @@ export function LinkProfileScreen(props: {
     return (
       <Suspense fallback={<LoadingScreen />}>
         <EcosystemWalletConnectUI
-          wallet={wallet as Wallet<EcosystemWalletId>}
+          chain={chain}
+          client={props.client}
+          connectLocale={props.locale}
           done={() => {
             setTimeout(() => {
               queryClient.invalidateQueries({ queryKey: ["profiles"] });
             }, 500);
             props.onBack();
           }}
-          connectLocale={props.locale}
-          client={props.client}
-          size="compact"
-          chain={chain}
-          meta={{
-            title: props.locale.manageWallet.linkProfile,
-            showThirdwebBranding: false,
-          }}
-          walletConnect={props.walletConnect}
-          isLinking={true}
           goBack={props.onBack}
+          isLinking={true}
+          meta={{
+            showThirdwebBranding: false,
+            title: props.locale.manageWallet.linkProfile,
+          }}
+          size="compact"
+          wallet={wallet as Wallet<EcosystemWalletId>}
+          walletConnect={props.walletConnect}
         />
       </Suspense>
     );
@@ -102,23 +102,23 @@ export function LinkProfileScreen(props: {
     >
       <Container p="lg">
         <ModalHeader
-          title={props.locale.manageWallet.linkProfile}
           onBack={props.onBack}
+          title={props.locale.manageWallet.linkProfile}
         />
       </Container>
       <Line />
       <Container
+        center="both"
+        color="secondaryText"
         flex="column"
         gap="md"
-        center="both"
         px="xl"
-        color="secondaryText"
         style={{
           flex: "1",
           minHeight: "250px",
         }}
       >
-        <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
+        <CrossCircledIcon height={iconSize.xl} width={iconSize.xl} />
         <Text center>This wallet does not support account linking</Text>
       </Container>
     </Container>

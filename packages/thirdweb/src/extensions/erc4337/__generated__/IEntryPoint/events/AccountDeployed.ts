@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "AccountDeployed" event.
@@ -42,8 +42,8 @@ export function accountDeployedEvent(
   filters: AccountDeployedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event AccountDeployed(bytes32 indexed userOpHash, address indexed sender, address factory, address paymaster)",
-    filters,
   });
 }

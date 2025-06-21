@@ -1,9 +1,5 @@
 "use client";
 
-import { CustomRadioGroup } from "@/components/ui/CustomRadioGroup";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   CreditCardIcon,
   ExternalLinkIcon,
@@ -13,17 +9,22 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useId, useState } from "react";
+import type { Address } from "thirdweb";
 import { defineChain } from "thirdweb/chains";
-import { Switch } from "../../../../components/ui/switch";
+import { CustomRadioGroup } from "@/components/ui/CustomRadioGroup";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { cn } from "../../../../lib/utils";
 import { CollapsibleSection } from "../../sign-in/components/CollapsibleSection";
 import { ColorFormGroup } from "../../sign-in/components/ColorFormGroup";
-import type { PayEmbedPlaygroundOptions } from "../components/types";
+import type { BridgeComponentsPlaygroundOptions } from "../components/types";
 
 export function LeftSection(props: {
-  options: PayEmbedPlaygroundOptions;
-  setOptions: React.Dispatch<React.SetStateAction<PayEmbedPlaygroundOptions>>;
+  options: BridgeComponentsPlaygroundOptions;
+  setOptions: React.Dispatch<
+    React.SetStateAction<BridgeComponentsPlaygroundOptions>
+  >;
 }) {
   const { options, setOptions } = props;
   const { theme, payOptions } = options;
@@ -37,108 +38,66 @@ export function LeftSection(props: {
     }));
   };
 
-  // Local token state that persists between modes
-  const [tokenName, setTokenName] = useState<string>(
-    payOptions.buyTokenInfo?.name || "",
-  );
-  const [tokenSymbol, setTokenSymbol] = useState<string>(
-    payOptions.buyTokenInfo?.symbol || "",
-  );
   const [tokenAddress, setTokenAddress] = useState<string>(
-    payOptions.buyTokenInfo?.address || "",
-  );
-  const [tokenIcon, setTokenIcon] = useState<string>(
-    payOptions.buyTokenInfo?.icon || "",
+    payOptions.buyTokenAddress || "",
   );
 
-  // Determine if highlighting is needed - if any field is filled but not all required fields
-  const needsHighlighting =
-    (tokenName || tokenSymbol || tokenAddress) &&
-    (!tokenName || !tokenSymbol || !tokenAddress);
-
-  // Update the global state when all required fields are filled
-  useEffect(() => {
-    if (tokenName && tokenSymbol && tokenAddress) {
-      setOptions((v) => ({
-        ...v,
-        payOptions: {
-          ...v.payOptions,
-          buyTokenInfo: {
-            name: tokenName,
-            symbol: tokenSymbol,
-            address: tokenAddress,
-            ...(tokenIcon ? { icon: tokenIcon } : {}),
-          },
-        },
-      }));
-    } else if (!tokenName && !tokenSymbol && !tokenAddress) {
-      // If all fields are empty, set buyTokenInfo to undefined
-      setOptions((v) => ({
-        ...v,
-        payOptions: {
-          ...v.payOptions,
-          buyTokenInfo: undefined,
-        },
-      }));
-    }
-  }, [tokenName, tokenSymbol, tokenAddress, tokenIcon, setOptions]);
+  const payModeId = useId();
+  const buyTokenAmountId = useId();
+  const buyTokenChainId = useId();
+  const tokenAddressId = useId();
+  const sellerAddressId = useId();
+  const paymentAmountId = useId();
+  const directPaymentChainId = useId();
+  const modalTitleId = useId();
+  const modalTitleIconId = useId();
+  const modalDescriptionId = useId();
+  const themeId = useId();
 
   return (
     <div className="flex flex-col gap-4">
-      {/* <CollapsibleSection
-        title="Wallets"
-        icon={WalletCardsIcon}
-        defaultOpen
-        triggerContainerClassName="pt-0"
-      >
-        <div className="h-4" />
-        <WalletsSelection {...props} />
-      </CollapsibleSection> */}
-
       <CollapsibleSection
-        title="Payment Options"
-        icon={CreditCardIcon}
         defaultOpen
+        icon={CreditCardIcon}
+        title="Payment Options"
       >
         <div className="flex flex-col gap-6 pt-5">
           <section className="flex flex-col gap-3">
-            <Label htmlFor="pay-mode">Mode</Label>
+            <Label htmlFor={payModeId}>Widget</Label>
             <CustomRadioGroup
-              id="pay-mode"
-              options={[
-                { value: "fund_wallet", label: "Buy Crypto" },
-                { value: "direct_payment", label: "Purchase" },
-                { value: "transaction", label: "Transaction" },
-              ]}
+              id={payModeId}
               onValueChange={(value) => {
-                setOptions((v) => ({
-                  ...v,
-                  payOptions: {
-                    ...v.payOptions,
-                    mode: value as
-                      | "fund_wallet"
-                      | "direct_payment"
-                      | "transaction",
-                  },
-                }));
+                setOptions(
+                  (v) =>
+                    ({
+                      ...v,
+                      payOptions: {
+                        ...v.payOptions,
+                        widget: value as "buy" | "checkout" | "transaction",
+                      },
+                    }) satisfies BridgeComponentsPlaygroundOptions,
+                );
               }}
-              value={payOptions.mode || "fund_wallet"}
+              options={[
+                { label: "Buy", value: "buy" },
+                { label: "Checkout", value: "checkout" },
+                { label: "Transaction", value: "transaction" },
+              ]}
+              value={payOptions.widget || "buy"}
             />
           </section>
 
           {/* Conditional form fields based on selected mode */}
           <div className="mt-4">
             {/* Fund Wallet Mode Options */}
-            {(!payOptions.mode || payOptions.mode === "fund_wallet") && (
+            {(!payOptions.widget || payOptions.widget === "buy") && (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-4">
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="buy-token-amount">Amount</Label>
+                    <Label htmlFor={buyTokenAmountId}>Amount</Label>
                     <Input
-                      id="buy-token-amount"
-                      placeholder="0.01"
                       className="bg-card"
-                      value={payOptions.buyTokenAmount || ""}
+                      id={buyTokenAmountId}
                       onChange={(e) =>
                         setOptions((v) => ({
                           ...v,
@@ -148,18 +107,17 @@ export function LeftSection(props: {
                           },
                         }))
                       }
+                      placeholder="0.01"
+                      value={payOptions.buyTokenAmount || ""}
                     />
                   </div>
 
                   {/* Chain selection */}
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="fund-wallet-chain-id">Chain ID</Label>
+                    <Label htmlFor={buyTokenChainId}>Chain ID</Label>
                     <Input
-                      id="fund-wallet-chain-id"
-                      type="number"
-                      placeholder="1 (Ethereum)"
                       className="bg-card"
-                      value={payOptions.buyTokenChain?.id || ""}
+                      id={buyTokenChainId}
                       onChange={(e) => {
                         const chainId = Number.parseInt(e.target.value);
                         if (!Number.isNaN(chainId)) {
@@ -173,6 +131,9 @@ export function LeftSection(props: {
                           }));
                         }
                       }}
+                      placeholder="1 (Ethereum)"
+                      type="text"
+                      value={payOptions.buyTokenChain?.id || ""}
                     />
                   </div>
                 </div>
@@ -182,104 +143,57 @@ export function LeftSection(props: {
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-4">
                       <div className="flex flex-1 flex-col gap-2">
-                        <Label htmlFor="token-name">Token Name</Label>
+                        <Label htmlFor={tokenAddressId}>Token Address</Label>
                         <Input
-                          id="token-name"
-                          placeholder="My Token"
-                          value={tokenName}
-                          onChange={(e) => setTokenName(e.target.value)}
-                          className={cn(
-                            "bg-card",
-                            needsHighlighting && !tokenName && "border-red-500",
-                          )}
-                        />
-                      </div>
-                      <div className="flex flex-1 flex-col gap-2">
-                        <Label htmlFor="token-symbol">Token Symbol</Label>
-                        <Input
-                          id="token-symbol"
-                          placeholder="XYZ"
-                          value={tokenSymbol}
-                          onChange={(e) => setTokenSymbol(e.target.value)}
-                          className={cn(
-                            "bg-card",
-                            needsHighlighting &&
-                              !tokenSymbol &&
-                              "border-red-500",
-                          )}
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-4">
-                      <div className="flex flex-1 flex-col gap-2">
-                        <Label htmlFor="token-address">Token Address</Label>
-                        <Input
-                          id="token-address"
+                          className={cn("bg-card")}
+                          id={tokenAddressId}
+                          onChange={(e) => {
+                            setOptions((v) => ({
+                              ...v,
+                              payOptions: {
+                                ...v.payOptions,
+                                buyTokenAddress: e.target.value as Address,
+                              },
+                            }));
+                          }}
                           placeholder="0x..."
-                          value={tokenAddress}
-                          onChange={(e) => setTokenAddress(e.target.value)}
-                          className={cn(
-                            "bg-card",
-                            needsHighlighting &&
-                              !tokenAddress &&
-                              "border-red-500",
-                          )}
-                        />
-                      </div>
-                      <div className="flex flex-1 flex-col gap-2">
-                        <Label htmlFor="token-icon">
-                          Token Icon URL (optional)
-                        </Label>
-                        <Input
-                          id="token-icon"
-                          placeholder="https://..."
-                          value={tokenIcon}
-                          onChange={(e) => setTokenIcon(e.target.value)}
-                          className="bg-card"
+                          value={payOptions.buyTokenAddress}
                         />
                       </div>
                     </div>
-                    {needsHighlighting && (
-                      <div className="mt-1 text-red-500 text-xs">
-                        All three token fields (Name, Symbol, and Address) are
-                        required
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
             )}
 
             {/* Direct Payment Mode Options */}
-            {payOptions.mode === "direct_payment" && (
+            {payOptions.widget === "checkout" && (
               <div className="space-y-4">
                 <div className="flex flex-col gap-2">
-                  <Label htmlFor="seller-address">Seller Address</Label>
+                  <Label htmlFor={sellerAddressId}>Seller Address</Label>
                   <Input
-                    id="seller-address"
-                    placeholder="0x..."
                     className="bg-card"
-                    value={payOptions.sellerAddress || ""}
-                    onChange={(e) =>
+                    id={sellerAddressId}
+                    onChange={(e) => {
                       setOptions((v) => ({
                         ...v,
                         payOptions: {
                           ...v.payOptions,
-                          sellerAddress: e.target.value,
+                          sellerAddress: e.target.value as Address,
                         },
-                      }))
-                    }
+                      }));
+                    }}
+                    placeholder="0x..."
+                    value={payOptions.sellerAddress || ""}
                   />
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-4">
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="payment-amount">Price</Label>
+                    <Label htmlFor={paymentAmountId}>Price</Label>
                     <Input
-                      id="payment-amount"
-                      placeholder="0.01"
                       className="bg-card"
-                      value={payOptions.buyTokenAmount || ""}
+                      id={paymentAmountId}
                       onChange={(e) =>
                         setOptions((v) => ({
                           ...v,
@@ -289,18 +203,17 @@ export function LeftSection(props: {
                           },
                         }))
                       }
+                      placeholder="0.01"
+                      value={payOptions.buyTokenAmount || ""}
                     />
                   </div>
 
                   {/* Chain selection */}
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="direct-payment-chain-id">Chain ID</Label>
+                    <Label htmlFor={directPaymentChainId}>Chain ID</Label>
                     <Input
-                      id="direct-payment-chain-id"
-                      type="number"
-                      placeholder="1 (Ethereum)"
                       className="bg-card"
-                      value={payOptions.buyTokenChain?.id || ""}
+                      id={directPaymentChainId}
                       onChange={(e) => {
                         const chainId = Number.parseInt(e.target.value);
                         if (!Number.isNaN(chainId)) {
@@ -314,6 +227,9 @@ export function LeftSection(props: {
                           }));
                         }
                       }}
+                      placeholder="1 (Ethereum)"
+                      type="number"
+                      value={payOptions.buyTokenChain?.id || ""}
                     />
                   </div>
                 </div>
@@ -323,76 +239,23 @@ export function LeftSection(props: {
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-4">
                       <div className="flex flex-1 flex-col gap-2">
-                        <Label htmlFor="token-name">Token Name</Label>
+                        <Label htmlFor={tokenAddressId}>Token Address</Label>
                         <Input
-                          id="token-name"
-                          placeholder="Name"
-                          value={tokenName}
-                          onChange={(e) => setTokenName(e.target.value)}
-                          className={cn(
-                            "bg-card",
-                            needsHighlighting && !tokenName && "border-red-500",
-                          )}
-                        />
-                      </div>
-                      <div className="flex flex-1 flex-col gap-2">
-                        <Label htmlFor="token-symbol">Token Symbol</Label>
-                        <Input
-                          id="token-symbol"
-                          placeholder="Symbol"
-                          value={tokenSymbol}
-                          onChange={(e) => setTokenSymbol(e.target.value)}
-                          className={cn(
-                            "bg-card",
-                            needsHighlighting &&
-                              !tokenSymbol &&
-                              "border-red-500",
-                          )}
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-4">
-                      <div className="flex flex-1 flex-col gap-2">
-                        <Label htmlFor="token-address">Token Address</Label>
-                        <Input
-                          id="token-address"
+                          className={cn("bg-card")}
+                          id={tokenAddressId}
+                          onChange={(e) => setTokenAddress(e.target.value)}
                           placeholder="0x..."
                           value={tokenAddress}
-                          onChange={(e) => setTokenAddress(e.target.value)}
-                          className={cn(
-                            "bg-card",
-                            needsHighlighting &&
-                              !tokenAddress &&
-                              "border-red-500",
-                          )}
-                        />
-                      </div>
-                      <div className="flex flex-1 flex-col gap-2">
-                        <Label htmlFor="token-icon">
-                          Token Icon URL (optional)
-                        </Label>
-                        <Input
-                          id="token-icon"
-                          placeholder="https://..."
-                          value={tokenIcon}
-                          onChange={(e) => setTokenIcon(e.target.value)}
-                          className="bg-card"
                         />
                       </div>
                     </div>
-                    {needsHighlighting && (
-                      <div className="mt-1 text-red-500 text-xs">
-                        All three token fields (Name, Symbol, and Address) are
-                        required
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
             )}
 
             {/* Transaction Mode Options */}
-            {payOptions.mode === "transaction" && (
+            {payOptions.widget === "transaction" && (
               <div className="space-y-4">
                 <div className="flex flex-col gap-2">
                   <Label>Transaction</Label>
@@ -406,64 +269,18 @@ export function LeftSection(props: {
               </div>
             )}
           </div>
-
-          <div className="mt-4 flex flex-col gap-4">
-            <Label>Payment Methods</Label>
-            <div className="flex flex-row gap-4">
-              <div className="flex flex-1 items-center space-x-2">
-                <Checkbox
-                  id="buy-with-crypto"
-                  checked={payOptions.buyWithCrypto}
-                  onCheckedChange={(checked) =>
-                    setOptions((v) => ({
-                      ...v,
-                      payOptions: {
-                        ...v.payOptions,
-                        buyWithCrypto: checked === true,
-                      },
-                    }))
-                  }
-                />
-                <Label htmlFor="buy-with-crypto">Buy with Crypto</Label>
-              </div>
-              <div className="flex flex-1 items-center space-x-2">
-                <Checkbox
-                  id="buy-with-fiat"
-                  checked={payOptions.buyWithFiat}
-                  onCheckedChange={(checked) =>
-                    setOptions((v) => ({
-                      ...v,
-                      payOptions: {
-                        ...v.payOptions,
-                        buyWithFiat: checked === true,
-                      },
-                    }))
-                  }
-                />
-                <Label htmlFor="buy-with-fiat">Buy with Fiat</Label>
-              </div>
-            </div>
-          </div>
         </div>
       </CollapsibleSection>
 
-      <CollapsibleSection title="Metadata Options" icon={Settings2Icon}>
+      <CollapsibleSection icon={Settings2Icon} title="Metadata Options">
         <div className="flex flex-col gap-6 pt-5">
-          {/* Locale TODO (pay) */}
-          {/* <LocaleFormControl
-            connectOptions={options}
-            setConnectOptions={setConnectOptions}
-          /> */}
-
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-4">
             {/* Modal title */}
             <div className="flex flex-col gap-2">
-              <Label htmlFor="modal-title">Title</Label>
+              <Label htmlFor={modalTitleId}>Title</Label>
               <Input
-                id="modal-title"
-                placeholder="Product name"
                 className="bg-card"
-                value={options.payOptions.title}
+                id={modalTitleId}
                 onChange={(e) =>
                   setOptions((v) => ({
                     ...v,
@@ -473,17 +290,17 @@ export function LeftSection(props: {
                     },
                   }))
                 }
+                placeholder="Product name"
+                value={options.payOptions.title}
               />
             </div>
 
             {/* Modal Title Icon */}
             <div className="flex flex-col gap-2">
-              <Label htmlFor="modal-title">Image</Label>
+              <Label htmlFor={modalTitleIconId}>Image</Label>
               <Input
-                id="modal-title"
-                placeholder="https://..."
                 className="bg-card"
-                value={options.payOptions.image}
+                id={modalTitleIconId}
                 onChange={(e) =>
                   setOptions((v) => ({
                     ...v,
@@ -493,23 +310,45 @@ export function LeftSection(props: {
                     },
                   }))
                 }
+                placeholder="https://..."
+                value={options.payOptions.image}
               />
             </div>
+          </div>
+
+          {/* Modal description */}
+          <div className="flex flex-col gap-2">
+            <Label htmlFor={modalDescriptionId}>Image</Label>
+            <Input
+              className="bg-card"
+              id={modalDescriptionId}
+              onChange={(e) =>
+                setOptions((v) => ({
+                  ...v,
+                  payOptions: {
+                    ...payOptions,
+                    description: e.target.value,
+                  },
+                }))
+              }
+              placeholder="Your own description here"
+              value={options.payOptions.description}
+            />
           </div>
         </div>
       </CollapsibleSection>
 
-      <CollapsibleSection title="Appearance" icon={PaletteIcon}>
+      <CollapsibleSection icon={PaletteIcon} title="Appearance">
         {/* Theme */}
         <section className="flex flex-col gap-3 pt-6">
           <Label htmlFor="theme"> Theme </Label>
           <CustomRadioGroup
-            id="theme"
-            options={[
-              { value: "dark", label: "Dark" },
-              { value: "light", label: "Light" },
-            ]}
+            id={themeId}
             onValueChange={setThemeType}
+            options={[
+              { label: "Dark", value: "dark" },
+              { label: "Light", value: "light" },
+            ]}
             value={theme.type}
           />
         </section>
@@ -518,17 +357,17 @@ export function LeftSection(props: {
 
         {/* Colors */}
         <ColorFormGroup
-          theme={options.theme}
           onChange={(newTheme) => {
             setOptions((v) => ({
               ...v,
               theme: newTheme,
             }));
           }}
+          theme={options.theme}
         />
       </CollapsibleSection>
 
-      <CollapsibleSection title="Sponsor gas fees" icon={FuelIcon}>
+      <CollapsibleSection icon={FuelIcon} title="Sponsor gas fees">
         <div className="mt-4 flex items-start gap-6">
           <div className="flex flex-col gap-2">
             <p className="">
@@ -537,26 +376,14 @@ export function LeftSection(props: {
             </p>
 
             <Link
+              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
               href="https://portal.thirdweb.com/connect/account-abstraction/overview?utm_source=playground"
               target="_blank"
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
             >
               Learn more about Account Abstraction
               <ExternalLinkIcon className="size-4" />
             </Link>
           </div>
-          <Switch
-            checked={options.connectOptions.enableAccountAbstraction}
-            onCheckedChange={(checked) => {
-              setOptions((v) => ({
-                ...v,
-                connectOptions: {
-                  ...v.connectOptions,
-                  enableAccountAbstraction: checked,
-                },
-              }));
-            }}
-          />
         </div>
       </CollapsibleSection>
     </div>

@@ -69,14 +69,14 @@ export function useBuyWithFiatQuote(
 ): UseQueryResult<BuyWithFiatQuote> {
   return useQuery({
     ...queryOptions,
-    queryKey: ["useBuyWithFiatQuote", params],
+    enabled: !!params,
     queryFn: async () => {
       if (!params) {
         throw new Error("No params provided");
       }
       return getBuyWithFiatQuote(params);
     },
-    enabled: !!params,
+    queryKey: ["useBuyWithFiatQuote", params],
     retry: false,
   });
 }

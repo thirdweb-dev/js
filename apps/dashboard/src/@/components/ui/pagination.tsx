@@ -22,8 +22,8 @@ const PaginationContent = React.forwardRef<
   React.ComponentProps<"ul">
 >(({ className, ...props }, ref) => (
   <ul
-    ref={ref}
     className={cn("flex flex-row items-center gap-2", className)}
+    ref={ref}
     {...props}
   />
 ));
@@ -33,7 +33,7 @@ const PaginationItem = React.forwardRef<
   HTMLLIElement,
   React.ComponentProps<"li">
 >(({ className, ...props }, ref) => (
-  <li ref={ref} className={cn("", className)} {...props} />
+  <li className={cn("", className)} ref={ref} {...props} />
 ));
 PaginationItem.displayName = "PaginationItem";
 
@@ -48,13 +48,13 @@ const PaginationLink = ({
   ...props
 }: PaginationLinkProps) => (
   <Button
-    variant={!isActive ? "outline" : "default"}
+    aria-current={isActive ? "page" : undefined}
     className={cn(
       "h-auto px-3 py-2",
       className,
       props.disabled && "cursor-not-allowed",
     )}
-    aria-current={isActive ? "page" : undefined}
+    variant={!isActive ? "outline" : "default"}
     {...props}
   />
 );
@@ -66,8 +66,8 @@ const PaginationPrevious = ({
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
     aria-label="Go to previous page"
-    size="default"
     className={cn("h-10 gap-1 pl-2.5", className)}
+    size="default"
     {...props}
   >
     <ChevronLeftIcon className="size-4" />
@@ -82,8 +82,8 @@ const PaginationNext = ({
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
     aria-label="Go to next page"
-    size="default"
     className={cn("h-10 gap-1 pr-2.5", className)}
+    size="default"
     {...props}
   >
     <span className="max-sm:hidden">Next</span>

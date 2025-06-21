@@ -227,8 +227,6 @@ export function prepareContractCall<
   return prepareTransaction(
     {
       ...rest,
-      // these always inferred from the contract
-      to: contract.address,
       chain: contract.chain,
       client: contract.client,
       data: async () => {
@@ -253,10 +251,12 @@ export function prepareContractCall<
             await resolvePromisedValue(params ?? []),
           ).slice(2)) as `${(typeof preparedM)[0]}${string}`;
       },
+      // these always inferred from the contract
+      to: contract.address,
     },
     {
-      preparedMethod: preparedMethodPromise,
       contract: contract,
+      preparedMethod: preparedMethodPromise,
     },
   );
 }

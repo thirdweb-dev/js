@@ -7,8 +7,8 @@ import {
   TEST_ACCOUNT_B,
 } from "../../../../test/src/test-wallets.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { balanceOf } from "../../erc721/__generated__/IERC721A/read/balanceOf.js";
@@ -25,26 +25,26 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularTokenERC721", () => {
   let contract: ThirdwebContract;
   beforeAll(async () => {
     const address = await deployModularContract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       core: "ERC721",
-      params: {
-        name: "TestTokenERC721",
-        symbol: "TT",
-        contractURI: TEST_CONTRACT_URI,
-      },
       modules: [
         MintableERC721.module({
           primarySaleRecipient: TEST_ACCOUNT_A.address,
         }),
         BatchMetadataERC721.module(),
       ],
+      params: {
+        contractURI: TEST_CONTRACT_URI,
+        name: "TestTokenERC721",
+        symbol: "TT",
+      },
     });
     contract = getContract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       address,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
   }, 1721000);
 
@@ -57,45 +57,45 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularTokenERC721", () => {
     // should throw
     await expect(
       sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_A,
         transaction: MintableERC721.mintWithRole({
           contract,
           nfts: ["ipfs://Qma4g1c8e9c7a6a4c5a1a5c1a3a2a4a5a6a7a8a9a0a"],
           to: TEST_ACCOUNT_A.address,
         }),
-        account: TEST_ACCOUNT_A,
       }),
     ).rejects.toThrowError(/MintableRequestUnauthorized/);
   });
 
   it("should mint tokens with permissions", async () => {
     let balance = await balanceOf({
-      owner: TEST_ACCOUNT_A.address,
       contract,
+      owner: TEST_ACCOUNT_A.address,
     });
     expect(balance).toBe(0n);
 
     // grant minter role
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: grantMinterRole({
         contract,
         user: TEST_ACCOUNT_A.address,
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     // mint
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: MintableERC721.mintWithRole({
         contract,
         nfts: ["ipfs://Qmah4ePps7cKPVydfrSme3NkiAfrWM8jSmirsKwyZCaQm4/0"],
         to: TEST_ACCOUNT_A.address,
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     balance = await balanceOf({
-      owner: TEST_ACCOUNT_A.address,
       contract,
+      owner: TEST_ACCOUNT_A.address,
     });
 
     expect(balance).toBe(1n);
@@ -115,29 +115,29 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularTokenERC721", () => {
     const result = await MintableERC721.generateMintSignature({
       account: TEST_ACCOUNT_A,
       contract,
-      nfts: ["ipfs://Qma4g1c8e9c7a6a4c5a1a5c1a3a2a4a5a6a7a8a9a0a"],
       mintRequest: {
         recipient: TEST_ACCOUNT_B.address,
       },
+      nfts: ["ipfs://Qma4g1c8e9c7a6a4c5a1a5c1a3a2a4a5a6a7a8a9a0a"],
     });
 
     let balance = await balanceOf({
-      owner: TEST_ACCOUNT_B.address,
       contract,
+      owner: TEST_ACCOUNT_B.address,
     });
     expect(balance).toBe(0n);
 
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_B,
       transaction: MintableERC721.mintWithSignature({
         contract,
         ...result,
-      }),
-      account: TEST_ACCOUNT_B, // diff account can mint
+      }), // diff account can mint
     });
 
     balance = await balanceOf({
-      owner: TEST_ACCOUNT_B.address,
       contract,
+      owner: TEST_ACCOUNT_B.address,
     });
     expect(balance).toBe(1n);
   });
@@ -145,21 +145,21 @@ describe.runIf(process.env.TW_SECRET_KEY)("ModularTokenERC721", () => {
   it("should mint tokens with batch metadata", async () => {
     // should have minted 2 tokens at this point
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: MintableERC721.mintWithRole({
         contract,
         nfts: ["ipfs://some-uri/0", "ipfs://some-uri/1"],
         to: TEST_ACCOUNT_A.address,
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: MintableERC721.mintWithRole({
         contract,
         nfts: ["ipfs://some-other-uri/0"],
         to: TEST_ACCOUNT_A.address,
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     expect(

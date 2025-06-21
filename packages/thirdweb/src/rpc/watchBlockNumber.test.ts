@@ -18,8 +18,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
   it("should set up the watcher", () => {
     const onNewBlockNumber = vi.fn();
     const unwatch = watchBlockNumber({
-      client: TEST_CLIENT,
       chain: baseSepolia,
+      client: TEST_CLIENT,
       onNewBlockNumber,
     });
 
@@ -31,8 +31,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
   it("should call the onNewBlockNumber callback", async () => {
     const unwatch = watchBlockNumber({
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       onNewBlockNumber,
     });
 
@@ -47,13 +47,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
   it("should re-use the same watcher for multiple calls", async () => {
     const unwatch = watchBlockNumber({
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       onNewBlockNumber,
     });
     const unwatch2 = watchBlockNumber({
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       onNewBlockNumber: onNewBlockNumber2,
     });
 
@@ -73,8 +73,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
   it("should stop polling when unsubscribed", async () => {
     const unwatch = watchBlockNumber({
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       onNewBlockNumber,
     });
 
@@ -95,8 +95,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
   it("should re-start from a fresh block when fully unsubscribed and re-subscribed", async () => {
     const unwatch = watchBlockNumber({
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       onNewBlockNumber,
     });
 
@@ -117,8 +117,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
     const unwatch2 = watchBlockNumber({
-      client: TEST_CLIENT,
       chain: baseSepolia,
+      client: TEST_CLIENT,
       onNewBlockNumber,
     });
 
@@ -136,8 +136,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
   it("should re-start from latestBlockNumber if provided", async () => {
     const unwatch = watchBlockNumber({
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       onNewBlockNumber,
     });
 
@@ -158,10 +158,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
     expect(onNewBlockNumber).toHaveBeenCalledTimes(0);
 
     const unwatch2 = watchBlockNumber({
-      client: TEST_CLIENT,
       chain: baseSepolia,
-      onNewBlockNumber,
+      client: TEST_CLIENT,
       latestBlockNumber: lastBlockNumber,
+      onNewBlockNumber,
     });
 
     await mineBlock(ANVIL_CHAIN);
@@ -177,10 +177,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("watch block number", () => {
 
   it("should start from latestBlockNumber", async () => {
     const unwatch = watchBlockNumber({
-      client: TEST_CLIENT,
       chain: baseSepolia,
-      onNewBlockNumber,
+      client: TEST_CLIENT,
       latestBlockNumber: 9342233n,
+      onNewBlockNumber,
     });
 
     await wait(500);

@@ -46,15 +46,16 @@ export function BuyFundsSection(props: {
 
           <PayModalButton
             chainId={props.chain.chainId}
-            label={`Bridge to ${sanitizedChainName}`}
             client={props.client}
+            label={`Bridge to ${sanitizedChainName}`}
           />
 
           <div className="h-4" />
 
           <Link
-            href="https://portal.thirdweb.com/connect/pay/overview"
             className="inline-flex items-center gap-1.5 text-muted-foreground text-sm hover:text-foreground"
+            href="https://portal.thirdweb.com/connect/pay/overview"
+            rel="noopener noreferrer"
             target="_blank"
           >
             Learn more about Universal Bridge

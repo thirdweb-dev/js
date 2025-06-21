@@ -1,8 +1,10 @@
 "use client";
+import { SponsoredTransactionsTable } from "@app/team/[team_slug]/(team)/~/usage/overview/components/SponsoredTransactionsTable";
+import { searchParams } from "@app/team/[team_slug]/[project_slug]/(sidebar)/account-abstraction/search-params";
 import {
   DateRangeSelector,
-  type Range,
   getLastNDaysRange,
+  type Range,
 } from "components/analytics/date-range-selector";
 import { IntervalSelector } from "components/analytics/interval-selector";
 import { differenceInDays } from "date-fns";
@@ -10,8 +12,6 @@ import { useQueryState } from "nuqs";
 import { useTransition } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { UserOpStats } from "types/analytics";
-import { SponsoredTransactionsTable } from "../../../app/(app)/team/[team_slug]/(team)/~/usage/overview/components/SponsoredTransactionsTable";
-import { searchParams } from "../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/connect/account-abstraction/search-params";
 import { SponsoredTransactionsChartCard } from "./SponsoredTransactionsChartCard";
 import { TotalSponsoredChartCard } from "./TotalSponsoredChartCard";
 
@@ -96,23 +96,23 @@ export function AccountAbstractionAnalytics(props: {
 
       <div className="flex flex-col gap-4 lg:gap-6">
         <TotalSponsoredChartCard
-          userOpStats={props.userOpStats}
           isPending={isLoading}
+          userOpStats={props.userOpStats}
         />
 
         <SponsoredTransactionsChartCard
-          userOpStats={props.userOpStats}
           isPending={isLoading}
+          userOpStats={props.userOpStats}
         />
 
         <SponsoredTransactionsTable
           client={props.client}
-          teamId={props.teamId}
           from={from.toISOString()}
+          projectId={props.projectId}
+          teamId={props.teamId}
+          teamSlug={props.teamSlug}
           to={to.toISOString()}
           variant="project"
-          projectId={props.projectId}
-          teamSlug={props.teamSlug}
         />
       </div>
     </div>

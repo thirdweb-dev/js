@@ -46,7 +46,6 @@ export type MintToParams = WithOverrides<{
  */
 export function mintTo(options: BaseTransactionOptions<MintToParams>) {
   return generatedMintTo({
-    contract: options.contract,
     asyncParams: async () => {
       let tokenUri: string;
 
@@ -64,13 +63,14 @@ export function mintTo(options: BaseTransactionOptions<MintToParams>) {
         });
       }
       return {
+        amount: options.supply,
+        overrides: options.overrides,
         to: options.to,
         // maxUint256 is used to indicate that this is a NEW token!
         tokenId: maxUint256,
         uri: tokenUri,
-        amount: options.supply,
-        overrides: options.overrides,
       };
     },
+    contract: options.contract,
   });
 }

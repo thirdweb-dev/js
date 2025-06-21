@@ -24,6 +24,7 @@ export const IpfsUploadButton: ComponentWithChildren<IpfsUploadButtonProps> = ({
   const { onError } = useErrorHandler();
   const handleUpload = (file: File) => {
     storageUpload.mutate([file], {
+      onError: (error) => onError(error, "Failed to upload file"),
       onSuccess: ([uri]) => {
         if (uri) {
           onUpload(uri);
@@ -31,18 +32,17 @@ export const IpfsUploadButton: ComponentWithChildren<IpfsUploadButtonProps> = ({
           toast.error("File Upload but no URI returned");
         }
       },
-      onError: (error) => onError(error, "Failed to upload file"),
     });
   };
 
   return (
-    <FileInput setValue={handleUpload} client={client}>
+    <FileInput client={client} setValue={handleUpload}>
       <Button
+        aria-label="Upload to IPFS"
+        isLoading={storageUpload.isPending}
+        rightIcon={<UploadIcon className="size-4" />}
         size="sm"
         variant="solid"
-        aria-label="Upload to IPFS"
-        rightIcon={<UploadIcon className="size-4" />}
-        isLoading={storageUpload.isPending}
         {...buttonProps}
       >
         {children}

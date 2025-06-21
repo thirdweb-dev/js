@@ -20,6 +20,7 @@ Welcome, AI copilots! This guide captures the coding standards, architectural de
 - Biome governs formatting and linting; its rules live in biome.json.
 - Run pnpm biome check --apply before committing.
 - Avoid editor‑specific configs; rely on the shared settings.
+- make sure everything builds after each file change by running `pnpm build`
 
 ⸻
 
@@ -39,7 +40,8 @@ Welcome, AI copilots! This guide captures the coding standards, architectural de
 - Co‑locate tests: foo.ts ↔ foo.test.ts.
 - Use real function invocations with stub data; avoid brittle mocks.
 - For network interactions, use Mock Service Worker (MSW) to intercept fetch/HTTP calls, mocking only scenarios that are hard to reproduce.
-- Keep tests deterministic and side‑effect free; Jest is pre‑configured.
+- Keep tests deterministic and side‑effect free; Vitest is pre‑configured.
+- to run the tests: `cd packages thirdweb & pnpm test:dev <filename>`
 
 ⸻
 
@@ -101,6 +103,41 @@ Welcome, AI copilots! This guide captures the coding standards, architectural de
   -- Use descriptive, stable queryKeys for cache hits.
   -- Configure staleTime / cacheTime based on freshness requirements (default ≥ 60 s).
   -- Keep tokens secret by calling internal API routes or server actions.
+
+  6.5 Analytics Event Reporting
+
+- **When to create a new event**  
+  -- Only add events that answer a clear product or business question.  
+  -- Check `src/@/analytics/report.ts` first; avoid duplicates.
+
+- **Naming conventions**  
+  -- **Event name**: human-readable phrase in the form `<subject> <verb>` (e.g. "contract deployed").  
+  -- **Reporting function**: `report<Subject><Verb>` (PascalCase).  
+  -- All reporting helpers currently live in the shared `report.ts` file.
+
+- **Boilerplate template**  
+  -- Add a JSDoc header explaining **Why** the event exists and **Who** owns it (`@username`).  
+  -- Accept a single typed `properties` object and forward it unchanged to `posthog.capture`.  
+  -- Example:
+
+```ts
+/**
+ * ### Why do we need to report this event?
+ * - Tracks number of contracts deployed
+ *
+ * ### Who is responsible for this event?
+ * @jnsdls
+ */
+export function reportContractDeployed(properties: {
+  address: string;
+  chainId: number;
+}) {
+  posthog.capture("contract deployed", properties);
+}
+```
+
+- **Client-side only**: never import `posthog-js` in server components.  
+- **Housekeeping**: Inform **#eng-core-services** before renaming or removing an existing event.
 
 ⸻
 

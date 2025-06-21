@@ -4,13 +4,13 @@ import { AccountOnboardingLayout } from "../onboarding-layout";
 import { LoginOrSignup } from "./LoginOrSignup";
 
 const meta = {
-  title: "Onboarding/AccountOnboarding/LoginOrSignup",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Onboarding/AccountOnboarding/LoginOrSignup",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -34,9 +34,7 @@ export const OtherError: Story = {
   },
 };
 
-function Story(props: {
-  type: "success" | "error" | "email-exists";
-}) {
+function Story(props: { type: "success" | "error" | "email-exists" }) {
   return (
     <AccountOnboardingLayout
       currentStep={1}
@@ -46,9 +44,6 @@ function Story(props: {
       }}
     >
       <LoginOrSignup
-        onRequestSent={(params) => {
-          storybookLog("onRequestSent", params);
-        }}
         loginOrSignup={async (data) => {
           storybookLog("loginOrSignup", data);
 
@@ -62,8 +57,8 @@ function Story(props: {
             throw new Error("email address already exists");
           }
         }}
-        trackEvent={(params) => {
-          storybookLog("trackEvent", params);
+        onRequestSent={(params) => {
+          storybookLog("onRequestSent", params);
         }}
       />
     </AccountOnboardingLayout>

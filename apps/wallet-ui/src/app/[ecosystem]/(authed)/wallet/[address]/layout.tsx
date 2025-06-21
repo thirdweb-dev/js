@@ -1,11 +1,11 @@
+import type { Metadata, ResolvingMetadata } from "next";
+import { resolveName } from "thirdweb/extensions/ens";
+import { shortenAddress } from "thirdweb/utils";
 import { ChainCombobox } from "@/components/ChainCombobox";
 import { getChains } from "@/lib/chains";
 import { client } from "@/lib/client";
 import { getEcosystemInfo } from "@/lib/ecosystems";
 import { SIMPLEHASH_NFT_SUPPORTED_CHAIN_IDS } from "@/util/simplehash";
-import type { Metadata, ResolvingMetadata } from "next";
-import { resolveName } from "thirdweb/extensions/ens";
-import { shortenAddress } from "thirdweb/utils";
 
 export async function generateMetadata(
   props: { params: Promise<{ ecosystem: string; address: string }> },
@@ -19,10 +19,10 @@ export async function generateMetadata(
   const previousImages = parentMetadata.openGraph?.images || [];
 
   return {
-    title: `${ecosystem.name} | ${shortenAddress(params.address)}`,
     openGraph: {
       images: [ecosystem.imageUrl, ...previousImages],
     },
+    title: `${ecosystem.name} | ${shortenAddress(params.address)}`,
   };
 }
 
@@ -35,8 +35,8 @@ export default async function Layout(props: {
   const { children } = props;
 
   const ensPromise = resolveName({
-    client,
     address: params.address,
+    client,
   });
   const thirdwebChainsPromise = getChains();
 

@@ -19,8 +19,8 @@ describe("useResolvedMediaType", () => {
     expect(
       resolveMediaTypeFromUri({
         client,
-        uri: "ipfs://test",
         gatewayUrl: "https://cf-ipfs.com/ipfs/",
+        uri: "ipfs://test",
       }),
     ).toBe("https://cf-ipfs.com/ipfs/test");
   });

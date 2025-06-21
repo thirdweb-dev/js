@@ -15,8 +15,8 @@ type FetchConstructorParamsOptions = {
 };
 
 const RequestStatus = {
-  OK: "1",
   NOTOK: "0",
+  OK: "1",
 };
 
 /**

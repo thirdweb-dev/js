@@ -5,13 +5,13 @@ import { AccountOnboardingLayout } from "../onboarding-layout";
 import { VerifyEmail } from "./VerifyEmail";
 
 const meta = {
-  title: "Onboarding/AccountOnboarding/VerifyEmail",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Onboarding/AccountOnboarding/VerifyEmail",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -19,22 +19,22 @@ type Story = StoryObj<typeof meta>;
 
 export const VerifyEmailSuccess: Story = {
   args: {
-    verifyEmailType: "success",
     resendConfirmationEmailType: "success",
+    verifyEmailType: "success",
   },
 };
 
 export const VerifyEmailError: Story = {
   args: {
-    verifyEmailType: "error",
     resendConfirmationEmailType: "success",
+    verifyEmailType: "error",
   },
 };
 
 export const ResendCodeError: Story = {
   args: {
-    verifyEmailType: "success",
     resendConfirmationEmailType: "error",
+    verifyEmailType: "success",
   },
 };
 
@@ -51,9 +51,21 @@ function Story(props: {
       }}
     >
       <VerifyEmail
-        title="Custom Title"
-        trackingAction="customAction"
         accountAddress="0x1234567890123456789012345678901234567890"
+        email="user@example.com"
+        onBack={() => {
+          storybookLog("onBack");
+        }}
+        onEmailConfirmed={(params) => {
+          storybookLog("onEmailConfirmed", params);
+        }}
+        resendConfirmationEmail={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          if (props.resendConfirmationEmailType === "error") {
+            throw new Error("Example error");
+          }
+        }}
+        title="Custom Title"
         verifyEmail={async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           if (props.verifyEmailType === "error") {
@@ -62,22 +74,6 @@ function Story(props: {
           return {
             account: newAccountStub(),
           };
-        }}
-        resendConfirmationEmail={async () => {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          if (props.resendConfirmationEmailType === "error") {
-            throw new Error("Example error");
-          }
-        }}
-        email="user@example.com"
-        onEmailConfirmed={(params) => {
-          storybookLog("onEmailConfirmed", params);
-        }}
-        onBack={() => {
-          storybookLog("onBack");
-        }}
-        trackEvent={(params) => {
-          storybookLog("trackEvent", params);
         }}
       />
     </AccountOnboardingLayout>

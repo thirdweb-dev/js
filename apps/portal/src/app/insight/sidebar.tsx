@@ -1,4 +1,3 @@
-import type { SideBar } from "@/components/Layouts/DocLayout";
 import {
   AlbumIcon,
   BoxIcon,
@@ -12,94 +11,95 @@ import {
   WebhookIcon,
   WrenchIcon,
 } from "lucide-react";
+import type { SideBar } from "@/components/Layouts/DocLayout";
 
 const insightSlug = "/insight";
 
 export const sidebar: SideBar = {
-  name: "Insight",
   links: [
     {
-      name: "Overview",
       href: "/insight",
       icon: <BoxIcon />,
+      name: "Overview",
     },
     {
-      name: "Use Cases",
       href: `${insightSlug}/use-cases`,
       icon: <StickyNoteIcon />,
+      name: "Use Cases",
     },
     {
-      name: "Playground",
       href: "https://playground.thirdweb.com/insight",
       icon: <ExternalLinkIcon />,
+      name: "Playground",
     },
     {
-      name: "Get Started",
       href: `${insightSlug}/get-started`,
       icon: <RocketIcon />,
+      name: "Get Started",
     },
     {
-      name: "Blueprints",
       href: `${insightSlug}/blueprints`,
       icon: <AlbumIcon />,
+      name: "Blueprints",
     },
     {
-      name: "Multichain Queries",
       href: `${insightSlug}/multichain-queries`,
       icon: <NetworkIcon />,
+      name: "Multichain Queries",
     },
     {
-      name: "Agents & LLMs",
       href: `${insightSlug}/agents-and-llms`,
       icon: <BrainIcon />,
       links: [
         {
-          name: "llms.txt",
           href: `${insightSlug}/agents-and-llms/llmstxt`,
+          name: "llms.txt",
         },
       ],
+      name: "Agents & LLMs",
     },
     {
-      name: "Webhooks",
       href: `${insightSlug}/webhooks`,
       icon: <WebhookIcon />,
       links: [
         {
-          name: "Get Started",
           href: `${insightSlug}/webhooks`,
+          name: "Get Started",
         },
         {
-          name: "Managing Webhooks",
           href: `${insightSlug}/webhooks/managing-webhooks`,
+          name: "Managing Webhooks",
         },
         {
-          name: "Filtering",
           href: `${insightSlug}/webhooks/filtering`,
+          name: "Filtering",
         },
         {
-          name: "Payload",
           href: `${insightSlug}/webhooks/payload`,
+          name: "Payload",
         },
         {
-          name: "API Reference",
           href: "https://insight.thirdweb.com/reference#tag/webhooks",
+          name: "API Reference",
         },
       ],
+      name: "Webhooks",
     },
     {
-      name: "API Reference",
       href: "https://insight.thirdweb.com/reference",
       icon: <BracesIcon />,
+      name: "API Reference",
     },
     {
-      name: "Troubleshoot",
       href: `${insightSlug}/troubleshoot`,
       icon: <WrenchIcon />,
+      name: "Troubleshoot",
     },
     {
-      name: "FAQs",
       href: `${insightSlug}/faqs`,
       icon: <MessageCircleQuestionIcon />,
+      name: "FAQs",
     },
   ],
+  name: "Insight",
 };

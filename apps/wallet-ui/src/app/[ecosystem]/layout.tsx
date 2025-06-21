@@ -1,5 +1,5 @@
-import { getEcosystemInfo } from "@/lib/ecosystems";
 import type { Metadata, ResolvingMetadata } from "next";
+import { getEcosystemInfo } from "@/lib/ecosystems";
 
 export async function generateMetadata(
   props: { params: Promise<{ ecosystem: string }> },
@@ -13,14 +13,14 @@ export async function generateMetadata(
   const previousImages = parentMetadata.openGraph?.images || [];
 
   return {
-    title: ecosystem.name,
     description: `Access your ${ecosystem.name} wallet.`,
-    openGraph: {
-      images: [ecosystem.imageUrl, ...previousImages],
-    },
     icons: {
       icon: ecosystem.imageUrl,
     },
+    openGraph: {
+      images: [ecosystem.imageUrl, ...previousImages],
+    },
+    title: ecosystem.name,
   };
 }
 

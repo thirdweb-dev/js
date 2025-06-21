@@ -9,8 +9,8 @@ import type { ThirdwebClient, ThirdwebContract } from "thirdweb";
 import { getContract, resolveContractAbi } from "thirdweb/contract";
 import { isAddress, isValidENSName } from "thirdweb/utils";
 import {
-  type PublishedContractWithVersion,
   fetchPublishedContractVersions,
+  type PublishedContractWithVersion,
 } from "./fetch-contracts-with-versions";
 import { fetchPublishedContracts } from "./fetchPublishedContracts";
 import { fetchPublishedContractsFromDeploy } from "./fetchPublishedContractsFromDeploy";
@@ -21,7 +21,7 @@ export function useAllVersions(
   client: ThirdwebClient,
 ) {
   return useQuery({
-    queryKey: ["all-releases", publisherAddress, contractId],
+    enabled: !!publisherAddress && !!contractId,
     queryFn: () => {
       if (!publisherAddress || !contractId) {
         // should never happen because we check for this in the enabled check
@@ -33,23 +33,22 @@ export function useAllVersions(
         client,
       );
     },
-
-    enabled: !!publisherAddress && !!contractId,
+    queryKey: ["all-releases", publisherAddress, contractId],
   });
 }
 
 export function usePublishedContractsFromDeploy(contract: ThirdwebContract) {
   return useQuery({
+    enabled: !!contract,
+    queryFn: () =>
+      fetchPublishedContractsFromDeploy({
+        contract,
+      }),
     queryKey: [
       "published-contracts-from-deploy",
       contract.chain.id,
       contract.address,
     ],
-    queryFn: () =>
-      fetchPublishedContractsFromDeploy({
-        contract,
-      }),
-    enabled: !!contract,
     retry: false,
   });
 }
@@ -111,9 +110,9 @@ export function usePublishedContractsQuery(params: {
 }) {
   const { client, address } = params;
   return useQuery<PublishedContractDetails[]>({
-    queryKey: ["published-contracts", address],
-    queryFn: () => fetchPublishedContracts({ address, client }),
     enabled: !!address,
+    queryFn: () => fetchPublishedContracts({ address, client }),
+    queryKey: ["published-contracts", address],
   });
 }
 
@@ -134,7 +133,13 @@ function ensQuery(params: {
     ensName: null,
   };
   return queryOptions({
-    queryKey: ["ens", addressOrEnsName],
+    enabled:
+      !!addressOrEnsName &&
+      (isAddress(addressOrEnsName) || isValidENSName(addressOrEnsName)),
+    // 24h
+    gcTime: 60 * 60 * 24 * 1000,
+    // default to the one we know already
+    placeholderData,
     queryFn: async () => {
       if (!addressOrEnsName) {
         return placeholderData;
@@ -163,16 +168,10 @@ function ensQuery(params: {
         ensName,
       };
     },
-    enabled:
-      !!addressOrEnsName &&
-      (isAddress(addressOrEnsName) || isValidENSName(addressOrEnsName)),
-    // 24h
-    gcTime: 60 * 60 * 24 * 1000,
+    queryKey: ["ens", addressOrEnsName],
+    retry: false,
     // 1h
     staleTime: 60 * 60 * 1000,
-    // default to the one we know already
-    placeholderData,
-    retry: false,
   });
 }
 
@@ -196,13 +195,13 @@ export function useCustomFactoryAbi(
   const chain = useV5DashboardChain(chainId);
 
   return useQuery({
-    queryKey: ["custom-factory-abi", { contractAddress, chainId }],
+    enabled: !!contractAddress && !!chainId,
     queryFn: () => {
       const contract = chain
         ? getContract({
-            client,
             address: contractAddress,
             chain,
+            client,
           })
         : undefined;
 
@@ -212,6 +211,6 @@ export function useCustomFactoryAbi(
 
       return resolveContractAbi<Abi>(contract);
     },
-    enabled: !!contractAddress && !!chainId,
+    queryKey: ["custom-factory-abi", { chainId, contractAddress }],
   });
 }

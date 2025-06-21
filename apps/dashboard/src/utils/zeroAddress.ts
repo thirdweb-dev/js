@@ -1,4 +1,4 @@
-import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS, isAddress } from "thirdweb";
+import { isAddress, NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from "thirdweb";
 
 export function isAddressZero(address: string): boolean {
   const lowerCaseAddress = (address || "").toLowerCase();

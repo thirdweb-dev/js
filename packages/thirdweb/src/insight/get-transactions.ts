@@ -59,12 +59,12 @@ export async function getTransactions(args: {
   const result = await getV1WalletsByWalletAddressTransactions({
     baseUrl: `https://${getThirdwebDomains().insight}`,
     fetch: getClientFetch(client),
+    path: {
+      wallet_address: walletAddress,
+    },
     query: {
       ...defaultQueryOptions,
       ...queryOptions,
-    },
-    path: {
-      wallet_address: walletAddress,
     },
   });
   if (result.error) {

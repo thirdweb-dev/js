@@ -1,5 +1,122 @@
 # thirdweb
 
+## 5.104.0
+
+### Minor Changes
+
+- [#7343](https://github.com/thirdweb-dev/js/pull/7343) [`787118d`](https://github.com/thirdweb-dev/js/commit/787118d36765b9f57113cb62c606e494e715be04) Thanks [@Yash094](https://github.com/Yash094)! - add berachain and berachain testnet in chains package
+
+- [#7394](https://github.com/thirdweb-dev/js/pull/7394) [`9c420c0`](https://github.com/thirdweb-dev/js/commit/9c420c0c9d8874469bcc46e6122a637aff67923f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Updated PayEmbed UI
+
+### Patch Changes
+
+- [#7387](https://github.com/thirdweb-dev/js/pull/7387) [`70e024f`](https://github.com/thirdweb-dev/js/commit/70e024f43e6ff0a890efa6288fbdc9c19ca42e72) Thanks [@MananTank](https://github.com/MananTank)! - Fix `poster` not shown in `MediaRenderer` component for 3D models
+
+- [#7390](https://github.com/thirdweb-dev/js/pull/7390) [`6be9459`](https://github.com/thirdweb-dev/js/commit/6be945936195e6ba41dbdd3a90a28f097e81dbee) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Use decimal string for BuyWidget amount
+
+- [#7371](https://github.com/thirdweb-dev/js/pull/7371) [`3dbf9e1`](https://github.com/thirdweb-dev/js/commit/3dbf9e16fdff04eb36e9bb757a2b136f2b8001dc) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix typo in payment confirmation widget
+
+## 5.103.1
+
+### Patch Changes
+
+- [#7360](https://github.com/thirdweb-dev/js/pull/7360) [`78b9c8e`](https://github.com/thirdweb-dev/js/commit/78b9c8e334948e212e28cca3509572be7d24a77a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix setting explicit amount on TransactionWidget
+
+- [#7358](https://github.com/thirdweb-dev/js/pull/7358) [`55baa99`](https://github.com/thirdweb-dev/js/commit/55baa997f0ea2a20dff43bad56e1c2486ba1aa03) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix etherlink transfers when too little funds
+
+## 5.103.0
+
+### Minor Changes
+
+- [#7354](https://github.com/thirdweb-dev/js/pull/7354) [`ed81006`](https://github.com/thirdweb-dev/js/commit/ed81006741adb43a98c428029ca6907b7e20ac55) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds new components BuyWidget, CheckoutWidget, and TransactionWidget
+
+  ## BuyWidget
+
+  A component that allows users to purchase tokens or NFTs directly within your application.
+
+  ### Example:
+
+  ```tsx
+  import { BuyWidget } from "thirdweb/react";
+
+  function App() {
+    return (
+      <BuyWidget
+        client={client}
+        chain={chain}
+        tokenAddress="0x..." // Token or NFT contract address
+        recipient="0x..." // Optional: recipient address
+        theme="light" // Optional: "light" or "dark"
+      />
+    );
+  }
+  ```
+
+  ## CheckoutWidget
+
+  A comprehensive checkout experience for purchasing digital assets with multiple payment options.
+
+  ### Example:
+
+  ```tsx
+  import { CheckoutWidget } from "thirdweb/react";
+
+  function App() {
+    return (
+      <CheckoutWidget
+        client={client}
+        chain={chain}
+        items={[
+          {
+            tokenAddress: "0x...",
+            tokenId: "1", // For NFTs
+            quantity: "1",
+          },
+        ]}
+        onSuccess={(result) => console.log("Purchase successful:", result)}
+        theme="dark" // Optional: "light" or "dark"
+      />
+    );
+  }
+  ```
+
+  ## TransactionWidget
+
+  A widget for executing arbitrary blockchain transactions with a user-friendly interface.
+
+  ### Example:
+
+  ```tsx
+  import { TransactionWidget } from "thirdweb/react";
+  import { prepareContractCall } from "thirdweb";
+
+  function App() {
+    const transaction = prepareContractCall({
+      contract: myContract,
+      method: "transfer",
+      params: [recipientAddress, amount],
+    });
+
+    return (
+      <TransactionWidget
+        client={client}
+        transaction={transaction}
+        onSuccess={(result) => console.log("Transaction successful:", result)}
+        onError={(error) => console.error("Transaction failed:", error)}
+        theme="light" // Optional: "light" or "dark"
+      />
+    );
+  }
+  ```
+
+### Patch Changes
+
+- [#7315](https://github.com/thirdweb-dev/js/pull/7315) [`99d6b3b`](https://github.com/thirdweb-dev/js/commit/99d6b3b151c2af6f0df41513eff44931362d6b11) Thanks [@MananTank](https://github.com/MananTank)! - - Add support for blob urls in `MediaRenderer` component
+
+  - Fix `className` prop not set in loading state of `MediaRenderer` component
+
+- [#7332](https://github.com/thirdweb-dev/js/pull/7332) [`913ea98`](https://github.com/thirdweb-dev/js/commit/913ea98d23799f5716ece819b1493b405187c70e) Thanks [@MananTank](https://github.com/MananTank)! - Fix `NFTMetadata` type
+
 ## 5.102.6
 
 ### Patch Changes

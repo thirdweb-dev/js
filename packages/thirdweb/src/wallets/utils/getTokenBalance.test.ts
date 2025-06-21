@@ -15,8 +15,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("getTokenBalance", () => {
   it("should work for native token", async () => {
     const result = await getTokenBalance({
       account,
-      client: TEST_CLIENT,
       chain: FORKED_ETHEREUM_CHAIN,
+      client: TEST_CLIENT,
     });
 
     expect(result).toStrictEqual({
@@ -30,40 +30,40 @@ describe.runIf(process.env.TW_SECRET_KEY)("getTokenBalance", () => {
 
   it("should work for ERC20 token", async () => {
     const erc20Address = await deployERC20Contract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       account,
-      type: "TokenERC20",
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       params: {
-        name: "",
         contractURI: TEST_CONTRACT_URI,
+        name: "",
       },
+      type: "TokenERC20",
     });
     const erc20Contract = getContract({
+      address: erc20Address,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      address: erc20Address,
     });
 
     const amount = 1000;
 
     // Mint some tokens
     const tx = mintTo({
+      amount,
       contract: erc20Contract,
       to: account.address,
-      amount,
     });
 
     await sendAndConfirmTransaction({
-      transaction: tx,
       account,
+      transaction: tx,
     });
 
     const result = await getTokenBalance({
-      client: TEST_CLIENT,
       account,
-      tokenAddress: erc20Address,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
+      tokenAddress: erc20Address,
     });
 
     const expectedDecimal = 18;

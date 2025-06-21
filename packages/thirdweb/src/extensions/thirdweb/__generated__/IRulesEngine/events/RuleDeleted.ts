@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "RuleDeleted" event.
@@ -34,7 +34,7 @@ export type RuleDeletedEventFilters = Partial<{
  */
 export function ruleDeletedEvent(filters: RuleDeletedEventFilters = {}) {
   return prepareEvent({
-    signature: "event RuleDeleted(bytes32 indexed ruleId)",
     filters,
+    signature: "event RuleDeleted(bytes32 indexed ruleId)",
   });
 }

@@ -4,14 +4,14 @@ import type { ThirdwebContract } from "thirdweb";
 
 export function useContractFunctionSelectors(contract: ThirdwebContract) {
   return useQuery({
+    placeholderData: [],
+    queryFn: () => resolveFunctionSelectors(contract),
     queryKey: [
       "contract-function-selectors",
       {
-        chainId: contract.chain.id,
         address: contract.address,
+        chainId: contract.chain.id,
       },
     ],
-    queryFn: () => resolveFunctionSelectors(contract),
-    placeholderData: [],
   });
 }

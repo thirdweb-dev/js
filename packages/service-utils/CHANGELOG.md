@@ -1,5 +1,17 @@
 # @thirdweb-dev/service-utils
 
+## 0.9.14
+
+### Patch Changes
+
+- [#7382](https://github.com/thirdweb-dev/js/pull/7382) [`4c29886`](https://github.com/thirdweb-dev/js/commit/4c2988623fa58311ca854e849ae1872e9e48846d) Thanks [@arcoraven](https://github.com/arcoraven)! - chore: add dedicatedSupportChannel to TeamResponse
+
+## 0.9.13
+
+### Patch Changes
+
+- [#7303](https://github.com/thirdweb-dev/js/pull/7303) [`6378f37`](https://github.com/thirdweb-dev/js/commit/6378f371c50b11052f7bfbb6aeefe3fb19ea26f0) Thanks [@arcoraven](https://github.com/arcoraven)! - chore: pass allowImpersonation to auth server
+
 ## 0.9.12
 
 ### Patch Changes

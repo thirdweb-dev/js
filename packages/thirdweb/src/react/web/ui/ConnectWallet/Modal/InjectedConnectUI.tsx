@@ -32,8 +32,8 @@ export const InjectedConnectUI = (props: {
       setErrorConnecting(false);
       await wait(1000);
       await wallet.connect({
-        client: props.client,
         chain: props.chain,
+        client: props.client,
       });
 
       done();
@@ -54,23 +54,23 @@ export const InjectedConnectUI = (props: {
 
   return (
     <ConnectingScreen
+      client={props.client}
+      errorConnecting={errorConnecting}
       locale={{
+        failed: locale.connectionScreen.failed,
         getStartedLink: locale.getStartedLink,
+        inProgress: locale.connectionScreen.inProgress,
         instruction: locale.connectionScreen.instruction,
         tryAgain: locale.connectionScreen.retry,
-        inProgress: locale.connectionScreen.inProgress,
-        failed: locale.connectionScreen.failed,
       }}
       onBack={props.onBack}
-      walletName={props.walletName}
       onGetStarted={props.onGetStarted}
-      walletId={props.wallet.id}
       onRetry={() => {
         connectToExtension();
       }}
-      errorConnecting={errorConnecting}
-      client={props.client}
       size={props.size}
+      walletId={props.wallet.id}
+      walletName={props.walletName}
     />
   );
 };

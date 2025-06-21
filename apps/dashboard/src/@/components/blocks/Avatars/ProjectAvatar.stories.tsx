@@ -8,9 +8,9 @@ import { Button } from "../../ui/button";
 import { ProjectAvatar } from "./ProjectAvatar";
 
 const meta = {
-  title: "blocks/Avatars/ProjectAvatar",
   component: Story,
   parameters: {},
+  title: "blocks/Avatars/ProjectAvatar",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -27,17 +27,17 @@ function Story() {
 
       <BadgeContainer label="No Src - Skeleton">
         <ProjectAvatar
-          src={undefined}
           className="size-6"
           client={storybookThirdwebClient}
+          src={undefined}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Invalid/Empty Src - BoxIcon Fallback">
         <ProjectAvatar
-          src={""}
           className="size-6"
           client={storybookThirdwebClient}
+          src={""}
         />
       </BadgeContainer>
 
@@ -54,7 +54,7 @@ function ToggleTest() {
   return (
     <div className="relative flex flex-col gap-10 border p-6">
       <Button
-        variant="outline"
+        className="absolute top-6 right-6 inline-flex"
         onClick={() => {
           if (data) {
             setData(undefined);
@@ -65,7 +65,7 @@ function ToggleTest() {
             });
           }
         }}
-        className="absolute top-6 right-6 inline-flex"
+        variant="outline"
       >
         Toggle Src
       </Button>
@@ -74,17 +74,17 @@ function ToggleTest() {
 
       <BadgeContainer label="Valid Src">
         <ProjectAvatar
-          src={data?.src}
           className="size-6"
           client={storybookThirdwebClient}
+          src={data?.src}
         />
       </BadgeContainer>
 
       <BadgeContainer label="invalid Src">
         <ProjectAvatar
-          src={data ? "invalid-src" : undefined}
           className="size-6"
           client={storybookThirdwebClient}
+          src={data ? "invalid-src" : undefined}
         />
       </BadgeContainer>
     </div>

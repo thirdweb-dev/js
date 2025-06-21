@@ -6,22 +6,22 @@ type DefaultedBoxProps = Pick<
 >;
 
 const defaultBoxProps: Required<DefaultedBoxProps> = {
-  shadow: "sm",
-  px: 4,
-  py: 4,
+  borderColor: "borderColor",
   borderRadius: "xl",
   borderWidth: "1px",
-  borderColor: "borderColor",
+  px: 4,
+  py: 4,
+  shadow: "sm",
 };
 
 const borderRadiusMap = {
-  "3xl": "2xl",
   "2xl": "xl",
-  xl: "lg",
+  "3xl": "2xl",
   lg: "md",
   md: "sm",
-  sm: "none",
   none: "none",
+  sm: "none",
+  xl: "lg",
 };
 
 interface CardProps extends BoxProps {
@@ -53,26 +53,26 @@ export const Card: React.FC<CardProps> = ({
     <>
       {outlineBorder ? (
         <Box
-          p={outlineBorder.width}
           borderRadius={combinedProps.borderRadius}
-          position="relative"
           overflow="hidden"
+          p={outlineBorder.width}
+          position="relative"
           w={combinedProps.w || combinedProps.width}
         >
           <Box
-            zIndex={-1}
+            bgGradient={outlineBorder.gradient}
+            h="full"
+            left={0}
             position="absolute"
             top={0}
-            left={0}
             w="full"
-            h="full"
-            bgGradient={outlineBorder.gradient}
+            zIndex={-1}
           />
 
           <Box
             {...combinedProps}
-            w="full"
             borderRadius={getBorderRadius(combinedProps.borderRadius)}
+            w="full"
           >
             {children}
           </Box>

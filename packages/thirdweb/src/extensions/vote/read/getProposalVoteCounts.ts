@@ -33,8 +33,8 @@ export async function getProposalVoteCounts(
 ): Promise<ProposalVoteInfo> {
   const votes = await proposalVotes(options);
   return {
+    abstain: votes[2],
     against: votes[0],
     for: votes[1],
-    abstain: votes[2],
   };
 }

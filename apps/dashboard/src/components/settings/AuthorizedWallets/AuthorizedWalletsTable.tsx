@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   type AuthorizedWallet,
   useRevokeAuthorizedWallet,
@@ -8,12 +7,12 @@ import {
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useState } from "react";
 import { toast } from "sonner";
 import { isAddress } from "thirdweb/utils";
 import type { ComponentWithChildren } from "types/component-with-children";
 import { shortenString } from "utils/usedapp-external";
+import { Button } from "@/components/ui/button";
 import { AuthorizedWalletRevokeModal } from "./AuthorizedWalletRevokeModal";
 
 interface AuthorizedWalletsTableProps {
@@ -27,7 +26,6 @@ const columnHelper = createColumnHelper<AuthorizedWallet>();
 export const AuthorizedWalletsTable: ComponentWithChildren<
   AuthorizedWalletsTableProps
 > = ({ authorizedWallets, isPending, isFetched }) => {
-  const trackEvent = useTrack();
   const { mutateAsync: revokeAccess } = useRevokeAuthorizedWallet();
   const [revokeAuthorizedWalletId, setRevokeAuthorizedWalletId] = useState<
     string | undefined
@@ -36,7 +34,6 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
 
   const columns = [
     columnHelper.accessor("deviceName", {
-      header: "Device Name",
       cell: (cell) => {
         const value = cell.getValue();
         if (!value) {
@@ -47,10 +44,10 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
         }
         return <span className="text-sm">{value}</span>;
       },
+      header: "Device Name",
     }),
 
     columnHelper.accessor("createdAt", {
-      header: "Authorized at",
       cell: (cell) => {
         const value = cell.getValue();
 
@@ -60,10 +57,10 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
         const createdDate = format(new Date(value), "MMM dd, yyyy");
         return <span className="text-sm">{createdDate}</span>;
       },
+      header: "Authorized at",
     }),
 
     columnHelper.accessor("id", {
-      header: "",
       cell: (cell) => {
         const value = cell.getValue();
         if (!value) {
@@ -72,13 +69,14 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
         return (
           <Button
             onClick={() => handleOpen(value)}
-            variant="destructive"
             size="sm"
+            variant="destructive"
           >
             Revoke Access
           </Button>
         );
       },
+      header: "",
     }),
   ];
 
@@ -96,29 +94,16 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
     if (!revokeAuthorizedWalletId) {
       return;
     }
-    trackEvent({
-      category: "account-settings",
-      action: "revoke-access-to-device",
-      label: "attempt",
-    });
+
     try {
       await revokeAccess({
         authorizedWalletId: revokeAuthorizedWalletId,
       });
-      trackEvent({
-        category: "account-settings",
-        action: "revoke-access-to-device",
-        label: "success",
-      });
+
       toast.success("The selected device has been revoked.");
     } catch (error) {
       console.error(error);
-      trackEvent({
-        category: "account-settings",
-        action: "revoke-access-to-device",
-        label: "error",
-        error,
-      });
+
       toast.error("Something went wrong while revoking the device", {
         description:
           "Please visit our support site: https://thirdweb.com/support",
@@ -132,19 +117,19 @@ export const AuthorizedWalletsTable: ComponentWithChildren<
     <>
       {revokeAuthorizedWalletId && (
         <AuthorizedWalletRevokeModal
+          authorizedWalletId={revokeAuthorizedWalletId || ""}
           isOpen={isOpen}
           onClose={handleClose}
-          authorizedWalletId={revokeAuthorizedWalletId || ""}
           onSubmit={handleSubmit}
         />
       )}
 
       <TWTable
-        title="Authorized Devices"
         columns={columns}
         data={authorizedWallets}
-        isPending={isPending}
         isFetched={isFetched}
+        isPending={isPending}
+        title="Authorized Devices"
       />
     </>
   );

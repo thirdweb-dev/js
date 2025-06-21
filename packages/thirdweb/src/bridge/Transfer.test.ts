@@ -6,15 +6,15 @@ import * as Transfer from "./Transfer.js";
 describe.runIf(process.env.TW_SECRET_KEY)("Bridge.Transfer.prepare", () => {
   it("should get a valid prepared quote", async () => {
     const quote = await Transfer.prepare({
-      chainId: 1,
-      tokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       amount: toWei("0.01"),
-      sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
-      receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+      chainId: 1,
       client: TEST_CLIENT,
       purchaseData: {
         reference: "test-transfer",
       },
+      receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+      sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+      tokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
     });
 
     expect(quote).toBeDefined();
@@ -28,38 +28,38 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.Transfer.prepare", () => {
   it("should surface any errors", async () => {
     await expect(
       Transfer.prepare({
-        chainId: 444, // Invalid chain ID
-        tokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-        amount: toWei("1000000000"),
-        sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
-        receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+        amount: toWei("1000000000"), // Invalid chain ID
+        chainId: 444,
         client: TEST_CLIENT,
+        receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+        sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+        tokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       }),
     ).rejects.toThrowError();
   });
 
   it("should support the feePayer option", async () => {
     const senderQuote = await Transfer.prepare({
-      chainId: 1,
-      tokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       amount: toWei("0.01"),
-      sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
-      receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
-      feePayer: "sender",
+      chainId: 1,
       client: TEST_CLIENT,
+      feePayer: "sender",
+      receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+      sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+      tokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
     });
 
     expect(senderQuote).toBeDefined();
     expect(senderQuote.intent.feePayer).toBe("sender");
 
     const receiverQuote = await Transfer.prepare({
-      chainId: 1,
-      tokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       amount: toWei("0.01"),
-      sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
-      receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
-      feePayer: "receiver",
+      chainId: 1,
       client: TEST_CLIENT,
+      feePayer: "receiver",
+      receiver: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+      sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+      tokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
     });
 
     expect(receiverQuote).toBeDefined();

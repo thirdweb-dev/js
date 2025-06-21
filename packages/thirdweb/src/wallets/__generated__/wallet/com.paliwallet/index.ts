@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.paliwallet",
-  name: "Pali Wallet",
-  homepage: "https://paliwallet.com",
-  image_id: "4672cbde-0f96-42f3-84a0-524e9ad70a00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/pali-wallet-dex-nft-defi/id6447639615",
     android: "https://play.google.com/store/apps/details?id=io.paliwallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: "https://play.google.com/store/apps/details?id=io.paliwallet",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/pali-wallet-dex-nft-defi/id6447639615",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "paliwallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://paliwallet.com",
+  id: "com.paliwallet",
+  image_id: "4672cbde-0f96-42f3-84a0-524e9ad70a00",
+  mobile: {
+    native: "paliwallet://",
+    universal: null,
+  },
+  name: "Pali Wallet",
+  rdns: null,
 } as const;

@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "llc.besc",
-  name: "BeanBag",
-  homepage: "https://besc.llc",
-  image_id: "5fad49d2-a138-47bb-ac87-6368d8bd9000",
   app: {
-    browser: null,
-    ios: null,
     android: "https://play.google.com/store/apps/details?id=com.beanbag.wallet",
-    mac: "",
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: null,
+    mac: "",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "beanbag://wallet/connect",
-    universal:
-      "https://play.google.com/store/apps/details?id=com.beanbag.wallet",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://besc.llc",
+  id: "llc.besc",
+  image_id: "5fad49d2-a138-47bb-ac87-6368d8bd9000",
+  mobile: {
+    native: "beanbag://wallet/connect",
+    universal:
+      "https://play.google.com/store/apps/details?id=com.beanbag.wallet",
+  },
+  name: "BeanBag",
+  rdns: null,
 } as const;

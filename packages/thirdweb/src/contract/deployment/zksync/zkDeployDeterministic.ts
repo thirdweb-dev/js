@@ -42,16 +42,16 @@ export async function zkDeployContractDeterministic(
     normalizeFunctionParams(constructorAbi as AbiConstructor, options.params),
   );
   const create2FactoryAddress = await zkDeployCreate2Factory({
-    client: options.client,
-    chain: options.chain,
     account: options.account,
+    chain: options.chain,
+    client: options.client,
   });
   const bytecode = ensureBytecodePrefix(options.bytecode);
   const bytecodeHash = uint8ArrayToHex(hashBytecode(bytecode));
   const predictedAddress = computeDeploymentAddress({
     bytecodeHash,
-    encodedArgs,
     create2FactoryAddress,
+    encodedArgs,
     salt: options.salt,
   });
   const deployed = await isContractDeployed(
@@ -76,21 +76,21 @@ export async function zkDeployContractDeterministic(
     // if not known, publish the bytecodehash
     if (marker !== 1n) {
       await zkDeployContract({
-        client: options.client,
-        chain: options.chain,
-        account: options.account,
         abi: options.abi,
+        account: options.account,
         bytecode,
+        chain: options.chain,
+        client: options.client,
         params: options.params,
       });
     }
 
     // deploy with create2 factory
     const factory = getContract({
+      abi: parseAbi(singletonFactoryAbi),
       address: create2FactoryAddress,
       chain: options.chain,
       client: options.client,
-      abi: parseAbi(singletonFactoryAbi),
     });
 
     const salt = options?.salt

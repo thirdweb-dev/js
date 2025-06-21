@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "CurrencyApprovedForListing" event.
@@ -42,8 +42,8 @@ export function currencyApprovedForListingEvent(
   filters: CurrencyApprovedForListingEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event CurrencyApprovedForListing(uint256 indexed listingId, address indexed currency, uint256 pricePerToken)",
-    filters,
   });
 }

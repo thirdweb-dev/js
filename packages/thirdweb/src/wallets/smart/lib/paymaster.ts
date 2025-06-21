@@ -52,8 +52,8 @@ export async function getPaymasterAndData(args: {
   const paymasterUrl = getDefaultBundlerUrl(chain);
 
   const body = {
-    jsonrpc: "2.0",
     id: 1,
+    jsonrpc: "2.0",
     method: "pm_sponsorUserOperation",
     params: [hexlifyUserOp(userOp), entrypoint],
   };
@@ -61,9 +61,9 @@ export async function getPaymasterAndData(args: {
   // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
   const fetchWithHeaders = getClientFetch(client);
   const response = await fetchWithHeaders(paymasterUrl, {
-    method: "POST",
-    headers,
     body: stringify(body),
+    headers,
+    method: "POST",
   });
 
   if (!response.ok) {
@@ -89,23 +89,23 @@ export async function getPaymasterAndData(args: {
     }
 
     return {
-      paymasterAndData: res.result.paymasterAndData,
-      verificationGasLimit: res.result.verificationGasLimit
-        ? hexToBigInt(res.result.verificationGasLimit)
-        : undefined,
-      preVerificationGas: res.result.preVerificationGas
-        ? hexToBigInt(res.result.preVerificationGas)
-        : undefined,
       callGasLimit: res.result.callGasLimit
         ? hexToBigInt(res.result.callGasLimit)
         : undefined,
       paymaster: res.result.paymaster,
+      paymasterAndData: res.result.paymasterAndData,
       paymasterData: res.result.paymasterData,
+      paymasterPostOpGasLimit: res.result.paymasterPostOpGasLimit
+        ? hexToBigInt(res.result.paymasterPostOpGasLimit)
+        : undefined,
       paymasterVerificationGasLimit: res.result.paymasterVerificationGasLimit
         ? hexToBigInt(res.result.paymasterVerificationGasLimit)
         : undefined,
-      paymasterPostOpGasLimit: res.result.paymasterPostOpGasLimit
-        ? hexToBigInt(res.result.paymasterPostOpGasLimit)
+      preVerificationGas: res.result.preVerificationGas
+        ? hexToBigInt(res.result.preVerificationGas)
+        : undefined,
+      verificationGasLimit: res.result.verificationGasLimit
+        ? hexToBigInt(res.result.verificationGasLimit)
         : undefined,
     };
   }

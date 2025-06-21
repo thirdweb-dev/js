@@ -1,12 +1,12 @@
 import type { EthereumProvider } from "@walletconnect/ethereum-provider";
 import type { Address } from "abitype";
 import {
+  getTypesForEIP712Domain,
   type ProviderRpcError,
   type SignTypedDataParameters,
   SwitchChainError,
-  UserRejectedRequestError,
-  getTypesForEIP712Domain,
   serializeTypedData,
+  UserRejectedRequestError,
   validateTypedData,
 } from "viem";
 import { trackTransaction } from "../../analytics/track/transaction.js";
@@ -61,8 +61,8 @@ const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
 const defaultShowQrModal = true;
 
 const storageKeys = {
-  requestedChains: "tw.wc.requestedChains",
   lastUsedChainId: "tw.wc.lastUsedChainId",
+  requestedChains: "tw.wc.requestedChains",
 };
 
 /**
@@ -128,8 +128,8 @@ export async function connectWC(
     requiredChain,
     optionalChains: chainsToRequest,
   } = getChainsToRequest({
-    client: options.client,
     chain: chainToRequest,
+    client: options.client,
     optionalChains: optionalChains,
   });
 
@@ -138,8 +138,8 @@ export async function connectWC(
       ...(wcOptions?.pairingTopic
         ? { pairingTopic: wcOptions?.pairingTopic }
         : {}),
-      optionalChains: chainsToRequest,
       chains: requiredChain ? [requiredChain.id] : undefined,
+      optionalChains: chainsToRequest,
       rpcMap: rpcMap,
     });
   }
@@ -161,8 +161,8 @@ export async function connectWC(
 
   if (options) {
     const savedParams: SavedConnectParams = {
-      optionalChains: options.walletConnect?.optionalChains,
       chain: options.chain,
+      optionalChains: options.walletConnect?.optionalChains,
       pairingTopic: options.walletConnect?.pairingTopic,
     };
 
@@ -199,8 +199,8 @@ export async function autoConnectWC(
           chain: savedConnectParams.chain,
           client: options.client,
           walletConnect: {
-            pairingTopic: savedConnectParams.pairingTopic,
             optionalChains: savedConnectParams.optionalChains,
+            pairingTopic: savedConnectParams.pairingTopic,
           },
         }
       : {
@@ -258,36 +258,36 @@ async function initProvider(
     requiredChain,
     optionalChains: chainsToRequest,
   } = getChainsToRequest({
-    client: options.client,
     chain: chainToRequest,
+    client: options.client,
     optionalChains: optionalChains,
   });
 
   const provider = await EthereumProvider.init({
+    chains: requiredChain ? [requiredChain.id] : undefined,
+    disableProviderPing: true,
+    metadata: {
+      description:
+        wcOptions?.appMetadata?.description ||
+        getDefaultAppMetadata().description,
+      icons: [
+        wcOptions?.appMetadata?.logoUrl || getDefaultAppMetadata().logoUrl,
+      ],
+      name: wcOptions?.appMetadata?.name || getDefaultAppMetadata().name,
+      url: wcOptions?.appMetadata?.url || getDefaultAppMetadata().url,
+    },
+    optionalChains: chainsToRequest,
+    optionalEvents: OPTIONAL_EVENTS,
+    optionalMethods: OPTIONAL_METHODS,
+    projectId: wcOptions?.projectId || DEFAULT_PROJECT_ID,
+    qrModalOptions: wcOptions?.qrModalOptions,
+    rpcMap: rpcMap,
     showQrModal:
       wcOptions?.showQrModal === undefined
         ? sessionRequestHandler
           ? false
           : defaultShowQrModal
         : wcOptions.showQrModal,
-    projectId: wcOptions?.projectId || DEFAULT_PROJECT_ID,
-    optionalMethods: OPTIONAL_METHODS,
-    optionalEvents: OPTIONAL_EVENTS,
-    optionalChains: chainsToRequest,
-    chains: requiredChain ? [requiredChain.id] : undefined,
-    metadata: {
-      name: wcOptions?.appMetadata?.name || getDefaultAppMetadata().name,
-      description:
-        wcOptions?.appMetadata?.description ||
-        getDefaultAppMetadata().description,
-      url: wcOptions?.appMetadata?.url || getDefaultAppMetadata().url,
-      icons: [
-        wcOptions?.appMetadata?.logoUrl || getDefaultAppMetadata().logoUrl,
-      ],
-    },
-    rpcMap: rpcMap,
-    qrModalOptions: wcOptions?.qrModalOptions,
-    disableProviderPing: true,
   });
 
   provider.events.setMaxListeners(Number.POSITIVE_INFINITY);
@@ -339,23 +339,23 @@ function createAccount({
         method: "eth_sendTransaction",
         params: [
           {
-            gas: tx.gas ? numberToHex(tx.gas) : undefined,
-            value: tx.value ? numberToHex(tx.value) : undefined,
-            from: getAddress(address),
-            to: tx.to as Address,
             data: tx.data,
+            from: getAddress(address),
+            gas: tx.gas ? numberToHex(tx.gas) : undefined,
+            to: tx.to as Address,
+            value: tx.value ? numberToHex(tx.value) : undefined,
           },
         ],
       })) as Hex;
 
       trackTransaction({
-        client: client,
-        walletAddress: getAddress(address),
-        walletType: "walletConnect",
-        transactionHash,
         chainId: tx.chainId,
+        client: client,
         contractAddress: tx.to ?? undefined,
         gasPrice: tx.gasPrice,
+        transactionHash,
+        walletAddress: getAddress(address),
+        walletType: "walletConnect",
       });
 
       return {
@@ -416,7 +416,7 @@ function onConnect(
   storage: AsyncStorage,
   client: ThirdwebClient,
 ): [Account, Chain, DisconnectFn, SwitchChainFn] {
-  const account = createAccount({ provider, address, client });
+  const account = createAccount({ address, client, provider });
 
   async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
@@ -435,9 +435,9 @@ function onConnect(
   function onAccountsChanged(accounts: string[]) {
     if (accounts[0]) {
       const newAccount = createAccount({
-        provider,
         address: getAddress(accounts[0]),
         client,
+        provider,
       });
       emitter.emit("accountChanged", newAccount);
       emitter.emit("accountsChanged", accounts);
@@ -504,12 +504,12 @@ async function switchChainWC(
         method: ADD_ETH_CHAIN_METHOD,
         params: [
           {
-            chainId: numberToHex(apiChain.chainId),
-            chainName: apiChain.name,
-            nativeCurrency: apiChain.nativeCurrency,
-            rpcUrls: getValidPublicRPCUrl(apiChain), // no clientId on purpose
             blockExplorerUrls:
               blockExplorerUrls.length > 0 ? blockExplorerUrls : undefined,
+            chainId: numberToHex(apiChain.chainId),
+            chainName: apiChain.name,
+            nativeCurrency: apiChain.nativeCurrency, // no clientId on purpose
+            rpcUrls: getValidPublicRPCUrl(apiChain),
           },
         ],
       });
@@ -589,12 +589,12 @@ function getChainsToRequest(options: {
   }
 
   return {
-    rpcMap,
-    requiredChain: options.chain ? options.chain : undefined,
     optionalChains:
       optionalChains.length > 0
         ? (optionalChains.map((x) => x.id) as ArrayOneOrMore<number>)
         : [1],
+    requiredChain: options.chain ? options.chain : undefined,
+    rpcMap,
   };
 }
 

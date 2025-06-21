@@ -6,6 +6,7 @@ import type {
   PayUIOptions,
 } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useActiveWalletChain } from "../../../../../../core/hooks/wallets/useActiveWalletChain.js";
+import type { TokenInfo } from "../../../../../../core/utils/defaultTokens.js";
 import { useDebouncedValue } from "../../../../hooks/useDebouncedValue.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
 import {
@@ -49,7 +50,7 @@ export function useToTokenSelectionStates(options: {
       setToChain(prefillBuy.chain);
     }
     if (prefillBuy?.token) {
-      setToToken(prefillBuy.token);
+      setToToken(prefillBuy.token as TokenInfo);
     }
   }, [prefillBuy?.amount, prefillBuy?.chain, prefillBuy?.token]);
 
@@ -68,19 +69,19 @@ export function useToTokenSelectionStates(options: {
   );
 
   const [toToken, setToToken] = useState<ERC20OrNativeToken>(
-    prefillBuy?.token ||
+    (prefillBuy?.token as TokenInfo) ||
       (payOptions.mode === "direct_payment" && payOptions.paymentInfo.token) ||
       NATIVE_TOKEN,
   );
 
   return {
-    toChain,
-    setToChain,
-    toToken,
-    setToToken,
-    tokenAmount,
-    setTokenAmount,
     deferredTokenAmount,
+    setToChain,
+    setTokenAmount,
+    setToToken,
+    toChain,
+    tokenAmount,
+    toToken,
   };
 }
 
@@ -117,8 +118,8 @@ export function useFromTokenSelectionStates(options: {
 
   return {
     fromChain,
-    setFromChain,
     fromToken,
+    setFromChain,
     setFromToken,
   };
 }

@@ -28,8 +28,8 @@ export async function fetchPublishedContractsFromDeploy(options: {
   }
 
   let publishURIs = await getPublishedUriFromCompilerUri({
-    contract: getContractPublisher(contract.client),
     compilerMetadataUri: contractUri,
+    contract: getContractPublisher(contract.client),
   });
 
   // Try fetching using contract name from compiler metadata for zksolc variants
@@ -37,8 +37,8 @@ export async function fetchPublishedContractsFromDeploy(options: {
   if (publishURIs.length === 0 && (await isZkSyncChain(contract.chain))) {
     try {
       const res = await download({
-        uri: contractUri,
         client: contract.client,
+        uri: contractUri,
       });
 
       const deployMetadata = (await res.json()) as ZkSolcMetadata;

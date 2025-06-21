@@ -56,8 +56,8 @@ describe("Utility functions tests", () => {
     it("should format a valid HTTP URL with a WalletConnect URI", () => {
       const result = formatUniversalUrl("https://example.com", "wc:uri");
       expect(result).toEqual({
-        redirect: "https://example.com/wc?uri=wc%3Auri",
         href: "https://example.com/",
+        redirect: "https://example.com/wc?uri=wc%3Auri",
       });
     });
   });
@@ -66,8 +66,8 @@ describe("Utility functions tests", () => {
     it("should format a valid native URL with a WalletConnect URI", () => {
       const result = formatNativeUrl("custom://example", "wc:uri");
       expect(result).toEqual({
-        redirect: "custom://example/wc?uri=wc%3Auri",
         href: "custom://example/",
+        redirect: "custom://example/wc?uri=wc%3Auri",
       });
     });
   });
@@ -76,16 +76,16 @@ describe("Utility functions tests", () => {
     it("should call formatUniversalUrl for HTTP URLs", () => {
       const result = formatWalletConnectUrl("https://example.com", "wc:uri");
       expect(result).toEqual({
-        redirect: "https://example.com/wc?uri=wc%3Auri",
         href: "https://example.com/",
+        redirect: "https://example.com/wc?uri=wc%3Auri",
       });
     });
 
     it("should call formatNativeUrl for non-HTTP URLs", () => {
       const result = formatWalletConnectUrl("custom://example", "wc:uri");
       expect(result).toEqual({
-        redirect: "custom://example/wc?uri=wc%3Auri",
         href: "custom://example/",
+        redirect: "custom://example/wc?uri=wc%3Auri",
       });
     });
   });

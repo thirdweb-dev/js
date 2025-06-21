@@ -43,10 +43,10 @@ export function generateLoginPayload(options: AuthOptions) {
             randomBytesHex(),
           ))
       )(),
-      statement: options.login?.statement || DEFAULT_LOGIN_STATEMENT,
-      version: options.login?.version || DEFAULT_LOGIN_VERSION,
       resources: options.login?.resources,
+      statement: options.login?.statement || DEFAULT_LOGIN_STATEMENT,
       uri: options.login?.uri || options.domain,
+      version: options.login?.version || DEFAULT_LOGIN_VERSION,
     };
   };
 }

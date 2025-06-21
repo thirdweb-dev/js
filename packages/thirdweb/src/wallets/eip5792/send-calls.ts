@@ -162,7 +162,7 @@ export async function sendCalls<const ID extends WalletId>(
       "../in-app/core/eip5972/in-app-wallet-calls.js"
     );
     const id = await inAppWalletSendCalls({ account, calls });
-    return { id, client, chain, wallet };
+    return { chain, client, id, wallet };
   }
 
   const preparedCalls: EIP5792Call[] = await Promise.all(
@@ -179,8 +179,8 @@ export async function sendCalls<const ID extends WalletId>(
       ]);
 
       return {
-        to: _to as Address,
         data: _data as Hex,
+        to: _to as Address,
         value:
           typeof _value === "bigint" || typeof _value === "number"
             ? numberToHex(_value)
@@ -191,13 +191,13 @@ export async function sendCalls<const ID extends WalletId>(
 
   const injectedWalletCallParams: WalletSendCallsParameters = [
     {
-      from: getAddress(account.address),
-      calls: preparedCalls,
-      capabilities,
-      version,
-      chainId: numberToHex(chain.id),
       // see: https://eips.ethereum.org/EIPS/eip-5792#wallet_sendcalls
       atomicRequired: options.atomicRequired ?? false,
+      calls: preparedCalls,
+      capabilities,
+      chainId: numberToHex(chain.id),
+      from: getAddress(account.address),
+      version,
     },
   ];
 
@@ -222,9 +222,9 @@ export async function sendCalls<const ID extends WalletId>(
       params: injectedWalletCallParams as ViemWalletSendCallsParameters, // The viem type definition is slightly different
     });
     if (typeof callId === "object" && "id" in callId) {
-      return { id: callId.id, client, chain, wallet };
+      return { chain, client, id: callId.id, wallet };
     }
-    return { id: callId, client, chain, wallet };
+    return { chain, client, id: callId, wallet };
   } catch (error) {
     if (/unsupport|not support/i.test((error as Error).message)) {
       throw new Error(

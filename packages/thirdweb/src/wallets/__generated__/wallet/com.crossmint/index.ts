@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.crossmint",
-  name: "Crossmint",
-  homepage: "https://www.crossmint.com/",
-  image_id: "8ad627ec-cbcd-4878-ec5c-3df588055200",
   app: {
-    browser: "https://www.crossmint.com",
-    ios: null,
     android: null,
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://www.crossmint.com",
     chrome: "https://www.crossmint.com",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: null,
-    universal: "https://www.crossmint.com",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://www.crossmint.com",
   },
+  homepage: "https://www.crossmint.com/",
+  id: "com.crossmint",
+  image_id: "8ad627ec-cbcd-4878-ec5c-3df588055200",
+  mobile: {
+    native: null,
+    universal: "https://www.crossmint.com",
+  },
+  name: "Crossmint",
+  rdns: null,
 } as const;

@@ -15,11 +15,11 @@ export const AffectedAreaInput = () => {
       <SupportForm_SelectInput
         formLabel="Affected area"
         name="extraInfo_Affected_Area"
-        required={true}
+        onValueChange={setSelectedAffectedArea}
         options={AFFECTED_AREAS}
         promptText="Select an affected area"
+        required={true}
         value={selectedAffectedArea}
-        onValueChange={setSelectedAffectedArea}
       />
       {selectedAffectedArea &&
         (selectedAffectedArea === "Application" ? (
@@ -27,11 +27,11 @@ export const AffectedAreaInput = () => {
             <SupportForm_SelectInput
               formLabel="SDK"
               name="extraInfo_SDK"
-              required={true}
-              promptText="Select SDK"
-              options={["TypeScript", "React", "React Native", "Unity"]}
-              value={selectedSDK}
               onValueChange={setSelectedSDK}
+              options={["TypeScript", "React", "React Native", "Unity"]}
+              promptText="Select SDK"
+              required={true}
+              value={selectedSDK}
             />
             {selectedSDK && (
               <>
@@ -39,14 +39,14 @@ export const AffectedAreaInput = () => {
                 <SupportForm_TextInput
                   formLabel="SDK Version"
                   formValue="extraInfo_SDK_Version"
-                  required={true}
                   inputType="text"
+                  required={true}
                 />
                 <SupportForm_TextInput
                   formLabel="Application URL"
                   formValue="extraInfo_Application_URL"
-                  required={false}
                   inputType="url"
+                  required={false}
                 />
                 <DescriptionInput />
                 <AttachmentForm />

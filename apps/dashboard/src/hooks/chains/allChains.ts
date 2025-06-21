@@ -1,14 +1,14 @@
 "use client";
 
-import { isProd } from "@/constants/env-utils";
-import { createStore, useStore } from "@/lib/reactive";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import type { Chain, ChainMetadata } from "thirdweb/chains";
+import { isProd } from "@/constants/env-utils";
+import { createStore, useStore } from "@/lib/reactive";
 import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
 import {
-  type StoredChain,
   chainOverridesStore,
+  type StoredChain,
 } from "../../stores/chainStores";
 
 type AllChainsStore = {
@@ -126,8 +126,8 @@ export function useAllChainsData() {
   // trigger fetching all chains if this hook is used instead of putting this on root
   // so we can avoid fetching all chains if it's not required
   const allChainsQuery = useQuery({
-    queryKey: ["all-chains"],
     queryFn: () => fetchChainsFromApi(),
+    queryKey: ["all-chains"],
   });
 
   // eslint-disable-next-line no-restricted-syntax

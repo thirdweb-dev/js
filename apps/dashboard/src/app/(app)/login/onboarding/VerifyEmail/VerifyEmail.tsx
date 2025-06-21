@@ -1,20 +1,19 @@
 "use client";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
+import { ArrowLeftIcon, RotateCcwIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { cn } from "@/lib/utils";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import type { TrackingParams } from "hooks/analytics/useTrack";
-import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
-import { ArrowLeftIcon, RotateCcwIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import {
   type EmailConfirmationValidationSchema,
   emailConfirmationValidationSchema,
@@ -28,10 +27,8 @@ type VerifyEmailProps = {
     confirmationToken: string;
   }) => Promise<{ account: Account }>;
   resendConfirmationEmail: () => Promise<void>;
-  trackEvent: (params: TrackingParams) => void;
   accountAddress: string;
   title: string;
-  trackingAction: string;
 };
 
 export function VerifyEmail(props: VerifyEmailProps) {
@@ -51,30 +48,13 @@ export function VerifyEmail(props: VerifyEmailProps) {
   });
 
   const handleSubmit = form.handleSubmit((values) => {
-    props.trackEvent({
-      category: "account",
-      action: props.trackingAction,
-      label: "attempt",
-    });
-
     verifyEmail.mutate(values, {
-      onSuccess: (response) => {
-        props.onEmailConfirmed(response);
-        props.trackEvent({
-          category: "account",
-          action: props.trackingAction,
-          label: "success",
-        });
-      },
       onError: (error) => {
         console.error(error);
         toast.error("Invalid confirmation code");
-        props.trackEvent({
-          category: "account",
-          action: props.trackingAction,
-          label: "error",
-          error: error.message,
-        });
+      },
+      onSuccess: (response) => {
+        props.onEmailConfirmed(response);
       },
     });
   });
@@ -83,29 +63,13 @@ export function VerifyEmail(props: VerifyEmailProps) {
     form.setValue("confirmationToken", "");
     verifyEmail.reset();
 
-    props.trackEvent({
-      category: "account",
-      action: "resendEmailConfirmation",
-      label: "attempt",
-    });
-
     resendConfirmationEmail.mutate(undefined, {
+      onError: (error) => {
+        console.error(error);
+        toast.error("Failed to send verification code");
+      },
       onSuccess: () => {
         toast.success("Verification code sent");
-        props.trackEvent({
-          category: "account",
-          action: "resendEmailConfirmation",
-          label: "success",
-        });
-      },
-      onError: (error) => {
-        toast.error("Failed to send verification code");
-        props.trackEvent({
-          category: "account",
-          action: "resendEmailConfirmation",
-          label: "error",
-          error,
-        });
       },
     });
   }
@@ -124,26 +88,26 @@ export function VerifyEmail(props: VerifyEmailProps) {
 
           <div className="md:flex md:justify-start">
             <InputOTP
-              maxLength={6}
-              pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+              disabled={verifyEmail.isPending}
               inputMode="text"
-              value={form.watch("confirmationToken")}
+              maxLength={6}
               onChange={(otp) => {
                 form.setValue("confirmationToken", otp);
               }}
-              disabled={verifyEmail.isPending}
+              pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+              value={form.watch("confirmationToken")}
             >
               <InputOTPGroup className="w-full grow bg-background lg:w-[300px]">
                 {new Array(6).fill(0).map((_, idx) => (
                   <InputOTPSlot
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                    key={idx}
-                    index={idx}
                     className={cn("h-12 grow border-foreground/25 text-lg", {
                       "border-red-500":
                         form.getFieldState("confirmationToken", form.formState)
                           .error || verifyEmail.isError,
                     })}
+                    index={idx}
+                    // biome-ignore lint/suspicious/noArrayIndexKey: EXPECTED
+                    key={idx}
                   />
                 ))}
               </InputOTPGroup>
@@ -153,9 +117,9 @@ export function VerifyEmail(props: VerifyEmailProps) {
 
         <div className="mt-4 flex flex-col-reverse gap-4 border-t px-4 py-6 lg:flex-row lg:justify-between lg:px-6">
           <Button
+            className="gap-2 bg-card"
             onClick={props.onBack}
             variant="outline"
-            className="gap-2 bg-card"
           >
             <ArrowLeftIcon className="size-4 text-muted-foreground" />
             Change Email
@@ -163,10 +127,10 @@ export function VerifyEmail(props: VerifyEmailProps) {
 
           <div className="flex justify-end gap-4">
             <Button
-              variant="outline"
               className="gap-2 bg-background"
-              onClick={handleResend}
               disabled={resendConfirmationEmail.isPending}
+              onClick={handleResend}
+              variant="outline"
             >
               {resendConfirmationEmail.isPending ? (
                 <Spinner className="size-4" />
@@ -177,10 +141,10 @@ export function VerifyEmail(props: VerifyEmailProps) {
             </Button>
 
             <Button
-              type="submit"
-              onClick={handleSubmit}
-              disabled={verifyEmail.isPending}
               className="grow gap-2 px-6"
+              disabled={verifyEmail.isPending}
+              onClick={handleSubmit}
+              type="submit"
             >
               {verifyEmail.isPending && <Spinner className="size-4" />}
               Verify
@@ -195,23 +159,11 @@ export function VerifyEmail(props: VerifyEmailProps) {
 export function LinkWalletVerifyEmail(
   props: Omit<VerifyEmailProps, "title" | "trackingAction">,
 ) {
-  return (
-    <VerifyEmail
-      {...props}
-      title="Link Wallet"
-      trackingAction="confirmLinkWallet"
-    />
-  );
+  return <VerifyEmail {...props} title="Link Wallet" />;
 }
 
 export function SignupVerifyEmail(
   props: Omit<VerifyEmailProps, "title" | "trackingAction">,
 ) {
-  return (
-    <VerifyEmail
-      {...props}
-      title="Verify Email"
-      trackingAction="confirmEmail"
-    />
-  );
+  return <VerifyEmail {...props} title="Verify Email" />;
 }

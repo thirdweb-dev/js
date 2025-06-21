@@ -22,8 +22,8 @@ export const ChainIcon = (props: ChainIconProps) => {
     }
     try {
       return resolveScheme({
-        uri: url,
         client: props.client,
+        uri: url,
       });
     } catch {
       return CHAIN_ICON;
@@ -31,11 +31,11 @@ export const ChainIcon = (props: ChainIconProps) => {
   }, [props, url]);
   return (
     <RNImage
-      theme={props.theme}
-      size={props.size}
+      color={props.theme.colors.secondaryIconColor}
       data={data}
       placeholder={CHAIN_ICON}
-      color={props.theme.colors.secondaryIconColor}
+      size={props.size}
+      theme={props.theme}
     />
   );
 };

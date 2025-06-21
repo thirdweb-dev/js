@@ -55,13 +55,13 @@ export async function toSerializableTransaction(
       "./zksync/send-eip712-transaction.js"
     );
     const { gas, maxFeePerGas, maxPriorityFeePerGas } = await getZkGasFees({
-      transaction: options.transaction,
       from:
         typeof options.from === "string" // Is this just an address?
           ? getAddress(options.from)
           : options.from !== undefined // Is this an account?
             ? getAddress(options.from.address)
             : undefined,
+      transaction: options.transaction,
     });
     // passing these values here will avoid re-fetching them below
     options.transaction = {
@@ -128,15 +128,15 @@ export async function toSerializableTransaction(
   }
 
   return {
-    to,
+    accessList,
+    authorizationList,
     chainId,
     data,
     gas,
     nonce,
-    accessList,
-    value,
-    authorizationList,
+    to,
     type,
+    value,
     ...feeData,
   } satisfies SerializableTransaction;
 }

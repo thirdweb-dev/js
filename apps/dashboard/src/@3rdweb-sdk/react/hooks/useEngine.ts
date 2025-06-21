@@ -1,6 +1,5 @@
 "use client";
 
-import { apiServerProxy } from "@/actions/proxies";
 import {
   keepPreviousData,
   useMutation,
@@ -11,6 +10,7 @@ import type { EngineBackendWalletType } from "lib/engine";
 import { useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
+import { apiServerProxy } from "@/actions/proxies";
 import type { ResultItem } from "../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/engine/dedicated/(instance)/[engineId]/metrics/components/StatusCodes";
 import type { EngineStatus } from "../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/engine/dedicated/(instance)/[engineId]/overview/components/transactions-table";
 import { engineKeys } from "../cache-keys";
@@ -70,21 +70,31 @@ export type BackendWallet = {
 export function useEngineBackendWallets(params: {
   instanceUrl: string;
   authToken: string;
+  limit?: number;
+  page?: number;
 }) {
   const { instanceUrl, authToken } = params;
   return useQuery({
-    queryKey: [...engineKeys.backendWallets(instanceUrl), authToken],
+    enabled: !!instanceUrl,
     queryFn: async () => {
-      const res = await fetch(`${instanceUrl}backend-wallet/get-all?limit=50`, {
-        method: "GET",
-        headers: getEngineRequestHeaders(authToken),
-      });
+      const res = await fetch(
+        `${instanceUrl}backend-wallet/get-all?limit=${params.limit ?? 1000}&page=${params.page ?? 1}`,
+        {
+          headers: getEngineRequestHeaders(authToken),
+          method: "GET",
+        },
+      );
 
       const json = await res.json();
 
       return (json.result as BackendWallet[]) || [];
     },
-    enabled: !!instanceUrl,
+    queryKey: [
+      ...engineKeys.backendWallets(instanceUrl),
+      authToken,
+      params.limit,
+      params.page,
+    ],
   });
 }
 
@@ -107,7 +117,7 @@ export function useEngineSystemHealth(
   pollInterval: number | false = false,
 ) {
   return useQuery({
-    queryKey: engineKeys.health(instanceUrl),
+    enabled: !!instanceUrl,
     queryFn: async () => {
       const res = await fetch(`${instanceUrl}system/health`, {
         headers: getEngineRequestHeaders(null),
@@ -118,7 +128,7 @@ export function useEngineSystemHealth(
       const json = (await res.json()) as EngineSystemHealth;
       return json;
     },
-    enabled: !!instanceUrl,
+    queryKey: engineKeys.health(instanceUrl),
     refetchInterval: pollInterval,
   });
 }
@@ -130,8 +140,8 @@ export function useHasEngineFeature(
 ) {
   const query = useEngineSystemHealth(instanceUrl);
   return {
-    query,
     isSupported: !!query.data?.features?.includes(feature),
+    query,
   };
 }
 
@@ -155,7 +165,6 @@ export function useEngineQueueMetrics(params: {
   const pollInterval = params.pollInterval || false;
 
   return useQuery({
-    queryKey: [...engineKeys.queueMetrics(instanceUrl), authToken],
     queryFn: async () => {
       const res = await fetch(`${instanceUrl}system/queue`, {
         headers: getEngineRequestHeaders(authToken),
@@ -165,6 +174,7 @@ export function useEngineQueueMetrics(params: {
       }
       return (await res.json()) as EngineSystemQueueMetrics;
     },
+    queryKey: [...engineKeys.queueMetrics(instanceUrl), authToken],
     refetchInterval: pollInterval,
   });
 }
@@ -184,13 +194,12 @@ export function useEngineGetDeploymentPublicConfiguration(
   input: GetDeploymentPublicConfigurationInput,
 ) {
   return useQuery<DeploymentPublicConfigurationResponse>({
-    queryKey: engineKeys.deploymentPublicConfiguration(),
     queryFn: async () => {
       const res = await apiServerProxy<{
         data: DeploymentPublicConfigurationResponse;
       }>({
-        pathname: `/v1/teams/${input.teamSlug}/engine/deployments/public-configuration`,
         method: "GET",
+        pathname: `/v1/teams/${input.teamSlug}/engine/deployments/public-configuration`,
       });
 
       if (!res.ok) {
@@ -200,6 +209,7 @@ export function useEngineGetDeploymentPublicConfiguration(
       const json = res.data;
       return json.data;
     },
+    queryKey: engineKeys.deploymentPublicConfiguration(),
   });
 }
 
@@ -213,14 +223,14 @@ export function useEngineUpdateDeployment() {
   return useMutation({
     mutationFn: async (input: UpdateDeploymentInput) => {
       const res = await apiServerProxy({
-        pathname: `/v1/teams/${input.teamSlug}/engine/deployments/${input.deploymentId}`,
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({
           serverVersion: input.serverVersion,
         }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+        pathname: `/v1/teams/${input.teamSlug}/engine/deployments/${input.deploymentId}`,
       });
 
       if (!res.ok) {
@@ -240,8 +250,8 @@ export async function removeEngineFromDashboard({
   teamIdOrSlug,
 }: RemoveEngineFromDashboardIParams) {
   const res = await apiServerProxy({
-    pathname: `/v1/teams/${teamIdOrSlug}/engine/${instanceId}`,
     method: "DELETE",
+    pathname: `/v1/teams/${teamIdOrSlug}/engine/${instanceId}`,
   });
 
   if (!res.ok) {
@@ -261,12 +271,12 @@ export async function deleteCloudHostedEngine({
   feedback,
 }: DeleteCloudHostedEngineParams) {
   const res = await apiServerProxy({
-    pathname: `/v2/engine/deployments/${deploymentId}/infrastructure/delete`,
-    method: "POST",
+    body: JSON.stringify({ feedback, reason }),
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ reason, feedback }),
+    method: "POST",
+    pathname: `/v2/engine/deployments/${deploymentId}/infrastructure/delete`,
   });
 
   if (!res.ok) {
@@ -288,12 +298,12 @@ export async function editEngineInstance({
   url,
 }: EditEngineInstanceParams) {
   const res = await apiServerProxy({
-    pathname: `/v1/teams/${teamIdOrSlug}/engine/${instanceId}`,
-    method: "PUT",
+    body: JSON.stringify({ name, url }),
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ name, url }),
+    method: "PUT",
+    pathname: `/v1/teams/${teamIdOrSlug}/engine/${instanceId}`,
   });
 
   if (!res.ok) {
@@ -373,7 +383,7 @@ export function useEngineTransactions(params: {
   const { instanceUrl, autoUpdate, authToken } = params;
 
   return useQuery({
-    queryKey: engineKeys.transactions(instanceUrl, params),
+    placeholderData: keepPreviousData,
     queryFn: async () => {
       const url = new URL(`${instanceUrl}transaction/get-all`);
       if (params.queryParams) {
@@ -387,16 +397,16 @@ export function useEngineTransactions(params: {
       }
 
       const res = await fetch(url, {
-        method: "GET",
         headers: getEngineRequestHeaders(authToken),
+        method: "GET",
       });
 
       const json = await res.json();
 
       return (json.result as TransactionResponse) || {};
     },
+    queryKey: engineKeys.transactions(instanceUrl, params),
     refetchInterval: autoUpdate ? 4_000 : false,
-    placeholderData: keepPreviousData,
   });
 }
 
@@ -418,17 +428,17 @@ export function useEngineWalletConfig(params: {
 }) {
   const { instanceUrl, authToken } = params;
   return useQuery<WalletConfigResponse>({
-    queryKey: engineKeys.walletConfig(instanceUrl),
+    enabled: !!instanceUrl,
     queryFn: async () => {
       const res = await fetch(`${instanceUrl}configuration/wallets`, {
-        method: "GET",
         headers: getEngineRequestHeaders(authToken),
+        method: "GET",
       });
 
       const json = await res.json();
       return json.result;
     },
-    enabled: !!instanceUrl,
+    queryKey: engineKeys.walletConfig(instanceUrl),
   });
 }
 
@@ -449,15 +459,15 @@ export function useEngineBackendWalletBalance(params: {
   const { instanceUrl, address, authToken, chainId } = params;
 
   return useQuery({
-    queryKey: engineKeys.backendWalletBalance(address, chainId),
+    enabled: !!instanceUrl && !!address && !!chainId,
     queryFn: async () => {
       invariant(chainId, "chainId is required");
 
       const res = await fetch(
         `${instanceUrl}backend-wallet/${chainId}/${address}/get-balance`,
         {
-          method: "GET",
           headers: getEngineRequestHeaders(authToken),
+          method: "GET",
         },
       );
 
@@ -465,7 +475,7 @@ export function useEngineBackendWalletBalance(params: {
 
       return (json.result as CurrencyValue) || {};
     },
-    enabled: !!instanceUrl && !!address && !!chainId,
+    queryKey: engineKeys.backendWalletBalance(address, chainId),
   });
 }
 
@@ -483,11 +493,11 @@ export function useEnginePermissions(params: {
   const address = useActiveAccount()?.address;
 
   return useQuery({
-    queryKey: engineKeys.permissions(instanceUrl),
+    enabled: !!instanceUrl && !!address,
     queryFn: async () => {
       const res = await fetch(`${instanceUrl}auth/permissions/get-all`, {
-        method: "GET",
         headers: getEngineRequestHeaders(authToken),
+        method: "GET",
       });
 
       if (res.status !== 200) {
@@ -498,8 +508,7 @@ export function useEnginePermissions(params: {
 
       return (json.result as EngineAdmin[]) || [];
     },
-
-    enabled: !!instanceUrl && !!address,
+    queryKey: engineKeys.permissions(instanceUrl),
   });
 }
 
@@ -518,18 +527,18 @@ export function useEngineAccessTokens(params: {
 }) {
   const { instanceUrl, authToken } = params;
   return useQuery({
-    queryKey: engineKeys.accessTokens(instanceUrl),
+    enabled: !!instanceUrl,
     queryFn: async () => {
       const res = await fetch(`${instanceUrl}auth/access-tokens/get-all`, {
-        method: "GET",
         headers: getEngineRequestHeaders(authToken),
+        method: "GET",
       });
 
       const json = await res.json();
 
       return (json.result as AccessToken[]) || [];
     },
-    enabled: !!instanceUrl,
+    queryKey: engineKeys.accessTokens(instanceUrl),
   });
 }
 
@@ -551,18 +560,18 @@ export function useEngineKeypairs(params: {
   const { instanceUrl, authToken } = params;
 
   return useQuery({
-    queryKey: engineKeys.keypairs(instanceUrl),
+    enabled: !!instanceUrl,
     queryFn: async () => {
       const res = await fetch(`${instanceUrl}auth/keypair/get-all`, {
-        method: "GET",
         headers: getEngineRequestHeaders(authToken),
+        method: "GET",
       });
 
       const json = await res.json();
 
       return (json.result as Keypair[]) || [];
     },
-    enabled: !!instanceUrl,
+    queryKey: engineKeys.keypairs(instanceUrl),
   });
 }
 
@@ -584,9 +593,9 @@ export function useEngineAddKeypair(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}auth/keypair/add`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -620,9 +629,9 @@ export function useEngineRemoveKeypair(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}auth/keypair/remove`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -656,18 +665,18 @@ export function useEngineRelayer(params: {
   const { instanceUrl, authToken } = params;
 
   return useQuery({
-    queryKey: engineKeys.relayers(instanceUrl),
+    enabled: !!instanceUrl,
     queryFn: async () => {
       const res = await fetch(`${instanceUrl}relayer/get-all`, {
-        method: "GET",
         headers: getEngineRequestHeaders(authToken),
+        method: "GET",
       });
 
       const json = await res.json();
 
       return (json.result as EngineRelayer[]) || [];
     },
-    enabled: !!instanceUrl,
+    queryKey: engineKeys.relayers(instanceUrl),
   });
 }
 
@@ -691,9 +700,9 @@ export function useEngineCreateRelayer(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}relayer/create`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -727,9 +736,9 @@ export function useEngineRevokeRelayer(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}relayer/revoke`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -768,9 +777,9 @@ export function useEngineUpdateRelayer(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}relayer/update`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -805,18 +814,18 @@ export function useEngineWebhooks(params: {
   const { instanceUrl, authToken } = params;
 
   return useQuery({
-    queryKey: engineKeys.webhooks(instanceUrl),
+    enabled: !!instanceUrl,
     queryFn: async () => {
       const res = await fetch(`${instanceUrl}webhooks/get-all`, {
-        method: "GET",
         headers: getEngineRequestHeaders(authToken),
+        method: "GET",
       });
 
       const json = await res.json();
 
       return (json.result as EngineWebhook[]) || [];
     },
-    enabled: !!instanceUrl,
+    queryKey: engineKeys.webhooks(instanceUrl),
   });
 }
 
@@ -853,9 +862,9 @@ export function useEngineSetWalletConfig(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}configuration/wallets`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -897,9 +906,9 @@ export function useEngineCreateBackendWallet(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}backend-wallet/create`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -934,9 +943,9 @@ export function useEngineUpdateBackendWallet(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}backend-wallet/update`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -981,9 +990,9 @@ export function useEngineImportBackendWallet(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}backend-wallet/import`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -1018,8 +1027,8 @@ export function useEngineDeleteBackendWallet(params: {
       const res = await fetch(
         `${instanceUrl}backend-wallet/${input.walletAddress}`,
         {
-          method: "DELETE",
           headers: getEngineRequestHeaders(authToken),
+          method: "DELETE",
         },
       );
       const json = await res.json();
@@ -1049,9 +1058,9 @@ export function useEngineGrantPermissions(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}auth/permissions/grant`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -1085,9 +1094,9 @@ export function useEngineRevokePermissions(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}auth/permissions/revoke`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -1121,9 +1130,9 @@ export function useEngineCreateAccessToken(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}auth/access-tokens/create`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify({}),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -1157,9 +1166,9 @@ export function useEngineRevokeAccessToken(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}auth/access-tokens/revoke`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -1194,9 +1203,9 @@ export function useEngineUpdateAccessToken(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}auth/access-tokens/update`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -1232,9 +1241,9 @@ export function useEngineCreateWebhook(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}webhooks/create`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -1267,9 +1276,9 @@ export function useEngineDeleteWebhook(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}webhooks/revoke`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
       if (json.error) {
@@ -1305,9 +1314,9 @@ export function useEngineTestWebhook(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}webhooks/${input.id}/test`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify({}),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
       if (json.error) {
@@ -1344,16 +1353,16 @@ export function useEngineSendTokens(params: {
       const res = await fetch(
         `${instanceUrl}backend-wallet/${input.chainId}/transfer`,
         {
-          method: "POST",
+          body: JSON.stringify({
+            amount: input.amount.toString(),
+            currencyAddress: input.currencyAddress,
+            to: input.toAddress,
+          }),
           headers: {
             ...getEngineRequestHeaders(authToken),
             "x-backend-wallet-address": input.fromAddress,
           },
-          body: JSON.stringify({
-            to: input.toAddress,
-            amount: input.amount.toString(),
-            currencyAddress: input.currencyAddress,
-          }),
+          method: "POST",
         },
       );
       const json = await res.json();
@@ -1374,17 +1383,17 @@ export function useEngineCorsConfiguration(params: {
   const { instanceUrl, authToken } = params;
 
   return useQuery({
-    queryKey: engineKeys.corsUrls(instanceUrl),
     queryFn: async () => {
       const res = await fetch(`${instanceUrl}configuration/cors`, {
-        method: "GET",
         headers: getEngineRequestHeaders(authToken),
+        method: "GET",
       });
 
       const json = await res.json();
 
       return (json.result as string[]) || [];
     },
+    queryKey: engineKeys.corsUrls(instanceUrl),
   });
 }
 
@@ -1404,9 +1413,9 @@ export function useEngineSetCorsConfiguration(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}configuration/cors`, {
-        method: "PUT",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "PUT",
       });
       const json = await res.json();
 
@@ -1436,18 +1445,17 @@ export function useEngineIpAllowlistConfiguration(params: {
   const { data: health } = useEngineSystemHealth(instanceUrl);
 
   return useQuery({
-    queryKey: engineKeys.ipAllowlist(instanceUrl),
+    enabled: health?.features?.includes("IP_ALLOWLIST"),
     queryFn: async () => {
       const res = await fetch(`${instanceUrl}configuration/ip-allowlist`, {
-        method: "GET",
         headers: getEngineRequestHeaders(authToken),
+        method: "GET",
       });
 
       const json = await res.json();
       return (json.result as string[]) || [];
     },
-
-    enabled: health?.features?.includes("IP_ALLOWLIST"),
+    queryKey: engineKeys.ipAllowlist(instanceUrl),
   });
 }
 
@@ -1467,9 +1475,9 @@ export function useEngineSetIpAllowlistConfiguration(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}configuration/ip-allowlist`, {
-        method: "PUT",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "PUT",
       });
       const json = await res.json();
 
@@ -1509,16 +1517,16 @@ export function useEngineContractSubscription(params: {
 }) {
   const { instanceUrl, authToken } = params;
   return useQuery({
-    queryKey: engineKeys.contractSubscriptions(instanceUrl),
     queryFn: async () => {
       const res = await fetch(`${instanceUrl}contract-subscriptions/get-all`, {
-        method: "GET",
         headers: getEngineRequestHeaders(authToken),
+        method: "GET",
       });
 
       const json = await res.json();
       return json.result as EngineContractSubscription[];
     },
+    queryKey: engineKeys.contractSubscriptions(instanceUrl),
   });
 }
 
@@ -1544,9 +1552,9 @@ export function useEngineAddContractSubscription(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}contract-subscriptions/add`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -1581,9 +1589,9 @@ export function useEngineRemoveContractSubscription(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}contract-subscriptions/remove`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -1611,20 +1619,20 @@ export function useEngineSubscriptionsLastBlock(params: {
   const { instanceUrl, chainId, autoUpdate, authToken } = params;
 
   return useQuery({
-    queryKey: engineKeys.contractSubscriptionsLastBlock(instanceUrl, chainId),
+    enabled: !!instanceUrl,
     queryFn: async () => {
       const response = await fetch(
         `${instanceUrl}contract-subscriptions/last-block?chain=${chainId}`,
         {
-          method: "GET",
           headers: getEngineRequestHeaders(authToken),
+          method: "GET",
         },
       );
 
       const json = await response.json();
       return json.result.lastBlock as number;
     },
-    enabled: !!instanceUrl,
+    queryKey: engineKeys.contractSubscriptionsLastBlock(instanceUrl, chainId),
 
     refetchInterval: autoUpdate ? 5_000 : false,
   });
@@ -1649,7 +1657,8 @@ export function useEngineSystemMetrics(
   const [enabled, setEnabled] = useState(true);
 
   return useQuery({
-    queryKey: engineKeys.systemMetrics(engineId),
+    // Poll every 5s unless disabled.
+    enabled,
     queryFn: async () => {
       const res = await apiServerProxy({
         method: "GET",
@@ -1663,9 +1672,7 @@ export function useEngineSystemMetrics(
       const json = res.data as EngineResourceMetrics;
       return json;
     },
-
-    // Poll every 5s unless disabled.
-    enabled,
+    queryKey: engineKeys.systemMetrics(engineId),
     refetchInterval: 5_000,
   });
 }
@@ -1684,13 +1691,12 @@ export interface EngineAlertRule {
 
 export function useEngineAlertRules(engineId: string, teamIdOrSlug: string) {
   return useQuery({
-    queryKey: engineKeys.alertRules(engineId),
     queryFn: async () => {
       const res = await apiServerProxy<{
         data: EngineAlertRule[];
       }>({
-        pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/alert-rules`,
         method: "GET",
+        pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/alert-rules`,
       });
 
       if (!res.ok) {
@@ -1700,6 +1706,7 @@ export function useEngineAlertRules(engineId: string, teamIdOrSlug: string) {
       const json = res.data;
       return json.data;
     },
+    queryKey: engineKeys.alertRules(engineId),
   });
 }
 
@@ -1718,17 +1725,16 @@ export function useEngineAlerts(
   offset = 0,
 ) {
   return useQuery({
-    queryKey: engineKeys.alerts(engineId),
     queryFn: async () => {
       const res = await apiServerProxy<{
         data: EngineAlert[];
       }>({
+        method: "GET",
         pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/alerts`,
         searchParams: {
           limit: `${limit}`,
           offset: `${offset}`,
         },
-        method: "GET",
       });
 
       if (!res.ok) {
@@ -1738,17 +1744,18 @@ export function useEngineAlerts(
       const json = res.data;
       return json.data;
     },
+    queryKey: engineKeys.alerts(engineId),
   });
 }
 
 export const EngineNotificationChannelTypeConfig = {
-  slack: {
-    display: "Slack",
-    valueDisplay: "Slack Webhook URL",
-  },
   email: {
     display: "Email",
     valueDisplay: "Email Address",
+  },
+  slack: {
+    display: "Slack",
+    valueDisplay: "Slack Webhook URL",
   },
 } as const;
 
@@ -1772,13 +1779,12 @@ export function useEngineNotificationChannels(
   teamIdOrSlug: string,
 ) {
   return useQuery({
-    queryKey: engineKeys.notificationChannels(engineId),
     queryFn: async () => {
       const res = await apiServerProxy<{
         data: EngineNotificationChannel[];
       }>({
-        pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/notification-channels`,
         method: "GET",
+        pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/notification-channels`,
       });
 
       if (!res.ok) {
@@ -1788,6 +1794,7 @@ export function useEngineNotificationChannels(
       const json = res.data;
       return json.data;
     },
+    queryKey: engineKeys.notificationChannels(engineId),
   });
 }
 
@@ -1808,12 +1815,12 @@ export function useEngineCreateNotificationChannel(
       const res = await apiServerProxy<{
         data: EngineNotificationChannel;
       }>({
-        pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/notification-channels`,
-        method: "POST",
+        body: JSON.stringify(input),
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(input),
+        method: "POST",
+        pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/notification-channels`,
       });
 
       if (!res.ok) {
@@ -1840,8 +1847,8 @@ export function useEngineDeleteNotificationChannel(
   return useMutation({
     mutationFn: async (notificationChannelId: string) => {
       const res = await apiServerProxy({
-        pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/notification-channels/${notificationChannelId}`,
         method: "DELETE",
+        pathname: `/v1/teams/${teamIdOrSlug}/engine/${engineId}/notification-channels/${notificationChannelId}`,
       });
 
       if (!res.ok) {
@@ -1881,20 +1888,20 @@ export function useEngineWalletCredentials(params: {
   const { instanceUrl, authToken, page = 1, limit = 100 } = params;
 
   return useQuery({
-    queryKey: [...engineKeys.walletCredentials(instanceUrl), page, limit],
+    enabled: !!instanceUrl,
     queryFn: async () => {
       const res = await fetch(
         `${instanceUrl}wallet-credentials?page=${page}&limit=${limit}`,
         {
-          method: "GET",
           headers: getEngineRequestHeaders(authToken),
+          method: "GET",
         },
       );
 
       const json = await res.json();
       return (json.result as WalletCredential[]) || [];
     },
-    enabled: !!instanceUrl,
+    queryKey: [...engineKeys.walletCredentials(instanceUrl), page, limit],
   });
 }
 
@@ -1910,9 +1917,9 @@ export function useEngineCreateWalletCredential(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}wallet-credentials`, {
-        method: "POST",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "POST",
       });
       const json = await res.json();
 
@@ -1951,9 +1958,9 @@ export function useEngineUpdateWalletCredential(params: {
       invariant(instanceUrl, "instance is required");
 
       const res = await fetch(`${instanceUrl}wallet-credentials/${id}`, {
-        method: "PUT",
-        headers: getEngineRequestHeaders(authToken),
         body: JSON.stringify(input),
+        headers: getEngineRequestHeaders(authToken),
+        method: "PUT",
       });
       const json = await res.json();
 

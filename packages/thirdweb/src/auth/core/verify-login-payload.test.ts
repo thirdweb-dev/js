@@ -24,11 +24,6 @@ describe("verifyLoginPayload", () => {
       client: TEST_CLIENT,
       domain: "example.com",
       login: {
-        payloadExpirationTimeSeconds: 3600,
-        statement: "This is a statement",
-        version: "1.0",
-        resources: ["resource1", "resource2"],
-        uri: "https://example.com",
         nonce: {
           generate() {
             return "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
@@ -37,6 +32,11 @@ describe("verifyLoginPayload", () => {
             return uuid === "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
           },
         },
+        payloadExpirationTimeSeconds: 3600,
+        resources: ["resource1", "resource2"],
+        statement: "This is a statement",
+        uri: "https://example.com",
+        version: "1.0",
       },
     };
 
@@ -47,8 +47,8 @@ describe("verifyLoginPayload", () => {
 
     // sign the payload
     const signatureResult = await signLoginPayload({
-      payload: payloadToSign,
       account: TEST_ACCOUNT_A,
+      payload: payloadToSign,
     });
 
     // verify the payload
@@ -67,11 +67,6 @@ describe("verifyLoginPayload", () => {
       client: TEST_CLIENT,
       domain: "example.com",
       login: {
-        payloadExpirationTime: 3600000,
-        statement: "This is a statement",
-        version: "1.0",
-        resources: ["resource1", "resource2"],
-        uri: "https://example.com",
         nonce: {
           generate() {
             return "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
@@ -80,6 +75,11 @@ describe("verifyLoginPayload", () => {
             return uuid === "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
           },
         },
+        payloadExpirationTime: 3600000,
+        resources: ["resource1", "resource2"],
+        statement: "This is a statement",
+        uri: "https://example.com",
+        version: "1.0",
       },
     };
 
@@ -90,8 +90,8 @@ describe("verifyLoginPayload", () => {
 
     // sign the payload
     const signatureResult = await signLoginPayload({
-      payload: payloadToSign,
       account: TEST_ACCOUNT_A,
+      payload: payloadToSign,
     });
 
     // verify the payload
@@ -110,11 +110,6 @@ describe("verifyLoginPayload", () => {
       client: TEST_CLIENT,
       domain: "example.com",
       login: {
-        payloadExpirationTime: 3600000,
-        statement: "This is a statement",
-        version: "1.0",
-        resources: ["resource1", "resource2"],
-        uri: "https://example.com",
         nonce: {
           generate() {
             return "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
@@ -123,6 +118,11 @@ describe("verifyLoginPayload", () => {
             return uuid === "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
           },
         },
+        payloadExpirationTime: 3600000,
+        resources: ["resource1", "resource2"],
+        statement: "This is a statement",
+        uri: "https://example.com",
+        version: "1.0",
       },
     };
 
@@ -133,9 +133,9 @@ describe("verifyLoginPayload", () => {
 
     // sign the payload
     const signatureResult = await signLoginPayload({
-      payload: payloadToSign,
       // this is the wrong account!
       account: TEST_ACCOUNT_B,
+      payload: payloadToSign,
     });
 
     // verify the payload

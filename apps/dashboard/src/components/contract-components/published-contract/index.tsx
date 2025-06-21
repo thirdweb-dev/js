@@ -1,7 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Divider, Flex, GridItem, List, ListItem } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
@@ -23,6 +21,8 @@ import { useActiveAccount } from "thirdweb/react";
 import { download } from "thirdweb/storage";
 import invariant from "tiny-invariant";
 import { Card, Heading, LinkButton, Text } from "tw-components";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import type { PublishedContractWithVersion } from "../fetch-contracts-with-versions";
 import {
   usePublishedContractEvents,
@@ -69,7 +69,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
   const licenses = correctAndUniqueLicenses(publishedContract?.licenses || []);
 
   const sources = useQuery({
-    queryKey: ["sources", publishedContract.publishMetadataUri],
+    enabled: !!publishedContract.metadata.sources,
     queryFn: async () => {
       invariant(
         publishedContract.metadata.sources,
@@ -85,7 +85,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
         .slice()
         .reverse();
     },
-    enabled: !!publishedContract.metadata.sources,
+    queryKey: ["sources", publishedContract.publishMetadataUri],
   });
 
   const implementationAddresses =
@@ -110,13 +110,13 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
         <Flex flexDir="column" gap={6}>
           {address === publishedContract.publisher && (
             <LinkButton
-              ml="auto"
-              size="sm"
-              variant="outline"
-              leftIcon={<PencilIcon className="size-3" />}
               href={`/contracts/publish/${encodeURIComponent(
                 publishedContract.publishMetadataUri.replace("ipfs://", ""),
               )}`}
+              leftIcon={<PencilIcon className="size-3" />}
+              ml="auto"
+              size="sm"
+              variant="outline"
             >
               Edit
             </LinkButton>
@@ -129,25 +129,25 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
 
           {publishedContract?.changelog && (
             <Card as={Flex} flexDir="column" gap={2} p={0}>
-              <Heading px={6} pt={5} pb={2} size="title.sm">
+              <Heading pb={2} pt={5} px={6} size="title.sm">
                 {publishedContract?.version} Release Notes
               </Heading>
               <Divider />
 
               <MarkdownRenderer
-                markdownText={publishedContract?.changelog}
                 className="px-6 pt-2 pb-5"
+                markdownText={publishedContract?.changelog}
               />
             </Card>
           )}
           {contractFunctions && (
             <Card p={0}>
               <ContractFunctionsOverview
-                functions={contractFunctions}
-                events={contractEvents}
-                sources={sources.data}
                 abi={publishedContract?.abi}
+                events={contractEvents}
+                functions={contractFunctions}
                 isLoggedIn={isLoggedIn}
+                sources={sources.data}
               />
             </Card>
           )}
@@ -158,8 +158,8 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
         <Flex flexDir="column" gap={6}>
           {publishedContract.publisher && (
             <PublisherHeader
-              wallet={publishedContract.publisher}
               client={client}
+              wallet={publishedContract.publisher}
             />
           )}
 
@@ -168,87 +168,84 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
           <div className="flex flex-col gap-4">
             <h4 className="font-semibold text-xl tracking-tight">Details</h4>
             <List as={Flex} flexDir="column" gap={5}>
-              <>
-                {publishedContract.publishTimestamp && (
-                  <ListItem>
-                    <Flex gap={3} alignItems="flex-start">
-                      <CalendarDaysIcon className="size-5 text-muted-foreground" />
-                      <Flex direction="column" gap={1}>
-                        <Heading as="h5" size="label.sm">
-                          Publish Date
-                        </Heading>
-                        <Text size="body.md" lineHeight={1.2}>
-                          {publishDate}
-                        </Text>
-                      </Flex>
-                    </Flex>
-                  </ListItem>
-                )}
-                {publishedContract?.audit && (
-                  <ListItem>
-                    <Flex gap={3} alignItems="flex-start">
-                      <ShieldCheckIcon className="size-5 text-green-500" />
-                      <Flex direction="column" gap={1}>
-                        <Heading as="h5" size="label.sm">
-                          Audit Report
-                        </Heading>
-                        <Text size="body.md" lineHeight={1.2}>
-                          <Link
-                            href={replaceIpfsUrl(
-                              publishedContract.audit,
-                              client,
-                            )}
-                            target="_blank"
-                            className="text-link-foreground hover:text-foreground"
-                          >
-                            View Audit Report
-                          </Link>
-                        </Text>
-                      </Flex>
-                    </Flex>
-                  </ListItem>
-                )}
+              {publishedContract.publishTimestamp && (
                 <ListItem>
-                  <Flex gap={3} alignItems="flex-start">
-                    <BookOpenTextIcon className="size-5 text-muted-foreground" />
+                  <Flex alignItems="flex-start" gap={3}>
+                    <CalendarDaysIcon className="size-5 text-muted-foreground" />
                     <Flex direction="column" gap={1}>
                       <Heading as="h5" size="label.sm">
-                        License
-                        {licenses.length > 1 ? "s" : ""}
+                        Publish Date
                       </Heading>
-                      <Text size="body.md" lineHeight={1.2}>
-                        {licenses.join(", ") || "None"}
+                      <Text lineHeight={1.2} size="body.md">
+                        {publishDate}
                       </Text>
                     </Flex>
                   </Flex>
                 </ListItem>
-                {(publishedContract?.isDeployableViaProxy &&
-                  hasImplementationAddresses) ||
-                (publishedContract?.isDeployableViaFactory &&
-                  hasFactoryAddresses) ? (
-                  <ListItem>
-                    <Flex gap={2} alignItems="flex-start">
-                      <ServerIcon className="size-5 text-muted-foreground" />
-                      <Flex direction="column" gap={1}>
-                        <Heading as="h5" size="label.sm">
-                          {publishedContract?.isDeployableViaFactory
-                            ? "Factory"
-                            : "Proxy"}{" "}
-                          Enabled
-                        </Heading>
-                      </Flex>
+              )}
+              {publishedContract?.audit && (
+                <ListItem>
+                  <Flex alignItems="flex-start" gap={3}>
+                    <ShieldCheckIcon className="size-5 text-green-500" />
+                    <Flex direction="column" gap={1}>
+                      <Heading as="h5" size="label.sm">
+                        Audit Report
+                      </Heading>
+                      <Text lineHeight={1.2} size="body.md">
+                        <Link
+                          className="text-link-foreground hover:text-foreground"
+                          href={replaceIpfsUrl(publishedContract.audit, client)}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          View Audit Report
+                        </Link>
+                      </Text>
                     </Flex>
-                  </ListItem>
-                ) : null}
-              </>
+                  </Flex>
+                </ListItem>
+              )}
+              <ListItem>
+                <Flex alignItems="flex-start" gap={3}>
+                  <BookOpenTextIcon className="size-5 text-muted-foreground" />
+                  <Flex direction="column" gap={1}>
+                    <Heading as="h5" size="label.sm">
+                      License
+                      {licenses.length > 1 ? "s" : ""}
+                    </Heading>
+                    <Text lineHeight={1.2} size="body.md">
+                      {licenses.join(", ") || "None"}
+                    </Text>
+                  </Flex>
+                </Flex>
+              </ListItem>
+              {(publishedContract?.isDeployableViaProxy &&
+                hasImplementationAddresses) ||
+              (publishedContract?.isDeployableViaFactory &&
+                hasFactoryAddresses) ? (
+                <ListItem>
+                  <Flex alignItems="flex-start" gap={2}>
+                    <ServerIcon className="size-5 text-muted-foreground" />
+                    <Flex direction="column" gap={1}>
+                      <Heading as="h5" size="label.sm">
+                        {publishedContract?.isDeployableViaFactory
+                          ? "Factory"
+                          : "Proxy"}{" "}
+                        Enabled
+                      </Heading>
+                    </Flex>
+                  </Flex>
+                </ListItem>
+              ) : null}
             </List>
           </div>
 
           <Separator />
 
-          <Button asChild variant="outline" className="w-full gap-2 bg-card">
+          <Button asChild className="w-full gap-2 bg-card" variant="outline">
             <Link
               href="https://portal.thirdweb.com/contracts/publish/overview"
+              rel="noopener noreferrer"
               target="_blank"
             >
               Learn more about Publish{" "}
@@ -286,8 +283,8 @@ async function fetchSourceFilesFromMetadata(
           const source = await Promise.race([
             (
               await download({
-                uri: `ipfs://${ipfsHash}`,
                 client,
+                uri: `ipfs://${ipfsHash}`,
               })
             ).text(),
             timeout,

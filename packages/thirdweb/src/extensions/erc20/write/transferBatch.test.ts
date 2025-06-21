@@ -9,8 +9,8 @@ import {
   TEST_ACCOUNT_D,
 } from "~test/test-wallets.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import { deployERC20Contract } from "../../../extensions/prebuilts/deploy-erc20.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
@@ -26,14 +26,14 @@ let contract: ThirdwebContract;
 describe.runIf(process.env.TW_SECRET_KEY)("erc20: transferBatch", () => {
   beforeAll(async () => {
     const address = await deployERC20Contract({
-      type: "TokenERC20",
       account,
       chain,
       client,
       params: {
-        name: "",
         contractURI: TEST_CONTRACT_URI,
+        name: "",
       },
+      type: "TokenERC20",
     });
     contract = getContract({
       address,
@@ -44,46 +44,46 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc20: transferBatch", () => {
   it("should transfer tokens to multiple recipients", async () => {
     // Mint 200 tokens
     await sendAndConfirmTransaction({
-      transaction: mintTo({ contract, to: account.address, amount: 200 }),
       account,
+      transaction: mintTo({ amount: 200, contract, to: account.address }),
     });
 
     // Send 25 tokens to each account B, C and D
     await sendAndConfirmTransaction({
       account,
       transaction: transferBatch({
-        contract,
         batch: [
           {
-            to: TEST_ACCOUNT_B.address,
             amount: 25,
+            to: TEST_ACCOUNT_B.address,
           },
           {
+            amount: 25,
             to: TEST_ACCOUNT_C.address,
-            amount: 25,
           },
           {
+            amount: 25,
             to: TEST_ACCOUNT_D.address,
-            amount: 25,
           },
           {
+            amount: 25,
             to: TEST_ACCOUNT_B.address.toLowerCase(),
-            amount: 25,
           },
           {
-            to: TEST_ACCOUNT_B.address,
             amountWei: 25n * 10n ** 18n,
+            to: TEST_ACCOUNT_B.address,
           },
         ],
+        contract,
       }),
     });
 
     // After that, each address A, B, C and D should have 25 tokens
     const [balanceA, balanceB, balanceC, balanceD] = await Promise.all([
-      balanceOf({ contract, address: TEST_ACCOUNT_A.address }),
-      balanceOf({ contract, address: TEST_ACCOUNT_B.address }),
-      balanceOf({ contract, address: TEST_ACCOUNT_C.address }),
-      balanceOf({ contract, address: TEST_ACCOUNT_D.address }),
+      balanceOf({ address: TEST_ACCOUNT_A.address, contract }),
+      balanceOf({ address: TEST_ACCOUNT_B.address, contract }),
+      balanceOf({ address: TEST_ACCOUNT_C.address, contract }),
+      balanceOf({ address: TEST_ACCOUNT_D.address, contract }),
     ]);
 
     expect(balanceA).toBe(75n * 10n ** 18n);
@@ -94,79 +94,79 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc20: transferBatch", () => {
 
   it("should optimize the transfer content", async () => {
     const content = await optimizeTransferContent({
-      contract,
       batch: [
         {
+          amount: 25,
           to: TEST_ACCOUNT_B.address,
-          amount: 25,
         },
         {
+          amount: 25,
           to: TEST_ACCOUNT_C.address,
-          amount: 25,
         },
         {
+          amount: 25,
           to: TEST_ACCOUNT_D.address,
-          amount: 25,
         },
         {
+          amount: 25,
           // Should work
           to: TEST_ACCOUNT_B.address.toLowerCase(),
-          amount: 25,
         },
         {
-          to: TEST_ACCOUNT_B.address,
           amountWei: 25n * 10n ** 18n,
+          to: TEST_ACCOUNT_B.address,
         },
       ],
+      contract,
     });
 
     expect(content).toStrictEqual([
       {
-        to: TEST_ACCOUNT_B.address,
         amountWei: 75n * 10n ** 18n,
+        to: TEST_ACCOUNT_B.address,
       },
       {
+        amountWei: 25n * 10n ** 18n,
         to: TEST_ACCOUNT_C.address,
-        amountWei: 25n * 10n ** 18n,
       },
       {
-        to: TEST_ACCOUNT_D.address,
         amountWei: 25n * 10n ** 18n,
+        to: TEST_ACCOUNT_D.address,
       },
     ]);
   });
 
   it("an already-optimized content should not be changed", async () => {
     const content = await optimizeTransferContent({
-      contract,
       batch: [
         {
-          to: TEST_ACCOUNT_B.address,
           amountWei: 25n * 10n ** 18n,
+          to: TEST_ACCOUNT_B.address,
         },
         {
+          amount: 25,
           to: TEST_ACCOUNT_C.address,
-          amount: 25,
         },
         {
-          to: TEST_ACCOUNT_D.address,
           amount: 25,
+          to: TEST_ACCOUNT_D.address,
         },
       ],
+      contract,
     });
 
     expect(content).toStrictEqual([
       {
+        amountWei: 25n * 10n ** 18n,
         to: TEST_ACCOUNT_B.address,
-        amountWei: 25n * 10n ** 18n,
       },
       {
+        amountWei: 25n * 10n ** 18n,
         to: TEST_ACCOUNT_C.address,
-        amountWei: 25n * 10n ** 18n,
       },
       {
-        to: TEST_ACCOUNT_D.address,
         amountWei: 25n * 10n ** 18n,
+        to: TEST_ACCOUNT_D.address,
       },
     ]);
   });

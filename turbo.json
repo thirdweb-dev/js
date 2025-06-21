@@ -2,23 +2,74 @@
   "$schema": "https://turborepo.org/schema.json",
   "globalEnv": ["CI", "TW_SECRET_KEY"],
   "tasks": {
-    "build": {
-      "outputs": ["dist/**"],
-      "dependsOn": ["^build"]
-    },
     "bench": {
       "cache": false,
       "dependsOn": []
     },
-    "typedoc": {
-      "outputs": ["typedoc/**"],
-      "dependsOn": ["^build"]
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
     },
-    "thirdweb-login#build": {
-      "outputs": [".next/**", "!.next/cache/**"],
-      "dependsOn": ["^build"]
+    "clean": {
+      "cache": false
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "e2e": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "fixtures/**"],
+      "outputs": []
+    },
+    "e2e:legacy": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "fixtures/**"],
+      "outputs": []
+    },
+    "fix": {
+      "cache": false,
+      "outputs": []
+    },
+    "format": {
+      "cache": false
+    },
+    "lint": {
+      "cache": false,
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "lint:legacy": {
+      "cache": false,
+      "outputs": []
+    },
+    "playground-web#build": {
+      "dependsOn": ["^build"],
+      "env": ["ENGINE_ACCESS_TOKEN", "ENGINE_BACKEND_WALLET", "ENGINE_URL"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "portal#build": {
+      "dependsOn": ["^build", "thirdweb#typedoc"],
+      "outputs": [".next/**", "!.next/cache/**", "searchIndex.json"]
+    },
+    "portal#dev": {
+      "dependsOn": ["^build", "thirdweb#typedoc"]
+    },
+    "storybook": {
+      "inputs": ["$TURBO_DEFAULT$", "src/**"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "test/**"],
+      "outputs": ["coverage/**"]
+    },
+    "test:legacy": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "src/**", "test/**"],
+      "outputs": ["coverage/**"]
     },
     "thirdweb-dashboard#build": {
+      "dependsOn": ["^build"],
       "env": [
         "SENTRY_AUTH_TOKEN",
         "MORALIS_API_KEY",
@@ -54,77 +105,22 @@
         "NEXT_PUBLIC_NEBULA_URL",
         "INSIGHT_SERVICE_API_KEY"
       ],
-      "outputs": [".next/**", "!.next/cache/**"],
-      "dependsOn": ["^build"]
+      "outputs": [".next/**", "!.next/cache/**"]
     },
-    "portal#build": {
-      "outputs": [".next/**", "!.next/cache/**", "searchIndex.json"],
-      "dependsOn": ["^build", "thirdweb#typedoc"]
-    },
-    "portal#dev": {
-      "dependsOn": ["^build", "thirdweb#typedoc"]
-    },
-    "playground-web#build": {
-      "env": ["ENGINE_ACCESS_TOKEN", "ENGINE_BACKEND_WALLET", "ENGINE_URL"],
-      "outputs": [".next/**", "!.next/cache/**"],
-      "dependsOn": ["^build"]
-    },
-    "wallet-ui#build": {
-      "outputs": [".next/**", "!.next/cache/**"],
+    "thirdweb-dashboard#dev": {
       "dependsOn": ["^build"]
     },
     "thirdweb#update-version": {
       "inputs": ["$TURBO_DEFAULT$", "package.json"],
       "outputs": ["src/version.ts"]
     },
-    "test": {
-      "outputs": ["coverage/**"],
-      "inputs": ["$TURBO_DEFAULT$", "src/**", "test/**"],
-      "dependsOn": ["^build"]
-    },
-    "storybook": {
-      "inputs": ["$TURBO_DEFAULT$", "src/**"]
-    },
-    "test:legacy": {
-      "outputs": ["coverage/**"],
-      "inputs": ["$TURBO_DEFAULT$", "src/**", "test/**"],
-      "dependsOn": ["^build"]
-    },
-    "e2e": {
-      "outputs": [],
-      "inputs": ["$TURBO_DEFAULT$", "src/**", "fixtures/**"],
-      "dependsOn": ["^build"]
-    },
-    "e2e:legacy": {
-      "outputs": [],
-      "inputs": ["$TURBO_DEFAULT$", "src/**", "fixtures/**"],
-      "dependsOn": ["^build"]
-    },
-    "lint": {
+    "typedoc": {
       "dependsOn": ["^build"],
-      "cache": false,
-      "outputs": []
+      "outputs": ["typedoc/**"]
     },
-    "lint:legacy": {
-      "cache": false,
-      "outputs": []
-    },
-    "fix": {
-      "cache": false,
-      "outputs": []
-    },
-    "format": {
-      "cache": false
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "thirdweb-dashboard#dev": {
-      "dependsOn": ["^build"]
-    },
-    "clean": {
-      "cache": false
+    "wallet-ui#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"]
     }
   }
 }

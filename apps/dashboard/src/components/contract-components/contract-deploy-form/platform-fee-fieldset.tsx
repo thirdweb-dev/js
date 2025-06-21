@@ -1,8 +1,8 @@
-import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import Link from "next/link";
 import type { ThirdwebClient } from "thirdweb";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Fieldset } from "./common";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 
@@ -26,8 +26,6 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
           <>
             <FormFieldSetup
               className="grow"
-              label="Recipient Address"
-              isRequired
               errorMessage={
                 form.getFieldState(
                   "deployParams._platformFeeRecipient",
@@ -44,6 +42,8 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
                   happen on your contract.
                 </>
               }
+              isRequired
+              label="Recipient Address"
             >
               <SolidityInput
                 solidityType="address"
@@ -53,8 +53,6 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
             </FormFieldSetup>
 
             <FormFieldSetup
-              label="Percentage"
-              isRequired
               className="shrink-0 md:max-w-[150px]"
               errorMessage={
                 form.getFieldState(
@@ -62,9 +60,10 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
                   form.formState,
                 ).error?.message
               }
+              isRequired
+              label="Percentage"
             >
               <BasisPointsInput
-                value={Number(form.watch("deployParams._platformFeeBps"))}
                 onChange={(value) =>
                   form.setValue(
                     "deployParams._platformFeeBps",
@@ -74,6 +73,7 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
                     },
                   )
                 }
+                value={Number(form.watch("deployParams._platformFeeBps"))}
               />
             </FormFieldSetup>
           </>
@@ -82,9 +82,10 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
             A 2.5% platform fee is deducted from each sale to support ongoing
             platform operations and improvements.{" "}
             <Link
-              target="_blank"
               className="text-blue-500 underline"
               href={"https://thirdweb.com/pricing"}
+              rel="noopener noreferrer"
+              target="_blank"
             >
               See fee breakdown on pricing page.
             </Link>
@@ -94,9 +95,10 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
             A 2.5% platform fee is deducted from each primary sale price to
             support ongoing platform operations and improvements.{" "}
             <Link
-              target="_blank"
               className="text-blue-500 underline"
               href={"https://thirdweb.com/pricing"}
+              rel="noopener noreferrer"
+              target="_blank"
             >
               See fee breakdown on pricing page.
             </Link>

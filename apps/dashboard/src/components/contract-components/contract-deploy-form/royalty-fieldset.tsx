@@ -1,8 +1,8 @@
-import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import type { UseFormRegisterReturn } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Fieldset } from "./common";
 
 export function RoyaltyFieldset(props: {
@@ -31,8 +31,6 @@ export function RoyaltyFieldset(props: {
         <div className="flex flex-col gap-4 md:flex-row">
           <FormFieldSetup
             className="grow"
-            isRequired
-            label="Recipient Address"
             errorMessage={props.royaltyRecipient.errorMessage}
             helperText={
               <>
@@ -40,6 +38,8 @@ export function RoyaltyFieldset(props: {
                 royalties earned from secondary sales of the assets.
               </>
             }
+            isRequired
+            label="Recipient Address"
           >
             <SolidityInput
               solidityType="address"
@@ -49,23 +49,21 @@ export function RoyaltyFieldset(props: {
           </FormFieldSetup>
 
           <FormFieldSetup
-            isRequired
-            label="Percentage"
             className="shrink-0 md:max-w-[150px]"
             errorMessage={props.royaltyBps.errorMessage}
+            isRequired
+            label="Percentage"
           >
             <BasisPointsInput
-              value={Number.isNaN(bpsNumValue) ? 0 : bpsNumValue}
-              onChange={(value) => props.royaltyBps.setValue(value.toString())}
               defaultValue={0}
+              onChange={(value) => props.royaltyBps.setValue(value.toString())}
+              value={Number.isNaN(bpsNumValue) ? 0 : bpsNumValue}
             />
           </FormFieldSetup>
         </div>
 
         {props.transferValidator && (
           <FormFieldSetup
-            isRequired
-            label="Transfer Validator Address"
             errorMessage={props.transferValidator.errorMessage}
             helperText={
               <>
@@ -74,6 +72,8 @@ export function RoyaltyFieldset(props: {
                 disables this validation.
               </>
             }
+            isRequired
+            label="Transfer Validator Address"
           >
             <SolidityInput
               solidityType="address"

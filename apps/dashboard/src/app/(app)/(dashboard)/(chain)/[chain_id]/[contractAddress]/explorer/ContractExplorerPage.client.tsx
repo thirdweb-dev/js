@@ -26,8 +26,8 @@ export const ContractExplorerPageClient: React.FC<ContractExplorePageProps> = ({
   return (
     <ContractExplorerPage
       abi={abiQuery.data}
-      contract={contract}
       chainMetadata={chainMetadata}
+      contract={contract}
       isLoggedIn={isLoggedIn}
     />
   );

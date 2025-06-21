@@ -11,23 +11,25 @@ import { Text } from "./text.js";
 export const ChainName: React.FC<{
   chain: Chain;
   size: "xs" | "sm" | "md" | "lg";
+  color?: "primaryText" | "secondaryText";
   client: ThirdwebClient;
   short?: boolean;
+  style?: React.CSSProperties;
 }> = (props) => {
   const { name } = useChainName(props.chain);
 
   if (name) {
     return (
-      <Text size={props.size}>
+      <Text color={props.color} size={props.size} style={props.style}>
         {props.short ? shorterChainName(name) : name}
       </Text>
     );
   }
 
-  return <Skeleton width="50px" height={fontSize[props.size]} />;
+  return <Skeleton height={fontSize[props.size]} width="50px" />;
 };
 
-function shorterChainName(name: string) {
+export function shorterChainName(name: string) {
   const split = name.split(" ");
   const wordsToRemove = new Set(["mainnet", "testnet", "chain"]);
   return split

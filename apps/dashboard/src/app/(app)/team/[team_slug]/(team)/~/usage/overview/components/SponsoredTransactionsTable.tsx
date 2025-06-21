@@ -1,8 +1,8 @@
 "use client";
-import { analyticsServerProxy } from "@/actions/proxies";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb/dist/types/client/client";
+import { analyticsServerProxy } from "@/actions/proxies";
 import {
   type SponsoredTransaction,
   SponsoredTransactionsTableUI,
@@ -28,15 +28,15 @@ const getSponsoredTransactions = async (
       total: number;
     };
   }>({
-    pathname: "/v2/bundler/sponsored-transactions",
     method: "GET",
+    pathname: "/v2/bundler/sponsored-transactions",
     searchParams: {
-      teamId: params.teamId,
+      chainId: params.chainId,
+      from: params.from,
       limit: params.limit.toString(),
       offset: params.offset.toString(),
       projectId: params.projectId,
-      chainId: params.chainId,
-      from: params.from,
+      teamId: params.teamId,
       to: params.to,
     },
   });
@@ -55,11 +55,11 @@ async function getSponsoredTransactionsCSV(params: {
 }) {
   const res = await analyticsServerProxy<string>({
     method: "GET",
-    pathname: "/v2/bundler/sponsored-transactions/export",
     parseAsText: true,
+    pathname: "/v2/bundler/sponsored-transactions/export",
     searchParams: {
-      teamId: params.teamId,
       from: params.from,
+      teamId: params.teamId,
       to: params.to,
     },
   });
@@ -105,21 +105,21 @@ export function SponsoredTransactionsTable(
   });
 
   const params = {
-    teamId: props.teamId,
+    chainId: filters.chainId,
+    from: props.from,
     limit: pageSize,
     offset: (page - 1) * pageSize,
-    from: props.from,
-    to: props.to,
-    chainId: filters.chainId,
     projectId: filters.projectId,
+    teamId: props.teamId,
+    to: props.to,
   };
 
   const sponsoredTransactionsQuery = useQuery({
-    queryKey: ["sponsored-transactions", params],
+    placeholderData: keepPreviousData,
     queryFn: () => {
       return getSponsoredTransactions(params);
     },
-    placeholderData: keepPreviousData,
+    queryKey: ["sponsored-transactions", params],
     refetchOnWindowFocus: false,
   });
 
@@ -129,29 +129,29 @@ export function SponsoredTransactionsTable(
 
   return (
     <SponsoredTransactionsTableUI
+      client={props.client}
       filters={filters}
-      variant={props.variant}
+      getCSV={() => {
+        return getSponsoredTransactionsCSV({
+          from: props.from,
+          teamId: props.teamId,
+          to: props.to,
+        });
+      }}
+      isError={sponsoredTransactionsQuery.isError}
+      isPending={sponsoredTransactionsQuery.isFetching}
+      pageNumber={page}
+      pageSize={pageSize}
       projects={props.variant === "team" ? props.projects : []}
       setFilters={(v) => {
         setFilters(v);
         setPage(1);
       }}
-      client={props.client}
-      isError={sponsoredTransactionsQuery.isError}
-      getCSV={() => {
-        return getSponsoredTransactionsCSV({
-          teamId: props.teamId,
-          from: props.from,
-          to: props.to,
-        });
-      }}
-      isPending={sponsoredTransactionsQuery.isFetching}
-      sponsoredTransactions={sponsoredTransactionsQuery.data?.data ?? []}
-      pageNumber={page}
       setPageNumber={setPage}
-      pageSize={pageSize}
+      sponsoredTransactions={sponsoredTransactionsQuery.data?.data ?? []}
       teamSlug={props.teamSlug}
       totalPages={totalPages}
+      variant={props.variant}
     />
   );
 }

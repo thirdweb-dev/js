@@ -1,11 +1,10 @@
-import { fetchDeployMetadata } from "../../utils/any-evm/deploy-metadata.js";
-
 import { beforeAll, describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_C } from "../../../test/src/test-wallets.js";
-import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
+import { fetchDeployMetadata } from "../../utils/any-evm/deploy-metadata.js";
 import { deployContractfromDeployMetadata } from "../prebuilts/deploy-published.js";
 import { balanceOf } from "./__generated__/IERC721A/read/balanceOf.js";
 import { nextTokenIdToMint } from "./__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
@@ -28,9 +27,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         uri: "ipfs://QmY6CHFuhDpQzuv3y3NyQBPdAa7cYjZGJgFeFcw9BfSMQx",
       });
       const contractAddress = await deployContractfromDeployMetadata({
+        account: TEST_ACCOUNT_C,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
-        account: TEST_ACCOUNT_C,
         deployMetadata: customDropDeployMetadata,
         initializeParams: {
           defaultAdmin: TEST_ACCOUNT_C.address,
@@ -60,8 +59,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         ],
       });
       await sendAndConfirmTransaction({
-        transaction: mintTx,
         account: TEST_ACCOUNT_C,
+        transaction: mintTx,
       });
 
       await expect(nextTokenIdToMint({ contract })).resolves.toBe(6n);
@@ -75,27 +74,27 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         balanceOf({ contract, owner: TEST_ACCOUNT_C.address }),
       ).resolves.toBe(0n);
       await sendAndConfirmTransaction({
+        account: TEST_ACCOUNT_C,
         transaction: setClaimConditions({
           contract,
           phases: [
             {
-              startTime: new Date(0),
               maxClaimableSupply: 10n,
+              startTime: new Date(0),
             },
           ],
           singlePhaseDrop: true,
         }),
-        account: TEST_ACCOUNT_C,
       });
       const claimTx = claimTo({
         contract,
-        to: TEST_ACCOUNT_C.address,
         quantity: 1n,
         singlePhaseDrop: true,
+        to: TEST_ACCOUNT_C.address,
       });
       await sendAndConfirmTransaction({
-        transaction: claimTx,
         account: TEST_ACCOUNT_C,
+        transaction: claimTx,
       });
       await expect(
         balanceOf({ contract, owner: TEST_ACCOUNT_C.address }),

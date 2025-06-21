@@ -10,11 +10,11 @@ vi.mock("../../../../core/hooks/wallets/useAdminWallet");
 
 describe("ManageWalletScreen", () => {
   const mockProps = {
-    onBack: vi.fn(),
-    setScreen: vi.fn(),
+    client: TEST_CLIENT,
     closeModal: vi.fn(),
     locale: en,
-    client: TEST_CLIENT,
+    onBack: vi.fn(),
+    setScreen: vi.fn(),
   };
 
   beforeEach(() => {

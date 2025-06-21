@@ -1,30 +1,28 @@
 "use client";
 
+import clsx from "clsx";
+import { ChevronDownIcon } from "lucide-react";
+import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import clsx from "clsx";
-import { ChevronDownIcon } from "lucide-react";
-import Link from "next/link";
 
 type Version = "v2" | "v3";
 const engineLinks = [
   {
-    name: "v2",
     href: "/engine/v2",
+    name: "v2",
   },
   {
-    name: "v3",
     href: "/engine/v3",
+    name: "v3",
   },
 ];
 
-export function EngineVersionSelector(props: {
-  selected: Version;
-}) {
+export function EngineVersionSelector(props: { selected: Version }) {
   // biome-ignore lint/style/noNonNullAssertion: guaranteed
   const platform = engineLinks.find((p) => p.name === props.selected)!;
   return (
@@ -54,8 +52,8 @@ export function EngineVersionSelector(props: {
               >
                 <div className="flex gap-2">
                   <Link
-                    href={version.href}
                     className="before:absolute before:inset-0"
+                    href={version.href}
                   >
                     {version.name}
                   </Link>

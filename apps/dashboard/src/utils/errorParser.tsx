@@ -1,12 +1,16 @@
 import Link from "next/link";
-import posthog from "posthog-js";
 
 import type { JSX } from "react";
 
 const PLEASE_REACH_OUT_MESSAGE = (
   <span>
     If you believe this is incorrect or the error persists, please visit our{" "}
-    <Link className="font-semibold underline" target="_blank" href="/support">
+    <Link
+      className="font-semibold underline"
+      href="/support"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
       support site
     </Link>
     .
@@ -26,7 +30,7 @@ export function parseErrorToMessage(error: unknown): string | JSX.Element {
   );
 }
 
-export function parseError(error: unknown): string | JSX.Element {
+export function parseError(error: unknown): string {
   // if the error is a straight string just return it
   if (typeof error === "string") {
     return error;
@@ -63,7 +67,6 @@ export function parseError(error: unknown): string | JSX.Element {
 
   // everything that falls through here should be logged and sent to posthog
   console.error("unknown error", error);
-  posthog.capture("unknown_error", { error });
   // worst case scenario send a generic error message back
   return UNKNOWN_ERROR_MESSAGE;
 }
@@ -79,19 +82,11 @@ function isErrorWithCode(error: unknown): error is ErrorWithCode {
   return (error as ErrorWithCode)?.code !== undefined;
 }
 
-function parseErrorCode(
-  error: ErrorWithCode,
-): string | JSX.Element | undefined {
+function parseErrorCode(error: ErrorWithCode): string | undefined {
   switch (error.code) {
     case "CALL_EXCEPTION": {
       if (error.reason) {
-        return (
-          <>
-            The following error happened on the underlying Smart Contract:
-            <br />
-            <strong>{error.reason}</strong>
-          </>
-        );
+        return `The following error happened on the underlying Smart Contract: ${error.reason}`;
       }
       return "An error occurred on the underlying Smart Contract.";
     }

@@ -11,8 +11,8 @@ export function AccountDevicesPage() {
   return (
     <AuthorizedWalletsTable
       authorizedWallets={authorizedWalletsQuery.data || []}
-      isPending={authorizedWalletsQuery.isPending}
       isFetched={authorizedWalletsQuery.isFetched}
+      isPending={authorizedWalletsQuery.isPending}
     />
   );
 }

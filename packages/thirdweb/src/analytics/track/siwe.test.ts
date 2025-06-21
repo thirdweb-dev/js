@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -30,20 +30,20 @@ describe("SIWE tracking", () => {
     );
 
     await trackLogin({
+      chainId: 1,
       client: mockClient,
       walletAddress: "0x1234567890123456789012345678901234567890",
       walletType: "metamask",
-      chainId: 1,
     });
 
     expect(requestBody).toEqual({
-      source: "sdk",
       action: "login:attempt",
+      chainId: 1,
       clientId: "test-client-id",
+      errorCode: undefined,
+      source: "sdk",
       walletAddress: "0x1234567890123456789012345678901234567890",
       walletType: "metamask",
-      chainId: 1,
-      errorCode: undefined,
     });
   });
 
@@ -57,25 +57,25 @@ describe("SIWE tracking", () => {
     );
 
     await trackLogin({
+      chainId: 1,
       client: mockClient,
+      error: {
+        code: "SIGNATURE_VERIFICATION_FAILED",
+        message: "Signature verification failed",
+      },
       walletAddress: "0x1234567890123456789012345678901234567890",
       walletType: "metamask",
-      chainId: 1,
-      error: {
-        message: "Signature verification failed",
-        code: "SIGNATURE_VERIFICATION_FAILED",
-      },
     });
 
     expect(requestBody).toEqual({
-      source: "sdk",
       action: "login:attempt",
+      chainId: 1,
       clientId: "test-client-id",
+      errorCode:
+        '{"code":"SIGNATURE_VERIFICATION_FAILED","message":"Signature verification failed"}',
+      source: "sdk",
       walletAddress: "0x1234567890123456789012345678901234567890",
       walletType: "metamask",
-      chainId: 1,
-      errorCode:
-        '{"message":"Signature verification failed","code":"SIGNATURE_VERIFICATION_FAILED"}',
     });
   });
 
@@ -89,6 +89,7 @@ describe("SIWE tracking", () => {
     );
 
     await trackLogin({
+      chainId: 1,
       client: mockClient,
       ecosystem: {
         id: "ecosystem.test-ecosystem-id",
@@ -96,7 +97,6 @@ describe("SIWE tracking", () => {
       },
       walletAddress: "0x1234567890123456789012345678901234567890",
       walletType: "metamask",
-      chainId: 1,
     });
 
     expect(requestHeaders?.get("x-client-id")).toEqual("test-client-id");

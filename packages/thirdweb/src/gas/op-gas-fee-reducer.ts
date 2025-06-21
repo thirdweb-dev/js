@@ -16,7 +16,6 @@ export function roundUpGas(value: bigint): bigint {
   // Find the highest set bit by shifting until the value is 0.
   let highestBit = 1n;
   while (value > 0n) {
-    // biome-ignore lint/style/noParameterAssign: the whole point is that we modify the value in palce
     value >>= 1n;
     highestBit <<= 1n;
   }

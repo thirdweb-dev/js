@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "Register" event.
@@ -40,8 +40,8 @@ export type RegisterEventFilters = Partial<{
  */
 export function registerEvent(filters: RegisterEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event Register(address indexed to, uint256 indexed id, address recovery)",
-    filters,
   });
 }

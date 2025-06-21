@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "org.ecoinwallet",
-  name: "ECOIN Wallet",
-  homepage: "https://ecoinwallet.org",
-  image_id: "9639c263-d590-4862-ba9f-d5c7c1878d00",
   app: {
-    browser: null,
-    ios: null,
     android:
       "https://play.google.com/store/apps/details?id=org.ecoinwallet&referrer=utm_source%3Dwalletconnect%26utm_medium%3Dreown%26utm_content%3Dlink",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "ecoinwallet://",
-    universal: "https://ecoinwallet.org/link",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://ecoinwallet.org",
+  id: "org.ecoinwallet",
+  image_id: "9639c263-d590-4862-ba9f-d5c7c1878d00",
+  mobile: {
+    native: "ecoinwallet://",
+    universal: "https://ecoinwallet.org/link",
+  },
+  name: "ECOIN Wallet",
+  rdns: null,
 } as const;

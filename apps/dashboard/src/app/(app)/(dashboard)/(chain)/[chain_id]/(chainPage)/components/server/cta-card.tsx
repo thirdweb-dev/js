@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export type ChainCTAProps = {
   backgroundImageUrl: string;
@@ -30,10 +30,10 @@ export function ChainCTA(props: ChainCTAProps) {
         </div>
         <Button asChild>
           <Link
+            className="font-semibold"
             href={props.buttonLink}
             prefetch={false}
             target={props.buttonLink.startsWith("http") ? "_blank" : undefined}
-            className="font-semibold"
           >
             {props.buttonText}
           </Link>

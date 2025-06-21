@@ -37,7 +37,7 @@ export const WalletImage = (props: {
   const { wallet, avatar, size, client } = props;
 
   const { data: imageData } = useQuery({
-    queryKey: ["wallet-image", wallet.id, wallet.getAccount()?.address],
+    enabled: !avatar,
     queryFn: async (): Promise<string> => {
       let activeEOAId = wallet.id;
       if (wallet.id === "smart") {
@@ -69,16 +69,16 @@ export const WalletImage = (props: {
 
       return WALLET_ICON;
     },
-    enabled: !avatar,
+    queryKey: ["wallet-image", wallet.id, wallet.getAccount()?.address],
   });
 
   const data = avatar || imageData || WALLET_ICON;
   return (
     <RNImage
-      theme={props.theme}
+      color={props.theme.colors.accentButtonBg}
       data={data}
       size={size}
-      color={props.theme.colors.accentButtonBg}
+      theme={props.theme}
     />
   );
 };

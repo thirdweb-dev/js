@@ -29,7 +29,7 @@ function deepEqual(a: any, b: any) {
 
     for (i = length; i-- !== 0; )
       // biome-ignore lint/style/noNonNullAssertion: We know its there
-      if (!Object.prototype.hasOwnProperty.call(b, keys[i]!)) return false;
+      if (!Object.hasOwn(b, keys[i]!)) return false;
 
     for (i = length; i-- !== 0; ) {
       const key = keys[i];
@@ -41,7 +41,7 @@ function deepEqual(a: any, b: any) {
   }
 
   // true if both NaN, false otherwise
-  // biome-ignore lint/suspicious/noSelfCompare: <explanation>
+  // biome-ignore lint/suspicious/noSelfCompare: TODO
   return a !== a && b !== b;
 }
 

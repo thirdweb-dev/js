@@ -29,21 +29,21 @@ import type {
   TokenInfo,
 } from "../../../../../../core/utils/defaultTokens.js";
 import { LoadingScreen } from "../../../../../wallets/shared/LoadingScreen.js";
+import { Container } from "../../../../components/basic.js";
+import { Button } from "../../../../components/buttons.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { TextDivider } from "../../../../components/TextDivider.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
-import { Container } from "../../../../components/basic.js";
-import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { OutlineWalletIcon } from "../../../icons/OutlineWalletIcon.js";
 import { formatTokenBalance } from "../../formatTokenBalance.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import { FiatValue } from "./FiatValue.js";
-import { WalletRow } from "./WalletRow.js";
 import {
   type TokenBalance,
   useWalletsAndBalances,
 } from "./fetchBalancesForWallet.js";
+import { WalletRow } from "./WalletRow.js";
 
 export function TokenSelectorScreen(props: {
   client: ThirdwebClient;
@@ -67,10 +67,10 @@ export function TokenSelectorScreen(props: {
 
   const walletsAndBalances = useWalletsAndBalances({
     client: props.client,
+    mode: props.mode,
     sourceSupportedTokens: props.sourceSupportedTokens || [],
     toChain: props.toChain,
     toToken: props.toToken,
-    mode: props.mode,
   });
 
   if (
@@ -98,7 +98,7 @@ export function TokenSelectorScreen(props: {
     >
       {filteredWallets.length === 0 ? (
         <Container flex="column" gap="xs" py="lg">
-          <Text size="xs" color="secondaryText" center>
+          <Text center color="secondaryText" size="xs">
             No suitable payment token found
             <br />
             in connected wallets
@@ -125,97 +125,97 @@ export function TokenSelectorScreen(props: {
             if (!wallet) return null;
             return (
               <WalletRowWithBalances
-                key={w.id}
-                wallet={wallet}
+                address={address}
                 balances={balances}
                 client={props.client}
-                address={address}
+                key={w.id}
                 onClick={(wallet, token, chain) => {
                   trackPayEvent({
-                    event: "choose_payment_method_token",
-                    client: props.client,
-                    walletAddress: activeAccount?.address,
-                    walletType: activeWallet?.id,
                     chainId: chain.id,
+                    client: props.client,
+                    event: "choose_payment_method_token",
                     fromToken: isNativeToken(token) ? undefined : token.address,
+                    toChainId: props.toChain.id,
                     toToken: isNativeToken(props.toToken)
                       ? undefined
                       : props.toToken.address,
-                    toChainId: props.toChain.id,
+                    walletAddress: activeAccount?.address,
+                    walletType: activeWallet?.id,
                   });
                   props.onSelectToken(wallet, token, chain);
                 }}
+                wallet={wallet}
               />
             );
           })}
           {filteredWallets.length > 0 && <TextDivider text="OR" />}
           <Button
-            variant="secondary"
+            bg="tertiaryBg"
             fullWidth
             onClick={() => {
               trackPayEvent({
-                event: "choose_payment_method_another_wallet",
                 client: props.client,
-                walletAddress: activeAccount?.address,
-                walletType: activeWallet?.id,
+                event: "choose_payment_method_another_wallet",
                 toChainId: props.toChain.id,
                 toToken: isNativeToken(props.toToken)
                   ? undefined
                   : props.toToken.address,
+                walletAddress: activeAccount?.address,
+                walletType: activeWallet?.id,
               });
               props.onConnect();
             }}
-            bg="tertiaryBg"
             style={{
               border: `1px solid ${theme.colors.borderColor}`,
               padding: spacing.sm,
             }}
+            variant="secondary"
           >
             <Container
+              center="y"
+              color="secondaryIconColor"
+              expand
               flex="row"
               gap="sm"
-              center="y"
-              expand
-              color="secondaryIconColor"
             >
               <OutlineWalletIcon size={iconSize.md} />
-              <Text size="sm" color="primaryText">
+              <Text color="primaryText" size="sm">
                 Pay with another wallet
               </Text>
             </Container>
           </Button>
           {props.fiatSupported && (
             <Button
-              variant="secondary"
+              bg="tertiaryBg"
               fullWidth
               onClick={() => {
                 trackPayEvent({
-                  event: "choose_payment_method_with_card",
                   client: props.client,
-                  walletAddress: activeAccount?.address,
-                  walletType: activeWallet?.id,
+                  event: "choose_payment_method_with_card",
                   toChainId: props.toChain.id,
                   toToken: isNativeToken(props.toToken)
                     ? undefined
                     : props.toToken.address,
+                  walletAddress: activeAccount?.address,
+                  walletType: activeWallet?.id,
                 });
                 props.onPayWithFiat();
               }}
-              bg="tertiaryBg"
               style={{
                 border: `1px solid ${theme.colors.borderColor}`,
                 padding: spacing.sm,
               }}
+              variant="secondary"
             >
               <Container
+                center="y"
+                color="secondaryIconColor"
+                expand
                 flex="row"
                 gap="sm"
-                center="y"
-                expand
-                color="secondaryIconColor"
               >
-                <CardStackIcon width={iconSize.md} height={iconSize.md} />
-                <Text size="sm" color="primaryText">
+                <CardStackIcon height={iconSize.md} width={iconSize.md} />
+                <Text color="primaryText" size="sm">
                   Pay with card
                 </Text>
               </Container>
@@ -245,34 +245,34 @@ function WalletRowWithBalances(props: {
     <Container
       flex="column"
       style={{
-        borderRadius: radius.lg,
         border: `1px solid ${theme.colors.borderColor}`,
+        borderRadius: radius.lg,
       }}
     >
       <Container
+        bg="tertiaryBg"
         flex="row"
         gap="sm"
-        bg="tertiaryBg"
         style={{
-          justifyContent: "space-between",
-          borderTopRightRadius: radius.lg,
+          borderBottom: `1px solid ${theme.colors.borderColor}`,
           borderTopLeftRadius: radius.lg,
+          borderTopRightRadius: radius.lg,
+          justifyContent: "space-between",
           padding: spacing.sm,
           paddingRight: spacing.xs,
-          borderBottom: `1px solid ${theme.colors.borderColor}`,
         }}
       >
         <WalletRow {...props} />
         {!isActiveAccount && (
           <Button
-            variant="ghost"
             onClick={() => disconnect(props.wallet)}
             style={{
-              padding: spacing.xxs,
               color: theme.colors.secondaryText,
+              padding: spacing.xxs,
             }}
+            variant="ghost"
           >
-            <Cross2Icon width={iconSize.sm} height={iconSize.sm} />
+            <Cross2Icon height={iconSize.sm} width={iconSize.sm} />
           </Button>
         )}
       </Container>
@@ -281,27 +281,27 @@ function WalletRowWithBalances(props: {
           displayedBalances.map((b, idx) => (
             <TokenBalanceRow
               client={props.client}
-              onClick={() => props.onClick(props.wallet, b.token, b.chain)}
               key={`${b.token.address}-${b.chain.id}`}
-              tokenBalance={b}
-              wallet={props.wallet}
+              onClick={() => props.onClick(props.wallet, b.token, b.chain)}
               style={{
-                borderTopLeftRadius: 0,
-                borderTopRightRadius: 0,
-                borderBottomRightRadius:
-                  idx === displayedBalances.length - 1 ? radius.lg : 0,
-                borderBottomLeftRadius:
-                  idx === displayedBalances.length - 1 ? radius.lg : 0,
                 borderBottom:
                   idx === displayedBalances.length - 1
                     ? "none"
                     : `1px solid ${theme.colors.borderColor}`,
+                borderBottomLeftRadius:
+                  idx === displayedBalances.length - 1 ? radius.lg : 0,
+                borderBottomRightRadius:
+                  idx === displayedBalances.length - 1 ? radius.lg : 0,
+                borderTopLeftRadius: 0,
+                borderTopRightRadius: 0,
               }}
+              tokenBalance={b}
+              wallet={props.wallet}
             />
           ))
         ) : (
           <Container style={{ padding: spacing.sm }}>
-            <Text size="sm" color="secondaryText">
+            <Text color="secondaryText" size="sm">
               Insufficient Funds
             </Text>
           </Container>
@@ -323,36 +323,36 @@ function TokenBalanceRow(props: {
   return (
     <StyledButton
       onClick={() => onClick(tokenBalance.token, wallet)}
-      variant="secondary"
       style={{
         ...style,
         display: "flex",
         justifyContent: "space-between",
         minWidth: 0, // Needed for text truncation to work
       }}
+      variant="secondary"
     >
       <Container
-        flex="row"
         center="y"
+        flex="row"
         gap="sm"
         style={{
           flex: "1 1 50%",
-          minWidth: 0,
-          maxWidth: "50%",
-          overflow: "hidden",
           flexWrap: "nowrap",
+          maxWidth: "50%",
+          minWidth: 0,
+          overflow: "hidden",
         }}
       >
         <TokenIcon
-          token={tokenBalance.token}
           chain={tokenBalance.chain}
-          size="md"
           client={client}
+          size="md"
+          token={tokenBalance.token}
         />
         <Container flex="column" gap="4xs" style={{ minWidth: 0 }}>
           <Text
-            size="xs"
             color="primaryText"
+            size="xs"
             style={{
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -377,21 +377,21 @@ function TokenBalanceRow(props: {
       </Container>
 
       <Container
-        flex="row"
         center="y"
-        gap="4xs"
         color="secondaryText"
+        flex="row"
+        gap="4xs"
         style={{
           flex: "1 1 50%",
+          flexWrap: "nowrap",
+          justifyContent: "flex-end",
           maxWidth: "50%",
           minWidth: 0,
-          justifyContent: "flex-end",
-          flexWrap: "nowrap",
         }}
       >
         <Container
-          flex="column"
           color="secondaryText"
+          flex="column"
           gap="4xs"
           style={{
             alignItems: "flex-end",
@@ -400,8 +400,8 @@ function TokenBalanceRow(props: {
           }}
         >
           <Text
-            size="xs"
             color="primaryText"
+            size="xs"
             style={{
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -411,17 +411,17 @@ function TokenBalanceRow(props: {
             {formatTokenBalance(tokenBalance.balance, true, 2)}
           </Text>
           <FiatValue
-            tokenAmount={tokenBalance.balance.displayValue}
-            token={tokenBalance.token}
             chain={tokenBalance.chain}
             client={client}
             size="xs"
+            token={tokenBalance.token}
+            tokenAmount={tokenBalance.balance.displayValue}
           />
         </Container>
         <ChevronRightIcon
-          width={iconSize.md}
           height={iconSize.md}
           style={{ flexShrink: 0 }}
+          width={iconSize.md}
         />
       </Container>
     </StyledButton>
@@ -431,17 +431,17 @@ function TokenBalanceRow(props: {
 const StyledButton = /* @__PURE__ */ styled(Button)((props) => {
   const theme = useCustomTheme();
   return {
-    background: "transparent",
-    justifyContent: "space-between",
-    flexWrap: "nowrap",
-    flexDirection: "row",
-    padding: spacing.sm,
-    paddingRight: spacing.xs,
-    gap: spacing.sm,
     "&:hover": {
       background: theme.colors.secondaryButtonBg,
       transform: "scale(1.01)",
     },
+    background: "transparent",
+    flexDirection: "row",
+    flexWrap: "nowrap",
+    gap: spacing.sm,
+    justifyContent: "space-between",
+    padding: spacing.sm,
+    paddingRight: spacing.xs,
     transition: "background 200ms ease, transform 150ms ease",
     ...props.style,
   };

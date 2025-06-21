@@ -1,5 +1,7 @@
 "use client";
 
+import type { UseFormReturn } from "react-hook-form";
+import type { NFTInput } from "thirdweb/utils";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import {
   FormControl,
@@ -10,8 +12,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import type { UseFormReturn } from "react-hook-form";
-import type { NFTInput } from "thirdweb/utils";
 
 type AdvancedNFTMetadataFormGroupValues = {
   image?: NFTInput["image"];
@@ -22,9 +22,7 @@ type AdvancedNFTMetadataFormGroupValues = {
 
 export function AdvancedNFTMetadataFormGroup<
   T extends AdvancedNFTMetadataFormGroupValues,
->(props: {
-  form: UseFormReturn<T>;
-}) {
+>(props: { form: UseFormReturn<T> }) {
   // T contains all properties of AdvancedNFTMetadataFormGroupValues, so this is a-ok
   const form =
     props.form as unknown as UseFormReturn<AdvancedNFTMetadataFormGroupValues>;
@@ -99,10 +97,10 @@ export function AdvancedNFTMetadataFormGroup<
       {!externalIsTextFile && (
         <FormFieldSetup
           errorMessage={form.formState.errors.external_url?.message}
+          helperText="This is the URL that will appear below the asset's image on OpenSea and will allow users to leave OpenSea and view the item on your site."
           htmlFor="external-url"
           isRequired={false}
           label="External URL"
-          helperText="This is the URL that will appear below the asset's image on OpenSea and will allow users to leave OpenSea and view the item on your site."
         >
           <Input
             placeholder="https://"

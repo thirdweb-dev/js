@@ -11,8 +11,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("deploy-pack contract", () => {
   it("should deploy Pack contract", async () => {
     const address = await deployPackContract({
       account,
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       params: {
         name: "pack-contract",
       },

@@ -1,14 +1,4 @@
 {
-  "name": "wallet-ui",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "biome check ./src && knip && eslint ./src",
-    "fix": "biome check ./src --fix && knip --fix --allow-remove-files && eslint ./src --fix"
-  },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-dialog": "1.1.14",
@@ -34,6 +24,7 @@
     "zod": "3.25.62"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.0.4",
     "@next/eslint-plugin-next": "15.3.3",
     "@types/node": "22.14.1",
     "@types/react": "19.1.8",
@@ -48,5 +39,15 @@
     "postcss-load-config": "^6.0.1",
     "tailwindcss": "3.4.17",
     "typescript": "5.8.3"
-  }
+  },
+  "name": "wallet-ui",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev --turbopack",
+    "fix": "biome check ./src --fix && knip --fix --allow-remove-files && eslint ./src --fix",
+    "lint": "biome check ./src && knip && eslint ./src",
+    "start": "next start"
+  },
+  "version": "0.1.0"
 }

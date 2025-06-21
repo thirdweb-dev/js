@@ -2,7 +2,11 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import { LatestEventsUI } from "./LatestEvents";
 
 const meta: Meta<typeof LatestEventsUI> = {
-  title: "Contracts/Overview/LatestEvents",
+  args: {
+    allEvents: [],
+    autoUpdate: false,
+    eventsHref: "/ethereum/0x123456789/events",
+  },
   component: LatestEventsUI,
   decorators: [
     (Story) => (
@@ -11,20 +15,15 @@ const meta: Meta<typeof LatestEventsUI> = {
       </div>
     ),
   ],
-  args: {
-    allEvents: [],
-    autoUpdate: false,
-    eventsHref: "/ethereum/0x123456789/events",
-    trackingCategory: "test-category",
-  },
+  title: "Contracts/Overview/LatestEvents",
 };
 
 function eventStub(eventName: string) {
   return {
-    logIndex: 0,
-    eventName,
     address: "0x",
     args: [],
+    eventName,
+    logIndex: 0,
   };
 }
 
@@ -54,20 +53,20 @@ export const WithEvents: Story = {
   args: {
     allEvents: [
       {
-        transactionHash: txStub,
         events: [eventStub("Transfer"), eventStub("Approval")],
+        transactionHash: txStub,
       },
       {
-        transactionHash: txStub,
         events: [eventStub("Mint")],
+        transactionHash: txStub,
       },
       {
-        transactionHash: txStub,
         events: [
           eventStub("Transfer"),
           eventStub("Burn"),
           eventStub("Approval"),
         ],
+        transactionHash: txStub,
       },
     ],
     autoUpdate: false,
@@ -79,24 +78,24 @@ export const LiveWithEvents: Story = {
   args: {
     allEvents: [
       {
-        transactionHash: txStub,
         events: [eventStub("Transfer"), eventStub("Approval")],
+        transactionHash: txStub,
       },
       {
-        transactionHash: txStub,
         events: [eventStub("Mint")],
+        transactionHash: txStub,
       },
       {
-        transactionHash: txStub,
         events: [
           eventStub("Transfer"),
           eventStub("Burn"),
           eventStub("Approval"),
         ],
+        transactionHash: txStub,
       },
       {
-        transactionHash: txStub,
         events: [eventStub("RoleGranted"), eventStub("OwnershipTransferred")],
+        transactionHash: txStub,
       },
     ],
     autoUpdate: true,

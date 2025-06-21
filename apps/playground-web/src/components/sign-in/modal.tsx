@@ -24,14 +24,14 @@ const playgroundAuth: ConnectButtonProps["auth"] = {
   },
   async getLoginPayload(params) {
     return {
-      domain: "",
       address: params.address,
-      statement: "",
-      version: "",
-      nonce: "",
-      issued_at: "",
+      domain: "",
       expiration_time: "",
       invalid_before: "",
+      issued_at: "",
+      nonce: "",
+      statement: "",
+      version: "",
     };
   },
   async isLoggedIn() {
@@ -51,8 +51,8 @@ export function ModalPreview({ enableAuth }: { enableAuth?: boolean }) {
 
   const connect = async () => {
     const wallet = await connectMutation.connect({
-      client: THIRDWEB_CLIENT,
       auth: enableAuth ? playgroundAuth : undefined,
+      client: THIRDWEB_CLIENT,
     });
     console.log("connected", wallet);
     return wallet;
@@ -63,12 +63,12 @@ export function ModalPreview({ enableAuth }: { enableAuth?: boolean }) {
       {account && wallet ? (
         <>
           <p className="py-4">Connected as {shortenAddress(account.address)}</p>
-          <Button variant="outline" onClick={() => disconnect(wallet)}>
+          <Button onClick={() => disconnect(wallet)} variant="outline">
             Disconnect
           </Button>
         </>
       ) : (
-        <Button variant="default" onClick={connect}>
+        <Button onClick={connect} variant="default">
           Sign in
         </Button>
       )}

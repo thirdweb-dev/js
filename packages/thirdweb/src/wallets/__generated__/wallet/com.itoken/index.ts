@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.itoken",
-  name: "iToken Wallet",
-  homepage: "https://www.itoken.com/",
-  image_id: "5cd60c34-038d-470c-c024-d58f64260200",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/id1433883012",
     android:
       "https://play.google.com/store/apps/details?id=com.huobionchainwallet.gp",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/id1433883012",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "huobiwallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.itoken.com/",
+  id: "com.itoken",
+  image_id: "5cd60c34-038d-470c-c024-d58f64260200",
+  mobile: {
+    native: "huobiwallet://",
+    universal: null,
+  },
+  name: "iToken Wallet",
+  rdns: null,
 } as const;

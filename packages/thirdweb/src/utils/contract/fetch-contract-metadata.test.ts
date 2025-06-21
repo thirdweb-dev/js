@@ -8,8 +8,8 @@ import {
 describe("fetchContractMetadata", () => {
   it("should return a json object from a valid base64 encoded json", async () => {
     const validContractMetadata = {
-      name: "contract name",
       description: "contract description",
+      name: "contract name",
     };
     const contractURIBase64 = `data:application/json;base64,${btoa(
       JSON.stringify(validContractMetadata),

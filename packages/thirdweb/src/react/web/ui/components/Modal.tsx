@@ -20,10 +20,10 @@ import {
   wideModalMaxHeight,
 } from "../ConnectWallet/constants.js";
 import { StyledDiv } from "../design-system/elements.js";
-import { DynamicHeight } from "./DynamicHeight.js";
-import { Overlay } from "./Overlay.js";
 import { noScrollBar } from "./basic.js";
 import { IconButton } from "./buttons.js";
+import { DynamicHeight } from "./DynamicHeight.js";
+import { Overlay } from "./Overlay.js";
 
 /**
  * @internal

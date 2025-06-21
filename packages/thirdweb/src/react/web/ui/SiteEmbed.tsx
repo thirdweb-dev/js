@@ -48,10 +48,7 @@ export function SiteEmbed({
   const activeWallet = useActiveWallet();
   const walletId = activeWallet?.id;
 
-  const {
-    data: { authProvider, authCookie } = {},
-  } = useQuery({
-    queryKey: ["site-embed", walletId, src, client.clientId, ecosystem],
+  const { data: { authProvider, authCookie } = {} } = useQuery({
     enabled:
       activeWallet &&
       (isEcosystemWallet(activeWallet) ||
@@ -59,16 +56,17 @@ export function SiteEmbed({
         walletId === "smart"),
     queryFn: async () => {
       const storage = new ClientScopedStorage({
-        storage: webLocalStorage,
         clientId: client.clientId,
         ecosystem,
+        storage: webLocalStorage,
       });
 
       const authProvider = await getLastAuthProvider(webLocalStorage);
       const authCookie = await storage.getAuthCookie();
 
-      return { authProvider, authCookie };
+      return { authCookie, authProvider };
     },
+    queryKey: ["site-embed", walletId, src, client.clientId, ecosystem],
   });
 
   const url = new URL(src);
@@ -84,10 +82,10 @@ export function SiteEmbed({
 
   return (
     <iframe
+      allowFullScreen
+      height="100%"
       src={encodeURI(url.toString())}
       width="100%"
-      height="100%"
-      allowFullScreen
       {...props}
     />
   );

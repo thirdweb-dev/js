@@ -1,3 +1,4 @@
+import { differenceInCalendarDays, format, subDays } from "date-fns";
 import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 import {
   Select,
@@ -7,7 +8,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { normalizeTime } from "@/lib/time";
-import { differenceInCalendarDays, format, subDays } from "date-fns";
 
 export function DateRangeSelector(props: {
   range: Range;
@@ -26,30 +26,15 @@ export function DateRangeSelector(props: {
 
   return (
     <DatePickerWithRange
+      className="w-auto bg-card"
       from={range.from}
-      to={range.to}
-      popoverAlign={props.popoverAlign}
-      setFrom={(from) =>
-        setRange({
-          from,
-          to: range.to,
-          type: "custom",
-        })
-      }
-      setTo={(to) =>
-        setRange({
-          from: range.from,
-          to,
-          type: "custom",
-        })
-      }
       header={
         <div className="mb-2 border-border border-b p-4">
           <Select
-            value={rangeType}
             onValueChange={(id: DurationId) => {
               setRange(getLastNDaysRange(id));
             }}
+            value={rangeType}
           >
             <SelectTrigger className="flex bg-transparent">
               <SelectValue placeholder="Select" />
@@ -72,7 +57,22 @@ export function DateRangeSelector(props: {
         </div>
       }
       labelOverride={rangeLabel}
-      className="w-auto bg-card"
+      popoverAlign={props.popoverAlign}
+      setFrom={(from) =>
+        setRange({
+          from,
+          to: range.to,
+          type: "custom",
+        })
+      }
+      setTo={(to) =>
+        setRange({
+          from: range.from,
+          to,
+          type: "custom",
+        })
+      }
+      to={range.to}
     />
   );
 }
@@ -86,10 +86,10 @@ export function getLastNDaysRange(id: DurationId) {
   const todayDate = new Date(Date.now() + 1000 * 60 * 60 * 24); // add 1 day to avoid timezone issues
 
   const value: Range = {
-    type: id,
     from: subDays(todayDate, durationInfo.days),
-    to: todayDate,
     label: durationInfo.name,
+    to: todayDate,
+    type: id,
   };
 
   return value;
@@ -97,24 +97,24 @@ export function getLastNDaysRange(id: DurationId) {
 
 const durationPresets = [
   {
-    name: "Last 7 Days",
-    id: "last-7",
     days: 7,
+    id: "last-7",
+    name: "Last 7 Days",
   },
   {
-    name: "Last 30 Days",
-    id: "last-30",
     days: 30,
+    id: "last-30",
+    name: "Last 30 Days",
   },
   {
-    name: "Last 60 Days",
-    id: "last-60",
     days: 60,
+    id: "last-60",
+    name: "Last 60 Days",
   },
   {
-    name: "Last 120 Days",
-    id: "last-120",
     days: 120,
+    id: "last-120",
+    name: "Last 120 Days",
   },
 ] as const;
 

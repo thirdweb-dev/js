@@ -43,9 +43,9 @@ export async function fetchSourceFilesFromMetadata(
         const ipfsHash = ipfsLink.split("ipfs/")[1];
         return download({
           client: options.client,
-          uri: `ipfs://${ipfsHash}`,
           // 3 sec timeout for sources that haven't been uploaded to ipfs
           requestTimeoutMs: 3000,
+          uri: `ipfs://${ipfsHash}`,
         })
           .then((res) => res.text())
           .then((source) => ({ filename: path, source }));

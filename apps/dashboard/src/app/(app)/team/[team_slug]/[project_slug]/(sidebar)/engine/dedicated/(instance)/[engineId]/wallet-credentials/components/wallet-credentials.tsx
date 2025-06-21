@@ -1,13 +1,13 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   useEngineWalletCredentials,
   useHasEngineFeature,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { CreateWalletCredentialButton } from "./create-wallet-credential-button";
 import { WalletCredentialsTable } from "./wallet-credentials-table";
 
@@ -25,8 +25,8 @@ export const WalletCredentialsSection: React.FC<WalletCredentialsProps> = ({
     isPending,
     isFetched,
   } = useEngineWalletCredentials({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
 
   const {
@@ -66,6 +66,7 @@ export const WalletCredentialsSection: React.FC<WalletCredentialsProps> = ({
             Manage your wallet credentials for different providers.{" "}
             <Link
               href="https://portal.thirdweb.com/engine/features/wallet-credentials"
+              rel="noopener noreferrer"
               target="_blank"
             >
               Learn more about wallet credentials.
@@ -75,18 +76,18 @@ export const WalletCredentialsSection: React.FC<WalletCredentialsProps> = ({
 
         <div className="flex flex-col items-end gap-4 border-border max-md:w-full max-md:border-t max-md:pt-6">
           <CreateWalletCredentialButton
-            instanceUrl={instanceUrl}
             authToken={authToken}
+            instanceUrl={instanceUrl}
           />
         </div>
       </div>
 
       <WalletCredentialsTable
-        credentials={credentials}
-        isPending={isPending}
-        isFetched={isFetched}
-        instanceUrl={instanceUrl}
         authToken={authToken}
+        credentials={credentials}
+        instanceUrl={instanceUrl}
+        isFetched={isFetched}
+        isPending={isPending}
       />
     </section>
   );

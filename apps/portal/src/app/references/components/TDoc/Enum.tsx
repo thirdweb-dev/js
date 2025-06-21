@@ -1,7 +1,7 @@
-import { Callout } from "@/components/Document";
-import { sluggerContext } from "@/contexts/slugger";
 import invariant from "tiny-invariant";
 import { type EnumDoc, getEnumSignature } from "typedoc-better-json";
+import { Callout } from "@/components/Document";
+import { sluggerContext } from "@/contexts/slugger";
 import { CodeBlock } from "../../../../components/Document/Code";
 import { Heading } from "../../../../components/Document/Heading";
 import { DeprecatedCalloutTDoc } from "./Deprecated";
@@ -24,7 +24,7 @@ export function EnumTDoc(props: { doc: EnumDoc; level: number }) {
 
   return (
     <>
-      <Heading level={props.level} id={doc.name}>
+      <Heading anchorId={doc.name} level={props.level}>
         {doc.name}
       </Heading>
 
@@ -36,7 +36,7 @@ export function EnumTDoc(props: { doc: EnumDoc; level: number }) {
 
       {exampleTag?.summary && (
         <>
-          <Heading level={subLevel} id={slugger.slug("example")} noIndex>
+          <Heading anchorId={slugger.slug("example")} level={subLevel} noIndex>
             Example
           </Heading>
           <TypedocSummary summary={exampleTag.summary} />
@@ -49,15 +49,15 @@ export function EnumTDoc(props: { doc: EnumDoc; level: number }) {
         </Callout>
       )}
 
-      <CodeBlock lang="ts" code={code} />
+      <CodeBlock code={code} lang="ts" />
 
       {doc.members?.map((member) => {
         return (
           <MemberTDoc
             doc={member}
-            level={props.level + 1}
             enumName={doc.name}
             key={member.name}
+            level={props.level + 1}
           />
         );
       })}
@@ -74,11 +74,11 @@ function MemberTDoc(props: {
 
   return (
     <div key={member.name}>
-      <Heading level={props.level + 1} id={member.name}>
+      <Heading anchorId={member.name} level={props.level + 1}>
         {member.name}
       </Heading>
       {member.summary && <TypedocSummary summary={member.summary} />}
-      <CodeBlock lang="ts" code={`${member.value.code}`} />
+      <CodeBlock code={`${member.value.code}`} lang="ts" />
     </div>
   );
 }

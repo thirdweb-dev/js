@@ -12,10 +12,10 @@ import {
   useWalletInfo,
 } from "../../../../../../core/utils/wallet.js";
 import { useProfiles } from "../../../../../hooks/wallets/useProfiles.js";
-import { Skeleton } from "../../../../components/Skeleton.js";
-import { WalletImage } from "../../../../components/WalletImage.js";
 import { Container } from "../../../../components/basic.js";
+import { Skeleton } from "../../../../components/Skeleton.js";
 import { Text } from "../../../../components/text.js";
+import { WalletImage } from "../../../../components/WalletImage.js";
 import { OutlineWalletIcon } from "../../../icons/OutlineWalletIcon.js";
 
 export function WalletRow(props: {
@@ -40,37 +40,41 @@ export function WalletRow(props: {
       : undefined;
   const walletInfo = useWalletInfo(wallet?.id);
   const ensNameQuery = useEnsName({
-    client,
     address,
+    client,
   });
   const addressOrENS = address
     ? ensNameQuery.data || shortenAddress(address)
     : "";
   return (
     <Container flex="row" style={{ justifyContent: "space-between" }}>
-      <Container flex="row" center="y" gap="sm" color="secondaryText">
+      <Container center="y" color="secondaryText" flex="row" gap="md">
         {wallet ? (
           <WalletImage
+            client={props.client}
             id={wallet.id}
             size={iconSize[props.iconSize || "md"]}
-            client={props.client}
           />
         ) : (
           <OutlineWalletIcon size={iconSize[props.iconSize || "md"]} />
         )}
-        <Container flex="column" gap="4xs">
+        <Container flex="column" gap="3xs">
           {props.label ? (
-            <Text size="xs" color="secondaryText">
+            <Text color="secondaryText" size="xs">
               {props.label}
             </Text>
           ) : null}
-          <Text size={props.textSize || "xs"} color="primaryText">
+          <Text
+            color="primaryText"
+            size={props.textSize || "xs"}
+            style={{ fontFamily: "monospace", fontWeight: 600 }}
+          >
             {addressOrENS || shortenAddress(props.address)}
           </Text>
           {profile.isLoading ? (
-            <Skeleton width="100px" height={fontSize.sm} />
+            <Skeleton height={fontSize.sm} width="100px" />
           ) : email || walletInfo?.data?.name ? (
-            <Text size="xs" color="secondaryText">
+            <Text color="secondaryText" size="xs">
               {email || walletInfo?.data?.name}
             </Text>
           ) : null}

@@ -18,15 +18,13 @@ type PaymentLink = {
   purchaseData: Record<string, unknown> | undefined;
 };
 
-export async function getPaymentLink(props: {
-  paymentId: string;
-}) {
+export async function getPaymentLink(props: { paymentId: string }) {
   const res = await fetch(`${UB_BASE_URL}/v1/links/${props.paymentId}`, {
-    method: "GET",
     headers: {
       "Content-Type": "application/json",
       "x-secret-key": DASHBOARD_THIRDWEB_SECRET_KEY,
     },
+    method: "GET",
   });
 
   if (!res.ok) {
@@ -36,12 +34,12 @@ export async function getPaymentLink(props: {
 
   const { data } = await res.json();
   return {
-    clientId: data.clientId,
-    title: data.title,
-    imageUrl: data.imageUrl,
-    receiver: data.receiver,
-    destinationToken: data.destinationToken,
     amount: data.amount ? BigInt(data.amount) : undefined,
+    clientId: data.clientId,
+    destinationToken: data.destinationToken,
+    imageUrl: data.imageUrl,
     purchaseData: data.purchaseData,
+    receiver: data.receiver,
+    title: data.title,
   } as PaymentLink;
 }

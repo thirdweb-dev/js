@@ -1,4 +1,4 @@
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import Link from "next/link";
 
 export function NotFoundPage() {
   return (
@@ -21,40 +21,28 @@ export function NotFoundPage() {
           <div>
             <p className="text-center text-muted-foreground text-xl leading-7">
               Find live content on our{" "}
-              <TrackedLinkTW
-                category="page-not-found"
-                label="homepage"
-                href="/home"
-                className="text-foreground hover:underline"
-              >
+              <Link className="text-foreground hover:underline" href="/home">
                 homepage
-              </TrackedLinkTW>
+              </Link>
               ,{" "}
-              <TrackedLinkTW
-                category="page-not-found"
-                label="dashboard"
-                href="/team"
-                className="text-foreground hover:underline"
-              >
+              <Link className="text-foreground hover:underline" href="/team">
                 dashboard
-              </TrackedLinkTW>{" "}
+              </Link>{" "}
               or{" "}
-              <TrackedLinkTW
-                category="page-not-found"
-                label="portal"
-                href="https://portal.thirdweb.com"
+              <Link
                 className="text-foreground hover:underline"
+                href="https://portal.thirdweb.com"
               >
                 developer portal
-              </TrackedLinkTW>
+              </Link>
               .
             </p>
           </div>
 
           <Aurora
             color="hsl(var(--foreground)/8%)"
-            pos={{ top: "40%", left: "50%" }}
-            size={{ width: "100vw", height: "100vh" }}
+            pos={{ left: "50%", top: "40%" }}
+            size={{ height: "100vh", width: "100vw" }}
           />
         </div>
       </div>
@@ -73,12 +61,12 @@ const Aurora: React.FC<AuroraProps> = ({ color, pos, size }) => {
     <div
       className="pointer-events-none absolute"
       style={{
-        top: pos.top,
-        left: pos.left,
-        width: size.width,
-        height: size.height,
-        transform: "translate(-50%, -50%)",
         backgroundImage: `radial-gradient(ellipse at center, ${color}, transparent 60%)`,
+        height: size.height,
+        left: pos.left,
+        top: pos.top,
+        transform: "translate(-50%, -50%)",
+        width: size.width,
       }}
     />
   );

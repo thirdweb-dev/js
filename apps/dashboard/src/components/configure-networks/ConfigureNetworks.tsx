@@ -1,23 +1,12 @@
-import { useTrack } from "hooks/analytics/useTrack";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
+import { reportChainConfigurationAdded } from "../../@/analytics/report";
 import {
-  type StoredChain,
   addChainOverrides,
   addRecentlyUsedChainId,
+  type StoredChain,
 } from "../../stores/chainStores";
 import { ConfigureNetworkForm } from "./ConfigureNetworkForm";
-
-function useChainConfigTrack() {
-  const trackEvent = useTrack();
-  return (action: "add" | "update", chain: StoredChain) => {
-    trackEvent({
-      category: "chain_configuration",
-      chain,
-      action,
-    });
-  };
-}
 
 interface ConfigureNetworksProps {
   onNetworkConfigured?: (chain: StoredChain) => void;
@@ -29,7 +18,6 @@ interface ConfigureNetworksProps {
 }
 
 export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
-  const trackChainConfig = useChainConfigTrack();
   const { editChain } = props;
 
   const handleSubmit = (chain: StoredChain) => {
@@ -38,17 +26,21 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
 
     if (chain.isCustom) {
       if (props.onNetworkAdded) {
+        reportChainConfigurationAdded({
+          chainId: chain.chainId,
+          chainName: chain.name,
+          nativeCurrency: chain.nativeCurrency,
+          rpcURLs: chain.rpc,
+        });
         props.onNetworkAdded(chain);
       }
 
-      trackChainConfig("add", chain);
       toast.success("Network Added Successfully");
     } else {
       if (props.onNetworkConfigured) {
         props.onNetworkConfigured(chain);
       }
 
-      trackChainConfig("update", chain);
       toast.success("Network Updated Successfully");
     }
   };
@@ -65,19 +57,19 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
         {/* Modify the given chain */}
         {editChain && (
           <ConfigureNetworkForm
+            client={props.client}
             editingChain={editChain}
             onSubmit={handleSubmit}
-            client={props.client}
           />
         )}
 
         {/* Custom chain */}
         {!editChain && (
           <ConfigureNetworkForm
-            prefillSlug={props.prefillSlug}
-            prefillChainId={props.prefillChainId}
-            onSubmit={handleSubmit}
             client={props.client}
+            onSubmit={handleSubmit}
+            prefillChainId={props.prefillChainId}
+            prefillSlug={props.prefillSlug}
           />
         )}
       </div>

@@ -1,4 +1,10 @@
 "use client";
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { useMutation } from "@tanstack/react-query";
+import { useId, useState } from "react";
+import { toast } from "sonner";
+import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
+import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -7,26 +13,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Meta, StoryObj } from "@storybook/nextjs";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
-import { toast } from "sonner";
-import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
-import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import {
-  type MintFormValues,
   MintableModuleUI,
+  type MintFormValues,
   type UpdateFormValues,
 } from "./Mintable";
 
 const meta = {
-  title: "Modules/Mintable",
   component: Component,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Modules/Mintable",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -63,9 +63,9 @@ function Component() {
   });
 
   const contractInfo = {
-    name: "Module Name",
     description:
       "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore ",
+    name: "Module Name",
     publisher: "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
     version: "1.0.0",
   };
@@ -79,20 +79,18 @@ function Component() {
 
         <div className="flex flex-wrap items-center gap-5">
           <CheckboxWithLabel
-            value={isOwner}
-            onChange={setIsOwner}
-            id="isOwner"
             label="Is Owner"
+            onChange={setIsOwner}
+            value={isOwner}
           />
 
           <CheckboxWithLabel
-            value={isBatchMetadataInstalled}
-            onChange={setIsBatchMetadataInstalled}
-            id="isBatchMetadataInstalled"
             label="isBatchMetadataInstalled"
+            onChange={setIsBatchMetadataInstalled}
+            value={isBatchMetadataInstalled}
           />
 
-          <Select value={name} onValueChange={(v) => setName(v)}>
+          <Select onValueChange={(v) => setName(v)} value={name}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -107,63 +105,63 @@ function Component() {
         <BadgeContainer label="Empty Primary Sale Recipient">
           <MintableModuleUI
             client={storybookThirdwebClient}
-            isLoggedIn={true}
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
-            primarySaleRecipient={""}
-            updatePrimaryRecipient={updatePrimaryRecipientStub}
-            mint={mintStub}
-            uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-            name={name}
-            isBatchMetadataInstalled={isBatchMetadataInstalled}
             contractChainId={1}
+            contractInfo={contractInfo}
+            isBatchMetadataInstalled={isBatchMetadataInstalled}
+            isLoggedIn={true}
+            isOwnerAccount={isOwner}
+            isPending={false}
+            mint={mintStub}
+            moduleAddress="0x0000000000000000000000000000000000000000"
+            name={name}
+            primarySaleRecipient={""}
+            uninstallButton={{
+              isPending: removeMutation.isPending,
+              onClick: async () => removeMutation.mutateAsync(),
+            }}
+            updatePrimaryRecipient={updatePrimaryRecipientStub}
           />
         </BadgeContainer>
 
         <BadgeContainer label="Filled Primary Sale Recipient">
           <MintableModuleUI
             client={storybookThirdwebClient}
-            isLoggedIn={true}
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
-            primarySaleRecipient={testAddress1}
-            updatePrimaryRecipient={updatePrimaryRecipientStub}
-            mint={mintStub}
-            uninstallButton={{
-              onClick: () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-            name={name}
-            isBatchMetadataInstalled={isBatchMetadataInstalled}
             contractChainId={1}
+            contractInfo={contractInfo}
+            isBatchMetadataInstalled={isBatchMetadataInstalled}
+            isLoggedIn={true}
+            isOwnerAccount={isOwner}
+            isPending={false}
+            mint={mintStub}
+            moduleAddress="0x0000000000000000000000000000000000000000"
+            name={name}
+            primarySaleRecipient={testAddress1}
+            uninstallButton={{
+              isPending: removeMutation.isPending,
+              onClick: () => removeMutation.mutateAsync(),
+            }}
+            updatePrimaryRecipient={updatePrimaryRecipientStub}
           />
         </BadgeContainer>
 
         <BadgeContainer label="Pending">
           <MintableModuleUI
             client={storybookThirdwebClient}
-            isLoggedIn={true}
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={true}
-            primarySaleRecipient={testAddress1}
-            updatePrimaryRecipient={updatePrimaryRecipientStub}
-            mint={mintStub}
-            uninstallButton={{
-              onClick: () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-            name={name}
-            isBatchMetadataInstalled={isBatchMetadataInstalled}
             contractChainId={1}
+            contractInfo={contractInfo}
+            isBatchMetadataInstalled={isBatchMetadataInstalled}
+            isLoggedIn={true}
+            isOwnerAccount={isOwner}
+            isPending={true}
+            mint={mintStub}
+            moduleAddress="0x0000000000000000000000000000000000000000"
+            name={name}
+            primarySaleRecipient={testAddress1}
+            uninstallButton={{
+              isPending: removeMutation.isPending,
+              onClick: () => removeMutation.mutateAsync(),
+            }}
+            updatePrimaryRecipient={updatePrimaryRecipientStub}
           />
         </BadgeContainer>
       </div>
@@ -174,20 +172,20 @@ function Component() {
 function CheckboxWithLabel(props: {
   value: boolean;
   onChange: (value: boolean) => void;
-  id: string;
   label: string;
 }) {
+  const id = useId();
   return (
     <div className="items-top flex space-x-2">
       <Checkbox
-        id={props.id}
         checked={props.value}
+        id={id}
         onCheckedChange={(v) => props.onChange(!!v)}
       />
       <div className="grid gap-1.5 leading-none">
         <label
-          htmlFor={props.id}
           className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          htmlFor={id}
         >
           {props.label}
         </label>

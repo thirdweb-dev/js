@@ -1,12 +1,11 @@
 "use client";
 
-import { MarkdownRenderer } from "@/components/markdown/MarkdownRenderer";
-import { LoadingDots } from "@/components/ui/LoadingDots";
-import { Button } from "@/components/ui/button";
-import { AutoResizeTextarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { MessageCircleIcon } from "lucide-react";
-import { ArrowUpIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
+import {
+  ArrowUpIcon,
+  MessageCircleIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+} from "lucide-react";
 import { usePostHog } from "posthog-js/react";
 import {
   type ChangeEvent,
@@ -16,6 +15,11 @@ import {
   useRef,
   useState,
 } from "react";
+import { MarkdownRenderer } from "@/components/markdown/MarkdownRenderer";
+import { Button } from "@/components/ui/button";
+import { LoadingDots } from "@/components/ui/LoadingDots";
+import { AutoResizeTextarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import { getChatResponse, sendFeedback } from "./api";
 
 interface Message {
@@ -35,7 +39,9 @@ const predefinedPrompts = [
 // Empty State Component
 function ChatEmptyState({
   onPromptClick,
-}: { onPromptClick: (prompt: string) => void }) {
+}: {
+  onPromptClick: (prompt: string) => void;
+}) {
   return (
     <div className="flex flex-col items-center justify-center space-y-8 py-16 text-center">
       <MessageCircleIcon className="size-16" />
@@ -48,10 +54,10 @@ function ChatEmptyState({
       <div className="flex w-full max-w-md flex-col items-center justify-center space-y-3">
         {predefinedPrompts.map((prompt) => (
           <Button
-            key={prompt}
-            variant="outline"
             className="h-auto w-full justify-start whitespace-normal p-4 text-left"
+            key={prompt}
             onClick={() => onPromptClick(prompt)}
+            variant="outline"
           >
             {prompt}
           </Button>
@@ -75,22 +81,22 @@ export function Chat() {
       if (!content.trim()) return;
 
       posthog?.capture("siwa.send-message", {
-        sessionId: conversationId,
         message: content,
+        sessionId: conversationId,
       });
 
       const userMessage: Message = {
+        content,
         id: Date.now().toString(),
         role: "user",
-        content,
       };
 
       const loadingMessageId = (Date.now() + 1).toString();
       const assistantLoadingMessage: Message = {
-        id: loadingMessageId,
-        role: "assistant",
         content: "",
+        id: loadingMessageId,
         isLoading: true,
+        role: "assistant",
       };
 
       setMessages((prevMessages) => [
@@ -171,10 +177,7 @@ export function Chat() {
   };
 
   return (
-    <div
-      className="mx-auto flex size-full flex-col overflow-hidden lg:min-w-[800px] lg:max-w-5xl"
-      id="chat-container"
-    >
+    <div className="mx-auto flex size-full flex-col overflow-hidden lg:min-w-[800px] lg:max-w-5xl">
       <div className="flex-1 overflow-y-auto p-4">
         {messages.length === 0 ? (
           <ChatEmptyState onPromptClick={handleSendMessage} />
@@ -182,12 +185,12 @@ export function Chat() {
           <div className="space-y-4">
             {messages.map((message, index) => (
               <div
-                key={message.id}
-                ref={index === messages.length - 1 ? lastMessageRef : null}
                 className={cn(
                   "flex",
                   message.role === "user" ? "justify-end" : "justify-start",
                 )}
+                key={message.id}
+                ref={index === messages.length - 1 ? lastMessageRef : null}
               >
                 <div
                   className={cn(
@@ -202,8 +205,8 @@ export function Chat() {
                   ) : (
                     <>
                       <StyledMarkdownRenderer
-                        text={message.content}
                         isMessagePending={false}
+                        text={message.content}
                         type={message.role}
                       />
                       {message.role === "assistant" && !message.isLoading && (
@@ -211,18 +214,18 @@ export function Chat() {
                           {!message.feedback && (
                             <>
                               <button
-                                type="button"
                                 aria-label="Thumbs up"
                                 className="text-muted-foreground transition-colors hover:text-green-500"
                                 onClick={() => handleFeedback(message.id, 1)}
+                                type="button"
                               >
                                 <ThumbsUpIcon className="size-5" />
                               </button>
                               <button
-                                type="button"
                                 aria-label="Thumbs down"
                                 className="text-muted-foreground transition-colors hover:text-red-500"
                                 onClick={() => handleFeedback(message.id, -1)}
+                                type="button"
                               >
                                 <ThumbsDownIcon className="size-5" />
                               </button>
@@ -241,23 +244,23 @@ export function Chat() {
       <div className="p-4">
         <div className="relative rounded-lg bg-muted text-muted-foreground">
           <AutoResizeTextarea
-            value={input}
+            className="min-h-[100px] resize-none bg-transparent pt-4 pr-20 pl-4"
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             placeholder="Ask AI Assistant..."
-            className="min-h-[100px] resize-none bg-transparent pt-4 pr-20 pl-4"
             rows={2}
+            value={input}
           />
           <Button
-            type="submit"
-            variant={"primary"}
             className="-translate-y-1/2 absolute top-1/2 right-2"
+            disabled={!input.trim()}
             onClick={() => {
               const currentInput = input;
               setInput("");
               handleSendMessage(currentInput);
             }}
-            disabled={!input.trim()}
+            type="submit"
+            variant={"primary"}
           >
             <ArrowUpIcon />
           </Button>
@@ -274,21 +277,21 @@ function StyledMarkdownRenderer(props: {
 }) {
   return (
     <MarkdownRenderer
-      skipHtml
-      markdownText={props.text}
       className="text-foreground [&>*:first-child]:mt-0 [&>*:first-child]:border-none [&>*:first-child]:pb-0 [&>*:last-child]:mb-0"
       code={{
-        ignoreFormattingErrors: true,
         className: "bg-transparent",
+        ignoreFormattingErrors: true,
       }}
+      inlineCode={{ className: "border-none" }}
+      li={{ className: "text-foreground" }}
+      markdownText={props.text}
       p={{
         className:
           props.type === "assistant"
             ? "text-foreground"
             : "text-foreground leading-normal",
       }}
-      li={{ className: "text-foreground" }}
-      inlineCode={{ className: "border-none" }}
+      skipHtml
     />
   );
 }

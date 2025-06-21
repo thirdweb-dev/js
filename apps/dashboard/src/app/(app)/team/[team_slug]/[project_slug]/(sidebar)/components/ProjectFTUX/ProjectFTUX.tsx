@@ -1,8 +1,3 @@
-import type { Project } from "@/api/projects";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CodeServer } from "@/components/ui/code/code.server";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { DotNetIcon } from "components/icons/brand-icons/DotNetIcon";
 import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
 import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
@@ -10,14 +5,19 @@ import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
 import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import {
+  ArrowLeftRightIcon,
   ChevronRightIcon,
   CircleAlertIcon,
   ExternalLinkIcon,
 } from "lucide-react";
+import Link from "next/link";
+import type { Project } from "@/api/projects";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CodeServer } from "@/components/ui/code/code.server";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { ContractIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/ContractIcon";
-import { EngineIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 import { InsightIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/InsightIcon";
-import { NebulaIcon } from "../../../../../../../nebula-app/(app)/icons/NebulaIcon";
+import { PayIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/PayIcon";
 import { ClientIDSection } from "./ClientIDSection";
 import { IntegrateAPIKeyCodeTabs } from "./IntegrateAPIKeyCodeTabs";
 import { SecretKeySection } from "./SecretKeySection";
@@ -30,8 +30,8 @@ export function ProjectFTUX(props: { project: Project; teamSlug: string }) {
         teamSlug={props.teamSlug}
       />
       <ProductsSection
-        teamSlug={props.teamSlug}
         projectSlug={props.project.slug}
+        teamSlug={props.teamSlug}
       />
       <SDKSection />
       <StarterKitsSection />
@@ -62,9 +62,9 @@ function IntegrateAPIKeySection({
           <ClientIDSection clientId={clientId} />
           {secretKeyMasked && (
             <SecretKeySection
+              projectId={project.id}
               secretKeyMasked={secretKeyMasked}
               teamId={project.teamId}
-              projectId={project.id}
             />
           )}
         </div>
@@ -83,62 +83,14 @@ function IntegrationCodeExamples(props: {
   return (
     <IntegrateAPIKeyCodeTabs
       tabs={{
-        ts: (
-          <CodeServer
-            code={typescriptCodeExample(props.project)}
-            lang="ts"
-            className="bg-background"
-          />
-        ),
-        react: (
-          <CodeServer
-            code={reactCodeExample(props.project)}
-            lang="ts"
-            className="bg-background"
-          />
-        ),
-        "react-native": (
-          <CodeServer
-            code={reactCodeExample(props.project)}
-            lang="ts"
-            className="bg-background"
-          />
-        ),
-        unity: (
-          <Alert variant="info" className="bg-background">
-            <CircleAlertIcon className="size-5" />
-            <AlertTitle>
-              Configure Client ID in Thirdweb Manager prefab
-            </AlertTitle>
-            <AlertDescription className="leading-loose">
-              Configure "Client ID" and "Bundle ID" in{" "}
-              <UnderlineLink
-                href="https://portal.thirdweb.com/unity/v5/thirdwebmanager"
-                target="_blank"
-              >
-                Thirdweb Manager prefab
-              </UnderlineLink>
-              <span className="block text-sm">
-                Make sure to configure your app's bundle ID in "Allowed Bundle
-                IDs" in{" "}
-                <UnderlineLink
-                  target="_blank"
-                  href={`/team/${props.teamSlug}/${props.project.slug}/settings`}
-                >
-                  Project settings
-                </UnderlineLink>
-              </span>
-            </AlertDescription>
-          </Alert>
-        ),
         dotnet: (
           <div className="flex flex-col gap-3">
             <CodeServer
+              className="bg-background"
               code={dotNotCodeExample(props.project)}
               lang="csharp"
-              className="bg-background"
             />
-            <Alert variant="info" className="bg-background">
+            <Alert className="bg-background" variant="info">
               <CircleAlertIcon className="size-5" />
               <AlertTitle>
                 Configure your app's bundle ID in "Allowed Bundle IDs" in
@@ -147,8 +99,8 @@ function IntegrationCodeExamples(props: {
               <AlertDescription className="leading-loose">
                 Go to{" "}
                 <UnderlineLink
-                  target="_blank"
                   href={`/team/${props.teamSlug}/${props.project.slug}/settings`}
+                  target="_blank"
                 >
                   Project settings
                 </UnderlineLink>{" "}
@@ -157,8 +109,58 @@ function IntegrationCodeExamples(props: {
             </Alert>
           </div>
         ),
+        react: (
+          <CodeServer
+            className="bg-background"
+            code={reactCodeExample(props.project)}
+            lang="ts"
+          />
+        ),
+        "react-native": (
+          <CodeServer
+            className="bg-background"
+            code={reactCodeExample(props.project)}
+            lang="ts"
+          />
+        ),
+        ts: (
+          <CodeServer
+            className="bg-background"
+            code={typescriptCodeExample(props.project)}
+            lang="ts"
+          />
+        ),
+        unity: (
+          <Alert className="bg-background" variant="info">
+            <CircleAlertIcon className="size-5" />
+            <AlertTitle>
+              Configure Client ID in Thirdweb Manager prefab
+            </AlertTitle>
+            <AlertDescription className="leading-loose">
+              Configure "Client ID" and "Bundle ID" in{" "}
+              <UnderlineLink
+                href="https://portal.thirdweb.com/unity/v5/thirdwebmanager"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Thirdweb Manager prefab
+              </UnderlineLink>
+              <span className="block text-sm">
+                Make sure to configure your app's bundle ID in "Allowed Bundle
+                IDs" in{" "}
+                <UnderlineLink
+                  href={`/team/${props.teamSlug}/${props.project.slug}/settings`}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Project settings
+                </UnderlineLink>
+              </span>
+            </AlertDescription>
+          </Alert>
+        ),
         unreal: (
-          <Alert variant="info" className="bg-background">
+          <Alert className="bg-background" variant="info">
             <CircleAlertIcon className="size-5" />
             <AlertTitle>
               Configure Client ID in Thirdweb Unreal Plugin{" "}
@@ -167,6 +169,7 @@ function IntegrationCodeExamples(props: {
               Configure "Client ID" and "Bundle ID" in{" "}
               <UnderlineLink
                 href="https://portal.thirdweb.com/unreal-engine/getting-started"
+                rel="noopener noreferrer"
                 target="_blank"
               >
                 thirdweb plugin settings
@@ -175,8 +178,9 @@ function IntegrationCodeExamples(props: {
                 Make sure to configure your app's bundle ID in "Allowed Bundle
                 IDs" in{" "}
                 <UnderlineLink
-                  target="_blank"
                   href={`/team/${props.teamSlug}/${props.project.slug}/settings`}
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
                   Project settings
                 </UnderlineLink>
@@ -220,48 +224,40 @@ var client = ThirdwebClient.Create(secretKey: "${project.secretKeys[0]?.masked}"
 
 // products section ------------------------------------------------------------
 
-function ProductsSection(props: {
-  teamSlug: string;
-  projectSlug: string;
-}) {
+function ProductsSection(props: { teamSlug: string; projectSlug: string }) {
   const products: Array<{
     title: string;
     description: string;
     href: string;
     icon: React.FC<{ className?: string }>;
-    trackingLabel: string;
   }> = [
     {
-      title: "Engine",
       description:
         "Scale your application with a backend server to read, write, and deploy contracts at production-grade.",
-      href: `/team/${props.teamSlug}/${props.projectSlug}/engine`,
-      icon: EngineIcon,
-      trackingLabel: "engine",
+      href: `/team/${props.teamSlug}/${props.projectSlug}/transactions`,
+      icon: ArrowLeftRightIcon,
+      title: "Transactions",
     },
     {
-      title: "Contracts",
       description:
         "Deploy your own contracts or leverage existing solutions for onchain implementation",
       href: `/team/${props.teamSlug}/${props.projectSlug}/contracts`,
       icon: ContractIcon,
-      trackingLabel: "contracts",
+      title: "Contracts",
     },
     {
-      title: "Insight",
       description:
         "Add indexing capabilities to retrieve real-time onchain data",
       href: `/team/${props.teamSlug}/${props.projectSlug}/insight`,
       icon: InsightIcon,
-      trackingLabel: "insight",
+      title: "Insight",
     },
     {
-      title: "Nebula",
       description:
-        "Integrate a blockchain AI model to improve your users insight into your application and the blockchain",
-      href: `/team/${props.teamSlug}/${props.projectSlug}/nebula`,
-      icon: NebulaIcon,
-      trackingLabel: "nebula",
+        "Bridge, swap, and purchase cryptocurrencies with any fiat options or tokens via cross-chain routing",
+      href: `/team/${props.teamSlug}/${props.projectSlug}/universal-bridge`,
+      icon: PayIcon,
+      title: "Universal Bridge",
     },
   ];
 
@@ -281,12 +277,11 @@ function ProductsSection(props: {
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         {products.map((product) => (
           <ProductCard
-            key={product.title}
-            title={product.title}
             description={product.description}
             href={product.href}
             icon={product.icon}
-            trackingLabel={product.trackingLabel}
+            key={product.title}
+            title={product.title}
           />
         ))}
       </section>
@@ -299,7 +294,6 @@ function ProductCard(props: {
   description: string;
   href: string;
   icon: React.FC<{ className?: string }>;
-  trackingLabel: string;
 }) {
   return (
     <div className="relative flex flex-col rounded-lg border bg-card p-4 hover:border-active-border">
@@ -307,14 +301,9 @@ function ProductCard(props: {
         <props.icon className="size-5 text-muted-foreground" />
       </div>
       <h3 className="mb-0.5 font-semibold text-lg tracking-tight">
-        <TrackedLinkTW
-          href={props.href}
-          className="before:absolute before:inset-0"
-          category="project-ftux"
-          label={props.trackingLabel}
-        >
+        <Link className="before:absolute before:inset-0" href={props.href}>
           {props.title}
-        </TrackedLinkTW>
+        </Link>
       </h3>
       <p className="text-muted-foreground text-sm">{props.description}</p>
     </div>
@@ -332,39 +321,39 @@ type SDKCardProps = {
 
 const sdks: SDKCardProps[] = [
   {
-    name: "TypeScript",
     href: "https://portal.thirdweb.com/sdk/typescript",
     icon: TypeScriptIcon,
+    name: "TypeScript",
     trackingLabel: "typescript",
   },
   {
-    name: "React",
     href: "https://portal.thirdweb.com/react/v5",
     icon: ReactIcon,
+    name: "React",
     trackingLabel: "react",
   },
   {
-    name: "React Native",
     href: "https://portal.thirdweb.com/react-native/v5",
     icon: ReactIcon,
+    name: "React Native",
     trackingLabel: "react_native",
   },
   {
-    name: "Unity",
     href: "https://portal.thirdweb.com/unity/v5",
     icon: UnityIcon,
+    name: "Unity",
     trackingLabel: "unity",
   },
   {
-    name: "Unreal Engine",
     href: "https://portal.thirdweb.com/unreal-engine",
     icon: UnrealIcon,
+    name: "Unreal Engine",
     trackingLabel: "unreal",
   },
   {
-    name: ".NET",
     href: "https://portal.thirdweb.com/dotnet",
     icon: DotNetIcon,
+    name: ".NET",
     trackingLabel: "dotnet",
   },
 ];
@@ -376,10 +365,10 @@ function SDKSection() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {sdks.map((sdk) => (
           <SDKCard
-            key={sdk.name}
-            name={sdk.name}
             href={sdk.href}
             icon={sdk.icon}
+            key={sdk.name}
+            name={sdk.name}
             trackingLabel={sdk.trackingLabel}
           />
         ))}
@@ -396,15 +385,14 @@ function SDKCard(props: SDKCardProps) {
       </div>
       <div className="flex flex-col gap-0.5">
         <p className="font-medium text-base">
-          <TrackedLinkTW
-            href={props.href}
+          <Link
             className="before:absolute before:inset-0"
+            href={props.href}
+            rel="noopener noreferrer"
             target="_blank"
-            category="project-ftux"
-            label={props.trackingLabel}
           >
             {props.name}
-          </TrackedLinkTW>
+          </Link>
         </p>
         <p className="inline-flex items-center gap-1.5 text-muted-foreground text-xs">
           View Docs
@@ -425,23 +413,23 @@ type StartedKitCardProps = {
 
 const startedKits: StartedKitCardProps[] = [
   {
-    name: "Next Starter",
     href: "https://github.com/thirdweb-example/next-starter",
+    name: "Next Starter",
     trackingLabel: "next_starter",
   },
   {
-    name: "Vite Starter",
     href: "https://github.com/thirdweb-example/vite-starter",
+    name: "Vite Starter",
     trackingLabel: "vite_starter",
   },
   {
-    name: "Expo Starter",
     href: "https://github.com/thirdweb-example/expo-starter",
+    name: "Expo Starter",
     trackingLabel: "expo_starter",
   },
   {
-    name: "Node Starter",
     href: "https://github.com/thirdweb-example/node-starter",
+    name: "Node Starter",
     trackingLabel: "node_starter",
   },
 ];
@@ -451,23 +439,22 @@ function StarterKitsSection() {
     <section>
       <div className="mb-3 flex items-center justify-between gap-2">
         <h2 className="font-semibold text-xl tracking-tight">Starter Kits</h2>
-        <TrackedLinkTW
-          href="https://github.com/thirdweb-example"
-          target="_blank"
-          category="project-ftux"
-          label="view_all_templates"
+        <Link
           className="inline-flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground"
+          href="https://github.com/thirdweb-example"
+          rel="noopener noreferrer"
+          target="_blank"
         >
           View all <ChevronRightIcon className="size-3" />
-        </TrackedLinkTW>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {startedKits.map((kit) => (
           <StarterKitCard
+            href={kit.href}
             key={kit.name}
             name={kit.name}
-            href={kit.href}
             trackingLabel={kit.trackingLabel}
           />
         ))}
@@ -484,15 +471,14 @@ function StarterKitCard(props: StartedKitCardProps) {
       </div>
 
       <div className="flex flex-col gap-0.5">
-        <TrackedLinkTW
-          href={props.href}
-          target="_blank"
-          category="project-ftux"
-          label={props.trackingLabel}
+        <Link
           className="before:absolute before:inset-0"
+          href={props.href}
+          rel="noopener noreferrer"
+          target="_blank"
         >
           {props.name}
-        </TrackedLinkTW>
+        </Link>
         <p className="inline-flex items-center gap-1.5 text-muted-foreground text-xs">
           View Repo
           <ExternalLinkIcon className="size-3" />

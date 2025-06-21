@@ -26,28 +26,28 @@ export async function rateLimit(args: {
   const { serviceScope } = serviceConfig;
 
   const rateLimitResult = await rateLimitSlidingWindow({
-    redis,
-    limitPerSecond,
-    key: `rate-limit:${serviceScope}:${team.id}`,
     increment,
+    key: `rate-limit:${serviceScope}:${team.id}`,
+    limitPerSecond,
+    redis,
     windowSeconds: SLIDING_WINDOW_SECONDS,
   });
 
   // if the request is rate limited, return the rate limit result.
   if (rateLimitResult.rateLimited) {
     return {
+      errorCode: "RATE_LIMIT_EXCEEDED",
+      errorMessage: `You've exceeded your ${serviceScope} rate limit at ${limitPerSecond} requests per second. Please upgrade your plan to increase your limits: https://thirdweb.com/team/${team.slug}/~/settings/billing`,
+      rateLimit: rateLimitResult.rateLimit,
       rateLimited: true,
       requestCount: rateLimitResult.requestCount,
-      rateLimit: rateLimitResult.rateLimit,
       status: 429,
-      errorMessage: `You've exceeded your ${serviceScope} rate limit at ${limitPerSecond} requests per second. Please upgrade your plan to increase your limits: https://thirdweb.com/team/${team.slug}/~/settings/billing`,
-      errorCode: "RATE_LIMIT_EXCEEDED",
     };
   }
   // otherwise, the request is not rate limited.
   return {
+    rateLimit: rateLimitResult.rateLimit,
     rateLimited: false,
     requestCount: rateLimitResult.requestCount,
-    rateLimit: rateLimitResult.rateLimit,
   };
 }

@@ -5,7 +5,7 @@ import { typedData } from "../../../test/src/typed-data.js";
 import { verifySignature } from "../../auth/verify-signature.js";
 import { verifyTypedData } from "../../auth/verify-typed-data.js";
 import { baseSepolia } from "../../chains/chain-definitions/base-sepolia.js";
-import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import { sendBatchTransaction } from "../../transaction/actions/send-batch-transaction.js";
 import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
@@ -42,8 +42,8 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       wallet = smartWallet(
         Config.erc7579({
           chain,
-          sponsorGas: true,
           factoryAddress: DEFAULT_FACTORY_ADDRESS,
+          sponsorGas: true,
           validatorAddress: DEFAULT_VALIDATOR_ADDRESS,
         }),
       );
@@ -68,11 +68,11 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
         message: "hello world",
       });
       const isValid = await verifySignature({
-        message: "hello world",
-        signature,
         address: smartWalletAddress,
         chain,
         client,
+        message: "hello world",
+        signature,
       });
       expect(isValid).toEqual(true);
     });
@@ -80,10 +80,10 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
     it("can sign typed data", async () => {
       const signature = await smartAccount.signTypedData(typedData.basic);
       const isValid = await verifyTypedData({
-        signature,
         address: smartWalletAddress,
         chain,
         client,
+        signature,
         ...typedData.basic,
       });
       expect(isValid).toEqual(true);
@@ -91,15 +91,15 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
 
     it("should send a transaction", async () => {
       const tx = prepareTransaction({
-        client,
         chain,
+        client,
         to: smartAccount.address,
         value: 0n,
       });
 
       const receipt = await sendTransaction({
-        transaction: tx,
         account: smartAccount,
+        transaction: tx,
       });
       expect(receipt.transactionHash).toBeDefined();
 
@@ -110,22 +110,22 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
 
     it("should send a batch transaction", async () => {
       const tx = prepareTransaction({
-        client,
         chain,
+        client,
         to: smartAccount.address,
         value: 0n,
       });
 
       const tx2 = prepareTransaction({
-        client,
         chain,
+        client,
         to: TEST_ACCOUNT_A.address,
         value: 0n,
       });
 
       const receipt = await sendBatchTransaction({
-        transactions: [tx, tx2],
         account: smartAccount,
+        transactions: [tx, tx2],
       });
       expect(receipt.transactionHash).toBeDefined();
     });

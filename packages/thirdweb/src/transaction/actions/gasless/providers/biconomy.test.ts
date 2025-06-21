@@ -6,8 +6,8 @@ import {
   TEST_ACCOUNT_B,
 } from "../../../../../test/src/test-wallets.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../../contract/contract.js";
 import { mintTo } from "../../../../extensions/erc20/write/mintTo.js";
 import { transfer } from "../../../../extensions/erc20/write/transfer.js";
@@ -33,12 +33,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("prepareBiconomyTransaction", () => {
     });
     // mint some tokens to the account
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: mintTo({
-        contract: erc20Contract,
         amount: "1000",
+        contract: erc20Contract,
         to: TEST_ACCOUNT_A.address,
       }),
-      account: TEST_ACCOUNT_A,
     });
   }, 60_000);
   it("should prepare a Biconomy transaction", async () => {
@@ -50,21 +50,21 @@ describe.runIf(process.env.TW_SECRET_KEY)("prepareBiconomyTransaction", () => {
 
     // seralizable transaction
     const serializableTransaction = await toSerializableTransaction({
-      transaction,
       from: TEST_ACCOUNT_A.address,
+      transaction,
     });
 
     const result = await prepareBiconomyTransaction({
       account: TEST_ACCOUNT_A,
-      serializableTransaction,
-      transaction,
       gasless: {
         apiId: "TEST_ID",
         apiKey: "TEST_KEY",
+        provider: "biconomy",
         // mainnet forwarder address
         relayerForwarderAddress: "0x84a0856b038eaAd1cC7E297cF34A7e72685A8693",
-        provider: "biconomy",
       },
+      serializableTransaction,
+      transaction,
     });
 
     const [request, signature] = result;

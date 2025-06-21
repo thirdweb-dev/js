@@ -2,34 +2,34 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.safepal",
-  name: "SafePal",
-  homepage: "https://safepal.com/",
-  image_id: "4e7d6f52-f663-4fc1-4b88-eebe7fc72800",
   app: {
+    android: "https://play.google.com/store/apps/details?id=io.safepal.wallet",
     browser:
       "https://chrome.google.com/webstore/detail/safepal-extension-wallet/lgmpcpglpngdoalbgeoldeajfclnhafa",
-    ios: "https://apps.apple.com/app/safepal-wallet/id1548297139",
-    android: "https://play.google.com/store/apps/details?id=io.safepal.wallet",
-    mac: null,
-    windows: null,
-    linux: null,
     chrome:
       "https://chrome.google.com/webstore/detail/safepal-extension-wallet/lgmpcpglpngdoalbgeoldeajfclnhafa",
+    edge: "https://microsoftedge.microsoft.com/addons/detail/safepal%E6%8F%92%E4%BB%B6%E9%92%B1%E5%8C%85/apenkfbbpmhihehmihndmmcdanacolnh",
     firefox:
       "https://addons.mozilla.org/firefox/addon/safepal-extension-wallet",
-    safari: null,
-    edge: "https://microsoftedge.microsoft.com/addons/detail/safepal%E6%8F%92%E4%BB%B6%E9%92%B1%E5%8C%85/apenkfbbpmhihehmihndmmcdanacolnh",
+    ios: "https://apps.apple.com/app/safepal-wallet/id1548297139",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "safepalwallet://",
-    universal: "https://link.safepal.io",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal:
       "https://chrome.google.com/webstore/detail/safepal-extension-wallet/lgmpcpglpngdoalbgeoldeajfclnhafa",
   },
+  homepage: "https://safepal.com/",
+  id: "com.safepal",
+  image_id: "4e7d6f52-f663-4fc1-4b88-eebe7fc72800",
+  mobile: {
+    native: "safepalwallet://",
+    universal: "https://link.safepal.io",
+  },
+  name: "SafePal",
+  rdns: null,
 } as const;

@@ -1,7 +1,5 @@
 "use client";
 
-import { CodeClient } from "@/components/ui/code/code.client";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import {
   type InternalTransaction,
   useActivity,
@@ -28,11 +26,13 @@ import { useChainSlug } from "hooks/chains/chainSlug";
 import { useClipboard } from "hooks/useClipboard";
 import { ChevronDownIcon, CircleHelpIcon, CopyIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useId, useMemo, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { stringify } from "thirdweb/utils";
 import { Button, Card, FormLabel, Heading, Text } from "tw-components";
+import { CodeClient } from "@/components/ui/code/code.client";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../_utils/contract-page-path";
 
@@ -75,24 +75,24 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({
     [allEvents, selectedEvent],
   );
 
+  const autoUpdateId = useId();
+
   return (
-    <Flex gap={6} flexDirection="column">
+    <Flex flexDirection="column" gap={6}>
       <Flex align="center" justify="space-between" w="full">
-        <Flex gap={4} alignItems="center">
+        <Flex alignItems="center" gap={4}>
           <Heading flexShrink={0} size="title.sm">
             Latest Transactions
           </Heading>
           <Select
-            w="50%"
-            value={selectedEvent}
             onChange={(e) => {
               const val = e.target.value;
 
               if (eventTypes.includes(val)) {
                 const path = buildContractPagePath({
-                  projectMeta,
                   chainIdOrSlug: chainSlug.toString(),
                   contractAddress: contract.address,
+                  projectMeta,
                   subpath:
                     e.target.value === "all"
                       ? "/events"
@@ -103,6 +103,8 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({
                 setSelectedEvent(val);
               }
             }}
+            value={selectedEvent}
+            w="50%"
           >
             <option value="all">All</option>
             {eventTypes.map((eventType) => (
@@ -113,29 +115,29 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({
           </Select>
         </Flex>
         <div>
-          <FormControl display="flex" alignItems="center">
-            <FormLabel htmlFor="auto-update" mb="0">
+          <FormControl alignItems="center" display="flex">
+            <FormLabel htmlFor={autoUpdateId} mb="0">
               Auto-Update
             </FormLabel>
             <LightMode>
               <Switch
+                id={autoUpdateId}
                 isChecked={autoUpdate}
                 onChange={() => setAutoUpdate((val) => !val)}
-                id="auto-update"
               />
             </LightMode>
           </FormControl>
         </div>
       </Flex>
-      <Card p={0} overflow="hidden">
+      <Card overflow="hidden" p={0}>
         <SimpleGrid
-          gap={2}
-          columns={12}
+          _dark={{ bg: "whiteAlpha.50" }}
+          bg="blackAlpha.50"
           borderBottomWidth="1px"
           borderColor="borderColor"
+          columns={12}
+          gap={2}
           padding={4}
-          bg="blackAlpha.50"
-          _dark={{ bg: "whiteAlpha.50" }}
         >
           <Heading gridColumn="span 4" size="label.md">
             Transaction Hash
@@ -153,7 +155,7 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({
             <div className="flex items-center justify-center py-4">
               <Flex align="center" gap={2}>
                 {autoUpdate && <Spinner size="sm" speed="0.69s" />}
-                <Text size="body.md" fontStyle="italic">
+                <Text fontStyle="italic" size="body.md">
                   {autoUpdate ? "listening for events" : "no events to show"}
                 </Text>
               </Flex>
@@ -162,12 +164,12 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({
           <Accordion allowMultiple defaultIndex={[]}>
             {filteredEvents?.slice(0, 10).map((e) => (
               <EventsFeedItem
-                key={e.transactionHash}
-                transaction={e}
-                setSelectedEvent={setSelectedEvent}
-                contractAddress={contract.address}
                 chainSlug={chainSlug}
+                contractAddress={contract.address}
+                key={e.transactionHash}
                 projectMeta={projectMeta}
+                setSelectedEvent={setSelectedEvent}
+                transaction={e}
               />
             ))}
           </Accordion>
@@ -197,43 +199,43 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
 
   return (
     <AccordionItem
+      _first={{ borderTop: "none" }}
       borderBottom="none"
       borderColor="borderColor"
-      _first={{ borderTop: "none" }}
     >
       <AccordionButton padding={0}>
         <SimpleGrid
-          columns={12}
-          gap={2}
+          _last={{ borderBottomWidth: 0 }}
+          alignItems="center"
           as="li"
           borderBottomWidth="1px"
           borderColor="borderColor"
-          padding={4}
+          columns={12}
+          gap={2}
           overflow="hidden"
-          alignItems="center"
-          _last={{ borderBottomWidth: 0 }}
+          padding={4}
         >
           <Box gridColumn="span 3">
             <div className="flex flex-row items-center gap-3">
               <Tooltip
-                p={0}
                 bg="transparent"
                 boxShadow="none"
                 label={
-                  <Card py={2} px={4} bgColor="backgroundHighlight">
+                  <Card bgColor="backgroundHighlight" px={4} py={2}>
                     <Text size="label.sm">
                       Copy transaction hash to clipboard
                     </Text>
                   </Card>
                 }
+                p={0}
               >
                 <Button
-                  size="sm"
                   bg="transparent"
                   onClick={() => {
                     onCopy();
                     toast.info("Transaction hash copied.");
                   }}
+                  size="sm"
                 >
                   <CopyIcon className="size-4" />
                 </Button>
@@ -247,12 +249,12 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
           <Box gridColumn="span 1" />
 
           <ButtonGroup
-            size="sm"
-            variant="outline"
-            gridColumn="span 5"
             flexWrap="wrap"
             gap={2}
+            gridColumn="span 5"
+            size="sm"
             spacing={0}
+            variant="outline"
           >
             {transaction.events.slice(0, 2).map((e, idx) => (
               <Button
@@ -262,9 +264,9 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
                 onClick={(ev) => {
                   ev.stopPropagation();
                   const path = buildContractPagePath({
-                    projectMeta,
                     chainIdOrSlug: chainSlug.toString(),
                     contractAddress: contractAddress,
+                    projectMeta,
                     subpath: `/events?event=${e.eventName}`,
                   });
 
@@ -297,31 +299,31 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
       <AccordionPanel>
         <Card>
           <div className="flex flex-col gap-4">
-            <Heading size="subtitle.sm" fontWeight="bold">
+            <Heading fontWeight="bold" size="subtitle.sm">
               Transaction Data
             </Heading>
 
             <Divider />
 
             <TransactionData
-              name="Transaction Hash"
-              value={transaction.transactionHash}
               description={`
                   A transaction hash is a unique 66 character identifier
                   that is generated whenever a transaction is executed.
                 `}
+              name="Transaction Hash"
+              value={transaction.transactionHash}
             />
 
             <TransactionData
-              name="Block Number"
-              value={transaction.blockNumber}
               description={`
                   The number of the block in which the transaction was recorded.
                   Block confirmation indicate how many blocks since the transaction was validated.
                 `}
+              name="Block Number"
+              value={transaction.blockNumber}
             />
 
-            <Heading size="subtitle.sm" fontWeight="bold" pt={6}>
+            <Heading fontWeight="bold" pt={6} size="subtitle.sm">
               Event Data
             </Heading>
 
@@ -369,14 +371,14 @@ const TransactionData: React.FC<TransactionDataProps> = ({
       <SimpleGrid columns={12} gap={2}>
         <div className="col-span-3 flex flex-row items-center gap-2">
           <Tooltip
-            p={0}
             bg="transparent"
             boxShadow="none"
             label={
-              <Card py={2} px={4} bgColor="backgroundHighlight">
+              <Card bgColor="backgroundHighlight" px={4} py={2}>
                 <Text size="label.sm">{description}</Text>
               </Card>
             }
+            p={0}
           >
             <div className="flex items-center justify-center">
               <CircleHelpIcon className="size-4 text-gray-600" />

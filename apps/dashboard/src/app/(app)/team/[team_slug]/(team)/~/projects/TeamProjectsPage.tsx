@@ -1,18 +1,33 @@
 "use client";
 
+import { LazyCreateProjectDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
+import { format } from "date-fns";
+import {
+  ArrowUpDownIcon,
+  CalendarIcon,
+  CheckIcon,
+  LetterTextIcon,
+  PlusIcon,
+  SearchIcon,
+  UsersIcon,
+} from "lucide-react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
 import { PaginationButtons } from "@/components/pagination-buttons";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -24,12 +39,6 @@ import {
 } from "@/components/ui/table";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import { LazyCreateProjectDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
-import { format } from "date-fns";
-import { ArrowDownNarrowWideIcon, PlusIcon, SearchIcon } from "lucide-react";
-import Link from "next/link";
-import { useMemo, useState } from "react";
-import type { ThirdwebClient } from "thirdweb";
 
 type SortById = "name" | "createdAt" | "monthlyActiveUsers";
 
@@ -83,7 +92,7 @@ export function TeamProjectsPage(props: {
     return _projectsToShow;
   }, [searchTerm, sortBy, projects]);
 
-  const pageSize = 10;
+  const pageSize = 5;
   const [page, setPage] = useState(1);
   const paginatedProjects = sortedProjects.slice(
     (page - 1) * pageSize,
@@ -93,71 +102,83 @@ export function TeamProjectsPage(props: {
   const showPagination = sortedProjects.length > pageSize;
   const totalPages = Math.ceil(sortedProjects.length / pageSize);
 
+  const hasActiveFilters = searchTerm !== "" || sortBy !== "monthlyActiveUsers";
+
   return (
-    <div className="flex grow flex-col">
-      <div className="relative flex flex-col gap-5 rounded-t-lg pb-4 lg:flex-row lg:items-center lg:justify-between lg:border lg:border-b-0 lg:bg-card lg:px-6 lg:py-6">
-        <h2 className="font-semibold text-2xl tracking-tight">Projects</h2>
+    <div>
+      <div className="relative flex flex-col gap-5 pb-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h2 className="mb-1 font-semibold text-2xl tracking-tight">
+            Projects
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            Create and manage your projects for your team
+          </p>
+        </div>
 
         {/* Filters + Add New */}
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
-          <SearchInput
-            value={searchTerm}
-            onValueChange={(v) => {
-              setSearchTerm(v);
-              setPage(1);
-            }}
-          />
-          <div className="flex gap-3">
-            <SelectBy
-              value={sortBy}
-              onChange={(v) => {
+          <div className="flex items-center gap-3">
+            <div className="relative max-sm:grow lg:w-60">
+              <Input
+                className="rounded-full bg-card pl-10"
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setPage(1);
+                }}
+                placeholder="Name or Client ID"
+                value={searchTerm}
+              />
+              <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-4 size-4 text-muted-foreground" />
+            </div>
+            <SortDropdown
+              hasActiveFilters={hasActiveFilters}
+              onSortChange={(v) => {
                 setSortBy(v);
                 setPage(1);
               }}
-            />
-            <AddNewButton
-              createProject={() => setIsCreateProjectDialogOpen(true)}
-              teamMembersSettingsPath={`/team/${props.team.slug}/~/settings/members`}
+              sortBy={sortBy}
             />
           </div>
+
+          <Button
+            className="gap-1.5 rounded-full"
+            onClick={() => setIsCreateProjectDialogOpen(true)}
+          >
+            <PlusIcon className="size-4" />
+            Create Project
+          </Button>
         </div>
       </div>
 
       {/* Projects Table */}
       {paginatedProjects.length === 0 ? (
-        <>
-          {searchTerm !== "" ? (
-            <div className="flex min-h-[450px] grow items-center justify-center border border-border bg-card">
-              <div className="flex flex-col items-center">
-                <p className="mb-5 text-center">No projects found</p>
-              </div>
+        searchTerm !== "" ? (
+          <div className="flex min-h-[375px] grow items-center justify-center border border-dashed bg-card rounded-lg">
+            <div className="flex flex-col items-center">
+              <p className="mb-5 text-center">No projects found</p>
             </div>
-          ) : (
-            <div className="flex min-h-[450px] grow items-center justify-center rounded-b-lg border border-border bg-card">
-              <div className="flex flex-col items-center">
-                <p className="mb-5 text-center font-semibold text-lg">
-                  No projects created
-                </p>
-                <Button
-                  className="gap-2 bg-background"
-                  onClick={() => setIsCreateProjectDialogOpen(true)}
-                  variant="outline"
-                >
-                  <PlusIcon className="size-4" />
-                  Create Project
-                </Button>
-              </div>
+          </div>
+        ) : (
+          <div className="flex min-h-[375px] grow items-center justify-center border rounded-lg border-dashed bg-card">
+            <div className="flex flex-col items-center">
+              <p className="mb-5 text-center font-semibold text-lg">
+                No projects created
+              </p>
+              <Button
+                className="gap-2"
+                onClick={() => setIsCreateProjectDialogOpen(true)}
+                variant="default"
+              >
+                <PlusIcon className="size-4" />
+                Create Project
+              </Button>
             </div>
-          )}
-        </>
+          </div>
+        )
       ) : (
-        <div>
-          <TableContainer
-            className={cn(
-              "lg:rounded-t-none",
-              showPagination && "rounded-b-none",
-            )}
-          >
+        <div className="flex grow flex-col">
+          <TableContainer className={cn(showPagination && "rounded-b-none")}>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -170,9 +191,9 @@ export function TeamProjectsPage(props: {
               <TableBody>
                 {paginatedProjects.map((project) => (
                   <TableRow
+                    className="hover:bg-accent/50"
                     key={project.id}
                     linkBox
-                    className="hover:bg-accent/50"
                   >
                     <TableCell>
                       <Link
@@ -181,8 +202,8 @@ export function TeamProjectsPage(props: {
                       >
                         <ProjectAvatar
                           className="size-8 rounded-full"
-                          src={project.image || ""}
                           client={props.client}
+                          src={project.image || ""}
                         />
                         <span className="font-medium text-sm">
                           {project.name}
@@ -198,12 +219,12 @@ export function TeamProjectsPage(props: {
                     </TableCell>
                     <TableCell>
                       <CopyTextButton
+                        className="-translate-x-2 z-10 font-mono text-muted-foreground"
+                        copyIconPosition="right"
                         textToCopy={project.publishableKey}
                         textToShow={`${project.publishableKey.slice(0, 4)}...${project.publishableKey.slice(-4)}`}
-                        copyIconPosition="right"
                         tooltip={undefined}
                         variant="ghost"
-                        className="-translate-x-2 z-10 font-mono text-muted-foreground"
                       />
                     </TableCell>
                     <TableCell className="text-muted-foreground">
@@ -228,88 +249,84 @@ export function TeamProjectsPage(props: {
       )}
 
       <LazyCreateProjectDialog
-        open={isCreateProjectDialogOpen}
-        onOpenChange={setIsCreateProjectDialogOpen}
-        teamSlug={props.team.slug}
-        teamId={props.team.id}
+        enableNebulaServiceByDefault={props.team.enabledScopes.includes(
+          "nebula",
+        )}
         onCreateAndComplete={() => {
           // refresh projects
           router.refresh();
         }}
-        enableNebulaServiceByDefault={props.team.enabledScopes.includes(
-          "nebula",
-        )}
+        onOpenChange={setIsCreateProjectDialogOpen}
+        open={isCreateProjectDialogOpen}
+        teamId={props.team.id}
+        teamSlug={props.team.slug}
       />
     </div>
   );
 }
 
-function SearchInput(props: {
-  value: string;
-  onValueChange: (value: string) => void;
-}) {
-  return (
-    <div className="relative grow">
-      <Input
-        placeholder="Project name or Client ID"
-        value={props.value}
-        onChange={(e) => props.onValueChange(e.target.value)}
-        className="bg-background pl-9 lg:w-[320px]"
-      />
-      <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
-    </div>
-  );
-}
+const sortByIcon: Record<SortById, React.FC<{ className?: string }>> = {
+  createdAt: CalendarIcon,
+  monthlyActiveUsers: UsersIcon,
+  name: LetterTextIcon,
+};
 
-function AddNewButton(props: {
-  createProject: () => void;
-  teamMembersSettingsPath: string;
-}) {
-  return (
-    <Button
-      variant="default"
-      className="absolute top-0 right-0 gap-2 lg:static"
-      onClick={props.createProject}
-    >
-      <PlusIcon className="size-4" />
-      <span>
-        <span className="hidden lg:inline">Create</span> Project
-      </span>
-    </Button>
-  );
-}
-
-function SelectBy(props: {
-  value: SortById;
-  onChange: (value: SortById) => void;
+function SortDropdown(props: {
+  sortBy: SortById;
+  onSortChange: (value: SortById) => void;
+  hasActiveFilters: boolean;
 }) {
   const values: SortById[] = ["name", "createdAt", "monthlyActiveUsers"];
   const valueToLabel: Record<SortById, string> = {
-    name: "Name",
     createdAt: "Creation Date",
     monthlyActiveUsers: "Monthly Active Users",
+    name: "Name",
   };
 
   return (
-    <Select
-      value={props.value}
-      onValueChange={(v) => {
-        props.onChange(v as SortById);
-      }}
-    >
-      <SelectTrigger className="min-w-[200px] bg-background capitalize">
-        <div className="flex items-center gap-2">
-          <ArrowDownNarrowWideIcon className="size-4 text-muted-foreground" />
-          {valueToLabel[props.value]}
-        </div>
-      </SelectTrigger>
-      <SelectContent>
-        {values.map((value) => (
-          <SelectItem key={value} value={value}>
-            {valueToLabel[value]}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button className="gap-1.5 rounded-full bg-card" variant="outline">
+          <ArrowUpDownIcon className="size-4 text-muted-foreground" />
+          <span className="hidden lg:inline">Sort by</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="end"
+        className="w-60 rounded-xl p-1.5 shadow-lg"
+        sideOffset={10}
+      >
+        <DropdownMenuRadioGroup
+          className="flex flex-col gap-1"
+          onValueChange={(v) => props.onSortChange(v as SortById)}
+          value={props.sortBy}
+        >
+          {values.map((value) => {
+            const Icon = sortByIcon[value];
+            return (
+              <DropdownMenuItem
+                className={cn(
+                  "flex cursor-pointer items-center justify-between gap-2 rounded-lg py-2",
+                  props.sortBy === value && "bg-accent",
+                )}
+                key={value}
+                onClick={() => props.onSortChange(value)}
+              >
+                <div className="flex items-center gap-2">
+                  <Icon className="size-4 text-muted-foreground" />
+                  {valueToLabel[value]}
+                </div>
+
+                {props.sortBy === value ? (
+                  <CheckIcon className="size-4 text-foreground" />
+                ) : (
+                  <div className="size-4" />
+                )}
+              </DropdownMenuItem>
+            );
+          })}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

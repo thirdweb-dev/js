@@ -1,6 +1,4 @@
 "use client";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Box, Divider, Flex, IconButton } from "@chakra-ui/react";
 import type { Abi } from "abitype";
@@ -8,10 +6,9 @@ import {
   DASHBOARD_ENGINE_RELAYER_URL,
   DASHBOARD_FORWARDER_ADDRESS,
 } from "constants/misc";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { ChevronFirstIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
@@ -21,6 +18,9 @@ import {
 } from "thirdweb/extensions/thirdweb";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Text } from "tw-components";
+import { reportContractPublished } from "@/analytics/report";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { useEns, useFunctionParamsFromABI } from "../hooks";
 import { ContractParamsFieldset } from "./contract-params-fieldset";
 import { FactoryFieldset } from "./factory-fieldset";
@@ -38,7 +38,6 @@ export function ContractPublishForm(props: {
   const [fieldsetToShow, setFieldsetToShow] = useState<
     "landing" | "factory" | "contractParams" | "implParams" | "networks"
   >("landing");
-  const trackEvent = useTrack();
 
   const router = useDashboardRouter();
   const { onSuccess, onError } = useTxNotifications(
@@ -50,8 +49,8 @@ export function ContractPublishForm(props: {
     gasless: {
       experimentalChainlessSupport: true,
       provider: "engine",
-      relayerUrl: DASHBOARD_ENGINE_RELAYER_URL,
       relayerForwarderAddress: DASHBOARD_FORWARDER_ADDRESS,
+      relayerUrl: DASHBOARD_ENGINE_RELAYER_URL,
     },
   });
 
@@ -68,49 +67,49 @@ export function ContractPublishForm(props: {
   const transformedQueryData = useMemo(() => {
     return {
       ...props.publishMetadata,
-      name: props.publishMetadata.name || "",
       changelog: "",
-      version: placeholderVersion,
-      displayName:
-        props.publishMetadata.displayName ||
-        props.publishMetadata.info?.title ||
-        props.publishMetadata.name ||
-        "",
-      description:
-        props.publishMetadata.description ||
-        props.publishMetadata.info?.notice ||
-        "",
-      factoryDeploymentData: props.publishMetadata?.factoryDeploymentData || {
-        factoryAddresses: {},
-        implementationAddresses: {},
-        implementationInitializerFunction: "initialize",
-        customFactoryInput: {
-          factoryFunction:
-            props.publishMetadata.factoryDeploymentData?.customFactoryInput
-              ?.factoryFunction || "deployProxyByImplementation",
-          customFactoryAddresses:
-            props.publishMetadata.factoryDeploymentData?.customFactoryInput
-              ?.customFactoryAddresses || {},
-          params:
-            props.publishMetadata.factoryDeploymentData?.customFactoryInput
-              ?.params || [],
-        },
-      },
       constructorParams: props.publishMetadata.constructorParams || {},
-      implConstructorParams: props.publishMetadata.implConstructorParams || {},
-      networksForDeployment: props.publishMetadata?.networksForDeployment || {
-        allNetworks: true,
-      },
-      deployType: props.publishMetadata.deployType || "standard",
       customFactoryAddresses: Object.entries(
         props.publishMetadata.factoryDeploymentData?.customFactoryInput
           ?.customFactoryAddresses || {},
       ).map(([key, value]) => ({ key: Number(key), value })),
       defaultExtensions: props.publishMetadata.defaultExtensions || [],
       defaultModules: props.publishMetadata.defaultModules || [],
+      deployType: props.publishMetadata.deployType || "standard",
+      description:
+        props.publishMetadata.description ||
+        props.publishMetadata.info?.notice ||
+        "",
+      displayName:
+        props.publishMetadata.displayName ||
+        props.publishMetadata.info?.title ||
+        props.publishMetadata.name ||
+        "",
       extensionsParamName:
         props.publishMetadata.factoryDeploymentData?.modularFactoryInput
           ?.hooksParamName || "",
+      factoryDeploymentData: props.publishMetadata?.factoryDeploymentData || {
+        customFactoryInput: {
+          customFactoryAddresses:
+            props.publishMetadata.factoryDeploymentData?.customFactoryInput
+              ?.customFactoryAddresses || {},
+          factoryFunction:
+            props.publishMetadata.factoryDeploymentData?.customFactoryInput
+              ?.factoryFunction || "deployProxyByImplementation",
+          params:
+            props.publishMetadata.factoryDeploymentData?.customFactoryInput
+              ?.params || [],
+        },
+        factoryAddresses: {},
+        implementationAddresses: {},
+        implementationInitializerFunction: "initialize",
+      },
+      implConstructorParams: props.publishMetadata.implConstructorParams || {},
+      name: props.publishMetadata.name || "",
+      networksForDeployment: props.publishMetadata?.networksForDeployment || {
+        allNetworks: true,
+      },
+      version: placeholderVersion,
     };
   }, [placeholderVersion, props.publishMetadata]);
 
@@ -118,11 +117,11 @@ export function ContractPublishForm(props: {
     FetchDeployMetadataResult & { name: string; version: string }
   >({
     defaultValues: transformedQueryData,
-    values: transformedQueryData,
     resetOptions: {
       keepDirty: true,
       keepDirtyValues: true,
     },
+    values: transformedQueryData,
   });
 
   const disableNext =
@@ -131,8 +130,8 @@ export function ContractPublishForm(props: {
     !!form.getFieldState("version", form.formState).error;
 
   const ensQuery = useEns({
-    client: props.client,
     addressOrEnsName: account?.address,
+    client: props.client,
   });
 
   const ensNameOrAddress = useMemo(() => {
@@ -185,17 +184,21 @@ export function ContractPublishForm(props: {
 
   useIsomorphicLayoutEffect(() => {
     window?.scrollTo({
-      top: 0,
       behavior: "smooth",
+      top: 0,
     });
   }, []);
+
+  const formId = useId();
 
   return (
     <FormProvider {...form}>
       <div className="w-full">
         <Flex
           as="form"
-          id="contract-release-form"
+          direction="column"
+          gap={6}
+          id={formId}
           onSubmit={form.handleSubmit((data) => {
             if (!account) {
               // no account, do nothing
@@ -217,15 +220,28 @@ export function ContractPublishForm(props: {
               {},
             );
 
-            trackEvent({
-              category: "publish",
-              action: "click",
-              label: "attempt",
-              release_id: `${ensNameOrAddress}/${props.publishMetadata.name}`,
-            });
-
             const metadata = {
               ...data,
+              factoryDeploymentData: {
+                ...data.factoryDeploymentData,
+                customFactoryInput: {
+                  customFactoryAddresses:
+                    addressObj ||
+                    data.factoryDeploymentData?.customFactoryInput
+                      ?.customFactoryAddresses,
+                  factoryFunction:
+                    data.factoryDeploymentData?.customFactoryInput
+                      ?.factoryFunction || "deployProxyByImplementation",
+                  params:
+                    data.factoryDeploymentData?.customFactoryInput?.params ||
+                    [],
+                },
+                implementationAddresses:
+                  data.factoryDeploymentData?.implementationAddresses || {},
+                implementationInitializerFunction:
+                  data.factoryDeploymentData
+                    ?.implementationInitializerFunction || "initialize",
+              },
               networksForDeployment: {
                 allNetworks:
                   data.deployType === "customFactory"
@@ -235,26 +251,6 @@ export function ContractPublishForm(props: {
                   addressArray.length > 0
                     ? Object.keys(addressObj).map((val) => Number(val))
                     : data.networksForDeployment?.networksEnabled,
-              },
-              factoryDeploymentData: {
-                ...data.factoryDeploymentData,
-                implementationAddresses:
-                  data.factoryDeploymentData?.implementationAddresses || {},
-                implementationInitializerFunction:
-                  data.factoryDeploymentData
-                    ?.implementationInitializerFunction || "initialize",
-                customFactoryInput: {
-                  factoryFunction:
-                    data.factoryDeploymentData?.customFactoryInput
-                      ?.factoryFunction || "deployProxyByImplementation",
-                  params:
-                    data.factoryDeploymentData?.customFactoryInput?.params ||
-                    [],
-                  customFactoryAddresses:
-                    addressObj ||
-                    data.factoryDeploymentData?.customFactoryInput
-                      ?.customFactoryAddresses,
-                },
               },
             } satisfies FetchDeployMetadataResult & {
               name: string;
@@ -269,15 +265,18 @@ export function ContractPublishForm(props: {
             });
 
             sendTx.mutate(tx, {
+              onError: (err) => {
+                console.error("Failed to publish contract", err);
+                onError(err);
+              },
               onSuccess: async () => {
                 onSuccess();
-                trackEvent({
-                  category: "publish",
-                  action: "click",
-                  label: "success",
-                  release_id: `${ensNameOrAddress}/${props.publishMetadata.name}`,
+
+                reportContractPublished({
+                  contractName: props.publishMetadata.name,
+                  deployType: data.deployType,
+                  publisher: ensNameOrAddress ?? "",
                   version: data.version,
-                  type: data.deployType,
                 });
                 await props.onPublishSuccess().catch((err) => {
                   console.error("Failed to run onPublishSuccess", err);
@@ -286,27 +285,14 @@ export function ContractPublishForm(props: {
                   router.push(successRedirectUrl, { scroll: true });
                 }
               },
-              onError: (err) => {
-                console.error("Failed to publish contract", err);
-                onError(err);
-                trackEvent({
-                  category: "publish",
-                  action: "click",
-                  label: "error",
-                  release_id: `${ensNameOrAddress}/${props.publishMetadata.name}`,
-                  is_factory: data.isDeployableViaFactory,
-                });
-              },
             });
           })}
-          direction="column"
-          gap={6}
         >
           {fieldsetToShow !== "landing" && (
             <div>
               <IconButton
-                w="inherit"
-                variant="ghost"
+                aria-label="Back"
+                icon={<ChevronFirstIcon className="size-6" />}
                 onClick={() =>
                   fieldsetToShow === "contractParams" &&
                   (form.watch("deployType") === "autoFactory" ||
@@ -319,8 +305,8 @@ export function ContractPublishForm(props: {
                         ? setFieldsetToShow("contractParams")
                         : setFieldsetToShow("landing")
                 }
-                aria-label="Back"
-                icon={<ChevronFirstIcon className="size-6" />}
+                variant="ghost"
+                w="inherit"
               >
                 Back
               </IconButton>
@@ -329,23 +315,23 @@ export function ContractPublishForm(props: {
 
           {fieldsetToShow === "landing" && (
             <LandingFieldset
+              client={props.client}
               latestVersion={latestVersion}
               placeholderVersion={placeholderVersion}
-              client={props.client}
             />
           )}
 
           {fieldsetToShow === "contractParams" && (
             <ContractParamsFieldset
-              deployParams={deployParams}
               client={props.client}
+              deployParams={deployParams}
             />
           )}
 
           {fieldsetToShow === "implParams" && implDeployParams?.length > 0 && (
             <ImplementationParamsFieldset
-              implParams={implDeployParams}
               client={props.client}
+              implParams={implDeployParams}
             />
           )}
 
@@ -353,32 +339,32 @@ export function ContractPublishForm(props: {
             <Flex flexDir="column" gap={24}>
               <FactoryFieldset
                 abi={props.publishMetadata.abi || []}
-                setCustomFactoryAbi={setCustomFactoryAbi}
                 client={props.client}
+                setCustomFactoryAbi={setCustomFactoryAbi}
               />
             </Flex>
           )}
 
           {fieldsetToShow === "networks" && (
             <Flex flexDir="column" gap={24}>
-              <NetworksFieldset fromStandard client={props.client} />
+              <NetworksFieldset client={props.client} fromStandard />
             </Flex>
           )}
 
           <Flex flexDir="column" gap={6}>
             <Divider />
             <Flex
-              justifyContent="space-between"
               alignItems="center"
               flexDir={{ base: "column", md: "row" }}
               gap={4}
+              justifyContent="space-between"
             >
               {!account ? (
                 <>
                   <Box />
                   <CustomConnectWallet
-                    isLoggedIn={props.isLoggedIn}
                     client={props.client}
+                    isLoggedIn={props.isLoggedIn}
                   />
                 </>
               ) : fieldsetToShow === "landing" &&
@@ -386,9 +372,9 @@ export function ContractPublishForm(props: {
                 <>
                   <Box />
                   <Button
-                    onClick={() => setFieldsetToShow("networks")}
                     colorScheme="primary"
                     isDisabled={disableNext}
+                    onClick={() => setFieldsetToShow("networks")}
                   >
                     Next
                   </Button>
@@ -399,9 +385,9 @@ export function ContractPublishForm(props: {
                 <>
                   <Box />
                   <Button
-                    onClick={() => setFieldsetToShow("factory")}
                     colorScheme="primary"
                     isDisabled={disableNext}
+                    onClick={() => setFieldsetToShow("factory")}
                   >
                     Next
                   </Button>
@@ -412,9 +398,9 @@ export function ContractPublishForm(props: {
                 <>
                   <Box />
                   <Button
+                    colorScheme="primary"
                     isDisabled={disableNext}
                     onClick={() => setFieldsetToShow("contractParams")}
-                    colorScheme="primary"
                   >
                     Next
                   </Button>
@@ -426,9 +412,9 @@ export function ContractPublishForm(props: {
                 <>
                   <Box />
                   <Button
+                    colorScheme="primary"
                     isDisabled={disableNext}
                     onClick={() => setFieldsetToShow("implParams")}
-                    colorScheme="primary"
                   >
                     Next
                   </Button>
@@ -438,9 +424,9 @@ export function ContractPublishForm(props: {
                 <>
                   <Box />
                   <Button
-                    onClick={() => setFieldsetToShow("implParams")}
                     colorScheme="primary"
                     isDisabled={disableNext}
+                    onClick={() => setFieldsetToShow("implParams")}
                   >
                     Next
                   </Button>
@@ -452,19 +438,18 @@ export function ContractPublishForm(props: {
                   </Text>
                   <Button
                     // differentiate this from the edit button
-                    key="submit-button"
                     borderRadius="md"
-                    position="relative"
-                    role="group"
                     colorScheme="blue"
-                    isLoading={isPending}
-                    form="contract-release-form"
+                    form={formId}
                     isDisabled={isDisabled}
+                    isLoading={isPending}
+                    key="submit-button"
                     loadingText={
                       sendTx.isSuccess
                         ? "Preparing page"
                         : "Publishing contract"
                     }
+                    position="relative"
                     type="submit"
                   >
                     Publish Contract

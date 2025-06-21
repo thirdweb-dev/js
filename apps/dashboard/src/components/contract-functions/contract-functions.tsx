@@ -37,11 +37,11 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
 }) => {
   if (onlyFunctions) {
     return (
-      <Flex height="100%" flexDir="column" gap={2}>
+      <Flex flexDir="column" gap={2} height="100%">
         {functions && functions.length > 0 && (
           <ContractFunctionsPanel
-            fnsOrEvents={functions}
             contract={contract}
+            fnsOrEvents={functions}
             isLoggedIn={isLoggedIn}
           />
         )}
@@ -51,8 +51,8 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
 
   return (
     <Flex flexDir="column" gap={2} w="100%">
-      <Tabs isLazy lazyBehavior="keepMounted" colorScheme="gray">
-        <TabList px={0} borderBottomColor="borderColor" borderBottomWidth="1px">
+      <Tabs colorScheme="gray" isLazy lazyBehavior="keepMounted">
+        <TabList borderBottomColor="borderColor" borderBottomWidth="1px" px={0}>
           {functions && functions.length > 0 ? (
             <Tab>
               <Heading color="inherit" my={1} size="label.lg">
@@ -86,8 +86,8 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
           {functions && functions.length > 0 ? (
             <TabPanel h="40rem">
               <ContractFunctionsPanel
-                fnsOrEvents={functions}
                 contract={contract}
+                fnsOrEvents={functions}
                 isLoggedIn={isLoggedIn}
               />
             </TabPanel>
@@ -95,8 +95,8 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
           {events && events?.length > 0 ? (
             <TabPanel>
               <ContractFunctionsPanel
-                fnsOrEvents={events}
                 contract={contract}
+                fnsOrEvents={events}
                 isLoggedIn={isLoggedIn}
               />
             </TabPanel>
@@ -106,15 +106,15 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
               <div className="flex flex-col gap-6">
                 <CodeOverview
                   abi={abi}
-                  noSidebar
                   chainId={contract?.chain.id || 1}
+                  noSidebar
                 />
               </div>
             </TabPanel>
           )}
           {(sources || abi) && (
             <TabPanel>
-              <SourcesPanel sources={sources} abi={abi} />
+              <SourcesPanel abi={abi} sources={sources} />
             </TabPanel>
           )}
         </TabPanels>

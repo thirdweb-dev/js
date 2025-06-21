@@ -12,6 +12,11 @@ export const webLocalStorage: AsyncStorage = {
 
     return null;
   },
+  async removeItem(key: string) {
+    if (typeof window !== "undefined" && window.localStorage) {
+      localStorage.removeItem(key);
+    }
+  },
   async setItem(key: string, value: string) {
     try {
       if (typeof window !== "undefined" && window.localStorage) {
@@ -19,11 +24,6 @@ export const webLocalStorage: AsyncStorage = {
       }
     } catch {
       // ignore
-    }
-  },
-  async removeItem(key: string) {
-    if (typeof window !== "undefined" && window.localStorage) {
-      localStorage.removeItem(key);
     }
   },
 };

@@ -1,7 +1,10 @@
 "use client";
 
+import {
+  DEFAULT_ACCOUNT_FACTORY_V0_6,
+  DEFAULT_ACCOUNT_FACTORY_V0_7,
+} from "thirdweb/wallets/smart";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import {
   Table,
   TableBody,
@@ -11,22 +14,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  DEFAULT_ACCOUNT_FACTORY_V0_6,
-  DEFAULT_ACCOUNT_FACTORY_V0_7,
-} from "thirdweb/wallets/smart";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 
 export function DefaultFactoriesSection() {
   const data = [
     {
-      name: "AccountFactory (v0.6)",
       address: DEFAULT_ACCOUNT_FACTORY_V0_6,
       entrypointVersion: "0.6",
+      name: "AccountFactory (v0.6)",
     },
     {
-      name: "AccountFactory (v0.7)",
       address: DEFAULT_ACCOUNT_FACTORY_V0_7,
       entrypointVersion: "0.7",
+      name: "AccountFactory (v0.7)",
     },
   ];
 
@@ -40,8 +40,8 @@ export function DefaultFactoriesSection() {
           Ready to use account factories that are pre-deployed on each chain.{" "}
           <UnderlineLink
             href="https://playground.thirdweb.com/connect/account-abstraction/connect"
+            rel="noopener noreferrer"
             target="_blank"
-            rel="noreferrer"
           >
             Learn how to use these in your apps
           </UnderlineLink>
@@ -66,9 +66,9 @@ export function DefaultFactoriesSection() {
                 <TableCell>
                   <CopyAddressButton
                     address={row.address}
+                    className="-translate-x-2"
                     copyIconPosition="left"
                     variant="ghost"
-                    className="-translate-x-2"
                   />
                 </TableCell>
                 <TableCell>{row.entrypointVersion}</TableCell>

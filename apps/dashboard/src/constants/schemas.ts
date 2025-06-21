@@ -1,8 +1,8 @@
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { resolveEns } from "lib/ens";
 import { isAddress } from "thirdweb";
 import { isValidENSName } from "thirdweb/utils";
 import z from "zod";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 
 /**
  * This file contains some useful zod schemas from the SDK v4
@@ -54,12 +54,12 @@ const FileOrStringSchema = z.union([FileSchema, z.string()]);
 
 export const CommonContractSchema = z
   .object({
-    name: z.string(),
-    description: z.string().optional(),
-    image: FileOrStringSchema.optional(),
-    external_link: z.string().optional(),
     app_uri: z.string().optional(),
-    social_urls: z.record(z.string()).optional(),
     defaultAdmin: AddressOrEnsSchema.optional(),
+    description: z.string().optional(),
+    external_link: z.string().optional(),
+    image: FileOrStringSchema.optional(),
+    name: z.string(),
+    social_urls: z.record(z.string()).optional(),
   })
   .catchall(z.unknown());

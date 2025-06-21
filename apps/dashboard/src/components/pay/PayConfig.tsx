@@ -1,5 +1,14 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import {
+  type ApiKeyPayConfigValidationSchema,
+  apiKeyPayConfigValidationSchema,
+} from "components/settings/ApiKeys/validations";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { Project } from "@/api/projects";
 import { type Fee, updateFee } from "@/api/universal-bridge/developer";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
@@ -11,16 +20,6 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import {
-  type ApiKeyPayConfigValidationSchema,
-  apiKeyPayConfigValidationSchema,
-} from "components/settings/ApiKeys/validations";
-import { useTrack } from "hooks/analytics/useTrack";
-import Link from "next/link";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 interface PayConfigProps {
   project: Project;
@@ -29,18 +28,14 @@ interface PayConfigProps {
   fees: Fee;
 }
 
-const TRACKING_CATEGORY = "pay";
-
 export const PayConfig: React.FC<PayConfigProps> = (props) => {
   const form = useForm<ApiKeyPayConfigValidationSchema>({
     resolver: zodResolver(apiKeyPayConfigValidationSchema),
     values: {
-      payoutAddress: props.fees.feeRecipient ?? "",
       developerFeeBPS: props.fees.feeBps ? props.fees.feeBps / 100 : 0,
+      payoutAddress: props.fees.feeRecipient ?? "",
     },
   });
-
-  const trackEvent = useTrack();
 
   const updateFeeMutation = useMutation({
     mutationFn: async (values: {
@@ -49,9 +44,9 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
     }) => {
       await updateFee({
         clientId: props.project.publishableKey,
-        teamId: props.teamId,
-        feeRecipient: values.payoutAddress,
         feeBps: values.developerFeeBPS,
+        feeRecipient: values.payoutAddress,
+        teamId: props.teamId,
       });
     },
   });
@@ -60,30 +55,16 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
     ({ payoutAddress, developerFeeBPS }) => {
       updateFeeMutation.mutate(
         {
-          payoutAddress,
           developerFeeBPS: developerFeeBPS ? developerFeeBPS * 100 : 0,
+          payoutAddress,
         },
         {
-          onSuccess: () => {
-            toast.success("Fee sharing updated");
-            trackEvent({
-              category: TRACKING_CATEGORY,
-              action: "configuration-update",
-              label: "success",
-              data: {
-                payoutAddress,
-              },
-            });
-          },
           onError: (err) => {
             toast.error("Failed to update fee sharing");
             console.error(err);
-            trackEvent({
-              category: TRACKING_CATEGORY,
-              action: "configuration-update",
-              label: "error",
-              error: err,
-            });
+          },
+          onSuccess: () => {
+            toast.success("Fee sharing updated");
           },
         },
       );
@@ -95,16 +76,16 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit} autoComplete="off">
+      <form autoComplete="off" onSubmit={handleSubmit}>
         <SettingsCard
           bottomText="Shared Fees are sent to recipient address"
           errorText={form.getFieldState("payoutAddress").error?.message}
+          noPermissionText={undefined}
           saveButton={{
-            type: "submit",
             disabled: !form.formState.isDirty,
             isPending: updateFeeMutation.isPending,
+            type: "submit",
           }}
-          noPermissionText={undefined}
         >
           <div>
             <h3 className="font-semibold text-xl tracking-tight">
@@ -114,9 +95,10 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
               thirdweb collects a 0.3% protocol fee on swap transactions. You
               may set your own developer fee in addition to this fee.{" "}
               <Link
-                href="https://portal.thirdweb.com/connect/pay/fee-sharing"
-                target="_blank"
                 className="text-link-foreground hover:text-foreground"
+                href="https://portal.thirdweb.com/connect/pay/fee-sharing"
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 Learn more.
               </Link>
@@ -143,7 +125,7 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
                     <FormLabel>Fee amount</FormLabel>
                     <FormControl>
                       <div className="flex items-center gap-2">
-                        <Input {...field} type="number" placeholder="0.5" />
+                        <Input {...field} placeholder="0.5" type="number" />
                         <span className="text-muted-foreground text-sm">%</span>
                       </div>
                     </FormControl>

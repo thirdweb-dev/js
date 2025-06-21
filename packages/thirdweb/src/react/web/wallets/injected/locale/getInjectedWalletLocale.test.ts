@@ -13,15 +13,15 @@ import tl from "./tl.js";
 import vi from "./vi.js";
 
 const locales: { locale: LocaleId; content: object }[] = [
-  { locale: "es_ES", content: es },
-  { locale: "ja_JP", content: ja },
-  { locale: "tl_PH", content: tl },
-  { locale: "vi_VN", content: vi },
-  { locale: "de_DE", content: de },
-  { locale: "ko_KR", content: kr },
-  { locale: "fr_FR", content: fr },
-  { locale: "ru_RU", content: ru },
-  { locale: "pt_BR", content: br },
+  { content: es, locale: "es_ES" },
+  { content: ja, locale: "ja_JP" },
+  { content: tl, locale: "tl_PH" },
+  { content: vi, locale: "vi_VN" },
+  { content: de, locale: "de_DE" },
+  { content: kr, locale: "ko_KR" },
+  { content: fr, locale: "fr_FR" },
+  { content: ru, locale: "ru_RU" },
+  { content: br, locale: "pt_BR" },
 ];
 
 describe("getInjectedWalletLocale", () => {

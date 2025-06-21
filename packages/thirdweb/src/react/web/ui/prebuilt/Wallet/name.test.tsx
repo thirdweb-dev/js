@@ -23,7 +23,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("WalletName", () => {
 
   it("fetchWalletName should work with formatFn", async () => {
     const formatFn = (str: string) => `${str} Wallet`;
-    expect(await fetchWalletName({ id: "io.metamask", formatFn })).toBe(
+    expect(await fetchWalletName({ formatFn, id: "io.metamask" })).toBe(
       "MetaMask Wallet",
     );
   });
@@ -38,7 +38,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("WalletName", () => {
   it("getQueryKeys should work WITH a formatFn", () => {
     const fn = (str: string) => `test:${str}`;
     const fnId = getFunctionId(fn);
-    expect(getQueryKeys({ id: "ai.hacken", formatFn: fn })).toStrictEqual([
+    expect(getQueryKeys({ formatFn: fn, id: "ai.hacken" })).toStrictEqual([
       "walletName",
       "ai.hacken",
       { resolver: fnId },
@@ -47,6 +47,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("WalletName", () => {
 
   it("should render a span", async () => {
     const { container } = render(
+      // biome-ignore lint/nursery/useUniqueElementIds: "id" is not a html attribute here - TODO: stop using 'id' as a prop on JSX elements
       <WalletProvider id="io.metamask">
         <WalletName />
       </WalletProvider>,

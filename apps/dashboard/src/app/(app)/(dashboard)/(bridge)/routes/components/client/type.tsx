@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { ArrowDownLeftIcon, ArrowUpRightIcon } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 
 type QueryTypeProps = {
   activeType: "origin" | "destination";
@@ -26,26 +26,26 @@ export const QueryType: React.FC<QueryTypeProps> = ({ activeType }) => {
   );
   return (
     <div className="flex flex-row">
-      <ToolTipLabel label="Origin" contentClassName="w-full">
+      <ToolTipLabel contentClassName="w-full" label="Origin">
         <Button
-          size="icon"
-          variant={activeType === "origin" ? "default" : "outline"}
+          className="rounded-r-none"
           onClick={() => {
             router.replace(createPageURL("origin"));
           }}
-          className="rounded-r-none"
+          size="icon"
+          variant={activeType === "origin" ? "default" : "outline"}
         >
           <ArrowUpRightIcon strokeWidth={1} />
         </Button>
       </ToolTipLabel>
-      <ToolTipLabel label="Destination" contentClassName="w-full">
+      <ToolTipLabel contentClassName="w-full" label="Destination">
         <Button
-          variant={activeType === "destination" ? "default" : "outline"}
-          size="icon"
+          className="rounded-l-none"
           onClick={() => {
             router.replace(createPageURL("destination"));
           }}
-          className="rounded-l-none"
+          size="icon"
+          variant={activeType === "destination" ? "default" : "outline"}
         >
           <ArrowDownLeftIcon strokeWidth={1} />
         </Button>

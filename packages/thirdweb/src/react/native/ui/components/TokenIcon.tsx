@@ -19,9 +19,9 @@ export function TokenIcon(props: {
 }) {
   return props.token ? (
     <RNImage
-      theme={props.theme}
       data={props.token?.icon || genericTokenIcon}
       size={props.size}
+      theme={props.theme}
     />
   ) : (
     <ChainIcon {...props} />

@@ -14,12 +14,12 @@ export async function updateAccount(values: {
   }
 
   const res = await fetch(`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/account`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
     body: JSON.stringify(values),
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    method: "PUT",
   });
 
   if (!res.ok) {

@@ -1,7 +1,14 @@
 "use client";
 
+import { FormControl } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { CircleAlertIcon, DownloadIcon, ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import { apiServerProxy } from "@/actions/proxies";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,15 +18,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { FormControl } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { CircleAlertIcon, DownloadIcon, ExternalLinkIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -36,15 +36,15 @@ async function importEngine({
   const url = data.url.endsWith("/") ? data.url : `${data.url}/`;
 
   const res = await apiServerProxy({
-    pathname: `/v1/teams/${teamIdOrSlug}/engine`,
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({
       name: data.name,
       url,
     }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    pathname: `/v1/teams/${teamIdOrSlug}/engine`,
   });
 
   if (!res.ok) {
@@ -61,13 +61,13 @@ export function EngineImportCard(props: {
 
   return (
     <EngineImportCardUI
-      prefillImportUrl={props.prefillImportUrl}
       importEngine={async (params) => {
         await importEngine({ ...params, teamIdOrSlug: props.teamSlug });
         router.push(
           `/team/${props.teamSlug}/${props.projectSlug}/engine/dedicated`,
         );
       }}
+      prefillImportUrl={props.prefillImportUrl}
     />
   );
 }
@@ -120,16 +120,15 @@ export function EngineImportCardUI(props: {
 
               <div className="h-4" />
 
-              <TrackedLinkTW
+              <Link
                 className="flex items-center justify-between gap-2 rounded-lg border border-border bg-card p-3 text-sm hover:bg-accent"
                 href="https://portal.thirdweb.com/infrastructure/engine/get-started"
+                rel="noopener noreferrer"
                 target="_blank"
-                category="engine"
-                label="clicked-self-host-instructions"
               >
                 Get help setting up Engine for free
                 <ExternalLinkIcon className="size-4 text-muted-foreground" />
-              </TrackedLinkTW>
+              </Link>
             </div>
 
             <div className="mt-6 flex flex-col gap-4">
@@ -141,8 +140,8 @@ export function EngineImportCardUI(props: {
                     <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Enter a descriptive label"
                         autoFocus
+                        placeholder="Enter a descriptive label"
                         {...field}
                       />
                     </FormControl>
@@ -159,8 +158,8 @@ export function EngineImportCardUI(props: {
                     <FormLabel>URL</FormLabel>
                     <FormControl>
                       <Input
-                        type="url"
                         placeholder="Enter your Engine URL"
+                        type="url"
                         {...field}
                       />
                     </FormControl>
@@ -180,7 +179,7 @@ export function EngineImportCardUI(props: {
           <div className="h-8" />
 
           <div className="flex justify-end border-border border-t p-6">
-            <Button type="submit" className="min-w-28 gap-2">
+            <Button className="min-w-28 gap-2" type="submit">
               {importMutation.isPending ? (
                 <Spinner className="size-4" />
               ) : (

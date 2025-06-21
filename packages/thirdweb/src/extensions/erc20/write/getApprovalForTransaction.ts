@@ -93,8 +93,8 @@ export async function getApprovalForTransaction(
 
     return approve({
       contract,
-      value: erc20Value.amountWei,
       spender: target,
+      value: erc20Value.amountWei,
     });
   }
 

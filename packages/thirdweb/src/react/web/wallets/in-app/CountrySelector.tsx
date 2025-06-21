@@ -45,16 +45,15 @@ export function CountrySelector({
   return (
     <>
       <Select
-        ref={selectRef}
         name="countries"
-        id="countries"
-        value={countryCode}
         onChange={(e) => {
           setCountryCode(e.target.value);
         }}
+        ref={selectRef}
         style={{
           padding: `${spacing.sm} ${spacing.md}`,
         }}
+        value={countryCode}
       >
         <Option
           style={{
@@ -82,39 +81,39 @@ export function CountrySelector({
 const Option = /* @__PURE__ */ StyledOption(() => {
   const theme = useCustomTheme();
   return {
-    color: theme.colors.primaryText,
-    background: theme.colors.modalBg,
-    transition: "background 0.3s ease",
     "&:hover": {
       background: theme.colors.tertiaryBg,
     },
+    background: theme.colors.modalBg,
+    color: theme.colors.primaryText,
+    transition: "background 0.3s ease",
   };
 });
 
 const Select = /* @__PURE__ */ StyledSelect((_) => {
   const theme = useCustomTheme();
   return {
-    display: "block",
-    padding: spacing.sm,
-    boxSizing: "border-box",
-    outline: "none",
-    border: "none",
-    borderRadius: radius.lg,
-    color: theme.colors.primaryText,
-    WebkitAppearance: "none",
-    appearance: "none",
-    cursor: "pointer",
-    background: "transparent",
     "&::placeholder": {
       color: theme.colors.secondaryText,
     },
     "&[disabled]": {
       cursor: "not-allowed",
     },
-    minWidth: "0px",
+    appearance: "none",
+    background: "transparent",
+    border: "none",
+    borderRadius: radius.lg,
+    boxSizing: "border-box",
+    color: theme.colors.primaryText,
+    cursor: "pointer",
+    display: "block",
     maxWidth: "90px",
-    textOverflow: "ellipsis",
+    minWidth: "0px",
+    outline: "none",
     overflow: "hidden",
+    padding: spacing.sm,
+    textOverflow: "ellipsis",
+    WebkitAppearance: "none",
     whiteSpace: "nowrap",
   };
 });

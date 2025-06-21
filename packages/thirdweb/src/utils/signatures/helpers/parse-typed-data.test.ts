@@ -7,8 +7,8 @@ describe("parseTypedData", () => {
       domain: {
         chainId: "0x1" as unknown as number,
       },
-      types: {},
       primaryType: "EIP712Domain" as const,
+      types: {},
     };
 
     const result = parseTypedData(typedData);
@@ -20,8 +20,8 @@ describe("parseTypedData", () => {
       domain: {
         chainId: 1,
       },
-      types: {},
       primaryType: "EIP712Domain" as const,
+      types: {},
     };
 
     const result = parseTypedData(typedData);
@@ -31,8 +31,8 @@ describe("parseTypedData", () => {
   test("returns typed data unchanged if chainId is undefined", () => {
     const typedData = {
       domain: {},
-      types: {},
       primaryType: "EIP712Domain" as const,
+      types: {},
     };
 
     const result = parseTypedData(typedData);
@@ -45,8 +45,8 @@ describe("parseTypedData", () => {
         chainId: "0x1" as unknown as number,
         name: "Test",
       },
-      types: {},
       primaryType: "EIP712Domain" as const,
+      types: {},
     };
 
     const result = parseTypedData(typedData);

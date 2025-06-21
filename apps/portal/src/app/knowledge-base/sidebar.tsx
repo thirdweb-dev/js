@@ -1,87 +1,86 @@
+import { BracesIcon, CodeIcon, RocketIcon } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 
-import { BracesIcon, CodeIcon, RocketIcon } from "lucide-react";
-
 export const sidebar: SideBar = {
-  name: "Support Knowledge Base",
   links: [
     {
-      name: "Get Started",
       href: "/knowledge-base/get-started",
       icon: <RocketIcon />,
+      name: "Get Started",
     },
     {
       separator: true,
     },
     {
-      name: "thirdweb Resources",
       isCollapsible: false,
       links: [
         {
-          name: "How to",
           icon: <BracesIcon />,
           links: [
             {
-              name: "Verify your team email domain",
               expanded: true,
               href: "/knowledge-base/how-to/verify-your-team-email-domain",
+              name: "Verify your team email domain",
             },
             {
-              name: "Creating soulbound NFTs",
               expanded: true,
               href: "/knowledge-base/how-to/creating-soulbound-nfts",
+              name: "Creating soulbound NFTs",
             },
             {
-              name: "Console error sharing",
               expanded: true,
               href: "/knowledge-base/how-to/console-error-sharing",
+              name: "Console error sharing",
             },
             {
-              name: "Deploy mint template",
               expanded: true,
               href: "/knowledge-base/how-to/deploy-mint-template",
+              name: "Deploy mint template",
             },
           ],
+          name: "How to",
         },
       ],
+      name: "thirdweb Resources",
     },
     {
-      name: "Troubleshoot",
       isCollapsible: false,
       links: [
         {
-          name: "Onchain common errors",
           icon: <RocketIcon />,
           links: [
             {
-              name: "Thirdweb CLI: Device Link Error",
               href: "/knowledge-base/onchain-common-errors/thirdweb-cli/device-link-error",
+              name: "Thirdweb CLI: Device Link Error",
             },
           ],
+          name: "Onchain common errors",
         },
         {
-          name: "Contracts",
           icon: <CodeIcon />,
           links: [
             {
-              name: "Airdrop Contract",
               href: "/knowledge-base/troubleshoot/contracts/airdrop-contract",
+              name: "Airdrop Contract",
             },
             {
-              name: "Embed Feature Not Found",
               href: "/knowledge-base/troubleshoot/contracts/embed-feature-not-found",
+              name: "Embed Feature Not Found",
             },
             {
-              name: "Batch Upload",
               href: "/knowledge-base/troubleshoot/contracts/batch-upload",
+              name: "Batch Upload",
             },
             {
-              name: "Transfer Amount Exceeds Allowance",
               href: "/knowledge-base/troubleshoot/contracts/erc20-transfer-allowance",
+              name: "Transfer Amount Exceeds Allowance",
             },
           ],
+          name: "Contracts",
         },
       ],
+      name: "Troubleshoot",
     },
   ],
+  name: "Support Knowledge Base",
 };

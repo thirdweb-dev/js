@@ -1,17 +1,14 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useStore } from "@/lib/reactive";
 import { getSDKTheme } from "app/(app)/components/sdk-component-theme";
 import { LazyConfigureNetworkModal } from "components/configure-networks/LazyConfigureNetworkModal";
 import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
 import { mapV4ChainToV5Chain } from "contexts/map-chains";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 import { useCallback, useMemo, useState } from "react";
 import type { Chain, ThirdwebClient } from "thirdweb";
 import {
@@ -20,12 +17,15 @@ import {
   useActiveAccount,
   useConnectModal,
 } from "thirdweb/react";
+import { resetAnalytics } from "@/analytics/reset";
+import { Button } from "@/components/ui/button";
+import { useStore } from "@/lib/reactive";
 import { useFavoriteChainIds } from "../../../../app/(app)/(dashboard)/(chain)/components/client/star-button";
 import { doLogout } from "../../../../app/(app)/login/auth-actions";
 import {
-  type StoredChain,
   addRecentlyUsedChainId,
   recentlyUsedChainIdsStore,
+  type StoredChain,
 } from "../../../../stores/chainStores";
 import { popularChains } from "../popularChains";
 
@@ -95,16 +95,16 @@ export const CustomConnectWallet = (props: {
   const chainSections: NetworkSelectorProps["sections"] = useMemo(() => {
     return [
       {
-        label: "Recent",
         chains: recentlyUsedChainsWithMetadata,
+        label: "Recent",
       },
       {
-        label: "Favorites",
         chains: favoriteChainsWithMetadata,
+        label: "Favorites",
       },
       {
-        label: "Popular",
         chains: popularChainsWithMetadata,
+        label: "Popular",
       },
     ];
   }, [
@@ -123,9 +123,9 @@ export const CustomConnectWallet = (props: {
       <>
         <Button
           asChild
-          variant="default"
           className={props.signInLinkButtonClassName}
           size="lg"
+          variant="default"
         >
           <Link
             href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
@@ -140,36 +140,32 @@ export const CustomConnectWallet = (props: {
   return (
     <>
       <ConnectButton
-        theme={getSDKTheme(t)}
-        client={client}
-        connectModal={{
-          privacyPolicyUrl: "/privacy-policy",
-          termsOfServiceUrl: "/terms",
-          showThirdwebBranding: false,
-          welcomeScreen: () => <ConnectWalletWelcomeScreen theme={t} />,
-        }}
         appMetadata={{
-          name: "thirdweb",
           logoUrl: "https://thirdweb.com/favicon.ico",
+          name: "thirdweb",
           url: "https://thirdweb.com",
         }}
-        onDisconnect={async () => {
-          try {
-            await doLogout();
-          } catch (err) {
-            console.error("Failed to log out", err);
-          }
-        }}
+        chain={props.chain}
+        chains={allChainsV5}
+        client={client}
         connectButton={{
           className: props.connectButtonClassName,
+        }}
+        connectModal={{
+          privacyPolicyUrl: "/privacy-policy",
+          showThirdwebBranding: false,
+          termsOfServiceUrl: "/terms",
+          welcomeScreen: () => <ConnectWalletWelcomeScreen theme={t} />,
         }}
         detailsButton={{
           className: props.detailsButtonClassName,
         }}
-        chains={allChainsV5}
         detailsModal={{
           networkSelector: {
-            sections: chainSections,
+            onCustomClick: () => {
+              setEditChain(undefined);
+              setIsNetworkConfigModalOpen(true);
+            },
             onSwitch(chain) {
               addRecentlyUsedChainId(chain.id);
             },
@@ -185,20 +181,25 @@ export const CustomConnectWallet = (props: {
                 />
               );
             },
-            onCustomClick: () => {
-              setEditChain(undefined);
-              setIsNetworkConfigModalOpen(true);
-            },
+            sections: chainSections,
           },
         }}
-        chain={props.chain}
+        onDisconnect={async () => {
+          try {
+            await doLogout();
+            resetAnalytics();
+          } catch (err) {
+            console.error("Failed to log out", err);
+          }
+        }}
+        theme={getSDKTheme(t)}
       />
 
       <LazyConfigureNetworkModal
-        open={isNetworkConfigModalOpen}
-        onOpenChange={setIsNetworkConfigModalOpen}
-        editChain={editChain}
         client={client}
+        editChain={editChain}
+        onOpenChange={setIsNetworkConfigModalOpen}
+        open={isNetworkConfigModalOpen}
       />
     </>
   );
@@ -213,26 +214,26 @@ function ConnectWalletWelcomeScreen(props: {
 
   return (
     <div
+      className="flex h-full flex-col bg-center bg-cover bg-no-repeat p-6"
       style={{
         backgroundColor: props.theme === "dark" ? "#18132f" : "#c7b5f1",
         backgroundImage: `url("/assets/connect-wallet/welcome-gradient-${props.theme}.png")`,
       }}
-      className="flex h-full flex-col bg-center bg-cover bg-no-repeat p-6"
     >
       <div className="flex flex-grow flex-col justify-center">
         <div>
           <div className="flex justify-center">
             <Image
+              alt=""
               className="select-none"
+              draggable={false}
+              height={150}
+              loading="eager"
+              src="/assets/connect-wallet/tw-welcome-icon.svg"
               style={{
                 mixBlendMode: props.theme === "dark" ? "soft-light" : "initial",
               }}
-              draggable={false}
               width={200}
-              height={150}
-              alt=""
-              src="/assets/connect-wallet/tw-welcome-icon.svg"
-              loading="eager"
             />
           </div>
 
@@ -259,18 +260,17 @@ function ConnectWalletWelcomeScreen(props: {
         </div>
       </div>
 
-      <TrackedAnchorLink
+      <Link
         className="text-center font-semibold opacity-70 hover:no-underline hover:opacity-100"
-        target="_blank"
-        category="custom-connect-wallet"
-        label="new-to-wallets"
         href="https://blog.thirdweb.com/web3-wallet/"
+        rel="noopener noreferrer"
         style={{
           color: fontColor,
         }}
+        target="_blank"
       >
         New to Wallets?
-      </TrackedAnchorLink>
+      </Link>
     </div>
   );
 }
@@ -282,57 +282,24 @@ export function useCustomConnectModal() {
   return useCallback(
     (options: { chain?: Chain; client: ThirdwebClient }) => {
       return connect({
-        client: options.client,
         appMetadata: {
-          name: "thirdweb",
           logoUrl: "https://thirdweb.com/favicon.ico",
+          name: "thirdweb",
           url: "https://thirdweb.com",
         },
         chain: options?.chain,
+        client: options.client,
         privacyPolicyUrl: "/privacy-policy",
-        termsOfServiceUrl: "/terms",
         showThirdwebBranding: false,
+        termsOfServiceUrl: "/terms",
+        theme: getSDKTheme(theme === "light" ? "light" : "dark"),
         welcomeScreen: () => (
           <ConnectWalletWelcomeScreen
             theme={theme === "light" ? "light" : "dark"}
           />
         ),
-        theme: getSDKTheme(theme === "light" ? "light" : "dark"),
       });
     },
     [connect, theme],
-  );
-}
-
-/**
- * A link component extends the `Link` component and adds tracking.
- */
-function TrackedAnchorLink(props: {
-  category: string;
-  label?: string;
-  trackingProps?: Record<string, string>;
-  href: string;
-  target?: string;
-  children: React.ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
-}) {
-  const trackEvent = useTrack();
-  const { category, label, trackingProps } = props;
-
-  const onClick = useCallback(() => {
-    trackEvent({ category, action: "click", label, ...trackingProps });
-  }, [trackEvent, category, label, trackingProps]);
-
-  return (
-    <Link
-      onClick={onClick}
-      target={props.target}
-      href={props.href}
-      className={props.className}
-      style={props.style}
-    >
-      {props.children}
-    </Link>
   );
 }

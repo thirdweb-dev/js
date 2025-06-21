@@ -157,8 +157,8 @@ export function ChainName({
 }: ChainNameProps) {
   const { chain } = useChainContext();
   const nameQuery = useQuery({
-    queryKey: getQueryKeys({ chainId: chain.id, nameResolver }),
     queryFn: async () => fetchChainName({ chain, nameResolver }),
+    queryKey: getQueryKeys({ chainId: chain.id, nameResolver }),
     ...queryOptions,
   });
 

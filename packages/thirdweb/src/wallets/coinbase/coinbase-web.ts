@@ -16,8 +16,11 @@ import {
 } from "../../utils/encoding/hex.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parse-typed-data.js";
 import { COINBASE } from "../constants.js";
-import type { Account, Wallet } from "../interfaces/wallet.js";
-import type { SendTransactionOption } from "../interfaces/wallet.js";
+import type {
+  Account,
+  SendTransactionOption,
+  Wallet,
+} from "../interfaces/wallet.js";
 import type { AppMetadata, DisconnectFn, SwitchChainFn } from "../types.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
@@ -136,12 +139,12 @@ export async function getCoinbaseWebProvider(
 
     // @ts-expect-error This import error is not visible to TypeScript
     const client = new CoinbaseWalletSDK({
-      appName: options?.appMetadata?.name || getDefaultAppMetadata().name,
       appChainIds: options?.chains
         ? options.chains.map((c) => c.id)
         : undefined,
       appLogoUrl:
         options?.appMetadata?.logoUrl || getDefaultAppMetadata().logoUrl,
+      appName: options?.appMetadata?.name || getDefaultAppMetadata().name,
     });
 
     const provider = client.makeWeb3Provider(options?.walletConfig);
@@ -174,29 +177,34 @@ function createAccount({
 }) {
   const account: Account = {
     address: getAddress(address),
+    onTransactionRequested: async () => {
+      // make sure to show the coinbase popup BEFORE doing any transaction preprocessing
+      // otherwise the popup might get blocked in safari
+      await showCoinbasePopup(provider);
+    },
     async sendTransaction(tx: SendTransactionOption) {
       const transactionHash = (await provider.request({
         method: "eth_sendTransaction",
         params: [
           {
             accessList: tx.accessList,
-            value: tx.value ? numberToHex(tx.value) : undefined,
-            gas: tx.gas ? numberToHex(tx.gas) : undefined,
-            from: getAddress(address),
-            to: tx.to as Address,
             data: tx.data,
+            from: getAddress(address),
+            gas: tx.gas ? numberToHex(tx.gas) : undefined,
+            to: tx.to as Address,
+            value: tx.value ? numberToHex(tx.value) : undefined,
           },
         ],
       })) as Hex;
 
       trackTransaction({
-        client: client,
         chainId: tx.chainId,
-        walletAddress: getAddress(address),
-        walletType: COINBASE,
-        transactionHash,
+        client: client,
         contractAddress: tx.to ?? undefined,
         gasPrice: tx.gasPrice,
+        transactionHash,
+        walletAddress: getAddress(address),
+        walletType: COINBASE,
       });
 
       return {
@@ -261,11 +269,6 @@ function createAccount({
       }
       return res;
     },
-    onTransactionRequested: async () => {
-      // make sure to show the coinbase popup BEFORE doing any transaction preprocessing
-      // otherwise the popup might get blocked in safari
-      await showCoinbasePopup(provider);
-    },
   };
 
   return account;
@@ -278,7 +281,7 @@ function onConnect(
   emitter: WalletEmitter<typeof COINBASE>,
   client: ThirdwebClient,
 ): [Account, Chain, DisconnectFn, SwitchChainFn] {
-  const account = createAccount({ provider, address, client });
+  const account = createAccount({ address, client, provider });
 
   async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
@@ -295,9 +298,9 @@ function onConnect(
   function onAccountsChanged(accounts: string[]) {
     if (accounts[0]) {
       const newAccount = createAccount({
-        provider,
         address: getAddress(accounts[0]),
         client,
+        provider,
       });
       emitter.emit("accountChanged", newAccount);
       emitter.emit("accountsChanged", accounts);
@@ -413,11 +416,11 @@ async function switchChainCoinbaseWalletSDK(
         method: "wallet_addEthereumChain",
         params: [
           {
+            blockExplorerUrls: apiChain.explorers?.map((x) => x.url) || [],
             chainId: chainIdHex,
             chainName: apiChain.name,
-            nativeCurrency: apiChain.nativeCurrency,
-            rpcUrls: getValidPublicRPCUrl(apiChain), // no client id on purpose here
-            blockExplorerUrls: apiChain.explorers?.map((x) => x.url) || [],
+            nativeCurrency: apiChain.nativeCurrency, // no client id on purpose here
+            rpcUrls: getValidPublicRPCUrl(apiChain),
           },
         ],
       });

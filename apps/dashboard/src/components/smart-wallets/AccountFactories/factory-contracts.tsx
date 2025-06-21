@@ -1,5 +1,11 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import { ContractNameCell } from "components/contract-components/tables/cells";
+import { FactoryAccountCell } from "components/smart-wallets/AccountFactories/account-cell";
+import { useV5DashboardChain } from "lib/v5-adapter";
+import type { ThirdwebClient } from "thirdweb";
+import { getChainMetadata } from "thirdweb/chains";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import {
@@ -11,12 +17,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
-import { ContractNameCell } from "components/contract-components/tables/cells";
-import { FactoryAccountCell } from "components/smart-wallets/AccountFactories/account-cell";
-import { useV5DashboardChain } from "lib/v5-adapter";
-import type { ThirdwebClient } from "thirdweb";
-import { getChainMetadata } from "thirdweb/chains";
 import type { ProjectContract } from "../../../app/(app)/account/contracts/_components/getProjectContracts";
 
 interface FactoryContractsProps {
@@ -31,18 +31,18 @@ interface FactoryContractsProps {
 function NetworkName(props: { id: number }) {
   const chain = useV5DashboardChain(props.id);
   const chainQuery = useQuery({
-    queryKey: ["getChainByChainIdAsync", props.id],
     queryFn: () => getChainMetadata(chain),
+    queryKey: ["getChainByChainIdAsync", props.id],
   });
 
   return (
     <SkeletonContainer
       className="inline-block"
       loadedData={chainQuery.data?.name}
-      skeletonData="Ethereum Mainnet"
       render={(v) => {
         return <p className="text-muted-foreground text-sm">{v}</p>;
       }}
+      skeletonData="Ethereum Mainnet"
     />
   );
 }
@@ -70,10 +70,10 @@ export const FactoryContracts: React.FC<FactoryContractsProps> = ({
               <TableCell>
                 <ContractNameCell
                   chainId={contract.chainId}
-                  contractAddress={contract.contractAddress}
-                  teamSlug={teamSlug}
-                  projectSlug={projectSlug}
                   client={client}
+                  contractAddress={contract.contractAddress}
+                  projectSlug={projectSlug}
+                  teamSlug={teamSlug}
                 />
               </TableCell>
               <TableCell>
@@ -82,16 +82,16 @@ export const FactoryContracts: React.FC<FactoryContractsProps> = ({
               <TableCell>
                 <CopyAddressButton
                   address={contract.contractAddress}
+                  className="-translate-x-2"
                   copyIconPosition="left"
                   variant="ghost"
-                  className="-translate-x-2"
                 />
               </TableCell>
               <TableCell>
                 <FactoryAccountCell
                   chainId={contract.chainId}
-                  contractAddress={contract.contractAddress}
                   client={client}
+                  contractAddress={contract.contractAddress}
                 />
               </TableCell>
             </TableRow>

@@ -1,6 +1,6 @@
-import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import type { ThirdwebClient } from "thirdweb";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Fieldset } from "./common";
 import type {
   CustomContractDeploymentForm,
@@ -25,8 +25,6 @@ export const TrustedForwardersFieldset: React.FC<
       {!isDynamicValue(value) && (
         <Fieldset legend="Gasless">
           <FormFieldSetup
-            isRequired
-            label="Trusted Forwarders"
             errorMessage={
               form.getFieldState(
                 "deployParams._trustedForwarders",
@@ -45,11 +43,13 @@ export const TrustedForwardersFieldset: React.FC<
                 </span>
               </>
             }
+            isRequired
+            label="Trusted Forwarders"
           >
             <SolidityInput
               client={client}
-              value={value}
               solidityType="address[]"
+              value={value}
               {...form.register("deployParams._trustedForwarders")}
             />
           </FormFieldSetup>

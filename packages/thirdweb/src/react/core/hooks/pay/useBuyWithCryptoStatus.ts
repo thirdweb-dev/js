@@ -57,14 +57,14 @@ import {
  */
 export function useBuyWithCryptoStatus(params?: BuyWithCryptoTransaction) {
   return useQuery<BuyWithCryptoStatus, Error>({
-    queryKey: ["getBuyWithCryptoStatus", params?.transactionHash] as const,
+    enabled: !!params,
     queryFn: async () => {
       if (!params) {
         throw new Error("No params");
       }
       return getBuyWithCryptoStatus(params);
     },
-    enabled: !!params,
+    queryKey: ["getBuyWithCryptoStatus", params?.transactionHash] as const,
     refetchInterval: (query) => {
       const status = (query.state.data as BuyWithCryptoStatus)?.status;
       if (status === "COMPLETED" || status === "FAILED") {

@@ -1,9 +1,19 @@
 "use client";
 
+import { CancelPlanButton } from "components/settings/Account/Billing/CancelPlanModal/CancelPlanModal";
+import { BillingPricing } from "components/settings/Account/Billing/Pricing";
+import { differenceInDays, format, isAfter } from "date-fns";
+import {
+  CircleAlertIcon,
+  CreditCardIcon,
+  FileTextIcon,
+  SquarePenIcon,
+} from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 import type { Team } from "@/api/team";
 import type { TeamSubscription } from "@/api/team-subscription";
 import { BillingPortalButton } from "@/components/billing";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -14,13 +24,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { CancelPlanButton } from "components/settings/Account/Billing/CancelPlanModal/CancelPlanModal";
-import { BillingPricing } from "components/settings/Account/Billing/Pricing";
-import { differenceInDays, format, isAfter } from "date-fns";
-import { CreditCardIcon, FileTextIcon, SquarePenIcon } from "lucide-react";
-import { CircleAlertIcon } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { RenewSubscriptionButton } from "../../../../../../../../../components/settings/Account/Billing/renew-subscription/renew-subscription-button";
 import { getValidTeamPlan } from "../../../../../../components/TeamHeader/getValidTeamPlan";
 
@@ -54,12 +58,12 @@ export function PlanInfoCardUI(props: {
   return (
     <div className="rounded-lg border border-border bg-card">
       <ViewPlansSheet
-        team={team}
-        trialPeriodEndedAt={planSub?.trialEnd ?? undefined}
-        isOpen={isPlanSheetOpen}
-        onOpenChange={setIsPlanSheetOpen}
         getTeam={props.getTeam}
         highlightPlan={props.highlightPlan}
+        isOpen={isPlanSheetOpen}
+        onOpenChange={setIsPlanSheetOpen}
+        team={team}
+        trialPeriodEndedAt={planSub?.trialEnd ?? undefined}
       />
 
       <div className="flex flex-col gap-4 p-4 lg:flex-row lg:items-center lg:justify-between lg:p-6">
@@ -80,8 +84,8 @@ export function PlanInfoCardUI(props: {
                 You are on the legacy plan. You may save by upgrading to new
                 plan.{" "}
                 <UnderlineLink
-                  href="/pricing"
                   className="decoration-yellow-600/50"
+                  href="/pricing"
                 >
                   Learn More
                 </UnderlineLink>
@@ -117,13 +121,13 @@ export function PlanInfoCardUI(props: {
             >
               <div>
                 <Button
-                  variant="outline"
-                  size="sm"
                   className="gap-2 bg-background"
+                  disabled={!props.isOwnerAccount}
                   onClick={() => {
                     setIsPlanSheetOpen(true);
                   }}
-                  disabled={!props.isOwnerAccount}
+                  size="sm"
+                  variant="outline"
                 >
                   <SquarePenIcon className="size-4 text-muted-foreground" />
                   Change Plan
@@ -143,18 +147,18 @@ export function PlanInfoCardUI(props: {
               <div>
                 {props.team.planCancellationDate ? (
                   <RenewSubscriptionButton
-                    teamId={props.team.id}
-                    getTeam={props.getTeam}
                     disabled={!props.isOwnerAccount}
+                    getTeam={props.getTeam}
+                    teamId={props.team.id}
                   />
                 ) : (
                   <CancelPlanButton
-                    teamId={props.team.id}
-                    teamSlug={props.team.slug}
                     billingStatus={props.team.billingStatus}
                     currentPlan={props.team.billingPlan}
-                    getTeam={props.getTeam}
                     disabled={!props.isOwnerAccount}
+                    getTeam={props.getTeam}
+                    teamId={props.team.id}
+                    teamSlug={props.team.slug}
                   />
                 )}
               </div>
@@ -186,11 +190,11 @@ export function PlanInfoCardUI(props: {
                 <div>
                   <Button
                     disabled={!props.isOwnerAccount}
-                    variant="default"
-                    size="sm"
                     onClick={() => {
                       setIsPlanSheetOpen(true);
                     }}
+                    size="sm"
+                    variant="default"
                   >
                     Select a plan
                   </Button>
@@ -215,9 +219,10 @@ export function PlanInfoCardUI(props: {
             </span>
             <span>
               <UnderlineLink
-                href="https://portal.thirdweb.com/account/billing/manage-billing"
-                target="_blank"
                 className="underline underline-offset-2 hover:text-foreground"
+                href="https://portal.thirdweb.com/account/billing/manage-billing"
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 {" "}
                 how to manage billing
@@ -228,9 +233,9 @@ export function PlanInfoCardUI(props: {
           <div className="flex items-center gap-3">
             <Button
               asChild
-              variant="outline"
-              size="sm"
               className="gap-2 bg-background"
+              size="sm"
+              variant="outline"
             >
               <Link href={`/team/${team.slug}/~/settings/invoices`}>
                 <FileTextIcon className="size-4 text-muted-foreground" />
@@ -248,13 +253,13 @@ export function PlanInfoCardUI(props: {
             >
               <div>
                 <BillingPortalButton
-                  teamSlug={team.slug}
                   buttonProps={{
-                    variant: "outline",
-                    size: "sm",
                     className: "bg-background gap-2",
                     disabled: !props.isOwnerAccount,
+                    size: "sm",
+                    variant: "outline",
                   }}
+                  teamSlug={team.slug}
                 >
                   <CreditCardIcon className="size-4 text-muted-foreground" />
                   Manage Billing
@@ -286,7 +291,7 @@ function BillingInfo({
   return (
     <div>
       {planSubscription && (
-        <SubscriptionOverview title="Plan" subscription={planSubscription} />
+        <SubscriptionOverview subscription={planSubscription} title="Plan" />
       )}
 
       {usageSubscription && (
@@ -353,8 +358,8 @@ function SubscriptionOverview(props: {
 
 function formatCurrencyAmount(centsAmount: number, currency: string) {
   return new Intl.NumberFormat(undefined, {
-    style: "currency",
     currency: currency,
+    style: "currency",
   }).format(centsAmount / 100);
 }
 
@@ -367,16 +372,16 @@ function ViewPlansSheet(props: {
   highlightPlan: Team["billingPlan"] | undefined;
 }) {
   return (
-    <Sheet open={props.isOpen} onOpenChange={props.onOpenChange}>
+    <Sheet onOpenChange={props.onOpenChange} open={props.isOpen}>
       <SheetContent className="!max-w-[1300px] w-full overflow-auto">
         <SheetHeader className="sr-only">
           <SheetTitle>Manage plans</SheetTitle>
         </SheetHeader>
         <BillingPricing
-          team={props.team}
-          trialPeriodEndedAt={props.trialPeriodEndedAt}
           getTeam={props.getTeam}
           highlightPlan={props.highlightPlan}
+          team={props.team}
+          trialPeriodEndedAt={props.trialPeriodEndedAt}
         />
       </SheetContent>
     </Sheet>

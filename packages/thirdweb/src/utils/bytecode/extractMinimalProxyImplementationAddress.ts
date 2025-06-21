@@ -14,7 +14,6 @@ export function extractMinimalProxyImplementationAddress(
   bytecode: string,
 ): string | undefined {
   if (!bytecode.startsWith("0x")) {
-    // biome-ignore lint/style/noParameterAssign: perf
     bytecode = `0x${bytecode}`;
   }
   // EIP-1167 clone minimal proxy - https://eips.ethereum.org/EIPS/eip-1167

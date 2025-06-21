@@ -48,8 +48,8 @@ export function module(params?: { publisher?: string }) {
       publisher: params?.publisher,
     });
     return {
-      module: moduleContract.address as Address,
       data: "0x" as const,
+      module: moduleContract.address as Address,
     };
   };
 }
@@ -83,8 +83,8 @@ export function install(options: {
   return installPublishedModule({
     account: options.account,
     contract: options.contract,
-    moduleName: contractId,
     moduleData: "0x" as const,
+    moduleName: contractId,
     publisher: options.params?.publisher,
   });
 }

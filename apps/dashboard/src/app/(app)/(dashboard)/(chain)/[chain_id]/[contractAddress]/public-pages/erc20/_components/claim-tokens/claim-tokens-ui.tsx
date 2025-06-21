@@ -1,30 +1,22 @@
 "use client";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import { DecimalInput } from "@/components/ui/decimal-input";
-import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
-import { SkeletonContainer } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
 import {
   CheckIcon,
   CircleAlertIcon,
   CircleIcon,
   ExternalLinkIcon,
-  InfinityIcon,
   XIcon,
 } from "lucide-react";
-import { useTheme } from "next-themes";
 import Link from "next/link";
-import { useState } from "react";
+import { useTheme } from "next-themes";
+import { useId, useState } from "react";
 import { toast } from "sonner";
 import {
-  type ThirdwebContract,
   padHex,
   sendAndConfirmTransaction,
+  type ThirdwebContract,
   toTokens,
   waitForReceipt,
 } from "thirdweb";
@@ -34,28 +26,31 @@ import {
   type getActiveClaimCondition,
   getApprovalForTransaction,
 } from "thirdweb/extensions/erc20";
-import {
-  useActiveAccount,
-  useActiveWallet,
-  useSendTransaction,
-} from "thirdweb/react";
-import { getClaimParams, maxUint256 } from "thirdweb/utils";
+import { useActiveAccount, useSendTransaction } from "thirdweb/react";
+import { getClaimParams } from "thirdweb/utils";
+import { parseError } from "utils/errorParser";
 import { tryCatch } from "utils/try-catch";
-import { ToolTipLabel } from "../../../../../../../../../../@/components/ui/tooltip";
+import {
+  reportAssetBuyFailed,
+  reportAssetBuySuccessful,
+} from "@/analytics/report";
+import { Button } from "@/components/ui/button";
+import { DecimalInput } from "@/components/ui/decimal-input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { getSDKTheme } from "../../../../../../../../components/sdk-component-theme";
 import { PublicPageConnectButton } from "../../../_components/PublicPageConnectButton";
+import { SupplyClaimedProgress } from "../../../_components/supply-claimed-progress";
+import { TokenPrice } from "../../../_components/token-price";
 import { getCurrencyMeta } from "../../_utils/getCurrencyMeta";
 
 type ActiveClaimCondition = Awaited<ReturnType<typeof getActiveClaimCondition>>;
 
 // TODO UI improvements - show how many tokens connected wallet can claim at max
 
-const compactNumberFormatter = new Intl.NumberFormat("en-US", {
-  notation: "compact",
-  maximumFractionDigits: 10,
-});
-
-export function ClaimTokenCardUI(props: {
+export function TokenDropClaim(props: {
   contract: ThirdwebContract;
   name: string;
   symbol: string | undefined;
@@ -69,46 +64,21 @@ export function ClaimTokenCardUI(props: {
 }) {
   const [quantity, setQuantity] = useState("1");
   const account = useActiveAccount();
-  const activeWallet = useActiveWallet();
+
   const { theme } = useTheme();
-  const trackEvent = useTrack();
+
   const sendClaimTx = useSendTransaction({
     payModal: {
       theme: getSDKTheme(theme === "light" ? "light" : "dark"),
     },
   });
+
   const [successScreen, setSuccessScreen] = useState<
     | undefined
     | {
         txHash: string;
       }
   >(undefined);
-
-  function trackAssetBuy(
-    params:
-      | {
-          type: "attempt" | "success";
-        }
-      | {
-          type: "error";
-          errorMessage: string;
-        },
-  ) {
-    trackEvent({
-      category: "asset",
-      action: "buy",
-      label: params.type,
-      contractType: "DropERC20",
-      accountAddress: account?.address,
-      walletId: activeWallet?.id,
-      chainId: props.contract.chain.id,
-      ...(params.type === "error"
-        ? {
-            errorMessage: params.errorMessage,
-          }
-        : {}),
-    });
-  }
 
   const [stepsUI, setStepsUI] = useState<
     | undefined
@@ -125,22 +95,18 @@ export function ClaimTokenCardUI(props: {
         return;
       }
 
-      trackAssetBuy({
-        type: "attempt",
-      });
-
       setStepsUI(undefined);
 
       const transaction = claimTo({
         contract: props.contract,
-        to: account.address,
-        quantity: String(quantity),
         from: account.address,
+        quantity: String(quantity),
+        to: account.address,
       });
 
       const approveTx = await getApprovalForTransaction({
-        transaction,
         account,
+        transaction,
       });
 
       if (approveTx) {
@@ -151,25 +117,30 @@ export function ClaimTokenCardUI(props: {
 
         const approveTxResult = await tryCatch(
           sendAndConfirmTransaction({
-            transaction: approveTx,
             account,
+            transaction: approveTx,
           }),
         );
 
         if (approveTxResult.error) {
+          console.error(approveTxResult.error);
+
           setStepsUI({
             approve: "error",
             claim: "idle",
           });
 
-          trackAssetBuy({
-            type: "error",
-            errorMessage: approveTxResult.error.message,
+          const errorMessage = parseError(approveTxResult.error);
+
+          reportAssetBuyFailed({
+            assetType: "coin",
+            chainId: props.contract.chain.id,
+            contractType: "DropERC20",
+            error: errorMessage,
           });
 
-          console.error(approveTxResult.error);
           toast.error("Failed to approve spending", {
-            description: approveTxResult.error.message,
+            description: errorMessage,
           });
           return;
         }
@@ -192,30 +163,35 @@ export function ClaimTokenCardUI(props: {
 
       const claimTxResult = await tryCatch(sendAndConfirm());
       if (claimTxResult.error) {
+        console.error(claimTxResult.error);
+        const errorMessage = parseError(claimTxResult.error);
         setStepsUI({
           approve: approveTx ? "success" : undefined,
           claim: "error",
         });
 
-        trackAssetBuy({
-          type: "error",
-          errorMessage: claimTxResult.error.message,
+        reportAssetBuyFailed({
+          assetType: "coin",
+          chainId: props.contract.chain.id,
+          contractType: "DropERC20",
+          error: errorMessage,
         });
 
-        console.error(claimTxResult.error);
         toast.error("Failed to buy tokens", {
-          description: claimTxResult.error.message,
+          description: errorMessage,
         });
         return;
       }
 
+      reportAssetBuySuccessful({
+        assetType: "coin",
+        chainId: props.contract.chain.id,
+        contractType: "DropERC20",
+      });
+
       setStepsUI({
         approve: approveTx ? "success" : undefined,
         claim: "success",
-      });
-
-      trackAssetBuy({
-        type: "success",
       });
 
       setSuccessScreen({
@@ -225,14 +201,13 @@ export function ClaimTokenCardUI(props: {
   });
 
   const publicPrice = {
-    pricePerTokenWei: props.claimCondition.pricePerToken,
     currencyAddress: props.claimCondition.currency,
     decimals: props.claimConditionCurrency.decimals,
+    pricePerTokenWei: props.claimCondition.pricePerToken,
     symbol: props.claimConditionCurrency.symbol,
   };
 
   const claimParamsQuery = useQuery({
-    queryKey: ["claim-params", props.contract.address, account?.address],
     queryFn: async () => {
       if (!account) {
         return publicPrice;
@@ -245,30 +220,33 @@ export function ClaimTokenCardUI(props: {
 
       const claimParams = await getClaimParams({
         contract: props.contract,
-        to: account.address,
-        quantity: 1n, // not relevant
-        type: "erc20",
-        tokenDecimals: props.decimals,
         from: account.address,
+        quantity: 1n, // not relevant
+        to: account.address,
+        tokenDecimals: props.decimals,
+        type: "erc20",
       });
 
       const meta = await getCurrencyMeta({
-        currencyAddress: claimParams.currency,
-        chainMetadata: props.chainMetadata,
         chain: props.contract.chain,
+        chainMetadata: props.chainMetadata,
         client: props.contract.client,
+        currencyAddress: claimParams.currency,
       });
 
       return {
-        pricePerTokenWei: claimParams.pricePerToken,
         currencyAddress: claimParams.currency,
         decimals: meta.decimals,
+        pricePerTokenWei: claimParams.pricePerToken,
         symbol: meta.symbol,
       };
     },
+    queryKey: ["claim-params", props.contract.address, account?.address],
   });
 
   const claimParamsData = claimParamsQuery.data;
+
+  const tokenAmountId = useId();
 
   if (successScreen) {
     const explorerUrl =
@@ -294,11 +272,12 @@ export function ClaimTokenCardUI(props: {
           </p>
         </div>
 
-        <Button className="w-full bg-muted/50" variant="outline" asChild>
+        <Button asChild className="w-full bg-muted/50" variant="outline">
           <Link
-            href={`${explorerUrl}/tx/${successScreen.txHash}`}
-            target="_blank"
             className="gap-1.5"
+            href={`${explorerUrl}/tx/${successScreen.txHash}`}
+            rel="noopener noreferrer"
+            target="_blank"
           >
             View Transaction{" "}
             <ExternalLinkIcon className="size-3.5 text-muted-foreground" />
@@ -306,8 +285,8 @@ export function ClaimTokenCardUI(props: {
         </Button>
 
         <Button
-          onClick={() => setSuccessScreen(undefined)}
           className="mt-3 w-full"
+          onClick={() => setSuccessScreen(undefined)}
         >
           Buy More
         </Button>
@@ -334,21 +313,24 @@ export function ClaimTokenCardUI(props: {
       <div className="p-4 lg:p-5">
         <div>
           <div className="space-y-2">
-            <Label htmlFor="token-amount">Tokens</Label>
+            <Label htmlFor={tokenAmountId}>Tokens</Label>
             <PriceInput
+              id={tokenAmountId}
               quantity={quantity}
               setQuantity={setQuantity}
-              id="token-amount"
               symbol={props.symbol}
             />
           </div>
 
           <div className="h-4" />
 
-          <SupplyRemaining
-            supplyClaimed={props.claimCondition.supplyClaimed}
-            maxClaimableSupply={props.claimCondition.maxClaimableSupply}
-            decimals={props.decimals}
+          <SupplyClaimedProgress
+            claimedSupply={BigInt(
+              toTokens(props.claimCondition.supplyClaimed, props.decimals),
+            )}
+            totalSupply={BigInt(
+              toTokens(props.claimCondition.maxClaimableSupply, props.decimals),
+            )}
           />
 
           <div className="h-4" />
@@ -366,10 +348,39 @@ export function ClaimTokenCardUI(props: {
               </span>
 
               <div className="flex flex-col items-end gap-1">
+                {/* public price */}
                 {isShowingCustomPrice && (
-                  <TokenPrice data={publicPrice} strikethrough={true} />
+                  <TokenPrice
+                    data={{
+                      priceInTokens: Number(
+                        toTokens(
+                          publicPrice.pricePerTokenWei,
+                          publicPrice.decimals,
+                        ),
+                      ),
+                      symbol: publicPrice.symbol,
+                    }}
+                    strikethrough={true}
+                  />
                 )}
-                <TokenPrice data={claimParamsData} strikethrough={false} />
+
+                {/* price shown to user */}
+                <TokenPrice
+                  data={
+                    claimParamsData
+                      ? {
+                          priceInTokens: Number(
+                            toTokens(
+                              claimParamsData.pricePerTokenWei,
+                              claimParamsData.decimals,
+                            ),
+                          ),
+                          symbol: claimParamsData.symbol,
+                        }
+                      : undefined
+                  }
+                  strikethrough={false}
+                />
               </div>
             </div>
 
@@ -383,25 +394,23 @@ export function ClaimTokenCardUI(props: {
             <div className="border-active-border border-t border-dashed pt-4">
               <div className="flex justify-between font-semibold text-sm">
                 <span>Total Price</span>
-                <SkeletonContainer
-                  skeletonData={"0.00 ETH"}
-                  loadedData={
+                <TokenPrice
+                  data={
                     claimParamsData
-                      ? claimParamsData.pricePerTokenWei === 0n
-                        ? "FREE"
-                        : `${
+                      ? {
+                          priceInTokens:
                             Number(
                               toTokens(
                                 claimParamsData.pricePerTokenWei,
                                 claimParamsData.decimals,
                               ),
-                            ) * Number(quantity)
-                          } ${claimParamsData.symbol}`
+                            ) * Number(quantity),
+                          symbol: claimParamsData.symbol,
+                        }
                       : undefined
                   }
-                  render={(v) => {
-                    return <span>{v}</span>;
-                  }}
+                  // don't strikethrough the total
+                  strikethrough={false}
                 />
               </div>
             </div>
@@ -411,18 +420,18 @@ export function ClaimTokenCardUI(props: {
 
           {account ? (
             <TransactionButton
-              client={props.contract.client}
-              transactionCount={undefined}
               checkBalance={false}
+              className="!w-full"
+              client={props.contract.client}
+              disabled={approveAndClaim.isPending || !claimParamsData}
               isLoggedIn={true}
               isPending={approveAndClaim.isPending}
               onClick={async () => {
                 approveAndClaim.mutate();
               }}
-              variant="default"
-              className="!w-full"
+              transactionCount={undefined}
               txChainID={props.contract.chain.id}
-              disabled={approveAndClaim.isPending || !claimParamsData}
+              variant="default"
             >
               Buy
             </TransactionButton>
@@ -436,11 +445,11 @@ export function ClaimTokenCardUI(props: {
               <h2 className="mb-2 font-semibold">Status</h2>
               <div className="space-y-2">
                 {stepsUI.approve && (
-                  <StepUI title="Approve Spending" status={stepsUI.approve} />
+                  <StepUI status={stepsUI.approve} title="Approve Spending" />
                 )}
 
                 {stepsUI.claim && (
-                  <StepUI title={"Buy Tokens"} status={stepsUI.claim} />
+                  <StepUI status={stepsUI.claim} title={"Buy Tokens"} />
                 )}
               </div>
             </div>
@@ -451,108 +460,16 @@ export function ClaimTokenCardUI(props: {
   );
 }
 
-function TokenPrice(props: {
-  strikethrough: boolean;
-  data:
-    | {
-        pricePerTokenWei: bigint;
-        decimals: number;
-        symbol: string;
-      }
-    | undefined;
-}) {
-  return (
-    <SkeletonContainer
-      skeletonData={"0.00 ETH"}
-      loadedData={
-        props.data
-          ? props.data.pricePerTokenWei === 0n
-            ? "FREE"
-            : `${toTokens(
-                props.data.pricePerTokenWei,
-                props.data.decimals,
-              )} ${props.data.symbol}`
-          : undefined
-      }
-      render={(v) => {
-        if (props.strikethrough) {
-          return (
-            <s className="font-medium text-muted-foreground text-sm line-through decoration-muted-foreground/50">
-              {v}
-            </s>
-          );
-        }
-        return <span className="font-medium text-foreground text-sm">{v}</span>;
-      }}
-    />
-  );
-}
-
-function SupplyRemaining(props: {
-  supplyClaimed: bigint;
-  maxClaimableSupply: bigint;
-  decimals: number;
-}) {
-  const isMaxClaimableSupplyUnlimited = props.maxClaimableSupply === maxUint256;
-  const supplyClaimedTokenNumber = Number(
-    toTokens(props.supplyClaimed, props.decimals),
-  );
-
-  // if there is unlimited supply - show many are claimed
-  if (isMaxClaimableSupplyUnlimited) {
-    return (
-      <p className="flex items-center justify-between gap-2">
-        <span className="font-medium text-sm">Supply Claimed</span>
-        <span className="flex items-center gap-1 font-bold text-sm">
-          {compactNumberFormatter.format(supplyClaimedTokenNumber)} /{" "}
-          <InfinityIcon className="size-4" aria-label="Unlimited" />
-        </span>
-      </p>
-    );
-  }
-
-  const maxClaimableSupplyTokenNumber = Number(
-    toTokens(props.maxClaimableSupply, props.decimals),
-  );
-
-  const soldPercentage = isMaxClaimableSupplyUnlimited
-    ? 0
-    : (supplyClaimedTokenNumber / maxClaimableSupplyTokenNumber) * 100;
-
-  const supplyRemainingTokenNumber =
-    maxClaimableSupplyTokenNumber - supplyClaimedTokenNumber;
-
-  // else - show supply remaining
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <span className="font-medium text-sm">Supply Remaining</span>
-        <span className="font-bold text-sm">
-          {compactNumberFormatter.format(supplyRemainingTokenNumber)} /{" "}
-          {compactNumberFormatter.format(maxClaimableSupplyTokenNumber)}
-        </span>
-      </div>
-      <Progress value={soldPercentage} className="h-2.5" />
-      <p className="font-medium text-muted-foreground text-xs">
-        {soldPercentage.toFixed(1)}% Sold
-      </p>
-    </div>
-  );
-}
-
 type Status = "idle" | "pending" | "success" | "error";
 
 const statusToIcon: Record<Status, React.FC<{ className: string }>> = {
-  pending: Spinner,
-  success: CheckIcon,
   error: XIcon,
   idle: CircleIcon,
+  pending: Spinner,
+  success: CheckIcon,
 };
 
-function StepUI(props: {
-  title: string;
-  status: Status;
-}) {
+function StepUI(props: { title: string; status: Status }) {
   const Icon = statusToIcon[props.status];
   return (
     <div
@@ -578,12 +495,12 @@ function PriceInput(props: {
   return (
     <div className="relative">
       <DecimalInput
+        className="!text-2xl h-auto truncate bg-muted/50 pr-14 font-bold"
         id={props.id}
-        value={String(props.quantity)}
         onChange={(value) => {
           props.setQuantity(value);
         }}
-        className="!text-2xl h-auto truncate bg-muted/50 pr-14 font-bold"
+        value={String(props.quantity)}
       />
       {props.symbol && (
         <div className="-translate-y-1/2 absolute top-1/2 right-3 font-medium text-muted-foreground text-sm">

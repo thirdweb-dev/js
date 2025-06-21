@@ -64,8 +64,8 @@ export async function getProfileMetadata(
   }
   const { download } = await import("../../../storage/download.js");
   const res = await download({
-    uri: profile.metadataURI,
     client,
+    uri: profile.metadataURI,
   });
   const profileData = ((await res.json()) as LensProfileSchema) || null;
   return profileData;

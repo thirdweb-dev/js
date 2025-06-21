@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.safematrix",
-  name: "Safematrix",
-  homepage: "https://safematrix.io/",
-  image_id: "48ea5de9-869a-4994-2402-97afba060900",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/sg/app/safematrix/id1613333481",
     android: "https://download.safematrix.io/abm/safematrix.apk",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/sg/app/safematrix/id1613333481",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: null,
-    universal: "https://safematrix.io/",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://safematrix.io/",
+  id: "io.safematrix",
+  image_id: "48ea5de9-869a-4994-2402-97afba060900",
+  mobile: {
+    native: null,
+    universal: "https://safematrix.io/",
+  },
+  name: "Safematrix",
+  rdns: null,
 } as const;

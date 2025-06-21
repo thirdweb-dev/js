@@ -1,10 +1,10 @@
 "use client";
 
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getSDKTheme } from "app/(app)/components/sdk-component-theme";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTheme } from "next-themes";
 import { ConnectButton } from "thirdweb/react";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 
 const client = getClientThirdwebClient();
 
@@ -17,24 +17,24 @@ export function PublicPageConnectButton(props: {
 
   return (
     <ConnectButton
-      theme={getSDKTheme(t)}
-      client={client}
-      connectModal={{
-        privacyPolicyUrl: "/privacy-policy",
-        termsOfServiceUrl: "/terms",
-        showThirdwebBranding: false,
+      appMetadata={{
+        logoUrl: "https://thirdweb.com/favicon.ico",
+        name: "thirdweb",
+        url: "https://thirdweb.com",
       }}
+      autoConnect={false}
+      chains={allChainsV5}
+      client={client}
       connectButton={{
         className: props.connectButtonClassName,
       }}
-      appMetadata={{
-        name: "thirdweb",
-        logoUrl: "https://thirdweb.com/favicon.ico",
-        url: "https://thirdweb.com",
+      connectModal={{
+        privacyPolicyUrl: "/privacy-policy",
+        showThirdwebBranding: false,
+        termsOfServiceUrl: "/terms",
       }}
-      chains={allChainsV5}
       // we have an AutoConnect already added in root layout with AA configuration
-      autoConnect={false}
+      theme={getSDKTheme(t)}
     />
   );
 }

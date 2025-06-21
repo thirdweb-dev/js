@@ -14,8 +14,8 @@ export async function SharedPermissionsPage(props: {
   isLoggedIn: boolean;
 }) {
   const info = await getContractPageParamsInfo({
-    contractAddress: props.contractAddress,
     chainIdOrSlug: props.chainIdOrSlug,
+    contractAddress: props.contractAddress,
     teamId: props.projectMeta?.teamId,
   });
 
@@ -28,8 +28,8 @@ export async function SharedPermissionsPage(props: {
     const shouldHide = await shouldRenderNewPublicPage(info.serverContract);
     if (shouldHide) {
       redirectToContractLandingPage({
-        contractAddress: props.contractAddress,
         chainIdOrSlug: props.chainIdOrSlug,
+        contractAddress: props.contractAddress,
         projectMeta: props.projectMeta,
       });
     }
@@ -39,8 +39,8 @@ export async function SharedPermissionsPage(props: {
   if (isLocalhostChain) {
     return (
       <ContractPermissionsPageClient
-        contract={clientContract}
         chainMetadata={info.chainMetadata}
+        contract={clientContract}
         isLoggedIn={props.isLoggedIn}
         projectMeta={props.projectMeta}
       />
@@ -52,11 +52,11 @@ export async function SharedPermissionsPage(props: {
 
   return (
     <ContractPermissionsPage
-      projectMeta={props.projectMeta}
-      contract={clientContract}
       chainSlug={info.chainMetadata.slug}
+      contract={clientContract}
       detectedPermissionEnumerable={isPermissionsEnumerableSupported}
       isLoggedIn={props.isLoggedIn}
+      projectMeta={props.projectMeta}
     />
   );
 }

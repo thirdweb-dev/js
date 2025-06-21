@@ -14,13 +14,13 @@ export function ConnectModalWideLayout(props: {
   return (
     <div
       style={{
-        height: "100%",
         display: "grid",
         gridTemplateColumns: "300px 1fr",
+        height: "100%",
       }}
     >
       <LeftContainer> {props.left} </LeftContainer>
-      <Container flex="column" scrollY relative>
+      <Container flex="column" relative scrollY>
         {props.right}
       </Container>
     </div>
@@ -36,8 +36,8 @@ export function ConnectModalCompactLayout(props: {
   return (
     <Container
       flex="column"
-      scrollY
       relative
+      scrollY
       style={{
         maxHeight: compactModalMaxHeight,
       }}
@@ -54,7 +54,7 @@ const LeftContainer = /* @__PURE__ */ StyledDiv((_) => {
     flexDirection: "column",
     overflowY: "auto",
     ...noScrollBar,
-    position: "relative",
     borderRight: `1px solid ${theme.colors.separatorLine}`,
+    position: "relative",
   };
 });

@@ -34,10 +34,6 @@ export function useProfiles(args: {
     wallets.length > 0 &&
     wallets.some((w) => w.id === "inApp" || isEcosystemWallet(w));
   return useQuery({
-    queryKey: [
-      "profiles",
-      wallets.map((w) => `${w.id}-${w.getAccount()?.address}`),
-    ],
     enabled,
     queryFn: async () => {
       const ecosystemWallet = wallets.find((w) => isEcosystemWallet(w));
@@ -52,5 +48,9 @@ export function useProfiles(args: {
         ecosystem,
       });
     },
+    queryKey: [
+      "profiles",
+      wallets.map((w) => `${w.id}-${w.getAccount()?.address}`),
+    ],
   });
 }

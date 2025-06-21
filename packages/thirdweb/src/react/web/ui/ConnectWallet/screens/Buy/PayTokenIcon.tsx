@@ -3,7 +3,7 @@ import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { getAddress } from "../../../../../../utils/address.js";
 import type { iconSize } from "../../../../../core/design-system/index.js";
 import { TokenIcon } from "../../../components/TokenIcon.js";
-import { type NativeToken, isNativeToken } from "../nativeToken.js";
+import { isNativeToken, type NativeToken } from "../nativeToken.js";
 import { useBuySupportedDestinations } from "./swap/useSwapSupportedChains.js";
 
 // This is a temporary solution to get the token icon working for ERC20 tokens
@@ -32,6 +32,9 @@ export function PayTokenIcon(props: {
 
   return (
     <TokenIcon
+      chain={props.chain}
+      client={props.client}
+      size={props.size}
       token={
         isNativeToken(token)
           ? { nativeToken: true }
@@ -40,9 +43,6 @@ export function PayTokenIcon(props: {
               icon: token.icon || tokenIcon,
             }
       }
-      chain={props.chain}
-      client={props.client}
-      size={props.size}
     />
   );
 }

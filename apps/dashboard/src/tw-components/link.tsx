@@ -5,15 +5,14 @@ import {
   type LinkProps as ChakraLinkProps,
   forwardRef,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
 import _NextLink, { type LinkProps as _NextLinkProps } from "next/link";
-import { forwardRef as reactForwardRef, useCallback } from "react";
+import { forwardRef as reactForwardRef } from "react";
 
 type ChakraNextLinkProps = Omit<ChakraLinkProps, "as"> &
   Omit<_NextLinkProps, "as">;
 export const ChakraNextLink = forwardRef<ChakraNextLinkProps, "a">(
   (props, ref) => (
-    <ChakraLink as={_NextLink} {...props} ref={ref} prefetch={false} />
+    <ChakraLink as={_NextLink} {...props} prefetch={false} ref={ref} />
   ),
 );
 
@@ -35,7 +34,7 @@ export const Link = reactForwardRef<HTMLAnchorElement, LinkProps>(
   ({ href, isExternal, children, scroll, ...restLinkProps }, ref) => {
     if (isExternal) {
       return (
-        <ChakraLink isExternal href={href} ref={ref} {...restLinkProps}>
+        <ChakraLink href={href} isExternal ref={ref} {...restLinkProps}>
           {children}
         </ChakraLink>
       );
@@ -43,11 +42,11 @@ export const Link = reactForwardRef<HTMLAnchorElement, LinkProps>(
 
     return (
       <ChakraNextLink
+        _focus={{ boxShadow: "none" }}
         href={href}
+        ref={ref}
         scroll={scroll}
         scrollBehavior="smooth"
-        ref={ref}
-        _focus={{ boxShadow: "none" }}
         {...restLinkProps}
       >
         {children}
@@ -57,26 +56,3 @@ export const Link = reactForwardRef<HTMLAnchorElement, LinkProps>(
 );
 
 Link.displayName = "Link";
-
-interface TrackedLinkProps extends LinkProps {
-  category: string;
-  label?: string;
-  trackingProps?: Record<string, string>;
-}
-
-/**
- * A link component extends the `Link` component and adds tracking.
- */
-export const TrackedLink = reactForwardRef<HTMLAnchorElement, TrackedLinkProps>(
-  ({ category, label, trackingProps, ...props }, ref) => {
-    const trackEvent = useTrack();
-
-    const onClick = useCallback(() => {
-      trackEvent({ category, action: "click", label, ...trackingProps });
-    }, [trackEvent, category, label, trackingProps]);
-
-    return <Link ref={ref} onClick={onClick} {...props} />;
-  },
-);
-
-TrackedLink.displayName = "TrackedLink";

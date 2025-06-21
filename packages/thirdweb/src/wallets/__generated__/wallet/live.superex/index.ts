@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "live.superex",
-  name: "SuperWallet",
-  homepage: "https://superex.live",
-  image_id: "e8f30122-5537-4b38-d6d5-9cae46771800",
   app: {
-    browser: "https://superex.com",
-    ios: "https://apps.apple.com/us/app/superex/id1601589888",
     android: "https://play.google.com/store/apps/details?id=com.superex.ex",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://superex.com",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/superex/id1601589888",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "superwallet://",
-    universal: "https://www.superex.live",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://superex.com",
   },
+  homepage: "https://superex.live",
+  id: "live.superex",
+  image_id: "e8f30122-5537-4b38-d6d5-9cae46771800",
+  mobile: {
+    native: "superwallet://",
+    universal: "https://www.superex.live",
+  },
+  name: "SuperWallet",
+  rdns: null,
 } as const;

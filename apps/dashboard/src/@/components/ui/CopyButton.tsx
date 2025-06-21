@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { useClipboard } from "hooks/useClipboard";
 import { CheckIcon, CopyIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "./button";
 import { ToolTipLabel } from "./tooltip";
 
@@ -16,10 +16,10 @@ export function CopyButton(props: {
   return (
     <ToolTipLabel label="Copy">
       <Button
-        variant={props.variant || "ghost"}
         aria-label="Copy"
         className={cn("h-auto w-auto p-1", props.className)}
         onClick={onCopy}
+        variant={props.variant || "ghost"}
       >
         {hasCopied ? (
           <CheckIcon

@@ -19,19 +19,19 @@ export async function socialAuth(args: {
   const loginUrl = getLoginUrl({
     authOption: auth.strategy,
     client,
+    ecosystem,
     mode: "window",
     redirectUrl: auth.redirectUrl,
-    ecosystem,
   });
 
   const result = await WebBrowser.openAuthSessionAsync(
     loginUrl,
     auth.redirectUrl,
     {
+      enableBarCollapsing: false,
+      enableDefaultShareMenuItem: false,
       preferEphemeralSession: false,
       showTitle: false,
-      enableDefaultShareMenuItem: false,
-      enableBarCollapsing: false,
     },
   );
 

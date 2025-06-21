@@ -1,7 +1,4 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
-  "extends": ["../../biome.json"],
-  "files": {
-    "ignore": ["src/app/references/components/TDoc/fetchDocs/v4-legacy-docs/**"]
-  }
+  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
+  "extends": "//"
 }

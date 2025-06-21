@@ -17,9 +17,9 @@ import { getDeployedInfraContract } from "./infra.js";
 describe.runIf(process.env.TW_SECRET_KEY)("bootstrap", () => {
   it("should bootstrap onchain infra", async () => {
     await deployCloneFactory({
+      account: TEST_ACCOUNT_A,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      account: TEST_ACCOUNT_A,
     });
 
     // verify all contracts are deployed
@@ -40,19 +40,19 @@ describe.runIf(process.env.TW_SECRET_KEY)("bootstrap", () => {
     const cloneFactory = await getDeployedInfraContract({
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      contractId: "TWCloneFactory",
       constructorParams: {
         _trustedForwarder: forwarder.address,
       },
+      contractId: "TWCloneFactory",
     });
     expect(cloneFactory).not.toBeNull();
   });
 
   it("should return saved implementations for zksync chains", async () => {
     let infra = await getOrDeployInfraForPublishedContract({
-      client: TEST_CLIENT,
-      chain: defineChain(300),
       account: TEST_ACCOUNT_A,
+      chain: defineChain(300),
+      client: TEST_CLIENT,
       contractId: "MarketplaceV3",
     });
 
@@ -64,9 +64,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("bootstrap", () => {
     );
 
     infra = await getOrDeployInfraForPublishedContract({
-      client: TEST_CLIENT,
-      chain: defineChain(300),
       account: TEST_ACCOUNT_A,
+      chain: defineChain(300),
+      client: TEST_CLIENT,
       contractId: "DropERC721",
       version: "5.0.4",
     });
@@ -77,9 +77,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("bootstrap", () => {
     expect(infra.implementationContract.address).toBeDefined();
 
     const weth = await getOrDeployInfraContract({
-      client: TEST_CLIENT,
-      chain: defineChain(300),
       account: TEST_ACCOUNT_A,
+      chain: defineChain(300),
+      client: TEST_CLIENT,
       contractId: "WETH9",
     });
 

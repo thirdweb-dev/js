@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.coininn",
-  name: "Coininn Wallet",
-  homepage: "https://www.coininn.com/coinwallet",
-  image_id: "52efd5a7-65fa-428d-668c-f53ceb4b5f00",
   app: {
-    browser: null,
-    ios: "https://itunes.apple.com/app/id6448525015",
     android: "https://play.google.com/store/apps/details?id=com.coininn.wallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://itunes.apple.com/app/id6448525015",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "coininn_wallet_wc://request",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.coininn.com/coinwallet",
+  id: "com.coininn",
+  image_id: "52efd5a7-65fa-428d-668c-f53ceb4b5f00",
+  mobile: {
+    native: "coininn_wallet_wc://request",
+    universal: null,
+  },
+  name: "Coininn Wallet",
+  rdns: null,
 } as const;

@@ -1,10 +1,10 @@
 import { readFile } from "node:fs/promises";
 import {
+  parse,
   CommentNode as X_CommentNode,
   HTMLElement as X_HTMLElement,
   type Node as X_Node,
   TextNode as X_TextNode,
-  parse,
 } from "node-html-parser";
 import type { PageData, PageSectionData } from "../types";
 import { getFilesRecursive } from "./getFilesRecursive";
@@ -30,10 +30,10 @@ export async function extractContent(
     htmlFiles.map(async (filePath) => {
       const htmlContent = await readFile(filePath, "utf-8");
       const mainEl = parse(htmlContent, {
-        comment: false,
         blockTextElements: {
           pre: true,
         },
+        comment: false,
       }).querySelector("main");
 
       if (!mainEl) {
@@ -103,8 +103,8 @@ function extractPageSearchData(
 
   return {
     href: filePath.replace(nextOutputDir, "").replace(".html", ""),
-    title: pageTitle ? trimExtraSpace(pageTitle) : "",
     sections: getPageSectionsForSearchIndex(main),
+    title: pageTitle ? trimExtraSpace(pageTitle) : "",
   };
 }
 
@@ -139,9 +139,9 @@ function getPageSectionsForSearchIndex(main: X_HTMLElement): PageSectionData[] {
         }
 
         sectionData.push({
-          title: node.text,
-          href: node.parentNode.querySelector("a")?.getAttribute("href") || "",
           content: "",
+          href: node.parentNode.querySelector("a")?.getAttribute("href") || "",
+          title: node.text,
         });
       } else {
         for (const child of node.childNodes) {

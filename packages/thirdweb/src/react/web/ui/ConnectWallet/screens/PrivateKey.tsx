@@ -7,9 +7,9 @@ import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem
 import { ClientScopedStorage } from "../../../../../wallets/in-app/core/authentication/client-scoped-storage.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../../core/design-system/index.js";
+import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
-import { Container, Line, ModalHeader } from "../../components/basic.js";
 import type { ConnectLocale } from "../locale/types.js";
 
 /**
@@ -23,6 +23,8 @@ export function PrivateKey(props: {
   connectLocale: ConnectLocale;
 }) {
   const [isLoading, setLoading] = useState(true);
+  const baseDomain = getThirdwebBaseUrl("inAppWallet");
+
   useEffect(() => {
     const loginReady = async (e: MessageEvent<{ eventType: string }>) => {
       if (
@@ -44,19 +46,19 @@ export function PrivateKey(props: {
 
           const clientStorage = new ClientScopedStorage({
             clientId: props.client.clientId,
-            storage: webLocalStorage,
             ecosystem: isEcosystemWallet(props.wallet)
               ? {
                   id: props.wallet.id,
                   partnerId: props.wallet.getConfig()?.partnerId,
                 }
               : undefined,
+            storage: webLocalStorage,
           });
           if (iframe?.contentWindow) {
             iframe.contentWindow.postMessage(
               {
-                eventType: "initExportPrivateKey",
                 authToken: await clientStorage.getAuthCookie(),
+                eventType: "initExportPrivateKey",
               },
               e.origin,
             );
@@ -69,13 +71,12 @@ export function PrivateKey(props: {
     return () => {
       window.removeEventListener("message", loginReady);
     };
-  }, [props.wallet, props.client.clientId]);
+  }, [props.wallet, props.client.clientId, baseDomain]);
 
   if (!props.wallet) {
     throw new Error("[PrivateKey] No wallet found");
   }
 
-  const baseDomain = getThirdwebBaseUrl("inAppWallet");
   const ecosystem = isEcosystemWallet(props.wallet)
     ? { id: props.wallet.id, partnerId: props.wallet.getConfig()?.partnerId }
     : undefined;
@@ -88,8 +89,8 @@ export function PrivateKey(props: {
     >
       <Container p="lg">
         <ModalHeader
-          title={props.connectLocale.manageWallet.exportPrivateKey}
           onBack={props.onBack}
+          title={props.connectLocale.manageWallet.exportPrivateKey}
         />
       </Container>
       <Line />
@@ -101,39 +102,31 @@ export function PrivateKey(props: {
         }}
       >
         <Spacer y="md" />
-        <Container style={{ position: "relative", height: "250px" }}>
+        <Container style={{ height: "250px", position: "relative" }}>
           {isLoading ? (
             <Container
               center="both"
               flex="column"
-              style={{ position: "absolute", width: "100%", height: "100%" }}
+              style={{ height: "100%", position: "absolute", width: "100%" }}
             >
-              <Spinner size="lg" color="primaryButtonBg" />
+              <Spinner color="primaryButtonBg" size="lg" />
             </Container>
-          ) : (
-            <></>
-          )}
+          ) : null}
 
           <Container
             style={{
-              position: "absolute",
               height: "100%",
+              position: "absolute",
               width: "100%",
               zIndex: 11,
             }}
           >
             <iframe
+              allow="clipboard-read; clipboard-write"
               id={`export-wallet-${props.wallet.id}`}
-              title="Export In-App Wallet"
-              style={{
-                width: "100%",
-                height: "250px",
-                visibility: isLoading ? "hidden" : "unset",
-              }}
               onLoad={() => {
                 setLoading(false);
               }}
-              allow="clipboard-read; clipboard-write"
               src={`${baseDomain}/sdk/2022-08-12/embedded-wallet/export-private-key?clientId=${
                 props.client.clientId
               }&theme=${
@@ -141,6 +134,12 @@ export function PrivateKey(props: {
               }${ecosystem ? `&ecosystemId=${ecosystem.id}` : ""}${
                 ecosystem?.partnerId ? `&partnerId=${ecosystem.partnerId}` : ""
               }`}
+              style={{
+                height: "250px",
+                visibility: isLoading ? "hidden" : "unset",
+                width: "100%",
+              }}
+              title="Export In-App Wallet"
             />
           </Container>
         </Container>

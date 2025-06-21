@@ -13,8 +13,8 @@ export async function SharedEnglishAuctionsPage(props: {
   isLoggedIn: boolean;
 }) {
   const info = await getContractPageParamsInfo({
-    contractAddress: props.contractAddress,
     chainIdOrSlug: props.chainIdOrSlug,
+    contractAddress: props.contractAddress,
     teamId: props.projectMeta?.teamId,
   });
 
@@ -36,8 +36,8 @@ export async function SharedEnglishAuctionsPage(props: {
 
   if (!metadata.isEnglishAuctionSupported) {
     redirectToContractLandingPage({
-      contractAddress: props.contractAddress,
       chainIdOrSlug: props.chainIdOrSlug,
+      contractAddress: props.contractAddress,
       projectMeta: props.projectMeta,
     });
   }
@@ -45,8 +45,8 @@ export async function SharedEnglishAuctionsPage(props: {
   return (
     <ContractEnglishAuctionsPage
       contract={info.clientContract}
-      isLoggedIn={props.isLoggedIn}
       isInsightSupported={metadata.isInsightSupported}
+      isLoggedIn={props.isLoggedIn}
     />
   );
 }

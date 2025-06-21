@@ -5,7 +5,7 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { type ChangeEvent, useState } from "react";
 import type { StoredChain } from "stores/chainStores";
-import { type ThirdwebClient, prepareTransaction, toWei } from "thirdweb";
+import { prepareTransaction, type ThirdwebClient, toWei } from "thirdweb";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { Card } from "tw-components";
 
@@ -33,38 +33,36 @@ export const DepositNative: React.FC<DepositNativeProps> = ({
 
   return (
     <Card
+      maxW={{ base: "100%", md: "49%" }}
       style={{
+        alignItems: "center",
         display: "flex",
         flexDirection: "row",
         gap: 16,
-        alignItems: "center",
       }}
-      maxW={{ base: "100%", md: "49%" }}
     >
       <Input
-        placeholder={`Amount in ${symbol}. ex: 0.001`}
         onChange={handleChange}
+        placeholder={`Amount in ${symbol}. ex: 0.001`}
         type="number"
         value={amount}
       />
       <TransactionButton
         client={client}
-        isLoggedIn={isLoggedIn}
-        txChainID={v5Chain.id}
-        transactionCount={1}
-        isPending={isPending}
         disabled={
           amount.length === 0 || Number.parseFloat(amount) <= 0 || !address
         }
+        isLoggedIn={isLoggedIn}
+        isPending={isPending}
         onClick={() => {
           if (!address) {
             throw new Error("Invalid address");
           }
 
           const transaction = prepareTransaction({
-            to: address,
             chain: v5Chain,
             client,
+            to: address,
             value: toWei(amount),
           });
           transfer(transaction, {
@@ -74,6 +72,8 @@ export const DepositNative: React.FC<DepositNativeProps> = ({
           });
         }}
         style={{ minWidth: 160 }}
+        transactionCount={1}
+        txChainID={v5Chain.id}
       >
         Deposit
       </TransactionButton>

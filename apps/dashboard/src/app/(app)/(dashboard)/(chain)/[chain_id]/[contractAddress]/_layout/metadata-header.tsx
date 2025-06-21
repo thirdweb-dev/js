@@ -1,13 +1,13 @@
 "use client";
 
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
-import { Button } from "@/components/ui/button";
 import { ChainIconClient } from "components/icons/ChainIcon";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import type { ThirdwebClient } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { MediaRenderer } from "thirdweb/react";
+import { Button } from "@/components/ui/button";
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 
 interface ExternalLink {
   name: string;
@@ -57,10 +57,10 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
       {data?.image && (
         <div className="size-16 shrink-0 overflow-hidden rounded-lg border border-border bg-muted md:size-20">
           <MediaRenderer
-            src={data?.image}
-            client={client}
             alt={""}
             className="h-full w-full"
+            client={client}
+            src={data?.image}
             style={{
               objectFit: "contain",
             }}
@@ -83,13 +83,13 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
             )}
 
             <Link
-              href={`/${chain.slug}`}
               className="flex w-fit shrink-0 items-center gap-2 rounded-3xl border border-border bg-card px-2.5 py-1.5 hover:bg-accent"
+              href={`/${chain.slug}`}
             >
               <ChainIconClient
-                src={chain.icon?.url}
-                client={client}
                 className="size-4"
+                client={client}
+                src={chain.icon?.url}
               />
               {cleanedChainName && (
                 <span className="text-xs">{cleanedChainName}</span>
@@ -112,21 +112,21 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
         <div className="flex flex-row flex-wrap items-center gap-2">
           <CopyAddressButton
             address={address}
-            copyIconPosition="left"
             className="bg-card px-2.5 py-1.5 text-xs"
+            copyIconPosition="left"
             variant="outline"
           />
 
           {validBlockExplorers?.map((validBlockExplorer) => (
             <BadgeLink
+              href={`${validBlockExplorer.url.endsWith("/") ? validBlockExplorer.url : `${validBlockExplorer.url}/`}address/${address}`}
               key={validBlockExplorer.url}
               name={validBlockExplorer.name}
-              href={`${validBlockExplorer.url.endsWith("/") ? validBlockExplorer.url : `${validBlockExplorer.url}/`}address/${address}`}
             />
           ))}
 
           {validExternalLinks?.map((e) => (
-            <BadgeLink href={e.url} name={e.name} key={e.url} />
+            <BadgeLink href={e.url} key={e.url} name={e.name} />
           ))}
         </div>
       </div>
@@ -134,17 +134,14 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
   );
 };
 
-function BadgeLink(props: {
-  name: string;
-  href: string;
-}) {
+function BadgeLink(props: { name: string; href: string }) {
   return (
     <Button
-      variant="outline"
       asChild
       className="!h-auto gap-2 rounded-lg bg-card px-3 py-1.5 text-xs capitalize"
+      variant="outline"
     >
-      <Link href={props.href} target="_blank">
+      <Link href={props.href} rel="noopener noreferrer" target="_blank">
         {props.name}
         <ExternalLinkIcon className="size-3 text-muted-foreground" />
       </Link>

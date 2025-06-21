@@ -1,11 +1,11 @@
 "use client";
 
+import { useId, useState } from "react";
+import { useActiveAccount, useConnect } from "thirdweb/react";
+import { inAppWallet, preAuthenticate } from "thirdweb/wallets";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { THIRDWEB_CLIENT } from "@/lib/client";
-import { useState } from "react";
-import { useActiveAccount, useConnect } from "thirdweb/react";
-import { inAppWallet, preAuthenticate } from "thirdweb/wallets";
 import { Label } from "../ui/label";
 import { InAppConnectEmbed } from "./connect-button";
 
@@ -20,8 +20,8 @@ export function CustomLoginForm() {
     setScreen("verify");
     await preAuthenticate({
       client: THIRDWEB_CLIENT,
-      strategy: "email",
       email,
+      strategy: "email",
     });
   };
 
@@ -29,10 +29,10 @@ export function CustomLoginForm() {
     connect(async () => {
       const wallet = inAppWallet();
       await wallet.connect({
-        strategy: "email",
-        email,
-        verificationCode,
         client: THIRDWEB_CLIENT,
+        email,
+        strategy: "email",
+        verificationCode,
       });
       return wallet;
     });
@@ -42,18 +42,21 @@ export function CustomLoginForm() {
     connect(async () => {
       const wallet = inAppWallet({
         auth: {
-          options: ["google"],
           mode: "redirect",
+          options: ["google"],
           redirectUrl: `${window.location.origin}/connect/in-app-wallet`,
         },
       });
       await wallet.connect({
-        strategy: "google",
         client: THIRDWEB_CLIENT,
+        strategy: "google",
       });
       return wallet;
     });
   };
+
+  const emailId = useId();
+  const verificationCodeId = useId();
 
   if (account) {
     return <InAppConnectEmbed />;
@@ -63,27 +66,27 @@ export function CustomLoginForm() {
     return (
       <div className="flex w-full max-w-xl flex-col space-y-4 p-6">
         <div>
-          <Label htmlFor="email" className="mb-2 block">
+          <Label className="mb-2 block" htmlFor={emailId}>
             Email Address
           </Label>
           <Input
-            type="email"
-            id="email"
-            value={email}
+            id={emailId}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             required
+            type="email"
+            value={email}
           />
         </div>
         <Button
-          type="submit"
-          onClick={() => sendEmailVerificationCode(email)}
           disabled={isConnecting || !email}
+          onClick={() => sendEmailVerificationCode(email)}
+          type="submit"
         >
           {isConnecting ? "Submitting..." : "Submit"}
         </Button>
         <p className="text-center text-sm text-white">Or</p>
-        <Button type="button" onClick={loginWithGoogle}>
+        <Button onClick={loginWithGoogle} type="button">
           Login with Google
         </Button>
         {error && <p className="max-w-[300px] text-red-500">{error.message}</p>}
@@ -95,22 +98,22 @@ export function CustomLoginForm() {
     return (
       <div className="flex w-full max-w-xl flex-col space-y-4 p-6">
         <div>
-          <Label htmlFor="verification-code" className="mb-2 block">
+          <Label className="mb-2 block" htmlFor={verificationCodeId}>
             Verification Code
           </Label>
           <Input
-            type="text"
-            id="verification-code"
-            value={verificationCode}
+            id={verificationCodeId}
             onChange={(e) => setVerificationCode(e.target.value)}
             placeholder="Enter the code you received"
             required
+            type="text"
+            value={verificationCode}
           />
         </div>
         <Button
-          type="submit"
-          onClick={() => loginWithEmail(email, verificationCode)}
           disabled={isConnecting || !verificationCode}
+          onClick={() => loginWithEmail(email, verificationCode)}
+          type="submit"
         >
           {isConnecting ? "Submitting..." : "Submit"}
         </Button>

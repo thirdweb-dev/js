@@ -1,11 +1,11 @@
 "use client";
+import { useMemo } from "react";
+import type { ThirdwebClient } from "thirdweb";
+import type { UniversalBridgeWalletStats } from "types/analytics";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { SkeletonContainer } from "@/components/ui/skeleton";
-import { useMemo } from "react";
-import type { ThirdwebClient } from "thirdweb";
-import type { UniversalBridgeWalletStats } from "types/analytics";
 import { toUSD } from "../../../../utils/number";
 import {
   CardHeading,
@@ -47,8 +47,8 @@ export function PayCustomersTable(props: {
       <div className="h-5" />
       <ScrollShadow
         className="overflow-hidden rounded-lg border"
-        scrollableClassName="h-[280px]"
         disableTopShadow={true}
+        scrollableClassName="h-[280px]"
       >
         <table className="w-full">
           <thead>
@@ -61,10 +61,10 @@ export function PayCustomersTable(props: {
             {tableData.map((customer, i) => {
               return (
                 <CustomerTableRow
-                  key={customer.walletAddress}
-                  customer={customer}
-                  rowIndex={i}
                   client={props.client}
+                  customer={customer}
+                  key={customer.walletAddress}
+                  rowIndex={i}
                 />
               );
             })}
@@ -97,21 +97,21 @@ function CustomerTableRow(props: {
       <TableData>
         <SkeletonContainer
           className="inline-flex"
-          style={delayAnim}
           loadedData={props.customer?.walletAddress}
-          skeletonData="0x0000000000000000000000000000000000000000"
           render={(v) => <WalletAddress address={v} client={props.client} />}
+          skeletonData="0x0000000000000000000000000000000000000000"
+          style={delayAnim}
         />
       </TableData>
       <TableData>
         <SkeletonContainer
-          style={delayAnim}
           className="inline-flex"
           loadedData={props.customer?.totalSpendUSDCents}
-          skeletonData={20000}
           render={(v) => {
             return <p>${(v / 100).toLocaleString()}</p>;
           }}
+          skeletonData={20000}
+          style={delayAnim}
         />
       </TableData>
     </tr>
@@ -141,8 +141,8 @@ function getTopCustomers(data: UniversalBridgeWalletStats[]) {
       .filter((x) => x.walletAddress === customer)
       .reduce((acc, curr) => acc + curr.amountUsdCents, 0);
     customersData.push({
-      walletAddress: customer,
       totalSpendUSDCents: totalSpend,
+      walletAddress: customer,
     });
   }
   return customersData.sort(

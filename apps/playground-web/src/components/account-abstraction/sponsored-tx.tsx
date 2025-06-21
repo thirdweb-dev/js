@@ -33,11 +33,11 @@ export function SponsoredTxPreview() {
     tokenId: editionDropTokenId,
   });
   const { data: ownedNfts } = useReadContract(getOwnedNFTs, {
-    contract: editionDropContract,
     // biome-ignore lint/style/noNonNullAssertion: handled by queryOptions
     address: smartAccount?.address!,
-    useIndexer: false,
+    contract: editionDropContract,
     queryOptions: { enabled: !!smartAccount },
+    useIndexer: false,
   });
 
   return (
@@ -48,23 +48,23 @@ export function SponsoredTxPreview() {
         <>
           <div className="flex flex-col justify-center gap-2 p-2">
             <ConnectButton
-              client={THIRDWEB_CLIENT}
-              chain={chain}
-              wallets={WALLETS}
               accountAbstraction={{
                 chain,
                 sponsorGas: true,
               }}
+              chain={chain}
+              client={THIRDWEB_CLIENT}
               connectButton={{
                 label: "Login to mint this Kitten!",
               }}
+              wallets={WALLETS}
             />
           </div>
           {nft ? (
             <MediaRenderer
               client={THIRDWEB_CLIENT}
               src={nft.metadata.image}
-              style={{ width: "300px", marginTop: "10px" }}
+              style={{ marginTop: "10px", width: "300px" }}
             />
           ) : null}
           {smartAccount ? (
@@ -74,26 +74,26 @@ export function SponsoredTxPreview() {
                 {nft?.metadata?.name}
               </p>
               <TransactionButton
-                transaction={() =>
-                  claimTo({
-                    contract: editionDropContract,
-                    tokenId: editionDropTokenId,
-                    to: smartAccount.address,
-                    quantity: 1n,
-                  })
-                }
-                payModal={{
-                  metadata: nft?.metadata,
+                onClick={() => {
+                  setTxHash(null);
                 }}
                 onError={(error) => {
                   alert(`Error: ${error.message}`);
                 }}
-                onClick={() => {
-                  setTxHash(null);
-                }}
                 onTransactionConfirmed={async (receipt) => {
                   setTxHash(receipt.transactionHash);
                 }}
+                payModal={{
+                  metadata: nft?.metadata,
+                }}
+                transaction={() =>
+                  claimTo({
+                    contract: editionDropContract,
+                    quantity: 1n,
+                    to: smartAccount.address,
+                    tokenId: editionDropTokenId,
+                  })
+                }
               >
                 Mint with EIP-4337
               </TransactionButton>
@@ -104,10 +104,10 @@ export function SponsoredTxPreview() {
               <p className="mb-2 text-center text-green-500">
                 Minted! Tx Hash:{" "}
                 <a
-                  href={`${chain.blockExplorers?.[0]?.url}/tx/${txHash}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="underline"
+                  href={`${chain.blockExplorers?.[0]?.url}/tx/${txHash}`}
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
                   {shortenHex(txHash)}
                 </a>

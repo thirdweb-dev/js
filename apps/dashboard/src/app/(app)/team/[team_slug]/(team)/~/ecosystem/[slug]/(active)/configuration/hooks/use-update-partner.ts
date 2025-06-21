@@ -39,19 +39,19 @@ export function useUpdatePartner(
       const res = await fetch(
         `${params.ecosystem.url}/${params.ecosystem.id}/partner/${params.partnerId}`,
         {
-          method: "PATCH",
+          body: JSON.stringify({
+            accessControl: params.accessControl,
+            allowlistedBundleIds: params.allowlistedBundleIds,
+            allowlistedDomains: params.allowlistedDomains,
+            name: params.name,
+          }),
 
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
             "x-thirdweb-team-id": teamId,
           },
-          body: JSON.stringify({
-            name: params.name,
-            allowlistedDomains: params.allowlistedDomains,
-            allowlistedBundleIds: params.allowlistedBundleIds,
-            accessControl: params.accessControl,
-          }),
+          method: "PATCH",
         },
       );
 

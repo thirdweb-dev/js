@@ -18,33 +18,33 @@ describe("transaction-store", () => {
   it("should update transactions on completion", async () => {
     addTransactionToStore({
       address: TEST_ACCOUNT_A.address as Address,
-      transactionHash: MOCK_TX_HASH,
       chainId: ANVIL_CHAIN.id,
+      transactionHash: MOCK_TX_HASH,
     });
 
     const transactions = getTransactionStore(TEST_ACCOUNT_A.address as Address);
     expect(transactions.getValue()).toEqual([
       {
-        transactionHash: MOCK_TX_HASH,
         chainId: ANVIL_CHAIN.id,
+        transactionHash: MOCK_TX_HASH,
       },
     ]);
 
     addTransactionToStore({
       address: TEST_ACCOUNT_A.address,
-      transactionHash: "0xabc",
       chainId: 1,
+      transactionHash: "0xabc",
     });
 
     const transactions2 = getTransactionStore(TEST_ACCOUNT_A.address);
     expect(transactions2.getValue()).toEqual([
       {
-        transactionHash: MOCK_TX_HASH,
         chainId: ANVIL_CHAIN.id,
+        transactionHash: MOCK_TX_HASH,
       },
       {
-        transactionHash: "0xabc",
         chainId: 1,
+        transactionHash: "0xabc",
       },
     ]);
   });

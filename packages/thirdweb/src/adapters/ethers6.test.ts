@@ -10,8 +10,8 @@ import { privateKeyToAccount } from "../wallets/private-key.js";
 import { fromEthersSigner, toEthersSigner } from "./ethers6.js";
 
 const account = privateKeyToAccount({
-  privateKey: ANVIL_PKEY_A,
   client: TEST_CLIENT,
+  privateKey: ANVIL_PKEY_A,
 });
 
 describe("toEthersSigner", () => {
@@ -42,27 +42,28 @@ describe("toEthersSigner", () => {
 
     // All properties on a domain are optional
     const domain = {
-      name: "Ether Mail",
-      version: "1",
       chainId: 1,
+      name: "Ether Mail",
       verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+      version: "1",
     };
 
     // The named list of all type definitions
     const types = {
-      Person: [
-        { name: "name", type: "string" },
-        { name: "wallet", type: "address" },
-      ],
       Mail: [
         { name: "from", type: "Person" },
         { name: "to", type: "Person" },
         { name: "contents", type: "string" },
       ],
+      Person: [
+        { name: "name", type: "string" },
+        { name: "wallet", type: "address" },
+      ],
     };
 
     // The data to sign
     const value = {
+      contents: "Hello, Bob!",
       from: {
         name: "Cow",
         wallet: "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826",
@@ -71,7 +72,6 @@ describe("toEthersSigner", () => {
         name: "Bob",
         wallet: "0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB",
       },
-      contents: "Hello, Bob!",
     };
 
     const signature = await signer.signTypedData(domain, types, value);
@@ -133,13 +133,13 @@ describe("fromEthersSigner", () => {
     const account = await fromEthersSigner(wallet);
 
     const transaction = prepareTransaction({
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       to: TEST_ACCOUNT_B.address,
       value: 1n,
     });
 
-    const txResponse = await sendTransaction({ transaction, account });
+    const txResponse = await sendTransaction({ account, transaction });
 
     expect(txResponse.transactionHash.length).toBe(66);
   });
@@ -149,10 +149,10 @@ describe("fromEthersSigner", () => {
     const account = await fromEthersSigner(wallet);
 
     const domain = {
-      name: "Ether Mail",
-      version: "1",
       chainId: 1,
+      name: "Ether Mail",
       verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+      version: "1",
     };
 
     const types = {
@@ -168,10 +168,10 @@ describe("fromEthersSigner", () => {
     };
 
     const signature = await account.signTypedData({
-      primaryType: "Person",
       domain,
-      types,
       message: value,
+      primaryType: "Person",
+      types,
     });
 
     expect(signature).toBeDefined();

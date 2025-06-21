@@ -65,9 +65,9 @@ export function useSendAndConfirmTransaction(
         throw new Error("No active account");
       }
       return await sendAndConfirmTransaction({
-        transaction,
         account,
         gasless,
+        transaction,
       });
     },
   });

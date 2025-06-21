@@ -19,10 +19,10 @@ export function DeployContractHeader(
     <div className="flex flex-col gap-4 py-2">
       <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
         <DeployContractInfo
-          name={props.activeVersion.name}
-          displayName={props.activeVersion.displayName}
           description={props.activeVersion.description}
+          displayName={props.activeVersion.displayName}
           logo={props.activeVersion.logo}
+          name={props.activeVersion.name}
         />
         <div className="flex flex-col-reverse gap-3 md:flex-row">
           {

@@ -12,8 +12,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenProvider component", () => {
     render(
       <TokenProvider
         address={NATIVE_TOKEN_ADDRESS}
-        client={TEST_CLIENT}
         chain={ethereum}
+        client={TEST_CLIENT}
       >
         <div>Child Component</div>
       </TokenProvider>,
@@ -26,8 +26,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenProvider component", () => {
     render(
       <TokenProvider
         address={NATIVE_TOKEN_ADDRESS}
-        client={TEST_CLIENT}
         chain={ethereum}
+        client={TEST_CLIENT}
       >
         <TokenName />
         <TokenSymbol />

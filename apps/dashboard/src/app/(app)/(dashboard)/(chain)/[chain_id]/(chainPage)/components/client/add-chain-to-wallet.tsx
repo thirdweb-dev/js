@@ -1,8 +1,5 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useCustomConnectModal } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -13,6 +10,9 @@ import {
   useSwitchActiveWalletChain,
 } from "thirdweb/react";
 import { useDebounce } from "use-debounce";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 
 type AddChainToWalletProps = {
   chain: Chain;
@@ -44,9 +44,8 @@ export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
       }
     >
       <Button
-        disabled={disabled}
         className="w-full gap-2"
-        variant="outline"
+        disabled={disabled}
         onClick={() => {
           // Connect directly to this chain
           if (!account) {
@@ -59,10 +58,11 @@ export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
           // switch to this chain
           const switchPromise = switchChainMutation.mutateAsync();
           toast.promise(switchPromise, {
-            success: `${props.chain.name} added to wallet`,
             error: `Failed to add ${props.chain.name} to wallet`,
+            success: `${props.chain.name} added to wallet`,
           });
         }}
+        variant="outline"
       >
         <span>Add to wallet</span>
         {debouncedLoading && <Spinner className="size-3" />}

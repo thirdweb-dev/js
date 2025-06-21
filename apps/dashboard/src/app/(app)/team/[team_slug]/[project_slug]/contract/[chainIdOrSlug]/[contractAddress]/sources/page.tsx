@@ -1,5 +1,5 @@
-import { getProject } from "@/api/projects";
 import { notFound } from "next/navigation";
+import { getProject } from "@/api/projects";
 import { SharedContractSourcesPage } from "../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/sources/shared-sources-page";
 import type { ProjectContractPageParams } from "../types";
 
@@ -15,11 +15,11 @@ export default async function Page(props: {
 
   return (
     <SharedContractSourcesPage
-      contractAddress={params.contractAddress}
       chainIdOrSlug={params.chainIdOrSlug}
+      contractAddress={params.contractAddress}
       projectMeta={{
-        teamId: project.teamId,
         projectSlug: project.slug,
+        teamId: project.teamId,
         teamSlug: params.team_slug,
       }}
     />

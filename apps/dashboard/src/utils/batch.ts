@@ -99,13 +99,12 @@ const getAcceptedFiles = async (acceptedFiles: File[]) => {
     .filter((f) => f.name !== csv?.name)
     .sort(sortAscending);
 
-  return { csv, json, images, videos };
+  return { csv, images, json, videos };
 };
 
 function removeEmptyKeysFromObject<T extends Record<string, unknown>>(
   obj: T,
 ): T {
-  // biome-ignore lint/complexity/noForEach: FIXME
   Object.keys(obj).forEach((key) => {
     if (obj[key] === "" || obj[key] === null || obj[key] === undefined) {
       delete obj[key];
@@ -151,22 +150,22 @@ const getMergedData = (
       } = row;
 
       return removeEmptyKeysFromObject({
-        name: name.toString(),
-        description: description?.toString(),
-        external_url,
-        background_color,
-        youtube_url,
-        attributes: convertToOsStandard(removeEmptyKeysFromObject(properties)),
-        image:
-          imageFiles.find((img) => img?.name === image) ||
-          (!isImageMapped && imageFiles[index]) ||
-          image ||
-          undefined,
         animation_url:
           videoFiles.find((video) => video?.name === animation_url) ||
           (!isAnimationUrlMapped && videoFiles[index]) ||
           animation_url ||
           undefined,
+        attributes: convertToOsStandard(removeEmptyKeysFromObject(properties)),
+        background_color,
+        description: description?.toString(),
+        external_url,
+        image:
+          imageFiles.find((img) => img?.name === image) ||
+          (!isImageMapped && imageFiles[index]) ||
+          image ||
+          undefined,
+        name: name.toString(),
+        youtube_url,
       });
     });
   }
@@ -181,16 +180,16 @@ const getMergedData = (
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
     return jsonData.map((nft: any, index: number) => ({
       ...nft,
+      animation_url:
+        videoFiles.find((video) => video?.name === nft?.animation_url) ||
+        (!isAnimationUrlMapped && videoFiles[index]) ||
+        nft.animation_url ||
+        undefined,
       image:
         imageFiles.find((img) => img?.name === nft?.image) ||
         (!isImageMapped && imageFiles[index]) ||
         nft.image ||
         nft.file_url ||
-        undefined,
-      animation_url:
-        videoFiles.find((video) => video?.name === nft?.animation_url) ||
-        (!isAnimationUrlMapped && videoFiles[index]) ||
-        nft.animation_url ||
         undefined,
     }));
   }
@@ -206,8 +205,6 @@ export async function processInputData(
     setData(getMergedData(undefined, json, images, videos));
   } else if (csv) {
     Papa.parse<CSVData>(csv, {
-      header: true,
-      transformHeader,
       complete: (results) => {
         const validResults: Papa.ParseResult<CSVData> = {
           ...results,
@@ -223,6 +220,8 @@ export async function processInputData(
         }
         setData(getMergedData(validResults, undefined, images, videos));
       },
+      header: true,
+      transformHeader,
     });
   } else {
     throw new Error(
@@ -233,6 +232,6 @@ export async function processInputData(
 
 export const shuffleData = (array: NFTInput[]) =>
   array
-    .map((value) => ({ value, sort: Math.random() }))
+    .map((value) => ({ sort: Math.random(), value }))
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value);

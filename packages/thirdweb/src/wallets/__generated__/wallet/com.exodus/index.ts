@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.exodus",
-  name: "Exodus",
-  homepage: "https://exodus.com/",
-  image_id: "4c16cad4-cac9-4643-6726-c696efaf5200",
   app: {
-    browser: "https://exodus.com/download/",
-    ios: "https://apps.apple.com/us/app/exodus-crypto-bitcoin-wallet/id1414384820",
     android:
       "https://play.google.com/store/apps/details?id=exodusmovement.exodus&hl=en&gl=US",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://exodus.com/download/",
     chrome:
       "https://chrome.google.com/webstore/detail/exodus-web3-wallet/aholpfdialjgjfhomihkjbmgjidlcdno",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/exodus-crypto-bitcoin-wallet/id1414384820",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "exodus://",
-    universal: "https://exodus.com/m",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://exodus.com/",
+  id: "com.exodus",
+  image_id: "4c16cad4-cac9-4643-6726-c696efaf5200",
+  mobile: {
+    native: "exodus://",
+    universal: "https://exodus.com/m",
+  },
+  name: "Exodus",
+  rdns: null,
 } as const;

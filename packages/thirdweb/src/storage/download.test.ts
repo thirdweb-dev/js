@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import { handlers as storageHandlers } from "../../test/src/mocks/storage.js";
@@ -22,8 +22,8 @@ describe.skip("download", () => {
     server.use(
       http.get("https://*.ipfscdn.io/ipfs/:hash/:id", () => {
         return new HttpResponse(mockContent, {
-          status: 200,
           headers: { "Content-Type": "text/plain" },
+          status: 200,
         });
       }),
     );
@@ -42,8 +42,8 @@ describe.skip("download", () => {
     server.use(
       http.get("https://arweave.net/:id", () => {
         return new HttpResponse(mockContent, {
-          status: 200,
           headers: { "Content-Type": "text/plain" },
+          status: 200,
         });
       }),
     );
@@ -62,8 +62,8 @@ describe.skip("download", () => {
     server.use(
       http.get("https://example.com/file.txt", () => {
         return new HttpResponse(mockContent, {
-          status: 200,
           headers: { "Content-Type": "text/plain" },
+          status: 200,
         });
       }),
     );
@@ -103,8 +103,8 @@ describe.skip("download", () => {
     await expect(
       download({
         client: mockClient,
-        uri: "ipfs://QmTest1234567890TestHash/file.txt",
         requestTimeoutMs: 500,
+        uri: "ipfs://QmTest1234567890TestHash/file.txt",
       }),
     ).rejects.toThrow("timeout");
   });

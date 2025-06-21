@@ -74,9 +74,9 @@ export async function download(options: DownloadOptions) {
     const data = getFromMockStorage(hash);
     if (data) {
       return {
+        json: () => Promise.resolve(data),
         ok: true,
         status: 200,
-        json: () => Promise.resolve(data),
       } as Response;
     }
   }
@@ -90,8 +90,8 @@ export async function download(options: DownloadOptions) {
   }
 
   const res = await getClientFetch(options.client)(url, {
-    keepalive: options.client.config?.storage?.fetch?.keepalive,
     headers: options.client.config?.storage?.fetch?.headers,
+    keepalive: options.client.config?.storage?.fetch?.keepalive,
     requestTimeoutMs:
       options.requestTimeoutMs ??
       options.client.config?.storage?.fetch?.requestTimeoutMs ??

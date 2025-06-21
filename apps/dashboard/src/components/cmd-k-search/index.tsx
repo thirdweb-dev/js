@@ -1,9 +1,22 @@
 "use client";
 
-import { DynamicHeight } from "@/components/ui/DynamicHeight";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  keepPreviousData,
+  type QueryClient,
+  queryOptions,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { ChainIconClient } from "components/icons/ChainIcon";
+import { fetchTopContracts, type TrendingContract } from "lib/search";
+import { ArrowRightIcon, CommandIcon, SearchIcon, XIcon } from "lucide-react";
+import Link from "next/link";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
+import { useDebounce } from "use-debounce";
+import { shortenIfAddress } from "utils/usedapp-external";
 import { Button } from "@/components/ui/button";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import {
   Dialog,
   DialogContent,
@@ -12,25 +25,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import {
-  type QueryClient,
-  keepPreviousData,
-  queryOptions,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { ChainIconClient } from "components/icons/ChainIcon";
-import { useTrack } from "hooks/analytics/useTrack";
-import { type TrendingContract, fetchTopContracts } from "lib/search";
-import { ArrowRightIcon, CommandIcon, SearchIcon, XIcon } from "lucide-react";
-import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import type { ThirdwebClient } from "thirdweb";
-import { useDebounce } from "use-debounce";
-import { shortenIfAddress } from "utils/usedapp-external";
-const TRACKING_CATEGORY = "any_contract_search";
 
 const typesenseApiKey =
   process.env.NEXT_PUBLIC_TYPESENSE_CONTRACT_API_KEY || "";
@@ -38,26 +36,18 @@ const typesenseApiKey =
 function contractTypesenseSearchQuery(
   searchQuery: string,
   queryClient: QueryClient,
-  trackEvent: ReturnType<typeof useTrack>,
 ) {
   return queryOptions({
-    queryKey: ["typesense-contract-search", { search: searchQuery }],
+    enabled: !!searchQuery && !!queryClient && !!typesenseApiKey,
+    placeholderData: keepPreviousData,
     queryFn: async () => {
-      trackEvent({
-        category: TRACKING_CATEGORY,
-        action: "query",
-        label: "attempt",
-        searchQuery,
-      });
-
       return fetchTopContracts({
-        query: searchQuery,
         perPage: 10,
+        query: searchQuery,
         timeRange: "month",
       });
     },
-    enabled: !!searchQuery && !!queryClient && !!typesenseApiKey,
-    placeholderData: keepPreviousData,
+    queryKey: ["typesense-contract-search", { search: searchQuery }],
   });
 }
 
@@ -67,7 +57,6 @@ export const CmdKSearchModal = (props: {
   client: ThirdwebClient;
 }) => {
   const { open, setOpen } = props;
-  const trackEvent = useTrack();
   const queryClient = useQueryClient();
 
   // legitimate use-case
@@ -89,7 +78,7 @@ export const CmdKSearchModal = (props: {
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
   const typesenseSearchQuery = useQuery(
-    contractTypesenseSearchQuery(debouncedSearchValue, queryClient, trackEvent),
+    contractTypesenseSearchQuery(debouncedSearchValue, queryClient),
   );
 
   const data = useMemo(() => {
@@ -154,13 +143,7 @@ export const CmdKSearchModal = (props: {
           router.push(
             `/${result.chainMetadata.chainId}/${result.contractAddress}`,
           );
-          trackEvent({
-            category: TRACKING_CATEGORY,
-            action: "select_contract",
-            input_mode: "keyboard",
-            chainId: result.chainMetadata.chainId,
-            contract_address: result.contractAddress,
-          });
+
           handleClose();
         }
       } else if (e.key === "ArrowDown") {
@@ -180,16 +163,16 @@ export const CmdKSearchModal = (props: {
     };
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
-  }, [activeIndex, data, handleClose, open, router, trackEvent]);
+  }, [activeIndex, data, handleClose, open, router]);
 
   return (
     <Dialog
-      open={open}
       onOpenChange={(isOpen) => {
         if (!isOpen) {
           handleClose();
         }
       }}
+      open={open}
     >
       <DialogContent className="gap-0 p-0">
         {/* Title */}
@@ -208,21 +191,21 @@ export const CmdKSearchModal = (props: {
               <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
               <Input
                 autoFocus
-                placeholder="Name or Contract Address"
                 className="px-10"
-                value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
+                placeholder="Name or Contract Address"
+                value={searchValue}
               />
               <div className="-translate-y-1/2 absolute top-1/2 right-3">
                 {isFetching ? (
                   <Spinner className="size-5 text-muted-foreground" />
                 ) : searchValue.length > 0 ? (
                   <Button
-                    size="sm"
                     aria-label="Clear search"
-                    variant="ghost"
                     className="translate-x-2 p-2"
                     onClick={() => setSearchValue("")}
+                    size="sm"
+                    variant="ghost"
                   >
                     <XIcon className="size-4 text-muted-foreground" />
                   </Button>
@@ -244,20 +227,13 @@ export const CmdKSearchModal = (props: {
                       return (
                         <SearchResult
                           client={props.client}
-                          key={`${result.chainMetadata.chainId}_${result.contractAddress}`}
-                          result={result}
                           isActive={idx === activeIndex}
+                          key={`${result.chainMetadata.chainId}_${result.contractAddress}`}
                           onClick={() => {
                             handleClose();
-                            trackEvent({
-                              category: TRACKING_CATEGORY,
-                              action: "select_contract",
-                              input_mode: "click",
-                              chainId: result.chainMetadata.chainId,
-                              contract_address: result.contractAddress,
-                            });
                           }}
                           onMouseEnter={() => setActiveIndex(idx)}
+                          result={result}
                         />
                       );
                     })}
@@ -282,9 +258,9 @@ export const CmdKSearch = (props: {
     <>
       <div className="relative hidden w-[300px] lg:block">
         <Input
+          className={cn("bg-transparent pr-4", props.className)}
           onClick={() => setOpen(true)}
           placeholder="Search any contract"
-          className={cn("bg-transparent pr-4", props.className)}
         />
         <div className="-translate-y-1/2 absolute top-1/2 right-3 flex items-center gap-[2px] text-muted-foreground text-sm">
           <CommandIcon className="size-3" /> K
@@ -292,15 +268,15 @@ export const CmdKSearch = (props: {
       </div>
 
       <Button
-        className="!h-auto !w-auto p-2 lg:hidden"
         aria-label="Search any contract"
-        variant="ghost"
+        className="!h-auto !w-auto p-2 lg:hidden"
         onClick={() => setOpen(true)}
+        variant="ghost"
       >
         <SearchIcon className="size-5" />
       </Button>
 
-      <CmdKSearchModal open={open} setOpen={setOpen} client={props.client} />
+      <CmdKSearchModal client={props.client} open={open} setOpen={setOpen} />
     </>
   );
 };
@@ -329,16 +305,16 @@ const SearchResult: React.FC<SearchResultProps> = ({
     >
       <ChainIconClient
         className="size-6 shrink-0"
-        src={result.chainMetadata?.icon?.url}
         client={client}
+        src={result.chainMetadata?.icon?.url}
       />
       <div className="flex flex-col gap-1">
         <h3 className="line-clamp-2 font-semibold text-foreground">
           <Link
-            href={`/${result.chainMetadata.chainId}/${result.contractAddress}`}
-            onMouseEnter={onMouseEnter}
-            onClick={onClick}
             className="before:absolute before:inset-0"
+            href={`/${result.chainMetadata.chainId}/${result.contractAddress}`}
+            onClick={onClick}
+            onMouseEnter={onMouseEnter}
           >
             {shortenIfAddress(result.name)}
           </Link>

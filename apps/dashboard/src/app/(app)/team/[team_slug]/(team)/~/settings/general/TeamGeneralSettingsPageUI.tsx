@@ -1,5 +1,13 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { FileInput } from "components/shared/FileInput";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
+import { z } from "zod";
 import { deleteTeam } from "@/actions/deleteTeam";
 import type { Team } from "@/api/team";
 import type { VerifiedDomainResponse } from "@/api/verified-domain";
@@ -9,14 +17,7 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Input } from "@/components/ui/input";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { FileInput } from "components/shared/FileInput";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import type { ThirdwebClient } from "thirdweb";
-import { z } from "zod";
+import { TeamDedicatedSupportCard } from "../_components/settings-cards/dedicated-support";
 import { TeamDomainVerificationCard } from "../_components/settings-cards/domain-verification";
 import {
   maxTeamNameLength,
@@ -47,22 +48,26 @@ export function TeamGeneralSettingsPageUI(props: {
         updateTeamField={props.updateTeamField}
       />
       <TeamAvatarFormControl
-        updateTeamImage={props.updateTeamImage}
         avatar={props.team.image}
         client={props.client}
+        updateTeamImage={props.updateTeamImage}
       />
       <TeamIdCard team={props.team} />
       <TeamDomainVerificationCard
-        teamId={props.team.id}
         initialVerification={props.initialVerification}
         isOwnerAccount={props.isOwnerAccount}
+        teamId={props.team.id}
+      />
+      <TeamDedicatedSupportCard
+        isOwnerAccount={props.isOwnerAccount}
+        team={props.team}
       />
 
-      <LeaveTeamCard teamName={props.team.name} leaveTeam={props.leaveTeam} />
+      <LeaveTeamCard leaveTeam={props.leaveTeam} teamName={props.team.name} />
       <DeleteTeamCard
+        canDelete={props.isOwnerAccount}
         teamId={props.team.id}
         teamName={props.team.name}
-        canDelete={props.isOwnerAccount}
       />
     </div>
   );
@@ -77,8 +82,8 @@ function TeamNameFormControl(props: {
   updateTeamField: UpdateTeamField;
 }) {
   const form = useForm<{ name: string }>({
-    values: { name: props.team.name },
     resolver: zodResolver(teamNameFormSchema),
+    values: { name: props.team.name },
   });
   const updateTeamMutation = useMutation({
     mutationFn: (name: string) => props.updateTeamField({ name }),
@@ -89,29 +94,29 @@ function TeamNameFormControl(props: {
       onSubmit={form.handleSubmit((values) => {
         const promise = updateTeamMutation.mutateAsync(values.name);
         toast.promise(promise, {
-          success: "Team name updated successfully",
           error: "Failed to update team name",
+          success: "Team name updated successfully",
         });
       })}
     >
       <SettingsCard
-        header={{
-          title: "Team Name",
-          description: "This is your team's name on thirdweb",
-        }}
         bottomText={`Please use ${maxTeamNameLength} characters at maximum.`}
+        errorText={form.formState.errors.name?.message}
+        header={{
+          description: "This is your team's name on thirdweb",
+          title: "Team Name",
+        }}
+        noPermissionText={undefined}
         saveButton={{
-          type: "submit",
           disabled: !form.formState.isDirty,
           isPending: updateTeamMutation.isPending,
+          type: "submit",
         }}
-        errorText={form.formState.errors.name?.message}
-        noPermissionText={undefined}
       >
         <Input
           {...form.register("name")}
-          maxLength={maxTeamNameLength}
           className="md:w-[450px]"
+          maxLength={maxTeamNameLength}
         />
       </SettingsCard>
     </form>
@@ -139,25 +144,25 @@ function TeamSlugFormControl(props: {
       onSubmit={form.handleSubmit((values) => {
         const promise = updateTeamMutation.mutateAsync(values.slug);
         toast.promise(promise, {
-          success: "Team URL updated successfully",
           error: "Failed to update team URL",
+          success: "Team URL updated successfully",
         });
       })}
     >
       <SettingsCard
-        header={{
-          title: "Team URL",
-          description:
-            "This is your team's URL namespace on thirdweb. All your team's projects and settings can be accessed using this URL",
-        }}
         bottomText={`Please use ${maxTeamSlugLength} characters at maximum.`}
         errorText={form.formState.errors.slug?.message}
-        saveButton={{
-          type: "submit",
-          disabled: !form.formState.isDirty,
-          isPending: updateTeamMutation.isPending,
+        header={{
+          description:
+            "This is your team's URL namespace on thirdweb. All your team's projects and settings can be accessed using this URL",
+          title: "Team URL",
         }}
         noPermissionText={undefined}
+        saveButton={{
+          disabled: !form.formState.isDirty,
+          isPending: updateTeamMutation.isPending,
+          type: "submit",
+        }}
       >
         <div className="relative flex rounded-lg border border-border md:w-[450px]">
           <div className="flex items-center self-stretch rounded-l-lg border-border border-r bg-card px-3 font-mono text-muted-foreground/80 text-sm">
@@ -165,8 +170,8 @@ function TeamSlugFormControl(props: {
           </div>
           <Input
             {...form.register("slug")}
-            maxLength={maxTeamSlugLength}
             className="truncate border-0 font-mono"
+            maxLength={maxTeamSlugLength}
           />
         </div>
       </SettingsCard>
@@ -195,21 +200,21 @@ function TeamAvatarFormControl(props: {
   function handleSave() {
     const promise = updateTeamAvatarMutation.mutateAsync(teamAvatar);
     toast.promise(promise, {
-      success: "Team avatar updated successfully",
       error: "Failed to update team avatar",
+      success: "Team avatar updated successfully",
     });
   }
 
   return (
     <SettingsCard
       bottomText="An avatar is optional but strongly recommended."
+      errorText={undefined}
+      noPermissionText={undefined}
       saveButton={{
-        onClick: handleSave,
         disabled: false,
         isPending: updateTeamAvatarMutation.isPending,
+        onClick: handleSave,
       }}
-      noPermissionText={undefined}
-      errorText={undefined}
     >
       <div className="flex flex-row gap-4 md:justify-between">
         <div>
@@ -221,37 +226,35 @@ function TeamAvatarFormControl(props: {
         </div>
         <FileInput
           accept={{ "image/*": [] }}
-          value={teamAvatar || teamAvatarUrl}
-          setValue={setTeamAvatar}
           className="w-20 rounded-full lg:w-28"
-          disableHelperText
           client={props.client}
+          disableHelperText
+          setValue={setTeamAvatar}
+          value={teamAvatar || teamAvatarUrl}
         />
       </div>
     </SettingsCard>
   );
 }
 
-function TeamIdCard(props: {
-  team: Team;
-}) {
+function TeamIdCard(props: { team: Team }) {
   return (
     <SettingsCard
-      header={{
-        title: "Team ID",
-        description: "This is your team's ID on thirdweb",
-      }}
       bottomText="Used when interacting with the thirdweb API"
-      noPermissionText={undefined} // TODO
       errorText={undefined}
+      header={{
+        description: "This is your team's ID on thirdweb",
+        title: "Team ID",
+      }} // TODO
+      noPermissionText={undefined}
     >
       <CopyTextButton
+        className="w-full justify-between truncate bg-background px-3 py-2 font-mono text-muted-foreground lg:w-[450px]"
+        copyIconPosition="right"
         textToCopy={props.team.id}
         textToShow={props.team.id}
-        variant="outline"
-        className="w-full justify-between truncate bg-background px-3 py-2 font-mono text-muted-foreground lg:w-[450px]"
         tooltip="Copy Team ID"
-        copyIconPosition="right"
+        variant="outline"
       />
     </SettingsCard>
   );
@@ -272,23 +275,23 @@ export function LeaveTeamCard(props: {
   function handleLeave() {
     const promise = leaveTeam.mutateAsync();
     toast.promise(promise, {
-      success: "Left team successfully",
       error: "Failed to leave team",
+      success: "Left team successfully",
     });
   }
 
   return (
     <DangerSettingCard
-      title={title}
-      description={description}
       buttonLabel={title}
       buttonOnClick={handleLeave}
-      isPending={leaveTeam.isPending}
       confirmationDialog={{
-        title: `Are you sure you want to leave team "${props.teamName}" ?`,
         description:
           "This will revoke your access to this Team. Any resources you've added to the Team will remain.",
+        title: `Are you sure you want to leave team "${props.teamName}" ?`,
       }}
+      description={description}
+      isPending={leaveTeam.isPending}
+      title={title}
     />
   );
 }
@@ -318,35 +321,35 @@ export function DeleteTeamCard(props: {
   function handleDelete() {
     const promise = deleteTeamAndRedirect.mutateAsync();
     toast.promise(promise, {
-      success: "Team deleted",
       error: "Failed to delete team",
+      success: "Team deleted",
     });
   }
 
   if (props.canDelete) {
     return (
       <DangerSettingCard
-        title={title}
-        description={description}
         buttonLabel={title}
         buttonOnClick={handleDelete}
-        isPending={deleteTeamAndRedirect.isPending}
         confirmationDialog={{
-          title: `Are you sure you want to delete team "${props.teamName}" ?`,
           description: description,
+          title: `Are you sure you want to delete team "${props.teamName}" ?`,
         }}
+        description={description}
+        isPending={deleteTeamAndRedirect.isPending}
+        title={title}
       />
     );
   }
 
   return (
     <SettingsCard
-      header={{
-        title,
-        description,
-      }}
       bottomText=""
       errorText={undefined}
+      header={{
+        description,
+        title,
+      }}
       noPermissionText="You need additional permissions to delete your team."
     />
   );

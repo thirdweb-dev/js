@@ -4,14 +4,14 @@ import { defineChain } from "../utils.js";
  * @chain
  */
 export const base = /* @__PURE__ */ defineChain({
-  id: 8453,
-  name: "Base",
-  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
   blockExplorers: [
     {
+      apiUrl: "https://api.basescan.org/api",
       name: "Basescan",
       url: "https://basescan.org",
-      apiUrl: "https://api.basescan.org/api",
     },
   ],
+  id: 8453,
+  name: "Base",
+  nativeCurrency: { decimals: 18, name: "Ether", symbol: "ETH" },
 });

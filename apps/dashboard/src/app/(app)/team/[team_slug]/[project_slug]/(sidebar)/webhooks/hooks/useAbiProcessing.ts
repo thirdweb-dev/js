@@ -5,13 +5,12 @@ import { useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { defineChain } from "thirdweb/chains";
 import { getContract, resolveAbiFromContractApi } from "thirdweb/contract";
+import { parseAddresses } from "../utils/webhookPayloadUtils";
 import type {
   AbiData,
   EventSignature,
   FunctionSignature,
 } from "../utils/webhookTypes";
-
-import { parseAddresses } from "../utils/webhookPayloadUtils";
 
 export function useAbiMultiFetch({
   isOpen,
@@ -38,7 +37,7 @@ export function useAbiMultiFetch({
         const key = `${chainId}:${address.toLowerCase()}`;
         if (!seen.has(key)) {
           seen.add(key);
-          result.push({ chainId, address });
+          result.push({ address, chainId });
         }
       }
     }
@@ -46,7 +45,7 @@ export function useAbiMultiFetch({
   }, [chainIds, addresses]);
 
   const queryResult = useQuery({
-    queryKey: ["abis", chainIds, addresses, type],
+    enabled: isOpen && !!addresses.trim() && chainIds.length > 0,
     queryFn: async () => {
       return Promise.all(
         pairs.map(async ({ chainId, address }) => {
@@ -54,19 +53,19 @@ export function useAbiMultiFetch({
             // eslint-disable-next-line no-restricted-syntax
             const chainObj = defineChain(Number(chainId));
             const contract = getContract({
-              client: thirdwebClient,
               address,
               chain: chainObj,
+              client: thirdwebClient,
             });
             const abi = await resolveAbiFromContractApi(contract);
-            return { chainId, address, data: abi, status: "success" as const };
+            return { address, chainId, data: abi, status: "success" as const };
           } catch (error) {
-            return { chainId, address, error, status: "error" as const };
+            return { address, chainId, error, status: "error" as const };
           }
         }),
       );
     },
-    enabled: isOpen && !!addresses.trim() && chainIds.length > 0,
+    queryKey: ["abis", chainIds, addresses, type],
     staleTime: Number.POSITIVE_INFINITY,
   });
 
@@ -107,9 +106,9 @@ export function useAbiMultiFetch({
             .map((abiItem) => abiItem.name);
         }
         abis[item.address] = {
+          abi: abi,
           fetchedAt: new Date().toISOString(),
           status: "success",
-          abi: abi,
           ...(type === "event" ? { events: items } : { functions: items }),
         };
       }
@@ -135,5 +134,5 @@ export function useAbiMultiFetch({
     return errs;
   }, [queryResult.data]);
 
-  return { signatures, fetchedAbis, errors, isFetching, abisByAddress };
+  return { abisByAddress, errors, fetchedAbis, isFetching, signatures };
 }

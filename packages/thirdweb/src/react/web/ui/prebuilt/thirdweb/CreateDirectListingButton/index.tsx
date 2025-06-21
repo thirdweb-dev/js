@@ -83,10 +83,10 @@ export function CreateDirectListingButton(
   });
   const { data: payMetadata } = useReadContract(getPayMetadata, {
     contract: nftContract,
-    tokenId,
     queryOptions: {
       enabled: !defaultPayModalMetadata,
     },
+    tokenId,
   });
   const { mutateAsync } = useSendAndConfirmTransaction();
 
@@ -118,9 +118,9 @@ export function CreateDirectListingButton(
       });
       if (!isApproved) {
         const transaction = setApprovalForAll({
+          approved: true,
           contract: nftContract,
           operator: marketplaceContract.address,
-          approved: true,
         });
         await mutateAsync(transaction);
       }
@@ -152,9 +152,9 @@ export function CreateDirectListingButton(
           marketplaceContract.address.toLowerCase()
       ) {
         const transaction = setApprovalForAll({
+          approved: true,
           contract: nftContract,
           operator: marketplaceContract.address,
-          approved: true,
         });
         await mutateAsync(transaction);
       }
@@ -169,11 +169,11 @@ export function CreateDirectListingButton(
 
   return (
     <TransactionButton
-      transaction={() => prepareTransaction()}
       payModal={{
         metadata: defaultPayModalMetadata || payMetadata,
         ...payModal,
       }}
+      transaction={() => prepareTransaction()}
       {...props}
     >
       {children}

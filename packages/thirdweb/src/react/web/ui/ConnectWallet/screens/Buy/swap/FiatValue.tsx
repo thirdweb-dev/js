@@ -5,8 +5,8 @@ import { convertCryptoToFiat } from "../../../../../../../pay/convert/cryptoToFi
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { fontSize } from "../../../../../../core/design-system/index.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
-import { Text } from "../../../../components/text.js";
 import type { TextProps } from "../../../../components/text.js";
+import { Text } from "../../../../components/text.js";
 import { useDebouncedValue } from "../../../../hooks/useDebouncedValue.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { getTokenAddress } from "../../nativeToken.js";
@@ -21,29 +21,35 @@ export function FiatValue(
 ) {
   const deferredTokenAmount = useDebouncedValue(props.tokenAmount, 500);
   const cryptoToFiatQuery = useQuery({
+    queryFn: () =>
+      convertCryptoToFiat({
+        chain: props.chain,
+        client: props.client,
+        fromAmount: Number(deferredTokenAmount),
+        fromTokenAddress: getTokenAddress(props.token),
+        to: "USD",
+      }),
     queryKey: [
       "cryptoToFiat",
       props.chain.id,
       getTokenAddress(props.token),
       deferredTokenAmount,
     ],
-    queryFn: () =>
-      convertCryptoToFiat({
-        client: props.client,
-        chain: props.chain,
-        fromTokenAddress: getTokenAddress(props.token),
-        fromAmount: Number(deferredTokenAmount),
-        to: "USD",
-      }),
   });
 
   if (cryptoToFiatQuery.isLoading) {
-    return <Skeleton width={"50px"} height={fontSize.lg} />;
+    return <Skeleton height={fontSize.lg} width={"50px"} />;
   }
 
   return cryptoToFiatQuery.data?.result ? (
     <Text {...props}>
-      ${formatNumber(cryptoToFiatQuery.data.result, 2).toFixed(2)}
+      $
+      {Number(
+        formatNumber(cryptoToFiatQuery.data.result, 2).toFixed(2),
+      ).toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+      })}
     </Text>
   ) : null;
 }

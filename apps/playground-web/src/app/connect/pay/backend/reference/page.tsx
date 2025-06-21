@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -5,7 +6,6 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { redirect } from "next/navigation";
 import { THIRDWEB_CLIENT } from "../../../../../lib/client";
 import { isProd } from "../../../../../lib/env";
 import { BlueprintPlayground } from "../../../../insight/[blueprint_slug]/blueprint-playground.client";
@@ -46,13 +46,13 @@ export default async function Page(props: {
       )}
 
       <BlueprintPlayground
-        key={params.route}
-        metadata={pathMetadata}
         backLink={"/connect/pay/backend"}
         clientId={THIRDWEB_CLIENT.clientId}
+        domain={domain}
+        key={params.route}
+        metadata={pathMetadata}
         path={params.route}
         supportedChainIds={[]}
-        domain={domain}
       />
     </div>
   );

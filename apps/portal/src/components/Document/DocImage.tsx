@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import { cn } from "@/lib/utils";
+
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 export function DocImage(props: {
   src: React.ComponentProps<typeof Image>["src"];
@@ -19,9 +20,9 @@ export function DocImage(props: {
       )}
     >
       {typeof src === "string" ? (
-        <img className={cls} alt={alt || ""} src={src} />
+        <img alt={alt || ""} className={cls} src={src} />
       ) : (
-        <Image className={cls} alt={alt || ""} src={src} />
+        <Image alt={alt || ""} className={cls} src={src} />
       )}
     </div>
   );

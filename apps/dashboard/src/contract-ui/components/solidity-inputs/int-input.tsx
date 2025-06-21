@@ -1,8 +1,8 @@
+import { useCallback } from "react";
+import { toWei } from "thirdweb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { useCallback } from "react";
-import { toWei } from "thirdweb";
 import type { SolidityInputWithTypeProps } from ".";
 import { validateInt } from "./helpers";
 
@@ -39,8 +39,8 @@ export const SolidityIntInput: React.FC<SolidityInputWithTypeProps> = ({
       form.clearErrors(inputName);
     } catch {
       form.setError(inputName, {
-        type: "pattern",
         message: "Can't be converted to WEI.",
+        type: "pattern",
       });
     }
   }, [form, inputName]);
@@ -55,16 +55,16 @@ export const SolidityIntInput: React.FC<SolidityInputWithTypeProps> = ({
       <Input
         placeholder={solidityType}
         {...restOfInputProps}
-        value={form.watch(inputName)}
-        onChange={handleChange}
         className={cn(
           showConversionButton && "pr-28",
           restOfInputProps.className,
         )}
+        onChange={handleChange}
+        value={form.watch(inputName)}
       />
       {showConversionButton && (
         <div className="absolute inset-y-0 right-0 flex items-center pr-1">
-          <Button variant="ghost" size="sm" onClick={handleConversion}>
+          <Button onClick={handleConversion} size="sm" variant="ghost">
             Convert to WEI
           </Button>
         </div>

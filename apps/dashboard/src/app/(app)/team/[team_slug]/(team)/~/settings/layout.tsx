@@ -1,6 +1,6 @@
+import { redirect } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { redirect } from "next/navigation";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../login/loginRedirect";
@@ -34,7 +34,7 @@ export default async function Layout(props: {
   });
 
   return (
-    <SettingsLayout team={team} account={account} client={client}>
+    <SettingsLayout account={account} client={client} team={team}>
       {props.children}
     </SettingsLayout>
   );

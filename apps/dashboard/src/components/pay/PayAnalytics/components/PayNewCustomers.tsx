@@ -1,9 +1,9 @@
 "use client";
-import { SkeletonContainer } from "@/components/ui/skeleton";
 import { useId, useMemo } from "react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import type { UniversalBridgeWalletStats } from "types/analytics";
-import { CardHeading, NoDataOverlay, chartHeight } from "./common";
+import { SkeletonContainer } from "@/components/ui/skeleton";
+import { CardHeading, chartHeight, NoDataOverlay } from "./common";
 
 type GraphDataItem = {
   date: string;
@@ -70,22 +70,22 @@ export function PayNewCustomers(props: {
               loadedData={
                 isEmpty ? "NA" : graphData[graphData.length - 1]?.value || 0
               }
-              skeletonData={100}
               render={(v) => {
                 return (
                   <p className="font-semibold text-4xl tracking-tighter">{v}</p>
                 );
               }}
+              skeletonData={100}
             />
           </div>
         </div>
       </div>
 
       <div className="relative flex w-full justify-center">
-        <ResponsiveContainer width="100%" height={chartHeight}>
+        <ResponsiveContainer height={chartHeight} width="100%">
           <AreaChart data={graphData || emptyGraphData}>
             <defs>
-              <linearGradient id={uniqueId} x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id={uniqueId} x1="0" x2="0" y1="0" y2="1">
                 <stop offset="5%" stopColor={chartColor} stopOpacity={0.3} />
                 <stop offset="95%" stopColor={chartColor} stopOpacity={0.0} />
               </linearGradient>
@@ -109,23 +109,23 @@ export function PayNewCustomers(props: {
               }}
             />
             <Area
-              type="monotone"
               dataKey="value"
-              stroke={chartColor}
-              fillOpacity={1}
               fill={`url(#${uniqueId})`}
-              strokeWidth={2}
+              fillOpacity={1}
+              stroke={chartColor}
               strokeLinecap="round"
+              strokeWidth={2}
+              type="monotone"
             />
 
             {graphData && (
               <XAxis
-                dataKey="date"
                 axisLine={false}
-                tickLine={false}
                 className="mt-5 font-sans text-xs"
-                stroke="hsl(var(--muted-foreground))"
+                dataKey="date"
                 dy={12}
+                stroke="hsl(var(--muted-foreground))"
+                tickLine={false}
               />
             )}
           </AreaChart>
@@ -141,8 +141,8 @@ const emptyGraphData: GraphDataItem[] = [5, 9, 7, 15, 7, 20].map(
     const date = new Date();
     date.setDate(date.getDate() + i - arr.length);
     return {
-      value: x,
       date: date.toISOString(),
+      value: x,
     };
   },
 );

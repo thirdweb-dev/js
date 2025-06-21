@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { UploadIcon } from "lucide-react";
 import { type ChangeEvent, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
 export function UploadImage(props: {
   onImageUpload?: (file: File) => void;
@@ -40,7 +40,8 @@ export function UploadImage(props: {
   };
 
   return (
-    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+    // biome-ignore lint/a11y/useKeyWithClickEvents: TODO
+    // biome-ignore lint/a11y/noStaticElementInteractions: TODO
     <div
       className={cn(
         "relative aspect-square w-80 cursor-pointer overflow-hidden rounded-lg border",
@@ -50,20 +51,20 @@ export function UploadImage(props: {
       onClick={handleClick}
     >
       <input
-        id={props.id}
-        type="file"
-        ref={fileInputRef}
-        className="hidden"
         accept="image/*"
+        className="hidden"
+        id={props.id}
         onChange={handleFileChange}
+        ref={fileInputRef}
+        type="file"
       />
 
       {preview ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={preview}
           alt="Preview"
           className="h-full w-full object-contain"
+          src={preview}
         />
       ) : (
         <div className="flex h-full w-full flex-col items-center justify-center p-4 text-muted-foreground">

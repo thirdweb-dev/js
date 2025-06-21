@@ -36,8 +36,8 @@ export function ContractNFTPageClient(props: {
   return (
     <ContractNFTPage
       contract={props.contract}
-      isErc721={supportedERCs.isERC721}
       functionSelectors={functionSelectors}
+      isErc721={supportedERCs.isERC721}
       isLoggedIn={props.isLoggedIn}
       projectMeta={props.projectMeta}
     />

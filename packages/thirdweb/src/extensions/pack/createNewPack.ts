@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "../../client/client.js";
-import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import { upload } from "../../storage/upload.js";
 import type {
   BaseTransactionOptions,
@@ -13,7 +13,6 @@ import {
   createPack,
 } from "./__generated__/IPack/write/createPack.js";
 
-// biome-ignore lint/nursery/noEnum: fine here
 export enum PACK_TOKEN_TYPE {
   ERC20 = 0,
   ERC721 = 1,
@@ -123,8 +122,8 @@ export function createNewPack(
   options: WithOverrides<BaseTransactionOptions<CreateNewPackParams>>,
 ) {
   return createPack({
-    contract: options.contract,
     asyncParams: async () => getCreatePackParams(options),
+    contract: options.contract,
   });
 }
 
@@ -149,18 +148,18 @@ async function getCreatePackParams(
   const [erc20Content, erc721Content, erc1155Content, packUri] =
     await Promise.all([
       processErc20Rewards({
-        packContract: contract,
         content: erc20Rewards,
+        packContract: contract,
         tokenOwner,
       }),
       processErc721Rewards({
-        packContract: contract,
         content: erc721Rewards,
+        packContract: contract,
         tokenOwner,
       }),
       processErc1155Rewards({
-        packContract: contract,
         content: erc1155Rewards,
+        packContract: contract,
         tokenOwner,
       }),
       typeof packMetadata === "string"
@@ -179,14 +178,14 @@ async function getCreatePackParams(
     .concat(erc1155Content.numOfRewardUnits);
 
   return {
-    packUri,
-    recipient,
+    amountDistributedPerOpen,
     contents,
     numOfRewardUnits,
     // openStartTimestamp should be in seconds and not millisecond
     openStartTimestamp: BigInt(Math.ceil(openStartTimestamp.getTime() / 1000)),
-    amountDistributedPerOpen,
     overrides,
+    packUri,
+    recipient,
   };
 }
 
@@ -235,8 +234,8 @@ async function processErc20Rewards(options: {
         return Promise.all([
           allowance({
             contract,
-            spender: packContract.address,
             owner: tokenOwner,
+            spender: packContract.address,
           }),
           decimals({ contract }).catch(() => undefined),
           contract.address,
@@ -279,8 +278,8 @@ async function processErc20Rewards(options: {
     numOfRewardUnits.push(BigInt(item.totalRewards));
     return {
       assetContract: contractAddress,
-      tokenType: PACK_TOKEN_TYPE.ERC20,
-      tokenId: 0n, // hard-coded to `0n` for ERC20
+      tokenId: 0n,
+      tokenType: PACK_TOKEN_TYPE.ERC20, // hard-coded to `0n` for ERC20
       totalAmount: totalRequired,
     };
   });
@@ -354,8 +353,8 @@ async function processErc721Rewards(options: {
     numOfRewardUnits.push(1n);
     return {
       assetContract: address,
-      tokenType: PACK_TOKEN_TYPE.ERC721,
       tokenId,
+      tokenType: PACK_TOKEN_TYPE.ERC721,
       totalAmount: 1n,
     };
   });
@@ -389,8 +388,8 @@ async function processErc1155Rewards(options: {
           chain: packContract.chain,
           client: packContract.client,
         }),
-        tokenId: o.tokenId,
         quantityPerReward: o.quantityPerReward,
+        tokenId: o.tokenId,
         totalRewards: o.totalRewards,
       })),
     ),
@@ -428,8 +427,8 @@ async function processErc1155Rewards(options: {
     numOfRewardUnits.push(BigInt(totalRewards));
     return {
       assetContract: address,
-      tokenType: PACK_TOKEN_TYPE.ERC1155,
       tokenId,
+      tokenType: PACK_TOKEN_TYPE.ERC1155,
       totalAmount: BigInt(quantityPerReward) * BigInt(totalRewards),
     };
   });

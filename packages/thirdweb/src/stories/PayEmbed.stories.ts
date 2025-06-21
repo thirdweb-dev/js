@@ -3,15 +3,15 @@ import { PayEmbed } from "../react/web/ui/PayEmbed.js";
 import { storyClient } from "./utils.js";
 
 const meta = {
-  title: "Connect/PayEmbed",
+  args: {
+    client: storyClient,
+  },
   component: PayEmbed,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
-  args: {
-    client: storyClient,
-  },
+  title: "Connect/PayEmbed",
 } satisfies Meta<typeof PayEmbed>;
 
 type Story = StoryObj<typeof meta>;
@@ -24,12 +24,12 @@ export const Dark: Story = {
 
 export const FiatTestMode: Story = {
   args: {
-    theme: "dark",
     payOptions: {
       buyWithFiat: {
         testMode: true,
       },
     },
+    theme: "dark",
   },
 };
 

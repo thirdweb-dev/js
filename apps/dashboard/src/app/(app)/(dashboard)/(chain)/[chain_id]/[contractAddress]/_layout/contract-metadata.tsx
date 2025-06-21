@@ -27,11 +27,11 @@ export function ContractMetadata({
 }: ContractMetadataProps) {
   return (
     <MetadataHeader
-      data={contractMetadata}
-      chain={chain}
       address={contract.address}
-      externalLinks={externalLinks}
+      chain={chain}
       client={contract.client}
+      data={contractMetadata}
+      externalLinks={externalLinks}
     />
   );
 }

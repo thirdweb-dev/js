@@ -66,14 +66,14 @@ export async function encodeJWT(options: EncodeJWTParams) {
 
 async function ensureJWTPayload(payload: JWTPayloadInput): Promise<JWTPayload> {
   return {
-    iss: payload.iss,
-    sub: payload.sub,
     aud: payload.aud,
+    ctx: payload.ctx,
     exp: Math.floor(payload.exp.getTime() / 1000),
-    nbf: Math.floor(payload.nbf.getTime() / 1000),
     iat: Math.floor(payload.iat.getTime() / 1000),
+    iss: payload.iss,
     // default to uuid if jti is not provided
     jti: payload.jti || (await randomBytesHex()),
-    ctx: payload.ctx,
+    nbf: Math.floor(payload.nbf.getTime() / 1000),
+    sub: payload.sub,
   };
 }

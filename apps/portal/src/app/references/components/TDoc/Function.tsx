@@ -1,24 +1,24 @@
-import { DocLink, Paragraph } from "@/components/Document";
-import { InlineCode } from "@/components/Document/InlineCode";
-import { sluggerContext } from "@/contexts/slugger";
 import invariant from "tiny-invariant";
 import {
   type FunctionDoc,
   type FunctionParameter,
   type FunctionSignature,
+  getFunctionSignature,
   type InterfaceDoc,
   type Summary,
   type TypeInfo,
-  getFunctionSignature,
 } from "typedoc-better-json";
+import { DocLink, Paragraph } from "@/components/Document";
+import { InlineCode } from "@/components/Document/InlineCode";
+import { sluggerContext } from "@/contexts/slugger";
 import { Callout } from "../../../../components/Document/Callout";
 import { CodeBlock } from "../../../../components/Document/Code";
 import { Details } from "../../../../components/Document/Details";
 import { Heading } from "../../../../components/Document/Heading";
 import { DeprecatedCalloutTDoc } from "./Deprecated";
+import fetchDocBySlug from "./fetchDocs/fetchDocBySlug";
 import { SourceLinkTypeDoc } from "./SourceLink";
 import { TypedocSummary } from "./Summary";
-import fetchDocBySlug from "./fetchDocs/fetchDocBySlug";
 import { getExtensionName } from "./utils/getSidebarLinkgroups";
 import { getTags } from "./utils/getTags";
 import { getTokenLinks } from "./utils/getTokenLinks";
@@ -45,7 +45,7 @@ export function FunctionTDoc(props: {
   return (
     <>
       {props.showHeading !== false && (
-        <Heading level={props.level} id={slugger.slug(doc.name)}>
+        <Heading anchorId={slugger.slug(doc.name)} level={props.level}>
           {extensionName && extensionName !== "Common"
             ? `${extensionName}.${doc.name}`
             : doc.name}
@@ -55,12 +55,12 @@ export function FunctionTDoc(props: {
       {doc.source && <SourceLinkTypeDoc href={doc.source} />}
       {doc.signatures?.map((signature, i) => (
         <RenderFunctionSignature
-          signatureId={multipleSignatures ? i + 1 : undefined}
-          signature={signature}
-          name={doc.name}
-          level={props.level + 1}
           // biome-ignore lint/suspicious/noArrayIndexKey: nothing better available
           key={i}
+          level={props.level + 1}
+          name={doc.name}
+          signature={signature}
+          signatureId={multipleSignatures ? i + 1 : undefined}
         />
       ))}
     </>
@@ -93,12 +93,12 @@ async function RenderFunctionSignature(props: {
     <>
       {props.signatureId && (
         <Heading
-          level={props.level}
-          id={slugger.slug(
+          anchorId={slugger.slug(
             `${props.name}-signature-${props.signatureId}`,
             false,
           )}
           className="text-foreground"
+          level={props.level}
           noIndex
         >
           Signature
@@ -126,7 +126,7 @@ async function RenderFunctionSignature(props: {
 
       {exampleTag?.summary && (
         <>
-          <Heading level={subLevel} id={slugger.slug("example")} noIndex>
+          <Heading anchorId={slugger.slug("example")} level={subLevel} noIndex>
             Example
           </Heading>
           <TypedocSummary summary={exampleTag.summary} />
@@ -134,10 +134,10 @@ async function RenderFunctionSignature(props: {
       )}
 
       <Details
-        startExpanded
-        id={slugger.slug("signature")}
-        summary="Signature"
+        anchorId={slugger.slug("signature")}
         noIndex
+        startExpanded
+        summary="Signature"
       >
         <CodeBlock
           code={signatureCode.code}
@@ -149,8 +149,11 @@ async function RenderFunctionSignature(props: {
       {signature.parameters && (
         <div className="mt-5">
           <Heading
+            anchorId={slugger.slug(
+              `${props.name}--param--${props.name}`,
+              false,
+            )}
             level={subLevel}
-            id={slugger.slug(`${props.name}--param--${props.name}`, false)}
             noIndex
           >
             Parameters
@@ -158,11 +161,11 @@ async function RenderFunctionSignature(props: {
           {props.signature.parameters?.map(async (param) => {
             return (
               <Details
-                id={slugger.slug(param.name)}
+                anchorId={slugger.slug(param.name)}
                 key={param.name}
                 level={props.level + 1}
-                summary={param.name}
                 startExpanded
+                summary={param.name}
                 tags={[
                   param.flags?.isOptional ? "optional" : "",
                   param.flags?.isPrivate ? "private" : "",
@@ -170,7 +173,7 @@ async function RenderFunctionSignature(props: {
                   param.flags?.isStatic ? "static" : "",
                 ].filter((w) => w)}
               >
-                <ParameterTDoc param={param} level={subLevel} />
+                <ParameterTDoc level={subLevel} param={param} />
               </Details>
             );
           })}
@@ -180,8 +183,8 @@ async function RenderFunctionSignature(props: {
       {signature.returns && (
         <div className="mt-5">
           <Heading
+            anchorId={slugger.slug(`${props.name}-returns`)}
             level={subLevel}
-            id={slugger.slug(`${props.name}-returns`)}
             noIndex
           >
             Returns
@@ -189,10 +192,10 @@ async function RenderFunctionSignature(props: {
           <div>
             {signature.returns.type && (
               <Details
-                startExpanded
-                id={slugger.slug(`${props.name}-return-type`)}
-                summary="Return Type"
+                anchorId={slugger.slug(`${props.name}-return-type`)}
                 noIndex
+                startExpanded
+                summary="Return Type"
               >
                 <ReturnsTDoc returns={signature.returns} />
               </Details>
@@ -207,7 +210,7 @@ async function RenderFunctionSignature(props: {
 
       {prepareTag && (
         <div className="mt-8" data-noindex>
-          <Callout variant="info" title="Preparable">
+          <Callout title="Preparable" variant="info">
             <Paragraph>
               You can also prepare the transaction without executing it by
               calling <InlineCode code={`${name}.prepare()`} /> with same
@@ -303,10 +306,10 @@ async function ParameterTDoc(props: {
           {showType && (
             <>
               <Heading
-                level={props.level + 1}
-                id={slugger.slug(`${param.name}type`)}
-                noIndex
                 anchorClassName={!param.summary ? "mt-0" : ""}
+                anchorId={slugger.slug(`${param.name}type`)}
+                level={props.level + 1}
+                noIndex
               >
                 Type
               </Heading>
@@ -314,6 +317,7 @@ async function ParameterTDoc(props: {
               <CodeBlock
                 // Prioritize the unrolled type when showing the parameter codeblock
                 code={`let ${param.name}: ${fullTypeDoc?.type?.code ?? param.type.code}`}
+                lang="ts"
                 tokenLinks={
                   param.type.tokens
                     ? await getTokenLinks([
@@ -322,7 +326,6 @@ async function ParameterTDoc(props: {
                       ])
                     : undefined
                 }
-                lang="ts"
               />
             </>
           )}
@@ -330,8 +333,8 @@ async function ParameterTDoc(props: {
           {exampleTag?.summary && (
             <>
               <Heading
+                anchorId={slugger.slug(`${param.name}example`)}
                 level={props.level + 1}
-                id={slugger.slug(`${param.name}example`)}
                 noIndex
               >
                 Example

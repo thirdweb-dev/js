@@ -21,15 +21,15 @@ export function EngineAlertsPage(props: {
     <div>
       <ManageEngineAlertsSection
         alertRules={alertRules}
-        engineId={props.instance.id}
         alertRulesIsLoading={alertRulesQuery.isLoading}
+        engineId={props.instance.id}
         teamIdOrSlug={props.teamIdOrSlug}
       />
       <div className="h-8" />
       <RecentEngineAlertsSection
         alertRules={alertRules}
-        engineId={props.instance.id}
         alertRulesIsLoading={alertRulesQuery.isLoading}
+        engineId={props.instance.id}
         teamIdOrSlug={props.teamIdOrSlug}
       />
     </div>

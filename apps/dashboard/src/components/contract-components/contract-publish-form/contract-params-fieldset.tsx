@@ -1,3 +1,11 @@
+import { FormControl, useBreakpointValue } from "@chakra-ui/react";
+import type { AbiParameter } from "abitype";
+import { SolidityInput } from "contract-ui/components/solidity-inputs";
+import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
+import { getTemplateValuesForType } from "lib/deployment/template-values";
+import { useId, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import type { ThirdwebClient } from "thirdweb";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { InlineCode } from "@/components/ui/inline-code";
@@ -5,14 +13,6 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { FormControl, useBreakpointValue } from "@chakra-ui/react";
-import type { AbiParameter } from "abitype";
-import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
-import { getTemplateValuesForType } from "lib/deployment/template-values";
-import { useState } from "react";
-import { useFormContext } from "react-hook-form";
-import type { ThirdwebClient } from "thirdweb";
 import { DecodedInputArrayFieldset } from "./decoded-bytes-input/decoded-input-array-fieldset";
 import { RefInputFieldset } from "./ref-contract-input/ref-input-fieldset";
 
@@ -26,7 +26,8 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
 }) => {
   const form = useFormContext();
   const isMobile = useBreakpointValue({ base: true, md: false });
-
+  const displayNameId = useId();
+  const descriptionId = useId();
   const [isCustomInputEnabledArray, setIsCustomInputEnabledArray] = useState(
     Array(deployParams.length).fill(false),
   );
@@ -84,8 +85,8 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
           const paramTemplateValues = getTemplateValuesForType(param.type);
           return (
             <div
-              key={`implementation_${param.name}`}
               className="rounded-lg border border-border bg-card p-6"
+              key={`implementation_${param.name}`}
             >
               {/* Title + Type */}
               <div className="flex items-center gap-3">
@@ -108,9 +109,6 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
 
               {/* Display Name */}
               <FormFieldSetup
-                htmlFor="display-name"
-                isRequired={false}
-                label="Display Name"
                 errorMessage={
                   form.getFieldState(
                     `constructorParams.${
@@ -119,14 +117,12 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                     form.formState,
                   ).error?.message
                 }
+                htmlFor={displayNameId}
+                isRequired={false}
+                label="Display Name"
               >
                 <Input
-                  id="display-name"
-                  value={form.watch(
-                    `constructorParams.${
-                      param.name ? param.name : "*"
-                    }.displayName`,
-                  )}
+                  id={displayNameId}
                   onChange={(e) =>
                     form.setValue(
                       `constructorParams.${
@@ -136,6 +132,11 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                     )
                   }
                   placeholder={camelToTitle(param.name ? param.name : "*")}
+                  value={form.watch(
+                    `constructorParams.${
+                      param.name ? param.name : "*"
+                    }.displayName`,
+                  )}
                 />
               </FormFieldSetup>
 
@@ -143,8 +144,6 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
 
               {/* Description */}
               <FormFieldSetup
-                isRequired={false}
-                label="Description"
                 errorMessage={
                   form.getFieldState(
                     `constructorParams.${
@@ -153,7 +152,6 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                     form.formState,
                   ).error?.message
                 }
-                htmlFor="description"
                 helperText={
                   <>
                     {form.watch(
@@ -164,14 +162,14 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                     /400 characters
                   </>
                 }
+                htmlFor={descriptionId}
+                isRequired={false}
+                label="Description"
               >
                 <Textarea
-                  id="description"
-                  value={form.watch(
-                    `constructorParams.${
-                      param.name ? param.name : "*"
-                    }.description`,
-                  )}
+                  className="h-full"
+                  id={descriptionId}
+                  maxLength={400}
                   onChange={(e) =>
                     form.setValue(
                       `constructorParams.${
@@ -180,9 +178,12 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                       e.target.value,
                     )
                   }
-                  className="h-full"
-                  maxLength={400}
                   placeholder="Enter a description for this parameter."
+                  value={form.watch(
+                    `constructorParams.${
+                      param.name ? param.name : "*"
+                    }.description`,
+                  )}
                 />
               </FormFieldSetup>
 
@@ -218,9 +219,8 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                 {!isCustomInputEnabledArray[idx] ? (
                   <FormControl>
                     <SolidityInput
-                      client={client}
                       className="!bg-background !text-sm placeholder:!text-sm"
-                      solidityType={param.type}
+                      client={client}
                       placeholder={
                         isMobile ||
                         paramTemplateValues?.[0]?.value ===
@@ -228,6 +228,7 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                           ? "Pre-filled value."
                           : "This value will be pre-filled in the deploy form."
                       }
+                      solidityType={param.type}
                       {...form.register(
                         `constructorParams.${
                           param.name ? param.name : "*"
@@ -236,9 +237,9 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                     />
                   </FormControl>
                 ) : param.type === "address" || param.type === "address[]" ? (
-                  <RefInputFieldset param={param} client={client} />
+                  <RefInputFieldset client={client} param={param} />
                 ) : (
-                  <DecodedInputArrayFieldset param={param} client={client} />
+                  <DecodedInputArrayFieldset client={client} param={param} />
                 )}
 
                 {/* Checkboxes */}

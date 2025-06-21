@@ -66,20 +66,20 @@ export async function prepareOpenZeppelinTransaction({
     // chainless support!
     if (gasless.experimentalChainlessSupport) {
       const message = {
+        chainid: BigInt(transaction.chain.id),
+        data: serializableTransaction.data,
         from: account.address,
-        to: serializableTransaction.to,
-        value: 0n,
         gas: serializableTransaction.gas,
         nonce: nonce,
-        data: serializableTransaction.data,
-        chainid: BigInt(transaction.chain.id),
+        to: serializableTransaction.to,
+        value: 0n,
       } as const;
       return [
         await account.signTypedData({
           domain: {
             name: "GSNv2 Forwarder",
-            version: "0.0.1",
             verifyingContract: forrwaderContract.address,
+            version: "0.0.1",
           },
           message,
           primaryType: "ForwardRequest",
@@ -90,20 +90,20 @@ export async function prepareOpenZeppelinTransaction({
     }
     // else non-chainless support
     const message = {
+      data: serializableTransaction.data,
       from: account.address,
-      to: serializableTransaction.to,
-      value: 0n,
       gas: serializableTransaction.gas,
       nonce: nonce,
-      data: serializableTransaction.data,
+      to: serializableTransaction.to,
+      value: 0n,
     } as const;
     return [
       await account.signTypedData({
         domain: {
-          name: gasless.domainName ?? "GSNv2 Forwarder",
-          version: gasless.domainVersion ?? "0.0.1",
           chainId: transaction.chain.id,
+          name: gasless.domainName ?? "GSNv2 Forwarder",
           verifyingContract: forrwaderContract.address,
+          version: gasless.domainVersion ?? "0.0.1",
         },
         message,
         primaryType: "ForwardRequest",
@@ -115,7 +115,7 @@ export async function prepareOpenZeppelinTransaction({
   // TODO: handle special case for `approve` -> `permit`
   const messageType = "forward";
 
-  return { message, signature, messageType } as const;
+  return { message, messageType, signature } as const;
 }
 
 const ForwardRequest = [
@@ -147,13 +147,13 @@ export async function relayOpenZeppelinTransaction(
     await prepareOpenZeppelinTransaction(options);
 
   const response = await fetch(options.gasless.relayerUrl, {
-    method: "POST",
     body: stringify({
-      request: message,
-      type: messageType,
-      signature,
       forwarderAddress: options.gasless.relayerForwarderAddress,
+      request: message,
+      signature,
+      type: messageType,
     }),
+    method: "POST",
   });
 
   if (!response.ok) {
@@ -166,9 +166,9 @@ export async function relayOpenZeppelinTransaction(
   const transactionHash = JSON.parse(json.result).txHash;
   if (isHex(transactionHash)) {
     return {
-      transactionHash,
       chain: options.transaction.chain,
       client: options.transaction.client,
+      transactionHash,
     };
   }
 

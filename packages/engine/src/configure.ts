@@ -10,11 +10,11 @@ export function configure(
   options: EngineClientOptions & { override?: Config },
 ) {
   client.setConfig({
+    bodySerializer: stringify,
     headers: {
       ...(options.clientId && { "x-client-id": options.clientId }),
       ...(options.secretKey && { "x-secret-key": options.secretKey }),
     },
-    bodySerializer: stringify,
     ...(options.override ?? {}),
   });
 }

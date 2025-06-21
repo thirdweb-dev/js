@@ -20,10 +20,10 @@ export async function mapDirectListing(
   const { latestBlock, rawListing } = options;
   // process the listing
   const status = computeStatus({
-    listingStatus: rawListing.status,
     blockTimeStamp: latestBlock.timestamp,
-    startTimestamp: rawListing.startTimestamp,
     endTimestamp: rawListing.endTimestamp,
+    listingStatus: rawListing.status,
+    startTimestamp: rawListing.startTimestamp,
   });
 
   const currencyContract = getContract({
@@ -45,28 +45,28 @@ export async function mapDirectListing(
   ]);
 
   return {
-    id: rawListing.listingId,
-    creatorAddress: rawListing.listingCreator,
+    asset: nftAsset,
     assetContractAddress: rawListing.assetContract,
-    tokenId: rawListing.tokenId,
-    quantity: rawListing.quantity,
+    creatorAddress: rawListing.listingCreator,
     currencyContractAddress: rawListing.currency,
     currencyValuePerToken: {
       ...currencyValuePerToken,
-      value: rawListing.pricePerToken,
+      chainId: currencyContract.chain.id,
       displayValue: toTokens(
         rawListing.pricePerToken,
         currencyValuePerToken.decimals,
       ),
       tokenAddress: currencyContract.address,
-      chainId: currencyContract.chain.id,
+      value: rawListing.pricePerToken,
     },
-    pricePerToken: rawListing.pricePerToken,
-    asset: nftAsset,
-    startTimeInSeconds: rawListing.startTimestamp,
     endTimeInSeconds: rawListing.endTimestamp,
+    id: rawListing.listingId,
     isReservedListing: rawListing.reserved,
+    pricePerToken: rawListing.pricePerToken,
+    quantity: rawListing.quantity,
+    startTimeInSeconds: rawListing.startTimestamp,
     status,
+    tokenId: rawListing.tokenId,
     type: "direct-listing",
   };
 }
@@ -102,9 +102,9 @@ export async function isListingValid(
     const [approvedForAll, approvedOperator, tokenOwner] = await Promise.all([
       isApprovedForAll({
         contract: assetContract,
-        owner: options.listing.creatorAddress,
         // the marketplace contract address has to be approved to transfer the token
         operator: options.contract.address,
+        owner: options.listing.creatorAddress,
       }),
       getApproved({
         contract: assetContract,
@@ -118,14 +118,14 @@ export async function isListingValid(
     // if the marketplace is not approved for all and the marketplace contract is not the approved operator for the token
     // -> the listing is not valid
     if (!approvedForAll && approvedOperator !== options.contract.address) {
-      return { valid: false, reason: "Asset not approved for marketplace." };
+      return { reason: "Asset not approved for marketplace.", valid: false };
     }
     // if the token owner is not the creator of the listing
     // -> the listing is not valid
     if (tokenOwner !== options.listing.creatorAddress) {
       return {
-        valid: false,
         reason: "Listing creator no longer owns this token.",
+        valid: false,
       };
     }
     // otherwise the listing is valid
@@ -143,9 +143,9 @@ export async function isListingValid(
     const [approvedForAll, balance] = await Promise.all([
       isApprovedForAll({
         contract: assetContract,
-        owner: options.listing.creatorAddress,
         // the marketplace contract address has to be approved to transfer the token
         operator: options.contract.address,
+        owner: options.listing.creatorAddress,
       }),
       balanceOf({
         contract: assetContract,
@@ -157,16 +157,16 @@ export async function isListingValid(
     // if the marketplace is not approved for all
     // -> the listing is not valid
     if (!approvedForAll) {
-      return { valid: false, reason: "Asset not approved for marketplace." };
+      return { reason: "Asset not approved for marketplace.", valid: false };
     }
     // if the balance is less than the quantity the user is trying to purchase or the listing quantity
     // -> the listing is not valid
     const quantityWanted = options.quantity || options.listing.quantity;
     if (balance < quantityWanted) {
       return {
-        valid: false,
         reason:
           "Seller does not have enough balance of token to fulfill order.",
+        valid: false,
       };
     }
     return {
@@ -176,7 +176,7 @@ export async function isListingValid(
   // if the asset is neither ERC721 nor ERC1155
 
   return {
-    valid: false,
     reason: "AssetContract must implement ERC 1155 or ERC 721.",
+    valid: false,
   };
 }

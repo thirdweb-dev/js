@@ -1,7 +1,7 @@
 "use client";
 
-import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 import { format } from "date-fns";
+import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 
 export function RateGraph(props: {
   peakPercentage: number;
@@ -11,33 +11,29 @@ export function RateGraph(props: {
   return (
     <ThirdwebAreaChart
       chartClassName="aspect-[1.5] lg:aspect-[4]"
-      header={{
-        title: "Request Rate Over Time",
-        description: "Request rate over the last 24 hours.",
-      }}
       config={
         props.peakPercentage > 80
           ? {
               averageRate: {
-                label: "Average RPS",
                 color: "hsl(var(--chart-1))",
-              },
-              peakRPS: {
-                label: "Peak RPS",
-                color: "hsl(var(--chart-2))",
+                label: "Average RPS",
               },
               maxLine: {
                 label: "Plan Rate Limit",
               },
+              peakRPS: {
+                color: "hsl(var(--chart-2))",
+                label: "Peak RPS",
+              },
             }
           : {
               averageRate: {
-                label: "Average RPS",
                 color: "hsl(var(--chart-1))",
+                label: "Average RPS",
               },
               peakRPS: {
-                label: "Peak RPS",
                 color: "hsl(var(--chart-2))",
+                label: "Peak RPS",
               },
             }
       }
@@ -45,21 +41,25 @@ export function RateGraph(props: {
       data={props.data
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .map((v) => ({
-          time: v.date,
           averageRate: Number(Number(v.averageRate).toFixed(2)),
-          peakRPS: Number(v.peakRPS),
           maxLine: props.currentRateLimit,
+          peakRPS: Number(v.peakRPS),
+          time: v.date,
         }))}
-      yAxis
-      xAxis={{
-        sameDay: true,
+      header={{
+        description: "Request rate over the last 24 hours.",
+        title: "Request Rate Over Time",
       }}
-      showLegend
       hideLabel={false}
+      isPending={false}
+      showLegend
       toolTipLabelFormatter={(label) => {
         return format(label, "MMM dd, HH:mm");
       }}
-      isPending={false}
+      xAxis={{
+        sameDay: true,
+      }}
+      yAxis
     />
   );
 }

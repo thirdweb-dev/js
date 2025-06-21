@@ -1,10 +1,10 @@
+import { DeployedContractsPage } from "@app/account/contracts/_components/DeployedContractsPage";
+import { getAuthToken } from "@app/api/lib/getAuthToken";
+import { loginRedirect } from "@app/login/loginRedirect";
+import { redirect } from "next/navigation";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { redirect } from "next/navigation";
-import { DeployedContractsPage } from "../../../../../account/contracts/_components/DeployedContractsPage";
-import { getAuthToken } from "../../../../../api/lib/getAuthToken";
-import { loginRedirect } from "../../../../../login/loginRedirect";
 import { FooterLinksSection } from "../components/footer/FooterLinksSection";
 
 export default async function Page(props: {
@@ -38,12 +38,12 @@ export default async function Page(props: {
   return (
     <div className="flex grow flex-col">
       <DeployedContractsPage
-        teamId={team.id}
-        projectId={project.id}
         authToken={authToken}
         client={client}
-        teamSlug={params.team_slug}
+        projectId={project.id}
         projectSlug={params.project_slug}
+        teamId={team.id}
+        teamSlug={params.team_slug}
       />
       <div className="h-20" />
       <ContractsFooter />
@@ -56,51 +56,50 @@ function ContractsFooter() {
     <div className="border-t">
       <div className="container max-w-7xl">
         <FooterLinksSection
-          trackingCategory="contracts"
-          left={{
-            title: "Documentation",
-            links: [
-              {
-                label: "Deployment Tools",
-                href: "https://portal.thirdweb.com/contracts/deploy/overview",
-              },
-              {
-                label: "Modular Contracts",
-                href: "https://portal.thirdweb.com/contracts/modular-contracts/overview",
-              },
-              {
-                label: "Pre-built Contracts",
-                href: "https://portal.thirdweb.com/contracts/explore/overview",
-              },
-            ],
-          }}
           center={{
-            title: "Templates",
             links: [
               {
-                label: "Hardhat Starter",
                 href: "https://thirdweb.com/templates/hardhat-starter",
+                label: "Hardhat Starter",
               },
               {
                 href: "https://thirdweb.com/templates/forge-starter",
                 label: "Forge Starter",
               },
             ],
+            title: "Templates",
           }}
-          right={{
-            title: "Tutorials",
+          left={{
             links: [
               {
-                label:
-                  "Everything you need to know about upgradeable smart contracts",
-                href: "https://www.youtube.com/watch?v=cZt-CkzxrNM",
+                href: "https://portal.thirdweb.com/contracts/deploy/overview",
+                label: "Deployment Tools",
               },
               {
-                label:
-                  "Modular Contracts SDK: Build Core & Modules from Scratch (Advanced Guide)",
-                href: "https://www.youtube.com/watch?v=ZoOk41y4f_k",
+                href: "https://portal.thirdweb.com/contracts/modular-contracts/overview",
+                label: "Modular Contracts",
+              },
+              {
+                href: "https://portal.thirdweb.com/contracts/explore/overview",
+                label: "Pre-built Contracts",
               },
             ],
+            title: "Documentation",
+          }}
+          right={{
+            links: [
+              {
+                href: "https://www.youtube.com/watch?v=cZt-CkzxrNM",
+                label:
+                  "Everything you need to know about upgradeable smart contracts",
+              },
+              {
+                href: "https://www.youtube.com/watch?v=ZoOk41y4f_k",
+                label:
+                  "Modular Contracts SDK: Build Core & Modules from Scratch (Advanced Guide)",
+              },
+            ],
+            title: "Tutorials",
           }}
         />
       </div>

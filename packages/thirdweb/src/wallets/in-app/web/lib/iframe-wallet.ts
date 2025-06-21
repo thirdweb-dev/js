@@ -25,9 +25,9 @@ import type { IWebWallet } from "../../core/wallet/web-wallet.js";
 import type {
   ClientIdWithQuerierType,
   GetAddressReturnType,
+  SignedTypedDataReturnType,
   SignMessageReturnType,
   SignTransactionReturnType,
-  SignedTypedDataReturnType,
 } from "../types.js";
 import type { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 
@@ -151,8 +151,8 @@ export class IFrameWallet implements IWebWallet {
   async getUserWalletStatus(): Promise<GetUser> {
     const userStatus =
       await this.walletManagerQuerier.call<GetUserWalletStatusRpcReturnType>({
-        procedureName: "getUserStatus",
         params: undefined,
+        procedureName: "getUserStatus",
       });
     if (userStatus.status === "Logged In, Wallet Initialized") {
       return {
@@ -188,18 +188,18 @@ export class IFrameWallet implements IWebWallet {
     const partnerId = this.ecosystem?.partnerId;
 
     const { address } = await querier.call<GetAddressReturnType>({
-      procedureName: "getAddress",
       params: undefined,
+      procedureName: "getAddress",
     });
     const _signTransaction = async (tx: SendTransactionOption) => {
       // biome-ignore lint/suspicious/noExplicitAny: ethers tx transformation
       const transaction: Record<string, any> = {
-        to: tx.to ?? undefined,
+        chainId: tx.chainId,
         data: tx.data,
-        value: tx.value,
         gasLimit: tx.gas,
         nonce: tx.nonce,
-        chainId: tx.chainId,
+        to: tx.to ?? undefined,
+        value: tx.value,
       };
 
       if (tx.maxFeePerGas) {
@@ -216,31 +216,22 @@ export class IFrameWallet implements IWebWallet {
       const RPC_URL = getThirdwebDomains().rpc;
       const { signedTransaction } =
         await querier.call<SignTransactionReturnType>({
-          procedureName: "signTransaction",
           params: {
-            transaction,
             chainId: tx.chainId,
             partnerId,
-            rpcEndpoint: `https://${tx.chainId}.${RPC_URL}`, // TODO (ew) shouldnt be needed
+            rpcEndpoint: `https://${tx.chainId}.${RPC_URL}`,
+            transaction, // TODO (ew) shouldnt be needed
           },
+          procedureName: "signTransaction",
         });
       return signedTransaction as Hex;
     };
     return {
       address: getAddress(address),
-      async signTransaction(tx) {
-        if (!tx.chainId) {
-          throw new Error("chainId required in tx to sign");
-        }
-        return _signTransaction({
-          ...tx,
-          chainId: tx.chainId,
-        });
-      },
       async sendTransaction(tx) {
         const rpcRequest = getRpcClient({
-          client,
           chain: getCachedChain(tx.chainId),
+          client,
         });
         const signedTx = await _signTransaction(tx);
 
@@ -250,13 +241,13 @@ export class IFrameWallet implements IWebWallet {
         );
 
         trackTransaction({
-          client,
           chainId: tx.chainId,
-          walletAddress: address,
-          walletType: "inApp",
-          transactionHash,
+          client,
           contractAddress: tx.to ?? undefined,
           gasPrice: tx.gasPrice,
+          transactionHash,
+          walletAddress: address,
+          walletType: "inApp",
         });
 
         return { transactionHash };
@@ -274,15 +265,24 @@ export class IFrameWallet implements IWebWallet {
         })();
 
         const { signedMessage } = await querier.call<SignMessageReturnType>({
-          procedureName: "signMessage",
           params: {
+            chainId: 1, // needs bytes or string
             // biome-ignore lint/suspicious/noExplicitAny: ethers tx transformation
-            message: messageDecoded as any, // needs bytes or string
-            partnerId,
-            chainId: 1, // TODO check if we need this
+            message: messageDecoded as any,
+            partnerId, // TODO check if we need this
           },
+          procedureName: "signMessage",
         });
         return signedMessage as Hex;
+      },
+      async signTransaction(tx) {
+        if (!tx.chainId) {
+          throw new Error("chainId required in tx to sign");
+        }
+        return _signTransaction({
+          ...tx,
+          chainId: tx.chainId,
+        });
       },
       async signTypedData(_typedData) {
         const parsedTypedData = parseTypedData(_typedData);
@@ -309,17 +309,17 @@ export class IFrameWallet implements IWebWallet {
         const RPC_URL = getThirdwebDomains().rpc;
         const { signedTypedData } =
           await querier.call<SignedTypedDataReturnType>({
-            procedureName: "signTypedDataV4",
             params: {
+              chainId: Number.parseInt(BigInt(chainId || 1).toString()),
               domain: domainData,
-              types:
-                parsedTypedData.types as SignerProcedureTypes["signTypedDataV4"]["types"],
               message:
                 parsedTypedData.message as SignerProcedureTypes["signTypedDataV4"]["message"],
-              chainId: Number.parseInt(BigInt(chainId || 1).toString()),
               partnerId,
-              rpcEndpoint: `https://${chainId}.${RPC_URL}`, // TODO (ew) shouldnt be needed
+              rpcEndpoint: `https://${chainId}.${RPC_URL}`,
+              types:
+                parsedTypedData.types as SignerProcedureTypes["signTypedDataV4"]["types"], // TODO (ew) shouldnt be needed
             },
+            procedureName: "signTypedDataV4",
           });
         return signedTypedData as Hex;
       },

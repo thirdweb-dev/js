@@ -6,28 +6,29 @@ export function StepConnectorArrow() {
   const theme = useCustomTheme();
   return (
     <Container
-      flex="row"
       center="both"
+      flex="row"
       style={{
-        width: "100%",
-        position: "relative",
-        marginTop: "-10px",
         marginBottom: "-10px",
+        marginTop: "-10px",
+        position: "relative",
+        width: "100%",
         zIndex: 1000,
       }}
     >
       <Container
-        flex="row"
         center="both"
+        color="primaryText"
+        flex="row"
         style={{
-          borderRadius: "100%",
-          width: "30px",
-          height: "30px",
           backgroundColor: theme.colors.modalBg,
           border: `1px solid ${theme.colors.borderColor}`,
+          borderRadius: "100%",
+          height: "30px",
+          width: "30px",
         }}
       >
-        <ChevronDownIcon width={16} height={16} />
+        <ChevronDownIcon height={16} width={16} />
       </Container>
     </Container>
   );

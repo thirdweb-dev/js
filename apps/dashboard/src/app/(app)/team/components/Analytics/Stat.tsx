@@ -4,7 +4,11 @@ export function Stat({
   label,
   value,
   trend,
-}: { label: string; value: string | number; trend?: number }) {
+}: {
+  label: string;
+  value: string | number;
+  trend?: number;
+}) {
   return (
     <div className="flex flex-col gap-1 p-4 text-left">
       <span className="text-muted-foreground text-sm">{label}</span>
