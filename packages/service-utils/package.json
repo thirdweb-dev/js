@@ -9,7 +9,7 @@
     "zod": "3.25.62"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.0",
+    "@biomejs/biome": "2.0.4",
     "@cloudflare/workers-types": "4.20250612.0",
     "@types/node": "22.14.1",
     "@vitest/coverage-v8": "3.2.3",

@@ -84,7 +84,7 @@
     "zod": "3.25.62"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.0",
+    "@biomejs/biome": "2.0.4",
     "@chakra-ui/cli": "^2.4.1",
     "@chromatic-com/storybook": "4.0.0",
     "@next/bundle-analyzer": "15.3.3",
