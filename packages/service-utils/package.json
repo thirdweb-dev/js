@@ -68,5 +68,5 @@
     }
   },
   "typings": "dist/types/index.d.ts",
-  "version": "0.9.13"
+  "version": "0.9.14"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/nebula",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"

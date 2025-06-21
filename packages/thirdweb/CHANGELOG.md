@@ -1,5 +1,21 @@
 # thirdweb
 
+## 5.104.0
+
+### Minor Changes
+
+- [#7343](https://github.com/thirdweb-dev/js/pull/7343) [`787118d`](https://github.com/thirdweb-dev/js/commit/787118d36765b9f57113cb62c606e494e715be04) Thanks [@Yash094](https://github.com/Yash094)! - add berachain and berachain testnet in chains package
+
+- [#7394](https://github.com/thirdweb-dev/js/pull/7394) [`9c420c0`](https://github.com/thirdweb-dev/js/commit/9c420c0c9d8874469bcc46e6122a637aff67923f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Updated PayEmbed UI
+
+### Patch Changes
+
+- [#7387](https://github.com/thirdweb-dev/js/pull/7387) [`70e024f`](https://github.com/thirdweb-dev/js/commit/70e024f43e6ff0a890efa6288fbdc9c19ca42e72) Thanks [@MananTank](https://github.com/MananTank)! - Fix `poster` not shown in `MediaRenderer` component for 3D models
+
+- [#7390](https://github.com/thirdweb-dev/js/pull/7390) [`6be9459`](https://github.com/thirdweb-dev/js/commit/6be945936195e6ba41dbdd3a90a28f097e81dbee) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Use decimal string for BuyWidget amount
+
+- [#7371](https://github.com/thirdweb-dev/js/pull/7371) [`3dbf9e1`](https://github.com/thirdweb-dev/js/commit/3dbf9e16fdff04eb36e9bb757a2b136f2b8001dc) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix typo in payment confirmation widget
+
 ## 5.103.1
 
 ### Patch Changes
