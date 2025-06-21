@@ -17,6 +17,7 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Input } from "@/components/ui/input";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import { TeamDedicatedSupportCard } from "../_components/settings-cards/dedicated-support";
 import { TeamDomainVerificationCard } from "../_components/settings-cards/domain-verification";
 import {
   maxTeamNameLength,
@@ -56,6 +57,10 @@ export function TeamGeneralSettingsPageUI(props: {
         initialVerification={props.initialVerification}
         isOwnerAccount={props.isOwnerAccount}
         teamId={props.team.id}
+      />
+      <TeamDedicatedSupportCard
+        isOwnerAccount={props.isOwnerAccount}
+        team={props.team}
       />
 
       <LeaveTeamCard leaveTeam={props.leaveTeam} teamName={props.team.name} />
