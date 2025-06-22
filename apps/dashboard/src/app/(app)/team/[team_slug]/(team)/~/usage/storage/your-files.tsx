@@ -137,15 +137,15 @@ export const YourFilesSection = (props: { authToken: string }) => {
     pageSize: pageSize,
   });
 
-  const showPagination = pinnedFilesQuery.data
+  const showPagination = pinnedFilesQuery.data?.result
     ? pinnedFilesQuery.data.result.count > pageSize
     : false;
 
-  const totalPages = pinnedFilesQuery.data
+  const totalPages = pinnedFilesQuery.data?.result
     ? Math.ceil(pinnedFilesQuery.data.result.count / pageSize)
     : 0;
 
-  const pinnedFilesToShow = pinnedFilesQuery.data
+  const pinnedFilesToShow = pinnedFilesQuery.data?.result
     ? pinnedFilesQuery.data.result.pinnedFiles
     : undefined;
 
@@ -206,7 +206,7 @@ export const YourFilesSection = (props: { authToken: string }) => {
           </TableBody>
         </Table>
 
-        {pinnedFilesQuery.data && pinnedFilesQuery.data.result.count === 0 && (
+        {pinnedFilesQuery.data?.result?.count === 0 && (
           <div className="flex min-h-[250px] items-center justify-center rounded-lg">
             No Pinned Files
           </div>
