@@ -1,7 +1,7 @@
-import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
 import { Grid2x2XIcon } from "lucide-react";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import type { ExtensionDetectedState } from "@/types/ExtensionDetectedState";
 
 const settingTypeMap = {
   metadata: {

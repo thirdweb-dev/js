@@ -1,8 +1,8 @@
 "use client";
 
 import { FormControl, Input } from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
 import { useForm } from "react-hook-form";
 import type { ThirdwebContract } from "thirdweb";
 import { burn as burn721, isERC721 } from "thirdweb/extensions/erc721";
@@ -13,12 +13,8 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
-import {
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  Text,
-} from "tw-components";
+import { TransactionButton } from "@/components/tx-button";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface BurnTabProps {
   tokenId: string;

@@ -2,8 +2,8 @@
 
 import { Flex, IconButton, Select, Skeleton } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { TWTable } from "components/shared/TWTable";
-import { useChainSlug } from "hooks/chains/chainSlug";
+import { Legacy_CopyButton } from "chakra/button";
+import { Text } from "chakra/text";
 import {
   ChevronFirstIcon,
   ChevronLastIcon,
@@ -14,7 +14,8 @@ import { useMemo, useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { getAccounts, totalAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
-import { Legacy_CopyButton, Text } from "tw-components";
+import { TWTable } from "@/components/blocks/TWTable";
+import { useChainSlug } from "@/hooks/chains/chainSlug";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";

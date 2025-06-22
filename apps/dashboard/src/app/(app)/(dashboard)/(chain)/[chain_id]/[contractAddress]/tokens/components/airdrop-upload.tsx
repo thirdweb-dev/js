@@ -1,14 +1,16 @@
 import { Link } from "@chakra-ui/react";
-import { useCsvUpload } from "hooks/useCsvUpload";
+import { Button } from "chakra/button";
+import { Heading } from "chakra/heading";
+import { Text } from "chakra/text";
 import { CircleAlertIcon, UploadIcon } from "lucide-react";
 import { useMemo, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import type { Column } from "react-table";
 import { type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
-import { Button, Heading, Text } from "tw-components";
 import { UnorderedList } from "@/components/ui/List/List";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useCsvUpload } from "@/hooks/useCsvUpload";
 import { cn } from "@/lib/utils";
 import { CsvDataTable } from "../../_components/csv-data-table";
 

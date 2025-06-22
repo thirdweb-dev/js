@@ -1,17 +1,17 @@
 "use client";
 
 import { format } from "date-fns";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { formatTickerNumber } from "lib/format-utils";
 import Link from "next/link";
 import { useMemo } from "react";
-import type { TransactionStats } from "types/analytics";
 import type { Project } from "@/api/projects";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { Button } from "@/components/ui/button";
 import type { ChartConfig } from "@/components/ui/chart";
+import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import type { TransactionStats } from "@/types/analytics";
+import { formatTickerNumber } from "@/utils/format-utils";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
 
 type ChartData = Record<string, number> & {

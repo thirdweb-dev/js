@@ -1,8 +1,8 @@
-import { DeployableContractTable } from "components/contract-components/contract-table";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
+import { DeployableContractTable } from "@/components/contracts/contract-table";
 
 export default async function DeployMultipleContractsPage(props: {
   searchParams?: Promise<{

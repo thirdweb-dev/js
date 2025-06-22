@@ -1,10 +1,10 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { Team } from "@/api/team";
+import type { Account } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
 import { getTeamSettingsLinks } from "./_components/sidebar/getTeamSettingsLinks";
 import { TeamSettingsSidebar } from "./_components/sidebar/TeamSettingsSidebar";

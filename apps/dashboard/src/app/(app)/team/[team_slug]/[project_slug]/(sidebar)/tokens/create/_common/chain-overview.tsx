@@ -1,6 +1,6 @@
-import { ChainIconClient } from "components/icons/ChainIcon";
-import { useAllChainsData } from "hooks/chains/allChains";
 import type { ThirdwebClient } from "thirdweb/dist/types/client/client";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { ChainIconClient } from "@/icons/ChainIcon";
 
 export function ChainOverview(props: {
   chainId: string;

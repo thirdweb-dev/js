@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { FileInput } from "components/shared/FileInput";
 import { ArrowRightIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -9,6 +8,7 @@ import type { ThirdwebClient } from "thirdweb";
 import { useDebounce } from "use-debounce";
 import { z } from "zod";
 import type { Team } from "@/api/team";
+import { FileInput } from "@/components/blocks/FileInput";
 import { Button } from "@/components/ui/button";
 import {
   Form,

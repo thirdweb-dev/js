@@ -1,9 +1,9 @@
 import { FormControl } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { SolidityInput } from "contract-ui/components/solidity-inputs";
+import { FormErrorMessage, FormLabel } from "chakra/form";
 import type { ThirdwebClient } from "thirdweb";
 import invariant from "tiny-invariant";
-import { FormErrorMessage, FormLabel } from "tw-components";
+import { SolidityInput } from "@/components/solidity-inputs";
 import { getModuleInstalledParams } from "./getModuleInstalledParams";
 import type { InstallModuleForm } from "./ModuleForm";
 

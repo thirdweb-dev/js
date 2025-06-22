@@ -9,7 +9,7 @@ import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { maxUint256 } from "thirdweb/utils";
 import { CustomMediaRenderer } from "@/components/blocks/media-renderer";
-import { PaginationButtons } from "@/components/pagination-buttons";
+import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";

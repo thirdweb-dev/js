@@ -1,7 +1,7 @@
 "use client";
 
-import { useWalletNFTs } from "@3rdweb-sdk/react";
 import type { ThirdwebContract } from "thirdweb";
+import { useWalletNFTs } from "@/hooks/useWalletNFTs";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { NFTCards } from "../../_components/NFTCards";
 

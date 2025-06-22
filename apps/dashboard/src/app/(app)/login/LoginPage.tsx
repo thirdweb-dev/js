@@ -1,8 +1,6 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Turnstile } from "@marsidev/react-turnstile";
-import { isVercel } from "lib/vercel-utils";
 import { PhoneIcon } from "lucide-react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
@@ -17,19 +15,21 @@ import { createWallet, inAppWallet } from "thirdweb/wallets";
 import { getRawAccountAction } from "@/actions/getAccount";
 import { resetAnalytics } from "@/analytics/reset";
 import { ClientOnly } from "@/components/blocks/client-only";
+import { ToggleThemeButton } from "@/components/blocks/color-mode-toggle";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
-import { ToggleThemeButton } from "@/components/color-mode-toggle";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
+import type { Account } from "@/hooks/useApi";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { isVercel } from "@/utils/vercel";
 import {
   LAST_USED_PROJECT_ID,
   LAST_USED_TEAM_ID,
-} from "../../../constants/cookies";
-import { deleteCookie } from "../../../lib/cookie";
-import { getSDKTheme } from "../components/sdk-component-theme";
+} from "../../../@/constants/cookies";
+import { deleteCookie } from "../../../@/utils/cookie";
+import { getSDKTheme } from "../../../@/utils/sdk-component-theme";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { LAST_VISITED_TEAM_PAGE_PATH } from "../team/components/last-visited-page/consts";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";

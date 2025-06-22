@@ -1,8 +1,8 @@
-import { getAuthToken } from "@app/api/lib/getAuthToken";
 import { ChevronDownIcon, TicketCheckIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { mapV4ChainToV5Chain } from "../../../../../../contexts/map-chains";
+import { mapV4ChainToV5Chain } from "../../../../../../@/utils/map-chains";
 import { TeamHeader } from "../../../../team/components/TeamHeader/team-header";
 import { StarButton } from "../../components/client/star-button";
 import { getChain, getChainMetadata } from "../../utils";

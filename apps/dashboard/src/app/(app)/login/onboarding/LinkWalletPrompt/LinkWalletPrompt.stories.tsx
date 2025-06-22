@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { storybookLog } from "../../../../../stories/utils";
+import { storybookLog } from "../../../../../@/storybook/utils";
 import { AccountOnboardingLayout } from "../onboarding-layout";
 import { LinkWalletPrompt } from "./LinkWalletPrompt";
 

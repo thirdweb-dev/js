@@ -2,7 +2,7 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
-import { PaginationButtons } from "@/components/pagination-buttons";
+import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 
 type ChainlistPaginationProps = {

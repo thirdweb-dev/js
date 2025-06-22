@@ -1,14 +1,15 @@
 "use client";
 
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button } from "chakra/button";
+import { Text } from "chakra/text";
 import { CircleCheckIcon, UploadIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { ThirdwebContract } from "thirdweb";
 import { transferBatch } from "thirdweb/extensions/erc20";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
-import { Button, Text } from "tw-components";
+import { TransactionButton } from "@/components/tx-button";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { type AirdropAddressInput, AirdropUpload } from "./airdrop-upload";
 
 interface TokenAirdropFormProps {

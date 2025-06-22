@@ -1,5 +1,5 @@
-import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
 import type { Team } from "@/api/team";
+import type { EngineInstance } from "@/hooks/useEngine";
 import { EngineFooterCard } from "../_components";
 import { EngineInstancesTable } from "./engine-instances-table";
 

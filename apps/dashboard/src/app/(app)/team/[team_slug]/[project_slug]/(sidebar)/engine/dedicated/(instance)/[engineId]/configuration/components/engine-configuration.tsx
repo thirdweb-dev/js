@@ -1,6 +1,6 @@
 "use client";
 
-import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
+import type { EngineInstance } from "@/hooks/useEngine";
 import { EngineCorsConfig } from "./cors";
 import { EngineWalletConfig } from "./engine-wallet-config";
 import { EngineIpAllowlistConfig } from "./ip-allowlist";

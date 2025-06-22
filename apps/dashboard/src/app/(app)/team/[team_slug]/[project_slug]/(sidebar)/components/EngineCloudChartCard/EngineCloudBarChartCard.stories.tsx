@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { BadgeContainer } from "stories/utils";
-import type { EngineCloudStats } from "types/analytics";
+import { BadgeContainer } from "@/storybook/utils";
+import type { EngineCloudStats } from "@/types/analytics";
 import { EngineCloudBarChartCardUI } from "./EngineCloudBarChartCardUI";
 
 const meta = {

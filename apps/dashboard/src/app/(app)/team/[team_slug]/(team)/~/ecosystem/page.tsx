@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { getAuthToken } from "../../../../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../../../../@/api/auth-token";
 import { loginRedirect } from "../../../../../login/loginRedirect";
 import headerImage from "./assets/header.png";
 import { fetchEcosystemList } from "./utils/fetchEcosystemList";

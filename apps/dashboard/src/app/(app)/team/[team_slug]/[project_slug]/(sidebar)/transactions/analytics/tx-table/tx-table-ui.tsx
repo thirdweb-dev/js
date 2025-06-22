@@ -1,16 +1,14 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ChainIconClient } from "components/icons/ChainIcon";
 import { format, formatDistanceToNowStrict } from "date-fns";
-import { useAllChainsData } from "hooks/chains/allChains";
 import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useId, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { Project } from "@/api/projects";
+import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { WalletAddress } from "@/components/blocks/wallet-address";
-import { PaginationButtons } from "@/components/pagination-buttons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
@@ -36,6 +34,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { ChainIconClient } from "@/icons/ChainIcon";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
 import type {

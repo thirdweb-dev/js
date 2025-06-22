@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { FileInput } from "components/shared/FileInput";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -12,11 +11,12 @@ import { deleteTeam } from "@/actions/deleteTeam";
 import type { Team } from "@/api/team";
 import type { VerifiedDomainResponse } from "@/api/verified-domain";
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
+import { FileInput } from "@/components/blocks/FileInput";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Input } from "@/components/ui/input";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { TeamDedicatedSupportCard } from "../_components/settings-cards/dedicated-support";
 import { TeamDomainVerificationCard } from "../_components/settings-cards/domain-verification";
 import {

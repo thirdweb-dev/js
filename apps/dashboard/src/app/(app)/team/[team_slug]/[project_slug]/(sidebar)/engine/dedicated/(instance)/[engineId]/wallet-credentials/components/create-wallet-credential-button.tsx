@@ -1,8 +1,8 @@
-import { useEngineCreateWalletCredential } from "@3rdweb-sdk/react/hooks/useEngine";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { useEngineCreateWalletCredential } from "@/hooks/useEngine";
 import { CredentialForm } from "./credential-form";
 import type { CredentialFormData } from "./types";
 

@@ -3,7 +3,6 @@ import { useMutation } from "@tanstack/react-query";
 import { subDays } from "date-fns";
 import { useId, useState } from "react";
 import { toast } from "sonner";
-import { storybookThirdwebClient } from "stories/utils";
 import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from "thirdweb";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { checksumAddress } from "thirdweb/utils";
@@ -15,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { storybookThirdwebClient } from "@/storybook/utils";
 import {
   ClaimableModuleUI,
   type ClaimConditionFormValues,

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useMemo, useState } from "react";
-import { BadgeContainer } from "../../../stories/utils";
+import { BadgeContainer } from "@/storybook/utils";
 import { MultiSelect } from "./multi-select";
 
 const meta = {

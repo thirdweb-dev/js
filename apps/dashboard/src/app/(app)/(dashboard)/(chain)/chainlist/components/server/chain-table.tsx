@@ -7,11 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { StarButton } from "../../../components/client/star-button";
 import type {
   ChainMetadataWithServices,
   ChainSupportedService,
-} from "../../../types/chain";
+} from "@/types/chain";
+import { StarButton } from "../../../components/client/star-button";
 import { getChainsWithServices } from "../../../utils";
 import { ChainlistPagination } from "../client/pagination";
 import { ChainListCard } from "../server/chainlist-card";

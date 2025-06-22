@@ -1,6 +1,5 @@
 "use client";
 
-import { useChainSlug } from "hooks/chains/chainSlug";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -8,8 +7,8 @@ import type { NFT, ThirdwebClient, ThirdwebContract } from "thirdweb";
 import { getNFT as getErc721NFT } from "thirdweb/extensions/erc721";
 import { getNFT as getErc1155NFT } from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
-import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { UnexpectedValueErrorMessage } from "@/components/blocks/error-fallbacks/unexpect-value-error-message";
+import { NFTMediaWithEmptyState } from "@/components/blocks/nft-media";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -25,7 +24,8 @@ import { CodeClient } from "@/components/ui/code/code.client";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { TabButtons } from "@/components/ui/tabs";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import { useChainSlug } from "@/hooks/chains/chainSlug";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 import { NftProperty } from "../components/nft-property";

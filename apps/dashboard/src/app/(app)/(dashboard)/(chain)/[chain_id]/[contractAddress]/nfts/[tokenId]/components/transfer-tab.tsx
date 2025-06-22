@@ -1,9 +1,7 @@
 "use client";
 
 import { FormControl, Input } from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
 import { useForm } from "react-hook-form";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { transferFrom } from "thirdweb/extensions/erc721";
@@ -13,8 +11,10 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
-import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
+import { SolidityInput } from "@/components/solidity-inputs";
+import { TransactionButton } from "@/components/tx-button";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface TransferTabProps {
   contract: ThirdwebContract;

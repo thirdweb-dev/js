@@ -1,8 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -19,9 +17,8 @@ import {
   MintableERC1155,
 } from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
-import type { NFTMetadataInputLimited } from "types/modified-types";
-import { parseAttributes } from "utils/parseAttributes";
 import { z } from "zod";
+import { TransactionButton } from "@/components/tx-button";
 import {
   Accordion,
   AccordionContent,
@@ -43,6 +40,9 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
+import type { NFTMetadataInputLimited } from "@/types/modified-types";
+import { parseAttributes } from "@/utils/parseAttributes";
 import { addressSchema } from "../zod-schemas";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";

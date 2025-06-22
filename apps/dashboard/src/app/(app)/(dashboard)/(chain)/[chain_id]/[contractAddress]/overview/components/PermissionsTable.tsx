@@ -1,6 +1,5 @@
 "use client";
 
-import { getAllRoleMembers } from "contract-ui/hooks/permissions";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
@@ -23,6 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getAllRoleMembers } from "@/hooks/contract-ui/permissions";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 

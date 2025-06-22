@@ -1,17 +1,17 @@
 "use client";
-import { RenewSubscriptionButton } from "components/settings/Account/Billing/renew-subscription/renew-subscription-button";
 import { CheckIcon, DollarSignIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
-import { remainingDays } from "utils/date-utils";
-import { TEAM_PLANS } from "utils/pricing";
 import type { Team } from "@/api/team";
+import { CheckoutButton } from "@/components/billing/billing";
+import { RenewSubscriptionButton } from "@/components/billing/renew-subscription/renew-subscription-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import type { ProductSKU } from "../../lib/billing";
-import { CheckoutButton } from "../billing";
+import type { ProductSKU } from "@/types/billing";
+import { remainingDays } from "@/utils/date-utils";
+import { TEAM_PLANS } from "@/utils/pricing";
 
 type PricingCardCta = {
   hint?: string;

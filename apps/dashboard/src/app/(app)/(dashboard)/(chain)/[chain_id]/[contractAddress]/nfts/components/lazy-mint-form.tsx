@@ -11,11 +11,8 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
-import { OpenSeaPropertyBadge } from "components/badges/opensea";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { PropertiesFormControl } from "components/contract-pages/forms/properties.shared";
-import { FileInput } from "components/shared/FileInput";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
+import { Heading } from "chakra/heading";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -23,15 +20,14 @@ import type { ThirdwebContract } from "thirdweb";
 import { lazyMint as lazyMint721 } from "thirdweb/extensions/erc721";
 import { lazyMint as lazyMint1155 } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import {
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  Heading,
-} from "tw-components";
-import type { NFTMetadataInputLimited } from "types/modified-types";
-import { parseAttributes } from "utils/parseAttributes";
+import { OpenSeaPropertyBadge } from "@/components/badges/opensea";
+import { FileInput } from "@/components/blocks/FileInput";
+import { PropertiesFormControl } from "@/components/contracts/properties.shared";
+import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
+import type { NFTMetadataInputLimited } from "@/types/modified-types";
+import { parseAttributes } from "@/utils/parseAttributes";
 import {
   getUploadedNFTMediaMeta,
   handleNFTMediaUpload,

@@ -3,8 +3,8 @@ import Link from "next/link";
 import type { JSX } from "react";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { ChainSupportedService } from "@/types/chain";
 import { ChainIcon } from "../../../components/server/chain-icon";
-import type { ChainSupportedService } from "../../../types/chain";
 import { getChainMetadata } from "../../../utils";
 
 type ChainListCardProps = {

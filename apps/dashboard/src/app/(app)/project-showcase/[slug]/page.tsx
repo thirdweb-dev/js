@@ -1,4 +1,3 @@
-import { PROJECT_SHOWCASE_DATA } from "lib/project-showcase-constants";
 import { ExternalLinkIcon, FileTextIcon } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import { PROJECT_SHOWCASE_DATA } from "@/lib/project-showcase-constants";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 
 export default async function DetailPage(props: {
   params: Promise<{ slug: string }>;

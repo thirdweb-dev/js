@@ -1,8 +1,8 @@
 import { format } from "date-fns";
-import { resolveEns } from "lib/ens";
-import { correctAndUniqueLicenses } from "lib/licenses";
 import { getSocialProfiles } from "thirdweb/social";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { resolveEns } from "@/lib/ens";
+import { correctAndUniqueLicenses } from "@/lib/licenses";
 import { getLatestPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
 import { publishedContractOGImageTemplate } from "./utils/publishedContractOGImageTemplate";
 

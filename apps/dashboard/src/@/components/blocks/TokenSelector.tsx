@@ -1,5 +1,3 @@
-import { useAllChainsData } from "hooks/chains/allChains";
-import { useTokensData } from "hooks/tokens/tokens";
 import { useCallback, useMemo } from "react";
 import {
   getAddress,
@@ -7,13 +5,15 @@ import {
   type ThirdwebClient,
 } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
-import { replaceIpfsUrl } from "../../../lib/sdk";
-import { fallbackChainIcon } from "../../../utils/chain-icons";
-import type { TokenMetadata } from "../../api/universal-bridge/tokens";
-import { cn } from "../../lib/utils";
-import { Badge } from "../ui/badge";
-import { Img } from "./Img";
-import { SelectWithSearch } from "./select-with-search";
+import type { TokenMetadata } from "@/api/universal-bridge/tokens";
+import { Img } from "@/components/blocks/Img";
+import { SelectWithSearch } from "@/components/blocks/select-with-search";
+import { Badge } from "@/components/ui/badge";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { useTokensData } from "@/hooks/tokens";
+import { replaceIpfsUrl } from "@/lib/sdk";
+import { cn } from "@/lib/utils";
+import { fallbackChainIcon } from "@/utils/chain-icons";
 
 type Option = { label: string; value: string };
 

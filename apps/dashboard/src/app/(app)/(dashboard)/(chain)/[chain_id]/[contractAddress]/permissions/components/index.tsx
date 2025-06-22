@@ -1,13 +1,7 @@
 "use client";
 
 import { ButtonGroup, Flex } from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { ROLE_DESCRIPTION_MAP } from "constants/mappings";
-import {
-  createSetAllRoleMembersTx,
-  getAllRoleMembers,
-} from "contract-ui/hooks/permissions";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button } from "chakra/button";
 import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { ThirdwebContract } from "thirdweb";
@@ -16,7 +10,13 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
-import { Button } from "tw-components";
+import { TransactionButton } from "@/components/tx-button";
+import { ROLE_DESCRIPTION_MAP } from "@/constants/mappings";
+import {
+  createSetAllRoleMembersTx,
+  getAllRoleMembers,
+} from "@/hooks/contract-ui/permissions";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { ContractPermission } from "./contract-permission";
 
 type PermissionFormContext = {

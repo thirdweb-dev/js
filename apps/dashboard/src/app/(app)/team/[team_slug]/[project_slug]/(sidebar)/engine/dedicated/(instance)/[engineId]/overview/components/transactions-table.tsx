@@ -1,11 +1,8 @@
-import {
-  type Transaction,
-  useEngineTransactions,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import { Collapse, Divider, useDisclosure } from "@chakra-ui/react";
-import { ChainIconClient } from "components/icons/ChainIcon";
+import { LinkButton } from "chakra/button";
+import { FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
 import { format, formatDistanceToNowStrict } from "date-fns";
-import { useAllChainsData } from "hooks/chains/allChains";
 import {
   ExternalLinkIcon,
   InfoIcon,
@@ -21,10 +18,9 @@ import {
   useState,
 } from "react";
 import { type ThirdwebClient, toTokens } from "thirdweb";
-import { FormLabel, LinkButton, Text } from "tw-components";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { WalletAddress } from "@/components/blocks/wallet-address";
-import { PaginationButtons } from "@/components/pagination-buttons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
@@ -57,6 +53,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { type Transaction, useEngineTransactions } from "@/hooks/useEngine";
+import { ChainIconClient } from "@/icons/ChainIcon";
 import { normalizeTime } from "@/lib/time";
 import { TransactionTimeline } from "./transaction-timeline";
 

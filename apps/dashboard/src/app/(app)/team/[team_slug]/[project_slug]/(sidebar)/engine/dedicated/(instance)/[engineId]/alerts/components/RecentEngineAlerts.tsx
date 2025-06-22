@@ -1,10 +1,5 @@
 "use client";
 
-import {
-  type EngineAlert,
-  type EngineAlertRule,
-  useEngineAlerts,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import { formatDistance } from "date-fns";
 import { useMemo } from "react";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
@@ -18,6 +13,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  type EngineAlert,
+  type EngineAlertRule,
+  useEngineAlerts,
+} from "@/hooks/useEngine";
 
 export function RecentEngineAlertsSection(props: {
   alertRules: EngineAlertRule[];

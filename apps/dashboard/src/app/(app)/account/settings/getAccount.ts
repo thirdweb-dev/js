@@ -1,6 +1,6 @@
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
-import { getAuthToken } from "../../api/lib/getAuthToken";
+import type { Account } from "@/hooks/useApi";
+import { getAuthToken } from "../../../../@/api/auth-token";
 import { loginRedirect } from "../../login/loginRedirect";
 import { isAccountOnboardingComplete } from "../../login/onboarding/isOnboardingRequired";
 

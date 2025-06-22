@@ -1,19 +1,19 @@
 "use server";
 
+import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
+import { MORALIS_API_KEY } from "@/constants/server-envs";
 import {
   generateAlchemyUrl,
   transformAlchemyResponseToNFT,
-} from "lib/wallet/nfts/alchemy";
+} from "@/lib/wallet/nfts/alchemy";
 import {
   generateMoralisUrl,
   transformMoralisResponseToNFT,
-} from "lib/wallet/nfts/moralis";
-import type { WalletNFT } from "lib/wallet/nfts/types";
-import { getVercelEnv } from "../../lib/vercel-utils";
-import { isAlchemySupported } from "../../lib/wallet/nfts/isAlchemySupported";
-import { isMoralisSupported } from "../../lib/wallet/nfts/isMoralisSupported";
-import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "../constants/public-envs";
-import { MORALIS_API_KEY } from "../constants/server-envs";
+} from "@/lib/wallet/nfts/moralis";
+import type { WalletNFT } from "@/lib/wallet/nfts/types";
+import { getVercelEnv } from "@/utils/vercel";
+import { isAlchemySupported } from "../lib/wallet/nfts/isAlchemySupported";
+import { isMoralisSupported } from "../lib/wallet/nfts/isMoralisSupported";
 
 type WalletNFTApiReturn =
   | { result: WalletNFT[]; error?: undefined }

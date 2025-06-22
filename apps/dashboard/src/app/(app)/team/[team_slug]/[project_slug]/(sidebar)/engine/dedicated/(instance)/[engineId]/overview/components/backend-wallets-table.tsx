@@ -1,11 +1,3 @@
-import { engineKeys } from "@3rdweb-sdk/react";
-import {
-  type BackendWallet,
-  useEngineBackendWalletBalance,
-  useEngineDeleteBackendWallet,
-  useEngineSendTokens,
-  useEngineUpdateBackendWallet,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
   FormControl,
@@ -25,11 +17,8 @@ import {
 } from "@chakra-ui/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { ChainIconClient } from "components/icons/ChainIcon";
-import { TWTable } from "components/shared/TWTable";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { EngineBackendWalletOptions } from "lib/engine";
-import { useV5DashboardChain } from "lib/v5-adapter";
+import { FormHelperText, FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
 import {
   DownloadIcon,
   ExternalLinkIcon,
@@ -46,7 +35,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { getAddress, type ThirdwebClient } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
-import { FormHelperText, FormLabel, Text } from "tw-components";
+import { TWTable } from "@/components/blocks/TWTable";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -56,6 +45,18 @@ import { FormItem } from "@/components/ui/form";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { EngineBackendWalletOptions } from "@/constants/engine";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
+import {
+  type BackendWallet,
+  useEngineBackendWalletBalance,
+  useEngineDeleteBackendWallet,
+  useEngineSendTokens,
+  useEngineUpdateBackendWallet,
+} from "@/hooks/useEngine";
+import { ChainIconClient } from "@/icons/ChainIcon";
+import { engineKeys } from "@/query-keys/cache-keys";
 import { prettyPrintCurrency } from "./utils";
 
 interface BackendWalletsTableProps {

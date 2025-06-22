@@ -1,6 +1,6 @@
-import { getAuthToken } from "@app/api/lib/getAuthToken";
 import { loginRedirect } from "@app/login/loginRedirect";
 import { redirect } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";

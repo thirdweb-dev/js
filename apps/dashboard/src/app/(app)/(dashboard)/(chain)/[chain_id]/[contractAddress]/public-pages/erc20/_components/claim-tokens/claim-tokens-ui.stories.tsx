@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { storybookThirdwebClient } from "stories/utils";
 import { getContract } from "thirdweb";
 import { baseSepolia } from "thirdweb/chains";
 import { ThirdwebProvider } from "thirdweb/react";
+import { storybookThirdwebClient } from "@/storybook/utils";
 import { TokenDropClaim } from "./claim-tokens-ui";
 
 const meta = {

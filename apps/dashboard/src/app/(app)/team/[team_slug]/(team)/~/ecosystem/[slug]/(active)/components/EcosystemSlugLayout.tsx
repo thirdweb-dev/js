@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../../../../../../../@/api/auth-token";
 import { fetchEcosystem } from "../../../utils/fetchEcosystem";
 import { EcosystemHeader } from "./ecosystem-header.client";
 

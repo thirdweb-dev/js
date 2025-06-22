@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { storybookThirdwebClient } from "stories/utils";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
+import { storybookThirdwebClient } from "@/storybook/utils";
 import { CreateTokenAssetPageUI } from "./create-token-page.client";
 
 const meta = {

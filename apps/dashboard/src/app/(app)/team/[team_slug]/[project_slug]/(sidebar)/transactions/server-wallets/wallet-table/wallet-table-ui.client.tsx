@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { format, formatDistanceToNowStrict } from "date-fns";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { SendIcon } from "lucide-react";
 import Link from "next/link";
 import { useId, useState } from "react";
@@ -35,6 +34,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import CreateServerWallet from "../components/create-server-wallet.client";
 import type { Wallet } from "./types";

@@ -1,14 +1,5 @@
 "use client";
 
-import {
-  type DeleteCloudHostedEngineParams,
-  deleteCloudHostedEngine,
-  type EditEngineInstanceParams,
-  type EngineInstance,
-  editEngineInstance,
-  type RemoveEngineFromDashboardIParams,
-  removeEngineFromDashboard,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -30,7 +21,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import type { Team } from "@/api/team";
-import { CheckoutButton } from "@/components/billing";
+import { CheckoutButton } from "@/components/billing/billing";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -81,9 +72,18 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  type DeleteCloudHostedEngineParams,
+  deleteCloudHostedEngine,
+  type EditEngineInstanceParams,
+  type EngineInstance,
+  editEngineInstance,
+  type RemoveEngineFromDashboardIParams,
+  removeEngineFromDashboard,
+} from "@/hooks/useEngine";
+import { EngineIcon } from "@/icons/EngineIcon";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import { EngineIcon } from "../../../../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
 
 type DeletedCloudHostedEngine = (
   params: DeleteCloudHostedEngineParams,

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ThirdwebClient } from "thirdweb";
-import { ToggleThemeButton } from "@/components/color-mode-toggle";
+import { ToggleThemeButton } from "@/components/blocks/color-mode-toggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { SecondaryNavLinks } from "../../../components/Header/SecondaryNav/SecondaryNav";

@@ -1,7 +1,7 @@
-import { DEFAULT_FEE_RECIPIENT } from "constants/addresses";
 import { notFound } from "next/navigation";
 import type { ThirdwebContract } from "thirdweb";
 import { getPlatformFeeInfo } from "thirdweb/extensions/common";
+import { DEFAULT_FEE_RECIPIENT } from "@/constants/addresses";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { redirectToContractLandingPage } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/utils";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";

@@ -1,3 +1,9 @@
+import { createThirdwebClient } from "thirdweb";
+import { setThirdwebDomains } from "thirdweb/utils";
+import {
+  NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
+  NEXT_PUBLIC_IPFS_GATEWAY_URL,
+} from "@/constants/public-envs";
 import {
   THIRDWEB_BRIDGE_URL,
   THIRDWEB_BUNDLER_DOMAIN,
@@ -7,14 +13,8 @@ import {
   THIRDWEB_RPC_DOMAIN,
   THIRDWEB_SOCIAL_API_DOMAIN,
   THIRDWEB_STORAGE_DOMAIN,
-} from "constants/urls";
-import { getVercelEnv } from "lib/vercel-utils";
-import { createThirdwebClient } from "thirdweb";
-import { setThirdwebDomains } from "thirdweb/utils";
-import {
-  NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
-  NEXT_PUBLIC_IPFS_GATEWAY_URL,
-} from "@/constants/public-envs";
+} from "@/constants/urls";
+import { getVercelEnv } from "@/utils/vercel";
 
 function getPayThirdwebClient() {
   if (getVercelEnv() !== "production") {

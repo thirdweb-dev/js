@@ -1,8 +1,8 @@
 "use client";
 
+import { Heading } from "chakra/heading";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
-import { Heading } from "tw-components";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { AccountBalance } from "./components/account-balance";
 import { DepositNative } from "./components/deposit-native";

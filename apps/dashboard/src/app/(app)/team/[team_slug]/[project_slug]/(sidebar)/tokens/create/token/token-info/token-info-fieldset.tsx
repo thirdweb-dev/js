@@ -1,9 +1,9 @@
 "use client";
 
-import { FileInput } from "components/shared/FileInput";
 import { useId } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { ClientOnly } from "@/components/blocks/client-only";
+import { FileInput } from "@/components/blocks/FileInput";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Form } from "@/components/ui/form";

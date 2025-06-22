@@ -1,13 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TransactionButton } from "components/buttons/TransactionButton";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { isAddress, type ThirdwebContract } from "thirdweb";
 import { mintAdditionalSupplyTo } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { z } from "zod";
+import { TransactionButton } from "@/components/tx-button";
 import {
   Form,
   FormControl,

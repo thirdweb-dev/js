@@ -6,7 +6,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { acceptInvite } from "@/actions/acceptInvite";
 import type { Team } from "@/api/team";
-import { ToggleThemeButton } from "@/components/color-mode-toggle";
+import { ToggleThemeButton } from "@/components/blocks/color-mode-toggle";
 import { DotsBackgroundPattern } from "@/components/ui/background-patterns";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner/Spinner";

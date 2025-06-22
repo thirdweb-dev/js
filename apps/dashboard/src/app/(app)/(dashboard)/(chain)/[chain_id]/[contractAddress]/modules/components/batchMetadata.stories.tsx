@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useMutation } from "@tanstack/react-query";
-import type { TransactionError } from "contexts/error-handler";
 import { useId, useState } from "react";
 import { toast } from "sonner";
-import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
 import { ZERO_ADDRESS } from "thirdweb";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { Checkbox } from "@/components/ui/checkbox";
+import type { TransactionError } from "@/contexts/error-handler";
+import { BadgeContainer, storybookThirdwebClient } from "@/storybook/utils";
 import {
   BatchMetadataModuleUI,
   type UploadMetadataFormValues,

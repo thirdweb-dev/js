@@ -1,8 +1,8 @@
-import { getAuthToken } from "@app/api/lib/getAuthToken";
 import { loginRedirect } from "@app/login/loginRedirect";
-import { PayConfig } from "components/pay/PayConfig";
-import { RouteDiscovery } from "components/pay/RouteDiscovery";
+import { PayConfig } from "@app/team/[team_slug]/[project_slug]/(sidebar)/universal-bridge/settings/PayConfig";
+import { RouteDiscovery } from "@app/team/[team_slug]/[project_slug]/(sidebar)/universal-bridge/settings/RouteDiscovery";
 import { redirect } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getFees } from "@/api/universal-bridge/developer";

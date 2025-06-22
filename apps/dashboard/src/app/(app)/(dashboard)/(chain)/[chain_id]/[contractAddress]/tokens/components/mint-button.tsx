@@ -1,8 +1,7 @@
 "use client";
 
-import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { FormControl, Input } from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
+import { FormErrorMessage, FormLabel } from "chakra/form";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -14,7 +13,8 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
-import { FormErrorMessage, FormLabel } from "tw-components";
+import { MinterOnly } from "@/components/contracts/roles/minter-only";
+import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,

@@ -1,5 +1,4 @@
-import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
+import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,8 +7,9 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import type { EngineInstance } from "@/hooks/useEngine";
+import { getAuthToken } from "../../../../../../../../../../@/api/auth-token";
 import { getValidAccount } from "../../../../../../../../account/settings/getAccount";
-import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../../login/loginRedirect";
 import { getEngineInstance } from "../../_utils/getEngineInstance";
 import { EngineErrorPage } from "./_components/EngineErrorPage";

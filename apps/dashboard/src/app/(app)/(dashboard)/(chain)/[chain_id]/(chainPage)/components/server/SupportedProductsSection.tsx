@@ -1,7 +1,7 @@
 import { CircleCheckIcon } from "lucide-react";
 import Link from "next/link";
+import type { ChainMetadataWithServices } from "@/types/chain";
 import { products } from "../../../../components/server/products";
-import type { ChainMetadataWithServices } from "../../../../types/chain";
 import { SectionTitle } from "./SectionTitle";
 
 export function SupportedProductsSection(props: {

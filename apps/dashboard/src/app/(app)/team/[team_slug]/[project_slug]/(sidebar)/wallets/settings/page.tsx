@@ -1,12 +1,12 @@
-import { getAuthToken } from "@app/api/lib/getAuthToken";
 import { loginRedirect } from "@app/login/loginRedirect";
-import { getValidTeamPlan } from "@app/team/components/TeamHeader/getValidTeamPlan";
-import { InAppWalletSettingsPage } from "components/embedded-wallets/Configure";
 import { redirect } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getSMSCountryTiers } from "@/api/sms";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
+import { InAppWalletSettingsPage } from "./components";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;

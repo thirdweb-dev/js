@@ -1,7 +1,7 @@
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import type { ThirdwebClient } from "thirdweb";
 import type { Team } from "@/api/team";
 import { Badge } from "@/components/ui/badge";
+import type { Account } from "@/hooks/useApi";
 import { getTeamSettingsLinks } from "./getTeamSettingsLinks";
 import { SidebarLink } from "./SidebarLink";
 

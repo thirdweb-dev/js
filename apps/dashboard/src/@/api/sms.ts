@@ -1,6 +1,6 @@
 import "server-only";
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "../constants/public-envs";
-import { API_SERVER_SECRET } from "../constants/server-envs";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
+import { API_SERVER_SECRET } from "@/constants/server-envs";
 
 export type SMSCountryTiers = {
   tier1: string[];

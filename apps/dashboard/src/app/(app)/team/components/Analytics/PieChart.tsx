@@ -1,6 +1,5 @@
 "use client";
 
-import { formatTickerNumber } from "lib/format-utils";
 import { Pie, PieChart as RechartsPieChart } from "recharts";
 import {
   type ChartConfig,
@@ -8,6 +7,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { formatTickerNumber } from "@/utils/format-utils";
 
 export function PieChart({
   title,

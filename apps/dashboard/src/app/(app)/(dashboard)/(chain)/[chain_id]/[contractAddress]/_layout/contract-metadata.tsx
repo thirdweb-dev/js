@@ -1,10 +1,10 @@
+import type { ThirdwebContract } from "thirdweb";
+import type { ChainMetadata } from "thirdweb/chains";
+import { fetchPublishedContractsFromDeploy } from "@/components/contract-components/fetchPublishedContractsFromDeploy";
 import {
   type DashboardContractMetadata,
   fetchDashboardContractMetadata,
-} from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
-import { fetchPublishedContractsFromDeploy } from "components/contract-components/fetchPublishedContractsFromDeploy";
-import type { ThirdwebContract } from "thirdweb";
-import type { ChainMetadata } from "thirdweb/chains";
+} from "@/hooks/useDashboardContractMetadata";
 import { MetadataHeader } from "./metadata-header";
 
 interface ContractMetadataProps {

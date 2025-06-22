@@ -1,12 +1,4 @@
 "use client";
-import {
-  type CreateNotificationChannelInput,
-  type EngineAlertRule,
-  type EngineNotificationChannel,
-  useEngineCreateNotificationChannel,
-  useEngineDeleteNotificationChannel,
-  useEngineNotificationChannels,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import { type UseMutationResult, useMutation } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { EllipsisVerticalIcon, PlusIcon } from "lucide-react";
@@ -32,6 +24,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import {
+  type CreateNotificationChannelInput,
+  type EngineAlertRule,
+  type EngineNotificationChannel,
+  useEngineCreateNotificationChannel,
+  useEngineDeleteNotificationChannel,
+  useEngineNotificationChannels,
+} from "@/hooks/useEngine";
 import { EngineAlertDialogForm } from "./EngineAlertDialogForm";
 import { EngineDeleteAlertModal } from "./EngineDeleteAlertModal";
 

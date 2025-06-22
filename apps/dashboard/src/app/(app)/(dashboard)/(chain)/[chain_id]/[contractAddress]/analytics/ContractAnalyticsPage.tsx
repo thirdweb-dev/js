@@ -1,10 +1,15 @@
 "use client";
 import type { UseQueryResult } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { useMemo, useState } from "react";
+import type { ThirdwebContract } from "thirdweb";
 import {
   DateRangeSelector,
   getLastNDaysRange,
   type Range,
-} from "components/analytics/date-range-selector";
+} from "@/components/analytics/date-range-selector";
+import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import {
   type AnalyticsQueryParams,
   type TotalQueryResult,
@@ -16,12 +21,7 @@ import {
   useTotalContractEvents,
   useTotalContractTransactionAnalytics,
   useTotalContractUniqueWallets,
-} from "data/analytics/hooks";
-import { format } from "date-fns";
-import { useMemo, useState } from "react";
-import type { ThirdwebContract } from "thirdweb";
-import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
-import { SkeletonContainer } from "@/components/ui/skeleton";
+} from "./utils/hooks";
 
 interface ContractAnalyticsPageProps {
   contract: ThirdwebContract;

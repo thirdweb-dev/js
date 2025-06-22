@@ -1,6 +1,6 @@
 "use client";
 
-import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
+import { SmartWalletsBillingAlert } from "@app/team/[team_slug]/[project_slug]/(sidebar)/account-abstraction/Alerts";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { DismissibleAlert } from "@/components/blocks/dismissible-alert";

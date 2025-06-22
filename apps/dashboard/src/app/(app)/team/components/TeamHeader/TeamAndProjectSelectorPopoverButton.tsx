@@ -1,6 +1,5 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ChevronsUpDownIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
@@ -13,6 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import type { Account } from "@/hooks/useApi";
 import { ProjectSelectorUI } from "./ProjectSelectorUI";
 import { TeamSelectionUI } from "./TeamSelectionUI";
 

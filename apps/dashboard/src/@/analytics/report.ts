@@ -1,6 +1,6 @@
 import posthog from "posthog-js";
 
-import type { Team } from "../api/team";
+import type { Team } from "@/api/team";
 
 // ----------------------------
 // CONTRACTS

@@ -1,6 +1,5 @@
 "use client";
 
-import { replaceDeployerAddress } from "lib/publisher-utils";
 import type { ThirdwebClient } from "thirdweb";
 import {
   AccountAddress,
@@ -9,8 +8,9 @@ import {
   AccountName,
   AccountProvider,
 } from "thirdweb/react";
-import { shortenIfAddress } from "utils/usedapp-external";
 import { Skeleton } from "@/components/ui/skeleton";
+import { replaceDeployerAddress } from "@/lib/publisher-utils";
+import { shortenIfAddress } from "@/utils/usedapp-external";
 
 export function ProfileHeader(props: {
   profileAddress: string;

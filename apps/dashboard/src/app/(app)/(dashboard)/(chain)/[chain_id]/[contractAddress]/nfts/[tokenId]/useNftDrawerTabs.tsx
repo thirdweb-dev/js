@@ -1,5 +1,3 @@
-import { useIsMinter } from "@3rdweb-sdk/react/hooks/useContractRoles";
-import { useContractFunctionSelectors } from "contract-ui/hooks/useContractFunctionSelectors";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
@@ -7,6 +5,8 @@ import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { checksumAddress } from "thirdweb/utils";
+import { useContractFunctionSelectors } from "@/hooks/contract-ui/useContractFunctionSelectors";
+import { useIsMinter } from "@/hooks/useContractRoles";
 import type { NFTDrawerTab } from "./types";
 
 type UseNFTDrawerTabsParams = {

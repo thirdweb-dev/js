@@ -1,12 +1,12 @@
 "use client";
 
-import {
-  EmptyChartState,
-  LoadingChartState,
-} from "components/analytics/empty-chart-state";
 import { format } from "date-fns";
 import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import {
+  EmptyChartState,
+  LoadingChartState,
+} from "@/components/analytics/empty-chart-state";
 import {
   Card,
   CardContent,

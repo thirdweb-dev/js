@@ -1,12 +1,13 @@
 "use client";
 
-import { voteTokenBalances } from "@3rdweb-sdk/react/hooks/useVote";
 import { Divider, Flex, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
+import { Card } from "chakra/card";
+import { Heading } from "chakra/heading";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import * as VoteExt from "thirdweb/extensions/vote";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
-import { Card, Heading } from "tw-components";
+import { voteTokenBalances } from "@/hooks/useVote";
 import { DelegateButton } from "./components/delegate-button";
 import { Proposal } from "./components/proposal";
 import { ProposalButton } from "./components/proposal-button";

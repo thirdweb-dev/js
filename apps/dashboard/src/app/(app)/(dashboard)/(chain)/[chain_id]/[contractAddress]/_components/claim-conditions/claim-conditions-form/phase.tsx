@@ -1,6 +1,6 @@
-import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { ChevronDownIcon, ChevronUpIcon, XIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
+import { AdminOnly } from "@/components/contracts/roles/admin-only";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

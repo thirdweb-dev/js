@@ -1,5 +1,5 @@
-import type { PublishedContractWithVersion } from "components/contract-components/fetch-contracts-with-versions";
 import type { PropsWithChildren } from "react";
+import type { PublishedContractWithVersion } from "@/components/contract-components/fetch-contracts-with-versions";
 import { ModuleList } from "../[publisher]/[contract_id]/components/module-list.client";
 import { DeployContractInfo } from "./contract-info";
 import { DeployContractVersionSelector } from "./version-selector";

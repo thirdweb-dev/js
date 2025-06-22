@@ -2,21 +2,9 @@ import {
   EmptyStateCard,
   EmptyStateContent,
 } from "app/(app)/team/components/Analytics/EmptyStateCard";
-import {
-  type DurationId,
-  getLastNDaysRange,
-  type Range,
-} from "components/analytics/date-range-selector";
-import { LoadingChartState } from "components/analytics/empty-chart-state";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { getWalletInfo, type WalletId } from "thirdweb/wallets";
-import type {
-  InAppWalletStats,
-  UniversalBridgeStats,
-  WalletStats,
-  WalletUserStats,
-} from "types/analytics";
 import {
   getClientTransactions,
   getInAppWalletUsage,
@@ -25,8 +13,19 @@ import {
   getWalletConnections,
   getWalletUsers,
 } from "@/api/analytics";
-
 import { getTeamBySlug } from "@/api/team";
+import {
+  type DurationId,
+  getLastNDaysRange,
+  type Range,
+} from "@/components/analytics/date-range-selector";
+import { LoadingChartState } from "@/components/analytics/empty-chart-state";
+import type {
+  InAppWalletStats,
+  UniversalBridgeStats,
+  WalletStats,
+  WalletUserStats,
+} from "@/types/analytics";
 import { AnalyticsHeader } from "../../../../components/Analytics/AnalyticsHeader";
 import { CombinedBarChartCard } from "../../../../components/Analytics/CombinedBarChartCard";
 import { PieChartCard } from "../../../../components/Analytics/PieChartCard";

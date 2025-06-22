@@ -1,5 +1,4 @@
 "use client";
-import { TransactionButton } from "components/buttons/TransactionButton";
 import {
   ArrowRightIcon,
   ArrowUpFromLineIcon,
@@ -9,7 +8,6 @@ import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWallet } from "thirdweb/react";
-import { parseError } from "utils/errorParser";
 import {
   reportAssetCreationFailed,
   reportAssetCreationSuccessful,
@@ -18,6 +16,7 @@ import {
   type MultiStepState,
   MultiStepStatus,
 } from "@/components/blocks/multi-step-status/multi-step-status";
+import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -26,6 +25,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { parseError } from "@/utils/errorParser";
 import { ChainOverview } from "../../_common/chain-overview";
 import { FilePreview } from "../../_common/file-preview";
 import { StepCard } from "../../_common/step-card";

@@ -1,5 +1,5 @@
-import { getVercelEnv } from "lib/vercel-utils";
 import { INSIGHT_SERVICE_API_KEY } from "@/constants/server-envs";
+import { getVercelEnv } from "@/utils/vercel";
 
 const thirdwebDomain =
   getVercelEnv() !== "production" ? "thirdweb-dev" : "thirdweb";

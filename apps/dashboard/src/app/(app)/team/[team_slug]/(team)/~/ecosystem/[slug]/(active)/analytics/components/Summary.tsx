@@ -1,6 +1,6 @@
-import { StatCard } from "components/analytics/stat";
 import { ActivityIcon, UserIcon } from "lucide-react";
-import type { EcosystemWalletStats } from "types/analytics";
+import { StatCard } from "@/components/analytics/stat";
+import type { EcosystemWalletStats } from "@/types/analytics";
 
 export function EcosystemWalletsSummary(props: {
   allTimeStats: EcosystemWalletStats[] | undefined;

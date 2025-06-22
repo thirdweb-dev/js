@@ -1,8 +1,8 @@
-import { ContractPublishForm } from "components/contract-components/contract-publish-form";
+import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
+import { ContractPublishForm } from "@/components/contract-components/contract-publish-form";
 import { getActiveAccountCookie, getJWTCookie } from "@/constants/cookie";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";

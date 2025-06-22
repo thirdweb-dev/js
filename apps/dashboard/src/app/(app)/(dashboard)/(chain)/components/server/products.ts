@@ -1,12 +1,12 @@
-import type { ChainSupportedService } from "../../types/chain";
-import { ConnectSDKIcon } from "./icons/ConnectSDKIcon";
-import { ContractIcon } from "./icons/ContractIcon";
-import { EngineIcon } from "./icons/EngineIcon";
-import { InsightIcon } from "./icons/InsightIcon";
-import { NebulaIcon } from "./icons/NebulaIcon";
-import { PayIcon } from "./icons/PayIcon";
-import { RPCIcon } from "./icons/RPCIcon";
-import { SmartAccountIcon } from "./icons/SmartAccountIcon";
+import { ConnectSDKIcon } from "@/icons/ConnectSDKIcon";
+import { ContractIcon } from "@/icons/ContractIcon";
+import { EngineIcon } from "@/icons/EngineIcon";
+import { InsightIcon } from "@/icons/InsightIcon";
+import { NebulaIcon } from "@/icons/NebulaIcon";
+import { PayIcon } from "@/icons/PayIcon";
+import { RPCIcon } from "@/icons/RPCIcon";
+import { SmartAccountIcon } from "@/icons/SmartAccountIcon";
+import type { ChainSupportedService } from "@/types/chain";
 
 export const products = [
   {

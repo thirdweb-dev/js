@@ -10,9 +10,9 @@ module.exports = {
     "plugin:storybook/recommended",
   ],
   overrides: [
-    // disable restricted imports in tw-components
+    // disable restricted imports in chakra
     {
-      files: "src/tw-components/**/*",
+      files: "src/chakra/**/*",
       rules: {
         "no-restricted-imports": ["off"],
       },
@@ -92,7 +92,7 @@ module.exports = {
       {
         paths: [
           {
-            // these are provided by tw-components, so we don't want to import them from chakra directly
+            // these are provided by chakra folder, so we don't want to import them from chakra directly
             importNames: [
               "Card",
               "Button",
@@ -127,7 +127,7 @@ module.exports = {
               "StackProps",
             ],
             message:
-              'Use the equivalent component from "tw-components" instead.',
+              'import component from "chakra" folder instead if you have to use chakra component, But use shadcn component otherwise',
             name: "@chakra-ui/react",
           },
           {
@@ -150,12 +150,6 @@ module.exports = {
             message:
               'Use `import { useDashboardRouter } from "@/lib/DashboardRouter";` instead',
             name: "next/navigation",
-          },
-          {
-            importNames: ["Link", "Table", "Sidebar"],
-            message:
-              'This is likely a mistake. If you really want to import this - postfix the imported name with Icon. Example - "LinkIcon"',
-            name: "lucide-react",
           },
           {
             message:

@@ -1,10 +1,4 @@
 "use client";
-import {
-  DEFAULT_FEE_BPS_NEW,
-  DEFAULT_FEE_RECIPIENT,
-} from "constants/addresses";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { defineDashboardChain } from "lib/defineDashboardChain";
 import { useRef } from "react";
 import { toast } from "sonner";
 import {
@@ -24,14 +18,20 @@ import {
   transferBatch,
 } from "thirdweb/extensions/erc20";
 import { useActiveAccount } from "thirdweb/react";
-import { parseError } from "utils/errorParser";
-import { pollWithTimeout } from "utils/pollWithTimeout";
 import { revalidatePathAction } from "@/actions/revalidate";
 import {
   reportAssetCreationFailed,
   reportContractDeployed,
 } from "@/analytics/report";
-import { useAddContractToProject } from "../../../hooks/project-contracts";
+import {
+  DEFAULT_FEE_BPS_NEW,
+  DEFAULT_FEE_RECIPIENT,
+} from "@/constants/addresses";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { useAddContractToProject } from "@/hooks/project-contracts";
+import { defineDashboardChain } from "@/lib/defineDashboardChain";
+import { parseError } from "@/utils/errorParser";
+import { pollWithTimeout } from "@/utils/pollWithTimeout";
 import type { CreateAssetFormValues } from "./_common/form";
 import { CreateTokenAssetPageUI } from "./create-token-page.client";
 

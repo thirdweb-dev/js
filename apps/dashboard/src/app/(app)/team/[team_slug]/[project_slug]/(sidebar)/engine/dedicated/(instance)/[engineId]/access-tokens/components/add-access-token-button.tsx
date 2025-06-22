@@ -1,4 +1,3 @@
-import { useEngineCreateAccessToken } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
   Modal,
@@ -9,12 +8,14 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button } from "chakra/button";
+import { Text } from "chakra/text";
 import { CirclePlusIcon } from "lucide-react";
 import { useState } from "react";
-import { Button, Text } from "tw-components";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
+import { useEngineCreateAccessToken } from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface AddAccessTokenButtonProps {
   instanceUrl: string;

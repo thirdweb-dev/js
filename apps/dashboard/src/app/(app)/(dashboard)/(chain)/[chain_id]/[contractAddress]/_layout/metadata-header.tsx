@@ -1,6 +1,5 @@
 "use client";
 
-import { ChainIconClient } from "components/icons/ChainIcon";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import type { ThirdwebClient } from "thirdweb";
@@ -8,6 +7,7 @@ import type { ChainMetadata } from "thirdweb/chains";
 import { MediaRenderer } from "thirdweb/react";
 import { Button } from "@/components/ui/button";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { ChainIconClient } from "@/icons/ChainIcon";
 
 interface ExternalLink {
   name: string;

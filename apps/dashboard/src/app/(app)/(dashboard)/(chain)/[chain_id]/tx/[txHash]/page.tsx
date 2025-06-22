@@ -1,4 +1,3 @@
-import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { toTokens, ZERO_ADDRESS } from "thirdweb";
 import {
   eth_getBlockByHash,
@@ -10,6 +9,7 @@ import { hexToNumber, shortenAddress, toEther } from "thirdweb/utils";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { mapV4ChainToV5Chain } from "@/utils/map-chains";
 import { getChain } from "../../../utils";
 
 export default async function Page(props: {

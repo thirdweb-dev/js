@@ -1,8 +1,8 @@
-import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   NEXT_PUBLIC_DEMO_ENGINE_URL,
   NEXT_PUBLIC_THIRDWEB_API_HOST,
 } from "@/constants/public-envs";
+import type { EngineInstance } from "@/hooks/useEngine";
 
 export async function getEngineInstance(params: {
   teamIdOrSlug: string;

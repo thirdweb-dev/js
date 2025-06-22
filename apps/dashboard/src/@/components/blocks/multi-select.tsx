@@ -4,16 +4,16 @@
 import { CheckIcon, ChevronDownIcon, SearchIcon, XIcon } from "lucide-react";
 import { forwardRef, useCallback, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Separator } from "@/components/ui/separator";
+import { useShowMore } from "@/hooks/useShowMore";
 import { cn } from "@/lib/utils";
-import { useShowMore } from "../../lib/useShowMore";
-import { Input } from "../ui/input";
-import { ScrollShadow } from "../ui/ScrollShadow/ScrollShadow";
 
 interface MultiSelectProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {

@@ -1,8 +1,8 @@
-import { LoadingChartState } from "components/analytics/empty-chart-state";
 import { Suspense } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import type { AnalyticsQueryParams } from "types/analytics";
 import { getClientTransactions } from "@/api/analytics";
+import { LoadingChartState } from "@/components/analytics/empty-chart-state";
+import type { AnalyticsQueryParams } from "@/types/analytics";
 import { TransactionsChartsUI } from "./TransactionCharts";
 
 export function TransactionsCharts(

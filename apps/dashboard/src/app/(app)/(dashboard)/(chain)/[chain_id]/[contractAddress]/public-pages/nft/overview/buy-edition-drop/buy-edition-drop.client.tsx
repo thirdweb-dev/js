@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { TransactionButton } from "components/buttons/TransactionButton";
 import { CircleAlertIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -11,12 +10,12 @@ import type { ChainMetadata } from "thirdweb/chains";
 import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import { parseError } from "utils/errorParser";
 import * as z from "zod";
 import {
   reportAssetBuyFailed,
   reportAssetBuySuccessful,
 } from "@/analytics/report";
+import { TransactionButton } from "@/components/tx-button";
 import {
   Form,
   FormControl,
@@ -28,6 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { parseError } from "@/utils/errorParser";
 import { PublicPageConnectButton } from "../../../_components/PublicPageConnectButton";
 import { SupplyClaimedProgress } from "../../../_components/supply-claimed-progress";
 import { TokenPrice } from "../../../_components/token-price";

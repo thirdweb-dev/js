@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { BadgeContainer } from "../../../stories/utils";
+import { BadgeContainer } from "@/storybook/utils";
 
 const meta = {
   component: Component,

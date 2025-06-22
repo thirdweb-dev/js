@@ -1,10 +1,10 @@
-import { EmptyAccountAbstractionChartContent } from "components/smart-wallets/AccountAbstractionAnalytics/SponsoredTransactionsChartCard";
 import { defineChain } from "thirdweb";
 import { type ChainMetadata, getChainMetadata } from "thirdweb/chains";
-import type { TransactionStats } from "types/analytics";
 import { cn } from "@/lib/utils";
+import type { TransactionStats } from "@/types/analytics";
 import { BarChart } from "../../../components/Analytics/BarChart";
 import { CombinedBarChartCard } from "../../../components/Analytics/CombinedBarChartCard";
+import { EmptyAccountAbstractionChartContent } from "../../[project_slug]/(sidebar)/account-abstraction/AccountAbstractionAnalytics/SponsoredTransactionsChartCard";
 
 export async function TransactionsChartCardUI({
   data,

@@ -1,6 +1,6 @@
-import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
-import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
 import Link from "next/link";
+import { ReactIcon } from "@/icons/brand-icons/ReactIcon";
+import { TypeScriptIcon } from "@/icons/brand-icons/TypeScriptIcon";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 

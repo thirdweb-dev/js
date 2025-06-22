@@ -3,14 +3,14 @@ import { InfoIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getProjects } from "@/api/projects";
 import { getTeamBySlug, getTeams } from "@/api/team";
-import { AppFooter } from "@/components/blocks/app-footer";
+import { AppFooter } from "@/components/footers/app-footer";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getValidAccount } from "../../../account/settings/getAccount";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,
-} from "../../../api/lib/getAuthToken";
+} from "../../../../../@/api/auth-token";
+import { getValidAccount } from "../../../account/settings/getAccount";
 import { loginRedirect } from "../../../login/loginRedirect";
 import { TeamHeaderLoggedIn } from "../../../team/components/TeamHeader/team-header-logged-in.client";
 

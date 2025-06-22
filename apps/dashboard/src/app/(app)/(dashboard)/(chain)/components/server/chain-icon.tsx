@@ -2,9 +2,9 @@
 import "server-only";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
-import { fallbackChainIcon } from "../../../../../../utils/chain-icons";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
+import { fallbackChainIcon } from "../../../../../../@/utils/chain-icons";
 
 export async function ChainIcon(props: {
   iconUrl?: string;

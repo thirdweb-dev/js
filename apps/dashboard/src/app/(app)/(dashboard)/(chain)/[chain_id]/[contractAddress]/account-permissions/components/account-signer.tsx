@@ -1,11 +1,13 @@
 import { Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
+import { Card } from "chakra/card";
+import { Heading } from "chakra/heading";
+import { Text } from "chakra/text";
 import { formatDistance } from "date-fns";
-import { useAllChainsData } from "hooks/chains/allChains";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
-import { Card, Heading, Text } from "tw-components";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
+import { useAllChainsData } from "@/hooks/chains/allChains";
 
 export type AccountSignerType = {
   signer: string;

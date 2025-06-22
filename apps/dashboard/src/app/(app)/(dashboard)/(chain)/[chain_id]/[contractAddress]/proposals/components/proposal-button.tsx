@@ -1,7 +1,8 @@
 "use client";
 
 import { FormControl, Textarea } from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
+import { Button } from "chakra/button";
+import { FormErrorMessage, FormLabel } from "chakra/form";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -9,7 +10,7 @@ import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import * as VoteExt from "thirdweb/extensions/vote";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
-import { Button, FormErrorMessage, FormLabel } from "tw-components";
+import { TransactionButton } from "@/components/tx-button";
 import {
   Sheet,
   SheetContent,

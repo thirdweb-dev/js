@@ -1,7 +1,3 @@
-import { fetchPublishedContractsFromDeploy } from "components/contract-components/fetchPublishedContractsFromDeploy";
-import { ContractCard } from "components/explore/contract-card";
-import { THIRDWEB_DEPLOYER_ADDRESS } from "constants/addresses";
-import { resolveEns } from "lib/ens";
 import type { ThirdwebContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
 import { getBytecode, getContract } from "thirdweb/contract";
@@ -9,6 +5,10 @@ import { getPublishedUriFromCompilerUri } from "thirdweb/extensions/thirdweb";
 import { getInstalledModules } from "thirdweb/modules";
 import { download } from "thirdweb/storage";
 import { extractIPFSUri, isValidENSName } from "thirdweb/utils";
+import { fetchPublishedContractsFromDeploy } from "@/components/contract-components/fetchPublishedContractsFromDeploy";
+import { ContractCard } from "@/components/contracts/contract-card";
+import { THIRDWEB_DEPLOYER_ADDRESS } from "@/constants/addresses";
+import { resolveEns } from "@/lib/ens";
 
 type ModuleMetadataPickedKeys = {
   publisher: string;

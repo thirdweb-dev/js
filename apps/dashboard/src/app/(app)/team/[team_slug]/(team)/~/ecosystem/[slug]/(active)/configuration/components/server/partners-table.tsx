@@ -1,6 +1,6 @@
+import { Link } from "chakra/link";
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
-import { Link } from "tw-components/link";
 import { Button } from "@/components/ui/button";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { CopyButton } from "@/components/ui/CopyButton";

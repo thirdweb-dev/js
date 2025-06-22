@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useState } from "react";
-import { mobileViewport, storybookThirdwebClient } from "stories/utils";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
@@ -10,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { mobileViewport, storybookThirdwebClient } from "@/storybook/utils";
 import { AccountSettingsPageUI } from "./AccountSettingsPageUI";
 
 const meta = {

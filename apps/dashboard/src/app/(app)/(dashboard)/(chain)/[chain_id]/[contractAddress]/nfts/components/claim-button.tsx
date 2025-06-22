@@ -1,8 +1,7 @@
 "use client";
 
 import { FormControl, Input } from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
 import { GemIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -11,7 +10,7 @@ import { isAddress, type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc721";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
+import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -20,6 +19,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 const CLAIM_FORM_ID = "nft-claim-form";
 

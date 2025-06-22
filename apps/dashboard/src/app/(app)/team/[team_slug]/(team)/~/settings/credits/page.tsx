@@ -1,6 +1,6 @@
+import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import { redirect } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { SettingsGasCreditsPage } from "./SettingsCreditsPage";
 

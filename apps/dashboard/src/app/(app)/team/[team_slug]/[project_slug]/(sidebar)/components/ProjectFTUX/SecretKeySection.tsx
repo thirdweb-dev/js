@@ -1,7 +1,7 @@
 "use client";
 
-import { rotateSecretKeyClient } from "@3rdweb-sdk/react/hooks/useApi";
 import { useState } from "react";
+import { rotateSecretKeyClient } from "@/hooks/useApi";
 import { RotateSecretKeyButton } from "../../settings/ProjectGeneralSettingsPage";
 
 export function SecretKeySection(props: {

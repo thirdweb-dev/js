@@ -1,13 +1,13 @@
-import type { MinimalTeamsAndProjects } from "components/contract-components/contract-deploy-form/add-to-project-card";
-import { resolveFunctionSelectors } from "lib/selectors";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { isAddress, isContractDeployed } from "thirdweb/utils";
-import { shortenIfAddress } from "utils/usedapp-external";
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
+import type { MinimalTeamsAndProjects } from "@/components/contract-components/contract-deploy-form/add-to-project-card";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { resolveFunctionSelectors } from "@/lib/selectors";
+import { shortenIfAddress } from "@/utils/usedapp-external";
 import type { ProjectMeta } from "../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { TeamHeader } from "../../../../team/components/TeamHeader/team-header";
 import { ConfigureCustomChain } from "./_layout/ConfigureCustomChain";

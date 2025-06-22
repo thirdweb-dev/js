@@ -1,9 +1,9 @@
-import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import { Flex, Select, Spinner } from "@chakra-ui/react";
 import { InfoIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { Card } from "@/components/ui/card";
+import { useIsAdmin } from "@/hooks/useContractRoles";
 import { PermissionEditor } from "./permissions-editor";
 
 interface ContractPermissionProps {

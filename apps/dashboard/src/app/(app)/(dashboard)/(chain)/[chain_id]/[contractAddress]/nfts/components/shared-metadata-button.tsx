@@ -1,8 +1,8 @@
 "use client";
-import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
+import { MinterOnly } from "@/components/contracts/roles/minter-only";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,

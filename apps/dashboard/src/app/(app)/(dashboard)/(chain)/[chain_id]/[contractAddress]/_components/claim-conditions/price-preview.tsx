@@ -1,7 +1,7 @@
-import { CURRENCIES } from "constants/currencies";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { shortenIfAddress } from "utils/usedapp-external";
-import { isAddressZero } from "utils/zeroAddress";
+import { CURRENCIES } from "@/constants/currencies";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { shortenIfAddress } from "@/utils/usedapp-external";
+import { isAddressZero } from "@/utils/zeroAddress";
 
 interface PricePreviewProps {
   price: string | number | undefined;

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { BadgeContainer } from "../../../stories/utils";
+import { BadgeContainer } from "@/storybook/utils";
 import { DangerSettingCard } from "./DangerSettingCard";
 
 const meta = {

@@ -2,8 +2,8 @@
 
 import { useTheme } from "next-themes";
 import { PayEmbed, type TokenInfo } from "thirdweb/react";
-import { useV5DashboardChain } from "../../../../lib/v5-adapter";
-import { getSDKTheme } from "../../../(app)/components/sdk-component-theme";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
+import { getSDKTheme } from "@/utils/sdk-component-theme";
 import { bridgeAppThirdwebClient } from "../../constants";
 
 export function UniversalBridgeEmbed({

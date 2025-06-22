@@ -1,15 +1,3 @@
-import {
-  type EngineInstance,
-  type ImportBackendWalletInput,
-  useEngineImportBackendWallet,
-  useHasEngineFeature,
-  type WalletConfigResponse,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import {
-  EngineBackendWalletOptions,
-  type EngineBackendWalletType,
-} from "lib/engine";
 import { CircleAlertIcon, CloudDownloadIcon } from "lucide-react";
 import Link from "next/link";
 import { useId, useState } from "react";
@@ -42,6 +30,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  EngineBackendWalletOptions,
+  type EngineBackendWalletType,
+} from "@/constants/engine";
+import {
+  type EngineInstance,
+  type ImportBackendWalletInput,
+  useEngineImportBackendWallet,
+  useHasEngineFeature,
+  type WalletConfigResponse,
+} from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface ImportBackendWalletButtonProps {
   instance: EngineInstance;

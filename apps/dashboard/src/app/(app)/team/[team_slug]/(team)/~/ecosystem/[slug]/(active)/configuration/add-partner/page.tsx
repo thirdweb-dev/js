@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../../../../../../../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../../../../../../../../@/api/auth-token";
 import { loginRedirect } from "../../../../../../../../../login/loginRedirect";
 import { AddPartnerForm } from "../components/client/add-partner-form.client";
 import { fetchEcosystem } from "../hooks/fetchEcosystem";

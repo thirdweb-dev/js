@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { BadgeContainer } from "stories/utils";
-import type { RpcMethodStats } from "types/analytics";
+import { BadgeContainer } from "@/storybook/utils";
+import type { RpcMethodStats } from "@/types/analytics";
 import { RpcMethodBarChartCardUI } from "./RpcMethodBarChartCardUI";
 
 const meta = {

@@ -1,7 +1,7 @@
 "use client";
 import { useId, useMemo } from "react";
-import { toUSD } from "utils/number";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { toUSD } from "@/utils/number";
 
 type Data = {
   label: string;

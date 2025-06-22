@@ -1,11 +1,3 @@
-import {
-  type EngineInstance,
-  type SetWalletConfigInput,
-  useEngineSetWalletConfig,
-  useEngineWalletConfig,
-  useHasEngineFeature,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import Link from "next/link";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
@@ -14,6 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Form, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  type EngineInstance,
+  type SetWalletConfigInput,
+  useEngineSetWalletConfig,
+  useEngineWalletConfig,
+  useHasEngineFeature,
+} from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface KmsAwsConfigProps {
   instance: EngineInstance;

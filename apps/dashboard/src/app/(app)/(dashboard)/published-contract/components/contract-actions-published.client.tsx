@@ -4,7 +4,7 @@ import { ChevronsRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { shareLink } from "@/lib/shareLink";
+import { shareLink } from "@/utils/shareLink";
 
 export function PublishedActions(props: {
   publisher: string;

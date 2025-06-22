@@ -1,9 +1,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import type { MinimalTeamsAndProjects } from "components/contract-components/contract-deploy-form/add-to-project-card";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
+import type { MinimalTeamsAndProjects } from "@/components/contract-components/contract-deploy-form/add-to-project-card";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { ErrorPage, LoadingPage } from "../_components/page-skeletons";
 import { useContractPageMetadata } from "../_hooks/useContractPageMetadata";

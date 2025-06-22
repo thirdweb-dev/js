@@ -6,7 +6,7 @@ import type {
   EnglishAuction,
 } from "thirdweb/extensions/marketplace";
 import { BuyDirectListingButton, useActiveAccount } from "thirdweb/react";
-import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import { NFTMediaWithEmptyState } from "@/components/blocks/nft-media";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";

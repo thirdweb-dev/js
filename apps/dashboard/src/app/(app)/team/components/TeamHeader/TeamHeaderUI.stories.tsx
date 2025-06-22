@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { teamsAndProjectsStub } from "stories/stubs";
-import {
-  BadgeContainer,
-  mobileViewport,
-  storybookThirdwebClient,
-} from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { Button } from "@/components/ui/button";
+import { teamsAndProjectsStub } from "@/storybook/stubs";
+import {
+  BadgeContainer,
+  mobileViewport,
+  storybookThirdwebClient,
+} from "@/storybook/utils";
 import { TeamHeaderDesktopUI, TeamHeaderMobileUI } from "./TeamHeaderUI";
 
 const meta = {

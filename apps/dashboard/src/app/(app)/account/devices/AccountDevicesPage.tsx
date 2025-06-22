@@ -1,7 +1,7 @@
 "use client";
 
-import { useAuthorizedWallets } from "@3rdweb-sdk/react/hooks/useApi";
-import { AuthorizedWalletsTable } from "components/settings/AuthorizedWallets/AuthorizedWalletsTable";
+import { AuthorizedWalletsTable } from "@app/account/devices/AuthorizedWalletsTable";
+import { useAuthorizedWallets } from "@/hooks/useApi";
 
 // TODO - fetch the authorized wallets server side
 

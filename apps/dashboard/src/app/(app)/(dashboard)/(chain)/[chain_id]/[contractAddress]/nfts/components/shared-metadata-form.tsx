@@ -11,24 +11,20 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { FileInput } from "components/shared/FileInput";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button } from "chakra/button";
+import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
+import { Heading } from "chakra/heading";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { setSharedMetadata } from "thirdweb/extensions/erc721";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import {
-  Button,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  Heading,
-} from "tw-components";
-import type { NFTMetadataInputLimited } from "types/modified-types";
-import { parseAttributes } from "utils/parseAttributes";
+import { FileInput } from "@/components/blocks/FileInput";
+import { TransactionButton } from "@/components/tx-button";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
+import type { NFTMetadataInputLimited } from "@/types/modified-types";
+import { parseAttributes } from "@/utils/parseAttributes";
 import {
   getUploadedNFTMediaMeta,
   handleNFTMediaUpload,

@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
+import { ThirdwebProvider } from "thirdweb/react";
+import type { LinkedWallet } from "@/api/linked-wallets";
 import {
   BadgeContainer,
   mobileViewport,
   storybookThirdwebClient,
-} from "stories/utils";
-import { ThirdwebProvider } from "thirdweb/react";
-import type { LinkedWallet } from "@/api/linked-wallets";
+} from "@/storybook/utils";
 import { LinkWalletUI } from "./LinkWalletUI";
 
 const meta = {

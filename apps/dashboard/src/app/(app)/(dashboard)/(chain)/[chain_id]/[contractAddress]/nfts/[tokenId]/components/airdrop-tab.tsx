@@ -1,7 +1,5 @@
 "use client";
 
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { UploadIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -10,6 +8,7 @@ import type { ThirdwebContract } from "thirdweb";
 import { multicall } from "thirdweb/extensions/common";
 import { balanceOf, encodeSafeTransferFrom } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -18,6 +17,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { cn } from "@/lib/utils";
 import {
   type AirdropAddressInput,

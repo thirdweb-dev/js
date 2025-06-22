@@ -1,6 +1,9 @@
 "use client";
+import { LinkButton } from "chakra/button";
+import { Card } from "chakra/card";
+import { Heading } from "chakra/heading";
+import { Text } from "chakra/text";
 import type { ThirdwebContract } from "thirdweb";
-import { Card, Heading, LinkButton, Text } from "tw-components";
 import { TokenAirdropButton } from "./components/airdrop-button";
 import { TokenBurnButton } from "./components/burn-button";
 import { TokenClaimButton } from "./components/claim-button";

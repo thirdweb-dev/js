@@ -1,7 +1,7 @@
 import "server-only";
 
+import { getAuthToken } from "@/api/auth-token";
 import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
-import { getAuthToken } from "../../../app/(app)/api/lib/getAuthToken";
 
 type LineItem = {
   quantity: number;

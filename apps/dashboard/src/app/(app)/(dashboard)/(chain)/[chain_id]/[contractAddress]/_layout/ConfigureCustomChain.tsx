@@ -1,12 +1,12 @@
 "use client";
 
-import { ConfigureNetworks } from "components/configure-networks/ConfigureNetworks";
 import { CheckIcon, CircleAlertIcon, RotateCcwIcon } from "lucide-react";
 import { useState } from "react";
-import { addChainOverrides } from "stores/chainStores";
 import type { ThirdwebClient } from "thirdweb";
+import { ConfigureNetworks } from "@/components/misc/configure-networks/ConfigureNetworks";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { addChainOverrides } from "@/stores/chainStores";
 
 export function ConfigureCustomChain(props: {
   chainSlug: string;

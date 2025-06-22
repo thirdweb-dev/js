@@ -1,5 +1,5 @@
-import { getAuthToken } from "@app/api/lib/getAuthToken";
 import type { Metadata } from "next";
+import { getAuthToken } from "@/api/auth-token";
 import {
   generateContractLayoutMetadata,
   SharedContractLayout,

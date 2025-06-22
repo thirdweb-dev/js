@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { toUSD } from "utils/number";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { toUSD } from "@/utils/number";
 import { Stat } from "./Stat";
 import { StatBreakdown } from "./StatBreakdown";
 

@@ -1,4 +1,3 @@
-import type { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
   FormControl,
@@ -16,14 +15,17 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
+import { Button } from "chakra/button";
+import { FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
 import { format } from "date-fns";
 import { CheckIcon } from "lucide-react";
 import { useRef } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
-import { Button, FormLabel, Text } from "tw-components";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import type { Transaction } from "@/hooks/useEngine";
 
 interface TimelineStep {
   step: string;

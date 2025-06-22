@@ -1,5 +1,4 @@
 import { ipAddress } from "@vercel/functions";
-import { cacheTtl } from "lib/redis";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getTeams } from "@/api/team";
@@ -9,6 +8,7 @@ import {
   THIRDWEB_ACCESS_TOKEN,
   THIRDWEB_ENGINE_URL,
 } from "@/constants/server-envs";
+import { cacheTtl } from "@/lib/redis";
 import type { CanClaimResponseType } from "./CanClaimResponseType";
 
 // Note: This handler cannot use "edge" runtime because of Redis usage.

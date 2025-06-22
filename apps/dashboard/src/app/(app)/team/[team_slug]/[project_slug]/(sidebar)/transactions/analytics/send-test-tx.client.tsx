@@ -1,7 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAllChainsData } from "hooks/chains/allChains";
 import { Loader2Icon, LockIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -21,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import { SmartAccountCell } from "../server-wallets/wallet-table/wallet-table-ui.client";

@@ -1,10 +1,6 @@
 "use client";
 
 import {
-  type InternalTransaction,
-  useActivity,
-} from "@3rdweb-sdk/react/hooks/useActivity";
-import {
   Accordion,
   AccordionButton,
   AccordionItem,
@@ -22,16 +18,21 @@ import {
   Switch,
   Tooltip,
 } from "@chakra-ui/react";
-import { useChainSlug } from "hooks/chains/chainSlug";
-import { useClipboard } from "hooks/useClipboard";
+import { Button } from "chakra/button";
+import { Card } from "chakra/card";
+import { FormLabel } from "chakra/form";
+import { Heading } from "chakra/heading";
+import { Text } from "chakra/text";
 import { ChevronDownIcon, CircleHelpIcon, CopyIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Fragment, useId, useMemo, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { stringify } from "thirdweb/utils";
-import { Button, Card, FormLabel, Heading, Text } from "tw-components";
 import { CodeClient } from "@/components/ui/code/code.client";
+import { useChainSlug } from "@/hooks/chains/chainSlug";
+import { type InternalTransaction, useActivity } from "@/hooks/useActivity";
+import { useClipboard } from "@/hooks/useClipboard";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../_utils/contract-page-path";

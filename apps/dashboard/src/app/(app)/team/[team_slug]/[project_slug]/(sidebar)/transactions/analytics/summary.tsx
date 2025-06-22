@@ -1,6 +1,6 @@
-import { StatCard } from "components/analytics/stat"; // Assuming correct path
 import { ActivityIcon, CoinsIcon } from "lucide-react";
 import { toEther } from "thirdweb/utils";
+import { StatCard } from "@/components/analytics/stat"; // Assuming correct path
 import type { TransactionSummaryData } from "../lib/analytics";
 
 // Renders the UI based on fetched data or pending state

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { newAccountStub, teamStub } from "../../../../stories/stubs";
-import { storybookLog } from "../../../../stories/utils";
+import { newAccountStub, teamStub } from "../../../../@/storybook/stubs";
+import { storybookLog } from "../../../../@/storybook/utils";
 import { AccountOnboardingUI } from "./account-onboarding-ui";
 
 const meta = {

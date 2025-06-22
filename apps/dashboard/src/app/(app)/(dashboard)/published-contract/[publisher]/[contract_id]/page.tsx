@@ -1,11 +1,11 @@
-import { PublishedContract } from "components/contract-components/published-contract";
+import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import { notFound } from "next/navigation";
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
+import { PublishedContract } from "@/components/contracts/published-contract";
 import { Separator } from "@/components/ui/separator";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { getAuthToken } from "../../../../../../@/api/auth-token";
 import { getRawAccount } from "../../../../account/settings/getAccount";
-import { getAuthToken } from "../../../../api/lib/getAuthToken";
 import { PublishedActions } from "../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../components/contract-header";
 import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";

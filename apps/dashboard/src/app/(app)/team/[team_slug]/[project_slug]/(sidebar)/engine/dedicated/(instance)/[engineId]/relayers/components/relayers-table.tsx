@@ -1,11 +1,4 @@
 import {
-  type EngineRelayer,
-  type UpdateRelayerInput,
-  useEngineBackendWallets,
-  useEngineRevokeRelayer,
-  useEngineUpdateRelayer,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import {
   Flex,
   FormControl,
   Input,
@@ -22,24 +15,26 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { ChainIconClient } from "components/icons/ChainIcon";
-import { TWTable } from "components/shared/TWTable";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button, Legacy_CopyButton, LinkButton } from "chakra/button";
+import { FormHelperText, FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
-import {
-  Button,
-  FormHelperText,
-  FormLabel,
-  Legacy_CopyButton,
-  LinkButton,
-  Text,
-} from "tw-components";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { TWTable } from "@/components/blocks/TWTable";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import {
+  type EngineRelayer,
+  type UpdateRelayerInput,
+  useEngineBackendWallets,
+  useEngineRevokeRelayer,
+  useEngineUpdateRelayer,
+} from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { ChainIconClient } from "@/icons/ChainIcon";
 import { type AddModalInput, parseAddressListRaw } from "./add-relayer-button";
 
 interface RelayersTableProps {

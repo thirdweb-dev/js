@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ToggleThemeButton } from "@/components/color-mode-toggle";
+import { ToggleThemeButton } from "@/components/blocks/color-mode-toggle";
 import { cn } from "@/lib/utils";
 import { ThirdwebMiniLogo } from "../../../../../../components/ThirdwebMiniLogo";
 import { PublicPageConnectButton } from "./PublicPageConnectButton";

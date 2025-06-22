@@ -2,12 +2,12 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { CircleCheckIcon, XIcon } from "lucide-react";
-import { hostnameEndsWith } from "utils/url";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { isProd } from "@/constants/env-utils";
 import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
+import { hostnameEndsWith } from "@/utils/url";
 import { PrimaryInfoItem } from "../server/primary-info-item";
 
 function useChainStatswithRPC(_rpcUrl: string) {

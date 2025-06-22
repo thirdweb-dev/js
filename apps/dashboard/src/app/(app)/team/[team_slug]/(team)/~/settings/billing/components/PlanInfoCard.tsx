@@ -1,7 +1,5 @@
 "use client";
 
-import { CancelPlanButton } from "components/settings/Account/Billing/CancelPlanModal/CancelPlanModal";
-import { BillingPricing } from "components/settings/Account/Billing/Pricing";
 import { differenceInDays, format, isAfter } from "date-fns";
 import {
   CircleAlertIcon,
@@ -13,7 +11,10 @@ import Link from "next/link";
 import { useState } from "react";
 import type { Team } from "@/api/team";
 import type { TeamSubscription } from "@/api/team-subscription";
-import { BillingPortalButton } from "@/components/billing";
+import { BillingPortalButton } from "@/components/billing/billing";
+import { CancelPlanButton } from "@/components/billing/CancelPlanModal/CancelPlanModal";
+import { BillingPricing } from "@/components/billing/Pricing";
+import { RenewSubscriptionButton } from "@/components/billing/renew-subscription/renew-subscription-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -25,8 +26,7 @@ import {
 } from "@/components/ui/sheet";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { RenewSubscriptionButton } from "../../../../../../../../../components/settings/Account/Billing/renew-subscription/renew-subscription-button";
-import { getValidTeamPlan } from "../../../../../../components/TeamHeader/getValidTeamPlan";
+import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
 
 export function PlanInfoCardUI(props: {
   subscriptions: TeamSubscription[];

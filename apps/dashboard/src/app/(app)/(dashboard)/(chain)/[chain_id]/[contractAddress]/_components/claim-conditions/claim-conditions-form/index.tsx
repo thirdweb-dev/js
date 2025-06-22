@@ -1,7 +1,5 @@
 "use client";
 
-import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import {
   Alert,
   AlertDescription,
@@ -14,8 +12,9 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button } from "chakra/button";
+import { Heading } from "chakra/heading";
+import { Text } from "chakra/text";
 import { CircleHelpIcon, PlusIcon } from "lucide-react";
 import { createContext, Fragment, useContext, useMemo, useState } from "react";
 import {
@@ -37,11 +36,14 @@ import {
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
 import invariant from "tiny-invariant";
-import { Button, Heading, Text } from "tw-components";
 import * as z from "zod";
 import { ZodError } from "zod";
+import { AdminOnly } from "@/components/contracts/roles/admin-only";
+import { TransactionButton } from "@/components/tx-button";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useIsAdmin } from "@/hooks/useContractRoles";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 import {
   type ClaimConditionInput,
   ClaimConditionInputSchema,

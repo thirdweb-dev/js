@@ -1,6 +1,4 @@
 "use client";
-import { EmptyChartState } from "components/analytics/empty-chart-state";
-import { formatTickerNumber } from "lib/format-utils";
 import {
   Bar,
   CartesianGrid,
@@ -8,13 +6,15 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { toUSD } from "utils/number";
+import { EmptyChartState } from "@/components/analytics/empty-chart-state";
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { formatTickerNumber } from "@/utils/format-utils";
+import { toUSD } from "@/utils/number";
 
 export function BarChart({
   chartConfig,

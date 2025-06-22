@@ -1,9 +1,9 @@
 "use client";
-import { TransactionButton } from "components/buttons/TransactionButton";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { cancelAuction, cancelListing } from "thirdweb/extensions/marketplace";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
+import { TransactionButton } from "@/components/tx-button";
 
 interface CancelTabProps {
   id: string;

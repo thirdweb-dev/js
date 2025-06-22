@@ -1,11 +1,11 @@
-import {
-  fetchLatestPublishedContractVersion,
-  fetchPublishedContractVersions,
-} from "components/contract-components/fetch-contracts-with-versions";
 import { isAddress, type ThirdwebClient } from "thirdweb";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import invariant from "tiny-invariant";
+import {
+  fetchLatestPublishedContractVersion,
+  fetchPublishedContractVersions,
+} from "@/components/contract-components/fetch-contracts-with-versions";
 import type { ModuleMeta } from "./install-module-params";
 
 export async function getModuleInstalledParams(

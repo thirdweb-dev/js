@@ -1,14 +1,12 @@
 import { getSortedDeployedContracts } from "@app/account/contracts/_components/getSortedDeployedContracts";
-import { getAuthToken } from "@app/api/lib/getAuthToken";
 import { loginRedirect } from "@app/login/loginRedirect";
-import { DefaultFactoriesSection } from "components/smart-wallets/AccountFactories";
-import { FactoryContracts } from "components/smart-wallets/AccountFactories/factory-contracts";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { defineChain, getContract, type ThirdwebClient } from "thirdweb";
 import { getCompilerMetadata } from "thirdweb/contract";
+import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { ClientOnly } from "@/components/blocks/client-only";
@@ -17,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { DefaultFactoriesSection } from "./AccountFactories";
+import { FactoryContracts } from "./AccountFactories/factory-contracts";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;

@@ -1,8 +1,8 @@
 import "server-only";
 
 import Stripe from "stripe";
-import type { Team } from "../api/team";
-import { STRIPE_SECRET_KEY } from "../constants/server-envs";
+import type { Team } from "@/api/team";
+import { STRIPE_SECRET_KEY } from "@/constants/server-envs";
 
 let existingStripe: Stripe | undefined;
 

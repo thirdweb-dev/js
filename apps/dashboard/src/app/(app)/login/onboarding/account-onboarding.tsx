@@ -1,11 +1,11 @@
 "use client";
 
+import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import {
   resendEmailClient,
   updateAccountClient,
   verifyEmailClient,
-} from "@3rdweb-sdk/react/hooks/useApi";
-import { useActiveWallet, useDisconnect } from "thirdweb/react";
+} from "@/hooks/useApi";
 import { doLogout } from "../auth-actions";
 import { AccountOnboardingUI } from "./account-onboarding-ui";
 

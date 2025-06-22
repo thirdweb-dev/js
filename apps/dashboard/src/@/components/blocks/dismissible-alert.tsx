@@ -1,8 +1,8 @@
 "use client";
 
-import { useLocalStorage } from "hooks/useLocalStorage";
 import { XIcon } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 export function DismissibleAlert(props: {
   title: React.ReactNode;

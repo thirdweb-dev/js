@@ -6,12 +6,12 @@ import {
   XCircleIcon,
 } from "lucide-react";
 import { redirect } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import { getTeamBySlug } from "@/api/team";
 import { getLast24HoursRPCUsage } from "@/api/usage/rpc";
+import { TeamPlanBadge } from "@/components/blocks/TeamPlanBadge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
-import { TeamPlanBadge } from "../../../../../../components/TeamPlanBadge";
 import { loginRedirect } from "../../../../../../login/loginRedirect";
 import { CountGraph } from "./components/count-graph";
 import { RateGraph } from "./components/rate-graph";

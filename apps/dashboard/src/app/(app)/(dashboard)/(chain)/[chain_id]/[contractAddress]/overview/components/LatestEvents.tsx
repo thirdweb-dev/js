@@ -1,13 +1,8 @@
 "use client";
 
-import {
-  type InternalTransaction,
-  useActivity,
-} from "@3rdweb-sdk/react/hooks/useActivity";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import type { ThirdwebContract } from "thirdweb";
-import { shortenString } from "utils/usedapp-external";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
@@ -21,6 +16,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { type InternalTransaction, useActivity } from "@/hooks/useActivity";
+import { shortenString } from "@/utils/usedapp-external";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { teamStub } from "stories/stubs";
-import { storybookLog, storybookThirdwebClient } from "stories/utils";
 import type { Team } from "@/api/team";
+import { teamStub } from "@/storybook/stubs";
+import { storybookLog, storybookThirdwebClient } from "@/storybook/utils";
 import { TeamOnboardingLayout } from "../onboarding-layout";
 import { InviteTeamMembersUI } from "./InviteTeamMembers";
 

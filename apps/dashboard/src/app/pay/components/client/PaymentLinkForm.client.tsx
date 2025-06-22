@@ -13,6 +13,7 @@ import {
 } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { resolveScheme, upload } from "thirdweb/storage";
+import { FileInput } from "@/components/blocks/FileInput";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { Button } from "@/components/ui/button";
@@ -20,9 +21,8 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { resolveEns } from "@/lib/ens";
 import { cn } from "@/lib/utils";
-import { FileInput } from "../../../../components/shared/FileInput";
-import { resolveEns } from "../../../../lib/ens";
 
 export function PaymentLinkForm() {
   const [chainId, setChainId] = useState<number>();

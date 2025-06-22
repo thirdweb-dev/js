@@ -1,8 +1,4 @@
 import {
-  type Keypair,
-  useEngineRemoveKeypair,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import {
   Flex,
   FormControl,
   Modal,
@@ -16,14 +12,17 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { TWTable } from "components/shared/TWTable";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button } from "chakra/button";
+import { FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
-import { Button, FormLabel, Text } from "tw-components";
-import { toDateTimeLocal } from "utils/date-utils";
+import { TWTable } from "@/components/blocks/TWTable";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
+import { type Keypair, useEngineRemoveKeypair } from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { toDateTimeLocal } from "@/utils/date-utils";
 
 interface KeypairsTableProps {
   instanceUrl: string;

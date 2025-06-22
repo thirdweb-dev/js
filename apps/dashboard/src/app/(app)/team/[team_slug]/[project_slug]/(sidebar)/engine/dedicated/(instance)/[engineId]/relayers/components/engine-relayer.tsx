@@ -1,8 +1,10 @@
 "use client";
 
-import { useEngineRelayer } from "@3rdweb-sdk/react/hooks/useEngine";
+import { Heading } from "chakra/heading";
+import { Link } from "chakra/link";
+import { Text } from "chakra/text";
 import type { ThirdwebClient } from "thirdweb";
-import { Heading, Link, Text } from "tw-components";
+import { useEngineRelayer } from "@/hooks/useEngine";
 import { AddRelayerButton } from "./add-relayer-button";
 import { RelayersTable } from "./relayers-table";
 

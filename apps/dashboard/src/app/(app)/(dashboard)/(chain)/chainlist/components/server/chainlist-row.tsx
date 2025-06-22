@@ -10,9 +10,9 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import type { ChainSupportedService } from "@/types/chain";
 import { ChainIcon } from "../../../components/server/chain-icon";
 import { products } from "../../../components/server/products";
-import type { ChainSupportedService } from "../../../types/chain";
 import { getChainMetadata } from "../../../utils";
 
 type ChainListRowProps = {

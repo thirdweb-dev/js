@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import type { Team } from "@/api/team";
 import type { TeamAccountRole, TeamMember } from "@/api/team-members";
-import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
+import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

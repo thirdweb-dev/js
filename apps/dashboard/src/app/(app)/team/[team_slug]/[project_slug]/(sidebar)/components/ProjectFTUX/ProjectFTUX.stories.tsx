@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { projectStub } from "stories/stubs";
+import { projectStub } from "@/storybook/stubs";
 import { ProjectFTUX } from "./ProjectFTUX";
 
 const meta = {

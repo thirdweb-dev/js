@@ -1,5 +1,6 @@
 import "server-only";
 
+import { ANALYTICS_SERVICE_URL } from "@/constants/server-envs";
 import type {
   AnalyticsQueryParams,
   EcosystemWalletStats,
@@ -12,9 +13,8 @@ import type {
   UserOpStats,
   WalletStats,
   WalletUserStats,
-} from "types/analytics";
-import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
-import { ANALYTICS_SERVICE_URL } from "../constants/server-envs";
+} from "@/types/analytics";
+import { getAuthToken } from "./auth-token";
 import { getChains } from "./chain";
 
 async function fetchAnalytics(

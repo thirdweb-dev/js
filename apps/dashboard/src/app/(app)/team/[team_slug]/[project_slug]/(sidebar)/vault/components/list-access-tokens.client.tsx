@@ -4,7 +4,6 @@ import { listAccessTokens, revokeAccessToken } from "@thirdweb-dev/vault-sdk";
 import { Loader2Icon, LockIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { toDateTimeLocal } from "utils/date-utils";
 import type { Project } from "@/api/projects";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
@@ -16,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toDateTimeLocal } from "@/utils/date-utils";
 import {
   createWalletAccessToken,
   initVaultClient,

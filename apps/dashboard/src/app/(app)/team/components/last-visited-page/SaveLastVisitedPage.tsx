@@ -2,8 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { LAST_USED_TEAM_ID } from "../../../../../constants/cookies";
-import { setCookie } from "../../../../../lib/cookie";
+import { LAST_USED_TEAM_ID } from "../../../../../@/constants/cookies";
+import { setCookie } from "../../../../../@/utils/cookie";
 import { LAST_VISITED_TEAM_PAGE_PATH } from "./consts";
 
 export function SaveLastVisitedTeamPage(props: { teamId: string }) {

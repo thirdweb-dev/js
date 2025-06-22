@@ -1,8 +1,8 @@
 import "server-only";
 import type { ChainMetadata } from "thirdweb/chains";
-import type { ChainService } from "../../app/(app)/(dashboard)/(chain)/types/chain";
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "../constants/public-envs";
-import { API_SERVER_SECRET } from "../constants/server-envs";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
+import { API_SERVER_SECRET } from "@/constants/server-envs";
+import type { ChainService } from "@/types/chain";
 
 export async function getGasSponsoredChains() {
   if (!API_SERVER_SECRET) {

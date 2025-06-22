@@ -3,7 +3,7 @@ import type { ThirdwebClient } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { mapV4ChainToV5Chain } from "../../../../../../../../contexts/map-chains";
+import { mapV4ChainToV5Chain } from "../../../../../../../../@/utils/map-chains";
 import { ChainIcon } from "../../../../components/server/chain-icon";
 import { AddChainToWallet } from "../client/add-chain-to-wallet";
 

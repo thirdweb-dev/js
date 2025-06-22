@@ -1,5 +1,5 @@
-import { getAuthToken } from "@app/api/lib/getAuthToken";
 import { notFound } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 
 import { KeyManagement } from "./components/key-management";

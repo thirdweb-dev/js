@@ -1,15 +1,15 @@
 import { redirect } from "next/navigation";
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
-import { AppFooter } from "@/components/blocks/app-footer";
+import { AppFooter } from "@/components/footers/app-footer";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { ErrorProvider } from "../../../../../../../../contexts/error-handler";
-import { SharedContractLayout } from "../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/shared-layout";
-import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,
-} from "../../../../../../api/lib/getAuthToken";
+} from "../../../../../../../../@/api/auth-token";
+import { ErrorProvider } from "../../../../../../../../@/contexts/error-handler";
+import { SharedContractLayout } from "../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/shared-layout";
+import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { TeamHeaderLoggedIn } from "../../../../../components/TeamHeader/team-header-logged-in.client";
 import { SaveLastUsedProject } from "../../../(sidebar)/components/SaveLastUsedProject";
 import type { ProjectContractPageParams } from "./types";

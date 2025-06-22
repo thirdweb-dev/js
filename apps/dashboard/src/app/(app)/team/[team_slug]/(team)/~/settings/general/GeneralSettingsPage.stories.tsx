@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { teamStub } from "stories/stubs";
-import { storybookThirdwebClient } from "stories/utils";
+import { teamStub } from "@/storybook/stubs";
+import { storybookThirdwebClient } from "@/storybook/utils";
 import {
   DeleteTeamCard,
   LeaveTeamCard,

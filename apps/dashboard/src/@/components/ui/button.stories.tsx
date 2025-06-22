@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { StarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BadgeContainer } from "../../../stories/utils";
+import { BadgeContainer } from "@/storybook/utils";
 
 const meta = {
   component: Component,

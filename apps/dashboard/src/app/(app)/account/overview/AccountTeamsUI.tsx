@@ -8,7 +8,8 @@ import type { ThirdwebClient } from "thirdweb";
 import { createTeam } from "@/actions/createTeam";
 import type { Team } from "@/api/team";
 import type { TeamAccountRole } from "@/api/team-members";
-import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
+import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
+import { TeamPlanBadge } from "@/components/blocks/TeamPlanBadge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,8 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { TeamPlanBadge } from "../../components/TeamPlanBadge";
-import { getValidTeamPlan } from "../../team/components/TeamHeader/getValidTeamPlan";
+import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
 import { SearchInput } from "../components/SearchInput";
 
 export function AccountTeamsUI(props: {

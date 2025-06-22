@@ -1,10 +1,10 @@
 "use client";
 import { payAppThirdwebClient } from "app/pay/constants";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
 import { NATIVE_TOKEN_ADDRESS, toTokens } from "thirdweb";
 import { AutoConnect, PayEmbed } from "thirdweb/react";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 
 export function PayPageEmbed({
   chainId,

@@ -1,9 +1,3 @@
-import {
-  PROJECT_SHOWCASE_DATA,
-  PROJECT_SHOWCASE_INDUSTRIES,
-  PROJECT_SHOWCASE_ITEMS_PER_PAGE,
-} from "lib/project-showcase-constants";
-import { getAbsoluteUrl } from "lib/vercel-utils";
 import { FileTextIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -26,7 +20,13 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import {
+  PROJECT_SHOWCASE_DATA,
+  PROJECT_SHOWCASE_INDUSTRIES,
+  PROJECT_SHOWCASE_ITEMS_PER_PAGE,
+} from "@/lib/project-showcase-constants";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
+import { getAbsoluteUrl } from "@/utils/vercel";
 
 export const metadata: Metadata = {
   description: "Discover the latest web3 apps and games built on thirdweb",

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { projectStub, teamStub } from "stories/stubs";
-import { storybookThirdwebClient } from "stories/utils";
+import { projectStub, teamStub } from "@/storybook/stubs";
+import { storybookThirdwebClient } from "@/storybook/utils";
 import { ProjectGeneralSettingsPageUI } from "./ProjectGeneralSettingsPage";
 
 const meta = {

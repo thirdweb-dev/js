@@ -1,9 +1,9 @@
-import { CustomContractForm } from "components/contract-components/contract-deploy-form/custom-contract";
+import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
+import { getUserThirdwebClient } from "@/api/auth-token";
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
-import { getUserThirdwebClient } from "../../../api/lib/getAuthToken";
+import { CustomContractForm } from "@/components/contract-components/contract-deploy-form/custom-contract";
 import { loginRedirect } from "../../../login/loginRedirect";
 
 type DeployFormForUriProps = {

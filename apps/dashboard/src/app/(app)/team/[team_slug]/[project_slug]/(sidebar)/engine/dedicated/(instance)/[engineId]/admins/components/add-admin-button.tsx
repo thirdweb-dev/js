@@ -1,8 +1,4 @@
 import {
-  type EngineAdmin,
-  useEngineGrantPermissions,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import {
   Flex,
   FormControl,
   Input,
@@ -15,11 +11,13 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button } from "chakra/button";
+import { FormLabel } from "chakra/form";
 import { CirclePlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { isAddress } from "thirdweb";
-import { Button, FormLabel } from "tw-components";
+import { type EngineAdmin, useEngineGrantPermissions } from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface AddAdminButtonProps {
   instanceUrl: string;

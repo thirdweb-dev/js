@@ -1,6 +1,6 @@
 "use server";
 import type { ProjectResponse } from "@thirdweb-dev/service-utils";
-import { getAuthToken } from "app/(app)/api/lib/getAuthToken";
+import { getAuthToken } from "@/api/auth-token";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 import { UB_BASE_URL } from "./constants";
 

@@ -1,9 +1,9 @@
 "use server";
-import { defineDashboardChain } from "lib/defineDashboardChain";
 import { isAddress, toTokens, ZERO_ADDRESS } from "thirdweb";
 import { getWalletBalance } from "thirdweb/wallets";
-import { MORALIS_API_KEY } from "../constants/server-envs";
-import { serverThirdwebClient } from "../constants/thirdweb-client.server";
+import { MORALIS_API_KEY } from "@/constants/server-envs";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { defineDashboardChain } from "@/lib/defineDashboardChain";
 
 type BalanceQueryResponse = Array<{
   balance: string;

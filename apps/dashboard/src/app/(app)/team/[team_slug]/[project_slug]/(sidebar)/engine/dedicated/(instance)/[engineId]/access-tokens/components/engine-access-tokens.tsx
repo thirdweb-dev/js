@@ -1,16 +1,19 @@
 "use client";
 
+import { ButtonGroup, Flex } from "@chakra-ui/react";
+import { Button } from "chakra/button";
+import { Heading } from "chakra/heading";
+import { Link } from "chakra/link";
+import { Text } from "chakra/text";
+import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
+import { CodeClient } from "@/components/ui/code/code.client";
+import { InlineCode } from "@/components/ui/inline-code";
 import {
   useEngineAccessTokens,
   useEngineKeypairs,
   useHasEngineFeature,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { ButtonGroup, Flex } from "@chakra-ui/react";
-import { useState } from "react";
-import type { ThirdwebClient } from "thirdweb";
-import { Button, Heading, Link, Text } from "tw-components";
-import { CodeClient } from "@/components/ui/code/code.client";
-import { InlineCode } from "@/components/ui/inline-code";
+} from "@/hooks/useEngine";
 import { AccessTokensTable } from "./access-tokens-table";
 import { AddAccessTokenButton } from "./add-access-token-button";
 import { AddKeypairButton } from "./add-keypair-button";

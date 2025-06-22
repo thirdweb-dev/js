@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
 
-import { getAuthToken } from "app/(app)/api/lib/getAuthToken";
-import { THIRDWEB_INSIGHT_API_DOMAIN } from "constants/urls";
+import { getAuthToken } from "@/api/auth-token";
+import { THIRDWEB_INSIGHT_API_DOMAIN } from "@/constants/urls";
 
 export interface WebhookResponse {
   id: string;

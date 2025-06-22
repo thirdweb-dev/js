@@ -1,11 +1,5 @@
 "use client";
 
-import {
-  type EngineInstance,
-  useEngineGetDeploymentPublicConfiguration,
-  useEngineSystemHealth,
-  useEngineUpdateDeployment,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import { formatDistanceToNow } from "date-fns";
 import { CircleArrowUpIcon, TriangleAlertIcon } from "lucide-react";
 import Link from "next/link";
@@ -33,6 +27,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import {
+  type EngineInstance,
+  useEngineGetDeploymentPublicConfiguration,
+  useEngineSystemHealth,
+  useEngineUpdateDeployment,
+} from "@/hooks/useEngine";
 
 export const EngineVersionBadge = ({
   instance,

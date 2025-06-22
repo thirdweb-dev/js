@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { teamsAndProjectsStub } from "stories/stubs";
+import { ThirdwebProvider } from "thirdweb/react";
+import { Button } from "@/components/ui/button";
+import { teamsAndProjectsStub } from "@/storybook/stubs";
 import {
   BadgeContainer,
   mobileViewport,
   storybookThirdwebClient,
-} from "stories/utils";
-import { ThirdwebProvider } from "thirdweb/react";
-import { Button } from "@/components/ui/button";
+} from "@/storybook/utils";
 import {
   AccountHeaderDesktopUI,
   AccountHeaderMobileUI,

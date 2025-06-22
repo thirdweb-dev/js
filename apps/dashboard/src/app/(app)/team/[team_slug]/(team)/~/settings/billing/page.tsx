@@ -1,13 +1,13 @@
 import { redirect } from "next/navigation";
 import { getStripeBalance } from "@/actions/stripe-actions";
+import { getAuthToken } from "@/api/auth-token";
 import { getTeamBySlug, type Team } from "@/api/team";
 import { getMemberByAccountId } from "@/api/team-members";
 import { getTeamSubscriptions } from "@/api/team-subscription";
+import { CreditsInfoCard } from "@/components/billing/PlanCard";
+import { Coupons } from "@/components/billing/SubscriptionCoupons/Coupons";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { CreditsInfoCard } from "../../../../../../../../components/settings/Account/Billing/PlanCard";
-import { Coupons } from "../../../../../../../../components/settings/Account/Billing/SubscriptionCoupons/Coupons";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
-import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import { CreditBalanceSection } from "./components/credit-balance-section.client";
 import { PlanInfoCardClient } from "./components/PlanInfoCard.client";
 

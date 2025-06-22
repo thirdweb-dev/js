@@ -1,6 +1,6 @@
-import { getAuthToken } from "@app/api/lib/getAuthToken";
-import type { TransactionStats } from "types/analytics";
+import { getAuthToken } from "@/api/auth-token";
 import { NEXT_PUBLIC_ENGINE_CLOUD_URL } from "@/constants/public-envs";
+import type { TransactionStats } from "@/types/analytics";
 import type {
   Transaction,
   TransactionsResponse,

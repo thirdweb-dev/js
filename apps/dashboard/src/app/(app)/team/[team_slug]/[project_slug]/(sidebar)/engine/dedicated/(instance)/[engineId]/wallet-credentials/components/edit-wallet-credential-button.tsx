@@ -1,11 +1,11 @@
-import {
-  useEngineUpdateWalletCredential,
-  type WalletCredential,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import { PencilIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import {
+  useEngineUpdateWalletCredential,
+  type WalletCredential,
+} from "@/hooks/useEngine";
 import { CredentialForm } from "./credential-form";
 import type { CredentialUpdateFormData } from "./types";
 

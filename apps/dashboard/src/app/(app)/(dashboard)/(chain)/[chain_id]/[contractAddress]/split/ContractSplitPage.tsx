@@ -1,6 +1,5 @@
 "use client";
 
-import { useSplitBalances } from "@3rdweb-sdk/react/hooks/useSplit";
 import {
   Flex,
   SimpleGrid,
@@ -9,7 +8,9 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
-import { useAllChainsData } from "hooks/chains/allChains";
+import { Card } from "chakra/card";
+import { Heading } from "chakra/heading";
+import { Text } from "chakra/text";
 import { useMemo } from "react";
 import {
   type ThirdwebContract,
@@ -23,8 +24,9 @@ import {
   useReadContract,
   useWalletBalance,
 } from "thirdweb/react";
-import { Card, Heading, Text } from "tw-components";
-import { shortenIfAddress } from "utils/usedapp-external";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { useSplitBalances } from "@/hooks/useSplit";
+import { shortenIfAddress } from "@/utils/usedapp-external";
 import { DistributeButton } from "./components/distribute-button";
 
 export type Balance = {

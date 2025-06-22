@@ -3,8 +3,8 @@ import { getProject } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { getMemberByAccountId } from "@/api/team-members";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { getAuthToken } from "../../../../../../../@/api/auth-token";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
-import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../login/loginRedirect";
 import { ProjectGeneralSettingsPage } from "./ProjectGeneralSettingsPage";
 

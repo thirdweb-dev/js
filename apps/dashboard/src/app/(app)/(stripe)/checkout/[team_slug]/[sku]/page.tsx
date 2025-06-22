@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import type { ProductSKU } from "@/lib/billing";
+import type { ProductSKU } from "@/types/billing";
 import { StripeRedirectErrorPage } from "../../../_components/StripeRedirectErrorPage";
 import {
   getBillingCheckoutUrl,

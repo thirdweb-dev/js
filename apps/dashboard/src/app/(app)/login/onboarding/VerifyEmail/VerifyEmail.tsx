@@ -1,5 +1,4 @@
 "use client";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
@@ -13,6 +12,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import type { Account } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
 import {
   type EmailConfirmationValidationSchema,

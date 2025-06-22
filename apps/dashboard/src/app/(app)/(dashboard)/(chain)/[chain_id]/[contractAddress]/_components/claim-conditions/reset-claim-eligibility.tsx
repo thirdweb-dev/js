@@ -1,15 +1,15 @@
 "use client";
 
-import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleHelpIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
+import { AdminOnly } from "@/components/contracts/roles/admin-only";
+import { TransactionButton } from "@/components/tx-button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface ResetClaimEligibilityProps {
   isErc20: boolean;

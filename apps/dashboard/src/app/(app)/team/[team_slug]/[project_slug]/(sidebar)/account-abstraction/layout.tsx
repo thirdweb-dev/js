@@ -1,8 +1,8 @@
-import { getAbsoluteUrl } from "lib/vercel-utils";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
+import { getAbsoluteUrl } from "@/utils/vercel";
 import { AccountAbstractionLayout } from "./AccountAbstractionPage";
 
 export default async function Page(props: {

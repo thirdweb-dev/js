@@ -1,14 +1,13 @@
 "use client";
 
-import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
-import { BatchLazyMint } from "core-ui/batch-upload/batch-lazy-mint";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { FileStackIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
+import { BatchLazyMint } from "@/components/batch-upload/batch-lazy-mint";
+import { MinterOnly } from "@/components/contracts/roles/minter-only";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -17,6 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface BatchLazyMintButtonProps {
   canCreateDelayedRevealBatch: boolean;

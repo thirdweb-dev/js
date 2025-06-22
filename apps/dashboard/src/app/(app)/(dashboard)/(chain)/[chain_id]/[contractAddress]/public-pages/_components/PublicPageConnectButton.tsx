@@ -1,10 +1,10 @@
 "use client";
 
-import { getSDKTheme } from "app/(app)/components/sdk-component-theme";
-import { useAllChainsData } from "hooks/chains/allChains";
 import { useTheme } from "next-themes";
 import { ConnectButton } from "thirdweb/react";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { getSDKTheme } from "@/utils/sdk-component-theme";
 
 const client = getClientThirdwebClient();
 

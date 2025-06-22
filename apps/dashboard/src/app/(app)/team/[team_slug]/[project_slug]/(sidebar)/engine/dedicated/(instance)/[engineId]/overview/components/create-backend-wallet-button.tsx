@@ -1,15 +1,4 @@
-import {
-  type CreateBackendWalletInput,
-  type EngineInstance,
-  useEngineCreateBackendWallet,
-  useHasEngineFeature,
-  type WalletConfigResponse,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import { Dialog } from "@radix-ui/react-dialog";
-import {
-  EngineBackendWalletOptions,
-  type EngineBackendWalletType,
-} from "lib/engine";
 import { CircleAlertIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useId, useState } from "react";
@@ -37,6 +26,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  EngineBackendWalletOptions,
+  type EngineBackendWalletType,
+} from "@/constants/engine";
+import {
+  type CreateBackendWalletInput,
+  type EngineInstance,
+  useEngineCreateBackendWallet,
+  useHasEngineFeature,
+  type WalletConfigResponse,
+} from "@/hooks/useEngine";
 
 interface CreateBackendWalletButtonProps {
   instance: EngineInstance;

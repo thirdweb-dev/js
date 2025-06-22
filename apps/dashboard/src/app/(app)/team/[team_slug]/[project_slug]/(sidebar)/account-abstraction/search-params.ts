@@ -1,5 +1,5 @@
-import { getLastNDaysRange } from "components/analytics/date-range-selector";
 import { createLoader, parseAsIsoDate, parseAsStringEnum } from "nuqs/server";
+import { getLastNDaysRange } from "@/components/analytics/date-range-selector";
 
 export const searchParams = {
   from: parseAsIsoDate.withDefault(getLastNDaysRange("last-120").from),

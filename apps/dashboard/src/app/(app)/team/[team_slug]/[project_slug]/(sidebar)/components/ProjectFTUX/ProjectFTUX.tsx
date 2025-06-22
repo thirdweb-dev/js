@@ -1,9 +1,3 @@
-import { DotNetIcon } from "components/icons/brand-icons/DotNetIcon";
-import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
-import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
-import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
-import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
-import { UnrealIcon } from "components/icons/brand-icons/UnrealIcon";
 import {
   ArrowLeftRightIcon,
   ChevronRightIcon,
@@ -15,9 +9,15 @@ import type { Project } from "@/api/projects";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CodeServer } from "@/components/ui/code/code.server";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { ContractIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/ContractIcon";
-import { InsightIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/InsightIcon";
-import { PayIcon } from "../../../../../../(dashboard)/(chain)/components/server/icons/PayIcon";
+import { DotNetIcon } from "@/icons/brand-icons/DotNetIcon";
+import { GithubIcon } from "@/icons/brand-icons/GithubIcon";
+import { ReactIcon } from "@/icons/brand-icons/ReactIcon";
+import { TypeScriptIcon } from "@/icons/brand-icons/TypeScriptIcon";
+import { UnityIcon } from "@/icons/brand-icons/UnityIcon";
+import { UnrealIcon } from "@/icons/brand-icons/UnrealIcon";
+import { ContractIcon } from "@/icons/ContractIcon";
+import { InsightIcon } from "@/icons/InsightIcon";
+import { PayIcon } from "@/icons/PayIcon";
 import { ClientIDSection } from "./ClientIDSection";
 import { IntegrateAPIKeyCodeTabs } from "./IntegrateAPIKeyCodeTabs";
 import { SecretKeySection } from "./SecretKeySection";

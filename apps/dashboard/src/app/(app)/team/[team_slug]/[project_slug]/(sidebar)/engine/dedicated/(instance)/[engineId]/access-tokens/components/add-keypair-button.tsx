@@ -1,8 +1,4 @@
 import {
-  type KeypairAlgorithm,
-  useEngineAddKeypair,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import {
   Alert,
   Flex,
   FormControl,
@@ -17,11 +13,14 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button } from "chakra/button";
+import { FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
 import { CirclePlusIcon } from "lucide-react";
 import { useState } from "react";
-import { Button, FormLabel, Text } from "tw-components";
 import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
+import { type KeypairAlgorithm, useEngineAddKeypair } from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 const KEYPAIR_ALGORITHM_DETAILS: Record<
   KeypairAlgorithm,

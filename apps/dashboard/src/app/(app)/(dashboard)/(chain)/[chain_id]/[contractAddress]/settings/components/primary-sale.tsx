@@ -1,13 +1,10 @@
 "use client";
-import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { AddressOrEnsSchema } from "constants/schemas";
-import { SolidityInput } from "contract-ui/components/solidity-inputs";
-
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Card } from "chakra/card";
+import { FormErrorMessage, FormLabel } from "chakra/form";
+import { Heading } from "chakra/heading";
+import { Text } from "chakra/text";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
@@ -20,14 +17,13 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
-import {
-  Card,
-  FormErrorMessage,
-  FormLabel,
-  Heading,
-  Text,
-} from "tw-components";
 import { z } from "zod";
+import { AdminOnly } from "@/components/contracts/roles/admin-only";
+import { SolidityInput } from "@/components/solidity-inputs";
+import { TransactionButton } from "@/components/tx-button";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { AddressOrEnsSchema } from "@/schema/schemas";
+import type { ExtensionDetectedState } from "@/types/ExtensionDetectedState";
 import { SettingDetectedState } from "./detected-state";
 
 const CommonPrimarySaleSchema = z.object({

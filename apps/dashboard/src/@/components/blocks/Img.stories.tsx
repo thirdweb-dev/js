@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { ImageIcon } from "lucide-react";
 import { useState } from "react";
-import { BadgeContainer } from "../../../stories/utils";
+import { BadgeContainer } from "@/storybook/utils";
 import { Button } from "../ui/button";
 import { Spinner } from "../ui/Spinner/Spinner";
 import { Img } from "./Img";

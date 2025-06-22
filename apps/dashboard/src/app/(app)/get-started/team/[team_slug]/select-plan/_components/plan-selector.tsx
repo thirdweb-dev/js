@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { pollWithTimeout } from "utils/pollWithTimeout";
 import {
   reportOnboardingPlanSelected,
   reportOnboardingPlanSelectionSkipped,
@@ -10,8 +9,9 @@ import type { Team } from "@/api/team";
 import { PricingCard } from "@/components/blocks/pricing-card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useStripeRedirectEvent } from "@/hooks/stripe/redirect-event";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useStripeRedirectEvent } from "../../../../../(stripe)/stripe-redirect/stripeRedirectChannel";
+import { pollWithTimeout } from "@/utils/pollWithTimeout";
 
 export function PlanSelector(props: {
   team: Team;

@@ -8,7 +8,6 @@ import { type PropsWithChildren, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { randomPrivateKey } from "thirdweb/wallets";
-import { shortenString } from "utils/usedapp-external";
 import { z } from "zod";
 import {
   createWebhook,
@@ -55,6 +54,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { shortenString } from "@/utils/usedapp-external";
 
 type PayWebhooksPageProps = {
   clientId: string;

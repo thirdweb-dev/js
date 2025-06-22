@@ -5,8 +5,7 @@ import { format, formatDistance } from "date-fns";
 import { PinOffIcon } from "lucide-react";
 import { useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
-import { toSize } from "utils/number";
-import { PaginationButtons } from "@/components/pagination-buttons";
+import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -21,6 +20,7 @@ import {
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { NEXT_PUBLIC_DASHBOARD_UPLOAD_SERVER } from "@/constants/public-envs";
+import { toSize } from "@/utils/number";
 
 interface PinnedFilesResponse {
   result: PinnedFilesResult;

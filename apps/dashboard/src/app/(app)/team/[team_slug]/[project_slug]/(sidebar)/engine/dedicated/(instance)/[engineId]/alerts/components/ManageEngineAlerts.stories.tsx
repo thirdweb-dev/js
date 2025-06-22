@@ -1,14 +1,14 @@
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { useMutation } from "@tanstack/react-query";
 import type {
   CreateNotificationChannelInput,
   EngineNotificationChannel,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import type { Meta, StoryObj } from "@storybook/nextjs";
-import { useMutation } from "@tanstack/react-query";
+} from "@/hooks/useEngine";
 import {
   createEngineAlertRuleStub,
   createEngineNotificationChannelStub,
-} from "stories/stubs";
-import { BadgeContainer } from "stories/utils";
+} from "@/storybook/stubs/engine";
+import { BadgeContainer } from "@/storybook/utils";
 import { ManageEngineAlertsSectionUI } from "./ManageEngineAlerts";
 
 const meta = {

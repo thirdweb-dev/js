@@ -1,19 +1,16 @@
-import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
 import { getProjects } from "@/api/projects";
 import { getTeamBySlug, getTeams } from "@/api/team";
-import { AppFooter } from "@/components/blocks/app-footer";
+import { CustomChatButton } from "@/components/chat/CustomChatButton";
+import { AppFooter } from "@/components/footers/app-footer";
+import { AnnouncementBanner } from "@/components/misc/AnnouncementBanner";
 import { Button } from "@/components/ui/button";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { CustomChatButton } from "../../../../../components/CustomChat/CustomChatButton";
 import { siwaExamplePrompts } from "../../../(dashboard)/support/definitions";
 import { getValidAccount } from "../../../account/settings/getAccount";
-import {
-  getAuthToken,
-  getAuthTokenWalletAddress,
-} from "../../../api/lib/getAuthToken";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
 
 export default async function TeamLayout(props: {

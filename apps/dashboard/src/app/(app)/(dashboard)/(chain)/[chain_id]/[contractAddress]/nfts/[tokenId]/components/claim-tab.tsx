@@ -1,15 +1,15 @@
 "use client";
 
 import { Flex, FormControl, Input } from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
+import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
-import { parseError } from "utils/errorParser";
+import { TransactionButton } from "@/components/tx-button";
+import { parseError } from "@/utils/errorParser";
 
 interface ClaimTabProps {
   contract: ThirdwebContract;

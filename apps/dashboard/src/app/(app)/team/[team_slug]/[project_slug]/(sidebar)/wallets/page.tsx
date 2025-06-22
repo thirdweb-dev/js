@@ -1,8 +1,8 @@
-import type { Range } from "components/analytics/date-range-selector";
-import { InAppWalletAnalytics } from "components/embedded-wallets/Analytics";
-import { InAppWalletsSummary } from "components/embedded-wallets/Analytics/Summary";
 import { redirect } from "next/navigation";
 import { getProject } from "@/api/projects";
+import type { Range } from "@/components/analytics/date-range-selector";
+import { InAppWalletAnalytics } from "./analytics/chart";
+import { InAppWalletsSummary } from "./analytics/chart/Summary";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;

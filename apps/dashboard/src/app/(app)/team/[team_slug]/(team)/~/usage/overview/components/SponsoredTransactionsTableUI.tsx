@@ -1,16 +1,14 @@
 "use client";
-import { ChainIconClient } from "components/icons/ChainIcon";
 import { format, formatDistance } from "date-fns";
-import { useAllChainsData } from "hooks/chains/allChains";
 import { ExternalLinkIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import type { ThirdwebClient } from "thirdweb";
-import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
+import { ProjectAvatar } from "@/components/blocks/avatar/project-avatar";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { SelectWithSearch } from "@/components/blocks/select-with-search";
 import { WalletAddress } from "@/components/blocks/wallet-address";
-import { PaginationButtons } from "@/components/pagination-buttons";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -24,6 +22,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { ChainIconClient } from "@/icons/ChainIcon";
 import { cn } from "@/lib/utils";
 
 export type SponsoredTransaction = {

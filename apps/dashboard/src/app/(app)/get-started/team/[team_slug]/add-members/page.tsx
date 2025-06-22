@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../../../@/api/auth-token";
 import { TeamOnboardingLayout } from "../../../../login/onboarding/onboarding-layout";
 import { InviteTeamMembers } from "../../../../login/onboarding/team-onboarding/team-onboarding";
 

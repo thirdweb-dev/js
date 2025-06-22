@@ -1,4 +1,3 @@
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { CirclePlusIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -6,13 +5,14 @@ import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
-import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
+import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
+import { TeamPlanBadge } from "@/components/blocks/TeamPlanBadge";
 import { Button } from "@/components/ui/button";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Separator } from "@/components/ui/separator";
+import type { Account } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
-import { TeamPlanBadge } from "../../../components/TeamPlanBadge";
-import { getValidTeamPlan } from "./getValidTeamPlan";
+import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
 import { SearchInput } from "./SearchInput";
 import { TeamVerifiedIcon } from "./team-verified-icon";
 

@@ -1,11 +1,11 @@
 "use client";
-import { defineDashboardChain } from "lib/defineDashboardChain";
 import { useTheme } from "next-themes";
 import type { ThirdwebClient } from "thirdweb";
 import { PayEmbed } from "thirdweb/react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { getSDKTheme } from "../../../../../../components/sdk-component-theme";
+import { defineDashboardChain } from "@/lib/defineDashboardChain";
+import { getSDKTheme } from "../../../../../../../../@/utils/sdk-component-theme";
 
 export function PayModalButton(props: {
   chainId: number;

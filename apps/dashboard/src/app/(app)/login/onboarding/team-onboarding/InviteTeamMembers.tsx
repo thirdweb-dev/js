@@ -3,7 +3,6 @@
 import { ArrowRightIcon, CircleArrowUpIcon } from "lucide-react";
 import { useState, useTransition } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { pollWithTimeout } from "utils/pollWithTimeout";
 import {
   reportOnboardingMembersInvited,
   reportOnboardingMembersSkipped,
@@ -23,8 +22,9 @@ import {
 } from "@/components/ui/sheet";
 import { TabButtons } from "@/components/ui/tabs";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import { useStripeRedirectEvent } from "@/hooks/stripe/redirect-event";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useStripeRedirectEvent } from "../../../(stripe)/stripe-redirect/stripeRedirectChannel";
+import { pollWithTimeout } from "@/utils/pollWithTimeout";
 import {
   InviteSection,
   type InviteTeamMembersFn,

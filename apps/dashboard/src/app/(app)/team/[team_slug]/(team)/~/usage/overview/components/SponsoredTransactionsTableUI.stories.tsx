@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useId, useState } from "react";
-import { projectStub } from "stories/stubs";
-import { storybookThirdwebClient } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { projectStub } from "@/storybook/stubs";
+import { storybookThirdwebClient } from "@/storybook/utils";
 import {
   type SponsoredTransaction,
   SponsoredTransactionsTableUI,

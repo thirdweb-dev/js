@@ -1,7 +1,7 @@
 "use client";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 
 import { useState } from "react";
+import type { Account } from "@/hooks/useApi";
 import { LinkWalletPrompt } from "./LinkWalletPrompt/LinkWalletPrompt";
 import { LoginOrSignup } from "./LoginOrSignup/LoginOrSignup";
 import { AccountOnboardingLayout } from "./onboarding-layout";

@@ -1,8 +1,5 @@
 "use client";
 
-import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import { useIsMinter } from "@3rdweb-sdk/react/hooks/useContractRoles";
-import { StepsCard } from "components/dashboard/StepsCard";
 import Link from "next/link";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
@@ -12,6 +9,9 @@ import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import { getAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
+import { StepsCard } from "@/components/blocks/StepsCard";
+import { AdminOnly } from "@/components/contracts/roles/admin-only";
+import { useIsMinter } from "@/hooks/useContractRoles";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 

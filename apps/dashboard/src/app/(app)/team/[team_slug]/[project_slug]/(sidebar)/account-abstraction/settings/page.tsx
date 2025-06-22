@@ -1,14 +1,14 @@
-import { getAuthToken } from "@app/api/lib/getAuthToken";
-import { getValidTeamPlan } from "@app/team/components/TeamHeader/getValidTeamPlan";
-import { AccountAbstractionSettingsPage } from "components/smart-wallets/SponsorshipPolicies";
+import { AccountAbstractionSettingsPage } from "@app/team/[team_slug]/[project_slug]/(sidebar)/account-abstraction/settings/SponsorshipPolicies";
+import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import { CircleAlertIcon } from "lucide-react";
 import { redirect } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;

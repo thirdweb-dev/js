@@ -1,8 +1,8 @@
 "use client";
 
-import { SupportForm_SelectInput } from "components/help/contact-forms/shared/SupportForm_SelectInput";
-import { SupportForm_TeamSelection } from "components/help/contact-forms/shared/SupportForm_TeamSelection";
-import { SupportForm_TelegramInput } from "components/help/contact-forms/shared/SupportForm_TelegramInput";
+import { SupportForm_SelectInput } from "@app/(dashboard)/support/create-ticket/components/contact-forms/shared/SupportForm_SelectInput";
+import { SupportForm_TeamSelection } from "@app/(dashboard)/support/create-ticket/components/contact-forms/shared/SupportForm_TeamSelection";
+import { SupportForm_TelegramInput } from "@app/(dashboard)/support/create-ticket/components/contact-forms/shared/SupportForm_TelegramInput";
 import dynamic from "next/dynamic";
 import {
   type ReactElement,
@@ -19,41 +19,26 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { createTicketAction } from "./create-ticket.action";
 
-const ConnectSupportForm = dynamic(
-  () => import("../../../../../../components/help/contact-forms/connect"),
-  {
-    loading: () => <Skeleton className="h-12" />,
-    ssr: false,
-  },
-);
-const EngineSupportForm = dynamic(
-  () => import("../../../../../../components/help/contact-forms/engine"),
-  {
-    loading: () => <Skeleton className="h-12" />,
-    ssr: false,
-  },
-);
-const ContractSupportForm = dynamic(
-  () => import("../../../../../../components/help/contact-forms/contracts"),
-  {
-    loading: () => <Skeleton className="h-12" />,
-    ssr: false,
-  },
-);
-const AccountSupportForm = dynamic(
-  () => import("../../../../../../components/help/contact-forms/account"),
-  {
-    loading: () => <Skeleton className="h-12" />,
-    ssr: false,
-  },
-);
-const OtherSupportForm = dynamic(
-  () => import("../../../../../../components/help/contact-forms/other"),
-  {
-    loading: () => <Skeleton className="h-12" />,
-    ssr: false,
-  },
-);
+const ConnectSupportForm = dynamic(() => import("./contact-forms/connect"), {
+  loading: () => <Skeleton className="h-12" />,
+  ssr: false,
+});
+const EngineSupportForm = dynamic(() => import("./contact-forms/engine"), {
+  loading: () => <Skeleton className="h-12" />,
+  ssr: false,
+});
+const ContractSupportForm = dynamic(() => import("./contact-forms/contracts"), {
+  loading: () => <Skeleton className="h-12" />,
+  ssr: false,
+});
+const AccountSupportForm = dynamic(() => import("./contact-forms/account"), {
+  loading: () => <Skeleton className="h-12" />,
+  ssr: false,
+});
+const OtherSupportForm = dynamic(() => import("./contact-forms/other"), {
+  loading: () => <Skeleton className="h-12" />,
+  ssr: false,
+});
 
 const productOptions: { label: string; component: ReactElement }[] = [
   {

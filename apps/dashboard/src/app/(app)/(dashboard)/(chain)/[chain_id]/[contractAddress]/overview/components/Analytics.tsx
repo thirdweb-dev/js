@@ -1,10 +1,5 @@
 "use client";
 
-import {
-  useContractEventAnalytics,
-  useContractTransactionAnalytics,
-  useContractUniqueWalletAnalytics,
-} from "data/analytics/hooks";
 import { differenceInCalendarDays, format } from "date-fns";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
@@ -13,6 +8,11 @@ import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 import { Button } from "@/components/ui/button";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
+import {
+  useContractEventAnalytics,
+  useContractTransactionAnalytics,
+  useContractUniqueWalletAnalytics,
+} from "../../analytics/utils/hooks";
 
 function getDateKey(date: Date, precision: "day" | "hour") {
   const dayKey = date.toISOString().split("T")[0];

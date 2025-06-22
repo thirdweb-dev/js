@@ -1,11 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FileInput } from "components/shared/FileInput";
 import { ArrowLeftIcon, ArrowRightIcon, AsteriskIcon } from "lucide-react";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
+import { FileInput } from "@/components/blocks/FileInput";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { Badge } from "@/components/ui/badge";

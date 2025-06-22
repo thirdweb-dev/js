@@ -2,7 +2,6 @@
 
 import * as Sentry from "@sentry/nextjs";
 import { useMutation } from "@tanstack/react-query";
-import { TransactionButton } from "components/buttons/TransactionButton";
 import { InfoIcon } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
@@ -17,6 +16,7 @@ import {
 import { uninstallModuleByProxy } from "thirdweb/modules";
 import type { Account } from "thirdweb/wallets";
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import {

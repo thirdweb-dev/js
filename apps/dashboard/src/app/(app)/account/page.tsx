@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getTeams } from "@/api/team";
 import { getMemberByAccountId } from "@/api/team-members";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../api/lib/getAuthToken";
+import { getAuthToken } from "../../../@/api/auth-token";
 import { loginRedirect } from "../login/loginRedirect";
 import { AccountTeamsUI } from "./overview/AccountTeamsUI";
 import { getValidAccount } from "./settings/getAccount";

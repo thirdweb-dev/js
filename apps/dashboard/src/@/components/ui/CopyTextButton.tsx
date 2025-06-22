@@ -1,7 +1,7 @@
 "use client";
 
-import { useClipboard } from "hooks/useClipboard";
 import { CheckIcon, CopyIcon } from "lucide-react";
+import { useClipboard } from "@/hooks/useClipboard";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
 import { ToolTipLabel } from "./tooltip";

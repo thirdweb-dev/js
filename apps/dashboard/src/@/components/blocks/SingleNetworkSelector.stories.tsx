@@ -1,9 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useState } from "react";
-import {
-  BadgeContainer,
-  storybookThirdwebClient,
-} from "../../../stories/utils";
+import { BadgeContainer, storybookThirdwebClient } from "@/storybook/utils";
 import { SingleNetworkSelector } from "./NetworkSelectors";
 
 const meta = {

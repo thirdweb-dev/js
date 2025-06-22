@@ -1,13 +1,13 @@
-import { LAST_USED_TEAM_ID } from "constants/cookies";
 import { cookies } from "next/headers";
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
+import { LAST_USED_TEAM_ID } from "@/constants/cookies";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getRawAccount } from "../../../account/settings/getAccount";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,
-} from "../../../api/lib/getAuthToken";
+} from "../../../../../@/api/auth-token";
+import { getRawAccount } from "../../../account/settings/getAccount";
 import { HeaderLoggedOut } from "../HeaderLoggedOut/HeaderLoggedOut";
 import { TeamHeaderLoggedIn } from "./team-header-logged-in.client";
 

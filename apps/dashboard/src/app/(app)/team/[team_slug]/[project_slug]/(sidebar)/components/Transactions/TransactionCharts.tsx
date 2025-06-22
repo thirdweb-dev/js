@@ -1,7 +1,7 @@
-import { fetchDashboardContractMetadata } from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
 import { defineChain, getContract, type ThirdwebClient } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
-import type { TransactionStats } from "types/analytics";
+import { fetchDashboardContractMetadata } from "@/hooks/useDashboardContractMetadata";
+import type { TransactionStats } from "@/types/analytics";
 import { PieChartCard } from "../../../../../components/Analytics/PieChartCard";
 import { TransactionsChartCardUI } from "../../../../(team)/_components/TransactionsCard";
 

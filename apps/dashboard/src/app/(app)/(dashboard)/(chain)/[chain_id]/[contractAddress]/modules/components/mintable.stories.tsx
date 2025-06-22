@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useMutation } from "@tanstack/react-query";
 import { useId, useState } from "react";
 import { toast } from "sonner";
-import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -13,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { BadgeContainer, storybookThirdwebClient } from "@/storybook/utils";
 import {
   MintableModuleUI,
   type MintFormValues,

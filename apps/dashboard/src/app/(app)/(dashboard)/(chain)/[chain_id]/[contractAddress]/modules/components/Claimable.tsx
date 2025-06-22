@@ -2,10 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { TransactionButton } from "components/buttons/TransactionButton";
 import { addDays, fromUnixTime } from "date-fns";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import {
   type Dispatch,
@@ -32,6 +29,7 @@ import {
 import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { z } from "zod";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { TransactionButton } from "@/components/tx-button";
 import {
   Accordion,
   AccordionContent,
@@ -54,6 +52,8 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { addressSchema } from "../zod-schemas";
 import { CurrencySelector } from "./CurrencySelector";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";

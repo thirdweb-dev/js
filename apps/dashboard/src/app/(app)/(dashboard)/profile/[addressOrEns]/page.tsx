@@ -1,9 +1,9 @@
-import { replaceDeployerAddress } from "lib/publisher-utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { shortenIfAddress } from "utils/usedapp-external";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { replaceDeployerAddress } from "@/lib/publisher-utils";
+import { shortenIfAddress } from "@/utils/usedapp-external";
 import { ProfileUI } from "./ProfileUI";
 import { resolveAddressAndEns } from "./resolveAddressAndEns";
 

@@ -1,8 +1,8 @@
 import "server-only";
+import { getAuthToken } from "@/api/auth-token";
 import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
-import type { ProductSKU } from "@/lib/billing";
-import { getAbsoluteUrl } from "../../../../lib/vercel-utils";
-import { getAuthToken } from "../../api/lib/getAuthToken";
+import type { ProductSKU } from "@/types/billing";
+import { getAbsoluteUrl } from "@/utils/vercel";
 
 export async function getBillingCheckoutUrl(options: {
   teamSlug: string;

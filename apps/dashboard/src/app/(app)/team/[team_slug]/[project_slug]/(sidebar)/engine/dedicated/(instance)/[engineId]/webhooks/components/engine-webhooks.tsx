@@ -1,7 +1,9 @@
 "use client";
 
-import { useEngineWebhooks } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Heading, Link, Text } from "tw-components";
+import { Heading } from "chakra/heading";
+import { Link } from "chakra/link";
+import { Text } from "chakra/text";
+import { useEngineWebhooks } from "@/hooks/useEngine";
 import { AddWebhookButton } from "./add-webhook-button";
 import { WebhooksTable } from "./webhooks-table";
 

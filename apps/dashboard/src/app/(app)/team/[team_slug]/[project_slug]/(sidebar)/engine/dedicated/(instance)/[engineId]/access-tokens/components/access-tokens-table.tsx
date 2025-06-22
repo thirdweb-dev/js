@@ -1,9 +1,4 @@
 import {
-  type AccessToken,
-  useEngineRevokeAccessToken,
-  useEngineUpdateAccessToken,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import {
   Flex,
   FormControl,
   Input,
@@ -18,14 +13,21 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { TWTable } from "components/shared/TWTable";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button } from "chakra/button";
+import { FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { Button, FormLabel, Text } from "tw-components";
-import { toDateTimeLocal } from "utils/date-utils";
+import { TWTable } from "@/components/blocks/TWTable";
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import {
+  type AccessToken,
+  useEngineRevokeAccessToken,
+  useEngineUpdateAccessToken,
+} from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { toDateTimeLocal } from "@/utils/date-utils";
 
 interface AccessTokensTableProps {
   instanceUrl: string;

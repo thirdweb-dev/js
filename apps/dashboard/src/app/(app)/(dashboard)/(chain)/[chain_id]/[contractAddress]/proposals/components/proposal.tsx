@@ -1,10 +1,8 @@
 "use client";
 
-import {
-  tokensDelegated,
-  votingTokenDecimals,
-} from "@3rdweb-sdk/react/hooks/useVote";
-import { TransactionButton } from "components/buttons/TransactionButton";
+import { Button } from "chakra/button";
+import { Card } from "chakra/card";
+import { Text } from "chakra/text";
 import { CheckIcon, MinusIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -15,7 +13,8 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
-import { Button, Card, Text } from "tw-components";
+import { TransactionButton } from "@/components/tx-button";
+import { tokensDelegated, votingTokenDecimals } from "@/hooks/useVote";
 
 const ProposalStateToMetadataMap: Record<
   keyof typeof VoteExt.ProposalState,

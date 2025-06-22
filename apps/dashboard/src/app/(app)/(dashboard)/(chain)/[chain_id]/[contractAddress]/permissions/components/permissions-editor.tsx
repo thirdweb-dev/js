@@ -1,8 +1,4 @@
 import {
-  AdminOnly,
-  AdminOrSelfOnly,
-} from "@3rdweb-sdk/react/components/roles/admin-only";
-import {
   Flex,
   FormControl,
   IconButton,
@@ -11,8 +7,9 @@ import {
   InputLeftAddon,
   InputRightAddon,
 } from "@chakra-ui/react";
-import { DelayedDisplay } from "components/delayed-display/delayed-display";
-import { useClipboard } from "hooks/useClipboard";
+import { Button } from "chakra/button";
+import { FormErrorMessage } from "chakra/form";
+import { Text } from "chakra/text";
 import {
   ClipboardPasteIcon,
   CopyIcon,
@@ -24,8 +21,13 @@ import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { isAddress, type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
-import { Button, FormErrorMessage, Text } from "tw-components";
+import {
+  AdminOnly,
+  AdminOrSelfOnly,
+} from "@/components/contracts/roles/admin-only";
+import { DelayedDisplay } from "@/components/misc/delayed-display";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useClipboard } from "@/hooks/useClipboard";
 
 interface PermissionEditorProps {
   role: string;

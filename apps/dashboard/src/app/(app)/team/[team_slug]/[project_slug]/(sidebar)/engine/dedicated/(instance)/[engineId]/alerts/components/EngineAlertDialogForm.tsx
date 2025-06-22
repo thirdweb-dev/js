@@ -1,9 +1,5 @@
 "use client";
 
-import {
-  type EngineAlertRule,
-  EngineNotificationChannelTypeConfig,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -34,6 +30,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  type EngineAlertRule,
+  EngineNotificationChannelTypeConfig,
+} from "@/hooks/useEngine";
 
 const alertFormSchema = z.object({
   subscriptionRoutes: z.array(z.string()),

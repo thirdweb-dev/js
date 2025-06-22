@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { stripeRedirectPageChannel } from "./stripeRedirectChannel";
+import { stripeRedirectPageChannel } from "@/hooks/stripe/redirect-event";
 
 export default function ClosePage() {
   // eslint-disable-next-line no-restricted-syntax

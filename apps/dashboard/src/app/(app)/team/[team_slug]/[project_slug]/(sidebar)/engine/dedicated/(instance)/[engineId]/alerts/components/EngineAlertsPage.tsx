@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  type EngineInstance,
-  useEngineAlertRules,
-} from "@3rdweb-sdk/react/hooks/useEngine";
+import { type EngineInstance, useEngineAlertRules } from "@/hooks/useEngine";
 import { ManageEngineAlertsSection } from "./ManageEngineAlerts";
 import { RecentEngineAlertsSection } from "./RecentEngineAlerts";
 

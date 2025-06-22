@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import {
   createEngineAlertRuleStub,
   createEngineAlertStub,
-} from "stories/stubs";
-import { BadgeContainer } from "stories/utils";
+} from "@/storybook/stubs/engine";
+import { BadgeContainer } from "@/storybook/utils";
 import { RecentEngineAlertsSectionUI } from "./RecentEngineAlerts";
 
 const meta = {

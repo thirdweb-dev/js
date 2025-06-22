@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useMutation } from "@tanstack/react-query";
 import { useId, useState } from "react";
-import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
 import { ThirdwebProvider } from "thirdweb/react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { BadgeContainer, storybookThirdwebClient } from "@/storybook/utils";
 import { ModuleCardUI } from "./module-card";
 
 const meta = {

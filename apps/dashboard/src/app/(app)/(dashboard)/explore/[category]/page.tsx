@@ -1,13 +1,13 @@
-import {
-  ContractCard,
-  ContractCardSkeleton,
-} from "components/explore/contract-card";
-import { DeployUpsellCard } from "components/explore/upsells/deploy-your-own";
-import { getCategory } from "data/explore";
+import { DeployUpsellCard } from "@app/(dashboard)/explore/components/upsells/deploy-your-own";
+import { getCategory } from "@app/(dashboard)/explore/data";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import {
+  ContractCard,
+  ContractCardSkeleton,
+} from "@/components/contracts/contract-card";
 import {
   Breadcrumb,
   BreadcrumbItem,

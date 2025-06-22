@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import {
   mobileViewport,
   storybookThirdwebClient,
-} from "../../../../../stories/utils";
+} from "../../../../../@/storybook/utils";
 import { HeaderLoggedOut } from "./HeaderLoggedOut";
 
 const meta = {

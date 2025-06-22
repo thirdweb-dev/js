@@ -1,8 +1,9 @@
 "use client";
 
 import { ButtonGroup, Flex } from "@chakra-ui/react";
+import { LinkButton } from "chakra/button";
+import { Heading } from "chakra/heading";
 import type { ThirdwebContract } from "thirdweb";
-import { Heading, LinkButton } from "tw-components";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { AccountsCount } from "./components/accounts-count";
 import { AccountsTable } from "./components/accounts-table";

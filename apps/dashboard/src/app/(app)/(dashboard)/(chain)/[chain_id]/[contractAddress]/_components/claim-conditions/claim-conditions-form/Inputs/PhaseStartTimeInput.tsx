@@ -1,5 +1,5 @@
 import { Input } from "@chakra-ui/react";
-import { toDateTimeLocal } from "utils/date-utils";
+import { toDateTimeLocal } from "@/utils/date-utils";
 import { CustomFormControl } from "../common";
 import { useClaimConditionsFormContext } from "../index";
 

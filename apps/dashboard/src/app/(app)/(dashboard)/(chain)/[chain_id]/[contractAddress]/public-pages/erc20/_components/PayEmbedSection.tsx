@@ -3,7 +3,7 @@
 import { useTheme } from "next-themes";
 import type { Chain, ThirdwebClient } from "thirdweb";
 import { PayEmbed } from "thirdweb/react";
-import { getSDKTheme } from "../../../../../../../components/sdk-component-theme";
+import { getSDKTheme } from "../../../../../../../../../@/utils/sdk-component-theme";
 
 export function BuyTokenEmbed(props: {
   client: ThirdwebClient;

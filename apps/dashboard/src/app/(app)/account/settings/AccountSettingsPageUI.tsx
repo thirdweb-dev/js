@@ -1,9 +1,7 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { FileInput } from "components/shared/FileInput";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { CircleXIcon, EllipsisIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
@@ -12,8 +10,9 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { z } from "zod";
-import { BillingPortalButton } from "@/components/billing";
+import { BillingPortalButton } from "@/components/billing/billing";
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
+import { FileInput } from "@/components/blocks/FileInput";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -43,8 +42,9 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import type { Account } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 
 type MinimalAccount = Pick<
   Account,

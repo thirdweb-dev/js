@@ -14,7 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getAuthToken } from "../../../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../../../@/api/auth-token";
 import {
   AllFilters,
   ChainOptionsFilter,

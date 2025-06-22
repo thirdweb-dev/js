@@ -1,6 +1,14 @@
 import "server-only";
 
 import { notFound } from "next/navigation";
+import type { ChainMetadata } from "thirdweb/chains";
+import {
+  getChainServices,
+  getChains,
+  getGasSponsoredChains,
+} from "@/api/chain";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
+import type { ChainMetadataWithServices, ChainServices } from "@/types/chain";
 import type { ChainCTAProps } from "./[chain_id]/(chainPage)/components/server/cta-card";
 import zeroGCTA from "./temp-assets/0gCTA.png";
 import zeroGBanner from "./temp-assets/0gLabsBanner.png";
@@ -79,17 +87,7 @@ import zetachainCTA from "./temp-assets/zetachainCTA.png";
 import zkCandyBanner from "./temp-assets/zkCandyBanner.jpg";
 import zytronBanner from "./temp-assets/zytronBanner.png";
 import zytronCTA from "./temp-assets/zytronCTA.jpg";
-
 // END TEMPORARY
-
-import type { ChainMetadata } from "thirdweb/chains";
-import {
-  getChainServices,
-  getChains,
-  getGasSponsoredChains,
-} from "@/api/chain";
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
-import type { ChainMetadataWithServices, ChainServices } from "./types/chain";
 
 export async function getChainsWithServices() {
   const [chains, chainServices] = await Promise.all([

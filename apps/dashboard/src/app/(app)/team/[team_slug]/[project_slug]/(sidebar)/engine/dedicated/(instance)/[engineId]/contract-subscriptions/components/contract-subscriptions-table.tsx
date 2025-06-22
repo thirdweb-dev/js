@@ -1,11 +1,6 @@
 "use client";
 
 import {
-  type EngineContractSubscription,
-  useEngineRemoveContractSubscription,
-  useEngineSubscriptionsLastBlock,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import {
   Flex,
   FormControl,
   Modal,
@@ -21,19 +16,27 @@ import {
 } from "@chakra-ui/react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
-import { ChainIconClient } from "components/icons/ChainIcon";
-import { TWTable } from "components/shared/TWTable";
+import { Button, LinkButton } from "chakra/button";
+import { Card } from "chakra/card";
+import { FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
 import { format } from "date-fns";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { InfoIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { eth_getBlockByNumber, getRpcClient } from "thirdweb";
 import { shortenAddress as shortenAddressThrows } from "thirdweb/utils";
-import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
+import { TWTable } from "@/components/blocks/TWTable";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
+import {
+  type EngineContractSubscription,
+  useEngineRemoveContractSubscription,
+  useEngineSubscriptionsLastBlock,
+} from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { ChainIconClient } from "@/icons/ChainIcon";
 
 function shortenAddress(address: string) {
   if (!address) {

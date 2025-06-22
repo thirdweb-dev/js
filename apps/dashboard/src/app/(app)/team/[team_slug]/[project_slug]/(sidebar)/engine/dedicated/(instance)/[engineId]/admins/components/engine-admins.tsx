@@ -1,8 +1,10 @@
 "use client";
 
-import { useEnginePermissions } from "@3rdweb-sdk/react/hooks/useEngine";
+import { Heading } from "chakra/heading";
+import { Link } from "chakra/link";
+import { Text } from "chakra/text";
 import type { ThirdwebClient } from "thirdweb";
-import { Heading, Link, Text } from "tw-components";
+import { useEnginePermissions } from "@/hooks/useEngine";
 import { AddAdminButton } from "./add-admin-button";
 import { AdminsTable } from "./admins-table";
 

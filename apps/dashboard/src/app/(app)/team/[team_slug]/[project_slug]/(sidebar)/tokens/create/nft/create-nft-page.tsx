@@ -20,13 +20,13 @@ import {
 } from "thirdweb/extensions/erc1155";
 import { useActiveAccount } from "thirdweb/react";
 import { maxUint256 } from "thirdweb/utils";
-import { parseError } from "utils/errorParser";
 import { revalidatePathAction } from "@/actions/revalidate";
 import {
   reportAssetCreationFailed,
   reportContractDeployed,
 } from "@/analytics/report";
-import { useAddContractToProject } from "../../../hooks/project-contracts";
+import { useAddContractToProject } from "@/hooks/project-contracts";
+import { parseError } from "@/utils/errorParser";
 import type { CreateNFTCollectionAllValues } from "./_common/form";
 import { CreateNFTPageUI } from "./create-nft-page-ui";
 

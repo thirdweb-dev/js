@@ -1,8 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -10,6 +8,7 @@ import { sendAndConfirmTransaction, type ThirdwebClient } from "thirdweb";
 import { RoyaltyERC721, RoyaltyERC1155 } from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
 import { z } from "zod";
+import { TransactionButton } from "@/components/tx-button";
 import {
   Accordion,
   AccordionContent,
@@ -27,6 +26,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { addressSchema } from "../zod-schemas";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";

@@ -1,6 +1,6 @@
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { Notifications } from "components/settings/Account/Notifications";
+import { Notifications } from "@app/team/[team_slug]/(team)/~/settings/notifications/Notifications";
 import { Separator } from "@/components/ui/separator";
+import type { Account } from "@/hooks/useApi";
 
 export const SettingsNotificationsPage = (props: { account: Account }) => {
   return (

@@ -1,9 +1,9 @@
-import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { getAddress, getContract, isAddress } from "thirdweb";
 import { localhost } from "thirdweb/chains";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { fetchChainWithLocalOverrides } from "../../../../../../../utils/fetchChainWithLocalOverrides";
-import { getUserThirdwebClient } from "../../../../../api/lib/getAuthToken";
+import { mapV4ChainToV5Chain } from "@/utils/map-chains";
+import { getUserThirdwebClient } from "../../../../../../../@/api/auth-token";
+import { fetchChainWithLocalOverrides } from "../../../../../../../@/utils/fetchChainWithLocalOverrides";
 
 export async function getContractPageParamsInfo(params: {
   contractAddress: string;

@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   type CodeEnvironment,
   CodeSegment,
-} from "@/components/blocks/code-segment.client";
+} from "@/components/blocks/code/code-segment.client";
 
 export function SDKSection() {
   const [codeEnvironment, setCodeEnvironment] =

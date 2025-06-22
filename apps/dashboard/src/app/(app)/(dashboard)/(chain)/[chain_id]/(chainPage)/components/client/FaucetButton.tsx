@@ -1,10 +1,8 @@
 "use client";
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CanClaimResponseType } from "app/(app)/api/testnet-faucet/can-claim/CanClaimResponseType";
-import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -23,9 +21,9 @@ import {
   useSwitchActiveWalletChain,
   useWalletBalance,
 } from "thirdweb/react";
-import { parseError } from "utils/errorParser";
 import { z } from "zod";
 import { reportFaucetUsed } from "@/analytics/report";
+import { CustomConnectWallet } from "@/components/connect-wallet";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import {
@@ -50,6 +48,8 @@ import {
   NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
   NEXT_PUBLIC_TURNSTILE_SITE_KEY,
 } from "@/constants/public-envs";
+import { parseError } from "@/utils/errorParser";
+import { mapV4ChainToV5Chain } from "@/utils/map-chains";
 
 function formatTime(seconds: number) {
   const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });

@@ -1,6 +1,5 @@
 "use client";
 
-import { ImportModal } from "components/contract-components/import-contract/modal";
 import { ArrowDownToLineIcon, CoinsIcon, ImagesIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -10,6 +9,7 @@ import {
   reportAssetImportStarted,
   reportAssetImportSuccessful,
 } from "@/analytics/report";
+import { ImportModal } from "@/components/contracts/import-contract/modal";
 import { cn } from "@/lib/utils";
 
 export function Cards(props: {

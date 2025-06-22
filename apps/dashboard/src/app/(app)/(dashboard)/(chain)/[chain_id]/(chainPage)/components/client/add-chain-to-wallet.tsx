@@ -1,6 +1,5 @@
 "use client";
 
-import { useCustomConnectModal } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import type { Chain, ThirdwebClient } from "thirdweb";
@@ -10,6 +9,7 @@ import {
   useSwitchActiveWalletChain,
 } from "thirdweb/react";
 import { useDebounce } from "use-debounce";
+import { useCustomConnectModal } from "@/components/connect-wallet";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";

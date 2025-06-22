@@ -18,7 +18,7 @@ import {
 } from "thirdweb/extensions/marketplace";
 import { useReadContract } from "thirdweb/react";
 import { min } from "thirdweb/utils";
-import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import { NFTMediaWithEmptyState } from "@/components/blocks/nft-media";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

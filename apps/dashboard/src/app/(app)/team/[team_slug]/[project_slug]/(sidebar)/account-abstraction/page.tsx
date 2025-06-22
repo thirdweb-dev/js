@@ -1,16 +1,16 @@
-import { getAuthToken } from "@app/api/lib/getAuthToken";
-import {
-  getLastNDaysRange,
-  type Range,
-} from "components/analytics/date-range-selector";
-import { AccountAbstractionAnalytics } from "components/smart-wallets/AccountAbstractionAnalytics";
-import { AccountAbstractionSummary } from "components/smart-wallets/AccountAbstractionAnalytics/AccountAbstractionSummary";
 import { notFound, redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
 import { getUserOpUsage } from "@/api/analytics";
+import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
+import {
+  getLastNDaysRange,
+  type Range,
+} from "@/components/analytics/date-range-selector";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { AccountAbstractionAnalytics } from "./AccountAbstractionAnalytics";
+import { AccountAbstractionSummary } from "./AccountAbstractionAnalytics/AccountAbstractionSummary";
 import { searchParamLoader } from "./search-params";
 
 interface PageParams {

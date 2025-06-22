@@ -6,18 +6,15 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
 import { getTeams } from "@/api/team";
+import { CustomChatButton } from "@/components/chat/CustomChatButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CustomChatButton } from "../../../../components/CustomChat/CustomChatButton";
-import { EngineIcon } from "../../(dashboard)/(chain)/components/server/icons/EngineIcon";
-import { InsightIcon } from "../../(dashboard)/(chain)/components/server/icons/InsightIcon";
-import { PayIcon } from "../../(dashboard)/(chain)/components/server/icons/PayIcon";
-import {
-  getAuthToken,
-  getAuthTokenWalletAddress,
-} from "../../api/lib/getAuthToken";
-import { NebulaIcon } from "../(chain)/components/server/icons/NebulaIcon";
+import { EngineIcon } from "@/icons/EngineIcon";
+import { InsightIcon } from "@/icons/InsightIcon";
+import { NebulaIcon } from "@/icons/NebulaIcon";
+import { PayIcon } from "@/icons/PayIcon";
 import { siwaExamplePrompts } from "./definitions";
 
 export const metadata: Metadata = {

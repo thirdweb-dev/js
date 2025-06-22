@@ -1,19 +1,19 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { useEns } from "components/contract-components/hooks";
 import { LogOutIcon, MoonIcon, SunIcon } from "lucide-react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
+import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useEns } from "@/hooks/contract-hooks";
+import type { Account } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
 
 export function AccountButton(props: {

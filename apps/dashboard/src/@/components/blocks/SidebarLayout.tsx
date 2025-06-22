@@ -13,9 +13,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "../../lib/utils";
+import { AppFooter } from "../footers/app-footer";
 import { NavLink } from "../ui/NavLink";
 import { Separator } from "../ui/separator";
-import { AppFooter } from "./app-footer";
 import { MobileSidebar, useActiveSidebarLink } from "./MobileSidebar";
 import { CustomSidebar, type SidebarLink } from "./Sidebar";
 

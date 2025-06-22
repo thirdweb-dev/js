@@ -4,8 +4,8 @@ import { getChainMetadata } from "thirdweb/chains";
 import { isValidENSName } from "thirdweb/utils";
 import { isLoginRequired } from "@/constants/auth";
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
+import { defineDashboardChain } from "@/lib/defineDashboardChain";
 import { LAST_VISITED_TEAM_PAGE_PATH } from "./app/(app)/team/components/last-visited-page/consts";
-import { defineDashboardChain } from "./lib/defineDashboardChain";
 
 // ignore assets, api - only intercept page routes
 export const config = {

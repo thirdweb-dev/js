@@ -6,7 +6,7 @@ import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
-import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
+import { ProjectAvatar } from "@/components/blocks/avatar/project-avatar";
 import { Button } from "@/components/ui/button";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Separator } from "@/components/ui/separator";

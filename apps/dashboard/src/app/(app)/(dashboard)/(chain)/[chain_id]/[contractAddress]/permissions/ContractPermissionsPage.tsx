@@ -1,8 +1,12 @@
 "use client";
 
 import { ButtonGroup, Divider, Flex } from "@chakra-ui/react";
+import { LinkButton } from "chakra/button";
+import { Card } from "chakra/card";
+import { Heading } from "chakra/heading";
+import { Link } from "chakra/link";
+import { Text } from "chakra/text";
 import type { ThirdwebContract } from "thirdweb";
-import { Card, Heading, Link, LinkButton, Text } from "tw-components";
 import { InlineCode } from "@/components/ui/inline-code";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../_utils/contract-page-path";

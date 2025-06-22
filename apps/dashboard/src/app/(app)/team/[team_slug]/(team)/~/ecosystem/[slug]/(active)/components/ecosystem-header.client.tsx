@@ -1,5 +1,4 @@
 "use client";
-import { useDashboardStorageUpload } from "@3rdweb-sdk/react/hooks/useDashboardStorageUpload";
 import {
   AlertTriangleIcon,
   CheckIcon,
@@ -38,9 +37,10 @@ import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useDashboardStorageUpload } from "@/hooks/useDashboardStorageUpload";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { useEcosystemList } from "../../../hooks/use-ecosystem-list";
 import type { Ecosystem } from "../../../types";
 import { useUpdateEcosystem } from "../configuration/hooks/use-update-ecosystem";

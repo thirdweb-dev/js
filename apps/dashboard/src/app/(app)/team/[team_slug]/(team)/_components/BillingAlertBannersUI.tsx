@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useStripeRedirectEvent } from "@/hooks/stripe/redirect-event";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import { useStripeRedirectEvent } from "../../../../(stripe)/stripe-redirect/stripeRedirectChannel";
 
 function BillingAlertBanner(props: {
   title: string;

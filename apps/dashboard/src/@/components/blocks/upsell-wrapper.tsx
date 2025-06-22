@@ -3,6 +3,9 @@
 import { CrownIcon, LockIcon, SparklesIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
+import type { Team } from "@/api/team";
+import { TeamPlanBadge } from "@/components/blocks/TeamPlanBadge";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,9 +15,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { TeamPlanBadge } from "../../../app/(app)/components/TeamPlanBadge";
-import type { Team } from "../../api/team";
-import { Badge } from "../ui/badge";
 
 interface UpsellWrapperProps {
   teamSlug: string;

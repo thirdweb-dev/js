@@ -1,4 +1,4 @@
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import style from "./Spinner.module.css";
 
 export function Spinner(props: { className?: string }) {

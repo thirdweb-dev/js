@@ -1,4 +1,3 @@
-import type { WalletCredential } from "@3rdweb-sdk/react/hooks/useEngine";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
@@ -12,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import type { WalletCredential } from "@/hooks/useEngine";
 import { EditWalletCredentialButton } from "./edit-wallet-credential-button";
 
 interface WalletCredentialsTableProps {

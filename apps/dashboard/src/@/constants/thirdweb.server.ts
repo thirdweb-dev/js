@@ -1,13 +1,3 @@
-import {
-  THIRDWEB_BRIDGE_URL,
-  THIRDWEB_BUNDLER_DOMAIN,
-  THIRDWEB_INAPP_WALLET_DOMAIN,
-  THIRDWEB_INSIGHT_API_DOMAIN,
-  THIRDWEB_PAY_DOMAIN,
-  THIRDWEB_RPC_DOMAIN,
-  THIRDWEB_SOCIAL_API_DOMAIN,
-  THIRDWEB_STORAGE_DOMAIN,
-} from "constants/urls";
 import { createThirdwebClient, type ThirdwebClient } from "thirdweb";
 import { populateEip712Transaction } from "thirdweb/transaction";
 import {
@@ -20,7 +10,17 @@ import {
   NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
   NEXT_PUBLIC_IPFS_GATEWAY_URL,
 } from "@/constants/public-envs";
-import { getVercelEnv } from "../../lib/vercel-utils";
+import {
+  THIRDWEB_BRIDGE_URL,
+  THIRDWEB_BUNDLER_DOMAIN,
+  THIRDWEB_INAPP_WALLET_DOMAIN,
+  THIRDWEB_INSIGHT_API_DOMAIN,
+  THIRDWEB_PAY_DOMAIN,
+  THIRDWEB_RPC_DOMAIN,
+  THIRDWEB_SOCIAL_API_DOMAIN,
+  THIRDWEB_STORAGE_DOMAIN,
+} from "@/constants/urls";
+import { getVercelEnv } from "@/utils/vercel";
 
 export function getConfiguredThirdwebClient(options: {
   secretKey: string | undefined;

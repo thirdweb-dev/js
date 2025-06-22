@@ -1,21 +1,21 @@
 "use client";
-import { useClipboard } from "hooks/useClipboard";
 import { CheckIcon, CopyIcon, XIcon } from "lucide-react";
 import { useMemo } from "react";
 import { isAddress, type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import { Blobbie, type SocialProfile, useSocialProfiles } from "thirdweb/react";
+import { Img } from "@/components/blocks/Img";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { cn } from "../../lib/utils";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { ToolTipLabel } from "../ui/tooltip";
-import { Img } from "./Img";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useClipboard } from "@/hooks/useClipboard";
+import { cn } from "@/lib/utils";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 
 export function WalletAddress(props: {
   address: string | undefined;

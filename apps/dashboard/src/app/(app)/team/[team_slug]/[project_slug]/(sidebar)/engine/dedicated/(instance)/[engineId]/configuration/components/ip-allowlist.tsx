@@ -1,14 +1,16 @@
+import { Flex, Textarea } from "@chakra-ui/react";
+import { Button } from "chakra/button";
+import { Heading } from "chakra/heading";
+import { Text } from "chakra/text";
+import { isValid } from "ipaddr.js";
+import { useForm } from "react-hook-form";
+import { InlineCode } from "@/components/ui/inline-code";
 import {
   useEngineIpAllowlistConfiguration,
   useEngineSetIpAllowlistConfiguration,
   useHasEngineFeature,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { Flex, Textarea } from "@chakra-ui/react";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { isValid } from "ipaddr.js";
-import { useForm } from "react-hook-form";
-import { Button, Heading, Text } from "tw-components";
-import { InlineCode } from "@/components/ui/inline-code";
+} from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface EngineIpAllowlistConfigProps {
   instanceUrl: string;

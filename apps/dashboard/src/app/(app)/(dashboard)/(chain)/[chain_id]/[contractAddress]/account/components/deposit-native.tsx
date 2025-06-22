@@ -1,13 +1,13 @@
 "use client";
 
-import { Input } from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useV5DashboardChain } from "lib/v5-adapter";
+import { Card } from "chakra/card";
 import { type ChangeEvent, useState } from "react";
-import type { StoredChain } from "stores/chainStores";
 import { prepareTransaction, type ThirdwebClient, toWei } from "thirdweb";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
-import { Card } from "tw-components";
+import { TransactionButton } from "@/components/tx-button";
+import { Input } from "@/components/ui/input";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
+import type { StoredChain } from "@/stores/chainStores";
 
 interface DepositNativeProps {
   address: string;

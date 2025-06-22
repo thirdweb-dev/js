@@ -1,6 +1,5 @@
 "use client";
 
-import { TransactionButton } from "components/buttons/TransactionButton";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import {
@@ -8,6 +7,7 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
+import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 

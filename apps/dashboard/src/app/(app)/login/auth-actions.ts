@@ -1,7 +1,6 @@
 "use server";
 import "server-only";
 
-import { isVercel } from "lib/vercel-utils";
 import { cookies } from "next/headers";
 import { getAddress } from "thirdweb";
 import type {
@@ -12,6 +11,7 @@ import type {
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { API_SERVER_SECRET } from "@/constants/server-envs";
+import { isVercel } from "@/utils/vercel";
 import { verifyTurnstileToken } from "./verifyTurnstileToken";
 
 export async function getLoginPayload(

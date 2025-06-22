@@ -1,6 +1,6 @@
-import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { teamStub } from "../../../../../../../../../../stories/stubs";
+import type { EngineInstance } from "@/hooks/useEngine";
+import { teamStub } from "../../../../../../../../../../@/storybook/stubs";
 import { EngineInstancesTableUI } from "./engine-instances-table";
 
 const meta: Meta<typeof Story> = {

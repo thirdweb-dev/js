@@ -1,8 +1,8 @@
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import Link from "next/link";
 import type React from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { NotificationsButton } from "../../../../../@/components/blocks/notifications/notification-button";
+import { NotificationsButton } from "@/components/notifications/notification-button";
+import type { Account } from "@/hooks/useApi";
 import { AccountButton } from "./account-button.client";
 import { ResourcesDropdownButton } from "./ResourcesDropdownButton";
 

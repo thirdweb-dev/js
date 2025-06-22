@@ -2,10 +2,10 @@ import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { isTokenByIndexSupported } from "thirdweb/extensions/erc721";
-import { ResponsiveLayout } from "@/components/Responsive";
+import { ResponsiveLayout } from "@/components/blocks/Responsive";
 import { Skeleton } from "@/components/ui/skeleton";
+import { resolveFunctionSelectors } from "@/lib/selectors";
 import { cn } from "@/lib/utils";
-import { resolveFunctionSelectors } from "../../../../../../../../lib/selectors";
 import { NFTPublicPageLayout } from "./nft-page-layout";
 import {
   BuyNFTDropCardServer,

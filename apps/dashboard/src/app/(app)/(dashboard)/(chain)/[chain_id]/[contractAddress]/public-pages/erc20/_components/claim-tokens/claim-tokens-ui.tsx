@@ -1,7 +1,6 @@
 "use client";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { TransactionButton } from "components/buttons/TransactionButton";
 import {
   CheckIcon,
   CircleAlertIcon,
@@ -28,19 +27,20 @@ import {
 } from "thirdweb/extensions/erc20";
 import { useActiveAccount, useSendTransaction } from "thirdweb/react";
 import { getClaimParams } from "thirdweb/utils";
-import { parseError } from "utils/errorParser";
-import { tryCatch } from "utils/try-catch";
 import {
   reportAssetBuyFailed,
   reportAssetBuySuccessful,
 } from "@/analytics/report";
+import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
 import { DecimalInput } from "@/components/ui/decimal-input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { getSDKTheme } from "../../../../../../../../components/sdk-component-theme";
+import { parseError } from "@/utils/errorParser";
+import { tryCatch } from "@/utils/try-catch";
+import { getSDKTheme } from "../../../../../../../../../../@/utils/sdk-component-theme";
 import { PublicPageConnectButton } from "../../../_components/PublicPageConnectButton";
 import { SupplyClaimedProgress } from "../../../_components/supply-claimed-progress";
 import { TokenPrice } from "../../../_components/token-price";

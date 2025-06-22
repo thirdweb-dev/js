@@ -1,11 +1,6 @@
 "use client";
 
 import {
-  type AddContractSubscriptionInput,
-  useEngineAddContractSubscription,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { useResolveContractAbi } from "@3rdweb-sdk/react/hooks/useResolveContractAbi";
-import {
   Collapse,
   Flex,
   FormControl,
@@ -23,22 +18,23 @@ import {
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { useV5DashboardChain } from "lib/v5-adapter";
+import { Button } from "chakra/button";
+import { Card } from "chakra/card";
+import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
 import { CirclePlusIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { getContract, isAddress, type ThirdwebClient } from "thirdweb";
-import {
-  Button,
-  Card,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  Text,
-} from "tw-components";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
+import {
+  type AddContractSubscriptionInput,
+  useEngineAddContractSubscription,
+} from "@/hooks/useEngine";
+import { useResolveContractAbi } from "@/hooks/useResolveContractAbi";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface AddContractSubscriptionButtonProps {
   instanceUrl: string;

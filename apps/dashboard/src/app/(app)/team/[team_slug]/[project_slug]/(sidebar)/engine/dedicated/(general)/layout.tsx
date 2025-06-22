@@ -4,7 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TabPathLinks } from "@/components/ui/tabs";
-import { EngineIcon } from "../../../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
+import { EngineIcon } from "@/icons/EngineIcon";
 import { ImportEngineLink } from "./_components";
 
 export default async function Layout(props: {

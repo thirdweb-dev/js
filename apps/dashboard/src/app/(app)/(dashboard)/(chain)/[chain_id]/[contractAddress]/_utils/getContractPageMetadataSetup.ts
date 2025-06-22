@@ -1,6 +1,6 @@
-import { resolveFunctionSelectors } from "lib/selectors";
 import type { ThirdwebContract } from "thirdweb";
 import { contractType as getContractType } from "thirdweb/extensions/thirdweb";
+import { resolveFunctionSelectors } from "@/lib/selectors";
 import {
   isERC20ClaimConditionsSupported,
   isERC721ClaimConditionsSupported,

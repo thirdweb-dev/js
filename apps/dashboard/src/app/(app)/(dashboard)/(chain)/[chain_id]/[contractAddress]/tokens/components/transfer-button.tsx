@@ -1,8 +1,7 @@
 "use client";
 
 import { FormControl, Input } from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { SolidityInput } from "contract-ui/components/solidity-inputs";
+import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
 import { SendIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -14,7 +13,8 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
-import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
+import { SolidityInput } from "@/components/solidity-inputs";
+import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,

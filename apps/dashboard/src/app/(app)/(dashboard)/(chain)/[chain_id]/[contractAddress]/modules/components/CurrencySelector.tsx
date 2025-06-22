@@ -1,7 +1,5 @@
-import { CURRENCIES, type CurrencyMetadata } from "constants/currencies";
 import { useMemo, useState } from "react";
 import type { ControllerRenderProps, FieldValues } from "react-hook-form";
-import type { StoredChain } from "stores/chainStores";
 import { isAddress, NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from "thirdweb";
 import { Button } from "@/components/ui/button";
 import { FormControl } from "@/components/ui/form";
@@ -13,7 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CURRENCIES, type CurrencyMetadata } from "@/constants/currencies";
 import { cn } from "@/lib/utils";
+import type { StoredChain } from "@/stores/chainStores";
 
 interface CurrencySelectorProps<
   TFieldValues extends FieldValues = FieldValues,

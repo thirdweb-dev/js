@@ -28,7 +28,7 @@ import {
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
 import { TabButtons } from "@/components/ui/tabs";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { useERC1155ClaimCondition } from "../client-utils";
 import { BuyEditionDrop } from "../overview/buy-edition-drop/buy-edition-drop.client";
 

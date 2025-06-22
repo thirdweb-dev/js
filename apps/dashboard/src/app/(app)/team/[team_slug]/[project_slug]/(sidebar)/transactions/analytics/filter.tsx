@@ -1,11 +1,11 @@
 "use client";
 
-import { DateRangeSelector } from "components/analytics/date-range-selector";
-import { IntervalSelector } from "components/analytics/interval-selector";
 import {
   useResponsiveSearchParams,
   useSetResponsiveSearchParams,
 } from "responsive-rsc";
+import { DateRangeSelector } from "@/components/analytics/date-range-selector";
+import { IntervalSelector } from "@/components/analytics/interval-selector";
 import { normalizeTimeISOString } from "@/lib/time";
 import { getTxAnalyticsFiltersFromSearchParams } from "../lib/utils";
 

@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 import { useIsomorphicLayoutEffect } from "../../lib/useIsomorphicLayoutEffect";
-import { cn } from "../../lib/utils";
 
 type imgElementProps = React.DetailedHTMLProps<
   React.ImgHTMLAttributes<HTMLImageElement>,

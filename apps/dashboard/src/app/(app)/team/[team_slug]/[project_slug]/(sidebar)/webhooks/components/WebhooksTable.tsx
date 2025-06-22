@@ -1,7 +1,6 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns";
 import { PlayIcon, TrashIcon } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -12,6 +11,7 @@ import {
   type WebhookFilters,
   type WebhookResponse,
 } from "@/api/insight/webhooks";
+import { TWTable } from "@/components/blocks/TWTable";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";

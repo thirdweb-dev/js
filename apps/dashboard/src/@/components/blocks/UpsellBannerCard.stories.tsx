@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { ArrowRightIcon, RocketIcon, StarIcon } from "lucide-react";
-import { BadgeContainer } from "../../../stories/utils";
+import { BadgeContainer } from "@/storybook/utils";
 import { UpsellBannerCard } from "./UpsellBannerCard";
 
 function Story() {

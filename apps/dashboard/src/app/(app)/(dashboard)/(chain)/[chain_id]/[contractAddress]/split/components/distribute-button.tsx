@@ -1,11 +1,11 @@
 "use client";
 
-import { useSplitDistributeFunds } from "@3rdweb-sdk/react/hooks/useSplit";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
+import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
+import { useSplitDistributeFunds } from "@/hooks/useSplit";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 import type { Balance } from "../ContractSplitPage";
 
 interface DistributeButtonProps {

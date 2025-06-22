@@ -5,7 +5,7 @@ import { getProjects, type Project } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { DismissibleAlert } from "@/components/blocks/dismissible-alert";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../../@/api/auth-token";
 import { loginRedirect } from "../../../login/loginRedirect";
 import { Changelog } from "./_components/Changelog";
 import { FreePlanUpsellBannerUI } from "./_components/FreePlanUpsellBannerUI";

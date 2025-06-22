@@ -3,10 +3,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { toast } from "sonner";
-import { shortenString } from "utils/usedapp-external";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import { shortenString } from "@/utils/usedapp-external";
 
 export function LinkWalletPrompt(props: {
   email: string;

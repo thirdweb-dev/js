@@ -1,6 +1,5 @@
 "use client";
 import type { Abi, AbiFunction } from "abitype";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { ArrowDownIcon, WalletIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -25,6 +24,7 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { ShareButton } from "../../components/share";
 
 export type SimulateTransactionForm = {

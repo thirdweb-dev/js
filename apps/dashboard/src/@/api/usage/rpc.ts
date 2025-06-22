@@ -1,6 +1,6 @@
 import "server-only";
 import { unstable_cache } from "next/cache";
-import { ANALYTICS_SERVICE_URL } from "../../constants/server-envs";
+import { ANALYTICS_SERVICE_URL } from "@/constants/server-envs";
 
 type Last24HoursRPCUsageApiResponse = {
   peakRate: {

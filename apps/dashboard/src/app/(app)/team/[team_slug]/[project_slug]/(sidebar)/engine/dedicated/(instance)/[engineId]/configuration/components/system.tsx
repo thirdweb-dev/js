@@ -2,7 +2,7 @@ import {
   type EngineInstance,
   useEngineSystemHealth,
   useEngineSystemMetrics,
-} from "@3rdweb-sdk/react/hooks/useEngine";
+} from "@/hooks/useEngine";
 
 interface EngineSystemProps {
   instance: EngineInstance;

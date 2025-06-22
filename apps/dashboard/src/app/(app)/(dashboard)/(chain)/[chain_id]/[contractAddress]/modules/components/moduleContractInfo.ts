@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { usePublishedContractsFromDeploy } from "components/contract-components/hooks";
-import { THIRDWEB_DEPLOYER_ADDRESS } from "constants/addresses";
 import { useMemo } from "react";
 import { getContract, type ThirdwebContract } from "thirdweb";
 import { getCompilerMetadata } from "thirdweb/contract";
 import { useActiveAccount } from "thirdweb/react";
+import { THIRDWEB_DEPLOYER_ADDRESS } from "@/constants/addresses";
+import { usePublishedContractsFromDeploy } from "@/hooks/contract-hooks";
 
 async function getAllModuleContractInfo(
   installedModules: string[],

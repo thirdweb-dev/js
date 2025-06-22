@@ -15,7 +15,6 @@ import {
   usePrevious,
 } from "@chakra-ui/react";
 import type { UseQueryResult } from "@tanstack/react-query";
-import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import {
   ChevronFirstIcon,
   ChevronLastIcon,
@@ -38,6 +37,7 @@ import type {
 } from "thirdweb/extensions/marketplace";
 import { min } from "thirdweb/utils";
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { MediaCell } from "@/components/contracts/media-cell";
 import { Button } from "@/components/ui/button";
 import { ListingDrawer } from "./listing-drawer";
 import { LISTING_STATUS } from "./types";

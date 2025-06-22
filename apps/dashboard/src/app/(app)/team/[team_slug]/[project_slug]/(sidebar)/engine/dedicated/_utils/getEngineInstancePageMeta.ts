@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { getAuthToken } from "../../../../../../../../../@/api/auth-token";
 import { getValidAccount } from "../../../../../../../account/settings/getAccount";
-import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../login/loginRedirect";
 import { getEngineInstance } from "./getEngineInstance";
 

@@ -1,13 +1,3 @@
-import { DiscordIcon } from "components/icons/brand-icons/DiscordIcon";
-import { GithubIcon } from "components/icons/brand-icons/GithubIcon";
-import { InstagramIcon } from "components/icons/brand-icons/InstagramIcon";
-import { LinkedInIcon } from "components/icons/brand-icons/LinkedinIcon";
-import { RedditIcon } from "components/icons/brand-icons/RedditIcon";
-import { TelegramIcon } from "components/icons/brand-icons/TelegramIcon";
-import { TiktokIcon } from "components/icons/brand-icons/TiktokIcon";
-import { XIcon as TwitterXIcon } from "components/icons/brand-icons/XIcon";
-import { YoutubeIcon } from "components/icons/brand-icons/YoutubeIcon";
-import { ChainIconClient } from "components/icons/ChainIcon";
 import { ExternalLinkIcon, GlobeIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
@@ -17,8 +7,18 @@ import { Img } from "@/components/blocks/Img";
 import { Button } from "@/components/ui/button";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import { DiscordIcon } from "@/icons/brand-icons/DiscordIcon";
+import { GithubIcon } from "@/icons/brand-icons/GithubIcon";
+import { InstagramIcon } from "@/icons/brand-icons/InstagramIcon";
+import { LinkedInIcon } from "@/icons/brand-icons/LinkedinIcon";
+import { RedditIcon } from "@/icons/brand-icons/RedditIcon";
+import { TelegramIcon } from "@/icons/brand-icons/TelegramIcon";
+import { TiktokIcon } from "@/icons/brand-icons/TiktokIcon";
+import { XIcon as TwitterXIcon } from "@/icons/brand-icons/XIcon";
+import { YoutubeIcon } from "@/icons/brand-icons/YoutubeIcon";
+import { ChainIconClient } from "@/icons/ChainIcon";
 import { cn } from "@/lib/utils";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 
 const platformToIcons: Record<string, React.FC<{ className?: string }>> = {
   discord: DiscordIcon,

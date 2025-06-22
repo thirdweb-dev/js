@@ -1,7 +1,7 @@
-import { ContractTable } from "components/contract-components/tables/contract-table";
 import { Suspense } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { ClientOnly } from "@/components/blocks/client-only";
+import { ContractTable } from "@/components/contract-components/tables/contract-table";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { DeployViaCLIOrImportCard } from "./DeployViaCLIOrImportCard";
 import { getSortedDeployedContracts } from "./getSortedDeployedContracts";

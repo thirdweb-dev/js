@@ -1,6 +1,5 @@
 "use client";
 
-import { LazyCreateProjectDialog } from "components/settings/ApiKeys/Create/LazyCreateAPIKeyDialog";
 import { format } from "date-fns";
 import {
   ArrowUpDownIcon,
@@ -16,8 +15,9 @@ import { useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
-import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
-import { PaginationButtons } from "@/components/pagination-buttons";
+import { ProjectAvatar } from "@/components/blocks/avatar/project-avatar";
+import { PaginationButtons } from "@/components/blocks/pagination-buttons";
+import { LazyCreateProjectDialog } from "@/components/project/create-project-modal/LazyCreateAPIKeyDialog";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import {

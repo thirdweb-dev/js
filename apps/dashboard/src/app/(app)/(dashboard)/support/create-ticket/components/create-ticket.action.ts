@@ -2,8 +2,8 @@
 import "server-only";
 
 import { getTeamById } from "@/api/team";
+import { getAuthTokenWalletAddress } from "../../../../../../@/api/auth-token";
 import { getRawAccount } from "../../../../account/settings/getAccount";
-import { getAuthTokenWalletAddress } from "../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../login/loginRedirect";
 
 type State = {

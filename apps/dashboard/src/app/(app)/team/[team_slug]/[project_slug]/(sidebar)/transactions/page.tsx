@@ -1,6 +1,6 @@
-import { getAuthToken } from "@app/api/lib/getAuthToken";
 import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
 import { notFound, redirect } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";

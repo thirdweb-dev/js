@@ -1,10 +1,10 @@
 "use client";
 
-import { useSplitBalances } from "@3rdweb-sdk/react/hooks/useSplit";
 import { SimpleGrid, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
+import { Card } from "chakra/card";
 import type { ThirdwebContract } from "thirdweb";
 import { useActiveWalletChain, useWalletBalance } from "thirdweb/react";
-import { Card } from "tw-components";
+import { useSplitBalances } from "@/hooks/useSplit";
 
 interface AccountBalanceProps {
   contract: ThirdwebContract;

@@ -1,15 +1,15 @@
 "use client";
-import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
-import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
-import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
-import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
-import { formatTickerNumber } from "lib/format-utils";
 import { useMemo } from "react";
-import type { EcosystemWalletStats } from "types/analytics";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import { DocLink } from "@/components/blocks/DocLink";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import type { ChartConfig } from "@/components/ui/chart";
+import { ReactIcon } from "@/icons/brand-icons/ReactIcon";
+import { TypeScriptIcon } from "@/icons/brand-icons/TypeScriptIcon";
+import { UnityIcon } from "@/icons/brand-icons/UnityIcon";
+import type { EcosystemWalletStats } from "@/types/analytics";
+import { formatTickerNumber } from "@/utils/format-utils";
 import type { Partner } from "../../../../types";
 
 type ChartData = Record<string, number> & {

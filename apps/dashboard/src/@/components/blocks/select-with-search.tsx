@@ -3,15 +3,15 @@
 import { CheckIcon, ChevronDownIcon, SearchIcon } from "lucide-react";
 import React, { useMemo, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { useShowMore } from "@/hooks/useShowMore";
 import { cn } from "@/lib/utils";
-import { useShowMore } from "../../lib/useShowMore";
-import { Input } from "../ui/input";
-import { ScrollShadow } from "../ui/ScrollShadow/ScrollShadow";
 
 interface SelectWithSearchProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {

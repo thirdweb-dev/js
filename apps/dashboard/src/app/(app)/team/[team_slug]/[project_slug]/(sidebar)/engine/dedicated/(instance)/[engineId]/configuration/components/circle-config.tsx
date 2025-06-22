@@ -1,8 +1,3 @@
-import {
-  type EngineInstance,
-  type SetWalletConfigInput,
-  useEngineSetWalletConfig,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import Link from "next/link";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
@@ -12,6 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  type EngineInstance,
+  type SetWalletConfigInput,
+  useEngineSetWalletConfig,
+} from "@/hooks/useEngine";
 
 interface CircleConfigProps {
   instance: EngineInstance;

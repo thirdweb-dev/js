@@ -17,7 +17,7 @@ import type { ThirdwebClient } from "thirdweb";
 import { z } from "zod";
 import type { Team } from "@/api/team";
 import type { TeamAccountRole } from "@/api/team-members";
-import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
+import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -36,9 +36,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
-import { getValidTeamPlan } from "../../../../../components/TeamHeader/getValidTeamPlan";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
+import { getValidTeamPlan } from "../../../../../../../../@/utils/getValidTeamPlan";
 
 const inviteFormSchema = z.object({
   invites: z

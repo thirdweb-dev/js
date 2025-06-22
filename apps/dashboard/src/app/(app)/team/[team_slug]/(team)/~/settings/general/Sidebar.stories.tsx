@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { teamStub } from "stories/stubs";
+import { teamStub } from "@/storybook/stubs";
 import {
   BadgeContainer,
   mobileViewport,
   storybookThirdwebClient,
-} from "stories/utils";
+} from "@/storybook/utils";
 import { TeamSettingsSidebar } from "../_components/sidebar/TeamSettingsSidebar";
 import { TeamSettingsMobileNav } from "../_components/sidebar/TeamsMobileNav";
 

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import type { EcosystemWalletStats } from "types/analytics";
+import type { EcosystemWalletStats } from "@/types/analytics";
 import { EcosystemWalletUsersChartCard } from "./EcosystemWalletUsersChartCard";
 
 const meta = {

@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import { TransactionButton } from "components/buttons/TransactionButton";
 import { CircleAlertIcon } from "lucide-react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import type { NFT, ThirdwebClient } from "thirdweb";
@@ -11,6 +10,7 @@ import type { ChainMetadata } from "thirdweb/chains";
 import type { getActiveClaimCondition } from "thirdweb/extensions/erc721";
 import * as z from "zod";
 import { CustomMediaRenderer } from "@/components/blocks/media-renderer";
+import { TransactionButton } from "@/components/tx-button";
 import {
   Form,
   FormControl,

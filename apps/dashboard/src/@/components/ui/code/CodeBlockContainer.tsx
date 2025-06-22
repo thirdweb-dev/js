@@ -1,10 +1,10 @@
 "use client";
 
-import { useClipboard } from "hooks/useClipboard";
 import { CheckIcon, CopyIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { useClipboard } from "@/hooks/useClipboard";
 import { cn } from "@/lib/utils";
-import { Button } from "../button";
-import { ScrollShadow } from "../ScrollShadow/ScrollShadow";
 
 export function CodeBlockContainer(props: {
   codeToCopy: string;

@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { TransactionButton } from "components/buttons/TransactionButton";
 import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -15,6 +14,7 @@ import {
 } from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
 import { z } from "zod";
+import { TransactionButton } from "@/components/tx-button";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {

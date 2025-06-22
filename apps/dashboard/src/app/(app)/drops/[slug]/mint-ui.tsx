@@ -1,7 +1,5 @@
 "use client";
 
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import type React from "react";
 import { useId, useState } from "react";
@@ -14,12 +12,14 @@ import {
   useActiveAccount,
   useReadContract,
 } from "thirdweb/react";
+import { CustomConnectWallet } from "@/components/connect-wallet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 type Props = {
   contract: ThirdwebContract;

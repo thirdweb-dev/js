@@ -2,11 +2,7 @@
 
 import { FormControl, Input, Select, Skeleton, Spacer } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import {
-  useAllVersions,
-  usePublishedContractsQuery,
-} from "components/contract-components/hooks";
+import { FormErrorMessage, FormLabel } from "chakra/form";
 import { useMemo } from "react";
 import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -30,8 +26,12 @@ import {
   toFunctionSelector,
 } from "thirdweb/utils";
 import type { Account } from "thirdweb/wallets";
-import { FormErrorMessage, FormLabel } from "tw-components";
+import { TransactionButton } from "@/components/tx-button";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  useAllVersions,
+  usePublishedContractsQuery,
+} from "@/hooks/contract-hooks";
 import {
   ModuleInstallParams,
   useModuleInstallParams,

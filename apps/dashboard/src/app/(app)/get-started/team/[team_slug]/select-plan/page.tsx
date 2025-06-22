@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getTeamBySlug, type Team } from "@/api/team";
-import { getAuthToken } from "../../../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../../../@/api/auth-token";
 import { TeamOnboardingLayout } from "../../../../login/onboarding/onboarding-layout";
 import { PlanSelector } from "./_components/plan-selector";
 

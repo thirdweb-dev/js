@@ -1,6 +1,5 @@
 "use client";
 
-import { useEns } from "components/contract-components/hooks";
 import {
   LogOutIcon,
   MenuIcon,
@@ -17,6 +16,7 @@ import type { ThirdwebClient } from "thirdweb";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SkeletonContainer } from "@/components/ui/skeleton";
+import { useEns } from "@/hooks/contract-hooks";
 import { cn } from "@/lib/utils";
 import { ThirdwebMiniLogo } from "./ThirdwebMiniLogo";
 

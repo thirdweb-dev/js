@@ -1,20 +1,20 @@
 "use client";
 
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { isSanctionedAddress } from "data/eth-sanctioned-addresses";
-import { useAllChainsData } from "hooks/chains/allChains";
 import { ThemeProvider, useTheme } from "next-themes";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { useEffect, useMemo } from "react";
 import { Toaster } from "sonner";
-import { SyncChainStores } from "stores/chainStores";
 import {
   ThirdwebProvider,
   useActiveAccount,
   useConnectionManager,
 } from "thirdweb/react";
+import { CustomConnectWallet } from "@/components/connect-wallet";
+import { isSanctionedAddress } from "@/constants/eth-sanctioned-addresses";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { SyncChainStores } from "@/stores/chainStores";
 import { TWAutoConnect } from "./components/autoconnect";
 
 const queryClient = new QueryClient();

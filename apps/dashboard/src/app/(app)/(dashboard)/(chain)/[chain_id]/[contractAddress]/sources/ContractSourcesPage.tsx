@@ -1,9 +1,6 @@
 "use client";
 
-import { useResolveContractAbi } from "@3rdweb-sdk/react/hooks/useResolveContractAbi";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { SourcesPanel } from "components/contract-components/shared/sources-panel";
-import { useContractSources } from "contract-ui/hooks/useContractSources";
 import {
   CircleCheckIcon,
   CircleXIcon,
@@ -14,6 +11,7 @@ import { useMemo } from "react";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
+import { SourcesPanel } from "@/components/contract-components/shared/sources-panel";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,6 +21,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useContractSources } from "@/hooks/contract-ui/useContractSources";
+import { useResolveContractAbi } from "@/hooks/useResolveContractAbi";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 
 type VerificationResult = {

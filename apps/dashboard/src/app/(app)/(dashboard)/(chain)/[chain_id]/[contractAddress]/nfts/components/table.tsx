@@ -16,8 +16,6 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import * as Sentry from "@sentry/nextjs";
-import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
-import { useChainSlug } from "hooks/chains/chainSlug";
 import {
   ArrowRightIcon,
   ChevronFirstIcon,
@@ -39,7 +37,9 @@ import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { UnexpectedValueErrorMessage } from "@/components/blocks/error-fallbacks/unexpect-value-error-message";
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { MediaCell } from "@/components/contracts/media-cell";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { useChainSlug } from "@/hooks/chains/chainSlug";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";

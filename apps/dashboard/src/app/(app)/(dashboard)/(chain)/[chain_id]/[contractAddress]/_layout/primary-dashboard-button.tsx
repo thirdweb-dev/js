@@ -1,10 +1,5 @@
 "use client";
 
-import type { EVMContractInfo } from "@3rdweb-sdk/react";
-import {
-  AddToProjectSelector,
-  type MinimalTeamsAndProjects,
-} from "components/contract-components/contract-deploy-form/add-to-project-card";
 import {
   CircleAlertIcon,
   CodeIcon,
@@ -16,6 +11,10 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { Chain, ThirdwebClient } from "thirdweb";
+import {
+  AddToProjectSelector,
+  type MinimalTeamsAndProjects,
+} from "@/components/contract-components/contract-deploy-form/add-to-project-card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +27,8 @@ import {
 } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { useAddContractToProject } from "../../../../../team/[team_slug]/[project_slug]/(sidebar)/hooks/project-contracts";
+import { useAddContractToProject } from "@/hooks/project-contracts";
+import type { EVMContractInfo } from "@/hooks/useActiveChainId";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../_utils/contract-page-path";
 

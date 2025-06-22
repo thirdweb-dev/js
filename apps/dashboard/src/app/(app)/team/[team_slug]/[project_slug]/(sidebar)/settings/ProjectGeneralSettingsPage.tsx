@@ -1,10 +1,4 @@
 "use client";
-import type { RotateSecretKeyAPIReturnType } from "@3rdweb-sdk/react/hooks/useApi";
-import {
-  deleteProjectClient,
-  rotateSecretKeyClient,
-  updateProjectClient,
-} from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import type { ProjectService } from "@thirdweb-dev/service-utils";
@@ -13,12 +7,6 @@ import {
   SERVICES,
   type ServiceName,
 } from "@thirdweb-dev/service-utils";
-import {
-  HIDDEN_SERVICES,
-  projectDomainsSchema,
-  projectNameSchema,
-} from "components/settings/ApiKeys/validations";
-import { FileInput } from "components/shared/FileInput";
 import { format } from "date-fns";
 import {
   CircleAlertIcon,
@@ -37,15 +25,13 @@ import {
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { upload } from "thirdweb/storage";
-import { RE_BUNDLE_ID } from "utils/regex";
-import { joinWithComma, toArrFromList } from "utils/string";
-import { validStrList } from "utils/validations";
 import { z } from "zod";
 import { apiServerProxy } from "@/actions/proxies";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
-import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
+import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
+import { FileInput } from "@/components/blocks/FileInput";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -73,9 +59,23 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import type { RotateSecretKeyAPIReturnType } from "@/hooks/useApi";
+import {
+  deleteProjectClient,
+  rotateSecretKeyClient,
+  updateProjectClient,
+} from "@/hooks/useApi";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import { cn } from "@/lib/utils";
+import {
+  HIDDEN_SERVICES,
+  projectDomainsSchema,
+  projectNameSchema,
+} from "@/schema/validations";
+import { RE_BUNDLE_ID } from "@/utils/regex";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
+import { joinWithComma, toArrFromList } from "@/utils/string";
+import { validStrList } from "@/utils/validations";
 
 // TODO: instead of single submit handler, move the submit to each section
 

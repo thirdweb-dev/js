@@ -1,10 +1,10 @@
 "use client";
 
-import { ImportModal } from "components/contract-components/import-contract/modal";
 import { ArrowUpRightIcon, DownloadIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { ImportModal } from "@/components/contracts/import-contract/modal";
 import { Button } from "@/components/ui/button";
 
 export function DeployViaCLIOrImportCard(props: {

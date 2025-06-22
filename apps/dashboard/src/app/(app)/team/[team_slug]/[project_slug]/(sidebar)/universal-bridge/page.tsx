@@ -1,17 +1,17 @@
-import { getAuthToken } from "@app/api/lib/getAuthToken";
 import { loginRedirect } from "@app/login/loginRedirect";
-import { PayAnalyticsFilter } from "components/pay/PayAnalytics/components/PayAnalyticsFilter";
-import { PayAnalytics } from "components/pay/PayAnalytics/PayAnalytics";
-import { getUniversalBridgeFiltersFromSearchParams } from "lib/time";
 import { ArrowUpRightIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import {
   ResponsiveSearchParamsProvider,
   ResponsiveSuspense,
 } from "responsive-rsc";
+import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { PayAnalytics } from "./components/PayAnalytics";
+import { PayAnalyticsFilter } from "./components/PayAnalyticsFilter";
+import { getUniversalBridgeFiltersFromSearchParams } from "./components/time";
 
 export default async function Page(props: {
   params: Promise<{

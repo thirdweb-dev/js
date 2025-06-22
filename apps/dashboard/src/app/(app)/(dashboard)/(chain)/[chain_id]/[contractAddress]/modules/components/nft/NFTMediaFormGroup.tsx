@@ -1,8 +1,8 @@
 "use client";
-import { FileInput } from "components/shared/FileInput";
 import type { UseFormReturn } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import type { NFTInput } from "thirdweb/utils";
+import { FileInput } from "@/components/blocks/FileInput";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import {
   getUploadedNFTMediaMeta,

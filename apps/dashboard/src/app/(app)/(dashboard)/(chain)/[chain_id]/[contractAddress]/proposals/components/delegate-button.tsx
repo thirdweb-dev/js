@@ -1,14 +1,11 @@
 "use client";
 
-import {
-  tokensDelegated,
-  useDelegateMutation,
-} from "@3rdweb-sdk/react/hooks/useVote";
-import { TransactionButton } from "components/buttons/TransactionButton";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
+import { TransactionButton } from "@/components/tx-button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { tokensDelegated, useDelegateMutation } from "@/hooks/useVote";
 
 interface VoteButtonProps {
   contract: ThirdwebContract;

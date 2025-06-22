@@ -1,9 +1,9 @@
+import { getEcosystemWalletUsage } from "@/api/analytics";
 import {
   getLastNDaysRange,
   type Range,
-} from "components/analytics/date-range-selector";
-import { RangeSelector } from "components/analytics/range-selector";
-import { getEcosystemWalletUsage } from "@/api/analytics";
+} from "@/components/analytics/date-range-selector";
+import { RangeSelector } from "@/components/analytics/range-selector";
 import type { Partner } from "../../../../types";
 import { EcosystemWalletUsersChartCard } from "./EcosystemWalletUsersChartCard";
 import { EcosystemWalletsSummary } from "./Summary";

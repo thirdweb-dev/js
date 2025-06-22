@@ -1,11 +1,11 @@
 "use server";
 
-import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
+import { getAuthToken } from "@/api/auth-token";
 import {
   NEXT_PUBLIC_ENGINE_CLOUD_URL,
   NEXT_PUBLIC_THIRDWEB_API_HOST,
-} from "../constants/public-envs";
-import { ANALYTICS_SERVICE_URL } from "../constants/server-envs";
+} from "@/constants/public-envs";
+import { ANALYTICS_SERVICE_URL } from "@/constants/server-envs";
 
 type ProxyActionParams = {
   pathname: string;

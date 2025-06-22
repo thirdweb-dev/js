@@ -1,18 +1,15 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
 import { getProject, getProjects, type Project } from "@/api/projects";
 import { getTeamBySlug, getTeams } from "@/api/team";
+import { CustomChatButton } from "@/components/chat/CustomChatButton";
 import { Button } from "@/components/ui/button";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { CustomChatButton } from "../../../../../../components/CustomChat/CustomChatButton";
-import { AnnouncementBanner } from "../../../../../../components/notices/AnnouncementBanner";
+import { AnnouncementBanner } from "../../../../../../@/components/misc/AnnouncementBanner";
 import { siwaExamplePrompts } from "../../../../(dashboard)/support/definitions";
 import { getValidAccount } from "../../../../account/settings/getAccount";
-import {
-  getAuthToken,
-  getAuthTokenWalletAddress,
-} from "../../../../api/lib/getAuthToken";
 import { TeamHeaderLoggedIn } from "../../../components/TeamHeader/team-header-logged-in.client";
 import { ProjectSidebarLayout } from "./components/ProjectSidebarLayout";
 import { SaveLastUsedProject } from "./components/SaveLastUsedProject";

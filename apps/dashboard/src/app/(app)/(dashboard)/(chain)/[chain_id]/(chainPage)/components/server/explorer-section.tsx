@@ -1,6 +1,6 @@
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
-import type { ChainMetadataWithServices } from "../../../../types/chain";
+import type { ChainMetadataWithServices } from "@/types/chain";
 import { SectionTitle } from "./SectionTitle";
 
 export function ExplorersSection(props: {

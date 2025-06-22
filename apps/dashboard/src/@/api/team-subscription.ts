@@ -1,6 +1,6 @@
-import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "../constants/public-envs";
-import type { ProductSKU } from "../lib/billing";
+import { getAuthToken } from "@/api/auth-token";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
+import type { ProductSKU } from "@/types/billing";
 
 type InvoiceLine = {
   // amount for this line item

@@ -1,9 +1,4 @@
 "use client";
-import {
-  type EngineInstance,
-  useEngineBackendWallets,
-  useEngineWalletConfig,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
@@ -11,6 +6,11 @@ import { useActiveWalletChain } from "thirdweb/react";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Button } from "@/components/ui/button";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import {
+  type EngineInstance,
+  useEngineBackendWallets,
+  useEngineWalletConfig,
+} from "@/hooks/useEngine";
 import { BackendWalletsTable } from "./backend-wallets-table";
 import { CreateBackendWalletButton } from "./create-backend-wallet-button";
 import { ImportBackendWalletButton } from "./import-backend-wallet-button";

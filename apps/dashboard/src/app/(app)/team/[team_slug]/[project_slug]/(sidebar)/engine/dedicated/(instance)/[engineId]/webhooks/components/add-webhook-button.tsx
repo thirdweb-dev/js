@@ -1,8 +1,4 @@
 import {
-  type CreateWebhookInput,
-  useEngineCreateWebhook,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import {
   Flex,
   FormControl,
   Input,
@@ -16,10 +12,15 @@ import {
   Select,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button } from "chakra/button";
+import { FormLabel } from "chakra/form";
 import { CirclePlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Button, FormLabel } from "tw-components";
+import {
+  type CreateWebhookInput,
+  useEngineCreateWebhook,
+} from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { beautifyString } from "./webhooks-table";
 
 interface AddWebhookButtonProps {

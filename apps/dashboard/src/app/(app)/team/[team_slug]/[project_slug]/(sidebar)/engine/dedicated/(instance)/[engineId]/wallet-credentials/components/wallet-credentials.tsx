@@ -1,13 +1,13 @@
 "use client";
 
-import {
-  useEngineWalletCredentials,
-  useHasEngineFeature,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  useEngineWalletCredentials,
+  useHasEngineFeature,
+} from "@/hooks/useEngine";
 import { CreateWalletCredentialButton } from "./create-wallet-credential-button";
 import { WalletCredentialsTable } from "./wallet-credentials-table";
 

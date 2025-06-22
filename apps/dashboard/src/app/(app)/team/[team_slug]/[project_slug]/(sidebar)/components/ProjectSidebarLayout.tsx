@@ -12,10 +12,10 @@ import {
 } from "lucide-react";
 import { FullWidthSidebarLayout } from "@/components/blocks/SidebarLayout";
 import { Badge } from "@/components/ui/badge";
-import { ContractIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/ContractIcon";
-import { InsightIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/InsightIcon";
-import { PayIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/PayIcon";
-import { SmartAccountIcon } from "../../../../../(dashboard)/(chain)/components/server/icons/SmartAccountIcon";
+import { ContractIcon } from "@/icons/ContractIcon";
+import { InsightIcon } from "@/icons/InsightIcon";
+import { PayIcon } from "@/icons/PayIcon";
+import { SmartAccountIcon } from "@/icons/SmartAccountIcon";
 
 export function ProjectSidebarLayout(props: {
   layoutPath: string;

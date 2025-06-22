@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
-import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../../../../../../../@/api/auth-token";
 import { fetchEcosystem } from "../../../utils/fetchEcosystem";
 import { fetchPartners } from "../configuration/hooks/fetchPartners";
 import { EcosystemAnalyticsPage } from "./components/EcosystemAnalyticsPage";

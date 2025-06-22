@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useCsvUpload } from "hooks/useCsvUpload";
 import {
   ArrowRightIcon,
   ArrowUpFromLineIcon,
@@ -36,6 +35,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
+import { useCsvUpload } from "@/hooks/useCsvUpload";
 import { cn } from "@/lib/utils";
 import { DownloadFileButton } from "../../_common/download-file-button";
 import type { TokenDistributionForm } from "../_common/form";

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { storybookLog, storybookThirdwebClient } from "stories/utils";
 import { getContract, NATIVE_TOKEN_ADDRESS, type NFT, toUnits } from "thirdweb";
 import { baseSepolia, type ChainMetadata } from "thirdweb/chains";
 import type { getActiveClaimCondition } from "thirdweb/extensions/erc721";
 import { ThirdwebProvider, useActiveAccount } from "thirdweb/react";
+import { storybookLog, storybookThirdwebClient } from "@/storybook/utils";
 import { PublicPageConnectButton } from "../../../_components/PublicPageConnectButton";
 import { BuyNFTDropUI, type BuyNFTDropUIProps } from "./buy-nft-drop-ui.client";
 

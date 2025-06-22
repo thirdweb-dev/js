@@ -1,7 +1,5 @@
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ipAddress } from "@vercel/functions";
 import { startOfToday } from "date-fns";
-import { cacheGet, cacheSet } from "lib/redis";
 import { type NextRequest, NextResponse } from "next/server";
 import { getAddress, ZERO_ADDRESS } from "thirdweb";
 import { getTeams } from "@/api/team";
@@ -15,6 +13,8 @@ import {
   THIRDWEB_ENGINE_URL,
   TURNSTILE_SECRET_KEY,
 } from "@/constants/server-envs";
+import type { Account } from "@/hooks/useApi";
+import { cacheGet, cacheSet } from "@/lib/redis";
 import { getFaucetClaimAmount } from "./claim-amount";
 
 interface RequestTestnetFundsPayload {

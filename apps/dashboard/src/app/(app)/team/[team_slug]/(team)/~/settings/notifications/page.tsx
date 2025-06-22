@@ -1,4 +1,4 @@
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
+import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { SettingsNotificationsPage } from "./NotificationsPage";
 

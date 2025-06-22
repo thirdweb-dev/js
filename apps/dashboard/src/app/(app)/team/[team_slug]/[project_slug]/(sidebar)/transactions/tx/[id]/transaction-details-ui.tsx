@@ -1,8 +1,6 @@
 "use client";
 
-import { ChainIconClient } from "components/icons/ChainIcon";
 import { format, formatDistanceToNowStrict } from "date-fns";
-import { useAllChainsData } from "hooks/chains/allChains";
 import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { type ThirdwebClient, toEther } from "thirdweb";
@@ -14,6 +12,8 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { ChainIconClient } from "@/icons/ChainIcon";
 import { statusDetails } from "../../analytics/tx-table/tx-table-ui";
 import type { Transaction } from "../../analytics/tx-table/types";
 

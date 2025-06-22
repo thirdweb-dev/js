@@ -1,9 +1,9 @@
 "use client";
 
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { ApplyForOpCredits } from "components/onboarding/ApplyForOpCreditsModal";
+import { ApplyForOpCredits } from "@app/team/[team_slug]/(team)/~/settings/credits/components/ApplyForOpCreditsModal";
 import type { Team } from "@/api/team";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import type { Account } from "@/hooks/useApi";
 
 export const SettingsGasCreditsPage = (props: {
   team: Team;

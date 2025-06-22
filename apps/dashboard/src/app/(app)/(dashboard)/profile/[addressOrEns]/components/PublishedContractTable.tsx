@@ -1,7 +1,5 @@
 /** biome-ignore-all lint/nursery/noNestedComponentDefinitions: FIXME */
-import type { PublishedContractDetails } from "components/contract-components/hooks";
-import { replaceDeployerAddress } from "lib/publisher-utils";
-import { replaceIpfsUrl } from "lib/sdk";
+
 import { ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
@@ -19,6 +17,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import type { PublishedContractDetails } from "@/hooks/contract-hooks";
+import { replaceDeployerAddress } from "@/lib/publisher-utils";
+import { replaceIpfsUrl } from "@/lib/sdk";
 
 interface PublishedContractTableProps {
   contractDetails: ContractDataInput[];

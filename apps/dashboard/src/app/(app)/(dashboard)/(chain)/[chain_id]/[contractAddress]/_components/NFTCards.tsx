@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useMemo } from "react";
 import { type NFT, type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
-import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import { NFTMediaWithEmptyState } from "@/components/blocks/nft-media";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../_utils/contract-page-path";

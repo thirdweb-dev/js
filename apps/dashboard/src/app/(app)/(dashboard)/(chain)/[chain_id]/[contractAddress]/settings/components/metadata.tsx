@@ -1,6 +1,5 @@
 "use client";
 
-import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import {
   Flex,
   FormControl,
@@ -9,11 +8,11 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { FileInput } from "components/shared/FileInput";
-import { CommonContractSchema } from "constants/schemas";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button } from "chakra/button";
+import { Card } from "chakra/card";
+import { FormErrorMessage, FormLabel } from "chakra/form";
+import { Heading } from "chakra/heading";
+import { Text } from "chakra/text";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -24,15 +23,13 @@ import {
 } from "thirdweb/extensions/common";
 import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
 import { resolveScheme } from "thirdweb/storage";
-import {
-  Button,
-  Card,
-  FormErrorMessage,
-  FormLabel,
-  Heading,
-  Text,
-} from "tw-components";
 import { z } from "zod";
+import { FileInput } from "@/components/blocks/FileInput";
+import { AdminOnly } from "@/components/contracts/roles/admin-only";
+import { TransactionButton } from "@/components/tx-button";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { CommonContractSchema } from "@/schema/schemas";
+import type { ExtensionDetectedState } from "@/types/ExtensionDetectedState";
 import { SettingDetectedState } from "./detected-state";
 
 const DashboardCommonContractSchema = CommonContractSchema.extend({

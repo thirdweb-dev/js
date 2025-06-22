@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useState } from "react";
-import { storybookThirdwebClient } from "stories/utils";
 import { getAddress, NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { ThirdwebProvider } from "thirdweb/react";
+import { storybookThirdwebClient } from "@/storybook/utils";
 import type { NFTMetadataWithPrice } from "./batch-upload/process-files";
 import { type NFTData, UploadNFTsFieldset } from "./upload-nfts";
 

@@ -4,9 +4,9 @@ import "server-only";
 // biome-ignore lint/style/useNodejsImportProtocol: breaks storybook if it's `node:` prefixed
 import { randomBytes } from "crypto";
 import { format } from "date-fns";
+import { getAuthToken } from "@/api/auth-token";
 import type { Team } from "@/api/team";
-import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "../constants/public-envs";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 
 export async function createTeam(options?: { name?: string; slug?: string }) {
   const token = await getAuthToken();
