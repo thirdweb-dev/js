@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { stringify } from "viem";
+import { createThirdwebClient } from "../../client/client.js";
 import type { Theme } from "../../react/core/design-system/index.js";
 import type { CompletedStatusResult } from "../../react/core/hooks/useStepExecutor.js";
 import { webWindowAdapter } from "../../react/web/adapters/WindowAdapter.js";
@@ -14,6 +15,8 @@ import {
   simpleOnrampQuote,
   TRANSACTION_UI_OPTIONS,
 } from "./fixtures.js";
+
+const TEST_CLIENT = createThirdwebClient({ clientId: "test" });
 
 const mockBuyCompletedStatuses: CompletedStatusResult[] = JSON.parse(
   stringify([
@@ -126,6 +129,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
+    client: TEST_CLIENT,
     theme: "dark",
   },
   parameters: {
@@ -135,6 +139,7 @@ export const Default: Story = {
 
 export const DefaultLight: Story = {
   args: {
+    client: TEST_CLIENT,
     theme: "light",
   },
   parameters: {
@@ -144,6 +149,7 @@ export const DefaultLight: Story = {
 
 export const OnrampPayment: Story = {
   args: {
+    client: TEST_CLIENT,
     completedStatuses: mockOnrampCompletedStatuses,
     preparedQuote: simpleOnrampQuote,
     theme: "dark",
@@ -161,6 +167,7 @@ export const OnrampPayment: Story = {
 
 export const OnrampPaymentLight: Story = {
   args: {
+    client: TEST_CLIENT,
     completedStatuses: mockOnrampCompletedStatuses,
     preparedQuote: simpleOnrampQuote,
     theme: "light",
@@ -172,6 +179,7 @@ export const OnrampPaymentLight: Story = {
 
 export const ComplexPayment: Story = {
   args: {
+    client: TEST_CLIENT,
     completedStatuses: [
       ...mockOnrampCompletedStatuses,
       ...mockBuyCompletedStatuses,
@@ -192,6 +200,7 @@ export const ComplexPayment: Story = {
 
 export const ComplexPaymentLight: Story = {
   args: {
+    client: TEST_CLIENT,
     completedStatuses: [
       ...mockOnrampCompletedStatuses,
       ...mockBuyCompletedStatuses,
@@ -206,6 +215,7 @@ export const ComplexPaymentLight: Story = {
 
 export const TransactionPayment: Story = {
   args: {
+    client: TEST_CLIENT,
     completedStatuses: mockBuyCompletedStatuses,
     preparedQuote: simpleBuyQuote,
     theme: "light",

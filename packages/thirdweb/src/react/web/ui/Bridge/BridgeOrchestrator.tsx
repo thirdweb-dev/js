@@ -217,6 +217,7 @@ export function BridgeOrchestrator({
       {/* Error Banner */}
       {state.value === "error" && state.context.currentError && (
         <ErrorBanner
+          client={client}
           error={state.context.currentError}
           onCancel={onCancel}
           onRetry={handleRetry}
@@ -332,6 +333,7 @@ export function BridgeOrchestrator({
         state.context.quote &&
         state.context.completedStatuses && (
           <SuccessScreen
+            client={client}
             completedStatuses={state.context.completedStatuses}
             onDone={handleBuyComplete}
             preparedQuote={state.context.quote}
