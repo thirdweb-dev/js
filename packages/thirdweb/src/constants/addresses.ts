@@ -1,3 +1,5 @@
+import { getAddress } from "src/utils/address.js";
+
 /**
  * The address of the native token.
  */
@@ -8,7 +10,7 @@ export const NATIVE_TOKEN_ADDRESS =
  * @internal
  */
 export function isNativeTokenAddress(address: string) {
-  return address.toLowerCase() === NATIVE_TOKEN_ADDRESS;
+  return getAddress(address) === getAddress(NATIVE_TOKEN_ADDRESS);
 }
 
 /**
