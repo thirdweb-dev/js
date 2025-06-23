@@ -58,6 +58,8 @@ export function RightSection(props: {
         amount={props.options.payOptions.buyTokenAmount}
         chain={props.options.payOptions.buyTokenChain}
         client={THIRDWEB_CLIENT}
+        description={props.options.payOptions.description}
+        image={props.options.payOptions.image}
         theme={themeObj}
         title={props.options.payOptions.title}
         tokenAddress={props.options.payOptions.buyTokenAddress}
@@ -71,14 +73,15 @@ export function RightSection(props: {
         amount={props.options.payOptions.buyTokenAmount}
         chain={props.options.payOptions.buyTokenChain}
         client={THIRDWEB_CLIENT}
-        name={props.options.payOptions.title}
+        description={
+          props.options.payOptions.description || "Your Product Description"
+        }
+        image={
+          props.options.payOptions.image ||
+          getDefaultImage(props.options.theme.type)
+        }
+        name={props.options.payOptions.title || "Your Product Name"}
         presetOptions={[1, 2, 3]}
-        purchaseData={{
-          description: "Size L | Ships worldwide.",
-          image:
-            "https://placehold.co/600x400/1d1d23/7c7a85?text=Your%20Product%20Here&font=roboto",
-          name: "Black Hoodie",
-        }}
         seller={props.options.payOptions.sellerAddress}
         theme={themeObj}
         tokenAddress={props.options.payOptions.buyTokenAddress}
@@ -180,4 +183,10 @@ function TabButtons(props: {
       </div>
     </div>
   );
+}
+
+function getDefaultImage(theme: "dark" | "light") {
+  return theme === "dark"
+    ? "https://placehold.co/600x400/1d1d23/7c7a85?text=Your%20Product%20Here&font=roboto"
+    : "https://placehold.co/600x400/f2eff3/6f6d78?text=Your%20Product%20Here&font=roboto";
 }

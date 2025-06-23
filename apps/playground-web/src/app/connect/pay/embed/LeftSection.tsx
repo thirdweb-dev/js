@@ -277,7 +277,7 @@ export function LeftSection(props: {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-4">
             {/* Modal title */}
             <div className="flex flex-col gap-2">
-              <Label htmlFor={modalTitleId}>Title</Label>
+              <Label htmlFor={modalTitleId}>Name</Label>
               <Input
                 className="bg-card"
                 id={modalTitleId}
@@ -318,7 +318,7 @@ export function LeftSection(props: {
 
           {/* Modal description */}
           <div className="flex flex-col gap-2">
-            <Label htmlFor={modalDescriptionId}>Image</Label>
+            <Label htmlFor={modalDescriptionId}>Description</Label>
             <Input
               className="bg-card"
               id={modalDescriptionId}
