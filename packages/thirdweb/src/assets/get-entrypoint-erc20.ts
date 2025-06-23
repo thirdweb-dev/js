@@ -1,6 +1,6 @@
 import { encodePacked } from "viem";
 import { ZERO_ADDRESS } from "../constants/addresses.js";
-import { type ThirdwebContract, getContract } from "../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../contract/contract.js";
 import { getOrDeployInfraContract } from "../contract/deployment/utils/bootstrap.js";
 import { getDeployedInfraContract } from "../contract/deployment/utils/infra.js";
 import { encodeInitialize } from "../extensions/assets/__generated__/AssetEntrypointERC20/write/initialize.js";
@@ -27,9 +27,9 @@ export async function getOrDeployEntrypointERC20(
 
   if (implementations?.AssetEntrypointERC20) {
     return getContract({
-      client: options.client,
-      chain: options.chain,
       address: implementations.AssetEntrypointERC20,
+      chain: options.chain,
+      client: options.client,
     });
   }
 
@@ -48,22 +48,22 @@ export async function getOrDeployEntrypointERC20(
   // encode init data
   const initData = encodeInitialize({
     owner: DEFAULT_INFRA_ADMIN,
-    router: ZERO_ADDRESS,
     rewardLocker: ZERO_ADDRESS,
+    router: ZERO_ADDRESS,
   });
 
   const entyrpointProxyAddress = await deployInfraProxy({
     ...options,
-    initData,
+    assetFactory,
     extraData: "0x",
     implementationAddress: entrypointImpl.address,
-    assetFactory,
+    initData,
   });
 
   return getContract({
-    client: options.client,
-    chain: options.chain,
     address: entyrpointProxyAddress,
+    chain: options.chain,
+    client: options.client,
   });
 }
 
@@ -72,9 +72,9 @@ export async function getDeployedEntrypointERC20(options: ClientAndChain) {
 
   if (implementations?.AssetEntrypointERC20) {
     return getContract({
-      client: options.client,
-      chain: options.chain,
       address: implementations.AssetEntrypointERC20,
+      chain: options.chain,
+      client: options.client,
     });
   }
 
@@ -110,9 +110,9 @@ export async function getDeployedEntrypointERC20(options: ClientAndChain) {
 
   const entrypointProxyAddress = `0x${hashedDeployInfo.slice(26)}`;
   const entrypointProxy = getContract({
-    client: options.client,
-    chain: options.chain,
     address: entrypointProxyAddress,
+    chain: options.chain,
+    client: options.client,
   });
 
   if (!(await isContractDeployed(entrypointProxy))) {

@@ -17,10 +17,10 @@ export async function distributeToken(options: DistrbuteTokenParams) {
   }
 
   return distributeAsset({
-    contract: entrypoint,
     asset: options.tokenAddress,
     contents: options.contents.map((a) => {
       return { ...a, amount: toUnits(a.amount.toString(), 18) };
     }),
+    contract: entrypoint,
   });
 }

@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "RouterUpdated" event.
@@ -34,7 +34,7 @@ export type RouterUpdatedEventFilters = Partial<{
  */
 export function routerUpdatedEvent(filters: RouterUpdatedEventFilters = {}) {
   return prepareEvent({
-    signature: "event RouterUpdated(address indexed router)",
     filters,
+    signature: "event RouterUpdated(address indexed router)",
   });
 }

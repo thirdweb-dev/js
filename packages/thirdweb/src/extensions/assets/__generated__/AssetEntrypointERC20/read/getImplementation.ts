@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { decodeAbiParameters } from "viem";
-import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the "getImplementation" function.
@@ -19,35 +19,35 @@ export type GetImplementationParams = {
 export const FN_SELECTOR = "0x3c2e0828" as const;
 const FN_INPUTS = [
   {
-    type: "bytes32",
     name: "contractId",
+    type: "bytes32",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple",
     components: [
       {
-        type: "bytes32",
         name: "contractId",
+        type: "bytes32",
       },
       {
-        type: "address",
         name: "implementation",
+        type: "address",
       },
       {
-        type: "uint8",
         name: "implementationType",
-      },
-      {
         type: "uint8",
-        name: "createHook",
       },
       {
-        type: "bytes",
+        name: "createHook",
+        type: "uint8",
+      },
+      {
         name: "createHookData",
+        type: "bytes",
       },
     ],
+    type: "tuple",
   },
 ] as const;
 

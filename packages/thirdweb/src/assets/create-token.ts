@@ -27,8 +27,8 @@ export async function createToken(options: CreateTokenOptions) {
 
   const encodedInitData = await encodeInitParams({
     client,
-    params,
     creator,
+    params,
   });
 
   const rpcRequest = getRpcClient({
@@ -62,9 +62,9 @@ export async function createToken(options: CreateTokenOptions) {
       launchConfig.config.tokenOut &&
       launchConfig.config.tokenOut !== NATIVE_TOKEN_ADDRESS
         ? getContract({
-            client,
-            chain,
             address: launchConfig.config.tokenOut,
+            chain,
+            client,
           })
         : null;
     const currencyDecimals = launchConfig.config.priceDenominator
@@ -83,14 +83,14 @@ export async function createToken(options: CreateTokenOptions) {
 
   const transaction = createAsset({
     contract: entrypoint,
-    creator,
     createParams: {
       amount,
-      referrer: ZERO_ADDRESS,
-      salt,
       data: encodedInitData,
       hookData,
+      referrer: ZERO_ADDRESS,
+      salt,
     },
+    creator,
   });
 
   const receipt = await sendAndConfirmTransaction({ account, transaction });

@@ -7,9 +7,9 @@ import { deployFeeManager, getDeployedFeeManager } from "./bootstrap.js";
 describe.runIf(process.env.TW_SECRET_KEY)("bootstrap asset infra", () => {
   it("should bootstrap fee manager", async () => {
     const feeManager = await deployFeeManager({
+      account: TEST_ACCOUNT_A,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      account: TEST_ACCOUNT_A,
     });
 
     const expectedFeeManager = await getDeployedFeeManager({

@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "AssetInfraDeployed" event.
@@ -42,8 +42,8 @@ export function assetInfraDeployedEvent(
   filters: AssetInfraDeployedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event AssetInfraDeployed(address indexed implementation, address indexed proxy, bytes32 inputSalt, bytes data, bytes extraData)",
-    filters,
   });
 }

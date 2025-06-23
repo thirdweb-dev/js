@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "RewardLockerUpdated" event.
@@ -36,7 +36,7 @@ export function rewardLockerUpdatedEvent(
   filters: RewardLockerUpdatedEventFilters = {},
 ) {
   return prepareEvent({
-    signature: "event RewardLockerUpdated(address indexed locker)",
     filters,
+    signature: "event RewardLockerUpdated(address indexed locker)",
   });
 }

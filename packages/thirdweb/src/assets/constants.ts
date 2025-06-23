@@ -8,7 +8,7 @@ export const DEFAULT_FEE_BPS = 50n;
 export const DEFAULT_SALT = "thirdweb";
 
 export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
-  [84532]: {
+  84532: {
     AssetEntrypointERC20: "0x79C1236cFe59f1f088A15Da08b0D8667387d9703",
     ERC20AssetImpl: "",
     V3PositionManager: "",
@@ -16,7 +16,6 @@ export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
   },
 };
 
-// biome-ignore lint/nursery/noEnum: FIXME
 export enum ImplementationType {
   CLONE = 0,
   CLONE_WITH_IMMUTABLE_ARGS = 1,
@@ -24,7 +23,6 @@ export enum ImplementationType {
   ERC1967_WITH_IMMUTABLE_ARGS = 3,
 }
 
-// biome-ignore lint/nursery/noEnum: FIXME
 export enum CreateHook {
   NONE = 0, // do nothing
   CREATE_POOL = 1, // create a DEX pool via Router

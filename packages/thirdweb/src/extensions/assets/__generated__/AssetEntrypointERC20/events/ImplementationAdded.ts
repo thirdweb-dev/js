@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "ImplementationAdded" event.
@@ -36,8 +36,8 @@ export function implementationAddedEvent(
   filters: ImplementationAddedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event ImplementationAdded(bytes32 contractId, address indexed implementation, uint8 implementationType, uint8 createHook, bytes32 createHookData)",
-    filters,
   });
 }

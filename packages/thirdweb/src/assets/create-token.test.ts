@@ -1,4 +1,3 @@
-import { totalSupply } from "src/extensions/erc20/__generated__/IERC20/read/totalSupply.js";
 import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
@@ -11,12 +10,12 @@ import { createTokenByImplConfig } from "./create-token-by-impl-config.js";
 describe.runIf(process.env.TW_SECRET_KEY)("create token by impl config", () => {
   it("should create token without pool", async () => {
     const token = await createTokenByImplConfig({
+      account: TEST_ACCOUNT_A,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      account: TEST_ACCOUNT_A,
       params: {
-        name: "Test",
         maxSupply: 10_00n,
+        name: "Test",
       },
       salt: "salt123",
     });
@@ -25,9 +24,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("create token by impl config", () => {
 
     const tokenName = await name({
       contract: getContract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
         address: token,
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
       }),
     });
     expect(tokenName).to.eq("Test");

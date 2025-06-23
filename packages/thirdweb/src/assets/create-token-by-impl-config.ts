@@ -32,8 +32,8 @@ export async function createTokenByImplConfig(options: CreateTokenOptions) {
 
   const encodedInitData = await encodeInitParams({
     client,
-    params,
     creator,
+    params,
   });
 
   const rpcRequest = getRpcClient({
@@ -68,9 +68,9 @@ export async function createTokenByImplConfig(options: CreateTokenOptions) {
       launchConfig.config.tokenOut &&
       launchConfig.config.tokenOut !== NATIVE_TOKEN_ADDRESS
         ? getContract({
-            client,
-            chain,
             address: launchConfig.config.tokenOut,
+            chain,
+            client,
           })
         : null;
     const currencyDecimals = launchConfig.config.priceDenominator
@@ -88,12 +88,8 @@ export async function createTokenByImplConfig(options: CreateTokenOptions) {
   }
 
   const transaction = createAssetByImplementationConfig({
-    contract: entrypoint,
-    creator,
     config: {
       contractId: keccakId("ERC20Asset"),
-      implementation: tokenImpl.address,
-      implementationType: ImplementationType.ERC1967,
       createHook:
         launchConfig?.kind === "pool"
           ? CreateHook.CREATE_POOL
@@ -103,13 +99,17 @@ export async function createTokenByImplConfig(options: CreateTokenOptions) {
               ? CreateHook.DISTRIBUTE
               : CreateHook.NONE,
       createHookData: hookData,
+      implementation: tokenImpl.address,
+      implementationType: ImplementationType.ERC1967,
     },
+    contract: entrypoint,
+    creator,
     params: {
       amount,
-      referrer: ZERO_ADDRESS,
-      salt,
       data: encodedInitData,
       hookData,
+      referrer: ZERO_ADDRESS,
+      salt,
     },
   });
 

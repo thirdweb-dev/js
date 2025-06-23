@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "AssetCreated" event.
@@ -40,8 +40,8 @@ export type AssetCreatedEventFilters = Partial<{
  */
 export function assetCreatedEvent(filters: AssetCreatedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event AssetCreated(bytes32 contractId, address indexed creator, address indexed asset, address referrer, bytes aux)",
-    filters,
   });
 }

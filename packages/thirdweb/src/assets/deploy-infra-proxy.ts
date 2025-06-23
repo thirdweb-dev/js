@@ -18,15 +18,15 @@ export async function deployInfraProxy(
 ) {
   const transaction = deployInfraProxyDeterministic({
     contract: options.assetFactory,
-    implementation: options.implementationAddress,
     data: options.initData,
     extraData: options.extraData,
+    implementation: options.implementationAddress,
     salt: keccakId(DEFAULT_SALT),
   });
 
   const receipt = await sendAndConfirmTransaction({
-    transaction,
     account: options.account,
+    transaction,
   });
   const proxyEvent = assetInfraDeployedEvent();
   const decodedEvent = parseEventLogs({

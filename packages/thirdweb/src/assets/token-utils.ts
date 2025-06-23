@@ -25,46 +25,46 @@ export async function encodeInitParams(options: {
       client,
       files: [
         {
-          name: params.name,
           description: params.description,
-          symbol: params.symbol,
-          image: params.image,
           external_link: params.external_link,
+          image: params.image,
+          name: params.name,
           social_urls: params.social_urls,
+          symbol: params.symbol,
         },
       ],
     })) ||
     "";
 
   return encodeInitialize({
-    name: params.name,
-    symbol: params.symbol || params.name,
     contractURI,
     maxSupply: toUnits(
       params.maxSupply.toString() || DEFAULT_MAX_SUPPLY_ERC20.toString(),
       18,
     ),
+    name: params.name,
     owner: creator,
+    symbol: params.symbol || params.name,
   });
 }
 
 export function encodePoolConfig(poolConfig: PoolConfig): Hex {
   const POOL_PARAMS = [
     {
-      type: "address",
       name: "currency",
+      type: "address",
     },
     {
-      type: "uint256",
       name: "amount",
+      type: "uint256",
     },
     {
-      type: "uint24",
       name: "fee",
+      type: "uint24",
     },
     {
-      type: "uint24",
       name: "initialTick",
+      type: "uint24",
     },
   ] as const;
 
@@ -81,32 +81,32 @@ export function encodeMarketConfig(
 ): Hex {
   const MARKET_PARAMS = [
     {
-      type: "address",
       name: "tokenOut",
-    },
-    {
-      type: "uint256",
-      name: "pricePerUnit",
-    },
-    {
-      type: "uint8",
-      name: "priceDenominator",
-    },
-    {
-      type: "uint48",
-      name: "startTime",
-    },
-    {
-      type: "uint48",
-      name: "endTime",
-    },
-    {
       type: "address",
-      name: "hook",
     },
     {
-      type: "bytes",
+      name: "pricePerUnit",
+      type: "uint256",
+    },
+    {
+      name: "priceDenominator",
+      type: "uint8",
+    },
+    {
+      name: "startTime",
+      type: "uint48",
+    },
+    {
+      name: "endTime",
+      type: "uint48",
+    },
+    {
+      name: "hook",
+      type: "address",
+    },
+    {
       name: "hookInit",
+      type: "bytes",
     },
   ] as const;
 

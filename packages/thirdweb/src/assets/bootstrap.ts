@@ -59,11 +59,11 @@ export async function deployRouter(options: ClientAndChainAndAccount) {
 
   const routerImpl = await getOrDeployInfraContract({
     ...options,
-    contractId: "Router",
     constructorParams: {
-      _marketSaleImplementation: marketSaleImpl.address,
       _feeManager: feeManager.address,
+      _marketSaleImplementation: marketSaleImpl.address,
     },
+    contractId: "Router",
     publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
   });
 
@@ -74,16 +74,16 @@ export async function deployRouter(options: ClientAndChainAndAccount) {
 
   const routerProxyAddress = await deployInfraProxy({
     ...options,
-    initData,
+    assetFactory,
     extraData: "0x",
     implementationAddress: routerImpl.address,
-    assetFactory,
+    initData,
   });
 
   return getContract({
-    client: options.client,
-    chain: options.chain,
     address: routerProxyAddress,
+    chain: options.chain,
+    client: options.client,
   });
 }
 
@@ -106,12 +106,12 @@ export async function deployRewardLocker(options: ClientAndChainAndAccount) {
 
   return await getOrDeployInfraContract({
     ...options,
-    contractId: "RewardLocker",
     constructorParams: {
       _feeManager: feeManager.address,
       _v3PositionManager: v3PositionManager,
       _v4PositionManager: v4PositionManager,
     },
+    contractId: "RewardLocker",
     publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
   });
 }
@@ -132,23 +132,23 @@ export async function deployFeeManager(options: ClientAndChainAndAccount) {
 
   // encode init data
   const initData = encodeFeeManagerInit({
-    owner: DEFAULT_INFRA_ADMIN,
-    feeRecipient: DEFAULT_FEE_RECIPIENT,
     defaultFee: DEFAULT_FEE_BPS,
+    feeRecipient: DEFAULT_FEE_RECIPIENT,
+    owner: DEFAULT_INFRA_ADMIN,
   });
 
   // fee manager proxy deployment
   const transaction = deployInfraProxyDeterministic({
     contract: assetFactory,
-    implementation: feeManagerImpl.address,
     data: initData,
     extraData: "0x",
+    implementation: feeManagerImpl.address,
     salt: keccakId(DEFAULT_SALT),
   });
 
   const receipt = await sendAndConfirmTransaction({
-    transaction,
     account: options.account,
+    transaction,
   });
   const proxyEvent = assetInfraDeployedEvent();
   const decodedEvent = parseEventLogs({
@@ -165,9 +165,9 @@ export async function deployFeeManager(options: ClientAndChainAndAccount) {
   const feeManagerProxyAddress = decodedEvent[0]?.args.proxy;
 
   return getContract({
-    client: options.client,
-    chain: options.chain,
     address: feeManagerProxyAddress,
+    chain: options.chain,
+    client: options.client,
   });
 }
 
@@ -203,11 +203,11 @@ export async function getDeployedRouter(options: ClientAndChain) {
 
   const routerImpl = await getDeployedInfraContract({
     ...options,
-    contractId: "Router",
     constructorParams: {
-      _marketSaleImplementation: marketSaleImpl.address,
       _feeManager: feeManager.address,
+      _marketSaleImplementation: marketSaleImpl.address,
     },
+    contractId: "Router",
     publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
   });
 
@@ -233,9 +233,9 @@ export async function getDeployedRouter(options: ClientAndChain) {
 
   const routerProxyAddress = `0x${hashedDeployInfo.slice(26)}`;
   const routerProxy = getContract({
-    client: options.client,
-    chain: options.chain,
     address: routerProxyAddress,
+    chain: options.chain,
+    client: options.client,
   });
 
   if (!(await isContractDeployed(routerProxy))) {
@@ -264,12 +264,12 @@ export async function getDeployedRewardLocker(options: ClientAndChain) {
 
   return await getDeployedInfraContract({
     ...options,
-    contractId: "RewardLocker",
     constructorParams: {
       _feeManager: feeManager.address,
       _v3PositionManager: v3PositionManager,
       _v4PositionManager: v4PositionManager,
     },
+    contractId: "RewardLocker",
     publisher: "0x6453a486d52e0EB6E79Ec4491038E2522a926936",
   });
 }
@@ -306,9 +306,9 @@ export async function getDeployedFeeManager(options: ClientAndChain) {
 
   const feeManagerProxyAddress = `0x${hashedDeployInfo.slice(26)}`;
   const feeManagerProxy = getContract({
-    client: options.client,
-    chain: options.chain,
     address: feeManagerProxyAddress,
+    chain: options.chain,
+    client: options.client,
   });
 
   if (!(await isContractDeployed(feeManagerProxy))) {

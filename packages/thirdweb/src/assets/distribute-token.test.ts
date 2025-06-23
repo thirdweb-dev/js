@@ -1,4 +1,4 @@
-import { type ThirdwebContract, getContract } from "src/contract/contract.js";
+import { getContract, type ThirdwebContract } from "src/contract/contract.js";
 import { getBalance } from "src/extensions/erc20/read/getBalance.js";
 import { approve } from "src/extensions/erc20/write/approve.js";
 import { sendAndConfirmTransaction } from "src/transaction/actions/send-and-confirm-transaction.js";
@@ -26,20 +26,20 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     beforeAll(async () => {
       // create token
       const tokenAddress = await createTokenByImplConfig({
+        account: TEST_ACCOUNT_A,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
-        account: TEST_ACCOUNT_A,
         params: {
-          name: "Test",
           maxSupply: 10_000_000_000n,
+          name: "Test",
         },
         salt: "salt123",
       });
 
       token = getContract({
         address: tokenAddress,
-        client: TEST_CLIENT,
         chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
       });
 
       // approve tokens to entrypoint for distribution
@@ -49,58 +49,58 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
 
       const approvalTx = approve({
+        amountWei: toUnits("1000", 18),
         contract: token,
         spender: entrypoint?.address as string,
-        amountWei: toUnits("1000", 18),
       });
       await sendAndConfirmTransaction({
-        transaction: approvalTx,
         account: TEST_ACCOUNT_A,
+        transaction: approvalTx,
       });
     }, 20000);
 
     it("should distrbute tokens to specified recipients", async () => {
       const contents = [
-        { recipient: TEST_ACCOUNT_B.address, amount: 10n },
-        { recipient: TEST_ACCOUNT_C.address, amount: 15n },
-        { recipient: TEST_ACCOUNT_D.address, amount: 20n },
+        { amount: 10n, recipient: TEST_ACCOUNT_B.address },
+        { amount: 15n, recipient: TEST_ACCOUNT_C.address },
+        { amount: 20n, recipient: TEST_ACCOUNT_D.address },
       ];
 
       const transaction = await distributeToken({
-        client: TEST_CLIENT,
         chain: ANVIL_CHAIN,
-        tokenAddress: token.address,
+        client: TEST_CLIENT,
         contents,
+        tokenAddress: token.address,
       });
 
-      await sendAndConfirmTransaction({ transaction, account: TEST_ACCOUNT_A });
+      await sendAndConfirmTransaction({ account: TEST_ACCOUNT_A, transaction });
 
       const balanceB = (
         await getBalance({
-          contract: token,
           address: TEST_ACCOUNT_B.address,
+          contract: token,
         })
       ).value;
 
       const balanceC = (
         await getBalance({
-          contract: token,
           address: TEST_ACCOUNT_C.address,
+          contract: token,
         })
       ).value;
 
       const balanceD = (
         await getBalance({
-          contract: token,
           address: TEST_ACCOUNT_D.address,
+          contract: token,
         })
       ).value;
 
       // admin balance
       const balanceA = (
         await getBalance({
-          contract: token,
           address: TEST_ACCOUNT_A.address,
+          contract: token,
         })
       ).value;
 

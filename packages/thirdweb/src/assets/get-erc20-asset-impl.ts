@@ -1,7 +1,6 @@
-import { type ThirdwebContract, getContract } from "../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../contract/contract.js";
 import { getOrDeployInfraContract } from "../contract/deployment/utils/bootstrap.js";
 import type { ClientAndChainAndAccount } from "../utils/types.js";
-import {} from "./bootstrap.js";
 import { IMPLEMENTATIONS } from "./constants.js";
 
 export async function getOrDeployERC20AssetImpl(
@@ -11,9 +10,9 @@ export async function getOrDeployERC20AssetImpl(
 
   if (implementations?.ERC20AssetImpl) {
     return getContract({
-      client: options.client,
-      chain: options.chain,
       address: implementations.ERC20AssetImpl,
+      chain: options.chain,
+      client: options.client,
     });
   }
 
