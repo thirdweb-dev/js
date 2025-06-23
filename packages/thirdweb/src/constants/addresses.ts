@@ -2,7 +2,7 @@
  * The address of the native token.
  */
 export const NATIVE_TOKEN_ADDRESS =
-  "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+  "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 
 /**
  * @internal
