@@ -4,9 +4,11 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSubItem,
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
@@ -66,23 +68,13 @@ export function FullWidthSidebarLayout(props: {
     >
       {/* left - sidebar */}
       <Sidebar className="pt-2" collapsible="icon" side="left">
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <RenderSidebarGroup
-                groupName={undefined}
-                sidebarLinks={contentSidebarLinks}
-              />
-            </SidebarGroupContent>
-          </SidebarGroup>
+        <SidebarContent className="p-2">
+          <RenderSidebarMenu links={contentSidebarLinks} />
         </SidebarContent>
 
         {footerSidebarLinks && (
           <SidebarFooter className="pb-3">
-            <RenderSidebarGroup
-              groupName={undefined}
-              sidebarLinks={footerSidebarLinks}
-            />
+            <RenderSidebarMenu links={footerSidebarLinks} />
           </SidebarFooter>
         )}
 
@@ -106,17 +98,29 @@ export function FullWidthSidebarLayout(props: {
 
 function RenderSidebarGroup(props: {
   sidebarLinks: SidebarLink[];
-  groupName: string | undefined;
+  groupName: string;
 }) {
-  const { sidebarLinks } = props;
-  const sidebar = useSidebar();
+  return (
+    <SidebarGroup className="p-0">
+      <SidebarMenuItem>
+        <SidebarGroupLabel> {props.groupName}</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <RenderSidebarMenu links={props.sidebarLinks} />
+        </SidebarGroupContent>
+      </SidebarMenuItem>
+    </SidebarGroup>
+  );
+}
 
+function RenderSidebarMenu(props: { links: SidebarLink[] }) {
+  const sidebar = useSidebar();
   return (
     <SidebarMenu className="gap-1.5">
-      {sidebarLinks.map((link) => {
+      {props.links.map((link, idx) => {
+        // link
         if ("href" in link) {
           return (
-            <SidebarMenuItem key={link.href}>
+            <SidebarMenuSubItem key={link.href}>
               <SidebarMenuButton asChild>
                 <NavLink
                   activeClassName="text-foreground bg-accent"
@@ -132,14 +136,24 @@ function RenderSidebarGroup(props: {
                   <span>{link.label}</span>
                 </NavLink>
               </SidebarMenuButton>
-            </SidebarMenuItem>
+            </SidebarMenuSubItem>
           );
         }
 
+        // separator
         if ("separator" in link) {
-          return <SidebarSeparator className="my-1" key={Math.random()} />;
+          return (
+            <SidebarSeparator
+              className="my-1"
+              key={`separator-${
+                // biome-ignore lint/suspicious/noArrayIndexKey: index is fine here
+                idx
+              }`}
+            />
+          );
         }
 
+        // group
         return (
           <RenderSidebarGroup
             groupName={link.group}
