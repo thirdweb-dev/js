@@ -27,10 +27,7 @@ export function WithHeader({
           style={{
             aspectRatio: "16/9",
             backgroundColor: theme.colors.tertiaryBg,
-            backgroundImage: `url(${resolveScheme({
-              client,
-              uri: uiOptions.metadata.image,
-            })})`,
+            backgroundImage: `url(${getUrl(client, uiOptions.metadata.image)})`,
             backgroundPosition: "center",
             backgroundSize: "cover",
             borderRadius: `${radius.md} ${radius.md} 0 0`,
@@ -62,4 +59,14 @@ export function WithHeader({
       </Container>
     </Container>
   );
+}
+
+function getUrl(client: ThirdwebClient, uri: string) {
+  if (!uri.startsWith("ipfs://")) {
+    return uri;
+  }
+  return resolveScheme({
+    client,
+    uri,
+  });
 }

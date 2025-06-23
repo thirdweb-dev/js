@@ -12,6 +12,7 @@ export function BuyMerchPreview() {
         client={THIRDWEB_CLIENT}
         description="Size L | Ships worldwide."
         feePayer="seller"
+        image="/drip-hoodie.png"
         name="Black Hoodie"
         seller="0xEb0effdFB4dC5b3d5d3aC6ce29F3ED213E95d675"
         theme="light"

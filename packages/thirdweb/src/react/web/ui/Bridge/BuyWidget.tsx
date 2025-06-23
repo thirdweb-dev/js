@@ -121,6 +121,16 @@ export type BuyWidgetProps = {
   title?: string;
 
   /**
+   * The description to display in the widget.
+   */
+  description?: string;
+
+  /**
+   * The image to display in the widget.
+   */
+  image?: string;
+
+  /**
    * Preset fiat amounts to display in the UI. Defaults to [5, 10, 20].
    */
   presetOptions?: [number, number, number];
@@ -275,6 +285,11 @@ export function BuyWidget(props: BuyWidgetProps) {
           data: {
             destinationToken: ETH,
             initialAmount: props.amount,
+            metadata: {
+              description: props.description,
+              image: props.image,
+              title: props.title,
+            },
             mode: "fund_wallet",
           },
           type: "success",
@@ -300,6 +315,8 @@ export function BuyWidget(props: BuyWidgetProps) {
           destinationToken: token,
           initialAmount: props.amount,
           metadata: {
+            description: props.description,
+            image: props.image,
             title: props.title,
           },
           mode: "fund_wallet",
