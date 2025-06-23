@@ -8,6 +8,7 @@ import {
   NATIVE_TOKEN_ADDRESS,
   type ThirdwebClient,
 } from "thirdweb";
+import { useActiveWalletChain } from "thirdweb/react";
 import { reportAssetCreationStepConfigured } from "@/analytics/report";
 import {
   type CreateAssetFormValues,
@@ -24,8 +25,6 @@ export type CreateTokenFunctions = {
   deployContract: (values: CreateAssetFormValues) => Promise<{
     contractAddress: string;
   }>;
-  setClaimConditions: (values: CreateAssetFormValues) => Promise<void>;
-  mintTokens: (values: CreateAssetFormValues) => Promise<void>;
   airdropTokens: (values: CreateAssetFormValues) => Promise<void>;
 };
 
@@ -42,12 +41,11 @@ export function CreateTokenAssetPageUI(props: {
   const [step, setStep] = useState<"token-info" | "distribution" | "launch">(
     "token-info",
   );
+  const activeChain = useActiveWalletChain();
 
   const tokenInfoForm = useForm<TokenInfoFormValues>({
-    resolver: zodResolver(tokenInfoFormSchema),
-    reValidateMode: "onChange",
-    values: {
-      chain: "1",
+    defaultValues: {
+      chain: activeChain?.id.toString() || "",
       description: "",
       image: undefined,
       name: "",
@@ -63,22 +61,29 @@ export function CreateTokenAssetPageUI(props: {
       ],
       symbol: "",
     },
+    resolver: zodResolver(tokenInfoFormSchema),
+    reValidateMode: "onChange",
   });
 
   const tokenDistributionForm = useForm<TokenDistributionFormValues>({
-    resolver: zodResolver(tokenDistributionFormSchema),
-    reValidateMode: "onChange",
-    values: {
+    defaultValues: {
       airdropAddresses: [],
       // airdrop
       airdropEnabled: false,
+      directSale: {
+        currencyAddress: checksummedNativeTokenAddress,
+        priceAmount: "0.1",
+      },
+      publicMarket: {
+        tradingFees: "1",
+      },
       // sale fieldset
       saleAllocationPercentage: "0",
-      saleEnabled: false,
-      salePrice: "0.1",
-      saleTokenAddress: checksummedNativeTokenAddress,
+      saleMode: "disabled",
       supply: "1000000",
     },
+    resolver: zodResolver(tokenDistributionFormSchema),
+    reValidateMode: "onChange",
   });
 
   return (
@@ -90,7 +95,7 @@ export function CreateTokenAssetPageUI(props: {
           onChainUpdated={() => {
             // if the chain is updated, set the sale token address to the native token address
             tokenDistributionForm.setValue(
-              "saleTokenAddress",
+              "directSale.currencyAddress",
               checksummedNativeTokenAddress,
             );
           }}

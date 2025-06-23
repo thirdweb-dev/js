@@ -9,6 +9,7 @@ import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { SocialUrlsFieldset } from "../../_common/SocialUrls";
 import { StepCard } from "../../_common/step-card";
@@ -94,7 +95,7 @@ export function NFTCollectionInfoFieldset(props: {
                 isRequired
                 label="Chain"
               >
-                <ClientOnly ssr={null}>
+                <ClientOnly ssr={<Skeleton className="h-10" />}>
                   <SingleNetworkSelector
                     chainId={Number(form.watch("chain"))}
                     className="bg-background"
