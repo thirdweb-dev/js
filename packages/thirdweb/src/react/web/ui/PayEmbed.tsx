@@ -308,6 +308,7 @@ export type PayEmbedProps = {
  * Refer to the [`PayEmbedConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/PayEmbedConnectOptions) type for more details.
  *
  * @buyCrypto
+ * @deprecated Use `BuyWidget`, `CheckoutWidget` or `TransactionWidget` instead.
  */
 export function PayEmbed(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
@@ -510,10 +511,10 @@ export type PayEmbedConnectOptions = {
    * ```
    */
   autoConnect?:
-    | {
-        timeout: number;
-      }
-    | boolean;
+  | {
+    timeout: number;
+  }
+  | boolean;
 
   /**
    * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.
