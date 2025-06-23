@@ -344,7 +344,7 @@ export function FilterDetailsStep({
                     }}
                     options={functionSignatures.map((sig) => ({
                       abi: sig.abi,
-                      label: sig.name,
+                      label: truncateMiddle(sig.name, 30, 15),
                       value: sig.signature,
                     }))}
                     placeholder="Select or enter a function signature"
