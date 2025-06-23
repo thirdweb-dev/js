@@ -359,6 +359,7 @@ export function PayEmbed(props: PayEmbedProps) {
         client={props.client}
         theme={theme}
         title={metadata?.name || "Buy"}
+        onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
         tokenAddress={
           props.payOptions.prefillBuy.token?.address as Address | undefined
         }
@@ -376,6 +377,7 @@ export function PayEmbed(props: PayEmbedProps) {
         image={metadata?.image}
         name={metadata?.name || "Checkout"}
         seller={props.payOptions.paymentInfo.sellerAddress as Address}
+        onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
         theme={theme}
         tokenAddress={
           props.payOptions.paymentInfo.token?.address as Address | undefined
@@ -391,6 +393,7 @@ export function PayEmbed(props: PayEmbedProps) {
         description={metadata?.description}
         image={metadata?.image}
         theme={theme}
+        onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
         title={metadata?.name}
         transaction={props.payOptions.transaction}
       />
