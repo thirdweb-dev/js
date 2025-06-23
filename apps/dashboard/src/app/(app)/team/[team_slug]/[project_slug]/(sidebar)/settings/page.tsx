@@ -1,10 +1,10 @@
+import { notFound, redirect } from "next/navigation";
 import { getProject } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { getMemberByAccountId } from "@/api/team-members";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { notFound, redirect } from "next/navigation";
+import { getAuthToken } from "../../../../../../../@/api/auth-token";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
-import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../login/loginRedirect";
 import { ProjectGeneralSettingsPage } from "./ProjectGeneralSettingsPage";
 
@@ -44,8 +44,8 @@ export default async function Page(props: {
       }
 
       return {
-        team,
         role: member.role,
+        team,
       };
     }),
   );
@@ -63,13 +63,13 @@ export default async function Page(props: {
 
   return (
     <ProjectGeneralSettingsPage
-      project={project}
-      teamSlug={team_slug}
-      showNebulaSettings={currentTeam.enabledScopes.includes("nebula")}
       client={client}
-      teamId={currentTeam.id}
-      teamsWithRole={teamsWithRole}
       isOwnerAccount={isOwnerAccount}
+      project={project}
+      showNebulaSettings={currentTeam.enabledScopes.includes("nebula")}
+      teamId={currentTeam.id}
+      teamSlug={team_slug}
+      teamsWithRole={teamsWithRole}
     />
   );
 }

@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "org.thetatoken",
-  name: "Theta Wallet",
-  homepage: "https://www.thetatoken.org/wallet",
-  image_id: "d4afb810-5925-4f00-4ebb-d180fcf29000",
   app: {
-    browser: "https://wallet.thetatoken.org",
-    ios: "https://apps.apple.com/app/theta-wallet/id1451094550",
     android:
       "https://play.google.com/store/apps/details?id=org.theta.wallet&pli=1",
-    mac: "",
-    windows: null,
-    linux: null,
+    browser: "https://wallet.thetatoken.org",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/app/theta-wallet/id1451094550",
+    linux: null,
+    mac: "",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "wc://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://wallet.thetatoken.org",
   },
+  homepage: "https://www.thetatoken.org/wallet",
+  id: "org.thetatoken",
+  image_id: "d4afb810-5925-4f00-4ebb-d180fcf29000",
+  mobile: {
+    native: "wc://",
+    universal: null,
+  },
+  name: "Theta Wallet",
+  rdns: null,
 } as const;

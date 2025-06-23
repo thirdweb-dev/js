@@ -1,13 +1,13 @@
 "use client";
 
-import type { Project } from "@/api/projects";
-import type { Team } from "@/api/team";
-import { DynamicHeight } from "@/components/ui/DynamicHeight";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { ChevronsUpDownIcon } from "lucide-react";
 import type { ThirdwebClient } from "thirdweb";
+import type { Project } from "@/api/projects";
+import type { Team } from "@/api/team";
+import { Button } from "@/components/ui/button";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import type { Account } from "@/hooks/useApi";
 import { TeamSelectionUI } from "./TeamSelectionUI";
 
 type TeamSelectorMobileMenuButtonProps = {
@@ -30,10 +30,10 @@ export function TeamSelectorMobileMenuButton(
       {/* Trigger */}
       <DialogTrigger asChild>
         <Button
-          size="icon"
-          className="!h-auto w-auto rounded-xl px-0.5 py-2"
-          variant="ghost"
           aria-label="Select Project"
+          className="!h-auto w-auto rounded-xl px-0.5 py-2"
+          size="icon"
+          variant="ghost"
         >
           <ChevronsUpDownIcon
             className="size-5 shrink-0 text-muted-foreground hover:text-foreground"
@@ -42,17 +42,17 @@ export function TeamSelectorMobileMenuButton(
         </Button>
       </DialogTrigger>
 
-      <DialogContent dialogCloseClassName="hidden" className="p-0">
+      <DialogContent className="p-0" dialogCloseClassName="hidden">
         <DynamicHeight>
           <TeamSelectionUI
-            isOnProjectPage={props.isOnProjectPage}
-            currentTeam={currentTeam}
-            setHoveredTeam={() => {}} // don't care on mobile
-            teamsAndProjects={teamsAndProjects}
-            upgradeTeamLink={props.upgradeTeamLink}
             account={props.account}
             client={props.client}
-            createTeam={props.createTeam}
+            createTeam={props.createTeam} // don't care on mobile
+            currentTeam={currentTeam}
+            isOnProjectPage={props.isOnProjectPage}
+            setHoveredTeam={() => {}}
+            teamsAndProjects={teamsAndProjects}
+            upgradeTeamLink={props.upgradeTeamLink}
           />
         </DynamicHeight>
       </DialogContent>

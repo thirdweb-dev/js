@@ -1,7 +1,7 @@
 import { optimism } from "../../../chains/chain-definitions/optimism.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import { KEY_GATEWAY_ADDRESS } from "../constants.js";
 import type { FarcasterContractOptions } from "./contractOptions.js";
@@ -24,8 +24,8 @@ export function getKeyGateway(
   options: FarcasterContractOptions,
 ): ThirdwebContract {
   return getContract({
-    client: options.client,
     address: KEY_GATEWAY_ADDRESS,
     chain: options.chain ?? optimism,
+    client: options.client,
   });
 }

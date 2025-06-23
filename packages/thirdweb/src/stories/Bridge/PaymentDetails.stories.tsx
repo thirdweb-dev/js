@@ -8,58 +8,58 @@ import {
 import { stringify } from "../../utils/json.js";
 import { ModalThemeWrapper, storyClient } from "../utils.js";
 import {
-  DIRECT_PAYMENT_UI_OPTIONS,
-  STORY_MOCK_WALLET,
-  TRANSACTION_UI_OPTIONS,
-  USDC,
   buyWithApprovalQuote,
   complexBuyQuote,
+  DIRECT_PAYMENT_UI_OPTIONS,
   longTextBuyQuote,
   onrampWithSwapsQuote,
+  STORY_MOCK_WALLET,
   simpleBuyQuote,
   simpleOnrampQuote,
+  TRANSACTION_UI_OPTIONS,
+  USDC,
 } from "./fixtures.js";
 
 const fiatPaymentMethod: PaymentMethod = {
-  type: "fiat",
   currency: "USD",
   onramp: "coinbase",
   payerWallet: STORY_MOCK_WALLET,
+  type: "fiat",
 };
 
 const cryptoPaymentMethod: PaymentMethod = JSON.parse(
   stringify({
-    type: "wallet",
-    payerWallet: STORY_MOCK_WALLET,
     balance: 100000000n,
     originToken: {
-      chainId: 1,
       address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-      name: "USD Coin",
-      symbol: "USDC",
+      chainId: 1,
       decimals: 6,
-      priceUsd: 1.0,
       iconUri:
         "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
+      name: "USD Coin",
+      priceUsd: 1.0,
+      symbol: "USDC",
     },
+    payerWallet: STORY_MOCK_WALLET,
+    type: "wallet",
   }),
 );
 
 const ethCryptoPaymentMethod: PaymentMethod = JSON.parse(
   stringify({
-    type: "wallet",
-    payerWallet: STORY_MOCK_WALLET,
     balance: 1000000000000000000n,
     originToken: {
-      chainId: 1,
       address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-      name: "Ethereum",
-      symbol: "ETH",
+      chainId: 1,
       decimals: 18,
-      priceUsd: 2500.0,
       iconUri:
         "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
+      name: "Ethereum",
+      priceUsd: 2500.0,
+      symbol: "ETH",
     },
+    payerWallet: STORY_MOCK_WALLET,
+    type: "wallet",
   }),
 );
 
@@ -79,39 +79,39 @@ const PaymentDetailsWithTheme = (props: PaymentDetailsWithThemeProps) => {
 };
 
 const meta = {
-  title: "Bridge/PaymentDetails",
+  args: {
+    onBack: () => {},
+    onConfirm: () => {},
+    onError: (error) => console.error("Error:", error),
+    preparedQuote: simpleOnrampQuote,
+    theme: "dark",
+    uiOptions: {
+      destinationToken: USDC,
+      mode: "fund_wallet",
+    },
+  },
+  argTypes: {
+    onBack: { action: "back clicked" },
+    onConfirm: { action: "route confirmed" },
+    onError: { action: "error occurred" },
+    theme: {
+      control: "select",
+      description: "Theme for the component",
+      options: ["light", "dark"],
+    },
+  },
   component: PaymentDetailsWithTheme,
   parameters: {
-    layout: "centered",
     docs: {
       description: {
         component:
           "Route preview screen that displays prepared quote details, fees, estimated time, and transaction steps for user confirmation.",
       },
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  args: {
-    preparedQuote: simpleOnrampQuote,
-    onConfirm: () => {},
-    onBack: () => {},
-    onError: (error) => console.error("Error:", error),
-    theme: "dark",
-    uiOptions: {
-      mode: "fund_wallet",
-      destinationToken: USDC,
-    },
-  },
-  argTypes: {
-    theme: {
-      control: "select",
-      options: ["light", "dark"],
-      description: "Theme for the component",
-    },
-    onConfirm: { action: "route confirmed" },
-    onBack: { action: "back clicked" },
-    onError: { action: "error occurred" },
-  },
+  title: "Bridge/PaymentDetails",
 } satisfies Meta<typeof PaymentDetailsWithTheme>;
 
 export default meta;
@@ -119,10 +119,10 @@ type Story = StoryObj<typeof meta>;
 
 export const OnrampSimple: Story = {
   args: {
-    theme: "dark",
-    preparedQuote: simpleOnrampQuote,
-    paymentMethod: fiatPaymentMethod,
     client: storyClient,
+    paymentMethod: fiatPaymentMethod,
+    preparedQuote: simpleOnrampQuote,
+    theme: "dark",
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -137,10 +137,10 @@ export const OnrampSimple: Story = {
 
 export const OnrampSimpleLight: Story = {
   args: {
-    theme: "light",
-    preparedQuote: simpleOnrampQuote,
-    paymentMethod: fiatPaymentMethod,
     client: storyClient,
+    paymentMethod: fiatPaymentMethod,
+    preparedQuote: simpleOnrampQuote,
+    theme: "light",
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -154,10 +154,10 @@ export const OnrampSimpleLight: Story = {
 
 export const OnrampSimpleDirectPayment: Story = {
   args: {
-    theme: "dark",
-    preparedQuote: simpleOnrampQuote,
-    paymentMethod: fiatPaymentMethod,
     client: storyClient,
+    paymentMethod: fiatPaymentMethod,
+    preparedQuote: simpleOnrampQuote,
+    theme: "dark",
     uiOptions: DIRECT_PAYMENT_UI_OPTIONS.credits,
   },
   parameters: {
@@ -173,10 +173,10 @@ export const OnrampSimpleDirectPayment: Story = {
 
 export const OnrampSimpleLightDirectPayment: Story = {
   args: {
-    theme: "light",
-    preparedQuote: simpleOnrampQuote,
-    paymentMethod: fiatPaymentMethod,
     client: storyClient,
+    paymentMethod: fiatPaymentMethod,
+    preparedQuote: simpleOnrampQuote,
+    theme: "light",
     uiOptions: DIRECT_PAYMENT_UI_OPTIONS.concertTicket,
   },
   parameters: {
@@ -191,10 +191,10 @@ export const OnrampSimpleLightDirectPayment: Story = {
 
 export const OnrampWithSwaps: Story = {
   args: {
-    theme: "dark",
-    preparedQuote: onrampWithSwapsQuote,
-    paymentMethod: fiatPaymentMethod,
     client: storyClient,
+    paymentMethod: fiatPaymentMethod,
+    preparedQuote: onrampWithSwapsQuote,
+    theme: "dark",
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -209,10 +209,10 @@ export const OnrampWithSwaps: Story = {
 
 export const OnrampWithSwapsLight: Story = {
   args: {
-    theme: "light",
-    preparedQuote: onrampWithSwapsQuote,
-    paymentMethod: fiatPaymentMethod,
     client: storyClient,
+    paymentMethod: fiatPaymentMethod,
+    preparedQuote: onrampWithSwapsQuote,
+    theme: "light",
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -226,10 +226,10 @@ export const OnrampWithSwapsLight: Story = {
 
 export const BuySimple: Story = {
   args: {
-    theme: "dark",
-    preparedQuote: simpleBuyQuote,
-    paymentMethod: ethCryptoPaymentMethod,
     client: storyClient,
+    paymentMethod: ethCryptoPaymentMethod,
+    preparedQuote: simpleBuyQuote,
+    theme: "dark",
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -244,10 +244,10 @@ export const BuySimple: Story = {
 
 export const BuySimpleLight: Story = {
   args: {
-    theme: "light",
-    preparedQuote: simpleBuyQuote,
-    paymentMethod: ethCryptoPaymentMethod,
     client: storyClient,
+    paymentMethod: ethCryptoPaymentMethod,
+    preparedQuote: simpleBuyQuote,
+    theme: "light",
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -261,10 +261,10 @@ export const BuySimpleLight: Story = {
 
 export const BuySimpleDirectPayment: Story = {
   args: {
-    theme: "dark",
-    preparedQuote: simpleBuyQuote,
-    paymentMethod: ethCryptoPaymentMethod,
     client: storyClient,
+    paymentMethod: ethCryptoPaymentMethod,
+    preparedQuote: simpleBuyQuote,
+    theme: "dark",
     uiOptions: DIRECT_PAYMENT_UI_OPTIONS.digitalArt,
   },
   parameters: {
@@ -280,10 +280,10 @@ export const BuySimpleDirectPayment: Story = {
 
 export const BuySimpleLightDirectPayment: Story = {
   args: {
-    theme: "light",
-    preparedQuote: simpleBuyQuote,
-    paymentMethod: ethCryptoPaymentMethod,
     client: storyClient,
+    paymentMethod: ethCryptoPaymentMethod,
+    preparedQuote: simpleBuyQuote,
+    theme: "light",
     uiOptions: DIRECT_PAYMENT_UI_OPTIONS.subscription,
   },
   parameters: {
@@ -298,10 +298,10 @@ export const BuySimpleLightDirectPayment: Story = {
 
 export const BuyWithLongText: Story = {
   args: {
-    theme: "dark",
-    preparedQuote: longTextBuyQuote,
-    paymentMethod: ethCryptoPaymentMethod,
     client: storyClient,
+    paymentMethod: ethCryptoPaymentMethod,
+    preparedQuote: longTextBuyQuote,
+    theme: "dark",
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -315,10 +315,10 @@ export const BuyWithLongText: Story = {
 
 export const BuyWithApproval: Story = {
   args: {
-    theme: "dark",
-    preparedQuote: buyWithApprovalQuote,
-    paymentMethod: cryptoPaymentMethod,
     client: storyClient,
+    paymentMethod: cryptoPaymentMethod,
+    preparedQuote: buyWithApprovalQuote,
+    theme: "dark",
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -333,10 +333,10 @@ export const BuyWithApproval: Story = {
 
 export const BuyWithApprovalLight: Story = {
   args: {
-    theme: "light",
-    preparedQuote: buyWithApprovalQuote,
-    paymentMethod: cryptoPaymentMethod,
     client: storyClient,
+    paymentMethod: cryptoPaymentMethod,
+    preparedQuote: buyWithApprovalQuote,
+    theme: "light",
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -350,10 +350,10 @@ export const BuyWithApprovalLight: Story = {
 
 export const BuyComplex: Story = {
   args: {
-    theme: "dark",
-    preparedQuote: complexBuyQuote,
-    paymentMethod: ethCryptoPaymentMethod,
     client: storyClient,
+    paymentMethod: ethCryptoPaymentMethod,
+    preparedQuote: complexBuyQuote,
+    theme: "dark",
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -368,10 +368,10 @@ export const BuyComplex: Story = {
 
 export const BuyComplexLight: Story = {
   args: {
-    theme: "light",
-    preparedQuote: complexBuyQuote,
-    paymentMethod: ethCryptoPaymentMethod,
     client: storyClient,
+    paymentMethod: ethCryptoPaymentMethod,
+    preparedQuote: complexBuyQuote,
+    theme: "light",
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -388,10 +388,10 @@ export const BuyComplexLight: Story = {
 
 export const TransactionEthTransfer: Story = {
   args: {
-    theme: "dark",
-    preparedQuote: simpleBuyQuote,
-    paymentMethod: ethCryptoPaymentMethod,
     client: storyClient,
+    paymentMethod: ethCryptoPaymentMethod,
+    preparedQuote: simpleBuyQuote,
+    theme: "dark",
     uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,
   },
   parameters: {
@@ -407,10 +407,10 @@ export const TransactionEthTransfer: Story = {
 
 export const TransactionEthTransferLight: Story = {
   args: {
-    theme: "light",
-    preparedQuote: simpleBuyQuote,
-    paymentMethod: ethCryptoPaymentMethod,
     client: storyClient,
+    paymentMethod: ethCryptoPaymentMethod,
+    preparedQuote: simpleBuyQuote,
+    theme: "light",
     uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,
   },
   parameters: {
@@ -426,10 +426,10 @@ export const TransactionEthTransferLight: Story = {
 
 export const TransactionERC20Transfer: Story = {
   args: {
-    theme: "dark",
-    preparedQuote: simpleBuyQuote,
-    paymentMethod: cryptoPaymentMethod,
     client: storyClient,
+    paymentMethod: cryptoPaymentMethod,
+    preparedQuote: simpleBuyQuote,
+    theme: "dark",
     uiOptions: TRANSACTION_UI_OPTIONS.erc20Transfer,
   },
   parameters: {
@@ -445,10 +445,10 @@ export const TransactionERC20Transfer: Story = {
 
 export const TransactionERC20TransferLight: Story = {
   args: {
-    theme: "light",
-    preparedQuote: simpleBuyQuote,
-    paymentMethod: cryptoPaymentMethod,
     client: storyClient,
+    paymentMethod: cryptoPaymentMethod,
+    preparedQuote: simpleBuyQuote,
+    theme: "light",
     uiOptions: TRANSACTION_UI_OPTIONS.erc20Transfer,
   },
   parameters: {
@@ -464,10 +464,10 @@ export const TransactionERC20TransferLight: Story = {
 
 export const TransactionContractInteraction: Story = {
   args: {
-    theme: "dark",
-    preparedQuote: simpleBuyQuote,
-    paymentMethod: ethCryptoPaymentMethod,
     client: storyClient,
+    paymentMethod: ethCryptoPaymentMethod,
+    preparedQuote: simpleBuyQuote,
+    theme: "dark",
     uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
   },
   parameters: {
@@ -483,10 +483,10 @@ export const TransactionContractInteraction: Story = {
 
 export const TransactionContractInteractionLight: Story = {
   args: {
-    theme: "light",
-    preparedQuote: simpleBuyQuote,
-    paymentMethod: ethCryptoPaymentMethod,
     client: storyClient,
+    paymentMethod: ethCryptoPaymentMethod,
+    preparedQuote: simpleBuyQuote,
+    theme: "light",
     uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
   },
   parameters: {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -8,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
 
 export function RequestExample(props: {
   codeExamples: Array<{
@@ -32,12 +32,12 @@ export function RequestExample(props: {
           </span>
         </div>
         <Select
-          value={selectedExample?.label}
           onValueChange={(value: string) => {
             setSelectedExample(
               props.codeExamples.find((example) => example.label === value),
             );
           }}
+          value={selectedExample?.label}
         >
           <SelectTrigger className="w-[130px]">
             <SelectValue />

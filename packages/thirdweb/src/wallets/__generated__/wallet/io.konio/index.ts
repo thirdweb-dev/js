@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.konio",
-  name: "Konio",
-  homepage: "https://konio.io",
-  image_id: "305dadb1-395e-4ca8-d4d0-d8ad0cc37000",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/app/konio/id6453561342",
     android: "https://play.google.com/store/apps/details?id=com.adrihoke.konio",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/app/konio/id6453561342",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "konio://",
-    universal: "https://konio.io",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://konio.io",
+  id: "io.konio",
+  image_id: "305dadb1-395e-4ca8-d4d0-d8ad0cc37000",
+  mobile: {
+    native: "konio://",
+    universal: "https://konio.io",
+  },
+  name: "Konio",
+  rdns: null,
 } as const;

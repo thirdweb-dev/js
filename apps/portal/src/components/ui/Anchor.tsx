@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { LinkIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export function Anchor(props: {
   id: string;
@@ -19,8 +19,8 @@ export function Anchor(props: {
       {props.children}
       {props.id && (
         <a
-          href={`#${props.id}`}
           className="text-muted-foreground no-underline opacity-0 transition-opacity group-hover/anchor:opacity-100"
+          href={`#${props.id}`}
           onClick={(e) => {
             e.stopPropagation();
           }}

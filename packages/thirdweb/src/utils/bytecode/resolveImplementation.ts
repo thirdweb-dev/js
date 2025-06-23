@@ -1,5 +1,5 @@
 import { getBytecode } from "../../contract/actions/get-bytecode.js";
-import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import { eth_getStorageAt } from "../../rpc/actions/eth_getStorageAt.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { readContract } from "../../transaction/read-contract.js";
@@ -52,7 +52,6 @@ export async function resolveImplementation(
   if (beacon && beacon !== AddressZero) {
     // In case of a BeaconProxy, it is setup as BeaconProxy --> Beacon --> Implementation
     // Hence we replace the proxy address with Beacon address, and continue further resolving below
-    // biome-ignore lint/style/noParameterAssign: we purposefully mutate the contract object here
     contract = getContract({
       ...contract,
       address: beacon,
@@ -100,8 +99,8 @@ async function getBeaconFromStorageSlot(
    * bytes32(uint256(keccak256('eip1967.proxy.beacon')) - 1))
    */
   const rpcRequest = getRpcClient({
-    client: contract.client,
     chain: contract.chain,
+    client: contract.client,
   });
 
   try {
@@ -124,8 +123,8 @@ async function getImplementationFromStorageSlot(
   contract: ThirdwebContract<any>,
 ): Promise<string | undefined> {
   const rpcRequest = getRpcClient({
-    client: contract.client,
     chain: contract.chain,
+    client: contract.client,
   });
 
   try {
@@ -161,17 +160,17 @@ async function getImplementationFromStorageSlot(
 }
 
 const UPGRADEABLE_PROXY_ABI = {
-  type: "function",
-  name: "implementation",
   inputs: [],
+  name: "implementation",
   outputs: [
     {
-      type: "address",
-      name: "",
       internalType: "address",
+      name: "",
+      type: "address",
     },
   ],
   stateMutability: "view",
+  type: "function",
 } as const;
 
 async function getImplementationFromContractCall(

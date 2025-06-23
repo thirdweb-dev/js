@@ -2,8 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import { timeoutPromise } from "./timeoutPromise.js";
 
 const options = {
-  ms: 100,
   message: "Timeout",
+  ms: 100,
 };
 
 describe("timeoutPromise", () => {

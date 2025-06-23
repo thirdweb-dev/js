@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
 
-import { getAuthToken } from "app/(app)/api/lib/getAuthToken";
-import { THIRDWEB_INSIGHT_API_DOMAIN } from "constants/urls";
+import { getAuthToken } from "@/api/auth-token";
+import { THIRDWEB_INSIGHT_API_DOMAIN } from "@/constants/urls";
 
 export interface WebhookResponse {
   id: string;
@@ -80,13 +80,13 @@ export async function createWebhook(
     const response = await fetch(
       `https://${THIRDWEB_INSIGHT_API_DOMAIN}/v1/webhooks`,
       {
-        method: "POST",
+        body: JSON.stringify(payload),
         headers: {
+          Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
           "x-client-id": clientId,
-          Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify(payload),
+        method: "POST",
       },
     );
 
@@ -115,11 +115,11 @@ export async function getWebhooks(
     const response = await fetch(
       `https://${THIRDWEB_INSIGHT_API_DOMAIN}/v1/webhooks`,
       {
-        method: "GET",
         headers: {
-          "x-client-id": clientId,
           Authorization: `Bearer ${authToken}`,
+          "x-client-id": clientId,
         },
+        method: "GET",
       },
     );
 
@@ -149,11 +149,11 @@ export async function deleteWebhook(
     const response = await fetch(
       `https://${THIRDWEB_INSIGHT_API_DOMAIN}/v1/webhooks/${encodeURIComponent(webhookId)}`,
       {
-        method: "DELETE",
         headers: {
-          "x-client-id": clientId,
           Authorization: `Bearer ${authToken}`,
+          "x-client-id": clientId,
         },
+        method: "DELETE",
       },
     );
 
@@ -183,29 +183,29 @@ export async function testWebhook(
     const response = await fetch(
       `https://${THIRDWEB_INSIGHT_API_DOMAIN}/v1/webhooks/test`,
       {
-        method: "POST",
+        body: JSON.stringify(payload),
         headers: {
+          Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
           "x-client-id": clientId,
-          Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify(payload),
+        method: "POST",
       },
     );
 
     if (!response.ok) {
       const errorText = await response.text();
       return {
-        success: false,
         error: `Failed to test webhook: ${errorText}`,
+        success: false,
       };
     }
 
     return (await response.json()) as TestWebhookResponse;
   } catch (error) {
     return {
-      success: false,
       error: `Network or parsing error: ${error instanceof Error ? error.message : "Unknown error"}`,
+      success: false,
     };
   }
 }
@@ -215,10 +215,10 @@ export async function getSupportedWebhookChains(): Promise<SupportedWebhookChain
     const response = await fetch(
       `https://${THIRDWEB_INSIGHT_API_DOMAIN}/service/chains`,
       {
-        method: "GET",
         headers: {
           "x-service-api-key": process.env.INSIGHT_SERVICE_API_KEY || "",
         },
+        method: "GET",
       },
     );
 

@@ -23,22 +23,22 @@ export function OTPInput(props: {
   return (
     <OTPInputContainer>
       <InputOTP
+        maxLength={6}
+        onChange={(newValue) => {
+          props.setValue(newValue);
+        }}
         onComplete={() => {
           props.onEnter();
         }}
-        maxLength={6}
-        value={props.value}
         render={({ slots }) => (
-          <Container flex="row" gap="xs" center="both">
+          <Container center="both" flex="row" gap="xs">
             {slots.map((slot, idx) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: index is the only valid key here
               <Slot key={idx} {...slot} isInvalid={props.isInvalid} />
             ))}
           </Container>
         )}
-        onChange={(newValue) => {
-          props.setValue(newValue);
-        }}
+        value={props.value}
       />
     </OTPInputContainer>
   );
@@ -71,45 +71,45 @@ const caretBlink = keyframes`
 const FakeCaret = StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
-    position: "absolute",
-    pointerEvents: "none",
-    inset: 0,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    animation: `${caretBlink} 1s infinite`,
     "&::before": {
+      backgroundColor: theme.colors.primaryText,
       content: "''",
       display: "block",
-      width: "1.5px",
       height: "1em",
-      backgroundColor: theme.colors.primaryText,
+      width: "1.5px",
     },
+    alignItems: "center",
+    animation: `${caretBlink} 1s infinite`,
+    display: "flex",
+    inset: 0,
+    justifyContent: "center",
+    pointerEvents: "none",
+    position: "absolute",
   };
 });
 
 const OTPInputBox = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
-    position: "relative",
-    width: "40px",
-    height: "40px",
-    textAlign: "center",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: fontSize.md,
-    padding: spacing.xs,
-    boxSizing: "border-box",
-    transition: "color 200ms ease",
-    border: `2px solid ${theme.colors.borderColor}`,
     "&[data-active='true']": {
       borderColor: theme.colors.accentText,
     },
-    color: theme.colors.primaryText,
-    borderRadius: radius.lg,
     "&[data-error='true']": {
       borderColor: theme.colors.danger,
     },
+    alignItems: "center",
+    border: `2px solid ${theme.colors.borderColor}`,
+    borderRadius: radius.lg,
+    boxSizing: "border-box",
+    color: theme.colors.primaryText,
+    display: "flex",
+    fontSize: fontSize.md,
+    height: "40px",
+    justifyContent: "center",
+    padding: spacing.xs,
+    position: "relative",
+    textAlign: "center",
+    transition: "color 200ms ease",
+    width: "40px",
   };
 });

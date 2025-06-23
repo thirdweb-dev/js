@@ -1,10 +1,6 @@
 "use server";
 import "server-only";
 
-import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
-import { API_SERVER_SECRET } from "@/constants/server-envs";
-import { isVercel } from "lib/vercel-utils";
 import { cookies } from "next/headers";
 import { getAddress } from "thirdweb";
 import type {
@@ -12,6 +8,10 @@ import type {
   LoginPayload,
   VerifyLoginPayloadParams,
 } from "thirdweb/auth";
+import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
+import { API_SERVER_SECRET } from "@/constants/server-envs";
+import { isVercel } from "@/utils/vercel";
 import { verifyTurnstileToken } from "./verifyTurnstileToken";
 
 export async function getLoginPayload(
@@ -21,15 +21,15 @@ export async function getLoginPayload(
     throw new Error("API_SERVER_SECRET is not set");
   }
   const res = await fetch(`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v2/siwe/payload`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-service-api-key": API_SERVER_SECRET,
-    },
     body: JSON.stringify({
       address: params.address,
       chainId: params.chainId?.toString(),
     }),
+    headers: {
+      "Content-Type": "application/json",
+      "x-service-api-key": API_SERVER_SECRET,
+    },
+    method: "POST",
   });
 
   if (!res.ok) {
@@ -58,8 +58,8 @@ export async function doLogin(
     const result = await verifyTurnstileToken(turnstileToken);
     if (!result.success) {
       return {
-        error: "Invalid captcha. Please try again.",
         context: result.context,
+        error: "Invalid captcha. Please try again.",
       };
     }
   }
@@ -80,13 +80,13 @@ export async function doLogin(
 
   // forward the request to the API server
   const res = await fetch(`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v2/siwe/login`, {
-    method: "POST",
+    // set the createAccount flag to true to create a new account if it does not exist
+    body: JSON.stringify({ ...payload, createAccount: true, utm: utmCookies }),
     headers: {
       "Content-Type": "application/json",
       "x-service-api-key": API_SERVER_SECRET,
     },
-    // set the createAccount flag to true to create a new account if it does not exist
-    body: JSON.stringify({ ...payload, createAccount: true, utm: utmCookies }),
+    method: "POST",
   });
 
   // if the request failed, log the error and throw an error
@@ -142,20 +142,20 @@ export async function doLogin(
     jwt,
     {
       httpOnly: true,
-      secure: true,
-      sameSite: "strict",
       // 3 days
       maxAge: 3 * 24 * 60 * 60,
+      sameSite: "strict",
+      secure: true,
     },
   );
 
   // set the active account cookie
   cookieStore.set(COOKIE_ACTIVE_ACCOUNT, getAddress(payload.payload.address), {
     httpOnly: true,
-    secure: true,
-    sameSite: "strict",
     // 3 days
     maxAge: 3 * 24 * 60 * 60,
+    sameSite: "strict",
+    secure: true,
   });
 
   return {
@@ -186,11 +186,11 @@ export async function isLoggedIn(address: string) {
   }
 
   const res = await fetch(`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/account/me`, {
-    method: "GET",
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
+    method: "GET",
   });
 
   if (!res.ok) {
@@ -216,10 +216,10 @@ export async function isLoggedIn(address: string) {
   // set the active account cookie again
   cookieStore.set(COOKIE_ACTIVE_ACCOUNT, getAddress(address), {
     httpOnly: false,
-    secure: true,
-    sameSite: "strict",
     // 3 days
     maxAge: 3 * 24 * 60 * 60,
+    sameSite: "strict",
+    secure: true,
   });
   return true;
 }

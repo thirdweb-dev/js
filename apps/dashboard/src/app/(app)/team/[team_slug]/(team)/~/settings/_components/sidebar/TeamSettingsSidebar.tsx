@@ -1,9 +1,9 @@
+import type { ThirdwebClient } from "thirdweb";
 import type { Team } from "@/api/team";
 import { Badge } from "@/components/ui/badge";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import type { ThirdwebClient } from "thirdweb";
-import { SidebarLink } from "./SidebarLink";
+import type { Account } from "@/hooks/useApi";
 import { getTeamSettingsLinks } from "./getTeamSettingsLinks";
+import { SidebarLink } from "./SidebarLink";
 
 export function TeamSettingsSidebar(props: {
   team: Team;
@@ -19,24 +19,24 @@ export function TeamSettingsSidebar(props: {
   return (
     <aside className="lg:-ml-2 sticky top-0 hidden w-[250px] shrink-0 grow-0 flex-col gap-4 self-start lg:flex">
       <RenderLinkGroup
+        client={props.client}
         links={teamGroupLinks}
-        title="Team"
         team={props.team}
+        title="Team"
         titleAvatarIcon={{
           id: props.team.id,
           src: props.team.image || "",
         }}
-        client={props.client}
       />
       <RenderLinkGroup
+        client={props.client}
         links={accountGroupLinks}
-        title="Account"
         team={props.team}
+        title="Account"
         titleAvatarIcon={{
           id: props.account?.id,
           src: props.account?.image || "",
         }}
-        client={props.client}
       />
     </aside>
   );
@@ -59,8 +59,8 @@ function RenderLinkGroup(props: {
     <>
       <div className="px-2">
         <Badge
-          variant="outline"
           className="bg-card font-normal text-muted-foreground"
+          variant="outline"
         >
           {props.title}
         </Badge>

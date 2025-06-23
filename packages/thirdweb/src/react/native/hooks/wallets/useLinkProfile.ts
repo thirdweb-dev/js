@@ -80,7 +80,6 @@ export function useLinkProfile() {
   const wallets = useConnectedWallets();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ["profiles"],
     mutationFn: async (options: AuthArgsType) => {
       const ecosystemWallet = wallets.find((w) => isEcosystemWallet(w));
       const ecosystem: Ecosystem | undefined = ecosystemWallet
@@ -92,6 +91,7 @@ export function useLinkProfile() {
       const optionsWithEcosystem = { ...options, ecosystem } as AuthArgsType;
       return linkProfile(optionsWithEcosystem);
     },
+    mutationKey: ["profiles"],
     onSuccess() {
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ["profiles"] });

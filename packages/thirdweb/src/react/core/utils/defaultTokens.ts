@@ -40,275 +40,275 @@ const DEFAULT_TOKENS = {
   "1": [
     {
       address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      icon: wrappedEthIcon,
       name: "Wrapped Ether",
       symbol: "WETH",
-      icon: wrappedEthIcon,
     },
     {
       address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      icon: tetherUsdIcon,
       name: "Tether USD",
       symbol: "USDT",
-      icon: tetherUsdIcon,
     },
     {
       address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      icon: usdcIcon,
       name: "USD Coin",
       symbol: "USDC",
-      icon: usdcIcon,
     },
     {
       address: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      icon: wrappedBtcIcon,
       name: "Wrapped Bitcoin",
       symbol: "WBTC",
-      icon: wrappedBtcIcon,
     },
     {
       address: "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0",
+      icon: maticIcon,
       name: "Polygon",
       symbol: "WMATIC",
-      icon: maticIcon,
-    },
-  ],
-  "11155111": [
-    {
-      address: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
-      name: "USD Coin",
-      symbol: "USDC",
-      icon: usdcIcon,
     },
   ],
   "10": [
     {
       address: "0x4200000000000000000000000000000000000006",
+      icon: wrappedEthIcon,
       name: "Wrapped Ether",
       symbol: "WETH",
-      icon: wrappedEthIcon,
     },
     {
       address: "0x0b2c639c533813f4aa9d7837caf62653d097ff85",
+      icon: usdcIcon,
       name: "USD Coin",
       symbol: "USDC",
-      icon: usdcIcon,
     },
   ],
   "56": [
     {
       address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      icon: binanceCoinIcon,
       name: "Wrapped Binance Chain Token",
       symbol: "WBNB",
-      icon: binanceCoinIcon,
     },
     {
       address: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+      icon: BUSDIcon,
       name: "Binance USD",
       symbol: "BUSD",
-      icon: BUSDIcon,
     },
   ],
   "97": [
     {
       address: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
+      icon: binanceCoinIcon,
       name: "Wrapped Binance Chain Testnet Token",
       symbol: "WBNB",
-      icon: binanceCoinIcon,
     },
     {
       address: "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee",
+      icon: BUSDIcon,
       name: "Binance USD",
       symbol: "BUSD",
-      icon: BUSDIcon,
     },
   ],
   "137": [
     {
       address: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+      icon: usdcIcon,
       name: "USD Coin",
       symbol: "USDC",
-      icon: usdcIcon,
     },
     {
       address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+      icon: maticIcon,
       name: "Wrapped Matic",
       symbol: "WMATIC",
-      icon: maticIcon,
     },
     {
       address: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+      icon: wrappedEthIcon,
       name: "Wrapped Ether",
       symbol: "WETH",
-      icon: wrappedEthIcon,
     },
     {
       address: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      icon: tetherUsdIcon,
       name: "Tether USD",
       symbol: "USDT",
-      icon: tetherUsdIcon,
     },
     {
       address: "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
+      icon: wrappedBtcIcon,
       name: "Wrapped BTC",
       symbol: "WBTC",
-      icon: wrappedBtcIcon,
     },
   ],
   "250": [
     {
       address: "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
+      icon: fantomIcon,
       name: "Wrapped Fantom",
       symbol: "WFTM",
-      icon: fantomIcon,
     },
     {
-      name: "Wrapped Ether",
       address: "0x74b23882a30290451A17c44f4F05243b6b58C76d",
-      symbol: "WETH",
       icon: wrappedEthIcon,
+      name: "Wrapped Ether",
+      symbol: "WETH",
     },
     {
-      name: "USD Coin",
       address: "0x04068DA6C83AFCFA0e13ba15A6696662335D5B75",
-      symbol: "USDC",
       icon: usdcIcon,
+      name: "USD Coin",
+      symbol: "USDC",
     },
     {
-      name: "Wrapped Bitcoin",
       address: "0x321162Cd933E2Be498Cd2267a90534A804051b11",
-      symbol: "WBTC",
       icon: wrappedBtcIcon,
+      name: "Wrapped Bitcoin",
+      symbol: "WBTC",
     },
   ],
   "420": [
     {
       address: "0x4200000000000000000000000000000000000006",
+      icon: wrappedEthIcon,
       name: "Wrapped Ether",
       symbol: "WETH",
-      icon: wrappedEthIcon,
     },
   ],
   "4002": [
     {
       address: "0xf1277d1Ed8AD466beddF92ef448A132661956621",
+      icon: fantomIcon,
       name: "Wrapped Fantom",
       symbol: "WFTM",
-      icon: fantomIcon,
-    },
-  ],
-  "42161": [
-    {
-      address: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-      icon: wrappedEthIcon,
-    },
-    {
-      address: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
-      name: "USD Coin",
-      symbol: "USDC",
-      icon: usdcIcon,
-    },
-  ],
-  "43113": [
-    {
-      address: "0xd00ae08403B9bbb9124bB305C09058E32C39A48c",
-      name: "Wrapped AVAX",
-      symbol: "WAVAX",
-      icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwMyIgaGVpZ2h0PSIxNTA0IiB2aWV3Qm94PSIwIDAgMTUwMyAxNTA0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB4PSIyODciIHk9IjI1OCIgd2lkdGg9IjkyOCIgaGVpZ2h0PSI4NDQiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTUwMi41IDc1MkMxNTAyLjUgMTE2Ni43NyAxMTY2LjI3IDE1MDMgNzUxLjUgMTUwM0MzMzYuNzM0IDE1MDMgMC41IDExNjYuNzcgMC41IDc1MkMwLjUgMzM3LjIzNCAzMzYuNzM0IDEgNzUxLjUgMUMxMTY2LjI3IDEgMTUwMi41IDMzNy4yMzQgMTUwMi41IDc1MlpNNTM4LjY4OCAxMDUwLjg2SDM5Mi45NEMzNjIuMzE0IDEwNTAuODYgMzQ3LjE4NiAxMDUwLjg2IDMzNy45NjIgMTA0NC45NkMzMjcuOTk5IDEwMzguNSAzMjEuOTExIDEwMjcuOCAzMjEuMTczIDEwMTUuOTlDMzIwLjYxOSAxMDA1LjExIDMyOC4xODQgOTkxLjgyMiAzNDMuMzEyIDk2NS4yNTVMNzAzLjE4MiAzMzAuOTM1QzcxOC40OTUgMzAzLjk5OSA3MjYuMjQzIDI5MC41MzEgNzM2LjAyMSAyODUuNTVDNzQ2LjUzNyAyODAuMiA3NTkuMDgzIDI4MC4yIDc2OS41OTkgMjg1LjU1Qzc3OS4zNzcgMjkwLjUzMSA3ODcuMTI2IDMwMy45OTkgODAyLjQzOCAzMzAuOTM1TDg3Ni40MiA0NjAuMDc5TDg3Ni43OTcgNDYwLjczOEM4OTMuMzM2IDQ4OS42MzUgOTAxLjcyMyA1MDQuMjg5IDkwNS4zODUgNTE5LjY2OUM5MDkuNDQzIDUzNi40NTggOTA5LjQ0MyA1NTQuMTY5IDkwNS4zODUgNTcwLjk1OEM5MDEuNjk1IDU4Ni40NTUgODkzLjM5MyA2MDEuMjE1IDg3Ni42MDQgNjMwLjU0OUw2ODcuNTczIDk2NC43MDJMNjg3LjA4NCA5NjUuNTU4QzY3MC40MzYgOTk0LjY5MyA2NjEuOTk5IDEwMDkuNDYgNjUwLjMwNiAxMDIwLjZDNjM3LjU3NiAxMDMyLjc4IDYyMi4yNjMgMTA0MS42MyA2MDUuNDc0IDEwNDYuNjJDNTkwLjE2MSAxMDUwLjg2IDU3My4wMDQgMTA1MC44NiA1MzguNjg4IDEwNTAuODZaTTkwNi43NSAxMDUwLjg2SDExMTUuNTlDMTE0Ni40IDEwNTAuODYgMTE2MS45IDEwNTAuODYgMTE3MS4xMyAxMDQ0Ljc4QzExODEuMDkgMTAzOC4zMiAxMTg3LjM2IDEwMjcuNDMgMTE4Ny45MiAxMDE1LjYzQzExODguNDUgMTAwNS4xIDExODEuMDUgOTkyLjMzIDExNjYuNTUgOTY3LjMwN0MxMTY2LjA1IDk2Ni40NTUgMTE2NS41NSA5NjUuNTg4IDExNjUuMDQgOTY0LjcwNkwxMDYwLjQzIDc4NS43NUwxMDU5LjI0IDc4My43MzVDMTA0NC41NCA3NTguODc3IDEwMzcuMTIgNzQ2LjMyNCAxMDI3LjU5IDc0MS40NzJDMTAxNy4wOCA3MzYuMTIxIDEwMDQuNzEgNzM2LjEyMSA5OTQuMTk5IDc0MS40NzJDOTg0LjYwNSA3NDYuNDUzIDk3Ni44NTcgNzU5LjU1MiA5NjEuNTQ0IDc4NS45MzRMODU3LjMwNiA5NjQuODkxTDg1Ni45NDkgOTY1LjUwN0M4NDEuNjkgOTkxLjg0NyA4MzQuMDY0IDEwMDUuMDEgODM0LjYxNCAxMDE1LjgxQzgzNS4zNTIgMTAyNy42MiA4NDEuNDQgMTAzOC41IDg1MS40MDIgMTA0NC45NkM4NjAuNDQzIDEwNTAuODYgODc1Ljk0IDEwNTAuODYgOTA2Ljc1IDEwNTAuODZaIiBmaWxsPSIjRTg0MTQyIi8+Cjwvc3ZnPgo=",
-    },
-    {
-      address: "0x5425890298aed601595a70AB815c96711a31Bc65",
-      name: "USD Coin",
-      symbol: "USDC",
-      icon: usdcIcon,
-    },
-  ],
-  "43114": [
-    {
-      address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
-      name: "Wrapped AVAX",
-      symbol: "WAVAX",
-      icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwMyIgaGVpZ2h0PSIxNTA0IiB2aWV3Qm94PSIwIDAgMTUwMyAxNTA0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB4PSIyODciIHk9IjI1OCIgd2lkdGg9IjkyOCIgaGVpZ2h0PSI4NDQiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTUwMi41IDc1MkMxNTAyLjUgMTE2Ni43NyAxMTY2LjI3IDE1MDMgNzUxLjUgMTUwM0MzMzYuNzM0IDE1MDMgMC41IDExNjYuNzcgMC41IDc1MkMwLjUgMzM3LjIzNCAzMzYuNzM0IDEgNzUxLjUgMUMxMTY2LjI3IDEgMTUwMi41IDMzNy4yMzQgMTUwMi41IDc1MlpNNTM4LjY4OCAxMDUwLjg2SDM5Mi45NEMzNjIuMzE0IDEwNTAuODYgMzQ3LjE4NiAxMDUwLjg2IDMzNy45NjIgMTA0NC45NkMzMjcuOTk5IDEwMzguNSAzMjEuOTExIDEwMjcuOCAzMjEuMTczIDEwMTUuOTlDMzIwLjYxOSAxMDA1LjExIDMyOC4xODQgOTkxLjgyMiAzNDMuMzEyIDk2NS4yNTVMNzAzLjE4MiAzMzAuOTM1QzcxOC40OTUgMzAzLjk5OSA3MjYuMjQzIDI5MC41MzEgNzM2LjAyMSAyODUuNTVDNzQ2LjUzNyAyODAuMiA3NTkuMDgzIDI4MC4yIDc2OS41OTkgMjg1LjU1Qzc3OS4zNzcgMjkwLjUzMSA3ODcuMTI2IDMwMy45OTkgODAyLjQzOCAzMzAuOTM1TDg3Ni40MiA0NjAuMDc5TDg3Ni43OTcgNDYwLjczOEM4OTMuMzM2IDQ4OS42MzUgOTAxLjcyMyA1MDQuMjg5IDkwNS4zODUgNTE5LjY2OUM5MDkuNDQzIDUzNi40NTggOTA5LjQ0MyA1NTQuMTY5IDkwNS4zODUgNTcwLjk1OEM5MDEuNjk1IDU4Ni40NTUgODkzLjM5MyA2MDEuMjE1IDg3Ni42MDQgNjMwLjU0OUw2ODcuNTczIDk2NC43MDJMNjg3LjA4NCA5NjUuNTU4QzY3MC40MzYgOTk0LjY5MyA2NjEuOTk5IDEwMDkuNDYgNjUwLjMwNiAxMDIwLjZDNjM3LjU3NiAxMDMyLjc4IDYyMi4yNjMgMTA0MS42MyA2MDUuNDc0IDEwNDYuNjJDNTkwLjE2MSAxMDUwLjg2IDU3My4wMDQgMTA1MC44NiA1MzguNjg4IDEwNTAuODZaTTkwNi43NSAxMDUwLjg2SDExMTUuNTlDMTE0Ni40IDEwNTAuODYgMTE2MS45IDEwNTAuODYgMTE3MS4xMyAxMDQ0Ljc4QzExODEuMDkgMTAzOC4zMiAxMTg3LjM2IDEwMjcuNDMgMTE4Ny45MiAxMDE1LjYzQzExODguNDUgMTAwNS4xIDExODEuMDUgOTkyLjMzIDExNjYuNTUgOTY3LjMwN0MxMTY2LjA1IDk2Ni40NTUgMTE2NS41NSA5NjUuNTg4IDExNjUuMDQgOTY0LjcwNkwxMDYwLjQzIDc4NS43NUwxMDU5LjI0IDc4My43MzVDMTA0NC41NCA3NTguODc3IDEwMzcuMTIgNzQ2LjMyNCAxMDI3LjU5IDc0MS40NzJDMTAxNy4wOCA3MzYuMTIxIDEwMDQuNzEgNzM2LjEyMSA5OTQuMTk5IDc0MS40NzJDOTg0LjYwNSA3NDYuNDUzIDk3Ni44NTcgNzU5LjU1MiA5NjEuNTQ0IDc4NS45MzRMODU3LjMwNiA5NjQuODkxTDg1Ni45NDkgOTY1LjUwN0M4NDEuNjkgOTkxLjg0NyA4MzQuMDY0IDEwMDUuMDEgODM0LjYxNCAxMDE1LjgxQzgzNS4zNTIgMTAyNy42MiA4NDEuNDQgMTAzOC41IDg1MS40MDIgMTA0NC45NkM4NjAuNDQzIDEwNTAuODYgODc1Ljk0IDEwNTAuODYgOTA2Ljc1IDEwNTAuODZaIiBmaWxsPSIjRTg0MTQyIi8+Cjwvc3ZnPgo=",
-    },
-    {
-      address: "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-      icon: wrappedEthIcon,
-    },
-    {
-      address: "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7",
-      name: "Tether USD",
-      symbol: "USDT",
-      icon: tetherUsdIcon,
-    },
-    {
-      address: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
-      name: "USD Coin",
-      symbol: "USDC",
-      icon: usdcIcon,
-    },
-    {
-      address: "0x50b7545627a5162F82A992c33b87aDc75187B218",
-      name: "Wrapped BTC",
-      symbol: "WBTC",
-      icon: wrappedBtcIcon,
-    },
-  ],
-  "80001": [
-    {
-      address: "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
-      name: "Wrapped Matic",
-      symbol: "WMATIC",
-      icon: maticIcon,
-    },
-    {
-      name: "Wrapped Ether",
-      address: "0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa",
-      symbol: "WETH",
-      icon: wrappedEthIcon,
-    },
-    {
-      address: "0x0FA8781a83E46826621b3BC094Ea2A0212e71B23",
-      name: "USD Coin",
-      symbol: "USDC",
-      icon: usdcIcon,
-    },
-    {
-      name: "Tether USD",
-      address: "0x3813e82e6f7098b9583FC0F33a962D02018B6803",
-      symbol: "USDT",
-      icon: tetherUsdIcon,
-    },
-  ],
-  "421613": [
-    {
-      address: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-      icon: wrappedEthIcon,
-    },
-    {
-      address: "0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63",
-      name: "USD Coin",
-      symbol: "USDC",
-      icon: usdcIcon,
     },
   ],
   // Base mainnet
   "8453": [
     {
       address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      icon: usdcIcon,
       name: "USD Coin",
       symbol: "USDC",
+    },
+  ],
+  "42161": [
+    {
+      address: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+      icon: wrappedEthIcon,
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+    {
+      address: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
       icon: usdcIcon,
+      name: "USD Coin",
+      symbol: "USDC",
+    },
+  ],
+  "43113": [
+    {
+      address: "0xd00ae08403B9bbb9124bB305C09058E32C39A48c",
+      icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwMyIgaGVpZ2h0PSIxNTA0IiB2aWV3Qm94PSIwIDAgMTUwMyAxNTA0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB4PSIyODciIHk9IjI1OCIgd2lkdGg9IjkyOCIgaGVpZ2h0PSI4NDQiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTUwMi41IDc1MkMxNTAyLjUgMTE2Ni43NyAxMTY2LjI3IDE1MDMgNzUxLjUgMTUwM0MzMzYuNzM0IDE1MDMgMC41IDExNjYuNzcgMC41IDc1MkMwLjUgMzM3LjIzNCAzMzYuNzM0IDEgNzUxLjUgMUMxMTY2LjI3IDEgMTUwMi41IDMzNy4yMzQgMTUwMi41IDc1MlpNNTM4LjY4OCAxMDUwLjg2SDM5Mi45NEMzNjIuMzE0IDEwNTAuODYgMzQ3LjE4NiAxMDUwLjg2IDMzNy45NjIgMTA0NC45NkMzMjcuOTk5IDEwMzguNSAzMjEuOTExIDEwMjcuOCAzMjEuMTczIDEwMTUuOTlDMzIwLjYxOSAxMDA1LjExIDMyOC4xODQgOTkxLjgyMiAzNDMuMzEyIDk2NS4yNTVMNzAzLjE4MiAzMzAuOTM1QzcxOC40OTUgMzAzLjk5OSA3MjYuMjQzIDI5MC41MzEgNzM2LjAyMSAyODUuNTVDNzQ2LjUzNyAyODAuMiA3NTkuMDgzIDI4MC4yIDc2OS41OTkgMjg1LjU1Qzc3OS4zNzcgMjkwLjUzMSA3ODcuMTI2IDMwMy45OTkgODAyLjQzOCAzMzAuOTM1TDg3Ni40MiA0NjAuMDc5TDg3Ni43OTcgNDYwLjczOEM4OTMuMzM2IDQ4OS42MzUgOTAxLjcyMyA1MDQuMjg5IDkwNS4zODUgNTE5LjY2OUM5MDkuNDQzIDUzNi40NTggOTA5LjQ0MyA1NTQuMTY5IDkwNS4zODUgNTcwLjk1OEM5MDEuNjk1IDU4Ni40NTUgODkzLjM5MyA2MDEuMjE1IDg3Ni42MDQgNjMwLjU0OUw2ODcuNTczIDk2NC43MDJMNjg3LjA4NCA5NjUuNTU4QzY3MC40MzYgOTk0LjY5MyA2NjEuOTk5IDEwMDkuNDYgNjUwLjMwNiAxMDIwLjZDNjM3LjU3NiAxMDMyLjc4IDYyMi4yNjMgMTA0MS42MyA2MDUuNDc0IDEwNDYuNjJDNTkwLjE2MSAxMDUwLjg2IDU3My4wMDQgMTA1MC44NiA1MzguNjg4IDEwNTAuODZaTTkwNi43NSAxMDUwLjg2SDExMTUuNTlDMTE0Ni40IDEwNTAuODYgMTE2MS45IDEwNTAuODYgMTE3MS4xMyAxMDQ0Ljc4QzExODEuMDkgMTAzOC4zMiAxMTg3LjM2IDEwMjcuNDMgMTE4Ny45MiAxMDE1LjYzQzExODguNDUgMTAwNS4xIDExODEuMDUgOTkyLjMzIDExNjYuNTUgOTY3LjMwN0MxMTY2LjA1IDk2Ni40NTUgMTE2NS41NSA5NjUuNTg4IDExNjUuMDQgOTY0LjcwNkwxMDYwLjQzIDc4NS43NUwxMDU5LjI0IDc4My43MzVDMTA0NC41NCA3NTguODc3IDEwMzcuMTIgNzQ2LjMyNCAxMDI3LjU5IDc0MS40NzJDMTAxNy4wOCA3MzYuMTIxIDEwMDQuNzEgNzM2LjEyMSA5OTQuMTk5IDc0MS40NzJDOTg0LjYwNSA3NDYuNDUzIDk3Ni44NTcgNzU5LjU1MiA5NjEuNTQ0IDc4NS45MzRMODU3LjMwNiA5NjQuODkxTDg1Ni45NDkgOTY1LjUwN0M4NDEuNjkgOTkxLjg0NyA4MzQuMDY0IDEwMDUuMDEgODM0LjYxNCAxMDE1LjgxQzgzNS4zNTIgMTAyNy42MiA4NDEuNDQgMTAzOC41IDg1MS40MDIgMTA0NC45NkM4NjAuNDQzIDEwNTAuODYgODc1Ljk0IDEwNTAuODYgOTA2Ljc1IDEwNTAuODZaIiBmaWxsPSIjRTg0MTQyIi8+Cjwvc3ZnPgo=",
+      name: "Wrapped AVAX",
+      symbol: "WAVAX",
+    },
+    {
+      address: "0x5425890298aed601595a70AB815c96711a31Bc65",
+      icon: usdcIcon,
+      name: "USD Coin",
+      symbol: "USDC",
+    },
+  ],
+  "43114": [
+    {
+      address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+      icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwMyIgaGVpZ2h0PSIxNTA0IiB2aWV3Qm94PSIwIDAgMTUwMyAxNTA0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB4PSIyODciIHk9IjI1OCIgd2lkdGg9IjkyOCIgaGVpZ2h0PSI4NDQiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTUwMi41IDc1MkMxNTAyLjUgMTE2Ni43NyAxMTY2LjI3IDE1MDMgNzUxLjUgMTUwM0MzMzYuNzM0IDE1MDMgMC41IDExNjYuNzcgMC41IDc1MkMwLjUgMzM3LjIzNCAzMzYuNzM0IDEgNzUxLjUgMUMxMTY2LjI3IDEgMTUwMi41IDMzNy4yMzQgMTUwMi41IDc1MlpNNTM4LjY4OCAxMDUwLjg2SDM5Mi45NEMzNjIuMzE0IDEwNTAuODYgMzQ3LjE4NiAxMDUwLjg2IDMzNy45NjIgMTA0NC45NkMzMjcuOTk5IDEwMzguNSAzMjEuOTExIDEwMjcuOCAzMjEuMTczIDEwMTUuOTlDMzIwLjYxOSAxMDA1LjExIDMyOC4xODQgOTkxLjgyMiAzNDMuMzEyIDk2NS4yNTVMNzAzLjE4MiAzMzAuOTM1QzcxOC40OTUgMzAzLjk5OSA3MjYuMjQzIDI5MC41MzEgNzM2LjAyMSAyODUuNTVDNzQ2LjUzNyAyODAuMiA3NTkuMDgzIDI4MC4yIDc2OS41OTkgMjg1LjU1Qzc3OS4zNzcgMjkwLjUzMSA3ODcuMTI2IDMwMy45OTkgODAyLjQzOCAzMzAuOTM1TDg3Ni40MiA0NjAuMDc5TDg3Ni43OTcgNDYwLjczOEM4OTMuMzM2IDQ4OS42MzUgOTAxLjcyMyA1MDQuMjg5IDkwNS4zODUgNTE5LjY2OUM5MDkuNDQzIDUzNi40NTggOTA5LjQ0MyA1NTQuMTY5IDkwNS4zODUgNTcwLjk1OEM5MDEuNjk1IDU4Ni40NTUgODkzLjM5MyA2MDEuMjE1IDg3Ni42MDQgNjMwLjU0OUw2ODcuNTczIDk2NC43MDJMNjg3LjA4NCA5NjUuNTU4QzY3MC40MzYgOTk0LjY5MyA2NjEuOTk5IDEwMDkuNDYgNjUwLjMwNiAxMDIwLjZDNjM3LjU3NiAxMDMyLjc4IDYyMi4yNjMgMTA0MS42MyA2MDUuNDc0IDEwNDYuNjJDNTkwLjE2MSAxMDUwLjg2IDU3My4wMDQgMTA1MC44NiA1MzguNjg4IDEwNTAuODZaTTkwNi43NSAxMDUwLjg2SDExMTUuNTlDMTE0Ni40IDEwNTAuODYgMTE2MS45IDEwNTAuODYgMTE3MS4xMyAxMDQ0Ljc4QzExODEuMDkgMTAzOC4zMiAxMTg3LjM2IDEwMjcuNDMgMTE4Ny45MiAxMDE1LjYzQzExODguNDUgMTAwNS4xIDExODEuMDUgOTkyLjMzIDExNjYuNTUgOTY3LjMwN0MxMTY2LjA1IDk2Ni40NTUgMTE2NS41NSA5NjUuNTg4IDExNjUuMDQgOTY0LjcwNkwxMDYwLjQzIDc4NS43NUwxMDU5LjI0IDc4My43MzVDMTA0NC41NCA3NTguODc3IDEwMzcuMTIgNzQ2LjMyNCAxMDI3LjU5IDc0MS40NzJDMTAxNy4wOCA3MzYuMTIxIDEwMDQuNzEgNzM2LjEyMSA5OTQuMTk5IDc0MS40NzJDOTg0LjYwNSA3NDYuNDUzIDk3Ni44NTcgNzU5LjU1MiA5NjEuNTQ0IDc4NS45MzRMODU3LjMwNiA5NjQuODkxTDg1Ni45NDkgOTY1LjUwN0M4NDEuNjkgOTkxLjg0NyA4MzQuMDY0IDEwMDUuMDEgODM0LjYxNCAxMDE1LjgxQzgzNS4zNTIgMTAyNy42MiA4NDEuNDQgMTAzOC41IDg1MS40MDIgMTA0NC45NkM4NjAuNDQzIDEwNTAuODYgODc1Ljk0IDEwNTAuODYgOTA2Ljc1IDEwNTAuODZaIiBmaWxsPSIjRTg0MTQyIi8+Cjwvc3ZnPgo=",
+      name: "Wrapped AVAX",
+      symbol: "WAVAX",
+    },
+    {
+      address: "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
+      icon: wrappedEthIcon,
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+    {
+      address: "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7",
+      icon: tetherUsdIcon,
+      name: "Tether USD",
+      symbol: "USDT",
+    },
+    {
+      address: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+      icon: usdcIcon,
+      name: "USD Coin",
+      symbol: "USDC",
+    },
+    {
+      address: "0x50b7545627a5162F82A992c33b87aDc75187B218",
+      icon: wrappedBtcIcon,
+      name: "Wrapped BTC",
+      symbol: "WBTC",
+    },
+  ],
+  "80001": [
+    {
+      address: "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
+      icon: maticIcon,
+      name: "Wrapped Matic",
+      symbol: "WMATIC",
+    },
+    {
+      address: "0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa",
+      icon: wrappedEthIcon,
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+    {
+      address: "0x0FA8781a83E46826621b3BC094Ea2A0212e71B23",
+      icon: usdcIcon,
+      name: "USD Coin",
+      symbol: "USDC",
+    },
+    {
+      address: "0x3813e82e6f7098b9583FC0F33a962D02018B6803",
+      icon: tetherUsdIcon,
+      name: "Tether USD",
+      symbol: "USDT",
     },
   ],
   // Base sepolia
   "84532": [
     {
       address: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+      icon: usdcIcon,
       name: "USD Coin",
       symbol: "USDC",
+    },
+  ],
+  "421613": [
+    {
+      address: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
+      icon: wrappedEthIcon,
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+    {
+      address: "0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63",
       icon: usdcIcon,
+      name: "USD Coin",
+      symbol: "USDC",
+    },
+  ],
+  "11155111": [
+    {
+      address: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
+      icon: usdcIcon,
+      name: "USD Coin",
+      symbol: "USDC",
     },
   ],
 } as const;

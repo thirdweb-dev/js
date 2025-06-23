@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import {
   arbitrumSepolia,
   baseSepolia,
+  defineChain,
   optimismSepolia,
   sepolia,
 } from "thirdweb/chains";
@@ -16,8 +17,8 @@ import {
   lightTheme,
   useActiveAccount,
   useActiveWallet,
+  useSiweAuth,
 } from "thirdweb/react";
-import { useSiweAuth } from "thirdweb/react";
 import { createWallet } from "thirdweb/wallets";
 import { Button } from "../../../../components/ui/button";
 import { THIRDWEB_CLIENT } from "../../../../lib/client";
@@ -63,14 +64,14 @@ export function RightSection(props: {
     },
     async getLoginPayload(params) {
       return {
-        domain: "",
         address: params.address,
-        statement: "",
-        version: "",
-        nonce: "",
-        issued_at: "",
+        domain: "",
         expiration_time: "",
         invalid_before: "",
+        issued_at: "",
+        nonce: "",
+        statement: "",
+        version: "",
       };
     },
     async isLoggedIn() {
@@ -103,25 +104,6 @@ export function RightSection(props: {
 
   const connectButton = (
     <ConnectButton
-      client={THIRDWEB_CLIENT}
-      autoConnect={false}
-      theme={themeObj}
-      locale={connectOptions.localeId}
-      connectButton={{
-        label: connectOptions.buttonLabel,
-      }}
-      connectModal={{
-        size: connectOptions.modalSize,
-        title: connectOptions.modalTitle,
-        titleIcon: connectOptions.modalTitleIcon,
-        termsOfServiceUrl: connectOptions.termsOfServiceLink,
-        privacyPolicyUrl: connectOptions.privacyPolicyLink,
-        showThirdwebBranding: connectOptions.ShowThirdwebBranding,
-        requireApproval: connectOptions.requireApproval,
-      }}
-      chains={[sepolia, baseSepolia, optimismSepolia, arbitrumSepolia]}
-      wallets={wallets}
-      auth={connectOptions.enableAuth ? playgroundAuth : undefined}
       accountAbstraction={
         connectOptions.enableAccountAbstraction
           ? {
@@ -130,6 +112,31 @@ export function RightSection(props: {
             }
           : undefined
       }
+      auth={connectOptions.enableAuth ? playgroundAuth : undefined}
+      autoConnect={false}
+      chains={[
+        defineChain(578),
+        sepolia,
+        baseSepolia,
+        optimismSepolia,
+        arbitrumSepolia,
+      ]}
+      client={THIRDWEB_CLIENT}
+      connectButton={{
+        label: connectOptions.buttonLabel,
+      }}
+      connectModal={{
+        privacyPolicyUrl: connectOptions.privacyPolicyLink,
+        requireApproval: connectOptions.requireApproval,
+        showThirdwebBranding: connectOptions.ShowThirdwebBranding,
+        size: connectOptions.modalSize,
+        termsOfServiceUrl: connectOptions.termsOfServiceLink,
+        title: connectOptions.modalTitle,
+        titleIcon: connectOptions.modalTitleIcon,
+      }}
+      locale={connectOptions.localeId}
+      theme={themeObj}
+      wallets={wallets}
     />
   );
 
@@ -138,18 +145,18 @@ export function RightSection(props: {
       <TabButtons
         tabs={[
           {
-            name: "Modal",
             isActive: previewTab === "modal",
+            name: "Modal",
             onClick: () => setPreviewTab("modal"),
           },
           {
-            name: "Button",
             isActive: previewTab === "button",
+            name: "Button",
             onClick: () => setPreviewTab("button"),
           },
           {
-            name: "Code",
             isActive: previewTab === "code",
+            name: "Code",
             onClick: () => setPreviewTab("code"),
           },
         ]}
@@ -170,18 +177,6 @@ export function RightSection(props: {
           ) : (
             <div className="relative">
               <ConnectEmbed
-                client={THIRDWEB_CLIENT}
-                autoConnect={false}
-                modalSize={connectOptions.modalSize}
-                theme={themeObj}
-                className="shadow-xl"
-                wallets={wallets}
-                header={{
-                  title: connectOptions.modalTitle,
-                  titleIcon: connectOptions.modalTitleIcon,
-                }}
-                locale={connectOptions.localeId}
-                auth={connectOptions.enableAuth ? playgroundAuth : undefined}
                 accountAbstraction={
                   connectOptions.enableAccountAbstraction
                     ? {
@@ -190,10 +185,22 @@ export function RightSection(props: {
                       }
                     : undefined
                 }
-                termsOfServiceUrl={connectOptions.termsOfServiceLink}
+                auth={connectOptions.enableAuth ? playgroundAuth : undefined}
+                autoConnect={false}
+                className="shadow-xl"
+                client={THIRDWEB_CLIENT}
+                header={{
+                  title: connectOptions.modalTitle,
+                  titleIcon: connectOptions.modalTitleIcon,
+                }}
+                locale={connectOptions.localeId}
+                modalSize={connectOptions.modalSize}
                 privacyPolicyUrl={connectOptions.privacyPolicyLink}
-                showThirdwebBranding={connectOptions.ShowThirdwebBranding}
                 requireApproval={connectOptions.requireApproval}
+                showThirdwebBranding={connectOptions.ShowThirdwebBranding}
+                termsOfServiceUrl={connectOptions.termsOfServiceLink}
+                theme={themeObj}
+                wallets={wallets}
               />
               {/* Fake X icon to make it looks exactly like a modal  */}
               <XIcon
@@ -269,15 +276,15 @@ function TabButtons(props: {
       <div className="flex justify-start gap-1 rounded-lg border bg-card p-2 shadow-md md:inline-flex">
         {props.tabs.map((tab) => (
           <Button
-            key={tab.name}
-            onClick={tab.onClick}
-            variant="ghost"
             className={cn(
               "gap-2 px-4 text-base",
               tab.isActive
                 ? "bg-accent text-foreground"
                 : "bg-transparent text-muted-foreground",
             )}
+            key={tab.name}
+            onClick={tab.onClick}
+            variant="ghost"
           >
             {tab.name}
           </Button>

@@ -13,18 +13,18 @@ export function CustomRadioGroup<T extends string>(props: {
 }) {
   return (
     <RadioGroup
-      id={props.id}
       className="flex gap-6"
-      value={props.value}
+      id={props.id}
       onValueChange={(v) => {
         props.onValueChange(v as T);
       }}
+      value={props.value}
     >
       {props.options.map((option) => {
         return (
-          <div key={option.value} className={cn("flex items-center space-x-2")}>
-            <RadioGroupItem value={option.value} id={option.value} />
-            <Label htmlFor={option.value} className="cursor-pointer">
+          <div className={cn("flex items-center space-x-2")} key={option.value}>
+            <RadioGroupItem id={option.value} value={option.value} />
+            <Label className="cursor-pointer" htmlFor={option.value}>
               {option.label}
             </Label>
           </div>

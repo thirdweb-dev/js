@@ -1,6 +1,9 @@
 {
-  "extends": "./tsconfig.base.json",
-  "include": ["src"],
+  "compilerOptions": {
+    "moduleResolution": "NodeNext",
+    "rootDir": "./src",
+    "sourceMap": true
+  },
   "exclude": [
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
@@ -8,9 +11,6 @@
     "src/**/*.bench.ts",
     "src/**/*.macro.ts"
   ],
-  "compilerOptions": {
-    "moduleResolution": "NodeNext",
-    "sourceMap": true,
-    "rootDir": "./src"
-  }
+  "extends": "./tsconfig.base.json",
+  "include": ["src"]
 }

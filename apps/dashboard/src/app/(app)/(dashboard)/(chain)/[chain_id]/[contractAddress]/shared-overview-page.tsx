@@ -21,8 +21,8 @@ export async function SharedContractOverviewPage(props: {
   projectMeta: ProjectMeta | undefined;
 }) {
   const info = await getContractPageParamsInfo({
-    contractAddress: props.contractAddress,
     chainIdOrSlug: props.chainIdOrSlug,
+    contractAddress: props.contractAddress,
     teamId: props.projectMeta?.teamId,
   });
 
@@ -36,9 +36,9 @@ export async function SharedContractOverviewPage(props: {
   if (isLocalhostChain) {
     return (
       <ContractOverviewPageClient
-        projectMeta={props.projectMeta}
         chainMetadata={chainMetadata}
         contract={clientContract}
+        projectMeta={props.projectMeta}
       />
     );
   }
@@ -49,9 +49,9 @@ export async function SharedContractOverviewPage(props: {
     if (renderNewPublicPage) {
       return (
         <RenderNewPublicContractPage
-          serverContract={serverContract}
-          clientContract={clientContract}
           chainMetadata={chainMetadata}
+          clientContract={clientContract}
+          serverContract={serverContract}
           type={renderNewPublicPage.type}
         />
       );
@@ -62,19 +62,19 @@ export async function SharedContractOverviewPage(props: {
 
   return (
     <ContractOverviewPage
+      chainSlug={chainMetadata.slug}
       contract={clientContract}
-      projectMeta={props.projectMeta}
+      functionSelectors={contractPageMetadata.functionSelectors}
       hasDirectListings={contractPageMetadata.isDirectListingSupported}
       hasEnglishAuctions={contractPageMetadata.isEnglishAuctionSupported}
-      isErc1155={contractPageMetadata.supportedERCs.isERC1155}
+      isAnalyticsSupported={contractPageMetadata.isInsightSupported}
       isErc20={contractPageMetadata.supportedERCs.isERC20}
       isErc721={contractPageMetadata.supportedERCs.isERC721}
+      isErc1155={contractPageMetadata.supportedERCs.isERC1155}
       isPermissionsEnumerable={
         contractPageMetadata.isPermissionsEnumerableSupported
       }
-      chainSlug={chainMetadata.slug}
-      isAnalyticsSupported={contractPageMetadata.isInsightSupported}
-      functionSelectors={contractPageMetadata.functionSelectors}
+      projectMeta={props.projectMeta}
       publishedBy={
         <ErrorBoundary fallback={null}>
           <PublishedBy contract={serverContract} />
@@ -94,9 +94,9 @@ function RenderNewPublicContractPage(props: {
     case "erc20": {
       return (
         <ERC20PublicPage
-          serverContract={props.serverContract}
-          clientContract={props.clientContract}
           chainMetadata={props.chainMetadata}
+          clientContract={props.clientContract}
+          serverContract={props.serverContract}
         />
       );
     }
@@ -105,11 +105,11 @@ function RenderNewPublicContractPage(props: {
     case "erc721": {
       return (
         <NFTPublicPage
-          serverContract={props.serverContract}
-          clientContract={props.clientContract}
           chainMetadata={props.chainMetadata}
-          type={props.type}
+          clientContract={props.clientContract}
+          serverContract={props.serverContract}
           tokenId={undefined}
+          type={props.type}
         />
       );
     }

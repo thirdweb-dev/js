@@ -17,22 +17,22 @@ describe("toProvider", () => {
   const emitter = createWalletEmitter();
 
   const mockWallet: Wallet = {
-    id: "io.metamask",
-    subscribe: emitter.subscribe,
-    connect: vi.fn().mockResolvedValue(mockAccount),
     autoConnect: vi.fn().mockResolvedValue(mockAccount),
+    connect: vi.fn().mockResolvedValue(mockAccount),
     disconnect: vi.fn(),
     getAccount: () => mockAccount,
     getChain: () => ANVIL_CHAIN,
     getConfig: () => undefined,
+    id: "io.metamask",
+    subscribe: emitter.subscribe,
     switchChain: vi.fn(),
   };
 
   test("should create a provider with the correct interface", () => {
     const provider = toProvider({
-      wallet: mockWallet,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
+      wallet: mockWallet,
     });
 
     expect(provider.on).toBeDefined();
@@ -42,9 +42,9 @@ describe("toProvider", () => {
 
   test("should handle eth_requestAccounts", async () => {
     const provider = toProvider({
-      wallet: mockWallet,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
+      wallet: mockWallet,
     });
 
     const accounts = await provider.request({
@@ -57,9 +57,9 @@ describe("toProvider", () => {
 
   test("should handle eth_accounts", async () => {
     const provider = toProvider({
-      wallet: mockWallet,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
+      wallet: mockWallet,
     });
 
     const accounts = await provider.request({
@@ -72,9 +72,9 @@ describe("toProvider", () => {
 
   test("should handle personal_sign", async () => {
     const provider = toProvider({
-      wallet: mockWallet,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
+      wallet: mockWallet,
     });
 
     const message = "0x48656c6c6f20776f726c64";
@@ -90,9 +90,9 @@ describe("toProvider", () => {
 
   test("should handle eth_signTypedData_v4", async () => {
     const provider = toProvider({
-      wallet: mockWallet,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
+      wallet: mockWallet,
     });
 
     const result = await provider.request({
@@ -107,22 +107,22 @@ describe("toProvider", () => {
 
   test("should handle eth_sendTransaction", async () => {
     const provider = toProvider({
-      wallet: mockWallet,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
+      wallet: mockWallet,
     });
 
     const tx = prepareTransaction({
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      value: 100n,
       to: TEST_WALLET_B,
+      value: 100n,
     });
 
     const balanceBefore = await getWalletBalance({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       address: mockAccount.address,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
 
     const result = await provider.request({
@@ -132,17 +132,17 @@ describe("toProvider", () => {
 
     expect(ox__Hex.validate(result)).toBe(true);
     const receipt = await waitForReceipt({
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       transactionHash: result,
     });
 
     expect(receipt.status).toBe("success");
 
     const balanceAfter = await getWalletBalance({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       address: mockAccount.address,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
 
     expect(balanceAfter.value).toBeLessThan(balanceBefore.value);
@@ -150,16 +150,16 @@ describe("toProvider", () => {
 
   test("should handle eth_estimateGas", async () => {
     const provider = toProvider({
-      wallet: mockWallet,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
+      wallet: mockWallet,
     });
 
     const tx = prepareTransaction({
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
-      value: 100n,
       to: TEST_WALLET_B,
+      value: 100n,
     });
 
     const result = await provider.request({
@@ -177,9 +177,9 @@ describe("toProvider", () => {
     };
 
     const provider = toProvider({
-      wallet: walletWithoutAccount,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
+      wallet: walletWithoutAccount,
     });
 
     await expect(
@@ -194,10 +194,10 @@ describe("toProvider", () => {
     const customConnect = vi.fn().mockResolvedValue(mockAccount);
 
     const provider = toProvider({
-      wallet: mockWallet,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       connectOverride: customConnect,
+      wallet: mockWallet,
     });
 
     await provider.request({

@@ -37,19 +37,19 @@ export const SupplyCards: React.FC<SupplyCardsProps> = ({ contract }) => {
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
       <StatCard
-        value={realTotalSupply.toString()}
-        label="Total Supply"
         isPending={nextTokenIdQuery.isPending}
+        label="Total Supply"
+        value={realTotalSupply.toString()}
       />
       <StatCard
-        value={totalSupplyQuery?.data?.toString() || "N/A"}
-        label="Claimed Supply"
         isPending={totalSupplyQuery.isPending}
+        label="Claimed Supply"
+        value={totalSupplyQuery?.data?.toString() || "N/A"}
       />
       <StatCard
-        value={unclaimedSupply}
-        label="Unclaimed Supply"
         isPending={totalSupplyQuery.isPending || nextTokenIdQuery.isPending}
+        label="Unclaimed Supply"
+        value={unclaimedSupply}
       />
     </div>
   );

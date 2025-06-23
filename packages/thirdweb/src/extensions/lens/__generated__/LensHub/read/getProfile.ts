@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { decodeAbiParameters } from "viem";
-import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
  * Represents the parameters for the "getProfile" function.
@@ -19,43 +19,43 @@ export type GetProfileParams = {
 export const FN_SELECTOR = "0xf08f4f64" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "profileId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple",
     components: [
       {
-        type: "uint256",
         name: "pubCount",
+        type: "uint256",
       },
       {
-        type: "address",
         name: "followModule",
-      },
-      {
         type: "address",
+      },
+      {
         name: "followNFT",
+        type: "address",
       },
       {
-        type: "string",
         name: "__DEPRECATED__handle",
+        type: "string",
       },
       {
-        type: "string",
         name: "__DEPRECATED__imageURI",
+        type: "string",
       },
       {
-        type: "string",
         name: "__DEPRECATED__followNFTURI",
+        type: "string",
       },
       {
-        type: "string",
         name: "metadataURI",
+        type: "string",
       },
     ],
+    type: "tuple",
   },
 ] as const;
 

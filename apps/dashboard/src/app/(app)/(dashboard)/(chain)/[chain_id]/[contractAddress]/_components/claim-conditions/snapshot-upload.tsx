@@ -1,7 +1,12 @@
-import { UnorderedList } from "@/components/ui/List/List";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { CircleAlertIcon, DownloadIcon, UploadIcon } from "lucide-react";
+import { useRef } from "react";
+import { useDropzone } from "react-dropzone";
+import type { Column } from "react-table";
+import { type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import { Button } from "@/components/ui/button";
 import { InlineCode } from "@/components/ui/inline-code";
+import { UnorderedList } from "@/components/ui/List/List";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Sheet,
   SheetContent,
@@ -9,13 +14,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useCsvUpload } from "@/hooks/useCsvUpload";
 import { cn } from "@/lib/utils";
-import { useCsvUpload } from "hooks/useCsvUpload";
-import { CircleAlertIcon, DownloadIcon, UploadIcon } from "lucide-react";
-import { useRef } from "react";
-import { useDropzone } from "react-dropzone";
-import type { Column } from "react-table";
-import { type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import { CsvDataTable } from "../csv-data-table";
 
 interface SnapshotAddressInput {
@@ -38,9 +38,9 @@ const csvParser = (items: SnapshotAddressInput[]): SnapshotAddressInput[] => {
   return items
     .map(({ address, maxClaimable, price, currencyAddress }) => ({
       address: (address || "").trim(),
+      currencyAddress: (currencyAddress || "").trim() || undefined,
       maxClaimable: (maxClaimable || "0").trim().toLowerCase(),
       price: (price || "").trim() || undefined,
-      currencyAddress: (currencyAddress || "").trim() || undefined,
     }))
     .filter(({ address }) => address !== "");
 };
@@ -54,9 +54,9 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
   client,
 }) => {
   const csvUpload = useCsvUpload<SnapshotAddressInput>({
+    client,
     csvParser,
     defaultRawData: value,
-    client,
   });
 
   const dropzone = useDropzone({
@@ -80,9 +80,9 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
     setSnapshot(
       normalizeData.result.map((o) => ({
         address: o.resolvedAddress,
+        currencyAddress: o.currencyAddress,
         maxClaimable: o.maxClaimable,
         price: o.price,
-        currencyAddress: o.currencyAddress,
       })),
     );
     onClose();
@@ -90,7 +90,6 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
 
   const columns = [
     {
-      Header: "Address",
       accessor: ({ address, isValid }) => {
         if (isValid) {
           return address;
@@ -114,9 +113,9 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
           </ToolTipLabel>
         );
       },
+      Header: "Address",
     },
     {
-      Header: "Max claimable",
       accessor: ({ maxClaimable }) => {
         return maxClaimable === "0" || !maxClaimable
           ? "Default"
@@ -124,9 +123,9 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
             ? "Unlimited"
             : maxClaimable;
       },
+      Header: "Max claimable",
     },
     {
-      Header: "Price",
       accessor: ({ price }) => {
         return price === "0"
           ? "Free"
@@ -134,15 +133,16 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
             ? "Default"
             : price;
       },
+      Header: "Price",
     },
     {
-      Header: "Currency Address",
       accessor: ({ currencyAddress }) => {
         return currencyAddress ===
           "0x0000000000000000000000000000000000000000" || !currencyAddress
           ? "Default"
           : currencyAddress;
       },
+      Header: "Currency Address",
     },
   ] as Column<SnapshotAddressInput>[];
 
@@ -151,9 +151,9 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
       {csvUpload.rawData.length > 0 ? (
         <div>
           <CsvDataTable<SnapshotAddressInput>
-            portalRef={paginationPortalRef}
-            data={csvUpload.normalizeQuery.data.result}
             columns={columns}
+            data={csvUpload.normalizeQuery.data.result}
+            portalRef={paginationPortalRef}
           />
         </div>
       ) : (
@@ -216,8 +216,8 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
                     to charge per wallet you specified
                     <br />
                     <a
-                      download
                       className="text-link-foreground hover:text-foreground"
+                      download
                       href="/assets/examples/snapshot-with-overrides.csv"
                     >
                       <DownloadIcon className="inline size-3" /> Example
@@ -232,8 +232,8 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
                     addresses.
                     <br />
                     <a
-                      download
                       className="text-link-foreground hover:text-foreground"
+                      download
                       href="/assets/examples/snapshot.csv"
                     >
                       <DownloadIcon className="inline size-3" /> Example
@@ -247,8 +247,8 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
                     your claim phase.
                     <br />
                     <a
-                      download
                       className="text-link-foreground hover:text-foreground"
+                      download
                       href="/assets/examples/snapshot-with-maxclaimable.csv"
                     >
                       <DownloadIcon className="inline size-3" /> Example
@@ -266,8 +266,8 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
                     </strong>
                     <br />
                     <a
-                      download
                       className="text-link-foreground hover:text-foreground"
+                      download
                       href="/assets/examples/snapshot-with-overrides.csv"
                     >
                       <DownloadIcon className="inline size-3" /> Example
@@ -304,20 +304,20 @@ const SnapshotViewerSheetContent: React.FC<SnapshotUploadProps> = ({
             {csvUpload.normalizeQuery.data?.invalidFound ? (
               <Button
                 className="w-full rounded-md md:w-auto"
-                variant="primary"
                 disabled={isDisabled || csvUpload.rawData.length === 0}
                 onClick={() => {
                   csvUpload.removeInvalid();
                 }}
+                variant="primary"
               >
                 Remove invalid
               </Button>
             ) : (
               <Button
                 className="w-full rounded-md md:w-auto"
-                variant="primary"
-                onClick={onSave}
                 disabled={isDisabled || csvUpload.rawData.length === 0}
+                onClick={onSave}
+                variant="primary"
               >
                 Next
               </Button>
@@ -336,12 +336,12 @@ export function SnapshotViewerSheet(
 ) {
   return (
     <Sheet
-      open={props.isOpen}
       onOpenChange={(open) => {
         if (!open) {
           props.onClose();
         }
       }}
+      open={props.isOpen}
     >
       <SheetContent className="flex w-full flex-col overflow-y-auto sm:min-w-[540px] lg:min-w-[900px]">
         <SheetHeader>

@@ -108,21 +108,21 @@ function isLegacyChain(
 export function convertLegacyChain(legacyChain: LegacyChain): Chain {
   const RPC_URL = getThirdwebDomains().rpc;
   return {
-    id: legacyChain.chainId,
-    name: legacyChain.name,
-    rpc: legacyChain.rpc[0] ?? `https://${legacyChain.chainId}.${RPC_URL}`,
     blockExplorers: legacyChain?.explorers?.map((explorer) => ({
+      apiUrl: explorer.url,
       name: explorer.name,
       url: explorer.url,
-      apiUrl: explorer.url,
     })),
-    nativeCurrency: {
-      name: legacyChain.nativeCurrency.name,
-      symbol: legacyChain.nativeCurrency.symbol,
-      decimals: legacyChain.nativeCurrency.decimals,
-    },
     faucets: legacyChain.faucets ? [...legacyChain.faucets] : undefined,
     icon: legacyChain.icon,
+    id: legacyChain.chainId,
+    name: legacyChain.name,
+    nativeCurrency: {
+      decimals: legacyChain.nativeCurrency.decimals,
+      name: legacyChain.nativeCurrency.name,
+      symbol: legacyChain.nativeCurrency.symbol,
+    },
+    rpc: legacyChain.rpc[0] ?? `https://${legacyChain.chainId}.${RPC_URL}`,
     testnet: legacyChain.testnet ? true : undefined,
   };
 }
@@ -139,24 +139,24 @@ function isViemChain(
 export function convertViemChain(viemChain: ViemChain): Chain {
   const RPC_URL = getThirdwebDomains().rpc;
   return {
-    id: viemChain.id,
-    name: viemChain.name,
-    nativeCurrency: {
-      name: viemChain.nativeCurrency.name,
-      symbol: viemChain.nativeCurrency.symbol,
-      decimals: viemChain.nativeCurrency.decimals,
-    },
-    rpc:
-      viemChain.rpcUrls.default.http[0] ?? `https://${viemChain.id}.${RPC_URL}`,
     blockExplorers: viemChain?.blockExplorers
       ? Object.values(viemChain?.blockExplorers).map((explorer) => {
           return {
+            apiUrl: explorer.apiUrl,
             name: explorer.name,
             url: explorer.url,
-            apiUrl: explorer.apiUrl,
           };
         })
       : [],
+    id: viemChain.id,
+    name: viemChain.name,
+    nativeCurrency: {
+      decimals: viemChain.nativeCurrency.decimals,
+      name: viemChain.nativeCurrency.name,
+      symbol: viemChain.nativeCurrency.symbol,
+    },
+    rpc:
+      viemChain.rpcUrls.default.http[0] ?? `https://${viemChain.id}.${RPC_URL}`,
     testnet: viemChain.testnet ? true : undefined,
   };
 }
@@ -390,20 +390,20 @@ export function getChainServices(chain: Chain): Promise<ChainService[]> {
  */
 export function convertApiChainToChain(apiChain: ChainMetadata): Chain {
   return {
-    id: apiChain.chainId,
-    name: apiChain.name,
-    rpc: apiChain.rpc[0] || "",
-    testnet: apiChain.testnet === true ? true : undefined,
-    nativeCurrency: apiChain.nativeCurrency,
     blockExplorers: apiChain.explorers?.map((explorer) => {
       return {
+        apiUrl: explorer.url,
         name: explorer.name,
         url: explorer.url,
-        apiUrl: explorer.url,
       };
     }),
     faucets: apiChain.faucets ? [...apiChain.faucets] : undefined,
     icon: apiChain.icon,
+    id: apiChain.chainId,
+    name: apiChain.name,
+    nativeCurrency: apiChain.nativeCurrency,
+    rpc: apiChain.rpc[0] || "",
+    testnet: apiChain.testnet === true ? true : undefined,
   };
 }
 
@@ -420,25 +420,25 @@ function createChainMetadata(
 
   return {
     ...data,
-    name: chain.name || data?.name || "",
-    chainId: chain.id || data?.chainId || -1,
-    rpc: chain.rpc ? [chain.rpc] : data?.rpc || [""],
-    testnet: chain.testnet || data?.testnet || false,
-    nativeCurrency: {
-      name: nativeCurrency?.name || "",
-      symbol: nativeCurrency?.symbol || "",
-      decimals: nativeCurrency?.decimals || 18,
-    },
-    icon: chain.icon || data?.icon,
     chain: data?.chain || chain.name || "",
-    shortName: data?.shortName || chain.name || "",
-    slug: data?.slug || chain.name || "",
+    chainId: chain.id || data?.chainId || -1,
     explorers:
       chain.blockExplorers?.map((e) => ({
         name: e.name,
-        url: e.url,
         standard: "EIP3091",
+        url: e.url,
       })) || data?.explorers,
+    icon: chain.icon || data?.icon,
+    name: chain.name || data?.name || "",
+    nativeCurrency: {
+      decimals: nativeCurrency?.decimals || 18,
+      name: nativeCurrency?.name || "",
+      symbol: nativeCurrency?.symbol || "",
+    },
+    rpc: chain.rpc ? [chain.rpc] : data?.rpc || [""],
+    shortName: data?.shortName || chain.name || "",
+    slug: data?.slug || chain.name || "",
     stackType: data?.stackType || "",
+    testnet: chain.testnet || data?.testnet || false,
   };
 }

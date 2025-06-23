@@ -1,7 +1,7 @@
-import { ContractRow } from "components/explore/contract-row";
-import { DeployUpsellCard } from "components/explore/upsells/deploy-your-own";
-import { PublishUpsellCard } from "components/explore/upsells/publish-submit";
-import { EXPLORE_PAGE_DATA } from "data/explore";
+import { ContractRow } from "@app/(dashboard)/explore/components/contract-row";
+import { DeployUpsellCard } from "@app/(dashboard)/explore/components/upsells/deploy-your-own";
+import { PublishUpsellCard } from "@app/(dashboard)/explore/components/upsells/publish-submit";
+import { EXPLORE_PAGE_DATA } from "@app/(dashboard)/explore/data";
 import type { Metadata } from "next";
 import { Fragment } from "react";
 
@@ -10,12 +10,12 @@ const description =
   "A list of Ethereum smart contract templates for web3 developers, including the most popular evm smart contracts for dapps, NFTs and more.";
 
 export const metadata: Metadata = {
-  title,
   description,
   openGraph: {
-    title,
     description,
+    title,
   },
+  title,
 };
 
 export default async function ExplorePage() {

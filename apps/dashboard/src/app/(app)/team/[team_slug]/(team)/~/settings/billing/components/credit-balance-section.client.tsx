@@ -1,5 +1,8 @@
 "use client";
 
+import { ArrowRightIcon, DollarSignIcon } from "lucide-react";
+import { Suspense, use, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,16 +16,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { ArrowRightIcon, DollarSignIcon } from "lucide-react";
-import { Suspense, use, useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import { ThirdwebMiniLogo } from "../../../../../../../components/ThirdwebMiniLogo";
 
 const predefinedAmounts = [
-  { value: "25", label: "$25" },
-  { value: "100", label: "$100" },
-  { value: "500", label: "$500" },
-  { value: "1000", label: "$1,000" },
+  { label: "$25", value: "25" },
+  { label: "$100", value: "100" },
+  { label: "$500", value: "500" },
+  { label: "$1,000", value: "1000" },
 ] as const;
 
 interface CreditBalanceSectionProps {
@@ -73,20 +73,20 @@ export function CreditBalanceSection({
           <div className="space-y-4 lg:col-span-2">
             <Label className="font-medium text-base">Select Amount</Label>
             <RadioGroup
-              value={selectedAmount}
-              onValueChange={setSelectedAmount}
               className="grid grid-cols-4 gap-3"
+              onValueChange={setSelectedAmount}
+              value={selectedAmount}
             >
               {predefinedAmounts.map((amount) => (
                 <div key={amount.value}>
                   <RadioGroupItem
-                    value={amount.value}
-                    id={amount.value}
                     className="peer sr-only"
+                    id={amount.value}
+                    value={amount.value}
                   />
                   <Label
-                    htmlFor={amount.value}
                     className="flex cursor-pointer flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 transition-colors hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                    htmlFor={amount.value}
                   >
                     <span className="font-semibold text-lg">
                       {amount.label}
@@ -110,8 +110,8 @@ export function CreditBalanceSection({
                 }
               >
                 <TopUpSummary
-                  selectedAmount={selectedAmount}
                   currentBalancePromise={balancePromise}
+                  selectedAmount={selectedAmount}
                 />
               </Suspense>
             </ErrorBoundary>
@@ -125,13 +125,13 @@ export function CreditBalanceSection({
                 <Button
                   asChild
                   className="w-full"
-                  size="lg"
                   disabled={!isOwnerAccount}
+                  size="lg"
                 >
                   <a
                     href={`/checkout/${teamSlug}/topup?amount=${selectedAmount}`}
-                    target="_blank"
                     rel="noopener noreferrer"
+                    target="_blank"
                   >
                     <ThirdwebMiniLogo className="mr-2 h-4 w-4" />
                     Top Up With Crypto
@@ -149,7 +149,9 @@ export function CreditBalanceSection({
 
 function CurrentBalance({
   balancePromise,
-}: { balancePromise: Promise<number> }) {
+}: {
+  balancePromise: Promise<number>;
+}) {
   const currentBalance = use(balancePromise);
 
   return (
@@ -214,11 +216,7 @@ function TopUpSummary({
   );
 }
 
-function TopUpSummarySkeleton({
-  selectedAmount,
-}: {
-  selectedAmount: string;
-}) {
+function TopUpSummarySkeleton({ selectedAmount }: { selectedAmount: string }) {
   return (
     <div className="space-y-3 rounded-lg bg-muted/30 p-4">
       <h3 className="font-medium text-sm">Summary</h3>
@@ -259,7 +257,7 @@ function TopUpSummaryErrorBoundary({
 // utils
 function formatUsd(amount: number) {
   return amount.toLocaleString("en-US", {
-    style: "currency",
     currency: "USD",
+    style: "currency",
   });
 }

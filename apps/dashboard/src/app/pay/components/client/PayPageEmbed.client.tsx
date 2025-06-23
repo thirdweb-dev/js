@@ -1,10 +1,10 @@
 "use client";
 import { payAppThirdwebClient } from "app/pay/constants";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
 import { NATIVE_TOKEN_ADDRESS, toTokens } from "thirdweb";
 import { AutoConnect, PayEmbed } from "thirdweb/react";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 
 export function PayPageEmbed({
   chainId,
@@ -45,21 +45,13 @@ export function PayPageEmbed({
       <AutoConnect client={payAppThirdwebClient} />
       <PayEmbed
         client={payAppThirdwebClient}
-        theme={theme ?? (browserTheme === "light" ? "light" : "dark")}
         paymentLinkId={paymentLinkId}
         payOptions={{
           metadata: {
-            name,
             image,
+            name,
           },
           mode: "direct_payment",
-          purchaseData,
-          paymentInfo: {
-            chain,
-            sellerAddress: recipientAddress,
-            amount: amount ? toTokens(amount, token.decimals) : "0.01",
-            token: token.address === NATIVE_TOKEN_ADDRESS ? undefined : token,
-          },
           onPurchaseSuccess: (result) => {
             if (!redirectUri) return;
             const url = new URL(redirectUri);
@@ -91,7 +83,15 @@ export function PayPageEmbed({
             }
             return window.open(url.toString());
           },
+          paymentInfo: {
+            amount: amount ? toTokens(amount, token.decimals) : "0.01",
+            chain,
+            sellerAddress: recipientAddress,
+            token: token.address === NATIVE_TOKEN_ADDRESS ? undefined : token,
+          },
+          purchaseData,
         }}
+        theme={theme ?? (browserTheme === "light" ? "light" : "dark")}
       />
     </>
   );

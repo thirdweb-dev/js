@@ -1,10 +1,8 @@
 "use client";
 
-import {
-  tokensDelegated,
-  votingTokenDecimals,
-} from "@3rdweb-sdk/react/hooks/useVote";
-import { TransactionButton } from "components/buttons/TransactionButton";
+import { Button } from "chakra/button";
+import { Card } from "chakra/card";
+import { Text } from "chakra/text";
 import { CheckIcon, MinusIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -15,20 +13,21 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
-import { Button, Card, Text } from "tw-components";
+import { TransactionButton } from "@/components/tx-button";
+import { tokensDelegated, votingTokenDecimals } from "@/hooks/useVote";
 
 const ProposalStateToMetadataMap: Record<
   keyof typeof VoteExt.ProposalState,
   string
 > = {
-  pending: "gray.500",
   active: "primary.500",
   canceled: "red.500",
   defeated: "red.500",
-  succeeded: "green.500",
-  queued: "yellow.500",
-  expired: "gray.500",
   executed: "green.500",
+  expired: "gray.500",
+  pending: "gray.500",
+  queued: "yellow.500",
+  succeeded: "green.500",
 };
 
 interface IProposal {
@@ -44,8 +43,8 @@ export const Proposal: React.FC<IProposal> = ({
 }) => {
   const account = useActiveAccount();
   const hasVotedQuery = useReadContract(VoteExt.hasVoted, {
-    contract,
     account: account?.address || "",
+    contract,
     proposalId: proposal.proposalId,
     queryOptions: {
       enabled: !!account,
@@ -59,8 +58,8 @@ export const Proposal: React.FC<IProposal> = ({
     contract,
   });
   const tokensDelegatedQuery = useReadContract(tokensDelegated, {
-    contract,
     account,
+    contract,
     queryOptions: { enabled: !!account },
   });
 
@@ -76,10 +75,10 @@ export const Proposal: React.FC<IProposal> = ({
       support: vote,
     });
     toast.promise(sendTx.mutateAsync(castVoteTx), {
-      loading: "Casting vote...",
-      success: "Vote cast successfully",
       error: "Error casting vote",
+      loading: "Casting vote...",
       onAutoClose: () => setVoteType(null),
+      success: "Vote cast successfully",
     });
   }
 
@@ -138,13 +137,13 @@ export const Proposal: React.FC<IProposal> = ({
         <div className="mt-6 flex gap-2">
           <TransactionButton
             client={contract.client}
+            disabled={sendTx.isPending && voteType !== 1}
             isLoggedIn={isLoggedIn}
-            txChainID={contract.chain.id}
+            isPending={sendTx.isPending && voteType === 1}
+            onClick={() => castVote(1)}
             size="sm"
             transactionCount={1}
-            onClick={() => castVote(1)}
-            disabled={sendTx.isPending && voteType !== 1}
-            isPending={sendTx.isPending && voteType === 1}
+            txChainID={contract.chain.id}
           >
             <div className="flex items-center gap-2">
               <CheckIcon className="size-4" />
@@ -153,14 +152,14 @@ export const Proposal: React.FC<IProposal> = ({
           </TransactionButton>
           <TransactionButton
             client={contract.client}
+            disabled={sendTx.isPending && voteType !== 0}
             isLoggedIn={isLoggedIn}
-            txChainID={contract.chain.id}
+            isPending={sendTx.isPending && voteType === 0}
+            onClick={() => castVote(0)}
             size="sm"
             transactionCount={1}
-            onClick={() => castVote(0)}
+            txChainID={contract.chain.id}
             variant="destructive"
-            disabled={sendTx.isPending && voteType !== 0}
-            isPending={sendTx.isPending && voteType === 0}
           >
             <div className="flex items-center gap-2">
               <XIcon className="size-4" />
@@ -169,13 +168,13 @@ export const Proposal: React.FC<IProposal> = ({
           </TransactionButton>
           <TransactionButton
             client={contract.client}
+            disabled={sendTx.isPending && voteType !== 2}
             isLoggedIn={isLoggedIn}
-            txChainID={contract.chain.id}
+            isPending={sendTx.isPending && voteType === 2}
+            onClick={() => castVote(2)}
             size="sm"
             transactionCount={1}
-            onClick={() => castVote(2)}
-            disabled={sendTx.isPending && voteType !== 2}
-            isPending={sendTx.isPending && voteType === 2}
+            txChainID={contract.chain.id}
           >
             <div className="flex items-center gap-2">
               <MinusIcon className="size-4" />
@@ -187,21 +186,21 @@ export const Proposal: React.FC<IProposal> = ({
         canExecuteQuery.data && (
           <Button
             colorScheme="primary"
-            size="sm"
+            isLoading={sendTx.isPending}
             leftIcon={<CheckIcon />}
+            mt="24px"
             onClick={() => {
               const executeTx = VoteExt.executeProposal({
                 contract,
                 proposalId: proposal.proposalId,
               });
               toast.promise(sendTx.mutateAsync(executeTx), {
+                error: "Error executing proposal",
                 loading: "Executing proposal...",
                 success: "Proposal executed successfully",
-                error: "Error executing proposal",
               });
             }}
-            isLoading={sendTx.isPending}
-            mt="24px"
+            size="sm"
           >
             Execute
           </Button>

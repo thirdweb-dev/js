@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "ChangeRecoveryAddress" event.
@@ -42,8 +42,8 @@ export function changeRecoveryAddressEvent(
   filters: ChangeRecoveryAddressEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event ChangeRecoveryAddress(uint256 indexed id, address indexed recovery)",
-    filters,
   });
 }

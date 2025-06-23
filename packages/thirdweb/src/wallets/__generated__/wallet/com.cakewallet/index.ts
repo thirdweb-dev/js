@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.cakewallet",
-  name: "Cake Wallet",
-  homepage: "https://cakewallet.com/",
-  image_id: "b05af25b-fa4d-4f91-a4cb-2f8f7d544000",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/cake-wallet/id1334702542?platform=iphone",
     android:
       "https://play.google.com/store/apps/details?id=com.cakewallet.cake_wallet",
-    mac: "https://apps.apple.com/us/app/cake-wallet/id1334702542?platform=mac",
-    windows: null,
-    linux: "https://github.com/cake-tech/cake_wallet/releases/tag/v4.10.0",
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/cake-wallet/id1334702542?platform=iphone",
+    linux: "https://github.com/cake-tech/cake_wallet/releases/tag/v4.10.0",
+    mac: "https://apps.apple.com/us/app/cake-wallet/id1334702542?platform=mac",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "cakewallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://cakewallet.com/",
+  id: "com.cakewallet",
+  image_id: "b05af25b-fa4d-4f91-a4cb-2f8f7d544000",
+  mobile: {
+    native: "cakewallet://",
+    universal: null,
+  },
+  name: "Cake Wallet",
+  rdns: null,
 } as const;

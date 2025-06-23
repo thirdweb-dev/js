@@ -1,9 +1,19 @@
 "use client";
 
-import { BillingPortalButton } from "@/components/billing";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
+import { CircleXIcon, EllipsisIcon, ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
+import { z } from "zod";
+import { BillingPortalButton } from "@/components/billing/billing";
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
+import { FileInput } from "@/components/blocks/FileInput";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,20 +41,10 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import type { Account } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { FileInput } from "components/shared/FileInput";
-import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
-import { CircleXIcon, EllipsisIcon, ExternalLinkIcon } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import type { ThirdwebClient } from "thirdweb";
-import { z } from "zod";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 
 type MinimalAccount = Pick<
   Account,
@@ -71,23 +71,23 @@ export function AccountSettingsPageUI(props: {
         updateName={(name) => props.updateName(name)}
       />
       <AccountAvatarFormControl
-        updateAccountAvatar={props.updateAccountAvatar}
         avatar={props.account.image || undefined}
         client={props.client}
+        updateAccountAvatar={props.updateAccountAvatar}
       />
       <AccountEmailFormControl
         email={props.account.email || ""}
-        status={props.account.emailConfirmedAt ? "verified" : "unverified"}
         sendEmail={props.sendEmail}
+        status={props.account.emailConfirmedAt ? "verified" : "unverified"}
         updateEmailWithOTP={props.updateEmailWithOTP}
       />
 
       <DeleteAccountCard
+        cancelSubscriptions={props.cancelSubscriptions}
+        defaultTeamName={props.defaultTeamName}
+        defaultTeamSlug={props.defaultTeamSlug}
         deleteAccount={props.deleteAccount}
         onAccountDeleted={props.onAccountDeleted}
-        defaultTeamSlug={props.defaultTeamSlug}
-        defaultTeamName={props.defaultTeamName}
-        cancelSubscriptions={props.cancelSubscriptions}
       />
     </div>
   );
@@ -112,21 +112,21 @@ function AccountAvatarFormControl(props: {
   function handleSave() {
     const promises = updateAvatarMutation.mutateAsync(avatar);
     toast.promise(promises, {
-      success: "Account avatar updated successfully",
       error: "Failed to update account avatar",
+      success: "Account avatar updated successfully",
     });
   }
 
   return (
     <SettingsCard
       bottomText="An avatar is optional but strongly recommended."
+      errorText={undefined}
+      noPermissionText={undefined}
       saveButton={{
-        onClick: handleSave,
         disabled: false,
         isPending: updateAvatarMutation.isPending,
+        onClick: handleSave,
       }}
-      noPermissionText={undefined}
-      errorText={undefined}
     >
       <div className="flex flex-row gap-4 md:justify-between">
         <div>
@@ -137,12 +137,12 @@ function AccountAvatarFormControl(props: {
           </p>
         </div>
         <FileInput
-          client={props.client}
           accept={{ "image/*": [] }}
-          value={avatar || accountAvatarUrl}
-          setValue={setAvatar}
           className="w-20 rounded-full lg:w-28"
+          client={props.client}
           disableHelperText
+          setValue={setAvatar}
+          value={avatar || accountAvatarUrl}
         />
       </div>
     </SettingsCard>
@@ -163,32 +163,32 @@ function AccountNameFormControl(props: {
   function handleSave() {
     const promises = updateAccountNameMutation.mutateAsync(accountName);
     toast.promise(promises, {
-      success: "Account name updated successfully",
       error: "Failed to update account name",
+      success: "Account name updated successfully",
     });
   }
 
   return (
     <SettingsCard
-      header={{
-        title: "Display Name",
-        description: "This is your account's name displayed on thirdweb",
-      }}
       bottomText={`Please use ${maxAccountNameLength} characters at maximum.`}
+      errorText={undefined}
+      header={{
+        description: "This is your account's name displayed on thirdweb",
+        title: "Display Name",
+      }}
+      noPermissionText={undefined}
       saveButton={{
-        onClick: handleSave,
         disabled: accountName.length === 0,
         isPending: updateAccountNameMutation.isPending,
-      }}
-      errorText={undefined}
-      noPermissionText={undefined} // TODO
+        onClick: handleSave,
+      }} // TODO
     >
       <Input
-        value={accountName}
+        className="md:w-[400px]"
         onChange={(e) => {
           setAccountName(e.target.value.slice(0, maxAccountNameLength));
         }}
-        className="md:w-[400px]"
+        value={accountName}
       />
     </SettingsCard>
   );
@@ -239,27 +239,9 @@ function DeleteAccountCard(props: {
 
   return (
     <DangerSettingCard
-      title={title}
-      description={description}
       buttonLabel={title}
       buttonOnClick={handleDelete}
-      isPending={deleteAccount.isPending}
       confirmationDialog={{
-        title: "Delete Account",
-        description: (
-          <span className="block space-y-2">
-            <span className="block">
-              Permanently delete your thirdweb account, the default team "
-              {props.defaultTeamName}" and all associated data
-            </span>
-            <span className="block font-medium">
-              This action is not reversible
-            </span>
-          </span>
-        ),
-        onClose: () => {
-          deleteAccount.reset();
-        },
         children: (
           <>
             {deleteAccount.data?.status === 400 && (
@@ -277,16 +259,16 @@ function DeleteAccountCard(props: {
 
                     <div className="flex flex-col gap-3 lg:flex-row">
                       <Button
-                        variant="default"
-                        size="sm"
                         className="gap-2"
                         onClick={() => {
                           const promise = cancelSubscriptions.mutateAsync();
                           toast.promise(promise, {
-                            success: "Subscriptions cancelled successfully",
                             error: "Failed to cancel subscriptions",
+                            success: "Subscriptions cancelled successfully",
                           });
                         }}
+                        size="sm"
+                        variant="default"
                       >
                         {cancelSubscriptions.isPending ? (
                           <Spinner className="size-4" />
@@ -297,12 +279,16 @@ function DeleteAccountCard(props: {
                       </Button>
 
                       <Button
-                        variant="outline"
                         asChild
-                        size="sm"
                         className="gap-2"
+                        size="sm"
+                        variant="outline"
                       >
-                        <Link href="/support/create-ticket" target="_blank">
+                        <Link
+                          href="/support/create-ticket"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
                           Contact Support
                           <ExternalLinkIcon className="size-4" />
                         </Link>
@@ -338,7 +324,25 @@ function DeleteAccountCard(props: {
             )}
           </>
         ),
+        description: (
+          <span className="block space-y-2">
+            <span className="block">
+              Permanently delete your thirdweb account, the default team "
+              {props.defaultTeamName}" and all associated data
+            </span>
+            <span className="block font-medium">
+              This action is not reversible
+            </span>
+          </span>
+        ),
+        onClose: () => {
+          deleteAccount.reset();
+        },
+        title: "Delete Account",
       }}
+      description={description}
+      isPending={deleteAccount.isPending}
+      title={title}
     />
   );
 }
@@ -352,13 +356,13 @@ function AccountEmailFormControl(props: {
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   return (
     <SettingsCard
-      header={{
-        title: "Email",
-        description:
-          "Enter the email address you want to use to log in with thirdweb. This email will be used for account related notifications",
-      }}
       bottomText="Emails must be verified to be able to login with them or be used as primary email"
       errorText={undefined}
+      header={{
+        description:
+          "Enter the email address you want to use to log in with thirdweb. This email will be used for account related notifications",
+        title: "Email",
+      }}
       noPermissionText={undefined}
     >
       <div className="flex items-center justify-between gap-4 rounded-lg border bg-background p-4">
@@ -374,12 +378,12 @@ function AccountEmailFormControl(props: {
         </div>
 
         {/* End */}
-        <Dialog open={isEmailModalOpen} onOpenChange={setIsEmailModalOpen}>
+        <Dialog onOpenChange={setIsEmailModalOpen} open={isEmailModalOpen}>
           <DialogTrigger asChild>
             <Button
+              className="!h-auto !w-auto p-1.5"
               size="icon"
               variant="ghost"
-              className="!h-auto !w-auto p-1.5"
             >
               <EllipsisIcon className="size-5 text-muted-foreground" />
             </Button>
@@ -387,11 +391,11 @@ function AccountEmailFormControl(props: {
           <DialogContent className="p-0">
             <EmailUpdateDialogContent
               currentEmail={props.email}
-              sendEmail={props.sendEmail}
-              updateEmailWithOTP={props.updateEmailWithOTP}
               onSuccess={() => {
                 setIsEmailModalOpen(false);
               }}
+              sendEmail={props.sendEmail}
+              updateEmailWithOTP={props.updateEmailWithOTP}
             />
           </DialogContent>
         </Dialog>
@@ -415,16 +419,16 @@ function EmailUpdateDialogContent(props: {
   if (isEmailSent) {
     return (
       <EnterEmailOTP
-        updateEmailWithOTP={props.updateEmailWithOTP}
         onSuccess={props.onSuccess}
+        updateEmailWithOTP={props.updateEmailWithOTP}
       />
     );
   }
 
   return (
     <SendEmailOTP
-      onEmailSent={() => setIsEmailSent(true)}
       currentEmail={props.currentEmail}
+      onEmailSent={() => setIsEmailSent(true)}
       sendEmail={props.sendEmail}
     />
   );
@@ -449,12 +453,12 @@ function SendEmailOTP(props: {
 
   function onSubmit(values: z.infer<typeof emailUpdateFormSchema>) {
     sendEmail.mutateAsync(values.email, {
-      onSuccess: () => {
-        props.onEmailSent();
-      },
       onError: (e) => {
         console.error(e);
         setShowSendError(true);
+      },
+      onSuccess: () => {
+        props.onEmailSent();
       },
     });
   }
@@ -503,8 +507,8 @@ function SendEmailOTP(props: {
           </DialogClose>
           <Button
             className="min-w-24 gap-2"
-            type="submit"
             disabled={!form.formState.isDirty}
+            type="submit"
           >
             {sendEmail.isPending && <Spinner className="size-4" />}
             Update
@@ -523,12 +527,12 @@ function EnterEmailOTP(props: {
   const [showOTPError, setShowOTPError] = useState(false);
   const updateEmail = useMutation({
     mutationFn: props.updateEmailWithOTP,
+    onError: () => {
+      setShowOTPError(true);
+    },
     onSuccess: () => {
       props.onSuccess();
       toast.success("Email updated successfully");
-    },
-    onError: () => {
-      setShowOTPError(true);
     },
   });
 
@@ -545,25 +549,25 @@ function EnterEmailOTP(props: {
         <div className="h-6" />
 
         <InputOTP
-          maxLength={6}
-          pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+          disabled={updateEmail.isPending}
           inputMode="text"
-          value={otp}
+          maxLength={6}
           onChange={(v) => {
             setOtp(v);
             setShowOTPError(false);
           }}
-          disabled={updateEmail.isPending}
+          pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+          value={otp}
         >
           <InputOTPGroup className="w-full">
             {new Array(6).fill(0).map((_, idx) => (
               <InputOTPSlot
-                // biome-ignore lint/suspicious/noArrayIndexKey: static list
-                key={idx}
-                index={idx}
                 className={cn("h-12 grow text-lg", {
                   "border-red-500": showOTPError,
                 })}
+                index={idx}
+                // biome-ignore lint/suspicious/noArrayIndexKey: static list
+                key={idx}
               />
             ))}
           </InputOTPGroup>

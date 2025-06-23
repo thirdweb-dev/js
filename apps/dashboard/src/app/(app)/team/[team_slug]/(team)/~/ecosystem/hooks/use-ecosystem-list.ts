@@ -1,20 +1,15 @@
-import { apiServerProxy } from "@/actions/proxies";
 import { useQuery } from "@tanstack/react-query";
 import { useActiveAccount } from "thirdweb/react";
+import { apiServerProxy } from "@/actions/proxies";
 import type { Ecosystem } from "../types";
 
-export function useEcosystemList({
-  teamIdOrSlug,
-}: {
-  teamIdOrSlug: string;
-}) {
+export function useEcosystemList({ teamIdOrSlug }: { teamIdOrSlug: string }) {
   const address = useActiveAccount()?.address;
   return useQuery({
-    queryKey: ["ecosystems", teamIdOrSlug, address],
     queryFn: async () => {
       const res = await apiServerProxy({
-        pathname: `/v1/teams/${teamIdOrSlug}/ecosystem-wallet`,
         method: "GET",
+        pathname: `/v1/teams/${teamIdOrSlug}/ecosystem-wallet`,
       });
 
       if (!res.ok) {
@@ -24,6 +19,7 @@ export function useEcosystemList({
       const data = res.data as { result: Ecosystem[] };
       return data.result;
     },
+    queryKey: ["ecosystems", teamIdOrSlug, address],
     retry: false,
   });
 }

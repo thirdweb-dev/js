@@ -1,10 +1,10 @@
+import ColorPicker from "react-pick-color";
+import { useDebouncedCallback } from "use-debounce";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import ColorPicker from "react-pick-color";
-import { useDebouncedCallback } from "use-debounce";
 import { cn } from "../../../../../lib/utils";
 
 export function ColorInput(props: {
@@ -32,6 +32,7 @@ export function ColorInput(props: {
       </PopoverTrigger>
       <PopoverContent className="w-auto border-none p-0">
         <ColorPicker
+          className="p-2"
           color={props.value}
           hideAlpha
           onChange={({ hsl }) =>
@@ -44,11 +45,10 @@ export function ColorInput(props: {
             borderColor: "hsl(var(--border))",
             borderRadius: "var(--radius)",
             boxShadow: "var(--shadow)",
-            inputBackground: "hsl(var(--input))",
             color: "hsl(var(--foreground))",
+            inputBackground: "hsl(var(--input))",
             width: "300px",
           }}
-          className="p-2"
         />
       </PopoverContent>
     </Popover>

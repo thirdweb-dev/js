@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.ttmwallet",
-  name: "MDAO Wallet",
-  homepage: "https://ttmwallet.io/",
-  image_id: "82014e92-838b-4e75-e77e-76cdc5539d00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/ru/app/ttm-wallet/id1540851562",
     android:
       "https://play.google.com/store/apps/details?id=com.ttmbank.wallet.app&hl=ru&gl=US",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/ru/app/ttm-wallet/id1540851562",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "ttmwalletapp://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://ttmwallet.io/",
+  id: "io.ttmwallet",
+  image_id: "82014e92-838b-4e75-e77e-76cdc5539d00",
+  mobile: {
+    native: "ttmwalletapp://",
+    universal: null,
+  },
+  name: "MDAO Wallet",
+  rdns: null,
 } as const;

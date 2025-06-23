@@ -51,8 +51,8 @@ export async function checkContractWalletSignedTypedData<
   const result = await isValidSignature({
     contract: options.contract,
     hash: ox__TypedData.hashStruct({
-      primaryType: options.data.primaryType,
       data: options.data.message as Record<string, unknown>,
+      primaryType: options.data.primaryType,
       types: options.data.types as ox__TypedData.Definition["types"],
     }),
     signature: options.signature,

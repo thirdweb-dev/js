@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "RoleRevoked" event.
@@ -46,8 +46,8 @@ export type RoleRevokedEventFilters = Partial<{
  */
 export function roleRevokedEvent(filters: RoleRevokedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender)",
-    filters,
   });
 }

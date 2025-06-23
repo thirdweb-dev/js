@@ -1,6 +1,6 @@
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
-import type { ChainMetadataWithServices } from "../../../../types/chain";
+import type { ChainMetadataWithServices } from "@/types/chain";
 import { SectionTitle } from "./SectionTitle";
 
 export function ExplorersSection(props: {
@@ -13,17 +13,18 @@ export function ExplorersSection(props: {
         {props.explorers.map((explorer) => {
           return (
             <div
-              key={explorer.url}
               className="relative rounded-xl border bg-card p-4 transition-colors hover:border-active-border"
+              key={explorer.url}
             >
               <ExternalLinkIcon className="absolute top-4 right-4 size-4 text-muted-foreground" />
               <h3 className="mb-1 font-semibold text-base capitalize">
                 {explorer.name}
               </h3>
               <Link
-                href={explorer.url}
-                target="_blank"
                 className="flex items-center gap-1.5 text-muted-foreground text-sm before:absolute before:inset-0 before:z-0"
+                href={explorer.url}
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 {explorer.url.endsWith("/")
                   ? explorer.url.slice(0, -1)

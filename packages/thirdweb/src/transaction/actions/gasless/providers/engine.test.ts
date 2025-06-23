@@ -6,8 +6,8 @@ import {
   TEST_ACCOUNT_B,
 } from "../../../../../test/src/test-wallets.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../../contract/contract.js";
 import { polygon } from "../../../../exports/chains.js";
 import { generateAccount } from "../../../../exports/wallets.js";
@@ -37,12 +37,12 @@ describe.runIf(process.env.TW_SECRET_KEY)("prepareengineTransaction", () => {
     });
     // mint some tokens to the account
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: mintTo({
-        contract: erc20Contract,
         amount: "1000",
+        contract: erc20Contract,
         to: TEST_ACCOUNT_A.address,
       }),
-      account: TEST_ACCOUNT_A,
     });
   }, 60_000);
 
@@ -55,20 +55,20 @@ describe.runIf(process.env.TW_SECRET_KEY)("prepareengineTransaction", () => {
 
     // seralizable transaction
     const serializableTransaction = await toSerializableTransaction({
-      transaction,
       from: TEST_ACCOUNT_A.address,
+      transaction,
     });
 
     const result = await prepareEngineTransaction({
       account: TEST_ACCOUNT_A,
-      serializableTransaction,
-      transaction,
       gasless: {
         provider: "engine",
-        relayerUrl: "https://safe-transaction.engine.com/api/v1",
         // mainnet forwarder address
         relayerForwarderAddress: "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81",
+        relayerUrl: "https://safe-transaction.engine.com/api/v1",
       },
+      serializableTransaction,
+      transaction,
     });
 
     const { message, messageType, signature } = result;
@@ -91,22 +91,22 @@ describe.runIf(process.env.TW_SECRET_KEY)("prepareengineTransaction", () => {
       client: TEST_CLIENT,
     });
     const transaction = add({
-      contract: multichainRegistry,
       chainId: 1337n,
+      contract: multichainRegistry,
       deployer: TEST_ACCOUNT_A.address,
       deployment: (await generateAccount({ client: TEST_CLIENT })).address,
       metadataUri: "",
     });
     const res = await sendTransaction({
       account: TEST_ACCOUNT_A,
-      transaction,
       gasless: {
+        experimentalChainlessSupport: true,
         provider: "engine",
+        relayerForwarderAddress: "0x409d530a6961297ece29121dbee2c917c3398659",
         relayerUrl:
           "https://checkout.engine.thirdweb.com/relayer/0c2bdd3a-307f-4243-b6e5-5ba495222d2b",
-        relayerForwarderAddress: "0x409d530a6961297ece29121dbee2c917c3398659",
-        experimentalChainlessSupport: true,
       },
+      transaction,
     });
     expect(res.transactionHash).toBeDefined();
     expect(res.transactionHash.length).toBe(66);

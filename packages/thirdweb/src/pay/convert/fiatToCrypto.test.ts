@@ -10,10 +10,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("Pay: fiatToCrypto", () => {
   it("should convert fiat price to token on Ethereum mainnet", async () => {
     const data = await convertFiatToCrypto({
       chain: ethereum,
+      client: TEST_CLIENT,
       from: "USD",
       fromAmount: 1,
       to: NATIVE_TOKEN_ADDRESS,
-      client: TEST_CLIENT,
     });
     expect(data.result).toBeDefined();
     // Should be a number
@@ -26,10 +26,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("Pay: fiatToCrypto", () => {
   it("should convert fiat price to token on Base mainnet", async () => {
     const data = await convertFiatToCrypto({
       chain: base,
+      client: TEST_CLIENT,
       from: "USD",
       fromAmount: 1,
       to: NATIVE_TOKEN_ADDRESS,
-      client: TEST_CLIENT,
     });
 
     expect(data.result).toBeDefined();
@@ -43,10 +43,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("Pay: fiatToCrypto", () => {
   it("should return zero if the fromAmount is zero", async () => {
     const data = await convertFiatToCrypto({
       chain: base,
+      client: TEST_CLIENT,
       from: "USD",
       fromAmount: 0,
       to: NATIVE_TOKEN_ADDRESS,
-      client: TEST_CLIENT,
     });
     expect(data.result).toBe(0);
   });
@@ -55,10 +55,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("Pay: fiatToCrypto", () => {
     await expect(
       convertFiatToCrypto({
         chain: sepolia,
-        to: NATIVE_TOKEN_ADDRESS,
-        fromAmount: 1,
-        from: "USD",
         client: TEST_CLIENT,
+        from: "USD",
+        fromAmount: 1,
+        to: NATIVE_TOKEN_ADDRESS,
       }),
     ).rejects.toThrowError(
       `Cannot fetch price for a testnet (chainId: ${sepolia.id})`,
@@ -69,10 +69,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("Pay: fiatToCrypto", () => {
     await expect(
       convertFiatToCrypto({
         chain: ethereum,
-        to: "haha",
-        fromAmount: 1,
-        from: "USD",
         client: TEST_CLIENT,
+        from: "USD",
+        fromAmount: 1,
+        to: "haha",
       }),
     ).rejects.toThrowError(
       "Invalid `to`. Expected a valid EVM contract address",

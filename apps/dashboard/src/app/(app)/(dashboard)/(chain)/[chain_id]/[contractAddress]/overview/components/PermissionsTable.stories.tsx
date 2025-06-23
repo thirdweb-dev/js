@@ -3,7 +3,11 @@ import { ThirdwebProvider } from "thirdweb/react";
 import { PermissionsTableUI } from "./PermissionsTable";
 
 const meta: Meta<typeof PermissionsTableUI> = {
-  title: "Contracts/Overview/PermissionsTable",
+  args: {
+    isPending: false,
+    members: [],
+    viewMoreLink: "#",
+  },
   component: PermissionsTableUI,
   decorators: [
     (Story) => (
@@ -14,12 +18,7 @@ const meta: Meta<typeof PermissionsTableUI> = {
       </ThirdwebProvider>
     ),
   ],
-  args: {
-    viewMoreLink: "#",
-    trackingCategory: "test-category",
-    members: [],
-    isPending: false,
-  },
+  title: "Contracts/Overview/PermissionsTable",
 };
 
 export default meta;

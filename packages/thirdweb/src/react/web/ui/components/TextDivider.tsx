@@ -25,15 +25,15 @@ export const TextDivider = (props: {
 const TextDividerEl = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
-    display: "flex",
-    alignItems: "center",
-    color: theme.colors.secondaryText,
-    fontSize: fontSize.sm,
     "&::before, &::after": {
+      borderBottom: `1px solid ${theme.colors.separatorLine}`,
       content: '""',
       flex: 1,
-      borderBottom: `1px solid ${theme.colors.separatorLine}`,
     },
+    alignItems: "center",
+    color: theme.colors.secondaryText,
+    display: "flex",
+    fontSize: fontSize.sm,
     span: {
       margin: "0 16px",
     },

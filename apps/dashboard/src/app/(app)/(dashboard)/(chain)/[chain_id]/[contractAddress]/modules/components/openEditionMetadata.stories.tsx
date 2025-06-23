@@ -1,23 +1,23 @@
-import { Checkbox } from "@/components/ui/checkbox";
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { toast } from "sonner";
-import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { BadgeContainer, storybookThirdwebClient } from "@/storybook/utils";
 import {
   OpenEditionMetadataModuleUI,
   type SetSharedMetadataFormValues,
 } from "./OpenEditionMetadata";
 
 const meta = {
-  title: "Modules/OpenEditionMetadata",
   component: Component,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Modules/OpenEditionMetadata",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -44,12 +44,14 @@ function Component() {
   });
 
   const contractInfo = {
-    name: "Module Name",
     description:
       "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore ",
+    name: "Module Name",
     publisher: "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
     version: "1.0.0",
   };
+
+  const terms1Id = useId();
 
   return (
     <ThirdwebProvider>
@@ -60,14 +62,14 @@ function Component() {
 
         <div className="flex gap-2">
           <Checkbox
-            id="terms1"
             checked={isOwner}
+            id={terms1Id}
             onCheckedChange={(v) => setIsOwner(!!v)}
           />
           <div className="grid gap-1.5 leading-none">
             <label
-              htmlFor="terms1"
               className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              htmlFor="terms1"
             >
               Is Owner
             </label>
@@ -76,17 +78,17 @@ function Component() {
 
         <BadgeContainer label="Default">
           <OpenEditionMetadataModuleUI
+            client={storybookThirdwebClient}
+            contractChainId={1}
             contractInfo={contractInfo}
+            isLoggedIn={true}
+            isOwnerAccount={isOwner}
             moduleAddress="0x0000000000000000000000000000000000000000"
             setSharedMetadata={setSharedMetadataStub}
             uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,
+              onClick: async () => removeMutation.mutateAsync(),
             }}
-            isOwnerAccount={isOwner}
-            client={storybookThirdwebClient}
-            contractChainId={1}
-            isLoggedIn={true}
           />
         </BadgeContainer>
       </div>

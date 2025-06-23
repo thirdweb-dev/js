@@ -39,8 +39,8 @@ export function PaymentOverview(props: {
         bg="tertiaryBg"
         flex="column"
         style={{
-          borderRadius: radius.lg,
           border: `1px solid ${theme.colors.borderColor}`,
+          borderRadius: radius.lg,
         }}
       >
         {sender && (
@@ -63,42 +63,42 @@ export function PaymentOverview(props: {
         )}
         {props.paymentMethod.type === "wallet" && (
           <TokenBalanceRow
-            token={props.paymentMethod.originToken}
-            client={props.client}
             amount={props.fromAmount}
+            client={props.client}
             onClick={() => {}}
             style={{
               background: "transparent",
-              borderRadius: 0,
               border: "none",
+              borderRadius: 0,
             }}
+            token={props.paymentMethod.originToken}
           />
         )}
         {props.paymentMethod.type === "fiat" && (
           <Container
+            center="y"
             flex="row"
             gap="sm"
             px="md"
             py="sm"
-            center="y"
             style={{ justifyContent: "space-between" }}
           >
-            <Container flex="row" gap="sm" center="y">
+            <Container center="y" flex="row" gap="sm">
               {getFiatCurrencyIcon({
                 currency: props.paymentMethod.currency,
                 size: "lg",
               })}
-              <Container flex="column" gap="3xs" center="y">
-                <Text size="sm" color="primaryText" style={{ fontWeight: 600 }}>
+              <Container center="y" flex="column" gap="3xs">
+                <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
                   {props.paymentMethod.currency}
                 </Text>
-                <Text size="xs" color="secondaryText">
+                <Text color="secondaryText" size="xs">
                   {props.paymentMethod.onramp.charAt(0).toUpperCase() +
                     props.paymentMethod.onramp.slice(1)}
                 </Text>
               </Container>
             </Container>
-            <Text size="sm" color="primaryText" style={{ fontWeight: 600 }}>
+            <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
               {props.fromAmount}
             </Text>
           </Container>
@@ -108,11 +108,11 @@ export function PaymentOverview(props: {
       <StepConnectorArrow />
       {/* Buy */}
       <Container
-        flex="column"
         bg="tertiaryBg"
+        flex="column"
         style={{
-          borderRadius: radius.lg,
           border: `1px solid ${theme.colors.borderColor}`,
+          borderRadius: radius.lg,
         }}
       >
         {isDifferentRecipient && (
@@ -135,38 +135,38 @@ export function PaymentOverview(props: {
         )}
         {props.uiOptions.mode === "direct_payment" && (
           <Container
+            center="y"
             flex="row"
             gap="sm"
             p="md"
-            center="y"
             style={{ justifyContent: "space-between" }}
           >
-            <Container flex="column" gap="3xs" center="y" style={{ flex: 1 }}>
-              <Text size="sm" color="primaryText" style={{ fontWeight: 600 }}>
+            <Container center="y" flex="column" gap="3xs" style={{ flex: 1 }}>
+              <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
                 {props.uiOptions.metadata?.title || "Payment"}
               </Text>
               {props.uiOptions.metadata?.description && (
-                <Text size="xs" color="secondaryText">
+                <Text color="secondaryText" size="xs">
                   {props.uiOptions.metadata.description}
                 </Text>
               )}
             </Container>
             <Container
+              center="y"
               flex="column"
               gap="3xs"
-              center="y"
               style={{ alignItems: "flex-end" }}
             >
               <FiatValue
-                tokenAmount={props.uiOptions.paymentInfo.amount}
-                token={props.toToken}
-                client={props.client}
                 chain={defineChain(props.toToken.chainId)}
-                weight={600}
+                client={props.client}
                 color="primaryText"
                 size="sm"
+                token={props.toToken}
+                tokenAmount={props.uiOptions.paymentInfo.amount}
+                weight={600}
               />
-              <Text size="xs" color="secondaryText">
+              <Text color="secondaryText" size="xs">
                 {props.uiOptions.paymentInfo.amount} {props.toToken.symbol}
               </Text>
             </Container>
@@ -174,21 +174,21 @@ export function PaymentOverview(props: {
         )}
         {props.uiOptions.mode === "fund_wallet" && (
           <TokenBalanceRow
-            token={props.toToken}
-            client={props.client}
             amount={props.toAmount}
+            client={props.client}
             onClick={() => {}}
             style={{
               background: "transparent",
-              borderRadius: 0,
               border: "none",
+              borderRadius: 0,
             }}
+            token={props.toToken}
           />
         )}
         {props.uiOptions.mode === "transaction" && (
           <TransactionOverViewCompact
-            uiOptions={props.uiOptions}
             client={props.client}
+            uiOptions={props.uiOptions}
           />
         )}
       </Container>
@@ -202,55 +202,55 @@ const TransactionOverViewCompact = (props: {
 }) => {
   const theme = useCustomTheme();
   const txInfo = useTransactionDetails({
-    transaction: props.uiOptions.transaction,
     client: props.client,
+    transaction: props.uiOptions.transaction,
   });
 
   if (!txInfo.data) {
     // Skeleton loading state
     return (
       <Container
+        center="y"
         flex="row"
         gap="sm"
         p="md"
-        center="y"
         style={{ justifyContent: "space-between" }}
       >
-        <Container flex="column" gap="3xs" center="y" style={{ flex: 1 }}>
+        <Container center="y" flex="column" gap="3xs" style={{ flex: 1 }}>
           {/* Title skeleton */}
           <div
             style={{
-              width: "120px",
-              height: "16px",
               backgroundColor: theme.colors.skeletonBg,
               borderRadius: spacing.xs,
+              height: "16px",
+              width: "120px",
             }}
           />
           {/* Description skeleton - only if metadata exists */}
           {props.uiOptions.metadata?.description && (
             <div
               style={{
-                width: "80px",
-                height: "12px",
                 backgroundColor: theme.colors.skeletonBg,
                 borderRadius: spacing.xs,
+                height: "12px",
+                width: "80px",
               }}
             />
           )}
         </Container>
         <Container
+          center="y"
           flex="column"
           gap="3xs"
-          center="y"
           style={{ alignItems: "flex-end" }}
         >
           {/* Function name skeleton */}
           <div
             style={{
-              width: "100px",
-              height: "24px",
               backgroundColor: theme.colors.skeletonBg,
               borderRadius: spacing.sm,
+              height: "24px",
+              width: "100px",
             }}
           />
         </Container>
@@ -260,37 +260,37 @@ const TransactionOverViewCompact = (props: {
 
   return (
     <Container
+      center="y"
       flex="row"
       gap="sm"
       p="md"
-      center="y"
       style={{ justifyContent: "space-between" }}
     >
-      <Container flex="column" gap="3xs" center="y" style={{ flex: 1 }}>
-        <Text size="sm" color="primaryText" style={{ fontWeight: 600 }}>
+      <Container center="y" flex="column" gap="3xs" style={{ flex: 1 }}>
+        <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
           {props.uiOptions.metadata?.title || "Transaction"}
         </Text>
         {props.uiOptions.metadata?.description && (
-          <Text size="xs" color="secondaryText">
+          <Text color="secondaryText" size="xs">
             {props.uiOptions.metadata.description}
           </Text>
         )}
       </Container>
       <Container
+        center="y"
         flex="column"
         gap="3xs"
-        center="y"
         style={{ alignItems: "flex-end" }}
       >
         <Text
-          size="xs"
           color="secondaryText"
+          size="xs"
           style={{
-            fontFamily: "monospace",
-            textAlign: "right",
             backgroundColor: theme.colors.secondaryButtonBg,
-            padding: `${spacing.xs} ${spacing.sm}`,
             borderRadius: spacing.sm,
+            fontFamily: "monospace",
+            padding: `${spacing.xs} ${spacing.sm}`,
+            textAlign: "right",
           }}
         >
           {txInfo.data.functionInfo.functionName}

@@ -40,22 +40,17 @@ export function useTransactionCostAndData(args: {
       encode(transaction),
     ]).then(([value, erc20Value, to, data]) => {
       setTxQueryKey({
-        value: value?.toString(),
-        erc20Value: erc20Value?.amountWei?.toString(),
-        erc20Currency: erc20Value?.tokenAddress,
-        to,
         data,
+        erc20Currency: erc20Value?.tokenAddress,
+        erc20Value: erc20Value?.amountWei?.toString(),
+        to,
+        value: value?.toString(),
       });
     });
   }, [transaction]);
 
   return useQuery({
-    queryKey: [
-      "transaction-cost",
-      transaction.chain.id,
-      account?.address,
-      txQueryKey,
-    ],
+    enabled: !!transaction && !!txQueryKey,
     queryFn: async () => {
       if (!account) {
         throw new Error("No payer account found");
@@ -85,8 +80,6 @@ export function useTransactionCostAndData(args: {
         const walletBalance = tokenBalance;
         const currency = {
           address: erc20Value.tokenAddress,
-          name: tokenMeta.name,
-          symbol: tokenMeta.symbol,
           icon: supportedDestinations
             .find((c) => c.chain.id === transaction.chain.id)
             ?.tokens.find(
@@ -94,14 +87,16 @@ export function useTransactionCostAndData(args: {
                 t.address.toLowerCase() ===
                 erc20Value.tokenAddress.toLowerCase(),
             )?.icon,
+          name: tokenMeta.name,
+          symbol: tokenMeta.symbol,
         };
         return {
-          token: currency,
-          decimals: tokenMeta.decimals,
           chainMetadata,
-          walletBalance,
+          decimals: tokenMeta.decimals,
           gasCostWei,
+          token: currency,
           transactionValueWei,
+          walletBalance,
         } satisfies TransactionCostAndData;
       }
 
@@ -119,20 +114,25 @@ export function useTransactionCostAndData(args: {
       const transactionValueWei =
         (await resolvePromisedValue(transaction.value)) || 0n;
       return {
-        token: {
-          address: NATIVE_TOKEN_ADDRESS,
-          name: chainMetadata.nativeCurrency.name,
-          symbol: chainMetadata.nativeCurrency.symbol,
-          icon: chainMetadata.icon?.url,
-        },
         chainMetadata,
         decimals: 18,
-        walletBalance,
         gasCostWei,
+        token: {
+          address: NATIVE_TOKEN_ADDRESS,
+          icon: chainMetadata.icon?.url,
+          name: chainMetadata.nativeCurrency.name,
+          symbol: chainMetadata.nativeCurrency.symbol,
+        },
         transactionValueWei,
+        walletBalance,
       } satisfies TransactionCostAndData;
     },
-    enabled: !!transaction && !!txQueryKey,
+    queryKey: [
+      "transaction-cost",
+      transaction.chain.id,
+      account?.address,
+      txQueryKey,
+    ],
     refetchInterval: args.refetchIntervalMs || 30_000,
   });
 }

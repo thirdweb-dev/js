@@ -48,23 +48,23 @@ export function installPublishedModule(options: InstallPublishedModuleOptions) {
   } = options;
 
   return installModule({
-    contract,
-    overrides: {
-      nonce,
-    },
     asyncParams: async () => {
       const deployedModule = await getOrDeployInfraForPublishedContract({
+        account,
         chain: contract.chain,
         client: contract.client,
-        account,
-        contractId: moduleName,
         constructorParams,
+        contractId: moduleName,
         publisher,
       });
       return {
-        moduleContract: deployedModule.implementationContract.address as string,
         data: moduleData || "0x",
+        moduleContract: deployedModule.implementationContract.address as string,
       };
+    },
+    contract,
+    overrides: {
+      nonce,
     },
   });
 }

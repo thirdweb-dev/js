@@ -39,9 +39,9 @@ export async function resolveName(options: ResolveNameOptions) {
   return withCache(
     async () => {
       const contract = getContract({
-        client,
-        chain: resolverChain || ethereum,
         address: resolverAddress || UNIVERSAL_RESOLVER_ADDRESS,
+        chain: resolverChain || ethereum,
+        client,
       });
 
       const reverseName = toHex(

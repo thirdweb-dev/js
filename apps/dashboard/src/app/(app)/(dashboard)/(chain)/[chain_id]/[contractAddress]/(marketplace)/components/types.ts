@@ -2,10 +2,10 @@
 import type { ListingStatus } from "thirdweb/dist/types/extensions/marketplace/types";
 
 export const LISTING_STATUS: Record<ListingStatus, string> = {
-  UNSET: "Does not exist",
-  CREATED: "Created",
-  COMPLETED: "Completed",
-  CANCELLED: "Cancelled",
   ACTIVE: "Active",
+  CANCELLED: "Cancelled",
+  COMPLETED: "Completed",
+  CREATED: "Created",
   EXPIRED: "Expired",
+  UNSET: "Does not exist",
 };

@@ -1,8 +1,8 @@
 "use server";
 
 import "server-only";
-import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "../constants/public-envs";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
+import { getAuthToken } from "./auth-token";
 
 export type AuditLogEntry = {
   who: {
@@ -58,34 +58,34 @@ export async function getAuditLogs(teamSlug: string, cursor?: string) {
   url.searchParams.set("take", "15");
 
   const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
     next: {
       // revalidate this query once per 10 seconds (does not need to be more granular than that)
       revalidate: 10,
-    },
-    headers: {
-      Authorization: `Bearer ${authToken}`,
     },
   });
   if (!response.ok) {
     // if the status is 402, the most likely reason is that the team is on a free plan
     if (response.status === 402) {
       return {
-        status: "error",
         reason: "higher_plan_required",
+        status: "error",
       } as const;
     }
     const body = await response.text();
     return {
-      status: "error",
-      reason: "unknown",
       body,
+      reason: "unknown",
+      status: "error",
     } as const;
   }
 
   const data = (await response.json()) as AuditLogApiResponse;
 
   return {
-    status: "success",
     data,
+    status: "success",
   } as const;
 }

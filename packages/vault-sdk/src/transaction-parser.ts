@@ -106,20 +106,19 @@ function parseTransaction(
   try {
     // Normalize and validate basics first
     const normalizedTx = {
+      // Handle gas/gasLimit field, converting to hex
+      gasLimit: normalizeGasLimit(clientTx),
       // Handle string/data field, prioritizing input
       input: normalizeInputData(clientTx),
 
       // Convert nonce to hex string
       nonce: normalizeNonce(clientTx),
 
-      // Convert value to hex string
-      value: normalizeValue(clientTx),
-
       // Handle to address, null for contract creation
       to: normalizeTo(clientTx),
 
-      // Handle gas/gasLimit field, converting to hex
-      gasLimit: normalizeGasLimit(clientTx),
+      // Convert value to hex string
+      value: normalizeValue(clientTx),
     };
 
     // Determine transaction type
@@ -179,8 +178,7 @@ function toHexString(value: number | bigint | string | undefined): string {
   }
 
   // Convert to lowercase hex string with 0x prefix
-  // biome-ignore lint/style/useTemplate: <explanation>
-  return "0x" + bigIntValue.toString(16);
+  return `0x${bigIntValue.toString(16)}`;
 }
 
 /**
@@ -579,14 +577,14 @@ function createLegacyTransaction(
   assert(gasPrice, "Gas price is required for legacy transactions");
 
   return {
-    type: "0x00",
-    chainId: normalizeChainId(chainId), // Optional for legacy
-    nonce,
+    chainId: normalizeChainId(chainId),
+    gasLimit, // Optional for legacy
     gasPrice: normalizeGasPrice(gasPrice),
-    gasLimit,
-    to,
-    value,
     input,
+    nonce,
+    to,
+    type: "0x00",
+    value,
   };
 }
 
@@ -610,15 +608,15 @@ function createEip2930Transaction(
   assert(gasPrice, "Gas price is required for EIP-2930 transactions");
 
   return {
-    type: "0x01",
-    chainId: normalizeChainId(chainId) as string, // Required for EIP-2930
-    nonce,
-    gasPrice: normalizeGasPrice(gasPrice),
-    gasLimit,
-    to,
-    value,
     accessList: normalizeAccessList(clientTx),
+    chainId: normalizeChainId(chainId) as string, // Required for EIP-2930
+    gasLimit,
+    gasPrice: normalizeGasPrice(gasPrice),
     input,
+    nonce,
+    to,
+    type: "0x01",
+    value,
   };
 }
 
@@ -646,16 +644,16 @@ function createEip1559Transaction(
   );
 
   return {
-    type: "0x02",
+    accessList: normalizeAccessList(clientTx),
     chainId: normalizeChainId(chainId) as string,
-    nonce,
     gasLimit,
+    input,
     maxFeePerGas: normalizeGasPrice(maxFeePerGas),
     maxPriorityFeePerGas: normalizeGasPrice(maxPriorityFeePerGas),
+    nonce,
     to,
+    type: "0x02", // Always provide access list, empty array if not specified
     value,
-    accessList: normalizeAccessList(clientTx), // Always provide access list, empty array if not specified
-    input,
   };
 }
 
@@ -701,18 +699,18 @@ function createEip4844Transaction(
 
   // Base transaction without sidecar
   const baseTransaction: TxEip4844 = {
-    type: "0x03",
-    chainId: normalizeChainId(chainId) as string,
-    nonce,
-    gasLimit,
-    maxFeePerGas: normalizeGasPrice(maxFeePerGas),
-    maxPriorityFeePerGas: normalizeGasPrice(maxPriorityFeePerGas),
-    to: to as Address,
-    value,
     accessList: normalizeAccessList(clientTx),
     blobVersionedHashes,
-    maxFeePerBlobGas: normalizeGasPrice(maxFeePerBlobGas),
+    chainId: normalizeChainId(chainId) as string,
+    gasLimit,
     input,
+    maxFeePerBlobGas: normalizeGasPrice(maxFeePerBlobGas),
+    maxFeePerGas: normalizeGasPrice(maxFeePerGas),
+    maxPriorityFeePerGas: normalizeGasPrice(maxPriorityFeePerGas),
+    nonce,
+    to: to as Address,
+    type: "0x03",
+    value,
   };
 
   // Check for blob data in any of the possible formats
@@ -761,17 +759,17 @@ function createEip7702Transaction(
   );
 
   return {
-    type: "0x05",
-    chainId: normalizeChainId(chainId) as string,
-    nonce,
-    gasLimit,
-    maxFeePerGas: normalizeGasPrice(maxFeePerGas),
-    maxPriorityFeePerGas: normalizeGasPrice(maxPriorityFeePerGas),
-    to: to as Address,
-    value,
     accessList: normalizeAccessList(clientTx),
     authorizationList: normalizeAuthorizationList(authorizationList),
+    chainId: normalizeChainId(chainId) as string,
+    gasLimit,
     input,
+    maxFeePerGas: normalizeGasPrice(maxFeePerGas),
+    maxPriorityFeePerGas: normalizeGasPrice(maxPriorityFeePerGas),
+    nonce,
+    to: to as Address,
+    type: "0x05",
+    value,
   };
 }
 

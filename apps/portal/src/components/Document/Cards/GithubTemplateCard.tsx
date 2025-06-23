@@ -7,7 +7,7 @@ export function GithubTemplateCard(props: {
   tag?: string;
 }) {
   return (
-    <Link href={props.href} target="_blank" className="flex cursor-default">
+    <Link className="flex cursor-default" href={props.href} target="_blank">
       <article className="group/article flex w-full items-center overflow-hidden rounded-lg border bg-card transition-colors duration-300 hover:border-active-border">
         <div className="flex w-full items-center gap-3 p-4">
           <GithubIcon className="size-5 shrink-0" />

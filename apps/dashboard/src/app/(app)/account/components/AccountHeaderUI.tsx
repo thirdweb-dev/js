@@ -1,11 +1,11 @@
-import type { Project } from "@/api/projects";
-import type { Team } from "@/api/team";
-import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
-import { cn } from "@/lib/utils";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import Link from "next/link";
 import type { ThirdwebClient } from "thirdweb";
-import { NotificationsButton } from "../../../../@/components/blocks/notifications/notification-button";
+import type { Project } from "@/api/projects";
+import type { Team } from "@/api/team";
+import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
+import { NotificationsButton } from "@/components/notifications/notification-button";
+import type { Account } from "@/hooks/useApi";
+import { cn } from "@/lib/utils";
 import { SecondaryNav } from "../../components/Header/SecondaryNav/SecondaryNav";
 import { MobileBurgerMenuButton } from "../../components/MobileBurgerMenuButton";
 import { ThirdwebMiniLogo } from "../../components/ThirdwebMiniLogo";
@@ -41,28 +41,28 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
 
         <div className="flex items-center gap-1">
           <Link
-            href="/account"
             className="flex flex-row items-center gap-2 font-normal text-sm"
+            href="/account"
           >
             <GradientAvatar
-              id={props.account?.id || "default"}
-              src={props.account?.image || ""}
               className="size-6"
               client={props.client}
+              id={props.account?.id || "default"}
+              src={props.account?.image || ""}
             />
             <span> My Account </span>
           </Link>
 
           {props.teamsAndProjects.length > 0 && (
             <TeamAndProjectSelectorPopoverButton
-              currentProject={undefined}
-              currentTeam={undefined}
-              teamsAndProjects={props.teamsAndProjects}
-              focus="team-selection"
-              createProject={props.createProject}
-              createTeam={props.createTeam}
               account={props.account}
               client={props.client}
+              createProject={props.createProject}
+              createTeam={props.createTeam}
+              currentProject={undefined}
+              currentTeam={undefined}
+              focus="team-selection"
+              teamsAndProjects={props.teamsAndProjects}
             />
           )}
         </div>
@@ -70,10 +70,10 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
 
       <SecondaryNav
         account={props.account}
-        logout={props.logout}
-        connectButton={props.connectButton}
-        client={props.client}
         accountAddress={props.accountAddress}
+        client={props.client}
+        connectButton={props.connectButton}
+        logout={props.logout}
       />
     </header>
   );
@@ -90,29 +90,29 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
           <Link
-            href="/account"
             className={cn(
               "flex flex-row items-center gap-2 font-normal text-foreground text-sm",
             )}
+            href="/account"
           >
             <GradientAvatar
-              id={props.account?.id}
-              src={props.account?.image || ""}
               className="size-6"
               client={props.client}
+              id={props.account?.id}
+              src={props.account?.image || ""}
             />
             <span> My Account </span>
           </Link>
 
           {props.teamsAndProjects.length > 0 && (
             <TeamSelectorMobileMenuButton
-              isOnProjectPage={false}
-              currentTeam={undefined}
-              teamsAndProjects={props.teamsAndProjects}
-              upgradeTeamLink={undefined}
               account={props.account}
               client={props.client}
               createTeam={props.createTeam}
+              currentTeam={undefined}
+              isOnProjectPage={false}
+              teamsAndProjects={props.teamsAndProjects}
+              upgradeTeamLink={undefined}
             />
           )}
         </div>
@@ -122,12 +122,12 @@ export function AccountHeaderMobileUI(props: AccountHeaderCompProps) {
         <NotificationsButton accountId={props.account.id} />
 
         <MobileBurgerMenuButton
-          type="loggedIn"
-          email={props.account?.email}
-          client={props.client}
-          logout={props.logout}
-          connectButton={props.connectButton}
           accountAddress={props.accountAddress}
+          client={props.client}
+          connectButton={props.connectButton}
+          email={props.account?.email}
+          logout={props.logout}
+          type="loggedIn"
         />
       </div>
     </header>

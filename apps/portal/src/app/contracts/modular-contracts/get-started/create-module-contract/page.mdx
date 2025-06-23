@@ -287,7 +287,7 @@ library CounterStorage {
 </Step>
 
 <Step title="Set Up Module Config">
-   Lastly, set up the `getModuleConfig` functionallity as this is the one which is responsible for communicating to the core contract:
+   Lastly, set up the `getModuleConfig` functionality as this is the one which is responsible for communicating to the core contract:
 
 ```solidity
 //SPDX-License-Identifier: MIT
@@ -330,7 +330,7 @@ contract CounterModule is Module {
         config.requiredInterfaces = new bytes4[](1);
         config.requiredInterfaces[0] = 0x00000001;
 
-        // register the intallation callback
+        // register the installation callback
         config.registerInstallationCallback = true;
     }
 

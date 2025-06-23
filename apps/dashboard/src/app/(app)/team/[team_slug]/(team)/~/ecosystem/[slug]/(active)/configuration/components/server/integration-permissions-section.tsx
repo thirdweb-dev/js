@@ -8,7 +8,11 @@ export function IntegrationPermissionsSection({
   ecosystem,
   authToken,
   teamId,
-}: { ecosystem?: Ecosystem; authToken: string; teamId: string }) {
+}: {
+  ecosystem?: Ecosystem;
+  authToken: string;
+  teamId: string;
+}) {
   return (
     <div className="relative rounded-lg border border-border bg-card px-4 py-6 lg:px-6">
       <h3 className="font-semibold text-xl tracking-tight">
@@ -26,8 +30,8 @@ export function IntegrationPermissionsSection({
       <section className="flex flex-col gap-4 md:gap-8">
         {ecosystem ? (
           <IntegrationPermissionsToggle
-            ecosystem={ecosystem}
             authToken={authToken}
+            ecosystem={ecosystem}
             teamId={teamId}
           />
         ) : (

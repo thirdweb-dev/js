@@ -17,10 +17,12 @@ export const getEip712Domain = (transaction: EIP721TransactionSerializable) => {
 
   return {
     domain: {
+      chainId: transaction.chainId,
       name: "zkSync",
       version: "2",
-      chainId: transaction.chainId,
     },
+    message: message,
+    primaryType: "Transaction",
     types: {
       Transaction: [
         { name: "txType", type: "uint256" },
@@ -38,8 +40,6 @@ export const getEip712Domain = (transaction: EIP721TransactionSerializable) => {
         { name: "paymasterInput", type: "bytes" },
       ],
     },
-    primaryType: "Transaction",
-    message: message,
   };
 };
 
@@ -62,18 +62,18 @@ function transactionToMessage(
   } = transaction;
 
   return {
-    txType: 113n,
+    data: data ? data : "0x0",
+    factoryDeps: factoryDeps?.map((dep) => toHex(hashBytecode(dep))) ?? [],
     from: BigInt(from),
-    to: to ? BigInt(to) : 0n,
     gasLimit: gas ?? 0n,
     gasPerPubdataByteLimit: gasPerPubdata ?? gasPerPubdataDefault,
     maxFeePerGas: maxFeePerGas ?? 0n,
     maxPriorityFeePerGas: maxPriorityFeePerGas ?? 0n,
-    paymaster: paymaster ? BigInt(paymaster) : 0n,
     nonce: nonce ? BigInt(nonce) : 0n,
-    value: value ?? 0n,
-    data: data ? data : "0x0",
-    factoryDeps: factoryDeps?.map((dep) => toHex(hashBytecode(dep))) ?? [],
+    paymaster: paymaster ? BigInt(paymaster) : 0n,
     paymasterInput: paymasterInput ? paymasterInput : "0x",
+    to: to ? BigInt(to) : 0n,
+    txType: 113n,
+    value: value ?? 0n,
   };
 }

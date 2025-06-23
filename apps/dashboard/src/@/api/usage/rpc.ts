@@ -1,6 +1,6 @@
 import "server-only";
 import { unstable_cache } from "next/cache";
-import { ANALYTICS_SERVICE_URL } from "../../constants/server-envs";
+import { ANALYTICS_SERVICE_URL } from "@/constants/server-envs";
 
 type Last24HoursRPCUsageApiResponse = {
   peakRate: {
@@ -23,11 +23,7 @@ type Last24HoursRPCUsageApiResponse = {
 };
 
 export const getLast24HoursRPCUsage = unstable_cache(
-  async (params: {
-    teamId: string;
-    projectId?: string;
-    authToken: string;
-  }) => {
+  async (params: { teamId: string; projectId?: string; authToken: string }) => {
     const analyticsEndpoint = ANALYTICS_SERVICE_URL;
     const url = new URL(`${analyticsEndpoint}/v2/rpc/24-hours`);
     url.searchParams.set("teamId", params.teamId);
@@ -44,16 +40,16 @@ export const getLast24HoursRPCUsage = unstable_cache(
     if (!res.ok) {
       const error = await res.text();
       return {
-        ok: false as const,
         error: error,
+        ok: false as const,
       };
     }
 
     const resData = await res.json();
 
     return {
-      ok: true as const,
       data: resData.data as Last24HoursRPCUsageApiResponse,
+      ok: true as const,
     };
   },
   ["rpc-usage-last-24-hours:v2"],

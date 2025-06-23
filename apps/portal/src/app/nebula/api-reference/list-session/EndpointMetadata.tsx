@@ -20,20 +20,20 @@ export function EndpointMetadata() {
   return (
     <ApiEndpoint
       metadata={{
-        title: "List Sessions",
         description: "Fetches a list of all available sessions.",
+        method: "GET",
         origin: "https://nebula-api.thirdweb.com",
         path: "/session/list",
-        method: "GET",
         request: {
-          pathParameters: [],
           bodyParameters: [],
           headers: [nebulaSecretKeyHeaderParameter],
+          pathParameters: [],
         },
         responseExamples: {
           200: response200Example,
           401: nebulaAPI401Response,
         },
+        title: "List Sessions",
       }}
     />
   );

@@ -1,7 +1,7 @@
 import "server-only";
+import type { Address } from "thirdweb";
 import type { Erc721Token } from "@/types/Erc721Token";
 import { chainIdToName, nameToChainId } from "@/util/simplehash";
-import type { Address } from "thirdweb";
 
 type GetErc721TokensParams = {
   owner: Address;
@@ -31,11 +31,11 @@ export async function getErc721Tokens({
     .slice(0, -1); // remove trailing comma
 
   const queryParams = new URLSearchParams({
-    wallet_addresses: owner,
-    limit: limit.toString(),
     chains: chainlist,
-    order_by: "floor_price__desc",
     filters: "spam_score__lte=80",
+    limit: limit.toString(),
+    order_by: "floor_price__desc",
+    wallet_addresses: owner,
   });
 
   if (cursor) {
@@ -43,11 +43,11 @@ export async function getErc721Tokens({
   }
 
   const options = {
-    method: "GET",
     headers: {
       accept: "application/json",
       "X-API-KEY": process.env.SIMPLEHASH_API_KEY as string,
     },
+    method: "GET",
     next: {
       cache: "no-store",
       tags: chainIds.map((id) => `transactions-${id}-${owner}`),
@@ -81,13 +81,13 @@ export async function getErc721Tokens({
       // biome-ignore lint/suspicious/noExplicitAny: false
       .map((token: any) => ({
         chainId: nameToChainId(token.chain),
-        contract: token.contract,
         collection: token.collection,
+        contract: token.contract,
         contractAddress: token.contract_address,
-        tokenId: Number(token.token_id),
-        name: token.name,
         description: token.description,
         image_url: token.image_url,
+        name: token.name,
+        tokenId: Number(token.token_id),
       })),
   };
 }

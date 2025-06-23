@@ -55,15 +55,15 @@ export async function resolveAddress(options: ResolveAddressOptions) {
   return withCache(
     async () => {
       const contract = getContract({
-        client,
-        chain: resolverChain || ethereum,
         address: resolverAddress || UNIVERSAL_RESOLVER_ADDRESS,
+        chain: resolverChain || ethereum,
+        client,
       });
       const data = encodeAddr({ name: namehash(name) });
       const result = await resolve({
         contract,
-        name: toHex(packetToBytes(name)),
         data,
+        name: toHex(packetToBytes(name)),
       });
       const resolvedAddress = getAddress(`0x${result[0].slice(-40)}`);
 

@@ -7,8 +7,8 @@ export default async function Page(props: {
   const params = await props.params;
   return (
     <SharedCrossChainPage
-      contractAddress={params.contractAddress}
       chainIdOrSlug={params.chain_id}
+      contractAddress={params.contractAddress}
       projectMeta={undefined}
     />
   );

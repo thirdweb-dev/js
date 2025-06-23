@@ -1,4 +1,13 @@
 "use client";
+import { formatDistanceToNow } from "date-fns";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ExternalLinkIcon,
+} from "lucide-react";
+import { useState } from "react";
+import { type ThirdwebClient, type ThirdwebContract, toTokens } from "thirdweb";
+import type { ChainMetadata } from "thirdweb/chains";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -12,24 +21,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { formatDistanceToNow } from "date-fns";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ExternalLinkIcon,
-} from "lucide-react";
-import { useState } from "react";
-import { type ThirdwebClient, type ThirdwebContract, toTokens } from "thirdweb";
-import type { ChainMetadata } from "thirdweb/chains";
 import {
   type TokenTransfersData,
   useTokenTransfers,
 } from "../_hooks/useTokenTransfers";
 
 const tokenAmountFormatter = new Intl.NumberFormat("en-US", {
-  notation: "compact",
   maximumFractionDigits: 3,
   minimumFractionDigits: 0,
+  notation: "compact",
 });
 
 function RecentTransfersUI(props: {
@@ -71,7 +71,7 @@ function RecentTransfersUI(props: {
           <TableBody>
             {props.isPending
               ? Array.from({ length: props.rowsPerPage }).map((_, index) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                  // biome-ignore lint/suspicious/noArrayIndexKey: EXPECTED
                   <SkeletonRow key={index} />
                 ))
               : props.data.map((transfer) => (
@@ -127,19 +127,19 @@ function RecentTransfersUI(props: {
                     </TableCell>
                     <TableCell>
                       <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0"
                         asChild
+                        className="h-8 w-8 p-0"
+                        size="sm"
+                        variant="ghost"
                       >
                         <a
-                          href={`${props.explorerUrl}/tx/${transfer.transaction_hash}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
                           className={cn(
                             "flex items-center justify-center",
                             "hover:bg-accent hover:text-accent-foreground",
                           )}
+                          href={`${props.explorerUrl}/tx/${transfer.transaction_hash}`}
+                          rel="noopener noreferrer"
+                          target="_blank"
                         >
                           <ExternalLinkIcon className="h-4 w-4" />
                         </a>
@@ -159,21 +159,21 @@ function RecentTransfersUI(props: {
 
       <div className="flex items-center justify-end gap-3 rounded-b-lg border-x border-b bg-card px-6 py-5">
         <Button
-          variant="outline"
-          size="sm"
           className="gap-1.5 bg-background"
           disabled={props.page === 0 || props.isPending}
           onClick={() => props.setPage(props.page - 1)}
+          size="sm"
+          variant="outline"
         >
           <ChevronLeftIcon className="size-4 text-muted-foreground" />
           Previous
         </Button>
         <Button
-          variant="outline"
-          size="sm"
-          disabled={props.isPending || props.data.length < props.rowsPerPage}
           className="gap-1.5 bg-background"
+          disabled={props.isPending || props.data.length < props.rowsPerPage}
           onClick={() => props.setPage(props.page + 1)}
+          size="sm"
+          variant="outline"
         >
           Next
           <ChevronRightIcon className="size-4 text-muted-foreground" />
@@ -217,27 +217,27 @@ export function RecentTransfers(props: {
   const tokenQuery = useTokenTransfers({
     chainId: props.clientContract.chain.id,
     contractAddress: props.clientContract.address,
-    page,
     limit: rowsPerPage,
+    page,
   });
 
   return (
     <div>
       <RecentTransfersUI
-        data={tokenQuery.data ?? []}
-        isPending={tokenQuery.isPending}
-        rowsPerPage={rowsPerPage}
         client={props.clientContract.client}
-        tokenMetadata={{
-          decimals: props.decimals,
-          symbol: props.tokenSymbol,
-        }}
-        page={page}
-        setPage={setPage}
+        data={tokenQuery.data ?? []}
         explorerUrl={
           props.chainMetadata.explorers?.[0]?.url ||
           `https://thirdweb.com/${props.chainMetadata.slug}`
         }
+        isPending={tokenQuery.isPending}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        setPage={setPage}
+        tokenMetadata={{
+          decimals: props.decimals,
+          symbol: props.tokenSymbol,
+        }}
       />
     </div>
   );

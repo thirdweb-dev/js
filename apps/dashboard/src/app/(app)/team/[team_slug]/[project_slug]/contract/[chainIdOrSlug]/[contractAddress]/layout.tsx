@@ -1,17 +1,17 @@
+import { redirect } from "next/navigation";
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
-import { AppFooter } from "@/components/blocks/app-footer";
+import { AppFooter } from "@/components/footers/app-footer";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { redirect } from "next/navigation";
-import { SaveLastUsedProject } from "../../../(sidebar)/components/SaveLastUsedProject";
-import { SharedContractLayout } from "../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/shared-layout";
-import { ErrorProvider } from "../../../../../../../../contexts/error-handler";
-import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import {
   getAuthToken,
   getAuthTokenWalletAddress,
-} from "../../../../../../api/lib/getAuthToken";
+} from "../../../../../../../../@/api/auth-token";
+import { ErrorProvider } from "../../../../../../../../@/contexts/error-handler";
+import { SharedContractLayout } from "../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/shared-layout";
+import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { TeamHeaderLoggedIn } from "../../../../../components/TeamHeader/team-header-logged-in.client";
+import { SaveLastUsedProject } from "../../../(sidebar)/components/SaveLastUsedProject";
 import type { ProjectContractPageParams } from "./types";
 
 export default async function ContractLayout(props: {
@@ -40,8 +40,8 @@ export default async function ContractLayout(props: {
 
   const teamsAndProjects = await Promise.all(
     teams.map(async (team) => ({
-      team,
       projects: await getProjects(team.slug),
+      team,
     })),
   );
 
@@ -64,21 +64,21 @@ export default async function ContractLayout(props: {
       <div className="flex min-h-dvh flex-col bg-background">
         <div className="border-border border-b bg-card">
           <TeamHeaderLoggedIn
-            currentProject={project}
-            currentTeam={team}
-            teamsAndProjects={teamsAndProjects}
             account={account}
             accountAddress={accountAddress}
             client={client}
+            currentProject={project}
+            currentTeam={team}
+            teamsAndProjects={teamsAndProjects}
           />
         </div>
         <SharedContractLayout
-          contractAddress={params.contractAddress}
-          chainIdOrSlug={params.chainIdOrSlug}
           authToken={authToken}
+          chainIdOrSlug={params.chainIdOrSlug}
+          contractAddress={params.contractAddress}
           projectMeta={{
-            teamId: team.id,
             projectSlug: params.project_slug,
+            teamId: team.id,
             teamSlug: params.team_slug,
           }}
         >

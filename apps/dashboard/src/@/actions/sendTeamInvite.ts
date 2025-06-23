@@ -1,7 +1,7 @@
 "use server";
 
-import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "../constants/public-envs";
+import { getAuthToken } from "@/api/auth-token";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 
 export async function sendTeamInvites(options: {
   teamId: string;
@@ -20,8 +20,8 @@ export async function sendTeamInvites(options: {
 
   if (!token) {
     return {
-      ok: false,
       errorMessage: "You are not authorized to perform this action",
+      ok: false,
     };
   }
 
@@ -43,15 +43,15 @@ async function sendInvite(
   const res = await fetch(
     `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamId}/invites`,
     {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({
         inviteEmail: invite.email,
         inviteRole: invite.role,
       }),
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
     },
   );
 
@@ -59,8 +59,8 @@ async function sendInvite(
     const errorMessage = await res.text();
     return {
       email: invite.email,
-      ok: false,
       errorMessage,
+      ok: false,
     };
   }
 

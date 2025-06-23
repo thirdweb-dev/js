@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import he from "he";
 import { NodeHtmlMarkdown } from "node-html-markdown";
-import { type HTMLElement as X_HTMLElement, parse } from "node-html-parser";
+import { parse, type HTMLElement as X_HTMLElement } from "node-html-parser";
 import type { LinkGroup } from "../../../../components/others/Sidebar";
 import { fetchTypeScriptDoc } from "../../../references/components/TDoc/fetchDocs/fetchTypeScriptDoc";
 import { getSidebarLinkGroups } from "../../../references/components/TDoc/utils/getSidebarLinkgroups";
@@ -93,10 +93,10 @@ export async function extractContentForLLM(
     try {
       const htmlContent = await readFile(htmlFilePath, "utf-8");
       const mainEl = parse(htmlContent, {
-        comment: false,
         blockTextElements: {
           pre: true,
         },
+        comment: false,
       }).querySelector("main");
 
       if (!mainEl) {
@@ -169,12 +169,12 @@ function extractPageLLMContent(
     main.getAttribute("data-noindex") === "true" ||
     main.getAttribute("data-no-llm") === "true"
   ) {
-    return { links: "", full: "" };
+    return { full: "", links: "" };
   }
 
   const htmlToMarkdown = new NodeHtmlMarkdown({
-    keepDataImages: false,
     ignore: ["button"],
+    keepDataImages: false,
     maxConsecutiveNewlines: 2,
   });
 
@@ -242,10 +242,10 @@ function extractPageLLMContent(
   const preTags = main.querySelectorAll("pre");
   for (const preTag of preTags) {
     const codeBlock = parse(preTag.innerHTML.toString(), {
-      comment: false,
       blockTextElements: {
         pre: true,
       },
+      comment: false,
     }).querySelector("code");
 
     if (codeBlock) {
@@ -285,7 +285,7 @@ function extractPageLLMContent(
   fullContent += `${htmlToMarkdown.translate(main.toString())}`;
 
   return {
-    links: linksContent,
     full: fullContent,
+    links: linksContent,
   };
 }

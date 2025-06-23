@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.liberawallet",
-  name: "Libera",
-  homepage: "https://liberawallet.com",
-  image_id: "9485d17f-c413-47fe-ebee-a876a9dc9100",
   app: {
-    browser: null,
-    ios: null,
     android:
       "https://play.google.com/store/apps/details?id=com.impactmarket.mobile&&pli=1",
-    mac: "",
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: null,
+    mac: "",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "libera://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://liberawallet.com",
+  id: "com.liberawallet",
+  image_id: "9485d17f-c413-47fe-ebee-a876a9dc9100",
+  mobile: {
+    native: "libera://",
+    universal: null,
+  },
+  name: "Libera",
+  rdns: null,
 } as const;

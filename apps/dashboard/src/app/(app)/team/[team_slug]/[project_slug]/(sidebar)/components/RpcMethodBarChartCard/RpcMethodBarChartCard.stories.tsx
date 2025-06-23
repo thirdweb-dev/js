@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { BadgeContainer } from "stories/utils";
-import type { RpcMethodStats } from "types/analytics";
+import { BadgeContainer } from "@/storybook/utils";
+import type { RpcMethodStats } from "@/types/analytics";
 import { RpcMethodBarChartCardUI } from "./RpcMethodBarChartCardUI";
 
 const meta = {
-  title: "Analytics/RpcMethodBarChartCard",
   component: Component,
+  title: "Analytics/RpcMethodBarChartCard",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -34,12 +34,12 @@ const generateTimeSeriesData = (
 
     for (const method of methods) {
       data.push({
-        date: date.toISOString(),
-        evmMethod: method,
         count:
           shouldMakeEmpty || emptyData
             ? 0
             : Math.floor(Math.random() * 1000) + 100,
+        date: date.toISOString(),
+        evmMethod: method,
       });
     }
   }

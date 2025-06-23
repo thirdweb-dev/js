@@ -46,8 +46,8 @@ export function updateTokenURI(
 ) {
   const { contract } = options;
   return setTokenURI({
-    contract,
     asyncParams: async () => getUpdateTokenParams(options),
+    contract,
   });
 }
 

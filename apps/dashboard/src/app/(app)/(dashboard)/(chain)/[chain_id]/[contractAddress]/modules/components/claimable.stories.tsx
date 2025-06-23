@@ -1,3 +1,11 @@
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { useMutation } from "@tanstack/react-query";
+import { subDays } from "date-fns";
+import { useId, useState } from "react";
+import { toast } from "sonner";
+import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from "thirdweb";
+import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
+import { checksumAddress } from "thirdweb/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -6,31 +14,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Meta, StoryObj } from "@storybook/nextjs";
-import { useMutation } from "@tanstack/react-query";
-import { subDays } from "date-fns";
-import { useState } from "react";
-import { toast } from "sonner";
-import { storybookThirdwebClient } from "stories/utils";
-import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from "thirdweb";
-import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
-import { checksumAddress } from "thirdweb/utils";
+import { storybookThirdwebClient } from "@/storybook/utils";
 import {
+  ClaimableModuleUI,
   type ClaimConditionFormValues,
   type ClaimConditionValue,
-  ClaimableModuleUI,
   type MintFormValues,
   type PrimarySaleRecipientFormValues,
 } from "./Claimable";
 
 const meta = {
-  title: "Modules/Claimable",
   component: Component,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Modules/Claimable",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -43,16 +43,16 @@ export const Variants: Story = {
 const testAddress1 = "0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37";
 
 const claimCondition = {
-  availableSupply: BigInt(100),
-  maxMintPerWallet: BigInt(10),
-  pricePerUnit: 10000000000000000000n,
-  // we get checksummed NATIVE_TOKEN_ADDRESS from claim condition query for native token
-  currency: checksumAddress(NATIVE_TOKEN_ADDRESS),
-  // last week
-  startTimestamp: subDays(new Date(), 7).getTime() / 1000,
-  endTimestamp: new Date().getTime() / 1000,
   allowlistMerkleRoot: ZERO_ADDRESS,
   auxData: "0x",
+  availableSupply: BigInt(100),
+  // we get checksummed NATIVE_TOKEN_ADDRESS from claim condition query for native token
+  currency: checksumAddress(NATIVE_TOKEN_ADDRESS),
+  endTimestamp: Date.now() / 1000,
+  maxMintPerWallet: BigInt(10),
+  pricePerUnit: 10000000000000000000n,
+  // last week
+  startTimestamp: subDays(new Date(), 7).getTime() / 1000,
 } as ClaimConditionValue;
 
 function Component() {
@@ -91,9 +91,9 @@ function Component() {
   });
 
   const contractInfo = {
-    name: "Module Name",
     description:
       "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore ",
+    name: "Module Name",
     publisher: "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
     version: "1.0.0",
   };
@@ -107,13 +107,12 @@ function Component() {
 
         <div className="flex flex-wrap items-center gap-5">
           <CheckboxWithLabel
-            value={isOwner}
-            onChange={setIsOwner}
-            id="isOwner"
             label="Is Owner"
+            onChange={setIsOwner}
+            value={isOwner}
           />
 
-          <Select value={name} onValueChange={(v) => setName(v)}>
+          <Select onValueChange={(v) => setName(v)} value={name}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
@@ -125,40 +124,25 @@ function Component() {
           </Select>
 
           <CheckboxWithLabel
-            value={isClaimConditionLoading}
-            onChange={setIsClaimConditionLoading}
-            id="isClaimConditionLoading"
             label="Claim Condition Section Loading"
+            onChange={setIsClaimConditionLoading}
+            value={isClaimConditionLoading}
           />
 
           <CheckboxWithLabel
-            value={isPrimarySaleRecipientLoading}
-            onChange={setIsPrimarySaleRecipientLoading}
-            id="isPrimarySaleRecipientLoading"
             label="Primary Sale Recipient Section Loading"
+            onChange={setIsPrimarySaleRecipientLoading}
+            value={isPrimarySaleRecipientLoading}
           />
 
           <CheckboxWithLabel
-            value={noClaimConditionSet}
-            onChange={setNoClaimConditionSet}
-            id="noClaimConditionSet"
             label="No Claim Condition Set"
+            onChange={setNoClaimConditionSet}
+            value={noClaimConditionSet}
           />
         </div>
 
         <ClaimableModuleUI
-          client={storybookThirdwebClient}
-          isLoggedIn={true}
-          contractInfo={contractInfo}
-          moduleAddress="0x0000000000000000000000000000000000000000"
-          primarySaleRecipientSection={{
-            data: isPrimarySaleRecipientLoading
-              ? undefined
-              : {
-                  primarySaleRecipient: testAddress1,
-                },
-            setPrimarySaleRecipient: updatePrimarySaleRecipientStub,
-          }}
           claimConditionSection={{
             data:
               isClaimConditionLoading ||
@@ -173,19 +157,31 @@ function Component() {
             setClaimCondition: updateClaimConditionStub,
             tokenId,
           }}
+          client={storybookThirdwebClient}
+          contractChainId={1}
+          contractInfo={contractInfo}
+          isLoggedIn={true}
+          isOwnerAccount={isOwner}
+          isValidTokenId={true}
           mintSection={{
             mint: mintStub,
           }}
-          uninstallButton={{
-            onClick: async () => removeMutation.mutateAsync(),
-            isPending: removeMutation.isPending,
-          }}
-          isOwnerAccount={isOwner}
+          moduleAddress="0x0000000000000000000000000000000000000000"
           name={name}
-          contractChainId={1}
-          setTokenId={setTokenId}
-          isValidTokenId={true}
           noClaimConditionSet={noClaimConditionSet}
+          primarySaleRecipientSection={{
+            data: isPrimarySaleRecipientLoading
+              ? undefined
+              : {
+                  primarySaleRecipient: testAddress1,
+                },
+            setPrimarySaleRecipient: updatePrimarySaleRecipientStub,
+          }}
+          setTokenId={setTokenId}
+          uninstallButton={{
+            isPending: removeMutation.isPending,
+            onClick: async () => removeMutation.mutateAsync(),
+          }}
         />
       </div>
     </ThirdwebProvider>
@@ -195,20 +191,21 @@ function Component() {
 function CheckboxWithLabel(props: {
   value: boolean;
   onChange: (value: boolean) => void;
-  id: string;
+
   label: string;
 }) {
+  const id = useId();
   return (
     <div className="items-top flex space-x-2">
       <Checkbox
-        id={props.id}
         checked={props.value}
+        id={id}
         onCheckedChange={(v) => props.onChange(!!v)}
       />
       <div className="grid gap-1.5 leading-none">
         <label
-          htmlFor={props.id}
           className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          htmlFor={id}
         >
           {props.label}
         </label>

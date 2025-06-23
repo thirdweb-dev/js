@@ -10,9 +10,9 @@ export function SDKCard(props: {
 }) {
   return (
     <Link
+      className="flex items-center gap-2 rounded-lg border bg-card p-4 transition-colors hover:border-active-border"
       href={props.href}
       target={props.isExternal ? "_blank" : undefined}
-      className="flex items-center gap-2 rounded-lg border bg-card p-4 transition-colors hover:border-active-border"
     >
       {props.icon && (
         <props.icon

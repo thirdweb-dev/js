@@ -1,3 +1,5 @@
+import { ExternalLinkIcon, FileTextIcon } from "lucide-react";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,10 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { PROJECT_SHOWCASE_DATA } from "lib/project-showcase-constants";
-import { ExternalLinkIcon, FileTextIcon } from "lucide-react";
-import Link from "next/link";
+import { PROJECT_SHOWCASE_DATA } from "@/lib/project-showcase-constants";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 
 export default async function DetailPage(props: {
   params: Promise<{ slug: string }>;
@@ -49,19 +49,19 @@ export default async function DetailPage(props: {
               <Button asChild className="w-full sm:w-auto">
                 <Link
                   href={project.link}
-                  target="_blank"
                   rel="noopener noreferrer"
+                  target="_blank"
                 >
                   <ExternalLinkIcon className="mr-2 h-4 w-4" />
                   Visit Project Website
                 </Link>
               </Button>
               {project.case_study && (
-                <Button asChild variant="outline" className="w-full sm:w-auto">
+                <Button asChild className="w-full sm:w-auto" variant="outline">
                   <Link
                     href={project.case_study}
-                    target="_blank"
                     rel="noopener noreferrer"
+                    target="_blank"
                   >
                     <FileTextIcon className="mr-2 h-4 w-4" />
                     Link to Case Study
@@ -74,6 +74,9 @@ export default async function DetailPage(props: {
             <div className="relative aspect-video h-full w-full md:aspect-square">
               {/* eslint-disable @next/next/no-img-element */}
               <img
+                alt={`${project.title} Thumbnail`}
+                className="rounded-b-lg object-cover md:rounded-r-lg md:rounded-bl-none"
+                height={500}
                 src={
                   project.image?.startsWith("ipfs://")
                     ? (resolveSchemeWithErrorHandler({
@@ -82,10 +85,7 @@ export default async function DetailPage(props: {
                       }) ?? "")
                     : (project.image ?? "/assets/showcase/default_image.png")
                 }
-                alt={`${project.title} Thumbnail`}
                 width={500}
-                height={500}
-                className="rounded-b-lg object-cover md:rounded-r-lg md:rounded-bl-none"
               />
             </div>
           </div>

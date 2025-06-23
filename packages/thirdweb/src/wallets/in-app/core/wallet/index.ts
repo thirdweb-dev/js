@@ -12,11 +12,11 @@ import type {
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../smart/types.js";
 import type {
+  CreateWalletArgs,
   EcosystemWalletId,
   WalletAutoConnectionOption,
   WalletId,
 } from "../../../wallet-types.js";
-import type { CreateWalletArgs } from "../../../wallet-types.js";
 import { create7702MinimalAccount } from "../eip7702/minimal-account.js";
 import type { InAppConnector } from "../interfaces/connector.js";
 import type {
@@ -68,8 +68,8 @@ export async function connectInAppWallet(
   const authAccount = authResult.user.account;
 
   return createInAppAccount({
-    client: options.client,
     authAccount,
+    client: options.client,
     createOptions,
     desiredChain: options.chain,
   });
@@ -99,8 +99,8 @@ export async function autoConnectInAppWallet(
   const authAccount = user.account;
 
   return createInAppAccount({
-    client: options.client,
     authAccount,
+    client: options.client,
     createOptions,
     desiredChain: options.chain,
   });
@@ -116,9 +116,9 @@ async function convertToSmartAccount(options: {
 
   return connectSmartAccount(
     {
+      chain: options.chain,
       client: options.client,
       personalAccount: options.authAccount,
-      chain: options.chain,
     },
     options.smartAccountOptions,
   );
@@ -167,12 +167,12 @@ async function createInAppAccount(options: {
 
   if (smartAccountOptions) {
     const [account, chain] = await convertToSmartAccount({
-      client,
       authAccount,
-      smartAccountOptions,
       chain: desiredChain,
+      client,
+      smartAccountOptions,
     });
-    return { account, chain, adminAccount: authAccount };
+    return { account, adminAccount: authAccount, chain };
   }
 
   if (eip7702) {
@@ -183,14 +183,14 @@ async function createInAppAccount(options: {
       );
     }
     const account = create7702MinimalAccount({
-      client,
       adminAccount: authAccount,
+      client,
       sponsorGas: eip7702.sponsorGas,
     });
     return {
       account,
-      chain,
       adminAccount: authAccount,
+      chain,
     };
   }
 

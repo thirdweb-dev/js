@@ -1,14 +1,14 @@
 "use client";
 
-import { THIRDWEB_CLIENT } from "@/lib/client";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
 import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
-import { type SocialProfile, getSocialProfiles } from "thirdweb/social";
+import { getSocialProfiles, type SocialProfile } from "thirdweb/social";
 import { resolveScheme } from "thirdweb/storage";
 import { isValidENSName } from "thirdweb/utils";
+import { THIRDWEB_CLIENT } from "@/lib/client";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -36,8 +36,8 @@ export function SocialProfiles() {
         setProfiles([]);
       } else {
         const profiles = await getSocialProfiles({
-          client: THIRDWEB_CLIENT,
           address: resolvedAddress,
+          client: THIRDWEB_CLIENT,
         });
         setProfiles(profiles);
       }
@@ -48,13 +48,13 @@ export function SocialProfiles() {
     <div className="flex min-h-[300px] w-[300px] flex-col gap-4">
       <div className="flex items-center gap-2">
         <Input
+          onChange={(e) => setAddress(e.target.value)}
           placeholder="Enter an address or ENS"
           value={address}
-          onChange={(e) => setAddress(e.target.value)}
         />
         <Button
-          onClick={() => searchProfiles(address || "")}
           disabled={!address}
+          onClick={() => searchProfiles(address || "")}
         >
           Search
         </Button>
@@ -62,8 +62,8 @@ export function SocialProfiles() {
       {!isPending &&
         profiles?.map((profile) => (
           <SocialProfileCard
-            profile={profile}
             key={`${profile.type}-${profile.name}`}
+            profile={profile}
           />
         ))}
       {(profiles?.length === 0 || !profiles) && !isPending && (
@@ -85,7 +85,6 @@ export function SocialProfiles() {
 function SocialProfileCard({ profile }: { profile: SocialProfile }) {
   // This query protects against weird avatar formats that might be returned
   const { data: avatar } = useQuery({
-    queryKey: ["avatar", profile.avatar],
     queryFn: async () => {
       if (profile.avatar) {
         try {
@@ -98,13 +97,14 @@ function SocialProfileCard({ profile }: { profile: SocialProfile }) {
         }
       }
     },
+    queryKey: ["avatar", profile.avatar],
   });
 
   return (
     <div className="flex gap-4 rounded-lg border bg-background p-4 shadow-md">
       {avatar ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={avatar} alt={profile.name} className="size-10 rounded-full" />
+        <img alt={profile.name} className="size-10 rounded-full" src={avatar} />
       ) : (
         <div className="size-10 rounded-full bg-muted-foreground" />
       )}

@@ -1,20 +1,6 @@
 "use client";
 
-import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useResolveContractAbi } from "@3rdweb-sdk/react/hooks/useResolveContractAbi";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { SourcesPanel } from "components/contract-components/shared/sources-panel";
-import { useContractSources } from "contract-ui/hooks/useContractSources";
 import {
   CircleCheckIcon,
   CircleXIcon,
@@ -24,6 +10,20 @@ import {
 import { useMemo } from "react";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
+import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
+import { SourcesPanel } from "@/components/contract-components/shared/sources-panel";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useContractSources } from "@/hooks/contract-ui/useContractSources";
+import { useResolveContractAbi } from "@/hooks/useResolveContractAbi";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 
 type VerificationResult = {
   explorerUrl: string;
@@ -37,14 +37,14 @@ export async function verifyContract(contract: ThirdwebContract) {
     const response = await fetch(
       "https://contract.thirdweb.com/verify/contract",
       {
-        method: "POST",
+        body: JSON.stringify({
+          chainId: contract.chain.id,
+          contractAddress: contract.address,
+        }),
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          contractAddress: contract.address,
-          chainId: contract.chain.id,
-        }),
+        method: "POST",
       },
     );
 
@@ -64,8 +64,8 @@ function VerifyContractModalContent({
   contract: ThirdwebContract;
 }) {
   const verifyQuery = useQuery({
-    queryKey: ["verify-contract", contract.chain.id, contract.address],
     queryFn: () => verifyContract(contract),
+    queryKey: ["verify-contract", contract.chain.id, contract.address],
   });
 
   return (
@@ -94,8 +94,8 @@ function VerifyContractModalContent({
         <div className="flex flex-col gap-2">
           {verifyQuery.data.results.map(
             (result: VerificationResult, index: number) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              <div key={index} className="flex items-center gap-2">
+              // biome-ignore lint/suspicious/noArrayIndexKey: EXPECTED
+              <div className="flex items-center gap-2" key={index}>
                 {result.success && (
                   <>
                     <CircleCheckIcon className="size-4 text-green-600" />
@@ -131,7 +131,9 @@ function VerifyContractModalContent({
 
 export function ContractSourcesPage({
   contract,
-}: { contract: ThirdwebContract }) {
+}: {
+  contract: ThirdwebContract;
+}) {
   const contractSourcesQuery = useContractSources(contract);
   const abiQuery = useResolveContractAbi(contract);
 
@@ -189,7 +191,7 @@ export function ContractSourcesPage({
 
       <div className="h-4" />
       <div className="rounded-lg border bg-card">
-        <SourcesPanel sources={sources} abi={abiQuery.data} />
+        <SourcesPanel abi={abiQuery.data} sources={sources} />
       </div>
     </div>
   );
@@ -234,17 +236,17 @@ function RefreshContractMetadataButton(props: {
 
   return (
     <Button
+      className="gap-2 bg-card"
       disabled={contractCacheMutation.isPending}
-      variant="outline"
       onClick={() => {
         toast.promise(contractCacheMutation.mutateAsync(), {
           duration: 5000,
-          success: () => "Contract refreshed successfully",
           error: (e) => e?.message || "Failed to refresh contract data.",
+          success: () => "Contract refreshed successfully",
         });
       }}
       size="sm"
-      className="gap-2 bg-card"
+      variant="outline"
     >
       {contractCacheMutation.isPending ? (
         <Spinner className="size-4" />

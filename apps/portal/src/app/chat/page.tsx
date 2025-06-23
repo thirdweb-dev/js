@@ -1,7 +1,7 @@
 "use client";
 
-import { Chat } from "@/components/AI/chat";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Chat } from "@/components/AI/chat";
 
 const queryClient = new QueryClient();
 

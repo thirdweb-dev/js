@@ -31,9 +31,9 @@ export async function getCurrencyMetadata(
   // if the contract is the native token, return the native currency metadata
   if (isNativeTokenAddress(options.contract.address)) {
     return {
+      decimals: 18,
       name: "Ether",
       symbol: "ETH",
-      decimals: 18,
       // overwrite with native currency of the chain if available
       ...options.contract.chain.nativeCurrency,
     };
@@ -47,9 +47,9 @@ export async function getCurrencyMetadata(
     ]);
 
     return {
+      decimals: decimals_,
       name: name_,
       symbol: symbol_,
-      decimals: decimals_,
     };
   } catch (e) {
     throw new Error(`Invalid currency token: ${e}`);

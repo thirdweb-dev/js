@@ -33,11 +33,11 @@ const ModalWrapper = (props: { children: React.ReactNode }) => {
   return (
     <div
       style={{
-        width: 400,
-        margin: "16px auto",
         backgroundColor: theme.colors.modalBg,
         borderRadius: radius.md,
         boxShadow: `0 0 0 1px ${theme.colors.borderColor}`,
+        margin: "16px auto",
+        width: 400,
       }}
     >
       {props.children}

@@ -1,9 +1,9 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
-import { ChainActiveDot } from "./ChainActiveDot.js";
-import { Img } from "./Img.js";
 import { Container } from "./basic.js";
+import { ChainActiveDot } from "./ChainActiveDot.js";
 import { fallbackChainIcon } from "./fallbackChainIcon.js";
+import { Img } from "./Img.js";
 
 /**
  * This component (file) will eventually be replaced with the ChainIcon prebuilt version.
@@ -20,18 +20,18 @@ export const ChainIcon: React.FC<{
   return (
     <Container
       style={{
-        position: "relative",
+        alignItems: "center",
         display: "flex",
         flexShrink: 0,
-        alignItems: "center",
+        position: "relative",
       }}
     >
       <Img
+        client={props.client}
+        fallbackImage={fallbackChainIcon}
+        height={props.size}
         src={getSrcChainIcon(props)}
         width={props.size}
-        height={props.size}
-        fallbackImage={fallbackChainIcon}
-        client={props.client}
       />
       {props.active && (
         <ChainActiveDot className="tw-chain-active-dot-legacy-chain-icon" />
@@ -53,8 +53,8 @@ export const getSrcChainIcon = (props: {
   }
   try {
     return resolveScheme({
-      uri: url,
       client: props.client,
+      uri: url,
     });
   } catch {
     return fallbackChainIcon;

@@ -8,8 +8,8 @@ describe("getBuyWithCryptoStatusMeta", () => {
       status: "NOT_FOUND",
     } as BuyWithCryptoStatus);
     expect(result).toEqual({
-      status: "Unknown",
       color: "secondaryText",
+      status: "Unknown",
     });
   });
 
@@ -19,9 +19,9 @@ describe("getBuyWithCryptoStatusMeta", () => {
       subStatus: "WAITING_BRIDGE",
     } as BuyWithCryptoStatus);
     expect(result).toEqual({
-      status: "Bridging",
       color: "accentText",
       loading: true,
+      status: "Bridging",
     });
   });
 
@@ -31,8 +31,8 @@ describe("getBuyWithCryptoStatusMeta", () => {
       subStatus: "PARTIAL_SUCCESS",
     } as BuyWithCryptoStatus);
     expect(result).toEqual({
-      status: "Incomplete",
       color: "secondaryText",
+      status: "Incomplete",
     });
   });
 
@@ -41,9 +41,9 @@ describe("getBuyWithCryptoStatusMeta", () => {
       status: "PENDING",
     } as BuyWithCryptoStatus);
     expect(result).toEqual({
-      status: "Pending",
       color: "accentText",
       loading: true,
+      status: "Pending",
     });
   });
 
@@ -52,8 +52,8 @@ describe("getBuyWithCryptoStatusMeta", () => {
       status: "FAILED",
     } as BuyWithCryptoStatus);
     expect(result).toEqual({
-      status: "Failed",
       color: "danger",
+      status: "Failed",
     });
   });
 
@@ -62,8 +62,8 @@ describe("getBuyWithCryptoStatusMeta", () => {
       status: "COMPLETED",
     } as BuyWithCryptoStatus);
     expect(result).toEqual({
-      status: "Completed",
       color: "success",
+      status: "Completed",
     });
   });
 
@@ -73,8 +73,8 @@ describe("getBuyWithCryptoStatusMeta", () => {
       status: "Unknown",
     });
     expect(result).toEqual({
-      status: "Unknown",
       color: "secondaryText",
+      status: "Unknown",
     });
   });
 });

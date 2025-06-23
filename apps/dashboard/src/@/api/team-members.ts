@@ -1,10 +1,10 @@
 import "server-only";
 import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
-import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
+import { getAuthToken } from "./auth-token";
 
 const TeamAccountRole = {
-  OWNER: "OWNER",
   MEMBER: "MEMBER",
+  OWNER: "OWNER",
 } as const;
 
 export type TeamAccountRole =

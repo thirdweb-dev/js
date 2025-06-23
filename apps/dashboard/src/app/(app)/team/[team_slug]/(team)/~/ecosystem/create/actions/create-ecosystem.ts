@@ -1,11 +1,11 @@
 "use server";
 import "server-only";
+import { redirect } from "next/navigation";
+import { upload } from "thirdweb/storage";
 import { BASE_URL } from "@/constants/env-utils";
 import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { redirect } from "next/navigation";
-import { upload } from "thirdweb/storage";
-import { getAuthToken } from "../../../../../../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../../../../../../@/api/auth-token";
 
 export async function createEcosystem(options: {
   teamSlug: string;
@@ -34,21 +34,21 @@ export async function createEcosystem(options: {
   const res = await fetch(
     `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamSlug}/checkout/create-link`,
     {
-      method: "POST",
       body: JSON.stringify({
         baseUrl: BASE_URL,
-        sku: "product:ecosystem_wallets",
         metadata: {
           ...data,
-          imageUrl,
           // not something we pass in today during creation, but required to be there
           authOptions: [],
+          imageUrl,
         },
+        sku: "product:ecosystem_wallets",
       }),
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
+      method: "POST",
     },
   );
   if (!res.ok) {

@@ -1,24 +1,17 @@
-import { Button } from "@/components/ui/button";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ArrowRightIcon, DownloadIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function ImportEngineLink(props: {
   label: string;
   engineLinkPrefix: string;
 }) {
   return (
-    <Button asChild variant="outline" size="sm" className="gap-2 bg-card">
-      <TrackedLinkTW
-        href={`${props.engineLinkPrefix}/import`}
-        category="engine"
-        trackingProps={{
-          action: "import",
-        }}
-      >
+    <Button asChild className="gap-2 bg-card" size="sm" variant="outline">
+      <Link href={`${props.engineLinkPrefix}/import`}>
         <DownloadIcon className="size-3" />
         {props.label}
-      </TrackedLinkTW>
+      </Link>
     </Button>
   );
 }
@@ -43,10 +36,11 @@ function EngineInfoSection(props: { team_slug: string; project_slug: string }) {
       </ul>
 
       <div className="mt-4 flex justify-start gap-3">
-        <Button asChild variant="outline" size="sm">
+        <Button asChild size="sm" variant="outline">
           <Link
-            href="https://portal.thirdweb.com/engine"
             className="gap-2"
+            href="https://portal.thirdweb.com/engine"
+            rel="noopener noreferrer"
             target="_blank"
           >
             Learn More
@@ -54,19 +48,11 @@ function EngineInfoSection(props: { team_slug: string; project_slug: string }) {
           </Link>
         </Button>
 
-        <Button size="sm" asChild variant="outline">
-          <TrackedLinkTW
-            href={`${engineLinkPrefix}/sandbox`}
-            className="gap-2"
-            category="engine"
-            label="click-try-demo"
-            trackingProps={{
-              action: "try-demo",
-            }}
-          >
+        <Button asChild size="sm" variant="outline">
+          <Link className="gap-2" href={`${engineLinkPrefix}/sandbox`}>
             Try Demo Engine
             <ArrowRightIcon className="size-3 text-muted-foreground" />
-          </TrackedLinkTW>
+          </Link>
         </Button>
       </div>
     </div>
@@ -80,8 +66,8 @@ export function EngineFooterCard(props: {
   return (
     <div className="relative rounded-lg border p-6">
       <EngineInfoSection
-        team_slug={props.teamSlug}
         project_slug={props.projectSlug}
+        team_slug={props.teamSlug}
       />
     </div>
   );

@@ -1,9 +1,13 @@
 "use client";
 
-import { InlineCode } from "@/components/ui/inline-code";
 import { ButtonGroup, Divider, Flex } from "@chakra-ui/react";
+import { LinkButton } from "chakra/button";
+import { Card } from "chakra/card";
+import { Heading } from "chakra/heading";
+import { Link } from "chakra/link";
+import { Text } from "chakra/text";
 import type { ThirdwebContract } from "thirdweb";
-import { Card, Heading, Link, LinkButton, Text } from "tw-components";
+import { InlineCode } from "@/components/ui/inline-code";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../_utils/contract-page-path";
 import { Permissions } from "./components";
@@ -26,9 +30,9 @@ export const ContractPermissionsPage: React.FC<
   projectMeta,
 }) => {
   const explorerHref = buildContractPagePath({
-    projectMeta,
     chainIdOrSlug: chainSlug,
     contractAddress: contract.address,
+    projectMeta,
     subpath: "/explorer",
   });
 
@@ -45,19 +49,19 @@ export const ContractPermissionsPage: React.FC<
           extension.
           <br />
           As a result, you can only view and manage basic permissions via the{" "}
-          <Link href={explorerHref} color="primary.500">
+          <Link color="primary.500" href={explorerHref}>
             Explorer
           </Link>{" "}
           at the moment.
         </Text>
 
         <Divider my={1} />
-        <Flex gap={4} align="center">
+        <Flex align="center" gap={4}>
           <Heading size="label.md">Learn more: </Heading>
           <ButtonGroup colorScheme="purple" size="sm" variant="solid">
             <LinkButton
-              isExternal
               href="https://portal.thirdweb.com/contracts/build/extensions/general/Permissions"
+              isExternal
             >
               Permissions
             </LinkButton>

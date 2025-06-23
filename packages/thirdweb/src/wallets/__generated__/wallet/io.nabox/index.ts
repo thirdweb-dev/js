@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.nabox",
-  name: "Nabox",
-  homepage: "https://nabox.io/",
-  image_id: "3b75e9f7-2ca8-4a33-ed2b-4e8a0c048d00",
   app: {
+    android: "https://play.google.com/store/apps/details?id=com.wallet.nabox",
     browser:
       "https://chrome.google.com/webstore/detail/nabox-wallet/nknhiehlklippafakaeklbeglecifhad?hl=en",
-    ios: "https://testflight.apple.com/join/Ux18h5Nv",
-    android: "https://play.google.com/store/apps/details?id=com.wallet.nabox",
-    mac: null,
-    windows: null,
-    linux: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://testflight.apple.com/join/Ux18h5Nv",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: null,
-    universal: "https://nabox.io/app/*",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal:
       "https://chrome.google.com/webstore/detail/nabox-wallet/nknhiehlklippafakaeklbeglecifhad?hl=en",
   },
+  homepage: "https://nabox.io/",
+  id: "io.nabox",
+  image_id: "3b75e9f7-2ca8-4a33-ed2b-4e8a0c048d00",
+  mobile: {
+    native: null,
+    universal: "https://nabox.io/app/*",
+  },
+  name: "Nabox",
+  rdns: null,
 } as const;

@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "UserOperationEvent" event.
@@ -48,8 +48,8 @@ export function userOperationEventEvent(
   filters: UserOperationEventEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event UserOperationEvent(bytes32 indexed userOpHash, address indexed sender, address indexed paymaster, uint256 nonce, bool success, uint256 actualGasCost, uint256 actualGasUsed)",
-    filters,
   });
 }

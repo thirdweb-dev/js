@@ -1,6 +1,6 @@
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { notFound } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { DeployContractInfo } from "../../../published-contract/components/contract-info";
 import { DeployFormForUri } from "../../../published-contract/components/uri-based-deploy";
 
@@ -27,10 +27,10 @@ export default async function DirectDeployPage(props: DirectDeployPageProps) {
   return (
     <div className="container flex flex-col gap-4 py-8">
       <DeployContractInfo
-        name={metadata.name}
-        displayName={metadata.displayName}
         description={metadata.description}
+        displayName={metadata.displayName}
         logo={metadata.logo}
+        name={metadata.name}
       />
       <DeployFormForUri
         contractMetadata={metadata}

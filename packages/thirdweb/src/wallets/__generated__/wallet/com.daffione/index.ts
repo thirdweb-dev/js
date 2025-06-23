@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.daffione",
-  name: "DaffiOne",
-  homepage: "https://www.daffione.com/",
-  image_id: "1e87bcb9-452c-4ad7-471c-130ae0115000",
   app: {
-    browser: null,
-    ios: null,
     android: "https://play.google.com/store/apps/details?id=com.me.daffione",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "DaffiOne:// wc://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.daffione.com/",
+  id: "com.daffione",
+  image_id: "1e87bcb9-452c-4ad7-471c-130ae0115000",
+  mobile: {
+    native: "DaffiOne:// wc://",
+    universal: null,
+  },
+  name: "DaffiOne",
+  rdns: null,
 } as const;

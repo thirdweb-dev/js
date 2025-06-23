@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { BadgeContainer } from "stories/utils";
+import { BadgeContainer } from "@/storybook/utils";
 import { BarChart } from "./BarChart";
 
 const meta = {
-  title: "Analytics/BarChart",
   component: Component,
+  title: "Analytics/BarChart",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -19,13 +19,13 @@ export const Basic: Story = {
 };
 
 const chartConfig = {
-  views: {
-    label: "Daily Views",
-    color: "hsl(var(--chart-1))",
-  },
   users: {
-    label: "Active Users",
     color: "hsl(var(--chart-2))",
+    label: "Active Users",
+  },
+  views: {
+    color: "hsl(var(--chart-1))",
+    label: "Daily Views",
   },
 };
 
@@ -39,8 +39,8 @@ const generateDailyData = (days: number) => {
 
     data.push({
       date: date.toISOString(),
-      views: Math.floor(Math.random() * 1000) + 500,
       users: Math.floor(Math.random() * 800) + 200,
+      views: Math.floor(Math.random() * 1000) + 500,
     });
   }
 
@@ -52,19 +52,19 @@ function Component() {
     <div className="container max-w-[800px] space-y-8 py-8">
       <BadgeContainer label="Views Data">
         <BarChart
-          tooltipLabel="Daily Views"
+          activeKey="views"
           chartConfig={chartConfig}
           data={generateDailyData(14)}
-          activeKey="views"
+          tooltipLabel="Daily Views"
         />
       </BadgeContainer>
 
       <BadgeContainer label="Users Data">
         <BarChart
-          tooltipLabel="Active Users"
+          activeKey="users"
           chartConfig={chartConfig}
           data={generateDailyData(14)}
-          activeKey="users"
+          tooltipLabel="Active Users"
         />
       </BadgeContainer>
     </div>

@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.ukiss",
-  name: "UKISS Hub",
-  homepage: "https://www.ukiss.io",
-  image_id: "23f4c933-68e6-46f9-75b6-2d2905ca1300",
   app: {
-    browser: null,
-    ios: null,
     android:
       "https://play.google.com/store/apps/details?id=io.ukiss.uhub.mobile",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "ukisshub://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.ukiss.io",
+  id: "io.ukiss",
+  image_id: "23f4c933-68e6-46f9-75b6-2d2905ca1300",
+  mobile: {
+    native: "ukisshub://",
+    universal: null,
+  },
+  name: "UKISS Hub",
+  rdns: null,
 } as const;

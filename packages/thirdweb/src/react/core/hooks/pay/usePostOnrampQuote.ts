@@ -40,13 +40,13 @@ export function usePostOnRampQuote(
 ): UseQueryResult<BuyWithCryptoQuote> {
   return useQuery({
     ...queryOptions,
-    queryKey: ["getPostOnRampQuote", params],
+    enabled: !!params,
     queryFn: async () => {
       if (!params) {
         throw new Error("No params provided");
       }
       return getPostOnRampQuote(params);
     },
-    enabled: !!params,
+    queryKey: ["getPostOnRampQuote", params],
   });
 }

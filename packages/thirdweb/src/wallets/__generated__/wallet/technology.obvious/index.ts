@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "technology.obvious",
-  name: "Obvious",
-  homepage: "https://obvious.technology",
-  image_id: "fe1b9394-55af-4828-a70d-5c5b7de6b200",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/in/app/obvious-crypto-wallet/id1643088398",
     android:
       "https://play.google.com/store/apps/details?id=com.hashhalli.obvious",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/in/app/obvious-crypto-wallet/id1643088398",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "obvious://",
-    universal: "https://wallet.obvious.technology",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://obvious.technology",
+  id: "technology.obvious",
+  image_id: "fe1b9394-55af-4828-a70d-5c5b7de6b200",
+  mobile: {
+    native: "obvious://",
+    universal: "https://wallet.obvious.technology",
+  },
+  name: "Obvious",
+  rdns: null,
 } as const;

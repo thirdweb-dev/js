@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Accordion,
   AccordionButton,
@@ -12,12 +11,8 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
-import { OpenSeaPropertyBadge } from "components/badges/opensea";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { PropertiesFormControl } from "components/contract-pages/forms/properties.shared";
-import { FileInput } from "components/shared/FileInput";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
+import { Heading } from "chakra/heading";
 import type { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -25,14 +20,14 @@ import type { ThirdwebContract } from "thirdweb";
 import { lazyMint as lazyMint721 } from "thirdweb/extensions/erc721";
 import { lazyMint as lazyMint1155 } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
-import {
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  Heading,
-} from "tw-components";
-import type { NFTMetadataInputLimited } from "types/modified-types";
-import { parseAttributes } from "utils/parseAttributes";
+import { OpenSeaPropertyBadge } from "@/components/badges/opensea";
+import { FileInput } from "@/components/blocks/FileInput";
+import { PropertiesFormControl } from "@/components/contracts/properties.shared";
+import { TransactionButton } from "@/components/tx-button";
+import { Button } from "@/components/ui/button";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
+import type { NFTMetadataInputLimited } from "@/types/modified-types";
+import { parseAttributes } from "@/utils/parseAttributes";
 import {
   getUploadedNFTMediaMeta,
   handleNFTMediaUpload,
@@ -53,7 +48,6 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
   setOpen,
   isLoggedIn,
 }) => {
-  const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const sendAndConfirmTx = useSendAndConfirmTransaction();
 
@@ -97,32 +91,17 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
             return;
           }
           try {
-            trackEvent({
-              category: "nft",
-              action: "lazy-mint",
-              label: "attempt",
-            });
             const nfts = [parseAttributes(data)];
             const transaction = isErc721
               ? lazyMint721({ contract, nfts })
               : lazyMint1155({ contract, nfts });
 
             await sendAndConfirmTx.mutateAsync(transaction, {
-              onSuccess: () => {
-                trackEvent({
-                  category: "nft",
-                  action: "lazy-mint",
-                  label: "success",
-                });
-                setOpen(false);
-              },
               onError: (error) => {
-                trackEvent({
-                  category: "nft",
-                  action: "lazy-mint",
-                  label: "error",
-                  error,
-                });
+                console.error(error);
+              },
+              onSuccess: () => {
+                setOpen(false);
               },
             });
 
@@ -137,7 +116,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
           <Heading size="subtitle.md">Metadata </Heading>
           <Divider />
         </div>
-        <FormControl isRequired isInvalid={!!errors.name}>
+        <FormControl isInvalid={!!errors.name} isRequired>
           <FormLabel>Name</FormLabel>
           <Input autoFocus {...register("name")} />
           <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
@@ -146,15 +125,15 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
           <FormLabel>Media</FormLabel>
           <div>
             <FileInput
-              previewMaxWidth="200px"
-              value={media}
-              showUploadButton
-              showPreview={true}
-              setValue={setFile}
               className="rounded border border-border transition-all duration-200"
-              selectOrUpload="Upload"
-              helperText="Media"
               client={contract.client}
+              helperText="Media"
+              previewMaxWidth="200px"
+              selectOrUpload="Upload"
+              setValue={setFile}
+              showPreview={true}
+              showUploadButton
+              value={media}
             />
           </div>
           <FormHelperText>
@@ -169,13 +148,13 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
           <FormControl isInvalid={!!errors.image}>
             <FormLabel>Cover Image</FormLabel>
             <FileInput
-              previewMaxWidth="200px"
-              client={contract.client}
               accept={{ "image/*": [] }}
-              value={image}
-              showUploadButton
-              setValue={(file) => setValue("image", file)}
               className="rounded border border-border transition-all"
+              client={contract.client}
+              previewMaxWidth="200px"
+              setValue={(file) => setValue("image", file)}
+              showUploadButton
+              value={image}
             />
             <FormHelperText>
               You can optionally upload an image as the cover of your NFT.
@@ -191,13 +170,13 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
           <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
         </FormControl>
         <PropertiesFormControl
-          watch={watch}
+          client={contract.client}
+          control={control}
           // biome-ignore lint/suspicious/noExplicitAny: FIXME
           errors={errors as any}
-          control={control}
           register={register}
           setValue={setValue}
-          client={contract.client}
+          watch={watch}
         />
         <Accordion
           allowToggle={!(errors.background_color || errors.external_url)}
@@ -206,7 +185,7 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
           }
         >
           <AccordionItem>
-            <AccordionButton px={0} justifyContent="space-between">
+            <AccordionButton justifyContent="space-between" px={0}>
               <Heading size="subtitle.md">Advanced Options</Heading>
               <AccordionIcon />
             </AccordionButton>
@@ -246,10 +225,10 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
                   <FormLabel>Image URL</FormLabel>
                   <Input
                     {...register("image")}
-                    value={image}
                     onChange={(e) => {
                       setValue("image", e.target.value);
                     }}
+                    value={image}
                   />
                   <FormHelperText>
                     If you already have your NFT image pre-uploaded to a URL,
@@ -264,10 +243,10 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
                   <FormLabel>Animation URL</FormLabel>
                   <Input
                     {...register("animation_url")}
-                    value={animation_url}
                     onChange={(e) => {
                       setValue("animation_url", e.target.value);
                     }}
+                    value={animation_url}
                   />
                   <FormHelperText>
                     If you already have your NFT Animation URL pre-uploaded to a
@@ -285,22 +264,22 @@ export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
       </form>
       <div className="mt-8 flex flex-row justify-end gap-3">
         <Button
-          disabled={sendAndConfirmTx.isPending}
-          variant="outline"
           className="mr-3"
+          disabled={sendAndConfirmTx.isPending}
           onClick={() => setOpen(false)}
+          variant="outline"
         >
           Cancel
         </Button>
         <TransactionButton
           client={contract.client}
-          isLoggedIn={isLoggedIn}
-          txChainID={contract.chain.id}
-          transactionCount={1}
-          isPending={sendAndConfirmTx.isPending}
-          form={LAZY_MINT_FORM_ID}
-          type="submit"
           disabled={!isDirty}
+          form={LAZY_MINT_FORM_ID}
+          isLoggedIn={isLoggedIn}
+          isPending={sendAndConfirmTx.isPending}
+          transactionCount={1}
+          txChainID={contract.chain.id}
+          type="submit"
         >
           Lazy Mint NFT
         </TransactionButton>

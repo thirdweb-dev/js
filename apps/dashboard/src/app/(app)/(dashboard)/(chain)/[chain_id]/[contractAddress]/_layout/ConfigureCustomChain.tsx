@@ -1,12 +1,12 @@
 "use client";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { ConfigureNetworks } from "components/configure-networks/ConfigureNetworks";
 import { CheckIcon, CircleAlertIcon, RotateCcwIcon } from "lucide-react";
 import { useState } from "react";
-import { addChainOverrides } from "stores/chainStores";
 import type { ThirdwebClient } from "thirdweb";
+import { ConfigureNetworks } from "@/components/misc/configure-networks/ConfigureNetworks";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { addChainOverrides } from "@/stores/chainStores";
 
 export function ConfigureCustomChain(props: {
   chainSlug: string;
@@ -25,8 +25,8 @@ export function ConfigureCustomChain(props: {
         </Alert>
         <div className="h-6" />
         <Button
-          onClick={() => window.location.reload()}
           className="w-full gap-2"
+          onClick={() => window.location.reload()}
         >
           <RotateCcwIcon className="size-4" />
           Reload Page to Continue
@@ -51,8 +51,8 @@ export function ConfigureCustomChain(props: {
       <div className="h-6" />
       <div className="rounded-lg border border-border">
         <ConfigureNetworks
-          prefillSlug={isSlugNumber ? undefined : chainSlug}
-          prefillChainId={isSlugNumber ? chainSlug : undefined}
+          client={props.client}
+          editChain={undefined}
           onNetworkAdded={(network) => {
             if (
               chainSlug === network.slug ||
@@ -62,8 +62,8 @@ export function ConfigureCustomChain(props: {
               setIsConfigured(true);
             }
           }}
-          editChain={undefined}
-          client={props.client}
+          prefillChainId={isSlugNumber ? chainSlug : undefined}
+          prefillSlug={isSlugNumber ? undefined : chainSlug}
         />
       </div>
     </div>

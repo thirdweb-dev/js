@@ -34,10 +34,10 @@ export async function resolveCurrencyValue(options: {
     ]);
 
     return {
-      name,
       decimals,
-      symbol,
       displayValue: toTokens(options.wei, decimals),
+      name,
+      symbol,
       value: options.wei,
     };
   }
@@ -57,10 +57,10 @@ export async function resolveCurrencyValue(options: {
   const metadata = await getCurrencyMetadata({ contract });
 
   return {
-    name: metadata.name,
     decimals: metadata.decimals,
-    symbol: metadata.symbol,
     displayValue: toTokens(options.wei, metadata.decimals),
+    name: metadata.name,
+    symbol: metadata.symbol,
     value: options.wei,
   };
 }

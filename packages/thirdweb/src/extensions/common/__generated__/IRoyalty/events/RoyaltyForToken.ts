@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "RoyaltyForToken" event.
@@ -42,8 +42,8 @@ export function royaltyForTokenEvent(
   filters: RoyaltyForTokenEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event RoyaltyForToken(uint256 indexed tokenId, address indexed royaltyRecipient, uint256 royaltyBps)",
-    filters,
   });
 }

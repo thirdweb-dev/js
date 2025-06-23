@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.noone",
-  name: "Noone Wallet",
-  homepage: "https://noone.io/",
-  image_id: "fbae89d3-d6cb-4b98-bd1c-b2007b61ed00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/noone-wallet/id1668333995",
     android:
       "https://play.google.com/store/apps/details?id=io.noone.androidwallet&hl=en&gl=US",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome:
       "https://chrome.google.com/webstore/detail/noone-wallet/bgfhmafjampalkbjicjcjiikhlaggdnm",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/noone-wallet/id1668333995",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "crypto.noone.wallet://walletcon",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://noone.io/",
+  id: "io.noone",
+  image_id: "fbae89d3-d6cb-4b98-bd1c-b2007b61ed00",
+  mobile: {
+    native: "crypto.noone.wallet://walletcon",
+    universal: null,
+  },
+  name: "Noone Wallet",
+  rdns: null,
 } as const;

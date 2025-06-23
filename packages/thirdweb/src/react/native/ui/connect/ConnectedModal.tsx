@@ -17,15 +17,15 @@ import { useDisconnect } from "../../../core/hooks/wallets/useDisconnect.js";
 import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
 import { fontSize, radius, spacing } from "../../design-system/index.js";
 import { Address } from "../components/Address.js";
+import { ThemedButton } from "../components/button.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { type ContainerType, Header } from "../components/Header.js";
 import { RNImage } from "../components/RNImage.js";
 import { Skeleton } from "../components/Skeleton.js";
-import { WalletImage } from "../components/WalletImage.js";
-import { ThemedButton } from "../components/button.js";
 import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 import { ThemedView } from "../components/view.js";
+import { WalletImage } from "../components/WalletImage.js";
 import {
   CLOSE_ICON,
   COINS_ICON,
@@ -70,12 +70,12 @@ export function ConnectedModal(props: ConnectedModalProps) {
     case "send": {
       content = (
         <SendScreen
-          theme={theme}
           client={client}
-          onClose={props.onClose}
-          onBack={() => setModalState({ screen: "account" })}
           containerType={containerType}
+          onBack={() => setModalState({ screen: "account" })}
+          onClose={props.onClose}
           supportedTokens={props.supportedTokens}
+          theme={theme}
         />
       );
       break;
@@ -84,12 +84,12 @@ export function ConnectedModal(props: ConnectedModalProps) {
       content = (
         <ReceiveScreen
           account={props.account}
-          wallet={props.wallet}
           client={props.client}
-          theme={theme}
           containerType={props.containerType}
           onBack={() => setModalState({ screen: "account" })}
           onClose={props.onClose}
+          theme={theme}
+          wallet={props.wallet}
         />
       );
       break;
@@ -98,17 +98,17 @@ export function ConnectedModal(props: ConnectedModalProps) {
       content = (
         <>
           <Header
-            theme={theme}
-            onClose={props.onClose}
-            onBack={() => setModalState({ screen: "account" })}
             containerType={containerType}
+            onBack={() => setModalState({ screen: "account" })}
+            onClose={props.onClose}
+            theme={theme}
             title="View Funds"
           />
           <Spacer size="xl" />
           <TokenListScreen
             client={client}
-            theme={theme}
             supportedTokens={props.supportedTokens}
+            theme={theme}
           />
         </>
       );
@@ -129,10 +129,10 @@ export function ConnectedModal(props: ConnectedModalProps) {
               }}
             >
               <RNImage
-                theme={theme}
+                color={theme.colors.secondaryIconColor}
                 data={CLOSE_ICON}
                 size={24}
-                color={theme.colors.secondaryIconColor}
+                theme={theme}
               />
             </TouchableOpacity>
           )}
@@ -149,12 +149,12 @@ export function ConnectedModal(props: ConnectedModalProps) {
 
   return (
     <ThemedView
-      theme={theme}
       style={
         containerType === "modal"
           ? styles.modalContainer
           : styles.embedContainer
       }
+      theme={theme}
     >
       {content}
     </ThemedView>
@@ -173,29 +173,29 @@ const AccountHeader = (props: ConnectedModalProps) => {
   return (
     <View style={styles.accountHeaderContainer}>
       <WalletImage
-        theme={theme}
-        size={70}
-        wallet={wallet}
         avatar={pfp}
         client={client}
+        size={70}
+        theme={theme}
+        wallet={wallet}
       />
       <SmartAccountBadge client={props.client} theme={theme} />
       <Spacer size="smd" />
-      <Address account={account} theme={theme} addressOrENS={name} />
+      <Address account={account} addressOrENS={name} theme={theme} />
       <Spacer size="xxs" />
       {balanceQuery.data ? (
         <ThemedText
-          theme={theme}
-          type="subtext"
           style={{
             fontSize: fontSize.sm,
           }}
+          theme={theme}
+          type="subtext"
         >
           {formatNumber(Number(balanceQuery.data.displayValue), 5)}{" "}
           {balanceQuery.data?.symbol}
         </ThemedText>
       ) : (
-        <Skeleton theme={theme} style={{ width: 80, height: 16 }} />
+        <Skeleton style={{ height: 16, width: 80 }} theme={theme} />
       )}
     </View>
   );
@@ -206,32 +206,32 @@ const WalletActionsRow = (props: ConnectedModalPropsInner) => {
   return (
     <View style={styles.walletActionRowContainer}>
       <ThemedButton
+        onPress={() => setModalState({ screen: "send" })}
+        style={styles.walletActionButton}
         theme={theme}
         variant="secondary"
-        style={styles.walletActionButton}
-        onPress={() => setModalState({ screen: "send" })}
       >
         <RNImage
-          theme={theme}
-          size={24}
-          data={SEND_ICON}
           color={theme.colors.secondaryIconColor}
+          data={SEND_ICON}
+          size={24}
+          theme={theme}
         />
         <ThemedText theme={theme} type="defaultSemiBold">
           Send
         </ThemedText>
       </ThemedButton>
       <ThemedButton
+        onPress={() => setModalState({ screen: "receive" })}
+        style={styles.walletActionButton}
         theme={theme}
         variant="secondary"
-        style={styles.walletActionButton}
-        onPress={() => setModalState({ screen: "receive" })}
       >
         <RNImage
-          theme={theme}
-          size={24}
-          data={RECEIVE_ICON}
           color={theme.colors.secondaryIconColor}
+          data={RECEIVE_ICON}
+          size={24}
+          theme={theme}
         />
         <ThemedText theme={theme} type="defaultSemiBold">
           Receive
@@ -260,13 +260,13 @@ const ChainSwitcher = (props: ConnectedModalPropsInner) => {
   const { name } = useChainName(chain);
   return (
     <TouchableOpacity style={styles.walletMenuRow}>
-      <ChainIcon client={client} size={32} chain={chain} theme={theme} />
+      <ChainIcon chain={chain} client={client} size={32} theme={theme} />
       {name ? (
         <ThemedText theme={theme} type="defaultSemiBold">
           {name}
         </ThemedText>
       ) : (
-        <Skeleton theme={theme} style={{ width: 80, height: 16 }} />
+        <Skeleton style={{ height: 16, width: 80 }} theme={theme} />
       )}
     </TouchableOpacity>
   );
@@ -276,14 +276,14 @@ const ViewFunds = (props: ConnectedModalPropsInner) => {
   const { theme, setModalState } = props;
   return (
     <TouchableOpacity
-      style={styles.walletMenuRow}
       onPress={() => setModalState({ screen: "view_funds" })}
+      style={styles.walletMenuRow}
     >
       <RNImage
-        theme={theme}
-        size={32}
-        data={COINS_ICON}
         color={theme.colors.secondaryIconColor}
+        data={COINS_ICON}
+        size={32}
+        theme={theme}
       />
       <ThemedText theme={theme} type="defaultSemiBold">
         View Funds
@@ -298,7 +298,6 @@ const DisconnectWallet = (props: ConnectedModalProps) => {
   const siweAuth = useSiweAuth(wallet, account, props.auth);
   return (
     <TouchableOpacity
-      style={styles.walletMenuRow}
       onPress={() => {
         onClose?.();
         disconnect(wallet);
@@ -306,12 +305,13 @@ const DisconnectWallet = (props: ConnectedModalProps) => {
           siweAuth.doLogout();
         }
       }}
+      style={styles.walletMenuRow}
     >
       <RNImage
-        theme={theme}
-        size={32}
-        data={EXIT_ICON}
         color={theme.colors.secondaryIconColor}
+        data={EXIT_ICON}
+        size={32}
+        theme={theme}
       />
       <ThemedText theme={theme} type="defaultSemiBold">
         Disconnect Wallet
@@ -320,10 +320,7 @@ const DisconnectWallet = (props: ConnectedModalProps) => {
   );
 };
 
-function SmartAccountBadge(props: {
-  theme: Theme;
-  client: ThirdwebClient;
-}) {
+function SmartAccountBadge(props: { theme: Theme; client: ThirdwebClient }) {
   const activeAccount = useActiveAccount();
   const activeWallet = useActiveWallet();
   const isSW = isSmartWallet(activeWallet);
@@ -351,26 +348,26 @@ function SmartAccountBadge(props: {
   const content = (
     <View
       style={{
-        flexDirection: "row",
         alignItems: "center",
-        justifyContent: "center",
-        gap: spacing.xs,
         backgroundColor: theme.colors.secondaryButtonBg,
         borderRadius: radius.md,
-        paddingVertical: spacing.xs,
+        flexDirection: "row",
+        gap: spacing.xs,
+        justifyContent: "center",
         paddingLeft: spacing.sm,
         paddingRight: spacing.smd,
+        paddingVertical: spacing.xs,
       }}
     >
       <RNImage
-        theme={theme}
+        color={theme.colors.accentButtonBg}
         data={SMART_WALLET_ICON}
         size={14}
-        color={theme.colors.accentButtonBg}
+        theme={theme}
       />
       <ThemedText
-        theme={theme}
         style={{ color: theme.colors.primaryText, fontSize: fontSize.xs }}
+        theme={theme}
       >
         Smart Account
       </ThemedText>
@@ -402,42 +399,42 @@ function SmartAccountBadge(props: {
 }
 
 const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    width: "100%",
-    flexDirection: "column",
-    borderTopLeftRadius: radius.lg,
-    borderTopRightRadius: radius.lg,
-  },
-  embedContainer: {
-    flex: 1,
-    width: "100%",
-    flexDirection: "column",
-    backgroundColor: "transparent",
-  },
   accountHeaderContainer: {
+    alignItems: "center",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
     paddingHorizontal: spacing.lg,
   },
+  embedContainer: {
+    backgroundColor: "transparent",
+    flex: 1,
+    flexDirection: "column",
+    width: "100%",
+  },
+  modalContainer: {
+    borderTopLeftRadius: radius.lg,
+    borderTopRightRadius: radius.lg,
+    flex: 1,
+    flexDirection: "column",
+    width: "100%",
+  },
+  walletActionButton: { flex: 1, gap: spacing.smd, padding: spacing.smd },
   walletActionRowContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
     alignItems: "center",
+    flexDirection: "row",
     gap: spacing.md,
+    justifyContent: "space-evenly",
     paddingHorizontal: spacing.lg,
   },
-  walletActionButton: { flex: 1, padding: spacing.smd, gap: spacing.smd },
   walletMenuContainer: {
     flexDirection: "column",
     gap: spacing.lg,
     paddingHorizontal: spacing.lg,
   },
   walletMenuRow: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
     alignItems: "center",
+    flexDirection: "row",
     gap: spacing.md,
+    justifyContent: "flex-start",
   },
 });

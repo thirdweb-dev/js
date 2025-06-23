@@ -1,3 +1,11 @@
+import { createThirdwebClient, type ThirdwebClient } from "thirdweb";
+import { populateEip712Transaction } from "thirdweb/transaction";
+import {
+  getTransactionDecorator,
+  setThirdwebDomains,
+  setTransactionDecorator,
+} from "thirdweb/utils";
+import { getZkPaymasterData } from "thirdweb/wallets/smart";
 import {
   NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
   NEXT_PUBLIC_IPFS_GATEWAY_URL,
@@ -11,16 +19,8 @@ import {
   THIRDWEB_RPC_DOMAIN,
   THIRDWEB_SOCIAL_API_DOMAIN,
   THIRDWEB_STORAGE_DOMAIN,
-} from "constants/urls";
-import { type ThirdwebClient, createThirdwebClient } from "thirdweb";
-import { populateEip712Transaction } from "thirdweb/transaction";
-import {
-  getTransactionDecorator,
-  setThirdwebDomains,
-  setTransactionDecorator,
-} from "thirdweb/utils";
-import { getZkPaymasterData } from "thirdweb/wallets/smart";
-import { getVercelEnv } from "../../lib/vercel-utils";
+} from "@/constants/urls";
+import { getVercelEnv } from "@/utils/vercel";
 
 export function getConfiguredThirdwebClient(options: {
   secretKey: string | undefined;
@@ -29,14 +29,14 @@ export function getConfiguredThirdwebClient(options: {
   if (getVercelEnv() !== "production") {
     // if not on production: run this when creating a client to set the domains
     setThirdwebDomains({
-      rpc: THIRDWEB_RPC_DOMAIN,
-      inAppWallet: THIRDWEB_INAPP_WALLET_DOMAIN,
-      pay: THIRDWEB_PAY_DOMAIN,
-      storage: THIRDWEB_STORAGE_DOMAIN,
-      social: THIRDWEB_SOCIAL_API_DOMAIN,
-      bundler: THIRDWEB_BUNDLER_DOMAIN,
-      insight: THIRDWEB_INSIGHT_API_DOMAIN,
       bridge: THIRDWEB_BRIDGE_URL,
+      bundler: THIRDWEB_BUNDLER_DOMAIN,
+      inAppWallet: THIRDWEB_INAPP_WALLET_DOMAIN,
+      insight: THIRDWEB_INSIGHT_API_DOMAIN,
+      pay: THIRDWEB_PAY_DOMAIN,
+      rpc: THIRDWEB_RPC_DOMAIN,
+      social: THIRDWEB_SOCIAL_API_DOMAIN,
+      storage: THIRDWEB_STORAGE_DOMAIN,
     });
   }
 
@@ -50,13 +50,13 @@ export function getConfiguredThirdwebClient(options: {
         transaction.chain.id === 50104
       ) {
         const serializedTx = await populateEip712Transaction({
-          transaction,
           account,
+          transaction,
         });
         const pmData = await getZkPaymasterData({
           options: {
-            client: transaction.client,
             chain: transaction.chain,
+            client: transaction.client,
           },
           transaction: serializedTx,
         });
@@ -77,14 +77,14 @@ export function getConfiguredThirdwebClient(options: {
   }
 
   return createThirdwebClient({
-    teamId: options.teamId,
-    secretKey: options.secretKey,
     clientId: NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
     config: {
       storage: {
         gatewayUrl: NEXT_PUBLIC_IPFS_GATEWAY_URL,
       },
     },
+    secretKey: options.secretKey,
+    teamId: options.teamId,
   });
 }
 

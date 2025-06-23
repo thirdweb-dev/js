@@ -40,37 +40,53 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  productionBrowserSourceMaps: false,
   experimental: {
+    serverSourceMaps: false,
     webpackBuildWorker: true,
     webpackMemoryOptimizations: true,
-    serverSourceMaps: false,
   },
   async headers() {
     return [
       {
-        source: "/(.*)",
         headers: securityHeaders,
+        source: "/(.*)",
+      },
+    ];
+  },
+  productionBrowserSourceMaps: false,
+  async redirects() {
+    return [
+      {
+        destination: "/connect/sign-in/button",
+        permanent: false,
+        source: "/connect/sign-in",
+      },
+      {
+        destination: "/connect/account-abstraction/connect",
+        permanent: false,
+        source: "/connect/account-abstraction",
+      },
+    ];
+  },
+  async rewrites() {
+    return [
+      {
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+        source: "/_ph/static/:path*",
+      },
+      {
+        destination: "https://us.i.posthog.com/:path*",
+        source: "/_ph/:path*",
+      },
+      {
+        destination: "https://us.i.posthog.com/decide",
+        source: "/_ph/decide",
       },
     ];
   },
   webpack: (config) => {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
-  },
-  async redirects() {
-    return [
-      {
-        source: "/connect/sign-in",
-        destination: "/connect/sign-in/button",
-        permanent: false,
-      },
-      {
-        source: "/connect/account-abstraction",
-        destination: "/connect/account-abstraction/connect",
-        permanent: false,
-      },
-    ];
   },
 };
 

@@ -1,7 +1,7 @@
-import { DEFAULT_FEE_RECIPIENT } from "constants/addresses";
 import { notFound } from "next/navigation";
 import type { ThirdwebContract } from "thirdweb";
 import { getPlatformFeeInfo } from "thirdweb/extensions/common";
+import { DEFAULT_FEE_RECIPIENT } from "@/constants/addresses";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { redirectToContractLandingPage } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/utils";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";
@@ -17,8 +17,8 @@ export async function SharedContractSettingsPage(props: {
   isLoggedIn: boolean;
 }) {
   const info = await getContractPageParamsInfo({
-    contractAddress: props.contractAddress,
     chainIdOrSlug: props.chainIdOrSlug,
+    contractAddress: props.contractAddress,
     teamId: props.projectMeta?.teamId,
   });
 
@@ -31,8 +31,8 @@ export async function SharedContractSettingsPage(props: {
     const shouldHide = await shouldRenderNewPublicPage(info.serverContract);
     if (shouldHide) {
       redirectToContractLandingPage({
-        contractAddress: props.contractAddress,
         chainIdOrSlug: props.chainIdOrSlug,
+        contractAddress: props.contractAddress,
         projectMeta: props.projectMeta,
       });
     }
@@ -58,8 +58,8 @@ export async function SharedContractSettingsPage(props: {
     <ContractSettingsPage
       contract={clientContract}
       functionSelectors={metadata.functionSelectors}
-      isLoggedIn={props.isLoggedIn}
       hasDefaultFeeConfig={hasDefaultFeeConfig}
+      isLoggedIn={props.isLoggedIn}
     />
   );
 }

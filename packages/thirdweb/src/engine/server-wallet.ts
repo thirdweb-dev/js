@@ -159,8 +159,8 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
           chainId: chainId.toString(),
         }
       : {
-          from: address,
           chainId: chainId.toString(),
+          from: address,
         };
   };
 
@@ -184,18 +184,18 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
     const body = {
       executionOptions: getExecutionOptions(chainId),
       params: transaction.map((t) => ({
-        to: t.to ?? undefined,
         data: t.data,
+        to: t.to ?? undefined,
         value: t.value?.toString(),
       })),
     };
 
     const result = await sendTransaction({
       baseUrl: getThirdwebBaseUrl("engineCloud"),
+      body,
       bodySerializer: stringify,
       fetch: getClientFetch(client),
       headers,
-      body,
     });
 
     if (result.error) {
@@ -211,6 +211,30 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
 
   return {
     address,
+    enqueueBatchTransaction: async (args: {
+      transactions: PreparedTransaction[];
+    }) => {
+      const serializedTransactions: SendTransactionOption[] = [];
+      for (const transaction of args.transactions) {
+        const [to, data, value] = await Promise.all([
+          transaction.to ? resolvePromisedValue(transaction.to) : null,
+          encode(transaction),
+          transaction.value ? resolvePromisedValue(transaction.value) : null,
+        ]);
+        serializedTransactions.push({
+          chainId: transaction.chain.id,
+          data,
+          to: to ?? undefined,
+          value: value ?? undefined,
+        });
+      }
+      const transactionIds = await enqueueTx(serializedTransactions);
+      const transactionId = transactionIds[0];
+      if (!transactionId) {
+        throw new Error("No transactionId returned from engine");
+      }
+      return { transactionId };
+    },
     enqueueTransaction: async (args: {
       transaction: PreparedTransaction;
       simulate?: boolean;
@@ -244,32 +268,8 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
       }
       return { transactionId };
     },
-    enqueueBatchTransaction: async (args: {
-      transactions: PreparedTransaction[];
-    }) => {
-      const serializedTransactions: SendTransactionOption[] = [];
-      for (const transaction of args.transactions) {
-        const [to, data, value] = await Promise.all([
-          transaction.to ? resolvePromisedValue(transaction.to) : null,
-          encode(transaction),
-          transaction.value ? resolvePromisedValue(transaction.value) : null,
-        ]);
-        serializedTransactions.push({
-          chainId: transaction.chain.id,
-          data,
-          to: to ?? undefined,
-          value: value ?? undefined,
-        });
-      }
-      const transactionIds = await enqueueTx(serializedTransactions);
-      const transactionId = transactionIds[0];
-      if (!transactionId) {
-        throw new Error("No transactionId returned from engine");
-      }
-      return { transactionId };
-    },
-    sendTransaction: async (transaction: SendTransactionOption) => {
-      const transactionIds = await enqueueTx([transaction]);
+    sendBatchTransaction: async (transactions: SendTransactionOption[]) => {
+      const transactionIds = await enqueueTx(transactions);
       const transactionId = transactionIds[0];
       if (!transactionId) {
         throw new Error("No transactionId returned from engine");
@@ -279,8 +279,8 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
         transactionId,
       });
     },
-    sendBatchTransaction: async (transactions: SendTransactionOption[]) => {
-      const transactionIds = await enqueueTx(transactions);
+    sendTransaction: async (transaction: SendTransactionOption) => {
+      const transactionIds = await enqueueTx([transaction]);
       const transactionId = transactionIds[0];
       if (!transactionId) {
         throw new Error("No transactionId returned from engine");
@@ -308,9 +308,6 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
 
       const signResult = await signMessage({
         baseUrl: getThirdwebBaseUrl("engineCloud"),
-        bodySerializer: stringify,
-        fetch: getClientFetch(client),
-        headers,
         body: {
           executionOptions: getExecutionOptions(signingChainId),
           params: [
@@ -320,6 +317,9 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
             },
           ],
         },
+        bodySerializer: stringify,
+        fetch: getClientFetch(client),
+        headers,
       });
 
       if (signResult.error) {
@@ -345,14 +345,14 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
 
       const signResult = await signTypedData({
         baseUrl: getThirdwebBaseUrl("engineCloud"),
-        bodySerializer: stringify,
-        fetch: getClientFetch(client),
-        headers,
         body: {
           executionOptions: getExecutionOptions(signingChainId),
           // biome-ignore lint/suspicious/noExplicitAny: TODO: fix ts / hey-api type clash
           params: [typedData as any],
         },
+        bodySerializer: stringify,
+        fetch: getClientFetch(client),
+        headers,
       });
 
       if (signResult.error) {

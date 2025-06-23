@@ -1,9 +1,9 @@
-import { Card } from "@/components/ui/card";
-import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import { Flex, Select, Spinner } from "@chakra-ui/react";
 import { InfoIcon } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
+import { Card } from "@/components/ui/card";
+import { useIsAdmin } from "@/hooks/useContractRoles";
 import { PermissionEditor } from "./permissions-editor";
 
 interface ContractPermissionProps {
@@ -44,7 +44,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
             </div>
 
             {role === "transfer" && (
-              <Flex align="center" justify="center" flexGrow={0} flexShrink={0}>
+              <Flex align="center" flexGrow={0} flexShrink={0} justify="center">
                 {isPending || isSubmitting ? (
                   <Flex align="center" gap={2} px={2}>
                     <Spinner size="sm" />
@@ -53,8 +53,6 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                 ) : (
                   <Select
                     isDisabled={!isAdmin}
-                    variant="filled"
-                    value={isRestricted ? 1 : 0}
                     onChange={(e) => {
                       if (e.target.value === "1") {
                         setValue(
@@ -70,6 +68,8 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                         });
                       }
                     }}
+                    value={isRestricted ? 1 : 0}
+                    variant="filled"
                   >
                     <option value={1}>Non-Transferable</option>
                     <option value={0}>Transferable</option>
@@ -79,7 +79,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
             )}
 
             {role === "lister" && (
-              <Flex align="center" justify="center" flexGrow={0} flexShrink={0}>
+              <Flex align="center" flexGrow={0} flexShrink={0} justify="center">
                 {isPending || isSubmitting ? (
                   <Flex align="center" gap={2} px={2}>
                     <Spinner size="sm" />
@@ -88,8 +88,6 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                 ) : (
                   <Select
                     isDisabled={!isAdmin}
-                    variant="filled"
-                    value={isRestricted ? 1 : 0}
                     onChange={(e) => {
                       if (e.target.value === "1") {
                         setValue(
@@ -105,6 +103,8 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                         });
                       }
                     }}
+                    value={isRestricted ? 1 : 0}
+                    variant="filled"
                   >
                     <option value={1}>Only specific wallets</option>
                     <option value={0}>Any wallet</option>
@@ -114,7 +114,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
             )}
 
             {role === "asset" && (
-              <Flex align="center" justify="center" flexGrow={0} flexShrink={0}>
+              <Flex align="center" flexGrow={0} flexShrink={0} justify="center">
                 {isPending || isSubmitting ? (
                   <Flex align="center" gap={2} px={2}>
                     <Spinner size="sm" />
@@ -123,8 +123,6 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                 ) : (
                   <Select
                     isDisabled={!isAdmin}
-                    variant="filled"
-                    value={isRestricted ? 1 : 0}
                     onChange={(e) => {
                       if (e.target.value === "1") {
                         setValue(
@@ -140,6 +138,8 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                         });
                       }
                     }}
+                    value={isRestricted ? 1 : 0}
+                    variant="filled"
                   >
                     <option value={1}>Only specific assets</option>
                     <option value={0}>Any asset</option>
@@ -151,18 +151,18 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
 
           {role === "transfer" && (
             <Flex
-              direction="row"
-              borderRadius="md"
-              borderWidth="1px"
-              bg="primary.50"
-              borderColor="primary.100"
               _dark={{
                 bg: "primary.800",
                 borderColor: "primary.800",
               }}
               align="center"
-              padding="10px"
+              bg="primary.50"
+              borderColor="primary.100"
+              borderRadius="md"
+              borderWidth="1px"
+              direction="row"
               gap={3}
+              padding="10px"
             >
               <InfoIcon className="size-6 text-primary hover:opacity-10 dark:text-primary-foreground" />
               <p className="text-primary dark:text-primary-foreground">
@@ -186,61 +186,48 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
 
           {role === "lister" && (
             <Flex
-              direction="row"
-              borderRadius="md"
-              borderWidth="1px"
-              bg="primary.50"
-              borderColor="primary.100"
               _dark={{
                 bg: "primary.800",
                 borderColor: "primary.800",
               }}
               align="center"
-              padding="10px"
+              bg="primary.50"
+              borderColor="primary.100"
+              borderRadius="md"
+              borderWidth="1px"
+              direction="row"
               gap={3}
+              padding="10px"
             >
               <InfoIcon className="size-6 text-primary hover:opacity-10 dark:text-primary-foreground" />
               <p className="text-primary dark:text-primary-foreground">
-                {isRestricted ? (
-                  <>
-                    Currently, only addresses specified below will be able to
-                    create listings on this marketplace.
-                  </>
-                ) : (
-                  <>This marketplace is open for anyone to create listings.</>
-                )}
+                {isRestricted
+                  ? "Currently, only addresses specified below will be able to create listings on this marketplace."
+                  : "This marketplace is open for anyone to create listings."}
               </p>
             </Flex>
           )}
 
           {role === "asset" && (
             <Flex
-              direction="row"
-              borderRadius="md"
-              borderWidth="1px"
-              bg="primary.50"
-              borderColor="primary.100"
               _dark={{
                 bg: "primary.800",
                 borderColor: "primary.800",
               }}
               align="center"
-              padding="10px"
+              bg="primary.50"
+              borderColor="primary.100"
+              borderRadius="md"
+              borderWidth="1px"
+              direction="row"
               gap={3}
+              padding="10px"
             >
               <InfoIcon className="size-6 text-primary hover:opacity-10 dark:text-primary-foreground" />
               <p className="text-primary dark:text-primary-foreground">
-                {isRestricted ? (
-                  <>
-                    Currently, only assets from the contracts specified below
-                    will be able to be used on this contract.
-                  </>
-                ) : (
-                  <>
-                    This contract is open for people to list assets from any
-                    contract.
-                  </>
-                )}
+                {isRestricted
+                  ? "Currently, only assets from the contracts specified below will be able to be used on this contract."
+                  : "This contract is open for people to list assets from any contract."}
               </p>
             </Flex>
           )}
@@ -249,7 +236,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
             <Spinner />
           ) : (
             isRestricted &&
-            role && <PermissionEditor role={role} contract={contract} />
+            role && <PermissionEditor contract={contract} role={role} />
           )}
         </div>
       </Flex>

@@ -1,5 +1,21 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { CircleAlertIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { type ThirdwebContract, toTokens } from "thirdweb";
+import type { ChainMetadata } from "thirdweb/chains";
+import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
+import { claimTo } from "thirdweb/extensions/erc1155";
+import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import * as z from "zod";
+import {
+  reportAssetBuyFailed,
+  reportAssetBuySuccessful,
+} from "@/analytics/report";
+import { TransactionButton } from "@/components/tx-button";
 import {
   Form,
   FormControl,
@@ -11,24 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
-import { CircleAlertIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { type ThirdwebContract, toTokens } from "thirdweb";
-import type { ChainMetadata } from "thirdweb/chains";
-import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
-import { claimTo } from "thirdweb/extensions/erc1155";
-import {
-  useActiveAccount,
-  useActiveWallet,
-  useSendAndConfirmTransaction,
-} from "thirdweb/react";
-import { parseError } from "utils/errorParser";
-import * as z from "zod";
+import { parseError } from "@/utils/errorParser";
 import { PublicPageConnectButton } from "../../../_components/PublicPageConnectButton";
 import { SupplyClaimedProgress } from "../../../_components/supply-claimed-progress";
 import { TokenPrice } from "../../../_components/token-price";
@@ -49,18 +48,17 @@ type BuyEditionDropProps = {
 };
 
 export function BuyEditionDrop(props: BuyEditionDropProps) {
-  const trackEvent = useTrack();
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
     defaultValues: {
       amount: 1,
     },
+    resolver: zodResolver(formSchema),
     reValidateMode: "onChange",
   });
   const nftAmountToClaim = Number(form.watch("amount"));
   const sendAndConfirmTx = useSendAndConfirmTransaction();
   const account = useActiveAccount();
-  const activeWallet = useActiveWallet();
+
   const queryClient = useQueryClient();
 
   const {
@@ -70,59 +68,28 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
     isUserPriceDifferent,
   } = useERC1155ClaimCondition({
     chainMetadata: props.chainMetadata,
-    tokenId: props.tokenId,
     contract: props.contract,
     enabled: true,
+    tokenId: props.tokenId,
   });
-
-  function trackAssetBuy(
-    params:
-      | {
-          type: "attempt" | "success";
-        }
-      | {
-          type: "error";
-          errorMessage: string;
-        },
-  ) {
-    trackEvent({
-      category: "asset",
-      action: "buy",
-      label: params.type,
-      contractType: "NFTCollection",
-      ercType: "erc1155",
-      accountAddress: account?.address,
-      walletId: activeWallet?.id,
-      chainId: props.contract.chain.id,
-      ...(params.type === "error"
-        ? {
-            errorMessage: params.errorMessage,
-          }
-        : {}),
-    });
-  }
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
-      trackAssetBuy({
-        type: "attempt",
-      });
-
       if (!account) {
         return toast.error("No account detected");
       }
 
       const transaction = claimTo({
         contract: props.contract,
-        to: account.address,
-        quantity: BigInt(data.amount),
         from: account.address,
+        quantity: BigInt(data.amount),
+        to: account.address,
         tokenId: props.tokenId,
       });
 
       const approveTx = await getApprovalForTransaction({
-        transaction,
         account,
+        transaction,
       });
 
       if (approveTx) {
@@ -133,23 +100,27 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
         });
 
         toast.promise(approveTxPromise, {
+          error: (err) => ({
+            description: parseError(err),
+            message: "Approval to spend ERC20 tokens failed",
+          }),
           loading: "Requesting approval to spend ERC20 tokens for NFT purchase",
           success: "ERC20 token spending request approved successfully",
-          error: (err) => ({
-            message: "Approval to spend ERC20 tokens failed",
-            description: parseError(err),
-          }),
         });
 
         try {
           await approveTxPromise;
         } catch (err) {
           const errorMessage = parseError(err);
-          trackAssetBuy({
-            type: "error",
-            errorMessage:
-              typeof errorMessage === "string" ? errorMessage : "Unknown error",
+
+          reportAssetBuyFailed({
+            assetType: "nft",
+            chainId: props.contract.chain.id,
+            contractType: "DropERC1155",
+            error: errorMessage,
           });
+
+          console.error(errorMessage);
           return;
         }
       }
@@ -159,19 +130,21 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
       const nftOrNfts = nftAmountToClaim > 1 ? "NFTs" : "NFT";
 
       toast.promise(claimTxPromise, {
+        error: (err) => ({
+          description: parseError(err),
+          message: `Failed to buy ${nftAmountToClaim} ${nftOrNfts}`,
+        }),
         loading: `Buying ${nftAmountToClaim} ${nftOrNfts}`,
         success: `${nftOrNfts} bought successfully`,
-        error: (err) => ({
-          message: `Failed to buy ${nftAmountToClaim} ${nftOrNfts}`,
-          description: parseError(err),
-        }),
       });
 
       try {
         await claimTxPromise;
 
-        trackAssetBuy({
-          type: "success",
+        reportAssetBuySuccessful({
+          assetType: "nft",
+          chainId: props.contract.chain.id,
+          contractType: "DropERC1155",
         });
 
         props.onSuccess?.();
@@ -180,31 +153,38 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
           queryKey: [ASSET_PAGE_ERC1155_QUERIES_ROOT_KEY],
         });
       } catch (err) {
+        console.error(err);
         const errorMessage = parseError(err);
-        trackAssetBuy({
-          type: "error",
-          errorMessage:
-            typeof errorMessage === "string" ? errorMessage : "Unknown error",
+
+        reportAssetBuyFailed({
+          assetType: "nft",
+          chainId: props.contract.chain.id,
+          contractType: "DropERC1155",
+          error: errorMessage,
         });
+
         return;
       }
     } catch (err) {
+      console.error(err);
       const errorMessage = parseError(err);
+
       toast.error("Failed to buy NFTs", {
-        description:
-          typeof errorMessage === "string" ? errorMessage : undefined,
+        description: errorMessage,
       });
-      trackAssetBuy({
-        type: "error",
-        errorMessage:
-          typeof errorMessage === "string" ? errorMessage : "Unknown error",
+
+      reportAssetBuyFailed({
+        assetType: "nft",
+        chainId: props.contract.chain.id,
+        contractType: "DropERC1155",
+        error: errorMessage,
       });
     }
   });
 
   return (
     <Form {...form}>
-      <form className="space-y-5" onSubmit={handleSubmit}>
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <FormField
           control={form.control}
           name="amount"
@@ -216,6 +196,7 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
                   autoComplete="off"
                   type="text"
                   {...field}
+                  className="bg-muted/50"
                   onChange={(e) => {
                     const num = Number(e.target.value);
                     const value = Number.isNaN(num) ? 0 : num;
@@ -235,7 +216,6 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
                       }
                     }
                   }}
-                  className="!text-2xl h-auto bg-muted/50 font-bold"
                 />
               </FormControl>
               <FormMessage />
@@ -331,14 +311,14 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
         </div>
         {account ? (
           <TransactionButton
+            className="w-full"
             client={props.contract.client}
             isLoggedIn={true}
-            txChainID={props.contract.chain.id}
-            transactionCount={undefined}
             isPending={form.formState.isSubmitting}
+            transactionCount={undefined}
+            txChainID={props.contract.chain.id}
             type="submit"
             variant="default"
-            className="w-full"
           >
             Buy NFT{nftAmountToClaim > 1 ? "s" : ""}
           </TransactionButton>

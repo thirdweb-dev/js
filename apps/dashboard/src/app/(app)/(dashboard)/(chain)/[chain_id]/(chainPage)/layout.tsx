@@ -1,3 +1,8 @@
+import { ChevronDownIcon, TicketCheckIcon } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,16 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import {
-  getAuthToken,
-  getAuthTokenWalletAddress,
-} from "@app/api/lib/getAuthToken";
-import { ChevronDownIcon, TicketCheckIcon } from "lucide-react";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { mapV4ChainToV5Chain } from "../../../../../../contexts/map-chains";
-import { NebulaChatButton } from "../../../../../nebula-app/(app)/components/FloatingChat/FloatingChat";
+import { mapV4ChainToV5Chain } from "../../../../../../@/utils/map-chains";
 import { TeamHeader } from "../../../../team/components/TeamHeader/team-header";
 import { StarButton } from "../../components/client/star-button";
 import { getChain, getChainMetadata } from "../../utils";
@@ -45,12 +41,12 @@ export async function generateMetadata(props: {
   }.`;
 
   return {
-    title,
     description,
     openGraph: {
-      title,
       description,
+      title,
     },
+    title,
   };
 }
 
@@ -61,10 +57,9 @@ export default async function ChainPageLayout(props: {
 }) {
   const params = await props.params;
   const { children } = props;
-  const [chain, authToken, accountAddress] = await Promise.all([
+  const [chain, authToken] = await Promise.all([
     getChain(params.chain_id),
     getAuthToken(),
-    getAuthTokenWalletAddress(),
   ]);
 
   if (params.chain_id !== chain.slug) {
@@ -74,49 +69,12 @@ export default async function ChainPageLayout(props: {
   const chainMetadata = await getChainMetadata(chain.chainId);
   const client = getClientThirdwebClient(undefined);
 
-  const chainPromptPrefix = `\
-You are assisting users exploring the chain ${chain.name} (Chain ID: ${chain.chainId}). Provide concise insights into the types of applications and activities prevalent on this chain, such as DeFi protocols, NFT marketplaces, or gaming platforms. Highlight notable projects or trends without delving into technical details like consensus mechanisms or gas fees.
-Users may seek comparisons between ${chain.name} and other chains. Provide objective, succinct comparisons focusing on performance, fees, and ecosystem support. Refrain from transaction-specific advice unless requested.
-Provide users with an understanding of the unique use cases and functionalities that ${chain.name} supports. Discuss how developers leverage this chain for specific applications, such as scalable dApps, low-cost transactions, or specialized token standards, focusing on practical implementations.
-Users may be interested in utilizing thirdweb tools on ${chain.name}. Offer clear guidance on how thirdweb's SDKs, smart contract templates, and deployment tools integrate with this chain. Emphasize the functionalities enabled by thirdweb without discussing transaction execution unless prompted.
-Avoid transaction-related actions to be executed by the user unless inquired about.
-
-The following is the user's message:
-  `;
-
-  const examplePrompts: string[] = [
-    "What are users doing on this chain?",
-    "What are the most active contracts?",
-    "Why would I use this chain over others?",
-    "Can I deploy thirdweb contracts to this chain?",
-  ];
-
-  if (chain.chainId !== 1) {
-    examplePrompts.push("Can I bridge assets from Ethereum to this chain?");
-  }
-
   return (
     <div className="flex grow flex-col">
       <div className="border-border border-b bg-card">
         <TeamHeader />
       </div>
-      <NebulaChatButton
-        isLoggedIn={!!authToken}
-        networks={chain.testnet ? "testnet" : "mainnet"}
-        isFloating={true}
-        pageType="chain"
-        label="Ask AI about this chain"
-        client={client}
-        nebulaParams={{
-          messagePrefix: chainPromptPrefix,
-          chainIds: [chain.chainId],
-          wallet: accountAddress ?? undefined,
-        }}
-        examplePrompts={examplePrompts.map((prompt) => ({
-          title: prompt,
-          message: prompt,
-        }))}
-      />
+
       <div className="flex h-14 border-border border-b pl-7">
         <Breadcrumb className="my-auto">
           <BreadcrumbList>
@@ -161,10 +119,10 @@ The following is the user's message:
         <div className="flex w-full flex-col pb-10">
           {/* Icon + Background */}
           <ChainHeader
-            headerImageUrl={chainMetadata?.headerImgUrl}
-            logoUrl={chain.icon?.url}
             chain={chain}
             client={client}
+            headerImageUrl={chainMetadata?.headerImgUrl}
+            logoUrl={chain.icon?.url}
           />
 
           <div className="h-4 md:h-8" />
@@ -187,8 +145,8 @@ The following is the user's message:
               {authToken && (
                 <StarButton
                   chainId={chain.chainId}
-                  iconClassName="size-5"
                   className="p-1"
+                  iconClassName="size-5"
                 />
               )}
 
@@ -211,15 +169,15 @@ The following is the user's message:
             <div className="w-full sm:hidden">
               <div className="grid grid-cols-2 gap-2">
                 <AddChainToWallet
-                  client={client}
                   chain={
                     // Do not include chain overrides for chain pages
                     // eslint-disable-next-line no-restricted-syntax
                     mapV4ChainToV5Chain(chain)
                   }
+                  client={client}
                 />
-                <Button variant="primary">
-                  <Link href="/team" target="_blank">
+                <Button asChild variant="primary">
+                  <Link href="/team" rel="noopener noreferrer" target="_blank">
                     Get started
                   </Link>
                 </Button>

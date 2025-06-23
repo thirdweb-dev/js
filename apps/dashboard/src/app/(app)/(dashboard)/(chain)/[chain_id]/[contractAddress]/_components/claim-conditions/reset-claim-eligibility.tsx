@@ -1,16 +1,15 @@
 "use client";
 
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { CircleHelpIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
+import { AdminOnly } from "@/components/contracts/roles/admin-only";
+import { TransactionButton } from "@/components/tx-button";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface ResetClaimEligibilityProps {
   isErc20: boolean;
@@ -27,8 +26,6 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
   isLoggedIn,
   isMultiphase,
 }) => {
-  const trackEvent = useTrack();
-
   const sendTxMutation = useSendAndConfirmTransaction();
 
   const txNotification = useTxNotifications(
@@ -37,14 +34,6 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
   );
 
   const handleResetClaimEligibility = () => {
-    const category = isErc20 ? "token" : "nft";
-
-    trackEvent({
-      category,
-      action: "reset-claim-conditions",
-      label: "attempt",
-    });
-
     const tx = (() => {
       switch (true) {
         // erc 20
@@ -55,8 +44,8 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
         case tokenId !== undefined: {
           return ERC1155Ext.resetClaimEligibility({
             contract,
-            tokenId: BigInt(tokenId),
             singlePhaseDrop: !isMultiphase,
+            tokenId: BigInt(tokenId),
           });
         }
         // assume erc 721
@@ -67,22 +56,11 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
     })();
 
     sendTxMutation.mutate(tx, {
-      onSuccess: () => {
-        txNotification.onSuccess();
-        trackEvent({
-          category,
-          action: "reset-claim-conditions",
-          label: "success",
-        });
-      },
       onError: (error) => {
         txNotification.onError(error);
-        trackEvent({
-          category,
-          action: "reset-claim-conditions",
-          label: "error",
-          error,
-        });
+      },
+      onSuccess: () => {
+        txNotification.onSuccess();
       },
     });
   };
@@ -96,12 +74,12 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
       <TransactionButton
         client={contract.client}
         isLoggedIn={isLoggedIn}
-        transactionCount={1}
-        type="button"
         isPending={sendTxMutation.isPending}
         onClick={handleResetClaimEligibility}
         size="sm"
+        transactionCount={1}
         txChainID={contract.chain.id}
+        type="button"
       >
         {sendTxMutation.isPending ? (
           "Resetting Eligibility"

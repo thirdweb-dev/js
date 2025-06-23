@@ -13,8 +13,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("BuyDirectListingButton", () => {
   it("should render", () => {
     render(
       <BuyDirectListingButton
-        client={client}
         chain={sepolia}
+        client={client}
         contractAddress={marketplaceAddress}
         listingId={1n}
       >

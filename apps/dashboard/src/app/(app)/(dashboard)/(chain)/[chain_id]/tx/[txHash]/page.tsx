@@ -1,8 +1,4 @@
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { mapV4ChainToV5Chain } from "contexts/map-chains";
-import { ZERO_ADDRESS, toTokens } from "thirdweb";
+import { toTokens, ZERO_ADDRESS } from "thirdweb";
 import {
   eth_getBlockByHash,
   eth_getTransactionByHash,
@@ -10,6 +6,10 @@ import {
   getRpcClient,
 } from "thirdweb/rpc";
 import { hexToNumber, shortenAddress, toEther } from "thirdweb/utils";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { mapV4ChainToV5Chain } from "@/utils/map-chains";
 import { getChain } from "../../../utils";
 
 export default async function Page(props: {
@@ -19,10 +19,10 @@ export default async function Page(props: {
   const chain = await getChain(params.chain_id);
 
   const rpcRequest = getRpcClient({
-    client: serverThirdwebClient,
     // Do not include chain overrides for chain pages
     // eslint-disable-next-line no-restricted-syntax
     chain: mapV4ChainToV5Chain(chain),
+    client: serverThirdwebClient,
   });
 
   const [transaction, receipt] = await Promise.all([

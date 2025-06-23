@@ -1,9 +1,9 @@
 "use client";
 
-import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
-import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useQuery } from "@tanstack/react-query";
 import type React from "react";
+import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
+import type { EngineInstance } from "@/hooks/useEngine";
 import { getEngineAccessPermission } from "../../../_utils/getEngineAccessPermission";
 import { EngineErrorPage } from "./EngineErrorPage";
 
@@ -20,13 +20,6 @@ export function EnsureEnginePermission(props: {
   const rootPath = `/team/${props.teamSlug}/${props.projectSlug}/engine/dedicated`;
 
   const permissionQuery = useQuery({
-    queryKey: [
-      "engine-permission",
-      {
-        instanceUrl: instance.url,
-        authToken: props.authToken,
-      },
-    ],
     queryFn: () => {
       const url = instance.url;
       if (!url) {
@@ -38,6 +31,13 @@ export function EnsureEnginePermission(props: {
         instanceUrl: url,
       });
     },
+    queryKey: [
+      "engine-permission",
+      {
+        authToken: props.authToken,
+        instanceUrl: instance.url,
+      },
+    ],
     retry: false,
   });
 

@@ -2,17 +2,17 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import {
   mobileViewport,
   storybookThirdwebClient,
-} from "../../../../../stories/utils";
+} from "../../../../../@/storybook/utils";
 import { HeaderLoggedOut } from "./HeaderLoggedOut";
 
 const meta = {
-  title: "Headers/LoggedOut",
   component: Variants,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Headers/LoggedOut",
 } satisfies Meta<typeof Variants>;
 
 export default meta;

@@ -1,3 +1,8 @@
+import Link from "next/link";
+import { onlyText } from "react-children-utilities"; // Assuming this dependency is available
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm"; // Assuming this dependency is available
+import type { BundledLanguage } from "shiki"; // For CodeClient lang prop
 import { CodeClient, CodeLoading } from "@/components/code/code.client"; // Adjusted path for portal
 import { PlainTextCodeBlock } from "@/components/code/plaintext-code"; // Adjusted path for portal
 import { InlineCode } from "@/components/ui/inline-code"; // Adjusted path for portal
@@ -11,17 +16,12 @@ import {
   TableRow,
 } from "@/components/ui/table"; // Adjusted path for portal
 import { cn } from "@/lib/utils"; // Adjusted path for portal
-import Link from "next/link";
-import { onlyText } from "react-children-utilities"; // Assuming this dependency is available
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm"; // Assuming this dependency is available
-import type { BundledLanguage } from "shiki"; // For CodeClient lang prop
 
 // Helper function to remove the 'node' prop before spreading
 function cleanedProps<T extends object & { node?: unknown }>(
   props: T,
 ): Omit<T, "node"> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // biome-ignore lint/correctness/noUnusedVariables: node is used for react-markdown
   const { node, ...rest } = props;
   return rest;
 }
@@ -51,9 +51,62 @@ export const MarkdownRenderer: React.FC<{
   return (
     <div className={className}>
       <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        skipHtml={markdownProps.skipHtml}
         components={{
+          a: (props) => (
+            <Link
+              href={props.href ?? "#"}
+              target="_blank"
+              {...cleanedProps(props)}
+              className="mt-4 text-blue-600 underline visited:text-purple-600 hover:text-blue-800" // Example portal link style
+            />
+          ),
+          code: ({ className: inheritedClassName, children, ...props }) => {
+            const codeStr = onlyText(children);
+
+            // Check if it's likely a block or inline code based on className or content length
+            if (inheritedClassName || codeStr.length > 80) {
+              // Heuristic for block code
+              if (
+                code?.disableCodeHighlight ||
+                !inheritedClassName?.includes("language-")
+              ) {
+                return (
+                  <div className="my-4">
+                    <PlainTextCodeBlock
+                      {...cleanedProps(props)}
+                      className={markdownProps.code?.className}
+                      code={codeStr.trim()}
+                      onCopy={(code) => {
+                        navigator.clipboard.writeText(code);
+                      }}
+                    />
+                  </div>
+                );
+              }
+              const language = inheritedClassName.replace(
+                "language-",
+                "",
+              ) as BundledLanguage;
+              return (
+                <div className="my-4">
+                  <CodeClient
+                    lang={language}
+                    {...cleanedProps(props)}
+                    className={markdownProps.code?.className}
+                    code={codeStr.trim()}
+                    loader={<CodeLoading />} // Basic loader
+                  />
+                </div>
+              );
+            }
+            // Inline code
+            return (
+              <InlineCode
+                className={markdownProps.inlineCode?.className}
+                code={codeStr.trim()}
+              />
+            );
+          },
           h1: (props) => (
             <h2
               className={cn(
@@ -99,108 +152,11 @@ export const MarkdownRenderer: React.FC<{
               className={cn(commonHeadingClassName, "mt-4 text-lg")} // Consider portal styles
             />
           ),
-          a: (props) => (
-            <Link
-              href={props.href ?? "#"}
-              target="_blank"
-              {...cleanedProps(props)}
-              className="mt-4 text-blue-600 underline visited:text-purple-600 hover:text-blue-800" // Example portal link style
-            />
-          ),
           hr: (props) => (
             <hr
               {...cleanedProps(props)}
               className="my-5 border-border bg-border"
             /> // Consider portal styles
-          ),
-          code: ({ className: inheritedClassName, children, ...props }) => {
-            const codeStr = onlyText(children);
-
-            // Check if it's likely a block or inline code based on className or content length
-            if (inheritedClassName || codeStr.length > 80) {
-              // Heuristic for block code
-              if (
-                code?.disableCodeHighlight ||
-                !inheritedClassName?.includes("language-")
-              ) {
-                return (
-                  <div className="my-4">
-                    <PlainTextCodeBlock
-                      {...cleanedProps(props)}
-                      code={codeStr.trim()}
-                      className={markdownProps.code?.className}
-                      onCopy={(code) => {
-                        navigator.clipboard.writeText(code);
-                      }}
-                    />
-                  </div>
-                );
-              }
-              const language = inheritedClassName.replace(
-                "language-",
-                "",
-              ) as BundledLanguage;
-              return (
-                <div className="my-4">
-                  <CodeClient
-                    lang={language}
-                    {...cleanedProps(props)}
-                    code={codeStr.trim()}
-                    className={markdownProps.code?.className}
-                    loader={<CodeLoading />} // Basic loader
-                  />
-                </div>
-              );
-            }
-            // Inline code
-            return (
-              <InlineCode
-                code={codeStr.trim()}
-                className={markdownProps.inlineCode?.className}
-              />
-            );
-          },
-          p: (props) => (
-            <p
-              className={cn(
-                "mb-4 text-muted-foreground leading-loose",
-                markdownProps.p?.className,
-              )}
-              {...cleanedProps(props)}
-            />
-          ),
-          table: (props) => (
-            <div className="mb-6">
-              <TableContainer>
-                <Table {...cleanedProps(props)} />
-              </TableContainer>
-            </div>
-          ),
-          th: ({ children: c, ...props }) => (
-            <TableHead
-              {...cleanedProps(props)}
-              className="text-left text-muted-foreground"
-            >
-              {c}
-            </TableHead>
-          ),
-          td: (props) => (
-            <TableCell {...cleanedProps(props)} className="text-left" />
-          ),
-          thead: (props) => <TableHeader {...cleanedProps(props)} />,
-          tbody: (props) => <TableBody {...cleanedProps(props)} />,
-          tr: (props) => <TableRow {...cleanedProps(props)} />,
-          ul: (props) => (
-            <ul
-              className="mb-4 list-outside list-disc pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
-              {...cleanedProps(props)}
-            />
-          ),
-          ol: (props) => (
-            <ol
-              className="mb-4 list-outside list-decimal pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
-              {...cleanedProps(props)}
-            />
           ),
           li: ({ children: c, ...props }) => (
             <li
@@ -213,10 +169,54 @@ export const MarkdownRenderer: React.FC<{
               {c}
             </li>
           ),
+          ol: (props) => (
+            <ol
+              className="mb-4 list-outside list-decimal pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
+              {...cleanedProps(props)}
+            />
+          ),
+          p: (props) => (
+            <p
+              className={cn(
+                "mb-4 text-muted-foreground leading-loose",
+                markdownProps.p?.className,
+              )}
+              {...cleanedProps(props)}
+            />
+          ),
           strong(props) {
             return <strong className="font-medium" {...cleanedProps(props)} />;
           },
+          table: (props) => (
+            <div className="mb-6">
+              <TableContainer>
+                <Table {...cleanedProps(props)} />
+              </TableContainer>
+            </div>
+          ),
+          tbody: (props) => <TableBody {...cleanedProps(props)} />,
+          td: (props) => (
+            <TableCell {...cleanedProps(props)} className="text-left" />
+          ),
+          th: ({ children: c, ...props }) => (
+            <TableHead
+              {...cleanedProps(props)}
+              className="text-left text-muted-foreground"
+            >
+              {c}
+            </TableHead>
+          ),
+          thead: (props) => <TableHeader {...cleanedProps(props)} />,
+          tr: (props) => <TableRow {...cleanedProps(props)} />,
+          ul: (props) => (
+            <ul
+              className="mb-4 list-outside list-disc pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
+              {...cleanedProps(props)}
+            />
+          ),
         }}
+        remarkPlugins={[remarkGfm]}
+        skipHtml={markdownProps.skipHtml}
       >
         {markdownText}
       </ReactMarkdown>

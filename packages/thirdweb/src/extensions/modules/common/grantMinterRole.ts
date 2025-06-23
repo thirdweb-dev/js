@@ -33,7 +33,7 @@ export function grantMinterRole(
 ) {
   return grantRoles({
     contract: options.contract,
-    user: options.user,
     roles: MINTER_ROLE,
+    user: options.user,
   });
 }

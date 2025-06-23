@@ -56,11 +56,11 @@ export async function getAllListings(
   const [rawListings, latestBlock] = await Promise.all([
     getAllInBatches(
       (startId, endId) =>
-        getAllListingGenerated({ contract: options.contract, startId, endId }),
+        getAllListingGenerated({ contract: options.contract, endId, startId }),
       {
-        start,
         end,
         maxSize: DEFAULT_QUERY_ALL_COUNT,
+        start,
       },
       // flatten the array of arrays
     ).then((listings) => listings.flat()),

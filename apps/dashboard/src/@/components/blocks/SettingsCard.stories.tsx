@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { BadgeContainer } from "../../../stories/utils";
+import { BadgeContainer } from "@/storybook/utils";
 import { SettingsCard } from "./SettingsCard";
 
 const meta = {
-  title: "Blocks/Cards/SettingsCard",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Blocks/Cards/SettingsCard",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -25,8 +25,8 @@ function Story() {
       <BadgeContainer label="No Header">
         <SettingsCard
           bottomText="This is bottom text"
-          header={undefined}
           errorText={undefined}
+          header={undefined}
           noPermissionText={undefined}
           saveButton={undefined}
         >
@@ -37,11 +37,11 @@ function Story() {
       <BadgeContainer label="Header">
         <SettingsCard
           bottomText="This is bottom text"
-          header={{
-            title: "Some Title",
-            description: "This is some description for this card",
-          }}
           errorText={undefined}
+          header={{
+            description: "This is some description for this card",
+            title: "Some Title",
+          }}
           noPermissionText={undefined}
           saveButton={undefined}
         >
@@ -52,11 +52,11 @@ function Story() {
       <BadgeContainer label="Error">
         <SettingsCard
           bottomText="This is bottom text"
-          header={{
-            title: "Some Title",
-            description: "This is some description for this card",
-          }}
           errorText="This is error text"
+          header={{
+            description: "This is some description for this card",
+            title: "Some Title",
+          }}
           noPermissionText={undefined}
           saveButton={undefined}
         >
@@ -67,17 +67,17 @@ function Story() {
       <BadgeContainer label="No Permission">
         <SettingsCard
           bottomText="This is bottom text"
+          errorText={undefined}
           header={{
-            title: "Some Title",
             description: "This is some description for this card",
+            title: "Some Title",
           }}
+          noPermissionText="You do not have permission to edit this"
           saveButton={{
             disabled: false,
             isPending: false,
             onClick: () => {},
           }}
-          noPermissionText="You do not have permission to edit this"
-          errorText={undefined}
         >
           <ChildrenPlaceholder />
         </SettingsCard>
@@ -86,17 +86,17 @@ function Story() {
       <BadgeContainer label="Save">
         <SettingsCard
           bottomText="This is bottom text"
+          errorText={undefined}
           header={{
-            title: "Some Title",
             description: "This is some description for this card",
+            title: "Some Title",
           }}
+          noPermissionText={undefined}
           saveButton={{
             disabled: false,
             isPending: false,
             onClick: () => {},
           }}
-          noPermissionText={undefined}
-          errorText={undefined}
         >
           <ChildrenPlaceholder />
         </SettingsCard>
@@ -105,17 +105,17 @@ function Story() {
       <BadgeContainer label="Save Disabled">
         <SettingsCard
           bottomText="This is bottom text"
+          errorText={undefined}
           header={{
-            title: "Some Title",
             description: "This is some description for this card",
+            title: "Some Title",
           }}
+          noPermissionText={undefined}
           saveButton={{
             disabled: true,
             isPending: false,
             onClick: () => {},
           }}
-          noPermissionText={undefined}
-          errorText={undefined}
         >
           <ChildrenPlaceholder />
         </SettingsCard>
@@ -124,17 +124,17 @@ function Story() {
       <BadgeContainer label="Save Loading">
         <SettingsCard
           bottomText="This is bottom text"
+          errorText={undefined}
           header={{
-            title: "Some Title",
             description: "This is some description for this card",
+            title: "Some Title",
           }}
+          noPermissionText={undefined}
           saveButton={{
             disabled: false,
             isPending: true,
             onClick: () => {},
           }}
-          noPermissionText={undefined}
-          errorText={undefined}
         >
           <ChildrenPlaceholder />
         </SettingsCard>

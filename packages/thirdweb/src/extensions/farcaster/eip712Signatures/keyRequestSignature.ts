@@ -6,10 +6,10 @@ import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { SIGNED_KEY_REQUEST_VALIDATOR_ADDRESS } from "../constants.js";
 
 const SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_DOMAIN = {
-  name: "Farcaster SignedKeyRequestValidator", // EIP-712 domain data for the SignedKeyRequestValidator.
-  version: "1",
-  chainId: 10,
+  chainId: 10, // EIP-712 domain data for the SignedKeyRequestValidator.
+  name: "Farcaster SignedKeyRequestValidator",
   verifyingContract: SIGNED_KEY_REQUEST_VALIDATOR_ADDRESS,
+  version: "1",
 } as const;
 
 const SIGNED_KEY_REQUEST_TYPE = [
@@ -87,8 +87,8 @@ export type SignKeyRequestOptions = {
 export function getKeyRequestData(message: SignedKeyRequestMessage) {
   return {
     ...SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_TYPES,
-    primaryType: "SignedKeyRequest" as const,
     message,
+    primaryType: "SignedKeyRequest" as const,
   };
 }
 
@@ -160,10 +160,10 @@ export function encodeSignedKeyRequestMetadata(options: {
 }): Hex {
   return encodeAbiParameters(SIGNED_KEY_REQUEST_METADATA_ABI, [
     {
+      deadline: options.deadline,
       requestFid: options.requestFid,
       requestSigner: options.requestSigner,
       signature: options.keyRequestSignature,
-      deadline: options.deadline,
     },
   ]);
 }
@@ -217,10 +217,10 @@ export async function getSignedKeyRequestMetadata(
   }
 
   return encodeSignedKeyRequestMetadata({
-    requestSigner:
-      "account" in options ? options.account.address : options.accountAddress,
+    deadline: options.message.deadline,
     keyRequestSignature: signature,
     requestFid: options.message.requestFid,
-    deadline: options.message.deadline,
+    requestSigner:
+      "account" in options ? options.account.address : options.accountAddress,
   });
 }

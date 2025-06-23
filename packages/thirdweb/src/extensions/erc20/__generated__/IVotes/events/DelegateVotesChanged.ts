@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "DelegateVotesChanged" event.
@@ -36,8 +36,8 @@ export function delegateVotesChangedEvent(
   filters: DelegateVotesChangedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event DelegateVotesChanged(address indexed delegate, uint256 previousBalance, uint256 newBalance)",
-    filters,
   });
 }

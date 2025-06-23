@@ -13,14 +13,14 @@ describe("backendAuthenticate", () => {
   it("should successfully authenticate and return token", async () => {
     // Mock response data
     const mockResponse = {
-      token: "mock-token",
       cookieString: "mock-cookie",
+      token: "mock-token",
     };
 
     // Mock fetch implementation
     const mockFetch = vi.fn().mockResolvedValue({
-      ok: true,
       json: () => Promise.resolve(mockResponse),
+      ok: true,
     });
 
     // Mock dependencies
@@ -34,11 +34,11 @@ describe("backendAuthenticate", () => {
 
     // Verify the fetch call
     expect(mockFetch).toHaveBeenCalledWith("/auth/login", {
-      method: "POST",
+      body: stringify({ walletSecret: "test-secret" }),
       headers: {
         "Content-Type": "application/json",
       },
-      body: stringify({ walletSecret: "test-secret" }),
+      method: "POST",
     });
 
     // Verify response

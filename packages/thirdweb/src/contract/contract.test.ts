@@ -33,9 +33,9 @@ describe("Contract - getContract", () => {
     expect(() =>
       getContract({
         address: USDT_CONTRACT_ADDRESS,
-        client: TEST_CLIENT,
         // @ts-ignore Test
         chain: {},
+        client: TEST_CLIENT,
       }),
     ).toThrowError(`getContract validation error - invalid chain: ${{}}`);
   });

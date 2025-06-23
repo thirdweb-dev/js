@@ -20,26 +20,26 @@ const chain = ANVIL_CHAIN;
 describe.runIf(process.env.TW_SECRET_KEY)("proposal exists", () => {
   it("`proposalExists` and `propose` should work", async () => {
     const tokenAddress = await deployERC20Contract({
-      client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
       account,
-      type: "TokenERC20",
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       params: {
-        name: "Token",
         contractURI: TEST_CONTRACT_URI,
+        name: "Token",
       },
+      type: "TokenERC20",
     });
     const address = await deployVoteContract({
       account,
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
       params: {
-        name: "",
         contractURI: TEST_CONTRACT_URI,
-        tokenAddress: tokenAddress,
         initialProposalThreshold: "0.5",
         initialVotingPeriod: 10,
         minVoteQuorumRequiredPercent: 51,
+        name: "",
+        tokenAddress: tokenAddress,
       },
     });
     const voteContract = getContract({
@@ -60,27 +60,27 @@ describe.runIf(process.env.TW_SECRET_KEY)("proposal exists", () => {
     });
     // first step: mint enough tokens so it passes the voting threshold
     const mintTransaction = mintTo({
+      amount: "1000",
       contract: tokenContract,
       to: account.address,
-      amount: "1000",
     });
-    await sendAndConfirmTransaction({ transaction: mintTransaction, account });
+    await sendAndConfirmTransaction({ account, transaction: mintTransaction });
     // 2nd step: to delegate the token
     const delegation = delegate({
       contract: tokenContract,
       delegatee: account.address,
     });
-    await sendAndConfirmTransaction({ transaction: delegation, account });
+    await sendAndConfirmTransaction({ account, transaction: delegation });
 
     // step 3: create a proposal
     const transaction = propose({
+      calldatas: ["0x"],
       contract: voteContract,
       description: "first proposal",
       targets: [voteContract.address],
       values: [0n],
-      calldatas: ["0x"],
     });
-    await sendAndConfirmTransaction({ transaction, account });
+    await sendAndConfirmTransaction({ account, transaction });
     const allProposals = await getAll({ contract: voteContract });
     expect(allProposals.length).toBe(1);
     const exists = await proposalExists({

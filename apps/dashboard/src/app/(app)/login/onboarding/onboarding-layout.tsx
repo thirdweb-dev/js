@@ -1,6 +1,3 @@
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import {
   BoxIcon,
@@ -10,6 +7,9 @@ import {
   UserIcon,
   UsersIcon,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { cn } from "@/lib/utils";
 
 type OnboardingStep = {
   icon: React.FC<{ className?: string }>;
@@ -20,16 +20,16 @@ type OnboardingStep = {
 
 const accountOnboardingSteps: OnboardingStep[] = [
   {
-    icon: UserIcon,
-    title: "Account Details",
     description: "Provide email address",
+    icon: UserIcon,
     number: 1,
+    title: "Account Details",
   },
   {
-    icon: MailIcon,
-    title: "Verify Email",
     description: "Enter your verification code",
+    icon: MailIcon,
     number: 2,
+    title: "Verify Email",
   },
 ];
 
@@ -44,17 +44,14 @@ export function AccountOnboardingLayout(props: {
 
   return (
     <OnboardingLayout
-      steps={accountOnboardingSteps}
-      currentStep={props.currentStep}
-      title="Get started with thirdweb"
       cta={
         <Button
-          variant="outline"
-          size="sm"
           className="gap-2 bg-card px-4"
           onClick={() => {
             logout.mutate();
           }}
+          size="sm"
+          variant="outline"
         >
           {logout.isPending ? (
             <Spinner className="size-3 text-muted-foreground" />
@@ -64,6 +61,9 @@ export function AccountOnboardingLayout(props: {
           Logout
         </Button>
       }
+      currentStep={props.currentStep}
+      steps={accountOnboardingSteps}
+      title="Get started with thirdweb"
     >
       {props.children}
     </OnboardingLayout>
@@ -72,22 +72,22 @@ export function AccountOnboardingLayout(props: {
 
 const teamOnboardingSteps: OnboardingStep[] = [
   {
-    icon: BoxIcon,
-    title: "Team Details",
     description: "Provide team details",
+    icon: BoxIcon,
     number: 1,
+    title: "Team Details",
   },
   {
-    icon: RocketIcon,
-    title: "Plan Selection",
     description: "Choose a plan that fits your needs",
+    icon: RocketIcon,
     number: 2,
+    title: "Plan Selection",
   },
   {
-    icon: UsersIcon,
-    title: "Team Members",
     description: "Invite members to your team",
+    icon: UsersIcon,
     number: 3,
+    title: "Team Members",
   },
 ];
 
@@ -97,8 +97,8 @@ export function TeamOnboardingLayout(props: {
 }) {
   return (
     <OnboardingLayout
-      steps={teamOnboardingSteps}
       currentStep={props.currentStep}
+      steps={teamOnboardingSteps}
       title="Setup your team"
     >
       {props.children}
@@ -138,8 +138,8 @@ function OnboardingLayout(props: {
               const isInactive = step.number !== props.currentStep;
               return (
                 <div
-                  key={step.number}
                   className={cn("flex items-center gap-4")}
+                  key={step.number}
                 >
                   <div className="relative z-10 flex size-10 items-center justify-center rounded-full border bg-card">
                     <step.icon

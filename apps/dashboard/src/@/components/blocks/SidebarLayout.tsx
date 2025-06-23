@@ -13,11 +13,11 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "../../lib/utils";
+import { AppFooter } from "../footers/app-footer";
 import { NavLink } from "../ui/NavLink";
 import { Separator } from "../ui/separator";
 import { MobileSidebar, useActiveSidebarLink } from "./MobileSidebar";
 import { CustomSidebar, type SidebarLink } from "./Sidebar";
-import { AppFooter } from "./app-footer";
 
 export function SidebarLayout(props: {
   sidebarLinks: SidebarLink[];
@@ -35,8 +35,8 @@ export function SidebarLayout(props: {
       )}
     >
       <CustomSidebar
-        links={sidebarLinks}
         className={props.desktopSidebarClassName}
+        links={sidebarLinks}
       />
       <MobileSidebar
         links={sidebarLinks}
@@ -65,13 +65,13 @@ export function FullWidthSidebarLayout(props: {
       )}
     >
       {/* left - sidebar */}
-      <Sidebar collapsible="icon" side="left" className="pt-2">
+      <Sidebar className="pt-2" collapsible="icon" side="left">
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupContent>
               <RenderSidebarGroup
-                sidebarLinks={contentSidebarLinks}
                 groupName={undefined}
+                sidebarLinks={contentSidebarLinks}
               />
             </SidebarGroupContent>
           </SidebarGroup>
@@ -80,8 +80,8 @@ export function FullWidthSidebarLayout(props: {
         {footerSidebarLinks && (
           <SidebarFooter className="pb-3">
             <RenderSidebarGroup
-              sidebarLinks={footerSidebarLinks}
               groupName={undefined}
+              sidebarLinks={footerSidebarLinks}
             />
           </SidebarFooter>
         )}
@@ -119,11 +119,11 @@ function RenderSidebarGroup(props: {
             <SidebarMenuItem key={link.href}>
               <SidebarMenuButton asChild>
                 <NavLink
-                  href={link.href}
-                  className="flex items-center gap-2 text-muted-foreground text-sm hover:bg-accent"
                   activeClassName="text-foreground bg-accent"
+                  className="flex items-center gap-2 text-muted-foreground text-sm hover:bg-accent"
                   exactMatch={link.exactMatch}
-                  tracking={link.tracking}
+                  href={link.href}
+                  isActive={link.isActive}
                   onClick={() => {
                     sidebar.setOpenMobile(false);
                   }}
@@ -137,14 +137,14 @@ function RenderSidebarGroup(props: {
         }
 
         if ("separator" in link) {
-          return <SidebarSeparator key={Math.random()} className="my-1" />;
+          return <SidebarSeparator className="my-1" key={Math.random()} />;
         }
 
         return (
           <RenderSidebarGroup
-            sidebarLinks={link.links}
             groupName={link.group}
             key={link.group}
+            sidebarLinks={link.links}
           />
         );
       })}
@@ -158,7 +158,7 @@ function MobileSidebarTrigger(props: { links: SidebarLink[] }) {
   return (
     <div className="flex items-center gap-3 border-b px-4 py-4 lg:hidden">
       <SidebarTrigger className="size-4" />
-      <Separator orientation="vertical" className="h-4" />
+      <Separator className="h-4" orientation="vertical" />
       {activeLink && <span className="text-sm">{activeLink.label}</span>}
     </div>
   );

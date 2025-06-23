@@ -17,15 +17,15 @@ import { useActiveWallet } from "../../../../../core/hooks/wallets/useActiveWall
 import type { TokenInfo } from "../../../../../core/utils/defaultTokens.js";
 import { useEnsName } from "../../../../../core/utils/wallet.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
-import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
+import { Container, Line, ModalHeader } from "../../../components/basic.js";
+import { Button } from "../../../components/buttons.js";
 import { ChainIcon } from "../../../components/ChainIcon.js";
 import { Img } from "../../../components/Img.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { TokenIcon } from "../../../components/TokenIcon.js";
-import { WalletImage } from "../../../components/WalletImage.js";
-import { Container, Line, ModalHeader } from "../../../components/basic.js";
-import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
+import { WalletImage } from "../../../components/WalletImage.js";
+import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
 import { ConnectButton } from "../../ConnectButton.js";
 import { PoweredByThirdweb } from "../../PoweredByTW.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../nativeToken.js";
@@ -56,12 +56,11 @@ export function DirectPaymentModeScreen(props: {
   const paymentInfo = payUiOptions.paymentInfo;
   const { data: chainData } = useChainMetadata(paymentInfo.chain);
   const { data: sellerEns } = useEnsName({
-    client,
     address: paymentInfo.sellerAddress,
+    client,
   });
 
   const totalCostQuery = useQuery({
-    queryKey: ["amount", paymentInfo],
     queryFn: async () => {
       let tokenDecimals = 18;
       if (paymentInfo.token && !isNativeToken(paymentInfo.token)) {
@@ -81,6 +80,7 @@ export function DirectPaymentModeScreen(props: {
       }
       return cost;
     },
+    queryKey: ["amount", paymentInfo],
   });
 
   const totalCost = totalCostQuery.data;
@@ -90,8 +90,6 @@ export function DirectPaymentModeScreen(props: {
 
   const token: TokenInfo = paymentInfo.token
     ? {
-        name: paymentInfo.token.name || chainData.nativeCurrency.name,
-        symbol: paymentInfo.token.symbol || chainData.nativeCurrency.symbol,
         address: paymentInfo.token.address || NATIVE_TOKEN_ADDRESS,
         icon:
           paymentInfo.token?.icon ||
@@ -102,12 +100,14 @@ export function DirectPaymentModeScreen(props: {
                 t.address.toLowerCase() ===
                 paymentInfo.token?.address.toLowerCase(),
             )?.icon,
+        name: paymentInfo.token.name || chainData.nativeCurrency.name,
+        symbol: paymentInfo.token.symbol || chainData.nativeCurrency.symbol,
       }
     : {
         address: NATIVE_TOKEN_ADDRESS,
+        icon: chainData.icon?.url,
         name: chainData.nativeCurrency.name,
         symbol: chainData.nativeCurrency.symbol,
-        icon: chainData.icon?.url,
       };
 
   return (
@@ -122,55 +122,55 @@ export function DirectPaymentModeScreen(props: {
             client={client}
             src={metadata?.image}
             style={{
-              width: "100%",
-              borderRadius: spacing.md,
               backgroundColor: theme.colors.tertiaryBg,
+              borderRadius: spacing.md,
+              width: "100%",
             }}
           />
         ) : activeWallet ? (
           <Container
-            flex="row"
             center="both"
+            flex="row"
             style={{
-              padding: spacing.md,
-              marginBottom: spacing.md,
-              borderRadius: spacing.md,
               backgroundColor: theme.colors.tertiaryBg,
+              borderRadius: spacing.md,
+              marginBottom: spacing.md,
+              padding: spacing.md,
             }}
           >
             <WalletImage
-              size={iconSize.xl}
-              id={activeWallet.id}
               client={client}
+              id={activeWallet.id}
+              size={iconSize.xl}
             />
             <div
               style={{
-                flexGrow: 1,
                 borderBottom: "6px dotted",
                 borderColor: theme.colors.secondaryIconColor,
+                flexGrow: 1,
                 marginLeft: spacing.md,
                 marginRight: spacing.md,
               }}
             />
             <ChainIcon
+              chainIconUrl={chainData.icon?.url}
               client={client}
               size={iconSize.xl}
-              chainIconUrl={chainData.icon?.url}
             />
           </Container>
         ) : null}
         <Spacer y="md" />
         <Container flex="row">
-          <Container flex="column" expand>
-            <Text size="md" color="primaryText" weight={700}>
+          <Container expand flex="column">
+            <Text color="primaryText" size="md" weight={700}>
               Price
             </Text>
           </Container>
           <Container expand>
             <Container
+              center="y"
               flex="row"
               gap="xs"
-              center="y"
               style={{ justifyContent: "right" }}
             >
               <TokenIcon
@@ -189,26 +189,26 @@ export function DirectPaymentModeScreen(props: {
         <Line />
         <Spacer y="md" />
         <Container flex="row">
-          <Container flex="column" expand>
-            <Text size="xs" color="secondaryText">
+          <Container expand flex="column">
+            <Text color="secondaryText" size="xs">
               Network
             </Text>
           </Container>
           <Container expand>
             <Container
+              center="y"
               flex="row"
               gap="xs"
-              center="y"
               style={{ justifyContent: "right" }}
             >
               <ChainIcon
                 chainIconUrl={chainData.icon?.url}
-                size="xs"
                 client={props.client}
+                size="xs"
               />
               <Text
-                size="xs"
                 color="secondaryText"
+                size="xs"
                 style={{ textAlign: "right" }}
               >
                 {chainData.name}
@@ -218,21 +218,21 @@ export function DirectPaymentModeScreen(props: {
         </Container>
         <Spacer y="sm" />
         <Container flex="row">
-          <Container flex="column" expand>
-            <Text size="xs" color="secondaryText">
+          <Container expand flex="column">
+            <Text color="secondaryText" size="xs">
               Seller
             </Text>
           </Container>
           <Container expand>
             <Container
+              center="y"
               flex="row"
               gap="xs"
-              center="y"
               style={{ justifyContent: "right" }}
             >
               <Text
-                size="xs"
                 color="secondaryText"
+                size="xs"
                 style={{ textAlign: "right" }}
               >
                 {sellerEns || shortenAddress(paymentInfo.sellerAddress)}
@@ -244,19 +244,19 @@ export function DirectPaymentModeScreen(props: {
       <Spacer y="xl" />
       {payerAccount ? (
         <Button
-          variant="accent"
           fullWidth
           onClick={() => {
             trackPayEvent({
-              event: "choose_payment_method_direct_payment_mode",
               client,
-              walletAddress: payerAccount.address,
-              walletType: activeWallet?.id,
+              event: "choose_payment_method_direct_payment_mode",
               toChainId: paymentInfo.chain.id,
               toToken: paymentInfo.token?.address,
+              walletAddress: payerAccount.address,
+              walletType: activeWallet?.id,
             });
             onContinue(totalCost, paymentInfo.chain, token);
           }}
+          variant="accent"
         >
           Choose Payment Method
         </Button>
@@ -265,12 +265,12 @@ export function DirectPaymentModeScreen(props: {
           <ConnectButton
             {...props.connectOptions}
             client={client}
-            theme={theme}
             connectButton={{
               style: {
                 width: "100%",
               },
             }}
+            theme={theme}
           />
         </div>
       )}

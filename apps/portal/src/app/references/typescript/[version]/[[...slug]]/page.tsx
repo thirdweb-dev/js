@@ -1,14 +1,14 @@
-import { getTDocPage } from "@/app/references/components/TDoc/PageLayout";
 import { fetchTypeScriptDoc } from "@/app/references/components/TDoc/fetchDocs/fetchTypeScriptDoc";
+import { getTDocPage } from "@/app/references/components/TDoc/PageLayout";
 
 const config = getTDocPage({
-  sdkTitle: "TypeScript SDK",
   getDoc: fetchTypeScriptDoc,
-  packageSlug: "typescript",
   async getVersions() {
     return ["v5"];
   },
   metadataIcon: "typescript",
+  packageSlug: "typescript",
+  sdkTitle: "TypeScript SDK",
 });
 
 export default config.default;

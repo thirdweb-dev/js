@@ -1,6 +1,6 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { getRoleMember as generatedGetRoleMember } from "../__generated__/IPermissionsEnumerable/read/getRoleMember.js";
-import { type RoleInput, getRoleHash } from "../utils.js";
+import { getRoleHash, type RoleInput } from "../utils.js";
 
 export { isGetRoleMemberSupported } from "../__generated__/IPermissionsEnumerable/read/getRoleMember.js";
 
@@ -35,7 +35,7 @@ export function getRoleMember(
 ): Promise<string> {
   return generatedGetRoleMember({
     contract: options.contract,
-    role: getRoleHash(options.role),
     index: options.index,
+    role: getRoleHash(options.role),
   });
 }

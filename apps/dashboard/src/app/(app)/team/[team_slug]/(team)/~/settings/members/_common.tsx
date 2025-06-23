@@ -1,5 +1,6 @@
 "use client";
 
+import { SearchIcon } from "lucide-react";
 import type { TeamAccountRole } from "@/api/team-members";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SearchIcon } from "lucide-react";
 
 export type RoleFilterValue = "ALL ROLES" | TeamAccountRole;
 export type MemberSortId = "date" | "a-z" | "z-a";
@@ -31,11 +31,11 @@ export function FiltersSection(props: {
       <div className="relative grow">
         <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 transform text-muted-foreground" />
         <Input
-          placeholder={props.searchPlaceholder}
           className="bg-card pl-9"
           disabled={props.disabled}
-          value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder={props.searchPlaceholder}
+          value={searchTerm}
         />
       </div>
 
@@ -58,8 +58,8 @@ function SortMembersBy(props: {
 }) {
   const { sortBy, setSortBy } = props;
   const valueToLabel: Record<MemberSortId, string> = {
-    date: "Date",
     "a-z": "Name (A-Z)",
+    date: "Date",
     "z-a": "Name (Z-A)",
   };
 
@@ -67,10 +67,10 @@ function SortMembersBy(props: {
 
   return (
     <Select
-      value={sortBy}
       onValueChange={(v) => {
         setSortBy(v as "date" | "a-z" | "z-a");
       }}
+      value={sortBy}
     >
       <SelectTrigger
         className="bg-card capitalize disabled:bg-muted lg:w-[150px]"
@@ -80,7 +80,7 @@ function SortMembersBy(props: {
       </SelectTrigger>
       <SelectContent>
         {sortByIds.map((id) => (
-          <SelectItem key={id} value={id} className="capitalize">
+          <SelectItem className="capitalize" key={id} value={id}>
             {valueToLabel[id]}
           </SelectItem>
         ))}
@@ -99,10 +99,10 @@ function RoleSelector(props: {
 
   return (
     <Select
-      value={role}
       onValueChange={(v) => {
         setRole(v as RoleFilterValue);
       }}
+      value={role}
     >
       <SelectTrigger
         className="bg-card capitalize disabled:bg-muted lg:w-[150px]"
@@ -112,7 +112,7 @@ function RoleSelector(props: {
       </SelectTrigger>
       <SelectContent>
         {roles.map((role) => (
-          <SelectItem key={role} value={role} className="capitalize">
+          <SelectItem className="capitalize" key={role} value={role}>
             {role.toLowerCase()}
           </SelectItem>
         ))}

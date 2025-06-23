@@ -7,34 +7,34 @@ export function getTeamSettingsLinks(teamSlug: string) {
     group: "team" | "account";
   }> = [
     {
-      name: "General",
+      group: "team",
       href: `${prefix}`,
-      group: "team",
+      name: "General",
     },
     {
-      name: "Billing",
+      group: "team",
       href: `${prefix}/billing`,
-      group: "team",
+      name: "Billing",
     },
     {
-      name: "Invoices",
+      group: "team",
       href: `${prefix}/invoices`,
-      group: "team",
+      name: "Invoices",
     },
     {
-      name: "Members",
+      group: "team",
       href: `${prefix}/members`,
-      group: "team",
+      name: "Members",
     },
     {
-      name: "Credits",
+      group: "team",
       href: `${prefix}/credits`,
-      group: "team",
+      name: "Credits",
     },
     {
-      name: "My Notifications",
-      href: `${prefix}/notifications`,
       group: "account",
+      href: `${prefix}/notifications`,
+      name: "My Notifications",
     },
   ];
 

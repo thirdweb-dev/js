@@ -25,27 +25,27 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721: claimToBatch", () => {
     expect(
       optimizeClaimContent([
         {
-          to: account.address,
           quantity: 1n,
+          to: account.address,
         },
         {
-          to: TEST_ACCOUNT_B.address,
           quantity: 2n,
+          to: TEST_ACCOUNT_B.address,
         },
         {
-          to: TEST_ACCOUNT_B.address,
           quantity: 3n,
+          to: TEST_ACCOUNT_B.address,
         },
-        { to: TEST_ACCOUNT_C.address, quantity: 2n },
-        { to: TEST_ACCOUNT_D.address, quantity: 2n },
-        { to: account.address, quantity: 1n },
+        { quantity: 2n, to: TEST_ACCOUNT_C.address },
+        { quantity: 2n, to: TEST_ACCOUNT_D.address },
+        { quantity: 1n, to: account.address },
       ]),
     ).toStrictEqual([
-      { to: account.address, quantity: 1n },
-      { to: TEST_ACCOUNT_B.address, quantity: 5n },
-      { to: TEST_ACCOUNT_C.address, quantity: 2n },
-      { to: TEST_ACCOUNT_D.address, quantity: 2n },
-      { to: account.address, quantity: 1n },
+      { quantity: 1n, to: account.address },
+      { quantity: 5n, to: TEST_ACCOUNT_B.address },
+      { quantity: 2n, to: TEST_ACCOUNT_C.address },
+      { quantity: 2n, to: TEST_ACCOUNT_D.address },
+      { quantity: 1n, to: account.address },
     ]);
   });
 
@@ -55,8 +55,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721: claimToBatch", () => {
       chain,
       client,
       params: {
-        name: "Test DropERC721",
         contractURI: TEST_CONTRACT_URI,
+        name: "Test DropERC721",
       },
       type: "DropERC721",
     });
@@ -68,6 +68,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721: claimToBatch", () => {
     });
 
     await sendAndConfirmTransaction({
+      account,
       transaction: lazyMint({
         contract,
         nfts: [
@@ -84,37 +85,36 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721: claimToBatch", () => {
           { name: "Test NFT 10" },
         ],
       }),
-      account,
     });
 
     await sendAndConfirmTransaction({
+      account: TEST_ACCOUNT_A,
       transaction: setClaimConditions({
         contract,
         phases: [{}],
       }),
-      account: TEST_ACCOUNT_A,
     });
 
     const transaction = claimToBatch({
-      contract,
-      from: account.address,
       content: [
         {
-          to: account.address,
           quantity: 1n,
+          to: account.address,
         },
         {
-          to: TEST_ACCOUNT_B.address,
           quantity: 2n,
+          to: TEST_ACCOUNT_B.address,
         },
         {
-          to: TEST_ACCOUNT_B.address,
           quantity: 3n,
+          to: TEST_ACCOUNT_B.address,
         },
-        { to: TEST_ACCOUNT_C.address, quantity: 2n },
-        { to: TEST_ACCOUNT_D.address, quantity: 2n },
-        { to: account.address, quantity: 1n },
+        { quantity: 2n, to: TEST_ACCOUNT_C.address },
+        { quantity: 2n, to: TEST_ACCOUNT_D.address },
+        { quantity: 1n, to: account.address },
       ],
+      contract,
+      from: account.address,
     });
 
     await sendAndConfirmTransaction({ account, transaction });

@@ -1,9 +1,9 @@
 "use client";
 
+import { ApplyForOpCredits } from "@app/team/[team_slug]/(team)/~/settings/credits/components/ApplyForOpCreditsModal";
 import type { Team } from "@/api/team";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { ApplyForOpCredits } from "components/onboarding/ApplyForOpCreditsModal";
+import type { Account } from "@/hooks/useApi";
 
 export const SettingsGasCreditsPage = (props: {
   team: Team;
@@ -19,8 +19,9 @@ export const SettingsGasCreditsPage = (props: {
           <p className="text-muted-foreground text-sm">
             Apply to the Optimism Superchain App Accelerator.{" "}
             <UnderlineLink
-              target="_blank"
               href="https://blog.thirdweb.com/accelerating-the-superchain-with-optimism/"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Learn More
             </UnderlineLink>
@@ -28,7 +29,7 @@ export const SettingsGasCreditsPage = (props: {
         </div>
       </div>
       <div className="h-6" />
-      <ApplyForOpCredits team={props.team} account={props.account} />
+      <ApplyForOpCredits account={props.account} team={props.team} />
     </div>
   );
 };

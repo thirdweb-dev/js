@@ -3,7 +3,6 @@ description: Rules for writing features in apps/dashboard
 globs: dashboard
 alwaysApply: false
 ---
-
 # Reusable Core UI Components
 
 - Always import from the central UI library under `@/components/ui/*` – e.g. `import { Button } from "@/components/ui/button"`.
@@ -101,3 +100,29 @@ Guidelines:
 - Keep `queryKey` stable and descriptive for cache hits.
 - Prefer API routes or server actions to keep tokens secret; the browser only sees relative paths.
 - Configure `staleTime` / `cacheTime` according to freshness requirements.
+
+# Analytics Event Reporting
+
+- **Add events intentionally** – only when they answer a concrete product/business question.
+- **Event name**: human-readable `<subject> <verb>` phrase (e.g. `"contract deployed"`).
+- **Reporting helper**: `report<Subject><Verb>` (PascalCase); all live in `src/@/analytics/report.ts`.
+- **Mandatory JSDoc**: explain *Why* the event exists and *Who* owns it (`@username`).
+- **Typed properties**: accept a single `properties` object and pass it unchanged to `posthog.capture`.
+- **Client-side only**: never import `posthog-js` in server components.
+- **Housekeeping**: ping **#core-services** before renaming or removing an event.
+
+```ts
+/**
+ * ### Why do we need to report this event?
+ * - Tracks number of contracts deployed
+ *
+ * ### Who is responsible for this event?
+ * @jnsdls
+ */
+export function reportContractDeployed(properties: {
+  address: string;
+  chainId: number;
+}) {
+  posthog.capture("contract deployed", properties);
+}
+```

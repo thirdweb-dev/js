@@ -1,15 +1,15 @@
 "use client";
-import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
-import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
-import type { ChartConfig } from "@/components/ui/chart";
-import { ReactIcon } from "components/icons/brand-icons/ReactIcon";
-import { TypeScriptIcon } from "components/icons/brand-icons/TypeScriptIcon";
-import { UnityIcon } from "components/icons/brand-icons/UnityIcon";
-import { DocLink } from "components/shared/DocLink";
 import { format } from "date-fns";
-import { formatTickerNumber } from "lib/format-utils";
 import { useMemo } from "react";
-import type { EcosystemWalletStats } from "types/analytics";
+import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import { DocLink } from "@/components/blocks/DocLink";
+import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
+import type { ChartConfig } from "@/components/ui/chart";
+import { ReactIcon } from "@/icons/brand-icons/ReactIcon";
+import { TypeScriptIcon } from "@/icons/brand-icons/TypeScriptIcon";
+import { UnityIcon } from "@/icons/brand-icons/UnityIcon";
+import type { EcosystemWalletStats } from "@/types/analytics";
+import { formatTickerNumber } from "@/utils/format-utils";
 import type { Partner } from "../../../../types";
 
 type ChartData = Record<string, number> & {
@@ -90,13 +90,13 @@ export function EcosystemWalletUsersChartCard(props: {
 
     authMethodsToShow.forEach((walletType, i) => {
       _chartConfig[walletType] = {
+        color: `hsl(var(--chart-${(i % 10) + 1}))`,
         label:
           groupBy === "ecosystemPartnerId"
             ? partners?.find((p) => p.id === walletType)?.name ||
               authMethodsToShow[i] ||
               "none"
             : authMethodsToShow[i],
-        color: `hsl(var(--chart-${(i % 10) + 1}))`,
       };
     });
 
@@ -104,16 +104,16 @@ export function EcosystemWalletUsersChartCard(props: {
       // Add Other
       authMethodsToShow.push("others");
       _chartConfig.others = {
-        label: "Others",
         color: "hsl(var(--muted-foreground))",
+        label: "Others",
       };
     }
 
     return {
+      chartConfig: _chartConfig,
       chartData: Array.from(_chartDataMap.values()).sort(
         (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
       ),
-      chartConfig: _chartConfig,
     };
   }, [ecosystemWalletStats, groupBy, partners]);
 
@@ -128,6 +128,7 @@ export function EcosystemWalletUsersChartCard(props: {
   return (
     <ThirdwebBarChart
       chartClassName="aspect-[1.5] lg:aspect-[3.5]"
+      config={chartConfig}
       customHeader={
         <div className="relative px-6 pt-6">
           <h3 className="mb-1 font-semibold text-xl tracking-tight md:text-2xl">
@@ -141,8 +142,8 @@ export function EcosystemWalletUsersChartCard(props: {
           <div className="top-6 right-6 mb-4 grid grid-cols-2 items-center gap-2 md:absolute md:mb-0 md:flex">
             <ExportToCSVButton
               className="bg-background"
-              fileName="Connect Wallets"
               disabled={disableActions}
+              fileName="Connect Wallets"
               getData={async () => {
                 // Shows the number of each type of wallet connected on all dates
                 const header = ["Date", ...uniqueAuthMethods];
@@ -159,13 +160,11 @@ export function EcosystemWalletUsersChartCard(props: {
           </div>
         </div>
       }
-      config={chartConfig}
       data={chartData}
-      isPending={props.isPending}
       emptyChartState={<EcosystemWalletUsersEmptyChartState />}
-      showLegend
       hideLabel={false}
-      variant="stacked"
+      isPending={props.isPending}
+      showLegend
       toolTipLabelFormatter={(_v, item) => {
         if (Array.isArray(item)) {
           const time = item[0].payload.time as number;
@@ -174,6 +173,7 @@ export function EcosystemWalletUsersChartCard(props: {
         return undefined;
       }}
       toolTipValueFormatter={(value) => formatTickerNumber(Number(value))}
+      variant="stacked"
     />
   );
 }
@@ -186,24 +186,24 @@ function EcosystemWalletUsersEmptyChartState() {
       </span>
       <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
         <DocLink
-          link="https://portal.thirdweb.com/typescript/v5/ecosystemWallet"
-          label="TypeScript"
           icon={TypeScriptIcon}
+          label="TypeScript"
+          link="https://portal.thirdweb.com/typescript/v5/ecosystemWallet"
         />
         <DocLink
-          link="https://portal.thirdweb.com/react/v5/ecosystem-wallet/get-started"
+          icon={ReactIcon}
           label="React"
-          icon={ReactIcon}
-        />
-        <DocLink
           link="https://portal.thirdweb.com/react/v5/ecosystem-wallet/get-started"
-          label="React Native"
-          icon={ReactIcon}
         />
         <DocLink
-          link="https://portal.thirdweb.com/unity/v5/wallets/ecosystem-wallet"
-          label="Unity"
+          icon={ReactIcon}
+          label="React Native"
+          link="https://portal.thirdweb.com/react/v5/ecosystem-wallet/get-started"
+        />
+        <DocLink
           icon={UnityIcon}
+          label="Unity"
+          link="https://portal.thirdweb.com/unity/v5/wallets/ecosystem-wallet"
         />
       </div>
     </div>

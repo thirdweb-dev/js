@@ -33,8 +33,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("estimateGasCost", () => {
       const tx = prepareTransaction({
         chain: FORKED_ETHEREUM_CHAIN,
         client: TEST_CLIENT,
-        value: 0n,
         to: TEST_WALLET_B,
+        value: 0n,
       });
       const result = await estimateGasCost({
         transaction: tx,
@@ -53,8 +53,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("estimateGasCost", () => {
       const tx = prepareTransaction({
         chain: FORKED_OPTIMISM_CHAIN,
         client: TEST_CLIENT,
-        value: 0n,
         to: TEST_WALLET_B,
+        value: 0n,
       });
       const result = await estimateGasCost({
         transaction: tx,

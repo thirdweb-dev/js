@@ -1,15 +1,12 @@
-import { metadataBase } from "@/lib/constants";
-import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Fira_Code, Inter } from "next/font/google";
 import Script from "next/script";
+import { metadataBase } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 import { AppSidebar } from "./AppSidebar";
 import { Providers } from "./providers";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
-import { PHProvider } from "../lib/posthog/Posthog";
-import { PosthogHeadSetup } from "../lib/posthog/PosthogHeadSetup";
-import { PostHogPageView } from "../lib/posthog/PosthogPageView";
 import { MobileHeader } from "./MobileHeader";
 import { getSidebarLinks } from "./navLinks";
 
@@ -26,9 +23,9 @@ const monoFont = Fira_Code({
 });
 
 export const metadata: Metadata = {
+  description: "thirdweb playground",
   metadataBase,
   title: "thirdweb playground",
-  description: "thirdweb playground",
 };
 
 export default async function RootLayout({
@@ -36,45 +33,41 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const sidebarLinks = await getSidebarLinks();
+  const sidebarLinks = getSidebarLinks();
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <Script
-          src="https://thirdweb.com/js/pl.js"
-          defer
-          data-domain="playground.thirdweb.com"
           data-api="https://pl.thirdweb.com/api/event"
+          data-domain="playground.thirdweb.com"
+          defer
+          src="https://thirdweb.com/js/pl.js"
         />
-        <PosthogHeadSetup />
       </head>
 
-      <PHProvider>
-        <PostHogPageView />
-        <body
-          className={cn(
-            "bg-background font-sans antialiased ",
-            sansFont.variable,
-            monoFont.variable,
-          )}
-        >
-          <NextTopLoader
-            color="hsl(var(--foreground))"
-            height={2}
-            shadow={false}
-            showSpinner={false}
-          />
-          <MobileHeader links={sidebarLinks} />
-          <div className="flex flex-col lg:h-dvh lg:flex-row">
-            <AppSidebar links={sidebarLinks} />
-            <div className="flex grow flex-col lg:overflow-auto">
-              <div className="relative grow">
-                <Providers>{children}</Providers>
-              </div>
+      <body
+        className={cn(
+          "bg-background font-sans antialiased ",
+          sansFont.variable,
+          monoFont.variable,
+        )}
+      >
+        <NextTopLoader
+          color="hsl(var(--foreground))"
+          height={2}
+          shadow={false}
+          showSpinner={false}
+        />
+        <MobileHeader links={sidebarLinks} />
+        <div className="flex flex-col lg:h-dvh lg:flex-row">
+          <AppSidebar links={sidebarLinks} />
+          <div className="flex grow flex-col lg:overflow-auto">
+            <div className="relative grow">
+              <Providers>{children}</Providers>
             </div>
           </div>
-        </body>
-      </PHProvider>
+        </div>
+      </body>
     </html>
   );
 }

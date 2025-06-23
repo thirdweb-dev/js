@@ -1,8 +1,8 @@
+import { redirect } from "next/navigation";
+import type { SearchParams } from "nuqs/server";
 import { getTeamInvoices } from "@/actions/stripe-actions";
 import { getTeamBySlug } from "@/api/team";
 import { getMemberByAccountId } from "@/api/team-members";
-import { redirect } from "next/navigation";
-import type { SearchParams } from "nuqs/server";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { BillingFilter } from "./components/billing-filter";
 import { BillingHistory } from "./components/billing-history";
@@ -53,12 +53,12 @@ export default async function Page(props: {
         <BillingFilter />
       </div>
       <BillingHistory
-        teamSlug={params.team_slug}
-        invoices={invoices.data}
         hasMore={invoices.has_more}
+        invoices={invoices.data}
+        isOwnerAccount={isOwnerAccount}
         // fall back to "all" if the status is not set
         status={searchParams.status ?? "all"}
-        isOwnerAccount={isOwnerAccount}
+        teamSlug={params.team_slug}
       />
     </div>
   );

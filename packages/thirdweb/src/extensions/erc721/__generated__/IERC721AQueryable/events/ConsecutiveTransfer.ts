@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "ConsecutiveTransfer" event.
@@ -48,8 +48,8 @@ export function consecutiveTransferEvent(
   filters: ConsecutiveTransferEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event ConsecutiveTransfer(uint256 indexed fromTokenId, uint256 toTokenId, address indexed from, address indexed to)",
-    filters,
   });
 }

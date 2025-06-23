@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { teamStub } from "stories/stubs";
-import { storybookLog, storybookThirdwebClient } from "stories/utils";
+import { teamStub } from "@/storybook/stubs";
+import { storybookLog, storybookThirdwebClient } from "@/storybook/utils";
 import { TeamOnboardingLayout } from "../onboarding-layout";
 import { TeamInfoFormUI } from "./TeamInfoForm";
 
 const meta = {
-  title: "Onboarding/TeamOnboarding/TeamInfo",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Onboarding/TeamOnboarding/TeamInfo",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -29,17 +29,11 @@ export const SendError: Story = {
   },
 };
 
-function Story(props: {
-  sendType: "success" | "error";
-}) {
+function Story(props: { sendType: "success" | "error" }) {
   return (
     <TeamOnboardingLayout currentStep={1}>
       <TeamInfoFormUI
         client={storybookThirdwebClient}
-        onComplete={() => {
-          storybookLog("onComplete");
-        }}
-        teamSlug="foo"
         isTeamSlugAvailable={async (slug) => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           // taken slugs stub
@@ -49,6 +43,10 @@ function Story(props: {
 
           return true;
         }}
+        onComplete={() => {
+          storybookLog("onComplete");
+        }}
+        teamSlug="foo"
         updateTeam={async (formData) => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           storybookLog("updateTeam", formData);

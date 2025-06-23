@@ -1,20 +1,20 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { teamStub } from "stories/stubs";
+import { teamStub } from "@/storybook/stubs";
 import {
   BadgeContainer,
   mobileViewport,
   storybookThirdwebClient,
-} from "stories/utils";
+} from "@/storybook/utils";
 import { AccountTeamsUI } from "./AccountTeamsUI";
 
 const meta = {
-  title: "Account/Pages/Teams",
   component: Variants,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Account/Pages/Teams",
 } satisfies Meta<typeof Variants>;
 
 export default meta;
@@ -43,20 +43,20 @@ function Variants() {
           client={storybookThirdwebClient}
           teamsWithRole={[
             {
+              role: "MEMBER",
               team: teamStub("1", "free"),
-              role: "MEMBER",
             },
             {
-              team: teamStub("2", "pro"),
               role: "OWNER",
+              team: teamStub("2", "pro"),
             },
             {
+              role: "MEMBER",
               team: teamStub("3", "growth"),
-              role: "MEMBER",
             },
             {
-              team: teamStub("4", "growth"),
               role: "MEMBER",
+              team: teamStub("4", "growth"),
             },
           ]}
         />
@@ -67,8 +67,8 @@ function Variants() {
           client={storybookThirdwebClient}
           teamsWithRole={[
             {
-              team: teamStub("1", "free"),
               role: "MEMBER",
+              team: teamStub("1", "free"),
             },
           ]}
         />

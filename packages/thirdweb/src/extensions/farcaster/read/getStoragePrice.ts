@@ -41,8 +41,8 @@ export async function getStoragePrice(
 
   const fetch = async () => {
     const contract = getStorageRegistry({
-      client: options.client,
       chain: options.chain,
+      client: options.client,
     });
     return (await unitPrice({ contract })) * units;
   };

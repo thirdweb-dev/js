@@ -24,10 +24,10 @@ export async function getCompilerMetadata(contract: ThirdwebContract) {
   const response = await fetch(
     `https://contract.thirdweb.com/metadata/${chain.id}/${address}`,
     {
-      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
+      method: "GET",
     },
   );
   if (!response.ok) {

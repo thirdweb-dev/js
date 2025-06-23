@@ -1,6 +1,6 @@
 import {
-  type UseQueryResult,
   queryOptions as defineQuery,
+  type UseQueryResult,
   useQuery,
 } from "@tanstack/react-query";
 import type { Abi, AbiFunction, ExtractAbiFunctionNames } from "abitype";
@@ -168,8 +168,8 @@ export function useReadContract<
 
   return useQuery(
     defineQuery({
-      queryKey: queryKey as QueryKey,
       queryFn: queryFn as QueryFn,
+      queryKey: queryKey as QueryKey,
       ...(queryOpts ?? {}),
     }),
   );

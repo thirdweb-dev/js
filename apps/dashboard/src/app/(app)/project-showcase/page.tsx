@@ -1,3 +1,7 @@
+import { FileTextIcon } from "lucide-react";
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,32 +20,28 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
 import {
   PROJECT_SHOWCASE_DATA,
   PROJECT_SHOWCASE_INDUSTRIES,
   PROJECT_SHOWCASE_ITEMS_PER_PAGE,
-} from "lib/project-showcase-constants";
-import { getAbsoluteUrl } from "lib/vercel-utils";
-import { FileTextIcon } from "lucide-react";
-import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
+} from "@/lib/project-showcase-constants";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
+import { getAbsoluteUrl } from "@/utils/vercel";
 
 export const metadata: Metadata = {
-  title: "Project Showcase | Built on thirdweb",
   description: "Discover the latest web3 apps and games built on thirdweb",
   openGraph: {
-    title: "Project Showcase | Built on thirdweb",
     description: "Discover the latest web3 apps and games built on thirdweb",
     images: [
       {
+        height: 630,
         url: `${getAbsoluteUrl()}/assets/showcase/og_image.png`,
         width: 1200,
-        height: 630,
       },
     ],
+    title: "Project Showcase | Built on thirdweb",
   },
+  title: "Project Showcase | Built on thirdweb",
 };
 
 export default async function ProjectShowcasePage(props: {
@@ -82,14 +82,14 @@ export default async function ProjectShowcasePage(props: {
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
                 <Link
-                  href="https://thirdweb.com/login"
                   className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 font-medium text-gray-50 text-sm shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:focus-visible:ring-gray-300 dark:hover:bg-gray-50/90"
+                  href="https://thirdweb.com/login"
                 >
                   Get Started
                 </Link>
                 <Link
-                  href="https://blog.thirdweb.com/case-studies/"
                   className="inline-flex h-10 items-center justify-center rounded-md border border-gray-200 bg-white px-8 font-medium text-sm shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-800 dark:bg-gray-950 dark:focus-visible:ring-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+                  href="https://blog.thirdweb.com/case-studies/"
                 >
                   View all case studies
                 </Link>
@@ -111,13 +111,13 @@ export default async function ProjectShowcasePage(props: {
             <div className="mb-8 flex flex-wrap justify-center gap-2">
               {PROJECT_SHOWCASE_INDUSTRIES.map((industry) => (
                 <Link
-                  key={industry}
-                  href={`/project-showcase?industry=${industry}&page=1`}
                   className={`inline-flex h-10 items-center justify-center rounded-md px-4 py-2 font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${
                     selectedIndustry === industry
                       ? "bg-primary text-primary-foreground shadow hover:bg-primary/90"
                       : "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
                   }`}
+                  href={`/project-showcase?industry=${industry}&page=1`}
+                  key={industry}
                 >
                   {industry}
                 </Link>
@@ -126,14 +126,17 @@ export default async function ProjectShowcasePage(props: {
           </div>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {paginatedProjects.map((project) => (
-              <div key={project.id} className="block">
+              <div className="block" key={project.id}>
                 <Card className="flex h-full cursor-pointer flex-col overflow-hidden transition-shadow hover:shadow-lg">
                   <Link
-                    href={`/project-showcase/${project.slug}`}
                     className="flex-grow"
+                    href={`/project-showcase/${project.slug}`}
                   >
                     {/* eslint-disable @next/next/no-img-element */}
                     <img
+                      alt={project.title}
+                      className="h-48 w-full object-cover"
+                      height={200}
                       src={
                         project.image?.startsWith("ipfs://")
                           ? (resolveSchemeWithErrorHandler({
@@ -143,10 +146,7 @@ export default async function ProjectShowcasePage(props: {
                           : (project.image ??
                             "/assets/showcase/default_image.png")
                       }
-                      alt={project.title}
                       width={300}
-                      height={200}
-                      className="h-48 w-full object-cover"
                     />
                     <CardHeader>
                       <CardTitle className="mb-3">{project.title}</CardTitle>
@@ -165,10 +165,10 @@ export default async function ProjectShowcasePage(props: {
                       {project.case_study && (
                         <Link
                           href={project.case_study}
+                          rel="noopener noreferrer"
                           target="_blank"
-                          // onClick={(e) => e.stopPropagation()}
                         >
-                          <Button variant="outline" size="sm">
+                          <Button size="sm" variant="outline">
                             <FileTextIcon className="mr-2 h-4 w-4" /> Case Study
                           </Button>
                         </Link>
@@ -192,8 +192,8 @@ export default async function ProjectShowcasePage(props: {
                     href={`/project-showcase?industry=${selectedIndustry}&page=${
                       currentPage > 1 ? currentPage - 1 : 1
                     }`}
-                    passHref
                     legacyBehavior
+                    passHref
                   >
                     <PaginationPrevious
                       className={
@@ -207,8 +207,8 @@ export default async function ProjectShowcasePage(props: {
                     <PaginationItem key={`page-${pageNumber}`}>
                       <Link
                         href={`/project-showcase?industry=${selectedIndustry}&page=${pageNumber}`}
-                        passHref
                         legacyBehavior
+                        passHref
                       >
                         <PaginationLink isActive={currentPage === pageNumber}>
                           {pageNumber}
@@ -222,8 +222,8 @@ export default async function ProjectShowcasePage(props: {
                     href={`/project-showcase?industry=${selectedIndustry}&page=${
                       currentPage < totalPages ? currentPage + 1 : totalPages
                     }`}
-                    passHref
                     legacyBehavior
+                    passHref
                   >
                     <PaginationNext
                       className={

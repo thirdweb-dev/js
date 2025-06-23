@@ -1,5 +1,5 @@
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 
 export function DeployContractInfo(props: {
   name: string;
@@ -20,7 +20,7 @@ export function DeployContractInfo(props: {
         {contractImageLink && (
           <div className="hidden shrink-0 items-center justify-center rounded-xl border border-border bg-card p-2 md:flex">
             {/*eslint-disable-next-line @next/next/no-img-element*/}
-            <img className="size-12" alt={props.name} src={contractImageLink} />
+            <img alt={props.name} className="size-12" src={contractImageLink} />
           </div>
         )}
 

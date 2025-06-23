@@ -1,7 +1,7 @@
+import { notFound } from "next/navigation";
 import { isProjectActive } from "@/api/analytics";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
-import { notFound } from "next/navigation";
 import { FooterLinksSection } from "../components/footer/FooterLinksSection";
 import { BlueprintCard } from "./blueprint-card";
 import { InsightFTUX } from "./insight-ftux";
@@ -24,8 +24,8 @@ export default async function Page(props: {
   }
 
   const activeResponse = await isProjectActive({
-    teamId: team.id,
     projectId: project.id,
+    teamId: team.id,
   });
 
   const showFTUX = !activeResponse.insight;
@@ -68,43 +68,42 @@ export default async function Page(props: {
 function InsightFooter() {
   return (
     <FooterLinksSection
-      left={{
-        title: "Documentation",
-        links: [
-          {
-            label: "Overview",
-            href: "https://portal.thirdweb.com/insight",
-          },
-          {
-            label: "API Reference",
-            href: "https://insight-api.thirdweb.com/reference",
-          },
-        ],
-      }}
       center={{
-        title: "Tutorials",
         links: [
           {
+            href: "https://www.youtube.com/watch?v=U2aW7YIUJVw",
             label:
               "Blockchain Data on Any EVM - Quick and Easy REST APIs for Onchain Data",
-            href: "https://www.youtube.com/watch?v=U2aW7YIUJVw",
           },
           {
-            label: "Build a Whale Alerts Telegram Bot with Insight",
             href: "https://www.youtube.com/watch?v=HvqewXLVRig",
+            label: "Build a Whale Alerts Telegram Bot with Insight",
           },
         ],
+        title: "Tutorials",
       }}
-      right={{
-        title: "Demos",
+      left={{
         links: [
           {
-            label: "API Playground",
-            href: "https://playground.thirdweb.com/insight",
+            href: "https://portal.thirdweb.com/insight",
+            label: "Overview",
+          },
+          {
+            href: "https://insight-api.thirdweb.com/reference",
+            label: "API Reference",
           },
         ],
+        title: "Documentation",
       }}
-      trackingCategory="insight"
+      right={{
+        links: [
+          {
+            href: "https://playground.thirdweb.com/insight",
+            label: "API Playground",
+          },
+        ],
+        title: "Demos",
+      }}
     />
   );
 }

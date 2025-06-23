@@ -8,7 +8,7 @@ describe("hex.ts", () => {
   });
 
   it("should convert", () => {
-    const result = numberToHex(100n, { size: 32, signed: false });
+    const result = numberToHex(100n, { signed: false, size: 32 });
     expect(result).toBe(
       "0x0000000000000000000000000000000000000000000000000000000000000064",
     );
@@ -48,7 +48,7 @@ describe("hex.ts", () => {
    */
   it("should work with string !!!!", () => {
     // @ts-ignore Intentional
-    const result = numberToHex("100", { size: 32, signed: false });
+    const result = numberToHex("100", { signed: false, size: 32 });
     expect(result).toBe(
       "0x0000000000000000000000000000000000000000000000000000000000000064",
     );
@@ -146,7 +146,7 @@ describe("fromHex WITH parameter", () => {
     expect(
       fromHex(
         "0x0000000000000000000000000000000000000000000000000000000000000001",
-        { to: "number", size: 32 },
+        { size: 32, to: "number" },
       ),
     ).toBe(1);
   });
@@ -155,7 +155,7 @@ describe("fromHex WITH parameter", () => {
     expect(
       fromHex(
         "0x0000000000000000000000000000000000000000000000000000000000000001",
-        { to: "bigint", size: 32 },
+        { size: 32, to: "bigint" },
       ),
     ).toBe(1n);
   });
@@ -164,7 +164,7 @@ describe("fromHex WITH parameter", () => {
     expect(
       fromHex(
         "0x3100000000000000000000000000000000000000000000000000000000000000",
-        { to: "string", size: 32 },
+        { size: 32, to: "string" },
       ),
     ).toBe("1");
   });
@@ -173,7 +173,7 @@ describe("fromHex WITH parameter", () => {
     expect(
       fromHex(
         "0x0000000000000000000000000000000000000000000000000000000000000001",
-        { to: "boolean", size: 32 },
+        { size: 32, to: "boolean" },
       ),
     ).toBe(true);
   });
@@ -182,7 +182,7 @@ describe("fromHex WITH parameter", () => {
     expect(
       fromHex(
         "0x0000000000000000000000000000000000000000000000000000000000000000",
-        { to: "boolean", size: 32 },
+        { size: 32, to: "boolean" },
       ),
     ).toBe(false);
   });
@@ -191,7 +191,7 @@ describe("fromHex WITH parameter", () => {
     expect(
       fromHex(
         "0x2aff008040000000000000000000000000000000000000000000000000000000",
-        { to: "bytes", size: 32 },
+        { size: 32, to: "bytes" },
       ).toString(),
     ).toStrictEqual(
       "42,255,0,128,64,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
@@ -205,13 +205,13 @@ describe("padHex", () => {
   });
 
   it("should produce correct result if padding direction is right", () => {
-    expect(padHex("0x1", { size: 10, dir: "right" })).toBe(
+    expect(padHex("0x1", { dir: "right", size: 10 })).toBe(
       "0x10000000000000000000",
     );
   });
 
   it("should produce correct result if padding direction is Left", () => {
-    expect(padHex("0x1", { size: 10, dir: "left" })).toBe(
+    expect(padHex("0x1", { dir: "left", size: 10 })).toBe(
       "0x00000000000000000001",
     );
   });

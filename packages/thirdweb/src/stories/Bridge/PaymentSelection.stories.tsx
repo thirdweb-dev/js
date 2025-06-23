@@ -24,10 +24,45 @@ const PaymentSelectionWithTheme = (props: PaymentSelectionWithThemeProps) => {
 };
 
 const meta = {
-  title: "Bridge/PaymentSelection",
+  args: {
+    client: storyClient,
+    connectLocale: en,
+    destinationAmount: "1",
+    destinationToken: USDC,
+    onError: (error) => console.error("Error:", error),
+    onPaymentMethodSelected: (_paymentMethod) => {},
+    theme: "dark",
+  },
+  argTypes: {
+    connectLocale: {
+      description: "Locale for connecting wallets",
+    },
+    destinationAmount: {
+      description: "Amount of destination token to bridge",
+    },
+    destinationToken: {
+      description: "The target token to bridge to",
+    },
+    onBack: {
+      action: "back clicked",
+      description: "Called when user wants to go back (only shown in Step 1)",
+    },
+    onError: {
+      action: "error occurred",
+      description: "Called when an error occurs during the flow",
+    },
+    onPaymentMethodSelected: {
+      action: "payment method selected",
+      description: "Called when user selects a wallet token or fiat provider",
+    },
+    theme: {
+      control: "select",
+      description: "Theme for the component",
+      options: ["light", "dark"],
+    },
+  },
   component: PaymentSelectionWithTheme,
   parameters: {
-    layout: "centered",
     docs: {
       description: {
         component:
@@ -38,45 +73,10 @@ const meta = {
           "The component intelligently manages wallet context and provides proper error handling for each step.",
       },
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  args: {
-    destinationToken: USDC,
-    client: storyClient,
-    onPaymentMethodSelected: (_paymentMethod) => {},
-    onError: (error) => console.error("Error:", error),
-    theme: "dark",
-    destinationAmount: "1",
-    connectLocale: en,
-  },
-  argTypes: {
-    theme: {
-      control: "select",
-      options: ["light", "dark"],
-      description: "Theme for the component",
-    },
-    destinationToken: {
-      description: "The target token to bridge to",
-    },
-    destinationAmount: {
-      description: "Amount of destination token to bridge",
-    },
-    onPaymentMethodSelected: {
-      action: "payment method selected",
-      description: "Called when user selects a wallet token or fiat provider",
-    },
-    onError: {
-      action: "error occurred",
-      description: "Called when an error occurs during the flow",
-    },
-    onBack: {
-      action: "back clicked",
-      description: "Called when user wants to go back (only shown in Step 1)",
-    },
-    connectLocale: {
-      description: "Locale for connecting wallets",
-    },
-  },
+  title: "Bridge/PaymentSelection",
 } satisfies Meta<typeof PaymentSelectionWithTheme>;
 
 export default meta;
@@ -114,8 +114,8 @@ export const Dark: Story = {
 
 export const WithBackButton: Story = {
   args: {
-    theme: "dark",
     onBack: () => {},
+    theme: "dark",
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -130,8 +130,8 @@ export const WithBackButton: Story = {
 
 export const WithBackButtonLight: Story = {
   args: {
-    theme: "light",
     onBack: () => {},
+    theme: "light",
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -146,8 +146,8 @@ export const WithBackButtonLight: Story = {
 
 export const DifferentDestinationToken: Story = {
   args: {
-    theme: "dark",
     destinationToken: UNI,
+    theme: "dark",
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -162,8 +162,8 @@ export const DifferentDestinationToken: Story = {
 
 export const LargeAmount: Story = {
   args: {
-    theme: "dark",
     destinationAmount: "1000",
+    theme: "dark",
   },
   parameters: {
     backgrounds: { default: "dark" },

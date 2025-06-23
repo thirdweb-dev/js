@@ -1,10 +1,10 @@
 "use client";
 
-import type { AuditLogEntry } from "@/api/audit-log";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 import { KeyIcon, SettingsIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
+import type { AuditLogEntry } from "@/api/audit-log";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface AuditLogEntryProps {
   entry: AuditLogEntry;
@@ -31,8 +31,8 @@ export function AuditLogEntryComponent({ entry }: AuditLogEntryProps) {
               </span>
               {entry.what.path ? (
                 <Link
-                  href={entry.what.path}
                   className="font-medium text-sm hover:underline"
+                  href={entry.what.path}
                 >
                   {entry.what.text}
                 </Link>
@@ -46,8 +46,8 @@ export function AuditLogEntryComponent({ entry }: AuditLogEntryProps) {
                   <span className="text-muted-foreground text-sm">in</span>
                   {entry.what.in.path ? (
                     <Link
-                      href={entry.what.in.path}
                       className="font-medium text-sm hover:underline"
+                      href={entry.what.in.path}
                     >
                       {entry.what.in.text}
                     </Link>

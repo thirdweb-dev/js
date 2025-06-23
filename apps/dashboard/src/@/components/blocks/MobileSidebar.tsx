@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ChevronDownIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
-import { cn } from "../../lib/utils";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 import {
   RenderSidebarLinks,
   type SidebarBaseLink,
@@ -35,7 +35,7 @@ export function MobileSidebar(props: {
   );
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog onOpenChange={setIsOpen} open={isOpen}>
       <DialogTrigger asChild>{props.trigger || defaultTrigger}</DialogTrigger>
       <DialogContent
         className="no-scrollbar max-h-[80vh] overflow-auto rounded-t-xl rounded-b-none p-4"

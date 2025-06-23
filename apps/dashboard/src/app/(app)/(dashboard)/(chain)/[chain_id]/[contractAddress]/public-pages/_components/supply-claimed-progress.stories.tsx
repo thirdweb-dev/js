@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { maxUint256 } from "thirdweb/utils";
-import { BadgeContainer } from "../../../../../../../../stories/utils";
+import { BadgeContainer } from "../../../../../../../../@/storybook/utils";
 import { SupplyClaimedProgress } from "./supply-claimed-progress";
 
 const meta = {
-  title: "Assets/NFT/SupplyClaimedProgress",
   component: StoryVariants,
+  title: "Assets/NFT/SupplyClaimedProgress",
 } satisfies Meta<typeof StoryVariants>;
 
 export default meta;

@@ -13,12 +13,12 @@ export function DynamicHeight(props: {
   return (
     <div
       style={{
+        boxSizing: "border-box",
         height: typeof height === "number" ? `${height}px` : "auto",
+        overflow: "hidden",
         transition:
           props.transition ||
           "height 210ms cubic-bezier(0.175, 0.885, 0.32, 1.1)",
-        overflow: "hidden",
-        boxSizing: "border-box",
       }}
     >
       <div
@@ -54,5 +54,5 @@ export function useHeightObserver() {
     };
   }, []);
 
-  return { height, elementRef: elementRef };
+  return { elementRef: elementRef, height };
 }

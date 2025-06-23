@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { newAccountStub, teamStub } from "../../../../stories/stubs";
-import { storybookLog } from "../../../../stories/utils";
+import { newAccountStub, teamStub } from "../../../../@/storybook/stubs";
+import { storybookLog } from "../../../../@/storybook/utils";
 import { AccountOnboardingUI } from "./account-onboarding-ui";
 
 const meta = {
-  title: "Onboarding/AccountOnboarding/Flow",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Onboarding/AccountOnboarding/Flow",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -39,17 +39,7 @@ function Story(props: {
 }) {
   return (
     <AccountOnboardingUI
-      logout={async () => {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        storybookLog("logout");
-      }}
-      onComplete={() => {
-        storybookLog("onComplete");
-      }}
       accountAddress=""
-      trackEvent={(params) => {
-        storybookLog("trackEvent", params);
-      }}
       loginOrSignup={async () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         if (props.loginOrSignupType === "error-email-exists") {
@@ -60,11 +50,21 @@ function Story(props: {
           throw new Error("generic error");
         }
       }}
+      logout={async () => {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        storybookLog("logout");
+      }}
+      onComplete={() => {
+        storybookLog("onComplete");
+      }}
       requestLinkWallet={async () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         if (props.requestLinkWalletType === "error") {
           throw new Error("generic error");
         }
+      }}
+      resendEmailConfirmation={async () => {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }}
       verifyEmail={async () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -73,12 +73,9 @@ function Story(props: {
         }
 
         return {
-          team: teamStub("foo", "free"),
           account: newAccountStub(),
+          team: teamStub("foo", "free"),
         };
-      }}
-      resendEmailConfirmation={async () => {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
       }}
     />
   );

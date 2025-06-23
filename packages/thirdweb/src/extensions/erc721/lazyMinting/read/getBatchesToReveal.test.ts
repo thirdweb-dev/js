@@ -2,19 +2,19 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 import { ANVIL_CHAIN } from "../../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../../test/src/test-clients.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../../contract/contract.js";
 import { getBatchesToReveal } from "./getBatchesToReveal.js";
 
 const mocks = vi.hoisted(() => ({
+  baseURIIndices: vi.fn(),
+  decodeAbiParameters: vi.fn(),
+  encryptedData: vi.fn(),
+  fetchTokenMetadata: vi.fn(),
   getBaseURICount: vi.fn(),
   getBatchIdAtIndex: vi.fn(),
-  baseURIIndices: vi.fn(),
   tokenURI: vi.fn(),
-  fetchTokenMetadata: vi.fn(),
-  encryptedData: vi.fn(),
-  decodeAbiParameters: vi.fn(),
 }));
 
 vi.mock(
@@ -56,8 +56,8 @@ describe("getBatchesToReveal", () => {
 
   beforeAll(() => {
     contract = getContract({
-      chain: ANVIL_CHAIN,
       address: "0x708781BAE850faA490cB5b5b16b4687Ec0A8D65D",
+      chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
     });
   });

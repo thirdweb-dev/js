@@ -1,24 +1,24 @@
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { ThirdwebProvider } from "thirdweb/react";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
 import { Button } from "@/components/ui/button";
-import type { Meta, StoryObj } from "@storybook/nextjs";
-import { teamsAndProjectsStub } from "stories/stubs";
+import { teamsAndProjectsStub } from "@/storybook/stubs";
 import {
   BadgeContainer,
   mobileViewport,
   storybookThirdwebClient,
-} from "stories/utils";
-import { ThirdwebProvider } from "thirdweb/react";
+} from "@/storybook/utils";
 import { TeamHeaderDesktopUI, TeamHeaderMobileUI } from "./TeamHeaderUI";
 
 const meta = {
-  title: "Headers/TeamHeader",
   component: Variants,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Headers/TeamHeader",
 } satisfies Meta<typeof Variants>;
 
 export default meta;
@@ -39,9 +39,7 @@ export const Mobile: Story = {
   },
 };
 
-function Variants(props: {
-  type: "mobile" | "desktop";
-}) {
+function Variants(props: { type: "mobile" | "desktop" }) {
   const freeTeam = teamsAndProjectsStub.find(
     (t) => t.team.billingPlan === "free",
   );
@@ -116,9 +114,9 @@ function Variants(props: {
 
         <BadgeContainer label="Pro Plan - project selected">
           <Variant
+            currentProject={proTeam.projects[0]}
             team={proTeam.team}
             type={props.type}
-            currentProject={proTeam.projects[0]}
           />
         </BadgeContainer>
       </div>
@@ -141,19 +139,19 @@ function Variant(props: {
   return (
     <div className="border-y bg-card">
       <Comp
-        teamsAndProjects={teamsAndProjectsStub}
-        currentTeam={props.team}
-        currentProject={undefined}
-        accountAddress={"0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37"}
         account={{
           email: "foo@example.com",
           id: "foo",
         }}
-        logout={() => {}}
+        accountAddress={"0x1F846F6DAE38E1C88D71EAA191760B15f38B7A37"}
+        client={storybookThirdwebClient}
         connectButton={<ConnectButtonStub />}
         createProject={() => {}}
         createTeam={() => {}}
-        client={storybookThirdwebClient}
+        currentProject={undefined}
+        currentTeam={props.team}
+        logout={() => {}}
+        teamsAndProjects={teamsAndProjectsStub}
       />
     </div>
   );

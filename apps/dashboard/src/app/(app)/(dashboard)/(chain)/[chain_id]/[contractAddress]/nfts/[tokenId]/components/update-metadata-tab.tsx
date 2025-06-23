@@ -1,3 +1,5 @@
+import { useState } from "react";
+import type { NFT, ThirdwebContract } from "thirdweb";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -6,9 +8,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useState } from "react";
-import type { NFT, ThirdwebContract } from "thirdweb";
 import { UpdateNftMetadata } from "./update-metadata-form";
+
 interface UpdateMetadataTabProps {
   contract: ThirdwebContract;
   nft: NFT;
@@ -30,7 +31,7 @@ const UpdateMetadataTab: React.FC<UpdateMetadataTabProps> = ({
   const [open, setOpen] = useState(false);
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet onOpenChange={setOpen} open={open}>
       <SheetTrigger asChild>
         <Button variant="primary">Update Metadata</Button>
       </SheetTrigger>
@@ -39,11 +40,11 @@ const UpdateMetadataTab: React.FC<UpdateMetadataTabProps> = ({
           <SheetTitle className="text-left">Update NFT Metadata</SheetTitle>
         </SheetHeader>
         <UpdateNftMetadata
-          isLoggedIn={isLoggedIn}
           contract={contract}
+          isLoggedIn={isLoggedIn}
           nft={nft}
-          useUpdateMetadata={useUpdateMetadata}
           setOpen={setOpen}
+          useUpdateMetadata={useUpdateMetadata}
         />
       </SheetContent>
     </Sheet>

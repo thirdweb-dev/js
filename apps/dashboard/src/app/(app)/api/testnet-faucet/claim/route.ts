@@ -1,3 +1,7 @@
+import { ipAddress } from "@vercel/functions";
+import { startOfToday } from "date-fns";
+import { type NextRequest, NextResponse } from "next/server";
+import { getAddress, ZERO_ADDRESS } from "thirdweb";
 import { getTeams } from "@/api/team";
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import {
@@ -9,12 +13,8 @@ import {
   THIRDWEB_ENGINE_URL,
   TURNSTILE_SECRET_KEY,
 } from "@/constants/server-envs";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { ipAddress } from "@vercel/functions";
-import { startOfToday } from "date-fns";
-import { cacheGet, cacheSet } from "lib/redis";
-import { type NextRequest, NextResponse } from "next/server";
-import { ZERO_ADDRESS, getAddress } from "thirdweb";
+import type { Account } from "@/hooks/useApi";
+import { cacheGet, cacheSet } from "@/lib/redis";
 import { getFaucetClaimAmount } from "./claim-amount";
 
 interface RequestTestnetFundsPayload {
@@ -103,14 +103,14 @@ export const POST = async (req: NextRequest) => {
     "https://challenges.cloudflare.com/turnstile/v0/siteverify",
     {
       body: JSON.stringify({
-        secret: TURNSTILE_SECRET_KEY,
-        response: turnstileToken,
         remoteip: ip,
+        response: turnstileToken,
+        secret: TURNSTILE_SECRET_KEY,
       }),
-      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      method: "POST",
     },
   );
 
@@ -128,10 +128,10 @@ export const POST = async (req: NextRequest) => {
   const accountRes = await fetch(
     `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/account/me`,
     {
-      method: "GET",
       headers: {
         Authorization: `Bearer ${authCookie.value}`,
       },
+      method: "GET",
     },
   );
 
@@ -226,18 +226,18 @@ export const POST = async (req: NextRequest) => {
     // then actually transfer the funds
     const url = `${THIRDWEB_ENGINE_URL}/backend-wallet/${chainId}/transfer`;
     const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-idempotency-key": idempotencyKey,
-        "x-backend-wallet-address": NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
-        Authorization: `Bearer ${THIRDWEB_ACCESS_TOKEN}`,
-      },
       body: JSON.stringify({
-        to: toAddress,
-        currencyAddress: ZERO_ADDRESS,
         amount: amountToClaim,
+        currencyAddress: ZERO_ADDRESS,
+        to: toAddress,
       }),
+      headers: {
+        Authorization: `Bearer ${THIRDWEB_ACCESS_TOKEN}`,
+        "Content-Type": "application/json",
+        "x-backend-wallet-address": NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
+        "x-idempotency-key": idempotencyKey,
+      },
+      method: "POST",
     });
 
     if (!response.ok) {

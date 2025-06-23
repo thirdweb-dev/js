@@ -1,6 +1,6 @@
 import type { BundledLanguage } from "shiki";
-import { RenderCode } from "./RenderCode";
 import { getCodeHtml } from "./getCodeHtml";
+import { RenderCode } from "./RenderCode";
 
 export type CodeProps = {
   code: string;
@@ -18,5 +18,5 @@ export const CodeServer: React.FC<CodeProps> = async ({
   const { html, formattedCode } = await getCodeHtml(code, lang, {
     ignoreFormattingErrors,
   });
-  return <RenderCode code={formattedCode} html={html} className={className} />;
+  return <RenderCode className={className} code={formattedCode} html={html} />;
 };

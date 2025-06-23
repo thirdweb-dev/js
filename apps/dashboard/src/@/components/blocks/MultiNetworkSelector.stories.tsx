@@ -1,19 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useState } from "react";
-import {
-  BadgeContainer,
-  storybookThirdwebClient,
-} from "../../../stories/utils";
+import { BadgeContainer, storybookThirdwebClient } from "@/storybook/utils";
 import { MultiNetworkSelector } from "./NetworkSelectors";
 
 const meta = {
-  title: "blocks/Cards/MultiNetworkSelector",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "blocks/Cards/MultiNetworkSelector",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -35,17 +32,14 @@ function Story() {
   );
 }
 
-function Variant(props: {
-  label: string;
-  selectedChainIds: number[];
-}) {
+function Variant(props: { label: string; selectedChainIds: number[] }) {
   const [chainIds, setChainIds] = useState<number[]>(props.selectedChainIds);
   return (
     <BadgeContainer label={props.label}>
       <MultiNetworkSelector
-        selectedChainIds={chainIds}
         client={storybookThirdwebClient}
         onChange={setChainIds}
+        selectedChainIds={chainIds}
       />
     </BadgeContainer>
   );

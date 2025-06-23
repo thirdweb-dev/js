@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "xyz.sequence",
-  name: "Sequence Wallet",
-  homepage: "https://sequence.xyz/",
-  image_id: "b2d5c39c-a485-4efa-5736-a782204e4a00",
   app: {
-    browser: "https://sequence.app",
-    ios: null,
     android: null,
-    mac: null,
-    windows: null,
-    linux: "https://sequence.app/",
+    browser: "https://sequence.app",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: "https://sequence.app/",
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: null,
-    universal: "https://sequence.app",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://sequence.app",
   },
+  homepage: "https://sequence.xyz/",
+  id: "xyz.sequence",
+  image_id: "b2d5c39c-a485-4efa-5736-a782204e4a00",
+  mobile: {
+    native: null,
+    universal: "https://sequence.app",
+  },
+  name: "Sequence Wallet",
+  rdns: null,
 } as const;

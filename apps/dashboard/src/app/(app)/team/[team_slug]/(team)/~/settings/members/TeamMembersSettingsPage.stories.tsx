@@ -1,17 +1,17 @@
-import type { TeamAccountRole, TeamMember } from "@/api/team-members";
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { teamStub } from "stories/stubs";
-import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
+import type { TeamAccountRole, TeamMember } from "@/api/team-members";
+import { teamStub } from "@/storybook/stubs";
+import { BadgeContainer, storybookThirdwebClient } from "@/storybook/utils";
 import { ManageMembersSection } from "./ManageMembersSection";
 
 const meta = {
-  title: "Team/Settings/Members/Manage",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Team/Settings/Members/Manage",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -34,10 +34,10 @@ function createMemberStub(
 
   const member: TeamMember = {
     account: {
-      email: `user-${id}@foo.com`,
-      name: name,
       creatorWalletAddress: "0x1234567890123456789012345678901234567890",
+      email: `user-${id}@foo.com`,
       image: null,
+      name: name,
     },
     accountId: `account-id-${id}`,
     createdAt: date.toISOString(),
@@ -73,31 +73,31 @@ function Story() {
       <div className="flex flex-col gap-10">
         <BadgeContainer label="Has permission">
           <ManageMembersSection
-            team={freeTeam}
-            userHasEditPermission={true}
-            members={membersStub}
             client={storybookThirdwebClient}
             deleteMember={deleteMemberStub}
+            members={membersStub}
+            team={freeTeam}
+            userHasEditPermission={true}
           />
         </BadgeContainer>
 
         <BadgeContainer label="No permission">
           <ManageMembersSection
-            team={freeTeam}
-            userHasEditPermission={false}
-            members={membersStub}
             client={storybookThirdwebClient}
             deleteMember={deleteMemberStub}
+            members={membersStub}
+            team={freeTeam}
+            userHasEditPermission={false}
           />
         </BadgeContainer>
 
         <BadgeContainer label="Has permission, Members dont have names">
           <ManageMembersSection
-            team={freeTeam}
-            userHasEditPermission={true}
-            members={membersStubNoName}
             client={storybookThirdwebClient}
             deleteMember={deleteMemberStub}
+            members={membersStubNoName}
+            team={freeTeam}
+            userHasEditPermission={true}
           />
         </BadgeContainer>
       </div>

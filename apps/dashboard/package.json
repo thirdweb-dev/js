@@ -1,26 +1,4 @@
 {
-  "name": "thirdweb-dashboard",
-  "version": "3.0.0",
-  "private": true,
-  "scripts": {
-    "preinstall": "npx only-allow pnpm",
-    "dev": "next dev --turbopack",
-    "build": "NODE_OPTIONS=--max-old-space-size=6144 next build",
-    "start": "next start",
-    "format": "biome format ./src --write",
-    "lint": "biome check ./src && knip && eslint ./src",
-    "fix": "biome check ./src --fix && eslint ./src --fix",
-    "typecheck": "tsc --noEmit",
-    "gen:theme-typings": "chakra-cli tokens src/theme/index.ts",
-    "postinstall": "pnpm run gen:theme-typings",
-    "postbuild": "next-sitemap",
-    "build:analyze": "ANALYZE=true pnpm run build",
-    "knip": "knip",
-    "playwright": "playwright test",
-    "update-checkly": "npx checkly deploy",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
-  },
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
     "@chakra-ui/styled-system": "^2.9.2",
@@ -62,8 +40,6 @@
     "compare-versions": "^6.1.0",
     "date-fns": "4.1.0",
     "fast-xml-parser": "^5.2.5",
-    "fetch-event-stream": "0.1.5",
-    "flat": "^6.0.1",
     "framer-motion": "12.17.0",
     "fuse.js": "7.1.0",
     "input-otp": "^1.4.1",
@@ -78,7 +54,7 @@
     "p-limit": "^6.2.0",
     "papaparse": "^5.5.3",
     "pluralize": "^8.0.0",
-    "posthog-js": "1.67.1",
+    "posthog-js": "1.252.0",
     "prettier": "3.5.3",
     "qrcode": "^1.5.3",
     "react": "19.1.0",
@@ -108,6 +84,7 @@
     "zod": "3.25.62"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.0.4",
     "@chakra-ui/cli": "^2.4.1",
     "@chromatic-com/storybook": "4.0.0",
     "@next/bundle-analyzer": "15.3.3",
@@ -141,5 +118,27 @@
     "storybook": "9.0.8",
     "tailwindcss": "3.4.17",
     "typescript": "5.8.3"
-  }
+  },
+  "name": "thirdweb-dashboard",
+  "private": true,
+  "scripts": {
+    "build": "NODE_OPTIONS=--max-old-space-size=6144 next build",
+    "build-storybook": "storybook build",
+    "build:analyze": "ANALYZE=true pnpm run build",
+    "dev": "next dev --turbopack",
+    "fix": "biome check ./src --fix && eslint ./src --fix",
+    "format": "biome format ./src --write",
+    "gen:theme-typings": "chakra-cli tokens src/chakra/theme/index.ts",
+    "knip": "knip",
+    "lint": "biome check ./src && knip && eslint ./src",
+    "playwright": "playwright test",
+    "postbuild": "next-sitemap",
+    "postinstall": "pnpm run gen:theme-typings",
+    "preinstall": "npx only-allow pnpm",
+    "start": "next start",
+    "storybook": "storybook dev -p 6006",
+    "typecheck": "tsc --noEmit",
+    "update-checkly": "npx checkly deploy"
+  },
+  "version": "3.0.0"
 }

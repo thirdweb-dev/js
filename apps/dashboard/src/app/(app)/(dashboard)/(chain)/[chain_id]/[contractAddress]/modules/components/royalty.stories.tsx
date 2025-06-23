@@ -1,10 +1,10 @@
-import { Checkbox } from "@/components/ui/checkbox";
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { toast } from "sonner";
-import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { BadgeContainer, storybookThirdwebClient } from "@/storybook/utils";
 import {
   type DefaultRoyaltyFormValues,
   type RoyaltyInfoFormValues,
@@ -13,13 +13,13 @@ import {
 } from "./Royalty";
 
 const meta = {
-  title: "Modules/Royalty",
   component: Component,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Modules/Royalty",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -58,9 +58,9 @@ function Component() {
   });
 
   const contractInfo = {
-    name: "Module Name",
     description:
       "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore ",
+    name: "Module Name",
     publisher: "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
     version: "1.0.0",
   };
@@ -74,90 +74,89 @@ function Component() {
 
         <div className="flex items-center gap-5">
           <CheckboxWithLabel
-            value={isOwner}
-            onChange={setIsOwner}
-            id="isOwner"
             label="Is Owner"
+            onChange={setIsOwner}
+            value={isOwner}
           />
         </div>
 
         <BadgeContainer label="Empty Transfer Validator & Default Royalty Info">
           <RoyaltyModuleUI
             client={storybookThirdwebClient}
+            contractChainId={1}
             contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
+            isLoggedIn={true}
+            isOwnerAccount={isOwner}
             isPending={false}
-            setRoyaltyInfoForToken={setRoyaltyInfoForToken}
+            moduleAddress="0x0000000000000000000000000000000000000000"
             setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
+            setRoyaltyInfoForToken={setRoyaltyInfoForToken}
             setTransferValidator={setTransferValidatorStub}
             uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,
+              onClick: async () => removeMutation.mutateAsync(),
             }}
-            isOwnerAccount={isOwner}
-            contractChainId={1}
-            isLoggedIn={true}
           />
         </BadgeContainer>
 
         <BadgeContainer label="Empty Transfer Validator & Non-Empty Default Royalty Info">
           <RoyaltyModuleUI
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
-            setRoyaltyInfoForToken={setRoyaltyInfoForToken}
-            setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
-            setTransferValidator={setTransferValidatorStub}
-            defaultRoyaltyInfo={[_testAddress1, 100]}
-            uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
-            contractChainId={1}
-            isLoggedIn={true}
             client={storybookThirdwebClient}
+            contractChainId={1}
+            contractInfo={contractInfo}
+            defaultRoyaltyInfo={[_testAddress1, 100]}
+            isLoggedIn={true}
+            isOwnerAccount={isOwner}
+            isPending={false}
+            moduleAddress="0x0000000000000000000000000000000000000000"
+            setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
+            setRoyaltyInfoForToken={setRoyaltyInfoForToken}
+            setTransferValidator={setTransferValidatorStub}
+            uninstallButton={{
+              isPending: removeMutation.isPending,
+              onClick: async () => removeMutation.mutateAsync(),
+            }}
           />
         </BadgeContainer>
 
         <BadgeContainer label="Non-Empty Transfer Validator & Empty Default Royalty Info">
           <RoyaltyModuleUI
             client={storybookThirdwebClient}
+            contractChainId={1}
             contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
+            isLoggedIn={true}
+            isOwnerAccount={isOwner}
             isPending={false}
-            setRoyaltyInfoForToken={setRoyaltyInfoForToken}
+            moduleAddress="0x0000000000000000000000000000000000000000"
             setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
+            setRoyaltyInfoForToken={setRoyaltyInfoForToken}
             setTransferValidator={setTransferValidatorStub}
             transferValidator={"0x0000000000000000000000000000000000000000"}
             uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,
+              onClick: async () => removeMutation.mutateAsync(),
             }}
-            isOwnerAccount={isOwner}
-            contractChainId={1}
-            isLoggedIn={true}
           />
         </BadgeContainer>
 
         <BadgeContainer label="Non-Empty Transfer Validator & Default Royalty Info">
           <RoyaltyModuleUI
+            client={storybookThirdwebClient}
+            contractChainId={1}
             contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            isPending={false}
-            setRoyaltyInfoForToken={setRoyaltyInfoForToken}
-            setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
-            setTransferValidator={setTransferValidatorStub}
             defaultRoyaltyInfo={[_testAddress1, 100]}
+            isLoggedIn={true}
+            isOwnerAccount={isOwner}
+            isPending={false}
+            moduleAddress="0x0000000000000000000000000000000000000000"
+            setDefaultRoyaltyInfo={setDefaultRoyaltyInfoStub}
+            setRoyaltyInfoForToken={setRoyaltyInfoForToken}
+            setTransferValidator={setTransferValidatorStub}
             transferValidator={"0x0000000000000000000000000000000000000000"}
             uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
               isPending: removeMutation.isPending,
+              onClick: async () => removeMutation.mutateAsync(),
             }}
-            isOwnerAccount={isOwner}
-            contractChainId={1}
-            isLoggedIn={true}
-            client={storybookThirdwebClient}
           />
         </BadgeContainer>
       </div>
@@ -168,20 +167,20 @@ function Component() {
 function CheckboxWithLabel(props: {
   value: boolean;
   onChange: (value: boolean) => void;
-  id: string;
   label: string;
 }) {
+  const id = useId();
   return (
     <div className="items-top flex space-x-2">
       <Checkbox
-        id={props.id}
         checked={props.value}
+        id={id}
         onCheckedChange={(v) => props.onChange(!!v)}
       />
       <div className="grid gap-1.5 leading-none">
         <label
-          htmlFor={props.id}
           className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          htmlFor={id}
         >
           {props.label}
         </label>

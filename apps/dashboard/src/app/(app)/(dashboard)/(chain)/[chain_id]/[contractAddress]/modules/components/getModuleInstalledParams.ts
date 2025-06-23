@@ -1,11 +1,11 @@
-import {
-  fetchLatestPublishedContractVersion,
-  fetchPublishedContractVersions,
-} from "components/contract-components/fetch-contracts-with-versions";
-import { type ThirdwebClient, isAddress } from "thirdweb";
+import { isAddress, type ThirdwebClient } from "thirdweb";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import invariant from "tiny-invariant";
+import {
+  fetchLatestPublishedContractVersion,
+  fetchPublishedContractVersions,
+} from "@/components/contract-components/fetch-contracts-with-versions";
 import type { ModuleMeta } from "./install-module-params";
 
 export async function getModuleInstalledParams(
@@ -21,7 +21,7 @@ export async function getModuleInstalledParams(
         name: ext.publisherAddress,
       });
 
-  let publishedModule: FetchDeployMetadataResult | undefined = undefined;
+  let publishedModule: FetchDeployMetadataResult | undefined;
 
   if (ext.moduleVersion === "latest") {
     publishedModule = await fetchLatestPublishedContractVersion(

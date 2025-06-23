@@ -1,9 +1,24 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
+import { useMutation } from "@tanstack/react-query";
+import { InfoIcon } from "lucide-react";
+import { Suspense, useEffect, useState } from "react";
+import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
+import { toast } from "sonner";
+import {
+  getContract,
+  sendTransaction,
+  type ThirdwebClient,
+  type ThirdwebContract,
+  waitForReceipt,
+} from "thirdweb";
+import { uninstallModuleByProxy } from "thirdweb/modules";
+import type { Account } from "thirdweb/wallets";
 import { WalletAddress } from "@/components/blocks/wallet-address";
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import {
   Dialog,
   DialogContent,
@@ -13,23 +28,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Skeleton } from "@/components/ui/skeleton";
-import * as Sentry from "@sentry/nextjs";
-import { useMutation } from "@tanstack/react-query";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { InfoIcon } from "lucide-react";
-import { Suspense, useEffect, useState } from "react";
-import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
-import { toast } from "sonner";
-import {
-  type ThirdwebClient,
-  type ThirdwebContract,
-  getContract,
-  sendTransaction,
-  waitForReceipt,
-} from "thirdweb";
-import { uninstallModuleByProxy } from "thirdweb/modules";
-import type { Account } from "thirdweb/wallets";
 import { ModuleInstance } from "./module-instance";
 import { useModuleContractInfo } from "./moduleContractInfo";
 
@@ -62,27 +62,27 @@ export function ModuleCard(props: ModuleCardProps) {
   const uninstallMutation = useMutation({
     mutationFn: async (account: Account) => {
       const uninstallTransaction = uninstallModuleByProxy({
-        contract,
         chain: contract.chain,
         client: contract.client,
-        moduleProxyAddress: moduleAddress,
+        contract,
         moduleData: "0x",
+        moduleProxyAddress: moduleAddress,
       });
 
       const txResult = await sendTransaction({
-        transaction: uninstallTransaction,
         account,
+        transaction: uninstallTransaction,
       });
 
       await waitForReceipt(txResult);
     },
-    onSuccess() {
-      toast.success("Module uninstalled successfully");
-      props.onRemoveModule();
-    },
     onError(error) {
       toast.error("Failed to uninstall module");
       console.error(error);
+    },
+    onSuccess() {
+      toast.success("Module uninstalled successfully");
+      props.onRemoveModule();
     },
   });
 
@@ -108,30 +108,30 @@ export function ModuleCard(props: ModuleCardProps) {
           )}
         >
           <ModuleInstance
-            isLoggedIn={props.isLoggedIn}
+            allModuleContractInfo={props.allModuleContractInfo}
             contract={contract}
             contractInfo={{
-              name: contractInfo.name,
               description: contractInfo.description,
+              name: contractInfo.name,
               publisher: contractInfo.publisher,
               version: contractInfo.version,
             }}
+            isLoggedIn={props.isLoggedIn}
+            moduleAddress={moduleAddress}
             ownerAccount={ownerAccount}
             uninstallButton={{
+              isPending: uninstallMutation.isPending,
               onClick: () => {
                 setIsUninstallModalOpen(true);
               },
-              isPending: uninstallMutation.isPending,
             }}
-            moduleAddress={moduleAddress}
-            allModuleContractInfo={props.allModuleContractInfo}
           />
         </ErrorBoundary>
       </Suspense>
 
       <Dialog
-        open={isUninstallModalOpen}
         onOpenChange={setIsUninstallModalOpen}
+        open={isUninstallModalOpen}
       >
         <DialogContent>
           <form
@@ -153,22 +153,22 @@ export function ModuleCard(props: ModuleCardProps) {
 
             <DialogFooter className="mt-10 flex-row justify-end gap-3 md:gap-1">
               <Button
-                type="button"
                 onClick={() => setIsUninstallModalOpen(false)}
+                type="button"
                 variant="outline"
               >
                 Cancel
               </Button>
 
               <TransactionButton
+                className="flex"
                 client={contract.client}
                 isLoggedIn={props.isLoggedIn}
-                txChainID={contract.chain.id}
-                transactionCount={1}
                 isPending={uninstallMutation.isPending}
+                transactionCount={1}
+                txChainID={contract.chain.id}
                 type="submit"
                 variant="destructive"
-                className="flex"
               >
                 Uninstall
               </TransactionButton>
@@ -218,8 +218,8 @@ export function ModuleCardUI(props: ModuleCardUIProps) {
             <Dialog>
               <DialogTrigger asChild>
                 <Button
-                  variant="ghost"
                   className="absolute top-4 right-4 h-auto w-auto p-2 text-muted-foreground"
+                  variant="ghost"
                 >
                   <InfoIcon className="size-5" />
                 </Button>
@@ -232,7 +232,7 @@ export function ModuleCardUI(props: ModuleCardUIProps) {
                   </DialogDescription>
 
                   {/* Avoid adding focus on other elements to prevent tooltips from opening on modal open */}
-                  <input className="sr-only" aria-hidden />
+                  <input aria-hidden className="sr-only" />
 
                   <div className="h-2" />
 
@@ -264,8 +264,8 @@ export function ModuleCardUI(props: ModuleCardUIProps) {
                         Module Address
                       </p>
                       <CopyAddressButton
-                        className="text-xs"
                         address={props.moduleAddress}
+                        className="text-xs"
                         copyIconPosition="left"
                         variant="outline"
                       />
@@ -292,11 +292,11 @@ export function ModuleCardUI(props: ModuleCardUIProps) {
 
       <div className="flex flex-row justify-end gap-3 border-border border-t p-4 lg:p-6">
         <Button
-          size="sm"
-          onClick={props.uninstallButton.onClick}
-          variant="destructive"
           className="min-w-24 gap-2"
           disabled={!props.isOwnerAccount}
+          onClick={props.uninstallButton.onClick}
+          size="sm"
+          variant="destructive"
         >
           {props.uninstallButton.isPending && <Spinner className="size-4" />}
           Uninstall
@@ -306,11 +306,11 @@ export function ModuleCardUI(props: ModuleCardUIProps) {
           props.updateButton &&
           typeof props.updateButton !== "function" && (
             <Button
-              size="sm"
               className="min-w-24 gap-2"
-              type="submit"
-              onClick={props.updateButton.onClick}
               disabled={props.updateButton.isPending || !props.isOwnerAccount}
+              onClick={props.updateButton.onClick}
+              size="sm"
+              type="submit"
             >
               {props.updateButton.isPending && <Spinner className="size-4" />}
               Update

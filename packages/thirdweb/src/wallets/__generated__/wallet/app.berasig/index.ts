@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.berasig",
-  name: "BeraSig",
-  homepage: "https://www.berasig.com/",
-  image_id: "4b9e9716-c86d-4f1e-4bcc-12af74af7400",
   app: {
-    browser: null,
-    ios: null,
     android: null,
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome:
       "https://chromewebstore.google.com/detail/berasig/ckedkkegjbflcfblcjklibnedmfjppbj",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: "app.berasig",
-  mobile: {
-    native: null,
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.berasig.com/",
+  id: "app.berasig",
+  image_id: "4b9e9716-c86d-4f1e-4bcc-12af74af7400",
+  mobile: {
+    native: null,
+    universal: null,
+  },
+  name: "BeraSig",
+  rdns: "app.berasig",
 } as const;

@@ -1,8 +1,8 @@
 "use client";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Ecosystem, Partner } from "../../../../../types";
 import { useAddPartner } from "../../hooks/use-add-partner";
 import { PartnerForm, type PartnerFormValues } from "./partner-form.client";
@@ -29,6 +29,13 @@ export function AddPartnerForm({
       teamId,
     },
     {
+      onError: (error) => {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Failed to add ecosystem partner";
+        toast.error(message);
+      },
       onSuccess: () => {
         toast.success("Partner added successfully", {
           description: "The partner has been added to your ecosystem.",
@@ -38,13 +45,6 @@ export function AddPartnerForm({
         const redirectPath = `/team/${teamSlug}/~/ecosystem/${ecosystemSlug}`;
         router.push(redirectPath);
       },
-      onError: (error) => {
-        const message =
-          error instanceof Error
-            ? error.message
-            : "Failed to add ecosystem partner";
-        toast.error(message);
-      },
     },
   );
 
@@ -53,23 +53,23 @@ export function AddPartnerForm({
     finalAccessControl: Partner["accessControl"] | null,
   ) => {
     addPartner({
-      ecosystem,
-      name: values.name,
-      allowlistedDomains: values.domains
-        .split(/,| /)
-        .filter((d) => d.length > 0),
+      accessControl: finalAccessControl,
       allowlistedBundleIds: values.bundleIds
         .split(/,| /)
         .filter((d) => d.length > 0),
-      accessControl: finalAccessControl,
+      allowlistedDomains: values.domains
+        .split(/,| /)
+        .filter((d) => d.length > 0),
+      ecosystem,
+      name: values.name,
     });
   };
 
   return (
     <PartnerForm
       client={client}
-      onSubmit={handleSubmit}
       isSubmitting={isPending}
+      onSubmit={handleSubmit}
       submitLabel="Add"
     />
   );

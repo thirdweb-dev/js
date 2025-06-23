@@ -31,7 +31,6 @@ import {
 export function resetClaimEligibility(options: BaseTransactionOptions) {
   // download existing conditions
   return setClaimConditions({
-    contract: options.contract,
     asyncParams: async () => {
       // get existing conditions
       const existingConditions = await getClaimConditions(options);
@@ -48,6 +47,7 @@ export function resetClaimEligibility(options: BaseTransactionOptions) {
         resetClaimEligibility: true,
       };
     },
+    contract: options.contract,
   });
 }
 

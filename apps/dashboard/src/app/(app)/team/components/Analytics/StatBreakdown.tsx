@@ -1,7 +1,7 @@
 "use client";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useId, useMemo } from "react";
-import { toUSD } from "utils/number";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { toUSD } from "@/utils/number";
 
 type Data = {
   label: string;
@@ -13,7 +13,10 @@ type Data = {
 export function StatBreakdown({
   data,
   isCurrency = false,
-}: { data: Data[]; isCurrency?: boolean }) {
+}: {
+  data: Data[];
+  isCurrency?: boolean;
+}) {
   const cardId = useId();
   const sum = useMemo(
     () => data.reduce((acc, curr) => acc + curr.value, 0),
@@ -24,14 +27,11 @@ export function StatBreakdown({
     <div className="flex flex-col gap-2">
       <div className="flex h-6 w-full overflow-hidden rounded-sm">
         {data.map((item, index) => (
+          // biome-ignore lint/a11y/noStaticElementInteractions: FIXME
           <div
-            key={item.label}
-            data-index={`${cardId}-${index}`}
             className="transition-opacity duration-200"
-            style={{
-              background: item.fill,
-              width: `${(item.value / sum) * 100}%`,
-            }}
+            data-index={`${cardId}-${index}`}
+            key={item.label}
             onMouseEnter={() => {
               const bars = document.querySelectorAll(
                 `[data-index^="${cardId}"]`,
@@ -55,6 +55,10 @@ export function StatBreakdown({
                 bar.classList.remove("opacity-40");
               }
             }}
+            style={{
+              background: item.fill,
+              width: `${(item.value / sum) * 100}%`,
+            }}
           />
         ))}
       </div>
@@ -62,9 +66,9 @@ export function StatBreakdown({
         <TableBody className="">
           {data.map((item, index) => (
             <TableRow
-              key={item.label}
-              data-index={`${cardId}-${index}`}
               className="px-2 text-sm hover:bg-card"
+              data-index={`${cardId}-${index}`}
+              key={item.label}
               onMouseEnter={() => {
                 const bars = document.querySelectorAll(
                   `[data-index^="${cardId}"]`,

@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.plutope",
-  name: "Plutope",
-  homepage: "https://www.plutope.io/",
-  image_id: "77aab1ef-28e8-4473-b91a-a566fd910900",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/in/app/plutope-crypto-wallet/id6466782831",
     android:
       "https://play.google.com/store/apps/details?id=com.app.plutope&pli=1",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/in/app/plutope-crypto-wallet/id6466782831",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "plutope://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.plutope.io/",
+  id: "io.plutope",
+  image_id: "77aab1ef-28e8-4473-b91a-a566fd910900",
+  mobile: {
+    native: "plutope://",
+    universal: null,
+  },
+  name: "Plutope",
+  rdns: null,
 } as const;

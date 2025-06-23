@@ -1,13 +1,13 @@
-import { type Team, getTeams } from "@/api/team";
-import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
-import { AppFooter } from "@/components/blocks/app-footer";
-import { DotsBackgroundPattern } from "@/components/ui/background-patterns";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { ChevronRightIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { getAuthToken } from "../../../api/lib/getAuthToken";
-import { TeamPlanBadge } from "../../../components/TeamPlanBadge";
+import { getAuthToken } from "@/api/auth-token";
+import { getTeams, type Team } from "@/api/team";
+import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
+import { TeamPlanBadge } from "@/components/blocks/TeamPlanBadge";
+import { AppFooter } from "@/components/footers/app-footer";
+import { DotsBackgroundPattern } from "@/components/ui/background-patterns";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { TeamHeader } from "../../components/TeamHeader/team-header";
 
 export default async function Page(props: {
@@ -48,9 +48,9 @@ export default async function Page(props: {
   if (teams.length === 1 && teams[0]) {
     redirect(
       createTeamLink({
-        team: teams[0],
         paths: params.paths,
         searchParams: searchParamsString,
+        team: teams[0],
       }),
     );
   }
@@ -88,22 +88,22 @@ export default async function Page(props: {
               {teams.map((team) => {
                 return (
                   <div
-                    key={team.id}
                     className="group relative flex items-center gap-3 px-4 py-4 hover:bg-accent/50 lg:px-6"
+                    key={team.id}
                   >
                     <GradientAvatar
-                      src={team.image || ""}
-                      id={team.id}
                       className="size-8 rounded-full border"
                       client={client}
+                      id={team.id}
+                      src={team.image || ""}
                     />
                     <Link
+                      className="before:absolute before:inset-0"
                       href={createTeamLink({
-                        team,
                         paths: params.paths,
                         searchParams: searchParamsString,
+                        team,
                       })}
-                      className="before:absolute before:inset-0"
                     >
                       {team.name}
                     </Link>

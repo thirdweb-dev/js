@@ -1,60 +1,22 @@
 // read
-export { isERC20 } from "../../extensions/erc20/read/isERC20.js";
-export {
-  getBalance,
-  type GetBalanceParams,
-  type GetBalanceResult,
-} from "../../extensions/erc20/read/getBalance.js";
-export {
-  balanceOf,
-  type BalanceOfParams,
-} from "../../extensions/erc20/__generated__/IERC20/read/balanceOf.js";
-export { decimals } from "../../extensions/erc20/read/decimals.js";
-export {
-  delegates,
-  type DelegatesParams,
-} from "../../extensions/erc20/__generated__/IVotes/read/delegates.js";
-export { totalSupply } from "../../extensions/erc20/__generated__/IERC20/read/totalSupply.js";
-export {
-  allowance,
-  type AllowanceParams,
-} from "../../extensions/erc20/__generated__/IERC20/read/allowance.js";
-export {
-  getCurrencyMetadata,
-  type GetCurrencyMetadataResult,
-} from "../../extensions/erc20/read/getCurrencyMetadata.js";
 
-// write
 export {
-  isMintToSupported,
-  mintTo,
-  type MintToParams,
-} from "../../extensions/erc20/write/mintTo.js";
-export {
-  transfer,
-  type TransferParams,
-} from "../../extensions/erc20/write/transfer.js";
-export {
-  transferFrom,
-  type TransferFromParams,
-} from "../../extensions/erc20/write/transferFrom.js";
-export {
-  transferBatch,
-  type TransferBatchParams,
-} from "../../extensions/erc20/write/transferBatch.js";
-export {
-  approve,
-  type ApproveParams,
-} from "../../extensions/erc20/write/approve.js";
-export {
-  burn,
   type BurnParams,
+  burn,
 } from "../../extensions/erc20/__generated__/IBurnableERC20/write/burn.js";
 export {
-  burnFrom,
   type BurnFromParams,
+  burnFrom,
 } from "../../extensions/erc20/__generated__/IBurnableERC20/write/burnFrom.js";
-
+export { claimConditionsUpdatedEvent } from "../../extensions/erc20/__generated__/IDropERC20/events/ClaimConditionsUpdated.js";
+export {
+  type TokensClaimedEventFilters,
+  tokensClaimedEvent,
+} from "../../extensions/erc20/__generated__/IDropERC20/events/TokensClaimed.js";
+export {
+  getActiveClaimConditionId,
+  isGetActiveClaimConditionIdSupported,
+} from "../../extensions/erc20/__generated__/IDropERC20/read/getActiveClaimConditionId.js";
 /**
  * DROPS extension for ERC20
  */
@@ -64,88 +26,120 @@ export {
   isGetClaimConditionByIdSupported,
 } from "../../extensions/erc20/__generated__/IDropERC20/read/getClaimConditionById.js";
 export {
-  getActiveClaimConditionId,
-  isGetActiveClaimConditionIdSupported,
-} from "../../extensions/erc20/__generated__/IDropERC20/read/getActiveClaimConditionId.js";
+  type ApprovalEventFilters,
+  approvalEvent,
+} from "../../extensions/erc20/__generated__/IERC20/events/Approval.js";
+// EVENTS
 export {
-  getClaimConditions,
-  isGetClaimConditionsSupported,
-} from "../../extensions/erc20/drops/read/getClaimConditions.js";
+  type TransferEventFilters,
+  transferEvent,
+} from "../../extensions/erc20/__generated__/IERC20/events/Transfer.js";
+export {
+  type AllowanceParams,
+  allowance,
+} from "../../extensions/erc20/__generated__/IERC20/read/allowance.js";
+export {
+  type BalanceOfParams,
+  balanceOf,
+} from "../../extensions/erc20/__generated__/IERC20/read/balanceOf.js";
+export { totalSupply } from "../../extensions/erc20/__generated__/IERC20/read/totalSupply.js";
+export {
+  type TokensMintedEventFilters,
+  tokensMintedEvent,
+} from "../../extensions/erc20/__generated__/IMintableERC20/events/TokensMinted.js";
+export {
+  type TokensMintedWithSignatureEventFilters,
+  tokensMintedWithSignatureEvent,
+} from "../../extensions/erc20/__generated__/ISignatureMintERC20/events/TokensMintedWithSignature.js";
+export {
+  type DelegatesParams,
+  delegates,
+} from "../../extensions/erc20/__generated__/IVotes/read/delegates.js";
+export {
+  type DelegateParams,
+  delegate,
+} from "../../extensions/erc20/__generated__/IVotes/write/delegate.js";
+export {
+  type WithdrawParams,
+  withdraw,
+} from "../../extensions/erc20/__generated__/IWETH/write/withdraw.js";
+export {
+  type CanClaimParams,
+  type CanClaimResult,
+  canClaim,
+} from "../../extensions/erc20/drops/read/canClaim.js";
 export {
   getActiveClaimCondition,
   isGetActiveClaimConditionSupported,
 } from "../../extensions/erc20/drops/read/getActiveClaimCondition.js";
 export {
-  canClaim,
-  type CanClaimParams,
-  type CanClaimResult,
-} from "../../extensions/erc20/drops/read/canClaim.js";
-
+  getClaimConditions,
+  isGetClaimConditionsSupported,
+} from "../../extensions/erc20/drops/read/getClaimConditions.js";
 // WRITE
 export {
-  claimTo,
   type ClaimToParams,
+  claimTo,
   isClaimToSupported,
 } from "../../extensions/erc20/drops/write/claimTo.js";
 export {
-  setClaimConditions,
-  type SetClaimConditionsParams,
-  isSetClaimConditionsSupported,
-} from "../../extensions/erc20/drops/write/setClaimConditions.js";
-export {
-  resetClaimEligibility,
   isResetClaimEligibilitySupported,
+  resetClaimEligibility,
 } from "../../extensions/erc20/drops/write/resetClaimEligibility.js";
-
-/**
- * SIGNATURE extension for ERC20
- */
 export {
-  mintWithSignature,
-  type GenerateMintSignatureOptions,
-  generateMintSignature,
-} from "../../extensions/erc20/write/sigMint.js";
-
+  isSetClaimConditionsSupported,
+  type SetClaimConditionsParams,
+  setClaimConditions,
+} from "../../extensions/erc20/drops/write/setClaimConditions.js";
+export { decimals } from "../../extensions/erc20/read/decimals.js";
+export {
+  type GetBalanceParams,
+  type GetBalanceResult,
+  getBalance,
+} from "../../extensions/erc20/read/getBalance.js";
+export {
+  type GetCurrencyMetadataResult,
+  getCurrencyMetadata,
+} from "../../extensions/erc20/read/getCurrencyMetadata.js";
+export { isERC20 } from "../../extensions/erc20/read/isERC20.js";
+export {
+  type ApproveParams,
+  approve,
+} from "../../extensions/erc20/write/approve.js";
 // ----------------------------
 // WETH
 // ----------------------------
 export {
-  deposit,
   type DepositParams,
+  deposit,
 } from "../../extensions/erc20/write/deposit.js";
 export {
-  withdraw,
-  type WithdrawParams,
-} from "../../extensions/erc20/__generated__/IWETH/write/withdraw.js";
-
-// EVENTS
-export {
-  transferEvent,
-  type TransferEventFilters,
-} from "../../extensions/erc20/__generated__/IERC20/events/Transfer.js";
-export {
-  approvalEvent,
-  type ApprovalEventFilters,
-} from "../../extensions/erc20/__generated__/IERC20/events/Approval.js";
-export {
-  tokensMintedEvent,
-  type TokensMintedEventFilters,
-} from "../../extensions/erc20/__generated__/IMintableERC20/events/TokensMinted.js";
-export {
-  tokensClaimedEvent,
-  type TokensClaimedEventFilters,
-} from "../../extensions/erc20/__generated__/IDropERC20/events/TokensClaimed.js";
-export { claimConditionsUpdatedEvent } from "../../extensions/erc20/__generated__/IDropERC20/events/ClaimConditionsUpdated.js";
-export {
-  tokensMintedWithSignatureEvent,
-  type TokensMintedWithSignatureEventFilters,
-} from "../../extensions/erc20/__generated__/ISignatureMintERC20/events/TokensMintedWithSignature.js";
-
-export {
-  getApprovalForTransaction,
   type GetApprovalForTransactionParams,
+  getApprovalForTransaction,
 } from "../../extensions/erc20/write/getApprovalForTransaction.js";
+// write
 export {
-  delegate,
-  type DelegateParams,
-} from "../../extensions/erc20/__generated__/IVotes/write/delegate.js";
+  isMintToSupported,
+  type MintToParams,
+  mintTo,
+} from "../../extensions/erc20/write/mintTo.js";
+/**
+ * SIGNATURE extension for ERC20
+ */
+export {
+  type GenerateMintSignatureOptions,
+  generateMintSignature,
+  mintWithSignature,
+} from "../../extensions/erc20/write/sigMint.js";
+export {
+  type TransferParams,
+  transfer,
+} from "../../extensions/erc20/write/transfer.js";
+export {
+  type TransferBatchParams,
+  transferBatch,
+} from "../../extensions/erc20/write/transferBatch.js";
+export {
+  type TransferFromParams,
+  transferFrom,
+} from "../../extensions/erc20/write/transferFrom.js";

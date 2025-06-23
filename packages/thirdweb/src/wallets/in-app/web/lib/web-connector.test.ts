@@ -39,8 +39,8 @@ describe("InAppWebConnector.connect", () => {
   const mockAuthToken = {
     storedToken: {
       authDetails: {
-        userWalletId: "123",
         recoveryShareManagement: "ENCLAVE" as const,
+        userWalletId: "123",
       },
       authProvider: "EmailOtp" as const,
       cookieString: "mock-cookie",
@@ -56,8 +56,8 @@ describe("InAppWebConnector.connect", () => {
   });
   const mockWallet = createWalletAdapter({
     adaptedAccount: TEST_ACCOUNT_A,
-    client: TEST_CLIENT,
     chain: ethereum,
+    client: TEST_CLIENT,
     onDisconnect: () => {},
     switchChain: () => {},
   });
@@ -70,17 +70,17 @@ describe("InAppWebConnector.connect", () => {
     vi.mocked(verifyOtp).mockResolvedValueOnce(mockAuthToken);
 
     const result = await connector.connect({
-      strategy: "email",
       email: "test@example.com",
+      strategy: "email",
       verificationCode: "123456",
     });
 
     expect(verifyOtp).toHaveBeenCalledWith({
-      strategy: "email",
-      email: "test@example.com",
-      verificationCode: "123456",
       client: TEST_CLIENT,
       ecosystem: undefined,
+      email: "test@example.com",
+      strategy: "email",
+      verificationCode: "123456",
     });
 
     expect(result).toBeDefined();
@@ -91,23 +91,23 @@ describe("InAppWebConnector.connect", () => {
 
     const mockWallet = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,
-      client: TEST_CLIENT,
       chain: ethereum,
+      client: TEST_CLIENT,
       onDisconnect: () => {},
       switchChain: () => {},
     });
 
     await connector.connect({
-      strategy: "wallet",
       chain: ethereum,
+      strategy: "wallet",
       wallet: mockWallet,
     });
 
     expect(siweAuthenticate).toHaveBeenCalledWith({
-      wallet: mockWallet,
       chain: ethereum,
       client: TEST_CLIENT,
       ecosystem: undefined,
+      wallet: mockWallet,
     });
   });
 
@@ -130,9 +130,9 @@ describe("InAppWebConnector.connect", () => {
     });
 
     expect(backendAuthenticate).toHaveBeenCalledWith({
-      walletSecret: "secret123",
       client: TEST_CLIENT,
       ecosystem: undefined,
+      walletSecret: "secret123",
     });
   });
 
@@ -146,8 +146,8 @@ describe("InAppWebConnector.connect", () => {
     expect(loginWithOauth).toHaveBeenCalledWith({
       authOption: "google",
       client: TEST_CLIENT,
-      ecosystem: undefined,
       closeOpenedWindow: undefined,
+      ecosystem: undefined,
       openedWindow: undefined,
     });
   });

@@ -27,10 +27,10 @@ export function ContractTokensPageClient(props: {
   return (
     <ContractTokensPage
       contract={props.contract}
-      isERC20={supportedERCs.isERC20}
-      isMintToSupported={isMintToSupported(functionSelectors)}
       isClaimToSupported={isClaimToSupported(functionSelectors)}
+      isERC20={supportedERCs.isERC20}
       isLoggedIn={props.isLoggedIn}
+      isMintToSupported={isMintToSupported(functionSelectors)}
     />
   );
 }

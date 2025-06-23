@@ -29,15 +29,15 @@ export async function BuyNFTDropCardServer(props: {
 }) {
   return (
     <BuyNFTDropCardClient
-      contract={props.clientContract}
       chainMetadata={props.chainMetadata}
       claimCondition={{
         ...props.erc721ActiveClaimCondition,
         decimals: props.erc721ClaimConditionCurrencyMeta.decimals,
         symbol: props.erc721ClaimConditionCurrencyMeta.symbol,
       }}
-      totalNFTs={props.totalNFTCount}
+      contract={props.clientContract}
       nextTokenIdToClaim={props.erc721NextTokenIdToClaim}
+      totalNFTs={props.totalNFTCount}
       totalUnclaimedSupply={props.erc721TotalUnclaimedSupply}
     />
   );
@@ -80,10 +80,10 @@ export async function getNFTDropClaimParams(params: {
   }
 
   const erc721ClaimConditionCurrencyMeta = await getCurrencyMeta({
-    currencyAddress: erc721ActiveClaimCondition.currency,
-    chainMetadata: params.chainMetadata,
     chain: params.serverContract.chain,
+    chainMetadata: params.chainMetadata,
     client: params.serverContract.client,
+    currencyAddress: erc721ActiveClaimCondition.currency,
   }).catch(() => undefined);
 
   if (!erc721ClaimConditionCurrencyMeta) {

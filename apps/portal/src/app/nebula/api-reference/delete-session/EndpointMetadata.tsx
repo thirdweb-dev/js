@@ -18,21 +18,21 @@ export function EndpointMetadata() {
   return (
     <ApiEndpoint
       metadata={{
-        title: "Delete Session",
-        method: "DELETE",
         description: "Deletes a session by ID",
+        method: "DELETE",
         origin: "https://nebula-api.thirdweb.com",
         path: "/session/{session_id}",
         request: {
-          pathParameters: [nebulaSessionIdPathParameter],
-          headers: [nebulaSecretKeyHeaderParameter],
           bodyParameters: [],
+          headers: [nebulaSecretKeyHeaderParameter],
+          pathParameters: [nebulaSessionIdPathParameter],
         },
         responseExamples: {
           200: response200Example,
-          422: nebulaAPI422Response,
           401: nebulaAPI401Response,
+          422: nebulaAPI422Response,
         },
+        title: "Delete Session",
       }}
     />
   );

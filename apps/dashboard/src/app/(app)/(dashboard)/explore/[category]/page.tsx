@@ -1,3 +1,13 @@
+import { DeployUpsellCard } from "@app/(dashboard)/explore/components/upsells/deploy-your-own";
+import { getCategory } from "@app/(dashboard)/explore/data";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import {
+  ContractCard,
+  ContractCardSkeleton,
+} from "@/components/contracts/contract-card";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,16 +16,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  ContractCard,
-  ContractCardSkeleton,
-} from "components/explore/contract-card";
-import { DeployUpsellCard } from "components/explore/upsells/deploy-your-own";
-import { getCategory } from "data/explore";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 type ExploreCategoryPageProps = {
   params: Promise<{
@@ -32,8 +32,8 @@ export async function generateMetadata(
     notFound();
   }
   return {
-    title: `${category.name} Smart Contracts | Explore`,
     description: `${category.description} Deploy with one click to Ethereum, Polygon, Optimism, and other EVM blockchains with thirdweb.`,
+    title: `${category.name} Smart Contracts | Explore`,
   };
 }
 
@@ -75,7 +75,7 @@ export default async function ExploreCategoryPage(
         </p>
         <div className="h-10" />
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-          {category.contracts.map((publishedContractId, idx) => {
+          {category.contracts.map((publishedContractId) => {
             const publisher: string | undefined = Array.isArray(
               publishedContractId,
             )
@@ -103,23 +103,19 @@ export default async function ExploreCategoryPage(
                 key={publisher + contractId + overrides?.title}
               >
                 <ContractCard
-                  publisher={publisher}
                   contractId={contractId}
-                  titleOverride={overrides?.title}
                   descriptionOverride={overrides?.description}
-                  tracking={{
-                    source: category.id,
-                    itemIndex: `${idx}`,
-                  }}
                   isBeta={category.isBeta}
                   modules={
                     modules?.length
                       ? modules.map((m) => ({
-                          publisher: m.split("/")[0] || "",
                           moduleId: m.split("/")[1] || "",
+                          publisher: m.split("/")[0] || "",
                         }))
                       : undefined
                   }
+                  publisher={publisher}
+                  titleOverride={overrides?.title}
                 />
               </Suspense>
             );

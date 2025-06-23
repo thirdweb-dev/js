@@ -1,8 +1,4 @@
 import {
-  type EngineAdmin,
-  useEngineGrantPermissions,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import {
   Flex,
   FormControl,
   Input,
@@ -15,12 +11,13 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button } from "chakra/button";
+import { FormLabel } from "chakra/form";
 import { CirclePlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { isAddress } from "thirdweb";
-import { Button, FormLabel } from "tw-components";
+import { type EngineAdmin, useEngineGrantPermissions } from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface AddAdminButtonProps {
   instanceUrl: string;
@@ -33,10 +30,10 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutate: grantPermissions } = useEngineGrantPermissions({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
-  const trackEvent = useTrack();
+
   const form = useForm<EngineAdmin>({
     defaultValues: {
       permissions: "ADMIN",
@@ -51,44 +48,32 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
   return (
     <>
       <Button
-        onClick={onOpen}
-        variant="ghost"
-        size="sm"
-        leftIcon={<CirclePlusIcon className="size-6" />}
         colorScheme="primary"
+        leftIcon={<CirclePlusIcon className="size-6" />}
+        onClick={onOpen}
+        size="sm"
+        variant="ghost"
         w="fit-content"
       >
         Add Admin
       </Button>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent
-          className="!bg-background rounded-lg border border-border"
           as="form"
+          className="!bg-background rounded-lg border border-border"
           onSubmit={form.handleSubmit((data) => {
             if (!isAddress(data.walletAddress)) {
               onError(new Error("Invalid wallet address"));
             }
             grantPermissions(data, {
+              onError: (error) => {
+                onError(error);
+                console.error(error);
+              },
               onSuccess: () => {
                 onSuccess();
                 onClose();
-                trackEvent({
-                  category: "engine",
-                  action: "add-admin",
-                  label: "success",
-                  instance: instanceUrl,
-                });
-              },
-              onError: (error) => {
-                onError(error);
-                trackEvent({
-                  category: "engine",
-                  action: "add-admin",
-                  label: "error",
-                  instance: instanceUrl,
-                  error,
-                });
               },
             });
           })}
@@ -100,16 +85,16 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
               <FormControl isRequired>
                 <FormLabel>Wallet Address</FormLabel>
                 <Input
-                  type="text"
                   placeholder="The wallet address for this admin"
+                  type="text"
                   {...form.register("walletAddress", { required: true })}
                 />
               </FormControl>
               <FormControl>
                 <FormLabel>Label</FormLabel>
                 <Input
-                  type="text"
                   placeholder="Enter a description for this admin"
+                  type="text"
                   {...form.register("label")}
                 />
               </FormControl>
@@ -117,10 +102,10 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
           </ModalBody>
 
           <ModalFooter as={Flex} gap={3}>
-            <Button type="button" onClick={onClose} variant="ghost">
+            <Button onClick={onClose} type="button" variant="ghost">
               Cancel
             </Button>
-            <Button type="submit" colorScheme="primary">
+            <Button colorScheme="primary" type="submit">
               Add
             </Button>
           </ModalFooter>

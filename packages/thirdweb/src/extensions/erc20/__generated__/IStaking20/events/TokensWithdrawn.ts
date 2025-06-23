@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "TokensWithdrawn" event.
@@ -36,7 +36,7 @@ export function tokensWithdrawnEvent(
   filters: TokensWithdrawnEventFilters = {},
 ) {
   return prepareEvent({
-    signature: "event TokensWithdrawn(address indexed staker, uint256 amount)",
     filters,
+    signature: "event TokensWithdrawn(address indexed staker, uint256 amount)",
   });
 }

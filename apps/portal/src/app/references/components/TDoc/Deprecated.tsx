@@ -4,7 +4,7 @@ import { TypedocSummary } from "./Summary";
 
 export function DeprecatedCalloutTDoc(props: { tag: BlockTag }) {
   return (
-    <Callout variant="warning" disableIcon>
+    <Callout disableIcon variant="warning">
       <div className="flex w-full flex-col gap-2 ">
         <div className="font-semibold text-lg">Deprecated</div>
         <div>

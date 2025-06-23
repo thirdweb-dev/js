@@ -27,37 +27,37 @@ export function TokenBalanceRow({
   return (
     <StyledButton
       onClick={() => onClick(token)}
-      variant="secondary"
       style={{
         display: "flex",
         justifyContent: "space-between",
         padding: `${spacing.sm} ${spacing.md}`,
         ...style,
       }}
+      variant="secondary"
     >
       <TokenAndChain
-        token={token}
         client={client}
         size="lg"
-        style={{ maxWidth: "50%", flex: 1 }}
+        style={{ flex: 1, maxWidth: "50%" }}
+        token={token}
       />
 
       <Container
-        flex="row"
         center="y"
-        gap="4xs"
         color="secondaryText"
+        flex="row"
+        gap="4xs"
         style={{
           flex: "1",
+          flexWrap: "nowrap",
+          justifyContent: "flex-end",
           maxWidth: "50%",
           minWidth: 0,
-          justifyContent: "flex-end",
-          flexWrap: "nowrap",
         }}
       >
         <Container
-          flex="column"
           color="secondaryText"
+          flex="column"
           gap="3xs"
           style={{
             alignItems: "flex-end",
@@ -66,16 +66,16 @@ export function TokenBalanceRow({
           }}
         >
           <FiatValue
-            tokenAmount={amount}
-            token={token}
             chain={chain}
             client={client}
             color="primaryText"
             size="sm"
+            token={token}
+            tokenAmount={amount}
           />
           <Text
-            size="xs"
             color="secondaryText"
+            size="xs"
             style={{
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -96,16 +96,16 @@ export function TokenBalanceRow({
 const StyledButton = /* @__PURE__ */ styled(Button)((props) => {
   const theme = useCustomTheme();
   return {
-    background: "transparent",
-    justifyContent: "space-between",
-    flexWrap: "nowrap",
-    flexDirection: "row",
-    padding: spacing.sm,
-    paddingRight: spacing.xs,
-    gap: spacing.sm,
     "&:hover": {
       background: theme.colors.secondaryButtonBg,
     },
+    background: "transparent",
+    flexDirection: "row",
+    flexWrap: "nowrap",
+    gap: spacing.sm,
+    justifyContent: "space-between",
+    padding: spacing.sm,
+    paddingRight: spacing.xs,
     transition: "background 200ms ease, transform 150ms ease",
     ...props.style,
   };

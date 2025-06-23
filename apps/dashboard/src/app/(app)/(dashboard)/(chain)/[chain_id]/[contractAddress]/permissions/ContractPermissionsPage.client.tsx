@@ -25,13 +25,13 @@ export function ContractPermissionsPageClient(props: {
 
   return (
     <ContractPermissionsPage
-      projectMeta={props.projectMeta}
-      contract={props.contract}
       chainSlug={props.chainMetadata.slug}
-      isLoggedIn={props.isLoggedIn}
+      contract={props.contract}
       detectedPermissionEnumerable={
         metadataQuery.data.isPermissionsEnumerableSupported
       }
+      isLoggedIn={props.isLoggedIn}
+      projectMeta={props.projectMeta}
     />
   );
 }

@@ -1,3 +1,4 @@
+/* biome-ignore-all lint: IGNORED */
 // @ts-nocheck - TODO typescript-ify this file
 // ported from https://github.com/34r7h/secrets.js/blob/master/secrets.js
 // with minimal changes to only allow using our own randomBytesBuffer function
@@ -8,11 +9,10 @@ var defaults, config, preGenPadding, runCSPRNGTest, CSPRNGTypes;
 function reset() {
   defaults = {
     bits: 8, // default number of bits
-    radix: 16, // work with HEX by default
+    bytesPerChar: 2, // work with HEX by default
+    maxBits: 20,
+    maxBytesPerChar: 6, // this permits 1,048,575 shares, though going this high is NOT recommended in JS!
     minBits: 3,
-    maxBits: 20, // this permits 1,048,575 shares, though going this high is NOT recommended in JS!
-    bytesPerChar: 2,
-    maxBytesPerChar: 6, // Math.pow(256,7) > Math.pow(2,53)
 
     // Primitive polynomials (in decimal form) for Galois Fields GF(2^n), for 2 <= n <= 30
     // The index of each term in the array corresponds to the n for that polynomial
@@ -49,7 +49,8 @@ function reset() {
       9,
       5,
       83,
-    ],
+    ], // Math.pow(256,7) > Math.pow(2,53)
+    radix: 16,
   };
   config = {};
   preGenPadding = new Array(1024).join("0"); // Pre-generate a string of 1024 0's for use by padLeft().
@@ -329,7 +330,7 @@ function constructPublicShareString(bits, id, data) {
   id = Number.parseInt(id, config.radix);
   bits = Number.parseInt(bits, 10) || config.bits;
   bitsBase36 = bits.toString(36).toUpperCase();
-  idMax = Math.pow(2, bits) - 1;
+  idMax = 2 ** bits - 1;
   idPaddingLen = idMax.toString(config.radix).length;
   idHex = padLeft(id.toString(config.radix), idPaddingLen);
 
@@ -348,79 +349,6 @@ function constructPublicShareString(bits, id, data) {
 // //////////////////
 
 export const secrets = {
-  init: function (bits, rngType) {
-    var logs = [],
-      exps = [],
-      x = 1,
-      primitive,
-      i;
-
-    // reset all config back to initial state
-    reset();
-
-    if (
-      bits &&
-      (typeof bits !== "number" ||
-        bits % 1 !== 0 ||
-        bits < defaults.minBits ||
-        bits > defaults.maxBits)
-    ) {
-      throw new Error(
-        "Number of bits must be an integer between " +
-          defaults.minBits +
-          " and " +
-          defaults.maxBits +
-          ", inclusive.",
-      );
-    }
-
-    if (rngType && CSPRNGTypes.indexOf(rngType) === -1) {
-      throw new Error("Invalid RNG type argument : '" + rngType + "'");
-    }
-
-    config.radix = defaults.radix;
-    config.bits = bits || defaults.bits;
-    config.size = Math.pow(2, config.bits);
-    config.maxShares = config.size - 1;
-
-    // Construct the exp and log tables for multiplication.
-    primitive = defaults.primitivePolynomials[config.bits];
-
-    for (i = 0; i < config.size; i++) {
-      exps[i] = x;
-      logs[x] = i;
-      x = x << 1; // Left shift assignment
-      if (x >= config.size) {
-        x = x ^ primitive; // Bitwise XOR assignment
-        x = x & config.maxShares; // Bitwise AND assignment
-      }
-    }
-
-    config.logs = logs;
-    config.exps = exps;
-
-    if (rngType) {
-      this.setRNG(rngType);
-    }
-
-    if (!isSetRNG()) {
-      this.setRNG();
-    }
-
-    if (
-      !isSetRNG() ||
-      !config.bits ||
-      !config.size ||
-      !config.maxShares ||
-      !config.logs ||
-      !config.exps ||
-      config.logs.length !== config.size ||
-      config.exps.length !== config.size
-    ) {
-      throw new Error("Initialization failed.");
-    }
-  },
-
   // Evaluates the Lagrange interpolation polynomial at x=`at` for
   // individual config.bits-length segments of each share in the `shares`
   // Array. Each share is expressed in base `inputRadix`. The output
@@ -512,16 +440,6 @@ export const secrets = {
     return bin2hex(at >= 1 ? result : result.slice(result.indexOf("1") + 1));
   },
 
-  getConfig: () => {
-    var obj = {};
-    obj.radix = config.radix;
-    obj.bits = config.bits;
-    obj.maxShares = config.maxShares;
-    obj.hasCSPRNG = isSetRNG();
-    obj.typeCSPRNG = config.typeCSPRNG;
-    return obj;
-  },
-
   // Given a public share, extract the bits (Integer), share ID (Integer), and share data (Hex)
   // and return an Object containing those components.
   extractShareComponents: (share) => {
@@ -553,10 +471,10 @@ export const secrets = {
     }
 
     // calc the max shares allowed for given bits
-    max = Math.pow(2, bits) - 1;
+    max = 2 ** bits - 1;
 
     // Determine the ID length which is variable and based on the bit count.
-    idLen = (Math.pow(2, bits) - 1).toString(config.radix).length;
+    idLen = (2 ** bits - 1).toString(config.radix).length;
 
     // Extract all the parts now that the segment sizes are known.
     regexStr = "^([a-kA-K3-9]{1})([a-fA-F0-9]{" + idLen + "})([a-fA-F0-9]+)$";
@@ -583,6 +501,163 @@ export const secrets = {
     }
 
     throw new Error("The share data provided is invalid : " + share);
+  },
+
+  getConfig: () => {
+    var obj = {};
+    obj.radix = config.radix;
+    obj.bits = config.bits;
+    obj.maxShares = config.maxShares;
+    obj.hasCSPRNG = isSetRNG();
+    obj.typeCSPRNG = config.typeCSPRNG;
+    return obj;
+  },
+
+  // Converts a given HEX number string to a UTF16 character string.
+  hex2str: (str, bytesPerChar) => {
+    var hexChars,
+      out = "",
+      i,
+      len;
+
+    if (typeof str !== "string") {
+      throw new Error("Input must be a hexadecimal string.");
+    }
+    bytesPerChar = bytesPerChar || defaults.bytesPerChar;
+
+    if (
+      typeof bytesPerChar !== "number" ||
+      bytesPerChar % 1 !== 0 ||
+      bytesPerChar < 1 ||
+      bytesPerChar > defaults.maxBytesPerChar
+    ) {
+      throw new Error(
+        "Bytes per character must be an integer between 1 and " +
+          defaults.maxBytesPerChar +
+          ", inclusive.",
+      );
+    }
+
+    hexChars = 2 * bytesPerChar;
+
+    str = padLeft(str, hexChars);
+
+    for (i = 0, len = str.length; i < len; i += hexChars) {
+      out =
+        String.fromCharCode(Number.parseInt(str.slice(i, i + hexChars), 16)) +
+        out;
+    }
+
+    return out;
+  },
+  init: function (bits, rngType) {
+    var logs = [],
+      exps = [],
+      x = 1,
+      primitive,
+      i;
+
+    // reset all config back to initial state
+    reset();
+
+    if (
+      bits &&
+      (typeof bits !== "number" ||
+        bits % 1 !== 0 ||
+        bits < defaults.minBits ||
+        bits > defaults.maxBits)
+    ) {
+      throw new Error(
+        "Number of bits must be an integer between " +
+          defaults.minBits +
+          " and " +
+          defaults.maxBits +
+          ", inclusive.",
+      );
+    }
+
+    if (rngType && CSPRNGTypes.indexOf(rngType) === -1) {
+      throw new Error("Invalid RNG type argument : '" + rngType + "'");
+    }
+
+    config.radix = defaults.radix;
+    config.bits = bits || defaults.bits;
+    config.size = 2 ** config.bits;
+    config.maxShares = config.size - 1;
+
+    // Construct the exp and log tables for multiplication.
+    primitive = defaults.primitivePolynomials[config.bits];
+
+    for (i = 0; i < config.size; i++) {
+      exps[i] = x;
+      logs[x] = i;
+      x = x << 1; // Left shift assignment
+      if (x >= config.size) {
+        x = x ^ primitive; // Bitwise XOR assignment
+        x = x & config.maxShares; // Bitwise AND assignment
+      }
+    }
+
+    config.logs = logs;
+    config.exps = exps;
+
+    if (rngType) {
+      this.setRNG(rngType);
+    }
+
+    if (!isSetRNG()) {
+      this.setRNG();
+    }
+
+    if (
+      !isSetRNG() ||
+      !config.bits ||
+      !config.size ||
+      !config.maxShares ||
+      !config.logs ||
+      !config.exps ||
+      config.logs.length !== config.size ||
+      config.exps.length !== config.size
+    ) {
+      throw new Error("Initialization failed.");
+    }
+  },
+
+  // Generate a new share with id `id` (a number between 1 and 2^bits-1)
+  // `id` can be a Number or a String in the default radix (16)
+  newShare: function (id, shares) {
+    var share, radid;
+
+    if (id && typeof id === "string") {
+      id = Number.parseInt(id, config.radix);
+    }
+
+    radid = id.toString(config.radix);
+
+    if (id && radid && shares && shares[0]) {
+      share = this.extractShareComponents(shares[0]);
+      return constructPublicShareString(
+        share.bits,
+        radid,
+        this.combine(shares, id),
+      );
+    }
+
+    throw new Error("Invalid 'id' or 'shares' Array argument to newShare().");
+  },
+
+  // Generates a random bits-length number string using the PRNG
+  random: (bits) => {
+    if (
+      typeof bits !== "number" ||
+      bits % 1 !== 0 ||
+      bits < 2 ||
+      bits > 65536
+    ) {
+      throw new Error("Number of bits must be an Integer between 1 and 65536.");
+    }
+
+    return bin2hex(config.rng(bits));
   },
 
   // Set the PRNG to use. If no RNG function is supplied, pick a default using getRNG()
@@ -642,119 +717,6 @@ export const secrets = {
     config.rng = rng;
 
     return true;
-  },
-
-  // Converts a given UTF16 character string to the HEX representation.
-  // Each character of the input string is represented by
-  // `bytesPerChar` bytes in the output string which defaults to 2.
-  str2hex: (str, bytesPerChar) => {
-    var hexChars,
-      max,
-      out = "",
-      neededBytes,
-      num,
-      i,
-      len;
-
-    if (typeof str !== "string") {
-      throw new Error("Input must be a character string.");
-    }
-
-    if (!bytesPerChar) {
-      bytesPerChar = defaults.bytesPerChar;
-    }
-
-    if (
-      typeof bytesPerChar !== "number" ||
-      bytesPerChar < 1 ||
-      bytesPerChar > defaults.maxBytesPerChar ||
-      bytesPerChar % 1 !== 0
-    ) {
-      throw new Error(
-        "Bytes per character must be an integer between 1 and " +
-          defaults.maxBytesPerChar +
-          ", inclusive.",
-      );
-    }
-
-    hexChars = 2 * bytesPerChar;
-    max = Math.pow(16, hexChars) - 1;
-
-    for (i = 0, len = str.length; i < len; i++) {
-      num = str[i].charCodeAt();
-
-      if (isNaN(num)) {
-        throw new Error("Invalid character: " + str[i]);
-      }
-
-      if (num > max) {
-        neededBytes = Math.ceil(Math.log(num + 1) / Math.log(256));
-        throw new Error(
-          "Invalid character code (" +
-            num +
-            "). Maximum allowable is 256^bytes-1 (" +
-            max +
-            "). To convert this character, use at least " +
-            neededBytes +
-            " bytes.",
-        );
-      }
-
-      out = padLeft(num.toString(16), hexChars) + out;
-    }
-    return out;
-  },
-
-  // Converts a given HEX number string to a UTF16 character string.
-  hex2str: (str, bytesPerChar) => {
-    var hexChars,
-      out = "",
-      i,
-      len;
-
-    if (typeof str !== "string") {
-      throw new Error("Input must be a hexadecimal string.");
-    }
-    bytesPerChar = bytesPerChar || defaults.bytesPerChar;
-
-    if (
-      typeof bytesPerChar !== "number" ||
-      bytesPerChar % 1 !== 0 ||
-      bytesPerChar < 1 ||
-      bytesPerChar > defaults.maxBytesPerChar
-    ) {
-      throw new Error(
-        "Bytes per character must be an integer between 1 and " +
-          defaults.maxBytesPerChar +
-          ", inclusive.",
-      );
-    }
-
-    hexChars = 2 * bytesPerChar;
-
-    str = padLeft(str, hexChars);
-
-    for (i = 0, len = str.length; i < len; i += hexChars) {
-      out =
-        String.fromCharCode(Number.parseInt(str.slice(i, i + hexChars), 16)) +
-        out;
-    }
-
-    return out;
-  },
-
-  // Generates a random bits-length number string using the PRNG
-  random: (bits) => {
-    if (
-      typeof bits !== "number" ||
-      bits % 1 !== 0 ||
-      bits < 2 ||
-      bits > 65536
-    ) {
-      throw new Error("Number of bits must be an Integer between 1 and 65536.");
-    }
-
-    return bin2hex(config.rng(bits));
   },
 
   // Divides a `secret` number String str expressed in radix `inputRadix` (optional, default 16)
@@ -861,27 +823,65 @@ export const secrets = {
     return x;
   },
 
-  // Generate a new share with id `id` (a number between 1 and 2^bits-1)
-  // `id` can be a Number or a String in the default radix (16)
-  newShare: function (id, shares) {
-    var share, radid;
+  // Converts a given UTF16 character string to the HEX representation.
+  // Each character of the input string is represented by
+  // `bytesPerChar` bytes in the output string which defaults to 2.
+  str2hex: (str, bytesPerChar) => {
+    var hexChars,
+      max,
+      out = "",
+      neededBytes,
+      num,
+      i,
+      len;
 
-    if (id && typeof id === "string") {
-      id = Number.parseInt(id, config.radix);
+    if (typeof str !== "string") {
+      throw new Error("Input must be a character string.");
     }
 
-    radid = id.toString(config.radix);
+    if (!bytesPerChar) {
+      bytesPerChar = defaults.bytesPerChar;
+    }
 
-    if (id && radid && shares && shares[0]) {
-      share = this.extractShareComponents(shares[0]);
-      return constructPublicShareString(
-        share.bits,
-        radid,
-        this.combine(shares, id),
+    if (
+      typeof bytesPerChar !== "number" ||
+      bytesPerChar < 1 ||
+      bytesPerChar > defaults.maxBytesPerChar ||
+      bytesPerChar % 1 !== 0
+    ) {
+      throw new Error(
+        "Bytes per character must be an integer between 1 and " +
+          defaults.maxBytesPerChar +
+          ", inclusive.",
       );
     }
 
-    throw new Error("Invalid 'id' or 'shares' Array argument to newShare().");
+    hexChars = 2 * bytesPerChar;
+    max = 16 ** hexChars - 1;
+
+    for (i = 0, len = str.length; i < len; i++) {
+      num = str[i].charCodeAt();
+
+      if (isNaN(num)) {
+        throw new Error("Invalid character: " + str[i]);
+      }
+
+      if (num > max) {
+        neededBytes = Math.ceil(Math.log(num + 1) / Math.log(256));
+        throw new Error(
+          "Invalid character code (" +
+            num +
+            "). Maximum allowable is 256^bytes-1 (" +
+            max +
+            "). To convert this character, use at least " +
+            neededBytes +
+            " bytes.",
+        );
+      }
+
+      out = padLeft(num.toString(16), hexChars) + out;
+    }
+    return out;
   },
 };
 

@@ -1,5 +1,11 @@
+import { Dialog } from "@radix-ui/react-dialog";
+import { CircleAlertIcon, PlusIcon } from "lucide-react";
+import Link from "next/link";
+import { useId, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import invariant from "tiny-invariant";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Form, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Select,
   SelectContent,
@@ -20,24 +27,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  type CreateBackendWalletInput,
-  type EngineInstance,
-  type WalletConfigResponse,
-  useEngineCreateBackendWallet,
-  useHasEngineFeature,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { Dialog } from "@radix-ui/react-dialog";
-import { useTrack } from "hooks/analytics/useTrack";
-import {
   EngineBackendWalletOptions,
   type EngineBackendWalletType,
-} from "lib/engine";
-import { CircleAlertIcon, PlusIcon } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import invariant from "tiny-invariant";
+} from "@/constants/engine";
+import {
+  type CreateBackendWalletInput,
+  type EngineInstance,
+  useEngineCreateBackendWallet,
+  useHasEngineFeature,
+  type WalletConfigResponse,
+} from "@/hooks/useEngine";
 
 interface CreateBackendWalletButtonProps {
   instance: EngineInstance;
@@ -61,10 +60,9 @@ export const CreateBackendWalletButton: React.FC<
 
   const [isOpen, setIsOpen] = useState(false);
   const createWallet = useEngineCreateBackendWallet({
-    instanceUrl: instance.url,
     authToken,
+    instanceUrl: instance.url,
   });
-  const trackEvent = useTrack();
 
   const form = useForm<CreateBackendWalletInput>({
     defaultValues: { type: walletConfig.type },
@@ -72,29 +70,17 @@ export const CreateBackendWalletButton: React.FC<
 
   const onSubmit = async (data: CreateBackendWalletInput) => {
     const promise = createWallet.mutateAsync(data, {
+      onError: (error) => {
+        console.error(error);
+      },
       onSuccess: () => {
         setIsOpen(false);
-        trackEvent({
-          category: "engine",
-          action: "create-backend-wallet",
-          label: "success",
-          instance: instance.url,
-        });
-      },
-      onError: (error) => {
-        trackEvent({
-          category: "engine",
-          action: "create-backend-wallet",
-          label: "error",
-          instance: instance.url,
-          error,
-        });
       },
     });
 
     toast.promise(promise, {
-      success: "Wallet created successfully",
       error: "Failed to create wallet",
+      success: "Wallet created successfully",
     });
   };
 
@@ -123,13 +109,17 @@ export const CreateBackendWalletButton: React.FC<
     (["gcp-kms", "smart:gcp-kms"].includes(walletType) &&
       !walletConfig.gcpKmsKeyRingId);
 
+  const walletLabelId = useId();
+  const credentialIdId = useId();
+  const isTestnetId = useId();
+
   return (
     <>
-      <Button onClick={() => setIsOpen(true)} className="gap-2" size="sm">
+      <Button className="gap-2" onClick={() => setIsOpen(true)} size="sm">
         <PlusIcon className="size-4" />
         Create
       </Button>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog onOpenChange={setIsOpen} open={isOpen}>
         <DialogContent className="overflow-hidden p-0">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -143,12 +133,12 @@ export const CreateBackendWalletButton: React.FC<
                 <div className="flex flex-col gap-3">
                   {/* Wallet type */}
                   <FormFieldSetup
-                    label="Wallet Type"
                     errorMessage={
                       form.getFieldState("type", form.formState).error?.message
                     }
                     htmlFor="wallet-label"
                     isRequired
+                    label="Wallet Type"
                     tooltip={null}
                   >
                     <Select
@@ -174,8 +164,8 @@ export const CreateBackendWalletButton: React.FC<
                     <FormDescription className="py-2">
                       Learn more about{" "}
                       <Link
-                        href="https://portal.thirdweb.com/engine/features/backend-wallets"
                         className="text-link-foreground hover:text-foreground"
+                        href="https://portal.thirdweb.com/engine/features/backend-wallets"
                       >
                         backend wallet types
                       </Link>
@@ -193,8 +183,8 @@ export const CreateBackendWalletButton: React.FC<
                       <AlertDescription>
                         Provide your credentials on the{" "}
                         <Link
-                          href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}/configuration`}
                           className="text-link-foreground hover:text-foreground"
+                          href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}/configuration`}
                         >
                           Configuration
                         </Link>{" "}
@@ -206,20 +196,20 @@ export const CreateBackendWalletButton: React.FC<
                     <>
                       {/* Label */}
                       <FormFieldSetup
-                        key="label"
-                        label="Label"
                         errorMessage={
                           form.getFieldState("label", form.formState).error
                             ?.message
                         }
-                        htmlFor="wallet-label"
+                        htmlFor={walletLabelId}
                         isRequired
+                        key="label"
+                        label="Label"
                         tooltip={null}
                       >
                         <Input
-                          id="wallet-label"
-                          type="text"
+                          id={walletLabelId}
                           placeholder="A description to identify this backend wallet"
+                          type="text"
                           {...form.register("label", { required: true })}
                         />
                       </FormFieldSetup>
@@ -228,20 +218,20 @@ export const CreateBackendWalletButton: React.FC<
                       {isCircleWallet && (
                         <>
                           <FormFieldSetup
-                            key="credentialId"
-                            label="Credential ID"
                             errorMessage={
                               form.getFieldState("credentialId", form.formState)
                                 .error?.message
                             }
-                            htmlFor="credential-id"
+                            htmlFor={credentialIdId}
                             isRequired
+                            key="credentialId"
+                            label="Credential ID"
                             tooltip={null}
                           >
                             <Input
-                              id="credential-id"
-                              type="text"
+                              id={credentialIdId}
                               placeholder="Enter the Circle credential ID"
+                              type="text"
                               {...form.register("credentialId", {
                                 required: isCircleWallet,
                               })}
@@ -250,8 +240,8 @@ export const CreateBackendWalletButton: React.FC<
                               The ID of the Circle credential to use for this
                               wallet. You can find this in the{" "}
                               <Link
-                                href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}/wallet-credentials`}
                                 className="text-link-foreground hover:text-foreground"
+                                href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}/wallet-credentials`}
                               >
                                 Wallet Credentials
                               </Link>{" "}
@@ -260,28 +250,28 @@ export const CreateBackendWalletButton: React.FC<
                           </FormFieldSetup>
 
                           <FormFieldSetup
-                            key="isTestnet"
-                            label="Testnet"
                             errorMessage={
                               form.getFieldState("isTestnet", form.formState)
                                 .error?.message
                             }
-                            htmlFor="is-testnet"
-                            tooltip={null}
+                            htmlFor={isTestnetId}
                             isRequired={false}
+                            key="isTestnet"
+                            label="Testnet"
+                            tooltip={null}
                           >
                             <div className="flex flex-col gap-2">
                               <div className="flex items-center space-x-2">
                                 <Checkbox
-                                  id="is-testnet"
                                   checked={form.watch("isTestnet")}
+                                  id={isTestnetId}
                                   onCheckedChange={(checked) =>
                                     form.setValue("isTestnet", !!checked)
                                   }
                                 />
                                 <label
-                                  htmlFor="is-testnet"
                                   className="text-sm leading-none opacity-70 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                  htmlFor="is-testnet"
                                 >
                                   Use testnet mode for creating backend wallet
                                 </label>
@@ -292,9 +282,10 @@ export const CreateBackendWalletButton: React.FC<
                                 wallets. A production API Key cannot be used for
                                 testnet transactions, and vice versa.{" "}
                                 <Link
-                                  href="https://developers.circle.com/w3s/sandbox-vs-production"
-                                  target="_blank"
                                   className="text-link-foreground hover:text-foreground"
+                                  href="https://developers.circle.com/w3s/sandbox-vs-production"
+                                  rel="noopener noreferrer"
+                                  target="_blank"
                                 >
                                   Learn more
                                 </Link>
@@ -309,17 +300,17 @@ export const CreateBackendWalletButton: React.FC<
               </div>
 
               <DialogFooter className="mt-4 gap-4 border-border border-t bg-card p-6 lg:gap-2 ">
-                <Button variant="outline" onClick={() => setIsOpen(false)}>
+                <Button onClick={() => setIsOpen(false)} variant="outline">
                   Cancel
                 </Button>
                 <Button
-                  type="submit"
                   className="min-w-28 gap-2"
                   disabled={
                     !form.formState.isValid ||
                     isNotConfigured ||
                     createWallet.isPending
                   }
+                  type="submit"
                 >
                   {createWallet.isPending && <Spinner className="size-4" />}
                   Create

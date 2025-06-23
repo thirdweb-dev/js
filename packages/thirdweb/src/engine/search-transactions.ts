@@ -1,7 +1,7 @@
 import {
+  searchTransactions as engineSearchTransactions,
   type TransactionsFilterNested,
   type TransactionsFilterValue,
-  searchTransactions as engineSearchTransactions,
 } from "@thirdweb-dev/engine";
 import type { ThirdwebClient } from "../client/client.js";
 import { getThirdwebBaseUrl } from "../utils/domains.js";
@@ -105,13 +105,13 @@ export async function searchTransactions(args: SearchTransactionsArgs) {
   const { client, filters, pageSize = 100, page = 1 } = args;
   const searchResult = await engineSearchTransactions({
     baseUrl: getThirdwebBaseUrl("engineCloud"),
-    bodySerializer: stringify,
-    fetch: getClientFetch(client),
     body: {
       filters,
       limit: pageSize,
       page,
     },
+    bodySerializer: stringify,
+    fetch: getClientFetch(client),
   });
 
   if (searchResult.error) {

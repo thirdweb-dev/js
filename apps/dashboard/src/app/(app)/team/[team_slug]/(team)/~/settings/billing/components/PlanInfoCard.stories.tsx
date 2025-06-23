@@ -1,18 +1,18 @@
-import type { Team } from "@/api/team";
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { addDays } from "date-fns";
-import { teamStub, teamSubscriptionsStub } from "stories/stubs";
-import { BadgeContainer } from "stories/utils";
+import type { Team } from "@/api/team";
+import { teamStub, teamSubscriptionsStub } from "@/storybook/stubs";
+import { BadgeContainer } from "@/storybook/utils";
 import { PlanInfoCardUI } from "./PlanInfoCard";
 
 const meta = {
-  title: "Billing/PlanInfoCard",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Billing/PlanInfoCard",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -60,9 +60,7 @@ export const Pro: Story = {
   },
 };
 
-function Story(props: {
-  plan: Team["billingPlan"];
-}) {
+function Story(props: { plan: Team["billingPlan"] }) {
   const team = teamStub("foo", props.plan);
   const zeroUsageOnDemandSubs = teamSubscriptionsStub("plan:growth");
   const trialPlanZeroUsageOnDemandSubs = teamSubscriptionsStub("plan:growth", {
@@ -80,10 +78,6 @@ function Story(props: {
 
   const subsWith4Usage = teamSubscriptionsStub("plan:growth", {
     usage: {
-      storage: {
-        amount: 10000,
-        quantity: 4,
-      },
       aaSponsorshipAmount: {
         amount: 7500,
         quantity: 4,
@@ -95,6 +89,10 @@ function Story(props: {
       inAppWalletAmount: {
         amount: 40000,
         quantity: 100,
+      },
+      storage: {
+        amount: 10000,
+        quantity: 4,
       },
     },
   });
@@ -109,59 +107,59 @@ function Story(props: {
     <div className="container flex max-w-6xl flex-col gap-12 py-10">
       <BadgeContainer label="On-demand Subscriptions with 0 usage">
         <PlanInfoCardUI
-          team={team}
-          subscriptions={zeroUsageOnDemandSubs}
           getTeam={teamTeamStub}
           highlightPlan={undefined}
-          openPlanSheetButtonByDefault={false}
           isOwnerAccount={true}
+          openPlanSheetButtonByDefault={false}
+          subscriptions={zeroUsageOnDemandSubs}
+          team={team}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Scheduled to cancel in 10 days">
         <PlanInfoCardUI
+          getTeam={teamTeamStub}
+          highlightPlan={undefined}
+          isOwnerAccount={true}
+          openPlanSheetButtonByDefault={false}
+          subscriptions={zeroUsageOnDemandSubs}
           team={{
             ...team,
             planCancellationDate: addDays(new Date(), 10).toISOString(),
           }}
-          subscriptions={zeroUsageOnDemandSubs}
-          getTeam={teamTeamStub}
-          highlightPlan={undefined}
-          openPlanSheetButtonByDefault={false}
-          isOwnerAccount={true}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Trial Plan - On-demand Subscriptions with 0 usage">
         <PlanInfoCardUI
-          team={team}
-          subscriptions={trialPlanZeroUsageOnDemandSubs}
           getTeam={teamTeamStub}
           highlightPlan={undefined}
-          openPlanSheetButtonByDefault={false}
           isOwnerAccount={true}
+          openPlanSheetButtonByDefault={false}
+          subscriptions={trialPlanZeroUsageOnDemandSubs}
+          team={team}
         />
       </BadgeContainer>
 
       <BadgeContainer label="On-demand Subscriptions with 1 usage">
         <PlanInfoCardUI
-          team={team}
-          subscriptions={subsWith1Usage}
           getTeam={teamTeamStub}
           highlightPlan={undefined}
-          openPlanSheetButtonByDefault={false}
           isOwnerAccount={true}
+          openPlanSheetButtonByDefault={false}
+          subscriptions={subsWith1Usage}
+          team={team}
         />
       </BadgeContainer>
 
       <BadgeContainer label="On-demand Subscriptions with 4 usage">
         <PlanInfoCardUI
-          team={team}
-          subscriptions={subsWith4Usage}
           getTeam={teamTeamStub}
           highlightPlan={undefined}
-          openPlanSheetButtonByDefault={false}
           isOwnerAccount={true}
+          openPlanSheetButtonByDefault={false}
+          subscriptions={subsWith4Usage}
+          team={team}
         />
       </BadgeContainer>
     </div>

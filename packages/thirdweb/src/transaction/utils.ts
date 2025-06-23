@@ -21,8 +21,8 @@ export async function getTransactionGasCost(
 ) {
   try {
     const gasCost = await estimateGasCost({
-      transaction: tx,
       from,
+      transaction: tx,
     });
 
     const bufferCost = gasCost.wei / 10n;
@@ -37,8 +37,8 @@ export async function getTransactionGasCost(
     }
     // fallback if both fail, use the tx value + 1M * gas price
     const gasPrice = await getGasPrice({
-      client: tx.client,
       chain: tx.chain,
+      client: tx.client,
     });
 
     return 1_000_000n * gasPrice;

@@ -10,9 +10,9 @@ import {
 } from "../../../../core/design-system/index.js";
 import { CreditCardIcon } from "../../ConnectWallet/icons/CreditCardIcon.js";
 import { WalletRow } from "../../ConnectWallet/screens/Buy/swap/WalletRow.js";
-import { Spacer } from "../../components/Spacer.js";
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
+import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
 
 interface WalletFiatSelectionProps {
@@ -34,7 +34,7 @@ export function WalletFiatSelection({
 
   return (
     <>
-      <Text size="md" color="primaryText">
+      <Text color="primaryText" size="md">
         Pay with Crypto
       </Text>
       <Spacer y="md" />
@@ -49,26 +49,26 @@ export function WalletFiatSelection({
               }
               return (
                 <Button
-                  key={wallet.id}
-                  variant="secondary"
                   fullWidth
+                  key={wallet.id}
                   onClick={() => onWalletSelected(wallet)}
                   style={{
+                    backgroundColor: theme.colors.tertiaryBg,
                     border: `1px solid ${theme.colors.borderColor}`,
                     borderRadius: radius.md,
-                    padding: `${spacing.sm} ${spacing.md}`,
-                    backgroundColor: theme.colors.tertiaryBg,
                     justifyContent: "space-between",
+                    padding: `${spacing.sm} ${spacing.md}`,
                   }}
+                  variant="secondary"
                 >
                   <WalletRow
-                    client={client}
                     address={account?.address}
+                    client={client}
                     iconSize="lg"
                     textSize="sm"
                   />
                   <ChevronRightIcon
-                    style={{ width: iconSize.md, height: iconSize.md }}
+                    style={{ height: iconSize.md, width: iconSize.md }}
                   />
                 </Button>
               );
@@ -80,46 +80,46 @@ export function WalletFiatSelection({
 
       {/* Connect Another Wallet */}
       <Button
-        variant="secondary"
         fullWidth
         onClick={onConnectWallet}
         style={{
+          backgroundColor: theme.colors.tertiaryBg,
           border: `1px solid ${theme.colors.borderColor}`,
           borderRadius: radius.md,
-          padding: `${spacing.sm} ${spacing.md}`,
-          backgroundColor: theme.colors.tertiaryBg,
-          textAlign: "left",
           height: "auto",
+          padding: `${spacing.sm} ${spacing.md}`,
+          textAlign: "left",
         }}
+        variant="secondary"
       >
         <Container
           flex="row"
           gap="md"
-          style={{ width: "100%", alignItems: "center" }}
+          style={{ alignItems: "center", width: "100%" }}
         >
           <Container
             style={{
-              borderRadius: radius.sm,
-              border: `1px dashed ${theme.colors.secondaryIconColor}`,
-              display: "flex",
               alignItems: "center",
+              border: `1px dashed ${theme.colors.secondaryIconColor}`,
+              borderRadius: radius.sm,
+              display: "flex",
+              height: iconSize.lg,
               justifyContent: "center",
               padding: spacing["4xs"],
               width: iconSize.lg,
-              height: iconSize.lg,
             }}
           >
             <PlusIcon
-              width={iconSize.md}
-              height={iconSize.md}
               color={theme.colors.secondaryText}
+              height={iconSize.md}
+              width={iconSize.md}
             />
           </Container>
           <Container flex="column" gap="3xs" style={{ flex: 1 }}>
-            <Text size="sm" color="primaryText" style={{ fontWeight: 600 }}>
+            <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
               Connect Another Wallet
             </Text>
-            <Text size="xs" color="secondaryText">
+            <Text color="secondaryText" size="xs">
               Use a different wallet to pay
             </Text>
           </Container>
@@ -129,39 +129,39 @@ export function WalletFiatSelection({
       <Spacer y="md" />
 
       {/* Pay with Debit Card */}
-      <Text size="md" color="primaryText">
+      <Text color="primaryText" size="md">
         Pay with Fiat
       </Text>
 
       <Spacer y="md" />
 
       <Button
-        variant="secondary"
         fullWidth
         onClick={onFiatSelected}
         style={{
+          backgroundColor: theme.colors.tertiaryBg,
           border: `1px solid ${theme.colors.borderColor}`,
           borderRadius: radius.md,
-          padding: `${spacing.sm} ${spacing.md}`,
-          backgroundColor: theme.colors.tertiaryBg,
-          textAlign: "left",
           height: "auto",
+          padding: `${spacing.sm} ${spacing.md}`,
+          textAlign: "left",
         }}
+        variant="secondary"
       >
         <Container
           flex="row"
           gap="md"
-          style={{ width: "100%", alignItems: "center" }}
+          style={{ alignItems: "center", width: "100%" }}
         >
           <CreditCardIcon
-            size={iconSize.lg}
             color={theme.colors.secondaryIconColor}
+            size={iconSize.lg}
           />
           <Container flex="column" gap="3xs" style={{ flex: 1 }}>
-            <Text size="sm" color="primaryText" style={{ fontWeight: 600 }}>
+            <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
               Pay with Card
             </Text>
-            <Text size="xs" color="secondaryText">
+            <Text color="secondaryText" size="xs">
               Buy crypto and bridge in one step
             </Text>
           </Container>

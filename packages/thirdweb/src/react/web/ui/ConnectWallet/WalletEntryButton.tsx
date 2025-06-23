@@ -11,11 +11,11 @@ import {
   spacing,
 } from "../../../core/design-system/index.js";
 import { useWalletInfo } from "../../../core/utils/wallet.js";
+import { Container } from "../components/basic.js";
 import { Img } from "../components/Img.js";
 import { Skeleton } from "../components/Skeleton.js";
-import { WalletImage } from "../components/WalletImage.js";
-import { Container } from "../components/basic.js";
 import { Text } from "../components/text.js";
+import { WalletImage } from "../components/WalletImage.js";
 import { StyledButton } from "../design-system/elements.js";
 import type { ConnectLocale } from "./locale/types.js";
 
@@ -56,29 +56,29 @@ export function WalletEntryButton(props: {
 
   return (
     <WalletButtonEl
-      type="button"
-      onClick={selectWallet}
       data-active={props.isActive}
+      onClick={selectWallet}
+      type="button"
     >
       {iconOverride ? (
         <Img
-          client={props.client}
-          src={iconOverride}
           alt={nameOverride}
-          width={`${iconSize.xl}`}
+          client={props.client}
           height={`${iconSize.xl}`}
+          src={iconOverride}
+          width={`${iconSize.xl}`}
         />
       ) : (
-        <WalletImage id={walletId} size={iconSize.xl} client={props.client} />
+        <WalletImage client={props.client} id={walletId} size={iconSize.xl} />
       )}
 
-      <Container flex="column" gap="xxs" expand>
+      <Container expand flex="column" gap="xxs">
         {nameOverride ? (
           <Text color="primaryText" weight={600}>
             {nameOverride}
           </Text>
         ) : (
-          <Skeleton width="100px" height={fontSize.md} />
+          <Skeleton height={fontSize.md} width="100px" />
         )}
         {props.badge ? (
           <Text size="sm">{props.badge}</Text>
@@ -95,17 +95,6 @@ export function WalletEntryButton(props: {
 export const WalletButtonEl = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
-    all: "unset",
-    display: "flex",
-    alignItems: "center",
-    gap: spacing.sm,
-    cursor: "pointer",
-    boxSizing: "border-box",
-    width: "100%",
-    color: theme.colors.secondaryText,
-    position: "relative",
-    borderRadius: radius.md,
-    padding: `${spacing.xs} ${spacing.xs}`,
     "&:hover": {
       backgroundColor: theme.colors.tertiaryBg,
       transform: "scale(1.01)",
@@ -113,6 +102,17 @@ export const WalletButtonEl = /* @__PURE__ */ StyledButton((_) => {
     '&[data-active="true"]': {
       backgroundColor: theme.colors.tertiaryBg,
     },
+    alignItems: "center",
+    all: "unset",
+    borderRadius: radius.md,
+    boxSizing: "border-box",
+    color: theme.colors.secondaryText,
+    cursor: "pointer",
+    display: "flex",
+    gap: spacing.sm,
+    padding: `${spacing.xs} ${spacing.xs}`,
+    position: "relative",
     transition: "background-color 200ms ease, transform 200ms ease",
+    width: "100%",
   };
 });

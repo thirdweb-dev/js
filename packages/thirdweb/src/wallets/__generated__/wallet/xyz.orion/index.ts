@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "xyz.orion",
-  name: "Orion",
-  homepage: "https://orion.xyz",
-  image_id: "85007828-9522-4517-6a55-6f376de8a500",
   app: {
-    browser: null,
-    ios: "https://itunes.apple.com/app/id1659758160",
     android: null,
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://itunes.apple.com/app/id1659758160",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "orion://wc?",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://orion.xyz",
+  id: "xyz.orion",
+  image_id: "85007828-9522-4517-6a55-6f376de8a500",
+  mobile: {
+    native: "orion://wc?",
+    universal: null,
+  },
+  name: "Orion",
+  rdns: null,
 } as const;

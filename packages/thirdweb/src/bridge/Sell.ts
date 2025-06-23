@@ -129,27 +129,27 @@ export async function quote(options: quote.Options): Promise<quote.Result> {
     const errorJson = await response.json();
     throw new ApiError({
       code: errorJson.code || "UNKNOWN_ERROR",
-      message: errorJson.message || response.statusText,
       correlationId: errorJson.correlationId || undefined,
+      message: errorJson.message || response.statusText,
       statusCode: response.status,
     });
   }
 
   const { data }: { data: Quote } = await response.json();
   return {
-    originAmount: BigInt(data.originAmount),
-    destinationAmount: BigInt(data.destinationAmount),
     blockNumber: data.blockNumber ? BigInt(data.blockNumber) : undefined,
-    timestamp: data.timestamp,
+    destinationAmount: BigInt(data.destinationAmount),
     estimatedExecutionTimeMs: data.estimatedExecutionTimeMs,
-    steps: data.steps,
     intent: {
-      originChainId,
-      originTokenAddress,
+      amount,
       destinationChainId,
       destinationTokenAddress,
-      amount,
+      originChainId,
+      originTokenAddress,
     },
+    originAmount: BigInt(data.originAmount),
+    steps: data.steps,
+    timestamp: data.timestamp,
   };
 }
 
@@ -334,61 +334,61 @@ export async function prepare(
   const url = new URL(`${getThirdwebBaseUrl("bridge")}/v1/sell/prepare`);
 
   const response = await clientFetch(url.toString(), {
-    method: "POST",
+    body: stringify({
+      amount: amount.toString(),
+      destinationChainId: destinationChainId.toString(),
+      destinationTokenAddress,
+      maxSteps,
+      originChainId: originChainId.toString(),
+      originTokenAddress,
+      paymentLinkId,
+      purchaseData,
+      receiver,
+      sellAmountWei: amount.toString(),
+      sender,
+    }),
     headers: {
       "Content-Type": "application/json",
     },
-    body: stringify({
-      sellAmountWei: amount.toString(),
-      amount: amount.toString(),
-      originChainId: originChainId.toString(),
-      originTokenAddress,
-      destinationChainId: destinationChainId.toString(),
-      destinationTokenAddress,
-      sender,
-      receiver,
-      purchaseData,
-      maxSteps,
-      paymentLinkId,
-    }),
+    method: "POST",
   });
   if (!response.ok) {
     const errorJson = await response.json();
     throw new ApiError({
       code: errorJson.code || "UNKNOWN_ERROR",
-      message: errorJson.message || response.statusText,
       correlationId: errorJson.correlationId || undefined,
+      message: errorJson.message || response.statusText,
       statusCode: response.status,
     });
   }
 
   const { data }: { data: PreparedQuote } = await response.json();
   return {
-    originAmount: BigInt(data.originAmount),
-    destinationAmount: BigInt(data.destinationAmount),
     blockNumber: data.blockNumber ? BigInt(data.blockNumber) : undefined,
-    timestamp: data.timestamp,
+    destinationAmount: BigInt(data.destinationAmount),
     estimatedExecutionTimeMs: data.estimatedExecutionTimeMs,
+    expiration: data.expiration,
+    intent: {
+      amount,
+      destinationChainId,
+      destinationTokenAddress,
+      originChainId,
+      originTokenAddress,
+      purchaseData,
+      receiver,
+      sender,
+    },
+    originAmount: BigInt(data.originAmount),
     steps: data.steps.map((step) => ({
       ...step,
       transactions: step.transactions.map((transaction) => ({
         ...transaction,
-        value: transaction.value ? BigInt(transaction.value) : undefined,
-        client,
         chain: defineChain(transaction.chainId),
+        client,
+        value: transaction.value ? BigInt(transaction.value) : undefined,
       })),
     })),
-    expiration: data.expiration,
-    intent: {
-      originChainId,
-      originTokenAddress,
-      destinationChainId,
-      destinationTokenAddress,
-      amount,
-      sender,
-      receiver,
-      purchaseData,
-    },
+    timestamp: data.timestamp,
   };
 }
 

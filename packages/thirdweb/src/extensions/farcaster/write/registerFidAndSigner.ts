@@ -84,87 +84,76 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
 
   return prepareContractCall({
     contract: getBundler({
-      client: options.client,
       chain: options.chain,
+      client: options.client,
     }),
     method: [
       "0xa44c9ce7",
       [
         {
-          type: "tuple",
-          name: "registerParams",
           components: [
             {
-              type: "address",
               name: "to",
-            },
-            {
               type: "address",
+            },
+            {
               name: "recovery",
+              type: "address",
             },
             {
-              type: "uint256",
               name: "deadline",
+              type: "uint256",
             },
             {
-              type: "bytes",
               name: "sig",
+              type: "bytes",
             },
           ],
+          name: "registerParams",
+          type: "tuple",
         },
         {
-          type: "tuple[]",
-          name: "signerParams",
           components: [
             {
-              type: "uint32",
               name: "keyType",
+              type: "uint32",
             },
             {
-              type: "bytes",
               name: "key",
+              type: "bytes",
             },
             {
-              type: "uint8",
               name: "metadataType",
+              type: "uint8",
             },
             {
-              type: "bytes",
               name: "metadata",
-            },
-            {
-              type: "uint256",
-              name: "deadline",
-            },
-            {
               type: "bytes",
+            },
+            {
+              name: "deadline",
+              type: "uint256",
+            },
+            {
               name: "sig",
+              type: "bytes",
             },
           ],
+          name: "signerParams",
+          type: "tuple[]",
         },
         {
-          type: "uint256",
           name: "extraStorage",
+          type: "uint256",
         },
       ],
       [
         {
-          type: "uint256",
           name: "fid",
+          type: "uint256",
         },
       ],
     ],
-    value: async () => {
-      const { getRegistrationPrice } = await import(
-        "../read/getRegistrationPrice.js"
-      );
-      return await getRegistrationPrice({
-        client: options.client,
-        chain: options.chain,
-        extraStorage: extraStorage,
-        disableCache: options.disableCache,
-      });
-    },
     params: async () => {
       const deadline =
         "deadline" in options
@@ -182,9 +171,9 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
 
       // Check if the user already has a registered fid
       const existingFid = await getFid({
-        client: options.client,
-        chain: options.chain,
         address: userAddress,
+        chain: options.chain,
+        client: options.client,
         disableCache: options.disableCache,
       });
       // If a fid is already registered for the user, throw an error
@@ -195,8 +184,8 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
       }
 
       const keyGateway = getKeyGateway({
-        client: options.client,
         chain: options.chain,
+        client: options.client,
       });
 
       // Fetch the user's current key gateway nonce
@@ -219,10 +208,10 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
         registerSignature = await signRegister({
           account: options.userAccount,
           message: {
-            nonce,
-            to: userAddress,
-            recovery: options.recoveryAddress,
             deadline,
+            nonce,
+            recovery: options.recoveryAddress,
+            to: userAddress,
           },
         });
       } else {
@@ -233,9 +222,9 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
 
       // Get the fid for the app account
       const appFid = await getFid({
-        client: options.client,
-        chain: options.chain,
         address: appAccountAddress,
+        chain: options.chain,
+        client: options.client,
         disableCache: options.disableCache,
       });
       if (appFid === 0n) {
@@ -253,9 +242,9 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
         signedKeyRequestMetadata = await getSignedKeyRequestMetadata({
           account: options.appAccount,
           message: {
-            requestFid: toBigInt(appFid),
-            key: options.signerPublicKey,
             deadline,
+            key: options.signerPublicKey,
+            requestFid: toBigInt(appFid),
           },
         });
       } else {
@@ -273,13 +262,13 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
         addSignature = await signAdd({
           account: options.userAccount,
           message: {
-            owner: userAddress,
-            keyType: 1,
-            key: options.signerPublicKey,
-            metadataType: 1,
-            metadata: signedKeyRequestMetadata,
-            nonce,
             deadline,
+            key: options.signerPublicKey,
+            keyType: 1,
+            metadata: signedKeyRequestMetadata,
+            metadataType: 1,
+            nonce,
+            owner: userAddress,
           },
         });
       } else {
@@ -290,23 +279,34 @@ export function registerFidAndSigner(options: RegisterFidAndSignerParams) {
 
       return [
         {
-          to: userAddress,
-          recovery: options.recoveryAddress,
           deadline,
+          recovery: options.recoveryAddress,
           sig: registerSignature,
+          to: userAddress,
         },
         [
           {
-            keyType: 1,
-            key: options.signerPublicKey,
-            metadataType: 1,
-            metadata: signedKeyRequestMetadata,
             deadline,
+            key: options.signerPublicKey,
+            keyType: 1,
+            metadata: signedKeyRequestMetadata,
+            metadataType: 1,
             sig: addSignature,
           },
         ],
         extraStorage,
       ] as const;
+    },
+    value: async () => {
+      const { getRegistrationPrice } = await import(
+        "../read/getRegistrationPrice.js"
+      );
+      return await getRegistrationPrice({
+        chain: options.chain,
+        client: options.client,
+        disableCache: options.disableCache,
+        extraStorage: extraStorage,
+      });
     },
   });
 }

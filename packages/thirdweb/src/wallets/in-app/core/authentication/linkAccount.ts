@@ -38,11 +38,11 @@ export async function linkAccount({
   const linkedDetailsResp = await clientFetch(
     `${IN_APP_URL}/api/2024-05-05/account/connect`,
     {
-      method: "POST",
-      headers,
       body: stringify({
         accountAuthTokenToConnect: tokenToLink,
       }),
+      headers,
+      method: "POST",
     },
   );
 
@@ -90,13 +90,13 @@ export async function unlinkAccount({
   const linkedDetailsResp = await clientFetch(
     `${IN_APP_URL}/api/2024-05-05/account/disconnect`,
     {
-      method: "POST",
-      headers,
       body: stringify({
-        type: profileToUnlink.type,
-        details: profileToUnlink.details,
         allowAccountDeletion,
+        details: profileToUnlink.details,
+        type: profileToUnlink.type,
       }),
+      headers,
+      method: "POST",
     },
   );
 
@@ -140,8 +140,8 @@ export async function getLinkedProfilesInternal({
   const linkedAccountsResp = await clientFetch(
     `${IN_APP_URL}/api/2024-05-05/accounts`,
     {
-      method: "GET",
       headers,
+      method: "GET",
     },
   );
 

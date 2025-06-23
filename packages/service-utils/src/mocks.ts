@@ -6,91 +6,58 @@ import type {
 } from "./core/api.js";
 
 export const validProjectResponse: ProjectResponse = {
-  id: "1",
-  publishableKey: "your-api-key",
-  walletAddresses: ["creator-address"],
-  domains: ["example.com", "*.example.com"],
   bundleIds: [],
-  services: [
-    {
-      name: "storage",
-      actions: ["read", "write"],
-    },
-    {
-      name: "rpc",
-      actions: [],
-    },
-    {
-      name: "bundler",
-      actions: [],
-      allowedChainIds: [1, 2, 3],
-    },
-  ],
-  teamId: "1",
   createdAt: new Date("2024-06-01").toISOString(),
-  updatedAt: new Date("2024-06-01").toISOString(),
+  domains: ["example.com", "*.example.com"],
+  id: "1",
+  image: "https://example.com/image.png",
   lastAccessedAt: new Date("2024-06-01").toISOString(),
   name: "test-project",
-  slug: "test-project",
-  image: "https://example.com/image.png",
+  publishableKey: "your-api-key",
   secretKeys: [
     {
+      createdAt: new Date("2024-06-01").toISOString(),
       hash: "1234567890123456789012345678901234567890123456789012345678901234",
       masked: "foo...lorem",
-      createdAt: new Date("2024-06-01").toISOString(),
       updatedAt: new Date("2024-06-01").toISOString(),
     },
   ],
+  services: [
+    {
+      actions: ["read", "write"],
+      name: "storage",
+    },
+    {
+      actions: [],
+      name: "rpc",
+    },
+    {
+      actions: [],
+      allowedChainIds: [1, 2, 3],
+      name: "bundler",
+    },
+  ],
+  slug: "test-project",
+  teamId: "1",
+  updatedAt: new Date("2024-06-01").toISOString(),
+  walletAddresses: ["creator-address"],
 };
 
 export const validTeamResponse: TeamResponse = {
-  id: "1",
-  name: "test-team",
-  slug: "test-team",
-  image: "https://example.com/image.png",
-  createdAt: new Date("2024-06-01").toISOString(),
-  updatedAt: new Date("2024-06-01").toISOString(),
-  billingPlan: "free",
-  supportPlan: "free",
   billingEmail: "test@example.com",
+  billingPlan: "free",
   billingStatus: "noPayment",
   canCreatePublicChains: false,
-  enabledScopes: ["storage", "rpc", "bundler"],
-  isOnboarded: true,
-  verifiedDomain: null,
   capabilities: {
-    rpc: {
-      enabled: true,
-      rateLimit: 1000,
-    },
-    insight: {
-      enabled: true,
-      rateLimit: 1000,
-      webhooks: true,
-    },
-    storage: {
-      enabled: true,
-      download: {
-        rateLimit: 1000,
-      },
-      upload: {
-        totalFileSizeBytesLimit: 1_000_000_000,
-        rateLimit: 1000,
-      },
-    },
-    nebula: {
-      enabled: true,
-      rateLimit: 1000,
-    },
     bundler: {
       enabled: true,
       mainnetEnabled: true,
       rateLimit: 1000,
     },
     embeddedWallets: {
-      enabled: true,
       customAuth: true,
       customBranding: true,
+      enabled: true,
       sms: {
         domestic: true,
         international: true,
@@ -101,6 +68,15 @@ export const validTeamResponse: TeamResponse = {
       mainnetEnabled: true,
       rateLimit: 100,
     },
+    insight: {
+      enabled: true,
+      rateLimit: 1000,
+      webhooks: true,
+    },
+    nebula: {
+      enabled: true,
+      rateLimit: 1000,
+    },
     pay: {
       enabled: true,
       rateLimit: 1000,
@@ -110,26 +86,51 @@ export const validTeamResponse: TeamResponse = {
       ecosystemWallets: true,
       seats: true,
     },
+    rpc: {
+      enabled: true,
+      rateLimit: 1000,
+    },
+    storage: {
+      download: {
+        rateLimit: 1000,
+      },
+      enabled: true,
+      upload: {
+        rateLimit: 1000,
+        totalFileSizeBytesLimit: 1_000_000_000,
+      },
+    },
   },
+  createdAt: new Date("2024-06-01").toISOString(),
+  dedicatedSupportChannel: null,
+  enabledScopes: ["storage", "rpc", "bundler"],
+  id: "1",
+  image: "https://example.com/image.png",
+  isOnboarded: true,
+  name: "test-team",
   planCancellationDate: null,
+  slug: "test-team",
+  supportPlan: "free",
   unthreadCustomerId: null,
+  updatedAt: new Date("2024-06-01").toISOString(),
+  verifiedDomain: null,
 };
 
 export const validTeamAndProjectResponse: TeamAndProjectResponse = {
-  team: validTeamResponse,
-  project: validProjectResponse,
   authMethod: "publishableKey",
+  project: validProjectResponse,
+  team: validTeamResponse,
 };
 
 export const validServiceConfig: CoreServiceConfig = {
   apiUrl: "https://api.example.com",
-  serviceScope: "storage",
-  serviceApiKey: "service-api-key",
   serviceAction: "read",
+  serviceApiKey: "service-api-key",
+  serviceScope: "storage",
 };
 
 export const validBundlerServiceConfig: CoreServiceConfig = {
   apiUrl: "https://api.example.com",
-  serviceScope: "bundler",
   serviceApiKey: "service-api-key",
+  serviceScope: "bundler",
 };

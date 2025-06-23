@@ -19,21 +19,21 @@ export async function trackPayEvent(args: {
   error?: string;
 }) {
   const data = {
-    source: "pay",
     action: args.event,
-    clientId: args.client.clientId,
+    amountWei: args.amountWei,
     chainId: args.chainId,
+    clientId: args.client.clientId,
+    dstChainId: args.toChainId,
+    dstTokenAddress: args.toToken,
+    errorCode: args.error,
+    source: "pay",
+    tokenAddress: args.fromToken,
     walletAddress: args.walletAddress,
     walletType: args.walletType,
-    tokenAddress: args.fromToken,
-    amountWei: args.amountWei,
-    dstTokenAddress: args.toToken,
-    dstChainId: args.toChainId,
-    errorCode: args.error,
   };
   return track({
     client: args.client,
-    ecosystem: args.ecosystem,
     data,
+    ecosystem: args.ecosystem,
   });
 }

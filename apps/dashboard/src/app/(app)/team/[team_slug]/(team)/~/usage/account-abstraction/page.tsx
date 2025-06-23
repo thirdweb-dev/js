@@ -1,9 +1,9 @@
+import { redirect } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { redirect } from "next/navigation";
+import { getAuthToken } from "../../../../../../../../@/api/auth-token";
 import { getProjects } from "../../../../../../../../@/api/projects";
 import { getTeamSubscriptions } from "../../../../../../../../@/api/team-subscription";
-import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../login/loginRedirect";
 import { SponsoredTransactionsTable } from "../overview/components/SponsoredTransactionsTable";
 
@@ -53,11 +53,11 @@ export default async function Page(props: {
     <div className="flex flex-col gap-14">
       <SponsoredTransactionsTable
         client={client}
-        teamSlug={team.slug}
-        teamId={team.id}
         from={usageSubscription.currentPeriodStart}
-        to={usageSubscription.currentPeriodEnd}
         projects={projects}
+        teamId={team.id}
+        teamSlug={team.slug}
+        to={usageSubscription.currentPeriodEnd}
         variant="team"
       />
     </div>

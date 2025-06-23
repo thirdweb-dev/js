@@ -7,16 +7,16 @@ import { getUsdStoragePrice } from "./getUsdStoragePrice.js";
 describe("farcaster.getUsdStoragePrice", () => {
   it("should return the price to rent 1 unit of storage", async () => {
     const price = await getUsdStoragePrice({
-      client: TEST_CLIENT,
       chain: FORKED_OPTIMISM_CHAIN,
+      client: TEST_CLIENT,
     });
     expect(price).toBe(3);
   });
 
   it("should return the price to rent 3 units of storage", async () => {
     const price = await getUsdStoragePrice({
-      client: TEST_CLIENT,
       chain: FORKED_OPTIMISM_CHAIN,
+      client: TEST_CLIENT,
       units: 3,
     });
     expect(price).toBe(9);

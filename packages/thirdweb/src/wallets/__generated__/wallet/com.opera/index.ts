@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.opera",
-  name: "Opera Crypto Browser",
-  homepage: "http://opera.com",
-  image_id: "877fa1a4-304d-4d45-ca8e-f76d1a556f00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/itunes-u/id1604311726?action=write-review",
     android: null,
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: "https://www.opera.com/crypto/next",
-    firefox: "https://www.opera.com/crypto/next",
-    safari: "https://www.opera.com/crypto/next",
     edge: "https://www.opera.com/crypto/next",
+    firefox: "https://www.opera.com/crypto/next",
+    ios: "https://apps.apple.com/us/app/itunes-u/id1604311726?action=write-review",
+    linux: null,
+    mac: null,
     opera: "https://www.opera.com/crypto/next",
-  },
-  rdns: null,
-  mobile: {
-    native: "cryptobrowser://",
-    universal: null,
+    safari: "https://www.opera.com/crypto/next",
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "http://opera.com",
+  id: "com.opera",
+  image_id: "877fa1a4-304d-4d45-ca8e-f76d1a556f00",
+  mobile: {
+    native: "cryptobrowser://",
+    universal: null,
+  },
+  name: "Opera Crypto Browser",
+  rdns: null,
 } as const;

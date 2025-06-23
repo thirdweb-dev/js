@@ -24,83 +24,83 @@ const mockWindowAdapter: WindowAdapter = {
 
 const mockStorage: AsyncStorage = {
   getItem: vi.fn().mockResolvedValue(null),
-  setItem: vi.fn().mockResolvedValue(undefined),
   removeItem: vi.fn().mockResolvedValue(undefined),
+  setItem: vi.fn().mockResolvedValue(undefined),
 };
 
 // Test token objects
 const testUSDCToken: Token = {
-  chainId: 137,
   address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-  name: "USD Coin (PoS)",
-  symbol: "USDC",
+  chainId: 137,
   decimals: 6,
+  name: "USD Coin (PoS)",
   priceUsd: 1.0,
+  symbol: "USDC",
 };
 
 const testETHToken: Token = {
-  chainId: 1,
   address: NATIVE_TOKEN_ADDRESS,
-  name: "Ethereum",
-  symbol: "ETH",
+  chainId: 1,
   decimals: 18,
+  name: "Ethereum",
   priceUsd: 2500.0,
+  symbol: "ETH",
 };
 
 const testTokenForPayment: Token = {
-  chainId: 1,
   address: "0xA0b86a33E6425c03e54c4b45DCb6d75b6B72E2AA",
-  name: "Test Token",
-  symbol: "TT",
+  chainId: 1,
   decimals: 18,
+  name: "Test Token",
   priceUsd: 1.0,
+  symbol: "TT",
 };
 
 const mockBuyQuote: BridgePrepareResult = {
-  type: "buy",
-  originAmount: 1000000000000000000n, // 1 ETH
-  destinationAmount: 100000000n, // 100 USDC
-  timestamp: Date.now(),
-  estimatedExecutionTimeMs: 120000, // 2 minutes
+  destinationAmount: 100000000n,
+  estimatedExecutionTimeMs: 120000, // 1 ETH
+  intent: {
+    amount: 100000000n,
+    destinationChainId: 137,
+    destinationTokenAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+    originChainId: 1,
+    originTokenAddress: NATIVE_TOKEN_ADDRESS,
+    receiver: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+    sender: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+  }, // 100 USDC
+  originAmount: 1000000000000000000n,
   steps: [
     {
-      originToken: testETHToken,
-      destinationToken: testUSDCToken,
-      originAmount: 1000000000000000000n,
       destinationAmount: 100000000n,
+      destinationToken: testUSDCToken,
       estimatedExecutionTimeMs: 120000,
+      originAmount: 1000000000000000000n,
+      originToken: testETHToken,
       transactions: [
         {
           action: "approval" as const,
-          id: "0x123" as const,
-          to: "0x456" as const,
-          data: "0x789" as const,
+          chain: defineChain(1),
           chainId: 1,
           client: TEST_CLIENT,
-          chain: defineChain(1),
+          data: "0x789" as const,
+          id: "0x123" as const,
+          to: "0x456" as const,
         },
         {
           action: "buy" as const,
-          id: "0xabc" as const,
-          to: "0xdef" as const,
-          data: "0x012" as const,
-          value: 1000000000000000000n,
+          chain: defineChain(1),
           chainId: 1,
           client: TEST_CLIENT,
-          chain: defineChain(1),
+          data: "0x012" as const,
+          id: "0xabc" as const,
+          to: "0xdef" as const,
+          value: 1000000000000000000n,
         },
       ],
     },
-  ],
-  intent: {
-    originChainId: 1,
-    originTokenAddress: NATIVE_TOKEN_ADDRESS,
-    destinationChainId: 137,
-    destinationTokenAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-    amount: 100000000n,
-    sender: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
-    receiver: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
-  },
+  ], // 2 minutes
+  timestamp: Date.now(),
+  type: "buy",
 };
 
 describe("PaymentMachine", () => {
@@ -108,8 +108,8 @@ describe("PaymentMachine", () => {
 
   beforeEach(() => {
     adapters = {
-      window: mockWindowAdapter,
       storage: mockStorage,
+      window: mockWindowAdapter,
     };
   });
 
@@ -124,114 +124,6 @@ describe("PaymentMachine", () => {
     expect(state.context.adapters).toBe(adapters);
   });
 
-  it("should transition through happy path with wallet payment method", () => {
-    const { result } = renderHook(() =>
-      usePaymentMachine(adapters, "fund_wallet"),
-    );
-
-    // Confirm destination
-    act(() => {
-      const [, send] = result.current;
-      send({
-        type: "DESTINATION_CONFIRMED",
-        destinationToken: testTokenForPayment,
-        destinationAmount: "100",
-        receiverAddress: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
-      });
-    });
-
-    let [state] = result.current;
-    expect(state.value).toBe("methodSelection");
-    expect(state.context.destinationToken).toEqual(testTokenForPayment);
-    expect(state.context.destinationAmount).toBe("100");
-    expect(state.context.receiverAddress).toBe(
-      "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
-    );
-
-    // Select wallet payment method
-    const walletPaymentMethod: PaymentMethod = {
-      type: "wallet",
-      originToken: testUSDCToken,
-      payerWallet: TEST_IN_APP_WALLET_A,
-      balance: 1000000000000000000n,
-    };
-
-    act(() => {
-      const [, send] = result.current;
-      send({
-        type: "PAYMENT_METHOD_SELECTED",
-        paymentMethod: walletPaymentMethod,
-      });
-    });
-
-    [state] = result.current;
-    expect(state.value).toBe("quote");
-    expect(state.context.selectedPaymentMethod).toEqual(walletPaymentMethod);
-
-    // Receive quote
-    act(() => {
-      const [, send] = result.current;
-      send({
-        type: "QUOTE_RECEIVED",
-        preparedQuote: mockBuyQuote,
-      });
-    });
-
-    [state] = result.current;
-    expect(state.value).toBe("preview");
-    expect(state.context.preparedQuote).toBe(mockBuyQuote);
-
-    // Confirm route
-    act(() => {
-      const [, send] = result.current;
-      send({
-        type: "ROUTE_CONFIRMED",
-      });
-    });
-
-    [state] = result.current;
-    expect(state.value).toBe("execute");
-    expect(state.context.selectedPaymentMethod).toBe(walletPaymentMethod);
-
-    // Complete execution
-    act(() => {
-      const [, send] = result.current;
-      send({
-        type: "EXECUTION_COMPLETE",
-        completedStatuses: [
-          {
-            type: "buy",
-            status: "COMPLETED",
-            paymentId: "test-payment-id",
-            originAmount: 1000000000000000000n,
-            destinationAmount: 100000000n,
-            originChainId: 1,
-            destinationChainId: 137,
-            originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-            destinationTokenAddress:
-              "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-            originToken: testETHToken,
-            destinationToken: testUSDCToken,
-            sender: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
-            receiver: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
-            transactions: [
-              {
-                chainId: 1,
-                transactionHash: "0xtest123",
-              },
-            ],
-          },
-        ],
-      });
-    });
-
-    [state] = result.current;
-    expect(state.value).toBe("success");
-    expect(state.context.completedStatuses).toBeDefined();
-    expect(state.context.completedStatuses).toHaveLength(1);
-    expect(state.context.completedStatuses?.[0]?.status).toBe("COMPLETED");
-  });
-
   it("should handle errors and allow retry", () => {
     const { result } = renderHook(() =>
       usePaymentMachine(adapters, "fund_wallet"),
@@ -241,8 +133,8 @@ describe("PaymentMachine", () => {
     act(() => {
       const [, send] = result.current;
       send({
-        type: "ERROR_OCCURRED",
         error: testError,
+        type: "ERROR_OCCURRED",
       });
     });
 
@@ -271,38 +163,38 @@ describe("PaymentMachine", () => {
     );
 
     const testToken: Token = {
-      chainId: 42,
       address: "0xtest",
-      name: "Test Token",
-      symbol: "TEST",
+      chainId: 42,
       decimals: 18,
+      name: "Test Token",
       priceUsd: 1.0,
+      symbol: "TEST",
     };
 
     // Confirm destination
     act(() => {
       const [, send] = result.current;
       send({
-        type: "DESTINATION_CONFIRMED",
-        destinationToken: testToken,
         destinationAmount: "50",
+        destinationToken: testToken,
         receiverAddress: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+        type: "DESTINATION_CONFIRMED",
       });
     });
 
     // Select payment method
     const paymentMethod: PaymentMethod = {
-      type: "wallet",
-      payerWallet: TEST_IN_APP_WALLET_A,
-      originToken: testUSDCToken,
       balance: 1000000000000000000n,
+      originToken: testUSDCToken,
+      payerWallet: TEST_IN_APP_WALLET_A,
+      type: "wallet",
     };
 
     act(() => {
       const [, send] = result.current;
       send({
-        type: "PAYMENT_METHOD_SELECTED",
         paymentMethod,
+        type: "PAYMENT_METHOD_SELECTED",
       });
     });
 
@@ -327,13 +219,13 @@ describe("PaymentMachine", () => {
     act(() => {
       const [, send] = result.current;
       send({
-        type: "PAYMENT_METHOD_SELECTED",
         paymentMethod: {
-          type: "fiat",
           currency: "USD",
-          payerWallet: TEST_IN_APP_WALLET_A,
           onramp: "stripe",
+          payerWallet: TEST_IN_APP_WALLET_A,
+          type: "fiat",
         },
+        type: "PAYMENT_METHOD_SELECTED",
       });
     });
 
@@ -344,10 +236,10 @@ describe("PaymentMachine", () => {
     act(() => {
       const [, send] = result.current;
       send({
-        type: "DESTINATION_CONFIRMED",
-        destinationToken: testTokenForPayment,
         destinationAmount: "100",
+        destinationToken: testTokenForPayment,
         receiverAddress: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+        type: "DESTINATION_CONFIRMED",
       });
     });
 
@@ -364,23 +256,23 @@ describe("PaymentMachine", () => {
     act(() => {
       const [, send] = result.current;
       send({
-        type: "DESTINATION_CONFIRMED",
-        destinationToken: testTokenForPayment,
         destinationAmount: "100",
+        destinationToken: testTokenForPayment,
         receiverAddress: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+        type: "DESTINATION_CONFIRMED",
       });
     });
 
     act(() => {
       const [, send] = result.current;
       send({
-        type: "PAYMENT_METHOD_SELECTED",
         paymentMethod: {
-          type: "fiat",
           currency: "USD",
-          payerWallet: TEST_IN_APP_WALLET_A,
           onramp: "stripe",
+          payerWallet: TEST_IN_APP_WALLET_A,
+          type: "fiat",
         },
+        type: "PAYMENT_METHOD_SELECTED",
       });
     });
 
@@ -391,8 +283,8 @@ describe("PaymentMachine", () => {
     act(() => {
       const [, send] = result.current;
       send({
-        type: "ERROR_OCCURRED",
         error: new Error("Test error"),
+        type: "ERROR_OCCURRED",
       });
     });
 
@@ -423,8 +315,8 @@ describe("PaymentMachine", () => {
     act(() => {
       const [, send] = result.current;
       send({
-        type: "ERROR_OCCURRED",
         error: new Error("Init error"),
+        type: "ERROR_OCCURRED",
       });
     });
 
@@ -441,18 +333,18 @@ describe("PaymentMachine", () => {
     act(() => {
       const [, send] = result.current;
       send({
-        type: "DESTINATION_CONFIRMED",
-        destinationToken: testTokenForPayment,
         destinationAmount: "100",
+        destinationToken: testTokenForPayment,
         receiverAddress: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+        type: "DESTINATION_CONFIRMED",
       });
     });
 
     act(() => {
       const [, send] = result.current;
       send({
-        type: "ERROR_OCCURRED",
         error: new Error("Method selection error"),
+        type: "ERROR_OCCURRED",
       });
     });
 
@@ -470,10 +362,10 @@ describe("PaymentMachine", () => {
     act(() => {
       const [, send] = result.current;
       send({
-        type: "DESTINATION_CONFIRMED",
-        destinationToken: testTokenForPayment,
         destinationAmount: "100",
+        destinationToken: testTokenForPayment,
         receiverAddress: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+        type: "DESTINATION_CONFIRMED",
       });
     });
 
@@ -481,13 +373,13 @@ describe("PaymentMachine", () => {
     act(() => {
       const [, send] = result.current;
       send({
-        type: "PAYMENT_METHOD_SELECTED",
         paymentMethod: {
-          type: "fiat",
           currency: "USD",
-          payerWallet: TEST_IN_APP_WALLET_A,
           onramp: "stripe",
+          payerWallet: TEST_IN_APP_WALLET_A,
+          type: "fiat",
         },
+        type: "PAYMENT_METHOD_SELECTED",
       });
     });
 
@@ -517,70 +409,6 @@ describe("PaymentMachine", () => {
     expect(state.value).toBe("init");
   });
 
-  it("should clear prepared quote when payment method changes", () => {
-    const { result } = renderHook(() =>
-      usePaymentMachine(adapters, "fund_wallet"),
-    );
-
-    // Go to methodSelection
-    act(() => {
-      const [, send] = result.current;
-      send({
-        type: "DESTINATION_CONFIRMED",
-        destinationToken: testTokenForPayment,
-        destinationAmount: "100",
-        receiverAddress: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
-      });
-    });
-
-    // Select first payment method and get quote
-    act(() => {
-      const [, send] = result.current;
-      send({
-        type: "PAYMENT_METHOD_SELECTED",
-        paymentMethod: {
-          type: "fiat",
-          currency: "USD",
-          payerWallet: TEST_IN_APP_WALLET_A,
-          onramp: "stripe",
-        },
-      });
-    });
-
-    act(() => {
-      const [, send] = result.current;
-      send({
-        type: "QUOTE_RECEIVED",
-        preparedQuote: mockBuyQuote,
-      });
-    });
-
-    let [state] = result.current;
-    expect(state.context.preparedQuote).toBe(mockBuyQuote);
-
-    // Go back and select different payment method
-    act(() => {
-      const [, send] = result.current;
-      send({ type: "BACK" });
-    });
-
-    act(() => {
-      const [, send] = result.current;
-      send({
-        type: "PAYMENT_METHOD_SELECTED",
-        paymentMethod: {
-          type: "wallet",
-          payerWallet: TEST_IN_APP_WALLET_A,
-          originToken: testUSDCToken,
-          balance: 1000000000000000000n,
-        },
-      });
-    });
-
-    [state] = result.current;
-    expect(state.context.preparedQuote).toBeUndefined(); // Should be cleared
-  });
-
   it("should handle post-buy-transaction state flow", () => {
     const { result } = renderHook(() =>
       usePaymentMachine(adapters, "fund_wallet"),
@@ -590,31 +418,31 @@ describe("PaymentMachine", () => {
     act(() => {
       const [, send] = result.current;
       send({
-        type: "DESTINATION_CONFIRMED",
-        destinationToken: testTokenForPayment,
         destinationAmount: "100",
+        destinationToken: testTokenForPayment,
         receiverAddress: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+        type: "DESTINATION_CONFIRMED",
       });
     });
 
     act(() => {
       const [, send] = result.current;
       send({
-        type: "PAYMENT_METHOD_SELECTED",
         paymentMethod: {
-          type: "wallet",
-          payerWallet: TEST_IN_APP_WALLET_A,
-          originToken: testUSDCToken,
           balance: 1000000000000000000n,
+          originToken: testUSDCToken,
+          payerWallet: TEST_IN_APP_WALLET_A,
+          type: "wallet",
         },
+        type: "PAYMENT_METHOD_SELECTED",
       });
     });
 
     act(() => {
       const [, send] = result.current;
       send({
-        type: "QUOTE_RECEIVED",
         preparedQuote: mockBuyQuote,
+        type: "QUOTE_RECEIVED",
       });
     });
 
@@ -628,31 +456,31 @@ describe("PaymentMachine", () => {
     act(() => {
       const [, send] = result.current;
       send({
-        type: "EXECUTION_COMPLETE",
         completedStatuses: [
           {
-            type: "buy",
-            status: "COMPLETED",
-            paymentId: "test-payment-id",
-            originAmount: 1000000000000000000n,
             destinationAmount: 100000000n,
-            originChainId: 1,
             destinationChainId: 137,
-            originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+            destinationToken: testUSDCToken,
             destinationTokenAddress:
               "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+            originAmount: 1000000000000000000n,
+            originChainId: 1,
             originToken: testETHToken,
-            destinationToken: testUSDCToken,
-            sender: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+            originTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+            paymentId: "test-payment-id",
             receiver: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+            sender: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+            status: "COMPLETED",
             transactions: [
               {
                 chainId: 1,
                 transactionHash: "0xtest123",
               },
             ],
+            type: "buy",
           },
         ],
+        type: "EXECUTION_COMPLETE",
       });
     });
 

@@ -39,7 +39,6 @@ export function claimERC721(
   options: BaseTransactionOptions<ClaimERC721Params>,
 ) {
   return generatedClaimERC721({
-    contract: options.contract,
     asyncParams: async () => {
       const merkleRoot = await tokenMerkleRoot({
         contract: options.contract,
@@ -50,8 +49,8 @@ export function claimERC721(
 
       const merkleProof = await fetchProofsERC721({
         contract: options.contract,
-        recipient: options.recipient,
         merkleRoot,
+        recipient: options.recipient,
       });
 
       if (!merkleProof) {
@@ -59,11 +58,12 @@ export function claimERC721(
       }
 
       return {
-        token: tokenAddress as Address,
-        receiver: merkleProof.recipient as Address,
-        tokenId: merkleProof.tokenId,
         proofs: merkleProof.proof,
+        receiver: merkleProof.recipient as Address,
+        token: tokenAddress as Address,
+        tokenId: merkleProof.tokenId,
       } as const;
     },
+    contract: options.contract,
   });
 }

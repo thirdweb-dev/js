@@ -136,7 +136,7 @@ export async function getDefaultGasOverrides(
     FORCE_GAS_PRICE_CHAIN_IDS.includes(chain.id)
   ) {
     return {
-      gasPrice: await getGasPrice({ client, chain, percentMultiplier: 10 }),
+      gasPrice: await getGasPrice({ chain, client, percentMultiplier: 10 }),
     };
   }
   const feeData = await getDynamicFeeData(client, chain);
@@ -148,7 +148,7 @@ export async function getDefaultGasOverrides(
   }
   // TODO: resolvedFeeType here could be "EIP1559", but we could not get EIP1559 fee data. should we throw?
   return {
-    gasPrice: await getGasPrice({ client, chain, percentMultiplier: 10 }),
+    gasPrice: await getGasPrice({ chain, client, percentMultiplier: 10 }),
   };
 }
 
@@ -167,7 +167,7 @@ async function getDynamicFeeData(
   let maxFeePerGas: null | bigint = null;
   let maxPriorityFeePerGas_: null | bigint = null;
 
-  const rpcRequest = getRpcClient({ client, chain });
+  const rpcRequest = getRpcClient({ chain, client });
 
   const [block, maxPriorityFeePerGas] = await Promise.all([
     eth_getBlockByNumber(rpcRequest, { blockTag: "latest" }),

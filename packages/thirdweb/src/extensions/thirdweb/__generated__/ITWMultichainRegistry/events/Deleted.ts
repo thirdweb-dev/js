@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "Deleted" event.
@@ -46,8 +46,8 @@ export type DeletedEventFilters = Partial<{
  */
 export function deletedEvent(filters: DeletedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event Deleted(address indexed deployer, address indexed deployment, uint256 indexed chainId)",
-    filters,
   });
 }

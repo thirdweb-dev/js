@@ -1,11 +1,11 @@
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
-import { getActiveAccountCookie, getJWTCookie } from "@/constants/cookie";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { ContractPublishForm } from "components/contract-components/contract-publish-form";
+import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
+import { ContractPublishForm } from "@/components/contract-components/contract-publish-form";
+import { getActiveAccountCookie, getJWTCookie } from "@/constants/cookie";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { getLatestPublishedContractsWithPublisherMapping } from "../../../published-contract/[publisher]/[contract_id]/utils/getPublishedContractsWithPublisherMapping";
 
 type DirectDeployPageProps = {
@@ -24,8 +24,8 @@ export default async function PublishContractPage(
     : `ipfs://${decodedPublishUri}`;
 
   const publishMetadataFromUri = await fetchDeployMetadata({
-    uri: publishUri,
     client: serverThirdwebClient,
+    uri: publishUri,
   }).catch(() => null);
 
   if (!publishMetadataFromUri) {
@@ -49,9 +49,9 @@ export default async function PublishContractPage(
   if (!publishMetadataFromUri.version) {
     const publishedContract =
       await getLatestPublishedContractsWithPublisherMapping({
-        publisher: address,
-        contract_id: publishMetadataFromUri.name,
         client: serverThirdwebClient,
+        contract_id: publishMetadataFromUri.name,
+        publisher: address,
       });
 
     if (publishedContract) {
@@ -72,8 +72,11 @@ export default async function PublishContractPage(
     <div className="container flex max-w-[1130px] flex-col gap-8 py-8">
       <ChakraProviderSetup>
         <ContractPublishForm
+          client={getClientThirdwebClient({
+            jwt: token,
+            teamId: undefined,
+          })}
           isLoggedIn={!!token}
-          publishMetadata={publishMetadata}
           onPublishSuccess={async () => {
             "use server";
             // we are pretty brutal here and simply invalidate ALL published contracts (for everyone!) and versions no matter what
@@ -83,10 +86,7 @@ export default async function PublishContractPage(
               "layout",
             );
           }}
-          client={getClientThirdwebClient({
-            jwt: token,
-            teamId: undefined,
-          })}
+          publishMetadata={publishMetadata}
         />
       </ChakraProviderSetup>
     </div>

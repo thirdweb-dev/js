@@ -1,29 +1,27 @@
 "use client";
 import { use, useState } from "react";
-import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { arbitrum } from "thirdweb/chains";
-import { checksumAddress } from "thirdweb/utils";
 import type { BridgeComponentsPlaygroundOptions } from "../components/types";
 import { LeftSection } from "./LeftSection";
 import { RightSection } from "./RightSection";
 
 // NOTE: Only set the values that are actually the default values used by PayEmbed component
 const defaultConnectOptions: BridgeComponentsPlaygroundOptions = {
-  theme: {
-    type: "dark",
-    darkColorOverrides: {},
-    lightColorOverrides: {},
-  },
   payOptions: {
-    widget: "buy",
-    title: "",
-    image: "",
-    description: "",
-    buyTokenAddress: checksumAddress(NATIVE_TOKEN_ADDRESS),
+    buyTokenAddress: undefined,
     buyTokenAmount: "0.002",
     buyTokenChain: arbitrum,
+    description: "",
+    image: "",
     sellerAddress: "0x0000000000000000000000000000000000000000",
+    title: "",
     transactionData: "",
+    widget: "buy",
+  },
+  theme: {
+    darkColorOverrides: {},
+    lightColorOverrides: {},
+    type: "dark",
   },
 };
 
@@ -41,7 +39,7 @@ export default function BridgeComponentsPlayground(props: {
         <LeftSection options={options} setOptions={setOptions} />
       </div>
 
-      <RightSection tab={searchParams.tab} options={options} />
+      <RightSection options={options} tab={searchParams.tab} />
     </div>
   );
 }

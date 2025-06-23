@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.shapeshift",
-  name: "ShapeShift",
-  homepage: "https://shapeshift.com",
-  image_id: "957c34b2-7210-475a-0734-689dfcabc400",
   app: {
-    browser: "https://app.shapeshift.com",
-    ios: "https://apps.apple.com/us/app/shapeshift-crypto-platform/id996569075",
     android:
       "https://play.google.com/store/apps/details?id=com.shapeshift.droid_shapeshift&hl=en_US&gl=US&pli=1",
-    mac: "https://apps.apple.com/us/app/shapeshift-crypto-platform/id996569075",
-    windows: null,
-    linux: null,
+    browser: "https://app.shapeshift.com",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/shapeshift-crypto-platform/id996569075",
+    linux: null,
+    mac: "https://apps.apple.com/us/app/shapeshift-crypto-platform/id996569075",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "shapeshift://",
-    universal: "https://shapeshift.app.link/",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://app.shapeshift.com",
   },
+  homepage: "https://shapeshift.com",
+  id: "com.shapeshift",
+  image_id: "957c34b2-7210-475a-0734-689dfcabc400",
+  mobile: {
+    native: "shapeshift://",
+    universal: "https://shapeshift.app.link/",
+  },
+  name: "ShapeShift",
+  rdns: null,
 } as const;

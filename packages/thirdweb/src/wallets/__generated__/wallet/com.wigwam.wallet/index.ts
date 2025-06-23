@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.wigwam.wallet",
-  name: "Wigwam",
-  homepage: "https://wigwam.app",
-  image_id: "6200b005-f202-41d5-7bd9-966c970f6700",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/app/id6630381643",
     android: "https://play.google.com/store/apps/details?id=com.wigwamapp",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome:
       "https://chromewebstore.google.com/detail/wigwam-%E2%80%94-web3-wallet/lccbohhgfkdikahanoclbdmaolidjdfl",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/app/id6630381643",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: "com.wigwam.wallet",
-  mobile: {
-    native: "wigwam://",
-    universal: "https://wigwam.app/",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://wigwam.app",
+  id: "com.wigwam.wallet",
+  image_id: "6200b005-f202-41d5-7bd9-966c970f6700",
+  mobile: {
+    native: "wigwam://",
+    universal: "https://wigwam.app/",
+  },
+  name: "Wigwam",
+  rdns: "com.wigwam.wallet",
 } as const;

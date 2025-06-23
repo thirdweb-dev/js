@@ -1,8 +1,8 @@
+import { redirect } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { redirect } from "next/navigation";
-import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../../../../../../../@/api/auth-token";
 import { fetchEcosystem } from "../../../utils/fetchEcosystem";
 import { EcosystemHeader } from "./ecosystem-header.client";
 
@@ -39,35 +39,35 @@ export async function EcosystemLayoutSlug({
   }
 
   const client = getClientThirdwebClient({
-    teamId: team.id,
     jwt: authToken,
+    teamId: team.id,
   });
 
   return (
     <div className="flex grow flex-col">
       <EcosystemHeader
+        authToken={authToken}
         client={client}
         ecosystem={ecosystem}
         ecosystemLayoutPath={ecosystemLayoutPath}
-        teamIdOrSlug={params.team_slug}
-        authToken={authToken}
         teamId={team.id}
+        teamIdOrSlug={params.team_slug}
       />
 
       <SidebarLayout
         sidebarLinks={[
           {
-            label: "Overview",
-            href: `${ecosystemLayoutPath}/${ecosystem.slug}`,
             exactMatch: true,
+            href: `${ecosystemLayoutPath}/${ecosystem.slug}`,
+            label: "Overview",
           },
           {
-            label: "Analytics",
             href: `${ecosystemLayoutPath}/${ecosystem.slug}/analytics`,
+            label: "Analytics",
           },
           {
-            label: "Design (coming soon)",
             href: `${ecosystemLayoutPath}/${ecosystem.slug}#`,
+            label: "Design (coming soon)",
           },
         ]}
       >

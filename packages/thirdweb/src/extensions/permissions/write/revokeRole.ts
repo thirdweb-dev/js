@@ -1,7 +1,7 @@
 import type { Address } from "abitype";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { revokeRole as generatedRevokeRole } from "../__generated__/IPermissions/write/revokeRole.js";
-import { type RoleInput, getRoleHash } from "../utils.js";
+import { getRoleHash, type RoleInput } from "../utils.js";
 
 export { isRevokeRoleSupported } from "../__generated__/IPermissions/write/revokeRole.js";
 
@@ -35,8 +35,8 @@ export type RevokeRoleParams = {
  */
 export function revokeRole(options: BaseTransactionOptions<RevokeRoleParams>) {
   return generatedRevokeRole({
+    account: options.targetAccountAddress,
     contract: options.contract,
     role: getRoleHash(options.role),
-    account: options.targetAccountAddress,
   });
 }

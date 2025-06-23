@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.pltwallet",
-  name: "PLTwallet",
-  homepage: "https://pltwallet.io/",
-  image_id: "a5d9dd15-8cef-42de-8bed-09e01a8b0200",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/id1581055631",
     android:
       "https://play.google.com/store/apps/details?id=com.palettechain.wallet&hl=ja&gl=US",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/id1581055631",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "pltwallet://",
-    universal: "https://pltwallet.io/",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://pltwallet.io/",
+  id: "io.pltwallet",
+  image_id: "a5d9dd15-8cef-42de-8bed-09e01a8b0200",
+  mobile: {
+    native: "pltwallet://",
+    universal: "https://pltwallet.io/",
+  },
+  name: "PLTwallet",
+  rdns: null,
 } as const;

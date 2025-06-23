@@ -1,19 +1,4 @@
 {
-  "name": "playground-web",
-  "version": "0.1.1",
-  "private": true,
-  "scripts": {
-    "dev": "rm -rf .next && next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "format": "biome format ./src --write",
-    "prelint": "biome check ./src",
-    "lint": "biome check ./src && knip && eslint ./src",
-    "prefix": "biome check ./src --fix",
-    "fix": "eslint ./src --fix",
-    "typecheck": "tsc --noEmit",
-    "update-insight-blueprints": "bun scripts/updateInsightBlueprints.ts"
-  },
   "dependencies": {
     "@abstract-foundation/agw-react": "^1.6.4",
     "@hookform/resolvers": "^3.9.1",
@@ -36,7 +21,7 @@
     "next-themes": "^0.4.6",
     "nextjs-toploader": "^1.6.12",
     "openapi-types": "^12.1.3",
-    "posthog-js": "1.67.1",
+    "posthog-js": "1.252.0",
     "prettier": "3.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -50,6 +35,7 @@
     "zod": "3.25.62"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.0.4",
     "@types/node": "22.14.1",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
@@ -63,5 +49,20 @@
     "tailwindcss": "3.4.17",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.8.3"
-  }
+  },
+  "name": "playground-web",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "rm -rf .next && next dev --turbopack",
+    "fix": "eslint ./src --fix",
+    "format": "biome format ./src --write",
+    "lint": "biome check ./src && knip && eslint ./src",
+    "prefix": "biome check ./src --fix",
+    "prelint": "biome check ./src",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "update-insight-blueprints": "bun scripts/updateInsightBlueprints.ts"
+  },
+  "version": "0.1.1"
 }

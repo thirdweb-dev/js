@@ -1,18 +1,18 @@
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import type { TeamInvite } from "@/api/team-invites";
 import type { TeamAccountRole } from "@/api/team-members";
-import type { Meta, StoryObj } from "@storybook/nextjs";
-import { teamStub } from "stories/stubs";
-import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
+import { teamStub } from "@/storybook/stubs";
+import { BadgeContainer, storybookThirdwebClient } from "@/storybook/utils";
 import { ManageInvitesSection } from "./ManageInvitesSection";
 
 const meta = {
-  title: "Team/Settings/Members/Invites",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Team/Settings/Members/Invites",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -37,13 +37,13 @@ function createInviteStub(
   expiresAt.setDate(expiresAt.getDate() + 10);
 
   const invite: TeamInvite = {
-    id: `invite-id-${email}`,
-    email,
-    role,
     createdAt: createdAt.toISOString(),
+    email,
+    expiresAt: expiresAt.toISOString(),
+    id: `invite-id-${email}`,
+    role,
     status,
     teamId: "team-id-foo",
-    expiresAt: expiresAt.toISOString(),
   };
 
   return invite;
@@ -66,21 +66,21 @@ function Story() {
       <div className="flex flex-col gap-10">
         <BadgeContainer label="Has permission">
           <ManageInvitesSection
-            team={freeTeam}
-            userHasEditPermission={true}
-            teamInvites={invitesStub}
             client={storybookThirdwebClient}
             deleteInvite={deleteInviteStub}
+            team={freeTeam}
+            teamInvites={invitesStub}
+            userHasEditPermission={true}
           />
         </BadgeContainer>
 
         <BadgeContainer label="No permission">
           <ManageInvitesSection
-            team={freeTeam}
-            userHasEditPermission={false}
-            teamInvites={invitesStub}
             client={storybookThirdwebClient}
             deleteInvite={deleteInviteStub}
+            team={freeTeam}
+            teamInvites={invitesStub}
+            userHasEditPermission={false}
           />
         </BadgeContainer>
       </div>

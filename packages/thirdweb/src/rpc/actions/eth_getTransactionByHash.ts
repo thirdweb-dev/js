@@ -1,9 +1,9 @@
 import {
   type EIP1193RequestFn,
   type EIP1474Methods,
+  formatTransaction,
   type Hash,
   type Transaction,
-  formatTransaction,
 } from "viem";
 
 type GetTransactionByHashParameters = {

@@ -7,9 +7,9 @@ import type { AppMetadata } from "../../../../../wallets/types.js";
 import type { WalletId } from "../../../../../wallets/wallet-types.js";
 import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
 import { useConnectedWallets } from "../../../../core/hooks/wallets/useConnectedWallets.js";
+import type { ConnectLocale } from "../locale/types.js";
 import { ConnectModalContent } from "../Modal/ConnectModalContent.js";
 import { useSetupScreen } from "../Modal/screen.js";
-import type { ConnectLocale } from "../locale/types.js";
 
 export type WalletSwitcherConnectionScreenProps = {
   chain: Chain | undefined;
@@ -46,8 +46,8 @@ export function WalletSwitcherConnectionScreen(
 
   const screenSetup = useSetupScreen({
     size: "compact",
-    welcomeScreen: undefined,
     wallets: wallets,
+    welcomeScreen: undefined,
   });
 
   return (
@@ -63,6 +63,10 @@ export function WalletSwitcherConnectionScreen(
       meta={{
         showThirdwebBranding: false,
       }}
+      modalHeader={{
+        onBack: props.onBack,
+        title: "Connect",
+      }}
       onClose={() => {}}
       onConnect={(w) => {
         props.onSelect(w);
@@ -70,18 +74,14 @@ export function WalletSwitcherConnectionScreen(
       }}
       recommendedWallets={props.recommendedWallets}
       screenSetup={screenSetup}
-      welcomeScreen={undefined}
-      wallets={wallets}
       setModalVisibility={() => {}}
       shouldSetActive={false}
       showAllWallets={props.showAllWallets}
       size="compact"
       walletConnect={props.walletConnect}
-      modalHeader={{
-        title: "Connect",
-        onBack: props.onBack,
-      }}
       walletIdsToHide={connectedWallets.map((x) => x.id)}
+      wallets={wallets}
+      welcomeScreen={undefined}
     />
   );
 }

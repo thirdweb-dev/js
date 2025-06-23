@@ -7,9 +7,9 @@ import { useWalletBalance } from "../../../core/hooks/others/useWalletBalance.js
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWalletChain } from "../../../core/hooks/wallets/useActiveWalletChain.js";
 import {
+  defaultTokens,
   type SupportedTokens,
   type TokenInfo,
-  defaultTokens,
 } from "../../../core/utils/defaultTokens.js";
 import { spacing } from "../../design-system/index.js";
 import { RNImage } from "../components/RNImage.js";
@@ -35,22 +35,22 @@ export const TokenListScreen = (props: TokenListScreenProps) => {
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.listContainer}>
         <TokenRow
-          chain={chain}
           address={account?.address}
+          chain={chain}
           client={props.client}
-          theme={props.theme}
           onTokenSelected={props.onTokenSelected}
+          theme={props.theme}
         />
         {tokens.map((t) => {
           return (
             <TokenRow
+              address={account?.address}
               chain={chain}
               client={props.client}
-              address={account?.address}
+              key={t.address}
+              onTokenSelected={props.onTokenSelected}
               theme={props.theme}
               token={t}
-              onTokenSelected={props.onTokenSelected}
-              key={t.address}
             />
           );
         })}
@@ -78,11 +78,11 @@ export const TokenRow = (props: {
   const inner = (
     <>
       <TokenIcon
-        token={token}
-        size={40}
         chain={chain}
         client={client}
+        size={40}
         theme={theme}
+        token={token}
       />
       <View style={{ flexDirection: "column", gap: spacing.xxs }}>
         <ThemedText theme={theme} type="defaultSemiBold">
@@ -95,17 +95,17 @@ export const TokenRow = (props: {
               {balanceQuery.data?.symbol}
             </ThemedText>
           ) : (
-            <Skeleton theme={theme} style={{ width: 80, height: 14 }} />
+            <Skeleton style={{ height: 14, width: 80 }} theme={theme} />
           ))}
       </View>
       {props.onTokenSelected && (
         <>
           <View style={{ flex: 1 }} />
           <RNImage
-            theme={theme}
-            size={24}
-            data={RIGHT_CHEVRON}
             color={theme.colors.secondaryIconColor}
+            data={RIGHT_CHEVRON}
+            size={24}
+            theme={theme}
           />
         </>
       )}
@@ -113,8 +113,8 @@ export const TokenRow = (props: {
   );
   return onTokenSelected ? (
     <TouchableOpacity
-      style={styles.tokenRowContainer}
       onPress={() => onTokenSelected(token)}
+      style={styles.tokenRowContainer}
     >
       {inner}
     </TouchableOpacity>
@@ -128,22 +128,22 @@ function formatBalanceOnButton(num: number) {
 }
 
 const styles = StyleSheet.create({
-  listContainer: {
-    flexDirection: "column",
+  emptyContainer: {
+    alignItems: "center",
     flex: 1,
-    paddingHorizontal: spacing.lg,
+    flexDirection: "column",
+    justifyContent: "center",
+    padding: spacing.lg,
+  },
+  listContainer: {
+    flex: 1,
+    flexDirection: "column",
     gap: spacing.md,
+    paddingHorizontal: spacing.lg,
   },
   tokenRowContainer: {
+    alignItems: "center",
     flexDirection: "row",
     gap: spacing.md,
-    alignItems: "center",
-  },
-  emptyContainer: {
-    flexDirection: "column",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: spacing.lg,
   },
 });

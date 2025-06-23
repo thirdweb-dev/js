@@ -1,22 +1,21 @@
+import type { Metadata } from "next";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
-import type { Metadata } from "next";
 import { SponsoredTxZksyncPreview } from "../../../../components/account-abstraction/sponsored-tx-zksync";
 import { PageLayout } from "../../../../components/blocks/APIHeader";
 import { CodeExample } from "../../../../components/code/code-example";
 
 export const metadata: Metadata = {
-  metadataBase,
-  title: "Native Account Abstraction",
   description:
     "On zkSync chains, you can take advantage of native account abstraction with no code changes",
+  metadataBase,
+  title: "Native Account Abstraction",
 };
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="Native Account Abstraction"
         description={
           <>
             On zkSync chains, you can take advantage of native account
@@ -24,6 +23,7 @@ export default function Page() {
           </>
         }
         docsLink="https://portal.thirdweb.com/connect/account-abstraction/overview?utm_source=playground"
+        title="Native Account Abstraction"
       >
         <SponsoredZksyncTx />
       </PageLayout>
@@ -35,7 +35,6 @@ function SponsoredZksyncTx() {
   return (
     <>
       <CodeExample
-        preview={<SponsoredTxZksyncPreview />}
         code={`\
 import { claimTo } from "thirdweb/extensions/erc1155";
 import { TransactionButton } from "thirdweb/react";
@@ -70,6 +69,7 @@ function App() {
   );
 }`}
         lang="tsx"
+        preview={<SponsoredTxZksyncPreview />}
       />
     </>
   );

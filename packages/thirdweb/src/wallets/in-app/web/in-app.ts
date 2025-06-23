@@ -304,7 +304,6 @@ export function inAppWallet(
   createOptions?: InAppWalletCreationOptions,
 ): Wallet<"inApp"> {
   return createInAppWallet({
-    createOptions,
     connectorFactory: async (client: ThirdwebClient) => {
       const { InAppWebConnector } = await import("./lib/web-connector.js");
       return new InAppWebConnector({
@@ -313,5 +312,6 @@ export function inAppWallet(
         storage: createOptions?.storage,
       });
     },
+    createOptions,
   }) as Wallet<"inApp">;
 }

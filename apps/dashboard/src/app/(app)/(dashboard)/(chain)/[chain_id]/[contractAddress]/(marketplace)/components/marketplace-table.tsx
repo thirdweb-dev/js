@@ -1,5 +1,5 @@
-import { WalletAddress } from "@/components/blocks/wallet-address";
-import { Button } from "@/components/ui/button";
+// biome-ignore-all lint/nursery/noNestedComponentDefinitions: TODO
+
 import {
   IconButton,
   Select,
@@ -15,7 +15,6 @@ import {
   usePrevious,
 } from "@chakra-ui/react";
 import type { UseQueryResult } from "@tanstack/react-query";
-import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import {
   ChevronFirstIcon,
   ChevronLastIcon,
@@ -37,6 +36,9 @@ import type {
   EnglishAuction,
 } from "thirdweb/extensions/marketplace";
 import { min } from "thirdweb/utils";
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { MediaCell } from "@/components/contracts/media-cell";
+import { Button } from "@/components/ui/button";
 import { ListingDrawer } from "./listing-drawer";
 import { LISTING_STATUS } from "./types";
 
@@ -92,29 +94,28 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
   const tableColumns: Column<DirectListing | EnglishAuction>[] = useMemo(() => {
     return [
       {
-        Header: "Listing Id",
         accessor: (row) => row.id.toString(),
+        Header: "Listing Id",
       },
       {
-        Header: "Media",
         accessor: (row) => row.asset.metadata,
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => <MediaCell cell={cell} client={contract.client} />,
+        Header: "Media",
       },
       {
-        Header: "Name",
         accessor: (row) => row.asset.metadata.name ?? "N/A",
+        Header: "Name",
       },
       {
-        Header: "Creator",
         accessor: (row) => row.creatorAddress,
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: ({ cell }: { cell: Cell<any, string> }) => (
           <WalletAddress address={cell.value} client={contract.client} />
         ),
+        Header: "Creator",
       },
       {
-        Header: "Price",
         accessor: (row) =>
           (row as DirectListing)?.currencyValuePerToken ||
           (row as EnglishAuction)?.buyoutCurrencyValue,
@@ -126,10 +127,11 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
             </p>
           );
         },
+        Header: "Price",
       },
       {
-        Header: "Status",
         accessor: (row) => LISTING_STATUS[row.status],
+        Header: "Status",
       },
     ];
   }, [contract.client]);
@@ -154,8 +156,8 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
       // biome-ignore lint/suspicious/noExplicitAny: FIXME
       data: (renderData as any) || [],
       initialState: {
-        pageSize: queryParams.count,
         pageIndex: 0,
+        pageSize: queryParams.count,
       },
       manualPagination: true,
       pageCount: Math.max(
@@ -176,7 +178,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
   // FIXME: re-work tables and pagination with @tanstack/table@latest - which (I believe) does not need this workaround anymore
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    setQueryParams({ start: pageIndex * pageSize, count: pageSize });
+    setQueryParams({ count: pageSize, start: pageIndex * pageSize });
   }, [pageIndex, pageSize, setQueryParams]);
 
   const [tokenRow, setTokenRow] = useState<
@@ -187,37 +189,37 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
     <div className="flex flex-col gap-4">
       <div className="flex flex-row">
         <Button
+          className="w-18 rounded-r-none"
           onClick={() => setListingsToShow("all")}
           variant={listingsToShow === "all" ? "default" : "outline"}
-          className="w-18 rounded-r-none"
         >
           All
         </Button>
         <Button
+          className="rounded-l-none"
           onClick={() => setListingsToShow("valid")}
           variant={listingsToShow === "valid" ? "default" : "outline"}
-          className="rounded-l-none"
         >
           Valid
         </Button>
       </div>
-      <TableContainer maxW="100%" className="relative">
+      <TableContainer className="relative" maxW="100%">
         {((listingsToShow === "all" && getAllQueryResult.isFetching) ||
           (listingsToShow === "valid" && getValidQueryResult.isFetching)) && (
           <Spinner
             color="primary"
-            size="xs"
             position="absolute"
-            top={2}
             right={4}
+            size="xs"
+            top={2}
           />
         )}
         <ListingDrawer
           contract={contract}
           data={tokenRow}
+          isLoggedIn={isLoggedIn}
           isOpen={!!tokenRow}
           onClose={() => setTokenRow(null)}
-          isLoggedIn={isLoggedIn}
         />
         <Table {...getTableProps()}>
           <Thead>
@@ -247,15 +249,16 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
               return (
                 <Tr
                   {...row.getRowProps()}
-                  role="group"
-                  className="hover:bg-card"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setTokenRow(row.original)}
-                  borderBottomWidth={1}
                   _last={{ borderBottomWidth: 0 }}
+                  borderBottomWidth={1}
                   borderColor="borderColor"
+                  className="hover:bg-card"
                   // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                   key={rowIndex}
+                  onClick={() => setTokenRow(row.original)}
+                  // biome-ignore lint/a11y/useSemanticElements: FIXME
+                  role="group"
+                  style={{ cursor: "pointer" }}
                 >
                   {row.cells.map((cell, cellIndex) => (
                     <Td
@@ -280,15 +283,15 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
       <div className="flex w-full items-center justify-center">
         <div className="flex flex-row items-center gap-2">
           <IconButton
-            isDisabled={!canPreviousPage || totalCountQuery.isPending}
             aria-label="first page"
             icon={<ChevronFirstIcon className="size-4" />}
+            isDisabled={!canPreviousPage || totalCountQuery.isPending}
             onClick={() => gotoPage(0)}
           />
           <IconButton
-            isDisabled={!canPreviousPage || totalCountQuery.isPending}
             aria-label="previous page"
             icon={<ChevronLeftIcon className="size-4" />}
+            isDisabled={!canPreviousPage || totalCountQuery.isPending}
             onClick={() => previousPage()}
           />
           <p className="whitespace-nowrap">
@@ -302,24 +305,24 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
             </Skeleton>
           </p>
           <IconButton
-            isDisabled={!canNextPage || totalCountQuery.isPending}
             aria-label="next page"
             icon={<ChevronRightIcon className="size-4" />}
+            isDisabled={!canNextPage || totalCountQuery.isPending}
             onClick={() => nextPage()}
           />
           <IconButton
-            isDisabled={!canNextPage || totalCountQuery.isPending}
             aria-label="last page"
             icon={<ChevronLastIcon className="size-4" />}
+            isDisabled={!canNextPage || totalCountQuery.isPending}
             onClick={() => gotoPage(pageCount - 1)}
           />
 
           <Select
+            isDisabled={totalCountQuery.isPending}
             onChange={(e) => {
               setPageSize(Number.parseInt(e.target.value as string, 10));
             }}
             value={pageSize}
-            isDisabled={totalCountQuery.isPending}
           >
             <option value="25">25</option>
             <option value="50">50</option>

@@ -47,8 +47,8 @@ export async function generateMerkleTreeInfoERC721(
 
   // generate merkle tree from snapshot
   const { shardedMerkleInfo, uri } = await processSnapshotERC721({
-    snapshot,
     client: contract.client,
+    snapshot,
   });
   return {
     merkleRoot: shardedMerkleInfo.merkleRoot,

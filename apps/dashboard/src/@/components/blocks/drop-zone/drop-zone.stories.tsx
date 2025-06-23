@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import { DropZone } from "./drop-zone";
 
 const meta = {
-  title: "blocks/DropZone",
   component: DropZone,
   decorators: [
     (Story) => (
@@ -11,6 +10,7 @@ const meta = {
       </div>
     ),
   ],
+  title: "blocks/DropZone",
 } satisfies Meta<typeof DropZone>;
 
 export default meta;
@@ -18,36 +18,36 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
+    accept: undefined,
+    description: "This is a description for drop zone",
     isError: false,
     onDrop: () => {},
-    title: "This is a title",
-    description: "This is a description for drop zone",
-    accept: undefined,
     resetButton: undefined,
+    title: "This is a title",
   },
 };
 
 export const ErrorState: Story = {
   args: {
+    accept: undefined,
+    description: "This is a description",
     isError: true,
     onDrop: () => {},
-    title: "this is title",
-    description: "This is a description",
-    accept: undefined,
     resetButton: undefined,
+    title: "this is title",
   },
 };
 
 export const ErrorStateWithResetButton: Story = {
   args: {
+    accept: undefined,
+    description: "This is a description",
     isError: true,
     onDrop: () => {},
-    title: "this is title",
-    description: "This is a description",
-    accept: undefined,
     resetButton: {
       label: "Remove Files",
       onClick: () => {},
     },
+    title: "this is title",
   },
 };

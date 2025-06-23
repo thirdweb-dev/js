@@ -1,19 +1,19 @@
+import { ChevronDownIcon, ChevronUpIcon, XIcon } from "lucide-react";
+import type { ThirdwebContract } from "thirdweb";
+import { AdminOnly } from "@/components/contracts/roles/admin-only";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import { ChevronDownIcon, ChevronUpIcon, XIcon } from "lucide-react";
-import type { ThirdwebContract } from "thirdweb";
-import { ClaimConditionTypeData, useClaimConditionsFormContext } from ".";
 import { PricePreview } from "../price-preview";
-import { ClaimPriceInput } from "./Inputs/ClaimPriceInput";
+import { ClaimConditionTypeData, useClaimConditionsFormContext } from ".";
+import { CustomFormGroup } from "./common";
 import { ClaimerSelection } from "./Inputs/ClaimerSelection";
+import { ClaimPriceInput } from "./Inputs/ClaimPriceInput";
 import { CreatorInput } from "./Inputs/CreatorInput";
 import { MaxClaimablePerWalletInput } from "./Inputs/MaxClaimablePerWalletInput";
 import { MaxClaimableSupplyInput } from "./Inputs/MaxClaimableSupplyInput";
 import { PhaseNameInput } from "./Inputs/PhaseNameInput";
 import { PhaseStartTimeInput } from "./Inputs/PhaseStartTimeInput";
-import { CustomFormGroup } from "./common";
 
 interface ClaimConditionsPhaseProps {
   contract: ThirdwebContract;
@@ -45,10 +45,10 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
     <Card className="relative flex flex-col gap-8 p-8">
       <div className="absolute top-3 right-3 flex flex-row items-start justify-between gap-1">
         <Button
-          variant="ghost"
+          className="gap-2"
           onClick={toggleEditing}
           size="sm"
-          className="gap-2"
+          variant="ghost"
         >
           {field.isEditing ? "Collapse" : isAdmin ? "Edit" : "See Phase"}
           {field.isEditing ? (
@@ -59,11 +59,11 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
         </Button>
         <AdminOnly contract={contract}>
           <Button
-            variant="ghost"
-            onClick={onRemove}
-            disabled={isPending}
-            size="sm"
             className="gap-2 text-red-300"
+            disabled={isPending}
+            onClick={onRemove}
+            size="sm"
+            variant="ghost"
           >
             Remove <XIcon className="size-4" />
           </Button>
@@ -76,7 +76,7 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
             {ClaimConditionTypeData[claimConditionType].name}
           </p>
           {isActive && (
-            <Badge variant="success" className="rounded-lg p-1.5">
+            <Badge className="rounded-lg p-1.5" variant="success">
               Currently active
             </Badge>
           )}
@@ -104,9 +104,9 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
             </p>
           </div>
           <PricePreview
-            price={field.price}
-            currencyAddress={field.currencyAddress}
             contractChainId={contract.chain.id}
+            currencyAddress={field.currencyAddress}
+            price={field.price}
           />
           <div className="flex flex-col">
             <p className="font-bold text-muted-foreground">Limit per wallet</p>

@@ -1,12 +1,9 @@
 "use client";
 
+import { PrimaryInfoItem } from "app/(app)/(dashboard)/(chain)/[chain_id]/(chainPage)/components/server/primary-info-item";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import {
-  type EngineInstance,
-  useEngineSystemHealth,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { PrimaryInfoItem } from "app/(app)/(dashboard)/(chain)/[chain_id]/(chainPage)/components/server/primary-info-item";
+import { type EngineInstance, useEngineSystemHealth } from "@/hooks/useEngine";
 
 export function Healthcheck({ instance }: { instance: EngineInstance }) {
   const query = useEngineSystemHealth(instance.url, 5_000);

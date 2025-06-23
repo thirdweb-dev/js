@@ -1,8 +1,8 @@
 "use server";
 
 import "server-only";
-import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "../constants/public-envs";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
+import { getAuthToken } from "./auth-token";
 
 export type Notification = {
   id: string;
@@ -41,17 +41,17 @@ export async function getUnreadNotifications(cursor?: string) {
   if (!response.ok) {
     const body = await response.text();
     return {
-      status: "error",
-      reason: "unknown",
       body,
+      reason: "unknown",
+      status: "error",
     } as const;
   }
 
   const data = (await response.json()) as NotificationsApiResponse;
 
   return {
-    status: "success",
     data,
+    status: "success",
   } as const;
 }
 
@@ -77,17 +77,17 @@ export async function getArchivedNotifications(cursor?: string) {
   if (!response.ok) {
     const body = await response.text();
     return {
-      status: "error",
-      reason: "unknown",
       body,
+      reason: "unknown",
+      status: "error",
     } as const;
   }
 
   const data = (await response.json()) as NotificationsApiResponse;
 
   return {
-    status: "success",
     data,
+    status: "success",
   } as const;
 }
 
@@ -109,9 +109,9 @@ export async function getUnreadNotificationsCount() {
   if (!response.ok) {
     const body = await response.text();
     return {
-      status: "error",
-      reason: "unknown",
       body,
+      reason: "unknown",
+      status: "error",
     } as const;
   }
   const data = (await response.json()) as {
@@ -120,8 +120,8 @@ export async function getUnreadNotificationsCount() {
     };
   };
   return {
-    status: "success",
     data,
+    status: "success",
   } as const;
 }
 
@@ -135,20 +135,20 @@ export async function markNotificationAsRead(notificationId?: string) {
     NEXT_PUBLIC_THIRDWEB_API_HOST,
   );
   const response = await fetch(url, {
-    method: "PUT",
+    // if notificationId is provided, mark it as read, otherwise mark all as read
+    body: JSON.stringify(notificationId ? { notificationId } : {}),
     headers: {
       Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",
     },
-    // if notificationId is provided, mark it as read, otherwise mark all as read
-    body: JSON.stringify(notificationId ? { notificationId } : {}),
+    method: "PUT",
   });
   if (!response.ok) {
     const body = await response.text();
     return {
-      status: "error",
-      reason: "unknown",
       body,
+      reason: "unknown",
+      status: "error",
     } as const;
   }
   return {

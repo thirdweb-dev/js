@@ -23,14 +23,14 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
     async () => {
       // bootstrap infra and implementation
       await deployCloneFactory({
+        account: TEST_ACCOUNT_A,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
-        account: TEST_ACCOUNT_A,
       });
       await deployImplementation({
+        account: TEST_ACCOUNT_A,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
-        account: TEST_ACCOUNT_A,
         contractId: "DropERC721",
       });
 
@@ -52,16 +52,16 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
 
       const initializeTransaction = initialize({
         contract: implementationContract,
-        name: "NFTDrop unified",
-        symbol: "NFTD",
+        contractURI: "",
         defaultAdmin: TEST_ACCOUNT_A.address,
+        name: "NFTDrop unified",
         platformFeeBps: 0n,
         platformFeeRecipient: TEST_ACCOUNT_A.address,
         royaltyBps: 0n,
         royaltyRecipient: TEST_ACCOUNT_A.address,
         saleRecipient: TEST_ACCOUNT_A.address,
+        symbol: "NFTD",
         trustedForwarders: [],
-        contractURI: "",
       });
 
       const transaction = prepareAutoFactoryDeployTransaction({
@@ -71,8 +71,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
         initializeTransaction,
       });
       const hash = await sendTransaction({
-        transaction,
         account: TEST_ACCOUNT_A,
+        transaction,
       });
       expect(hash.transactionHash).toBeDefined();
     },
@@ -99,16 +99,16 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
 
       const initializeTransaction = initialize({
         contract: implementationContract,
-        name: "NFTDrop unified",
-        symbol: "NFTD",
+        contractURI: "",
         defaultAdmin: TEST_ACCOUNT_A.address,
+        name: "NFTDrop unified",
         platformFeeBps: 0n,
         platformFeeRecipient: TEST_ACCOUNT_A.address,
         royaltyBps: 0n,
         royaltyRecipient: TEST_ACCOUNT_A.address,
         saleRecipient: TEST_ACCOUNT_A.address,
+        symbol: "NFTD",
         trustedForwarders: [],
-        contractURI: "",
       });
 
       const transaction = prepareAutoFactoryDeployTransaction({
@@ -118,8 +118,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
         initializeTransaction,
       });
       const hash = await sendTransaction({
-        transaction,
         account: TEST_ACCOUNT_A,
+        transaction,
       });
       expect(hash.transactionHash).toBeDefined();
     },
@@ -144,16 +144,16 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
 
     const initializeTransaction = initialize({
       contract: implementationContract,
-      name: "NFTDrop unified",
-      symbol: "NFTD",
+      contractURI: "",
       defaultAdmin: TEST_ACCOUNT_A.address,
+      name: "NFTDrop unified",
       platformFeeBps: 0n,
       platformFeeRecipient: TEST_ACCOUNT_A.address,
       royaltyBps: 0n,
       royaltyRecipient: TEST_ACCOUNT_A.address,
       saleRecipient: TEST_ACCOUNT_A.address,
+      symbol: "NFTD",
       trustedForwarders: [],
-      contractURI: "",
     });
 
     const transaction = prepareAutoFactoryDeployTransaction({
@@ -163,8 +163,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
       initializeTransaction,
     });
     const receipt = await sendAndConfirmTransaction({
-      transaction,
       account: TEST_ACCOUNT_A,
+      transaction,
     });
     const proxyEvent = proxyDeployedV2Event();
     const decodedEvent = parseEventLogs({
@@ -181,8 +181,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       deployMetadata,
-      isCrosschain: true,
       initializeData: decodedEvent[0]?.args.data,
+      isCrosschain: true,
     });
 
     expect(deployed).toBeDefined();
@@ -207,16 +207,16 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
 
     const initializeTransaction = initialize({
       contract: implementationContract,
-      name: "NFTDrop unified",
-      symbol: "NFTD",
+      contractURI: "",
       defaultAdmin: TEST_ACCOUNT_A.address,
+      name: "NFTDrop unified",
       platformFeeBps: 0n,
       platformFeeRecipient: TEST_ACCOUNT_A.address,
       royaltyBps: 0n,
       royaltyRecipient: TEST_ACCOUNT_A.address,
       saleRecipient: TEST_ACCOUNT_A.address,
+      symbol: "NFTD",
       trustedForwarders: [],
-      contractURI: "",
     });
 
     let salt = "test";
@@ -228,8 +228,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
       salt,
     });
     let receipt = await sendAndConfirmTransaction({
-      transaction,
       account: TEST_ACCOUNT_A,
+      transaction,
     });
     let proxyEvent = proxyDeployedV2Event();
     let decodedEvent = parseEventLogs({
@@ -248,8 +248,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
       salt,
     });
     receipt = await sendAndConfirmTransaction({
-      transaction,
       account: TEST_ACCOUNT_A,
+      transaction,
     });
     proxyEvent = proxyDeployedV2Event();
     decodedEvent = parseEventLogs({
@@ -264,14 +264,14 @@ describe.runIf(process.env.TW_SECRET_KEY)("deployFromMetadata", () => {
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       cloneFactoryContract,
-      initializeData: decodedEvent[0]?.args.data,
       implementationAddress: implementationContract.address,
+      initializeData: decodedEvent[0]?.args.data,
       isCrosschain: true,
       salt: keccakId("test2"),
     });
     receipt = await sendAndConfirmTransaction({
-      transaction,
       account: TEST_ACCOUNT_A,
+      transaction,
     });
     proxyEvent = proxyDeployedV2Event();
     decodedEvent = parseEventLogs({

@@ -14,14 +14,14 @@ export async function customJwt(args: {
   const clientFetch = getClientFetch(args.client, args.ecosystem);
 
   const res = await clientFetch(ROUTE_AUTH_JWT_CALLBACK, {
-    method: "POST",
+    body: stringify({
+      developerClientId: args.client.clientId,
+      jwt: args.jwt,
+    }),
     headers: {
       "Content-Type": "application/json",
     },
-    body: stringify({
-      jwt: args.jwt,
-      developerClientId: args.client.clientId,
-    }),
+    method: "POST",
   });
 
   if (!res.ok) {

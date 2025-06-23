@@ -1,7 +1,7 @@
 "use server";
 
-import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "../constants/public-envs";
+import { getAuthToken } from "@/api/auth-token";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 
 export async function confirmEmailWithOTP(otp: string) {
   const token = await getAuthToken();
@@ -15,14 +15,14 @@ export async function confirmEmailWithOTP(otp: string) {
   const res = await fetch(
     `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/account/confirmEmail`,
     {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify({
         confirmationToken: otp,
       }),
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      method: "PUT",
     },
   );
 

@@ -1,6 +1,16 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
+import { CircleAlertIcon } from "lucide-react";
+import { type UseFormReturn, useForm } from "react-hook-form";
+import type { NFT, ThirdwebClient } from "thirdweb";
+import { type ThirdwebContract, toTokens } from "thirdweb";
+import type { ChainMetadata } from "thirdweb/chains";
+import type { getActiveClaimCondition } from "thirdweb/extensions/erc721";
+import * as z from "zod";
 import { CustomMediaRenderer } from "@/components/blocks/media-renderer";
+import { TransactionButton } from "@/components/tx-button";
 import {
   Form,
   FormControl,
@@ -14,16 +24,6 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { CircleAlertIcon } from "lucide-react";
-import { type UseFormReturn, useForm } from "react-hook-form";
-import { type ThirdwebContract, toTokens } from "thirdweb";
-import type { NFT, ThirdwebClient } from "thirdweb";
-import type { ChainMetadata } from "thirdweb/chains";
-import type { getActiveClaimCondition } from "thirdweb/extensions/erc721";
-import * as z from "zod";
 import { PublicPageConnectButton } from "../../../_components/PublicPageConnectButton";
 import { SupplyClaimedProgress } from "../../../_components/supply-claimed-progress";
 import { TokenPrice } from "../../../_components/token-price";
@@ -66,64 +66,64 @@ export type BuyNFTDropUIProps = {
 
 export function BuyNFTDropUI(props: BuyNFTDropUIProps) {
   const form = useForm<z.infer<typeof buyNFTDropFormSchema>>({
-    resolver: zodResolver(buyNFTDropFormSchema),
     defaultValues: {
       amount: 1,
     },
+    resolver: zodResolver(buyNFTDropFormSchema),
     reValidateMode: "onChange",
   });
   const nftAmountToClaim = Number(form.watch("amount"));
 
   const claimParamsQuery = useQuery({
-    queryKey: [
-      NFT_ASSET_PAGE_ERC721_QUERIES_KEY_ROOT,
-      "erc721-claimParamsQuery",
-      {
-        contract: props.contract,
-        accountAddress: props.activeAccountAddress,
-      },
-    ],
     queryFn: async () => {
       if (!props.activeAccountAddress) {
         return publicPrice;
       }
 
       return props.getNFTDropClaimParams({
-        contract: props.contract,
-        chainMetadata: props.chainMetadata,
         accountAddress: props.activeAccountAddress,
+        chainMetadata: props.chainMetadata,
+        contract: props.contract,
       });
     },
+    queryKey: [
+      NFT_ASSET_PAGE_ERC721_QUERIES_KEY_ROOT,
+      "erc721-claimParamsQuery",
+      {
+        accountAddress: props.activeAccountAddress,
+        contract: props.contract,
+      },
+    ],
   });
 
   const publicPrice = {
-    pricePerTokenWei: props.claimCondition.pricePerToken,
     currencyAddress: props.claimCondition.currency,
     decimals: props.claimCondition.decimals,
-    symbol: props.claimCondition.symbol,
     maxClaimableSupply: props.claimCondition.maxClaimableSupply,
+    pricePerTokenWei: props.claimCondition.pricePerToken,
+    symbol: props.claimCondition.symbol,
   };
 
   const isAmountValid = !form.formState.errors.amount;
 
   const nftsToClaimQuery = useQuery({
+    enabled: isAmountValid,
+    queryFn: async () => {
+      return props.getNFTsToClaim({
+        contract: props.contract,
+        count: nftAmountToClaim,
+        nextTokenIdToClaim: props.nextTokenIdToClaim,
+      });
+    },
     queryKey: [
       NFT_ASSET_PAGE_ERC721_QUERIES_KEY_ROOT,
       "erc721-nftsToClaimQuery",
       {
         contract: props.contract,
-        start: props.nextTokenIdToClaim.toString(),
         count: nftAmountToClaim,
+        start: props.nextTokenIdToClaim.toString(),
       },
     ],
-    enabled: isAmountValid,
-    queryFn: async () => {
-      return props.getNFTsToClaim({
-        contract: props.contract,
-        nextTokenIdToClaim: props.nextTokenIdToClaim,
-        count: nftAmountToClaim,
-      });
-    },
   });
 
   const isShowingCustomPrice =
@@ -156,6 +156,7 @@ export function BuyNFTDropUI(props: BuyNFTDropUIProps) {
                   autoComplete="off"
                   type="text"
                   {...field}
+                  className="!text-2xl h-auto bg-muted/50 font-bold"
                   onChange={(e) => {
                     const num = Number(e.target.value);
                     const value = Number.isNaN(num) ? 0 : num;
@@ -170,7 +171,6 @@ export function BuyNFTDropUI(props: BuyNFTDropUIProps) {
                       form.trigger("amount");
                     }
                   }}
-                  className="!text-2xl h-auto bg-muted/50 font-bold"
                 />
               </FormControl>
               <FormDescription>
@@ -202,9 +202,9 @@ export function BuyNFTDropUI(props: BuyNFTDropUIProps) {
               {!nftsToClaimQuery.isPending &&
                 nftsToShow?.map((nft) => (
                   <MiniNFTCard
-                    key={nft.id}
-                    data={nft}
                     client={props.contract.client}
+                    data={nft}
+                    key={nft.id}
                   />
                 ))}
 
@@ -220,10 +220,10 @@ export function BuyNFTDropUI(props: BuyNFTDropUIProps) {
                   length: Math.min(nftAmountToClaim, maxNFTsToShow),
                 }).map((_, index) => (
                   <MiniNFTCard
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                    key={index}
-                    data={undefined}
                     client={props.contract.client}
+                    data={undefined}
+                    // biome-ignore lint/suspicious/noArrayIndexKey: EXPECTED
+                    key={index}
                   />
                 ))}
             </div>
@@ -311,14 +311,14 @@ export function BuyNFTDropUI(props: BuyNFTDropUIProps) {
 
         {props.activeAccountAddress ? (
           <TransactionButton
+            className="w-full"
             client={props.contract.client}
             isLoggedIn={true}
-            txChainID={props.contract.chain.id}
-            transactionCount={undefined}
             isPending={form.formState.isSubmitting}
+            transactionCount={undefined}
+            txChainID={props.contract.chain.id}
             type="submit"
             variant="default"
-            className="w-full"
           >
             Buy NFT{nftAmountToClaim > 1 ? "s" : ""}
           </TransactionButton>
@@ -330,10 +330,7 @@ export function BuyNFTDropUI(props: BuyNFTDropUIProps) {
   );
 }
 
-function MiniNFTCard(props: {
-  data: NFT | undefined;
-  client: ThirdwebClient;
-}) {
+function MiniNFTCard(props: { data: NFT | undefined; client: ThirdwebClient }) {
   return (
     <ToolTipLabel
       label={
@@ -360,13 +357,13 @@ function MiniNFTCard(props: {
           <Skeleton className="absolute inset-0" />
           {props.data ? (
             <CustomMediaRenderer
+              alt={props.data.metadata.name?.toString() || ""}
+              className="aspect-square h-full w-full"
               client={props.client}
+              poster={props.data.metadata.image}
               src={
                 props.data.metadata.animation_url || props.data.metadata.image
               }
-              alt={props.data.metadata.name?.toString() || ""}
-              poster={props.data.metadata.image}
-              className="aspect-square h-full w-full"
             />
           ) : (
             <Skeleton className="aspect-square h-full w-full" />

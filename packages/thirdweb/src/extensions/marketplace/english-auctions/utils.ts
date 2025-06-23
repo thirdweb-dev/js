@@ -18,10 +18,10 @@ export async function mapEnglishAuction(
   const { latestBlock, rawAuction } = options;
   // process the listing
   const status = computeStatus({
-    listingStatus: rawAuction.status,
     blockTimeStamp: latestBlock.timestamp,
-    startTimestamp: rawAuction.startTimestamp,
     endTimestamp: rawAuction.endTimestamp,
+    listingStatus: rawAuction.status,
+    startTimestamp: rawAuction.startTimestamp,
   });
 
   const currencyContract = getContract({
@@ -43,40 +43,40 @@ export async function mapEnglishAuction(
   ]);
 
   return {
-    id: rawAuction.auctionId,
-    creatorAddress: rawAuction.auctionCreator,
-    assetContractAddress: rawAuction.assetContract,
-    tokenId: rawAuction.tokenId,
-    quantity: rawAuction.quantity,
-    currencyContractAddress: rawAuction.currency,
     asset: nftAsset,
-    startTimeInSeconds: rawAuction.startTimestamp,
-    endTimeInSeconds: rawAuction.endTimestamp,
-    status,
-    minimumBidAmount: rawAuction.minimumBidAmount,
-    minimumBidCurrencyValue: {
-      ...auctionCurrencyMetadata,
-      value: rawAuction.minimumBidAmount,
-      displayValue: toTokens(
-        rawAuction.minimumBidAmount,
-        auctionCurrencyMetadata.decimals,
-      ),
-      tokenAddress: currencyContract.address,
-      chainId: currencyContract.chain.id,
-    },
+    assetContractAddress: rawAuction.assetContract,
+    bidBufferBps: rawAuction.bidBufferBps,
     buyoutBidAmount: rawAuction.buyoutBidAmount,
     buyoutCurrencyValue: {
       ...auctionCurrencyMetadata,
-      value: rawAuction.buyoutBidAmount,
+      chainId: currencyContract.chain.id,
       displayValue: toTokens(
         rawAuction.buyoutBidAmount,
         auctionCurrencyMetadata.decimals,
       ),
       tokenAddress: currencyContract.address,
-      chainId: currencyContract.chain.id,
+      value: rawAuction.buyoutBidAmount,
     },
+    creatorAddress: rawAuction.auctionCreator,
+    currencyContractAddress: rawAuction.currency,
+    endTimeInSeconds: rawAuction.endTimestamp,
+    id: rawAuction.auctionId,
+    minimumBidAmount: rawAuction.minimumBidAmount,
+    minimumBidCurrencyValue: {
+      ...auctionCurrencyMetadata,
+      chainId: currencyContract.chain.id,
+      displayValue: toTokens(
+        rawAuction.minimumBidAmount,
+        auctionCurrencyMetadata.decimals,
+      ),
+      tokenAddress: currencyContract.address,
+      value: rawAuction.minimumBidAmount,
+    },
+    quantity: rawAuction.quantity,
+    startTimeInSeconds: rawAuction.startTimestamp,
+    status,
     timeBufferInSeconds: rawAuction.timeBufferInSeconds,
-    bidBufferBps: rawAuction.bidBufferBps,
+    tokenId: rawAuction.tokenId,
     type: "english-auction",
   };
 }

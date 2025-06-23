@@ -1,13 +1,16 @@
 "use client";
 
+import { Card } from "chakra/card";
+import { Heading } from "chakra/heading";
+import { Text } from "chakra/text";
+import { ChartAreaIcon, InfoIcon } from "lucide-react";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import {
   type EngineInstance,
   useEngineQueueMetrics,
   useEngineSystemMetrics,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { ChartAreaIcon, InfoIcon } from "lucide-react";
-import { Card, Heading, Text, TrackedLink } from "tw-components";
+} from "@/hooks/useEngine";
 import { ErrorRate } from "./ErrorRate";
 import { Healthcheck } from "./Healthcheck";
 import { StatusCodes } from "./StatusCodes";
@@ -49,15 +52,14 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
           </div>
           <Text>
             Upgrade to a{" "}
-            <TrackedLink
-              href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/create`}
-              isExternal
+            <UnderlineLink
               color="blue.500"
-              category="engine"
-              label="metrics-cloud-hosted-upsell"
+              href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/create`}
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Engine instance managed by thirdweb
-            </TrackedLink>{" "}
+            </UnderlineLink>{" "}
             to view these metrics.
           </Text>
         </div>

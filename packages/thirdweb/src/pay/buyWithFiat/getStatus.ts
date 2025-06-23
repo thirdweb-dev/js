@@ -158,8 +158,8 @@ export async function getBuyWithFiatStatus(
   params: GetBuyWithFiatStatusParams,
 ): Promise<BuyWithFiatStatus> {
   const result = await onrampStatus({
-    id: params.intentId,
     client: params.client,
+    id: params.intentId,
   });
 
   return toBuyWithFiatStatus({ intentId: params.intentId, result });
@@ -180,18 +180,18 @@ function toBuyWithFiatStatus(args: {
     typeof result.status,
     "NONE" | "PENDING_PAYMENT" | "PAYMENT_FAILED" | "ON_RAMP_TRANSFER_COMPLETED"
   > = {
-    CREATED: "PENDING_PAYMENT",
-    PENDING: "PENDING_PAYMENT",
-    FAILED: "PAYMENT_FAILED",
     COMPLETED: "ON_RAMP_TRANSFER_COMPLETED",
+    CREATED: "PENDING_PAYMENT",
+    FAILED: "PAYMENT_FAILED",
+    PENDING: "PENDING_PAYMENT",
   } as const;
 
   const mappedStatus = STATUS_MAP[result.status];
 
   return buildPlaceholderStatus({
     intentId,
-    status: mappedStatus,
     purchaseData: result.purchaseData,
+    status: mappedStatus,
   });
 }
 
@@ -209,11 +209,11 @@ function buildPlaceholderStatus(args: {
   // Build a minimal—but type-complete—object that satisfies BuyWithFiatStatus.
   const emptyToken: PayTokenInfo = {
     chainId: 0,
-    tokenAddress: "",
     decimals: 18,
-    priceUSDCents: 0,
     name: "",
+    priceUSDCents: 0,
     symbol: "",
+    tokenAddress: "",
   };
 
   type BuyWithFiatStatusWithData = Exclude<
@@ -222,6 +222,8 @@ function buildPlaceholderStatus(args: {
   >;
 
   const quote: BuyWithFiatStatusWithData["quote"] = {
+    createdAt: new Date().toISOString(),
+    estimatedDurationSeconds: 0,
     estimatedOnRampAmount: "0",
     estimatedOnRampAmountWei: "0",
 
@@ -231,19 +233,17 @@ function buildPlaceholderStatus(args: {
     fromCurrency: {
       amount: "0",
       amountUnits: "USD",
-      decimals: 2,
       currencySymbol: "USD",
+      decimals: 2,
     },
     fromCurrencyWithFees: {
       amount: "0",
       amountUnits: "USD",
-      decimals: 2,
       currencySymbol: "USD",
+      decimals: 2,
     },
     onRampToken: emptyToken,
     toToken: emptyToken,
-    estimatedDurationSeconds: 0,
-    createdAt: new Date().toISOString(),
   } as BuyWithFiatStatusWithData["quote"];
 
   // The source/destination fields can only be filled accurately when extra context is returned
@@ -251,12 +251,12 @@ function buildPlaceholderStatus(args: {
   // now (they are optional).
 
   const base: Exclude<BuyWithFiatStatus, { status: "NOT_FOUND" }> = {
+    fromAddress: "",
     intentId,
+    purchaseData: purchaseData as object | undefined,
+    quote,
     status,
     toAddress: "",
-    fromAddress: "",
-    quote,
-    purchaseData: purchaseData as object | undefined,
   };
 
   return base;

@@ -1,12 +1,5 @@
 "use client";
 
-import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
-import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
-import {
-  type AddContractSubscriptionInput,
-  useEngineAddContractSubscription,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { useResolveContractAbi } from "@3rdweb-sdk/react/hooks/useResolveContractAbi";
 import {
   Collapse,
   Flex,
@@ -25,21 +18,23 @@ import {
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { useV5DashboardChain } from "lib/v5-adapter";
+import { Button } from "chakra/button";
+import { Card } from "chakra/card";
+import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
 import { CirclePlusIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
-import { type ThirdwebClient, getContract, isAddress } from "thirdweb";
+import { getContract, isAddress, type ThirdwebClient } from "thirdweb";
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import {
-  Button,
-  Card,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  Text,
-} from "tw-components";
+  type AddContractSubscriptionInput,
+  useEngineAddContractSubscription,
+} from "@/hooks/useEngine";
+import { useResolveContractAbi } from "@/hooks/useResolveContractAbi";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface AddContractSubscriptionButtonProps {
   instanceUrl: string;
@@ -55,11 +50,11 @@ export const AddContractSubscriptionButton: React.FC<
   return (
     <>
       <Button
-        onClick={disclosure.onOpen}
-        variant="ghost"
-        size="sm"
-        leftIcon={<CirclePlusIcon className="size-6" />}
         colorScheme="primary"
+        leftIcon={<CirclePlusIcon className="size-6" />}
+        onClick={disclosure.onOpen}
+        size="sm"
+        variant="ghost"
         w="fit-content"
       >
         Add Contract Subscription
@@ -67,10 +62,10 @@ export const AddContractSubscriptionButton: React.FC<
 
       {disclosure.isOpen && (
         <AddModal
-          instanceUrl={instanceUrl}
-          disclosure={disclosure}
           authToken={authToken}
           client={client}
+          disclosure={disclosure}
+          instanceUrl={instanceUrl}
         />
       )}
     </>
@@ -99,10 +94,10 @@ const AddModal = ({
   client: ThirdwebClient;
 }) => {
   const { mutate: addContractSubscription } = useEngineAddContractSubscription({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
-  const trackEvent = useTrack();
+
   const { onSuccess, onError } = useTxNotifications(
     "Created Contract Subscription.",
     "Failed to create Contract Subscription.",
@@ -114,10 +109,10 @@ const AddModal = ({
   const form = useForm<AddContractSubscriptionForm>({
     defaultValues: {
       chainId: 84532,
-      processEventLogs: true,
       filterEvents: [],
-      processTransactionReceipts: false,
       filterFunctions: [],
+      processEventLogs: true,
+      processTransactionReceipts: false,
     },
     mode: "onChange",
   });
@@ -126,48 +121,36 @@ const AddModal = ({
     const input: AddContractSubscriptionInput = {
       chain: data.chainId.toString(),
       contractAddress: data.contractAddress,
-      webhookUrl: data.webhookUrl.trim(),
-      processEventLogs: data.processEventLogs,
       filterEvents: data.filterEvents,
-      processTransactionReceipts: data.processTransactionReceipts,
       filterFunctions: data.filterFunctions,
+      processEventLogs: data.processEventLogs,
+      processTransactionReceipts: data.processTransactionReceipts,
+      webhookUrl: data.webhookUrl.trim(),
     };
 
     addContractSubscription(input, {
+      onError: (error) => {
+        onError(error);
+        console.error(error);
+      },
       onSuccess: () => {
         onSuccess();
         disclosure.onClose();
-        trackEvent({
-          category: "engine",
-          action: "add-contract-subscription",
-          label: "success",
-          instance: instanceUrl,
-        });
-      },
-      onError: (error) => {
-        onError(error);
-        trackEvent({
-          category: "engine",
-          action: "add-contract-subscription",
-          label: "error",
-          instance: instanceUrl,
-          error,
-        });
       },
     });
   };
 
   return (
     <Modal
+      isCentered
       isOpen={disclosure.isOpen}
       onClose={disclosure.onClose}
-      isCentered
       size="lg"
     >
       <ModalOverlay />
       <ModalContent
-        className="!bg-background rounded-lg border border-border"
         as="form"
+        className="!bg-background rounded-lg border border-border"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <ModalHeader>Add Contract Subscription</ModalHeader>
@@ -175,15 +158,15 @@ const AddModal = ({
 
         {modalState === "inputContract" ? (
           <ModalBodyInputContract
+            client={client}
             form={form}
             setModalState={setModalState}
-            client={client}
           />
         ) : modalState === "inputData" ? (
           <ModalBodyInputData
+            client={client}
             form={form}
             setModalState={setModalState}
-            client={client}
           />
         ) : null}
       </ModalContent>
@@ -212,21 +195,21 @@ const ModalBodyInputContract = ({
             <FormLabel>Chain</FormLabel>
             <SingleNetworkSelector
               chainId={form.watch("chainId")}
-              onChange={(val) => form.setValue("chainId", val)}
               client={client}
+              onChange={(val) => form.setValue("chainId", val)}
             />
           </FormControl>
 
           <FormControl
-            isRequired
             isInvalid={
               !!form.getFieldState("contractAddress", form.formState).error
             }
+            isRequired
           >
             <FormLabel>Contract Address</FormLabel>
             <Input
-              type="text"
               placeholder="0x..."
+              type="text"
               {...form.register("contractAddress", {
                 required: true,
                 validate: (v) => {
@@ -244,13 +227,13 @@ const ModalBodyInputContract = ({
           </FormControl>
 
           <FormControl
-            isRequired
             isInvalid={!!form.getFieldState("webhookUrl", form.formState).error}
+            isRequired
           >
             <FormLabel>Webhook URL</FormLabel>
             <Input
-              type="url"
               placeholder="https://"
+              type="url"
               {...form.register("webhookUrl", {
                 required: true,
                 validate: (v) => {
@@ -276,9 +259,9 @@ const ModalBodyInputContract = ({
 
       <ModalFooter>
         <Button
-          onClick={() => setModalState("inputData")}
           colorScheme="primary"
           isDisabled={!form.formState.isValid}
+          onClick={() => setModalState("inputData")}
         >
           Next
         </Button>
@@ -381,12 +364,12 @@ const ModalBodyInputData = ({
                       <Collapse in={shouldFilterEvents}>
                         <FilterSelector
                           abiItemType="event"
-                          form={form}
+                          client={client}
                           filter={filterEvents}
+                          form={form}
                           setFilter={(value) =>
                             form.setValue("filterEvents", value)
                           }
-                          client={client}
                         />
                       </Collapse>
                     </div>
@@ -438,12 +421,12 @@ const ModalBodyInputData = ({
                       <Collapse in={shouldFilterFunctions}>
                         <FilterSelector
                           abiItemType="function"
-                          form={form}
+                          client={client}
                           filter={filterFunctions}
+                          form={form}
                           setFilter={(value) =>
                             form.setValue("filterFunctions", value)
                           }
-                          client={client}
                         />
                       </Collapse>
                     </div>
@@ -457,16 +440,16 @@ const ModalBodyInputData = ({
 
       <ModalFooter as={Flex} gap={3}>
         <Button
-          type="button"
           onClick={() => setModalState("inputContract")}
+          type="button"
           variant="ghost"
         >
           Back
         </Button>
         <Button
-          type="submit"
           colorScheme="primary"
           isDisabled={isInputDataFormInvalid}
+          type="submit"
         >
           Add
         </Button>
@@ -508,9 +491,9 @@ const FilterSelector = ({
   const abiItems = useMemo(() => {
     if (!abiQuery.data) {
       return {
+        events: [],
         readFunctions: [],
         writeFunctions: [],
-        events: [],
       };
     }
     const readFunctions: string[] = [];
@@ -531,9 +514,9 @@ const FilterSelector = ({
       }
     }
     return {
+      events: [...new Set(events)].sort(),
       readFunctions: [...new Set(readFunctions)].sort(),
       writeFunctions: [...new Set(writeFunctions)].sort(),
-      events: [...new Set(events)].sort(),
     };
   }, [abiQuery.data]);
 

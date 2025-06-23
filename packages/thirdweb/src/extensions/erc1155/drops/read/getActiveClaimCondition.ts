@@ -48,14 +48,14 @@ export async function getActiveClaimCondition(
       metadata,
     ] = await claimCondition({ ...options, tokenId: options.tokenId });
     return {
-      startTimestamp,
-      maxClaimableSupply,
-      supplyClaimed,
-      quantityLimitPerWallet,
-      merkleRoot,
-      pricePerToken,
       currency,
+      maxClaimableSupply,
+      merkleRoot,
       metadata,
+      pricePerToken,
+      quantityLimitPerWallet,
+      startTimestamp,
+      supplyClaimed,
     };
   };
   const results = await Promise.allSettled([

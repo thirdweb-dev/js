@@ -1,6 +1,6 @@
-import { StatCard } from "components/analytics/stat";
 import { ActivityIcon, UserIcon } from "lucide-react";
-import type { EcosystemWalletStats } from "types/analytics";
+import { StatCard } from "@/components/analytics/stat";
+import type { EcosystemWalletStats } from "@/types/analytics";
 
 export function EcosystemWalletsSummary(props: {
   allTimeStats: EcosystemWalletStats[] | undefined;
@@ -29,16 +29,16 @@ export function EcosystemWalletsSummary(props: {
   return (
     <div className="grid grid-cols-2 gap-4 lg:gap-6">
       <StatCard
-        label="Total Users"
-        value={allTimeStats?.uniqueWalletsConnected || 0}
         icon={ActivityIcon}
         isPending={false}
+        label="Total Users"
+        value={allTimeStats?.uniqueWalletsConnected || 0}
       />
       <StatCard
-        label="Monthly Active Users"
-        value={monthlyStats?.uniqueWalletsConnected || 0}
         icon={UserIcon}
         isPending={false}
+        label="Monthly Active Users"
+        value={monthlyStats?.uniqueWalletsConnected || 0}
       />
     </div>
   );

@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "fi.dropmate",
-  name: "Dropmate",
-  homepage: "https://dropmate.fi",
-  image_id: "bf19fe4b-d712-45e8-95f2-b7be36e4c400",
   app: {
-    browser: null,
-    ios: "https://testflight.apple.com/join/KHOMtqE4",
     android: "https://play.google.com/store/apps/details?id=app.dropmate",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://testflight.apple.com/join/KHOMtqE4",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "dropmate://app",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://dropmate.fi",
+  id: "fi.dropmate",
+  image_id: "bf19fe4b-d712-45e8-95f2-b7be36e4c400",
+  mobile: {
+    native: "dropmate://app",
+    universal: null,
+  },
+  name: "Dropmate",
+  rdns: null,
 } as const;

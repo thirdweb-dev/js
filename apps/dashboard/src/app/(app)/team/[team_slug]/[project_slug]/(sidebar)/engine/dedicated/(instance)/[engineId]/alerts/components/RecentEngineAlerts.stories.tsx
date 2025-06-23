@@ -2,18 +2,18 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import {
   createEngineAlertRuleStub,
   createEngineAlertStub,
-} from "stories/stubs";
-import { BadgeContainer } from "stories/utils";
+} from "@/storybook/stubs/engine";
+import { BadgeContainer } from "@/storybook/utils";
 import { RecentEngineAlertsSectionUI } from "./RecentEngineAlerts";
 
 const meta = {
-  title: "Engine/Alerts/Recent Alerts",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Engine/Alerts/Recent Alerts",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -28,8 +28,6 @@ function Story() {
     <div className="container flex max-w-6xl flex-col gap-14 py-10">
       <BadgeContainer label="3 Alerts">
         <RecentEngineAlertsSectionUI
-          isLoading={false}
-          onAlertsUpdated={() => {}}
           alertRules={[createEngineAlertRuleStub("foo")]}
           alerts={[
             createEngineAlertStub("foo"),
@@ -40,23 +38,25 @@ function Story() {
               status: "resolved",
             }),
           ]}
+          isLoading={false}
+          onAlertsUpdated={() => {}}
         />
       </BadgeContainer>
 
       <BadgeContainer label="No Alerts">
         <RecentEngineAlertsSectionUI
-          isLoading={false}
           alertRules={[]}
           alerts={[]}
+          isLoading={false}
           onAlertsUpdated={() => {}}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Loading">
         <RecentEngineAlertsSectionUI
-          isLoading={true}
           alertRules={[]}
           alerts={[]}
+          isLoading={true}
           onAlertsUpdated={() => {}}
         />
       </BadgeContainer>

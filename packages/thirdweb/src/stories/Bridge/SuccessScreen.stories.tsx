@@ -10,41 +10,40 @@ import {
 import { ModalThemeWrapper } from "../utils.js";
 import {
   FUND_WALLET_UI_OPTIONS,
-  TRANSACTION_UI_OPTIONS,
   simpleBuyQuote,
   simpleOnrampQuote,
+  TRANSACTION_UI_OPTIONS,
 } from "./fixtures.js";
 
 const mockBuyCompletedStatuses: CompletedStatusResult[] = JSON.parse(
   stringify([
     {
-      type: "buy",
-      status: "COMPLETED",
-      paymentId: "payment-12345",
-      originAmount: 1000000000000000000n,
       destinationAmount: 100000000n,
-      originChainId: 1,
       destinationChainId: 1,
-      originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-      destinationTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-      originToken: {
-        chainId: 1,
-        address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-        symbol: "ETH",
-        name: "Ethereum",
-        decimals: 18,
-        priceUsd: 2500,
-      },
       destinationToken: {
-        chainId: 1,
         address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-        symbol: "USDC",
-        name: "USD Coin",
+        chainId: 1,
         decimals: 6,
+        name: "USD Coin",
         priceUsd: 1,
+        symbol: "USDC",
       },
-      sender: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+      destinationTokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      originAmount: 1000000000000000000n,
+      originChainId: 1,
+      originToken: {
+        address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        chainId: 1,
+        decimals: 18,
+        name: "Ethereum",
+        priceUsd: 2500,
+        symbol: "ETH",
+      },
+      originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      paymentId: "payment-12345",
       receiver: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+      sender: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD",
+      status: "COMPLETED",
       transactions: [
         {
           chainId: 1,
@@ -52,6 +51,7 @@ const mockBuyCompletedStatuses: CompletedStatusResult[] = JSON.parse(
             "0x1234567890abcdef1234567890abcdef12345678901234567890abcdef123456",
         },
       ],
+      type: "buy",
     },
   ]),
 );
@@ -59,7 +59,9 @@ const mockBuyCompletedStatuses: CompletedStatusResult[] = JSON.parse(
 const mockOnrampCompletedStatuses: CompletedStatusResult[] = JSON.parse(
   stringify([
     {
-      type: "onramp",
+      purchaseData: {
+        orderId: "stripe-order-abc123",
+      },
       status: "COMPLETED",
       transactions: [
         {
@@ -68,9 +70,7 @@ const mockOnrampCompletedStatuses: CompletedStatusResult[] = JSON.parse(
             "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
         },
       ],
-      purchaseData: {
-        orderId: "stripe-order-abc123",
-      },
+      type: "onramp",
     },
   ]),
 );
@@ -91,34 +91,34 @@ const SuccessScreenWithTheme = (props: SuccessScreenWithThemeProps) => {
 };
 
 const meta = {
-  title: "Bridge/SuccessScreen",
+  args: {
+    completedStatuses: mockBuyCompletedStatuses,
+    onDone: () => {},
+    preparedQuote: simpleBuyQuote,
+    theme: "dark",
+    uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
+    windowAdapter: webWindowAdapter,
+  },
+  argTypes: {
+    onDone: { action: "success screen closed" },
+    theme: {
+      control: "select",
+      description: "Theme for the component",
+      options: ["light", "dark"],
+    },
+  },
   component: SuccessScreenWithTheme,
   parameters: {
-    layout: "centered",
     docs: {
       description: {
         component:
           "Success screen that displays completion confirmation with transaction summary, payment details, and action buttons for next steps. Includes animated success icon and detailed transaction view.",
       },
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  args: {
-    preparedQuote: simpleBuyQuote,
-    completedStatuses: mockBuyCompletedStatuses,
-    onDone: () => {},
-    theme: "dark",
-    windowAdapter: webWindowAdapter,
-    uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
-  },
-  argTypes: {
-    theme: {
-      control: "select",
-      options: ["light", "dark"],
-      description: "Theme for the component",
-    },
-    onDone: { action: "success screen closed" },
-  },
+  title: "Bridge/SuccessScreen",
 } satisfies Meta<typeof SuccessScreenWithTheme>;
 
 export default meta;
@@ -144,9 +144,9 @@ export const DefaultLight: Story = {
 
 export const OnrampPayment: Story = {
   args: {
-    theme: "dark",
-    preparedQuote: simpleOnrampQuote,
     completedStatuses: mockOnrampCompletedStatuses,
+    preparedQuote: simpleOnrampQuote,
+    theme: "dark",
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -161,9 +161,9 @@ export const OnrampPayment: Story = {
 
 export const OnrampPaymentLight: Story = {
   args: {
-    theme: "light",
-    preparedQuote: simpleOnrampQuote,
     completedStatuses: mockOnrampCompletedStatuses,
+    preparedQuote: simpleOnrampQuote,
+    theme: "light",
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -172,12 +172,12 @@ export const OnrampPaymentLight: Story = {
 
 export const ComplexPayment: Story = {
   args: {
-    theme: "dark",
-    preparedQuote: simpleOnrampQuote,
     completedStatuses: [
       ...mockOnrampCompletedStatuses,
       ...mockBuyCompletedStatuses,
     ],
+    preparedQuote: simpleOnrampQuote,
+    theme: "dark",
   },
   parameters: {
     backgrounds: { default: "dark" },
@@ -192,12 +192,12 @@ export const ComplexPayment: Story = {
 
 export const ComplexPaymentLight: Story = {
   args: {
-    theme: "light",
-    preparedQuote: simpleOnrampQuote,
     completedStatuses: [
       ...mockOnrampCompletedStatuses,
       ...mockBuyCompletedStatuses,
     ],
+    preparedQuote: simpleOnrampQuote,
+    theme: "light",
   },
   parameters: {
     backgrounds: { default: "light" },
@@ -206,9 +206,9 @@ export const ComplexPaymentLight: Story = {
 
 export const TransactionPayment: Story = {
   args: {
-    theme: "light",
-    preparedQuote: simpleBuyQuote,
     completedStatuses: mockBuyCompletedStatuses,
+    preparedQuote: simpleBuyQuote,
+    theme: "light",
     uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
   },
   parameters: {

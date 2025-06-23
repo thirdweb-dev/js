@@ -1,18 +1,16 @@
 "use client";
 
-import thirdwebIconSrc from "@/../public/thirdweb.svg";
 import { MenuIcon, XIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ScrollShadow } from "../components/ui/ScrollShadow/ScrollShadow";
+import thirdwebIconSrc from "@/../public/thirdweb.svg";
 import { Button } from "../components/ui/button";
+import { ScrollShadow } from "../components/ui/ScrollShadow/ScrollShadow";
 import { Sidebar, type SidebarLink } from "../components/ui/sidebar";
 import { otherLinks } from "./otherLinks";
 
-export function MobileHeader(props: {
-  links: SidebarLink[];
-}) {
+export function MobileHeader(props: { links: SidebarLink[] }) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -31,22 +29,22 @@ export function MobileHeader(props: {
     <>
       <header className="sticky top-0 z-10 flex justify-between gap-4 border-b bg-background px-4 py-4 xl:hidden">
         <Link
+          aria-label="thirdweb Docs"
           className="flex items-center gap-3"
           href="/"
-          aria-label="thirdweb Docs"
           title="thirdweb Docs"
         >
-          <Image src={thirdwebIconSrc} className="size-7" alt="" />
+          <Image alt="" className="size-7" src={thirdwebIconSrc} />
           <span className="font-bold text-xl leading-none tracking-tight">
             Playground
           </span>
         </Link>
         <Button
-          variant="outline"
           className="!h-auto p-2"
           onClick={() => {
             setIsOpen((v) => !v);
           }}
+          variant="outline"
         >
           {!isOpen ? (
             <MenuIcon className="size-6" />
@@ -78,10 +76,10 @@ export function MobileHeader(props: {
             {otherLinks.map((link) => {
               return (
                 <Link
-                  key={link.href}
-                  href={link.href}
-                  target="_blank"
                   className="flex items-center gap-2 text-muted-foreground hover:text-foreground "
+                  href={link.href}
+                  key={link.href}
+                  target="_blank"
                 >
                   {link.name}
                 </Link>

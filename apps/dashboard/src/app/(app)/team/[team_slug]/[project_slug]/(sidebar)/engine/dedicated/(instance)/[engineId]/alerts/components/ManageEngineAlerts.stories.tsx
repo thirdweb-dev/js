@@ -1,24 +1,24 @@
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { useMutation } from "@tanstack/react-query";
 import type {
   CreateNotificationChannelInput,
   EngineNotificationChannel,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import type { Meta, StoryObj } from "@storybook/nextjs";
-import { useMutation } from "@tanstack/react-query";
+} from "@/hooks/useEngine";
 import {
   createEngineAlertRuleStub,
   createEngineNotificationChannelStub,
-} from "stories/stubs";
-import { BadgeContainer } from "stories/utils";
+} from "@/storybook/stubs/engine";
+import { BadgeContainer } from "@/storybook/utils";
 import { ManageEngineAlertsSectionUI } from "./ManageEngineAlerts";
 
 const meta = {
-  title: "Engine/Alerts/ManageAlerts",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Engine/Alerts/ManageAlerts",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -40,8 +40,8 @@ function Story() {
         id: "new-channel",
         pausedAt: null,
         subscriptionRoutes: values.subscriptionRoutes,
-        value: values.value,
         type: values.type,
+        value: values.value,
       };
 
       console.log("created channel:", channelStub);
@@ -58,21 +58,21 @@ function Story() {
     <div className="container flex max-w-6xl flex-col gap-14 py-6">
       <BadgeContainer label="2 Alerts">
         <ManageEngineAlertsSectionUI
-          isLoading={false}
-          onAlertsUpdated={() => {}}
-          engineId="test-engine-id"
-          createAlertMutation={createEngineAlertMutation}
-          deleteAlert={deleteAlert}
           alertRules={[
             createEngineAlertRuleStub("foo"),
             createEngineAlertRuleStub("bar"),
           ]}
+          createAlertMutation={createEngineAlertMutation}
+          deleteAlert={deleteAlert}
+          engineId="test-engine-id"
+          isLoading={false}
           notificationChannels={[
             createEngineNotificationChannelStub("foo"),
             createEngineNotificationChannelStub("foo", {
               pausedAt: null,
             }),
           ]}
+          onAlertsUpdated={() => {}}
         />
       </BadgeContainer>
 
@@ -82,12 +82,12 @@ function Story() {
             createEngineAlertRuleStub("foo"),
             createEngineAlertRuleStub("bar"),
           ]}
-          engineId="test-engine-id"
-          notificationChannels={[]}
-          isLoading={false}
-          onAlertsUpdated={() => {}}
           createAlertMutation={createEngineAlertMutation}
           deleteAlert={deleteAlert}
+          engineId="test-engine-id"
+          isLoading={false}
+          notificationChannels={[]}
+          onAlertsUpdated={() => {}}
         />
       </BadgeContainer>
 
@@ -97,24 +97,24 @@ function Story() {
             createEngineAlertRuleStub("foo"),
             createEngineAlertRuleStub("bar"),
           ]}
-          engineId="test-engine-id"
-          notificationChannels={[]}
-          isLoading={true}
-          onAlertsUpdated={() => {}}
           createAlertMutation={createEngineAlertMutation}
           deleteAlert={deleteAlert}
+          engineId="test-engine-id"
+          isLoading={true}
+          notificationChannels={[]}
+          onAlertsUpdated={() => {}}
         />
       </BadgeContainer>
 
       <BadgeContainer label="No Alert Rules">
         <ManageEngineAlertsSectionUI
           alertRules={[]}
-          engineId="test-engine-id"
-          notificationChannels={[]}
-          isLoading={false}
-          onAlertsUpdated={() => {}}
           createAlertMutation={createEngineAlertMutation}
           deleteAlert={deleteAlert}
+          engineId="test-engine-id"
+          isLoading={false}
+          notificationChannels={[]}
+          onAlertsUpdated={() => {}}
         />
       </BadgeContainer>
     </div>

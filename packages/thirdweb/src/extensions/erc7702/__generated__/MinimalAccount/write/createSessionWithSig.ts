@@ -1,12 +1,12 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type {
   BaseTransactionOptions,
   WithOverrides,
 } from "../../../../../transaction/types.js";
-import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { once } from "../../../../../utils/promise/once.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "createSessionWithSig" function.
@@ -81,134 +81,134 @@ export type CreateSessionWithSigParams = WithOverrides<{
 export const FN_SELECTOR = "0xb5051648" as const;
 const FN_INPUTS = [
   {
-    type: "tuple",
-    name: "sessionSpec",
     components: [
       {
-        type: "address",
         name: "signer",
+        type: "address",
       },
       {
-        type: "bool",
         name: "isWildcard",
+        type: "bool",
       },
       {
-        type: "uint256",
         name: "expiresAt",
+        type: "uint256",
       },
       {
-        type: "tuple[]",
-        name: "callPolicies",
         components: [
           {
-            type: "address",
             name: "target",
+            type: "address",
           },
           {
-            type: "bytes4",
             name: "selector",
+            type: "bytes4",
           },
           {
-            type: "uint256",
             name: "maxValuePerUse",
+            type: "uint256",
           },
           {
-            type: "tuple",
-            name: "valueLimit",
             components: [
               {
-                type: "uint8",
                 name: "limitType",
+                type: "uint8",
               },
               {
-                type: "uint256",
                 name: "limit",
+                type: "uint256",
               },
               {
-                type: "uint256",
                 name: "period",
+                type: "uint256",
               },
             ],
+            name: "valueLimit",
+            type: "tuple",
           },
           {
-            type: "tuple[]",
-            name: "constraints",
             components: [
               {
-                type: "uint8",
                 name: "condition",
+                type: "uint8",
               },
               {
-                type: "uint64",
                 name: "index",
+                type: "uint64",
               },
               {
-                type: "bytes32",
                 name: "refValue",
+                type: "bytes32",
               },
               {
-                type: "tuple",
-                name: "limit",
                 components: [
                   {
-                    type: "uint8",
                     name: "limitType",
+                    type: "uint8",
                   },
                   {
-                    type: "uint256",
                     name: "limit",
+                    type: "uint256",
                   },
                   {
-                    type: "uint256",
                     name: "period",
+                    type: "uint256",
                   },
                 ],
+                name: "limit",
+                type: "tuple",
               },
             ],
+            name: "constraints",
+            type: "tuple[]",
           },
         ],
+        name: "callPolicies",
+        type: "tuple[]",
       },
       {
-        type: "tuple[]",
-        name: "transferPolicies",
         components: [
           {
-            type: "address",
             name: "target",
+            type: "address",
           },
           {
-            type: "uint256",
             name: "maxValuePerUse",
+            type: "uint256",
           },
           {
-            type: "tuple",
-            name: "valueLimit",
             components: [
               {
-                type: "uint8",
                 name: "limitType",
+                type: "uint8",
               },
               {
-                type: "uint256",
                 name: "limit",
+                type: "uint256",
               },
               {
-                type: "uint256",
                 name: "period",
+                type: "uint256",
               },
             ],
+            name: "valueLimit",
+            type: "tuple",
           },
         ],
+        name: "transferPolicies",
+        type: "tuple[]",
       },
       {
-        type: "bytes32",
         name: "uid",
+        type: "bytes32",
       },
     ],
+    name: "sessionSpec",
+    type: "tuple",
   },
   {
-    type: "bytes",
     name: "signature",
+    type: "bytes",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
@@ -316,23 +316,23 @@ export function createSessionWithSig(
   });
 
   return prepareContractCall({
-    contract: options.contract,
-    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params: async () => {
-      const resolvedOptions = await asyncOptions();
-      return [resolvedOptions.sessionSpec, resolvedOptions.signature] as const;
-    },
-    value: async () => (await asyncOptions()).overrides?.value,
     accessList: async () => (await asyncOptions()).overrides?.accessList,
+    authorizationList: async () =>
+      (await asyncOptions()).overrides?.authorizationList,
+    contract: options.contract,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
     gas: async () => (await asyncOptions()).overrides?.gas,
     gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
     maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
     maxPriorityFeePerGas: async () =>
       (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     nonce: async () => (await asyncOptions()).overrides?.nonce,
-    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
-    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
-    authorizationList: async () =>
-      (await asyncOptions()).overrides?.authorizationList,
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.sessionSpec, resolvedOptions.signature] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

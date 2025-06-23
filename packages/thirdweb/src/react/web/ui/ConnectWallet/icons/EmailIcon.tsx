@@ -6,12 +6,12 @@ import type { IconFC } from "./types.js";
 export const EmailIcon: IconFC = (props) => {
   return (
     <svg
-      width={props.size}
-      height={props.size}
-      viewBox="0 0 16 16"
       fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+      height={props.size}
       role="presentation"
+      viewBox="0 0 16 16"
+      width={props.size}
+      xmlns="http://www.w3.org/2000/svg"
     >
       <path
         d="M13.3335 2.6665H2.66683C1.93045 2.6665 1.3335 3.26346 1.3335 3.99984V11.9998C1.3335 12.7362 1.93045 13.3332 2.66683 13.3332H13.3335C14.0699 13.3332 14.6668 12.7362 14.6668 11.9998V3.99984C14.6668 3.26346 14.0699 2.6665 13.3335 2.6665Z"

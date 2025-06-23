@@ -80,8 +80,7 @@ export function useBuyWithCryptoQuote(
 ): UseQueryResult<BuyWithCryptoQuote> {
   return useQuery({
     ...queryParams,
-    queryKey: ["buyWithCryptoQuote", params],
-    refetchInterval: 20_000,
+    enabled: !!params,
     queryFn: () => {
       if (!params) {
         throw new Error("Swap params are required");
@@ -89,7 +88,8 @@ export function useBuyWithCryptoQuote(
 
       return getBuyWithCryptoQuote(params);
     },
-    enabled: !!params,
+    queryKey: ["buyWithCryptoQuote", params],
+    refetchInterval: 20_000,
     retry: false,
   });
 }

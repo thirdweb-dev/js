@@ -18,7 +18,7 @@ const PAPER_CLIENT_ID_HEADER = "x-thirdweb-client-id";
 const ECOSYSTEM_ID_HEADER = "x-ecosystem-id";
 const ECOSYSTEM_PARTNER_ID_HEADER = "x-ecosystem-partner-id";
 
-let sessionNonce: Hex | undefined = undefined;
+let sessionNonce: Hex | undefined;
 
 function getSessionHeaders() {
   if (!sessionNonce) {
@@ -32,11 +32,11 @@ function getSessionHeaders() {
 
 export const verifyClientId = async (client: ThirdwebClient) => {
   const resp = await getClientFetch(client)(ROUTE_VERIFY_THIRDWEB_CLIENT_ID, {
-    method: "POST",
+    body: stringify({ clientId: client.clientId, parentDomain: "" }),
     headers: {
       ...getSessionHeaders(),
     },
-    body: stringify({ clientId: client.clientId, parentDomain: "" }),
+    method: "POST",
   });
   if (!resp.ok) {
     const error = await resp.json();
@@ -95,10 +95,10 @@ export async function authFetchEmbeddedWalletUser(args: {
       await new Promise((resolve) => setTimeout(resolve, 500));
       return await authFetchEmbeddedWalletUser({
         client,
-        url,
         props: params,
-        storage,
         retries: retries - 1,
+        storage,
+        url,
       });
     }
     throw e;
@@ -118,11 +118,11 @@ export async function fetchUserDetails(args: {
   }
   const resp = await authFetchEmbeddedWalletUser({
     client: args.client,
-    url: url.href,
     props: {
       method: "GET",
     },
     storage: args.storage,
+    url: url.href,
   });
   if (!resp.ok) {
     const error = await resp.json();
@@ -152,17 +152,17 @@ export async function storeUserShares({
 }) {
   const resp = await authFetchEmbeddedWalletUser({
     client,
-    url: ROUTE_STORE_USER_SHARES,
     props: {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: stringify({
-        walletAddress,
-        maybeEncryptedRecoveryShares,
         authShare,
+        maybeEncryptedRecoveryShares,
+        walletAddress,
       }),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
     },
     storage,
+    url: ROUTE_STORE_USER_SHARES,
   });
 
   if (!resp.ok) {
@@ -185,11 +185,11 @@ export async function getUserShares(args: {
 }) {
   const resp = await authFetchEmbeddedWalletUser({
     client: args.client,
-    url: args.getShareUrl.href,
     props: {
       method: "GET",
     },
     storage: args.storage,
+    url: args.getShareUrl.href,
   });
   if (!resp.ok) {
     const error = await resp.json();
@@ -222,11 +222,11 @@ export async function deleteAccount(args: {
   const url = new URL(ROUTE_EMBEDDED_WALLET_DETAILS);
   const resp = await authFetchEmbeddedWalletUser({
     client: args.client,
-    url: url.href,
     props: {
       method: "DELETE",
     },
     storage: args.storage,
+    url: url.href,
   });
   if (!resp.ok) {
     const error = await resp.json();

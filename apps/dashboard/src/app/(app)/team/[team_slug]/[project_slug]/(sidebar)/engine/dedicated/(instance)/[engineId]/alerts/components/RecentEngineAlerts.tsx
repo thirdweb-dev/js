@@ -1,7 +1,9 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { formatDistance } from "date-fns";
+import { useMemo } from "react";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Table,
   TableBody,
@@ -15,9 +17,7 @@ import {
   type EngineAlert,
   type EngineAlertRule,
   useEngineAlerts,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { formatDistance } from "date-fns";
-import { useMemo } from "react";
+} from "@/hooks/useEngine";
 
 export function RecentEngineAlertsSection(props: {
   alertRules: EngineAlertRule[];
@@ -122,7 +122,7 @@ function RecentEngineAlertsTableUI(props: {
                 <TableCell>{alertRulesMap[alert.alertRuleId]?.title}</TableCell>
 
                 <TableCell>
-                  <Badge variant={variant} className="text-sm">
+                  <Badge className="text-sm" variant={variant}>
                     {status}
                   </Badge>
                 </TableCell>

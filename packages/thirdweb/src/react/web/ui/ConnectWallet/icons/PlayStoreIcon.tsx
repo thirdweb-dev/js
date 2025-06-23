@@ -6,12 +6,12 @@ import type { IconFC } from "./types.js";
 export const PlayStoreIcon: IconFC = (props) => {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={props.size}
-      height={props.size}
-      viewBox="0 0 23 26"
       fill="none"
+      height={props.size}
       role="presentation"
+      viewBox="0 0 23 26"
+      width={props.size}
+      xmlns="http://www.w3.org/2000/svg"
     >
       <path
         d="M10.5832 12.0978L0.0976562 23.2275C0.0980507 23.2298 0.0988382 23.2317 0.0992076 23.2341C0.420793 24.4427 1.52467 25.3326 2.83473 25.3326C3.35844 25.3326 3.85012 25.191 4.27179 24.9424L4.30528 24.9228L16.1087 18.1117L10.5838 12.0977"

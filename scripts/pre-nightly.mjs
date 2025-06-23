@@ -1,4 +1,5 @@
 import fs from "node:fs";
+
 // load the changesets config file
 const changesetsConfig = JSON.parse(
   fs.readFileSync("./.changeset/config.json", "utf8"),

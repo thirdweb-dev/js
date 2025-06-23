@@ -1,7 +1,7 @@
 import "server-only";
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import type { ProjectResponse } from "@thirdweb-dev/service-utils";
-import { getAuthToken } from "../../app/(app)/api/lib/getAuthToken";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
+import { getAuthToken } from "./auth-token";
 
 export type Project = ProjectResponse;
 

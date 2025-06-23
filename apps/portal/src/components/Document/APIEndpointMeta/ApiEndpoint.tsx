@@ -36,9 +36,7 @@ type ApiEndpointMeta = {
   responseExamples: Record<string, string>;
 };
 
-export function ApiEndpoint(props: {
-  metadata: ApiEndpointMeta;
-}) {
+export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
   const { request, responseExamples } = props.metadata;
 
   const requestExamples: Array<{
@@ -50,15 +48,15 @@ export function ApiEndpoint(props: {
       code: createFetchCommand({
         metadata: props.metadata,
       }),
-      lang: "javascript",
       label: "Fetch",
+      lang: "javascript",
     },
     {
       code: createCurlCommand({
         metadata: props.metadata,
       }),
-      lang: "bash",
       label: "Curl",
+      lang: "bash",
     },
   ];
 
@@ -68,7 +66,7 @@ export function ApiEndpoint(props: {
     <div>
       <div>
         <div className="mb-5 flex flex-col gap-3 border-b pb-5">
-          <Heading level={1} id="title" className="mb-0">
+          <Heading anchorId="title" className="mb-0" level={1}>
             {props.metadata.title}
           </Heading>
           <Paragraph className="mb-0">{props.metadata.description}</Paragraph>
@@ -76,25 +74,25 @@ export function ApiEndpoint(props: {
 
         {/* Headers */}
         {request.headers.length > 0 && (
-          <ParameterSection title="Headers" parameters={request.headers} />
+          <ParameterSection parameters={request.headers} title="Headers" />
         )}
 
         {/* Path parameters */}
         {request.pathParameters.length > 0 && (
           <ParameterSection
-            title="Path parameters"
             parameters={request.pathParameters}
+            title="Path parameters"
           />
         )}
 
         {/* Body  */}
         {request.bodyParameters.length > 0 && (
-          <ParameterSection title="Body" parameters={request.bodyParameters} />
+          <ParameterSection parameters={request.bodyParameters} title="Body" />
         )}
       </div>
 
       <div>
-        <Heading id="request" level={2} className="text-lg lg:text-lg">
+        <Heading anchorId="request" className="text-lg lg:text-lg" level={2}>
           Request
         </Heading>
         <div className="rounded-lg border">
@@ -102,29 +100,29 @@ export function ApiEndpoint(props: {
             // render <CodeBlock /> on server and pass it to client
             codeExamples={requestExamples.map((example) => {
               return {
-                label: example.label,
                 code: (
                   <CodeBlock
-                    code={example.code}
-                    lang={example.lang}
                     className="rounded-none border-none"
+                    code={example.code}
                     containerClassName="m-0"
+                    lang={example.lang}
                   />
                 ),
+                label: example.label,
               };
             })}
-            method={props.metadata.method}
             endpointUrl={props.metadata.path}
+            method={props.metadata.method}
           />
         </div>
       </div>
 
       <div>
-        <Heading id="response" level={2} className="text-lg lg:text-lg">
+        <Heading anchorId="response" className="text-lg lg:text-lg" level={2}>
           Response
         </Heading>
         <div className="overflow-hidden rounded-lg border">
-          <Tabs defaultValue={responseKeys[0]} className="w-full">
+          <Tabs className="w-full" defaultValue={responseKeys[0]}>
             <TabsList className="w-full">
               {responseKeys.map((status) => (
                 <TabsTrigger key={status} value={status}>
@@ -143,12 +141,12 @@ export function ApiEndpoint(props: {
             </TabsList>
 
             {responseKeys.map((status) => (
-              <TabsContent key={status} value={status} className="m-0">
+              <TabsContent className="m-0" key={status} value={status}>
                 <CodeBlock
-                  code={responseExamples[status] as string}
-                  lang="json"
-                  containerClassName="m-0"
                   className="rounded-none border-none"
+                  code={responseExamples[status] as string}
+                  containerClassName="m-0"
+                  lang="json"
                   scrollContainerClassName="max-h-[600px]"
                 />
               </TabsContent>
@@ -167,10 +165,10 @@ function ParameterSection(props: {
   return (
     <div className="mb-5">
       <Heading
-        level={2}
-        id={props.title}
-        className="text-lg md:text-lg"
         anchorClassName="m-0 mb-2"
+        anchorId={props.title}
+        className="text-lg md:text-lg"
+        level={2}
       >
         {props.title}
       </Heading>
@@ -194,9 +192,9 @@ function ParameterItem({ param }: { param: APIParameter }) {
   return (
     <Details
       accordionItemClassName="my-1"
+      accordionTriggerClassName="font-mono"
       summary={param.name}
       tags={param.required ? ["Required"] : []}
-      accordionTriggerClassName="font-mono"
     >
       <div className={"flex flex-col gap-2"}>
         <Paragraph>{param.description}</Paragraph>
@@ -204,10 +202,10 @@ function ParameterItem({ param }: { param: APIParameter }) {
           <div className="rounded-lg border">
             <h4 className="border-b p-3 text-sm"> Type </h4>
             <CodeBlock
-              code={param.type}
-              lang="typescript"
-              containerClassName="mb-0"
               className="border-none"
+              code={param.type}
+              containerClassName="mb-0"
+              lang="typescript"
             />
           </div>
         )}
@@ -216,9 +214,7 @@ function ParameterItem({ param }: { param: APIParameter }) {
   );
 }
 
-function createCurlCommand(params: {
-  metadata: ApiEndpointMeta;
-}) {
+function createCurlCommand(params: { metadata: ApiEndpointMeta }) {
   const url = `${params.metadata.origin}${params.metadata.path}`;
   const bodyObj: Record<string, string | number | boolean | object> = {};
 
@@ -249,9 +245,7 @@ function createCurlCommand(params: {
   return `curl -X ${params.metadata.method} ${requestData}`;
 }
 
-function createFetchCommand(params: {
-  metadata: ApiEndpointMeta;
-}) {
+function createFetchCommand(params: { metadata: ApiEndpointMeta }) {
   const headersObj: Record<string, string | number | boolean | object> = {};
   const bodyObj: Record<string, string | number | boolean | object> = {};
   const { request } = params.metadata;

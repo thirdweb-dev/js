@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.ammer",
-  name: "Ammer Wallet",
-  homepage: "https://ammer.app/",
-  image_id: "7d38dd8e-92ee-44bf-1ca4-818531de1900",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/ammer-wallet/id1599698329",
     android: null,
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/ammer-wallet/id1599698329",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "ammerwallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://ammer.app/",
+  id: "app.ammer",
+  image_id: "7d38dd8e-92ee-44bf-1ca4-818531de1900",
+  mobile: {
+    native: "ammerwallet://",
+    universal: null,
+  },
+  name: "Ammer Wallet",
+  rdns: null,
 } as const;

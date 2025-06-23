@@ -1,12 +1,12 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type {
   BaseTransactionOptions,
   WithOverrides,
 } from "../../../../../transaction/types.js";
-import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { once } from "../../../../../utils/promise/once.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { once } from "../../../../../utils/promise/once.js";
 
 /**
  * Represents the parameters for the "airdropERC20" function.
@@ -29,22 +29,22 @@ export type AirdropERC20Params = WithOverrides<{
 export const FN_SELECTOR = "0x56b0b449" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "_tokenAddress",
+    type: "address",
   },
   {
-    type: "tuple[]",
-    name: "_contents",
     components: [
       {
-        type: "address",
         name: "recipient",
+        type: "address",
       },
       {
-        type: "uint256",
         name: "amount",
+        type: "uint256",
       },
     ],
+    name: "_contents",
+    type: "tuple[]",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
@@ -148,23 +148,23 @@ export function airdropERC20(
   });
 
   return prepareContractCall({
-    contract: options.contract,
-    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params: async () => {
-      const resolvedOptions = await asyncOptions();
-      return [resolvedOptions.tokenAddress, resolvedOptions.contents] as const;
-    },
-    value: async () => (await asyncOptions()).overrides?.value,
     accessList: async () => (await asyncOptions()).overrides?.accessList,
+    authorizationList: async () =>
+      (await asyncOptions()).overrides?.authorizationList,
+    contract: options.contract,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
     gas: async () => (await asyncOptions()).overrides?.gas,
     gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
     maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
     maxPriorityFeePerGas: async () =>
       (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     nonce: async () => (await asyncOptions()).overrides?.nonce,
-    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
-    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
-    authorizationList: async () =>
-      (await asyncOptions()).overrides?.authorizationList,
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.tokenAddress, resolvedOptions.contents] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

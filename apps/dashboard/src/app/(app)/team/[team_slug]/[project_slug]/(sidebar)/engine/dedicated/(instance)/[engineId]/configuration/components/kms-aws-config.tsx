@@ -1,19 +1,19 @@
+import Link from "next/link";
+import { useId } from "react";
+import { useForm } from "react-hook-form";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { Form, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type EngineInstance,
   type SetWalletConfigInput,
   useEngineSetWalletConfig,
   useEngineWalletConfig,
   useHasEngineFeature,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { useForm } from "react-hook-form";
+} from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface KmsAwsConfigProps {
   instance: EngineInstance;
@@ -25,62 +25,53 @@ export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({
   authToken,
 }) => {
   const { mutate: setAwsKmsConfig, isPending } = useEngineSetWalletConfig({
-    instanceUrl: instance.url,
     authToken,
+    instanceUrl: instance.url,
   });
   const { data: awsConfig } = useEngineWalletConfig({
-    instanceUrl: instance.url,
     authToken,
+    instanceUrl: instance.url,
   });
   const { isSupported: supportsMultipleWalletTypes } = useHasEngineFeature(
     instance.url,
     "HETEROGENEOUS_WALLET_TYPES",
   );
-  const trackEvent = useTrack();
+
   const { onSuccess, onError } = useTxNotifications(
     "Configuration set successfully.",
     "Failed to set configuration.",
   );
 
   const defaultValues: SetWalletConfigInput = {
-    type: "aws-kms" as const,
     awsAccessKeyId: awsConfig?.awsAccessKeyId ?? "",
-    awsSecretAccessKey: "",
     awsRegion: awsConfig?.awsRegion ?? "",
+    awsSecretAccessKey: "",
+    type: "aws-kms" as const,
   };
 
   const form = useForm<SetWalletConfigInput>({
     defaultValues,
-    values: defaultValues,
     resetOptions: {
       keepDirty: true,
       keepDirtyValues: true,
     },
+    values: defaultValues,
   });
 
   const onSubmit = (data: SetWalletConfigInput) => {
     setAwsKmsConfig(data, {
-      onSuccess: () => {
-        onSuccess();
-        trackEvent({
-          category: "engine",
-          action: "set-wallet-config",
-          type: "aws-kms",
-          label: "success",
-        });
-      },
       onError: (error) => {
         onError(error);
-        trackEvent({
-          category: "engine",
-          action: "set-wallet-config",
-          type: "aws-kms",
-          label: "error",
-          error,
-        });
+      },
+      onSuccess: () => {
+        onSuccess();
       },
     });
   };
+
+  const awsRegionId = useId();
+  const awsAccessKeyId = useId();
+  const awsSecretKeyId = useId();
 
   return (
     <Form {...form}>
@@ -95,70 +86,69 @@ export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({
         </p>
         <p className="text-muted-foreground">
           For help and more advanced use cases,{" "}
-          <TrackedLinkTW
-            target="_blank"
-            href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
-            label="learn-more"
-            category="engine"
+          <Link
             className="text-link-foreground hover:text-foreground"
+            href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             learn more about using AWS KMS wallets
-          </TrackedLinkTW>
+          </Link>
           .
         </p>
 
         <div className="grid gap-4 md:grid-cols-2">
           <FormFieldSetup
-            label="Region"
             errorMessage={
               form.getFieldState("awsRegion", form.formState).error?.message
             }
             htmlFor="aws-region"
             isRequired
+            label="Region"
             tooltip={null}
           >
             <Input
-              id="aws-region"
-              placeholder="us-west-2"
               autoComplete="off"
+              id={awsRegionId}
+              placeholder="us-west-2"
               type="text"
               {...form.register("awsRegion")}
             />
           </FormFieldSetup>
 
           <FormFieldSetup
-            label="Access Key"
             errorMessage={
               form.getFieldState("awsAccessKeyId", form.formState).error
                 ?.message
             }
-            htmlFor="aws-access-key"
+            htmlFor={awsAccessKeyId}
             isRequired
+            label="Access Key"
             tooltip={null}
           >
             <Input
-              id="aws-access-key"
-              placeholder="AKIA..."
               autoComplete="off"
+              id={awsAccessKeyId}
+              placeholder="AKIA..."
               type="text"
               {...form.register("awsAccessKeyId")}
             />
           </FormFieldSetup>
 
           <FormFieldSetup
-            label="Secret Key"
             errorMessage={
               form.getFieldState("awsSecretAccessKey", form.formState).error
                 ?.message
             }
-            htmlFor="aws-secret-key"
+            htmlFor={awsSecretKeyId}
             isRequired
+            label="Secret Key"
             tooltip={null}
           >
             <Input
-              id="aws-secret-key"
-              placeholder="UW7A..."
               autoComplete="off"
+              id={awsSecretKeyId}
+              placeholder="UW7A..."
               type="text"
               {...form.register("awsSecretAccessKey")}
             />
@@ -174,7 +164,7 @@ export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({
               This will clear other credentials.
             </p>
           )}
-          <Button type="submit" className="min-w-28 gap-2" disabled={isPending}>
+          <Button className="min-w-28 gap-2" disabled={isPending} type="submit">
             {isPending && <Spinner className="size-4" />}
             Save
           </Button>

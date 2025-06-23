@@ -1,6 +1,3 @@
-import type { SideBar } from "@/components/Layouts/DocLayout";
-import { NebulaSideIcon, TypeScriptIcon, UnityIcon } from "@/icons";
-
 import {
   BlocksIcon,
   BracesIcon,
@@ -13,204 +10,206 @@ import {
   WorkflowIcon,
   WrenchIcon,
 } from "lucide-react";
+import type { SideBar } from "@/components/Layouts/DocLayout";
+import { NebulaSideIcon, TypeScriptIcon, UnityIcon } from "@/icons";
 
 export const sidebar: SideBar = {
-  name: "AI",
   links: [
     {
-      name: "Overview",
       href: "/nebula",
       icon: <NebulaSideIcon />,
+      name: "Overview",
     },
     {
-      name: "Prompt Guide",
       href: "/nebula/prompt-guide",
       icon: <PencilRulerIcon />,
+      name: "Prompt Guide",
     },
     {
-      name: "Playground",
       href: "https://nebula.thirdweb.com",
       icon: <ExternalLinkIcon />,
+      name: "Playground",
     },
     {
       separator: true,
     },
     {
-      name: "Nebula (API)",
       isCollapsible: false,
       links: [
         {
-          name: "Get Started",
           href: "/nebula/get-started",
           icon: <RocketIcon />,
+          name: "Get Started",
         },
         {
-          name: "Key Concepts",
           icon: <KeyIcon />,
           links: [
             {
-              name: "Chat & Execute",
               href: "/nebula/key-concepts/chat-execute",
+              name: "Chat & Execute",
             },
             {
-              name: "Context Filters",
               href: "/nebula/key-concepts/context-filters",
+              name: "Context Filters",
             },
             {
-              name: "Execute Config",
               href: "/nebula/key-concepts/execute-configuration",
+              name: "Execute Config",
             },
             {
-              name: "Response Handling",
               href: "/nebula/key-concepts/response-handling",
+              name: "Response Handling",
             },
             {
-              name: "Sessions",
               href: "/nebula/key-concepts/sessions",
+              name: "Sessions",
             },
           ],
+          name: "Key Concepts",
         },
         {
-          name: "API Reference",
           href: "/nebula/api-reference",
           icon: <BracesIcon />,
           links: [
             {
-              name: "Chat",
               expanded: true,
               links: [
                 {
-                  name: "Send Message",
                   href: "/nebula/api-reference/chat",
+                  name: "Send Message",
                 },
                 {
-                  name: "Execute Action",
                   href: "/nebula/api-reference/execute",
+                  name: "Execute Action",
                 },
               ],
+              name: "Chat",
             },
             {
-              name: "Session",
               expanded: true,
               links: [
                 {
-                  name: "List Sessions",
                   href: "/nebula/api-reference/list-session",
+                  name: "List Sessions",
                 },
                 {
-                  name: "Get Session",
                   href: "/nebula/api-reference/get-session",
+                  name: "Get Session",
                 },
                 {
-                  name: "Create Session",
                   href: "/nebula/api-reference/create-session",
+                  name: "Create Session",
                 },
                 {
-                  name: "Update Session",
                   href: "/nebula/api-reference/update-session",
+                  name: "Update Session",
                 },
                 {
-                  name: "Clear Session",
                   href: "/nebula/api-reference/clear-session",
+                  name: "Clear Session",
                 },
                 {
-                  name: "Delete Session",
                   href: "/nebula/api-reference/delete-session",
+                  name: "Delete Session",
                 },
               ],
+              name: "Session",
             },
           ],
+          name: "API Reference",
         },
         {
-          name: "SDK Reference",
           icon: <CodeIcon />,
           links: [
             {
-              name: "Typescript",
               href: "/references/typescript/v5/chat",
               icon: <TypeScriptIcon />,
+              name: "Typescript",
             },
             {
-              name: "Unity",
               href: "/dotnet/nebula/quickstart",
               icon: <UnityIcon />,
+              name: "Unity",
             },
           ],
+          name: "SDK Reference",
         },
         {
-          name: "Plugins & Integrations",
           href: "/nebula/plugins",
           icon: <BlocksIcon />,
           links: [
             {
-              name: "OpenAI",
               href: "/nebula/plugins/openai",
+              name: "OpenAI",
             },
             {
-              name: "Eliza",
               href: "/nebula/plugins/eliza",
+              name: "Eliza",
             },
           ],
+          name: "Plugins & Integrations",
         },
       ],
+      name: "Nebula (API)",
     },
     {
-      name: "MCP Server",
       isCollapsible: false,
       links: [
         {
-          name: "Get Started",
           href: "/nebula/mcp-server/get-started",
           icon: <RocketIcon />,
+          name: "Get Started",
         },
         {
-          name: "Integrations",
           icon: <WorkflowIcon />,
           links: [
             {
-              name: "Claude Desktop",
               href: "/nebula/mcp-server/integrations/claude-desktop",
+              name: "Claude Desktop",
             },
             {
-              name: "MCP Clients",
               href: "/nebula/mcp-server/integrations/mcp-clients",
+              name: "MCP Clients",
             },
           ],
+          name: "Integrations",
         },
       ],
+      name: "MCP Server",
     },
     {
-      name: "Tools",
       isCollapsible: false,
       links: [
         {
-          name: "Python SDK",
           icon: <CodeIcon />,
           links: [
             {
-              name: "Installation",
               href: "/nebula/tools/python-sdk/installation",
+              name: "Installation",
             },
             {
-              name: "Examples",
               href: "https://github.com/thirdweb-dev/ai/tree/main/python/examples",
+              name: "Examples",
             },
           ],
+          name: "Python SDK",
         },
       ],
+      name: "Tools",
     },
     {
       separator: true,
     },
     {
-      name: "Troubleshoot",
       href: "/nebula/troubleshoot",
       icon: <WrenchIcon />,
+      name: "Troubleshoot",
     },
     {
-      name: "FAQs",
       href: "/nebula/faqs",
       icon: <MessageCircleQuestionIcon />,
+      name: "FAQs",
     },
   ],
+  name: "AI",
 };

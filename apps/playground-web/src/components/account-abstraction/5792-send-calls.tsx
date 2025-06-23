@@ -1,8 +1,7 @@
 "use client";
 import { getContract } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
-import { claimTo } from "thirdweb/extensions/erc1155";
-import { getNFT, getOwnedNFTs } from "thirdweb/extensions/erc1155";
+import { claimTo, getNFT, getOwnedNFTs } from "thirdweb/extensions/erc1155";
 import {
   ConnectButton,
   MediaRenderer,
@@ -14,7 +13,6 @@ import {
 import { shortenHex } from "thirdweb/utils";
 import { createWallet } from "thirdweb/wallets";
 import { THIRDWEB_CLIENT } from "../../lib/client";
-import { Spinner } from "../ui/Spinner/Spinner";
 import { Button } from "../ui/button";
 import {
   Card,
@@ -23,6 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { Spinner } from "../ui/Spinner/Spinner";
 
 const chain = sepolia;
 
@@ -49,18 +48,18 @@ export function Eip5792SendCallsPreview() {
     tokenId: 1n,
   });
   const { data: ownedNfts } = useReadContract(getOwnedNFTs, {
-    contract: editionDropContract,
-    useIndexer: false,
     // biome-ignore lint/style/noNonNullAssertion: handled by queryOptions
     address: activeEOA?.address!,
+    contract: editionDropContract,
     queryOptions: { enabled: !!activeEOA },
+    useIndexer: false,
   });
   const { data: ownedNfts2 } = useReadContract(getOwnedNFTs, {
-    contract: editionDropContract2,
-    useIndexer: false,
     // biome-ignore lint/style/noNonNullAssertion: handled by queryOptions
     address: activeEOA?.address!,
+    contract: editionDropContract2,
     queryOptions: { enabled: !!activeEOA },
+    useIndexer: false,
   });
 
   const sendCalls = useSendCalls();
@@ -83,15 +82,15 @@ export function Eip5792SendCallsPreview() {
               <Card className="mb-4">
                 <CardContent className="pt-6">
                   <ConnectButton
-                    client={THIRDWEB_CLIENT}
                     chain={sepolia}
+                    client={THIRDWEB_CLIENT}
+                    connectButton={{
+                      label: "Login to mint!",
+                    }}
                     wallets={[
                       createWallet("io.metamask"),
                       createWallet("com.coinbase.wallet"),
                     ]}
-                    connectButton={{
-                      label: "Login to mint!",
-                    }}
                   />
                 </CardContent>
               </Card>
@@ -107,10 +106,10 @@ export function Eip5792SendCallsPreview() {
                     {nft && (
                       <>
                         <MediaRenderer
+                          alt={nft.metadata.name || "NFT Image"}
+                          className="h-32 w-32 rounded-lg"
                           client={THIRDWEB_CLIENT}
                           src={nft.metadata.image}
-                          className="h-32 w-32 rounded-lg"
-                          alt={nft.metadata.name || "NFT Image"}
                         />
                         <p className="mt-2 font-medium text-sm">
                           {nft.metadata.name}
@@ -131,10 +130,10 @@ export function Eip5792SendCallsPreview() {
                     {nft2 && (
                       <>
                         <MediaRenderer
+                          alt={nft2.metadata.name || "NFT Image"}
+                          className="h-32 w-32 rounded-lg"
                           client={THIRDWEB_CLIENT}
                           src={nft2.metadata.image}
-                          className="h-32 w-32 rounded-lg"
-                          alt={nft2.metadata.name || "NFT Image"}
                         />
                         <p className="mt-2 font-medium text-sm">
                           {nft2.metadata.name}
@@ -151,25 +150,25 @@ export function Eip5792SendCallsPreview() {
               <CardFooter className="flex justify-center">
                 {activeEOA && (
                   <Button
+                    disabled={sendCalls.isPending || results.isLoading}
                     onClick={async () => {
                       await sendCalls.mutateAsync({
                         calls: [
                           claimTo({
                             contract: editionDropContract2,
-                            tokenId: 0n,
-                            to: activeEOA.address,
                             quantity: 1n,
+                            to: activeEOA.address,
+                            tokenId: 0n,
                           }),
                           claimTo({
                             contract: editionDropContract,
-                            tokenId: 1n,
-                            to: activeEOA.address,
                             quantity: 1n,
+                            to: activeEOA.address,
+                            tokenId: 1n,
                           }),
                         ],
                       });
                     }}
-                    disabled={sendCalls.isPending || results.isLoading}
                   >
                     {results.isLoading ? (
                       "Confirming..."
@@ -208,42 +207,42 @@ export function Eip5792SendCallsPreview() {
                     Transaction Confirmed!
                   </p>
                   <a
-                    href={`${chain.blockExplorers?.[0]?.url}/tx/${txHash}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="flex items-center gap-1 text-primary text-sm hover:underline"
+                    href={`${chain.blockExplorers?.[0]?.url}/tx/${txHash}`}
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     {shortenHex(txHash)}
                     <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="ml-1"
-                      role="img"
                       aria-label="Open in Explorer"
+                      className="ml-1"
+                      fill="none"
+                      height="12"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="12"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
                         d="M18 13V19C18 19.5304 17.7893 20.0391 17.4142 20.4142C17.0391 20.7893 16.5304 21 16 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V8C3 7.46957 3.21071 6.96086 3.58579 6.58579C3.96086 6.21071 4.46957 6 5 6H11"
                         stroke="currentColor"
-                        strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
+                        strokeWidth="2"
                       />
                       <path
                         d="M15 3H21V9"
                         stroke="currentColor"
-                        strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
+                        strokeWidth="2"
                       />
                       <path
                         d="M10 14L21 3"
                         stroke="currentColor"
-                        strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
+                        strokeWidth="2"
                       />
                     </svg>
                   </a>

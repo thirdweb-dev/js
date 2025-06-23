@@ -43,13 +43,13 @@ export function useBuyWithFiatHistory(
 ): UseQueryResult<BuyWithFiatHistoryData> {
   return useQuery({
     ...queryParams,
-    queryKey: ["buyWithFiatHistory", params],
+    enabled: !!params,
     queryFn: () => {
       if (!params) {
         throw new Error("params are required");
       }
       return getBuyWithFiatHistory(params);
     },
-    enabled: !!params,
+    queryKey: ["buyWithFiatHistory", params],
   });
 }

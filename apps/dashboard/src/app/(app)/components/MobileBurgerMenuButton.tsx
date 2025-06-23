@@ -1,10 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { SkeletonContainer } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
-import { useEns } from "components/contract-components/hooks";
 import {
   LogOutIcon,
   MenuIcon,
@@ -14,10 +9,15 @@ import {
   WalletIcon,
   XIcon,
 } from "lucide-react";
-import { useTheme } from "next-themes";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 import { useLayoutEffect, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { SkeletonContainer } from "@/components/ui/skeleton";
+import { useEns } from "@/hooks/contract-hooks";
+import { cn } from "@/lib/utils";
 import { ThirdwebMiniLogo } from "./ThirdwebMiniLogo";
 
 export function MobileBurgerMenuButton(
@@ -38,9 +38,9 @@ export function MobileBurgerMenuButton(
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { setTheme, theme } = useTheme();
   const ensQuery = useEns({
-    client: props.client,
     addressOrEnsName:
       props.type === "loggedIn" ? props.accountAddress : undefined,
+    client: props.client,
   });
   // const [isCMDSearchModalOpen, setIsCMDSearchModalOpen] = useState(false);
 
@@ -63,9 +63,9 @@ export function MobileBurgerMenuButton(
         setOpen={setIsCMDSearchModalOpen}
       /> */}
       <Button
-        variant="outline"
         className="flex size-10 items-center justify-center rounded-full bg-background p-0"
         onClick={() => setIsMenuOpen(true)}
+        variant="outline"
       >
         <MenuIcon className="size-4 text-muted-foreground" />
       </Button>
@@ -73,9 +73,9 @@ export function MobileBurgerMenuButton(
       {isMenuOpen && (
         <div className="fade-in-0 fixed inset-0 z-50 flex animate-in flex-col bg-background p-6 duration-200">
           <Button
-            variant="ghost"
             className="!h-auto absolute top-4 right-4 p-1"
             onClick={() => setIsMenuOpen(false)}
+            variant="ghost"
           >
             <XIcon className="size-7 text-muted-foreground" />
           </Button>
@@ -89,10 +89,10 @@ export function MobileBurgerMenuButton(
           {props.type === "loggedIn" && (
             <>
               <SkeletonContainer
-                skeletonData="someone@example.com"
-                loadedData={props.email}
                 className="inline-block self-start"
+                loadedData={props.email}
                 render={(email) => <p className="text-foreground">{email}</p>}
+                skeletonData="someone@example.com"
               />
 
               <div className="h-3" />
@@ -103,26 +103,27 @@ export function MobileBurgerMenuButton(
 
               <div className="flex flex-col gap-3">
                 <Link
-                  href="/account"
                   className="flex items-center gap-2 py-1 text-base text-muted-foreground hover:text-foreground"
+                  href="/account"
                 >
                   <UserRoundIcon className="size-4" />
                   My Account
                 </Link>
 
                 <Link
-                  href={`/${ensQuery.data?.ensName || props.accountAddress}`}
-                  target="_blank"
                   className="flex items-center gap-2 py-1 text-base text-muted-foreground hover:text-foreground"
+                  href={`/${ensQuery.data?.ensName || props.accountAddress}`}
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
                   <WalletIcon className="size-4" />
                   My Wallet
                 </Link>
 
                 <Button
-                  variant="link"
                   className="!h-auto hover:!no-underline justify-start gap-2 px-0 py-1 text-start text-base text-muted-foreground hover:text-foreground"
                   onClick={props.logout}
+                  variant="link"
                 >
                   <LogOutIcon className="size-4" />
                   Log Out
@@ -149,30 +150,31 @@ export function MobileBurgerMenuButton(
             </Button> */}
 
             <Link
-              href="/chainlist"
               className="text-muted-foreground hover:text-foreground "
+              href="/chainlist"
             >
               Chainlist
             </Link>
 
             <Link
-              href="https://playground.thirdweb.com/"
-              target="_blank"
               className="text-muted-foreground hover:text-foreground "
+              href="https://playground.thirdweb.com/"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Playground
             </Link>
 
             <Link
-              href="/explore"
               className="text-muted-foreground hover:text-foreground "
+              href="/explore"
             >
               Explore Contracts
             </Link>
 
             <Link
-              href="/home"
               className="text-base text-muted-foreground hover:text-foreground"
+              href="/home"
             >
               Home Page
             </Link>
@@ -181,25 +183,28 @@ export function MobileBurgerMenuButton(
           <div className="mt-auto">
             <div className="flex flex-col gap-5">
               <Link
-                target="_blank"
-                href="https://portal.thirdweb.com"
                 className="text-muted-foreground hover:text-foreground "
+                href="https://portal.thirdweb.com"
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 Docs
               </Link>
 
               <Link
-                target="_blank"
-                href="/support"
                 className="text-muted-foreground hover:text-foreground "
+                href="/support"
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 Support
               </Link>
 
               <Link
-                target="_blank"
-                href="https://feedback.thirdweb.com"
                 className="text-muted-foreground hover:text-foreground"
+                href="https://feedback.thirdweb.com"
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 Feedback
               </Link>
@@ -212,9 +217,9 @@ export function MobileBurgerMenuButton(
 
             {/* Theme */}
             <Button
-              variant="ghost"
               className="flex w-full items-center justify-between gap-2 px-0"
               onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+              variant="ghost"
             >
               <span className="text-base text-muted-foreground">Theme</span>
               <div className="ml-auto flex items-center gap-2 rounded-lg border px-2 py-1">

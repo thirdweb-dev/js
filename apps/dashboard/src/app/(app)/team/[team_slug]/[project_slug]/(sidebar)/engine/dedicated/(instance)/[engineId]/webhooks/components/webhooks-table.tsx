@@ -1,13 +1,3 @@
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { FormItem } from "@/components/ui/form";
-import {
-  type EngineWebhook,
-  useEngineDeleteWebhook,
-  useEngineTestWebhook,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
   FormControl,
@@ -23,14 +13,25 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { TWTable } from "components/shared/TWTable";
+import { Card } from "chakra/card";
+import { FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
 import { format, formatDistanceToNowStrict } from "date-fns";
-import { useTrack } from "hooks/analytics/useTrack";
 import { MailQuestionIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Card, FormLabel, Text } from "tw-components";
-import { shortenString } from "utils/usedapp-external";
+import { TWTable } from "@/components/blocks/TWTable";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { FormItem } from "@/components/ui/form";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  type EngineWebhook,
+  useEngineDeleteWebhook,
+  useEngineTestWebhook,
+} from "@/hooks/useEngine";
+import { shortenString } from "@/utils/usedapp-external";
 
 export function beautifyString(str: string): string {
   return str
@@ -51,43 +52,42 @@ const columnHelper = createColumnHelper<EngineWebhook>();
 
 const columns = [
   columnHelper.accessor("name", {
-    header: "Name",
     cell: (cell) => {
       return <Text>{cell.getValue()}</Text>;
     },
+    header: "Name",
   }),
   columnHelper.accessor("eventType", {
-    header: "Event Type",
     cell: (cell) => {
       return <Text>{beautifyString(cell.getValue())}</Text>;
     },
+    header: "Event Type",
   }),
   columnHelper.accessor("secret", {
-    header: "Secret",
     cell: (cell) => {
       return (
         <CopyTextButton
+          copyIconPosition="right"
           textToCopy={cell.getValue() || ""}
           textToShow={shortenString(cell.getValue() || "")}
           tooltip="Secret"
-          copyIconPosition="right"
         />
       );
     },
+    header: "Secret",
   }),
   columnHelper.accessor("url", {
-    header: "URL",
     cell: (cell) => {
       const url = cell.getValue();
       return (
-        <Text maxW={300} isTruncated>
+        <Text isTruncated maxW={300}>
           {url}
         </Text>
       );
     },
+    header: "URL",
   }),
   columnHelper.accessor("createdAt", {
-    header: "Created At",
     cell: (cell) => {
       const value = cell.getValue();
       if (!value) {
@@ -97,8 +97,8 @@ const columns = [
       const date = new Date(value);
       return (
         <Tooltip
-          borderRadius="md"
           bg="transparent"
+          borderRadius="md"
           boxShadow="none"
           label={
             <Card bgColor="backgroundHighlight">
@@ -111,6 +111,7 @@ const columns = [
         </Tooltip>
       );
     },
+    header: "Created At",
   }),
 ];
 
@@ -130,46 +131,46 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
   return (
     <>
       <TWTable
-        title="webhooks"
-        data={activeWebhooks}
         columns={columns}
-        isPending={isPending}
+        data={activeWebhooks}
         isFetched={isFetched}
+        isPending={isPending}
         onMenuClick={[
           {
             icon: <MailQuestionIcon className="size-4" />,
-            text: "Test webhook",
             onClick: (row) => {
               setSelectedWebhook(row);
               testDisclosure.onOpen();
             },
+            text: "Test webhook",
           },
           {
             icon: <TrashIcon className="size-4" />,
-            text: "Delete",
+            isDestructive: true,
             onClick: (row) => {
               setSelectedWebhook(row);
               deleteDisclosure.onOpen();
             },
-            isDestructive: true,
+            text: "Delete",
           },
         ]}
+        title="webhooks"
       />
 
       {selectedWebhook && deleteDisclosure.isOpen && (
         <DeleteWebhookModal
-          webhook={selectedWebhook}
+          authToken={authToken}
           disclosure={deleteDisclosure}
           instanceUrl={instanceUrl}
-          authToken={authToken}
+          webhook={selectedWebhook}
         />
       )}
       {selectedWebhook && testDisclosure.isOpen && (
         <TestWebhookModal
-          webhook={selectedWebhook}
+          authToken={authToken}
           disclosure={testDisclosure}
           instanceUrl={instanceUrl}
-          authToken={authToken}
+          webhook={selectedWebhook}
         />
       )}
     </>
@@ -192,41 +193,28 @@ function DeleteWebhookModal({
     authToken,
     instanceUrl,
   });
-  const trackEvent = useTrack();
 
   const onDelete = () => {
     const promise = deleteWebhook.mutateAsync(
       { id: webhook.id },
       {
+        onError: (error) => {
+          console.error(error);
+        },
         onSuccess: () => {
           disclosure.onClose();
-          trackEvent({
-            category: "engine",
-            action: "delete-webhook",
-            label: "success",
-            instance: instanceUrl,
-          });
-        },
-        onError: (error) => {
-          trackEvent({
-            category: "engine",
-            action: "delete-webhook",
-            label: "error",
-            instance: instanceUrl,
-            error,
-          });
         },
       },
     );
 
     toast.promise(promise, {
-      success: "Successfully deleted webhook.",
       error: "Failed to delete webhook.",
+      success: "Successfully deleted webhook.",
     });
   };
 
   return (
-    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
       <ModalOverlay />
       <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Delete Webhook</ModalHeader>
@@ -255,7 +243,7 @@ function DeleteWebhookModal({
           <Button onClick={disclosure.onClose} variant="outline">
             Cancel
           </Button>
-          <Button type="submit" variant="destructive" onClick={onDelete}>
+          <Button onClick={onDelete} type="submit" variant="destructive">
             Delete
           </Button>
         </ModalFooter>
@@ -277,8 +265,8 @@ function TestWebhookModal({
   authToken,
 }: TestWebhookModalProps) {
   const { mutate: testWebhook, isPending } = useEngineTestWebhook({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
 
   const [status, setStatus] = useState<number | undefined>();
@@ -297,7 +285,7 @@ function TestWebhookModal({
   };
 
   return (
-    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
       <ModalOverlay />
       <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Test Webhook</ModalHeader>
@@ -309,7 +297,7 @@ function TestWebhookModal({
               <span className="font-mono">{webhook.url}</span>
             </FormItem>
 
-            <Button type="submit" onClick={onTest} disabled={isPending}>
+            <Button disabled={isPending} onClick={onTest} type="submit">
               {isPending && <Spinner className="mr-2 size-4" />}
               Send Request
             </Button>

@@ -1,19 +1,19 @@
-import type { Project } from "@/api/projects";
-import type { Team } from "@/api/team";
-import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { CirclePlusIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { TeamPlanBadge } from "../../../components/TeamPlanBadge";
+import type { Project } from "@/api/projects";
+import type { Team } from "@/api/team";
+import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
+import { TeamPlanBadge } from "@/components/blocks/TeamPlanBadge";
+import { Button } from "@/components/ui/button";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { Separator } from "@/components/ui/separator";
+import type { Account } from "@/hooks/useApi";
+import { cn } from "@/lib/utils";
+import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
 import { SearchInput } from "./SearchInput";
-import { getValidTeamPlan } from "./getValidTeamPlan";
 import { TeamVerifiedIcon } from "./team-verified-icon";
 
 export function TeamSelectionUI(props: {
@@ -40,28 +40,28 @@ export function TeamSelectionUI(props: {
   return (
     <div className="flex flex-col">
       <SearchInput
+        onValueChange={setSearchTeamTerm}
         placeholder="Search Teams"
         value={searchTeamTerm}
-        onValueChange={setSearchTeamTerm}
       />
       <Separator />
       <ScrollShadow
-        scrollableClassName="max-h-[400px] lg:max-h-[600px]"
         className="grow"
+        scrollableClassName="max-h-[400px] lg:max-h-[600px]"
       >
         <div className="flex flex-col p-2">
           <Button
-            className={cn("w-full justify-start gap-2 px-2")}
-            variant="ghost"
-            onMouseEnter={() => setHoveredTeam(undefined)}
             asChild
+            className={cn("w-full justify-start gap-2 px-2")}
+            onMouseEnter={() => setHoveredTeam(undefined)}
+            variant="ghost"
           >
             <Link href="/account">
               <GradientAvatar
-                src={props.account?.image || ""}
                 className="size-4"
-                id={props.account?.id}
                 client={props.client}
+                id={props.account?.id}
+                src={props.account?.image || ""}
               />
               My Account
             </Link>
@@ -75,21 +75,21 @@ export function TeamSelectionUI(props: {
             {filteredTeams.map((team) => {
               const isSelected = team.id === currentTeam?.id;
               return (
-                // biome-ignore lint/a11y/useKeyWithMouseEvents: <explanation>
+                // biome-ignore lint/a11y/useKeyWithMouseEvents: FIXME
                 <li
-                  key={team.id}
                   className="py-0.5"
+                  key={team.id}
                   onMouseOver={() => {
                     setHoveredTeam(team);
                   }}
                 >
                   <Button
+                    asChild
                     className={cn(
                       "!opacity-100 w-full justify-between gap-2 pl-2",
                       isSelected && "bg-accent",
                     )}
                     variant="ghost"
-                    asChild
                   >
                     <Link
                       href={
@@ -105,10 +105,10 @@ export function TeamSelectionUI(props: {
                     >
                       <div className="flex items-center gap-2">
                         <GradientAvatar
-                          src={team.image || ""}
                           className="size-4"
-                          id={team.id}
                           client={props.client}
+                          id={team.id}
+                          src={team.image || ""}
                         />
 
                         <span className="truncate"> {team.name} </span>
@@ -128,8 +128,8 @@ export function TeamSelectionUI(props: {
             <li className="py-0.5">
               <Button
                 className="w-full justify-start gap-2 px-2"
-                variant="ghost"
                 onClick={props.createTeam}
+                variant="ghost"
               >
                 <CirclePlusIcon className="size-4 text-link-foreground" />
                 Create Team
@@ -143,9 +143,9 @@ export function TeamSelectionUI(props: {
         <div className="border-border border-t p-2">
           <Button
             asChild
-            variant="primary"
             className="w-full"
             onMouseEnter={() => setHoveredTeam(undefined)}
+            variant="primary"
           >
             <Link href={props.upgradeTeamLink}>Upgrade Team</Link>
           </Button>

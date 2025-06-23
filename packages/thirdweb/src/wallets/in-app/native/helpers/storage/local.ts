@@ -66,7 +66,7 @@ export async function setWallerUserDetails({
   await setItemInAsyncStorage(
     // ! Keep this in sync with getWalletUserDetails function below
     name,
-    stringify({ userId, email: newEmail }),
+    stringify({ email: newEmail, userId }),
   );
 }
 
@@ -108,7 +108,7 @@ export async function setDeviceShare({
   }
 
   const name = DEVICE_SHARE_LOCAL_STORAGE_NAME(clientId, userDetails.userId);
-  await setWallerUserDetails({ userId: userDetails.userId, clientId });
+  await setWallerUserDetails({ clientId, userId: userDetails.userId });
   await setItemInAsyncStorage(name, deviceShare);
   return deviceShare;
 }

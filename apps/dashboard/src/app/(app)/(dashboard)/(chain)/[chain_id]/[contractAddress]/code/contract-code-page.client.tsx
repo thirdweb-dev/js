@@ -19,8 +19,8 @@ export function ContractCodePageClient(props: {
   return (
     <ContractCodePage
       abi={abiQuery.data}
-      contract={props.contract}
       chainMetadata={props.chainMetadata}
+      contract={props.contract}
     />
   );
 }

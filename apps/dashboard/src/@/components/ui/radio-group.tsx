@@ -27,11 +27,11 @@ const RadioGroupItem = React.forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <RadioGroupPrimitive.Item
-      ref={ref}
       className={cn(
         "aspect-square h-4 w-4 rounded-full border border-inverted text-inverted ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
+      ref={ref}
       {...props}
     >
       <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
@@ -49,11 +49,11 @@ const RadioGroupItemButton = React.forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <RadioGroupPrimitive.Item
-      ref={ref}
       className={cn(
         "group flex min-w-32 cursor-pointer items-center space-x-3 space-y-0 rounded-lg border px-4 py-3 font-medium transition-all hover:border-foreground/25 hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 peer-hover:border-nonce data-[state=checked]:border-muted-foreground",
         className,
       )}
+      ref={ref}
       {...props}
     >
       <div className="flex aspect-square h-4 w-4 items-center justify-center rounded-full border text-inverted ring-offset-background transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 group-hover:border-foreground/25 group-data-[state=checked]:border-inverted">

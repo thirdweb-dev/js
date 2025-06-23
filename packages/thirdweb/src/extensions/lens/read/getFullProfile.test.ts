@@ -13,7 +13,7 @@ const client = TEST_CLIENT;
 
 describe.runIf(process.env.TW_SECRET_KEY)("lens/getFullProfile", () => {
   it("should return a full profile with handle and (maybe) profile metadata", async () => {
-    const profile = await getFullProfile({ profileId, client });
+    const profile = await getFullProfile({ client, profileId });
 
     // Although there is a profile, the metadata of that profile might still be "null"
     // if user hasn't set up any metadata like avatar, coverPicture, name, bio etc.
@@ -25,15 +25,15 @@ describe.runIf(process.env.TW_SECRET_KEY)("lens/getFullProfile", () => {
   it("should return null for invalid profileId", async () => {
     // As of Jul 2024 Lens has about 465k profiles | So trying to get profile of a max-unit256 profileId should return "null"
     // gotta be a very long before this number is reached so we should be safe
-    const profile = await getFullProfile({ profileId: MAX_UINT256, client });
+    const profile = await getFullProfile({ client, profileId: MAX_UINT256 });
     expect(profile === null).toBe(true);
   });
 
   it("should return joinDate", async () => {
     const profile = await getFullProfile({
-      profileId,
       client,
       includeJoinDate: true,
+      profileId,
     });
     expect(typeof profile?.joinDate).toBe("bigint");
   });

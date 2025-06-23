@@ -1,5 +1,5 @@
-import type { Ecosystem } from "@/types/Ecosystem";
 import { notFound } from "next/navigation";
+import type { Ecosystem } from "@/types/Ecosystem";
 
 export async function getEcosystemInfo(
   ecosystemId: string,

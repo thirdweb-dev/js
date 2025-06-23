@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "inc.tomo",
-  name: "Tomo Wallet",
-  homepage: "https://tomo.inc",
-  image_id: "95c9f957-b1e4-4619-fa7c-a77569d2fe00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/tomo-inc/id6468010287",
     android: "https://play.google.com/store/apps/details?id=tomo.app.unyx",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome:
       "https://chromewebstore.google.com/detail/tomo-wallet/pfccjkejcgoppjnllalolplgogenfojk",
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/tomo-inc/id6468010287",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: "inc.tomo",
-  mobile: {
-    native: "tomo://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://tomo.inc",
+  id: "inc.tomo",
+  image_id: "95c9f957-b1e4-4619-fa7c-a77569d2fe00",
+  mobile: {
+    native: "tomo://",
+    universal: null,
+  },
+  name: "Tomo Wallet",
+  rdns: "inc.tomo",
 } as const;

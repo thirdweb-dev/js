@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "Remove" event.
@@ -40,8 +40,8 @@ export type RemoveEventFilters = Partial<{
  */
 export function removeEvent(filters: RemoveEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event Remove(uint256 indexed fid, bytes indexed key, bytes keyBytes)",
-    filters,
   });
 }

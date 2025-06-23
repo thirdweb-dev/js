@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { BadgeContainer } from "stories/utils";
+import { BadgeContainer } from "@/storybook/utils";
 import { StatBreakdown } from "./StatBreakdown";
 
 const meta = {
-  title: "Analytics/StatBreakdown",
   component: Component,
+  title: "Analytics/StatBreakdown",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -17,30 +17,28 @@ export const Variants: Story = {
 };
 
 const baseData = [
-  { value: 3753420.21, fill: "hsl(var(--chart-1))", label: "Base" },
-  { value: 2134521, fill: "hsl(var(--chart-2))", label: "Xai" },
-  { value: 423455.32, fill: "hsl(var(--chart-3))", label: "Ethereum" },
-  { value: 134234.1, fill: "hsl(var(--chart-4))", label: "Polygon" },
+  { fill: "hsl(var(--chart-1))", label: "Base", value: 3753420.21 },
+  { fill: "hsl(var(--chart-2))", label: "Xai", value: 2134521 },
+  { fill: "hsl(var(--chart-3))", label: "Ethereum", value: 423455.32 },
+  { fill: "hsl(var(--chart-4))", label: "Polygon", value: 134234.1 },
 ];
 
 const withIconsData = [
   {
-    value: 3753420.21,
     fill: "hsl(var(--chart-1))",
-    label: "Chrome",
     icon: (
       // biome-ignore lint/a11y/noSvgWithoutTitle: This is a test icon
       <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
+        className="size-4"
         fill="none"
+        height="16"
         stroke="currentColor"
-        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="size-4"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        width="16"
+        xmlns="http://www.w3.org/2000/svg"
       >
         <circle cx="12" cy="12" r="10" />
         <circle cx="12" cy="12" r="4" />
@@ -49,29 +47,31 @@ const withIconsData = [
         <line x1="10.88" x2="15.46" y1="21.94" y2="14" />
       </svg>
     ),
+    label: "Chrome",
+    value: 3753420.21,
   },
   {
-    value: 2134521,
     fill: "hsl(var(--chart-2))",
-    label: "Firefox",
     icon: (
       // biome-ignore lint/a11y/noSvgWithoutTitle: This is a test icon
       <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
+        className="size-4"
         fill="none"
+        height="16"
         stroke="currentColor"
-        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="size-4"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        width="16"
+        xmlns="http://www.w3.org/2000/svg"
       >
         <circle cx="12" cy="12" r="10" />
         <circle cx="12" cy="12" r="4" />
       </svg>
     ),
+    label: "Firefox",
+    value: 2134521,
   },
 ];
 

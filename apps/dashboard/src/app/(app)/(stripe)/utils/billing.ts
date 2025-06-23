@@ -1,8 +1,8 @@
 import "server-only";
+import { getAuthToken } from "@/api/auth-token";
 import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
-import type { ProductSKU } from "@/lib/billing";
-import { getAbsoluteUrl } from "../../../../lib/vercel-utils";
-import { getAuthToken } from "../../api/lib/getAuthToken";
+import type { ProductSKU } from "@/types/billing";
+import { getAbsoluteUrl } from "@/utils/vercel";
 
 export async function getBillingCheckoutUrl(options: {
   teamSlug: string;
@@ -12,23 +12,23 @@ export async function getBillingCheckoutUrl(options: {
 
   if (!token) {
     return {
-      status: "error",
       error: "You are not logged in",
+      status: "error",
     } as const;
   }
 
   const res = await fetch(
     `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamSlug}/checkout/create-link`,
     {
-      method: "POST",
       body: JSON.stringify({
-        sku: options.sku,
         redirectTo: getAbsoluteStripeRedirectUrl(),
+        sku: options.sku,
       }),
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
+      method: "POST",
     },
   );
   if (!res.ok) {
@@ -37,21 +37,21 @@ export async function getBillingCheckoutUrl(options: {
     switch (res.status) {
       case 402: {
         return {
-          status: "error",
           error:
             "You have outstanding invoices, please pay these first before re-subscribing.",
+          status: "error",
         } as const;
       }
       case 429: {
         return {
-          status: "error",
           error: "Too many requests, please try again later.",
+          status: "error",
         } as const;
       }
       default: {
         return {
-          status: "error",
           error: "An unknown error occurred, please try again later.",
+          status: "error",
         } as const;
       }
     }
@@ -60,14 +60,14 @@ export async function getBillingCheckoutUrl(options: {
   const json = await res.json();
   if (!json.result) {
     return {
-      status: "error",
       error: "An unknown error occurred, please try again later.",
+      status: "error",
     } as const;
   }
 
   return {
-    status: "success",
     data: json.result as string,
+    status: "success",
   } as const;
 }
 
@@ -82,14 +82,14 @@ export async function getPlanCancelUrl(options: {
   const res = await fetch(
     `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamId}/checkout/cancel-plan-link`,
     {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify({
         redirectTo: getAbsoluteStripeRedirectUrl(),
       }),
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
     },
   );
 
@@ -120,14 +120,14 @@ export async function getBillingPortalUrl(options: {
   const res = await fetch(
     `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamSlug}/checkout/create-session-link`,
     {
-      method: "POST",
       body: JSON.stringify({
         redirectTo: getAbsoluteStripeRedirectUrl(),
       }),
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
+      method: "POST",
     },
   );
 
@@ -166,14 +166,14 @@ export async function getCryptoTopupUrl(options: {
       NEXT_PUBLIC_THIRDWEB_API_HOST,
     ),
     {
-      method: "POST",
       body: JSON.stringify({
         amountUSD: options.amountUSD,
       }),
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
+      method: "POST",
     },
   );
 
@@ -204,14 +204,14 @@ export async function getInvoicePaymentUrl(options: {
       NEXT_PUBLIC_THIRDWEB_API_HOST,
     ),
     {
-      method: "POST",
       body: JSON.stringify({
         invoiceId: options.invoiceId,
       }),
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
+      method: "POST",
     },
   );
 

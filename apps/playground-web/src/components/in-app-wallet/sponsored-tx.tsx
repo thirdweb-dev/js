@@ -20,9 +20,9 @@ export function SponsoredInAppTxPreview() {
     tokenId: editionDropTokenId,
   });
   const { data: ownedNfts } = useReadContract(getOwnedNFTs, {
-    contract: editionDropContract,
     // biome-ignore lint/style/noNonNullAssertion: handled by queryOptions
     address: smartAccount?.address!,
+    contract: editionDropContract,
     queryOptions: { enabled: !!smartAccount },
   });
 
@@ -64,7 +64,7 @@ export function SponsoredInAppTxPreview() {
             <MediaRenderer
               client={THIRDWEB_CLIENT}
               src={nft.metadata.image}
-              style={{ width: "400px", marginTop: "10px" }}
+              style={{ marginTop: "10px", width: "400px" }}
             />
           ) : null}
           {smartAccount ? (
@@ -75,20 +75,20 @@ export function SponsoredInAppTxPreview() {
               </p>
               <div className="flex justify-center">
                 <TransactionButton
-                  transaction={() =>
-                    claimTo({
-                      contract: editionDropContract,
-                      tokenId: editionDropTokenId,
-                      to: smartAccount.address,
-                      quantity: 1n,
-                    })
-                  }
                   onError={(error) => {
                     alert(`Error: ${error.message}`);
                   }}
                   onTransactionConfirmed={async () => {
                     alert("Minted successful!");
                   }}
+                  transaction={() =>
+                    claimTo({
+                      contract: editionDropContract,
+                      quantity: 1n,
+                      to: smartAccount.address,
+                      tokenId: editionDropTokenId,
+                    })
+                  }
                 >
                   Mint
                 </TransactionButton>
@@ -97,9 +97,9 @@ export function SponsoredInAppTxPreview() {
           ) : (
             <p
               style={{
+                marginTop: "10px",
                 textAlign: "center",
                 width: "400px",
-                marginTop: "10px",
               }}
             >
               Login to mint this Kitten!

@@ -4,6 +4,13 @@ import { defineChain } from "../utils.js";
  * @chain
  */
 export const avalanche = /* @__PURE__ */ defineChain({
+  blockExplorers: [
+    {
+      apiUrl: "https://api.snowtrace.io/api",
+      name: "SnowTrace",
+      url: "https://snowtrace.io",
+    },
+  ],
   id: 43114,
   name: "Avalanche",
   nativeCurrency: {
@@ -11,11 +18,4 @@ export const avalanche = /* @__PURE__ */ defineChain({
     name: "Avalanche",
     symbol: "AVAX",
   },
-  blockExplorers: [
-    {
-      name: "SnowTrace",
-      url: "https://snowtrace.io",
-      apiUrl: "https://api.snowtrace.io/api",
-    },
-  ],
 });

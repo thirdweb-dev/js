@@ -16,12 +16,35 @@ import type {
 const PROPOSAL_EVENT_MOCK: WalletConnectSessionProposalEvent = {
   id: 1717020142228697,
   params: {
+    expiryTimestamp: 1717020442,
     id: 1717020142228697,
+    optionalNamespaces: {
+      eip155: {
+        events: ["disconnect"],
+        methods: ["eth_signTypedData_v4"],
+      },
+    },
     pairingTopic:
       "80630f62114d67a2c529f785ba5b7ed4b4b7894cc6be17153a548aa9305e89d7",
-    expiryTimestamp: 1717020442,
+    proposer: {
+      metadata: {
+        description: "Example Dapp",
+        icons: ["https://walletconnect.com/walletconnect-logo.png"],
+        name: "Example Dapp",
+        url: "#",
+      },
+      publicKey:
+        "61ae6e6f8f441822cf72e21060029681aec2f50d9cb8bf0c95df461ecd371703",
+    },
+    relays: [
+      {
+        protocol: "irn",
+      },
+    ],
     requiredNamespaces: {
       eip155: {
+        chains: ["eip155:1"],
+        events: ["chainChanged", "accountsChanged"],
         methods: [
           "eth_sendTransaction",
           "eth_signTransaction",
@@ -29,29 +52,6 @@ const PROPOSAL_EVENT_MOCK: WalletConnectSessionProposalEvent = {
           "personal_sign",
           "eth_signTypedData",
         ],
-        chains: ["eip155:1"],
-        events: ["chainChanged", "accountsChanged"],
-      },
-    },
-    optionalNamespaces: {
-      eip155: {
-        methods: ["eth_signTypedData_v4"],
-        events: ["disconnect"],
-      },
-    },
-    relays: [
-      {
-        protocol: "irn",
-      },
-    ],
-    proposer: {
-      publicKey:
-        "61ae6e6f8f441822cf72e21060029681aec2f50d9cb8bf0c95df461ecd371703",
-      metadata: {
-        name: "Example Dapp",
-        description: "Example Dapp",
-        url: "#",
-        icons: ["https://walletconnect.com/walletconnect-logo.png"],
       },
     },
   },
@@ -67,11 +67,11 @@ const walletMock = {
 };
 
 const signClientMock = {
-  on: vi.fn(),
-  disconnect: vi.fn(),
   approve: vi.fn().mockResolvedValue({
     acknowledged: vi.fn().mockResolvedValue(mocks.session),
   }),
+  disconnect: vi.fn(),
+  on: vi.fn(),
 } as unknown as WalletConnectClient;
 
 describe("session_proposal", () => {
@@ -87,9 +87,9 @@ describe("session_proposal", () => {
     walletMock.getAccount.mockReturnValueOnce(null);
 
     const promise = onSessionProposal({
+      event: PROPOSAL_EVENT_MOCK,
       wallet: walletMock,
       walletConnectClient: signClientMock,
-      event: PROPOSAL_EVENT_MOCK,
     });
 
     await expect(promise).rejects.toThrow(
@@ -99,9 +99,9 @@ describe("session_proposal", () => {
 
   it("should connect new session", async () => {
     await onSessionProposal({
-      walletConnectClient: signClientMock,
-      wallet: walletMock,
       event: PROPOSAL_EVENT_MOCK,
+      wallet: walletMock,
+      walletConnectClient: signClientMock,
     });
 
     expect(signClientMock.approve).toHaveBeenCalledWith({
@@ -109,17 +109,17 @@ describe("session_proposal", () => {
       namespaces: {
         eip155: {
           accounts: [`eip155:1:${TEST_ACCOUNT_A.address}`],
-          methods: [
-            ...(PROPOSAL_EVENT_MOCK.params.requiredNamespaces?.eip155
-              ?.methods ?? []),
-            ...(PROPOSAL_EVENT_MOCK.params.optionalNamespaces?.eip155
-              ?.methods ?? []),
-          ],
           events: [
             ...(PROPOSAL_EVENT_MOCK.params.requiredNamespaces?.eip155?.events ??
               []),
             ...(PROPOSAL_EVENT_MOCK.params.optionalNamespaces?.eip155?.events ??
               []),
+          ],
+          methods: [
+            ...(PROPOSAL_EVENT_MOCK.params.requiredNamespaces?.eip155
+              ?.methods ?? []),
+            ...(PROPOSAL_EVENT_MOCK.params.optionalNamespaces?.eip155
+              ?.methods ?? []),
           ],
         },
       },
@@ -128,10 +128,10 @@ describe("session_proposal", () => {
 
   it("should connect new session with custom chains", async () => {
     await onSessionProposal({
-      walletConnectClient: signClientMock,
-      wallet: walletMock,
-      event: PROPOSAL_EVENT_MOCK,
       chains: [ANVIL_CHAIN],
+      event: PROPOSAL_EVENT_MOCK,
+      wallet: walletMock,
+      walletConnectClient: signClientMock,
     });
 
     expect(signClientMock.approve).toHaveBeenCalledWith({
@@ -142,17 +142,17 @@ describe("session_proposal", () => {
             `eip155:1:${TEST_ACCOUNT_A.address}`,
             `eip155:31337:${TEST_ACCOUNT_A.address}`,
           ],
-          methods: [
-            ...(PROPOSAL_EVENT_MOCK.params.requiredNamespaces?.eip155
-              ?.methods ?? []),
-            ...(PROPOSAL_EVENT_MOCK.params.optionalNamespaces?.eip155
-              ?.methods ?? []),
-          ],
           events: [
             ...(PROPOSAL_EVENT_MOCK.params.requiredNamespaces?.eip155?.events ??
               []),
             ...(PROPOSAL_EVENT_MOCK.params.optionalNamespaces?.eip155?.events ??
               []),
+          ],
+          methods: [
+            ...(PROPOSAL_EVENT_MOCK.params.requiredNamespaces?.eip155
+              ?.methods ?? []),
+            ...(PROPOSAL_EVENT_MOCK.params.optionalNamespaces?.eip155
+              ?.methods ?? []),
           ],
         },
       },
@@ -162,8 +162,8 @@ describe("session_proposal", () => {
   it("should disconnect existing session", async () => {
     vi.spyOn(SessionStore, "getSessions").mockResolvedValueOnce([
       {
-        topic: "old-session",
         origin: "https://example.com",
+        topic: "old-session",
       },
     ]);
 
@@ -173,14 +173,14 @@ describe("session_proposal", () => {
       verified: { origin: "https://example.com" },
     };
     await onSessionProposal({
-      walletConnectClient: signClientMock,
-      wallet: walletMock,
       event: sessionProposal,
+      wallet: walletMock,
+      walletConnectClient: signClientMock,
     });
 
     expect(signClientMock.disconnect).toHaveBeenCalledWith({
-      topic: "old-session",
       reason: expect.anything(),
+      topic: "old-session",
     });
   });
 
@@ -189,15 +189,15 @@ describe("session_proposal", () => {
       ...PROPOSAL_EVENT_MOCK,
       params: {
         ...PROPOSAL_EVENT_MOCK.params,
-        requiredNamespaces: {},
         optionalNamespaces: {},
+        requiredNamespaces: {},
       },
     };
 
     const promise = onSessionProposal({
-      walletConnectClient: signClientMock,
-      wallet: walletMock,
       event: proposal,
+      wallet: walletMock,
+      walletConnectClient: signClientMock,
     });
     await expect(promise).rejects.toThrow(
       "No EIP155 namespace found in Wallet Connect session proposal",
@@ -207,10 +207,10 @@ describe("session_proposal", () => {
   it("should call onConnect on successful connection", async () => {
     const onConnect = vi.fn();
     await onSessionProposal({
-      walletConnectClient: signClientMock,
-      wallet: walletMock,
       event: PROPOSAL_EVENT_MOCK,
       onConnect,
+      wallet: walletMock,
+      walletConnectClient: signClientMock,
     });
     expect(onConnect).toHaveBeenCalledWith({
       origin: expect.anything(),

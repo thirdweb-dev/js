@@ -50,18 +50,18 @@ export function setClaimConditions(
   options: BaseTransactionOptions<SetClaimConditionsParams>,
 ) {
   return multicall({
-    contract: options.contract,
     asyncParams: async () => {
       return {
         data: await getMulticallSetClaimConditionTransactions({
           contract: options.contract,
           phases: options.phases,
           resetClaimEligibility: options.resetClaimEligibility,
-          tokenDecimals: await decimals({ contract: options.contract }),
           singlePhase: options.singlePhaseDrop,
+          tokenDecimals: await decimals({ contract: options.contract }),
         }),
       };
     },
+    contract: options.contract,
   });
 }
 

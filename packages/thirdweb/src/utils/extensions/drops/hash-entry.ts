@@ -2,8 +2,8 @@ import { encodePacked } from "viem";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import {
-  ZERO_ADDRESS,
   isNativeTokenAddress,
+  ZERO_ADDRESS,
 } from "../../../constants/addresses.js";
 import { getAddress } from "../../address.js";
 import { keccak256 } from "../../hashing/keccak256.js";

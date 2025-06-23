@@ -12,20 +12,20 @@ import {
   waitForReceipt,
 } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
+import { Container, ModalHeader } from "../../../../components/basic.js";
+import { Button } from "../../../../components/buttons.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { StepBar } from "../../../../components/StepBar.js";
 import { SwitchNetworkButton } from "../../../../components/SwitchNetwork.js";
-import { Container, ModalHeader } from "../../../../components/basic.js";
-import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { StyledDiv } from "../../../../design-system/elements.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
 import type { PayerInfo } from "../types.js";
 import { ErrorText } from "./ErrorText.js";
-import { SwapSummary } from "./SwapSummary.js";
 import { addPendingTx } from "./pendingSwapTx.js";
+import { SwapSummary } from "./SwapSummary.js";
 
 /**
  * @internal
@@ -74,21 +74,21 @@ export function SwapConfirmationScreen(props: {
         error.toLowerCase().includes("user denied")
       ) {
         return {
-          title: "Failed to Approve",
           message: "Your wallet rejected the approval request.",
+          title: "Failed to Approve",
         };
       }
       if (error.toLowerCase().includes("insufficient funds for gas")) {
         return {
-          title: "Insufficient Native Funds",
           message:
             "You do not have enough native funds to approve the transaction.",
+          title: "Insufficient Native Funds",
         };
       }
       return {
-        title: "Failed to Approve",
         message:
           "Your wallet failed to approve the transaction for an unknown reason. Please try again or contact support.",
+        title: "Failed to Approve",
       };
     }
 
@@ -99,21 +99,21 @@ export function SwapConfirmationScreen(props: {
         error.toLowerCase().includes("user denied")
       ) {
         return {
-          title: "Failed to Confirm",
           message: "Your wallet rejected the confirmation request.",
+          title: "Failed to Confirm",
         };
       }
       if (error.toLowerCase().includes("insufficient funds for gas")) {
         return {
-          title: "Insufficient Native Funds",
           message:
             "You do not have enough native funds to confirm the transaction.",
+          title: "Insufficient Native Funds",
         };
       }
       return {
-        title: "Failed to Confirm",
         message:
           "Your wallet failed to confirm the transaction for an unknown reason. Please try again or contact support.",
+        title: "Failed to Confirm",
       };
     }
 
@@ -122,12 +122,12 @@ export function SwapConfirmationScreen(props: {
 
   return (
     <Container p="lg">
-      <ModalHeader title={props.title} onBack={props.onBack} />
+      <ModalHeader onBack={props.onBack} title={props.title} />
 
       {props.isFiatFlow ? (
         <>
           <Spacer y="lg" />
-          <StepBar steps={2} currentStep={2} />
+          <StepBar currentStep={2} steps={2} />
           <Spacer y="sm" />
           <Text size="xs">
             Step 2 of 2 - Converting {props.fromTokenSymbol} to{" "}
@@ -144,15 +144,15 @@ export function SwapConfirmationScreen(props: {
       )}
 
       <SwapSummary
-        sender={sender}
-        receiver={receiver}
         client={props.client}
-        fromToken={props.fromToken}
-        fromChain={props.fromChain}
-        toToken={props.toToken}
-        toChain={props.toChain}
         fromAmount={props.fromAmount}
+        fromChain={props.fromChain}
+        fromToken={props.fromToken}
+        receiver={receiver}
+        sender={sender}
         toAmount={props.toAmount}
+        toChain={props.toChain}
+        toToken={props.toToken}
       />
 
       <Spacer y="md" />
@@ -162,21 +162,21 @@ export function SwapConfirmationScreen(props: {
         <>
           <Spacer y="sm" />
           <Container
-            gap="sm"
+            center="y"
+            color="accentText"
             flex="row"
+            gap="sm"
             style={{
               justifyContent: "space-between",
             }}
-            center="y"
-            color="accentText"
           >
             <Step
-              isDone={step === "swap"}
               isActive={step === "approval"}
+              isDone={step === "swap"}
               label={step === "approval" ? "Approve" : "Approved"}
             />
             <ConnectorLine />
-            <Step isDone={false} label="Confirm" isActive={step === "swap"} />
+            <Step isActive={step === "swap"} isDone={false} label="Confirm" />
           </Container>
           <Spacer y="lg" />
         </>
@@ -185,8 +185,8 @@ export function SwapConfirmationScreen(props: {
       {uiErrorMessage && (
         <>
           <ErrorText
-            title={uiErrorMessage.title}
             message={uiErrorMessage.message}
+            title={uiErrorMessage.title}
           />
           <Spacer y="md" />
         </>
@@ -197,19 +197,19 @@ export function SwapConfirmationScreen(props: {
           <Spacer y="xs" />
           <SwitchNetworkButton
             fullWidth
-            variant="accent"
             switchChain={async () => {
               await props.payer.wallet.switchChain(props.fromChain);
             }}
+            variant="accent"
           />
         </>
       ) : (
         <>
           <Spacer y="xs" />
           <Button
-            variant="accent"
-            fullWidth
             disabled={status === "pending"}
+            fullWidth
+            gap="xs"
             onClick={async () => {
               const wallet = props.payer.wallet;
 
@@ -229,25 +229,25 @@ export function SwapConfirmationScreen(props: {
                   setStatus("pending");
 
                   trackPayEvent({
-                    event: "prompt_swap_approval",
+                    amountWei: props.quote.swapDetails.fromAmountWei,
+                    chainId: props.quote.swapDetails.fromToken.chainId,
                     client: props.client,
+                    event: "prompt_swap_approval",
+                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
+                    toChainId: props.quote.swapDetails.toToken.chainId,
+                    toToken: props.quote.swapDetails.toToken.tokenAddress,
                     walletAddress: account.address,
                     walletType: wallet.id,
-                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                    amountWei: props.quote.swapDetails.fromAmountWei,
-                    toToken: props.quote.swapDetails.toToken.tokenAddress,
-                    toChainId: props.quote.swapDetails.toToken.chainId,
-                    chainId: props.quote.swapDetails.fromToken.chainId,
                   });
 
                   const transaction = approve({
+                    amountWei: BigInt(props.quote.approvalData.amountWei),
                     contract: getContract({
-                      client: props.client,
                       address: props.quote.swapDetails.fromToken.tokenAddress,
                       chain: props.fromChain,
+                      client: props.client,
                     }),
                     spender: props.quote.approvalData.spenderAddress,
-                    amountWei: BigInt(props.quote.approvalData.amountWei),
                   });
 
                   const tx = await sendTransaction({
@@ -258,15 +258,15 @@ export function SwapConfirmationScreen(props: {
                   await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
 
                   trackPayEvent({
-                    event: "swap_approval_success",
+                    amountWei: props.quote.swapDetails.fromAmountWei,
+                    chainId: props.quote.swapDetails.fromToken.chainId,
                     client: props.client,
+                    event: "swap_approval_success",
+                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
+                    toChainId: props.quote.swapDetails.toToken.chainId,
+                    toToken: props.quote.swapDetails.toToken.tokenAddress,
                     walletAddress: account.address,
                     walletType: wallet.id,
-                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                    amountWei: props.quote.swapDetails.fromAmountWei,
-                    toToken: props.quote.swapDetails.toToken.tokenAddress,
-                    toChainId: props.quote.swapDetails.toToken.chainId,
-                    chainId: props.quote.swapDetails.fromToken.chainId,
                   });
 
                   setStep("swap");
@@ -282,15 +282,15 @@ export function SwapConfirmationScreen(props: {
                 setStatus("pending");
                 try {
                   trackPayEvent({
-                    event: "prompt_swap_execution",
+                    amountWei: props.quote.swapDetails.fromAmountWei,
+                    chainId: props.quote.swapDetails.fromToken.chainId,
                     client: props.client,
+                    event: "prompt_swap_execution",
+                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
+                    toChainId: props.quote.swapDetails.toToken.chainId,
+                    toToken: props.quote.swapDetails.toToken.tokenAddress,
                     walletAddress: account.address,
                     walletType: wallet.id,
-                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                    amountWei: props.quote.swapDetails.fromAmountWei,
-                    toToken: props.quote.swapDetails.toToken.tokenAddress,
-                    toChainId: props.quote.swapDetails.toToken.chainId,
-                    chainId: props.quote.swapDetails.fromToken.chainId,
                   });
                   const tx = props.quote.transactionRequest;
                   let _swapTx: WaitForReceiptOptions;
@@ -302,13 +302,13 @@ export function SwapConfirmationScreen(props: {
                     approveTxRequired
                   ) {
                     const approveTx = approve({
+                      amountWei: BigInt(props.quote.approvalData.amountWei),
                       contract: getContract({
-                        client: props.client,
                         address: props.quote.swapDetails.fromToken.tokenAddress,
                         chain: props.fromChain,
+                        client: props.client,
                       }),
                       spender: props.quote.approvalData.spenderAddress,
-                      amountWei: BigInt(props.quote.approvalData.amountWei),
                     });
 
                     _swapTx = await sendBatchTransaction({
@@ -323,23 +323,23 @@ export function SwapConfirmationScreen(props: {
                   }
 
                   trackPayEvent({
-                    event: "swap_execution_success",
+                    amountWei: props.quote.swapDetails.fromAmountWei,
+                    chainId: props.quote.swapDetails.fromToken.chainId,
                     client: props.client,
+                    event: "swap_execution_success",
+                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
+                    toChainId: props.quote.swapDetails.toToken.chainId,
+                    toToken: props.quote.swapDetails.toToken.tokenAddress,
                     walletAddress: account.address,
                     walletType: wallet.id,
-                    fromToken: props.quote.swapDetails.fromToken.tokenAddress,
-                    amountWei: props.quote.swapDetails.fromAmountWei,
-                    toToken: props.quote.swapDetails.toToken.tokenAddress,
-                    toChainId: props.quote.swapDetails.toToken.chainId,
-                    chainId: props.quote.swapDetails.fromToken.chainId,
                   });
 
                   // do not add pending tx if the swap is part of fiat flow
                   if (!props.isFiatFlow) {
                     addPendingTx({
-                      type: "swap",
-                      txHash: _swapTx.transactionHash,
                       chainId: _swapTx.chain.id,
+                      txHash: _swapTx.transactionHash,
+                      type: "swap",
                     });
                   }
 
@@ -351,14 +351,14 @@ export function SwapConfirmationScreen(props: {
                 }
               }
             }}
-            gap="xs"
+            variant="accent"
           >
             {step === "approval" &&
               (status === "pending" ? "Approving" : "Approve")}
             {step === "swap" &&
               (status === "pending" ? "Confirming" : "Confirm")}
             {status === "pending" && (
-              <Spinner size="sm" color="accentButtonText" />
+              <Spinner color="accentButtonText" size="sm" />
             )}
           </Button>
         </>
@@ -370,8 +370,8 @@ export function SwapConfirmationScreen(props: {
 export const ConnectorLine = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
-    height: "4px",
     background: theme.colors.borderColor,
     flex: 1,
+    height: "4px",
   };
 });

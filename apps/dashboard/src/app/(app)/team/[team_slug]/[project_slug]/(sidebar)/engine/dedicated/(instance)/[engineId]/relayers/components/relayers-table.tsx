@@ -1,11 +1,3 @@
-import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
-import {
-  type EngineRelayer,
-  type UpdateRelayerInput,
-  useEngineBackendWallets,
-  useEngineRevokeRelayer,
-  useEngineUpdateRelayer,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
   FormControl,
@@ -23,24 +15,26 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { ChainIconClient } from "components/icons/ChainIcon";
-import { TWTable } from "components/shared/TWTable";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button, Legacy_CopyButton, LinkButton } from "chakra/button";
+import { FormHelperText, FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { TWTable } from "@/components/blocks/TWTable";
+import { useAllChainsData } from "@/hooks/chains/allChains";
 import {
-  Button,
-  FormHelperText,
-  FormLabel,
-  LinkButton,
-  Text,
-  TrackedCopyButton,
-} from "tw-components";
+  type EngineRelayer,
+  type UpdateRelayerInput,
+  useEngineBackendWallets,
+  useEngineRevokeRelayer,
+  useEngineUpdateRelayer,
+} from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { ChainIconClient } from "@/icons/ChainIcon";
 import { type AddModalInput, parseAddressListRaw } from "./add-relayer-button";
 
 interface RelayersTableProps {
@@ -69,23 +63,22 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
 
   const columns = [
     columnHelper.accessor("chainId", {
-      header: "Chain",
       cell: (cell) => {
         const chain = idToChain.get(Number.parseInt(cell.getValue()));
         return (
           <Flex align="center" gap={2}>
             <ChainIconClient
               className="size-3"
-              src={chain?.icon?.url}
               client={client}
+              src={chain?.icon?.url}
             />
             <Text>{chain?.name ?? "N/A"}</Text>
           </Flex>
         );
       },
+      header: "Chain",
     }),
     columnHelper.accessor("backendWalletAddress", {
-      header: "Backend Wallet",
       cell: (cell) => {
         const { chainId, backendWalletAddress } = cell.row.original;
         const chain = idToChain.get(Number.parseInt(chainId));
@@ -97,26 +90,26 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
 
         return (
           <LinkButton
-            key={explorer.name}
-            variant="ghost"
-            isExternal
-            size="xs"
-            href={`${explorer.url}/address/${backendWalletAddress}`}
             fontFamily="mono"
+            href={`${explorer.url}/address/${backendWalletAddress}`}
+            isExternal
+            key={explorer.name}
+            size="xs"
+            variant="ghost"
           >
             {backendWalletAddress}
           </LinkButton>
         );
       },
+      header: "Backend Wallet",
     }),
     columnHelper.accessor("name", {
-      header: "Label",
       cell: (cell) => {
         return <Text>{cell.getValue()}</Text>;
       },
+      header: "Label",
     }),
     columnHelper.accessor("allowedContracts", {
-      header: "Allowed Contracts",
       cell: (cell) => {
         const allowedContracts = cell.getValue() ?? [];
         const value =
@@ -127,9 +120,9 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
               : `${allowedContracts.length} addresses`;
         return <Text>{value}</Text>;
       },
+      header: "Allowed Contracts",
     }),
     columnHelper.accessor("allowedForwarders", {
-      header: "Allowed Forwarders",
       cell: (cell) => {
         const allowedForwarders = cell.getValue() ?? [];
         const value =
@@ -140,68 +133,63 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
               : `${allowedForwarders.length} addresses`;
         return <Text>{value}</Text>;
       },
+      header: "Allowed Forwarders",
     }),
     columnHelper.accessor("id", {
-      header: "URL",
       cell: (cell) => {
         const id = cell.getValue();
         const url = `${instanceUrl}relayer/${id}`;
-        return (
-          <TrackedCopyButton
-            value={url}
-            category="engine"
-            aria-label="Copy to clipboard"
-          />
-        );
+        return <Legacy_CopyButton aria-label="Copy to clipboard" value={url} />;
       },
+      header: "URL",
     }),
   ];
 
   return (
     <>
       <TWTable
-        title="relayers"
-        data={relayers}
         columns={columns}
-        isPending={isPending}
+        data={relayers}
         isFetched={isFetched}
+        isPending={isPending}
         onMenuClick={[
           {
             icon: <PencilIcon className="size-4" />,
-            text: "Edit",
             onClick: (relayer) => {
               setSelectedRelayer(relayer);
               editDisclosure.onOpen();
             },
+            text: "Edit",
           },
           {
             icon: <Trash2Icon className="size-4" />,
-            text: "Remove",
+            isDestructive: true,
             onClick: (relayer) => {
               setSelectedRelayer(relayer);
               removeDisclosure.onOpen();
             },
-            isDestructive: true,
+            text: "Remove",
           },
         ]}
+        title="relayers"
       />
 
       {selectedRelayer && editDisclosure.isOpen && (
         <EditModal
-          relayer={selectedRelayer}
-          disclosure={editDisclosure}
-          instanceUrl={instanceUrl}
           authToken={authToken}
           client={client}
+          disclosure={editDisclosure}
+          instanceUrl={instanceUrl}
+          relayer={selectedRelayer}
         />
       )}
       {selectedRelayer && removeDisclosure.isOpen && (
         <RemoveModal
-          relayer={selectedRelayer}
-          disclosure={removeDisclosure}
-          instanceUrl={instanceUrl}
           authToken={authToken}
           client={client}
+          disclosure={removeDisclosure}
+          instanceUrl={instanceUrl}
+          relayer={selectedRelayer}
         />
       )}
     </>
@@ -222,15 +210,15 @@ const EditModal = ({
   client: ThirdwebClient;
 }) => {
   const { mutate: updateRelayer } = useEngineUpdateRelayer({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
   const { data: backendWallets } = useEngineBackendWallets({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
   const { idToChain } = useAllChainsData();
-  const trackEvent = useTrack();
+
   const { onSuccess, onError } = useTxNotifications(
     "Successfully updated relayer",
     "Failed to update relayer",
@@ -239,52 +227,40 @@ const EditModal = ({
   const form = useForm<AddModalInput>({
     defaultValues: {
       ...relayer,
-      chainId: Number.parseInt(relayer.chainId),
       allowedContractsRaw: (relayer.allowedContracts ?? []).join("\n"),
       allowedForwardersRaw: (relayer.allowedForwarders ?? []).join("\n"),
+      chainId: Number.parseInt(relayer.chainId),
     },
   });
 
   const onSubmit = (data: AddModalInput) => {
     const updateRelayerData: UpdateRelayerInput = {
-      id: relayer.id,
-      chain: idToChain.get(data.chainId)?.slug ?? "unknown",
-      backendWalletAddress: data.backendWalletAddress,
-      name: data.name,
       allowedContracts: parseAddressListRaw(data.allowedContractsRaw),
       allowedForwarders: parseAddressListRaw(data.allowedForwardersRaw),
+      backendWalletAddress: data.backendWalletAddress,
+      chain: idToChain.get(data.chainId)?.slug ?? "unknown",
+      id: relayer.id,
+      name: data.name,
     };
 
     updateRelayer(updateRelayerData, {
+      onError: (error) => {
+        onError(error);
+        console.error(error);
+      },
       onSuccess: () => {
         onSuccess();
         disclosure.onClose();
-        trackEvent({
-          category: "engine",
-          action: "update-relayer",
-          label: "success",
-          instance: instanceUrl,
-        });
-      },
-      onError: (error) => {
-        onError(error);
-        trackEvent({
-          category: "engine",
-          action: "update-relayer",
-          label: "error",
-          instance: instanceUrl,
-          error,
-        });
       },
     });
   };
 
   return (
-    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
       <ModalOverlay />
       <ModalContent
-        className="!bg-background rounded-lg border border-border"
         as="form"
+        className="!bg-background rounded-lg border border-border"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <ModalHeader>Update Relayer</ModalHeader>
@@ -295,8 +271,8 @@ const EditModal = ({
               <FormLabel>Chain</FormLabel>
               <SingleNetworkSelector
                 chainId={form.watch("chainId")}
-                onChange={(val) => form.setValue("chainId", val)}
                 client={client}
+                onChange={(val) => form.setValue("chainId", val)}
               />
             </FormControl>
             <FormControl>
@@ -315,8 +291,8 @@ const EditModal = ({
             <FormControl>
               <FormLabel>Label</FormLabel>
               <Input
-                type="text"
                 placeholder="Enter a description for this relayer"
+                type="text"
                 {...form.register("name")}
               />
             </FormControl>
@@ -342,10 +318,10 @@ const EditModal = ({
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>
-          <Button type="button" onClick={disclosure.onClose} variant="ghost">
+          <Button onClick={disclosure.onClose} type="button" variant="ghost">
             Cancel
           </Button>
-          <Button type="submit" colorScheme="blue">
+          <Button colorScheme="blue" type="submit">
             Save
           </Button>
         </ModalFooter>
@@ -368,10 +344,10 @@ const RemoveModal = ({
   client: ThirdwebClient;
 }) => {
   const { mutate: revokeRelayer } = useEngineRevokeRelayer({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
-  const trackEvent = useTrack();
+
   const { onSuccess, onError } = useTxNotifications(
     "Successfully removed relayer",
     "Failed to remove relayer",
@@ -382,32 +358,20 @@ const RemoveModal = ({
     revokeRelayer(
       { id: relayer.id },
       {
+        onError: (error) => {
+          onError(error);
+          console.error(error);
+        },
         onSuccess: () => {
           onSuccess();
           disclosure.onClose();
-          trackEvent({
-            category: "engine",
-            action: "revoke-relayer",
-            label: "success",
-            instance: instanceUrl,
-          });
-        },
-        onError: (error) => {
-          onError(error);
-          trackEvent({
-            category: "engine",
-            action: "revoke-relayer",
-            label: "error",
-            instance: instanceUrl,
-            error,
-          });
         },
       },
     );
   };
 
   return (
-    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
       <ModalOverlay />
       <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Remove Relayer</ModalHeader>
@@ -420,10 +384,10 @@ const RemoveModal = ({
               <Flex align="center" gap={2}>
                 <ChainIconClient
                   className="size-3"
+                  client={client}
                   src={
                     idToChain.get(Number.parseInt(relayer.chainId))?.icon?.url
                   }
-                  client={client}
                 />
                 <Text>
                   {idToChain.get(Number.parseInt(relayer.chainId))?.name}
@@ -441,10 +405,10 @@ const RemoveModal = ({
           </div>
         </ModalBody>
         <ModalFooter as={Flex} gap={3}>
-          <Button type="button" onClick={disclosure.onClose} variant="ghost">
+          <Button onClick={disclosure.onClose} type="button" variant="ghost">
             Cancel
           </Button>
-          <Button type="submit" colorScheme="red" onClick={onClick}>
+          <Button colorScheme="red" onClick={onClick} type="submit">
             Remove
           </Button>
         </ModalFooter>

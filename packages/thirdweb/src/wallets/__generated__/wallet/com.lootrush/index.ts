@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.lootrush",
-  name: "LootRush",
-  homepage: "https://www.lootrush.com/lootrush-wallet",
-  image_id: "lootrush.svg",
   app: {
-    browser: null,
-    ios: null,
     android: null,
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome:
       "https://chrome.google.com/webstore/detail/lootrush-wallet/lfmmjkfllhmfmkcobchabopkcefjkoip",
-    firefox: "https://addons.mozilla.org/en-US/firefox/addon/lootrush-wallet/",
-    safari: null,
     edge: null,
+    firefox: "https://addons.mozilla.org/en-US/firefox/addon/lootrush-wallet/",
+    ios: null,
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: "com.lootrush",
-  mobile: {
-    native: null,
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.lootrush.com/lootrush-wallet",
+  id: "com.lootrush",
+  image_id: "lootrush.svg",
+  mobile: {
+    native: null,
+    universal: null,
+  },
+  name: "LootRush",
+  rdns: "com.lootrush",
 } as const;

@@ -16,7 +16,6 @@ async function fetchChainsFromApi() {
 
 export function useAllChainsData() {
   const query = useQuery({
-    queryKey: ["all-chains"],
     queryFn: async () => {
       const idToChain = new Map<number, ChainMetadata>();
       const chains = await fetchChainsFromApi();
@@ -30,10 +29,11 @@ export function useAllChainsData() {
         idToChain,
       };
     },
+    queryKey: ["all-chains"],
   });
 
   return {
-    isPending: query.isLoading,
     data: query.data || { allChains: [], idToChain: new Map() },
+    isPending: query.isLoading,
   };
 }

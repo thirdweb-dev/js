@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-imports */
 
-import { isMultiTenant } from "@/lib/utils";
 import { useRouter as useNextRouter } from "next/navigation";
+import { isMultiTenant } from "@/lib/utils";
 
 export function useRouter() {
   const router = useNextRouter();

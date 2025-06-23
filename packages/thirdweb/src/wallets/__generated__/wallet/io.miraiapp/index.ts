@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.miraiapp",
-  name: "Mirai App",
-  homepage: "https://miraiapp.io",
-  image_id: "0c8022b0-d5a3-4561-64d5-a3e60d1ed500",
   app: {
-    browser: "https://miraiapp.io",
-    ios: "https://apps.apple.com/vn/app/mirai-app-mpc-powered-wallet/id6472134236",
     android: "https://play.google.com/store/apps/details?id=co.mirailabs.app",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://miraiapp.io",
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/vn/app/mirai-app-mpc-powered-wallet/id6472134236",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "miraiapp://",
-    universal: "https://go.miraiapp.io",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://miraiapp.io",
   },
+  homepage: "https://miraiapp.io",
+  id: "io.miraiapp",
+  image_id: "0c8022b0-d5a3-4561-64d5-a3e60d1ed500",
+  mobile: {
+    native: "miraiapp://",
+    universal: "https://go.miraiapp.io",
+  },
+  name: "Mirai App",
+  rdns: null,
 } as const;

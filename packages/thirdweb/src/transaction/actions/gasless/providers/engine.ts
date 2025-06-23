@@ -68,20 +68,20 @@ export async function prepareEngineTransaction({
     // chainless support!
     if (gasless.experimentalChainlessSupport) {
       const message = {
+        chainid: BigInt(transaction.chain.id),
+        data: serializableTransaction.data,
         from: account.address,
-        to: serializableTransaction.to,
-        value: 0n,
         gas: serializableTransaction.gas,
         nonce: nonce,
-        data: serializableTransaction.data,
-        chainid: BigInt(transaction.chain.id),
+        to: serializableTransaction.to,
+        value: 0n,
       } as const;
       return [
         await account.signTypedData({
           domain: {
             name: "GSNv2 Forwarder",
-            version: "0.0.1",
             verifyingContract: forrwaderContract.address,
+            version: "0.0.1",
           },
           message,
           primaryType: "ForwardRequest",
@@ -92,20 +92,20 @@ export async function prepareEngineTransaction({
     }
     // else non-chainless support
     const message = {
+      data: serializableTransaction.data,
       from: account.address,
-      to: serializableTransaction.to,
-      value: 0n,
       gas: serializableTransaction.gas,
       nonce: nonce,
-      data: serializableTransaction.data,
+      to: serializableTransaction.to,
+      value: 0n,
     } as const;
     return [
       await account.signTypedData({
         domain: {
-          name: gasless.domainName ?? "GSNv2 Forwarder",
-          version: gasless.domainVersion ?? "0.0.1",
           chainId: transaction.chain.id,
+          name: gasless.domainName ?? "GSNv2 Forwarder",
           verifyingContract: forrwaderContract.address,
+          version: gasless.domainVersion ?? "0.0.1",
         },
         message,
         primaryType: "ForwardRequest",
@@ -117,7 +117,7 @@ export async function prepareEngineTransaction({
   // TODO: handle special case for `approve` -> `permit`
   const messageType = "forward";
 
-  return { message, signature, messageType } as const;
+  return { message, messageType, signature } as const;
 }
 
 const ForwardRequest = [
@@ -149,16 +149,16 @@ export async function relayEngineTransaction(
     await prepareEngineTransaction(options);
 
   const response = await fetch(options.gasless.relayerUrl, {
-    method: "POST",
+    body: stringify({
+      forwarderAddress: options.gasless.relayerForwarderAddress,
+      request: message,
+      signature,
+      type: messageType,
+    }),
     headers: {
       "Content-Type": "application/json",
     },
-    body: stringify({
-      request: message,
-      type: messageType,
-      signature,
-      forwarderAddress: options.gasless.relayerForwarderAddress,
-    }),
+    method: "POST",
   });
 
   if (!response.ok) {
@@ -177,9 +177,9 @@ export async function relayEngineTransaction(
     const receipt = await fetchReceipt({ options, queueId });
     if (receipt) {
       return {
-        transactionHash: receipt.transactionHash,
         chain: options.transaction.chain,
         client: options.transaction.client,
+        transactionHash: receipt.transactionHash,
       };
     }
     await new Promise((resolve) => setTimeout(resolve, interval));
@@ -213,8 +213,8 @@ async function fetchReceipt(args: {
       throw new Error("Transaction execution cancelled.");
     case "mined": {
       const receipt = await waitForReceipt({
-        client: options.transaction.client,
         chain: options.transaction.chain,
+        client: options.transaction.client,
         transactionHash: result.transactionHash,
       });
       return receipt;

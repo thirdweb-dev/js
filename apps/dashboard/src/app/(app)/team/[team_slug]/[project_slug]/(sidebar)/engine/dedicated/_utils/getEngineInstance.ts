@@ -2,7 +2,7 @@ import {
   NEXT_PUBLIC_DEMO_ENGINE_URL,
   NEXT_PUBLIC_THIRDWEB_API_HOST,
 } from "@/constants/public-envs";
-import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
+import type { EngineInstance } from "@/hooks/useEngine";
 
 export async function getEngineInstance(params: {
   teamIdOrSlug: string;
@@ -12,14 +12,14 @@ export async function getEngineInstance(params: {
 }) {
   if (params.engineId === "sandbox") {
     const sandboxEngine: EngineInstance = {
-      id: "sandbox",
-      url: NEXT_PUBLIC_DEMO_ENGINE_URL,
-      name: "Demo Engine",
-      status: "active",
-      lastAccessedAt: new Date().toISOString(),
       accountId: params.accountId,
+      id: "sandbox",
       isCloudHosted: false,
       isPlanEngine: false,
+      lastAccessedAt: new Date().toISOString(),
+      name: "Demo Engine",
+      status: "active",
+      url: NEXT_PUBLIC_DEMO_ENGINE_URL,
     };
 
     return sandboxEngine;

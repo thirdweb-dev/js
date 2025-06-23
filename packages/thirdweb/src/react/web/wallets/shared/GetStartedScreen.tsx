@@ -14,11 +14,11 @@ import {
 import { AppleIcon } from "../../ui/ConnectWallet/icons/AppleIcon.js";
 import { ChromeIcon } from "../../ui/ConnectWallet/icons/ChromeIcon.js";
 import { PlayStoreIcon } from "../../ui/ConnectWallet/icons/PlayStoreIcon.js";
+import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { QRCode } from "../../ui/components/QRCode.js";
 import { Spacer } from "../../ui/components/Spacer.js";
-import { WalletImage } from "../../ui/components/WalletImage.js";
-import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Text } from "../../ui/components/text.js";
+import { WalletImage } from "../../ui/components/WalletImage.js";
 import { StyledButton } from "../../ui/design-system/elements.js";
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
 
@@ -53,35 +53,35 @@ export const GetStartedScreen: React.FC<{
     : undefined;
 
   return (
-    <Container fullHeight flex="column" animate="fadein">
+    <Container animate="fadein" flex="column" fullHeight>
       <Container expand flex="column" p="lg">
         {showScreen === "android-scan" && walletInfo.app.android && (
           <InstallScanScreen
-            platformIcon={<PlayStoreIcon size={iconSize.md} />}
-            url={walletInfo.app.android}
-            platform="Google Play"
-            walletName={walletInfo.name}
-            walletId={wallet.id}
-            onBack={handleBack}
+            client={client}
             locale={{
               scanToDownload: locale.getStartedScreen.instruction,
             }}
-            client={client}
+            onBack={handleBack}
+            platform="Google Play"
+            platformIcon={<PlayStoreIcon size={iconSize.md} />}
+            url={walletInfo.app.android}
+            walletId={wallet.id}
+            walletName={walletInfo.name}
           />
         )}
 
         {showScreen === "ios-scan" && walletInfo.app.ios && (
           <InstallScanScreen
-            platformIcon={<AppleIcon size={iconSize.md} />}
-            url={walletInfo.app.ios}
-            platform="App Store"
-            walletName={walletInfo.name}
-            walletId={wallet.id}
-            onBack={handleBack}
+            client={client}
             locale={{
               scanToDownload: locale.getStartedScreen.instruction,
             }}
-            client={client}
+            onBack={handleBack}
+            platform="App Store"
+            platformIcon={<AppleIcon size={iconSize.md} />}
+            url={walletInfo.app.ios}
+            walletId={wallet.id}
+            walletName={walletInfo.name}
           />
         )}
 
@@ -93,10 +93,10 @@ export const GetStartedScreen: React.FC<{
             <Spacer y="xl" />
 
             <Container
-              expand
               animate="fadein"
-              flex="column"
               center="y"
+              expand
+              flex="column"
               style={{
                 minHeight: "250px",
               }}
@@ -175,31 +175,31 @@ const InstallScanScreen: React.FC<{
 }> = (props) => {
   return (
     <Container animate="fadein" expand>
-      <ModalHeader title={props.walletName} onBack={props.onBack} />
+      <ModalHeader onBack={props.onBack} title={props.walletName} />
       <Spacer y="xl" />
 
       <Container
-        flex="column"
-        expand
         center="both"
+        expand
+        flex="column"
         style={{
           textAlign: "center",
         }}
       >
         <QRCode
-          qrCodeUri={props.url}
           QRIcon={
             <WalletImage
+              client={props.client}
               id={props.walletId}
               size={iconSize.xxl}
-              client={props.client}
             />
           }
+          qrCodeUri={props.url}
         />
 
         <Spacer y="xl" />
 
-        <Text multiline center balance>
+        <Text balance center multiline>
           {props.locale.scanToDownload}
         </Text>
 
@@ -212,24 +212,24 @@ const InstallScanScreen: React.FC<{
 const ButtonLink = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
-    all: "unset",
-    textDecoration: "none",
-    padding: `${spacing.sm} ${spacing.md}`,
-    borderRadius: radius.sm,
-    display: "flex",
-    alignItems: "center",
-    gap: spacing.md,
-    cursor: "pointer",
-    boxSizing: "border-box",
-    width: "100%",
-    fontWeight: 500,
-    color: theme.colors.secondaryButtonText,
-    background: theme.colors.secondaryButtonBg,
-    transition: "100ms ease",
     "&:hover": {
       background: theme.colors.secondaryButtonHoverBg,
-      textDecoration: "none",
       color: theme.colors.primaryText,
+      textDecoration: "none",
     },
+    alignItems: "center",
+    all: "unset",
+    background: theme.colors.secondaryButtonBg,
+    borderRadius: radius.sm,
+    boxSizing: "border-box",
+    color: theme.colors.secondaryButtonText,
+    cursor: "pointer",
+    display: "flex",
+    fontWeight: 500,
+    gap: spacing.md,
+    padding: `${spacing.sm} ${spacing.md}`,
+    textDecoration: "none",
+    transition: "100ms ease",
+    width: "100%",
   };
 });

@@ -6,9 +6,9 @@ import { base, baseSepolia, polygon } from "thirdweb/chains";
 import { transfer } from "thirdweb/extensions/erc20";
 import { claimTo, getNFT } from "thirdweb/extensions/erc1155";
 import {
+  getDefaultToken,
   TransactionButton,
   TransactionWidget,
-  getDefaultToken,
   useActiveAccount,
   useReadContract,
 } from "thirdweb/react";
@@ -40,25 +40,20 @@ export function PayTransactionPreview() {
   });
 
   return (
-    <>
-      <StyledConnectButton />
-      <div className="h-10" />
-      {account && (
-        <TransactionWidget
-          client={THIRDWEB_CLIENT}
-          theme={theme === "light" ? "light" : "dark"}
-          transaction={claimTo({
-            contract: nftContract,
-            quantity: 1n,
-            tokenId: 2n,
-            to: account?.address || "",
-          })}
-          title={nft?.metadata?.name}
-          description={nft?.metadata?.description}
-          image={nft?.metadata?.image}
-        />
-      )}
-    </>
+    <TransactionWidget
+      amount={"0.1"}
+      client={THIRDWEB_CLIENT}
+      description={nft?.metadata?.description}
+      image={nft?.metadata?.image}
+      theme={theme === "light" ? "light" : "dark"}
+      title={nft?.metadata?.name}
+      transaction={claimTo({
+        contract: nftContract,
+        quantity: 1n,
+        to: account?.address || "",
+        tokenId: 2n,
+      })}
+    />
   );
 }
 
@@ -76,24 +71,24 @@ export function PayTransactionButtonPreview() {
             Price:{" "}
             {USDC?.icon && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={USDC.icon} width={16} alt={USDC.name} />
+              <img alt={USDC.name} src={USDC.icon} width={16} />
             )}
             50 {USDC?.symbol}
           </div>
           <TransactionButton
-            transaction={() => {
-              if (!account) throw new Error("No active account");
-              return transfer({
-                contract: usdcContract,
-                amount: "50",
-                to: account?.address || "",
-              });
-            }}
             onError={(e) => {
               console.error(e);
             }}
             payModal={{
               theme: theme === "light" ? "light" : "dark",
+            }}
+            transaction={() => {
+              if (!account) throw new Error("No active account");
+              return transfer({
+                amount: "50",
+                contract: usdcContract,
+                to: account?.address || "",
+              });
             }}
           >
             Buy VIP Pass
@@ -101,6 +96,12 @@ export function PayTransactionButtonPreview() {
           <div className="h-10" />
           <div className="flex items-center gap-2">Price: 0.1 ETH</div>
           <TransactionButton
+            onError={(e) => {
+              console.error(e);
+            }}
+            payModal={{
+              theme: theme === "light" ? "light" : "dark",
+            }}
             transaction={() => {
               if (!account) throw new Error("No active account");
               return prepareTransaction({
@@ -109,12 +110,6 @@ export function PayTransactionButtonPreview() {
                 to: account.address,
                 value: toWei("0.1"),
               });
-            }}
-            onError={(e) => {
-              console.error(e);
-            }}
-            payModal={{
-              theme: theme === "light" ? "light" : "dark",
             }}
           >
             Send 0.1 ETH

@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.blockchain",
-  name: "Blockchain.com",
-  homepage: "https://www.blockchain.com/en/app",
-  image_id: "6f913b80-86c0-46f9-61ca-cc90a1805900",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/blockchain-bitcoin-wallet/id493253309",
     android:
       "https://play.google.com/store/apps/details?id=piuk.blockchain.android",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/blockchain-bitcoin-wallet/id493253309",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "blockchain-wallet://",
-    universal: "https://www.blockchain.com",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.blockchain.com/en/app",
+  id: "com.blockchain",
+  image_id: "6f913b80-86c0-46f9-61ca-cc90a1805900",
+  mobile: {
+    native: "blockchain-wallet://",
+    universal: "https://www.blockchain.com",
+  },
+  name: "Blockchain.com",
+  rdns: null,
 } as const;

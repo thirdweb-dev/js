@@ -1,9 +1,9 @@
 import {
-  type MockedFunction,
   beforeEach,
   describe,
   expect,
   it,
+  type MockedFunction,
   vi,
 } from "vitest";
 import { routes } from "../../../bridge/Routes.js";
@@ -25,21 +25,21 @@ const mockClient = { clientId: "test" } as ThirdwebClient;
 // Mock route data
 const mockRouteData: Route[] = [
   {
-    originToken: {
-      chainId: 1,
-      address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-      symbol: "ETH",
-      name: "Ethereum",
-      decimals: 18,
-      priceUsd: 2000.0,
-    },
     destinationToken: {
-      chainId: 137,
       address: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
-      symbol: "WETH",
-      name: "Wrapped Ethereum",
+      chainId: 137,
       decimals: 18,
+      name: "Wrapped Ethereum",
       priceUsd: 2000.0,
+      symbol: "WETH",
+    },
+    originToken: {
+      address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      chainId: 1,
+      decimals: 18,
+      name: "Ethereum",
+      priceUsd: 2000.0,
+      symbol: "ETH",
     },
   },
 ];
@@ -53,9 +53,9 @@ describe("useBridgeRoutes", () => {
     // Type-only test to verify UseBridgeRoutesParams interface
     const params: UseBridgeRoutesParams = {
       client: mockClient,
-      originChainId: 1,
       destinationChainId: 137,
       enabled: true,
+      originChainId: 1,
     };
 
     expect(params).toBeDefined();
@@ -68,15 +68,15 @@ describe("useBridgeRoutes", () => {
   it("should handle different parameter combinations", () => {
     const fullParams: UseBridgeRoutesParams = {
       client: mockClient,
-      originChainId: 1,
-      originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       destinationChainId: 137,
       destinationTokenAddress: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
-      maxSteps: 3,
-      sortBy: "popularity",
-      limit: 10,
-      offset: 0,
       enabled: false,
+      limit: 10,
+      maxSteps: 3,
+      offset: 0,
+      originChainId: 1,
+      originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      sortBy: "popularity",
     };
 
     expect(fullParams).toBeDefined();
@@ -89,8 +89,8 @@ describe("useBridgeRoutes", () => {
   it("should have optional enabled parameter defaulting to true", () => {
     const paramsWithoutEnabled: UseBridgeRoutesParams = {
       client: mockClient,
-      originChainId: 1,
       destinationChainId: 137,
+      originChainId: 1,
     };
 
     expect(paramsWithoutEnabled.enabled).toBeUndefined(); // Should be optional
@@ -99,8 +99,8 @@ describe("useBridgeRoutes", () => {
   it("should validate that Bridge.routes would be called with correct parameters", async () => {
     const testParams = {
       client: mockClient,
-      originChainId: 1,
       destinationChainId: 137,
+      originChainId: 1,
       originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" as const,
     };
 
@@ -126,8 +126,8 @@ describe("useBridgeRoutes", () => {
     try {
       await routes({
         client: mockClient,
-        originChainId: 1,
         destinationChainId: 137,
+        originChainId: 1,
       });
     } catch (error) {
       expect(error).toBe(apiError);

@@ -1,7 +1,7 @@
 import { CircleCheckIcon } from "lucide-react";
 import Link from "next/link";
+import type { ChainMetadataWithServices } from "@/types/chain";
 import { products } from "../../../../components/server/products";
-import type { ChainMetadataWithServices } from "../../../../types/chain";
 import { SectionTitle } from "./SectionTitle";
 
 export function SupportedProductsSection(props: {
@@ -24,16 +24,17 @@ export function SupportedProductsSection(props: {
         {enabledProducts.map((product) => {
           return (
             <div
-              key={product.id}
               className="relative flex gap-3 rounded-lg border bg-card p-4 pr-8 transition-colors hover:border-active-border"
+              key={product.id}
             >
               <CircleCheckIcon className="absolute top-4 right-4 size-5 text-success-text" />
               <product.icon className="mt-0.5 size-5 shrink-0" />
               <div>
                 <h3 className="mb-1.5 font-medium">
                   <Link
-                    href={product.link}
                     className="before:absolute before:inset-0"
+                    href={product.link}
+                    rel="noopener noreferrer"
                     target="_blank"
                   >
                     {product.name}

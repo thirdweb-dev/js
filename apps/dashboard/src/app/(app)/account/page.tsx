@@ -1,8 +1,8 @@
+import { notFound } from "next/navigation";
 import { getTeams } from "@/api/team";
 import { getMemberByAccountId } from "@/api/team-members";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { notFound } from "next/navigation";
-import { getAuthToken } from "../api/lib/getAuthToken";
+import { getAuthToken } from "../../../@/api/auth-token";
 import { loginRedirect } from "../login/loginRedirect";
 import { AccountTeamsUI } from "./overview/AccountTeamsUI";
 import { getValidAccount } from "./settings/getAccount";
@@ -32,8 +32,8 @@ export default async function Page() {
       }
 
       return {
-        team,
         role: member.role,
+        team,
       };
     }),
   );
@@ -47,7 +47,7 @@ export default async function Page() {
       </header>
 
       <div className="container flex max-w-[950px] grow flex-col py-8">
-        <AccountTeamsUI teamsWithRole={teamsWithRole} client={client} />
+        <AccountTeamsUI client={client} teamsWithRole={teamsWithRole} />
       </div>
     </div>
   );

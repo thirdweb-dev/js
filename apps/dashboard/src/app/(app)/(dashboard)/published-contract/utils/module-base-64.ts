@@ -23,8 +23,8 @@ export function moduleFromBase64(base64: string) {
     assertModule(mod);
     return {
       ...mod,
-      version: mod.version || "latest",
       displayName: mod.moduleId.split("ERC")[0],
+      version: mod.version || "latest",
     };
   } catch {
     return null;

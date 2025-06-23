@@ -1,5 +1,13 @@
 "use client";
 
+import { FileStackIcon } from "lucide-react";
+import { useState } from "react";
+import type { ThirdwebContract } from "thirdweb";
+import * as ERC721Ext from "thirdweb/extensions/erc721";
+import * as ERC1155Ext from "thirdweb/extensions/erc1155";
+import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
+import { BatchLazyMint } from "@/components/batch-upload/batch-lazy-mint";
+import { MinterOnly } from "@/components/contracts/roles/minter-only";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -8,16 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
-import { BatchLazyMint } from "core-ui/batch-upload/batch-lazy-mint";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { FileStackIcon } from "lucide-react";
-import { useState } from "react";
-import type { ThirdwebContract } from "thirdweb";
-import * as ERC721Ext from "thirdweb/extensions/erc721";
-import * as ERC1155Ext from "thirdweb/extensions/erc1155";
-import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface BatchLazyMintButtonProps {
   canCreateDelayedRevealBatch: boolean;
@@ -32,7 +31,6 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
   isErc721,
   isLoggedIn,
 }) => {
-  const trackEvent = useTrack();
   const [open, setOpen] = useState(false);
 
   const nextTokenIdToMintQuery = useReadContract(
@@ -57,7 +55,7 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
     <MinterOnly contract={contract}>
       <Sheet onOpenChange={setOpen} open={open}>
         <SheetTrigger asChild>
-          <Button variant="primary" className="gap-2">
+          <Button className="gap-2" variant="primary">
             <FileStackIcon className="size-4" />
             Batch Upload
           </Button>
@@ -67,17 +65,12 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
             <SheetTitle className="text-left">Upload NFTs</SheetTitle>
           </SheetHeader>
           <BatchLazyMint
-            isLoggedIn={isLoggedIn}
-            client={contract.client}
+            canCreateDelayedRevealBatch={canCreateDelayedRevealBatch}
             chainId={contract.chain.id}
+            client={contract.client}
+            isLoggedIn={isLoggedIn}
+            nextTokenIdToMint={nextTokenIdToMintQuery.data || 0n}
             onSubmit={async ({ revealType, data }) => {
-              // nice, we can set up everything the same for both the only thing that changes is the action string
-              const action = `batch-upload-${revealType}` as const;
-              trackEvent({
-                category: "nft",
-                action,
-                label: "attempt",
-              });
               try {
                 const tx = (() => {
                   switch (true) {
@@ -112,25 +105,13 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
 
                 await sendTxMutation.mutateAsync(tx);
 
-                trackEvent({
-                  category: "nft",
-                  action,
-                  label: "success",
-                });
                 txNotifications.onSuccess();
                 setOpen(false);
               } catch (error) {
-                trackEvent({
-                  category: "nft",
-                  action,
-                  label: "error",
-                  error,
-                });
+                console.error(error);
                 txNotifications.onError(error);
               }
             }}
-            nextTokenIdToMint={nextTokenIdToMintQuery.data || 0n}
-            canCreateDelayedRevealBatch={canCreateDelayedRevealBatch}
           />
         </SheetContent>
       </Sheet>

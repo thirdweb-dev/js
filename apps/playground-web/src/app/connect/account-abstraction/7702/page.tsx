@@ -1,22 +1,21 @@
+import type { Metadata } from "next";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
-import type { Metadata } from "next";
 import { Eip7702SmartAccountPreview } from "../../../../components/account-abstraction/7702-smart-account";
 import { PageLayout } from "../../../../components/blocks/APIHeader";
 import { CodeExample } from "../../../../components/code/code-example";
 
 export const metadata: Metadata = {
-  metadataBase,
-  title: "EIP-7702 Smart Accounts | thirdweb Connect",
   description:
     "EIP-7702 smart accounts allow you to turn your EOA into a smart account with no code changes",
+  metadataBase,
+  title: "EIP-7702 Smart Accounts | thirdweb Connect",
 };
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="EIP-7702 Smart Accounts"
         description={
           <>
             EIP-7702 smart accounts allow you to turn your EOA into a smart
@@ -24,6 +23,7 @@ export default function Page() {
           </>
         }
         docsLink="https://portal.thirdweb.com/connect/account-abstraction/overview?utm_source=playground"
+        title="EIP-7702 Smart Accounts"
       >
         <Eip7702SmartAccount />
       </PageLayout>
@@ -35,12 +35,6 @@ function Eip7702SmartAccount() {
   return (
     <>
       <CodeExample
-        header={{
-          title: "Turning in-app wallets into EIP-7702 smart accounts",
-          description:
-            "In-app wallets can be turned into EIP-7702 smart accounts by changing the execution mode",
-        }}
-        preview={<Eip7702SmartAccountPreview />}
         code={`\
 import { claimTo } from "thirdweb/extensions/erc1155";
 import { TransactionButton } from "thirdweb/react";
@@ -78,7 +72,13 @@ function App() {
     </>
   );
 }`}
+        header={{
+          description:
+            "In-app wallets can be turned into EIP-7702 smart accounts by changing the execution mode",
+          title: "Turning in-app wallets into EIP-7702 smart accounts",
+        }}
         lang="tsx"
+        preview={<Eip7702SmartAccountPreview />}
       />
     </>
   );

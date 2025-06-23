@@ -4,8 +4,8 @@ import { serializeErc6492Signature } from "../../../auth/serialize-erc6492-signa
 import { verifyHash } from "../../../auth/verify-hash.js";
 import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import { getNonce } from "../../../extensions/erc4337/__generated__/IEntryPoint/read/getNonce.js";
 import { execute } from "../../../extensions/erc7579/__generated__/IERC7579Account/write/execute.js";
@@ -65,42 +65,32 @@ export function erc7579(options: ERC7579Config): SmartWalletOptions {
     ...options,
     factoryAddress: options.factoryAddress,
     overrides: {
-      entrypointAddress: ENTRYPOINT_ADDRESS_v0_7,
       createAccount(factoryContract, admin) {
         // TODO (msa) - let ppl pass whatever modules they want here
         return createAccountWithModules({
-          contract: factoryContract,
           asyncParams: async () => {
             // default validator
             const modules = [
               {
-                moduleTypeId: 1n, // validator type id
+                initData: ox__Hex.fromString(""), // validator type id
                 module: defaultValidator,
-                initData: ox__Hex.fromString(""),
+                moduleTypeId: 1n,
               },
             ];
             return {
+              modules,
               owner: admin,
               salt: saltHex,
-              modules,
             };
           },
-        });
-      },
-      async predictAddress(factoryContract, admin) {
-        return readContract({
           contract: factoryContract,
-          method:
-            "function getAddress(address owner, bytes salt) returns (address)",
-          params: [admin, saltHex],
         });
       },
+      entrypointAddress: ENTRYPOINT_ADDRESS_v0_7,
       execute(accountContract, transaction) {
         return execute({
-          contract: accountContract,
           async asyncParams() {
             return {
-              mode: ox__Hex.padRight("0x00", 32), // single execution
               executionCalldata: ox__AbiParameters.encodePacked(
                 ["address", "uint256", "bytes"],
                 [
@@ -108,38 +98,40 @@ export function erc7579(options: ERC7579Config): SmartWalletOptions {
                   transaction.value || 0n,
                   transaction.data || "0x",
                 ],
-              ),
+              ), // single execution
+              mode: ox__Hex.padRight("0x00", 32),
             };
           },
+          contract: accountContract,
         });
       },
       executeBatch(accountContract, transactions) {
         return execute({
-          contract: accountContract,
           async asyncParams() {
             return {
-              mode: ox__Hex.padRight("0x01", 32), // batch execution
               executionCalldata: ox__AbiParameters.encode(
                 [
                   {
-                    type: "tuple[]",
                     components: [
-                      { type: "address", name: "to" },
-                      { type: "uint256", name: "value" },
-                      { type: "bytes", name: "data" },
+                      { name: "to", type: "address" },
+                      { name: "value", type: "uint256" },
+                      { name: "data", type: "bytes" },
                     ],
+                    type: "tuple[]",
                   },
                 ],
                 [
                   transactions.map((t) => ({
+                    data: t.data || "0x",
                     to: t.to || ZERO_ADDRESS,
                     value: t.value || 0n,
-                    data: t.data || "0x",
                   })),
                 ],
-              ),
+              ), // batch execution
+              mode: ox__Hex.padRight("0x01", 32),
             };
           },
+          contract: accountContract,
         });
       },
       async getAccountNonce(accountContract) {
@@ -158,6 +150,14 @@ export function erc7579(options: ERC7579Config): SmartWalletOptions {
         );
         return ox__Hex.toBigInt(withValidator);
       },
+      async predictAddress(factoryContract, admin) {
+        return readContract({
+          contract: factoryContract,
+          method:
+            "function getAddress(address owner, bytes salt) returns (address)",
+          params: [admin, saltHex],
+        });
+      },
       async signMessage(options) {
         const { accountContract, factoryContract, adminAccount, message } =
           options;
@@ -168,11 +168,11 @@ export function erc7579(options: ERC7579Config): SmartWalletOptions {
         }
         return generateSignature({
           accountContract,
-          factoryContract,
           adminAccount,
-          originalMsgHash,
-          defaultValidator,
           createAccount,
+          defaultValidator,
+          factoryContract,
+          originalMsgHash,
         });
       },
       async signTypedData(options) {
@@ -185,11 +185,11 @@ export function erc7579(options: ERC7579Config): SmartWalletOptions {
         }
         return generateSignature({
           accountContract,
-          factoryContract,
           adminAccount,
-          originalMsgHash,
-          defaultValidator,
           createAccount,
+          defaultValidator,
+          factoryContract,
+          originalMsgHash,
         });
       },
       ...options.overrides,
@@ -224,15 +224,15 @@ async function generateSignature(options: {
 
   const rawSig = await adminAccount.signTypedData({
     domain: {
+      chainId: accountContract.chain.id,
       // TODO (msa) - assumes our default validator here
       name: "DefaultValidator",
-      version: "1",
-      chainId: accountContract.chain.id,
       verifyingContract: defaultValidator,
+      version: "1",
     },
+    message: { message: wrappedMessageHash },
     primaryType: "AccountMessage",
     types: { AccountMessage: [{ name: "message", type: "bytes" }] },
-    message: { message: wrappedMessageHash },
   });
 
   // add the validator address to the signature
@@ -254,11 +254,11 @@ async function generateSignature(options: {
 
   // check if the signature is valid
   const isValid = await verifyHash({
-    hash: originalMsgHash,
-    signature: erc6492Sig,
     address: accountContract.address,
     chain: accountContract.chain,
     client: accountContract.client,
+    hash: originalMsgHash,
+    signature: erc6492Sig,
   });
 
   if (!isValid) {

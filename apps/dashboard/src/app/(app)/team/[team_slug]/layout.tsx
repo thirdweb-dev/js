@@ -1,9 +1,8 @@
-import { getTeamBySlug, hasToCompleteTeamOnboarding } from "@/api/team";
-import { PosthogIdentifierServer } from "components/wallets/PosthogIdentifierServer";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { getAuthToken } from "../../api/lib/getAuthToken";
-import { EnsureValidConnectedWalletLoginServer } from "../../components/EnsureValidConnectedWalletLogin/EnsureValidConnectedWalletLoginServer";
+import { getTeamBySlug, hasToCompleteTeamOnboarding } from "@/api/team";
+import { EnsureValidConnectedWalletLoginServer } from "@/components/misc/EnsureValidConnectedWalletLogin/EnsureValidConnectedWalletLoginServer";
+import { getAuthToken } from "../../../../@/api/auth-token";
 import { SaveLastVisitedTeamPage } from "../components/last-visited-page/SaveLastVisitedPage";
 import {
   PastDueBanner,
@@ -59,9 +58,6 @@ export default async function RootTeamLayout(props: {
 
       <Suspense fallback={null}>
         <EnsureValidConnectedWalletLoginServer />
-      </Suspense>
-      <Suspense fallback={null}>
-        <PosthogIdentifierServer />
       </Suspense>
     </div>
   );

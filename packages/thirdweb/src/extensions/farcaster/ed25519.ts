@@ -23,7 +23,7 @@ export async function createEd25519Keypair(): Promise<Ed25519Keypair> {
   const privateKey = ed25519.utils.randomPrivateKey();
   const publicKey = ed25519.getPublicKey(privateKey);
   return {
-    publicKey: fromBytes(publicKey, "hex"),
     privateKey: fromBytes(privateKey, "hex"),
+    publicKey: fromBytes(publicKey, "hex"),
   };
 }

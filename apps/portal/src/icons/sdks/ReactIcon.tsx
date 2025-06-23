@@ -1,12 +1,12 @@
 export function ReactIcon(props: { className?: string }) {
   return (
     <svg
-      width="24"
+      className={props.className}
+      fill="none"
       height="24"
       viewBox="0 0 21 18"
-      fill="none"
+      width="24"
       xmlns="http://www.w3.org/2000/svg"
-      className={props.className}
     >
       <title>React</title>
       <path

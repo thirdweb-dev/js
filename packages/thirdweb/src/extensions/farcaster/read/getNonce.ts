@@ -33,10 +33,10 @@ export type GetNonceParams = {
 export async function getNonce(options: GetNonceParams): Promise<bigint> {
   const fetch = () => {
     const contract = getKeyGateway({
-      client: options.client,
       chain: options.chain,
+      client: options.client,
     });
-    return nonces({ contract, account: options.address });
+    return nonces({ account: options.address, contract });
   };
 
   return withCache(fetch, {

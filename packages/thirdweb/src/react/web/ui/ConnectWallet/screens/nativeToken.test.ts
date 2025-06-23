@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import {
+  isNativeToken,
   NATIVE_TOKEN,
   type NativeToken,
-  isNativeToken,
 } from "./nativeToken.js"; // Replace with the actual file name// Assuming this is defined in a constants file
 
 describe("isNativeToken", () => {

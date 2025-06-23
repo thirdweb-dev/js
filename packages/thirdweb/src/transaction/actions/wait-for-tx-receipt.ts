@@ -58,14 +58,14 @@ export function waitForReceipt(
       );
     }
 
-    const request = getRpcClient({ client, chain });
+    const request = getRpcClient({ chain, client });
 
     // start at -1 because the first block doesn't count
     let blocksWaited = -1;
 
     const unwatch = watchBlockNumber({
-      client: client,
       chain: chain,
+      client: client,
       onNewBlockNumber: async () => {
         blocksWaited++;
         if (blocksWaited >= maxBlocksWaitTime) {

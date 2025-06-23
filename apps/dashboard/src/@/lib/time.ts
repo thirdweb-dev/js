@@ -1,9 +1,9 @@
+import { differenceInCalendarDays } from "date-fns";
 import {
   type DurationId,
-  type Range,
   getLastNDaysRange,
-} from "components/analytics/date-range-selector";
-import { differenceInCalendarDays } from "date-fns";
+  type Range,
+} from "@/components/analytics/date-range-selector";
 
 export function normalizeTime(date: Date) {
   const newDate = new Date(date);
@@ -45,12 +45,12 @@ export function getFiltersFromSearchParams(params: {
       : ("day" as const));
 
   return {
-    range,
     interval:
       params.interval === "day"
         ? ("day" as const)
         : params.interval === "week"
           ? ("week" as const)
           : (defaultInterval as "day" | "week"),
+    range,
   };
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { THIRDWEB_CLIENT } from "@/lib/client";
 import { useTheme } from "next-themes";
 import {
   arbitrumSepolia,
@@ -14,6 +13,7 @@ import {
   type ConnectEmbedProps,
   useActiveAccount,
 } from "thirdweb/react";
+import { THIRDWEB_CLIENT } from "@/lib/client";
 import { WALLETS } from "../lib/constants";
 import { StyledConnectButton } from "./styled-connect-button";
 
@@ -36,9 +36,9 @@ export function StyledConnectEmbed(
         polygonAmoy,
         arbitrumSepolia,
       ]}
-      wallets={WALLETS}
       client={THIRDWEB_CLIENT}
       theme={theme === "light" ? "light" : "dark"}
+      wallets={WALLETS}
       {...props}
     />
   );

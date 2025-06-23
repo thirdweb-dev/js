@@ -1,9 +1,9 @@
-import { SelectWithSearch } from "@/components/blocks/select-with-search";
-import { Badge } from "@/components/ui/badge";
-import { ChainIconClient } from "components/icons/ChainIcon";
-import { useAllChainsData } from "hooks/chains/allChains";
 import { useCallback, useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { SelectWithSearch } from "@/components/blocks/select-with-search";
+import { Badge } from "@/components/ui/badge";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { ChainIconClient } from "@/icons/ChainIcon";
 
 type Option = { label: string; value: string };
 
@@ -49,13 +49,13 @@ export function SingleNetworkSelector(props: {
           <span className="flex grow gap-2 truncate text-left">
             <ChainIconClient
               className="size-5"
-              src={chain.icon?.url}
               client={props.client}
               loading="lazy"
+              src={chain.icon?.url}
             />
             {chain.name}
           </span>
-          <Badge variant="outline" className="gap-2 max-sm:hidden">
+          <Badge className="gap-2 max-sm:hidden" variant="outline">
             <span className="text-muted-foreground">Chain ID</span>
             {chain.chainId}
           </Badge>
@@ -74,20 +74,20 @@ export function SingleNetworkSelector(props: {
 
   return (
     <SelectWithSearch
-      searchPlaceholder="Search by Name or Chain ID"
-      value={undefined}
-      options={options}
+      className={props.className}
+      closeOnSelect={true}
+      disabled={props.isAddingRow || allChains.length === 0}
       onValueChange={handleChange}
+      options={options}
+      overrideSearchFn={searchFn}
       placeholder={
         allChains.length === 0
           ? "Loading chains..."
           : "Select chain to deploy on"
       }
-      overrideSearchFn={searchFn}
       renderOption={renderOption}
-      className={props.className}
-      disabled={props.isAddingRow || allChains.length === 0}
-      closeOnSelect={true}
+      searchPlaceholder="Search by Name or Chain ID"
+      value={undefined}
     />
   );
 }

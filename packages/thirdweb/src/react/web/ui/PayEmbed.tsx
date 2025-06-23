@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
+import type { Address } from "../../../utils/address.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../wallets/types.js";
@@ -22,11 +23,12 @@ import { useActiveWallet } from "../../core/hooks/wallets/useActiveWallet.js";
 import { useConnectionManager } from "../../core/providers/connection-manager.js";
 import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
 import { AutoConnect } from "../../web/ui/AutoConnect/AutoConnect.js";
-import { webWindowAdapter } from "../adapters/WindowAdapter.js";
-import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
+import { BuyWidget } from "./Bridge/BuyWidget.js";
+import { CheckoutWidget } from "./Bridge/CheckoutWidget.js";
+import { TransactionWidget } from "./Bridge/TransactionWidget.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
+import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
-import { ExecutingTxScreen } from "./TransactionButton/ExecutingScreen.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";
 import type { LocaleId } from "./types.js";
@@ -345,17 +347,66 @@ export function PayEmbed(props: PayEmbedProps) {
       ? props.payOptions.metadata
       : null;
 
+  if (
+    props.payOptions?.mode === "fund_wallet" &&
+    props.payOptions?.prefillBuy
+  ) {
+    return (
+      <BuyWidget
+        amount={props.payOptions.prefillBuy.amount || "0.01"}
+        chain={props.payOptions.prefillBuy.chain}
+        client={props.client}
+        theme={theme}
+        title={metadata?.name || "Buy"}
+        tokenAddress={
+          props.payOptions.prefillBuy.token?.address as Address | undefined
+        }
+      />
+    );
+  }
+
+  if (props.payOptions?.mode === "direct_payment") {
+    return (
+      <CheckoutWidget
+        amount={(props.payOptions.paymentInfo as { amount: string }).amount}
+        chain={props.payOptions.paymentInfo.chain}
+        client={props.client}
+        description={metadata?.description}
+        image={metadata?.image}
+        name={metadata?.name || "Checkout"}
+        seller={props.payOptions.paymentInfo.sellerAddress as Address}
+        theme={theme}
+        tokenAddress={
+          props.payOptions.paymentInfo.token?.address as Address | undefined
+        }
+      />
+    );
+  }
+
+  if (props.payOptions?.mode === "transaction") {
+    return (
+      <TransactionWidget
+        client={props.client}
+        description={metadata?.description}
+        image={metadata?.image}
+        theme={theme}
+        title={metadata?.name}
+        transaction={props.payOptions.transaction}
+      />
+    );
+  }
+
   if (!localeQuery.data) {
     content = (
       <div
         style={{
-          minHeight: "350px",
+          alignItems: "center",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          minHeight: "350px",
         }}
       >
-        <Spinner size="xl" color="secondaryText" />
+        <Spinner color="secondaryText" size="xl" />
       </div>
     );
   } else {
@@ -364,50 +415,28 @@ export function PayEmbed(props: PayEmbedProps) {
         <AutoConnect client={props.client} siweAuth={siweAuth} />
         {screen === "buy" && (
           <BuyScreen
-            title={metadata?.name || "Buy"}
-            isEmbed={true}
-            supportedTokens={props.supportedTokens}
-            theme={theme}
             client={props.client}
             connectLocale={localeQuery.data}
+            connectOptions={props.connectOptions}
             hiddenWallets={props.hiddenWallets}
+            isEmbed={true}
+            onBack={undefined}
+            onDone={() => {
+              if (props.payOptions?.mode === "transaction") {
+                setScreen("execute-tx");
+              }
+            }}
             paymentLinkId={props.paymentLinkId}
             payOptions={
               props.payOptions || {
                 mode: "fund_wallet",
               }
             }
-            onDone={() => {
-              if (props.payOptions?.mode === "transaction") {
-                setScreen("execute-tx");
-              }
-            }}
-            connectOptions={props.connectOptions}
-            onBack={undefined}
+            supportedTokens={props.supportedTokens}
+            theme={theme}
+            title={metadata?.name || "Buy"}
           />
         )}
-
-        {screen === "execute-tx" &&
-          props.payOptions?.mode === "transaction" &&
-          props.payOptions.transaction && (
-            <ExecutingTxScreen
-              tx={props.payOptions.transaction}
-              closeModal={() => {
-                setScreen("buy");
-              }}
-              onBack={() => {
-                setScreen("buy");
-              }}
-              onTxSent={(data) => {
-                props.payOptions?.onPurchaseSuccess?.({
-                  type: "transaction",
-                  chainId: data.chain.id,
-                  transactionHash: data.transactionHash,
-                });
-              }}
-              windowAdapter={webWindowAdapter}
-            />
-          )}
       </>
     );
   }
@@ -415,9 +444,9 @@ export function PayEmbed(props: PayEmbedProps) {
   return (
     <CustomThemeProvider theme={theme}>
       <EmbedContainer
+        className={props.className}
         modalSize="compact"
         style={props.style}
-        className={props.className}
       >
         <DynamicHeight>{content}</DynamicHeight>
       </EmbedContainer>

@@ -38,12 +38,12 @@ export function TokenIdPageClient(props: {
 
   return (
     <TokenIdPage
+      accountAddress={props.accountAddress}
       contract={contract}
       isErc721={supportedERCs.isERC721}
-      tokenId={props.tokenId}
       isLoggedIn={props.isLoggedIn}
-      accountAddress={props.accountAddress}
       projectMeta={props.projectMeta}
+      tokenId={props.tokenId}
     />
   );
 }

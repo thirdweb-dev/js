@@ -8,7 +8,6 @@ import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import { getToken } from "../../../../pay/convert/get-token.js";
 import { type Address, checksumAddress } from "../../../../utils/address.js";
 import { stringify } from "../../../../utils/json.js";
-import { toTokens } from "../../../../utils/units.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
@@ -18,8 +17,8 @@ import type { Theme } from "../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButton_connectModalOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
-import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
+import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { DynamicHeight } from "../components/DynamicHeight.js";
 import { Spinner } from "../components/Spinner.js";
 import type { LocaleId } from "../types.js";
@@ -108,9 +107,9 @@ export type CheckoutWidgetProps = {
   tokenAddress?: Address;
 
   /**
-   * The price of the item **(in wei)**.
+   * The price of the item **(as a decimal string)**, e.g. "1.5" for 1.5 tokens.
    */
-  amount: bigint;
+  amount: string;
 
   /**
    * The wallet address or ENS funds will be paid to.
@@ -198,17 +197,6 @@ type UIOptionsResult =
  *  />
  * ```
  *
- * ### Enable/Disable payment methods
- *
- * You can use `disableOnramps` to prevent the use of onramps in the widget.
- *
- * ```tsx
- * <CheckoutWidget
- *   client={client}
- *   disableOnramps
- *  />
- * ```
- *
  * ### Customize the UI
  *
  * You can customize the UI of the `CheckoutWidget` component by passing a custom theme object to the `theme` prop.
@@ -264,7 +252,6 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
   const theme = props.theme || "dark";
 
   const bridgeDataQuery = useQuery({
-    queryKey: ["bridgeData", stringify(props)],
     queryFn: async (): Promise<UIOptionsResult> => {
       const token = await getToken(
         props.client,
@@ -275,31 +262,32 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
       );
       if (!token) {
         return {
-          type: "unsupported_token",
+          chain: props.chain,
           tokenAddress: checksumAddress(
             props.tokenAddress || NATIVE_TOKEN_ADDRESS,
           ),
-          chain: props.chain,
+          type: "unsupported_token",
         };
       }
       return {
-        type: "success",
         data: {
-          mode: "direct_payment",
           metadata: {
-            title: props.name,
-            image: props.image,
             description: props.description,
+            image: props.image,
+            title: props.name,
           },
+          mode: "direct_payment",
           paymentInfo: {
-            token,
-            amount: toTokens(props.amount, token.decimals),
+            amount: props.amount,
+            feePayer: props.feePayer === "seller" ? "receiver" : "sender",
             sellerAddress: props.seller,
-            feePayer: props.feePayer === "seller" ? "receiver" : "sender", // User is sender, seller is receiver
+            token, // User is sender, seller is receiver
           },
         },
+        type: "success",
       };
     },
+    queryKey: ["bridgeData", stringify(props)],
   });
 
   let content = null;
@@ -307,13 +295,13 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
     content = (
       <div
         style={{
-          minHeight: "350px",
+          alignItems: "center",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          minHeight: "350px",
         }}
       >
-        <Spinner size="xl" color="secondaryText" />
+        <Spinner color="secondaryText" size="xl" />
       </div>
     );
   } else if (bridgeDataQuery.data?.type === "unsupported_token") {
@@ -324,22 +312,22 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
     content = (
       <BridgeOrchestrator
         client={props.client}
-        uiOptions={bridgeDataQuery.data.data}
-        connectOptions={props.connectOptions}
         connectLocale={localeQuery.data}
-        purchaseData={props.purchaseData}
-        paymentLinkId={props.paymentLinkId}
+        connectOptions={props.connectOptions}
+        onCancel={() => {
+          props.onCancel?.();
+        }}
         onComplete={() => {
           props.onSuccess?.();
         }}
         onError={(err: Error) => {
           props.onError?.(err);
         }}
-        onCancel={() => {
-          props.onCancel?.();
-        }}
+        paymentLinkId={props.paymentLinkId}
         presetOptions={props.presetOptions}
+        purchaseData={props.purchaseData}
         receiverAddress={props.seller}
+        uiOptions={bridgeDataQuery.data.data}
       />
     );
   }
@@ -347,9 +335,9 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
   return (
     <CustomThemeProvider theme={theme}>
       <EmbedContainer
+        className={props.className}
         modalSize="compact"
         style={props.style}
-        className={props.className}
       >
         <DynamicHeight>{content}</DynamicHeight>
       </EmbedContainer>

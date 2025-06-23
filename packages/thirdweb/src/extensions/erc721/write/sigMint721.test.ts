@@ -8,8 +8,8 @@ import {
 } from "../../../../test/src/test-wallets.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
 import { toHex } from "../../../utils/encoding/hex.js";
@@ -34,9 +34,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           client: TEST_CLIENT,
           params: {
             name: "Test",
-            symbol: "TST",
             royaltyRecipient: TEST_ACCOUNT_C.address,
             saleRecipient: TEST_ACCOUNT_B.address,
+            symbol: "TST",
           },
           type: "TokenERC721",
         }),
@@ -68,9 +68,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           client: TEST_CLIENT,
           params: {
             name: "Test",
-            symbol: "TST",
             royaltyRecipient: TEST_ACCOUNT_C.address,
             saleRecipient: TEST_ACCOUNT_B.address,
+            symbol: "TST",
           },
           type: "LoyaltyCard",
         }),
@@ -78,17 +78,17 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         client: TEST_CLIENT,
       });
       const { payload, signature } = await generateMintSignature({
-        mintRequest: {
-          to: TEST_ACCOUNT_B.address,
-          metadata: {
-            name: "My NFT",
-            description: "This is my NFT",
-            image: "https://example.com/image.png",
-          },
-        },
         account: TEST_ACCOUNT_A,
         contract: loyaltyContract,
         contractType: "LoyaltyCard",
+        mintRequest: {
+          metadata: {
+            description: "This is my NFT",
+            image: "https://example.com/image.png",
+            name: "My NFT",
+          },
+          to: TEST_ACCOUNT_B.address,
+        },
       });
       const transaction = mintWithSignature({
         contract: loyaltyContract,
@@ -96,24 +96,24 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         signature,
       });
       const { transactionHash } = await sendTransaction({
-        transaction,
         account: TEST_ACCOUNT_A,
+        transaction,
       });
       expect(transactionHash.length).toBe(66);
     });
 
     it("should generate a mint signature and mint an NFT", async () => {
       const { payload, signature } = await generateMintSignature({
-        mintRequest: {
-          to: TEST_ACCOUNT_B.address,
-          metadata: {
-            name: "My NFT",
-            description: "This is my NFT",
-            image: "https://example.com/image.png",
-          },
-        },
         account: TEST_ACCOUNT_A,
         contract: erc721Contract,
+        mintRequest: {
+          metadata: {
+            description: "This is my NFT",
+            image: "https://example.com/image.png",
+            name: "My NFT",
+          },
+          to: TEST_ACCOUNT_B.address,
+        },
       });
       const transaction = mintWithSignature({
         contract: erc721Contract,
@@ -121,20 +121,20 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         signature,
       });
       const { transactionHash } = await sendTransaction({
-        transaction,
         account: TEST_ACCOUNT_A,
+        transaction,
       });
       expect(transactionHash.length).toBe(66);
     });
 
     it("should generate a mint signature with default values", async () => {
       const { payload, signature } = await generateMintSignature({
-        mintRequest: {
-          to: TEST_ACCOUNT_B.address,
-          metadata: "https://example.com/token",
-        },
         account: TEST_ACCOUNT_A,
         contract: erc721Contract,
+        mintRequest: {
+          metadata: "https://example.com/token",
+          to: TEST_ACCOUNT_B.address,
+        },
       });
 
       expect(payload.to).toBe("0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
@@ -155,28 +155,28 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         signature,
       });
       const { transactionHash } = await sendTransaction({
-        transaction,
         account: TEST_ACCOUNT_A,
+        transaction,
       });
       expect(transactionHash.length).toBe(66);
     });
 
     it("should generate a mint signature with custom values", async () => {
       const { payload, signature } = await generateMintSignature({
-        mintRequest: {
-          to: TEST_ACCOUNT_B.address,
-          royaltyRecipient: TEST_ACCOUNT_B.address,
-          royaltyBps: 500,
-          primarySaleRecipient: TEST_ACCOUNT_A.address,
-          metadata: "https://example.com/token",
-          price: "0.2",
-          currency: erc20TokenContract.address,
-          validityStartTimestamp: new Date(1635724800),
-          validityEndTimestamp: new Date(1867260800),
-          uid: toHex("abcdef1234567890", { size: 32 }),
-        },
         account: TEST_ACCOUNT_A,
         contract: erc721Contract,
+        mintRequest: {
+          currency: erc20TokenContract.address,
+          metadata: "https://example.com/token",
+          price: "0.2",
+          primarySaleRecipient: TEST_ACCOUNT_A.address,
+          royaltyBps: 500,
+          royaltyRecipient: TEST_ACCOUNT_B.address,
+          to: TEST_ACCOUNT_B.address,
+          uid: toHex("abcdef1234567890", { size: 32 }),
+          validityEndTimestamp: new Date(1867260800),
+          validityStartTimestamp: new Date(1635724800),
+        },
       });
 
       expect(payload.to).toBe("0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
@@ -200,20 +200,20 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
     it("should automatically encode a provided string uid", async () => {
       const { payload, signature } = await generateMintSignature({
-        mintRequest: {
-          to: TEST_ACCOUNT_B.address,
-          royaltyRecipient: TEST_ACCOUNT_B.address,
-          royaltyBps: 500,
-          primarySaleRecipient: TEST_ACCOUNT_A.address,
-          metadata: "https://example.com/token",
-          price: "0.2",
-          currency: erc20TokenContract.address,
-          validityStartTimestamp: new Date(1635724800),
-          validityEndTimestamp: new Date(1867260800),
-          uid: "abcdef1234567890",
-        },
         account: TEST_ACCOUNT_A,
         contract: erc721Contract,
+        mintRequest: {
+          currency: erc20TokenContract.address,
+          metadata: "https://example.com/token",
+          price: "0.2",
+          primarySaleRecipient: TEST_ACCOUNT_A.address,
+          royaltyBps: 500,
+          royaltyRecipient: TEST_ACCOUNT_B.address,
+          to: TEST_ACCOUNT_B.address,
+          uid: "abcdef1234567890",
+          validityEndTimestamp: new Date(1867260800),
+          validityStartTimestamp: new Date(1635724800),
+        },
       });
 
       expect(payload.to).toBe("0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
@@ -237,20 +237,20 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
     it("should default sale recipient to the contract's primarySaleRecipient when empty", async () => {
       const { payload, signature } = await generateMintSignature({
-        mintRequest: {
-          to: TEST_ACCOUNT_B.address,
-          royaltyBps: 500,
-          metadata: "https://example.com/token",
-          price: "0.2",
-          currency: erc20TokenContract.address,
-          validityStartTimestamp: new Date(1635724800),
-          validityEndTimestamp: new Date(1867260800),
-          uid: toHex("abcdef1234567890", { size: 32 }),
-          primarySaleRecipient: "",
-          royaltyRecipient: "",
-        },
         account: TEST_ACCOUNT_A,
         contract: erc721Contract,
+        mintRequest: {
+          currency: erc20TokenContract.address,
+          metadata: "https://example.com/token",
+          price: "0.2",
+          primarySaleRecipient: "",
+          royaltyBps: 500,
+          royaltyRecipient: "",
+          to: TEST_ACCOUNT_B.address,
+          uid: toHex("abcdef1234567890", { size: 32 }),
+          validityEndTimestamp: new Date(1867260800),
+          validityStartTimestamp: new Date(1635724800),
+        },
       });
 
       expect(payload.royaltyRecipient).toBe(TEST_ACCOUNT_C.address);

@@ -1,26 +1,19 @@
-/* eslint-disable no-restricted-syntax */
+/** biome-ignore-all lint/a11y/useSemanticElements: FIXME */
 "use client";
 
+import { CheckIcon, ChevronDownIcon, SearchIcon, XIcon } from "lucide-react";
+import { forwardRef, useCallback, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Separator } from "@/components/ui/separator";
+import { useShowMore } from "@/hooks/useShowMore";
 import { cn } from "@/lib/utils";
-import { CheckIcon, ChevronDownIcon, SearchIcon, XIcon } from "lucide-react";
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { useShowMore } from "../../lib/useShowMore";
-import { ScrollShadow } from "../ui/ScrollShadow/ScrollShadow";
-import { Input } from "../ui/input";
 
 interface MultiSelectProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -53,6 +46,7 @@ interface MultiSelectProps
   align?: "center" | "start" | "end";
   side?: "left" | "right" | "top" | "bottom";
   showSelectedValuesInModal?: boolean;
+  customSearchInput?: React.ReactNode;
 }
 
 export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
@@ -69,6 +63,7 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
       searchPlaceholder,
       popoverContentClassName,
       showSelectedValuesInModal = false,
+      customSearchInput,
       ...props
     },
     ref,
@@ -148,58 +143,48 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
 
     // scroll to top when options change
     const popoverElRef = useRef<HTMLDivElement>(null);
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useEffect(() => {
-      const scrollContainer =
-        popoverElRef.current?.querySelector("[data-scrollable]");
-      if (scrollContainer) {
-        scrollContainer.scrollTo({
-          top: 0,
-        });
-      }
-    }, [searchValue]);
 
     return (
-      <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen} modal>
+      <Popover modal onOpenChange={setIsPopoverOpen} open={isPopoverOpen}>
         <PopoverTrigger asChild>
           {props.customTrigger || (
             <Button
               ref={ref}
               {...props}
-              onClick={handleTogglePopover}
               className={cn(
                 "flex h-auto min-h-10 w-full items-center justify-between rounded-md border border-border bg-inherit p-3 hover:bg-inherit",
                 className,
               )}
+              onClick={handleTogglePopover}
             >
               {selectedValues.length > 0 ? (
                 <div className="flex w-full items-center justify-between">
                   <SelectedChainsBadges
-                    selectedValues={selectedValues}
-                    options={options}
+                    clearExtraOptions={clearExtraOptions}
                     maxCount={maxCount}
                     onClose={handleClear}
+                    options={options}
+                    selectedValues={selectedValues}
                     toggleOption={toggleOption}
-                    clearExtraOptions={clearExtraOptions}
                   />
                   <div className="flex items-center justify-between gap-2">
                     {/* Clear All */}
-                    {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-                    {/* biome-ignore lint/a11y/useFocusableInteractive: <explanation> */}
+                    {/* biome-ignore lint/a11y/useKeyWithClickEvents: FIXME */}
+                    {/* biome-ignore lint/a11y/useFocusableInteractive: FIXME */}
                     <div
-                      role="button"
+                      className="rounded p-1 hover:bg-accent"
                       onClick={(event) => {
                         event.stopPropagation();
                         handleClear();
                       }}
-                      className="rounded p-1 hover:bg-accent"
+                      role="button"
                     >
                       <XIcon className="h-4 cursor-pointer text-muted-foreground" />
                     </div>
 
                     <Separator
-                      orientation="vertical"
                       className="flex h-full min-h-6"
+                      orientation="vertical"
                     />
                     <ChevronDownIcon className="h-4 cursor-pointer text-muted-foreground" />
                   </div>
@@ -216,32 +201,45 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
           )}
         </PopoverTrigger>
         <PopoverContent
+          align={props.align}
           className={cn(
             "flex max-h-[500px] flex-col p-0",
             popoverContentClassName,
           )}
-          align={props.align}
+          onEscapeKeyDown={() => setIsPopoverOpen(false)}
+          ref={popoverElRef}
           side={props.side}
           sideOffset={10}
-          onEscapeKeyDown={() => setIsPopoverOpen(false)}
           style={{
-            width: "var(--radix-popover-trigger-width)",
             height:
               "calc(var(--radix-popover-content-available-height) - 40px)",
+            width: "var(--radix-popover-trigger-width)",
           }}
-          ref={popoverElRef}
         >
           {/* Search */}
           <div className="relative">
-            <Input
-              placeholder={searchPlaceholder || "Search"}
-              value={searchValue}
-              // do not focus on the input when the popover opens to avoid opening the keyboard
-              tabIndex={-1}
-              onChange={(e) => setSearchValue(e.target.value)}
-              className="!h-auto rounded-b-none border-0 border-border border-b py-4 pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
-              onKeyDown={handleInputKeyDown}
-            />
+            {customSearchInput ? (
+              customSearchInput
+            ) : (
+              <Input
+                className="!h-auto rounded-b-none border-0 border-border border-b py-4 pl-10 focus-visible:ring-0 focus-visible:ring-offset-0"
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                  const scrollContainer =
+                    popoverElRef.current?.querySelector("[data-scrollable]");
+                  if (scrollContainer) {
+                    scrollContainer.scrollTo({
+                      top: 0,
+                    });
+                  }
+                }}
+                // do not focus on the input when the popover opens to avoid opening the keyboard
+                onKeyDown={handleInputKeyDown}
+                placeholder={searchPlaceholder || "Search"}
+                tabIndex={-1}
+                value={searchValue}
+              />
+            )}
             <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-4 size-4 text-muted-foreground" />
           </div>
 
@@ -253,8 +251,8 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
 
           {optionsToShow.length > 0 && (
             <ScrollShadow
-              scrollableClassName="p-1 h-full"
               className="flex-1 rounded"
+              scrollableClassName="p-1 h-full"
             >
               {/* List */}
               <div>
@@ -262,15 +260,15 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
                   const isSelected = selectedValues.includes(option.value);
                   return (
                     <Button
-                      key={option.value}
-                      role="option"
                       aria-selected={isSelected}
-                      onClick={() => toggleOption(option.value)}
-                      variant="ghost"
                       className="flex w-full cursor-pointer justify-start gap-3 rounded-sm px-3 py-2 text-left"
+                      key={option.value}
+                      onClick={() => toggleOption(option.value)}
                       ref={
                         i === optionsToShow.length - 1 ? lastItemRef : undefined
                       }
+                      role="option"
+                      variant="ghost"
                     >
                       <div
                         className={cn(
@@ -296,12 +294,12 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
           {showSelectedValuesInModal && selectedValues.length > 0 && (
             <div className="border-t px-3 py-3">
               <SelectedChainsBadges
-                selectedValues={selectedValues}
-                options={options}
+                clearExtraOptions={clearExtraOptions}
                 maxCount={maxCount}
                 onClose={handleClear}
+                options={options}
+                selectedValues={selectedValues}
                 toggleOption={toggleOption}
-                clearExtraOptions={clearExtraOptions}
               />
             </div>
           )}
@@ -311,10 +309,7 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
   },
 );
 
-function ClosableBadge(props: {
-  label: string;
-  onClose: () => void;
-}) {
+function ClosableBadge(props: { label: string; onClose: () => void }) {
   return (
     <span className="flex items-center gap-3 rounded-xl border border-border bg-muted px-2 py-1 text-foreground text-xs">
       {props.label}

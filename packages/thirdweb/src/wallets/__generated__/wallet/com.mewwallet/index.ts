@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.mewwallet",
-  name: "MEW wallet",
-  homepage: "https://mewwallet.com",
-  image_id: "e2024511-2c9b-46d7-3111-52df3d241700",
   app: {
-    browser: "https://download.mewwallet.com/?source=wc",
-    ios: "https://apps.apple.com/app/id1464614025",
     android:
       "https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "https://download.mewwallet.com/?source=wc",
     chrome: null,
-    firefox: null,
-    safari: "https://apps.apple.com/app/id1464614025",
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/app/id1464614025",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "mewwallet://",
-    universal: "https://mewwallet.com",
+    safari: "https://apps.apple.com/app/id1464614025",
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://download.mewwallet.com/?source=wc",
   },
+  homepage: "https://mewwallet.com",
+  id: "com.mewwallet",
+  image_id: "e2024511-2c9b-46d7-3111-52df3d241700",
+  mobile: {
+    native: "mewwallet://",
+    universal: "https://mewwallet.com",
+  },
+  name: "MEW wallet",
+  rdns: null,
 } as const;

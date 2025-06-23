@@ -1,5 +1,4 @@
-import { ChakraProviderSetup } from "@/components/ChakraProviderSetup";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,9 +6,10 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import type { EngineInstance } from "@/hooks/useEngine";
+import { getAuthToken } from "../../../../../../../../../../@/api/auth-token";
 import { getValidAccount } from "../../../../../../../../account/settings/getAccount";
-import { getAuthToken } from "../../../../../../../../api/lib/getAuthToken";
 import { loginRedirect } from "../../../../../../../../login/loginRedirect";
 import { getEngineInstance } from "../../_utils/getEngineInstance";
 import { EngineErrorPage } from "./_components/EngineErrorPage";
@@ -36,10 +36,10 @@ export default async function Layout(props: {
   }
 
   const instance = await getEngineInstance({
-    teamIdOrSlug: params.team_slug,
+    accountId: account.id,
     authToken,
     engineId: params.engineId,
-    accountId: account.id,
+    teamIdOrSlug: params.team_slug,
   });
 
   const engineRootLayoutPath = `/team/${params.team_slug}/${params.project_slug}/engine/dedicated`;
@@ -48,8 +48,8 @@ export default async function Layout(props: {
     return (
       <EngineSidebarLayout
         engineId={params.engineId}
-        teamSlug={params.team_slug}
         projectSlug={params.project_slug}
+        teamSlug={params.team_slug}
       >
         <EngineErrorPage rootPath={engineRootLayoutPath}>
           Engine Instance Not Found
@@ -69,16 +69,16 @@ export default async function Layout(props: {
 
         <EngineSidebarLayout
           engineId={params.engineId}
-          teamSlug={params.team_slug}
           projectSlug={params.project_slug}
+          teamSlug={params.team_slug}
         >
           <EnsureEnginePermission
-            teamSlug={params.team_slug}
-            projectSlug={params.project_slug}
             accountId={account.id}
             authToken={authToken}
             engineId={params.engineId}
             instance={instance}
+            projectSlug={params.project_slug}
+            teamSlug={params.team_slug}
           >
             <div>{props.children}</div>
           </EnsureEnginePermission>
@@ -120,13 +120,13 @@ function EngineInstanceHeader(props: {
             </h1>
             {!instance.name.startsWith("https://") && (
               <CopyTextButton
+                className="-translate-x-2 h-auto px-2 py-1 text-muted-foreground"
                 copyIconPosition="right"
                 iconClassName="size-2.5"
-                textToShow={cleanEngineURL}
                 textToCopy={cleanEngineURL}
+                textToShow={cleanEngineURL}
                 tooltip="Copy Engine URL"
                 variant="ghost"
-                className="-translate-x-2 h-auto px-2 py-1 text-muted-foreground"
               />
             )}
           </div>

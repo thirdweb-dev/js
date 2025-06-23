@@ -1,6 +1,6 @@
 import { getLinkedWallets } from "@/api/linked-wallets";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../@/api/auth-token";
 import { loginRedirect } from "../../login/loginRedirect";
 import { getValidAccount } from "../settings/getAccount";
 import { LinkWallet } from "./LinkWalletUI";
@@ -33,9 +33,9 @@ export default async function Page() {
 
       <div className="container max-w-[950px] py-8">
         <LinkWallet
-          wallets={wallets || []}
           accountEmail={account.email || ""}
           client={client}
+          wallets={wallets || []}
         />
       </div>
     </div>

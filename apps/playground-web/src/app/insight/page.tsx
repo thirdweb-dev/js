@@ -1,5 +1,5 @@
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import Link from "next/link";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { insightBlueprints } from "./insightBlueprints";
 
 export default function Page() {
@@ -11,9 +11,9 @@ export default function Page() {
         user-friendly format. <br /> There is no need for ABIs, decoding, RPC,
         or web3 knowledge to fetch blockchain data.{" "}
         <Link
+          className="underline decoration-muted-foreground/50 decoration-dotted underline-offset-[5px] hover:decoration-solid"
           href="https://portal.thirdweb.com/insight/blueprints?utm_source=playground"
           target="_blank"
-          className="underline decoration-muted-foreground/50 decoration-dotted underline-offset-[5px] hover:decoration-solid"
         >
           Learn more about Insight Blueprints{" "}
         </Link>
@@ -23,15 +23,15 @@ export default function Page() {
         {insightBlueprints.map((blueprint) => {
           return (
             <BlueprintSection
-              key={blueprint.id}
-              title={blueprint.name}
               blueprints={blueprint.paths.map((pathInfo) => {
                 return {
-                  name: pathInfo.name,
-                  link: `/insight/${blueprint.id}?path=${pathInfo.path}`,
                   deprecated: pathInfo.deprecated,
+                  link: `/insight/${blueprint.id}?path=${pathInfo.path}`,
+                  name: pathInfo.name,
                 };
               })}
+              key={blueprint.id}
+              title={blueprint.name}
             />
           );
         })}
@@ -53,19 +53,19 @@ function BlueprintSection(props: {
         <TableBody>
           {props.blueprints.map((item) => (
             <TableRow
-              key={item.link}
               className="group hover:bg-accent/50"
+              key={item.link}
               linkBox
             >
               <TableCell>
                 <span className="flex items-center gap-3">
                   <Link
-                    href={item.link}
                     className={`${
                       item.deprecated
                         ? "line-through before:absolute before:inset-0"
                         : ""
                     }`}
+                    href={item.link}
                   >
                     {item.name}
                   </Link>

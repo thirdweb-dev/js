@@ -11,51 +11,51 @@ const addressSchema = z
 
 const webhookSchema = z.union([
   z.object({
-    version: z.literal(1),
     data: z.object({}),
+    version: z.literal(1),
   }),
   z.object({
-    version: z.literal(2),
     data: z.object({
+      action: z.enum(["TRANSFER", "BUY", "SELL"]),
+      clientId: z.string(),
+      destinationAmount: z.string(),
+      destinationToken: z.object({
+        address: addressSchema,
+        chainId: z.coerce.number(),
+        decimals: z.coerce.number(),
+        iconUri: z.optional(z.string()),
+        name: z.string(),
+        priceUsd: z.coerce.number(),
+        symbol: z.string(),
+      }),
+      developerFeeBps: z.coerce.number(),
+      developerFeeRecipient: addressSchema,
+      originAmount: z.string(),
+      originToken: z.object({
+        address: addressSchema,
+        chainId: z.coerce.number(),
+        decimals: z.coerce.number(),
+        iconUri: z.optional(z.string()),
+        name: z.string(),
+        priceUsd: z.coerce.number(),
+        symbol: z.string(),
+      }),
       paymentId: z.string(),
       // only exists when the payment was triggered from a developer specified payment link
       paymentLinkId: z.optional(z.string()),
-      clientId: z.string(),
-      action: z.enum(["TRANSFER", "BUY", "SELL"]),
-      status: z.enum(["PENDING", "FAILED", "COMPLETED"]),
-      originToken: z.object({
-        chainId: z.coerce.number(),
-        address: addressSchema,
-        name: z.string(),
-        symbol: z.string(),
-        decimals: z.coerce.number(),
-        priceUsd: z.coerce.number(),
-        iconUri: z.optional(z.string()),
-      }),
-      originAmount: z.string(),
-      destinationToken: z.object({
-        chainId: z.coerce.number(),
-        address: addressSchema,
-        name: z.string(),
-        symbol: z.string(),
-        decimals: z.coerce.number(),
-        priceUsd: z.coerce.number(),
-        iconUri: z.optional(z.string()),
-      }),
-      destinationAmount: z.string(),
-      sender: addressSchema,
+      purchaseData: z.optional(z.record(z.string(), z.unknown())),
       receiver: addressSchema,
-      type: z.string(),
+      sender: addressSchema,
+      status: z.enum(["PENDING", "FAILED", "COMPLETED"]),
       transactions: z.array(
         z.object({
           chainId: z.coerce.number(),
           transactionHash: hexSchema,
         }),
       ),
-      developerFeeBps: z.coerce.number(),
-      developerFeeRecipient: addressSchema,
-      purchaseData: z.optional(z.record(z.string(), z.unknown())),
+      type: z.string(),
     }),
+    version: z.literal(2),
   }),
 ]);
 
@@ -120,7 +120,7 @@ export async function parse(
   const key = await crypto.subtle.importKey(
     "raw",
     encoder.encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
+    { hash: "SHA-256", name: "HMAC" },
     false,
     ["sign"],
   );

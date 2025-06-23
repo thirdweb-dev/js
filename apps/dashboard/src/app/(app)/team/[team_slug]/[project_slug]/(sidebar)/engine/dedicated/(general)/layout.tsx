@@ -1,10 +1,10 @@
+import { DatabaseIcon, ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TabPathLinks } from "@/components/ui/tabs";
-import { DatabaseIcon, ExternalLinkIcon } from "lucide-react";
-import Link from "next/link";
-import { EngineIcon } from "../../../../../../../(dashboard)/(chain)/components/server/icons/EngineIcon";
+import { EngineIcon } from "@/icons/EngineIcon";
 import { ImportEngineLink } from "./_components";
 
 export default async function Layout(props: {
@@ -23,14 +23,14 @@ export default async function Layout(props: {
       <header className="pt-10 pb-6">
         <div className="container max-w-7xl">
           <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
-            <div className="flex flex-col gap-2">
-              <h1 className="flex items-center gap-2 font-semibold text-3xl tracking-tight">
-                Engine{" "}
+            <div>
+              <h1 className="mb-1 flex items-center gap-2 font-semibold text-3xl tracking-tight">
+                Transactions{" "}
                 <Badge
-                  variant="warning"
                   className="flex items-center gap-2 text-sm"
+                  variant="warning"
                 >
-                  <DatabaseIcon className="size-4" /> Dedicated
+                  <DatabaseIcon className="size-4" /> Dedicated Engine
                 </Badge>
               </h1>
               <p className="flex flex-col text-muted-foreground text-sm">
@@ -39,39 +39,34 @@ export default async function Layout(props: {
             </div>
             <div className="flex items-center gap-3">
               <ImportEngineLink
-                label="Import Engine"
                 engineLinkPrefix={linkPrefix}
+                label="Import Engine"
               />
             </div>
           </div>
           <div className="h-6" />
           <EngineLegacyBannerUI
-            teamSlug={params.team_slug}
             projectSlug={params.project_slug}
+            teamSlug={params.team_slug}
           />
         </div>
       </header>
 
-      <div className="relative">
-        <div className="absolute right-0 bottom-0 left-0 h-[1px] bg-border" />
-        <div className="container max-w-7xl">
-          <TabPathLinks
-            className="pt-2"
-            bottomLineClassName="hidden"
-            links={[
-              {
-                name: "Engine Instances",
-                path: `${linkPrefix}`,
-                exactMatch: true,
-              },
-              {
-                name: "Import Engine",
-                path: `${linkPrefix}/import`,
-              },
-            ]}
-          />
-        </div>
-      </div>
+      <TabPathLinks
+        className="pt-2"
+        links={[
+          {
+            exactMatch: true,
+            name: "Engine Instances",
+            path: `${linkPrefix}`,
+          },
+          {
+            name: "Import Engine",
+            path: `${linkPrefix}/import`,
+          },
+        ]}
+        scrollableClassName="container max-w-7xl"
+      />
 
       <div className="container max-w-7xl pt-8 pb-10">{props.children}</div>
     </div>
@@ -98,19 +93,20 @@ function EngineLegacyBannerUI(props: {
         </ul>
         <div className="h-6" />
         <div className="flex justify-start gap-3">
-          <Button className="flex items-center gap-2" asChild size="sm">
+          <Button asChild className="flex items-center gap-2" size="sm">
             <Link
-              href={`/team/${props.teamSlug}/${props.projectSlug}/engine/cloud`}
+              href={`/team/${props.teamSlug}/${props.projectSlug}/transactions`}
             >
               <EngineIcon className="size-4" /> Try Engine Cloud
             </Link>
           </Button>
 
-          <Button variant="outline" asChild size="sm">
+          <Button asChild size="sm" variant="outline">
             <Link
-              href={"https://portal.thirdweb.com/engine/v3"}
-              target="_blank"
               className="gap-2 bg-background"
+              href="https://portal.thirdweb.com/engine/v3"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               Learn More <ExternalLinkIcon className="size-4" />
             </Link>

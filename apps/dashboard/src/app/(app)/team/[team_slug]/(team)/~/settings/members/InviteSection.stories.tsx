@@ -1,20 +1,20 @@
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import { useId, useState } from "react";
 import type { TeamAccountRole } from "@/api/team-members";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import type { Meta, StoryObj } from "@storybook/nextjs";
-import { useState } from "react";
-import { teamStub } from "stories/stubs";
-import { storybookThirdwebClient } from "../../../../../../../../stories/utils";
+import { teamStub } from "@/storybook/stubs";
+import { storybookThirdwebClient } from "../../../../../../../../@/storybook/utils";
 import { InviteSection } from "./InviteSection";
 
 const meta = {
-  title: "Team/Settings/Members/InviteSection",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Team/Settings/Members/InviteSection",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -49,10 +49,6 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 type InviteParams = Array<{ email: string; role: TeamAccountRole }>;
 
 const INVITE_HANDLERS = {
-  success: async (params: InviteParams) => {
-    await sleep(500);
-    return { results: params.map(() => "fulfilled" as const) };
-  },
   failure: async (params: InviteParams) => {
     await sleep(500);
     return { results: params.map(() => "rejected" as const) };
@@ -65,16 +61,17 @@ const INVITE_HANDLERS = {
       ),
     };
   },
+  success: async (params: InviteParams) => {
+    await sleep(500);
+    return { results: params.map(() => "fulfilled" as const) };
+  },
 } as const;
 
-function RadioOption({
-  id,
-  label,
-  value,
-}: { id: string; label: string; value: string }) {
+function RadioOption({ label, value }: { label: string; value: string }) {
+  const id = useId();
   return (
     <div className="flex items-center space-x-2">
-      <RadioGroupItem value={value} id={id} />
+      <RadioGroupItem id={id} value={value} />
       <Label htmlFor={id}>{label}</Label>
     </div>
   );
@@ -100,11 +97,11 @@ function Story() {
     { length: recommendedMembersCount },
     (_, i) => ({
       email: `user${i + 1}@example.com`,
-      name: i % 2 === 0 ? `User ${i + 1}` : null,
       image:
         i % 3 === 0
           ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 1}`
           : null,
+      name: i % 2 === 0 ? `User ${i + 1}` : null,
     }),
   );
 
@@ -114,15 +111,15 @@ function Story() {
         <div>
           <h3 className="mb-3 font-medium">Team Type</h3>
           <RadioGroup
-            value={selectedTeam.id}
+            className="flex gap-4"
             onValueChange={(value: typeof selectedTeam.id) => {
               const config = TEAM_CONFIGS.find(({ id }) => id === value);
               if (config) setSelectedTeam({ id: value, team: config.team });
             }}
-            className="flex gap-4"
+            value={selectedTeam.id}
           >
             {TEAM_CONFIGS.map(({ id, label }) => (
-              <RadioOption key={id} id={id} label={label} value={id} />
+              <RadioOption key={id} label={label} value={id} />
             ))}
           </RadioGroup>
         </div>
@@ -131,20 +128,12 @@ function Story() {
           <div>
             <h3 className="mb-3 font-medium">Edit Permission</h3>
             <RadioGroup
-              value={hasEditPermission}
-              onValueChange={setHasEditPermission}
               className="flex gap-4"
+              onValueChange={setHasEditPermission}
+              value={hasEditPermission}
             >
-              <RadioOption
-                id="permission-true"
-                label="Has Permission"
-                value="true"
-              />
-              <RadioOption
-                id="permission-false"
-                label="No Permission"
-                value="false"
-              />
+              <RadioOption label="Has Permission" value="true" />
+              <RadioOption label="No Permission" value="false" />
             </RadioGroup>
           </div>
         )}
@@ -153,27 +142,15 @@ function Story() {
           <div>
             <h3 className="mb-3 font-medium">Invite Result</h3>
             <RadioGroup
-              value={inviteResult}
+              className="flex gap-4"
               onValueChange={(value: typeof inviteResult) => {
                 setInviteResult(value as keyof typeof INVITE_HANDLERS);
               }}
-              className="flex gap-4"
+              value={inviteResult}
             >
-              <RadioOption
-                id="result-success"
-                label="All Success"
-                value="success"
-              />
-              <RadioOption
-                id="result-failure"
-                label="All Failure"
-                value="failure"
-              />
-              <RadioOption
-                id="result-mixed"
-                label="Mixed Results"
-                value="mixed"
-              />
+              <RadioOption label="All Success" value="success" />
+              <RadioOption label="All Failure" value="failure" />
+              <RadioOption label="Mixed Results" value="mixed" />
             </RadioGroup>
           </div>
         )}
@@ -181,19 +158,14 @@ function Story() {
         <div>
           <h3 className="mb-3 font-medium">Recommended Members</h3>
           <RadioGroup
-            value={recommendedMembersCount.toString()}
+            className="flex gap-4"
             onValueChange={(value) => {
               setRecommendedMembersCount(Number.parseInt(value));
             }}
-            className="flex gap-4"
+            value={recommendedMembersCount.toString()}
           >
             {RECOMMENDED_MEMBERS_COUNTS.map(({ id, label, value }) => (
-              <RadioOption
-                key={id}
-                id={id}
-                label={label}
-                value={value.toString()}
-              />
+              <RadioOption key={id} label={label} value={value.toString()} />
             ))}
           </RadioGroup>
         </div>
@@ -201,11 +173,11 @@ function Story() {
 
       <div className="flex flex-col gap-10">
         <InviteSection
-          team={selectedTeam.team}
-          userHasEditPermission={hasEditPermission === "true"}
+          client={storybookThirdwebClient}
           inviteTeamMembers={INVITE_HANDLERS[inviteResult]}
           recommendedMembers={recommendedMembers}
-          client={storybookThirdwebClient}
+          team={selectedTeam.team}
+          userHasEditPermission={hasEditPermission === "true"}
         />
       </div>
     </div>

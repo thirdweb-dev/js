@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { BadgeContainer } from "stories/utils";
+import { BadgeContainer } from "@/storybook/utils";
 import { Stat } from "./Stat";
 
 const meta = {
-  title: "Analytics/Stat",
   component: Component,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Analytics/Stat",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -25,11 +25,11 @@ function Component() {
       </BadgeContainer>
 
       <BadgeContainer label="With Positive Trend">
-        <Stat label="Active Users" value={5678} trend={0.258707} />
+        <Stat label="Active Users" trend={0.258707} value={5678} />
       </BadgeContainer>
 
       <BadgeContainer label="With Negative Trend">
-        <Stat label="Daily Revenue" value={9876} trend={-0.1507} />
+        <Stat label="Daily Revenue" trend={-0.1507} value={9876} />
       </BadgeContainer>
     </div>
   );

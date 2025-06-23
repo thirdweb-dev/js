@@ -1,18 +1,17 @@
 "use client";
+import { CheckIcon, DollarSignIcon } from "lucide-react";
+import Link from "next/link";
+import type React from "react";
 import type { Team } from "@/api/team";
+import { CheckoutButton } from "@/components/billing/billing";
+import { RenewSubscriptionButton } from "@/components/billing/renew-subscription/renew-subscription-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { RenewSubscriptionButton } from "components/settings/Account/Billing/renew-subscription/renew-subscription-button";
-import { useTrack } from "hooks/analytics/useTrack";
-import { CheckIcon, DollarSignIcon } from "lucide-react";
-import Link from "next/link";
-import type React from "react";
-import { remainingDays } from "utils/date-utils";
-import { TEAM_PLANS } from "utils/pricing";
-import type { ProductSKU } from "../../lib/billing";
-import { CheckoutButton } from "../billing";
+import type { ProductSKU } from "@/types/billing";
+import { remainingDays } from "@/utils/date-utils";
+import { TEAM_PLANS } from "@/utils/pricing";
 
 type PricingCardCta = {
   hint?: string;
@@ -58,24 +57,11 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 }) => {
   const plan = TEAM_PLANS[billingPlan];
 
-  const trackEvent = useTrack();
   const remainingTrialDays =
     (activeTrialEndsAt ? remainingDays(activeTrialEndsAt) : 0) || 0;
 
-  // if the team has just signed up and has not subscribed yet, and the billing plan is growth, then they get a 7 day trial
-  const has7DayTrial =
-    remainingTrialDays === 0 &&
-    billingStatus === "noPayment" &&
-    billingPlan === "growth";
-
-  const handleCTAClick = () => {
-    cta?.onClick?.();
-    trackEvent({
-      category: "account",
-      label: `${billingPlan}Plan`,
-      action: "click",
-    });
-  };
+  // trials are disabled for now
+  const has7DayTrial = false;
 
   return (
     <div
@@ -155,18 +141,18 @@ export const PricingCard: React.FC<PricingCardProps> = ({
       {cta && (
         <div className="flex flex-col gap-3">
           {cta.type === "renew" && (
-            <RenewSubscriptionButton teamId={teamId} getTeam={getTeam} />
+            <RenewSubscriptionButton getTeam={getTeam} teamId={teamId} />
           )}
           {billingPlanToSkuMap[billingPlan] && cta.type === "checkout" && (
             <CheckoutButton
               billingStatus={billingStatus}
               buttonProps={{
-                variant: highlighted ? "default" : "outline",
                 className: highlighted ? undefined : "bg-background",
-                onClick: handleCTAClick,
+                onClick: cta.onClick,
+                variant: highlighted ? "default" : "outline",
               }}
-              teamSlug={teamSlug}
               sku={billingPlanToSkuMap[billingPlan]}
+              teamSlug={teamSlug}
             >
               {has7DayTrial ? "Start 7 Day Free Trial" : cta.label}
             </CheckoutButton>
@@ -174,11 +160,16 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
           {cta.type === "link" && (
             <Button
-              variant={highlighted ? "default" : "outline"}
-              className={highlighted ? undefined : "bg-background"}
               asChild
+              className={highlighted ? undefined : "bg-background"}
+              variant={highlighted ? "default" : "outline"}
             >
-              <Link href={cta.href} target="_blank" onClick={handleCTAClick}>
+              <Link
+                href={cta.href}
+                onClick={cta.onClick}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
                 {has7DayTrial ? "Start 7 Day Free Trial" : cta.label}
               </Link>
             </Button>
@@ -197,14 +188,14 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
 const billingPlanToSkuMap: Record<Team["billingPlan"], ProductSKU | undefined> =
   {
-    starter: "plan:starter",
-    growth: "plan:growth",
-    scale: "plan:scale",
-    pro: "plan:pro",
     // we can't render checkout buttons for these plans:
     accelerate: undefined,
     free: undefined,
+    growth: "plan:growth",
     growth_legacy: undefined,
+    pro: "plan:pro",
+    scale: "plan:scale",
+    starter: "plan:starter",
   };
 
 type FeatureItemProps = {

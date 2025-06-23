@@ -20,13 +20,13 @@ export const ChainName: React.FC<{
 
   if (name) {
     return (
-      <Text size={props.size} color={props.color} style={props.style}>
+      <Text color={props.color} size={props.size} style={props.style}>
         {props.short ? shorterChainName(name) : name}
       </Text>
     );
   }
 
-  return <Skeleton width="50px" height={fontSize[props.size]} />;
+  return <Skeleton height={fontSize[props.size]} width="50px" />;
 };
 
 export function shorterChainName(name: string) {

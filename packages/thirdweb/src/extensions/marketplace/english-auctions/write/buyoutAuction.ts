@@ -32,23 +32,23 @@ export function buyoutAuction(
   options: BaseTransactionOptions<BuyoutAuctionParams>,
 ) {
   return generatedBidInAuction({
-    contract: options.contract,
     asyncParams: async () => {
       const auction = await getAuction({
-        contract: options.contract,
         auctionId: options.auctionId,
+        contract: options.contract,
       });
 
       return {
         auctionId: options.auctionId,
         bidAmount: auction.buyoutBidAmount,
         overrides: {
+          extraGas: 50_000n,
           value: isNativeTokenAddress(auction.currencyContractAddress)
             ? auction.buyoutBidAmount
-            : undefined,
-          extraGas: 50_000n, // add extra gas to account for router call
+            : undefined, // add extra gas to account for router call
         },
       };
     },
+    contract: options.contract,
   });
 }

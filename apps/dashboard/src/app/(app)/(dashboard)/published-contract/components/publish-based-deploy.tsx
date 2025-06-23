@@ -1,12 +1,12 @@
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import {
-  fetchPublishedContractVersion,
-  fetchPublishedContractVersions,
-} from "components/contract-components/fetch-contracts-with-versions";
-import { ZERO_FEE_VERSIONS } from "constants/fee-config";
 import { isAddress } from "thirdweb";
 import { fetchDeployMetadata } from "thirdweb/contract";
 import { resolveAddress } from "thirdweb/extensions/ens";
+import {
+  fetchPublishedContractVersion,
+  fetchPublishedContractVersions,
+} from "@/components/contract-components/fetch-contracts-with-versions";
+import { ZERO_FEE_VERSIONS } from "@/constants/fee-config";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { DeployContractHeader } from "./contract-header";
 import { DeployFormForUri } from "./uri-based-deploy";
 
@@ -95,8 +95,8 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
     <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-8 pb-20">
       <DeployContractHeader
         {...props}
-        allVersions={publishedContractVersions}
         activeVersion={publishedContract}
+        allVersions={publishedContractVersions}
       />
       <DeployFormForUri
         contractMetadata={contractMetadata}

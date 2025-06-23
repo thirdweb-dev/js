@@ -4,7 +4,7 @@ import { retry } from "./retry.js";
 describe("retry", () => {
   it("should successfully resolve the promise without retries if no error is thrown", async () => {
     const mockFn = vi.fn().mockResolvedValue("success");
-    await expect(retry(mockFn, { retries: 1, delay: 100 })).resolves.toBe(
+    await expect(retry(mockFn, { delay: 100, retries: 1 })).resolves.toBe(
       "success",
     );
     expect(mockFn).toHaveBeenCalledTimes(1);
@@ -18,7 +18,7 @@ describe("retry", () => {
       .mockRejectedValueOnce(error)
       .mockResolvedValue("success");
 
-    await expect(retry(mockFn, { retries: 3, delay: 0 })).resolves.toBe(
+    await expect(retry(mockFn, { delay: 0, retries: 3 })).resolves.toBe(
       "success",
     );
     expect(mockFn).toHaveBeenCalledTimes(3);
@@ -28,7 +28,7 @@ describe("retry", () => {
     const error = new Error("Persistent error");
     const mockFn = vi.fn().mockRejectedValue(error);
 
-    await expect(retry(mockFn, { retries: 2, delay: 0 })).rejects.toThrow();
+    await expect(retry(mockFn, { delay: 0, retries: 2 })).rejects.toThrow();
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
@@ -42,7 +42,7 @@ describe("retry", () => {
 
     const delay = 100;
     const startTime = Date.now();
-    await retry(mockFn, { retries: 3, delay });
+    await retry(mockFn, { delay, retries: 3 });
     const endTime = Date.now();
 
     expect(endTime - startTime).toBeGreaterThanOrEqual(2 * delay);

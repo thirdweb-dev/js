@@ -1,13 +1,11 @@
 "use client";
 
+import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import {
   resendEmailClient,
   updateAccountClient,
   verifyEmailClient,
-} from "@3rdweb-sdk/react/hooks/useApi";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useActiveWallet } from "thirdweb/react";
-import { useDisconnect } from "thirdweb/react";
+} from "@/hooks/useApi";
 import { doLogout } from "../auth-actions";
 import { AccountOnboardingUI } from "./account-onboarding-ui";
 
@@ -16,12 +14,14 @@ function AccountOnboarding(props: {
   onLogout: () => void;
   accountAddress: string;
 }) {
-  const trackEvent = useTrack();
   const activeWallet = useActiveWallet();
   const { disconnect } = useDisconnect();
   return (
     <AccountOnboardingUI
-      onComplete={props.onComplete}
+      accountAddress={props.accountAddress}
+      loginOrSignup={async (params) => {
+        await updateAccountClient(params);
+      }}
       logout={async () => {
         if (activeWallet) {
           disconnect(activeWallet);
@@ -29,21 +29,17 @@ function AccountOnboarding(props: {
         await doLogout();
         props.onLogout();
       }}
-      accountAddress={props.accountAddress}
-      loginOrSignup={async (params) => {
-        await updateAccountClient(params);
-      }}
-      verifyEmail={verifyEmailClient}
-      resendEmailConfirmation={async () => {
-        await resendEmailClient();
-      }}
-      trackEvent={trackEvent}
+      onComplete={props.onComplete}
       requestLinkWallet={async (email) => {
         await updateAccountClient({
           email,
           linkWallet: true,
         });
       }}
+      resendEmailConfirmation={async () => {
+        await resendEmailClient();
+      }}
+      verifyEmail={verifyEmailClient}
     />
   );
 }

@@ -30,8 +30,8 @@ describe("useAutoConnectCore", () => {
   it("should return a useQuery result", async () => {
     const wallet = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,
-      client: TEST_CLIENT,
       chain: ethereum,
+      client: TEST_CLIENT,
       onDisconnect: () => {},
       switchChain: () => {},
     });
@@ -40,14 +40,14 @@ describe("useAutoConnectCore", () => {
         useAutoConnectCore(
           mockStorage,
           {
-            wallets: [wallet],
             client: TEST_CLIENT,
+            wallets: [wallet],
           },
           (id: WalletId) =>
             createWalletAdapter({
               adaptedAccount: TEST_ACCOUNT_A,
-              client: TEST_CLIENT,
               chain: ethereum,
+              client: TEST_CLIENT,
               onDisconnect: () => {
                 console.warn(id);
               },
@@ -65,8 +65,8 @@ describe("useAutoConnectCore", () => {
   it("should return `false` if there's no lastConnectedWalletIds", async () => {
     const wallet = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,
-      client: TEST_CLIENT,
       chain: ethereum,
+      client: TEST_CLIENT,
       onDisconnect: () => {},
       switchChain: () => {},
     });
@@ -75,14 +75,14 @@ describe("useAutoConnectCore", () => {
         useAutoConnectCore(
           mockStorage,
           {
-            wallets: [wallet],
             client: TEST_CLIENT,
+            wallets: [wallet],
           },
           (id: WalletId) =>
             createWalletAdapter({
               adaptedAccount: TEST_ACCOUNT_A,
-              client: TEST_CLIENT,
               chain: ethereum,
+              client: TEST_CLIENT,
               onDisconnect: () => {
                 console.warn(id);
               },

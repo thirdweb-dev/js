@@ -70,15 +70,15 @@ describe("fromProvider", () => {
     wallet.subscribe("onConnect", onConnectSpy);
 
     await wallet.connect({
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
 
     expect(onConnectSpy).toHaveBeenCalled();
     expect(trackConnect).toHaveBeenCalledWith({
       client: TEST_CLIENT,
-      walletType: "adapter",
       walletAddress: mockAccount.address,
+      walletType: "adapter",
     });
   });
 
@@ -107,8 +107,8 @@ describe("fromProvider", () => {
     wallet.subscribe("chainChanged", onChainChangedSpy);
 
     await wallet.connect({
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
 
     const chain = wallet.getChain();
@@ -124,12 +124,12 @@ describe("fromProvider", () => {
     });
 
     await wallet.connect({
-      client: TEST_CLIENT,
       chain: {
         ...ANVIL_CHAIN,
         id: undefined,
         // biome-ignore lint/suspicious/noExplicitAny: Testing unexpected input data
       } as any,
+      client: TEST_CLIENT,
     });
   });
 
@@ -144,8 +144,8 @@ describe("fromProvider", () => {
     mockProvider.request = vi.fn().mockResolvedValueOnce([mockAccount.address]);
 
     await wallet.connect({
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
 
     await wallet.disconnect();

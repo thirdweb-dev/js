@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.blanqlabs.wallet",
-  name: "Blanq",
-  homepage: "https://www.blanqlabs.com",
-  image_id: "d02dcb81-d279-4414-627a-681dcad51200",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/blanq-wallet-buy-store-crypto/id6470715307",
     android: "https://play.google.com/store/apps/details?id=xyz.blanq.mobile",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/blanq-wallet-buy-store-crypto/id6470715307",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: "com.blanqlabs.wallet",
-  mobile: {
-    native: null,
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: "https://wallet.blanq.app",
   },
+  homepage: "https://www.blanqlabs.com",
+  id: "com.blanqlabs.wallet",
+  image_id: "d02dcb81-d279-4414-627a-681dcad51200",
+  mobile: {
+    native: null,
+    universal: null,
+  },
+  name: "Blanq",
+  rdns: "com.blanqlabs.wallet",
 } as const;

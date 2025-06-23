@@ -1,15 +1,17 @@
-import { UnorderedList } from "@/components/ui/List/List";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import { Link } from "@chakra-ui/react";
-import { useCsvUpload } from "hooks/useCsvUpload";
+import { Button } from "chakra/button";
+import { Heading } from "chakra/heading";
+import { Text } from "chakra/text";
 import { CircleAlertIcon, UploadIcon } from "lucide-react";
 import { useMemo, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import type { Column } from "react-table";
 import { type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
-import { Button, Heading, Text } from "tw-components";
+import { UnorderedList } from "@/components/ui/List/List";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useCsvUpload } from "@/hooks/useCsvUpload";
+import { cn } from "@/lib/utils";
 import { CsvDataTable } from "../../_components/csv-data-table";
 
 export interface AirdropAddressInput {
@@ -37,7 +39,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
   onClose,
   client,
 }) => {
-  const csvUpload = useCsvUpload<AirdropAddressInput>({ csvParser, client });
+  const csvUpload = useCsvUpload<AirdropAddressInput>({ client, csvParser });
   const dropzone = useDropzone({
     onDrop: csvUpload.setFiles,
   });
@@ -49,7 +51,6 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
   const columns = useMemo(() => {
     return [
       {
-        Header: "Address",
         accessor: ({ address, isValid }) => {
           if (isValid) {
             return address;
@@ -73,12 +74,13 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
             </ToolTipLabel>
           );
         },
+        Header: "Address",
       },
       {
-        Header: "Quantity",
         accessor: ({ quantity }: { quantity: string }) => {
           return quantity || "1";
         },
+        Header: "Quantity",
       },
     ] as Column<AirdropAddressInput>[];
   }, []);
@@ -106,9 +108,9 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
       {normalizeData.result.length && csvUpload.rawData.length > 0 ? (
         <>
           <CsvDataTable<AirdropAddressInput>
-            portalRef={paginationPortalRef}
-            data={csvUpload.normalizeQuery.data.result}
             columns={columns}
+            data={csvUpload.normalizeQuery.data.result}
+            portalRef={paginationPortalRef}
           />
           <div className="mt-4 flex flex-col justify-between md:mt-0">
             <div ref={paginationPortalRef} />
@@ -139,9 +141,9 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                 <Button
                   borderRadius="md"
                   colorScheme="primary"
+                  isDisabled={csvUpload.rawData.length === 0}
                   onClick={onSave}
                   w={{ base: "100%", md: "auto" }}
-                  isDisabled={csvUpload.rawData.length === 0}
                 >
                   Next
                 </Button>
@@ -173,8 +175,8 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                 ) : (
                   <Heading
                     as={Text}
-                    size="label.md"
                     color={csvUpload.noCsv ? "red.500" : "gray.600"}
+                    size="label.md"
                   >
                     {csvUpload.noCsv
                       ? `No valid CSV file found, make sure your CSV includes the "address" & "quantity" column.`
@@ -192,8 +194,8 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                 quantity column, if the quantity column is not provided, that
                 record will be flagged as invalid.
                 <Link
-                  download
                   color="primary.500"
+                  download
                   href="/assets/examples/airdrop.csv"
                 >
                   Download an example CSV

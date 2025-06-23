@@ -1,7 +1,3 @@
-import { fetchPublishedContractsFromDeploy } from "components/contract-components/fetchPublishedContractsFromDeploy";
-import { ContractCard } from "components/explore/contract-card";
-import { THIRDWEB_DEPLOYER_ADDRESS } from "constants/addresses";
-import { resolveEns } from "lib/ens";
 import type { ThirdwebContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
 import { getBytecode, getContract } from "thirdweb/contract";
@@ -9,6 +5,10 @@ import { getPublishedUriFromCompilerUri } from "thirdweb/extensions/thirdweb";
 import { getInstalledModules } from "thirdweb/modules";
 import { download } from "thirdweb/storage";
 import { extractIPFSUri, isValidENSName } from "thirdweb/utils";
+import { fetchPublishedContractsFromDeploy } from "@/components/contract-components/fetchPublishedContractsFromDeploy";
+import { ContractCard } from "@/components/contracts/contract-card";
+import { THIRDWEB_DEPLOYER_ADDRESS } from "@/constants/addresses";
+import { resolveEns } from "@/lib/ens";
 
 type ModuleMetadataPickedKeys = {
   publisher: string;
@@ -86,12 +86,12 @@ export async function getPublishedByCardProps(params: {
               throw new Error("No IPFS URI found in bytecode");
             }
             let uris = await getPublishedUriFromCompilerUri({
+              compilerMetadataUri: ipfsUri,
               contract: {
+                address: "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808",
                 chain: polygon,
                 client: contract.client,
-                address: "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808",
               },
-              compilerMetadataUri: ipfsUri,
             }).catch((e) => {
               console.error("Error fetching published URI", e);
               return [];
@@ -105,8 +105,8 @@ export async function getPublishedByCardProps(params: {
             const results = await Promise.allSettled(
               uris.map(async (uri) => {
                 const content = await download({
-                  uri,
                   client: contract.client,
+                  uri,
                 });
                 return JSON.parse(
                   await content.text(),
@@ -132,13 +132,13 @@ export async function getPublishedByCardProps(params: {
   }
 
   return {
+    isBeta: (publishedContractToShow.displayName || "")
+      .toLowerCase()
+      .includes("beta"),
     modules,
     name: publishedContractToShow.name,
     publisher: publisherAddressOrEns,
     version: publishedContractToShow.version,
-    isBeta: (publishedContractToShow.displayName || "")
-      .toLowerCase()
-      .includes("beta"),
   };
 }
 
@@ -152,14 +152,14 @@ export function PublishedByUI(props: {
   return (
     <ContractCard
       contractId={props.name}
-      publisher={props.publisher}
-      version={props.version}
       isBeta={props.isBeta}
       modules={props.modules.map((m) => ({
-        publisher: m.publisher,
         moduleId: m.name,
+        publisher: m.publisher,
         version: m.version,
       }))}
+      publisher={props.publisher}
+      version={props.version}
     />
   );
 }

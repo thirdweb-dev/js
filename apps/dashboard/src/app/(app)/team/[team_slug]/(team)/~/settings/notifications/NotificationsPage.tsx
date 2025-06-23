@@ -1,10 +1,8 @@
+import { Notifications } from "@app/team/[team_slug]/(team)/~/settings/notifications/Notifications";
 import { Separator } from "@/components/ui/separator";
-import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { Notifications } from "components/settings/Account/Notifications";
+import type { Account } from "@/hooks/useApi";
 
-export const SettingsNotificationsPage = (props: {
-  account: Account;
-}) => {
+export const SettingsNotificationsPage = (props: { account: Account }) => {
   return (
     <div>
       <h1 className="mb-0.5 font-semibold text-2xl tracking-tight">

@@ -2,71 +2,69 @@
 // Permissions
 // --------------------------------------------------------
 
-// READ
 export {
-  hasRole,
-  type HasRoleParams,
-  isHasRoleSupported,
-} from "../../extensions/permissions/read/hasRole.js";
+  type RoleAdminChangedEventFilters,
+  roleAdminChangedEvent,
+} from "../../extensions/permissions/__generated__/IPermissions/events/RoleAdminChanged.js";
+// EVENTS
 export {
-  getRoleAdmin,
+  type RoleGrantedEventFilters,
+  roleGrantedEvent,
+} from "../../extensions/permissions/__generated__/IPermissions/events/RoleGranted.js";
+export {
+  type RoleRevokedEventFilters,
+  roleRevokedEvent,
+} from "../../extensions/permissions/__generated__/IPermissions/events/RoleRevoked.js";
+export {
   type GetRoleAdminParams,
+  getRoleAdmin,
   isGetRoleAdminSupported,
 } from "../../extensions/permissions/read/getRoleAdmin.js";
-
+// READ
+export {
+  type HasRoleParams,
+  hasRole,
+  isHasRoleSupported,
+} from "../../extensions/permissions/read/hasRole.js";
 // WRITE
 export {
-  grantRole,
   type GrantRoleParams,
+  grantRole,
   isGrantRoleSupported,
 } from "../../extensions/permissions/write/grantRole.js";
 export {
-  revokeRole,
-  type RevokeRoleParams,
-  isRevokeRoleSupported,
-} from "../../extensions/permissions/write/revokeRole.js";
-export {
-  renounceRole,
-  type RenounceRoleParams,
   isRenounceRoleSupported,
+  type RenounceRoleParams,
+  renounceRole,
 } from "../../extensions/permissions/write/renounceRole.js";
-
-// EVENTS
 export {
-  roleGrantedEvent,
-  type RoleGrantedEventFilters,
-} from "../../extensions/permissions/__generated__/IPermissions/events/RoleGranted.js";
-export {
-  roleRevokedEvent,
-  type RoleRevokedEventFilters,
-} from "../../extensions/permissions/__generated__/IPermissions/events/RoleRevoked.js";
-export {
-  roleAdminChangedEvent,
-  type RoleAdminChangedEventFilters,
-} from "../../extensions/permissions/__generated__/IPermissions/events/RoleAdminChanged.js";
+  isRevokeRoleSupported,
+  type RevokeRoleParams,
+  revokeRole,
+} from "../../extensions/permissions/write/revokeRole.js";
 
 // --------------------------------------------------------
 // PermissionsEnumerable
 // --------------------------------------------------------
 
+export {
+  type GetAllRoleMembersParams,
+  getAllRoleMembers,
+  isGetAllRoleMembersSupported,
+} from "../../extensions/permissions/read/getAllMembers.js";
 // READ
 export {
-  getRoleMember,
   type GetRoleMemberParams,
+  getRoleMember,
   isGetRoleMemberSupported,
 } from "../../extensions/permissions/read/getRoleMember.js";
 export {
-  getRoleMemberCount,
   type GetRoleMemberCountParams,
+  getRoleMemberCount,
   isGetRoleMemberCountSupported,
 } from "../../extensions/permissions/read/getRoleMemberCount.js";
-export {
-  getAllRoleMembers,
-  type GetAllRoleMembersParams,
-  isGetAllRoleMembersSupported,
-} from "../../extensions/permissions/read/getAllMembers.js";
 
 // --------------------------------------------------------
 // Utils
 // --------------------------------------------------------
-export { roleMap, getRoleHash } from "../../extensions/permissions/utils.js";
+export { getRoleHash, roleMap } from "../../extensions/permissions/utils.js";

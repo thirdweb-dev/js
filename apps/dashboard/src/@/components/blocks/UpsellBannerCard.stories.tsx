@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { ArrowRightIcon, RocketIcon, StarIcon } from "lucide-react";
-import { BadgeContainer } from "../../../stories/utils";
+import { BadgeContainer } from "@/storybook/utils";
 import { UpsellBannerCard } from "./UpsellBannerCard";
 
 function Story() {
@@ -8,48 +8,42 @@ function Story() {
     <div className="container flex max-w-4xl flex-col gap-8 py-10">
       <BadgeContainer label="Green with icon (default)">
         <UpsellBannerCard
-          title="Unlock more with thirdweb"
-          description="Upgrade to increase limits and access advanced features."
+          accentColor="green"
           cta={{
-            text: "View plans",
             icon: <ArrowRightIcon className="size-4" />,
             link: "#",
+            text: "View plans",
           }}
-          trackingCategory="storybook"
-          trackingLabel="green"
+          description="Upgrade to increase limits and access advanced features."
           icon={<RocketIcon className="size-5" />}
-          accentColor="green"
+          title="Unlock more with thirdweb"
         />
       </BadgeContainer>
 
       <BadgeContainer label="Blue accent">
         <UpsellBannerCard
-          title="Need more storage?"
-          description="Add additional space to your account."
+          accentColor="blue"
           cta={{
-            text: "Upgrade storage",
             icon: <ArrowRightIcon className="size-4" />,
             link: "#",
+            text: "Upgrade storage",
           }}
-          trackingCategory="storybook"
-          trackingLabel="blue"
+          description="Add additional space to your account."
           icon={<StarIcon className="size-5" />}
-          accentColor="blue"
+          title="Need more storage?"
         />
       </BadgeContainer>
 
       <BadgeContainer label="Purple without leading icon">
         <UpsellBannerCard
-          title="Join the beta"
-          description="Get early access to experimental features."
+          accentColor="purple"
           cta={{
-            text: "Request access",
             icon: <ArrowRightIcon className="size-4" />,
             link: "#",
+            text: "Request access",
           }}
-          trackingCategory="storybook"
-          trackingLabel="purple"
-          accentColor="purple"
+          description="Get early access to experimental features."
+          title="Join the beta"
         />
       </BadgeContainer>
     </div>
@@ -57,13 +51,13 @@ function Story() {
 }
 
 const meta = {
-  title: "blocks/Banners/UpsellBannerCard",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "blocks/Banners/UpsellBannerCard",
 } satisfies Meta<typeof Story>;
 
 export default meta;

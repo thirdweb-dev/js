@@ -31,7 +31,7 @@ export async function signLoginPayload(options: SignLoginPayloadParams) {
     message: createLoginMessage(payload),
   });
   return {
-    signature,
     payload,
+    signature,
   };
 }

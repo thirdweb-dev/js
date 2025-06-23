@@ -1,7 +1,7 @@
 import type { AbiFunction } from "abitype";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../../contract/contract.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { simulateTransaction } from "../../transaction/actions/simulate.js";
@@ -10,11 +10,11 @@ import { resolveMethod } from "../../transaction/resolve-method.js";
 import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
 import { normalizeFunctionParams } from "../../utils/abi/normalizeFunctionParams.js";
 import { getAddress } from "../../utils/address.js";
+import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metadata.js";
 import {
   type CompilerMetadata,
   fetchBytecodeFromCompilerMetadata,
 } from "../../utils/any-evm/deploy-metadata.js";
-import type { FetchDeployMetadataResult } from "../../utils/any-evm/deploy-metadata.js";
 import { encodeExtraDataWithUri } from "../../utils/any-evm/encode-extra-data-with-uri.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
@@ -107,15 +107,15 @@ export async function deployPublishedContract(
   return deployContractfromDeployMetadata({
     account,
     chain,
-    deployMetadata,
     client,
-    initializeParams: {
-      ...deployMetadata.constructorParams,
-      ...contractParams,
-    },
+    deployMetadata,
     implementationConstructorParams: {
       ...deployMetadata.implConstructorParams,
       ...implementationConstructorParams,
+    },
+    initializeParams: {
+      ...deployMetadata.constructorParams,
+      ...contractParams,
     },
     salt,
   });
@@ -166,9 +166,9 @@ export async function deployContractfromDeployMetadata(
     processedImplParams = {};
     for (const key in implementationConstructorParams) {
       processedImplParams[key] = await processRefDeployments({
-        client,
         account,
         chain,
+        client,
         paramValue: implementationConstructorParams[key] as
           | string
           | ImplementationConstructorParam,
@@ -180,9 +180,9 @@ export async function deployContractfromDeployMetadata(
     processedInitializeParams = {};
     for (const key in initializeParams) {
       processedInitializeParams[key] = await processRefDeployments({
-        client,
         account,
         chain,
+        client,
         paramValue: initializeParams[key] as
           | string
           | ImplementationConstructorParam,
@@ -194,12 +194,12 @@ export async function deployContractfromDeployMetadata(
     case "standard": {
       return directDeploy({
         account,
-        client,
         chain,
+        client,
         compilerMetadata: deployMetadata,
         contractParams: processedInitializeParams,
-        salt,
         metadataUri: deployMetadata.metadataUri,
+        salt,
       });
     }
     case "autoFactory": {
@@ -217,28 +217,27 @@ export async function deployContractfromDeployMetadata(
       ) {
         for (const e of deployMetadata.defaultExtensions) {
           await getOrDeployInfraForPublishedContract({
+            account,
             chain,
             client,
-            account,
-            contractId: e.extensionName,
-            version: e.extensionVersion || "latest",
-            publisher: e.publisherAddress,
             constructorParams:
               await getAllDefaultConstructorParamsForImplementation({
                 chain,
                 client,
                 contractId: e.extensionName,
               }),
+            contractId: e.extensionName,
+            publisher: e.publisherAddress,
+            version: e.extensionVersion || "latest",
           });
         }
       }
 
       const { cloneFactoryContract, implementationContract } =
         await getOrDeployInfraForPublishedContract({
+          account,
           chain,
           client,
-          account,
-          contractId: deployMetadata.name,
           constructorParams: {
             ...(await getAllDefaultConstructorParamsForImplementation({
               chain,
@@ -248,36 +247,37 @@ export async function deployContractfromDeployMetadata(
             })),
             ...processedImplParams,
           },
+          contractId: deployMetadata.name,
           publisher: deployMetadata.publisher,
           version: deployMetadata.version,
         });
 
       if (isCrosschain) {
         return deployViaAutoFactory({
-          client,
-          chain,
           account,
+          chain,
+          client,
           cloneFactoryContract,
           implementationAddress: implementationContract.address,
           initializeData,
-          salt,
           isCrosschain,
+          salt,
         });
       }
 
       const initializeTransaction = await getInitializeTransaction({
-        client,
+        account,
         chain,
+        client,
         deployMetadata,
         implementationContract,
         initializeParams: processedInitializeParams,
-        account,
         modules,
       });
       return deployViaAutoFactory({
-        client,
-        chain,
         account,
+        chain,
+        client,
         cloneFactoryContract,
         initializeTransaction,
         salt,
@@ -298,9 +298,9 @@ export async function deployContractfromDeployMetadata(
       }
 
       const factory = getContract({
-        client,
-        chain,
         address: factoryAddress,
+        chain,
+        client,
       });
       const method = await resolveMethod(factoryFunction)(factory);
       const deployTx = prepareContractCall({
@@ -313,8 +313,8 @@ export async function deployContractfromDeployMetadata(
         transaction: deployTx,
       });
       await sendAndConfirmTransaction({
-        transaction: deployTx,
         account,
+        transaction: deployTx,
       });
       return address as string;
     }
@@ -322,12 +322,12 @@ export async function deployContractfromDeployMetadata(
       // Default to standard deployment if none was specified
       return directDeploy({
         account,
-        client,
         chain,
+        client,
         compilerMetadata: deployMetadata,
         contractParams: processedInitializeParams,
-        salt,
         metadataUri: deployMetadata.metadataUri,
+        salt,
       });
     }
     default:
@@ -353,17 +353,16 @@ async function directDeploy(options: {
   );
   const isStylus = options.compilerMetadata.metadata.language === "rust";
   return deployContract({
-    account,
-    client,
-    chain,
-    bytecode: await fetchBytecodeFromCompilerMetadata({
-      compilerMetadata,
-      client,
-      chain,
-    }),
     abi: compilerMetadata.abi,
+    account,
+    bytecode: await fetchBytecodeFromCompilerMetadata({
+      chain,
+      client,
+      compilerMetadata,
+    }),
+    chain,
+    client,
     constructorParams: contractParams,
-    salt,
     extraDataWithUri:
       isStylus && options.metadataUri
         ? encodeExtraDataWithUri({
@@ -371,6 +370,7 @@ async function directDeploy(options: {
           })
         : undefined,
     isStylus,
+    salt,
   });
 }
 
@@ -464,9 +464,9 @@ export async function getInitializeTransaction(options: {
 
   const initializeTransaction = prepareContractCall({
     contract: getContract({
-      client,
-      chain,
       address: implementationContract.address,
+      chain,
+      client,
     }),
     method: initializeFunction,
     params: normalizeFunctionParams(initializeFunction, initializeParams),

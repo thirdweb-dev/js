@@ -1,8 +1,8 @@
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
@@ -36,8 +36,8 @@ export async function predictSmartAccountAddress(args: {
   accountSalt?: string;
 }): Promise<string> {
   return predictAddress({
-    adminAddress: args.adminAddress,
     accountSalt: args.accountSalt,
+    adminAddress: args.adminAddress,
     factoryContract: getContract({
       address: args.factoryAddress ?? DEFAULT_ACCOUNT_FACTORY_V0_6,
       chain: args.chain,
@@ -188,12 +188,12 @@ export function prepareExecute(args: {
   }
   return prepareContractCall({
     contract: accountContract,
-    method: "function execute(address, uint256, bytes)",
-    params: [transaction.to || "", value, transaction.data || "0x"],
     // if gas is specified for the inner tx, use that and add 21k for the execute call on the account contract
     // this avoids another estimateGas call when bundling the userOp
     // and also allows for passing custom gas limits for the inner tx
     gas: transaction.gas ? transaction.gas + 21000n : undefined,
+    method: "function execute(address, uint256, bytes)",
+    params: [transaction.to || "", value, transaction.data || "0x"],
   });
 }
 

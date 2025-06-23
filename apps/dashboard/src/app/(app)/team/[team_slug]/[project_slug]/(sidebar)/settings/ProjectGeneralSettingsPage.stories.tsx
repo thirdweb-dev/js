@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { projectStub, teamStub } from "stories/stubs";
-import { storybookThirdwebClient } from "stories/utils";
+import { projectStub, teamStub } from "@/storybook/stubs";
+import { storybookThirdwebClient } from "@/storybook/utils";
 import { ProjectGeneralSettingsPageUI } from "./ProjectGeneralSettingsPage";
 
 const meta = {
-  title: "Project/Settings",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Project/Settings",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -28,23 +28,30 @@ export const MemberAccount: Story = {
   },
 };
 
-function Story(props: {
-  isOwnerAccount: boolean;
-}) {
+function Story(props: { isOwnerAccount: boolean }) {
   const currentTeam = teamStub("currentTeam", "free");
   return (
     <div className="mx-auto w-full max-w-[1100px] px-4 py-6">
       <ProjectGeneralSettingsPageUI
-        updateProjectImage={async (file) => {
+        client={storybookThirdwebClient}
+        deleteProject={async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
-          console.log("updateProjectImage", file);
+          console.log("deleteProject");
         }}
         isOwnerAccount={props.isOwnerAccount}
-        transferProject={async (newTeam) => {
+        onKeyUpdated={undefined}
+        project={projectStub("foo", currentTeam.id)}
+        rotateSecretKey={async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
-          console.log("transferProject", newTeam);
+          return {
+            data: {
+              secret: `sk_${new Array(86).fill("x").join("")}`,
+              secretMasked: "sk_123...4567",
+            },
+          };
         }}
-        client={storybookThirdwebClient}
+        showNebulaSettings={false}
+        teamSlug={currentTeam.slug}
         teamsWithRole={[
           {
             role: props.isOwnerAccount ? "OWNER" : "MEMBER",
@@ -59,28 +66,19 @@ function Story(props: {
             team: teamStub("baz", "starter"),
           },
         ]}
+        transferProject={async (newTeam) => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          console.log("transferProject", newTeam);
+        }}
         updateProject={async (params) => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           console.log("updateProject", params);
           return projectStub("foo", "currentTeam");
         }}
-        deleteProject={async () => {
+        updateProjectImage={async (file) => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
-          console.log("deleteProject");
+          console.log("updateProjectImage", file);
         }}
-        project={projectStub("foo", currentTeam.id)}
-        teamSlug={currentTeam.slug}
-        onKeyUpdated={undefined}
-        rotateSecretKey={async () => {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          return {
-            data: {
-              secret: `sk_${new Array(86).fill("x").join("")}`,
-              secretMasked: "sk_123...4567",
-            },
-          };
-        }}
-        showNebulaSettings={false}
       />
     </div>
   );

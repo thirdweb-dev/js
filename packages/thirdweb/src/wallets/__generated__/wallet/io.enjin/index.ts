@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.enjin",
-  name: "Enjin Wallet",
-  homepage: "https://enjin.io/products/wallet",
-  image_id: "add9626b-a5fa-4c12-178c-e5584e6dcd00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/enjin-nft-crypto-wallet/id1349078375",
     android:
       "https://play.google.com/store/apps/details?id=com.enjin.mobile.wallet",
-    mac: "",
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/enjin-nft-crypto-wallet/id1349078375",
+    linux: null,
+    mac: "",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "enjinwallet://",
-    universal: "https://deeplink.wallet.enjin.io/",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://enjin.io/products/wallet",
+  id: "io.enjin",
+  image_id: "add9626b-a5fa-4c12-178c-e5584e6dcd00",
+  mobile: {
+    native: "enjinwallet://",
+    universal: "https://deeplink.wallet.enjin.io/",
+  },
+  name: "Enjin Wallet",
+  rdns: null,
 } as const;

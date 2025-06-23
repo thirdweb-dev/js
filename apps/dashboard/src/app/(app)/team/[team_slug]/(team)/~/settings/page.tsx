@@ -1,10 +1,10 @@
+import { notFound } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
 import { getMemberByAccountId } from "@/api/team-members";
 import { checkDomainVerification } from "@/api/verified-domain";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { notFound } from "next/navigation";
+import { getAuthToken } from "../../../../../../../@/api/auth-token";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
-import { getAuthToken } from "../../../../../api/lib/getAuthToken";
 import { TeamGeneralSettingsPage } from "./general/TeamGeneralSettingsPage";
 
 export default async function Page(props: {
@@ -37,11 +37,11 @@ export default async function Page(props: {
 
   return (
     <TeamGeneralSettingsPage
-      team={team}
-      client={client}
       accountId={account.id}
+      client={client}
       initialVerification={initialVerification}
       isOwnerAccount={isOwnerAccount}
+      team={team}
     />
   );
 }

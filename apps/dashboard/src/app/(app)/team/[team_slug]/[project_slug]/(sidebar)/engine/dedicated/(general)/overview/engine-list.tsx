@@ -1,5 +1,5 @@
 import type { Team } from "@/api/team";
-import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
+import type { EngineInstance } from "@/hooks/useEngine";
 import { EngineFooterCard } from "../_components";
 import { EngineInstancesTable } from "./engine-instances-table";
 
@@ -13,16 +13,16 @@ export const EngineInstancesList = (props: {
   return (
     <div className="flex grow flex-col">
       <EngineInstancesTable
-        team={props.team}
-        projectSlug={props.projectSlug}
-        instances={props.instances}
         engineLinkPrefix={engineLinkPrefix}
+        instances={props.instances}
+        projectSlug={props.projectSlug}
+        team={props.team}
       />
 
       <div className="h-40" />
       <EngineFooterCard
-        teamSlug={props.team.slug}
         projectSlug={props.projectSlug}
+        teamSlug={props.team.slug}
       />
     </div>
   );

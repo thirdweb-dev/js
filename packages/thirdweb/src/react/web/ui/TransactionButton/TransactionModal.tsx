@@ -40,40 +40,40 @@ export function TransactionModal(props: ModalProps) {
   const wallet = useActiveWallet();
 
   useQuery({
-    queryKey: ["transaction-modal-event", props.txId],
+    enabled: !!wallet && !!account,
     queryFn: async () => {
       if (!account || !wallet) {
         throw new Error(); // never happens, because enabled is false
       }
       trackPayEvent({
         client: props.client,
-        walletAddress: account.address,
-        walletType: wallet.id,
-        toChainId: props.tx.chain.id,
-        toToken: props.tx.erc20Value
-          ? (await resolvePromisedValue(props.tx.erc20Value))?.tokenAddress
-          : undefined,
         event:
           props.modalMode === "buy"
             ? "open_pay_transaction_modal"
             : "open_pay_deposit_modal",
+        toChainId: props.tx.chain.id,
+        toToken: props.tx.erc20Value
+          ? (await resolvePromisedValue(props.tx.erc20Value))?.tokenAddress
+          : undefined,
+        walletAddress: account.address,
+        walletType: wallet.id,
       });
 
       return null;
     },
-    enabled: !!wallet && !!account,
+    queryKey: ["transaction-modal-event", props.txId],
   });
 
   return (
     <CustomThemeProvider theme={props.theme}>
       <Modal
         open={true}
-        size="compact"
         setOpen={(_open) => {
           if (!_open) {
             props.onClose();
           }
         }}
+        size="compact"
       >
         <TransactionModalContent {...props} />
       </Modal>
@@ -92,9 +92,9 @@ function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
   if (screen === "execute-tx") {
     return (
       <ExecutingTxScreen
-        tx={props.tx}
         closeModal={props.onClose}
         onTxSent={props.onTxSent}
+        tx={props.tx}
         windowAdapter={webWindowAdapter}
       />
     );
@@ -104,12 +104,12 @@ function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
     return (
       <DepositScreen
         client={props.client}
-        onBack={props.onBack}
-        tx={props.tx}
         connectLocale={localeQuery.data}
+        onBack={props.onBack}
         onDone={() => {
           setScreen("execute-tx");
         }}
+        tx={props.tx}
       />
     );
   }
@@ -117,21 +117,21 @@ function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
   return (
     <BridgeOrchestrator
       client={props.client}
-      uiOptions={{
-        mode: "transaction",
-        transaction: props.tx,
-      }}
       connectLocale={localeQuery.data}
+      connectOptions={undefined}
+      onCancel={props.onClose}
       onComplete={() => {
         setScreen("execute-tx");
       }}
       onError={(_error) => {}}
-      onCancel={props.onClose}
-      connectOptions={undefined}
-      receiverAddress={undefined}
-      purchaseData={undefined}
       paymentLinkId={undefined}
       presetOptions={undefined}
+      purchaseData={undefined}
+      receiverAddress={undefined}
+      uiOptions={{
+        mode: "transaction",
+        transaction: props.tx,
+      }}
     />
   );
 }

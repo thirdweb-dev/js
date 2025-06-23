@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
 import type { UseQueryOptions } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getFunctionId } from "../../../utils/function-id.js";
 import { getWalletInfo } from "../../../wallets/__generated__/getWalletInfo.js";
 import type { WalletId } from "../../../wallets/wallet-types.js";
@@ -14,8 +14,8 @@ export function useWalletName(props: {
 }) {
   const { id } = useWalletContext();
   const nameQuery = useQuery({
-    queryKey: getQueryKeys({ id, formatFn: props.formatFn }),
-    queryFn: async () => fetchWalletName({ id, formatFn: props.formatFn }),
+    queryFn: async () => fetchWalletName({ formatFn: props.formatFn, id }),
+    queryKey: getQueryKeys({ formatFn: props.formatFn, id }),
     ...props.queryOptions,
   });
   return nameQuery;

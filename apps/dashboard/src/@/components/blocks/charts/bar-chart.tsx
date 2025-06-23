@@ -1,7 +1,12 @@
 "use client";
 
+import { format } from "date-fns";
+import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-
+import {
+  EmptyChartState,
+  LoadingChartState,
+} from "@/components/analytics/empty-chart-state";
 import {
   Card,
   CardContent,
@@ -18,12 +23,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { cn } from "@/lib/utils";
-import {
-  EmptyChartState,
-  LoadingChartState,
-} from "components/analytics/empty-chart-state";
-import { format } from "date-fns";
-import { useMemo } from "react";
 
 type ThirdwebBarChartProps<TConfig extends ChartConfig> = {
   // metadata
@@ -71,7 +70,7 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
       {props.customHeader && props.customHeader}
 
       <CardContent className={cn(!props.header && "pt-6")}>
-        <ChartContainer config={props.config} className={props.chartClassName}>
+        <ChartContainer className={props.chartClassName} config={props.config}>
           {props.isPending ? (
             <LoadingChartState />
           ) : props.data.length === 0 ? (
@@ -82,11 +81,11 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
             <BarChart accessibilityLayer data={props.data}>
               <CartesianGrid vertical={false} />
               <XAxis
-                dataKey="time"
-                tickLine={false}
                 axisLine={false}
-                tickMargin={10}
+                dataKey="time"
                 tickFormatter={(value) => format(new Date(value), "MMM d")}
+                tickLine={false}
+                tickMargin={10}
               />
               <ChartTooltip
                 content={
@@ -106,15 +105,15 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
               )}
               {configKeys.map((key) => (
                 <Bar
-                  key={key}
+                  className="stroke-background"
                   dataKey={key}
                   // if stacked then they should all be the same stackId
                   // if grouped then they should all be unique stackId (so the key works great)
-                  stackId={variant === "stacked" ? "a" : key}
                   fill={props.config[key]?.color}
+                  key={key}
                   radius={[4, 4, 4, 4]}
+                  stackId={variant === "stacked" ? "a" : key}
                   strokeWidth={1}
-                  className="stroke-background"
                 />
               ))}
             </BarChart>

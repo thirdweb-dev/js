@@ -1,7 +1,7 @@
-import { getEngineCloudMethodUsage } from "@/api/analytics";
-import { LoadingChartState } from "components/analytics/empty-chart-state";
 import { Suspense } from "react";
-import type { AnalyticsQueryParams } from "types/analytics";
+import { getEngineCloudMethodUsage } from "@/api/analytics";
+import { LoadingChartState } from "@/components/analytics/empty-chart-state";
+import type { AnalyticsQueryParams } from "@/types/analytics";
 import { EngineCloudBarChartCardUI } from "./EngineCloudBarChartCardUI";
 
 export function EngineCloudChartCard(props: AnalyticsQueryParams) {

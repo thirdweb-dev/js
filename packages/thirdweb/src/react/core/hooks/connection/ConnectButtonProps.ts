@@ -77,6 +77,9 @@ export type PayUIOptions = Prettify<
     buyWithCrypto?:
       | false
       | {
+          /**
+           * @deprecated
+           */
           testMode?: boolean;
           prefillSource?: {
             chain: Chain;
@@ -95,6 +98,9 @@ export type PayUIOptions = Prettify<
      */
     buyWithFiat?:
       | {
+          /**
+           * @deprecated
+           */
           testMode?: boolean;
           prefillSource?: {
             currency?: CurrencyMeta["shorthand"];

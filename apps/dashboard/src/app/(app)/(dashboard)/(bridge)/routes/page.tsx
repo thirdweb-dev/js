@@ -1,7 +1,7 @@
-import { getAuthToken } from "@app/api/lib/getAuthToken";
 import { ArrowUpRightIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import { getAuthToken } from "@/api/auth-token";
 import { SearchInput } from "./components/client/search";
 import { QueryType } from "./components/client/type";
 import { RouteListView } from "./components/client/view";
@@ -15,12 +15,12 @@ const description =
   "A list of token routes for swapping, bridging, and on-ramping between EVM chains with thirdweb.";
 
 export const metadata: Metadata = {
-  title,
   description,
   openGraph: {
-    title,
     description,
+    title,
   },
+  title,
 };
 
 export default async function RoutesPage(props: {
@@ -73,10 +73,10 @@ export default async function RoutesPage(props: {
             </p>
           </div>
           <a
-            href="https://portal.thirdweb.com/pay"
-            target="_blank"
-            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 font-medium text-sm text-white transition-all hover:bg-green-600/90 hover:shadow-sm"
+            href="https://portal.thirdweb.com/pay"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             Learn More
             <ArrowUpRightIcon className="size-4" />
@@ -85,9 +85,9 @@ export default async function RoutesPage(props: {
       </div>
       <div className="h-10" />
       <RoutesData
-        searchParams={searchParams}
         activeView={activeView}
         isLoggedIn={!!authToken}
+        searchParams={searchParams}
       />
     </section>
   );

@@ -1,12 +1,16 @@
 "use client";
-import { ProjectAvatar } from "@/components/blocks/Avatars/ProjectAvatar";
+import { format, formatDistance } from "date-fns";
+import { ExternalLinkIcon, XIcon } from "lucide-react";
+import Link from "next/link";
+import type { ThirdwebClient } from "thirdweb";
+import { ProjectAvatar } from "@/components/blocks/avatar/project-avatar";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { SelectWithSearch } from "@/components/blocks/select-with-search";
 import { WalletAddress } from "@/components/blocks/wallet-address";
-import { PaginationButtons } from "@/components/pagination-buttons";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -18,13 +22,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { ChainIconClient } from "@/icons/ChainIcon";
 import { cn } from "@/lib/utils";
-import { ChainIconClient } from "components/icons/ChainIcon";
-import { format, formatDistance } from "date-fns";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { ExternalLinkIcon, XIcon } from "lucide-react";
-import Link from "next/link";
-import type { ThirdwebClient } from "thirdweb";
 
 export type SponsoredTransaction = {
   timestamp: string;
@@ -79,18 +79,18 @@ export function SponsoredTransactionsTableUI(
           <div className="flex gap-2">
             {props.variant === "team" && (
               <ProjectFilter
+                client={props.client}
                 projectId={props.filters.projectId}
+                projects={props.projects}
                 setProjectId={(projectId) =>
                   props.setFilters({ ...props.filters, projectId })
                 }
-                projects={props.projects}
-                client={props.client}
               />
             )}
 
             <ChainFilter
-              client={props.client}
               chainId={props.filters.chainId}
+              client={props.client}
               setChainId={(chainId) =>
                 props.setFilters({ ...props.filters, chainId })
               }
@@ -102,8 +102,8 @@ export function SponsoredTransactionsTableUI(
               <div className="hidden h-4 w-[1px] border bg-border lg:block" />
               <ExportToCSVButton
                 className="bg-background"
-                getData={props.getCSV}
                 fileName="sponsored-transactions"
+                getData={props.getCSV}
               />
             </>
           )}
@@ -134,8 +134,8 @@ export function SponsoredTransactionsTableUI(
                       {/* Tx Hash */}
                       <TableCell>
                         <TransactionHashCell
-                          hash={transaction.transactionHash}
                           chainId={transaction.chainId}
+                          hash={transaction.transactionHash}
                         />
                       </TableCell>
 
@@ -143,11 +143,11 @@ export function SponsoredTransactionsTableUI(
                       {props.variant === "team" && (
                         <TableCell>
                           <ProjectCell
-                            teamSlug={props.teamSlug}
+                            client={props.client}
                             project={props.projects.find(
                               (p) => p.id === transaction.projectId,
                             )}
-                            client={props.client}
+                            teamSlug={props.teamSlug}
                           />
                         </TableCell>
                       )}
@@ -197,7 +197,7 @@ export function SponsoredTransactionsTableUI(
                 })
               : Array.from({ length: props.pageSize }).map((_, index) => (
                   <SkeletonRow
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                    // biome-ignore lint/suspicious/noArrayIndexKey: EXPECTED
                     key={`skeleton-${index}`}
                     variant={props.variant}
                   />
@@ -239,8 +239,8 @@ export function SponsoredTransactionsTableUI(
         <div className="flex justify-end gap-3 rounded-b-lg border-t p-4">
           <PaginationButtons
             activePage={props.pageNumber}
-            totalPages={props.totalPages}
             onPageClick={(page) => props.setPageNumber(page)}
+            totalPages={props.totalPages}
           />
         </div>
       )}
@@ -295,11 +295,12 @@ function TransactionHashCell(props: { hash: string; chainId: string }) {
 
   if (explorerUrl) {
     return (
-      <Button size="sm" variant="ghost" asChild>
+      <Button asChild size="sm" variant="ghost">
         <Link
-          href={`${explorerUrl}/tx/${props.hash}`}
-          target="_blank"
           className="-translate-x-2 gap-2 font-mono"
+          href={`${explorerUrl}/tx/${props.hash}`}
+          rel="noopener noreferrer"
+          target="_blank"
         >
           {txHashToShow}
           <ExternalLinkIcon className="size-3.5 text-muted-foreground" />
@@ -310,11 +311,11 @@ function TransactionHashCell(props: { hash: string; chainId: string }) {
 
   return (
     <CopyTextButton
+      className="-translate-x-2 font-mono"
+      copyIconPosition="right"
       textToCopy={props.hash}
       textToShow={txHashToShow}
       tooltip="Transaction Hash"
-      copyIconPosition="right"
-      className="-translate-x-2 font-mono"
       variant="ghost"
     />
   );
@@ -331,14 +332,15 @@ function ChainCell(props: { chainId: string; client: ThirdwebClient }) {
   return (
     <div className="relative flex w-max items-center gap-2">
       <ChainIconClient
-        src={chain?.icon?.url}
         className="size-6"
         client={props.client}
+        src={chain?.icon?.url}
       />
       <Link
-        target="_blank"
-        href={`/${chain ? chain.slug : props.chainId}`}
         className="before:absolute before:inset-0 hover:underline hover:underline-offset-4"
+        href={`/${chain ? chain.slug : props.chainId}`}
+        rel="noopener noreferrer"
+        target="_blank"
       >
         {chain ? chain.name : `Chain #${props.chainId}`}
       </Link>
@@ -366,13 +368,14 @@ function ProjectCell(props: {
   return (
     <div className="relative flex w-max items-center gap-2">
       <ProjectAvatar
-        src={props.project.image || ""}
         className="size-6 shrink-0"
         client={props.client}
+        src={props.project.image || ""}
       />
       <Link
-        href={`/team/${props.teamSlug}/${props.project.slug}`}
         className="before:absolute before:inset-0 hover:underline hover:underline-offset-4"
+        href={`/team/${props.teamSlug}/${props.project.slug}`}
+        rel="noopener noreferrer"
         target="_blank"
       >
         {props.project.name}
@@ -393,10 +396,10 @@ function ChainFilter(props: {
       {isChainFilterActive && (
         <ToolTipLabel label="Remove chain filter">
           <Button
-            variant="outline"
-            size="icon"
             className="rounded-r-none border-r-0 px-3 text-muted-foreground"
             onClick={() => props.setChainId(undefined)}
+            size="icon"
+            variant="outline"
           >
             <XIcon className="size-4" />
           </Button>
@@ -404,14 +407,14 @@ function ChainFilter(props: {
       )}
 
       <SingleNetworkSelector
-        client={props.client}
-        className={cn(isChainFilterActive && "rounded-l-none")}
-        chainId={props.chainId ? Number(props.chainId) : undefined}
-        onChange={(chainId) => props.setChainId(chainId.toString())}
-        popoverContentClassName="!w-[80vw] md:!w-[350px]"
         align="end"
-        placeholder="All Chains"
+        chainId={props.chainId ? Number(props.chainId) : undefined}
+        className={cn(isChainFilterActive && "rounded-l-none")}
+        client={props.client}
         disableChainId
+        onChange={(chainId) => props.setChainId(chainId.toString())}
+        placeholder="All Chains"
+        popoverContentClassName="!w-[80vw] md:!w-[350px]"
       />
     </div>
   );
@@ -430,10 +433,10 @@ function ProjectFilter(props: {
       {isProjectFilterActive && (
         <ToolTipLabel label="Remove project filter">
           <Button
-            variant="outline"
-            size="icon"
             className="rounded-r-none border-r-0 px-3 text-muted-foreground"
             onClick={() => props.setProjectId(undefined)}
+            size="icon"
+            variant="outline"
           >
             <XIcon className="size-4" />
           </Button>
@@ -441,19 +444,18 @@ function ProjectFilter(props: {
       )}
 
       <SelectWithSearch
-        onValueChange={(value) => props.setProjectId(value)}
-        options={props.projects.map((project) => ({
-          label: project.name,
-          value: project.id,
-        }))}
-        value={props.projectId}
-        placeholder="All Projects"
-        popoverContentClassName="!w-[80vw] md:!w-[350px]"
         align="end"
         className={cn(
           "min-w-[160px]",
           isProjectFilterActive && "rounded-l-none",
         )}
+        onValueChange={(value) => props.setProjectId(value)}
+        options={props.projects.map((project) => ({
+          label: project.name,
+          value: project.id,
+        }))}
+        placeholder="All Projects"
+        popoverContentClassName="!w-[80vw] md:!w-[350px]"
         renderOption={(option) => {
           const project = props.projects.find((p) => p.id === option.value);
           if (!project) {
@@ -462,14 +464,15 @@ function ProjectFilter(props: {
           return (
             <div className="flex items-center gap-2">
               <ProjectAvatar
-                src={project.image || ""}
                 className="size-6 shrink-0"
                 client={props.client}
+                src={project.image || ""}
               />
               <span>{project.name}</span>
             </div>
           );
         }}
+        value={props.projectId}
       />
     </div>
   );
@@ -477,10 +480,10 @@ function ProjectFilter(props: {
 
 // for values >= 0.01, show 2 decimal places
 const normalValueUSDFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
   currency: "USD",
-  notation: "standard",
   maximumFractionDigits: 2,
+  notation: "standard",
+  style: "currency",
 });
 
 function formatTransactionFee(usdValue: number) {

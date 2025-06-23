@@ -1,17 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { FormControl, Input } from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
+import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
 import { FlameIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -23,12 +14,16 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
+import { TransactionButton } from "@/components/tx-button";
+import { Button } from "@/components/ui/button";
 import {
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  Text,
-} from "tw-components";
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface TokenBurnButtonProps {
   contract: ThirdwebContract;
@@ -45,26 +40,25 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
   const address = useActiveAccount()?.address;
 
   const tokenBalanceQuery = useReadContract(ERC20Ext.balanceOf, {
-    contract,
     address: address || "",
+    contract,
     queryOptions: { enabled: !!address },
   });
 
   const hasBalance = tokenBalanceQuery.data && tokenBalanceQuery.data > 0n;
   const [open, setOpen] = useState(false);
   const sendConfirmation = useSendAndConfirmTransaction();
-  const trackEvent = useTrack();
   const form = useForm({ defaultValues: { amount: "0" } });
   const decimalsQuery = useReadContract(ERC20Ext.decimals, { contract });
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet onOpenChange={setOpen} open={open}>
       <SheetTrigger asChild>
         <Button
           variant="primary"
           {...restButtonProps}
-          disabled={!hasBalance}
           className="gap-2"
+          disabled={!hasBalance}
         >
           <FlameIcon className="size-4" /> Burn
         </Button>
@@ -75,11 +69,11 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
         </SheetHeader>
         <form className="mt-10 flex flex-col gap-3">
           <div className="flex w-full flex-col gap-6 md:flex-row">
-            <FormControl isRequired isInvalid={!!form.formState.errors.amount}>
+            <FormControl isInvalid={!!form.formState.errors.amount} isRequired>
               <FormLabel>Amount</FormLabel>
               <Input
-                type="text"
                 pattern={`^\\d+(\\.\\d{1,${decimalsQuery.data || 18}})?$`}
+                type="text"
                 {...form.register("amount")}
               />
               <FormHelperText>How many would you like to burn?</FormHelperText>
@@ -97,25 +91,15 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
         </form>
         <SheetFooter className="mt-10">
           <TransactionButton
-            isLoggedIn={isLoggedIn}
             client={contract.client}
-            txChainID={contract.chain.id}
-            transactionCount={1}
-            form={BURN_FORM_ID}
-            isPending={sendConfirmation.isPending}
-            type="submit"
             disabled={!form.formState.isDirty}
+            form={BURN_FORM_ID}
+            isLoggedIn={isLoggedIn}
+            isPending={sendConfirmation.isPending}
             onClick={form.handleSubmit((data) => {
               if (address) {
-                trackEvent({
-                  category: "token",
-                  action: "burn",
-                  label: "attempt",
-                });
-
                 // TODO: burn should be updated to take amount / amountWei (v6?)
                 const tx = ERC20Ext.burn({
-                  contract,
                   asyncParams: async () => {
                     return {
                       amount: toUnits(
@@ -124,35 +108,28 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
                       ),
                     };
                   },
+                  contract,
                 });
 
                 const promise = sendConfirmation.mutateAsync(tx, {
+                  onError: (error) => {
+                    console.error(error);
+                  },
                   onSuccess: () => {
-                    trackEvent({
-                      category: "token",
-                      action: "burn",
-                      label: "success",
-                    });
                     form.reset({ amount: "0" });
                     setOpen(false);
                   },
-                  onError: (error) => {
-                    trackEvent({
-                      category: "token",
-                      action: "burn",
-                      label: "error",
-                      error,
-                    });
-                    console.error(error);
-                  },
                 });
                 toast.promise(promise, {
+                  error: "Failed to burn tokens",
                   loading: `Burning ${data.amount} token(s)`,
                   success: "Tokens burned successfully",
-                  error: "Failed to burn tokens",
                 });
               }
             })}
+            transactionCount={1}
+            txChainID={contract.chain.id}
+            type="submit"
           >
             Burn Tokens
           </TransactionButton>

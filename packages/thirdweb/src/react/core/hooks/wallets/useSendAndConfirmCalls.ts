@@ -87,8 +87,8 @@ export function useSendAndConfirmCalls(args?: {
 
       return sendAndConfirmCalls({
         ...options,
-        wallet,
         maxBlocksWaitTime: args?.maxBlocksWaitTime,
+        wallet,
       });
     },
     onSettled: async (_result, _error, variables) => {

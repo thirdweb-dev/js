@@ -21,46 +21,46 @@ import type {
 } from "./types.js";
 
 const TRANSACTION_MOCK = {
-  to: "0xd46e8dd67c5d32be8058bb8eb970870f07244567",
   data: "0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675",
-  gas: "0x76c0", // 30400
-  gasPrice: "0x9184e72a000", // 10000000000000
-  value: "0x9184e72a", // 2441406250
-  nonce: "0x117", // 279
+  gas: "0x76c0",
+  gasPrice: "0x9184e72a000", // 30400
+  nonce: "0x117", // 10000000000000
+  to: "0xd46e8dd67c5d32be8058bb8eb970870f07244567", // 2441406250
+  value: "0x9184e72a", // 279
 };
 
 const REQUEST_EVENT_MOCK: WalletConnectSessionRequestEvent = {
   id: 1717020142228697,
-  topic: "session",
   params: {
+    chainId: "eip155:1",
     request: {
       method: "personal_sign",
       params: ["0x00", "0x00"],
     },
-    chainId: "eip155:1",
   },
+  topic: "session",
 };
 
 const walletMock = {
   ...TEST_IN_APP_WALLET_A,
   getAccount: vi.fn().mockReturnValue(TEST_IN_APP_WALLET_A.getAccount()),
-  switchChain: vi.fn(),
   getChain: vi.fn(),
+  switchChain: vi.fn(),
 };
 
 const mocks = vi.hoisted(() => ({
-  sendTransaction: vi.fn().mockResolvedValue({
+  sendRawTransaction: vi.fn().mockResolvedValue({
     transactionHash: "0xabcd",
   }),
-  sendRawTransaction: vi.fn().mockResolvedValue({
+  sendTransaction: vi.fn().mockResolvedValue({
     transactionHash: "0xabcd",
   }),
 }));
 
 const signClientMock = {
+  disconnect: vi.fn(),
   on: vi.fn(),
   respond: vi.fn(),
-  disconnect: vi.fn(),
 } as unknown as WalletConnectClient;
 
 describe("session_request", () => {
@@ -78,10 +78,10 @@ describe("session_request", () => {
   it("should throw if no account is connected", async () => {
     walletMock.getAccount.mockReturnValue(null);
     const promise = fulfillRequest({
-      walletConnectClient: signClientMock,
-      wallet: walletMock,
       event: REQUEST_EVENT_MOCK,
       thirdwebClient: TEST_CLIENT,
+      wallet: walletMock,
+      walletConnectClient: signClientMock,
     });
     await expect(promise).rejects.toThrow(
       "No account connected to provided wallet",
@@ -93,14 +93,13 @@ describe("session_request", () => {
     unsupportedRequest.params.request.method = "eth_unsupported";
 
     await fulfillRequest({
-      walletConnectClient: signClientMock,
-      wallet: walletMock,
       event: unsupportedRequest,
       thirdwebClient: TEST_CLIENT,
+      wallet: walletMock,
+      walletConnectClient: signClientMock,
     });
 
     expect(signClientMock.respond).toHaveBeenCalledWith({
-      topic: REQUEST_EVENT_MOCK.topic,
       response: {
         id: REQUEST_EVENT_MOCK.id,
         jsonrpc: "2.0",
@@ -109,6 +108,7 @@ describe("session_request", () => {
           message: "Unsupported request method: eth_unsupported",
         },
       },
+      topic: REQUEST_EVENT_MOCK.topic,
     });
   });
 
@@ -120,11 +120,11 @@ describe("session_request", () => {
     event.params.request.method = "eth_magic";
 
     const promise = fulfillRequest({
-      walletConnectClient: signClientMock,
-      wallet: walletMock,
       event,
       handlers: customHandlers,
       thirdwebClient: TEST_CLIENT,
+      wallet: walletMock,
+      walletConnectClient: signClientMock,
     });
 
     await expect(promise).resolves.not.toThrow();
@@ -148,19 +148,19 @@ describe("session_request", () => {
 
     it("should sign message", async () => {
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: personalSignRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result:
             "0x7b7806017c0666b88ff1a51a2af716b808c4974bdb31a4fb734fe2d16c121766363847d2556eb466d1cd04b26541aa5a2a1f5be4154cfd9bef8137dfb7b711ff1c",
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -168,14 +168,13 @@ describe("session_request", () => {
       personalSignRequest.params.request.params[1] = TEST_ACCOUNT_B.address;
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: personalSignRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
@@ -184,6 +183,7 @@ describe("session_request", () => {
             message: `Failed to validate account address (${TEST_ACCOUNT_A.address}), differs from ${TEST_ACCOUNT_B.address}`,
           },
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -193,11 +193,11 @@ describe("session_request", () => {
       };
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: personalSignRequest,
         handlers: customHandlers,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(customHandlers.personal_sign).toHaveBeenCalledWith({
@@ -205,12 +205,12 @@ describe("session_request", () => {
         params: personalSignRequest.params.request.params,
       });
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result: "0xRESULT",
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
   });
@@ -228,19 +228,19 @@ describe("session_request", () => {
 
     it("should sign message", async () => {
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: ethSignRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result:
             "0x7b7806017c0666b88ff1a51a2af716b808c4974bdb31a4fb734fe2d16c121766363847d2556eb466d1cd04b26541aa5a2a1f5be4154cfd9bef8137dfb7b711ff1c",
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -251,14 +251,13 @@ describe("session_request", () => {
       ] as WalletConnectSignRequestPrams;
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: ethSignRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
@@ -267,6 +266,7 @@ describe("session_request", () => {
             message: `Failed to validate account address (${TEST_ACCOUNT_A.address}), differs from ${TEST_ACCOUNT_B.address}`,
           },
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -276,11 +276,11 @@ describe("session_request", () => {
       };
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: ethSignRequest,
         handlers: customHandlers,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(customHandlers.eth_sign).toHaveBeenCalledWith({
@@ -288,12 +288,12 @@ describe("session_request", () => {
         params: ethSignRequest.params.request.params,
       });
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result: "0xRESULT",
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
   });
@@ -311,20 +311,20 @@ describe("session_request", () => {
 
     it("should sign typed data", async () => {
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: ethSignTypedDataRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result:
             "0x32f3d5975ba38d6c2fba9b95d5cbed1febaa68003d3d588d51f2de522ad54117760cfc249470a75232552e43991f53953a3d74edf6944553c6bef2469bb9e5921b",
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -335,20 +335,20 @@ describe("session_request", () => {
       ] as WalletConnectSignTypedDataRequestParams;
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: ethSignTypedDataRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result:
             "0x32f3d5975ba38d6c2fba9b95d5cbed1febaa68003d3d588d51f2de522ad54117760cfc249470a75232552e43991f53953a3d74edf6944553c6bef2469bb9e5921b",
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
   });
@@ -366,20 +366,20 @@ describe("session_request", () => {
 
     it("should sign typed data", async () => {
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: ethSignTypedDataRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result:
             "0x32f3d5975ba38d6c2fba9b95d5cbed1febaa68003d3d588d51f2de522ad54117760cfc249470a75232552e43991f53953a3d74edf6944553c6bef2469bb9e5921b",
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -390,20 +390,20 @@ describe("session_request", () => {
       ] as WalletConnectSignTypedDataRequestParams;
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: ethSignTypedDataRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result:
             "0x32f3d5975ba38d6c2fba9b95d5cbed1febaa68003d3d588d51f2de522ad54117760cfc249470a75232552e43991f53953a3d74edf6944553c6bef2469bb9e5921b",
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -414,14 +414,13 @@ describe("session_request", () => {
       ] as WalletConnectSignTypedDataRequestParams;
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: ethSignTypedDataRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
@@ -430,6 +429,7 @@ describe("session_request", () => {
             message: `Failed to validate account address (${TEST_ACCOUNT_A.address}), differs from ${TEST_ACCOUNT_B.address}`,
           },
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -439,11 +439,11 @@ describe("session_request", () => {
       };
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: ethSignTypedDataRequest,
         handlers: customHandlers,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(customHandlers.eth_signTypedData_v4).toHaveBeenCalledWith({
@@ -451,12 +451,12 @@ describe("session_request", () => {
         params: ethSignTypedDataRequest.params.request.params,
       });
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result: "0xRESULT",
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
   });
@@ -473,20 +473,20 @@ describe("session_request", () => {
 
     it("should sign transaction", async () => {
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: signTransactionRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result:
             "0xf8948201178609184e72a0008276c094d46e8dd67c5d32be8058bb8eb970870f07244567849184e72aa9d46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f0724456751ca072ed60498356d3bc60fa9b175e1703e460c2362a8e20b14efdd871a098a96ee6a0548610ee213ea8a6db5e8efd9ece886e97097c106c0a03925a51dd93a7750112",
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -497,14 +497,13 @@ describe("session_request", () => {
       });
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: signTransactionRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
@@ -514,6 +513,7 @@ describe("session_request", () => {
               "The current account does not support signing transactions",
           },
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -527,14 +527,13 @@ describe("session_request", () => {
       ] as WalletConnectTransactionRequestParams;
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: signTransactionRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
@@ -543,6 +542,7 @@ describe("session_request", () => {
             message: `Failed to validate account address (${TEST_ACCOUNT_A.address}), differs from ${TEST_ACCOUNT_B.address}`,
           },
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -552,11 +552,11 @@ describe("session_request", () => {
       };
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: signTransactionRequest,
         handlers: customHandlers,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(customHandlers.eth_signTransaction).toHaveBeenCalledWith({
@@ -564,12 +564,12 @@ describe("session_request", () => {
         params: signTransactionRequest.params.request.params,
       });
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result: "0xRESULT",
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
   });
@@ -589,19 +589,19 @@ describe("session_request", () => {
 
     it("should send transaction", async () => {
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: sendTransactionRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result: "0x1234",
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -609,14 +609,13 @@ describe("session_request", () => {
       sendTransactionRequest.params.chainId = "eip155:?";
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: sendTransactionRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
@@ -626,6 +625,7 @@ describe("session_request", () => {
               "Invalid chainId eip155:?, should have the format 'eip155:1'",
           },
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -640,14 +640,13 @@ describe("session_request", () => {
       ] as WalletConnectTransactionRequestParams;
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: sendTransactionRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
@@ -656,6 +655,7 @@ describe("session_request", () => {
             message: `Failed to validate account address (${TEST_ACCOUNT_A.address}), differs from ${TEST_ACCOUNT_B.address}`,
           },
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -665,11 +665,11 @@ describe("session_request", () => {
       };
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: sendTransactionRequest,
         handlers: customHandlers,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(customHandlers.eth_sendTransaction).toHaveBeenCalledWith({
@@ -678,12 +678,12 @@ describe("session_request", () => {
         params: sendTransactionRequest.params.request.params,
       });
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result: "0xRESULT",
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
   });
@@ -704,19 +704,19 @@ describe("session_request", () => {
 
     it("should send raw transaction", async () => {
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: sendRawTransactionRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result: "0xabcde",
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -724,14 +724,13 @@ describe("session_request", () => {
       TEST_ACCOUNT_A.sendRawTransaction = undefined;
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: sendRawTransactionRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
@@ -741,6 +740,7 @@ describe("session_request", () => {
               "The current account does not support sending raw transactions",
           },
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -748,14 +748,13 @@ describe("session_request", () => {
       sendRawTransactionRequest.params.chainId = "eip155:?";
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: sendRawTransactionRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
@@ -765,6 +764,7 @@ describe("session_request", () => {
               "Invalid chainId eip155:?, should have the format 'eip155:1'",
           },
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
 
@@ -774,11 +774,11 @@ describe("session_request", () => {
       };
 
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: sendRawTransactionRequest,
         handlers: customHandlers,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(customHandlers.eth_sendRawTransaction).toHaveBeenCalledWith({
@@ -787,12 +787,12 @@ describe("session_request", () => {
         params: sendRawTransactionRequest.params.request.params,
       });
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
           result: "0xRESULT",
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
   });
@@ -804,13 +804,13 @@ describe("session_request", () => {
       addEthereumChainRequest.params.request.method = "wallet_addEthereumChain";
       addEthereumChainRequest.params.request.params = [
         {
-          chainId: "0x1",
           blockExplorerUrls: ["https://etherscan.io"],
+          chainId: "0x1",
           chainName: "Ethereum",
           nativeCurrency: {
+            decimals: 18,
             name: "Ether",
             symbol: "ETH",
-            decimals: 18,
           },
           rpcUrls: ["https://rpc.ethereum.org"],
         },
@@ -819,14 +819,13 @@ describe("session_request", () => {
 
     it("is not supported", async () => {
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: addEthereumChainRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
-        topic: REQUEST_EVENT_MOCK.topic,
         response: {
           id: REQUEST_EVENT_MOCK.id,
           jsonrpc: "2.0",
@@ -835,6 +834,7 @@ describe("session_request", () => {
             message: "Unsupported request method: wallet_addEthereumChain",
           },
         },
+        topic: REQUEST_EVENT_MOCK.topic,
       });
     });
   });
@@ -854,10 +854,10 @@ describe("session_request", () => {
 
     it("switches the chain", async () => {
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: switchEthereumChainRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(walletMock.switchChain).toHaveBeenCalledWith(
@@ -870,10 +870,10 @@ describe("session_request", () => {
     it("does not switch the chain if already set", async () => {
       walletMock.getChain.mockReturnValue(defineChain(1));
       await fulfillRequest({
-        walletConnectClient: signClientMock,
-        wallet: walletMock,
         event: switchEthereumChainRequest,
         thirdwebClient: TEST_CLIENT,
+        wallet: walletMock,
+        walletConnectClient: signClientMock,
       });
 
       expect(walletMock.switchChain).not.toHaveBeenCalled();

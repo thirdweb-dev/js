@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.linen",
-  name: "Linen",
-  homepage: "https://linen.app/",
-  image_id: "aff3e4e1-92a9-4066-f48f-3591947cf200",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/app/linen-app-investing-in-defi/id1480509067",
     android: "https://play.google.com/store/apps/details?id=app.linen.wallet",
-    mac: "",
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/app/linen-app-investing-in-defi/id1480509067",
+    linux: null,
+    mac: "",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "linen://",
-    universal: "https://linen.app/",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://linen.app/",
+  id: "app.linen",
+  image_id: "aff3e4e1-92a9-4066-f48f-3591947cf200",
+  mobile: {
+    native: "linen://",
+    universal: "https://linen.app/",
+  },
+  name: "Linen",
+  rdns: null,
 } as const;

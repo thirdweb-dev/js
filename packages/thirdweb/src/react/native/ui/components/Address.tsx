@@ -17,7 +17,6 @@ export const Address = ({ account, theme, addressOrENS }: AddressProps) => {
   const [copySuccess, setCopySuccess] = useState(false);
   return (
     <TouchableOpacity
-      style={styles.addressContainer}
       onPress={() => {
         Clipboard.setString(account.address);
         setCopySuccess(true);
@@ -25,17 +24,18 @@ export const Address = ({ account, theme, addressOrENS }: AddressProps) => {
           setCopySuccess(false);
         }, 2500);
       }}
+      style={styles.addressContainer}
     >
       <ThemedText theme={theme} type="defaultSemiBold">
         {addressOrENS}
       </ThemedText>
       <RNImage
-        theme={theme}
-        data={copySuccess ? CHECK : COPY_ICON}
-        size={15}
         color={
           copySuccess ? theme.colors.success : theme.colors.secondaryIconColor
         }
+        data={copySuccess ? CHECK : COPY_ICON}
+        size={15}
+        theme={theme}
       />
     </TouchableOpacity>
   );
@@ -43,8 +43,8 @@ export const Address = ({ account, theme, addressOrENS }: AddressProps) => {
 
 const styles = StyleSheet.create({
   addressContainer: {
+    alignItems: "center",
     flexDirection: "row",
     gap: spacing.sm,
-    alignItems: "center",
   },
 });

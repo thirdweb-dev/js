@@ -107,13 +107,13 @@ async function buildStylus(spinner: Ora, secretKey?: string) {
       selectedAbiContent = parts[0];
     } else {
       const response = await prompts({
-        type: "select",
-        name: "contract",
-        message: "Select entrypoint:",
         choices: contractNames.map((name, idx) => ({
           title: name,
           value: idx,
         })),
+        message: "Select entrypoint:",
+        name: "contract",
+        type: "select",
       });
 
       const selectedIndex = response.contract;
@@ -187,20 +187,20 @@ async function buildStylus(spinner: Ora, secretKey?: string) {
       client,
       files: [
         {
-          name: selectedContractName,
-          metadataUri,
-          bytecodeUri,
           analytics: {
+            cli_version: "",
             command: "publish-stylus",
             contract_name: selectedContractName,
-            cli_version: "",
             project_type: "stylus",
           },
+          bytecodeUri,
           compilers: {
             stylus: [
-              { compilerVersion: "", evmVersion: "", metadataUri, bytecodeUri },
+              { bytecodeUri, compilerVersion: "", evmVersion: "", metadataUri },
             ],
           },
+          metadataUri,
+          name: selectedContractName,
         },
       ],
     });

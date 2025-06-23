@@ -1,63 +1,113 @@
 const legacyDashboardToTeamRedirects = [
   {
-    source: "/dashboard",
     destination: "/team",
     permanent: false,
+    source: "/dashboard",
   },
   {
-    source: "/dashboard/contracts/:path*",
     destination: "/team/~/~/contracts",
     permanent: false,
+    source: "/dashboard/contracts/:path*",
   },
   {
-    source: "/dashboard/connect/ecosystem/:path*",
     destination: "/team/~/~/ecosystem/:path*",
     permanent: false,
+    source: "/dashboard/connect/ecosystem/:path*",
   },
   {
-    source: "/dashboard/engine/:path*",
     destination: "/team/~/~/engine/:path*",
     permanent: false,
+    source: "/dashboard/engine/:path*",
   },
   {
-    source: "/dashboard/settings/api-keys",
     destination: "/team",
     permanent: false,
+    source: "/dashboard/settings/api-keys",
   },
   {
-    source: "/dashboard/settings/devices",
     destination: "/account/devices",
     permanent: false,
+    source: "/dashboard/settings/devices",
   },
   {
-    source: "/dashboard/settings/billing",
     destination: "/team/~/~/settings/billing",
     permanent: false,
+    source: "/dashboard/settings/billing",
   },
   {
-    source: "/dashboard/settings/gas-credits",
     destination: "/team/~/~/settings/credits",
     permanent: false,
+    source: "/dashboard/settings/gas-credits",
   },
   {
-    source: "/dashboard/settings/usage",
     destination: "/team/~/~/usage",
     permanent: false,
+    source: "/dashboard/settings/usage",
   },
   {
-    source: "/dashboard/settings/storage",
     destination: "/team/~/~/usage/storage",
     permanent: false,
+    source: "/dashboard/settings/storage",
   },
   {
-    source: "/dashboard/settings/notifications",
     destination: "/team/~/~/settings/notifications",
     permanent: false,
+    source: "/dashboard/settings/notifications",
   },
   // rest of the /dashboard/* routes
   {
-    source: "/dashboard/:path*",
     destination: "/team",
+    permanent: false,
+    source: "/dashboard/:path*",
+  },
+];
+
+const projectRoute = "/team/:team_slug/:project_slug";
+
+const projectPageRedirects = [
+  {
+    destination: `${projectRoute}/universal-bridge/:path*`,
+    permanent: false,
+    source: `${projectRoute}/connect/pay/:path*`,
+  },
+  {
+    destination: `${projectRoute}/universal-bridge/:path*`,
+    permanent: false,
+    source: `${projectRoute}/connect/universal-bridge/:path*`,
+  },
+  {
+    destination: `${projectRoute}/account-abstraction/:path*`,
+    permanent: false,
+    source: `${projectRoute}/connect/account-abstraction/:path*`,
+  },
+  {
+    destination: `${projectRoute}/wallets/:path*`,
+    permanent: false,
+    source: `${projectRoute}/connect/in-app-wallets/:path*`,
+  },
+  {
+    destination: `${projectRoute}/vault/:path*`,
+    permanent: false,
+    source: `${projectRoute}/engine/cloud/vault/:path*`,
+  },
+  {
+    destination: `${projectRoute}/transactions/:path*`,
+    permanent: false,
+    source: `${projectRoute}/engine/cloud/:path*`,
+  },
+  {
+    destination: `${projectRoute}/tokens/:path*`,
+    permanent: false,
+    source: `${projectRoute}/assets/:path*`,
+  },
+  {
+    destination: projectRoute,
+    permanent: false,
+    source: `${projectRoute}/nebula/:path*`,
+  },
+  {
+    source: `${projectRoute}/connect/analytics`,
+    destination: `${projectRoute}`,
     permanent: false,
   },
 ];
@@ -66,316 +116,316 @@ const legacyDashboardToTeamRedirects = [
 async function redirects() {
   return [
     {
-      source: "/portal/:match*",
       destination: "https://portal.thirdweb.com/:match*",
       permanent: true,
+      source: "/portal/:match*",
     },
     {
-      source: "/solutions/appchain-api",
       destination: "/solutions/chains",
       permanent: true,
+      source: "/solutions/appchain-api",
     },
     {
-      source: "/contracts/release",
       destination: "/contracts/publish",
       permanent: false,
+      source: "/contracts/release",
     },
     {
-      source: "/contracts/release/:path*",
       destination: "/contracts/publish/:path*",
       permanent: false,
+      source: "/contracts/release/:path*",
     },
     {
-      source: "/release",
       destination: "/publish",
       permanent: false,
+      source: "/release",
     },
     {
-      source: "/release/:path*",
       destination: "/publish/:path*",
       permanent: false,
+      source: "/release/:path*",
     },
     {
-      source: "/authentication",
       destination: "/auth",
       permanent: false,
+      source: "/authentication",
     },
     {
-      source: "/extensions",
       destination: "/build",
       permanent: false,
+      source: "/extensions",
     },
     {
-      source: "/contractkit",
       destination: "/build",
       permanent: true,
+      source: "/contractkit",
     },
     //  old (deprecated) routes
     {
-      source:
-        "/:network/(edition|nft-collection|token|nft-drop|signature-drop|edition-drop|token-drop|vote)/:address",
       destination: "/:network/:address",
       permanent: false,
+      source:
+        "/:network/(edition|nft-collection|token|nft-drop|signature-drop|edition-drop|token-drop|vote)/:address",
     },
     // prebuilt contract deploys
     {
-      source: "/contracts/new/:slug*",
       destination: "/explore",
       permanent: false,
+      source: "/contracts/new/:slug*",
     },
     // deployer to non-deployer url
     // handled directly in SSR as well
     {
-      source: "/deployer.thirdweb.eth",
       destination: "/thirdweb.eth",
       permanent: true,
+      source: "/deployer.thirdweb.eth",
     },
     {
-      source: "/deployer.thirdweb.eth/:path*",
       destination: "/thirdweb.eth/:path*",
       permanent: true,
+      source: "/deployer.thirdweb.eth/:path*",
     },
     {
-      source: "/chains",
       destination: "/chainlist",
       permanent: true,
+      source: "/chains",
     },
     // polygon zkevm beta to non-beta
     {
-      source: "/polygon-zkevm-beta",
       destination: "/polygon-zkevm",
       permanent: false,
+      source: "/polygon-zkevm-beta",
     },
     // backwards compat: page moved to pages/settings/devices
 
     {
-      source: "/template/nft-drop",
       destination: "/template/erc721",
       permanent: false,
+      source: "/template/nft-drop",
     },
     {
+      destination: "/team",
+      permanent: false,
       source: "/create-api-key",
-      destination: "/team",
-      permanent: false,
     },
     {
+      destination: "/team",
+      permanent: false,
       source: "/dashboard/settings",
-      destination: "/team",
-      permanent: false,
     },
     {
-      source: "/dashboard/connect/playground",
       destination: "https://playground.thirdweb.com/connect/sign-in/button",
       permanent: false,
+      source: "/dashboard/connect/playground",
     },
     {
-      source: "/dashboard/infrastructure/storage",
       destination: "/dashboard/settings/storage",
       permanent: false,
+      source: "/dashboard/infrastructure/storage",
     },
     {
-      source: "/dashboard/infrastructure/rpc-edge",
       destination: "/chainlist",
       permanent: false,
+      source: "/dashboard/infrastructure/rpc-edge",
     },
     {
-      source: "/solutions/commerce",
       destination: "/solutions/loyalty",
       permanent: false,
+      source: "/solutions/commerce",
     },
     {
-      source: "/hackathon/base-consumer-crypto",
       destination: "/hackathon/consumer-crypto",
       permanent: false,
+      source: "/hackathon/base-consumer-crypto",
     },
     {
-      source: "/bear-market-airdrop",
       destination: "/",
       permanent: false,
+      source: "/bear-market-airdrop",
     },
     {
-      source: "/drops/optimism",
       destination: "/optimism",
       permanent: false,
+      source: "/drops/optimism",
     },
     // Redirecting as ambassadors lives in community now
     {
-      source: "/ambassadors",
       destination: "/community/ambassadors",
       permanent: false,
+      source: "/ambassadors",
     },
     {
-      source: "/embedded-wallets",
       destination: "/in-app-wallets",
       permanent: false,
+      source: "/embedded-wallets",
     },
     // temporarily redirect cli login to support page
     {
-      source: "/cli/login",
       destination:
-        "https://support.thirdweb.com/troubleshooting-errors/7Y1BqKNvtLdBv5fZkRZZB3/issue-linking-device-on-the-authorization-page-via-thirdweb-cli/cn9LRA3ax7XCP6uxwRYdvx",
+        "https://portal.thirdweb.com/knowledge-base/onchain-common-errors/thirdweb-cli/device-link-error",
       permanent: false,
+      source: "/cli/login",
     },
 
     // temporary redirect gas -> explore page
     {
-      source: "/gas",
       destination: "/explore",
       permanent: false,
+      source: "/gas",
     },
     {
+      destination: "/contracts/deployment-tool",
+      permanent: false,
       source: "/deploy",
-      destination: "/contracts/deployment-tool",
-      permanent: false,
     },
     {
+      destination: "/contracts/deployment-tool",
+      permanent: false,
       source: "/publish",
-      destination: "/contracts/deployment-tool",
-      permanent: false,
     },
     {
-      source: "/smart-contracts",
       destination: "/contracts/explore",
       permanent: false,
+      source: "/smart-contracts",
     },
     {
-      source: "/build",
-      destination: "/contracts/modular-contracts",
+      destination: "/sdk",
       permanent: false,
-    },
-    {
       source: "/ui-components",
-      destination: "/sdk",
-      permanent: false,
     },
     {
+      destination: "/sdk",
+      permanent: false,
       source: "/interact",
-      destination: "/sdk",
-      permanent: false,
     },
     {
-      source: "/sponsored-transactions",
       destination: "/account-abstraction",
       permanent: false,
+      source: "/sponsored-transactions",
     },
     // redirect /solutions/chains to /solutions/ecosystem
     {
-      source: "/solutions/chains",
       destination: "/solutions/ecosystem",
       permanent: false,
+      source: "/solutions/chains",
     },
     // redirect /rpc to portal
     {
-      source: "/rpc-edge",
       destination:
         "https://portal.thirdweb.com/infrastructure/rpc-edge/overview",
       permanent: false,
+      source: "/rpc-edge",
     },
     // redirect /sdk to portal
     {
-      source: "/sdk",
       destination: "https://portal.thirdweb.com/connect/blockchain-api",
       permanent: false,
+      source: "/sdk",
     },
     // redirect `/events` to homepage
     {
-      source: "/events",
       destination: "/",
       permanent: false,
+      source: "/events",
     },
     // redirect /community to /community/ambassadors
     {
-      source: "/community",
       destination: "/community/ambassadors",
       permanent: false,
+      source: "/community",
     },
     // redirect `/tos` to `/terms`
     {
-      source: "/tos",
       destination: "/terms",
       permanent: false,
+      source: "/tos",
     },
     // redirect `/privacy` to `/privacy-policy`
     {
-      source: "/privacy",
       destination: "/privacy-policy",
       permanent: false,
+      source: "/privacy",
     },
     // redirect `/mission` to `/home`
     {
-      source: "/mission",
       destination: "/home",
       permanent: false,
+      source: "/mission",
     },
     // redirect "/open-source" to "/bounties"
     {
-      source: "/open-source",
       destination: "/bounties",
       permanent: false,
+      source: "/open-source",
     },
     // redirect /template/<slug> to /templates/<slug>
     {
-      source: "/template/:slug",
       destination: "/templates/:slug",
       permanent: false,
+      source: "/template/:slug",
     },
-    // redirect /account-abstraction to /connect/account-abstraction
+    // redirect /connect/pay to /universal-bridge
     {
-      source: "/account-abstraction",
-      destination: "/connect/account-abstraction",
+      destination: "/universal-bridge",
       permanent: false,
-    },
-    // redirect /connect/pay to /connect/universal-bridge
-    {
       source: "/connect/pay",
-      destination: "/connect/universal-bridge",
-      permanent: false,
-    },
-    // redirect /auth to /connect/auth
-    {
-      source: "/auth",
-      destination: "/connect/auth",
-      permanent: false,
-    },
-    // redirect /in-app-wallets to /connect/in-app-wallets
-    {
-      source: "/in-app-wallets",
-      destination: "/connect/in-app-wallets",
-      permanent: false,
     },
     // PREVIOUS CAMPAIGNS
     {
-      source: "/unlimited-wallets",
       destination: "/",
       permanent: false,
+      source: "/unlimited-wallets",
     },
-    // pay > universal-bridge redirect
-    {
-      source: "/team/:team_slug/:project_slug/connect/pay/:path*",
-      destination:
-        "/team/:team_slug/:project_slug/connect/universal-bridge/:path*",
-      permanent: false,
-    },
-
     // all /learn/tutorials (and sub-routes) -> /learn/guides
     {
-      source: "/learn/tutorials/:path*",
       destination: "/learn/guides/:path*",
       permanent: false,
+      source: "/learn/tutorials/:path*",
     },
     {
-      source: "/learn/tutorials",
       destination: "/learn/guides",
       permanent: false,
+      source: "/learn/tutorials",
     },
     // redirect to /grant/superchain to /superchain
     {
-      source: "/grant/superchain",
       destination: "/superchain",
       permanent: false,
+      source: "/grant/superchain",
     },
-
+    // connect -> build redirects
+    {
+      destination: "/wallets",
+      permanent: false,
+      source: "/connect",
+    },
+    {
+      destination: "/account-abstraction",
+      permanent: false,
+      source: "/connect/account-abstraction",
+    },
+    {
+      destination: "/universal-bridge",
+      permanent: false,
+      source: "/connect/universal-bridge",
+    },
+    {
+      destination: "/auth",
+      permanent: false,
+      source: "/connect/auth",
+    },
+    {
+      destination: "/in-app-wallets",
+      permanent: false,
+      source: "/connect/in-app-wallets",
+    },
+    {
+      destination: "/transactions",
+      permanent: false,
+      source: "/engine",
+    },
     ...legacyDashboardToTeamRedirects,
+    ...projectPageRedirects,
   ];
 }
 

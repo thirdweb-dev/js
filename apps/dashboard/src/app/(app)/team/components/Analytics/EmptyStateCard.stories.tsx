@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { BadgeContainer } from "stories/utils";
+import { BadgeContainer } from "@/storybook/utils";
 import { EmptyStateCard } from "./EmptyStateCard";
 
 const meta = {
-  title: "Analytics/EmptyStateCard",
   component: Component,
+  title: "Analytics/EmptyStateCard",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -27,8 +27,8 @@ function Component() {
 
       <BadgeContainer label="With Link">
         <EmptyStateCard
-          metric="revenue"
           link="https://docs.example.com/analytics"
+          metric="revenue"
         />
       </BadgeContainer>
     </div>

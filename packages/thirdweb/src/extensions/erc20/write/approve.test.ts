@@ -8,13 +8,13 @@ it.runIf(process.env.TW_SECRET_KEY)(
   "estimates erc20 approval gas correctly",
   async () => {
     const transaction = approve({
-      contract: USDT_CONTRACT,
       amount: 100,
+      contract: USDT_CONTRACT,
       spender: VITALIK_WALLET,
     });
     const result = await estimateGas({
-      transaction,
       from: VITALIK_WALLET,
+      transaction,
     });
     expect(result).toMatchInlineSnapshot("48549n");
   },

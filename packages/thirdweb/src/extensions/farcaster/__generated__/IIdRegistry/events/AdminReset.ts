@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "AdminReset" event.
@@ -34,7 +34,7 @@ export type AdminResetEventFilters = Partial<{
  */
 export function adminResetEvent(filters: AdminResetEventFilters = {}) {
   return prepareEvent({
-    signature: "event AdminReset(uint256 indexed fid)",
     filters,
+    signature: "event AdminReset(uint256 indexed fid)",
   });
 }

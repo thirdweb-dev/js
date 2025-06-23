@@ -1,6 +1,8 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -19,6 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Select,
   SelectContent,
@@ -30,10 +33,7 @@ import {
 import {
   type EngineAlertRule,
   EngineNotificationChannelTypeConfig,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+} from "@/hooks/useEngine";
 
 const alertFormSchema = z.object({
   subscriptionRoutes: z.array(z.string()),
@@ -60,11 +60,11 @@ export function EngineAlertDialogForm(props: {
   };
 }) {
   const form = useForm<z.infer<typeof alertFormSchema>>({
-    resolver: zodResolver(alertFormSchema),
     defaultValues: {
       subscriptionRoutes: ["alert.*"],
       type: "slack",
     },
+    resolver: zodResolver(alertFormSchema),
     values: props.values ?? undefined,
   });
 
@@ -74,12 +74,12 @@ export function EngineAlertDialogForm(props: {
 
   const alertRuleOptions: EngineAlertRule[] = [
     {
+      createdAt: new Date(),
+      description: "Get notified of all alerts.",
       id: "_all_alerts",
+      pausedAt: null,
       routingKey: "alert.*",
       title: "All alerts",
-      description: "Get notified of all alerts.",
-      createdAt: new Date(),
-      pausedAt: null,
     },
     ...props.alertRules,
   ];
@@ -90,7 +90,7 @@ export function EngineAlertDialogForm(props: {
   );
 
   return (
-    <Dialog open={props.open} onOpenChange={props.onOpenChange}>
+    <Dialog onOpenChange={props.onOpenChange} open={props.open}>
       <DialogContent className="p-0">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -207,17 +207,17 @@ export function EngineAlertDialogForm(props: {
 
             <DialogFooter className="mt-4 gap-4 border-border border-t bg-card p-6 lg:gap-2 ">
               <Button
-                variant="outline"
                 onClick={() => {
                   props.onOpenChange(false);
                 }}
+                variant="outline"
               >
                 Cancel
               </Button>
               <Button
-                type="submit"
                 className="min-w-28 gap-2"
                 disabled={props.submitButton.isLoading}
+                type="submit"
               >
                 {props.submitButton.isLoading && <Spinner className="size-4" />}
                 {props.submitButton.label}

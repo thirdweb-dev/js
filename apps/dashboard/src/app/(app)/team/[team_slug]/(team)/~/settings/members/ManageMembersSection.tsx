@@ -1,9 +1,14 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
+import Fuse from "fuse.js";
+import { EllipsisIcon } from "lucide-react";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import type { Team } from "@/api/team";
 import type { TeamAccountRole, TeamMember } from "@/api/team-members";
-import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,12 +23,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useMutation } from "@tanstack/react-query";
-import Fuse from "fuse.js";
-import { EllipsisIcon } from "lucide-react";
-import { useMemo, useState } from "react";
-import { toast } from "sonner";
-import type { ThirdwebClient } from "thirdweb";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { FiltersSection, type MemberSortId } from "./_common";
 
 type RoleFilterValue = "ALL ROLES" | TeamAccountRole;
@@ -110,12 +110,12 @@ export function ManageMembersSection(props: {
         // don't use membersToShow here
         disabled={props.members.length === 0}
         role={role}
+        searchPlaceholder="Search Team Members"
+        searchTerm={searchTerm}
         setRole={setRole}
+        setSearchTerm={setSearchTerm}
         setSortBy={setSortBy}
         sortBy={sortBy}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        searchPlaceholder="Search Team Members"
       />
 
       <div className="h-3" />
@@ -130,20 +130,20 @@ export function ManageMembersSection(props: {
             {membersToShow.map((member) => {
               return (
                 <li
-                  key={member.accountId}
                   className="border-border border-b last:border-b-0"
+                  key={member.accountId}
                 >
                   <MemberRow
-                    member={member}
-                    userHasEditPermission={props.userHasEditPermission}
                     client={props.client}
                     deleteMember={props.deleteMember}
+                    member={member}
                     onMemberDeleted={() => {
                       setDeletedMembersIds([
                         ...deletedMembersIds,
                         member.accountId,
                       ]);
                     }}
+                    userHasEditPermission={props.userHasEditPermission}
                   />
                 </li>
               );
@@ -174,9 +174,9 @@ function MemberRow(props: {
       <div className="flex items-center gap-3 lg:gap-4">
         <GradientAvatar
           className="size-6 border lg:size-9"
-          src={props.member.account.image || ""}
-          id={props.member.account.creatorWalletAddress}
           client={props.client}
+          id={props.member.account.creatorWalletAddress}
+          src={props.member.account.image || ""}
         />
 
         <div className="flex flex-col gap-0.5">
@@ -199,10 +199,10 @@ function MemberRow(props: {
 
         {props.userHasEditPermission && (
           <ManageMemberButton
-            member={props.member}
-            userHasEditPermission={props.userHasEditPermission}
             deleteMember={props.deleteMember}
+            member={props.member}
             onMemberDeleted={props.onMemberDeleted}
+            userHasEditPermission={props.userHasEditPermission}
           />
         )}
       </div>
@@ -227,10 +227,10 @@ function ManageMemberButton(props: {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            size="icon"
-            variant="ghost"
             className="!h-auto !w-auto p-1.5"
             disabled={!props.userHasEditPermission}
+            size="icon"
+            variant="ghost"
           >
             <EllipsisIcon className="size-4 text-muted-foreground" />
           </Button>
@@ -245,7 +245,7 @@ function ManageMemberButton(props: {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+      <Dialog onOpenChange={setShowDeleteDialog} open={showDeleteDialog}>
         <DialogContent className="overflow-hidden p-0">
           <DialogHeader className="p-6">
             <DialogTitle className="text-xl">Remove Member</DialogTitle>
@@ -265,26 +265,26 @@ function ManageMemberButton(props: {
           </DialogHeader>
           <div className="flex justify-end gap-3 border-t bg-card p-6">
             <Button
-              variant="outline"
               onClick={() => setShowDeleteDialog(false)}
+              variant="outline"
             >
               Cancel
             </Button>
             <Button
-              type="button"
               className="gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90"
               disabled={deleteMutation.isPending}
               onClick={() => {
                 const promise = deleteMutation.mutateAsync();
                 toast.promise(promise, {
-                  success: "Member deleted successfully",
                   error: "Failed to delete member",
+                  success: "Member deleted successfully",
                 });
                 promise.then(() => {
                   setShowDeleteDialog(false);
                   props.onMemberDeleted();
                 });
               }}
+              type="button"
             >
               {deleteMutation.isPending && <Spinner className="size-4" />}
               Remove Member

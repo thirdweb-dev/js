@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "TransferSingle" event.
@@ -46,8 +46,8 @@ export type TransferSingleEventFilters = Partial<{
  */
 export function transferSingleEvent(filters: TransferSingleEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event TransferSingle(address indexed _operator, address indexed _from, address indexed _to, uint256 tokenId, uint256 _value)",
-    filters,
   });
 }

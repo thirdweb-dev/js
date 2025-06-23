@@ -16,8 +16,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenName component", () => {
   it("fetchTokenName should respect the nameResolver being a string", async () => {
     const res = await fetchTokenName({
       address: "thing",
-      client,
       chain: ANVIL_CHAIN,
+      client,
       nameResolver: "tw",
     });
     expect(res).toBe("tw");
@@ -26,8 +26,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenName component", () => {
   it("fetchTokenName should respect the nameResolver being a non-async function", async () => {
     const res = await fetchTokenName({
       address: "thing",
-      client,
       chain: ANVIL_CHAIN,
+      client,
       nameResolver: () => "tw",
     });
 
@@ -37,8 +37,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenName component", () => {
   it("fetchTokenName should respect the nameResolver being an async function", async () => {
     const res = await fetchTokenName({
       address: "thing",
-      client,
       chain: ANVIL_CHAIN,
+      client,
       nameResolver: async () => {
         await new Promise((resolve) => setTimeout(resolve, 2000));
         return "tw";
@@ -51,8 +51,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenName component", () => {
   it("fetchTokenName should work for contract with `name` function", async () => {
     const res = await fetchTokenName({
       address: USDT_CONTRACT.address,
-      client,
       chain: USDT_CONTRACT.chain,
+      client,
     });
 
     expect(res).toBe("Tether USD");
@@ -61,8 +61,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenName component", () => {
   it("fetchTokenName should work for native token", async () => {
     const res = await fetchTokenName({
       address: NATIVE_TOKEN_ADDRESS,
-      client,
       chain: ethereum,
+      client,
     });
 
     expect(res).toBe("Ether");
@@ -76,8 +76,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenName component", () => {
     await expect(
       fetchTokenName({
         address: UNISWAPV3_FACTORY_CONTRACT.address,
-        client,
         chain: UNISWAPV3_FACTORY_CONTRACT.chain,
+        client,
       }),
     ).rejects.toThrowError(
       "Failed to resolve name from both name() and contract metadata",
@@ -85,7 +85,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenName component", () => {
   });
 
   it("getQueryKeys should work without resolver", () => {
-    expect(getQueryKeys({ chainId: 1, address: "0x" })).toStrictEqual([
+    expect(getQueryKeys({ address: "0x", chainId: 1 })).toStrictEqual([
       "_internal_token_name_",
       1,
       "0x",
@@ -97,7 +97,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenName component", () => {
 
   it("getQueryKeys should work with resolver being a string", () => {
     expect(
-      getQueryKeys({ chainId: 1, address: "0x", nameResolver: "tw" }),
+      getQueryKeys({ address: "0x", chainId: 1, nameResolver: "tw" }),
     ).toStrictEqual([
       "_internal_token_name_",
       1,
@@ -112,7 +112,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenName component", () => {
     const fn = () => "tw";
     const fnId = getFunctionId(fn);
     expect(
-      getQueryKeys({ chainId: 1, address: "0x", nameResolver: fn }),
+      getQueryKeys({ address: "0x", chainId: 1, nameResolver: fn }),
     ).toStrictEqual([
       "_internal_token_name_",
       1,
@@ -131,8 +131,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenName component", () => {
     const fnId = getFunctionId(fn);
     expect(
       getQueryKeys({
-        chainId: 1,
         address: "0x",
+        chainId: 1,
         nameResolver: fn,
       }),
     ).toStrictEqual([

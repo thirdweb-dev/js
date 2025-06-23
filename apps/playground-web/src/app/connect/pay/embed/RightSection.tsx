@@ -1,17 +1,15 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { getContract, toUnits } from "thirdweb";
+import { getContract } from "thirdweb";
 import { base } from "thirdweb/chains";
-import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc1155";
 import {
   BuyWidget,
   CheckoutWidget,
-  TransactionWidget,
   darkTheme,
   lightTheme,
+  TransactionWidget,
   useActiveAccount,
 } from "thirdweb/react";
 import { Button } from "../../../../components/ui/button";
@@ -43,18 +41,6 @@ export function RightSection(props: {
   }
 
   const account = useActiveAccount();
-  const { data: tokenData } = useQuery({
-    queryKey: ["token", props.options.payOptions.buyTokenAddress],
-    queryFn: () =>
-      getCurrencyMetadata({
-        contract: getContract({
-          address: props.options.payOptions.buyTokenAddress,
-          chain: props.options.payOptions.buyTokenChain,
-          client: THIRDWEB_CLIENT,
-        }),
-      }),
-    enabled: !!props.options.payOptions.buyTokenAddress,
-  });
 
   const themeObj =
     props.options.theme.type === "dark"
@@ -69,15 +55,14 @@ export function RightSection(props: {
   if (props.options.payOptions.widget === "buy") {
     embed = (
       <BuyWidget
+        amount={props.options.payOptions.buyTokenAmount}
+        chain={props.options.payOptions.buyTokenChain}
         client={THIRDWEB_CLIENT}
+        description={props.options.payOptions.description}
+        image={props.options.payOptions.image}
         theme={themeObj}
         title={props.options.payOptions.title}
         tokenAddress={props.options.payOptions.buyTokenAddress}
-        chain={props.options.payOptions.buyTokenChain}
-        amount={toUnits(
-          props.options.payOptions.buyTokenAmount,
-          tokenData?.decimals || 18,
-        )}
       />
     );
   }
@@ -85,23 +70,21 @@ export function RightSection(props: {
   if (props.options.payOptions.widget === "checkout") {
     embed = (
       <CheckoutWidget
-        client={THIRDWEB_CLIENT}
-        theme={themeObj}
-        name={props.options.payOptions.title}
-        tokenAddress={props.options.payOptions.buyTokenAddress}
+        amount={props.options.payOptions.buyTokenAmount}
         chain={props.options.payOptions.buyTokenChain}
-        amount={toUnits(
-          props.options.payOptions.buyTokenAmount,
-          tokenData?.decimals || 18,
-        )}
-        seller={props.options.payOptions.sellerAddress}
+        client={THIRDWEB_CLIENT}
+        description={
+          props.options.payOptions.description || "Your Product Description"
+        }
+        image={
+          props.options.payOptions.image ||
+          getDefaultImage(props.options.theme.type)
+        }
+        name={props.options.payOptions.title || "Your Product Name"}
         presetOptions={[1, 2, 3]}
-        purchaseData={{
-          name: "Black Hoodie",
-          description: "Size L | Ships worldwide.",
-          image:
-            "https://placehold.co/600x400/1d1d23/7c7a85?text=Your%20Product%20Here&font=roboto",
-        }}
+        seller={props.options.payOptions.sellerAddress}
+        theme={themeObj}
+        tokenAddress={props.options.payOptions.buyTokenAddress}
       />
     );
   }
@@ -110,16 +93,16 @@ export function RightSection(props: {
     embed = (
       <TransactionWidget
         client={THIRDWEB_CLIENT}
+        description={props.options.payOptions.description}
+        image={props.options.payOptions.image}
         theme={themeObj}
+        title={props.options.payOptions.title}
         transaction={claimTo({
           contract: nftContract,
           quantity: 1n,
-          tokenId: 2n,
           to: account?.address || "",
+          tokenId: 2n,
         })}
-        title={props.options.payOptions.title}
-        description={props.options.payOptions.description}
-        image={props.options.payOptions.image}
       />
     );
   }
@@ -129,13 +112,13 @@ export function RightSection(props: {
       <TabButtons
         tabs={[
           {
-            name: "UI",
             isActive: previewTab === "ui",
+            name: "UI",
             onClick: () => setPreviewTab("ui"),
           },
           {
-            name: "Code",
             isActive: previewTab === "code",
+            name: "Code",
             onClick: () => setPreviewTab("code"),
           },
         ]}
@@ -184,15 +167,15 @@ function TabButtons(props: {
       <div className="flex justify-start gap-1 rounded-lg border bg-card p-2 shadow-md md:inline-flex">
         {props.tabs.map((tab) => (
           <Button
-            key={tab.name}
-            onClick={tab.onClick}
-            variant="ghost"
             className={cn(
               "gap-2 px-4 text-base",
               tab.isActive
                 ? "bg-accent text-foreground"
                 : "bg-transparent text-muted-foreground",
             )}
+            key={tab.name}
+            onClick={tab.onClick}
+            variant="ghost"
           >
             {tab.name}
           </Button>
@@ -200,4 +183,10 @@ function TabButtons(props: {
       </div>
     </div>
   );
+}
+
+function getDefaultImage(theme: "dark" | "light") {
+  return theme === "dark"
+    ? "https://placehold.co/600x400/1d1d23/7c7a85?text=Your%20Product%20Here&font=roboto"
+    : "https://placehold.co/600x400/f2eff3/6f6d78?text=Your%20Product%20Here&font=roboto";
 }

@@ -1,7 +1,7 @@
+import { notFound } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { notFound } from "next/navigation";
-import { getAuthToken } from "../../../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../../../@/api/auth-token";
 import { TeamOnboardingLayout } from "../../../../login/onboarding/onboarding-layout";
 import { InviteTeamMembers } from "../../../../login/onboarding/team-onboarding/team-onboarding";
 
@@ -25,7 +25,7 @@ export default async function Page(props: {
 
   return (
     <TeamOnboardingLayout currentStep={3}>
-      <InviteTeamMembers team={team} client={client} />
+      <InviteTeamMembers client={client} team={team} />
     </TeamOnboardingLayout>
   );
 }

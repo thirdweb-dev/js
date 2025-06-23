@@ -43,8 +43,8 @@ export function verifyJWT(options: AuthOptions) {
       const valid = await options.jwt.jwtId.validate(payload.jti);
       if (!valid) {
         return {
-          valid: false,
           error: "Invalid JWT ID",
+          valid: false,
         };
       }
     }
@@ -52,52 +52,52 @@ export function verifyJWT(options: AuthOptions) {
     // check that the token audience matches the domain
     if (payload.aud !== options.domain) {
       return {
-        valid: false,
         error: `Expected token to be for the domain '${options.domain}', but found token with domain '${payload.aud}'`,
+        valid: false,
       };
     }
 
     // Check that the token is past the invalid before time
-    const currentTime = Math.floor(new Date().getTime() / 1000);
+    const currentTime = Math.floor(Date.now() / 1000);
     if (currentTime < payload.nbf) {
       return {
-        valid: false,
         error: `This token is invalid before epoch time '${payload.nbf}', current epoch time is '${currentTime}'`,
+        valid: false,
       };
     }
 
     // Check that the token hasn't expired
     if (currentTime > payload.exp) {
       return {
-        valid: false,
         error: `This token expired at epoch time '${payload.exp}', current epoch time is '${currentTime}'`,
+        valid: false,
       };
     }
 
     const issuerAddress = options.adminAccount.address;
     if (issuerAddress.toLowerCase() !== payload.iss.toLowerCase()) {
       return {
-        valid: false,
         error: `The expected issuer address '${issuerAddress}' did not match the token issuer address '${payload.iss}'`,
+        valid: false,
       };
     }
 
     const verified = await verifyEOASignature({
+      address: issuerAddress,
       message: stringify(payload),
       signature,
-      address: issuerAddress,
     });
 
     if (!verified) {
       return {
-        valid: false,
         error: `The expected issuer address '${issuerAddress}' did not sign this token.`,
+        valid: false,
       };
     }
 
     return {
-      valid: true,
       parsedJWT: payload,
+      valid: true,
     };
   };
 }

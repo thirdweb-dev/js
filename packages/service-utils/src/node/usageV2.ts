@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
 import {
+  getTopicName,
   type UsageV2Event,
   type UsageV2Source,
-  getTopicName,
 } from "../core/usageV2.js";
 import { KafkaProducer } from "./kafka.js";
 
@@ -43,10 +43,10 @@ export class UsageV2Producer {
     password: string;
   }) {
     this.kafkaProducer = new KafkaProducer({
-      producerName: config.producerName,
       kafkaServers: config.kafkaServers,
-      username: config.username,
       password: config.password,
+      producerName: config.producerName,
+      username: config.username,
     });
     this.topic = getTopicName(config.source);
   }
@@ -63,18 +63,18 @@ export class UsageV2Producer {
   async sendEvents(events: UsageV2Event[]): Promise<void> {
     const parsedEvents = events.map((event) => ({
       ...event,
-      // Default to a generated UUID.
-      id: event.id ?? randomUUID(),
       // Default to now.
       created_at: event.created_at ?? new Date(),
-      // Remove the "team_" prefix, if any.
-      team_id: event.team_id.startsWith(TEAM_ID_PREFIX)
-        ? event.team_id.slice(TEAM_ID_PREFIX.length)
-        : event.team_id,
+      // Default to a generated UUID.
+      id: event.id ?? randomUUID(),
       // Remove the "prj_" prefix, if any.
       project_id: event.project_id?.startsWith(PROJECT_ID_PREFIX)
         ? event.project_id.slice(PROJECT_ID_PREFIX.length)
         : event.project_id,
+      // Remove the "team_" prefix, if any.
+      team_id: event.team_id.startsWith(TEAM_ID_PREFIX)
+        ? event.team_id.slice(TEAM_ID_PREFIX.length)
+        : event.team_id,
     }));
     await this.kafkaProducer.send(this.topic, parsedEvents);
   }

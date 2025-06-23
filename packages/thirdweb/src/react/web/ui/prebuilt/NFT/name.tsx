@@ -94,14 +94,14 @@ export function NFTName({
   const { contract, tokenId } = useNFTContext();
 
   const nameQuery = useQuery({
-    queryKey: getQueryKey({
-      contractAddress: contract.address,
-      chainId: contract.chain.id,
-      tokenId,
-      nameResolver,
-    }),
     queryFn: async (): Promise<string> =>
-      fetchNftName({ nameResolver, contract, tokenId }),
+      fetchNftName({ contract, nameResolver, tokenId }),
+    queryKey: getQueryKey({
+      chainId: contract.chain.id,
+      contractAddress: contract.address,
+      nameResolver,
+      tokenId,
+    }),
     ...queryOptions,
   });
 

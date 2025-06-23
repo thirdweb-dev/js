@@ -32,7 +32,7 @@ export async function estimateGasCost(
   const from = options.from ?? options.account?.address ?? undefined;
   const gasLimit =
     (await resolvePromisedValue(transaction.gas)) ||
-    (await estimateGas({ transaction, from }));
+    (await estimateGas({ from, transaction }));
   const fees = await getDefaultGasOverrides(
     transaction.client,
     transaction.chain,

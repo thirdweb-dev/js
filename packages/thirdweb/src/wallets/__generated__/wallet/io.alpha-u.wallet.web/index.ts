@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.alpha-u.wallet.web",
-  name: "αU wallet",
-  homepage: "https://web.wallet.alpha-u.io/intro.html",
-  image_id: "40489ba1-6eb0-49a1-a9d4-439fefe52000",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/jp/app/%CE%B1u-wallet/id6444401106",
     android: "https://play.google.com/store/apps/details?id=com.kddi.wallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: "nothing",
-    firefox: "nothing",
-    safari: "nothing",
     edge: "nothing",
+    firefox: "nothing",
+    ios: "https://apps.apple.com/jp/app/%CE%B1u-wallet/id6444401106",
+    linux: null,
+    mac: null,
     opera: "nothing",
-  },
-  rdns: null,
-  mobile: {
-    native: "alpha-u-wallet://",
-    universal:
-      "https://alphauwallet.page.link/?apn=com.kddi.wallet&ibi=com.kddi.wallet&isi=6444401106&link=https://web.wallet.alpha-u.io/intro.html",
+    safari: "nothing",
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://web.wallet.alpha-u.io/intro.html",
+  id: "io.alpha-u.wallet.web",
+  image_id: "40489ba1-6eb0-49a1-a9d4-439fefe52000",
+  mobile: {
+    native: "alpha-u-wallet://",
+    universal:
+      "https://alphauwallet.page.link/?apn=com.kddi.wallet&ibi=com.kddi.wallet&isi=6444401106&link=https://web.wallet.alpha-u.io/intro.html",
+  },
+  name: "αU wallet",
+  rdns: null,
 } as const;

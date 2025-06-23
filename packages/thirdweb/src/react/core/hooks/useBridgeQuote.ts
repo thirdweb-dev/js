@@ -22,14 +22,8 @@ export function useBridgeQuote({
   enabled = true,
 }: UseBridgeQuoteParams) {
   return useQuery({
-    queryKey: [
-      "bridge-quote",
-      originToken.chainId,
-      originToken.address,
-      destinationToken.chainId,
-      destinationToken.address,
-      destinationAmount.toString(),
-    ],
+    enabled:
+      enabled && !!originToken && !!destinationToken && !!destinationAmount,
     queryFn: async () => {
       // if ssame token and chain, use transfer
       if (
@@ -38,30 +32,36 @@ export function useBridgeQuote({
         originToken.chainId === destinationToken.chainId
       ) {
         const transfer = await Transfer.prepare({
-          client,
-          chainId: originToken.chainId,
-          tokenAddress: originToken.address,
-          sender: originToken.address,
-          receiver: destinationToken.address,
           amount: destinationAmount,
+          chainId: originToken.chainId,
+          client,
+          receiver: destinationToken.address,
+          sender: originToken.address,
+          tokenAddress: originToken.address,
         });
         return transfer;
       }
       const quote = await Buy.quote({
-        originChainId: originToken.chainId,
-        originTokenAddress: originToken.address,
-        destinationChainId: destinationToken.chainId,
-        destinationTokenAddress: destinationToken.address,
         amount: destinationAmount,
         client,
+        destinationChainId: destinationToken.chainId,
+        destinationTokenAddress: destinationToken.address,
+        originChainId: originToken.chainId,
+        originTokenAddress: originToken.address,
       });
 
       return quote;
     },
-    enabled:
-      enabled && !!originToken && !!destinationToken && !!destinationAmount,
-    staleTime: 30000, // 30 seconds
-    refetchInterval: 60000, // 1 minute
-    retry: 3,
+    queryKey: [
+      "bridge-quote",
+      originToken.chainId,
+      originToken.address,
+      destinationToken.chainId,
+      destinationToken.address,
+      destinationAmount.toString(),
+    ],
+    refetchInterval: 60000, // 30 seconds
+    retry: 3, // 1 minute
+    staleTime: 30000,
   });
 }

@@ -1,18 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { storybookThirdwebClient } from "stories/utils";
 import { getContract } from "thirdweb";
 import { baseSepolia } from "thirdweb/chains";
 import { ThirdwebProvider } from "thirdweb/react";
+import { storybookThirdwebClient } from "@/storybook/utils";
 import { TokenDropClaim } from "./claim-tokens-ui";
 
 const meta = {
-  title: "ERC20/ClaimTokenCardUI",
   component: Story,
-  parameters: {
-    nextjs: {
-      appDirectory: true,
-    },
-  },
   decorators: [
     (Story) => (
       <ThirdwebProvider>
@@ -24,6 +18,12 @@ const meta = {
       </ThirdwebProvider>
     ),
   ],
+  parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
+  },
+  title: "ERC20/ClaimTokenCardUI",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -33,9 +33,9 @@ export const Variants: Story = {
 };
 
 const mockContract = getContract({
-  client: storybookThirdwebClient,
-  chain: baseSepolia,
   address: "0xD6866d1EcB82D37556B6cFEc0dFE8800D8b4B50A",
+  chain: baseSepolia,
+  client: storybookThirdwebClient,
 });
 
 const claimConditionCurrency = {
@@ -45,42 +45,43 @@ const claimConditionCurrency = {
 };
 
 const mockClaimCondition = {
-  startTimestamp: 1747918865n,
+  currency: claimConditionCurrency.address,
   maxClaimableSupply:
     115792089237316195423570985008687907853269984665640564039457584007913129639935n,
-  supplyClaimed: 790000000000000000000000n,
-  quantityLimitPerWallet: 0n,
   merkleRoot:
     "0x369b56a08dc68160042e86415132e683545596577b2f6afa272046c18cbab38b",
-  pricePerToken: 0n,
-  currency: claimConditionCurrency.address,
   metadata: "ipfs://QmPgawkS1jYSudujQGzx2UbodZzNPbMgWto1LPEba1Pxpj/0",
+  pricePerToken: 0n,
+  quantityLimitPerWallet: 0n,
+  startTimestamp: 1747918865n,
+  supplyClaimed: 790000000000000000000000n,
 };
 
 function Story() {
   return (
     <TokenDropClaim
-      contract={mockContract}
-      name="Example Token"
-      symbol="EXP"
-      claimCondition={mockClaimCondition}
-      claimConditionCurrency={claimConditionCurrency}
       chainMetadata={{
-        stackType: "evm",
+        chain: "ETH",
         chainId: 11155111,
         name: "Sepolia",
-        chain: "ETH",
-        shortName: "sep",
         nativeCurrency: {
+          decimals: 18,
           name: "Sepolia Ether",
           symbol: "ETH",
-          decimals: 18,
         },
+        // biome-ignore lint/suspicious/noTemplateCurlyInString: EXPECTED
         rpc: ["https://11155111.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
-        testnet: true,
+        shortName: "sep",
         slug: "sepolia",
+        stackType: "evm",
+        testnet: true,
       }}
+      claimCondition={mockClaimCondition}
+      claimConditionCurrency={claimConditionCurrency}
+      contract={mockContract}
       decimals={18}
+      name="Example Token"
+      symbol="EXP"
     />
   );
 }

@@ -1,5 +1,5 @@
-import { getProject } from "@/api/projects";
 import { notFound } from "next/navigation";
+import { getProject } from "@/api/projects";
 import { SharedNFTPage } from "../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/nfts/shared-nfts-page";
 import type { ProjectContractPageParams } from "../types";
 
@@ -15,8 +15,8 @@ export default async function Page(props: {
 
   return (
     <SharedNFTPage
-      contractAddress={params.contractAddress}
       chainIdOrSlug={params.chainIdOrSlug}
+      contractAddress={params.contractAddress}
       isLoggedIn={true}
       projectMeta={{
         projectSlug: project.slug,

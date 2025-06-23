@@ -1,5 +1,5 @@
-import type { ProductSKU } from "@/lib/billing";
 import { redirect } from "next/navigation";
+import type { ProductSKU } from "@/types/billing";
 import { StripeRedirectErrorPage } from "../../../_components/StripeRedirectErrorPage";
 import {
   getBillingCheckoutUrl,
@@ -28,8 +28,8 @@ export default async function CheckoutPage(props: {
         return <StripeRedirectErrorPage errorMessage="Invalid amount" />;
       }
       const topupUrl = await getCryptoTopupUrl({
-        teamSlug: params.team_slug,
         amountUSD,
+        teamSlug: params.team_slug,
       });
       if (!topupUrl) {
         // TODO: make a better error page
@@ -46,8 +46,8 @@ export default async function CheckoutPage(props: {
         return <StripeRedirectErrorPage errorMessage="Invalid invoice ID" />;
       }
       const invoice = await getInvoicePaymentUrl({
-        teamSlug: params.team_slug,
         invoiceId,
+        teamSlug: params.team_slug,
       });
       if (!invoice) {
         return (
@@ -59,8 +59,8 @@ export default async function CheckoutPage(props: {
     }
     default: {
       const response = await getBillingCheckoutUrl({
-        teamSlug: params.team_slug,
         sku: decodeURIComponent(params.sku) as Exclude<ProductSKU, null>,
+        teamSlug: params.team_slug,
       });
 
       if (response.status === "error") {

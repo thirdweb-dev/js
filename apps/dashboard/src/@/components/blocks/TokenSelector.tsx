@@ -1,19 +1,19 @@
-import { useAllChainsData } from "hooks/chains/allChains";
-import { useTokensData } from "hooks/tokens/tokens";
 import { useCallback, useMemo } from "react";
 import {
+  getAddress,
   NATIVE_TOKEN_ADDRESS,
   type ThirdwebClient,
-  getAddress,
 } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
-import { replaceIpfsUrl } from "../../../lib/sdk";
-import { fallbackChainIcon } from "../../../utils/chain-icons";
-import type { TokenMetadata } from "../../api/universal-bridge/tokens";
-import { cn } from "../../lib/utils";
-import { Badge } from "../ui/badge";
-import { Img } from "./Img";
-import { SelectWithSearch } from "./select-with-search";
+import type { TokenMetadata } from "@/api/universal-bridge/tokens";
+import { Img } from "@/components/blocks/Img";
+import { SelectWithSearch } from "@/components/blocks/select-with-search";
+import { Badge } from "@/components/ui/badge";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { useTokensData } from "@/hooks/tokens";
+import { replaceIpfsUrl } from "@/lib/sdk";
+import { cn } from "@/lib/utils";
+import { fallbackChainIcon } from "@/utils/chain-icons";
 
 type Option = { label: string; value: string };
 
@@ -55,14 +55,14 @@ export function TokenSelector(props: {
       if (!hasNativeToken && props.chainId) {
         return [
           {
+            address: checksummedNativeTokenAddress,
+            chainId: props.chainId,
+            decimals: 18,
             name:
               idToChain.get(props.chainId)?.nativeCurrency.name ??
               "Native Token",
             symbol:
               idToChain.get(props.chainId)?.nativeCurrency.symbol ?? "ETH",
-            decimals: 18,
-            chainId: props.chainId,
-            address: checksummedNativeTokenAddress,
           } satisfies TokenMetadata,
           ...tokensQuery.data,
         ];
@@ -129,22 +129,22 @@ export function TokenSelector(props: {
           <span className="flex grow gap-2 truncate text-left">
             <Img
               // render different image element if src changes to avoid showing old image while loading new one
-              key={resolvedSrc}
-              className={cn("size-5 rounded-full object-contain")}
-              src={resolvedSrc}
-              loading={"lazy"}
               alt=""
+              className={cn("size-5 rounded-full object-contain")}
+              fallback={<img alt="" src={fallbackChainIcon} />}
+              key={resolvedSrc}
+              loading={"lazy"}
               // eslint-disable-next-line @next/next/no-img-element
-              fallback={<img src={fallbackChainIcon} alt="" />}
               skeleton={
                 <div className="animate-pulse rounded-full bg-border" />
               }
+              src={resolvedSrc}
             />
             {token.symbol}
           </span>
 
           {!props.disableAddress && (
-            <Badge variant="outline" className="gap-2 py-1 max-sm:hidden">
+            <Badge className="gap-2 py-1 max-sm:hidden" variant="outline">
               <span className="text-muted-foreground">Address</span>
               {shortenAddress(token.address, 4)}
             </Badge>
@@ -172,9 +172,10 @@ export function TokenSelector(props: {
 
   return (
     <SelectWithSearch
-      searchPlaceholder="Search by name or symbol"
-      value={selectedValue}
-      options={options}
+      align={props.align}
+      className={props.className}
+      closeOnSelect={true}
+      disabled={tokensQuery.isPending || props.disabled}
       onValueChange={(tokenAddress) => {
         const token = addressChainToToken.get(tokenAddress);
         if (!token) {
@@ -182,20 +183,19 @@ export function TokenSelector(props: {
         }
         props.onChange(token);
       }}
-      closeOnSelect={true}
-      showCheck={props.showCheck}
+      options={options}
+      overrideSearchFn={searchFn}
       placeholder={
         tokensQuery.isPending
           ? "Loading Tokens"
           : props.placeholder || "Select Token"
       }
-      overrideSearchFn={searchFn}
-      renderOption={renderOption}
-      className={props.className}
       popoverContentClassName={props.popoverContentClassName}
-      disabled={tokensQuery.isPending || props.disabled}
+      renderOption={renderOption}
+      searchPlaceholder="Search by name or symbol"
+      showCheck={props.showCheck}
       side={props.side}
-      align={props.align}
+      value={selectedValue}
     />
   );
 }

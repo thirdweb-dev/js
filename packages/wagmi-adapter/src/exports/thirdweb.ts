@@ -1,4 +1,4 @@
 export {
-  inAppWalletConnector,
   type InAppWalletParameters,
+  inAppWalletConnector,
 } from "../connector.js";

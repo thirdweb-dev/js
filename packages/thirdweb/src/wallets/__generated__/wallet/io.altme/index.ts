@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.altme",
-  name: "Altme",
-  homepage: "https://altme.io/",
-  image_id: "7eeac6e8-6852-4d09-8579-e229fd6b9a00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/fr/app/altme/id1633216869",
     android:
       "https://play.google.com/store/apps/details?id=co.altme.alt.me.altme",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/fr/app/altme/id1633216869",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "wc-altme://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://altme.io/",
+  id: "io.altme",
+  image_id: "7eeac6e8-6852-4d09-8579-e229fd6b9a00",
+  mobile: {
+    native: "wc-altme://",
+    universal: null,
+  },
+  name: "Altme",
+  rdns: null,
 } as const;

@@ -1,6 +1,3 @@
-import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
-import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
-import { useEngineCreateAccessToken } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
   Modal,
@@ -11,11 +8,14 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button } from "chakra/button";
+import { Text } from "chakra/text";
 import { CirclePlusIcon } from "lucide-react";
 import { useState } from "react";
-import { Button, Text } from "tw-components";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
+import { useEngineCreateAccessToken } from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface AddAccessTokenButtonProps {
   instanceUrl: string;
@@ -29,10 +29,10 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
   const [accessToken, setAccessToken] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutate: createAccessToken } = useEngineCreateAccessToken({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
-  const trackEvent = useTrack();
+
   const [hasStoredToken, setHasStoredToken] = useState<boolean>(false);
 
   const { onSuccess, onError } = useTxNotifications(
@@ -43,46 +43,34 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
   return (
     <>
       <Button
+        colorScheme="primary"
+        leftIcon={<CirclePlusIcon className="size-6" />}
         onClick={() => {
           createAccessToken(undefined, {
+            onError: (error) => {
+              onError(error);
+              console.error(error);
+            },
             onSuccess: (response) => {
               onSuccess();
-              trackEvent({
-                category: "engine",
-                action: "create-access-token",
-                label: "success",
-                instance: instanceUrl,
-              });
               setAccessToken(response.accessToken);
               onOpen();
             },
-            onError: (error) => {
-              onError(error);
-              trackEvent({
-                category: "engine",
-                action: "create-access-token",
-                label: "error",
-                instance: instanceUrl,
-                error,
-              });
-            },
           });
         }}
-        variant="ghost"
         size="sm"
-        leftIcon={<CirclePlusIcon className="size-6" />}
-        colorScheme="primary"
+        variant="ghost"
         w="fit-content"
       >
         Create Access Token
       </Button>
 
       <Modal
+        closeOnEsc={false}
+        closeOnOverlayClick={false}
+        isCentered
         isOpen={isOpen}
         onClose={onClose}
-        closeOnOverlayClick={false}
-        closeOnEsc={false}
-        isCentered
       >
         <ModalOverlay />
         <ModalContent className="!bg-background rounded-lg border border-border">
@@ -105,13 +93,13 @@ export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
 
           <ModalFooter as={Flex} gap={3}>
             <Button
-              type="submit"
               colorScheme="primary"
               isDisabled={!hasStoredToken}
               onClick={() => {
                 onClose();
                 setAccessToken("");
               }}
+              type="submit"
             >
               Done
             </Button>

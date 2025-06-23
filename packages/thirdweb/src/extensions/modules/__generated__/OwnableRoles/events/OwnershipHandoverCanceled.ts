@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "OwnershipHandoverCanceled" event.
@@ -36,7 +36,7 @@ export function ownershipHandoverCanceledEvent(
   filters: OwnershipHandoverCanceledEventFilters = {},
 ) {
   return prepareEvent({
-    signature: "event OwnershipHandoverCanceled(address indexed pendingOwner)",
     filters,
+    signature: "event OwnershipHandoverCanceled(address indexed pendingOwner)",
   });
 }

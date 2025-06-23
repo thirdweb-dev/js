@@ -8,8 +8,8 @@ export function EngineErrorPage(props: {
   return (
     <div className="flex grow flex-col">
       <Link
-        href={props.rootPath}
         className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+        href={props.rootPath}
       >
         <ArrowLeftIcon className="size-5" />
         Back

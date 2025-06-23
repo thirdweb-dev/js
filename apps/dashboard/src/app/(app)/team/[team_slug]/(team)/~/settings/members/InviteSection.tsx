@@ -1,27 +1,4 @@
 "use client";
-import type { Team } from "@/api/team";
-import type { TeamAccountRole } from "@/api/team-members";
-import { GradientAvatar } from "@/components/blocks/Avatars/GradientAvatar";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { resolveSchemeWithErrorHandler } from "@/lib/resolveSchemeWithErrorHandler";
-import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -38,7 +15,30 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { z } from "zod";
-import { getValidTeamPlan } from "../../../../../components/TeamHeader/getValidTeamPlan";
+import type { Team } from "@/api/team";
+import type { TeamAccountRole } from "@/api/team-members";
+import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
+import { getValidTeamPlan } from "../../../../../../../../@/utils/getValidTeamPlan";
 
 const inviteFormSchema = z.object({
   invites: z
@@ -76,7 +76,7 @@ export function InviteSection(props: {
   inviteTeamMembers: InviteTeamMembersFn;
   customCTASection?: React.ReactNode;
   className?: string;
-  onInviteSuccess?: () => void;
+  onInviteSuccess?: (successCount: number) => void;
   shouldHideInviteButton?: boolean;
   recommendedMembers: RecommendedMember[];
   client: ThirdwebClient;
@@ -91,7 +91,6 @@ export function InviteSection(props: {
     props.userHasEditPermission;
 
   const form = useForm<InviteFormValues>({
-    resolver: zodResolver(inviteFormSchema),
     defaultValues: {
       invites: [
         {
@@ -100,6 +99,7 @@ export function InviteSection(props: {
         },
       ],
     },
+    resolver: zodResolver(inviteFormSchema),
   });
 
   const sendInvites = useMutation({
@@ -117,9 +117,10 @@ export function InviteSection(props: {
         <p className="text-muted-foreground text-sm">
           This feature is not available on the {teamPlan} plan.{" "}
           <Link
-            href="https://thirdweb.com/pricing"
-            target="_blank"
             className="text-link-foreground hover:text-foreground"
+            href="https://thirdweb.com/pricing"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             View plans <ExternalLinkIcon className="inline size-3" />
           </Link>
@@ -128,10 +129,10 @@ export function InviteSection(props: {
         {props.customCTASection ? (
           props.customCTASection
         ) : (
-          <Button variant="outline" size="sm" asChild>
+          <Button asChild size="sm" variant="outline">
             <Link
-              href={`/team/${props.team.slug}/~/settings/billing?showPlans=true&highlight=growth`}
               className="gap-2"
+              href={`/team/${props.team.slug}/~/settings/billing?showPlans=true&highlight=growth`}
             >
               Upgrade
             </Link>
@@ -153,9 +154,10 @@ export function InviteSection(props: {
         <p className="text-muted-foreground text-sm">
           Team members are billed according to your plan.{" "}
           <Link
-            href="https://thirdweb.com/pricing"
-            target="_blank"
             className="text-link-foreground hover:text-foreground"
+            href="https://thirdweb.com/pricing"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             View pricing <ExternalLinkIcon className="inline size-3" />
           </Link>
@@ -164,11 +166,11 @@ export function InviteSection(props: {
         <div className="flex gap-3">
           {!props.shouldHideInviteButton && (
             <Button
-              variant="default"
-              size="sm"
               className="gap-2 max-sm:w-full"
-              type="submit"
               disabled={sendInvites.isPending}
+              size="sm"
+              type="submit"
+              variant="default"
             >
               {sendInvites.isPending ? (
                 <Spinner className="size-4" />
@@ -217,7 +219,9 @@ export function InviteSection(props: {
           );
 
           if (props.onInviteSuccess) {
-            props.onInviteSuccess();
+            props.onInviteSuccess(
+              data.inviteStatuses.filter((r) => r === "fulfilled").length,
+            );
           }
         }
       },
@@ -227,13 +231,13 @@ export function InviteSection(props: {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
         onChange={() => {
           // when form updates - reset mutation result
           if (sendInvites.data) {
             sendInvites.reset();
           }
         }}
+        onSubmit={form.handleSubmit(onSubmit)}
       >
         <section>
           <div
@@ -254,10 +258,6 @@ export function InviteSection(props: {
               <RecommendedMembersSection
                 client={props.client}
                 isDisabled={!inviteEnabled}
-                recommendedMembers={props.recommendedMembers}
-                selectedMembers={form
-                  .watch("invites")
-                  .map((invite) => invite.email)}
                 onToggleMember={(email) => {
                   const currentInvites = form
                     .getValues("invites")
@@ -282,14 +282,18 @@ export function InviteSection(props: {
                     shouldTouch: true,
                   });
                 }}
+                recommendedMembers={props.recommendedMembers}
+                selectedMembers={form
+                  .watch("invites")
+                  .map((invite) => invite.email)}
               />
             )}
 
             <div className="px-4 py-6 lg:px-6">
               <div className="flex flex-col gap-5">
                 {form.watch("invites").map((_, index) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                  <div key={index} className="flex items-start gap-4">
+                  // biome-ignore lint/suspicious/noArrayIndexKey: EXPECTED
+                  <div className="flex items-start gap-4" key={index}>
                     <div className="grid flex-1 grid-cols-1 gap-4 md:grid-cols-2">
                       <FormField
                         control={form.control}
@@ -306,10 +310,10 @@ export function InviteSection(props: {
                             <FormControl>
                               <Input
                                 {...field}
-                                type="email"
-                                placeholder="user@example.com"
-                                disabled={!inviteEnabled}
                                 className="disabled:bg-muted"
+                                disabled={!inviteEnabled}
+                                placeholder="user@example.com"
+                                type="email"
                               />
                             </FormControl>
                             {sendInvites.data && (
@@ -349,8 +353,8 @@ export function InviteSection(props: {
                             <FormControl>
                               <RoleSelector
                                 disabled={!inviteEnabled}
-                                value={field.value}
                                 onChange={field.onChange}
+                                value={field.value}
                               />
                             </FormControl>
                             <FormMessage />
@@ -361,8 +365,6 @@ export function InviteSection(props: {
 
                     {form.watch("invites").length > 1 && (
                       <Button
-                        type="button"
-                        variant="outline"
                         className="mt-8 bg-background text-destructive-text disabled:cursor-not-allowed disabled:opacity-100"
                         onClick={() => {
                           const currentInvites = form.getValues("invites");
@@ -371,6 +373,8 @@ export function InviteSection(props: {
                             currentInvites.filter((_, i) => i !== index),
                           );
                         }}
+                        type="button"
+                        variant="outline"
                       >
                         <Trash2Icon className="size-4" />
                       </Button>
@@ -381,9 +385,6 @@ export function InviteSection(props: {
 
               <div className="mt-6 flex gap-3">
                 <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
                   className="gap-2"
                   disabled={
                     !inviteEnabled ||
@@ -396,21 +397,24 @@ export function InviteSection(props: {
                       { email: "", role: "MEMBER" },
                     ]);
                   }}
+                  size="sm"
+                  type="button"
+                  variant="outline"
                 >
                   <PlusIcon className="size-4" />
                   Add Another
                 </Button>
 
                 <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  disabled={!form.formState.isDirty}
                   className="gap-2"
+                  disabled={!form.formState.isDirty}
                   onClick={() => {
                     form.reset();
                     sendInvites.reset();
                   }}
+                  size="sm"
+                  type="button"
+                  variant="outline"
                 >
                   Reset
                 </Button>
@@ -434,10 +438,10 @@ function RoleSelector(props: {
 
   return (
     <Select
-      value={props.value}
       onValueChange={(v) => {
         props.onChange(v as TeamAccountRole);
       }}
+      value={props.value}
     >
       <SelectTrigger
         className="capitalize disabled:bg-muted"
@@ -447,7 +451,7 @@ function RoleSelector(props: {
       </SelectTrigger>
       <SelectContent>
         {roles.map((role) => (
-          <SelectItem key={role} value={role} className="capitalize">
+          <SelectItem className="capitalize" key={role} value={role}>
             {role.toLowerCase()}
           </SelectItem>
         ))}
@@ -487,12 +491,12 @@ function RecommendedMembersSection(props: {
         <div className="relative flex items-center gap-2">
           <SearchIcon className="absolute left-3 size-4 text-muted-foreground" />
           <Input
-            placeholder="Search Email"
             className="w-full bg-card pl-9 lg:w-72"
-            value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
             }}
+            placeholder="Search Email"
+            value={searchQuery}
           />
         </div>
       </div>
@@ -511,31 +515,31 @@ function RecommendedMembersSection(props: {
             const isSelected = props.selectedMembers.includes(member.email);
             return (
               <Button
-                key={member.email}
-                variant="outline"
                 className={cn(
                   "relative flex h-auto w-auto items-center justify-between gap-2 rounded-lg border-dashed p-2.5 text-start hover:border-active-border hover:border-solid hover:bg-accent/50 disabled:opacity-100",
                   isSelected &&
                     "border-active-border border-solid bg-accent/50",
                 )}
+                disabled={props.isDisabled}
+                key={member.email}
                 onClick={() => {
                   props.onToggleMember(member.email);
                 }}
-                disabled={props.isDisabled}
+                variant="outline"
               >
                 <div className="flex items-center gap-2.5 overflow-hidden">
                   <GradientAvatar
-                    id={member.email}
+                    className="size-8 rounded-full border"
                     client={props.client}
+                    id={member.email}
                     src={
                       member.image
                         ? resolveSchemeWithErrorHandler({
-                            uri: member.image,
                             client: props.client,
+                            uri: member.image,
                           })
                         : ""
                     }
-                    className="size-8 rounded-full border"
                   />
 
                   <div className="truncate text-foreground text-sm">
@@ -554,12 +558,12 @@ function RecommendedMembersSection(props: {
 
           {filteredMembers.length > membersToShow.length && (
             <Button
-              variant="outline"
-              size="sm"
               className="h-full rounded-lg border-dashed hover:border-active-border hover:border-solid hover:bg-accent/50"
               onClick={() => {
                 setIsExpanded(true);
               }}
+              size="sm"
+              variant="outline"
             >
               + {filteredMembers.length - membersToShow.length} more
             </Button>

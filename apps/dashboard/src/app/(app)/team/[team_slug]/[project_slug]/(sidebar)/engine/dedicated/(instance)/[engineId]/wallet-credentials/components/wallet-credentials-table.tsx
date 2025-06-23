@@ -1,6 +1,7 @@
+import { format } from "date-fns";
+import { Badge } from "@/components/ui/badge";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -10,8 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { WalletCredential } from "@3rdweb-sdk/react/hooks/useEngine";
-import { format } from "date-fns";
+import type { WalletCredential } from "@/hooks/useEngine";
 import { EditWalletCredentialButton } from "./edit-wallet-credential-button";
 
 interface WalletCredentialsTableProps {
@@ -64,12 +64,12 @@ export const WalletCredentialsTable: React.FC<WalletCredentialsTableProps> = ({
             <TableRow key={credential.id}>
               <TableCell>
                 <CopyTextButton
+                  className="font-mono text-xs"
+                  copyIconPosition="right"
                   textToCopy={credential.id}
                   textToShow={`${credential.id.slice(0, 8)}...`}
-                  variant="secondary"
-                  className="font-mono text-xs"
                   tooltip="Copy credential ID"
-                  copyIconPosition="right"
+                  variant="secondary"
                 />
               </TableCell>
               <TableCell>{credential.label || "-"}</TableCell>
@@ -91,9 +91,9 @@ export const WalletCredentialsTable: React.FC<WalletCredentialsTableProps> = ({
               </TableCell>
               <TableCell>
                 <EditWalletCredentialButton
+                  authToken={authToken}
                   credential={credential}
                   instanceUrl={instanceUrl}
-                  authToken={authToken}
                 />
               </TableCell>
             </TableRow>

@@ -1,7 +1,3 @@
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { TableCell, TableRow } from "@/components/ui/table";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import {
   CheckIcon,
   CircleAlertIcon,
@@ -10,9 +6,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type { JSX } from "react";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { TableCell, TableRow } from "@/components/ui/table";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import type { ChainSupportedService } from "@/types/chain";
 import { ChainIcon } from "../../../components/server/chain-icon";
 import { products } from "../../../components/server/products";
-import type { ChainSupportedService } from "../../../types/chain";
 import { getChainMetadata } from "../../../utils";
 
 type ChainListRowProps = {
@@ -38,16 +38,16 @@ export async function ChainListRow({
 }: ChainListRowProps) {
   const chainMetadata = await getChainMetadata(chainId);
   return (
-    <TableRow linkBox className="hover:bg-accent/50">
+    <TableRow className="hover:bg-accent/50" linkBox>
       {/* Name */}
       <TableCell>
         <div className="flex w-[370px] flex-row items-center gap-4">
           <div className="flex items-center gap-2">
             {favoriteButton && <div className="mr-6"> {favoriteButton} </div>}
-            <ChainIcon iconUrl={iconUrl} className="size-6" />
+            <ChainIcon className="size-6" iconUrl={iconUrl} />
             <Link
-              href={`/${chainSlug}`}
               className="group static before:absolute before:top-0 before:right-0 before:bottom-0 before:left-0 before:z-0 before:content-['']"
+              href={`/${chainSlug}`}
             >
               {chainName}
             </Link>
@@ -69,12 +69,12 @@ export async function ChainListRow({
 
       <TableCell>
         <CopyTextButton
+          className="relative z-10 text-base"
+          copyIconPosition="right"
           textToCopy={chainId.toString()}
           textToShow={chainId.toString()}
           tooltip="Copy Chain ID"
-          className="relative z-10 text-base"
           variant="ghost"
-          copyIconPosition="right"
         />
       </TableCell>
 
@@ -86,11 +86,11 @@ export async function ChainListRow({
             {products.map((p) => {
               return (
                 <ProductIcon
-                  key={p.name}
-                  icon={p.icon}
-                  label={p.name}
                   href={p.link}
+                  icon={p.icon}
                   isEnabled={enabledServices.includes(p.id)}
+                  key={p.name}
+                  label={p.name}
                 />
               );
             })}
@@ -119,9 +119,9 @@ function ProductIcon(props: {
       }
     >
       <Link
+        className="group rounded-lg p-2 hover:bg-accent"
         href={props.href}
         target={props.href.startsWith("http") ? "_blank" : undefined}
-        className="group rounded-lg p-2 hover:bg-accent"
       >
         <props.icon
           className={cn(

@@ -10,11 +10,11 @@ import {
   spacing,
 } from "../../../../core/design-system/index.js";
 import { useBuyWithFiatQuotesForProviders } from "../../../../core/hooks/pay/useBuyWithFiatQuotesForProviders.js";
+import { Container } from "../../components/basic.js";
+import { Button } from "../../components/buttons.js";
 import { Img } from "../../components/Img.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
-import { Container } from "../../components/basic.js";
-import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
 
 interface FiatProviderSelectionProps {
@@ -28,22 +28,22 @@ interface FiatProviderSelectionProps {
 
 const PROVIDERS = [
   {
-    id: "coinbase" as const,
-    name: "Coinbase",
     description: "Fast and secure payments",
     iconUri: "https://i.ibb.co/LDJ3Rk2t/Frame-5.png",
+    id: "coinbase" as const,
+    name: "Coinbase",
   },
   {
-    id: "stripe" as const,
-    name: "Stripe",
     description: "Trusted payment processing",
     iconUri: "https://i.ibb.co/CpgQC2Lf/images-3.png",
+    id: "stripe" as const,
+    name: "Stripe",
   },
   {
-    id: "transak" as const,
-    name: "Transak",
     description: "Global payment solution",
     iconUri: "https://i.ibb.co/Xx2r882p/Transak-official-symbol-1.png",
+    id: "transak" as const,
+    name: "Transak",
   },
 ];
 
@@ -59,12 +59,12 @@ export function FiatProviderSelection({
 
   // Fetch quotes for all providers
   const quoteQueries = useBuyWithFiatQuotesForProviders({
-    client,
-    chainId: toChainId,
-    tokenAddress: checksumAddress(toTokenAddress),
-    receiver: checksumAddress(toAddress),
     amount: toAmount || "0",
+    chainId: toChainId,
+    client,
     currency: "USD",
+    receiver: checksumAddress(toAddress),
+    tokenAddress: checksumAddress(toTokenAddress),
   });
 
   const quotes = useMemo(() => {
@@ -89,53 +89,53 @@ export function FiatProviderSelection({
 
               return (
                 <Container
-                  key={provider.id}
                   animate="fadein"
+                  key={provider.id}
                   style={{
                     animationDelay: `${index * 100}ms`,
                   }}
                 >
                   <Button
-                    variant="secondary"
                     fullWidth
                     onClick={() => onProviderSelected(provider.id)}
                     style={{
+                      backgroundColor: theme.colors.tertiaryBg,
                       border: `1px solid ${theme.colors.borderColor}`,
                       borderRadius: radius.md,
                       padding: `${spacing.sm} ${spacing.md}`,
-                      backgroundColor: theme.colors.tertiaryBg,
                       textAlign: "left",
                     }}
+                    variant="secondary"
                   >
                     <Container
                       flex="row"
                       gap="sm"
-                      style={{ width: "100%", alignItems: "center" }}
+                      style={{ alignItems: "center", width: "100%" }}
                     >
                       <Container
                         style={{
-                          width: `${iconSize.md}px`,
-                          height: `${iconSize.md}px`,
+                          alignItems: "center",
                           borderRadius: "50%",
                           display: "flex",
-                          alignItems: "center",
+                          height: `${iconSize.md}px`,
                           justifyContent: "center",
-                          padding: spacing.xs,
                           overflow: "hidden",
+                          padding: spacing.xs,
+                          width: `${iconSize.md}px`,
                         }}
                       >
                         <Img
-                          src={provider.iconUri}
                           alt={provider.name}
-                          width={iconSize.md}
-                          height={iconSize.md}
                           client={client}
+                          height={iconSize.md}
+                          src={provider.iconUri}
+                          width={iconSize.md}
                         />
                       </Container>
                       <Container flex="column" gap="3xs" style={{ flex: 1 }}>
                         <Text
-                          size="md"
                           color="primaryText"
+                          size="md"
                           style={{ fontWeight: 600 }}
                         >
                           {provider.name}
@@ -147,18 +147,18 @@ export function FiatProviderSelection({
                         style={{ alignItems: "flex-end" }}
                       >
                         <Text
-                          size="sm"
                           color="primaryText"
+                          size="sm"
                           style={{ fontWeight: 500 }}
                         >
                           $
                           {quote.currencyAmount.toLocaleString(undefined, {
-                            minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
+                            minimumFractionDigits: 2,
                           })}{" "}
                           {quote.currency}
                         </Text>
-                        <Text size="xs" color="secondaryText">
+                        <Text color="secondaryText" size="xs">
                           {toTokens(
                             quote.destinationAmount,
                             quote.destinationToken.decimals,
@@ -172,10 +172,10 @@ export function FiatProviderSelection({
               );
             })
         ) : (
-          <Container flex="column" center="both" style={{ minHeight: "120px" }}>
-            <Spinner size="lg" color="secondaryText" />
+          <Container center="both" flex="column" style={{ minHeight: "120px" }}>
+            <Spinner color="secondaryText" size="lg" />
             <Spacer y="sm" />
-            <Text size="sm" color="secondaryText" center>
+            <Text center color="secondaryText" size="sm">
               Generating quotes...
             </Text>
           </Container>

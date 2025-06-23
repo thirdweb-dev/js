@@ -1,20 +1,20 @@
+import { Heading } from "chakra/heading";
+import { CircleAlertIcon } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TabButtons } from "@/components/ui/tabs";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import {
+  EngineBackendWalletOptions,
+  type EngineBackendWalletType,
+} from "@/constants/engine";
 import {
   type EngineInstance,
   useEngineWalletConfig,
   useHasEngineFeature,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import {
-  EngineBackendWalletOptions,
-  type EngineBackendWalletType,
-} from "lib/engine";
-import { CircleAlertIcon } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { Heading } from "tw-components";
+} from "@/hooks/useEngine";
+import { cn } from "@/lib/utils";
 import { CircleConfig } from "./circle-config";
 import { KmsAwsConfig } from "./kms-aws-config";
 import { KmsGcpConfig } from "./kms-gcp-config";
@@ -34,8 +34,8 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
   authToken,
 }) => {
   const { data: walletConfig } = useEngineWalletConfig({
-    instanceUrl: instance.url,
     authToken,
+    instanceUrl: instance.url,
   });
 
   const { isSupported: isWalletCredentialsSupported } = useHasEngineFeature(
@@ -53,12 +53,12 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
 
   const tabContent: Partial<Record<EngineBackendWalletType, React.ReactNode>> =
     {
+      "aws-kms": <KmsAwsConfig authToken={authToken} instance={instance} />,
+      "gcp-kms": <KmsGcpConfig authToken={authToken} instance={instance} />,
       local: <LocalConfig />,
-      "aws-kms": <KmsAwsConfig instance={instance} authToken={authToken} />,
-      "gcp-kms": <KmsGcpConfig instance={instance} authToken={authToken} />,
       // circle wallets were only added with the WALLET_CREDENTIALS feature flag
       ...(isWalletCredentialsSupported && {
-        circle: <CircleConfig instance={instance} authToken={authToken} />,
+        circle: <CircleConfig authToken={authToken} instance={instance} />,
       }),
     } as const;
 
@@ -74,8 +74,8 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
         <p className="text-muted-foreground">
           Create backend wallets on the{" "}
           <Link
-            href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}`}
             className="text-link-foreground hover:text-foreground"
+            href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}`}
           >
             Overview
           </Link>{" "}
@@ -84,11 +84,8 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
       </div>
 
       <TabButtons
+        tabClassName="font-medium !text-sm"
         tabs={filteredWalletOptions.map(({ key, name }) => ({
-          key,
-          name,
-          isActive: activeTab === key,
-          onClick: () => setActiveTab(key),
           icon:
             (key === "aws-kms" && !isAwsKmsConfigured) ||
             (key === "gcp-kms" && !isGcpKmsConfigured)
@@ -98,12 +95,15 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
                   </ToolTipLabel>
                 )
               : undefined,
+          isActive: activeTab === key,
+          key,
+          name,
+          onClick: () => setActiveTab(key),
         }))}
-        tabClassName="font-medium !text-sm"
       />
 
       {!isWalletCredentialsSupported && activeTab === "circle" && (
-        <Alert variant="warning" className="mt-4">
+        <Alert className="mt-4" variant="warning">
           <CircleAlertIcon className="size-4" />
           <AlertTitle>Update Required</AlertTitle>
           <AlertDescription>

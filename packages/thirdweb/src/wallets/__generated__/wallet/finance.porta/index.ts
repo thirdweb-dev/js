@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "finance.porta",
-  name: "PortaWallet",
-  homepage: "https://porta.finance",
-  image_id: "07bc52e6-c402-439d-faea-a5736cd25300",
   app: {
-    browser: null,
-    ios: null,
     android:
       "https://play.google.com/store/apps/details?id=com.wallet.porta.android",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "porta://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://porta.finance",
+  id: "finance.porta",
+  image_id: "07bc52e6-c402-439d-faea-a5736cd25300",
+  mobile: {
+    native: "porta://",
+    universal: null,
+  },
+  name: "PortaWallet",
+  rdns: null,
 } as const;

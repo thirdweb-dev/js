@@ -1,14 +1,10 @@
 "use client";
-import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectedState";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { BasisPointsInput } from "components/inputs/BasisPointsInput";
-import { AddressOrEnsSchema, BasisPointsSchema } from "constants/schemas";
-import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Card } from "chakra/card";
+import { FormErrorMessage, FormLabel } from "chakra/form";
+import { Heading } from "chakra/heading";
+import { Text } from "chakra/text";
 import { useForm } from "react-hook-form";
 import type { ThirdwebContract } from "thirdweb";
 import {
@@ -20,14 +16,14 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
-import {
-  Card,
-  FormErrorMessage,
-  FormLabel,
-  Heading,
-  Text,
-} from "tw-components";
 import z from "zod";
+import { BasisPointsInput } from "@/components/blocks/BasisPointsInput";
+import { AdminOnly } from "@/components/contracts/roles/admin-only";
+import { SolidityInput } from "@/components/solidity-inputs";
+import { TransactionButton } from "@/components/tx-button";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { AddressOrEnsSchema, BasisPointsSchema } from "@/schema/schemas";
+import type { ExtensionDetectedState } from "@/types/ExtensionDetectedState";
 import { SettingDetectedState } from "./detected-state";
 
 // @internal
@@ -51,20 +47,19 @@ export const SettingsPlatformFees = ({
   detectedState: ExtensionDetectedState;
   isLoggedIn: boolean;
 }) => {
-  const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const sendAndConfirmTx = useSendAndConfirmTransaction();
   const platformFeesQuery = useReadContract(getPlatformFeeInfo, { contract });
   const platformFeeInfo = platformFeesQuery.data
     ? {
-        platform_fee_recipient: platformFeesQuery.data[0],
         platform_fee_basis_points: platformFeesQuery.data[1],
+        platform_fee_recipient: platformFeesQuery.data[0],
       }
     : undefined;
 
   const form = useForm<z.input<typeof CommonPlatformFeeSchema>>({
-    resolver: zodResolver(CommonPlatformFeeSchema),
     defaultValues: platformFeeInfo,
+    resolver: zodResolver(CommonPlatformFeeSchema),
     values: platformFeeInfo,
   });
 
@@ -75,63 +70,48 @@ export const SettingsPlatformFees = ({
   );
 
   return (
-    <Card p={0} position="relative" overflow="hidden">
-      <SettingDetectedState type="platformFee" detectedState={detectedState} />
+    <Card overflow="hidden" p={0} position="relative">
+      <SettingDetectedState detectedState={detectedState} type="platformFee" />
       <Flex
         as="form"
+        direction="column"
         onSubmit={form.handleSubmit((data) => {
-          trackEvent({
-            category: "settings",
-            action: "set-platform-fees",
-            label: "attempt",
-          });
           const transaction = setPlatformFeeInfo({
             contract,
-            platformFeeRecipient: data.platform_fee_recipient,
             platformFeeBps: BigInt(data.platform_fee_basis_points),
+            platformFeeRecipient: data.platform_fee_recipient,
           });
           sendAndConfirmTx.mutate(transaction, {
+            onError: (error) => {
+              console.error(error);
+              onError(error);
+            },
             onSuccess: () => {
-              trackEvent({
-                category: "settings",
-                action: "set-platform-fees",
-                label: "success",
-              });
               form.reset(data);
               onSuccess();
             },
-            onError: (error) => {
-              trackEvent({
-                category: "settings",
-                action: "set-platform-fees",
-                label: "error",
-                error,
-              });
-              onError(error);
-            },
           });
         })}
-        direction="column"
       >
-        <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
+        <Flex as="section" direction="column" gap={4} p={{ base: 6, md: 10 }}>
           <Heading size="title.sm">Platform fee</Heading>
-          <Text size="body.md" fontStyle="italic">
+          <Text fontStyle="italic" size="body.md">
             The wallet address that should receive the revenue from platform
             fees.
           </Text>
-          <Flex gap={4} direction={{ base: "column", md: "row" }}>
+          <Flex direction={{ base: "column", md: "row" }} gap={4}>
             <FormControl
+              isDisabled={!address}
               isInvalid={
                 !!form.getFieldState("platform_fee_recipient", form.formState)
                   .error
               }
-              isDisabled={!address}
             >
               <FormLabel>Recipient Address</FormLabel>
               <SolidityInput
                 client={contract.client}
-                solidityType="address"
                 formContext={form}
+                solidityType="address"
                 {...form.register("platform_fee_recipient")}
                 disabled={!address || sendAndConfirmTx.isPending}
               />
@@ -144,24 +124,24 @@ export const SettingsPlatformFees = ({
             </FormControl>
             <FormControl
               isDisabled={!address}
-              maxW={{ base: "100%", md: "200px" }}
               isInvalid={
                 !!form.getFieldState(
                   "platform_fee_basis_points",
                   form.formState,
                 ).error
               }
+              maxW={{ base: "100%", md: "200px" }}
             >
               <FormLabel>Percentage</FormLabel>
               <BasisPointsInput
-                value={form.watch("platform_fee_basis_points")}
+                disabled={sendAndConfirmTx.isPending}
                 onChange={(value) =>
                   form.setValue("platform_fee_basis_points", value, {
                     shouldDirty: true,
                     shouldTouch: true,
                   })
                 }
-                disabled={sendAndConfirmTx.isPending}
+                value={form.watch("platform_fee_basis_points")}
               />
               <FormErrorMessage>
                 {
@@ -176,14 +156,14 @@ export const SettingsPlatformFees = ({
         </Flex>
         <AdminOnly contract={contract}>
           <TransactionButton
-            client={contract.client}
-            isLoggedIn={isLoggedIn}
-            txChainID={contract.chain.id}
-            transactionCount={1}
-            disabled={platformFeesQuery.isPending || !form.formState.isDirty}
-            type="submit"
-            isPending={sendAndConfirmTx.isPending}
             className="!rounded-t-none rounded-xl"
+            client={contract.client}
+            disabled={platformFeesQuery.isPending || !form.formState.isDirty}
+            isLoggedIn={isLoggedIn}
+            isPending={sendAndConfirmTx.isPending}
+            transactionCount={1}
+            txChainID={contract.chain.id}
+            type="submit"
           >
             {sendAndConfirmTx.isPending
               ? "Updating Platform Fee Settings"

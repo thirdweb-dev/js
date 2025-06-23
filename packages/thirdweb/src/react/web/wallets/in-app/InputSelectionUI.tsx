@@ -6,9 +6,9 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
-import { Spacer } from "../../ui/components/Spacer.js";
 import { IconButton } from "../../ui/components/buttons.js";
 import { Input, InputContainer } from "../../ui/components/formElements.js";
+import { Spacer } from "../../ui/components/Spacer.js";
 import { Text } from "../../ui/components/text.js";
 import { CountrySelector, getCountrySelector } from "./CountrySelector.js";
 import type { SupportedSmsCountry } from "./supported-sms-countries.js";
@@ -63,34 +63,23 @@ export function InputSelectionUI(props: {
       }}
     >
       <InputContainer
+        data-error={renderingError}
         style={{
-          position: "relative",
           display: "flex",
           flexDirection: "row",
+          position: "relative",
         }}
-        data-error={renderingError}
       >
         {props.format === "phone" && (
           <CountrySelector
+            allowedCountryCodes={props.allowedSmsCountryCodes}
             countryCode={countryCodeInfo}
             setCountryCode={setCountryCodeInfo}
-            allowedCountryCodes={props.allowedSmsCountryCodes}
           />
         )}
         <Input
-          tabIndex={-1}
-          placeholder={props.placeholder}
-          style={{
-            flexGrow: 1,
-            padding: `${spacing.sm} ${
-              props.format === "phone" ? 0 : spacing.sm
-            }`,
-          }}
-          variant="transparent"
-          type={props.type}
-          name={props.name}
-          value={input}
           disabled={props.disabled}
+          name={props.name}
           onChange={(e) => {
             setInput(e.target.value);
             if (props.errorMessage) {
@@ -104,16 +93,27 @@ export function InputSelectionUI(props: {
               handleSelect();
             }
           }}
+          placeholder={props.placeholder}
+          style={{
+            flexGrow: 1,
+            padding: `${spacing.sm} ${
+              props.format === "phone" ? 0 : spacing.sm
+            }`,
+          }}
+          tabIndex={-1}
+          type={props.type}
+          value={input}
+          variant="transparent"
         />
         <IconButton
-          onClick={handleSelect}
           disabled={props.disabled}
+          onClick={handleSelect}
           style={{
-            padding: spacing.sm,
             borderRadius: `0 ${radius.md} ${radius.md} 0`,
+            padding: spacing.sm,
           }}
         >
-          <ArrowRightIcon width={iconSize.md} height={iconSize.md} />
+          <ArrowRightIcon height={iconSize.md} width={iconSize.md} />
         </IconButton>
       </InputContainer>
 

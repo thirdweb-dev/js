@@ -1,10 +1,30 @@
+import { Collapse, Divider, useDisclosure } from "@chakra-ui/react";
+import { LinkButton } from "chakra/button";
+import { FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
+import { format, formatDistanceToNowStrict } from "date-fns";
+import {
+  ExternalLinkIcon,
+  InfoIcon,
+  MoveLeftIcon,
+  MoveRightIcon,
+} from "lucide-react";
+import Link from "next/link";
+import {
+  type Dispatch,
+  type SetStateAction,
+  useId,
+  useMemo,
+  useState,
+} from "react";
+import { type ThirdwebClient, toTokens } from "thirdweb";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { WalletAddress } from "@/components/blocks/wallet-address";
-import { PaginationButtons } from "@/components/pagination-buttons";
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import type { ChartConfig } from "@/components/ui/chart";
 import { Label } from "@/components/ui/label";
 import {
@@ -33,25 +53,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { type Transaction, useEngineTransactions } from "@/hooks/useEngine";
+import { ChainIconClient } from "@/icons/ChainIcon";
 import { normalizeTime } from "@/lib/time";
-import {
-  type Transaction,
-  useEngineTransactions,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { Collapse, Divider, useDisclosure } from "@chakra-ui/react";
-import { ChainIconClient } from "components/icons/ChainIcon";
-import { format, formatDistanceToNowStrict } from "date-fns";
-import { useAllChainsData } from "hooks/chains/allChains";
-import {
-  ExternalLinkIcon,
-  InfoIcon,
-  MoveLeftIcon,
-  MoveRightIcon,
-} from "lucide-react";
-import Link from "next/link";
-import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
-import { type ThirdwebClient, toTokens } from "thirdweb";
-import { FormLabel, LinkButton, Text } from "tw-components";
 import { TransactionTimeline } from "./transaction-timeline";
 
 export type EngineStatus =
@@ -71,25 +76,29 @@ const statusDetails: Record<
     type: "success" | "destructive" | "warning";
   }
 > = {
-  mined: {
-    name: "Mined",
-    type: "success",
+  cancelled: {
+    name: "Cancelled",
+    type: "destructive",
   },
   errored: {
     name: "Failed",
     type: "destructive",
   },
-  cancelled: {
-    name: "Cancelled",
-    type: "destructive",
+  mined: {
+    name: "Mined",
+    type: "success",
+  },
+  processed: {
+    name: "Processed",
+    type: "warning",
   },
   queued: {
     name: "Queued",
     type: "warning",
   },
-  processed: {
-    name: "Processed",
-    type: "warning",
+  retried: {
+    name: "Retried",
+    type: "success",
   },
   sent: {
     name: "Sent",
@@ -98,10 +107,6 @@ const statusDetails: Record<
   "user-op-sent": {
     name: "User Op Sent",
     type: "warning",
-  },
-  retried: {
-    name: "Retried",
-    type: "success",
   },
 };
 
@@ -117,12 +122,12 @@ export function TransactionsTable(props: {
   const [autoUpdate, setAutoUpdate] = useState(true);
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<EngineStatus | undefined>(undefined);
-
+  const autoUpdateId = useId();
   const pageSize = 10;
   const transactionsQuery = useEngineTransactions({
-    instanceUrl: props.instanceUrl,
-    autoUpdate,
     authToken: props.authToken,
+    autoUpdate,
+    instanceUrl: props.instanceUrl,
     queryParams: {
       limit: pageSize,
       page: page,
@@ -158,20 +163,20 @@ export function TransactionsTable(props: {
 
         <div className="flex items-center justify-end gap-5 border-border border-t pt-4 lg:border-none lg:pt-0">
           <div className="flex shrink-0 items-center gap-2">
-            <Label htmlFor="auto-update">Auto Update</Label>
+            <Label htmlFor={autoUpdateId}>Auto Update</Label>
             <Switch
               checked={autoUpdate}
+              id={autoUpdateId}
               onCheckedChange={(v) => setAutoUpdate(!!v)}
-              id="auto-update"
             />
           </div>
           <StatusSelector
-            status={status}
             setStatus={(v) => {
               setStatus(v);
               // reset page
               setPage(1);
             }}
+            status={status}
           />
         </div>
       </div>
@@ -189,31 +194,27 @@ export function TransactionsTable(props: {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {showSkeleton ? (
-              <>
-                {new Array(pageSize).fill(0).map((_, i) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+            {showSkeleton
+              ? new Array(pageSize).fill(0).map((_, i) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: EXPECTED
                   <SkeletonRow key={i} />
-                ))}
-              </>
-            ) : (
-              <>
-                {transactions.map((tx) => (
+                ))
+              : transactions.map((tx) => (
                   <TableRow
+                    className="cursor-pointer hover:bg-accent/50"
+                    key={`${tx.queueId}${tx.chainId}${tx.blockNumber}`}
                     onClick={() => {
                       setSelectedTransaction(tx);
                       transactionDisclosure.onOpen();
                     }}
-                    key={`${tx.queueId}${tx.chainId}${tx.blockNumber}`}
-                    className="cursor-pointer hover:bg-accent/50"
                   >
                     {/* Queue ID */}
                     <TableCell className="font-medium">
                       <CopyAddressButton
                         address={tx.queueId ? tx.queueId : ""}
+                        className="text-muted-foreground"
                         copyIconPosition="left"
                         variant="ghost"
-                        className="text-muted-foreground"
                       />
                     </TableCell>
 
@@ -253,8 +254,6 @@ export function TransactionsTable(props: {
                     </TableCell>
                   </TableRow>
                 ))}
-              </>
-            )}
           </TableBody>
         </Table>
 
@@ -277,21 +276,21 @@ export function TransactionsTable(props: {
 
       {transactionDisclosure.isOpen && selectedTransaction && (
         <TransactionDetailsDrawer
-          transaction={selectedTransaction}
-          instanceUrl={props.instanceUrl}
           authToken={props.authToken}
-          onClickPrevious={
-            idx > 0
-              ? () => setSelectedTransaction(transactions[idx - 1] || null)
-              : undefined
-          }
+          client={props.client}
+          instanceUrl={props.instanceUrl}
           onClickNext={
             idx < transactions.length - 1
               ? () => setSelectedTransaction(transactions[idx + 1] || null)
               : undefined
           }
+          onClickPrevious={
+            idx > 0
+              ? () => setSelectedTransaction(transactions[idx - 1] || null)
+              : undefined
+          }
           setSelectedTransaction={setSelectedTransaction}
-          client={props.client}
+          transaction={selectedTransaction}
         />
       )}
     </div>
@@ -306,7 +305,6 @@ function StatusSelector(props: {
 
   return (
     <Select
-      value={props.status || "all"}
       onValueChange={(v) => {
         if (v === "all") {
           props.setStatus(undefined);
@@ -314,6 +312,7 @@ function StatusSelector(props: {
           props.setStatus(v as EngineStatus);
         }
       }}
+      value={props.status || "all"}
     >
       <SelectTrigger className="min-w-[160px]">
         <SelectValue placeholder="All" />
@@ -385,8 +384,8 @@ function TxChainCell(props: {
     <div className="flex items-center gap-2">
       <ChainIconClient
         className="size-5"
-        src={chain.icon?.url}
         client={client}
+        src={chain.icon?.url}
       />
       <div className="max-w-[150px] truncate">
         {chain.name ?? `Chain ID: ${chainId}`}
@@ -395,9 +394,7 @@ function TxChainCell(props: {
   );
 }
 
-function TxStatusCell(props: {
-  transaction: Transaction;
-}) {
+function TxStatusCell(props: { transaction: Transaction }) {
   const { transaction } = props;
   const { errorMessage, minedAt } = transaction;
   const status = (transaction.status as EngineStatus) ?? null;
@@ -414,7 +411,7 @@ function TxStatusCell(props: {
 
   return (
     <ToolTipLabel hoverable label={tooltip}>
-      <Badge variant={statusDetails[status].type} className="gap-2">
+      <Badge className="gap-2" variant={statusDetails[status].type}>
         {statusDetails[status].name}
         {errorMessage && <InfoIcon className="size-3" />}
       </Badge>
@@ -436,29 +433,30 @@ function TxHashCell(props: { transaction: Transaction }) {
   if (!explorer) {
     return (
       <CopyTextButton
-        textToCopy={transactionHash}
-        copyIconPosition="left"
-        textToShow={shortHash}
-        variant="ghost"
-        tooltip="Copy transaction hash"
         className="font-mono text-muted-foreground text-sm"
+        copyIconPosition="left"
+        textToCopy={transactionHash}
+        textToShow={shortHash}
+        tooltip="Copy transaction hash"
+        variant="ghost"
       />
     );
   }
 
   return (
     <Button
-      variant="ghost"
       asChild
       className="-translate-x-2 gap-2 font-mono"
       size="sm"
+      variant="ghost"
     >
       <Link
         href={`${explorer.url}/tx/${transactionHash}`}
-        target="_blank"
         onClick={(e) => {
           e.stopPropagation();
         }}
+        rel="noopener noreferrer"
+        target="_blank"
       >
         {shortHash}{" "}
         <ExternalLinkIcon className="size-4 text-muted-foreground" />
@@ -486,9 +484,9 @@ export function TransactionCharts(props: {
   instanceUrl: string;
 }) {
   const transactionsQuery = useEngineTransactions({
-    instanceUrl: props.instanceUrl,
-    autoUpdate: false,
     authToken: props.authToken,
+    autoUpdate: false,
+    instanceUrl: props.instanceUrl,
     queryParams: {
       limit: 10000,
       page: 1,
@@ -528,13 +526,13 @@ export function TransactionCharts(props: {
     const chartConfig: ChartConfig = {};
     Array.from(uniqueStatuses).forEach((status, i) => {
       chartConfig[status] = {
-        label: status.charAt(0).toUpperCase() + status.slice(1), // first letter uppercase
         color:
           status === "errored"
             ? "hsl(var(--destructive-text))"
             : status === "mined"
               ? "hsl(var(--success-text))"
-              : `hsl(var(--chart-${(i % 15) + 3}))`,
+              : `hsl(var(--chart-${(i % 15) + 3}))`, // first letter uppercase
+        label: status.charAt(0).toUpperCase() + status.slice(1),
       };
     });
 
@@ -546,17 +544,16 @@ export function TransactionCharts(props: {
 
   return (
     <ThirdwebBarChart
-      header={{
-        title: "Transactions Breakdown",
-        description: "Transactions sent from your backend wallets per day",
-        titleClassName: "text-xl mb-0",
-      }}
+      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
       config={chartConfig}
       data={analyticsData}
-      isPending={transactionsQuery.isPending}
-      chartClassName="aspect-[1.5] lg:aspect-[4.5]"
+      header={{
+        description: "Transactions sent from your backend wallets per day",
+        title: "Transactions Breakdown",
+        titleClassName: "text-xl mb-0",
+      }}
       hideLabel={false}
-      variant="stacked"
+      isPending={transactionsQuery.isPending}
       showLegend
       toolTipLabelFormatter={(_v, item) => {
         if (Array.isArray(item)) {
@@ -565,6 +562,7 @@ export function TransactionCharts(props: {
         }
         return undefined;
       }}
+      variant="stacked"
     />
   );
 }
@@ -622,7 +620,7 @@ const TransactionDetailsDrawer = ({
   };
 
   return (
-    <Sheet open={!!transaction} onOpenChange={handleOpenChange}>
+    <Sheet onOpenChange={handleOpenChange} open={!!transaction}>
       <SheetContent className="w-full overflow-y-auto sm:min-w-[500px] lg:min-w-[500px]">
         <SheetHeader>
           <SheetTitle className="mb-3 flex flex-row items-center gap-3 border-border border-b pb-3 text-left">
@@ -640,8 +638,8 @@ const TransactionDetailsDrawer = ({
             <div className="flex items-center gap-2">
               <ChainIconClient
                 className="size-5"
-                src={chain?.icon?.url}
                 client={client}
+                src={chain?.icon?.url}
               />
               <span>{chain?.name}</span>
             </div>
@@ -659,14 +657,14 @@ const TransactionDetailsDrawer = ({
               {transaction.accountAddress ? "Signer Address" : "From Address"}
             </FormLabel>
             <LinkButton
-              variant="ghost"
-              isExternal
-              size="xs"
               href={
                 explorer
                   ? `${explorer.url}/address/${transaction.fromAddress}`
                   : "#"
               }
+              isExternal
+              size="xs"
+              variant="ghost"
             >
               <Text fontFamily="mono">{transaction.fromAddress}</Text>
             </LinkButton>
@@ -676,14 +674,14 @@ const TransactionDetailsDrawer = ({
             <div>
               <FormLabel>Account Address</FormLabel>
               <LinkButton
-                variant="ghost"
-                isExternal
-                size="xs"
                 href={
                   explorer
                     ? `${explorer.url}/address/${transaction.accountAddress}`
                     : "#"
                 }
+                isExternal
+                size="xs"
+                variant="ghost"
               >
                 <Text fontFamily="mono">{transaction.accountAddress}</Text>
               </LinkButton>
@@ -698,14 +696,14 @@ const TransactionDetailsDrawer = ({
                 : "Contract Address"}
             </FormLabel>
             <LinkButton
-              variant="ghost"
-              isExternal
-              size="xs"
               href={
                 explorer
                   ? `${explorer.url}/address/${transaction.toAddress}`
                   : "#"
               }
+              isExternal
+              size="xs"
+              variant="ghost"
             >
               <Text fontFamily="mono">{transaction.toAddress}</Text>
             </LinkButton>
@@ -726,10 +724,10 @@ const TransactionDetailsDrawer = ({
           <Divider />
 
           <TransactionTimeline
-            transaction={transaction}
+            authToken={authToken}
             client={client}
             instanceUrl={instanceUrl}
-            authToken={authToken}
+            transaction={transaction}
           />
 
           <Divider />
@@ -758,15 +756,15 @@ const TransactionDetailsDrawer = ({
               <div>
                 <FormLabel>Transaction Hash</FormLabel>
                 <LinkButton
-                  variant="ghost"
-                  isExternal
-                  size="xs"
                   href={
                     explorer
                       ? `${explorer.url}/tx/${transaction.transactionHash}`
                       : "#"
                   }
+                  isExternal
                   maxW="100%"
+                  size="xs"
+                  variant="ghost"
                 >
                   <Text fontFamily="mono" isTruncated>
                     {transaction.transactionHash}
@@ -825,15 +823,15 @@ const TransactionDetailsDrawer = ({
                     <div>
                       <FormLabel>Block</FormLabel>
                       <LinkButton
-                        variant="ghost"
-                        isExternal
-                        size="xs"
                         href={
                           explorer
                             ? `${explorer.url}/block/${transaction.blockNumber}`
                             : "#"
                         }
+                        isExternal
                         maxW="100%"
+                        size="xs"
+                        variant="ghost"
                       >
                         <Text>{transaction.blockNumber}</Text>
                       </LinkButton>
@@ -843,10 +841,10 @@ const TransactionDetailsDrawer = ({
               </Collapse>
 
               <Button
-                onClick={advancedTxDetailsDisclosure.onToggle}
-                variant="link"
-                size="sm"
                 className="w-fit"
+                onClick={advancedTxDetailsDisclosure.onToggle}
+                size="sm"
+                variant="link"
               >
                 {advancedTxDetailsDisclosure.isOpen
                   ? "Hide transaction details"
@@ -857,19 +855,19 @@ const TransactionDetailsDrawer = ({
         </div>
         <div className="mt-4 flex flex-row justify-end gap-3 border-border border-t pt-4">
           <Button
+            className="gap-2"
             disabled={!onClickPrevious}
             onClick={onClickPrevious}
             variant="outline"
-            className="gap-2"
           >
             <MoveLeftIcon className="size-4" />
             Previous
           </Button>
           <Button
+            className="gap-2"
             disabled={!onClickNext}
             onClick={onClickNext}
             variant="outline"
-            className="gap-2"
           >
             Next
             <MoveRightIcon className="size-4" />

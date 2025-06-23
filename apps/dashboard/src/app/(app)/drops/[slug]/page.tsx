@@ -1,5 +1,3 @@
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { defineDashboardChain } from "lib/defineDashboardChain";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getContract, toTokens } from "thirdweb";
@@ -13,12 +11,16 @@ import {
   getActiveClaimCondition as getActiveClaimCondition1155,
   getNFT as getNFT1155,
 } from "thirdweb/extensions/erc1155";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { defineDashboardChain } from "@/lib/defineDashboardChain";
 import { DROP_PAGES } from "./data";
 import { NftMint } from "./mint-ui";
 
 export async function generateMetadata({
   params,
-}: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const project = DROP_PAGES.find((p) => p.slug === slug);
   if (!project) {
@@ -29,7 +31,9 @@ export async function generateMetadata({
 
 export default async function DropPage({
   params,
-}: { params: Promise<{ slug: string }> }) {
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
 
   const project = DROP_PAGES.find((p) => p.slug === slug);
@@ -74,9 +78,9 @@ export default async function DropPage({
     return (
       <NftMint
         contract={contract}
+        description={description}
         displayName={displayName}
         thumbnail={thumbnail}
-        description={description}
         {...project}
         noActiveClaimCondition
       />
@@ -104,13 +108,13 @@ export default async function DropPage({
   return (
     <NftMint
       contract={contract}
-      displayName={displayName || ""}
-      thumbnail={thumbnail}
-      description={description || ""}
       currencySymbol={currencyMetadata.symbol}
-      pricePerToken={pricePerToken}
+      description={description || ""}
+      displayName={displayName || ""}
       noActiveClaimCondition={false}
+      pricePerToken={pricePerToken}
       quantityLimitPerWallet={claimCondition.quantityLimitPerWallet}
+      thumbnail={thumbnail}
       {...project}
     />
   );

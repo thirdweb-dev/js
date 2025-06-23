@@ -1,15 +1,15 @@
-import { Img } from "@/components/ui/Img";
-import { LoadingDots } from "@/components/ui/LoadingDots";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { CheckIcon, SearchIcon } from "lucide-react";
 import { useState } from "react";
 import { useWalletImage } from "thirdweb/react";
-import { type WalletId, getAllWalletsList } from "thirdweb/wallets";
+import { getAllWalletsList, type WalletId } from "thirdweb/wallets";
+import { Button } from "@/components/ui/button";
+import { Img } from "@/components/ui/Img";
+import { Input } from "@/components/ui/input";
+import { LoadingDots } from "@/components/ui/LoadingDots";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 import type { ConnectPlaygroundOptions } from "./types";
 
 export function WalletsSelection(props: {
@@ -21,8 +21,8 @@ export function WalletsSelection(props: {
   const { connectOptions, setConnectOptions } = props;
   const [isEdited, setIsEdited] = useState(false);
   const walletsQuery = useQuery({
-    queryKey: ["wallets"],
     queryFn: () => getAllWalletsList(),
+    queryKey: ["wallets"],
   });
 
   const [search, setSearch] = useState("");
@@ -61,10 +61,10 @@ export function WalletsSelection(props: {
         <div className="relative max-w-[320px] grow">
           <SearchIcon className="-translate-y-1/2 absolute top-1/2 left-3 size-4 text-muted-foreground" />
           <Input
-            placeholder="Search from 500+ wallets"
             className="rounded-lg pl-9"
-            value={search}
             onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search from 500+ wallets"
+            value={search}
           />
         </div>
       </div>
@@ -73,9 +73,9 @@ export function WalletsSelection(props: {
 
       {wallets && (
         <ScrollShadow
+          className="fade-in-0 animate-in duration-500"
           scrollableClassName="h-[250px] px-2"
           shadowColor="hsl(var(--muted))"
-          className="fade-in-0 animate-in duration-500"
         >
           <div className="h-2" />
           <div className="grid grid-cols-1 gap-x-4 gap-y-1.5 md:grid-cols-2">
@@ -83,8 +83,8 @@ export function WalletsSelection(props: {
               const enabled = connectOptions.walletIds.includes(wallet.id);
               return (
                 <WalletButton
-                  id={wallet.id}
                   enabled={enabled}
+                  id={wallet.id}
                   key={wallet.id}
                   name={wallet.name}
                   onClick={() => {
@@ -134,10 +134,10 @@ function WalletButton(props: {
     >
       <span className="flex items-center gap-3">
         <Img
-          src={walletImage.data}
           alt=""
           className="size-7 rounded-lg"
           loading="lazy"
+          src={walletImage.data}
         />
         <span className="truncate"> {props.name}</span>
       </span>

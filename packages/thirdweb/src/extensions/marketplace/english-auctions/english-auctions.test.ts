@@ -7,8 +7,8 @@ import {
   TEST_ACCOUNT_B,
 } from "../../../../test/src/test-wallets.js";
 import {
-  type ThirdwebContract,
   getContract,
+  type ThirdwebContract,
 } from "../../../contract/contract.js";
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
@@ -37,42 +37,42 @@ describe.skip("Marketplace: English Auctions", () => {
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       params: {
-        name: "TestMarketPlace",
         contractURI: TEST_CONTRACT_URI,
+        name: "TestMarketPlace",
       },
     });
     marketplaceContract = getContract({
       address: marketplaceAddress,
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
 
     // also deploy an ERC721 contract
     const erc721Address = await deployERC721Contract({
-      type: "TokenERC721",
       account: TEST_ACCOUNT_A,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       params: {
-        name: "TestERC721",
         contractURI: TEST_CONTRACT_URI,
+        name: "TestERC721",
       },
+      type: "TokenERC721",
     });
 
     erc721Contract = getContract({
       address: erc721Address,
-      client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
     });
 
     const mintTransaction = mintTo({
       contract: erc721Contract,
-      to: TEST_ACCOUNT_A.address,
       nft: { name: "Test:ERC721:EnglishAuction" },
+      to: TEST_ACCOUNT_A.address,
     });
     const receipt = await sendAndConfirmTransaction({
-      transaction: mintTransaction,
       account: TEST_ACCOUNT_A,
+      transaction: mintTransaction,
     });
 
     const mintEvents = parseEventLogs({
@@ -104,20 +104,20 @@ describe.skip("Marketplace: English Auctions", () => {
     });
 
     await sendAndConfirmTransaction({
-      transaction: approveTx,
       account: TEST_ACCOUNT_A,
+      transaction: approveTx,
     });
 
     const transaction = createAuction({
-      contract: marketplaceContract,
       assetContractAddress: erc721Contract.address,
-      tokenId: nftTokenId,
-      minimumBidAmount: "1",
       buyoutBidAmount: "10",
+      contract: marketplaceContract,
+      minimumBidAmount: "1",
+      tokenId: nftTokenId,
     });
     const receipt = await sendAndConfirmTransaction({
-      transaction,
       account: TEST_ACCOUNT_A,
+      transaction,
     });
 
     const listingEvents = parseEventLogs({
@@ -148,8 +148,8 @@ describe.skip("Marketplace: English Auctions", () => {
 
     // explicitly retrieve the listing!
     const listing = await getAuction({
-      contract: marketplaceContract,
       auctionId: listingEvent.args.auctionId,
+      contract: marketplaceContract,
     });
 
     expect(listing).toBeDefined();
@@ -190,8 +190,8 @@ describe.skip("Marketplace: English Auctions", () => {
     // check for a winning bid
     await expect(
       getWinningBid({
-        contract: marketplaceContract,
         auctionId: listing.id,
+        contract: marketplaceContract,
       }),
     ).resolves.toBeUndefined();
 
@@ -201,8 +201,8 @@ describe.skip("Marketplace: English Auctions", () => {
         account: TEST_ACCOUNT_B,
         transaction: bidInAuction({
           auctionId: listing.id,
-          contract: marketplaceContract,
           bidAmount: "0",
+          contract: marketplaceContract,
         }),
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot("[Error: Bid amount is zero]");
@@ -212,8 +212,8 @@ describe.skip("Marketplace: English Auctions", () => {
         account: TEST_ACCOUNT_B,
         transaction: bidInAuction({
           auctionId: listing.id,
-          contract: marketplaceContract,
           bidAmount: "11",
+          contract: marketplaceContract,
         }),
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
@@ -225,8 +225,8 @@ describe.skip("Marketplace: English Auctions", () => {
         account: TEST_ACCOUNT_B,
         transaction: bidInAuction({
           auctionId: listing.id,
-          contract: marketplaceContract,
           bidAmount: "0.5",
+          contract: marketplaceContract,
         }),
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
@@ -239,8 +239,8 @@ describe.skip("Marketplace: English Auctions", () => {
         account: TEST_ACCOUNT_B,
         transaction: bidInAuction({
           auctionId: listing.id,
-          contract: marketplaceContract,
           bidAmount: "2",
+          contract: marketplaceContract,
         }),
       }),
     ).resolves.toBeDefined();
@@ -248,8 +248,8 @@ describe.skip("Marketplace: English Auctions", () => {
     // check for a new winning bid
     await expect(
       getWinningBid({
-        contract: marketplaceContract,
         auctionId: listing.id,
+        contract: marketplaceContract,
       }),
     ).resolves.toMatchInlineSnapshot(`
       {
@@ -272,8 +272,8 @@ describe.skip("Marketplace: English Auctions", () => {
         account: TEST_ACCOUNT_B,
         transaction: bidInAuction({
           auctionId: listing.id,
-          contract: marketplaceContract,
           bidAmount: "1.5",
+          contract: marketplaceContract,
         }),
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
@@ -286,9 +286,9 @@ describe.skip("Marketplace: English Auctions", () => {
         account: TEST_ACCOUNT_B,
         transaction: bidInAuction({
           auctionId: listing.id,
-          contract: marketplaceContract,
           // 2 * 1.05 = 2.1, so 2.05 is invalid
           bidAmount: "2.05",
+          contract: marketplaceContract,
         }),
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
@@ -301,8 +301,8 @@ describe.skip("Marketplace: English Auctions", () => {
         account: TEST_ACCOUNT_B,
         transaction: bidInAuction({
           auctionId: listing.id,
-          contract: marketplaceContract,
           bidAmount: "3",
+          contract: marketplaceContract,
         }),
       }),
     ).resolves.toBeDefined();
@@ -310,8 +310,8 @@ describe.skip("Marketplace: English Auctions", () => {
     // check for a new winning bid
     await expect(
       getWinningBid({
-        contract: marketplaceContract,
         auctionId: listing.id,
+        contract: marketplaceContract,
       }),
     ).resolves.toMatchInlineSnapshot(`
       {
@@ -333,8 +333,8 @@ describe.skip("Marketplace: English Auctions", () => {
       sendAndConfirmTransaction({
         account: TEST_ACCOUNT_B,
         transaction: buyoutAuction({
-          contract: marketplaceContract,
           auctionId: listing.id,
+          contract: marketplaceContract,
         }),
       }),
     ).resolves.toBeDefined();
@@ -342,8 +342,8 @@ describe.skip("Marketplace: English Auctions", () => {
     // check for a new winning bid
     await expect(
       getWinningBid({
-        contract: marketplaceContract,
         auctionId: listing.id,
+        contract: marketplaceContract,
       }),
     ).resolves.toMatchInlineSnapshot(`
       {

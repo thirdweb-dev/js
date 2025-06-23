@@ -1,16 +1,13 @@
-import { getProjects } from "@/api/projects";
-import { getTeams } from "@/api/team";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import type { MinimalTeamsAndProjects } from "components/contract-components/contract-deploy-form/add-to-project-card";
-import { resolveFunctionSelectors } from "lib/selectors";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { isAddress, isContractDeployed } from "thirdweb/utils";
-import { shortenIfAddress } from "utils/usedapp-external";
-import { NebulaChatButton } from "../../../../../nebula-app/(app)/components/FloatingChat/FloatingChat";
-import { examplePrompts } from "../../../../../nebula-app/(app)/data/examplePrompts";
-import { getAuthTokenWalletAddress } from "../../../../api/lib/getAuthToken";
+import { getProjects } from "@/api/projects";
+import { getTeams } from "@/api/team";
+import type { MinimalTeamsAndProjects } from "@/components/contract-components/contract-deploy-form/add-to-project-card";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { resolveFunctionSelectors } from "@/lib/selectors";
+import { shortenIfAddress } from "@/utils/usedapp-external";
 import type { ProjectMeta } from "../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { TeamHeader } from "../../../../team/components/TeamHeader/team-header";
 import { ConfigureCustomChain } from "./_layout/ConfigureCustomChain";
@@ -34,13 +31,12 @@ export async function SharedContractLayout(props: {
     return notFound();
   }
 
-  const [info, accountAddress, teamsAndProjects] = await Promise.all([
+  const [info, teamsAndProjects] = await Promise.all([
     getContractPageParamsInfo({
-      contractAddress: props.contractAddress,
       chainIdOrSlug: props.chainIdOrSlug,
+      contractAddress: props.contractAddress,
       teamId: props.projectMeta?.teamId,
     }),
-    getAuthTokenWalletAddress(),
     getTeamsAndProjectsIfLoggedIn(),
   ]);
 
@@ -69,8 +65,8 @@ export async function SharedContractLayout(props: {
         <ContractPageLayoutClient
           chainMetadata={chainMetadata}
           contract={clientContract}
-          teamsAndProjects={teamsAndProjects}
           projectMeta={props.projectMeta}
+          teamsAndProjects={teamsAndProjects}
         >
           {props.children}
         </ContractPageLayoutClient>
@@ -109,42 +105,17 @@ export async function SharedContractLayout(props: {
     projectMeta: props.projectMeta,
   });
 
-  const contractAddress = serverContract.address;
-  const chainName = chainMetadata.name;
-  const chainId = chainMetadata.chainId;
-
-  const contractPromptPrefix = `A user is viewing the contract address ${contractAddress} on ${chainName} (Chain ID: ${chainId}). Provide a concise summary of this contract's functionalities, such as token minting, staking, or governance mechanisms. Focus on what the contract enables users to do, avoiding transaction execution details unless requested.
-Users may be interested in how to interact with the contract. Outline common interaction patterns, such as claiming rewards, participating in governance, or transferring assets. Emphasize the contract's capabilities without guiding through transaction processes unless asked.
-Provide insights into how the contract is being used. Share information on user engagement, transaction volumes, or integration with other dApps, focusing on the contract's role within the broader ecosystem.
-Users may be considering integrating the contract into their applications. Discuss how this contract's functionalities can be leveraged within different types of dApps, highlighting potential use cases and benefits.
-
-The following is the user's message:`;
-
   return (
     <ConditionalTeamHeaderLayout projectMeta={props.projectMeta}>
       <ContractPageLayout
         chainMetadata={chainMetadata}
         contract={clientContract}
-        sidebarLinks={sidebarLinks}
         dashboardContractMetadata={contractMetadata}
         externalLinks={externalLinks}
-        teamsAndProjects={teamsAndProjects}
         projectMeta={props.projectMeta}
+        sidebarLinks={sidebarLinks}
+        teamsAndProjects={teamsAndProjects}
       >
-        <NebulaChatButton
-          isLoggedIn={!!accountAddress}
-          networks={info.chainMetadata.testnet ? "testnet" : "mainnet"}
-          isFloating={true}
-          pageType="contract"
-          label="Ask AI about this contract"
-          client={clientContract.client}
-          nebulaParams={{
-            messagePrefix: contractPromptPrefix,
-            chainIds: [chainId],
-            wallet: accountAddress ?? undefined,
-          }}
-          examplePrompts={examplePrompts}
-        />
         {props.children}
       </ContractPageLayout>
     </ConditionalTeamHeaderLayout>
@@ -161,18 +132,18 @@ async function getTeamsAndProjectsIfLoggedIn() {
 
     const teamsAndProjects: MinimalTeamsAndProjects = await Promise.all(
       teams.map(async (team) => ({
-        team: {
-          id: team.id,
-          name: team.name,
-          slug: team.slug,
-          image: team.image,
-        },
         projects: (await getProjects(team.slug)).map((x) => ({
           id: x.id,
-          name: x.name,
           image: x.image,
+          name: x.name,
           slug: x.slug,
         })),
+        team: {
+          id: team.id,
+          image: team.image,
+          name: team.name,
+          slug: team.slug,
+        },
       })),
     );
 
@@ -188,8 +159,8 @@ export async function generateContractLayoutMetadata(params: {
 }): Promise<Metadata> {
   try {
     const info = await getContractPageParamsInfo({
-      contractAddress: params.contractAddress,
       chainIdOrSlug: params.chainIdOrSlug,
+      contractAddress: params.contractAddress,
       teamId: undefined,
     });
 
@@ -231,13 +202,13 @@ export async function generateContractLayoutMetadata(params: {
     }
 
     return {
-      title: title,
       description: description,
+      title: title,
     };
   } catch {
     return {
-      title: `${shortenIfAddress(params.contractAddress)} | ${params.chainIdOrSlug}`,
       description: `View tokens, transactions, balances, source code, and analytics for the smart contract  on Chain ID ${params.chainIdOrSlug}`,
+      title: `${shortenIfAddress(params.contractAddress)} | ${params.chainIdOrSlug}`,
     };
   }
 }
@@ -245,7 +216,10 @@ export async function generateContractLayoutMetadata(params: {
 function ConditionalTeamHeaderLayout({
   children,
   projectMeta,
-}: { children: React.ReactNode; projectMeta: ProjectMeta | undefined }) {
+}: {
+  children: React.ReactNode;
+  projectMeta: ProjectMeta | undefined;
+}) {
   // if inside a project page - do not another team header
   if (projectMeta) {
     return children;

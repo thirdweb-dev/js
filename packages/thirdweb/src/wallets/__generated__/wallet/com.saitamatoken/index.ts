@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.saitamatoken",
-  name: "SaitaPro",
-  homepage: "https://www.saitamatoken.com/saitapro/",
-  image_id: "fedd85cd-fa5e-4c66-0b05-1ff2ce864e00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/saitapro/id1636523777",
     android:
       "https://play.google.com/store/apps/details?id=com.saitapro&hl=en&gl=US",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/saitapro/id1636523777",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "SaitaPro://app",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.saitamatoken.com/saitapro/",
+  id: "com.saitamatoken",
+  image_id: "fedd85cd-fa5e-4c66-0b05-1ff2ce864e00",
+  mobile: {
+    native: "SaitaPro://app",
+    universal: null,
+  },
+  name: "SaitaPro",
+  rdns: null,
 } as const;

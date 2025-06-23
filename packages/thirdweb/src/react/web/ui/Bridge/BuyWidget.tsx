@@ -12,7 +12,6 @@ import {
   isAddress,
 } from "../../../../utils/address.js";
 import { stringify } from "../../../../utils/json.js";
-import { toTokens } from "../../../../utils/units.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
@@ -22,8 +21,8 @@ import type { Theme } from "../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButton_connectModalOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
-import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
+import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { DynamicHeight } from "../components/DynamicHeight.js";
 import { Spinner } from "../components/Spinner.js";
 import type { LocaleId } from "../types.js";
@@ -112,14 +111,24 @@ export type BuyWidgetProps = {
   tokenAddress?: Address;
 
   /**
-   * The amount to buy **(in wei)**.
+   * The amount to buy **(as a decimal string)**, e.g. "1.5" for 1.5 tokens.
    */
-  amount: bigint;
+  amount: string;
 
   /**
    * The title to display in the widget.
    */
   title?: string;
+
+  /**
+   * The description to display in the widget.
+   */
+  description?: string;
+
+  /**
+   * The image to display in the widget.
+   */
+  image?: string;
 
   /**
    * Preset fiat amounts to display in the UI. Defaults to [5, 10, 20].
@@ -178,12 +187,11 @@ type UIOptionsResult =
  *
  * ```tsx
  * import { ethereum } from "thirdweb/chains";
- * import { toWei } from "thirdweb";
  *
  * <BuyWidget
  *   client={client}
  *   chain={ethereum}
- *   amount={toWei("0.1")}
+ *   amount="0.1"
  * />
  * ```
  *
@@ -195,7 +203,7 @@ type UIOptionsResult =
  * <BuyWidget
  *   client={client}
  *   chain={ethereum}
- *   amount={toWei("100")}
+ *   amount="100"
  *   tokenAddress="0xA0b86a33E6417E4df2057B2d3C6d9F7cc11b0a70"
  * />
  * ```
@@ -208,7 +216,7 @@ type UIOptionsResult =
  * <BuyWidget
  *   client={client}
  *   chain={ethereum}
- *   amount={toWei("0.1")}
+ *   amount="0.1"
  *   theme={darkTheme({
  *     colors: {
  *       modalBg: "red",
@@ -227,7 +235,7 @@ type UIOptionsResult =
  * <BuyWidget
  *   client={client}
  *   chain={ethereum}
- *   amount={toWei("0.1")}
+ *   amount="0.1"
  *   title="Buy ETH"
  * />
  * ```
@@ -240,7 +248,7 @@ type UIOptionsResult =
  * <BuyWidget
  *   client={client}
  *   chain={ethereum}
- *   amount={toWei("0.1")}
+ *   amount="0.1"
  *   connectOptions={{
  *     connectModal: {
  *       size: 'compact',
@@ -261,7 +269,6 @@ export function BuyWidget(props: BuyWidgetProps) {
   const theme = props.theme || "dark";
 
   const bridgeDataQuery = useQuery({
-    queryKey: ["bridgeData", stringify(props)],
     queryFn: async (): Promise<UIOptionsResult> => {
       if (
         !props.tokenAddress ||
@@ -275,12 +282,17 @@ export function BuyWidget(props: BuyWidgetProps) {
           props.chain.id,
         );
         return {
-          type: "success",
           data: {
-            mode: "fund_wallet",
             destinationToken: ETH,
-            initialAmount: toTokens(props.amount, ETH.decimals),
+            initialAmount: props.amount,
+            metadata: {
+              description: props.description,
+              image: props.image,
+              title: props.title,
+            },
+            mode: "fund_wallet",
           },
+          type: "success",
         };
       }
 
@@ -293,23 +305,26 @@ export function BuyWidget(props: BuyWidgetProps) {
       });
       if (!token) {
         return {
-          type: "unsupported_token",
-          tokenAddress: props.tokenAddress,
           chain: props.chain,
+          tokenAddress: props.tokenAddress,
+          type: "unsupported_token",
         };
       }
       return {
-        type: "success",
         data: {
-          mode: "fund_wallet",
           destinationToken: token,
-          initialAmount: toTokens(props.amount, token.decimals),
+          initialAmount: props.amount,
           metadata: {
+            description: props.description,
+            image: props.image,
             title: props.title,
           },
+          mode: "fund_wallet",
         },
+        type: "success",
       };
     },
+    queryKey: ["bridgeData", stringify(props)],
   });
 
   let content = null;
@@ -317,13 +332,13 @@ export function BuyWidget(props: BuyWidgetProps) {
     content = (
       <div
         style={{
-          minHeight: "350px",
+          alignItems: "center",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          minHeight: "350px",
         }}
       >
-        <Spinner size="xl" color="secondaryText" />
+        <Spinner color="secondaryText" size="xl" />
       </div>
     );
   } else if (bridgeDataQuery.data?.type === "unsupported_token") {
@@ -334,22 +349,22 @@ export function BuyWidget(props: BuyWidgetProps) {
     content = (
       <BridgeOrchestrator
         client={props.client}
-        uiOptions={bridgeDataQuery.data.data}
-        connectOptions={props.connectOptions}
         connectLocale={localeQuery.data}
-        purchaseData={props.purchaseData}
-        paymentLinkId={props.paymentLinkId}
+        connectOptions={props.connectOptions}
+        onCancel={() => {
+          props.onCancel?.();
+        }}
         onComplete={() => {
           props.onSuccess?.();
         }}
         onError={(err: Error) => {
           props.onError?.(err);
         }}
-        onCancel={() => {
-          props.onCancel?.();
-        }}
+        paymentLinkId={props.paymentLinkId}
         presetOptions={props.presetOptions}
+        purchaseData={props.purchaseData}
         receiverAddress={undefined}
+        uiOptions={bridgeDataQuery.data.data}
       />
     );
   }
@@ -357,9 +372,9 @@ export function BuyWidget(props: BuyWidgetProps) {
   return (
     <CustomThemeProvider theme={theme}>
       <EmbedContainer
+        className={props.className}
         modalSize="compact"
         style={props.style}
-        className={props.className}
       >
         <DynamicHeight>{content}</DynamicHeight>
       </EmbedContainer>

@@ -23,8 +23,8 @@ export function ContractSettingsPageClient(props: {
     <ContractSettingsPage
       contract={props.contract}
       functionSelectors={metadataQuery.data.functionSelectors}
-      isLoggedIn={props.isLoggedIn}
       hasDefaultFeeConfig={true}
+      isLoggedIn={props.isLoggedIn}
     />
   );
 }

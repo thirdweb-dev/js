@@ -14,6 +14,11 @@ import {
   mergeRefs,
 } from "./MediaRenderer.js";
 
+const three3dModelLink =
+  "https://i2.seadn.io/matic/0x2953399124f0cbb46d2cbacd8a89cf0599974963/bd1801876c5cf1302484e225c72959/49bd1801876c5cf1302484e225c72959.glb";
+const imageLink =
+  "https://i.seadn.io/gae/r_b9GB0iYA39ichUlKdFLeG4UliK7YXi9SsM0Xdvm6pNDChYbN5E7Fxop1MdJCbmNvSlbER73YiA9WY1JbhEfkuIktoHfN9UlEZy4A?auto=format&dpr=1&w=1000";
+
 describe("MediaRenderer", () => {
   it("should render nothing if no src provided", () => {
     render(<MediaRenderer client={TEST_CLIENT} />);
@@ -27,14 +32,9 @@ describe("MediaRenderer", () => {
     }, 1000);
   });
 
-  it("should render a plain image", () => {
-    render(
-      <MediaRenderer
-        client={TEST_CLIENT}
-        src="https://i.seadn.io/gae/r_b9GB0iYA39ichUlKdFLeG4UliK7YXi9SsM0Xdvm6pNDChYbN5E7Fxop1MdJCbmNvSlbER73YiA9WY1JbhEfkuIktoHfN9UlEZy4A?auto=format&dpr=1&w=1000"
-      />,
-    );
-    waitFor(() => {
+  it("should render a plain image", async () => {
+    render(<MediaRenderer client={TEST_CLIENT} src={imageLink} />);
+    await waitFor(() => {
       expect(screen.getByRole("img")).toBeInTheDocument();
     });
   });
@@ -100,7 +100,7 @@ describe("MediaRenderer", () => {
     it("renders with custom src and alt", () => {
       const src = "https://example.com/file";
       const alt = "Custom File Name";
-      render(<LinkPlayer src={src} alt={alt} />);
+      render(<LinkPlayer alt={alt} src={src} />);
 
       const linkElement = screen.getByText(alt);
       expect(linkElement).toBeInTheDocument();
@@ -111,7 +111,7 @@ describe("MediaRenderer", () => {
       const customStyle = { backgroundColor: "red" };
       const customClassName = "custom-class";
       const { container } = render(
-        <LinkPlayer style={customStyle} className={customClassName} />,
+        <LinkPlayer className={customClassName} style={customStyle} />,
       );
 
       const outerDiv = container.querySelector(".custom-class");
@@ -152,7 +152,7 @@ describe("MediaRenderer", () => {
     it("applies custom src and alt", () => {
       const src = "https://example.com/video";
       const alt = "Custom Video";
-      render(<IframePlayer src={src} alt={alt} />);
+      render(<IframePlayer alt={alt} src={src} />);
 
       const iframe = screen.getByTitle(alt);
       expect(iframe).toBeInTheDocument();
@@ -191,7 +191,7 @@ describe("MediaRenderer", () => {
     it("applies custom style", () => {
       const customStyle = { backgroundColor: "red" };
       const { container } = render(
-        <IframePlayer style={customStyle} className="iframe-test" />,
+        <IframePlayer className="iframe-test" style={customStyle} />,
       );
 
       const element = container.querySelector(".iframe-test");
@@ -210,7 +210,7 @@ describe("MediaRenderer", () => {
 
     it("respects requireInteraction prop", () => {
       render(
-        <IframePlayer src="https://example.com/video" requireInteraction />,
+        <IframePlayer requireInteraction src="https://example.com/video" />,
       );
 
       const iframe = screen.getByTitle("thirdweb iframe player");
@@ -220,6 +220,19 @@ describe("MediaRenderer", () => {
       fireEvent.click(playButton);
 
       expect(iframe).toHaveAttribute("src", "https://example.com/video");
+    });
+  });
+
+  it("should render poster image for 3d models", async () => {
+    render(
+      <MediaRenderer
+        client={TEST_CLIENT}
+        poster={imageLink}
+        src={three3dModelLink}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.getByRole("img")).toBeInTheDocument();
     });
   });
 });

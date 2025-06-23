@@ -1,21 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { teamStub } from "stories/stubs";
+import { teamStub } from "@/storybook/stubs";
 import {
   BadgeContainer,
   mobileViewport,
   storybookThirdwebClient,
-} from "stories/utils";
+} from "@/storybook/utils";
 import { TeamSettingsSidebar } from "../_components/sidebar/TeamSettingsSidebar";
 import { TeamSettingsMobileNav } from "../_components/sidebar/TeamsMobileNav";
 
 const meta = {
-  title: "Team/Settings/components/Sidebar",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Team/Settings/components/Sidebar",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -36,28 +36,26 @@ export const Mobile: Story = {
   },
 };
 
-function Story(props: {
-  type: "mobile" | "desktop";
-}) {
+function Story(props: { type: "mobile" | "desktop" }) {
   return (
     <div className="container min-h-dvh py-6 text-foreground">
       {props.type === "desktop" && (
         <div className="flex flex-col gap-10">
           <BadgeContainer label="account loaded">
             <TeamSettingsSidebar
-              team={teamStub("foo", "free")}
               account={{
                 id: "x",
               }}
               client={storybookThirdwebClient}
+              team={teamStub("foo", "free")}
             />
           </BadgeContainer>
 
           <BadgeContainer label="account loading">
             <TeamSettingsSidebar
-              team={teamStub("foo", "free")}
               account={undefined}
               client={storybookThirdwebClient}
+              team={teamStub("foo", "free")}
             />
           </BadgeContainer>
         </div>
@@ -71,9 +69,9 @@ function Story(props: {
                 href: "/team/foo/settings",
                 name: "Foo",
               }}
-              teamSlug="foo"
               setShowFull={() => {}}
               showFull={true}
+              teamSlug="foo"
             />
           </BadgeContainer>
 
@@ -83,9 +81,9 @@ function Story(props: {
                 href: "/team/foo/billing",
                 name: "Billing",
               }}
-              teamSlug="foo"
               setShowFull={() => {}}
               showFull={false}
+              teamSlug="foo"
             />
           </BadgeContainer>
         </div>

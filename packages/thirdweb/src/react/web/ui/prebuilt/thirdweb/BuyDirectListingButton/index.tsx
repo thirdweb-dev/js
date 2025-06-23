@@ -92,8 +92,8 @@ export function BuyDirectListingButton(props: BuyDirectListingButtonProps) {
   const account = useActiveAccount();
   const contract = getContract({
     address: contractAddress,
-    client,
     chain,
+    client,
   });
 
   const { data: payMetadata } = useReadContract(getPayMetadata, {
@@ -158,8 +158,8 @@ export function BuyDirectListingButton(props: BuyDirectListingButtonProps) {
     });
 
     const approveTx = await getApprovalForTransaction({
-      transaction: buyTx,
       account,
+      transaction: buyTx,
     });
 
     if (approveTx) {
@@ -191,10 +191,10 @@ async function getPayMetadata(
 ): Promise<{ name?: string; image?: string }> {
   const listing = await getListing(options);
   if (!listing) {
-    return { name: undefined, image: undefined };
+    return { image: undefined, name: undefined };
   }
   return {
-    name: listing.asset?.metadata?.name,
     image: listing.asset?.metadata?.image,
+    name: listing.asset?.metadata?.name,
   };
 }

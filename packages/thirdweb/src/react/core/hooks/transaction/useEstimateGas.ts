@@ -26,6 +26,6 @@ export function useEstimateGas(): UseMutationResult<
 > {
   const account = useActiveAccount();
   return useMutation({
-    mutationFn: (transaction) => estimateGas({ transaction, account }),
+    mutationFn: (transaction) => estimateGas({ account, transaction }),
   });
 }

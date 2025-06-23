@@ -37,89 +37,48 @@ const TokenBalanceRowWithTheme = (props: TokenBalanceRowWithThemeProps) => {
 };
 
 const meta = {
-  title: "Bridge/TokenBalanceRow",
+  args: {
+    amount: dummyBalanceETH,
+    chain: ethereum,
+    client: storyClient,
+    onClick: (_token: Token) => {},
+    theme: "dark",
+    token: ETH,
+  },
+  argTypes: {
+    onClick: {
+      action: "clicked",
+      description: "Callback function when token row is clicked",
+    },
+    theme: {
+      control: "select",
+      description: "Theme for the component",
+      options: ["light", "dark"],
+    },
+  },
   component: TokenBalanceRowWithTheme,
   parameters: {
-    layout: "centered",
     docs: {
       description: {
         component:
           "A row component that displays token balance information including token icon, symbol, chain, balance amount and fiat value. Used in bridge interfaces for token selection.",
       },
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  args: {
-    client: storyClient,
-    token: ETH,
-    chain: ethereum,
-    amount: dummyBalanceETH,
-    onClick: (_token: Token) => {},
-    theme: "dark",
-  },
-  argTypes: {
-    theme: {
-      control: "select",
-      options: ["light", "dark"],
-      description: "Theme for the component",
-    },
-    onClick: {
-      action: "clicked",
-      description: "Callback function when token row is clicked",
-    },
-  },
+  title: "Bridge/TokenBalanceRow",
 } satisfies Meta<typeof TokenBalanceRowWithTheme>;
 
 type Story = StoryObj<typeof meta>;
 
 export const TokenList: Story = {
-  render: (args) => (
-    <CustomThemeProvider theme={args.theme}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "8px",
-          minWidth: "400px",
-          maxWidth: "500px",
-        }}
-      >
-        <TokenBalanceRow
-          client={args.client}
-          token={ETH}
-          amount={dummyBalanceETH}
-          onClick={args.onClick}
-        />
-        <TokenBalanceRow
-          client={args.client}
-          token={ETH}
-          amount={dummyBalanceETH}
-          onClick={args.onClick}
-        />
-        <TokenBalanceRow
-          client={args.client}
-          token={USDC}
-          amount={dummyBalanceUSDC}
-          onClick={args.onClick}
-        />
-        <TokenBalanceRow
-          client={args.client}
-          token={UNI}
-          amount={dummyBalanceLowUNI}
-          onClick={args.onClick}
-        />
-      </div>
-    </CustomThemeProvider>
-  ),
   args: {
     theme: "light",
   },
   parameters: {
     backgrounds: { default: "light" },
   },
-};
-
-export const DarkTokenList: Story = {
   render: (args) => (
     <CustomThemeProvider theme={args.theme}>
       <div
@@ -127,43 +86,84 @@ export const DarkTokenList: Story = {
           display: "flex",
           flexDirection: "column",
           gap: "8px",
-          minWidth: "400px",
           maxWidth: "500px",
+          minWidth: "400px",
         }}
       >
         <TokenBalanceRow
-          client={args.client}
-          token={ETH}
           amount={dummyBalanceETH}
+          client={args.client}
           onClick={args.onClick}
+          token={ETH}
         />
         <TokenBalanceRow
-          client={args.client}
-          token={ETH}
           amount={dummyBalanceETH}
+          client={args.client}
           onClick={args.onClick}
+          token={ETH}
         />
         <TokenBalanceRow
-          client={args.client}
-          token={USDC}
           amount={dummyBalanceUSDC}
+          client={args.client}
           onClick={args.onClick}
+          token={USDC}
         />
         <TokenBalanceRow
-          client={args.client}
-          token={UNI}
           amount={dummyBalanceLowUNI}
+          client={args.client}
           onClick={args.onClick}
+          token={UNI}
         />
       </div>
     </CustomThemeProvider>
   ),
+};
+
+export const DarkTokenList: Story = {
   args: {
     theme: "dark",
   },
   parameters: {
     backgrounds: { default: "dark" },
   },
+  render: (args) => (
+    <CustomThemeProvider theme={args.theme}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px",
+          maxWidth: "500px",
+          minWidth: "400px",
+        }}
+      >
+        <TokenBalanceRow
+          amount={dummyBalanceETH}
+          client={args.client}
+          onClick={args.onClick}
+          token={ETH}
+        />
+        <TokenBalanceRow
+          amount={dummyBalanceETH}
+          client={args.client}
+          onClick={args.onClick}
+          token={ETH}
+        />
+        <TokenBalanceRow
+          amount={dummyBalanceUSDC}
+          client={args.client}
+          onClick={args.onClick}
+          token={USDC}
+        />
+        <TokenBalanceRow
+          amount={dummyBalanceLowUNI}
+          client={args.client}
+          onClick={args.onClick}
+          token={UNI}
+        />
+      </div>
+    </CustomThemeProvider>
+  ),
 };
 
 export default meta;

@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { storybookLog } from "../../../../../stories/utils";
+import { storybookLog } from "../../../../../@/storybook/utils";
 import { AccountOnboardingLayout } from "../onboarding-layout";
 import { LinkWalletPrompt } from "./LinkWalletPrompt";
 
 const meta = {
-  title: "Onboarding/AccountOnboarding/LinkWalletPrompt",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Onboarding/AccountOnboarding/LinkWalletPrompt",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -28,9 +28,7 @@ export const SendError: Story = {
   },
 };
 
-function Story(props: {
-  type: "success" | "error";
-}) {
+function Story(props: { type: "success" | "error" }) {
   return (
     <AccountOnboardingLayout
       currentStep={1}
@@ -40,10 +38,14 @@ function Story(props: {
       }}
     >
       <LinkWalletPrompt
+        accountAddress="0x1234567890123456789012345678901234567890"
+        email="user@example.com"
+        onBack={() => {
+          storybookLog("onBack");
+        }}
         onLinkWalletRequestSent={() => {
           storybookLog("onLinkWalletRequestSent");
         }}
-        email="user@example.com"
         requestLinkWallet={async (email) => {
           storybookLog("requestLinkWallet", email);
           await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -51,13 +53,6 @@ function Story(props: {
             throw new Error("Example error");
           }
         }}
-        onBack={() => {
-          storybookLog("onBack");
-        }}
-        trackEvent={(params) => {
-          storybookLog("trackEvent", params);
-        }}
-        accountAddress="0x1234567890123456789012345678901234567890"
       />
     </AccountOnboardingLayout>
   );

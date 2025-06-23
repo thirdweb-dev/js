@@ -1,6 +1,5 @@
 "use client";
 
-import { useSplitBalances } from "@3rdweb-sdk/react/hooks/useSplit";
 import {
   Flex,
   SimpleGrid,
@@ -9,13 +8,15 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
-import { useAllChainsData } from "hooks/chains/allChains";
+import { Card } from "chakra/card";
+import { Heading } from "chakra/heading";
+import { Text } from "chakra/text";
 import { useMemo } from "react";
 import {
   type ThirdwebContract,
-  ZERO_ADDRESS,
   toEther,
   toTokens,
+  ZERO_ADDRESS,
 } from "thirdweb";
 import { getAllRecipientsPercentages } from "thirdweb/extensions/split";
 import {
@@ -23,8 +24,9 @@ import {
   useReadContract,
   useWalletBalance,
 } from "thirdweb/react";
-import { Card, Heading, Text } from "tw-components";
-import { shortenIfAddress } from "utils/usedapp-external";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { useSplitBalances } from "@/hooks/useSplit";
+import { shortenIfAddress } from "@/utils/usedapp-external";
 import { DistributeButton } from "./components/distribute-button";
 
 export type Balance = {
@@ -51,8 +53,8 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
   const contractAddress = contract.address;
   const nativeBalanceQuery = useWalletBalance({
     address: contractAddress,
-    client: contract.client,
     chain: contract.chain,
+    client: contract.client,
   });
   const { data: allRecipientsPercentages } = useReadContract(
     getAllRecipientsPercentages,
@@ -66,11 +68,11 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
 
     return [
       {
+        balance: nativeBalanceQuery?.data?.value?.toString() || "0",
+        decimals: nativeBalanceQuery?.data?.decimals || 18,
+        display_balance: nativeBalanceQuery?.data?.displayValue || "0.0",
         name: "Native Token",
         token_address: ZERO_ADDRESS,
-        balance: nativeBalanceQuery?.data?.value?.toString() || "0",
-        display_balance: nativeBalanceQuery?.data?.displayValue || "0.0",
-        decimals: nativeBalanceQuery?.data?.decimals || 18,
       },
       ...(balanceQuery.data || []).filter((bl) => bl.name !== "Native Token"),
     ];
@@ -104,23 +106,23 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
 
   return (
     <Flex direction="column" gap={6}>
-      <Flex direction="row" justify="space-between" align="center">
+      <Flex align="center" direction="row" justify="space-between">
         <Heading size="title.sm">Balances</Heading>
         <Flex gap={4}>
           <DistributeButton
             balances={balances as Balance[]}
+            balancesIsError={balanceQuery.isError && nativeBalanceQuery.isError}
             balancesIsPending={
               balanceQuery.isPending || nativeBalanceQuery.isPending
             }
-            balancesIsError={balanceQuery.isError && nativeBalanceQuery.isError}
             contract={contract}
             isLoggedIn={isLoggedIn}
           />
         </Flex>
       </Flex>
       <div className="flex flex-col gap-8">
-        <Flex gap={4} flexDir="column">
-          <SimpleGrid spacing={{ base: 3, md: 6 }} columns={{ base: 2, md: 4 }}>
+        <Flex flexDir="column" gap={4}>
+          <SimpleGrid columns={{ base: 2, md: 4 }} spacing={{ base: 3, md: 6 }}>
             <Card as={Stat}>
               <StatLabel mb={{ base: 1, md: 0 }}>
                 {nativeBalanceQuery.data?.symbol}
@@ -195,7 +197,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
         </Flex>
 
         <div className="flex flex-col gap-2">
-          <Heading size="label.lg" mb="8px">
+          <Heading mb="8px" size="label.lg">
             Split Recipients
           </Heading>
           {(allRecipientsPercentages || []).map((split) => (

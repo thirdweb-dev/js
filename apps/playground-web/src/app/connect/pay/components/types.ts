@@ -13,7 +13,7 @@ export type BridgeComponentsPlaygroundOptions = {
     image: string | undefined;
     description: string | undefined;
 
-    buyTokenAddress: Address;
+    buyTokenAddress?: Address;
     buyTokenAmount: string;
     buyTokenChain: Chain;
 

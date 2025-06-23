@@ -11,18 +11,8 @@ import { verifyJWT } from "./verify-jwt.js";
 import { verifyLoginPayload } from "./verify-login-payload.js";
 
 const options: AuthOptions = {
-  domain: "example.com",
   adminAccount: TEST_ACCOUNT_A,
-  login: {
-    nonce: {
-      generate() {
-        return "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
-      },
-      validate(uuid: string) {
-        return uuid === "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
-      },
-    },
-  },
+  domain: "example.com",
   jwt: {
     jwtId: {
       generate() {
@@ -30,6 +20,16 @@ const options: AuthOptions = {
       },
       validate(jwtId: string) {
         return jwtId === "8bceec0d-37f7-48b4-a440-7be334b4dfd3";
+      },
+    },
+  },
+  login: {
+    nonce: {
+      generate() {
+        return "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
+      },
+      validate(uuid: string) {
+        return uuid === "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
       },
     },
   },
@@ -52,8 +52,8 @@ describe("verifyJWT", () => {
       address: TEST_ACCOUNT_B.address,
     });
     const signedPayload = await signLoginPayload({
-      payload: generatedPayload,
       account: TEST_ACCOUNT_B,
+      payload: generatedPayload,
     });
     const verifiedPayload = await verifyLoginPayload(options)({
       payload: signedPayload.payload,
@@ -91,8 +91,8 @@ describe("verifyJWT", () => {
       address: TEST_ACCOUNT_B.address,
     });
     const signedPayload = await signLoginPayload({
-      payload: generatedPayload,
       account: TEST_ACCOUNT_B,
+      payload: generatedPayload,
     });
     const verifiedPayload = await verifyLoginPayload(options)({
       payload: signedPayload.payload,

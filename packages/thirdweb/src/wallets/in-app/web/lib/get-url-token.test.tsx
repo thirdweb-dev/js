@@ -48,10 +48,10 @@ describe.runIf(global.window !== undefined)("getUrlToken", () => {
     const result = getUrlToken();
 
     expect(result).toEqual({
-      walletId: "123",
-      authResult: { token: "abc" },
-      authProvider: null,
       authCookie: null,
+      authProvider: null,
+      authResult: { token: "abc" },
+      walletId: "123",
     });
   });
 
@@ -61,10 +61,10 @@ describe.runIf(global.window !== undefined)("getUrlToken", () => {
     const result = getUrlToken();
 
     expect(result).toEqual({
-      walletId: "123",
-      authResult: undefined,
-      authProvider: null,
       authCookie: "myCookie",
+      authProvider: null,
+      authResult: undefined,
+      walletId: "123",
     });
 
     // Check if URL has been updated correctly
@@ -78,10 +78,10 @@ describe.runIf(global.window !== undefined)("getUrlToken", () => {
     const result = getUrlToken();
 
     expect(result).toEqual({
-      walletId: "123",
-      authResult: { token: "xyz" },
-      authProvider: "provider1",
       authCookie: "myCookie",
+      authProvider: "provider1",
+      authResult: { token: "xyz" },
+      walletId: "123",
     });
 
     // Check if URL has been updated correctly

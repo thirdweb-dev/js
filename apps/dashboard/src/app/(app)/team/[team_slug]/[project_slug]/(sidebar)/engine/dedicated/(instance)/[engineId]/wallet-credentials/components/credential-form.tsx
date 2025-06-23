@@ -1,5 +1,8 @@
+import { Dialog } from "@radix-ui/react-dialog";
+import Link from "next/link";
+import { useId } from "react";
+import { useForm } from "react-hook-form";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -10,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Select,
   SelectContent,
@@ -18,9 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
-import { Dialog } from "@radix-ui/react-dialog";
-import { useForm } from "react-hook-form";
 import { CircleCredentialFields } from "./credential-type-fields/circle";
 import {
   CREDENTIAL_TYPE_OPTIONS,
@@ -56,17 +57,17 @@ export const CredentialForm = ({
 }: CredentialFormProps) => {
   const form = useForm<CredentialFormData | CredentialUpdateFormData>({
     defaultValues: {
-      type: "circle" as CredentialType,
       label: "",
+      type: "circle" as CredentialType,
       ...defaultValues,
     },
     mode: "onChange",
   });
 
   const selectedType = form.watch("type");
-
+  const credentialLabelId = useId();
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog onOpenChange={onOpenChange} open={isOpen}>
       <DialogContent className="overflow-hidden p-0">
         <Form {...form}>
           <form
@@ -78,15 +79,14 @@ export const CredentialForm = ({
               <DialogHeader className="mb-4">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogDescription>
-                  <TrackedLinkTW
-                    href="https://portal.thirdweb.com/engine/features/wallet-credentials"
-                    target="_blank"
-                    label="learn-more"
-                    category="engine"
+                  <Link
                     className="text-link-foreground hover:text-foreground"
+                    href="https://portal.thirdweb.com/engine/features/wallet-credentials"
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     Learn more about wallet credentials
-                  </TrackedLinkTW>
+                  </Link>
                 </DialogDescription>
               </DialogHeader>
 
@@ -94,12 +94,12 @@ export const CredentialForm = ({
                 {/* Type */}
                 {!hideTypeSelect && (
                   <FormFieldSetup
-                    label="Type"
                     errorMessage={
                       form.getFieldState("type", form.formState).error?.message
                     }
                     htmlFor="credential-type"
                     isRequired
+                    label="Type"
                     tooltip={null}
                   >
                     <Select
@@ -126,19 +126,19 @@ export const CredentialForm = ({
 
                 {/* Label */}
                 <FormFieldSetup
-                  label="Label"
                   errorMessage={
                     form.getFieldState("label", form.formState).error?.message
                   }
-                  htmlFor="credential-label"
+                  htmlFor={credentialLabelId}
                   isRequired
+                  label="Label"
                   tooltip={null}
                 >
                   <Input
-                    id="credential-label"
-                    type="text"
-                    placeholder="A description to identify this credential"
                     className="bg-card"
+                    id={credentialLabelId}
+                    placeholder="A description to identify this credential"
+                    type="text"
                     {...form.register("label", { required: true })}
                   />
                 </FormFieldSetup>
@@ -151,13 +151,13 @@ export const CredentialForm = ({
             </div>
 
             <DialogFooter className="mt-4 gap-4 border-border border-t bg-card p-6 lg:gap-2">
-              <Button variant="outline" onClick={() => onOpenChange(false)}>
+              <Button onClick={() => onOpenChange(false)} variant="outline">
                 Cancel
               </Button>
               <Button
-                type="submit"
                 className="min-w-28 gap-2"
                 disabled={!form.formState.isValid || isPending}
+                type="submit"
               >
                 {isPending && <Spinner className="size-4" />}
                 {submitButtonText}

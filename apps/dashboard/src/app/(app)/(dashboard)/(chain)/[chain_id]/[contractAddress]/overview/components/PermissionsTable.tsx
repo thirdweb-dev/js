@@ -1,9 +1,18 @@
 "use client";
 
+import { ArrowRightIcon } from "lucide-react";
+import Link from "next/link";
+import { useMemo } from "react";
+import {
+  type ThirdwebClient,
+  type ThirdwebContract,
+  ZERO_ADDRESS,
+} from "thirdweb";
+import { useReadContract } from "thirdweb/react";
 import { WalletAddress } from "@/components/blocks/wallet-address";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Table,
   TableBody,
@@ -13,29 +22,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TrackedLinkTW } from "@/components/ui/tracked-link";
-import { getAllRoleMembers } from "contract-ui/hooks/permissions";
-import { ArrowRightIcon } from "lucide-react";
-import { useMemo } from "react";
-import {
-  type ThirdwebClient,
-  type ThirdwebContract,
-  ZERO_ADDRESS,
-} from "thirdweb";
-import { useReadContract } from "thirdweb/react";
+import { getAllRoleMembers } from "@/hooks/contract-ui/permissions";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 
 export function PermissionsTable(props: {
   contract: ThirdwebContract;
-  trackingCategory: string;
   chainSlug: string;
   projectMeta: ProjectMeta | undefined;
 }) {
   const permissionsHref = buildContractPagePath({
-    projectMeta: props.projectMeta,
     chainIdOrSlug: props.chainSlug,
     contractAddress: props.contract.address,
+    projectMeta: props.projectMeta,
     subpath: "/permissions",
   });
 
@@ -47,7 +46,6 @@ export function PermissionsTable(props: {
     return (
       Object.entries(allRoleMembers.data || {}).reduce(
         (acc, [role, roleMembers]) => {
-          // biome-ignore lint/complexity/noForEach: FIXME
           roleMembers.forEach((member) => {
             return !acc.find((m) => m.member === member)
               ? acc.push({ member, roles: [role] })
@@ -65,18 +63,16 @@ export function PermissionsTable(props: {
 
   return (
     <PermissionsTableUI
-      members={members}
-      isPending={allRoleMembers.isPending}
-      viewMoreLink={permissionsHref}
-      trackingCategory={props.trackingCategory}
       client={props.contract.client}
+      isPending={allRoleMembers.isPending}
+      members={members}
+      viewMoreLink={permissionsHref}
     />
   );
 }
 
 export function PermissionsTableUI(props: {
   viewMoreLink: string;
-  trackingCategory: string;
   members: { member: string; roles: string[] }[];
   isPending: boolean;
   client: ThirdwebClient;
@@ -86,15 +82,13 @@ export function PermissionsTableUI(props: {
       {/* header */}
       <div className="flex w-full items-center justify-between border-b px-6 py-4">
         <h2 className="font-semibold text-xl tracking-tight">Permissions</h2>
-        <Button asChild variant="outline" size="sm" className="bg-background">
-          <TrackedLinkTW
-            category={props.trackingCategory}
-            label="view_all_permissions"
-            href={props.viewMoreLink}
+        <Button asChild className="bg-background" size="sm" variant="outline">
+          <Link
             className="flex items-center gap-2 text-muted-foreground text-sm"
+            href={props.viewMoreLink}
           >
             View all <ArrowRightIcon className="size-4" />
-          </TrackedLinkTW>
+          </Link>
         </Button>
       </div>
 
@@ -118,9 +112,9 @@ export function PermissionsTableUI(props: {
                   <div className="flex w-max flex-wrap gap-2">
                     {data.roles.map((role) => (
                       <Badge
-                        variant="outline"
-                        key={role}
                         className="bg-background py-1 font-normal text-sm capitalize"
+                        key={role}
+                        variant="outline"
                       >
                         {role}
                       </Badge>

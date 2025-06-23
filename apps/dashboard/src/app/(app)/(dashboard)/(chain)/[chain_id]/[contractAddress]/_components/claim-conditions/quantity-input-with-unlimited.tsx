@@ -1,6 +1,6 @@
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
 
 interface QuantityInputWithUnlimitedProps {
   value: string;
@@ -47,10 +47,8 @@ export const QuantityInputWithUnlimited: React.FC<
   return (
     <div className="flex flex-row items-center rounded-md border border-border">
       <Input
-        required={isRequired}
+        className="border-none"
         disabled={isDisabled}
-        value={stringValue === "unlimited" ? "Unlimited" : stringValue}
-        onChange={(e) => updateValue(e.currentTarget.value)}
         onBlur={() => {
           if (value === "unlimited") {
             setStringValue("unlimited");
@@ -60,17 +58,19 @@ export const QuantityInputWithUnlimited: React.FC<
             setStringValue("0");
           }
         }}
-        className="border-none"
+        onChange={(e) => updateValue(e.currentTarget.value)}
+        required={isRequired}
+        value={stringValue === "unlimited" ? "Unlimited" : stringValue}
       />
       {hideMaxButton ? null : (
         <Button
-          disabled={isDisabled}
-          variant="ghost"
-          size="sm"
           className="mr-1 text-primary"
+          disabled={isDisabled}
           onClick={() => {
             updateValue("unlimited");
           }}
+          size="sm"
+          variant="ghost"
         >
           Unlimited
         </Button>

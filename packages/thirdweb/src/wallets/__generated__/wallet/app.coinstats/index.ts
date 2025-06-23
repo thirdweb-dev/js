@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.coinstats",
-  name: "CoinStats",
-  homepage: "https://coinstats.app",
-  image_id: "b2a00908-f144-4a49-cc0a-9d7422ad5e00",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/id1247849330",
     android:
       "https://play.google.com/store/apps/details?id=com.coinstats.crypto.portfolio",
-    mac: "https://apps.apple.com/us/app/id1247849330",
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/id1247849330",
+    linux: null,
+    mac: "https://apps.apple.com/us/app/id1247849330",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "coinstats://",
-    universal: "http://coinstats.app",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: "coinstats://",
     universal: null,
   },
+  homepage: "https://coinstats.app",
+  id: "app.coinstats",
+  image_id: "b2a00908-f144-4a49-cc0a-9d7422ad5e00",
+  mobile: {
+    native: "coinstats://",
+    universal: "http://coinstats.app",
+  },
+  name: "CoinStats",
+  rdns: null,
 } as const;

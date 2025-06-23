@@ -19,11 +19,11 @@ const DialogOverlay = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
-    ref={ref}
     className={cn(
       "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/80 data-[state=closed]:animate-out data-[state=open]:animate-in",
       className,
     )}
+    ref={ref}
     {...props}
   />
 ));
@@ -36,11 +36,11 @@ const DialogContent = React.forwardRef<
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
-      ref={ref}
       className={cn(
         "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-bottom-[48%] sm:data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-bottom-[48%] sm:data-[state=open]:slide-in-from-top-[48%] fixed bottom-0 left-[50%] z-50 grid w-full translate-x-[-50%] gap-4 rounded-t-xl bg-background p-6 shadow-lg duration-200 data-[state=closed]:animate-out data-[state=open]:animate-in sm:top-[50%] sm:bottom-auto sm:translate-y-[-50%] sm:rounded-xl md:max-w-lg",
         className,
       )}
+      ref={ref}
       {...props}
     >
       {children}
@@ -86,11 +86,11 @@ const DialogTitle = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
-    ref={ref}
     className={cn(
       "text-left font-semibold text-lg leading-none tracking-tight",
       className,
     )}
+    ref={ref}
     {...props}
   />
 ));
@@ -101,8 +101,8 @@ const DialogDescription = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
-    ref={ref}
     className={cn("text-left text-muted-foreground text-sm", className)}
+    ref={ref}
     {...props}
   />
 ));

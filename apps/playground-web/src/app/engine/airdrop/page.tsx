@@ -7,7 +7,6 @@ export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        title="Airdrop"
         description={
           <>
             Engine makes it effortless for any developer to airdrop tokens at
@@ -15,6 +14,7 @@ export default function Page() {
           </>
         }
         docsLink="https://thirdweb-engine.apidocumentation.com/reference#tag/erc20/POST/contract/{chain}/{contractAddress}/erc20/mint-batch-to?utm_source=playground"
+        title="Airdrop"
       >
         <EngineAirdropPreview />
         <div className="h-10" />

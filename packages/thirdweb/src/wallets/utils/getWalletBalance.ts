@@ -41,7 +41,7 @@ export type GetWalletBalanceResult = GetBalanceResult;
  */
 export async function getWalletBalance(
   options: GetWalletBalanceOptions,
-): Promise<GetWalletBalanceResult> {
+): Promise<GetBalanceResult> {
   const { address, client, chain, tokenAddress } = options;
   // erc20 case
   if (tokenAddress) {
@@ -50,12 +50,12 @@ export async function getWalletBalance(
       "../../extensions/erc20/read/getBalance.js"
     );
     return getBalance({
-      contract: getContract({ client, chain, address: tokenAddress }),
       address,
+      contract: getContract({ address: tokenAddress, chain, client }),
     });
   }
   // native token case
-  const rpcRequest = getRpcClient({ client, chain });
+  const rpcRequest = getRpcClient({ chain, client });
 
   const [nativeSymbol, nativeDecimals, nativeName, nativeBalance] =
     await Promise.all([
@@ -66,12 +66,12 @@ export async function getWalletBalance(
     ]);
 
   return {
-    value: nativeBalance,
+    chainId: chain.id,
     decimals: nativeDecimals,
     displayValue: toTokens(nativeBalance, nativeDecimals),
-    symbol: nativeSymbol,
     name: nativeName,
+    symbol: nativeSymbol,
     tokenAddress: tokenAddress ?? NATIVE_TOKEN_ADDRESS,
-    chainId: chain.id,
+    value: nativeBalance,
   };
 }

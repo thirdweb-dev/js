@@ -2,7 +2,7 @@
 
 import type { Team } from "@/api/team";
 import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
-import { getAuthToken } from "../../../../../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../../../../../@/api/auth-token";
 
 export async function updateTeam(params: {
   teamId: string;
@@ -17,19 +17,19 @@ export async function updateTeam(params: {
   const res = await fetch(
     `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${params.teamId}`,
     {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
       body: JSON.stringify(params.value),
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "PUT",
     },
   );
 
   if (!res.ok) {
     return {
-      ok: false as const,
       error: await res.text(),
+      ok: false as const,
     };
   }
 
@@ -38,7 +38,7 @@ export async function updateTeam(params: {
   };
 
   return {
-    ok: true as const,
     data: data.result,
+    ok: true as const,
   };
 }

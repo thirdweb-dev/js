@@ -1,11 +1,11 @@
 "use client";
 
+import { useId, useState } from "react";
+import { toEther, toTokens, toWei } from "thirdweb";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
-import { toEther, toTokens, toWei } from "thirdweb";
 import { ShareButton } from "../../components/share";
 
 export const WeiConverter = () => {
@@ -29,40 +29,44 @@ export const WeiConverter = () => {
     } catch {}
   };
 
+  const weiInputId = useId();
+  const gweiInputId = useId();
+  const etherInputId = useId();
+
   return (
     <div className="space-y-24">
       <div className="space-y-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Label htmlFor="wei-input" className="min-w-64 text-xl">
+          <Label className="min-w-64 text-xl" htmlFor={weiInputId}>
             Wei
           </Label>
           <Input
-            id="wei-input"
-            value={wei}
-            onChange={(e) => onChange({ wei: e.target.value })}
             className="p-6 text-xl"
+            id={weiInputId}
+            onChange={(e) => onChange({ wei: e.target.value })}
+            value={wei}
           />
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Label htmlFor="gwei-input" className="min-w-64 text-xl">
+          <Label className="min-w-64 text-xl" htmlFor={gweiInputId}>
             Gwei
           </Label>
           <Input
-            id="gwei-input"
-            value={gwei}
-            onChange={(e) => onChange({ gwei: e.target.value })}
             className="p-6 text-xl"
+            id={gweiInputId}
+            onChange={(e) => onChange({ gwei: e.target.value })}
+            value={gwei}
           />
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Label htmlFor="ether-input" className="min-w-64 text-xl">
+          <Label className="min-w-64 text-xl" htmlFor={etherInputId}>
             Ether
           </Label>
           <Input
-            id="ether-input"
-            value={ether}
-            onChange={(e) => onChange({ ether: e.target.value })}
             className="p-6 text-xl"
+            id={etherInputId}
+            onChange={(e) => onChange({ ether: e.target.value })}
+            value={ether}
           />
         </div>
         <div className="flex justify-end">
@@ -77,10 +81,10 @@ export const WeiConverter = () => {
         <p>
           Or use the{" "}
           <a
-            href="https://portal.thirdweb.com/typescript/v5"
-            target="_blank"
-            rel="noopener noreferrer"
             className="underline"
+            href="https://portal.thirdweb.com/typescript/v5"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             Connect SDK
           </a>
@@ -88,18 +92,18 @@ export const WeiConverter = () => {
         </p>
         <div>
           <CopyTextButton
-            textToShow={`toTokens(${wei}n, 9)`}
-            textToCopy={`toTokens(${wei}n, 9)`}
-            tooltip="Copy"
             copyIconPosition="right"
+            textToCopy={`toTokens(${wei}n, 9)`}
+            textToShow={`toTokens(${wei}n, 9)`}
+            tooltip="Copy"
           />
         </div>
         <div>
           <CopyTextButton
-            textToShow={`toEther(${wei}n)`}
-            textToCopy={`toEther(${wei}n)`}
-            tooltip="Copy"
             copyIconPosition="right"
+            textToCopy={`toEther(${wei}n)`}
+            textToShow={`toEther(${wei}n)`}
+            tooltip="Copy"
           />
         </div>
       </Card>

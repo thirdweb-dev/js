@@ -52,9 +52,9 @@ export async function processSnapshotERC20(options: {
   const shardsToUpload = [];
   for (const [shardId, entries] of Object.entries(shards)) {
     const data: ShardDataERC20 = {
+      entries,
       // biome-ignore lint/style/noNonNullAssertion: we know this is in bounds
       proofs: tree.getHexProof(roots[shardId]!),
-      entries,
     };
     shardsToUpload.push({
       data: stringify(data),
@@ -81,12 +81,12 @@ export async function processSnapshotERC20(options: {
   });
   // 7. assmeble the final sharded merkle tree info
   const shardedMerkleInfo: ShardedMerkleTreeInfo = {
-    merkleRoot: tree.getHexRoot(),
     baseUri,
+    isShardedMerkleTree: true,
+    merkleRoot: tree.getHexRoot(),
     originalEntriesUri,
     shardNybbles,
     tokenDecimals: options.tokenDecimals,
-    isShardedMerkleTree: true,
   };
   // 8. upload the final sharded merkle tree info
   const finalUri = await upload({

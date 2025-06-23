@@ -21,11 +21,11 @@ export const ContractDirectListingsPage: React.FC<
         </h2>
         <div className="flex flex-row gap-4">
           <CreateListingButton
-            isInsightSupported={isInsightSupported}
             contract={contract}
-            type="direct-listings"
             createText="Create Direct Listing"
+            isInsightSupported={isInsightSupported}
             isLoggedIn={isLoggedIn}
+            type="direct-listings"
           />
         </div>
       </div>

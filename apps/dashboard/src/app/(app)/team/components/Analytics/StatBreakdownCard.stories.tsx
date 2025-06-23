@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { BadgeContainer } from "stories/utils";
+import { BadgeContainer } from "@/storybook/utils";
 import { StatBreakdownCard } from "./StatBreakdownCard";
 
 const meta = {
-  title: "Analytics/StatBreakdownCard",
   component: Component,
+  title: "Analytics/StatBreakdownCard",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -17,45 +17,43 @@ export const Variants: Story = {
 };
 
 const baseChartData = [
-  { value: 3753420.21, fill: "hsl(var(--chart-1))", label: "Base" },
-  { value: 2134521, fill: "hsl(var(--chart-2))", label: "Xai" },
-  { value: 423455.32, fill: "hsl(var(--chart-3))", label: "Ethereum" },
-  { value: 134234.1, fill: "hsl(var(--chart-4))", label: "Polygon" },
+  { fill: "hsl(var(--chart-1))", label: "Base", value: 3753420.21 },
+  { fill: "hsl(var(--chart-2))", label: "Xai", value: 2134521 },
+  { fill: "hsl(var(--chart-3))", label: "Ethereum", value: 423455.32 },
+  { fill: "hsl(var(--chart-4))", label: "Polygon", value: 134234.1 },
 ];
 
 const manyRowsData = [
-  { value: 5000000, fill: "hsl(var(--chart-1))", label: "Bitcoin" },
-  { value: 4500000, fill: "hsl(var(--chart-2))", label: "Ethereum" },
-  { value: 4000000, fill: "hsl(var(--chart-3))", label: "Polygon" },
-  { value: 3500000, fill: "hsl(var(--chart-4))", label: "Arbitrum" },
-  { value: 3000000, fill: "hsl(var(--chart-5))", label: "Optimism" },
-  { value: 2500000, fill: "hsl(var(--chart-6))", label: "Avalanche" },
-  { value: 2000000, fill: "hsl(var(--chart-7))", label: "Binance" },
-  { value: 1500000, fill: "hsl(var(--chart-8))", label: "Solana" },
-  { value: 1000000, fill: "hsl(var(--chart-9))", label: "Cardano" },
-  { value: 750000, fill: "hsl(var(--chart-10))", label: "Polkadot" },
-  { value: 500000, fill: "hsl(var(--chart-1))", label: "Cosmos" },
-  { value: 250000, fill: "hsl(var(--chart-2))", label: "Near" },
+  { fill: "hsl(var(--chart-1))", label: "Bitcoin", value: 5000000 },
+  { fill: "hsl(var(--chart-2))", label: "Ethereum", value: 4500000 },
+  { fill: "hsl(var(--chart-3))", label: "Polygon", value: 4000000 },
+  { fill: "hsl(var(--chart-4))", label: "Arbitrum", value: 3500000 },
+  { fill: "hsl(var(--chart-5))", label: "Optimism", value: 3000000 },
+  { fill: "hsl(var(--chart-6))", label: "Avalanche", value: 2500000 },
+  { fill: "hsl(var(--chart-7))", label: "Binance", value: 2000000 },
+  { fill: "hsl(var(--chart-8))", label: "Solana", value: 1500000 },
+  { fill: "hsl(var(--chart-9))", label: "Cardano", value: 1000000 },
+  { fill: "hsl(var(--chart-10))", label: "Polkadot", value: 750000 },
+  { fill: "hsl(var(--chart-1))", label: "Cosmos", value: 500000 },
+  { fill: "hsl(var(--chart-2))", label: "Near", value: 250000 },
 ];
 
 const withIconsData = [
   {
-    value: 3753420.21,
     fill: "hsl(var(--chart-1))",
-    label: "Chrome",
     icon: (
       // biome-ignore lint/a11y/noSvgWithoutTitle: This is a test icon
       <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
+        className="size-4"
         fill="none"
+        height="16"
         stroke="currentColor"
-        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="size-4"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        width="16"
+        xmlns="http://www.w3.org/2000/svg"
       >
         <circle cx="12" cy="12" r="10" />
         <circle cx="12" cy="12" r="4" />
@@ -64,54 +62,56 @@ const withIconsData = [
         <line x1="10.88" x2="15.46" y1="21.94" y2="14" />
       </svg>
     ),
+    label: "Chrome",
+    value: 3753420.21,
   },
   {
-    value: 2134521,
     fill: "hsl(var(--chart-2))",
-    label: "Safari",
     icon: (
       // biome-ignore lint/a11y/noSvgWithoutTitle: This is a test icon
       <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
+        className="size-4"
         fill="none"
+        height="16"
         stroke="currentColor"
-        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="size-4"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        width="16"
+        xmlns="http://www.w3.org/2000/svg"
       >
         <circle cx="12" cy="12" r="10" />
         <line x1="2" x2="22" y1="12" y2="12" />
-        <line x1="12" x2="12" y1="2" y2="22" transform="rotate(45 12 12)" />
-        <line x1="12" x2="12" y1="2" y2="22" transform="rotate(-45 12 12)" />
+        <line transform="rotate(45 12 12)" x1="12" x2="12" y1="2" y2="22" />
+        <line transform="rotate(-45 12 12)" x1="12" x2="12" y1="2" y2="22" />
       </svg>
     ),
+    label: "Safari",
+    value: 2134521,
   },
   {
-    value: 423455.32,
     fill: "hsl(var(--chart-3))",
-    label: "Firefox",
     icon: (
       // biome-ignore lint/a11y/noSvgWithoutTitle: This is a test icon
       <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
+        className="size-4"
         fill="none"
+        height="16"
         stroke="currentColor"
-        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="size-4"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        width="16"
+        xmlns="http://www.w3.org/2000/svg"
       >
         <circle cx="12" cy="12" r="10" />
         <circle cx="12" cy="12" r="4" />
       </svg>
     ),
+    label: "Firefox",
+    value: 423455.32,
   },
 ];
 
@@ -120,22 +120,22 @@ function Component() {
     <div className="container max-w-[600px] space-y-10 py-10">
       <BadgeContainer label="Basic">
         <StatBreakdownCard
-          title="Sponsored Gas"
           data={baseChartData}
           isCurrency
+          title="Sponsored Gas"
         />
       </BadgeContainer>
 
       <BadgeContainer label="Many Rows (Shows Top 9 + Other)">
         <StatBreakdownCard
-          title="Network Distribution"
           data={manyRowsData}
           isCurrency
+          title="Network Distribution"
         />
       </BadgeContainer>
 
       <BadgeContainer label="With Icons">
-        <StatBreakdownCard title="Browser Distribution" data={withIconsData} />
+        <StatBreakdownCard data={withIconsData} title="Browser Distribution" />
       </BadgeContainer>
     </div>
   );

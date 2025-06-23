@@ -15,7 +15,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
   "lens/getHandleFromProfileId should return a handle for a valid profileId",
   () => {
     it("should return a string in this format: lens/@<handle>", async () => {
-      const handle = await getHandleFromProfileId({ profileId, client });
+      const handle = await getHandleFromProfileId({ client, profileId });
       expect(typeof handle).toBe("string");
       // @ts-ignore expected
       expect(handle.startsWith("lens/")).toBe(true);
@@ -25,21 +25,21 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       // As of Jul 2024 Lens has about 465k profiles | So trying to get handle of a max-unit256 profileId should return "null"
       // gotta be a very long before this number is reached so we should be safe
       const handle = await getHandleFromProfileId({
-        profileId: MAX_UINT256,
         client,
+        profileId: MAX_UINT256,
       });
       expect(handle).toBe(null);
     });
 
     it("should work with overrides", async () => {
       const handle = await getHandleFromProfileId({
-        profileId,
         client,
         overrides: {
           lensHandleAddress: "0xe7E7EaD361f3AaCD73A61A9bD6C10cA17F38E945",
           tokenHandleRegistryAddress:
             "0xD4F2F33680FCCb36748FA9831851643781608844",
         },
+        profileId,
       });
       // @ts-ignore expected
       expect(handle.startsWith("lens/")).toBe(true);

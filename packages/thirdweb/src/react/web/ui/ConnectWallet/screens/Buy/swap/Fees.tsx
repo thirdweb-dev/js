@@ -1,16 +1,14 @@
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
-import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line } from "../../../../components/basic.js";
+import { Spacer } from "../../../../components/Spacer.js";
 import { Text } from "../../../../components/text.js";
 
 /**
  * @internal
  */
-export function SwapFees(props: {
-  quote: BuyWithCryptoQuote;
-}) {
+export function SwapFees(props: { quote: BuyWithCryptoQuote }) {
   return (
     <Container
       flex="column"
@@ -23,9 +21,9 @@ export function SwapFees(props: {
         const feeAmount = formatNumber(Number(fee.amount), 6);
         return (
           <Container
-            key={`${fee.token.chainId}_${fee.token.tokenAddress}_${feeAmount}`}
             flex="row"
             gap="xxs"
+            key={`${fee.token.chainId}_${fee.token.tokenAddress}_${feeAmount}`}
           >
             <Text color="primaryText" size="sm">
               {feeAmount === 0 ? "~" : ""}
@@ -44,9 +42,7 @@ export function SwapFees(props: {
 /**
  * @internal
  */
-export function FiatFees(props: {
-  quote: BuyWithFiatQuote;
-}) {
+export function FiatFees(props: { quote: BuyWithFiatQuote }) {
   return (
     <Container flex="column" gap="xs">
       {/* Amount ( without fees included ) */}
@@ -56,7 +52,7 @@ export function FiatFees(props: {
           justifyContent: "space-between",
         }}
       >
-        <Text inline color="secondaryText">
+        <Text color="secondaryText" inline>
           Amount
         </Text>
         <Text color="primaryText" inline>
@@ -78,7 +74,7 @@ export function FiatFees(props: {
               justifyContent: "space-between",
             }}
           >
-            <Text inline color="secondaryText">
+            <Text color="secondaryText" inline>
               {fee.feeType === "NETWORK" ? "Network Fee" : "Processing Fee"}
             </Text>
 
@@ -100,7 +96,7 @@ export function FiatFees(props: {
           justifyContent: "space-between",
         }}
       >
-        <Text inline color="secondaryText">
+        <Text color="secondaryText" inline>
           Total
         </Text>
         <Text color="primaryText" inline>

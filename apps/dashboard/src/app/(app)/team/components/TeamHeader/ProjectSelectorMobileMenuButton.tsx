@@ -1,13 +1,13 @@
 "use client";
 
-import type { Project } from "@/api/projects";
-import type { Team } from "@/api/team";
-import { DynamicHeight } from "@/components/ui/DynamicHeight";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ChevronsUpDownIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import type { Project } from "@/api/projects";
+import type { Team } from "@/api/team";
+import { Button } from "@/components/ui/button";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ProjectSelectorUI } from "./ProjectSelectorUI";
 
 type ProjectSelectorMobileMenuButtonProps = {
@@ -23,22 +23,22 @@ export function ProjectSelectorMobileMenuButton(
 ) {
   const [open, setOpen] = useState(false);
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog onOpenChange={setOpen} open={open}>
       {/* Trigger */}
       <DialogTrigger asChild>
         <Button
-          size="icon"
-          className="!h-auto w-auto rounded-xl px-1 py-2"
-          variant="ghost"
           aria-label="Select Project"
+          className="!h-auto w-auto rounded-xl px-1 py-2"
+          size="icon"
+          variant="ghost"
         >
           <ChevronsUpDownIcon className="size-5 shrink-0 text-muted-foreground hover:text-foreground" />
         </Button>
       </DialogTrigger>
 
       <DialogContent
-        dialogCloseClassName="hidden"
         className="p-0"
+        dialogCloseClassName="hidden"
         onClick={(e) => {
           if (e.target instanceof HTMLAnchorElement) {
             setOpen(false);
@@ -47,14 +47,14 @@ export function ProjectSelectorMobileMenuButton(
       >
         <DynamicHeight>
           <ProjectSelectorUI
-            currentProject={props.currentProject}
             client={props.client}
-            projects={props.projects}
-            team={props.team}
             createProject={() => {
               props.createProject(props.team);
               setOpen(false);
             }}
+            currentProject={props.currentProject}
+            projects={props.projects}
+            team={props.team}
           />
         </DynamicHeight>
       </DialogContent>

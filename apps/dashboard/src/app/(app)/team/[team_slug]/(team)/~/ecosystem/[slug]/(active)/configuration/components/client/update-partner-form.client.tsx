@@ -1,8 +1,8 @@
 "use client";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Ecosystem, Partner } from "../../../../../types";
 import { useUpdatePartner } from "../../hooks/use-update-partner";
 import { PartnerForm, type PartnerFormValues } from "./partner-form.client";
@@ -31,6 +31,13 @@ export function UpdatePartnerForm({
       teamId,
     },
     {
+      onError: (error) => {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Failed to update ecosystem partner";
+        toast.error(message);
+      },
       onSuccess: () => {
         toast.success("Partner updated successfully", {
           description: "The partner details have been updated.",
@@ -40,13 +47,6 @@ export function UpdatePartnerForm({
         const redirectPath = `/team/${teamSlug}/~/ecosystem/${ecosystemSlug}`;
         router.push(redirectPath);
       },
-      onError: (error) => {
-        const message =
-          error instanceof Error
-            ? error.message
-            : "Failed to update ecosystem partner";
-        toast.error(message);
-      },
     },
   );
 
@@ -55,25 +55,25 @@ export function UpdatePartnerForm({
     finalAccessControl: Partner["accessControl"] | null,
   ) => {
     updatePartner({
-      ecosystem,
-      partnerId: partner.id,
-      name: values.name,
-      allowlistedDomains: values.domains
-        .split(/,| /)
-        .filter((d) => d.length > 0),
+      accessControl: finalAccessControl,
       allowlistedBundleIds: values.bundleIds
         .split(/,| /)
         .filter((d) => d.length > 0),
-      accessControl: finalAccessControl,
+      allowlistedDomains: values.domains
+        .split(/,| /)
+        .filter((d) => d.length > 0),
+      ecosystem,
+      name: values.name,
+      partnerId: partner.id,
     });
   };
 
   return (
     <PartnerForm
-      partner={partner}
       client={client}
-      onSubmit={handleSubmit}
       isSubmitting={isPending}
+      onSubmit={handleSubmit}
+      partner={partner}
       submitLabel="Update"
     />
   );

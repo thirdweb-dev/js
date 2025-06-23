@@ -1,6 +1,5 @@
 "use client";
 
-import { THIRDWEB_CLIENT } from "@/lib/client";
 import { useTheme } from "next-themes";
 import {
   abstract,
@@ -10,8 +9,9 @@ import {
   polygonAmoy,
   sepolia,
 } from "thirdweb/chains";
-import { ConnectButton } from "thirdweb/react";
 import type { ConnectButtonProps } from "thirdweb/react";
+import { ConnectButton } from "thirdweb/react";
+import { THIRDWEB_CLIENT } from "@/lib/client";
 import { WALLETS } from "../lib/constants";
 
 export function StyledConnectButton(
@@ -29,9 +29,9 @@ export function StyledConnectButton(
         arbitrumSepolia,
         abstract,
       ]}
-      wallets={WALLETS}
       client={THIRDWEB_CLIENT}
       theme={theme === "light" ? "light" : "dark"}
+      wallets={WALLETS}
       {...props}
     />
   );

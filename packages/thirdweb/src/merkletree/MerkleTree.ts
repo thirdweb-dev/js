@@ -100,18 +100,16 @@ export class MerkleTree {
     if (typeof leaf === "undefined") {
       throw new Error("leaf is required");
     }
-    // biome-ignore lint/style/noParameterAssign: part of the functionality
+
     leaf = leaf instanceof Uint8Array ? leaf : hexToBytes(leaf);
     const proof = [];
 
     if (!Number.isInteger(index)) {
-      // biome-ignore lint/style/noParameterAssign: part of the functionality
       index = -1;
 
       for (let i = 0; i < this.leaves.length; i++) {
         // biome-ignore lint/style/noNonNullAssertion: within bounds
         if (areUint8ArraysEqual(leaf, this.leaves[i]!)) {
-          // biome-ignore lint/style/noParameterAssign: part of the functionality
           index = i;
         }
       }
@@ -136,14 +134,13 @@ export class MerkleTree {
 
       if (pairIndex < layer.length) {
         proof.push({
-          position: isRightNode ? "left" : "right",
           data: layer[pairIndex],
+          position: isRightNode ? "left" : "right",
         });
       }
 
       // set index to parent index
       // @ts-expect-error - issue from original code
-      // biome-ignore lint/style/noParameterAssign: part of the functionality
       index = (index / 2) | 0;
     }
 

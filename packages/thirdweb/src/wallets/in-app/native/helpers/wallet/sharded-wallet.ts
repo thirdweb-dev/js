@@ -25,10 +25,10 @@ export class ShardedWallet implements IWebWallet {
 
   async postWalletSetUp(authResult: AuthResultAndRecoveryCode): Promise<void> {
     await postAuth({
-      storedToken: authResult.storedToken,
       client: this.client,
-      storage: this.storage,
       encryptionKey: authResult.encryptionKey,
+      storage: this.storage,
+      storedToken: authResult.storedToken,
     });
   }
 
@@ -41,23 +41,23 @@ export class ShardedWallet implements IWebWallet {
     });
     if (userStatus.status === "Logged In, Wallet Initialized") {
       return {
-        status: userStatus.status,
-        authDetails: userStatus.storedToken.authDetails,
-        walletAddress: userStatus.walletAddress,
         account: await this.getAccount(),
+        authDetails: userStatus.storedToken.authDetails,
+        status: userStatus.status,
+        walletAddress: userStatus.walletAddress,
       };
     }
     if (userStatus.status === "Logged In, New Device") {
       return {
-        status: "Logged In, New Device",
         authDetails: userStatus.storedToken.authDetails,
+        status: "Logged In, New Device",
         walletAddress: userStatus.walletAddress,
       };
     }
     if (userStatus.status === "Logged In, Wallet Uninitialized") {
       return {
-        status: "Logged In, Wallet Uninitialized",
         authDetails: userStatus.storedToken.authDetails,
+        status: "Logged In, Wallet Uninitialized",
       };
     }
     // Logged out

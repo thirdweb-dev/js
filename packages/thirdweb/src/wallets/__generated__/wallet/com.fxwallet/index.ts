@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.fxwallet",
-  name: "FxWallet",
-  homepage: "https://www.fxwallet.com",
-  image_id: "46a80541-e639-483d-e230-731fcbf13000",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/fxwallet/id1560943983",
     android: "https://play.google.com/store/apps/details?id=com.fxfi.fxwallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/fxwallet/id1560943983",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "fxwallet://",
-    universal: null,
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.fxwallet.com",
+  id: "com.fxwallet",
+  image_id: "46a80541-e639-483d-e230-731fcbf13000",
+  mobile: {
+    native: "fxwallet://",
+    universal: null,
+  },
+  name: "FxWallet",
+  rdns: null,
 } as const;

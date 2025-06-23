@@ -1,5 +1,5 @@
-import { AppFooter } from "@/components/blocks/app-footer";
-import { ErrorProvider } from "contexts/error-handler";
+import { AppFooter } from "@/components/footers/app-footer";
+import { ErrorProvider } from "@/contexts/error-handler";
 
 export default function DashboardLayout(props: { children: React.ReactNode }) {
   return (

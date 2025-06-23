@@ -30,9 +30,9 @@ export async function convertErc20Amount(
       }
       // otherwise get the decimals of the currency
       const currencyContract = getContract({
-        client: options.client,
-        chain: options.chain,
         address: options.erc20Address,
+        chain: options.chain,
+        client: options.client,
       });
       const { decimals } = await import(
         "../../extensions/erc20/read/decimals.js"

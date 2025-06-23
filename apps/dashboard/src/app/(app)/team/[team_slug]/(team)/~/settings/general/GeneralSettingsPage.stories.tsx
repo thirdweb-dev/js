@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { teamStub } from "stories/stubs";
-import { storybookThirdwebClient } from "stories/utils";
+import { teamStub } from "@/storybook/stubs";
+import { storybookThirdwebClient } from "@/storybook/utils";
 import {
   DeleteTeamCard,
   LeaveTeamCard,
@@ -8,13 +8,13 @@ import {
 } from "./TeamGeneralSettingsPageUI";
 
 const meta = {
-  title: "Team/Settings/General",
   component: Story,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Team/Settings/General",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -30,20 +30,20 @@ function Story() {
   return (
     <div className="container max-w-6xl py-10">
       <TeamGeneralSettingsPageUI
-        team={testTeam}
-        updateTeamImage={async () => {
+        client={storybookThirdwebClient}
+        initialVerification={null}
+        isOwnerAccount={true}
+        leaveTeam={async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
+        team={testTeam}
         updateTeamField={async (value) => {
           console.log(value);
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
-        client={storybookThirdwebClient}
-        leaveTeam={async () => {
+        updateTeamImage={async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
         }}
-        initialVerification={null}
-        isOwnerAccount={true}
       />
       <ComponentVariants />
     </div>
@@ -57,10 +57,10 @@ function ComponentVariants() {
         <h2 className="mb-5 text-3xl"> Component variations </h2>
         <div className="flex flex-col gap-6">
           <LeaveTeamCard
-            teamName="foo"
             leaveTeam={async () => {
               await new Promise((resolve) => setTimeout(resolve, 1000));
             }}
+            teamName="foo"
           />
           <DeleteTeamCard canDelete={true} teamId="1" teamName="foo" />
           <DeleteTeamCard canDelete={false} teamId="2" teamName="foo" />

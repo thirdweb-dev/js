@@ -1,5 +1,5 @@
 import { type AbiEvent, type ParseAbiItem, parseAbiItem } from "abitype";
-import { type Hex, encodeEventTopics, toEventHash } from "viem";
+import { encodeEventTopics, type Hex, toEventHash } from "viem";
 import type { AbiEventParametersToPrimitiveTypes } from "./types.js";
 import { isAbiEvent } from "./utils.js";
 

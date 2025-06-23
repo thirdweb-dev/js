@@ -1,25 +1,25 @@
-import { Checkbox } from "@/components/ui/checkbox";
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useMutation } from "@tanstack/react-query";
-import type { TransactionError } from "contexts/error-handler";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { toast } from "sonner";
-import { BadgeContainer, storybookThirdwebClient } from "stories/utils";
 import { ZERO_ADDRESS } from "thirdweb";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
+import { Checkbox } from "@/components/ui/checkbox";
+import type { TransactionError } from "@/contexts/error-handler";
+import { BadgeContainer, storybookThirdwebClient } from "@/storybook/utils";
 import {
   BatchMetadataModuleUI,
   type UploadMetadataFormValues,
 } from "./BatchMetadata";
 
 const meta = {
-  title: "Modules/BatchMetadata",
   component: Component,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
+  title: "Modules/BatchMetadata",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -39,11 +39,11 @@ function Component() {
     (error as TransactionError).reason = "This is a test reason error";
     (error as TransactionError).info = {
       from: ZERO_ADDRESS,
-      to: ZERO_ADDRESS,
       network: {
-        name: "test",
         chainId: 1,
+        name: "test",
       },
+      to: ZERO_ADDRESS,
     };
     throw error;
   }
@@ -58,9 +58,9 @@ function Component() {
   });
 
   const contractInfo = {
-    name: "Module Name",
     description:
       "lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore ",
+    name: "Module Name",
     publisher: "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
     version: "1.0.0",
   };
@@ -74,26 +74,25 @@ function Component() {
 
         <div className="flex items-center gap-5">
           <CheckboxWithLabel
-            value={isOwner}
-            onChange={setIsOwner}
-            id="isOwner"
             label="Is Owner"
+            onChange={setIsOwner}
+            value={isOwner}
           />
         </div>
 
         <BadgeContainer label="Default">
           <BatchMetadataModuleUI
-            isLoggedIn={true}
-            contractInfo={contractInfo}
-            moduleAddress="0x0000000000000000000000000000000000000000"
-            uploadMetadata={uploadMetadataStub}
             client={storybookThirdwebClient}
-            uninstallButton={{
-              onClick: async () => removeMutation.mutateAsync(),
-              isPending: removeMutation.isPending,
-            }}
-            isOwnerAccount={isOwner}
             contractChainId={1}
+            contractInfo={contractInfo}
+            isLoggedIn={true}
+            isOwnerAccount={isOwner}
+            moduleAddress="0x0000000000000000000000000000000000000000"
+            uninstallButton={{
+              isPending: removeMutation.isPending,
+              onClick: async () => removeMutation.mutateAsync(),
+            }}
+            uploadMetadata={uploadMetadataStub}
           />
         </BadgeContainer>
       </div>
@@ -104,20 +103,20 @@ function Component() {
 function CheckboxWithLabel(props: {
   value: boolean;
   onChange: (value: boolean) => void;
-  id: string;
   label: string;
 }) {
+  const id = useId();
   return (
     <div className="items-top flex space-x-2">
       <Checkbox
-        id={props.id}
         checked={props.value}
+        id={id}
         onCheckedChange={(v) => props.onChange(!!v)}
       />
       <div className="grid gap-1.5 leading-none">
         <label
-          htmlFor={props.id}
           className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          htmlFor={id}
         >
           {props.label}
         </label>

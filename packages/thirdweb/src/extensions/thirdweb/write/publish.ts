@@ -46,7 +46,6 @@ export function publishContract(
   options: BaseTransactionOptions<PublishContractParams>,
 ) {
   return generatedPublishContract({
-    contract: options.contract,
     async asyncParams() {
       const currentVersion = options.previousMetadata?.version;
       // check if the version is greater than the current version
@@ -71,15 +70,12 @@ export function publishContract(
       const routerType = getRouterType(abi);
       // not spreading here, we don't want to re-upload the fetched data like bytecode
       const newMetadata: ExtendedMetadata = {
-        bytecodeUri: options.metadata.bytecodeUri,
-        metadataUri: options.metadata.metadataUri,
-        name: options.metadata.name,
-        version: options.metadata.version,
         audit: options.metadata.audit,
+        bytecodeUri: options.metadata.bytecodeUri,
         changelog: options.metadata.changelog,
+        compilers: options.metadata.compilers,
         compositeAbi: options.metadata.compositeAbi,
         constructorParams: options.metadata.constructorParams,
-        implConstructorParams: options.metadata.implConstructorParams,
         defaultExtensions:
           routerType === "dynamic"
             ? options.metadata.defaultExtensions
@@ -92,15 +88,18 @@ export function publishContract(
         description: options.metadata.description,
         displayName: options.metadata.displayName,
         factoryDeploymentData: options.metadata.factoryDeploymentData,
+        implConstructorParams: options.metadata.implConstructorParams,
         isDeployableViaFactory: options.metadata.isDeployableViaFactory,
         isDeployableViaProxy: options.metadata.isDeployableViaProxy,
         logo: options.metadata.logo,
+        metadataUri: options.metadata.metadataUri,
+        name: options.metadata.name,
         networksForDeployment: options.metadata.networksForDeployment,
-        readme: options.metadata.readme,
-        tags: options.metadata.tags,
-        compilers: options.metadata.compilers,
         publisher: options.account.address,
+        readme: options.metadata.readme,
         routerType,
+        tags: options.metadata.tags,
+        version: options.metadata.version,
       };
 
       // upload the new metadata
@@ -110,14 +109,15 @@ export function publishContract(
       });
 
       return {
-        publisher: options.account.address,
-        contractId: options.metadata.name,
-        publishMetadataUri: newMetadataUri,
-        compilerMetadataUri: options.metadata.metadataUri,
         bytecodeHash,
+        compilerMetadataUri: options.metadata.metadataUri,
+        contractId: options.metadata.name,
         implementation: ZERO_ADDRESS,
+        publisher: options.account.address,
+        publishMetadataUri: newMetadataUri,
       };
     },
+    contract: options.contract,
   });
 }
 
@@ -127,9 +127,9 @@ export function publishContract(
  */
 export function getContractPublisher(client: ThirdwebClient) {
   return getContract({
-    client,
-    chain: polygon,
     address: CONTRACT_PUBLISHER_ADDRESS,
+    chain: polygon,
+    client,
   });
 }
 

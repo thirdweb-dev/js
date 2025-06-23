@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 
-export function Banner(props: { text: string; href: string; id: string }) {
+export function Banner(props: { text: string; href: string }) {
   const [showBanner, setShowBanner] = useState(false);
 
   const bannerCancelledKey = `banner-cancelled${props.href}`;
@@ -32,12 +32,12 @@ export function Banner(props: { text: string; href: string; id: string }) {
       }}
     >
       <Link
-        href={props.href}
-        target={props.href.startsWith("http") ? "_blank" : undefined}
         className="font-bold hover:underline"
+        href={props.href}
         style={{
           color: "white",
         }}
+        target={props.href.startsWith("http") ? "_blank" : undefined}
       >
         {props.text}
       </Link>

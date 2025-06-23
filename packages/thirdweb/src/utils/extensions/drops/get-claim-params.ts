@@ -1,7 +1,7 @@
 import { maxUint256, padHex } from "viem";
 import {
-  ZERO_ADDRESS,
   isNativeTokenAddress,
+  ZERO_ADDRESS,
 } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { getContractMetadata } from "../../../extensions/common/read/getContractMetadata.js";
@@ -104,9 +104,9 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
     if (!cc.merkleRoot || cc.merkleRoot === padHex("0x", { size: 32 })) {
       return {
         currency: ZERO_ADDRESS,
+        pricePerToken: maxUint256,
         proof: [],
         quantityLimitPerWallet: 0n,
-        pricePerToken: maxUint256,
       } satisfies OverrideProof;
     }
     // lazy-load the fetchProofsForClaimer function if we need it
@@ -124,15 +124,15 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
     if (!snapshotUri) {
       return {
         currency: ZERO_ADDRESS,
+        pricePerToken: maxUint256,
         proof: [],
         quantityLimitPerWallet: 0n,
-        pricePerToken: maxUint256,
       } satisfies OverrideProof;
     }
 
     const allowListProof = await fetchProofsForClaimer({
-      contract: options.contract,
-      claimer: options.from || options.to, // receiver and claimer can be different, always prioritize the claimer for allowlists
+      claimer: options.from || options.to,
+      contract: options.contract, // receiver and claimer can be different, always prioritize the claimer for allowlists
       merkleTreeUri: snapshotUri,
       tokenDecimals,
     });
@@ -140,9 +140,9 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
     if (!allowListProof) {
       return {
         currency: ZERO_ADDRESS,
+        pricePerToken: maxUint256,
         proof: [],
         quantityLimitPerWallet: 0n,
-        pricePerToken: maxUint256,
       } satisfies OverrideProof;
     }
     // otherwise return the proof
@@ -173,16 +173,16 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
       : undefined;
 
   return {
-    receiver: options.to,
-    tokenId: options.type === "erc1155" ? options.tokenId : undefined,
-    quantity: options.quantity,
-    currency,
-    pricePerToken,
     allowlistProof,
+    currency,
     data: "0x" as Hex,
     overrides: {
-      value,
       erc20Value,
+      value,
     },
+    pricePerToken,
+    quantity: options.quantity,
+    receiver: options.to,
+    tokenId: options.type === "erc1155" ? options.tokenId : undefined,
   };
 }

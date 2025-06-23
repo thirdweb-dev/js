@@ -9,16 +9,16 @@ import {
   spacing,
 } from "../../../core/design-system/index.js";
 import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
-import { QRCode } from "../../ui/components/QRCode.js";
-import { Spacer } from "../../ui/components/Spacer.js";
-import { WalletImage } from "../../ui/components/WalletImage.js";
 import {
   Container,
   ModalHeader,
   ScreenBottomContainer,
 } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
+import { QRCode } from "../../ui/components/QRCode.js";
+import { Spacer } from "../../ui/components/Spacer.js";
 import { Text } from "../../ui/components/text.js";
+import { WalletImage } from "../../ui/components/WalletImage.js";
 
 /**
  * @internal
@@ -40,14 +40,14 @@ export const ScanScreen: React.FC<{
   const [linkCopied, setLinkCopied] = useState(false);
 
   return (
-    <Container fullHeight flex="column" animate="fadein">
+    <Container animate="fadein" flex="column" fullHeight>
       <Container p="lg">
         <ModalHeader onBack={props.onBack} title={props.walletName} />
       </Container>
 
       <Spacer y="sm" />
 
-      <Container expand flex="column" px="lg" center="both">
+      <Container center="both" expand flex="column" px="lg">
         {!props.error && (
           <div
             style={{
@@ -55,26 +55,20 @@ export const ScanScreen: React.FC<{
             }}
           >
             <QRCode
-              qrCodeUri={props.qrCodeUri}
               QRIcon={
                 <WalletImage
-                  size={iconSize.xxl}
-                  id={props.walletId}
                   client={client}
+                  id={props.walletId}
+                  size={iconSize.xxl}
                 />
               }
+              qrCodeUri={props.qrCodeUri}
             />
 
             <Spacer y="xs" />
 
             <Button
               disabled={props.qrCodeUri === undefined}
-              variant="link"
-              style={{
-                fontSize: "12px",
-                opacity: props.qrCodeUri === undefined ? 0.5 : 1,
-                cursor: props.qrCodeUri === undefined ? "default" : "pointer",
-              }}
               onClick={() => {
                 navigator.clipboard
                   .writeText(props.qrCodeUri as string) // should always be string since the button is disabled otherwise
@@ -86,11 +80,17 @@ export const ScanScreen: React.FC<{
                     console.error("Failed to copy link to clipboard", err);
                   });
               }}
+              style={{
+                cursor: props.qrCodeUri === undefined ? "default" : "pointer",
+                fontSize: "12px",
+                opacity: props.qrCodeUri === undefined ? 0.5 : 1,
+              }}
+              variant="link"
             >
               {linkCopied ? (
-                <CheckIcon width={14} height={14} />
+                <CheckIcon height={14} width={14} />
               ) : (
-                <CopyIcon width={14} height={14} />
+                <CopyIcon height={14} width={14} />
               )}
               <span style={{ padding: "0 4px" }}>Copy Link</span>
             </Button>
@@ -98,9 +98,9 @@ export const ScanScreen: React.FC<{
             <Spacer y="lg" />
 
             <Text
+              balance
               center
               multiline
-              balance
               style={{
                 paddingInline: spacing.lg,
               }}
@@ -118,16 +118,16 @@ export const ScanScreen: React.FC<{
             }}
           >
             <Spacer y="xxl" />
-            <Container flex="row" center="x">
+            <Container center="x" flex="row">
               <AccentFailIcon size={iconSize["3xl"]} />
             </Container>
             <Spacer y="lg" />
-            <Text center size="lg" color="primaryText">
+            <Text center color="primaryText" size="lg">
               Connection Failed
             </Text>
             <Spacer y="3xl" />
 
-            <Button fullWidth variant="accent" onClick={props.onRetry}>
+            <Button fullWidth onClick={props.onRetry} variant="accent">
               Try again
             </Button>
           </Container>
@@ -143,12 +143,12 @@ export const ScanScreen: React.FC<{
           }}
         >
           <Button
-            variant="link"
             onClick={props.onGetStarted}
             style={{
               fontSize: fontSize.sm,
               textAlign: "center",
             }}
+            variant="link"
           >
             {props.getStartedLink}
           </Button>

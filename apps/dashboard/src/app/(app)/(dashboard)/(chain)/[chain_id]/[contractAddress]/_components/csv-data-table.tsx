@@ -1,4 +1,3 @@
-import { TableContainer } from "@/components/ui/table";
 import {
   IconButton,
   Portal,
@@ -17,6 +16,7 @@ import {
   ChevronRightIcon,
 } from "lucide-react";
 import { type Column, usePagination, useTable } from "react-table";
+import { TableContainer } from "@/components/ui/table";
 
 interface CsvDataTableProps<T extends object> {
   data: T[];
@@ -54,8 +54,8 @@ export function CsvDataTable<T extends object>({
       columns,
       data,
       initialState: {
-        pageSize: 50,
         pageIndex: 0,
+        pageSize: 50,
       },
     },
     // old package: this will be removed
@@ -113,15 +113,15 @@ export function CsvDataTable<T extends object>({
           <div className="flex w-full items-center justify-center">
             <div className="flex flex-row gap-1">
               <IconButton
-                isDisabled={!canPreviousPage}
                 aria-label="first page"
                 icon={<ChevronFirstIcon className="size-4" />}
+                isDisabled={!canPreviousPage}
                 onClick={() => gotoPage(0)}
               />
               <IconButton
-                isDisabled={!canPreviousPage}
                 aria-label="previous page"
                 icon={<ChevronLeftIcon className="size-4" />}
+                isDisabled={!canPreviousPage}
                 onClick={() => previousPage()}
               />
               <p className="my-auto whitespace-nowrap">
@@ -129,15 +129,15 @@ export function CsvDataTable<T extends object>({
                 <strong>{pageOptions.length}</strong>
               </p>
               <IconButton
-                isDisabled={!canNextPage}
                 aria-label="next page"
                 icon={<ChevronRightIcon className="size-4" />}
+                isDisabled={!canNextPage}
                 onClick={() => nextPage()}
               />
               <IconButton
-                isDisabled={!canNextPage}
                 aria-label="last page"
                 icon={<ChevronLastIcon className="size-4" />}
+                isDisabled={!canNextPage}
                 onClick={() => gotoPage(pageCount - 1)}
               />
               <Select

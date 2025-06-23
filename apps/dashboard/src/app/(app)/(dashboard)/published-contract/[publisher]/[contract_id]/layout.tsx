@@ -22,15 +22,15 @@ export async function generateMetadata(props: { params: Promise<Params> }) {
 
   const publishedContract =
     await getLatestPublishedContractsWithPublisherMapping({
-      publisher: publisher,
-      contract_id: contract_id,
       client: serverThirdwebClient,
+      contract_id: contract_id,
+      publisher: publisher,
     });
 
   if (!publishedContract) {
     return {
-      title: `${contract_id} | Published Smart Contract`,
       description: `Deploy ${contract_id} Smart Contract in one click with thirdweb.`,
+      title: `${contract_id} | Published Smart Contract`,
     };
   }
 
@@ -38,7 +38,7 @@ export async function generateMetadata(props: { params: Promise<Params> }) {
     publishedContract?.displayName || publishedContract?.name;
 
   return {
-    title: `${publishedContractName} | Published Smart Contract`,
     description: `${publishedContract.description}${publishedContract.description ? ". " : ""}Deploy ${publishedContractName} in one click with thirdweb.`,
+    title: `${publishedContractName} | Published Smart Contract`,
   };
 }

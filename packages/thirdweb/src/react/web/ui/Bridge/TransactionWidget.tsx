@@ -5,12 +5,14 @@ import type { Token } from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
+import { getToken } from "../../../../pay/convert/get-token.js";
 import {
   type PreparedTransaction,
   prepareTransaction,
 } from "../../../../transaction/prepare-transaction.js";
 import { type Address, checksumAddress } from "../../../../utils/address.js";
 import { stringify } from "../../../../utils/json.js";
+import { toUnits } from "../../../../utils/units.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
@@ -20,8 +22,8 @@ import type { Theme } from "../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButton_connectModalOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
-import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
+import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { DynamicHeight } from "../components/DynamicHeight.js";
 import { Spinner } from "../components/Spinner.js";
 import type { LocaleId } from "../types.js";
@@ -105,9 +107,9 @@ export type TransactionWidgetProps = {
   tokenAddress?: Address;
 
   /**
-   * The price of the item **(in wei)**.
+   * The price of the item **(as a decimal string)**, e.g. "1.5" for 1.5 tokens.
    */
-  amount?: bigint;
+  amount?: string;
 
   /**
    * A title for the transaction.
@@ -196,25 +198,8 @@ type UIOptionsResult =
  *     to: "0x...",
  *     chain: ethereum,
  *     client: client,
- *     value: toUnits("0.001", 18),
  *   })}
- *  />
- * ```
- *
- * ### Enable/Disable payment methods
- *
- * You can use `disableOnramps` to prevent the use of onramps in the widget.
- *
- * ```tsx
- * <TransactionWidget
- *   client={client}
- *   transaction={prepareTransaction({
- *     to: "0x...",
- *     chain: ethereum,
- *     client: client,
- *     value: toUnits("0.001", 18),
- *   })}
- *   disableOnramps
+ *   amount="0.1"
  *  />
  * ```
  *
@@ -291,33 +276,43 @@ export function TransactionWidget(props: TransactionWidgetProps) {
   const theme = props.theme || "dark";
 
   const bridgeDataQuery = useQuery({
-    queryKey: ["bridgeData", stringify(props)],
     queryFn: async (): Promise<UIOptionsResult> => {
+      let erc20Value = props.transaction.erc20Value;
+
+      if (props.amount) {
+        // Get token decimals for conversion
+        const tokenAddress = props.tokenAddress || NATIVE_TOKEN_ADDRESS;
+        const token = await getToken(
+          props.client,
+          checksumAddress(tokenAddress),
+          props.transaction.chain.id,
+        );
+
+        erc20Value = {
+          amountWei: toUnits(props.amount, token.decimals),
+          tokenAddress: checksumAddress(tokenAddress),
+        };
+      }
+
       const transaction = prepareTransaction({
         ...props.transaction,
-        erc20Value: props.amount
-          ? {
-              amountWei: props.amount,
-              tokenAddress: checksumAddress(
-                props.tokenAddress || NATIVE_TOKEN_ADDRESS,
-              ),
-            }
-          : props.transaction.erc20Value,
+        erc20Value,
       });
 
       return {
-        type: "success",
         data: {
-          mode: "transaction",
           metadata: {
-            title: props.title,
             description: props.description,
             image: props.image,
+            title: props.title,
           },
+          mode: "transaction",
           transaction,
         },
+        type: "success",
       };
     },
+    queryKey: ["bridgeData", stringify(props)],
   });
 
   let content = null;
@@ -325,13 +320,13 @@ export function TransactionWidget(props: TransactionWidgetProps) {
     content = (
       <div
         style={{
-          minHeight: "350px",
+          alignItems: "center",
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          minHeight: "350px",
         }}
       >
-        <Spinner size="xl" color="secondaryText" />
+        <Spinner color="secondaryText" size="xl" />
       </div>
     );
   } else if (bridgeDataQuery.data?.type === "unsupported_token") {
@@ -342,22 +337,22 @@ export function TransactionWidget(props: TransactionWidgetProps) {
     content = (
       <BridgeOrchestrator
         client={props.client}
-        uiOptions={bridgeDataQuery.data.data}
-        connectOptions={props.connectOptions}
         connectLocale={localeQuery.data}
-        purchaseData={props.purchaseData}
-        paymentLinkId={props.paymentLinkId}
+        connectOptions={props.connectOptions}
+        onCancel={() => {
+          props.onCancel?.();
+        }}
         onComplete={() => {
           props.onSuccess?.();
         }}
         onError={(err: Error) => {
           props.onError?.(err);
         }}
-        onCancel={() => {
-          props.onCancel?.();
-        }}
+        paymentLinkId={props.paymentLinkId}
         presetOptions={props.presetOptions}
+        purchaseData={props.purchaseData}
         receiverAddress={undefined}
+        uiOptions={bridgeDataQuery.data.data}
       />
     );
   }
@@ -365,9 +360,9 @@ export function TransactionWidget(props: TransactionWidgetProps) {
   return (
     <CustomThemeProvider theme={theme}>
       <EmbedContainer
+        className={props.className}
         modalSize="compact"
         style={props.style}
-        className={props.className}
       >
         <DynamicHeight>{content}</DynamicHeight>
       </EmbedContainer>

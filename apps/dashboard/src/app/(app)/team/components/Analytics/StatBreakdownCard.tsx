@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { toUSD } from "utils/number";
+import { toUSD } from "@/utils/number";
 import { Stat } from "./Stat";
 import { StatBreakdown } from "./StatBreakdown";
 
@@ -34,9 +34,9 @@ export function StatBreakdownCard({
 
     if (otherValue > 0) {
       top4.push({
+        fill: "hsl(var(--muted-foreground))",
         label: "Other",
         value: otherValue,
-        fill: "hsl(var(--muted-foreground))",
       });
     }
 
@@ -49,8 +49,8 @@ export function StatBreakdownCard({
     <Card className="flex flex-col">
       <CardHeader className="border-border border-b p-0">
         <Stat
-          value={isCurrency ? toUSD(sum) : sum.toLocaleString()}
           label={title}
+          value={isCurrency ? toUSD(sum) : sum.toLocaleString()}
         />
       </CardHeader>
       <CardContent className="flex-1 space-y-4 p-6">

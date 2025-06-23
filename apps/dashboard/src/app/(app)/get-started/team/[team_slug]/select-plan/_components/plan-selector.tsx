@@ -1,20 +1,22 @@
 "use client";
 
+import Link from "next/link";
+import {
+  reportOnboardingPlanSelected,
+  reportOnboardingPlanSelectionSkipped,
+} from "@/analytics/report";
 import type { Team } from "@/api/team";
 import { PricingCard } from "@/components/blocks/pricing-card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useStripeRedirectEvent } from "@/hooks/stripe/redirect-event";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useTrack } from "hooks/analytics/useTrack";
-import Link from "next/link";
-import { pollWithTimeout } from "utils/pollWithTimeout";
-import { useStripeRedirectEvent } from "../../../../../(stripe)/stripe-redirect/stripeRedirectChannel";
+import { pollWithTimeout } from "@/utils/pollWithTimeout";
 
 export function PlanSelector(props: {
   team: Team;
   getTeam: () => Promise<Team>;
 }) {
-  const trackEvent = useTrack();
   const router = useDashboardRouter();
 
   useStripeRedirectEvent(async () => {
@@ -25,12 +27,6 @@ export function PlanSelector(props: {
         const isNonFreePlan = team.billingPlan !== "free";
 
         if (isNonFreePlan) {
-          trackEvent({
-            category: "teamOnboarding",
-            action: "upgradePlan",
-            label: "success",
-            plan: team.billingPlan,
-          });
           router.replace(`/get-started/team/${props.team.slug}/add-members`);
         }
 
@@ -44,21 +40,18 @@ export function PlanSelector(props: {
     <PricingCard
       billingPlan="starter"
       billingStatus={props.team.billingStatus}
-      teamSlug={props.team.slug}
       cta={{
         label: "Get Started",
-        type: "checkout",
         onClick() {
-          trackEvent({
-            category: "teamOnboarding",
-            action: "selectPlan",
-            label: "attempt",
+          reportOnboardingPlanSelected({
             plan: "starter",
           });
         },
+        type: "checkout",
       }}
       getTeam={props.getTeam}
       teamId={props.team.id}
+      teamSlug={props.team.slug}
     />
   );
 
@@ -66,22 +59,19 @@ export function PlanSelector(props: {
     <PricingCard
       billingPlan="growth"
       billingStatus={props.team.billingStatus}
-      teamSlug={props.team.slug}
       cta={{
         label: "Get Started",
-        type: "checkout",
         onClick() {
-          trackEvent({
-            category: "teamOnboarding",
-            action: "selectPlan",
-            label: "attempt",
+          reportOnboardingPlanSelected({
             plan: "growth",
           });
         },
+        type: "checkout",
       }}
-      highlighted
       getTeam={props.getTeam}
+      highlighted
       teamId={props.team.id}
+      teamSlug={props.team.slug}
     />
   );
 
@@ -89,21 +79,18 @@ export function PlanSelector(props: {
     <PricingCard
       billingPlan="scale"
       billingStatus={props.team.billingStatus}
-      teamSlug={props.team.slug}
       cta={{
         label: "Get started",
-        type: "checkout",
         onClick() {
-          trackEvent({
-            category: "teamOnboarding",
-            action: "selectPlan",
-            label: "attempt",
+          reportOnboardingPlanSelected({
             plan: "scale",
           });
         },
+        type: "checkout",
       }}
       getTeam={props.getTeam}
       teamId={props.team.id}
+      teamSlug={props.team.slug}
     />
   );
 
@@ -111,21 +98,18 @@ export function PlanSelector(props: {
     <PricingCard
       billingPlan="pro"
       billingStatus={props.team.billingStatus}
-      teamSlug={props.team.slug}
       cta={{
         label: "Get started",
-        type: "checkout",
         onClick() {
-          trackEvent({
-            category: "teamOnboarding",
-            action: "selectPlan",
-            label: "attempt",
+          reportOnboardingPlanSelected({
             plan: "pro",
           });
         },
+        type: "checkout",
       }}
       getTeam={props.getTeam}
       teamId={props.team.id}
+      teamSlug={props.team.slug}
     />
   );
 
@@ -143,20 +127,16 @@ export function PlanSelector(props: {
           </div>
         </div>
         <Button
-          variant="link"
-          className="self-center text-muted-foreground"
           asChild
-          onClick={() => {
-            trackEvent({
-              category: "teamOnboarding",
-              action: "selectPlan",
-              label: "skip",
-            });
-          }}
+          className="self-center text-muted-foreground"
+          variant="link"
         >
           <Link
-            replace
             href={`/get-started/team/${props.team.slug}/add-members`}
+            onClick={() => {
+              reportOnboardingPlanSelectionSkipped();
+            }}
+            replace
           >
             Skip picking a plan for now and upgrade later
           </Link>

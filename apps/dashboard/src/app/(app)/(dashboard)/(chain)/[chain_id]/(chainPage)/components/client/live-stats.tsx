@@ -1,18 +1,19 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import { CircleCheckIcon, XIcon } from "lucide-react";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { isProd } from "@/constants/env-utils";
 import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
-import { useQuery } from "@tanstack/react-query";
-import { CircleCheckIcon, XIcon } from "lucide-react";
-import { hostnameEndsWith } from "utils/url";
+import { hostnameEndsWith } from "@/utils/url";
 import { PrimaryInfoItem } from "../server/primary-info-item";
 
 function useChainStatswithRPC(_rpcUrl: string) {
   let rpcUrl = _rpcUrl.replace(
     // eslint-disable-next-line no-template-curly-in-string
+    // biome-ignore lint/suspicious/noTemplateCurlyInString: this is expected in this case
     "${THIRDWEB_API_KEY}",
     NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
   );
@@ -25,17 +26,17 @@ function useChainStatswithRPC(_rpcUrl: string) {
   }
 
   return useQuery({
-    queryKey: ["chain-stats", { rpcUrl }],
+    enabled: !!rpcUrl,
     queryFn: async () => {
       const startTimeStamp = performance.now();
       const res = await fetch(rpcUrl, {
-        method: "POST",
         body: JSON.stringify({
+          id: 1,
           jsonrpc: "2.0",
           method: "eth_getBlockByNumber",
           params: ["latest", false],
-          id: 1,
         }),
+        method: "POST",
       });
 
       const json = await res.json();
@@ -44,18 +45,18 @@ function useChainStatswithRPC(_rpcUrl: string) {
       const blockNumber = Number.parseInt(json.result.number, 16);
       const blockGasLimit = Number.parseInt(json.result.gasLimit, 16);
       return {
-        latency,
-        blockNumber,
         blockGasLimit,
+        blockNumber,
+        latency,
       };
     },
+    queryKey: ["chain-stats", { rpcUrl }],
     refetchInterval: (query) => {
       if (query.state.error) {
         return false;
       }
       return 5 * 1000;
     },
-    enabled: !!rpcUrl,
     refetchOnWindowFocus: false,
   });
 }
@@ -82,13 +83,13 @@ export function ChainLiveStats(props: { rpc: string }) {
       >
         <div className="flex items-center gap-1">
           <CopyTextButton
-            tooltip="Copy RPC URL"
-            textToShow={new URL(props.rpc).origin}
-            textToCopy={props.rpc}
-            copyIconPosition="right"
-            variant="ghost"
             className="-translate-x-2 px-2 py-1 text-base"
+            copyIconPosition="right"
             iconClassName="size-4"
+            textToCopy={props.rpc}
+            textToShow={new URL(props.rpc).origin}
+            tooltip="Copy RPC URL"
+            variant="ghost"
           />
         </div>
       </PrimaryInfoItem>

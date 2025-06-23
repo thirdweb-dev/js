@@ -35,14 +35,14 @@ async function trackSiweEvent(
 ) {
   return track({
     client: event.client,
-    ecosystem: event.ecosystem,
     data: {
       action: event.action,
-      clientId: event.client.clientId,
       chainId: event.chainId,
+      clientId: event.client.clientId,
+      errorCode: stringify(event.error),
       walletAddress: event.walletAddress,
       walletType: event.walletType,
-      errorCode: stringify(event.error),
     },
+    ecosystem: event.ecosystem,
   });
 }

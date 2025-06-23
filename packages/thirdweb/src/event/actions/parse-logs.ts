@@ -43,8 +43,8 @@ export function parseEventLogs<
 ): ParseEventLogsResult<abiEvents, TStrict> {
   const { logs, events, strict } = options;
   return viem_parseEventLogs({
-    logs,
     abi: events.map((e) => e.abiEvent),
+    logs,
     strict,
   }) as unknown as ParseEventLogsResult<abiEvents, TStrict>;
 }

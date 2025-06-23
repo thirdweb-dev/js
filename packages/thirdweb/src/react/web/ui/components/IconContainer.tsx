@@ -13,15 +13,15 @@ export const IconContainer: React.FC<{
   return (
     <div
       style={{
-        position: "relative",
-        overflow: "hidden",
-        display: "flex",
-        justifyItems: "center",
-        flexShrink: 0,
         alignItems: "center",
-        padding: props.padding ?? "6px",
-        borderRadius: "100%",
         border: `1px solid ${theme.colors.borderColor}`,
+        borderRadius: "100%",
+        display: "flex",
+        flexShrink: 0,
+        justifyItems: "center",
+        overflow: "hidden",
+        padding: props.padding ?? "6px",
+        position: "relative",
         ...props.style,
       }}
     >

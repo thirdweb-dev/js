@@ -1,6 +1,6 @@
-import { type Team, getTeamBySlug } from "@/api/team";
 import { notFound } from "next/navigation";
-import { getAuthToken } from "../../../../api/lib/getAuthToken";
+import { getTeamBySlug, type Team } from "@/api/team";
+import { getAuthToken } from "../../../../../../@/api/auth-token";
 import { TeamOnboardingLayout } from "../../../../login/onboarding/onboarding-layout";
 import { PlanSelector } from "./_components/plan-selector";
 
@@ -17,11 +17,6 @@ export default async function Page(props: {
     notFound();
   }
 
-  // const client = getClientThirdwebClient({
-  //   jwt: authToken,
-  //   teamId: team.id,
-  // });
-
   async function getTeam() {
     "use server";
     const resolvedTeam = await getTeamBySlug(params.team_slug);
@@ -33,7 +28,7 @@ export default async function Page(props: {
 
   return (
     <TeamOnboardingLayout currentStep={2}>
-      <PlanSelector team={team} getTeam={getTeam} />
+      <PlanSelector getTeam={getTeam} team={team} />
     </TeamOnboardingLayout>
   );
 }

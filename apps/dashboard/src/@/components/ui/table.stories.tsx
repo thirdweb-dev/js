@@ -1,3 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -8,15 +10,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { Meta, StoryObj } from "@storybook/nextjs";
-import Link from "next/link";
-import { BadgeContainer } from "../../../stories/utils";
+import { BadgeContainer } from "@/storybook/utils";
 import { cn } from "../../lib/utils";
 import { Badge } from "./badge";
 
 const meta = {
-  title: "Shadcn/Table",
   component: Component,
+  title: "Shadcn/Table",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -54,40 +54,37 @@ type Invoice = {
 const invoices: Invoice[] = [
   {
     invoice: "INV001",
+    paymentMethod: "Credit Card",
     paymentStatus: "Paid",
     totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
   },
   {
     invoice: "INV002",
+    paymentMethod: "PayPal",
     paymentStatus: "Pending",
     totalAmount: "$150.00",
-    paymentMethod: "PayPal",
   },
   {
     invoice: "INV003",
+    paymentMethod: "Bank Transfer",
     paymentStatus: "Unpaid",
     totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
   },
   {
     invoice: "INV004",
+    paymentMethod: "Credit Card",
     paymentStatus: "Paid",
     totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
   },
   {
     invoice: "INV005",
+    paymentMethod: "PayPal",
     paymentStatus: "Paid",
     totalAmount: "$550.00",
-    paymentMethod: "PayPal",
   },
 ];
 
-function TableDemo(props: {
-  footer?: boolean;
-  linkBox?: boolean;
-}) {
+function TableDemo(props: { footer?: boolean; linkBox?: boolean }) {
   return (
     <TableContainer>
       <Table>
@@ -102,18 +99,18 @@ function TableDemo(props: {
         <TableBody>
           {invoices.map((invoice) => (
             <TableRow
-              key={invoice.invoice}
-              linkBox={props.linkBox}
               className={cn(
                 props.linkBox && "cursor-pointer hover:bg-accent/50",
               )}
+              key={invoice.invoice}
+              linkBox={props.linkBox}
             >
               <TableCell className="font-medium">
                 <Link
-                  href={`/invoices/${invoice.invoice}`}
                   className={cn(
                     props.linkBox && "before:absolute before:inset-0",
                   )}
+                  href={`/invoices/${invoice.invoice}`}
                 >
                   {invoice.invoice}
                 </Link>

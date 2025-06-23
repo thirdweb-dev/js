@@ -1,73 +1,68 @@
-import { getTeams } from "@/api/team";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpenIcon, ChevronRightIcon } from "lucide-react";
-import { HomeIcon, WalletIcon } from "lucide-react";
+import {
+  BookOpenIcon,
+  ChevronRightIcon,
+  HomeIcon,
+  WalletIcon,
+} from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { EngineIcon } from "../../(dashboard)/(chain)/components/server/icons/EngineIcon";
-import { InsightIcon } from "../../(dashboard)/(chain)/components/server/icons/InsightIcon";
-import { PayIcon } from "../../(dashboard)/(chain)/components/server/icons/PayIcon";
-import { CustomChatButton } from "../../../nebula-app/(app)/components/CustomChat/CustomChatButton";
-import { NebulaIcon } from "../../../nebula-app/(app)/icons/NebulaIcon";
-import {
-  getAuthToken,
-  getAuthTokenWalletAddress,
-} from "../../api/lib/getAuthToken";
+import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
+import { getTeams } from "@/api/team";
+import { CustomChatButton } from "@/components/chat/CustomChatButton";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EngineIcon } from "@/icons/EngineIcon";
+import { InsightIcon } from "@/icons/InsightIcon";
+import { NebulaIcon } from "@/icons/NebulaIcon";
+import { PayIcon } from "@/icons/PayIcon";
+import { siwaExamplePrompts } from "./definitions";
 
 export const metadata: Metadata = {
-  title: "thirdweb Support",
   openGraph: {
     title: "thirdweb Support",
   },
+  title: "thirdweb Support",
 };
+
 const HELP_PRODUCTS = [
   {
-    title: "Playground",
+    description: "Try out our interactive playground to get started",
     icon: HomeIcon,
+    title: "Playground",
     viewAllUrl:
       "https://playground.thirdweb.com/connect/sign-in/button?tab=code",
-    description: "Try out our interactive playground to get started",
   },
   {
-    title: "Connect",
-    icon: WalletIcon,
-    viewAllUrl: "https://portal.thirdweb.com/connect",
     description: "Wallets, auth, and onchain interactions",
+    icon: WalletIcon,
+    title: "Connect",
+    viewAllUrl: "https://portal.thirdweb.com/connect",
   },
   {
-    title: "Universal Bridge",
-    icon: PayIcon,
-    viewAllUrl: "https://portal.thirdweb.com/pay",
     description: "Bridge and onramp tokens on any chain",
+    icon: PayIcon,
+    title: "Universal Bridge",
+    viewAllUrl: "https://portal.thirdweb.com/pay",
   },
   {
-    title: "Engine",
-    icon: EngineIcon,
-    viewAllUrl: "https://portal.thirdweb.com/engine/v3",
     description: "Reliable transactions and monitoring",
+    icon: EngineIcon,
+    title: "Engine",
+    viewAllUrl: "https://portal.thirdweb.com/engine/v3",
   },
   {
-    title: "Insight",
-    icon: InsightIcon,
-    viewAllUrl: "https://portal.thirdweb.com/insight",
     description: "Blockchain data queries and transformations",
+    icon: InsightIcon,
+    title: "Insight",
+    viewAllUrl: "https://portal.thirdweb.com/insight",
   },
   {
-    title: "Nebula",
-    icon: NebulaIcon,
-    viewAllUrl: "https://portal.thirdweb.com/nebula",
     description: "API interface for LLMs",
+    icon: NebulaIcon,
+    title: "Nebula",
+    viewAllUrl: "https://portal.thirdweb.com/nebula",
   },
 ] as const;
-
-export const siwaExamplePrompts = [
-  "How do I add in-app wallet with sign in with google to my react app?",
-  "How do I send a transaction in Unity?",
-  "What does this contract revert error mean?",
-  "I see thirdweb support id in my console log, can you help me?",
-  "Here is my code, can you tell me why I'm seeing this error?",
-];
 
 export default async function SupportPage() {
   const [authToken, accountAddress] = await Promise.all([
@@ -98,22 +93,22 @@ export default async function SupportPage() {
             </p>
             <div className="mt-6 flex w-full flex-col items-center gap-3">
               <CustomChatButton
-                isLoggedIn={!!accountAddress}
-                networks="all"
-                isFloating={false}
-                pageType="support"
-                label="Ask AI for support"
-                examplePrompts={siwaExamplePrompts}
                 authToken={authToken || undefined}
-                teamId={teamId}
                 clientId={undefined}
+                examplePrompts={siwaExamplePrompts}
+                isFloating={false}
+                isLoggedIn={!!accountAddress}
+                label="Ask AI for support"
+                networks="all"
+                pageType="support"
+                teamId={teamId}
               />
 
               <Link
-                href="/support/create-ticket"
-                target="_blank"
-                rel="noreferrer"
                 className="text-muted-foreground text-sm hover:underline"
+                href="/support/create-ticket"
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 Open a support case
               </Link>
@@ -132,10 +127,10 @@ export default async function SupportPage() {
                   <CardTitle className="text-xl">{product.title}</CardTitle>
                 </div>
                 <Button
-                  variant="ghost"
-                  size="sm"
                   asChild
                   className="absolute top-4 right-2 flex flex-row gap-1 px-2 text-muted-foreground text-sm hover:text-foreground"
+                  size="sm"
+                  variant="ghost"
                 >
                   <Link href={product.viewAllUrl} target="_blank">
                     <span>View</span>

@@ -10,13 +10,13 @@ describe.runIf(process.env.TW_SECRET_KEY).skip("execute", () => {
   it("should execute a tx", async () => {
     await expect(
       Nebula.execute({
-        client: TEST_CLIENT,
-        message: `send 0.0001 ETH to ${TEST_ACCOUNT_B.address}`,
         account: TEST_ACCOUNT_A,
+        client: TEST_CLIENT,
         contextFilter: {
           chains: [sepolia],
           walletAddresses: [TEST_ACCOUNT_A.address],
         },
+        message: `send 0.0001 ETH to ${TEST_ACCOUNT_B.address}`,
       }),
     ).rejects.toThrow(/insufficient funds for gas/); // shows that the tx was sent
   });
@@ -24,24 +24,24 @@ describe.runIf(process.env.TW_SECRET_KEY).skip("execute", () => {
   // TODO make this work reliably
   it("should execute a contract call", async () => {
     const nftContract = getContract({
-      client: TEST_CLIENT,
-      chain: sepolia,
       address: "0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
+      chain: sepolia,
+      client: TEST_CLIENT,
     });
 
     const response = await Nebula.execute({
-      client: TEST_CLIENT,
-      messages: [
-        {
-          role: "user",
-          content: `approve 1 token of token id 0 to ${TEST_ACCOUNT_B.address} using the approve function`,
-        },
-      ],
       account: TEST_ACCOUNT_A,
+      client: TEST_CLIENT,
       contextFilter: {
         chains: [nftContract.chain],
         contractAddresses: [nftContract.address],
       },
+      messages: [
+        {
+          content: `approve 1 token of token id 0 to ${TEST_ACCOUNT_B.address} using the approve function`,
+          role: "user",
+        },
+      ],
     });
     expect(response.transactionHash).toBeDefined();
   });

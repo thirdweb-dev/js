@@ -1,8 +1,4 @@
 import {
-  type CreateWebhookInput,
-  useEngineCreateWebhook,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import {
   Flex,
   FormControl,
   Input,
@@ -16,11 +12,15 @@ import {
   Select,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button } from "chakra/button";
+import { FormLabel } from "chakra/form";
 import { CirclePlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Button, FormLabel } from "tw-components";
+import {
+  type CreateWebhookInput,
+  useEngineCreateWebhook,
+} from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { beautifyString } from "./webhooks-table";
 
 interface AddWebhookButtonProps {
@@ -44,10 +44,10 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutate: createWebhook } = useEngineCreateWebhook({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
-  const trackEvent = useTrack();
+
   const form = useForm<CreateWebhookInput>();
 
   const { onSuccess, onError } = useTxNotifications(
@@ -58,42 +58,30 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
   return (
     <>
       <Button
-        onClick={onOpen}
-        variant="ghost"
-        size="sm"
-        leftIcon={<CirclePlusIcon className="size-6" />}
         colorScheme="primary"
+        leftIcon={<CirclePlusIcon className="size-6" />}
+        onClick={onOpen}
+        size="sm"
+        variant="ghost"
         w="fit-content"
       >
         Create Webhook
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent
-          className="!bg-background rounded-lg border border-border"
           as="form"
+          className="!bg-background rounded-lg border border-border"
           onSubmit={form.handleSubmit((data) => {
             createWebhook(data, {
+              onError: (error) => {
+                onError(error);
+                console.error(error);
+              },
               onSuccess: () => {
                 onSuccess();
                 onClose();
-                trackEvent({
-                  category: "engine",
-                  action: "create-webhook",
-                  label: "success",
-                  instance: instanceUrl,
-                });
-              },
-              onError: (error) => {
-                onError(error);
-                trackEvent({
-                  category: "engine",
-                  action: "create-webhook",
-                  label: "error",
-                  instance: instanceUrl,
-                  error,
-                });
               },
             });
           })}
@@ -115,16 +103,16 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
               <FormControl isRequired>
                 <FormLabel>Name</FormLabel>
                 <Input
-                  type="text"
                   placeholder="My webhook"
+                  type="text"
                   {...form.register("name", { required: true })}
                 />
               </FormControl>
               <FormControl isRequired>
                 <FormLabel>URL</FormLabel>
                 <Input
-                  type="url"
                   placeholder="https://"
+                  type="url"
                   {...form.register("url", { required: true })}
                 />
               </FormControl>
@@ -132,10 +120,10 @@ export const AddWebhookButton: React.FC<AddWebhookButtonProps> = ({
           </ModalBody>
 
           <ModalFooter as={Flex} gap={3}>
-            <Button type="button" onClick={onClose} variant="ghost">
+            <Button onClick={onClose} type="button" variant="ghost">
               Cancel
             </Button>
-            <Button type="submit" colorScheme="primary">
+            <Button colorScheme="primary" type="submit">
               Create
             </Button>
           </ModalFooter>

@@ -1,5 +1,5 @@
-import type { Range } from "components/analytics/date-range-selector";
-import { RangeSelector } from "components/analytics/range-selector";
+import type { Range } from "@/components/analytics/date-range-selector";
+import { RangeSelector } from "@/components/analytics/range-selector";
 
 export function AnalyticsHeader(props: {
   title: string;

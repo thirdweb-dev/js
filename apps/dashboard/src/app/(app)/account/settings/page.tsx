@@ -1,6 +1,6 @@
 import { getDefaultTeam } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../@/api/auth-token";
 import { loginRedirect } from "../../login/loginRedirect";
 import { AccountSettingsPage } from "./AccountSettingsPage";
 import { getValidAccount } from "./getAccount";
@@ -27,8 +27,8 @@ export default async function Page() {
     <AccountSettingsPage
       account={account}
       client={client}
-      defaultTeamSlug={defaultTeam.slug}
       defaultTeamName={defaultTeam.name}
+      defaultTeamSlug={defaultTeam.slug}
     />
   );
 }

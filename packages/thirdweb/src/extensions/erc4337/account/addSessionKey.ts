@@ -61,18 +61,18 @@ export function addSessionKey(
 ) {
   const { contract, sessionKeyAddress, account, permissions } = options;
   return setPermissionsForSigner({
-    contract,
     async asyncParams() {
       const { req, signature } = await signPermissionRequest({
         account,
         contract,
         req: await toContractPermissions({
-          target: sessionKeyAddress,
           permissions,
+          target: sessionKeyAddress,
         }),
       });
-      return { signature, req };
+      return { req, signature };
     },
+    contract,
   });
 }
 
@@ -126,7 +126,7 @@ export async function shouldUpdateSessionKey(args: {
   // check end time validity
   if (
     currentPermissions.endTimestamp &&
-    currentPermissions.endTimestamp < Math.floor(new Date().getTime() / 1000)
+    currentPermissions.endTimestamp < Math.floor(Date.now() / 1000)
   ) {
     return true;
   }

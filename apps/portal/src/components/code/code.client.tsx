@@ -1,8 +1,8 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { BundledLanguage } from "shiki";
 import { LoadingDots } from "../ui/LoadingDots";
-import { RenderCode } from "./RenderCode";
 import { getCodeHtml } from "./getCodeHtml";
+import { RenderCode } from "./RenderCode";
 
 // Use CodeClient where the code changes based user input
 // Using RSC in that scenario feels too slow and unnecessary keep hitting the server
@@ -33,9 +33,9 @@ export const CodeClient: React.FC<CodeProps> = ({
   scrollableContainerClassName,
 }) => {
   const codeQuery = useQuery({
-    queryKey: ["html", code],
-    queryFn: () => getCodeHtml(code, lang),
     placeholderData: keepPreviousData,
+    queryFn: () => getCodeHtml(code, lang),
+    queryKey: ["html", code],
   });
 
   if (!codeQuery.data) {
@@ -44,9 +44,9 @@ export const CodeClient: React.FC<CodeProps> = ({
 
   return (
     <RenderCode
+      className={className}
       code={codeQuery.data.formattedCode}
       html={codeQuery.data.html}
-      className={className}
       scrollableClassName={scrollableClassName}
       scrollableContainerClassName={scrollableContainerClassName}
     />

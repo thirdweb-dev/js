@@ -1,8 +1,10 @@
 "use client";
 
-import { useEnginePermissions } from "@3rdweb-sdk/react/hooks/useEngine";
+import { Heading } from "chakra/heading";
+import { Link } from "chakra/link";
+import { Text } from "chakra/text";
 import type { ThirdwebClient } from "thirdweb";
-import { Heading, Link, Text } from "tw-components";
+import { useEnginePermissions } from "@/hooks/useEngine";
 import { AddAdminButton } from "./add-admin-button";
 import { AdminsTable } from "./admins-table";
 
@@ -18,8 +20,8 @@ export const EngineAdmins: React.FC<EngineAdminsProps> = ({
   client,
 }) => {
   const admins = useEnginePermissions({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
 
   return (
@@ -29,8 +31,8 @@ export const EngineAdmins: React.FC<EngineAdminsProps> = ({
         <Text>
           Admins are allowed to manage your Engine instance from the dashboard.{" "}
           <Link
-            href="https://portal.thirdweb.com/engine/features/admins"
             color="primary.500"
+            href="https://portal.thirdweb.com/engine/features/admins"
             isExternal
           >
             Learn more about admins
@@ -39,14 +41,14 @@ export const EngineAdmins: React.FC<EngineAdminsProps> = ({
         </Text>
       </div>
       <AdminsTable
-        instanceUrl={instanceUrl}
         admins={admins.data || []}
-        isPending={admins.isPending}
-        isFetched={admins.isFetched}
         authToken={authToken}
         client={client}
+        instanceUrl={instanceUrl}
+        isFetched={admins.isFetched}
+        isPending={admins.isPending}
       />
-      <AddAdminButton instanceUrl={instanceUrl} authToken={authToken} />
+      <AddAdminButton authToken={authToken} instanceUrl={instanceUrl} />
     </div>
   );
 };

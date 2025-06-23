@@ -1,7 +1,7 @@
+import { notFound } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { notFound } from "next/navigation";
-import { getAuthToken } from "../../../../../../../../../../../api/lib/getAuthToken";
+import { getAuthToken } from "../../../../../../../../../../../../../@/api/auth-token";
 import { loginRedirect } from "../../../../../../../../../../../login/loginRedirect";
 import { UpdatePartnerForm } from "../../../components/client/update-partner-form.client";
 import { fetchEcosystem } from "../../../hooks/fetchEcosystem";
@@ -37,16 +37,16 @@ export default async function EditPartnerPage({
 
   try {
     const ecosystem = await fetchEcosystem({
-      teamIdOrSlug: teamSlug,
-      slug: ecosystemSlug,
       authToken,
+      slug: ecosystemSlug,
+      teamIdOrSlug: teamSlug,
     });
 
     try {
       const partner = await fetchPartnerDetails({
+        authToken,
         ecosystem,
         partnerId,
-        authToken,
         teamId: team.id,
       });
 
@@ -70,11 +70,11 @@ export default async function EditPartnerPage({
               Edit Partner: {partner.name}
             </h1>
             <UpdatePartnerForm
+              authToken={authToken}
+              client={client}
               ecosystem={ecosystem}
               partner={partner}
-              authToken={authToken}
               teamId={team.id}
-              client={client}
             />
           </div>
         </div>

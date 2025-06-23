@@ -26,9 +26,9 @@ export const ToolTip: React.FC<{
         <RadixTooltip.Trigger asChild>{props.children}</RadixTooltip.Trigger>
         <RadixTooltip.Portal>
           <TooltipContent
-            sideOffset={props.sideOffset || 6}
             align={props.align || "center"}
             side={props.side || "top"}
+            sideOffset={props.sideOffset || 6}
           >
             {props.tip}
             <TooltipArrow />
@@ -54,18 +54,18 @@ const TooltipContent = /* @__PURE__ */ (() =>
   styled(RadixTooltip.Content)((_) => {
     const theme = useCustomTheme();
     return {
+      animation: `${slideUpAndFade} 200ms cubic-bezier(0.16, 1, 0.3, 1)`,
       background: theme.colors.tooltipBg,
-      color: theme.colors.tooltipText,
       borderRadius: radius.sm,
-      padding: `${spacing.xs} ${spacing.sm}`,
-      fontSize: fontSize.sm,
       boxShadow: shadow.sm,
+      color: theme.colors.tooltipText,
+      fontSize: fontSize.sm,
+      lineHeight: 1.5,
+      maxWidth: "300px",
+      padding: `${spacing.xs} ${spacing.sm}`,
       userSelect: "none",
       willChange: "transform, opacity",
-      animation: `${slideUpAndFade} 200ms cubic-bezier(0.16, 1, 0.3, 1)`,
       zIndex: 999999999999999,
-      maxWidth: "300px",
-      lineHeight: 1.5,
     };
   }))();
 

@@ -56,10 +56,6 @@ export async function nebulaFetch(
 ): Promise<Output> {
   const fetch = getClientFetch(input.client);
   const response = await fetch(`${NEBULA_API_URL}/${mode}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({
       ...("messages" in input
         ? {
@@ -82,14 +78,18 @@ export async function nebulaFetch(
             context_filter: {
               chain_ids:
                 input.contextFilter.chains?.map((c) => c.id.toString()) || [],
+              contract_addresses: input.contextFilter.contractAddresses || [],
               wallet_addresses:
                 input.contextFilter.walletAddresses ||
                 (input.account ? [input.account.address] : []),
-              contract_addresses: input.contextFilter.contractAddresses || [],
             },
           }
         : {}),
     }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
   });
   if (!response.ok) {
     const error = await response.text();
@@ -113,9 +113,9 @@ export async function nebulaFetch(
           return prepareTransaction({
             chain: getCachedChain(tx.chainId),
             client: input.client,
+            data: tx.data,
             to: tx.to,
             value: tx.value ? toBigInt(tx.value) : undefined,
-            data: tx.data,
           });
         }
         return undefined;

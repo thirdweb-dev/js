@@ -1,11 +1,11 @@
 import * as ox__Abi from "ox/Abi";
 import * as ox__AbiConstructor from "ox/AbiConstructor";
 import * as ox__AbiFunction from "ox/AbiFunction";
-import * as ox__Signature from "ox/Signature";
 import { WrappedSignature as ox__WrappedSignature } from "ox/erc6492";
+import * as ox__Signature from "ox/Signature";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
-import { type ThirdwebContract, getContract } from "../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../contract/contract.js";
 import { isValidSignature } from "../extensions/erc1271/__generated__/isValidSignature/read/isValidSignature.js";
 import { eth_call } from "../rpc/actions/eth_call.js";
 import { getRpcClient } from "../rpc/rpc.js";
@@ -81,20 +81,20 @@ export async function verifyHash({
   const isDeployed = await isContractDeployed(
     getContract({
       address,
-      client,
       chain,
+      client,
     }),
   );
 
   if (isDeployed) {
     const validEip1271 = await verifyEip1271Signature({
-      hash,
-      signature: signatureHex,
       contract: getContract({
-        chain,
         address,
+        chain,
         client,
       }),
+      hash,
+      signature: signatureHex,
     }).catch((err) => {
       console.error("Error verifying EIP-1271 signature", err);
       return false;
@@ -132,11 +132,11 @@ export async function verifyHash({
     // zksync chains dont support deploying code with eth_call
     // need to call a deployed contract instead
     verificationData = {
-      to: ZKSYNC_VALIDATOR_ADDRESS,
       data: ox__AbiFunction.encodeData(
         ox__AbiFunction.fromAbi(abi, "isValidSig"),
         [address, hash, wrappedSignature],
       ),
+      to: ZKSYNC_VALIDATOR_ADDRESS,
     };
   } else {
     const validatorConstructor = ox__AbiConstructor.fromAbi(abi);
@@ -159,13 +159,13 @@ export async function verifyHash({
   } catch {
     // Some chains do not support the eth_call simulation and will fail, so we fall back to regular EIP1271 validation
     const validEip1271 = await verifyEip1271Signature({
-      hash,
-      signature: signatureHex,
       contract: getContract({
-        chain,
         address,
+        chain,
         client,
       }),
+      hash,
+      signature: signatureHex,
     }).catch((err) => {
       console.error("Error verifying EIP-1271 signature", err);
       return false;
@@ -191,9 +191,9 @@ export async function verifyEip1271Signature({
 }): Promise<boolean> {
   try {
     const result = await isValidSignature({
+      contract,
       hash,
       signature,
-      contract,
     });
     return result === EIP_1271_MAGIC_VALUE;
   } catch (err) {

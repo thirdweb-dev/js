@@ -1,18 +1,18 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "next": true,
   "ignore": [
     "src/@/components/ui/**",
-    "src/components/notices/AnnouncementBanner.tsx",
-    "src/components/cmd-k-search/index.tsx",
-    "src/lib/search.ts"
+    "src/@/components/misc/AnnouncementBanner.tsx",
+    "src/@/components/cmd-k-search/index.tsx",
+    "src/@/lib/search.ts"
   ],
-  "project": ["src/**"],
-  "ignoreBinaries": ["only-allow", "biome"],
+  "ignoreBinaries": ["only-allow"],
   "ignoreDependencies": [
     "@thirdweb-dev/service-utils",
     "@thirdweb-dev/vault-sdk",
     "@types/color",
     "fast-xml-parser"
-  ]
+  ],
+  "next": true,
+  "project": ["src/**"]
 }

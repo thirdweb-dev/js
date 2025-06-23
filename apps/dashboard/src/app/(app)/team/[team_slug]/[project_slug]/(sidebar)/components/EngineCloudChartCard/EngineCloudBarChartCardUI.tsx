@@ -1,11 +1,4 @@
 "use client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
 import { format } from "date-fns";
 import { useMemo } from "react";
 import {
@@ -14,12 +7,21 @@ import {
   BarChart as RechartsBarChart,
   XAxis,
 } from "recharts";
-import type { EngineCloudStats } from "types/analytics";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import type { EngineCloudStats } from "@/types/analytics";
 import { EmptyStateCard } from "../../../../../components/Analytics/EmptyStateCard";
 
 export function EngineCloudBarChartCardUI({
   rawData,
-}: { rawData: EngineCloudStats[] }) {
+}: {
+  rawData: EngineCloudStats[];
+}) {
   const { data, pathnames, chartConfig, isAllEmpty } = useMemo(() => {
     // Dynamically collect all unique pathnames
     const pathnameSet = new Set<string>();
@@ -56,15 +58,15 @@ export function EngineCloudBarChartCardUI({
     }
 
     return {
-      data,
-      pathnames,
       chartConfig,
+      data,
       isAllEmpty: data.every((d) => d.total === 0),
+      pathnames,
     };
   }, [rawData]);
 
   if (data.length === 0 || isAllEmpty) {
-    return <EmptyStateCard metric="RPC" link="https://portal.thirdweb.com/" />;
+    return <EmptyStateCard link="https://portal.thirdweb.com/" metric="RPC" />;
   }
 
   return (
@@ -78,8 +80,8 @@ export function EngineCloudBarChartCardUI({
       </CardHeader>
       <CardContent className="px-2 sm:p-6 sm:pl-0">
         <ChartContainer
-          config={chartConfig}
           className="aspect-auto h-[250px] w-full pt-6"
+          config={chartConfig}
         >
           <RechartsBarChart
             accessibilityLayer
@@ -91,18 +93,18 @@ export function EngineCloudBarChartCardUI({
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="date"
-              tickLine={false}
               axisLine={false}
-              tickMargin={8}
+              dataKey="date"
               minTickGap={32}
               tickFormatter={(value: string) => {
                 const date = new Date(value);
                 return date.toLocaleDateString("en-US", {
-                  month: "short",
                   day: "numeric",
+                  month: "short",
                 });
               }}
+              tickLine={false}
+              tickMargin={8}
             />
             <ChartTooltip
               content={
@@ -117,18 +119,18 @@ export function EngineCloudBarChartCardUI({
             />
             {pathnames.map((pathname, idx) => (
               <Bar
-                key={pathname}
-                stackId="a"
+                className="stroke-background"
                 dataKey={pathname}
+                fill={`hsl(var(--chart-${idx + 1}))`}
+                key={pathname}
                 radius={[
                   idx === pathnames.length - 1 ? 4 : 0,
                   idx === pathnames.length - 1 ? 4 : 0,
                   idx === 0 ? 4 : 0,
                   idx === 0 ? 4 : 0,
                 ]}
-                fill={`hsl(var(--chart-${idx + 1}))`}
+                stackId="a"
                 strokeWidth={1}
-                className="stroke-background"
               />
             ))}
           </RechartsBarChart>

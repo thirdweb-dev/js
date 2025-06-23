@@ -1,5 +1,5 @@
-import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { prepareEvent } from "../../../../../event/prepare-event.js";
 
 /**
  * Represents the filters for the "AccountCreated" event.
@@ -40,8 +40,8 @@ export type AccountCreatedEventFilters = Partial<{
  */
 export function accountCreatedEvent(filters: AccountCreatedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event AccountCreated(address indexed account, address indexed accountAdmin)",
-    filters,
   });
 }

@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.zkape",
-  name: "Ape Wallet",
-  homepage: "https://www.zkape.io",
-  image_id: "ea66f627-cc46-41c4-8287-dae2f379f700",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/ape-layer2-wallet/id6450944029",
     android: null,
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: "https://apps.apple.com/us/app/ape-layer2-wallet/id6450944029",
+    linux: null,
+    mac: null,
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "ape://",
-    universal: "https://zkape.io",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
+  homepage: "https://www.zkape.io",
+  id: "io.zkape",
+  image_id: "ea66f627-cc46-41c4-8287-dae2f379f700",
+  mobile: {
+    native: "ape://",
+    universal: "https://zkape.io",
+  },
+  name: "Ape Wallet",
+  rdns: null,
 } as const;

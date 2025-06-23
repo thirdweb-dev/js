@@ -18,18 +18,18 @@ import {
 import { webWindowAdapter } from "../../adapters/WindowAdapter.js";
 import en from "../ConnectWallet/locale/en.js";
 import type { ConnectLocale } from "../ConnectWallet/locale/types.js";
+import { Container } from "../components/basic.js";
 import type { PayEmbedConnectOptions } from "../PayEmbed.js";
 import { ExecutingTxScreen } from "../TransactionButton/ExecutingScreen.js";
-import { Container } from "../components/basic.js";
 import { DirectPayment } from "./DirectPayment.js";
 import { ErrorBanner } from "./ErrorBanner.js";
 import { FundWallet } from "./FundWallet.js";
-import { QuoteLoader } from "./QuoteLoader.js";
-import { StepRunner } from "./StepRunner.js";
-import { TransactionPayment } from "./TransactionPayment.js";
 import { PaymentDetails } from "./payment-details/PaymentDetails.js";
 import { PaymentSelection } from "./payment-selection/PaymentSelection.js";
 import { SuccessScreen } from "./payment-success/SuccessScreen.js";
+import { QuoteLoader } from "./QuoteLoader.js";
+import { StepRunner } from "./StepRunner.js";
+import { TransactionPayment } from "./TransactionPayment.js";
 
 export type UIOptions = Prettify<
   {
@@ -131,8 +131,8 @@ export function BridgeOrchestrator({
   // Initialize adapters
   const adapters = useMemo(
     () => ({
-      window: webWindowAdapter,
       storage: webLocalStorage,
+      window: webWindowAdapter,
     }),
     [],
   );
@@ -160,7 +160,7 @@ export function BridgeOrchestrator({
   const handleError = useCallback(
     (error: Error) => {
       onError?.(error);
-      send({ type: "ERROR_OCCURRED", error });
+      send({ error, type: "ERROR_OCCURRED" });
     },
     [onError, send],
   );
@@ -168,7 +168,7 @@ export function BridgeOrchestrator({
   // Handle payment method selection
   const handlePaymentMethodSelected = useCallback(
     (paymentMethod: PaymentMethod) => {
-      send({ type: "PAYMENT_METHOD_SELECTED", paymentMethod });
+      send({ paymentMethod, type: "PAYMENT_METHOD_SELECTED" });
     },
     [send],
   );
@@ -176,7 +176,7 @@ export function BridgeOrchestrator({
   // Handle quote received
   const handleQuoteReceived = useCallback(
     (quote: BridgePrepareResult, request: BridgePrepareRequest) => {
-      send({ type: "QUOTE_RECEIVED", quote, request });
+      send({ quote, request, type: "QUOTE_RECEIVED" });
     },
     [send],
   );
@@ -189,7 +189,7 @@ export function BridgeOrchestrator({
   // Handle execution complete
   const handleExecutionComplete = useCallback(
     (completedStatuses: CompletedStatusResult[]) => {
-      send({ type: "EXECUTION_COMPLETE", completedStatuses });
+      send({ completedStatuses, type: "EXECUTION_COMPLETE" });
     },
     [send],
   );
@@ -203,10 +203,10 @@ export function BridgeOrchestrator({
   const handleRequirementsResolved = useCallback(
     (amount: string, token: Token, receiverAddress: Address) => {
       send({
-        type: "DESTINATION_CONFIRMED",
+        destinationAmount: amount,
         destinationToken: token,
         receiverAddress,
-        destinationAmount: amount,
+        type: "DESTINATION_CONFIRMED",
       });
     },
     [send],
@@ -218,38 +218,38 @@ export function BridgeOrchestrator({
       {state.value === "error" && state.context.currentError && (
         <ErrorBanner
           error={state.context.currentError}
-          onRetry={handleRetry}
           onCancel={onCancel}
+          onRetry={handleRetry}
         />
       )}
 
       {/* Render current screen based on state */}
       {state.value === "init" && uiOptions.mode === "fund_wallet" && (
         <FundWallet
-          uiOptions={uiOptions}
-          receiverAddress={receiverAddress}
           client={client}
-          onContinue={handleRequirementsResolved}
           connectOptions={connectOptions}
+          onContinue={handleRequirementsResolved}
           presetOptions={presetOptions}
+          receiverAddress={receiverAddress}
+          uiOptions={uiOptions}
         />
       )}
 
       {state.value === "init" && uiOptions.mode === "direct_payment" && (
         <DirectPayment
-          uiOptions={uiOptions}
           client={client}
-          onContinue={handleRequirementsResolved}
           connectOptions={connectOptions}
+          onContinue={handleRequirementsResolved}
+          uiOptions={uiOptions}
         />
       )}
 
       {state.value === "init" && uiOptions.mode === "transaction" && (
         <TransactionPayment
-          uiOptions={uiOptions}
           client={client}
-          onContinue={handleRequirementsResolved}
           connectOptions={connectOptions}
+          onContinue={handleRequirementsResolved}
+          uiOptions={uiOptions}
         />
       )}
 
@@ -258,18 +258,18 @@ export function BridgeOrchestrator({
         state.context.destinationAmount &&
         state.context.receiverAddress && (
           <PaymentSelection
-            destinationToken={state.context.destinationToken}
             client={client}
+            connectLocale={connectLocale || en}
+            connectOptions={connectOptions}
             destinationAmount={state.context.destinationAmount}
-            receiverAddress={state.context.receiverAddress}
-            onPaymentMethodSelected={handlePaymentMethodSelected}
-            onError={handleError}
+            destinationToken={state.context.destinationToken}
+            includeDestinationToken={uiOptions.mode !== "fund_wallet"}
             onBack={() => {
               send({ type: "BACK" });
             }}
-            connectOptions={connectOptions}
-            connectLocale={connectLocale || en}
-            includeDestinationToken={uiOptions.mode !== "fund_wallet"}
+            onError={handleError}
+            onPaymentMethodSelected={handlePaymentMethodSelected}
+            receiverAddress={state.context.receiverAddress}
           />
         )}
 
@@ -279,18 +279,18 @@ export function BridgeOrchestrator({
         state.context.destinationToken &&
         state.context.destinationAmount && (
           <QuoteLoader
-            destinationToken={state.context.destinationToken}
-            purchaseData={purchaseData}
-            paymentLinkId={paymentLinkId}
-            paymentMethod={state.context.selectedPaymentMethod}
-            receiver={state.context.receiverAddress}
             amount={state.context.destinationAmount}
             client={client}
-            onQuoteReceived={handleQuoteReceived}
-            onError={handleError}
+            destinationToken={state.context.destinationToken}
             onBack={() => {
               send({ type: "BACK" });
             }}
+            onError={handleError}
+            onQuoteReceived={handleQuoteReceived}
+            paymentLinkId={paymentLinkId}
+            paymentMethod={state.context.selectedPaymentMethod}
+            purchaseData={purchaseData}
+            receiver={state.context.receiverAddress}
           />
         )}
 
@@ -298,15 +298,15 @@ export function BridgeOrchestrator({
         state.context.selectedPaymentMethod &&
         state.context.quote && (
           <PaymentDetails
-            uiOptions={uiOptions}
             client={client}
-            paymentMethod={state.context.selectedPaymentMethod}
-            preparedQuote={state.context.quote}
-            onConfirm={handleRouteConfirmed}
             onBack={() => {
               send({ type: "BACK" });
             }}
+            onConfirm={handleRouteConfirmed}
             onError={handleError}
+            paymentMethod={state.context.selectedPaymentMethod}
+            preparedQuote={state.context.quote}
+            uiOptions={uiOptions}
           />
         )}
 
@@ -315,16 +315,16 @@ export function BridgeOrchestrator({
         state.context.request &&
         state.context.selectedPaymentMethod?.payerWallet && (
           <StepRunner
-            request={state.context.request}
-            wallet={state.context.selectedPaymentMethod?.payerWallet}
-            client={client}
             autoStart={true}
-            windowAdapter={webWindowAdapter}
-            onComplete={handleExecutionComplete}
-            onCancel={onCancel}
+            client={client}
             onBack={() => {
               send({ type: "BACK" });
             }}
+            onCancel={onCancel}
+            onComplete={handleExecutionComplete}
+            request={state.context.request}
+            wallet={state.context.selectedPaymentMethod?.payerWallet}
+            windowAdapter={webWindowAdapter}
           />
         )}
 
@@ -332,10 +332,10 @@ export function BridgeOrchestrator({
         state.context.quote &&
         state.context.completedStatuses && (
           <SuccessScreen
-            uiOptions={uiOptions}
-            preparedQuote={state.context.quote}
             completedStatuses={state.context.completedStatuses}
             onDone={handleBuyComplete}
+            preparedQuote={state.context.quote}
+            uiOptions={uiOptions}
             windowAdapter={webWindowAdapter}
           />
         )}
@@ -344,12 +344,12 @@ export function BridgeOrchestrator({
         uiOptions.mode === "transaction" &&
         uiOptions.transaction && (
           <ExecutingTxScreen
-            tx={uiOptions.transaction}
-            windowAdapter={webWindowAdapter}
             closeModal={handlePostBuyTransactionComplete}
             onTxSent={() => {
               // Do nothing
             }}
+            tx={uiOptions.transaction}
+            windowAdapter={webWindowAdapter}
           />
         )}
     </Container>

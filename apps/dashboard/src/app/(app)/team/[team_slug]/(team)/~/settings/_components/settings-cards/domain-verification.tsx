@@ -1,19 +1,19 @@
 "use client";
 
-import {
-  type VerifiedDomainResponse,
-  checkDomainVerification,
-  createDomainVerification,
-} from "@/api/verified-domain";
-import { SettingsCard } from "@/components/blocks/SettingsCard";
-import { CopyButton } from "@/components/ui/CopyButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertCircleIcon, CheckCircleIcon } from "lucide-react";
 import { useState } from "react";
+import {
+  checkDomainVerification,
+  createDomainVerification,
+  type VerifiedDomainResponse,
+} from "@/api/verified-domain";
+import { SettingsCard } from "@/components/blocks/SettingsCard";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { CopyButton } from "@/components/ui/CopyButton";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 
 interface DomainVerificationFormProps {
   teamId: string;
@@ -30,9 +30,9 @@ export function TeamDomainVerificationCard({
   const queryClient = useQueryClient();
 
   const domainQuery = useQuery({
-    queryKey: ["domain-verification", teamId],
-    queryFn: () => checkDomainVerification(teamId),
     initialData: initialVerification,
+    queryFn: () => checkDomainVerification(teamId),
+    queryKey: ["domain-verification", teamId],
     refetchInterval: (query) => {
       // if the data is pending, refetch every 10 seconds
       if (query.state.data?.status === "pending") {
@@ -76,14 +76,13 @@ export function TeamDomainVerificationCard({
       return (
         <div>
           <Input
-            id="domain"
+            className="md:w-[450px]"
+            disabled={!isOwnerAccount || verificationMutation.isPending}
+            maxLength={253}
+            onChange={(e) => setDomain(e.target.value)}
+            // is the max length for a domain
             placeholder="example.com"
             value={domain}
-            onChange={(e) => setDomain(e.target.value)}
-            disabled={!isOwnerAccount || verificationMutation.isPending}
-            // is the max length for a domain
-            maxLength={253}
-            className="md:w-[450px]"
           />
           <p className="mt-2 text-muted-foreground text-sm">
             Enter the domain you want to verify. Do not include http(s):// or
@@ -153,11 +152,11 @@ export function TeamDomainVerificationCard({
             </Alert>
 
             <Button
-              onClick={() => domainQuery.refetch()}
-              disabled={domainQuery.isFetching}
-              variant="outline"
-              size="sm"
               className="flex items-center gap-2"
+              disabled={domainQuery.isFetching}
+              onClick={() => domainQuery.refetch()}
+              size="sm"
+              variant="outline"
             >
               {domainQuery.isFetching && <Spinner className="size-4" />}
               {domainQuery.isFetching
@@ -193,13 +192,14 @@ export function TeamDomainVerificationCard({
 
   return (
     <SettingsCard
-      header={{
-        title: "Domain Verification",
-        description: "Verify your domain to enable advanced features.",
-      }}
+      bottomText={getBottomText()}
       errorText={
         verificationMutation.error?.message || domainQuery.error?.message
       }
+      header={{
+        description: "Verify your domain to enable advanced features.",
+        title: "Domain Verification",
+      }}
       noPermissionText={
         domainQuery.data?.status === "pending"
           ? !isOwnerAccount
@@ -207,18 +207,17 @@ export function TeamDomainVerificationCard({
             : undefined
           : undefined
       }
-      bottomText={getBottomText()}
       saveButton={
         !domainQuery.data
           ? {
-              onClick: () =>
-                verificationMutation.mutate({
-                  teamId,
-                  domain,
-                }),
               disabled: !domain || verificationMutation.isPending,
               isPending: verificationMutation.isPending,
               label: "Verify Domain",
+              onClick: () =>
+                verificationMutation.mutate({
+                  domain,
+                  teamId,
+                }),
             }
           : undefined
       }

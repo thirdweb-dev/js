@@ -1,5 +1,5 @@
 import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useId, useState } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import {
   fontSize,
@@ -11,22 +11,22 @@ import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccoun
 import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
 import { useSendToken } from "../../../../core/hooks/wallets/useSendToken.js";
 import {
-  type SupportedTokens,
   defaultTokens,
+  type SupportedTokens,
 } from "../../../../core/utils/defaultTokens.js";
+import { Container, ModalHeader } from "../../components/basic.js";
+import { Button } from "../../components/buttons.js";
+import { Input, Label } from "../../components/formElements.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
 import { TokenIcon } from "../../components/TokenIcon.js";
-import { Container, ModalHeader } from "../../components/basic.js";
-import { Button } from "../../components/buttons.js";
-import { Input, Label } from "../../components/formElements.js";
 import { Text } from "../../components/text.js";
 import { StyledDiv } from "../../design-system/elements.js";
 import type { ConnectLocale } from "../locale/types.js";
-import { TokenSelector } from "./TokenSelector.js";
 import { formatTokenBalance } from "./formatTokenBalance.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "./nativeToken.js";
+import { TokenSelector } from "./TokenSelector.js";
 
 type TXError = Error & { data?: { message?: string } };
 
@@ -74,7 +74,9 @@ export function SendFunds(props: {
   if (screen === "tokenSelector" && chain) {
     return (
       <TokenSelector
-        tokenList={tokenList}
+        chain={chain}
+        client={client}
+        connectLocale={connectLocale}
         onBack={() => {
           setScreen("base");
         }}
@@ -82,26 +84,24 @@ export function SendFunds(props: {
           setToken(_token);
           setScreen("base");
         }}
-        chain={chain}
-        connectLocale={connectLocale}
-        client={client}
+        tokenList={tokenList}
       />
     );
   }
 
   return (
     <SendFundsForm
-      token={token}
+      amount={amount}
+      client={client}
+      connectLocale={connectLocale}
+      onBack={props.onBack}
       onTokenSelect={() => {
         setScreen("tokenSelector");
       }}
       receiverAddress={receiverAddress}
-      setReceiverAddress={setReceiverAddress}
-      amount={amount}
       setAmount={setAmount}
-      onBack={props.onBack}
-      client={client}
-      connectLocale={connectLocale}
+      setReceiverAddress={setReceiverAddress}
+      token={token}
     />
   );
 }
@@ -129,10 +129,10 @@ export function SendFundsForm(props: {
   const activeChain = useActiveWalletChain();
 
   const balanceQuery = useWalletBalance({
-    chain,
-    tokenAddress: tokenAddress,
     address: activeAccount?.address,
+    chain,
     client: props.client,
+    tokenAddress: tokenAddress,
   });
 
   const { receiverAddress, setReceiverAddress, amount, setAmount } = props;
@@ -160,32 +160,36 @@ export function SendFundsForm(props: {
     return message;
   }
 
+  const tokenId = useId();
+  const receiverId = useId();
+  const amountId = useId();
+
   if (!activeChain) {
     return null; // this should never happen
   }
 
   if (sendTokenMutation.isError) {
     return (
-      <Container p="lg" animate="fadein">
+      <Container animate="fadein" p="lg">
         <ModalHeader
-          title={locale.title}
           onBack={() => {
             sendTokenMutation.reset();
           }}
+          title={locale.title}
         />
         <Spacer y="xl" />
         <Container
-          flex="column"
-          gap="lg"
           animate="fadein"
           center="both"
+          color="danger"
+          flex="column"
+          gap="lg"
           style={{
             minHeight: "200px",
           }}
-          color="danger"
         >
-          <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
-          <Text center multiline color="danger">
+          <CrossCircledIcon height={iconSize.xl} width={iconSize.xl} />
+          <Text center color="danger" multiline>
             {getErrorMessage(sendTokenMutation.error)}
           </Text>
         </Container>
@@ -195,24 +199,24 @@ export function SendFundsForm(props: {
 
   if (sendTokenMutation.isSuccess) {
     return (
-      <Container p="lg" animate="fadein">
+      <Container animate="fadein" p="lg">
         <ModalHeader
-          title={locale.title}
           onBack={() => {
             sendTokenMutation.reset();
           }}
+          title={locale.title}
         />
         <Container
-          flex="column"
-          gap="lg"
           animate="fadein"
           center="both"
+          color="success"
+          flex="column"
+          gap="lg"
           style={{
             minHeight: "250px",
           }}
-          color="success"
         >
-          <CheckCircledIcon width={iconSize.xl} height={iconSize.xl} />
+          <CheckCircledIcon height={iconSize.xl} width={iconSize.xl} />
           <Text color="success"> {locale.successMessage} </Text>
         </Container>
       </Container>
@@ -228,8 +232,8 @@ export function SendFundsForm(props: {
     balanceQuery?.data?.symbol;
 
   return (
-    <Container p="lg" animate="fadein">
-      <ModalHeader title={locale.title} onBack={props.onBack} />
+    <Container animate="fadein" p="lg">
+      <ModalHeader onBack={props.onBack} title={locale.title} />
       <Spacer y="xl" />
 
       <form
@@ -238,31 +242,31 @@ export function SendFundsForm(props: {
         }}
       >
         {/* Token  */}
-        <Label htmlFor="token" color="secondaryText">
+        <Label color="secondaryText" htmlFor={tokenId}>
           {locale.token}
         </Label>
         <Spacer y="sm" />
         <Button
-          id="token"
-          variant="outline"
           fullWidth
+          id={tokenId}
+          onClick={props.onTokenSelect}
           style={{
-            justifyContent: "flex-start",
             gap: spacing.sm,
+            justifyContent: "flex-start",
             padding: spacing.sm,
           }}
-          onClick={props.onTokenSelect}
+          variant="outline"
         >
           <TokenIcon
-            token={props.token}
             chain={activeChain}
-            size="lg"
             client={props.client}
+            size="lg"
+            token={props.token}
           />
 
           <Container flex="column" gap="xs">
             {tokenName ? (
-              <Text size="sm" color="primaryText">
+              <Text color="primaryText" size="sm">
                 {tokenName}
               </Text>
             ) : (
@@ -280,38 +284,38 @@ export function SendFundsForm(props: {
         <Spacer y="lg" />
 
         {/* Send to  */}
-        <Label htmlFor="receiver" color="secondaryText">
+        <Label color="secondaryText" htmlFor={receiverId}>
           {locale.sendTo}
         </Label>
         <Spacer y="sm" />
         <Input
-          required
-          id="receiver"
-          placeholder="0x... or ENS name"
-          variant="outline"
-          value={receiverAddress}
+          id={receiverId}
           onChange={(e) => {
             setReceiverAddress(e.target.value);
           }}
+          placeholder="0x... or ENS name"
+          required
+          value={receiverAddress}
+          variant="outline"
         />
 
         <Spacer y="lg" />
 
         {/* Amount  */}
-        <Label htmlFor="amount" color="secondaryText">
+        <Label color="secondaryText" htmlFor={amountId}>
           {locale.amount}
         </Label>
         <Spacer y="sm" />
         <Container relative>
           <Input
-            required
-            type="number"
-            id="amount"
-            variant="outline"
-            value={amount}
+            id={amountId}
             onChange={(e) => {
               setAmount(e.target.value);
             }}
+            required
+            type="number"
+            value={amount}
+            variant="outline"
           />
           <CurrencyBadge>
             <Text size="xs"> {tokenSymbol} </Text>
@@ -322,18 +326,16 @@ export function SendFundsForm(props: {
 
         {/* Submit */}
         <Button
-          fullWidth
-          variant="accent"
-          type="submit"
           className="tw-sendfunds-screen-send-button"
+          fullWidth
           onClick={async () => {
             if (!receiverAddress || !amount) {
               return;
             }
 
             await sendTokenMutation.mutateAsync({
-              receiverAddress,
               amount,
+              receiverAddress,
               tokenAddress: tokenAddress,
             });
           }}
@@ -342,9 +344,11 @@ export function SendFundsForm(props: {
             gap: spacing.sm,
             padding: spacing.md,
           }}
+          type="submit"
+          variant="accent"
         >
           {sendTokenMutation.isPending && (
-            <Spinner size="sm" color="accentButtonText" />
+            <Spinner color="accentButtonText" size="sm" />
           )}
           {sendTokenMutation.isPending ? locale.sending : locale.submitButton}
         </Button>
@@ -355,7 +359,7 @@ export function SendFundsForm(props: {
 
 const CurrencyBadge = /* @__PURE__ */ StyledDiv({
   position: "absolute",
+  right: spacing.sm,
   top: "50%",
   transform: "translateY(-50%)",
-  right: spacing.sm,
 });

@@ -62,7 +62,6 @@ export type LazyMintParams = {
  */
 export function lazyMint(options: BaseTransactionOptions<LazyMintParams>) {
   return LazyMint.lazyMint({
-    contract: options.contract,
     asyncParams: async () => {
       const startFileNumber = await nextTokenIdToMint({
         contract: options.contract,
@@ -83,6 +82,7 @@ export function lazyMint(options: BaseTransactionOptions<LazyMintParams>) {
         extraData: "0x",
       } as const;
     },
+    contract: options.contract,
   });
 }
 

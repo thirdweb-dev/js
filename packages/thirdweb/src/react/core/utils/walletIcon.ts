@@ -46,18 +46,18 @@ const passkeyIcon =
  * @internal
  */
 export const socialIcons = {
-  google: googleIconUri,
   apple: appleIconUri,
   coinbase: coinbaseIconUri,
-  facebook: facebookIconUri,
   discord: discordIconUri,
-  line: lineIconUri,
-  x: xIcon,
+  facebook: facebookIconUri,
   farcaster: farcasterIconUri,
+  github: githubIconUri,
+  google: googleIconUri,
+  line: lineIconUri,
+  steam: steamIconUri,
   telegram: telegramIconUri,
   twitch: twitchIconUri,
-  github: githubIconUri,
-  steam: steamIconUri,
+  x: xIcon,
 };
 
 /**
@@ -119,8 +119,8 @@ export function useWalletIcon(props: {
 }) {
   const { id } = useWalletContext();
   const imageQuery = useQuery({
-    queryKey: ["walletIcon", id],
     queryFn: async () => fetchWalletImage({ id }),
+    queryKey: ["walletIcon", id],
     ...props.queryOptions,
   });
   return imageQuery;

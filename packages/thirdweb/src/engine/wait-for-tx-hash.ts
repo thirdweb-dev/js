@@ -1,9 +1,7 @@
 import { stringify } from "viem";
-
-import type { Hex } from "../utils/encoding/hex.js";
-
 import type { ThirdwebClient } from "../client/client.js";
 import type { WaitForReceiptOptions } from "../transaction/actions/wait-for-tx-receipt.js";
+import type { Hex } from "../utils/encoding/hex.js";
 import { getTransactionStatus } from "./get-status.js";
 
 /**
@@ -58,9 +56,9 @@ export async function waitForTransactionHash(args: {
           );
         }
         return {
-          transactionHash: executionResult.transactionHash as Hex,
-          client: args.client,
           chain: executionResult.chain,
+          client: args.client,
+          transactionHash: executionResult.transactionHash as Hex,
         };
       }
       default: {

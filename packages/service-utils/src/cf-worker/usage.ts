@@ -1,5 +1,6 @@
 import { AwsClient } from "aws4fetch";
 import { type UsageEvent, usageEventSchema } from "../core/usage.js";
+
 export type { UsageEvent } from "../core/usage.js";
 
 // Initialize a singleton for AWS usage.
@@ -52,19 +53,19 @@ async function publishUsageEvents(
 
   const aws = getAws({
     accessKeyId,
-    secretAccessKey,
     region,
+    secretAccessKey,
   });
   await aws.fetch(`https://sqs.${region}.amazonaws.com`, {
-    headers: {
-      "X-Amz-Target": "AmazonSQS.SendMessageBatch",
-      "X-Amz-Date": new Date().toISOString(),
-      "Content-Type": "application/x-amz-json-1.0",
-    },
     body: JSON.stringify({
-      QueueUrl: queueUrl,
       Entries: entries,
+      QueueUrl: queueUrl,
     }),
+    headers: {
+      "Content-Type": "application/x-amz-json-1.0",
+      "X-Amz-Date": new Date().toISOString(),
+      "X-Amz-Target": "AmazonSQS.SendMessageBatch",
+    },
   });
 }
 

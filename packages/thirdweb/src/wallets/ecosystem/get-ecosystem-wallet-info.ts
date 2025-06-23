@@ -17,31 +17,31 @@ export async function getEcosystemWalletInfo(
   const data = await getEcosystemInfo(walletId);
 
   return {
-    id: walletId,
-    name: data.name,
-    image_id: data.imageUrl || "",
-    homepage: data.homepage || "",
-    rdns: null,
     app: {
-      browser: null,
-      ios: null,
       android: null,
-      mac: null,
-      windows: null,
-      linux: null,
-      opera: null,
+      browser: null,
       chrome: null,
-      firefox: null,
-      safari: null,
       edge: null,
-    },
-    mobile: {
-      native: null,
-      universal: null,
+      firefox: null,
+      ios: null,
+      linux: null,
+      mac: null,
+      opera: null,
+      safari: null,
+      windows: null,
     },
     desktop: {
       native: null,
       universal: null,
     },
+    homepage: data.homepage || "",
+    id: walletId,
+    image_id: data.imageUrl || "",
+    mobile: {
+      native: null,
+      universal: null,
+    },
+    name: data.name,
+    rdns: null,
   };
 }

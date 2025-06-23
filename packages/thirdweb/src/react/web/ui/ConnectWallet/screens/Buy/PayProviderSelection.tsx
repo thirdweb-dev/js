@@ -18,10 +18,10 @@ export const PayProviderSelection = (props: {
 }) => {
   const ProviderItem = (
     <Container
-      flex="row"
       center="y"
-      gap="xxs"
       color="secondaryText"
+      flex="row"
+      gap="xxs"
       style={{ padding: spacing.md }}
     >
       <Text size="xs">
@@ -30,7 +30,7 @@ export const PayProviderSelection = (props: {
         )}
       </Text>
       {props.supportedProviders.length > 1 && (
-        <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
+        <ChevronDownIcon height={iconSize.sm} width={iconSize.sm} />
       )}
     </Container>
   );
@@ -38,25 +38,25 @@ export const PayProviderSelection = (props: {
   return (
     <Container
       bg="tertiaryBg"
-      flex="row"
       borderColor="borderColor"
+      flex="row"
       style={{
-        paddingLeft: spacing.md,
-        justifyContent: "space-between",
         alignItems: "center",
-        borderWidth: "1px",
-        borderStyle: "solid",
         borderBottom: "none",
+        borderStyle: "solid",
+        borderWidth: "1px",
+        justifyContent: "space-between",
+        paddingLeft: spacing.md,
       }}
     >
-      <Text size="xs" color="secondaryText">
+      <Text color="secondaryText" size="xs">
         Provider
       </Text>
       {props.supportedProviders.length > 1 ? (
         <Button
-          variant="ghost"
           onClick={props.onShowProviders}
-          style={{ padding: 0 }} // Padding is managed within children as the button is conditional
+          style={{ padding: 0 }}
+          variant="ghost" // Padding is managed within children as the button is conditional
         >
           {ProviderItem}
         </Button>

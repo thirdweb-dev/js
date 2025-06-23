@@ -19,8 +19,8 @@ export function EngineAirdropPreview() {
   const airdropMutation = useMutation({
     mutationFn: async () => {
       const response = await airdrop_tokens_with_engine({
-        contractAddress: airdropExample.contractAddress,
         chainId: airdropExample.chainId,
+        contractAddress: airdropExample.contractAddress,
         receivers: airdropExample.receivers,
       });
 
@@ -49,16 +49,16 @@ export function EngineAirdropPreview() {
       <div className="rounded-lg border bg-card">
         <div className="grid md:grid-cols-2">
           <div className="flex flex-col overflow-hidden">
-            <TabName name="Details" icon={InfoIcon} />
+            <TabName icon={InfoIcon} name="Details" />
             <AirdropConfig />
           </div>
           <div className="flex flex-col border-t lg:border-t-0 lg:border-l ">
-            <TabName name="Preview" icon={EyeIcon} />
+            <TabName icon={EyeIcon} name="Preview" />
             <div className="flex grow items-center justify-center px-4 py-10">
               <EngineAirdropCard
-                txStatus={engineTxStatusQuery.data}
                 isAirdropping={airdropMutation.isPending}
                 onStartAirdrop={handleSubmit}
+                txStatus={engineTxStatusQuery.data}
               />
             </div>
           </div>
@@ -87,8 +87,8 @@ function AirdropConfig() {
         <h3 className="mb-2 font-medium">Network</h3>
         <a
           href="https://thirdweb.com/base-sepolia-testnet/"
-          target="_blank"
           rel="noopener noreferrer"
+          target="_blank"
         >
           <Badge variant="secondary">Base Sepolia</Badge>
         </a>
@@ -97,10 +97,10 @@ function AirdropConfig() {
       <div>
         <h3 className="mb-2 font-medium">Token Contract</h3>
         <a
-          href="https://thirdweb.com/base-sepolia-testnet/0xcB30dB8FB977e8b27ae34c86aF16C4F5E428c0bE"
-          target="_blank"
-          rel="noopener noreferrer"
           className="flex w-full items-center justify-between rounded bg-muted/50 px-3 py-2 font-mono text-sm transition-colors hover:bg-muted"
+          href="https://thirdweb.com/base-sepolia-testnet/0xcB30dB8FB977e8b27ae34c86aF16C4F5E428c0bE"
+          rel="noopener noreferrer"
+          target="_blank"
         >
           <span className="truncate">{airdropExample.contractAddress}</span>
           <ExternalLinkIcon className="size-3" />
@@ -114,8 +114,8 @@ function AirdropConfig() {
         <ul className="space-y-2">
           {airdropExample.receivers.map((recipient) => (
             <li
-              key={recipient.toAddress}
               className="flex-1 truncate rounded bg-muted/50 px-3 py-2 font-mono text-sm"
+              key={recipient.toAddress}
             >
               {recipient.toAddress}
             </li>

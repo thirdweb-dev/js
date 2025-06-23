@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { type ThirdwebContract, resolveContractAbi } from "thirdweb/contract";
+import { resolveContractAbi, type ThirdwebContract } from "thirdweb/contract";
 
 export function useResolveContractABI(contract: ThirdwebContract) {
   return useQuery({
-    queryKey: ["resolveContractAbi", contract],
     queryFn: () => {
       return resolveContractAbi(contract);
     },
-    retry: false,
+    queryKey: ["resolveContractAbi", contract],
     refetchOnWindowFocus: false,
+    retry: false,
   });
 }

@@ -44,21 +44,21 @@ export function removeAdmin(
 ) {
   const { contract, account, adminAddress } = options;
   return setPermissionsForSigner({
-    contract,
     async asyncParams() {
       const { req, signature } = await signPermissionRequest({
         account,
         contract,
         req: await defaultPermissionsForAdmin({
-          target: adminAddress,
           action: "remove-admin",
+          target: adminAddress,
         }),
       });
       return {
-        signature,
         req,
+        signature,
       };
     },
+    contract,
   });
 }
 

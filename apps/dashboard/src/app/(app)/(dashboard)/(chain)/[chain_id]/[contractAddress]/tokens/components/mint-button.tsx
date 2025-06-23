@@ -1,18 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { FormControl, Input } from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useTrack } from "hooks/analytics/useTrack";
+import { FormErrorMessage, FormLabel } from "chakra/form";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -24,7 +13,17 @@ import {
   useReadContract,
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
-import { FormErrorMessage, FormLabel } from "tw-components";
+import { MinterOnly } from "@/components/contracts/roles/minter-only";
+import { TransactionButton } from "@/components/tx-button";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface TokenMintButtonProps {
   contract: ThirdwebContract;
@@ -47,11 +46,10 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
     contract,
   });
   const sendAndConfirmTransaction = useSendAndConfirmTransaction();
-  const trackEvent = useTrack();
   const form = useForm({ defaultValues: { amount: "0" } });
   return (
     <MinterOnly contract={contract}>
-      <Sheet open={open} onOpenChange={setOpen}>
+      <Sheet onOpenChange={setOpen} open={open}>
         <SheetTrigger asChild>
           <Button variant="primary" {...restButtonProps} className="gap-2">
             <PlusIcon size={16} /> Mint
@@ -70,51 +68,35 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
               if (!address) {
                 return toast.error("No wallet connected");
               }
-              trackEvent({
-                category: "token",
-                action: "mint",
-                label: "attempt",
-              });
               const transaction = ERC20Ext.mintTo({
-                contract,
                 amount: d.amount,
+                contract,
                 to: address,
               });
               const promise = sendAndConfirmTransaction.mutateAsync(
                 transaction,
                 {
+                  onError: (error) => {
+                    console.error(error);
+                  },
                   onSuccess: () => {
-                    trackEvent({
-                      category: "token",
-                      action: "mint",
-                      label: "success",
-                    });
                     form.reset({ amount: "0" });
                     setOpen(false);
-                  },
-                  onError: (error) => {
-                    trackEvent({
-                      category: "token",
-                      action: "mint",
-                      label: "error",
-                      error,
-                    });
-                    console.error(error);
                   },
                 },
               );
               toast.promise(promise, {
+                error: "Failed to mint tokens",
                 loading: "Minting tokens",
                 success: "Tokens minted successfully",
-                error: "Failed to mint tokens",
               });
             })}
           >
-            <FormControl isRequired isInvalid={!!form.formState.errors.amount}>
+            <FormControl isInvalid={!!form.formState.errors.amount} isRequired>
               <FormLabel>Additional Supply</FormLabel>
               <Input
-                type="text"
                 pattern={`^\\d+(\\.\\d{1,${tokenDecimals || 18}})?$`}
+                type="text"
                 {...form.register("amount")}
               />
               <FormErrorMessage>
@@ -125,13 +107,13 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
           <SheetFooter className="mt-10">
             <TransactionButton
               client={contract.client}
-              isLoggedIn={isLoggedIn}
-              txChainID={contract.chain.id}
-              transactionCount={1}
-              isPending={sendAndConfirmTransaction.isPending}
-              form={MINT_FORM_ID}
-              type="submit"
               disabled={!form.formState.isDirty}
+              form={MINT_FORM_ID}
+              isLoggedIn={isLoggedIn}
+              isPending={sendAndConfirmTransaction.isPending}
+              transactionCount={1}
+              txChainID={contract.chain.id}
+              type="submit"
             >
               Mint Tokens
             </TransactionButton>

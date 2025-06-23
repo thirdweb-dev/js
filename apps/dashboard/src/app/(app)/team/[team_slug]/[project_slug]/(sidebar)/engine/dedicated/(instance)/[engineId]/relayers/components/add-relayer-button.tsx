@@ -1,9 +1,3 @@
-import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
-import {
-  type CreateRelayerInput,
-  useEngineBackendWallets,
-  useEngineCreateRelayer,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
   FormControl,
@@ -20,14 +14,20 @@ import {
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button } from "chakra/button";
+import { FormHelperText, FormLabel } from "chakra/form";
 import { CirclePlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import { isAddress, shortenAddress } from "thirdweb/utils";
-import { Button, FormHelperText, FormLabel } from "tw-components";
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import {
+  type CreateRelayerInput,
+  useEngineBackendWallets,
+  useEngineCreateRelayer,
+} from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 interface AddRelayerButtonProps {
   instanceUrl: string;
@@ -45,11 +45,11 @@ export const AddRelayerButton: React.FC<AddRelayerButtonProps> = ({
   return (
     <>
       <Button
-        onClick={disclosure.onOpen}
-        variant="ghost"
-        size="sm"
-        leftIcon={<CirclePlusIcon className="size-6" />}
         colorScheme="primary"
+        leftIcon={<CirclePlusIcon className="size-6" />}
+        onClick={disclosure.onOpen}
+        size="sm"
+        variant="ghost"
         w="fit-content"
       >
         Add Relayer
@@ -57,10 +57,10 @@ export const AddRelayerButton: React.FC<AddRelayerButtonProps> = ({
 
       {disclosure.isOpen && (
         <AddModal
-          instanceUrl={instanceUrl}
-          disclosure={disclosure}
           authToken={authToken}
           client={client}
+          disclosure={disclosure}
+          instanceUrl={instanceUrl}
         />
       )}
     </>
@@ -87,15 +87,14 @@ const AddModal = ({
   client: ThirdwebClient;
 }) => {
   const { mutate: createRelayer } = useEngineCreateRelayer({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
   const { data: backendWallets } = useEngineBackendWallets({
-    instanceUrl,
     authToken,
+    instanceUrl,
   });
   const { idToChain } = useAllChainsData();
-  const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Relayer created successfully.",
     "Failed to create relayer.",
@@ -109,43 +108,31 @@ const AddModal = ({
 
   const onSubmit = (data: AddModalInput) => {
     const createRelayerData: CreateRelayerInput = {
-      chain: idToChain.get(data.chainId)?.slug ?? "unknown",
-      backendWalletAddress: data.backendWalletAddress,
-      name: data.name,
       allowedContracts: parseAddressListRaw(data.allowedContractsRaw),
       allowedForwarders: parseAddressListRaw(data.allowedForwardersRaw),
+      backendWalletAddress: data.backendWalletAddress,
+      chain: idToChain.get(data.chainId)?.slug ?? "unknown",
+      name: data.name,
     };
 
     createRelayer(createRelayerData, {
+      onError: (error) => {
+        onError(error);
+        console.error(error);
+      },
       onSuccess: () => {
         onSuccess();
         disclosure.onClose();
-        trackEvent({
-          category: "engine",
-          action: "create-relayer",
-          label: "success",
-          instance: instanceUrl,
-        });
-      },
-      onError: (error) => {
-        onError(error);
-        trackEvent({
-          category: "engine",
-          action: "create-relayer",
-          label: "error",
-          instance: instanceUrl,
-          error,
-        });
       },
     });
   };
 
   return (
-    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
       <ModalOverlay />
       <ModalContent
-        className="!bg-background rounded-lg border border-border"
         as="form"
+        className="!bg-background rounded-lg border border-border"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <ModalHeader>Add Relayer</ModalHeader>
@@ -157,8 +144,8 @@ const AddModal = ({
               <FormLabel>Chain</FormLabel>
               <SingleNetworkSelector
                 chainId={form.watch("chainId")}
-                onChange={(val) => form.setValue("chainId", val)}
                 client={client}
+                onChange={(val) => form.setValue("chainId", val)}
               />
             </FormControl>
             <FormControl isRequired>
@@ -166,7 +153,7 @@ const AddModal = ({
               <Select
                 {...form.register("backendWalletAddress", { required: true })}
               >
-                <option value="" disabled selected hidden>
+                <option disabled hidden selected value="">
                   Select a backend wallet to use as a relayer
                 </option>
                 {backendWallets?.map((wallet) => (
@@ -180,8 +167,8 @@ const AddModal = ({
             <FormControl>
               <FormLabel>Label</FormLabel>
               <Input
-                type="text"
                 placeholder="Enter a description for this relayer"
+                type="text"
                 {...form.register("name")}
               />
             </FormControl>
@@ -207,13 +194,13 @@ const AddModal = ({
         </ModalBody>
 
         <ModalFooter as={Flex} gap={3}>
-          <Button type="button" onClick={disclosure.onClose} variant="ghost">
+          <Button onClick={disclosure.onClose} type="button" variant="ghost">
             Cancel
           </Button>
           <Button
-            type="submit"
             colorScheme="primary"
             isDisabled={!form.formState.isValid}
+            type="submit"
           >
             Add
           </Button>

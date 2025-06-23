@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "org.gooddollar",
-  name: "GoodDollar",
-  homepage: "https://gooddollar.org",
-  image_id: "371ab65b-e2c8-4843-f18a-cbcf2ba2ed00",
   app: {
-    browser: null,
-    ios: null,
     android: "https://play.google.com/store/apps/details?id=org.gooddollar",
-    mac: "",
-    windows: null,
-    linux: null,
+    browser: null,
     chrome: null,
-    firefox: null,
-    safari: null,
     edge: null,
+    firefox: null,
+    ios: null,
+    linux: null,
+    mac: "",
     opera: null,
-  },
-  rdns: null,
-  mobile: {
-    native: "gooddollar://",
-    universal: "https://wallet.gooddollar.org/",
+    safari: null,
+    windows: null,
   },
   desktop: {
     native: "gooddollar://",
     universal: "https://wallet.gooddollar.org/",
   },
+  homepage: "https://gooddollar.org",
+  id: "org.gooddollar",
+  image_id: "371ab65b-e2c8-4843-f18a-cbcf2ba2ed00",
+  mobile: {
+    native: "gooddollar://",
+    universal: "https://wallet.gooddollar.org/",
+  },
+  name: "GoodDollar",
+  rdns: null,
 } as const;

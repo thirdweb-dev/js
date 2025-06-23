@@ -1,20 +1,20 @@
 import type { Abi } from "abitype";
 import {
-  http,
+  createPublicClient,
+  createWalletClient,
+  custom,
   type GetContractReturnType,
+  http,
   type PublicClient,
   type TransactionSerializableEIP1559,
   type Chain as ViemChain,
   type WalletClient,
-  createPublicClient,
-  createWalletClient,
-  custom,
 } from "viem";
 import type { Chain } from "../chains/types.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
-import { type ThirdwebContract, getContract } from "../contract/contract.js";
+import { getContract, type ThirdwebContract } from "../contract/contract.js";
 import { getRpcClient } from "../rpc/rpc.js";
 import { estimateGas } from "../transaction/actions/estimate-gas.js";
 import { sendTransaction } from "../transaction/actions/send-transaction.js";
@@ -125,6 +125,58 @@ export const viemAdapter = {
   publicClient: {
     toViem: toViemPublicClient,
   },
+  /**
+   * Converts a thirdweb account to a Viem Wallet client or the other way around.
+   * @param options - The options for creating the Viem Wallet client.
+   * @returns The Viem Wallet client.
+   * @example
+   *
+   * ### toViem
+   * ```ts
+   * import { viemAdapter } from "thirdweb/adapters/viem";
+   *
+   * const walletClient = viemAdapter.wallet.toViem({
+   *  wallet,
+   *  client,
+   *  chain: ethereum,
+   * });
+   * ```
+   *
+   * ### fromViem
+   * ```ts
+   * import { viemAdapter } from "thirdweb/adapters";
+   *
+   * const wallet = viemAdapter.wallet.fromViem({
+   *   walletClient,
+   * });
+   * ```
+   */
+  wallet: {
+    /**
+     * Converts a Viem wallet client to a Thirdweb wallet.
+     * @param options - The options for converting a Viem wallet client to a Thirdweb wallet.
+     * @param options.walletClient - The Viem wallet client to convert.
+     * @returns A Promise that resolves to a Thirdweb wallet.
+     * @example
+     * ```ts
+     * import { viemAdapter } from "thirdweb/adapters";
+     * const wallet = viemAdapter.wallet.fromViem({ walletClient });
+     * ```
+     */
+    fromViem: walletFromViem,
+    /**
+     * Converts a Thirdweb wallet to a Viem wallet client.
+     * @param options - The options for converting a Thirdweb wallet to a Viem wallet client.
+     * @param options.wallet - The Thirdweb wallet to convert.
+     * @returns A Promise that resolves to a Viem wallet client.
+     * @example
+     * ```ts
+     * import { viemAdapter } from "thirdweb/adapters";
+     * const walletClient = viemAdapter.wallet.toViem({ wallet, client, chain });
+     * ```
+     */
+    toViem: walletToViem,
+  },
 
   /**
    * Converts a thirdweb account to a Viem Wallet client or the other way around.
@@ -155,19 +207,6 @@ export const viemAdapter = {
    */
   walletClient: {
     /**
-     * Converts a Thirdweb wallet to a Viem wallet client.
-     * @param options - The options for converting a Thirdweb wallet to a Viem wallet client.
-     * @param options.account - The Thirdweb wallet to convert.
-     * @returns A Promise that resolves to a Viem wallet client.
-     * @example
-     * ```ts
-     * import { viemAdapter } from "thirdweb/adapters";
-     * const walletClient = viemAdapter.walletClient.toViem({ account, client, chain });
-     * ```
-     * @deprecated use viemAdapter.wallet instead
-     */
-    toViem: toViemWalletClient,
-    /**
      * Converts a Viem wallet client to a Thirdweb wallet.
      * @param options - The options for converting a Viem wallet client to a Thirdweb wallet.
      * @param options.walletClient - The Viem wallet client to convert.
@@ -180,58 +219,19 @@ export const viemAdapter = {
      * @deprecated use viemAdapter.wallet instead
      */
     fromViem: fromViemWalletClient,
-  },
-  /**
-   * Converts a thirdweb account to a Viem Wallet client or the other way around.
-   * @param options - The options for creating the Viem Wallet client.
-   * @returns The Viem Wallet client.
-   * @example
-   *
-   * ### toViem
-   * ```ts
-   * import { viemAdapter } from "thirdweb/adapters/viem";
-   *
-   * const walletClient = viemAdapter.wallet.toViem({
-   *  wallet,
-   *  client,
-   *  chain: ethereum,
-   * });
-   * ```
-   *
-   * ### fromViem
-   * ```ts
-   * import { viemAdapter } from "thirdweb/adapters";
-   *
-   * const wallet = viemAdapter.wallet.fromViem({
-   *   walletClient,
-   * });
-   * ```
-   */
-  wallet: {
     /**
      * Converts a Thirdweb wallet to a Viem wallet client.
      * @param options - The options for converting a Thirdweb wallet to a Viem wallet client.
-     * @param options.wallet - The Thirdweb wallet to convert.
+     * @param options.account - The Thirdweb wallet to convert.
      * @returns A Promise that resolves to a Viem wallet client.
      * @example
      * ```ts
      * import { viemAdapter } from "thirdweb/adapters";
-     * const walletClient = viemAdapter.wallet.toViem({ wallet, client, chain });
+     * const walletClient = viemAdapter.walletClient.toViem({ account, client, chain });
      * ```
+     * @deprecated use viemAdapter.wallet instead
      */
-    toViem: walletToViem,
-    /**
-     * Converts a Viem wallet client to a Thirdweb wallet.
-     * @param options - The options for converting a Viem wallet client to a Thirdweb wallet.
-     * @param options.walletClient - The Viem wallet client to convert.
-     * @returns A Promise that resolves to a Thirdweb wallet.
-     * @example
-     * ```ts
-     * import { viemAdapter } from "thirdweb/adapters";
-     * const wallet = viemAdapter.wallet.fromViem({ walletClient });
-     * ```
-     */
-    fromViem: walletFromViem,
+    toViem: toViemWalletClient,
   },
 };
 
@@ -245,8 +245,8 @@ function fromViemContract<const TAbi extends Abi>(
   options: FromViemContractOptions<TAbi>,
 ): ThirdwebContract<TAbi> {
   return getContract({
-    address: options.viemContract.address,
     abi: options.viemContract.abi,
+    address: options.viemContract.address,
     chain: options.chain,
     client: options.client,
   });
@@ -259,8 +259,8 @@ export async function toViemContract<const TAbi extends Abi>(options: {
   thirdwebContract: ThirdwebContract<TAbi>;
 }): Promise<GetContractReturnType<TAbi>> {
   return {
-    address: getAddress(options.thirdwebContract.address),
     abi: await resolveContractAbi(options.thirdwebContract),
+    address: getAddress(options.thirdwebContract.address),
   };
 }
 
@@ -275,16 +275,17 @@ function toViemPublicClient(options: ToViemPublicClientOptions): PublicClient {
   const viemChain: ViemChain = {
     id: chain.id,
     name: chain.name || "",
+    nativeCurrency: {
+      decimals: chain.nativeCurrency?.decimals || 18,
+      name: chain.nativeCurrency?.name || "Ether",
+      symbol: chain.nativeCurrency?.symbol || "ETH",
+    },
     rpcUrls: {
       default: { http: [rpcUrl] },
     },
-    nativeCurrency: {
-      name: chain.nativeCurrency?.name || "Ether",
-      symbol: chain.nativeCurrency?.symbol || "ETH",
-      decimals: chain.nativeCurrency?.decimals || 18,
-    },
   };
   return createPublicClient({
+    chain: viemChain,
     transport: http(rpcUrl, {
       fetchOptions: client.secretKey
         ? {
@@ -294,7 +295,6 @@ function toViemPublicClient(options: ToViemPublicClientOptions): PublicClient {
           }
         : undefined,
     }),
-    chain: viemChain,
   });
 }
 
@@ -315,38 +315,38 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
   const viemChain: ViemChain = {
     id: chain.id,
     name: chain.name || "",
+    nativeCurrency: {
+      decimals: chain.nativeCurrency?.decimals || 18,
+      name: chain.nativeCurrency?.name || "Ether",
+      symbol: chain.nativeCurrency?.symbol || "ETH",
+    },
     rpcUrls: {
       default: { http: [rpcUrl] },
     },
-    nativeCurrency: {
-      name: chain.nativeCurrency?.name || "Ether",
-      symbol: chain.nativeCurrency?.symbol || "ETH",
-      decimals: chain.nativeCurrency?.decimals || 18,
-    },
   };
 
-  const rpcClient = getRpcClient({ client, chain });
+  const rpcClient = getRpcClient({ chain, client });
   const transport = custom({
     request: async (request) => {
       if (request.method === "eth_sendTransaction") {
         const result = await sendTransaction({
+          account: account,
           transaction: prepareTransaction({
             ...request.params[0],
             chain,
             client,
           }),
-          account: account,
         });
         return result.transactionHash;
       }
       if (request.method === "eth_estimateGas") {
         return estimateGas({
+          account: account,
           transaction: prepareTransaction({
             ...request.params[0],
             chain,
             client,
           }),
-          account: account,
         });
       }
       if (request.method === "personal_sign") {
@@ -376,10 +376,10 @@ function toViemWalletClient(options: ToViemWalletClientOptions): WalletClient {
   });
 
   return createWalletClient({
-    transport,
     account: getAddress(account.address),
     chain: viemChain,
     key: "thirdweb-wallet",
+    transport,
   });
 }
 
@@ -395,12 +395,6 @@ function fromViemWalletClient(options: {
   }
   return {
     address: viemAccount.address,
-    signMessage: async (msg) => {
-      return options.walletClient.signMessage({
-        account: viemAccount,
-        ...msg,
-      });
-    },
     sendTransaction: async (tx) => {
       const tx1559 = tx as TransactionSerializableEIP1559; // TODO check other txTypes
       const txHash = await options.walletClient.sendTransaction({
@@ -412,6 +406,12 @@ function fromViemWalletClient(options: {
         transaction: tx,
         transactionHash: txHash,
       };
+    },
+    signMessage: async (msg) => {
+      return options.walletClient.signMessage({
+        account: viemAccount,
+        ...msg,
+      });
     },
     signTypedData(_typedData) {
       if (!_typedData) {
@@ -440,13 +440,13 @@ function walletToViem(options: WalletToViemOptions): WalletClient {
   const viemChain: ViemChain = {
     id: chain.id,
     name: chain.name || "",
-    rpcUrls: {
-      default: { http: [rpcUrl] },
-    },
     nativeCurrency: {
+      decimals: chain.nativeCurrency?.decimals || 18,
       name: chain.nativeCurrency?.name || "Ether",
       symbol: chain.nativeCurrency?.symbol || "ETH",
-      decimals: chain.nativeCurrency?.decimals || 18,
+    },
+    rpcUrls: {
+      default: { http: [rpcUrl] },
     },
   };
 
@@ -456,18 +456,16 @@ function walletToViem(options: WalletToViemOptions): WalletClient {
     wallet,
   });
   return createWalletClient({
-    transport: custom({
-      request: (request) => eip1193Provider.request(request),
-    }),
     account: wallet.getAccount()?.address,
     chain: viemChain,
     key: "thirdweb-wallet",
+    transport: custom({
+      request: (request) => eip1193Provider.request(request),
+    }),
   });
 }
 
-function walletFromViem(options: {
-  walletClient: WalletClient;
-}): Wallet {
+function walletFromViem(options: { walletClient: WalletClient }): Wallet {
   const viemAccount = options.walletClient.account;
   if (!viemAccount) {
     throw new Error(
@@ -477,9 +475,9 @@ function walletFromViem(options: {
 
   const wallet = fromProvider({
     provider: {
-      request: (request) => options.walletClient.request(request),
       on: () => {},
       removeListener: () => {},
+      request: (request) => options.walletClient.request(request),
     },
     walletId: "adapter",
   });

@@ -42,17 +42,17 @@ export function prepareDeterministicDeployTransaction(
 ) {
   const { client, chain } = options;
   return prepareTransaction({
-    client,
     chain,
-    to: () =>
-      computeCreate2FactoryAddress({
-        client,
-        chain,
-      }),
+    client,
     data: async () => {
       const infraContractInfo =
         await computeDeploymentInfoFromContractId(options);
       return infraContractInfo.initCalldata;
     },
+    to: () =>
+      computeCreate2FactoryAddress({
+        chain,
+        client,
+      }),
   });
 }

@@ -1,25 +1,25 @@
 "use server";
 import "server-only";
-import { redirect } from "@/lib/redirect";
 import { cookies } from "next/headers";
 import {
+  createAuth,
   type GenerateLoginPayloadParams,
   type VerifyLoginPayloadParams,
-  createAuth,
 } from "thirdweb/auth";
 import { privateKeyToAccount, randomPrivateKey } from "thirdweb/wallets";
+import { redirect } from "@/lib/redirect";
 import { client } from "./client";
 
 const privateKey = process.env.THIRDWEB_ADMIN_PRIVATE_KEY;
 
 const thirdwebAuth = createAuth({
-  domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN || "",
-  client,
   // Fun little hack to make vercel happy at build time
   adminAccount: privateKeyToAccount({
     client,
     privateKey: privateKey || randomPrivateKey(),
   }),
+  client,
+  domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN || "",
 });
 
 // We force this to be async so it can be a server action
@@ -33,13 +33,13 @@ export async function login(payload: VerifyLoginPayloadParams) {
       payload: verifiedPayload.payload,
     });
     (await cookies()).set({
-      name: "jwt",
-      value: jwt,
       httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
-      sameSite: "strict",
       maxAge: 3600,
+      name: "jwt",
       path: "/",
+      sameSite: "strict",
+      secure: process.env.NODE_ENV !== "development",
+      value: jwt,
     });
     return true;
   }

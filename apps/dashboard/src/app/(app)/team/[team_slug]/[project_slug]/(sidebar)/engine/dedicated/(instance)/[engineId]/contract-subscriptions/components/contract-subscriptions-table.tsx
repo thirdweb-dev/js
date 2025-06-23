@@ -1,11 +1,5 @@
 "use client";
 
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
-import {
-  type EngineContractSubscription,
-  useEngineRemoveContractSubscription,
-  useEngineSubscriptionsLastBlock,
-} from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
   FormControl,
@@ -22,19 +16,27 @@ import {
 } from "@chakra-ui/react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
-import { ChainIconClient } from "components/icons/ChainIcon";
-import { TWTable } from "components/shared/TWTable";
+import { Button, LinkButton } from "chakra/button";
+import { Card } from "chakra/card";
+import { FormLabel } from "chakra/form";
+import { Text } from "chakra/text";
 import { format } from "date-fns";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { InfoIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { eth_getBlockByNumber, getRpcClient } from "thirdweb";
 import { shortenAddress as shortenAddressThrows } from "thirdweb/utils";
-import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
+import { TWTable } from "@/components/blocks/TWTable";
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
+import {
+  type EngineContractSubscription,
+  useEngineRemoveContractSubscription,
+  useEngineSubscriptionsLastBlock,
+} from "@/hooks/useEngine";
+import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { ChainIconClient } from "@/icons/ChainIcon";
 
 function shortenAddress(address: string) {
   if (!address) {
@@ -78,23 +80,22 @@ export const ContractSubscriptionTable: React.FC<
 
   const columns = [
     columnHelper.accessor("chainId", {
-      header: "Chain",
       cell: (cell) => {
         const chain = idToChain.get(cell.getValue());
         return (
           <Flex align="center" gap={2}>
             <ChainIconClient
               className="size-3"
-              src={chain?.icon?.url}
               client={client}
+              src={chain?.icon?.url}
             />
             <Text>{chain?.name ?? "N/A"}</Text>
           </Flex>
         );
       },
+      header: "Chain",
     }),
     columnHelper.accessor("contractAddress", {
-      header: "Contract Address",
       cell: (cell) => {
         const { chainId } = cell.row.original;
         const chain = idToChain.get(chainId);
@@ -109,32 +110,32 @@ export const ContractSubscriptionTable: React.FC<
         }
         return (
           <LinkButton
-            variant="ghost"
+            fontFamily="mono"
+            href={explorer ? `${explorer.url}/address/${cell.getValue()}` : "#"}
             isExternal
             size="xs"
-            href={explorer ? `${explorer.url}/address/${cell.getValue()}` : "#"}
-            fontFamily="mono"
+            variant="ghost"
           >
             {shortenAddress(cell.getValue())}
           </LinkButton>
         );
       },
+      header: "Contract Address",
     }),
     columnHelper.accessor("webhook", {
-      header: "Webhook URL",
       cell: (cell) => {
         const webhook = cell.getValue();
         const url = webhook?.url ?? "";
 
         return (
-          <Text maxW={200} whiteSpace="normal" noOfLines={3}>
+          <Text maxW={200} noOfLines={3} whiteSpace="normal">
             {url}
           </Text>
         );
       },
+      header: "Webhook URL",
     }),
     columnHelper.accessor("processEventLogs", {
-      header: "Filters",
       cell: (cell) => {
         const {
           processEventLogs,
@@ -153,7 +154,8 @@ export const ContractSubscriptionTable: React.FC<
                   <Text>All</Text>
                 ) : (
                   <Tooltip
-                    p={0}
+                    bgColor="backgroundCardHighlight"
+                    borderRadius="lg"
                     label={
                       <div className="flex flex-col gap-2 p-2 text-sm">
                         {filterEvents.map((name) => (
@@ -161,8 +163,7 @@ export const ContractSubscriptionTable: React.FC<
                         ))}
                       </div>
                     }
-                    bgColor="backgroundCardHighlight"
-                    borderRadius="lg"
+                    p={0}
                     shouldWrapChildren
                   >
                     <Text textDecoration="underline dotted">
@@ -181,7 +182,8 @@ export const ContractSubscriptionTable: React.FC<
                   <Text>All</Text>
                 ) : (
                   <Tooltip
-                    p={0}
+                    bgColor="backgroundCardHighlight"
+                    borderRadius="lg"
                     label={
                       <div className="flex flex-col gap-2 p-2 text-sm">
                         {filterFunctions.map((name) => (
@@ -189,8 +191,7 @@ export const ContractSubscriptionTable: React.FC<
                         ))}
                       </div>
                     }
-                    bgColor="backgroundCardHighlight"
-                    borderRadius="lg"
+                    p={0}
                     shouldWrapChildren
                   >
                     <Text textDecoration="underline dotted">
@@ -203,52 +204,53 @@ export const ContractSubscriptionTable: React.FC<
           </Flex>
         );
       },
+      header: "Filters",
     }),
     columnHelper.accessor("lastIndexedBlock", {
-      header: "Latest Block",
       cell: (cell) => {
         const { chainId } = cell.row.original;
         return (
           <ChainLastBlock
-            instanceUrl={instanceUrl}
-            chainId={chainId}
-            autoUpdate={autoUpdate}
             authToken={authToken}
+            autoUpdate={autoUpdate}
+            chainId={chainId}
             client={client}
+            instanceUrl={instanceUrl}
           />
         );
       },
+      header: "Latest Block",
     }),
   ];
 
   return (
     <>
       <TWTable
-        title="contract subscriptions"
-        data={contractSubscriptions}
         columns={columns}
-        isPending={isPending}
+        data={contractSubscriptions}
         isFetched={isFetched}
+        isPending={isPending}
         onMenuClick={[
           {
             icon: <Trash2Icon className="size-4" />,
-            text: "Remove",
+            isDestructive: true,
             onClick: (contractSub) => {
               setSelectedContractSub(contractSub);
               removeDisclosure.onOpen();
             },
-            isDestructive: true,
+            text: "Remove",
           },
         ]}
+        title="contract subscriptions"
       />
 
       {selectedContractSub && removeDisclosure.isOpen && (
         <RemoveModal
+          authToken={authToken}
+          client={client}
           contractSubscription={selectedContractSub}
           disclosure={removeDisclosure}
           instanceUrl={instanceUrl}
-          authToken={authToken}
-          client={client}
         />
       )}
     </>
@@ -267,13 +269,12 @@ const ChainLastBlockTimestamp = ({
   const chain = useV5DashboardChain(chainId);
   // Get the block timestamp to display how delayed the last processed block is.
   const ethBlockQuery = useQuery({
-    queryKey: ["block_timestamp", chainId, Number(blockNumber)],
     // keep the previous data while fetching new data
     placeholderData: keepPreviousData,
     queryFn: async () => {
       const rpcRequest = getRpcClient({
-        client,
         chain,
+        client,
       });
       const block = await eth_getBlockByNumber(rpcRequest, {
         blockNumber,
@@ -281,6 +282,7 @@ const ChainLastBlockTimestamp = ({
       });
       return new Date(Number(block.timestamp) * 1000);
     },
+    queryKey: ["block_timestamp", chainId, Number(blockNumber)],
   });
 
   if (!ethBlockQuery.data) {
@@ -308,31 +310,31 @@ const ChainLastBlock = ({
   client: ThirdwebClient;
 }) => {
   const lastBlockQuery = useEngineSubscriptionsLastBlock({
-    instanceUrl,
-    chainId,
-    autoUpdate,
     authToken,
+    autoUpdate,
+    chainId,
+    instanceUrl,
   });
   if (!lastBlockQuery.data) {
     return null;
   }
 
   return (
-    <Flex gap={2} align="center">
+    <Flex align="center" gap={2}>
       <Text>{lastBlockQuery.data}</Text>
       <Tooltip
-        borderRadius="md"
         bg="transparent"
+        borderRadius="md"
         boxShadow="none"
         label={
           <ChainLastBlockTimestamp
-            chainId={chainId}
             blockNumber={BigInt(lastBlockQuery.data)}
+            chainId={chainId}
             client={client}
           />
         }
-        shouldWrapChildren
         placement="auto"
+        shouldWrapChildren
       >
         <InfoIcon className="size-4" />
       </Tooltip>
@@ -355,10 +357,10 @@ const RemoveModal = ({
 }) => {
   const { mutate: removeContractSubscription } =
     useEngineRemoveContractSubscription({
-      instanceUrl,
       authToken,
+      instanceUrl,
     });
-  const trackEvent = useTrack();
+
   const { onSuccess, onError } = useTxNotifications(
     "Successfully removed contract subscription.",
     "Failed to remove contract subscription.",
@@ -372,32 +374,20 @@ const RemoveModal = ({
         contractSubscriptionId: contractSubscription.id,
       },
       {
+        onError: (error) => {
+          onError(error);
+          console.error(error);
+        },
         onSuccess: () => {
           onSuccess();
           disclosure.onClose();
-          trackEvent({
-            category: "engine",
-            action: "remove-contract-subscription",
-            label: "success",
-            instance: instanceUrl,
-          });
-        },
-        onError: (error) => {
-          onError(error);
-          trackEvent({
-            category: "engine",
-            action: "remove-contract-subscription",
-            label: "error",
-            instance: instanceUrl,
-            error,
-          });
         },
       },
     );
   };
 
   return (
-    <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
+    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
       <ModalOverlay />
       <ModalContent className="!bg-background rounded-lg border border-border">
         <ModalHeader>Remove Contract Subscription</ModalHeader>
@@ -415,8 +405,8 @@ const RemoveModal = ({
                 <Flex align="center" gap={2}>
                   <ChainIconClient
                     className="size-3"
-                    src={chain?.icon?.url}
                     client={client}
+                    src={chain?.icon?.url}
                   />
                   <Text>{chain?.name ?? "N/A"}</Text>
                 </Flex>
@@ -461,10 +451,10 @@ const RemoveModal = ({
           </div>
         </ModalBody>
         <ModalFooter as={Flex} gap={3}>
-          <Button type="button" onClick={disclosure.onClose} variant="ghost">
+          <Button onClick={disclosure.onClose} type="button" variant="ghost">
             Cancel
           </Button>
-          <Button type="submit" colorScheme="red" onClick={onClick}>
+          <Button colorScheme="red" onClick={onClick} type="submit">
             Remove
           </Button>
         </ModalFooter>

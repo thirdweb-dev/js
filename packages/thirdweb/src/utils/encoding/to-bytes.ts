@@ -1,7 +1,6 @@
 import * as ox__Bytes from "ox/Bytes";
 import { isHex } from "./helpers/is-hex.js";
-import type { Hex } from "./hex.js";
-import type { NumberToHexOpts } from "./hex.js";
+import type { Hex, NumberToHexOpts } from "./hex.js";
 
 export type ToBytesParameters = {
   /** Size of the output bytes. */

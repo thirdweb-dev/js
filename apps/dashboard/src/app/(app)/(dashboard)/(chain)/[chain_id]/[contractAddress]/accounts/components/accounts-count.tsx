@@ -14,9 +14,9 @@ export const AccountsCount: React.FC<AccountsCountProps> = ({ contract }) => {
   return (
     <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-6">
       <StatCard
+        isPending={totalAccountsQuery.isPending}
         label="Total Accounts"
         value={totalAccountsQuery.data?.toString() || "0"}
-        isPending={totalAccountsQuery.isPending}
       />
     </div>
   );
