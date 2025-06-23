@@ -47,7 +47,7 @@ export function UpsellWrapper({
   }
 
   return (
-    <div className={cn("relative flex-1", className)}>
+    <div className={cn("relative flex-1 flex flex-col", className)}>
       {/* Background content - blurred and non-interactive */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="pointer-events-none select-none opacity-60 blur-[1px]">
@@ -59,84 +59,109 @@ export function UpsellWrapper({
       <div className="absolute inset-0 bg-gradient-to-b from-muted/20 via-muted/30 to-background" />
 
       {/* Upsell content */}
-      <div className="relative z-10 flex items-center justify-center p-16">
-        <Card className="w-full max-w-2xl border-2 shadow-2xl">
-          <CardHeader className="space-y-4 text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border-2 bg-muted">
-              <LockIcon className="h-8 w-8 text-muted-foreground" />
-            </div>
-
-            <div className="space-y-2">
-              <TeamPlanBadge
-                plan="scale"
-                postfix=" Feature"
-                teamSlug={teamSlug}
-              />
-              <CardTitle className="font-bold text-2xl text-foreground md:text-3xl">
-                Unlock {featureName}
-              </CardTitle>
-              <CardDescription className="mx-auto max-w-md text-base text-muted-foreground">
-                {featureDescription}
-              </CardDescription>
-            </div>
-          </CardHeader>
-
-          <CardContent className="space-y-6">
-            {benefits.length > 0 && (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-muted-foreground text-sm uppercase tracking-wide">
-                  What you'll get:
-                </h4>
-                <div className="grid gap-2">
-                  {benefits.map((benefit) => (
-                    <div
-                      className="flex items-center gap-3"
-                      key={benefit.description}
-                    >
-                      <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-accent">
-                        <SparklesIcon className="h-3 w-3 text-success-text" />
-                      </div>
-                      <span className="text-sm">{benefit.description}</span>
-                      {benefit.status === "soon" && (
-                        <Badge className="text-xs" variant="secondary">
-                          Coming Soon
-                        </Badge>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="flex flex-col gap-3 pt-4 sm:flex-row">
-              <Button asChild className="flex-1 py-3 font-semibold" size="lg">
-                <Link
-                  href={`/team/${teamSlug}/~/settings/billing?showPlans=true&highlight=${requiredPlan}`}
-                >
-                  <CrownIcon className="mr-2 h-4 w-4" />
-                  Upgrade to{" "}
-                  <span className="ml-1 capitalize">{requiredPlan}</span>
-                </Link>
-              </Button>
-              <Button asChild className="md:flex-1" size="lg" variant="outline">
-                <Link
-                  href={`/team/${teamSlug}/~/settings/billing?showPlans=true`}
-                >
-                  View All Plans
-                </Link>
-              </Button>
-            </div>
-
-            <div className="pt-2 text-center">
-              <p className="text-muted-foreground text-xs">
-                You are currently on the{" "}
-                <span className="font-medium capitalize">{currentPlan}</span>{" "}
-                plan.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="relative z-10 flex items-center justify-center grow py-20 px-6">
+        <UpsellContent
+          benefits={benefits}
+          currentPlan={currentPlan}
+          featureDescription={featureDescription}
+          featureName={featureName}
+          requiredPlan={requiredPlan}
+          teamSlug={teamSlug}
+        />
       </div>
     </div>
+  );
+}
+
+export function UpsellContent(props: {
+  teamSlug: string;
+  featureName: string;
+  featureDescription: string;
+  requiredPlan: Team["billingPlan"];
+  currentPlan: Team["billingPlan"];
+  benefits?: {
+    description: string;
+    status: "available" | "soon";
+  }[];
+}) {
+  return (
+    <Card className="w-full max-w-xl border shadow-2xl">
+      <CardHeader className="space-y-4 text-center">
+        <div className="mx-auto flex p-4 items-center justify-center rounded-full border bg-card">
+          <LockIcon className="size-8 text-muted-foreground" />
+        </div>
+
+        <div className="space-y-4">
+          <TeamPlanBadge
+            plan={props.requiredPlan}
+            postfix=" Feature"
+            teamSlug={props.teamSlug}
+          />
+          <div className="space-y-1">
+            <CardTitle className="font-bold text-2xl text-foreground md:text-3xl">
+              Unlock {props.featureName}
+            </CardTitle>
+            <CardDescription className="mx-auto max-w-md text-base text-muted-foreground">
+              {props.featureDescription}
+            </CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+
+      <CardContent className="space-y-6">
+        {props.benefits && props.benefits.length > 0 && (
+          <div className="space-y-3">
+            <h4 className="font-semibold text-muted-foreground text-sm uppercase tracking-wide">
+              What you'll get:
+            </h4>
+            <div className="grid gap-2">
+              {props.benefits.map((benefit) => (
+                <div
+                  className="flex items-center gap-3"
+                  key={benefit.description}
+                >
+                  <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-accent">
+                    <SparklesIcon className="h-3 w-3 text-success-text" />
+                  </div>
+                  <span className="text-sm">{benefit.description}</span>
+                  {benefit.status === "soon" && (
+                    <Badge className="text-xs" variant="secondary">
+                      Coming Soon
+                    </Badge>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-col gap-3 pt-4 sm:flex-row">
+          <Button asChild className="flex-1 py-3 font-semibold" size="lg">
+            <Link
+              href={`/team/${props.teamSlug}/~/settings/billing?showPlans=true&highlight=${props.requiredPlan}`}
+            >
+              <CrownIcon className="mr-2 h-4 w-4" />
+              Upgrade to{" "}
+              <span className="ml-1 capitalize">{props.requiredPlan}</span>
+            </Link>
+          </Button>
+          <Button asChild className="md:flex-1" size="lg" variant="outline">
+            <Link
+              href={`/team/${props.teamSlug}/~/settings/billing?showPlans=true`}
+            >
+              View All Plans
+            </Link>
+          </Button>
+        </div>
+
+        <div className="pt-2 text-center">
+          <p className="text-muted-foreground text-xs">
+            You are currently on the{" "}
+            <span className="font-medium capitalize">{props.currentPlan}</span>{" "}
+            plan.
+          </p>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
