@@ -3,14 +3,14 @@
    ──────────────────────────────── */
 
 /* ---------- UsageLimit ---------- */
-export interface UsageLimitInput {
+interface UsageLimitInput {
   limitType: number;
   limit: bigint;
   period: bigint;
 }
 
 /* ---------- Constraint ---------- */
-export interface ConstraintInput {
+interface ConstraintInput {
   condition: number;
   index: bigint;
   refValue: `0x${string}`;
@@ -31,16 +31,6 @@ export interface TransferSpecInput {
   target: `0x${string}`;
   maxValuePerUse?: bigint;
   valueLimit?: UsageLimitInput;
-}
-
-/* ---------- SessionSpec ---------- */
-export interface SessionSpecInput {
-  signer: `0x${string}`;
-  isWildcard?: boolean;
-  expiresAt?: bigint;
-  callPolicies?: CallSpecInput[];
-  transferPolicies?: TransferSpecInput[];
-  uid: `0x${string}`;
 }
 
 /* ────────────────────────────────

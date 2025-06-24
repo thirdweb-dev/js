@@ -4,10 +4,7 @@ import { inAppWallet } from "src/wallets/in-app/web/in-app.js";
 import type { Account } from "src/wallets/interfaces/wallet.js";
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
-import {
-  TEST_ACCOUNT_A,
-  TEST_ACCOUNT_B,
-} from "../../../../test/src/test-wallets.js";
+import { TEST_ACCOUNT_A } from "../../../../test/src/test-wallets.js";
 import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import {
   getContract,
