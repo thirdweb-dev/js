@@ -1,3 +1,4 @@
+import { verifyTypedData } from "src/auth/verify-typed-data.js";
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
@@ -18,7 +19,6 @@ import {
 import { smartWallet } from "../wallets/smart/smart-wallet.js";
 import { generateAccount } from "../wallets/utils/generateAccount.js";
 import * as Engine from "./index.js";
-import { verifyTypedData } from "src/auth/verify-typed-data.js";
 
 describe.runIf(
   process.env.TW_SECRET_KEY &&
@@ -84,11 +84,11 @@ describe.runIf(
         address: process.env.ENGINE_CLOUD_WALLET_ADDRESS as string,
         chain: arbitrumSepolia,
         client: TEST_CLIENT,
-        vaultAccessToken: process.env.VAULT_TOKEN as string,
         executionOptions: {
-          type: "eoa",
           address: process.env.ENGINE_CLOUD_WALLET_ADDRESS_EOA as string,
+          type: "eoa",
         },
+        vaultAccessToken: process.env.VAULT_TOKEN as string,
       });
 
       const signature = await eoaServerWallet.signTypedData({
