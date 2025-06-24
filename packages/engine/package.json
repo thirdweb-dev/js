@@ -27,12 +27,9 @@
     "dist/*",
     "src/*"
   ],
-  "dependencies": {
-    "@hey-api/client-fetch": "0.10.0"
-  },
   "devDependencies": {
     "@biomejs/biome": "2.0.4",
-    "@hey-api/openapi-ts": "0.72.1",
+    "@hey-api/openapi-ts": "0.76.0",
     "rimraf": "6.0.1",
     "tslib": "^2.8.1"
   },

@@ -18,6 +18,7 @@ export type TransactionsFilterNested = {
 };
 
 /**
+ * Auto-determine Best Execution Options
  * This is the default execution option. If you do not specify an execution type, and only specify a "from" string, engine will automatically determine the most optimal options for you. If you would like to specify granular options about execution strategy choose one of the other `executionOptions` type and provide them.
  */
 export type AutoExecutionOptions = {
@@ -39,6 +40,9 @@ export type AutoExecutionOptions = {
   chainId: string;
 };
 
+/**
+ * ERC4337 Execution (Smart Account)
+ */
 export type AaExecutionOptions = {
   type: "ERC4337";
   /**
@@ -73,6 +77,7 @@ export type AaExecutionOptions = {
 };
 
 /**
+ * AA:zksync Execution Options
  * Uses zkSync native AA for execution. This type of execution is only available on zkSync chains.
  */
 export type AaZksyncExecutionOptions = {
@@ -131,6 +136,7 @@ export type ListAccountsResponses = {
        * EVM address in hex format
        */
       address: string;
+      label?: string;
       /**
        * The predicted smart account address for use with the default thirdweb v0.7 AccountFactory
        */
@@ -167,6 +173,7 @@ export type CreateAccountResponses = {
        * EVM address in hex format
        */
       address: string;
+      label?: string;
       /**
        * The predicted smart account address for use with the default thirdweb v0.7 AccountFactory
        */
