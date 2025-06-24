@@ -18,6 +18,7 @@ import {
 import { smartWallet } from "../wallets/smart/smart-wallet.js";
 import { generateAccount } from "../wallets/utils/generateAccount.js";
 import * as Engine from "./index.js";
+import { verifyTypedData } from "src/auth/verify-typed-data.js";
 
 describe.runIf(
   process.env.TW_SECRET_KEY &&
@@ -76,6 +77,36 @@ describe.runIf(
         ...typedData.basic,
       });
       expect(signature).toBeDefined();
+    });
+
+    it("should sign typed data for EOA execution options", async () => {
+      const eoaServerWallet = Engine.serverWallet({
+        address: process.env.ENGINE_CLOUD_WALLET_ADDRESS as string,
+        chain: arbitrumSepolia,
+        client: TEST_CLIENT,
+        vaultAccessToken: process.env.VAULT_TOKEN as string,
+        executionOptions: {
+          type: "eoa",
+          address: process.env.ENGINE_CLOUD_WALLET_ADDRESS_EOA as string,
+        },
+      });
+
+      const signature = await eoaServerWallet.signTypedData({
+        ...typedData.basic,
+      });
+
+      expect(signature).toBeDefined();
+
+      const is_valid = await verifyTypedData({
+        address: process.env.ENGINE_CLOUD_WALLET_ADDRESS_EOA as string,
+        chain: arbitrumSepolia,
+        client: TEST_CLIENT,
+        ...typedData.basic,
+
+        signature,
+      });
+
+      expect(is_valid).toBe(true);
     });
 
     it("should send a tx with regular API", async () => {
