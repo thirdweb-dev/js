@@ -1,17 +1,19 @@
 import { notFound } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { ContractsWebhooksPageContent } from "./contract-webhooks/contract-webhooks-page";
+import { AnalyticsPageContent } from "./analytics/analytics-page";
 
 export default async function WebhooksPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ team_slug: string; project_slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const [authToken, resolvedParams] = await Promise.all([
+  const [authToken, resolvedParams, resolvedSearchParams] = await Promise.all([
     getAuthToken(),
     params,
+    searchParams,
   ]);
 
   const project = await getProject(
@@ -25,21 +27,16 @@ export default async function WebhooksPage({
 
   return (
     <div>
-      <h2 className="mb-0.5 font-semibold text-xl tracking-tight">
-        Contract Webhooks
-      </h2>
+      <h2 className="mb-0.5 font-semibold text-xl tracking-tight">Overview</h2>
       <p className="text-muted-foreground text-sm">
-        Get notified about blockchain events, transactions and more.{" "}
-        <UnderlineLink
-          href="https://portal.thirdweb.com/insight/webhooks"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Learn more
-        </UnderlineLink>
+        Review your webhooks usage and errors.
       </p>
-      <div className="h-4" />
-      <ContractsWebhooksPageContent authToken={authToken} project={project} />
+      <div className="h-6" />
+      <AnalyticsPageContent
+        project={project}
+        teamSlug={resolvedParams.team_slug}
+        searchParams={resolvedSearchParams}
+      />
     </div>
   );
 }

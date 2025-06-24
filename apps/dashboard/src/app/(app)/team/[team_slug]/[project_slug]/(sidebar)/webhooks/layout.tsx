@@ -25,8 +25,13 @@ export default async function WebhooksLayout(props: {
         links={[
           {
             exactMatch: true,
-            name: "Contract",
+            name: "Overview",
             path: `/team/${params.team_slug}/${params.project_slug}/webhooks`,
+          },
+          {
+            exactMatch: true,
+            name: "Contract",
+            path: `/team/${params.team_slug}/${params.project_slug}/webhooks/contract`,
           },
           {
             name: "Universal Bridge",
