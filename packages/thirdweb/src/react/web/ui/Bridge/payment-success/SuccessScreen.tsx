@@ -63,7 +63,7 @@ export function SuccessScreen({
         trackPayEvent({
           chainId: preparedQuote.intent.originChainId,
           client: client,
-          event: "success_screen",
+          event: "ub:ui:success_screen",
           fromToken: preparedQuote.intent.originTokenAddress,
           toChainId: preparedQuote.intent.destinationChainId,
           toToken: preparedQuote.intent.destinationTokenAddress,

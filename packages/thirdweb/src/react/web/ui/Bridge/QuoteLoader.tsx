@@ -81,9 +81,11 @@ interface QuoteLoaderProps {
    * Fee payer for direct transfers (defaults to sender)
    */
   feePayer?: "sender" | "receiver";
+  mode: "fund_wallet" | "direct_payment" | "transaction";
 }
 
 export function QuoteLoader({
+  mode,
   destinationToken,
   paymentMethod,
   amount,
@@ -119,7 +121,7 @@ export function QuoteLoader({
             ? paymentMethod.originToken.chainId
             : undefined,
         client,
-        event: "loading_quote",
+        event: `ub:ui:loading_quote:${mode}`,
         fromToken:
           paymentMethod.type === "wallet"
             ? paymentMethod.originToken.address
@@ -202,7 +204,7 @@ function getBridgeParams(args: {
       if (
         paymentMethod.originToken.chainId === destinationToken.chainId &&
         paymentMethod.originToken.address.toLowerCase() ===
-          destinationToken.address.toLowerCase()
+        destinationToken.address.toLowerCase()
       ) {
         return {
           amount: toUnits(amount, destinationToken.decimals),

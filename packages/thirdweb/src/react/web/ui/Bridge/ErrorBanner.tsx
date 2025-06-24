@@ -43,7 +43,7 @@ export function ErrorBanner({
       trackPayEvent({
         client,
         error: error.message,
-        event: "error",
+        event: "ub:ui:error",
       });
     },
     queryKey: ["error_banner", userMessage],

@@ -32,7 +32,7 @@ export function UnsupportedTokenScreen(props: UnsupportedTokenScreenProps) {
       trackPayEvent({
         chainId: chain.id,
         client,
-        event: "unsupported_token",
+        event: "ub:ui:unsupported_token",
         fromToken: tokenAddress,
       });
     },

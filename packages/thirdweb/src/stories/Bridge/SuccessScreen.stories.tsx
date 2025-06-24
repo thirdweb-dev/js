@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { stringify } from "viem";
-import { createThirdwebClient } from "../../client/client.js";
 import type { Theme } from "../../react/core/design-system/index.js";
 import type { CompletedStatusResult } from "../../react/core/hooks/useStepExecutor.js";
 import { webWindowAdapter } from "../../react/web/adapters/WindowAdapter.js";
@@ -8,15 +7,13 @@ import {
   SuccessScreen,
   type SuccessScreenProps,
 } from "../../react/web/ui/Bridge/payment-success/SuccessScreen.js";
-import { ModalThemeWrapper } from "../utils.js";
+import { ModalThemeWrapper, storyClient } from "../utils.js";
 import {
   FUND_WALLET_UI_OPTIONS,
   simpleBuyQuote,
   simpleOnrampQuote,
   TRANSACTION_UI_OPTIONS,
 } from "./fixtures.js";
-
-const TEST_CLIENT = createThirdwebClient({ clientId: "test" });
 
 const mockBuyCompletedStatuses: CompletedStatusResult[] = JSON.parse(
   stringify([
@@ -96,7 +93,7 @@ const SuccessScreenWithTheme = (props: SuccessScreenWithThemeProps) => {
 const meta = {
   args: {
     completedStatuses: mockBuyCompletedStatuses,
-    onDone: () => {},
+    onDone: () => { },
     preparedQuote: simpleBuyQuote,
     theme: "dark",
     uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
@@ -129,7 +126,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    client: TEST_CLIENT,
+    client: storyClient,
     theme: "dark",
   },
   parameters: {
@@ -139,7 +136,7 @@ export const Default: Story = {
 
 export const DefaultLight: Story = {
   args: {
-    client: TEST_CLIENT,
+    client: storyClient,
     theme: "light",
   },
   parameters: {
@@ -149,7 +146,7 @@ export const DefaultLight: Story = {
 
 export const OnrampPayment: Story = {
   args: {
-    client: TEST_CLIENT,
+    client: storyClient,
     completedStatuses: mockOnrampCompletedStatuses,
     preparedQuote: simpleOnrampQuote,
     theme: "dark",
@@ -167,7 +164,7 @@ export const OnrampPayment: Story = {
 
 export const OnrampPaymentLight: Story = {
   args: {
-    client: TEST_CLIENT,
+    client: storyClient,
     completedStatuses: mockOnrampCompletedStatuses,
     preparedQuote: simpleOnrampQuote,
     theme: "light",
@@ -179,7 +176,7 @@ export const OnrampPaymentLight: Story = {
 
 export const ComplexPayment: Story = {
   args: {
-    client: TEST_CLIENT,
+    client: storyClient,
     completedStatuses: [
       ...mockOnrampCompletedStatuses,
       ...mockBuyCompletedStatuses,
@@ -200,7 +197,7 @@ export const ComplexPayment: Story = {
 
 export const ComplexPaymentLight: Story = {
   args: {
-    client: TEST_CLIENT,
+    client: storyClient,
     completedStatuses: [
       ...mockOnrampCompletedStatuses,
       ...mockBuyCompletedStatuses,
@@ -215,7 +212,7 @@ export const ComplexPaymentLight: Story = {
 
 export const TransactionPayment: Story = {
   args: {
-    client: TEST_CLIENT,
+    client: storyClient,
     completedStatuses: mockBuyCompletedStatuses,
     preparedQuote: simpleBuyQuote,
     theme: "light",

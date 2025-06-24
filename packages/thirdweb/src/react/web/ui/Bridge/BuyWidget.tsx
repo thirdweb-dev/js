@@ -166,15 +166,15 @@ export type BuyWidgetProps = {
 type UIOptionsResult =
   | { type: "success"; data: UIOptions }
   | {
-      type: "indexing_token";
-      token: Token;
-      chain: Chain;
-    }
+    type: "indexing_token";
+    token: Token;
+    chain: Chain;
+  }
   | {
-      type: "unsupported_token";
-      tokenAddress: Address;
-      chain: Chain;
-    };
+    type: "unsupported_token";
+    tokenAddress: Address;
+    chain: Chain;
+  };
 
 /**
  * Widget is a prebuilt UI for purchasing a specific token.
@@ -271,7 +271,7 @@ export function BuyWidget(props: BuyWidgetProps) {
     queryFn: () => {
       trackPayEvent({
         client: props.client,
-        event: "buy_widget:render",
+        event: "ub:ui:buy_widget:render",
         toChainId: props.chain.id,
         toToken: props.tokenAddress,
       });
@@ -285,7 +285,7 @@ export function BuyWidget(props: BuyWidgetProps) {
         !props.tokenAddress ||
         (isAddress(props.tokenAddress) &&
           checksumAddress(props.tokenAddress) ===
-            checksumAddress(NATIVE_TOKEN_ADDRESS))
+          checksumAddress(NATIVE_TOKEN_ADDRESS))
       ) {
         const ETH = await getToken(
           props.client,
@@ -455,10 +455,10 @@ type BuyWidgetConnectOptions = {
    * ```
    */
   autoConnect?:
-    | {
-        timeout: number;
-      }
-    | boolean;
+  | {
+    timeout: number;
+  }
+  | boolean;
 
   /**
    * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.
