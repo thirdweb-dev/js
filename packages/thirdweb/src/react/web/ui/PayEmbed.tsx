@@ -307,7 +307,6 @@ export type PayEmbedProps = {
  *
  * Refer to the [`PayEmbedConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/PayEmbedConnectOptions) type for more details.
  *
- * @buyCrypto
  * @deprecated Use `BuyWidget`, `CheckoutWidget` or `TransactionWidget` instead.
  */
 export function PayEmbed(props: PayEmbedProps) {

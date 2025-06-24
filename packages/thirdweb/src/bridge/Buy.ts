@@ -99,7 +99,6 @@ import type { PreparedQuote, Quote } from "./types/Quote.js";
  *
  * @throws Will throw an error if there is an issue fetching the quote.
  * @bridge Buy
- * @beta
  */
 export async function quote(options: quote.Options): Promise<quote.Result> {
   const {
@@ -164,13 +163,13 @@ export declare namespace quote {
     client: ThirdwebClient;
     maxSteps?: number;
   } & (
-    | {
+      | {
         buyAmountWei: bigint;
       }
-    | {
+      | {
         amount: bigint;
       }
-  );
+    );
 
   type Result = Quote & {
     intent: {
@@ -326,7 +325,6 @@ export declare namespace quote {
  *
  * @throws Will throw an error if there is an issue fetching the quote.
  * @bridge Buy
- * @beta
  */
 export async function prepare(
   options: prepare.Options,

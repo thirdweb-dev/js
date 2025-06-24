@@ -28,39 +28,33 @@ Try out the demo for yourself in the [buy crypto live playground](https://playgr
 
 ## Usage with UI Components
 
-The easiest way to buy crypto is to use the `PayEmbed` prebuilt UI component. Note that the `ConnectButton` also has a built-in funding flow that can also be customised.
+The easiest way to buy crypto is to use the `BuyWidget` prebuilt UI component.
 
 ```tsx
-import { PayEmbed } from "thirdweb/react";
+import { BuyWidget } from "thirdweb/react";
+import { base } from "thirdweb/chains";
 
 function App() {
   return (
-    <PayEmbed
+    <BuyWidget
       client={client}
-      payOptions={{
-        mode: "fund_wallet",
-        metadata: {
-          name: "Get funds",
-        },
-        prefillBuy: {
-          chain: base,
-          amount: "0.01",
-        },
-        // ... theme, currency, amounts, payment methods, etc.
-      }}
+      chain={base}
+      amount="0.01"
+      title="Get funds"
+      // ... theme, onSuccess, onError, etc.
     />
   );
 }
 ```
 
-Check out the [PayEmbed API reference](/references/typescript/v5/PayEmbed) for more information.
+Check out the [BuyWidget API reference](/references/typescript/v5/BuyWidget) for more information.
 
 <Stack>
 
 <ArticleIconCard
-	title="PayEmbed"
+	title="BuyWidget"
 	icon={ReactIcon}
-	href="/references/typescript/v5/PayEmbed"
+	href="/references/typescript/v5/BuyWidget"
 	description="Prebuilt UI to buy crypto by swapping or fiat onramps"
 />
 
