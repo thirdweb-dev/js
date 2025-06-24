@@ -28,6 +28,11 @@ export function TeamHeaderLoggedIn(props: {
   account: Pick<Account, "email" | "id">;
   accountAddress: string;
   client: ThirdwebClient;
+  currentProjectSubpath?: {
+    label: string;
+    href: string;
+    icon: React.ReactNode;
+  };
 }) {
   // identify the account
   useIdentifyAccount({
@@ -89,6 +94,7 @@ export function TeamHeaderLoggedIn(props: {
       );
     },
     currentProject: props.currentProject,
+    currentProjectSubpath: props.currentProjectSubpath,
     currentTeam: props.currentTeam,
     logout: logout,
     teamsAndProjects: props.teamsAndProjects,

@@ -1,13 +1,11 @@
 import { redirect } from "next/navigation";
+import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { AppFooter } from "@/components/footers/app-footer";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import {
-  getAuthToken,
-  getAuthTokenWalletAddress,
-} from "../../../../../../../../@/api/auth-token";
-import { ErrorProvider } from "../../../../../../../../@/contexts/error-handler";
+import { ErrorProvider } from "@/contexts/error-handler";
+import { ContractIcon } from "@/icons/ContractIcon";
 import { SharedContractLayout } from "../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/shared-layout";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { TeamHeaderLoggedIn } from "../../../../../components/TeamHeader/team-header-logged-in.client";
@@ -68,6 +66,11 @@ export default async function ContractLayout(props: {
             accountAddress={accountAddress}
             client={client}
             currentProject={project}
+            currentProjectSubpath={{
+              href: `/team/${params.team_slug}/${params.project_slug}/contracts`,
+              icon: <ContractIcon />,
+              label: "Contracts",
+            }}
             currentTeam={team}
             teamsAndProjects={teamsAndProjects}
           />
