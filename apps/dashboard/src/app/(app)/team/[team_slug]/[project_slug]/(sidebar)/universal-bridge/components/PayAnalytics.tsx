@@ -1,3 +1,4 @@
+import { ResponsiveSuspense } from "responsive-rsc";
 import type { ThirdwebClient } from "thirdweb";
 import {
   getUniversalBridgeUsage,
@@ -5,7 +6,9 @@ import {
 } from "@/api/analytics";
 import type { Range } from "@/components/analytics/date-range-selector";
 import { CodeServer } from "@/components/ui/code/code.server";
+import { Skeleton } from "@/components/ui/skeleton";
 import { apiCode, embedCode, sdkCode } from "./code-examples";
+import { PayAnalyticsFilter } from "./PayAnalyticsFilter";
 import { PayCustomersTable } from "./PayCustomersTable";
 import { PayEmbedFTUX } from "./PayEmbedFTUX";
 import { PaymentHistory } from "./PaymentHistory";
@@ -96,44 +99,70 @@ export async function PayAnalytics(props: {
   }
 
   return (
-    <div className="flex flex-col gap-10 lg:gap-6">
-      <GridWithSeparator>
-        <div className="flex items-center border-border border-b pb-6 xl:border-none xl:pb-0">
-          <TotalVolumePieChart
-            data={volumeData?.filter((x) => x.status === "completed") || []}
-          />
-        </div>
-        <TotalPayVolume
-          data={volumeData?.filter((x) => x.status === "completed") || []}
-          dateFormat={dateFormat}
-        />
-      </GridWithSeparator>
-
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <CardContainer>
-          <Payouts
-            data={volumeData?.filter((x) => x.status === "completed") || []}
-            dateFormat={dateFormat}
-          />
-        </CardContainer>
-        <CardContainer>
-          <PaymentsSuccessRate data={volumeData || []} />
-        </CardContainer>
+    <div>
+      <div className="mb-4 flex justify-start">
+        <PayAnalyticsFilter />
       </div>
+      <ResponsiveSuspense
+        fallback={
+          <div className="flex flex-col gap-6">
+            <Skeleton className="h-[350px] border rounded-xl" />
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+              <Skeleton className="h-[350px] border rounded-xl" />
+              <Skeleton className="h-[350px] border rounded-xl" />
+            </div>
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+              <Skeleton className="h-[350px] border rounded-xl" />
+              <Skeleton className="h-[350px] border rounded-xl" />
+            </div>
+            <Skeleton className="h-[500px] border rounded-xl" />
+          </div>
+        }
+        searchParamsUsed={["from", "to", "interval"]}
+      >
+        <div className="flex flex-col gap-10 lg:gap-6">
+          <GridWithSeparator>
+            <div className="flex items-center border-border border-b pb-6 xl:border-none xl:pb-0">
+              <TotalVolumePieChart
+                data={volumeData?.filter((x) => x.status === "completed") || []}
+              />
+            </div>
+            <TotalPayVolume
+              data={volumeData?.filter((x) => x.status === "completed") || []}
+              dateFormat={dateFormat}
+            />
+          </GridWithSeparator>
 
-      <GridWithSeparator>
-        <div className="border-border border-b pb-6 xl:border-none xl:pb-0">
-          <PayNewCustomers data={walletData || []} dateFormat={dateFormat} />
+          <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+            <CardContainer>
+              <Payouts
+                data={volumeData?.filter((x) => x.status === "completed") || []}
+                dateFormat={dateFormat}
+              />
+            </CardContainer>
+            <CardContainer>
+              <PaymentsSuccessRate data={volumeData || []} />
+            </CardContainer>
+          </div>
+
+          <GridWithSeparator>
+            <div className="border-border border-b pb-6 xl:border-none xl:pb-0">
+              <PayNewCustomers
+                data={walletData || []}
+                dateFormat={dateFormat}
+              />
+            </div>
+            <PayCustomersTable client={props.client} data={walletData || []} />
+          </GridWithSeparator>
+          <CardContainer>
+            <PaymentHistory
+              client={props.client}
+              projectClientId={props.projectClientId}
+              teamId={props.teamId}
+            />
+          </CardContainer>
         </div>
-        <PayCustomersTable client={props.client} data={walletData || []} />
-      </GridWithSeparator>
-      <CardContainer>
-        <PaymentHistory
-          client={props.client}
-          projectClientId={props.projectClientId}
-          teamId={props.teamId}
-        />
-      </CardContainer>
+      </ResponsiveSuspense>
     </div>
   );
 }
