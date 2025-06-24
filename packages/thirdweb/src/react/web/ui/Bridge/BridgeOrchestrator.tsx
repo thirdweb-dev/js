@@ -40,20 +40,20 @@ export type UIOptions = Prettify<
     };
   } & (
     | {
-      mode: "fund_wallet";
-      destinationToken: Token;
-      initialAmount?: string;
-      presetOptions?: [number, number, number];
-    }
+        mode: "fund_wallet";
+        destinationToken: Token;
+        initialAmount?: string;
+        presetOptions?: [number, number, number];
+      }
     | {
-      mode: "direct_payment";
-      paymentInfo: {
-        sellerAddress: Address;
-        token: Token;
-        amount: string;
-        feePayer?: "sender" | "receiver";
-      };
-    }
+        mode: "direct_payment";
+        paymentInfo: {
+          sellerAddress: Address;
+          token: Token;
+          amount: string;
+          feePayer?: "sender" | "receiver";
+        };
+      }
     | { mode: "transaction"; transaction: PreparedTransaction }
   )
 >;
@@ -283,10 +283,10 @@ export function BridgeOrchestrator({
             amount={state.context.destinationAmount}
             client={client}
             destinationToken={state.context.destinationToken}
+            mode={uiOptions.mode}
             onBack={() => {
               send({ type: "BACK" });
             }}
-            mode={uiOptions.mode}
             onError={handleError}
             onQuoteReceived={handleQuoteReceived}
             paymentLinkId={paymentLinkId}

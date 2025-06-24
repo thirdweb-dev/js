@@ -72,14 +72,30 @@ export function PaymentDetails({
 
   useQuery({
     queryFn: () => {
-      if (preparedQuote.type === "buy" || preparedQuote.type === "sell" || preparedQuote.type === "transfer") {
+      if (
+        preparedQuote.type === "buy" ||
+        preparedQuote.type === "sell" ||
+        preparedQuote.type === "transfer"
+      ) {
         trackPayEvent({
-          chainId: preparedQuote.type === "transfer" ? preparedQuote.intent.chainId : preparedQuote.intent.originChainId,
+          chainId:
+            preparedQuote.type === "transfer"
+              ? preparedQuote.intent.chainId
+              : preparedQuote.intent.originChainId,
           client,
           event: "payment_details",
-          fromToken: preparedQuote.type === "transfer" ? preparedQuote.intent.tokenAddress : preparedQuote.intent.originTokenAddress,
-          toChainId: preparedQuote.type === "transfer" ? preparedQuote.intent.chainId : preparedQuote.intent.destinationChainId,
-          toToken: preparedQuote.type === "transfer" ? preparedQuote.intent.tokenAddress : preparedQuote.intent.destinationTokenAddress,
+          fromToken:
+            preparedQuote.type === "transfer"
+              ? preparedQuote.intent.tokenAddress
+              : preparedQuote.intent.originTokenAddress,
+          toChainId:
+            preparedQuote.type === "transfer"
+              ? preparedQuote.intent.chainId
+              : preparedQuote.intent.destinationChainId,
+          toToken:
+            preparedQuote.type === "transfer"
+              ? preparedQuote.intent.tokenAddress
+              : preparedQuote.intent.destinationTokenAddress,
         });
       }
     },

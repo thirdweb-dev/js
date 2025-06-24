@@ -93,7 +93,7 @@ const SuccessScreenWithTheme = (props: SuccessScreenWithThemeProps) => {
 const meta = {
   args: {
     completedStatuses: mockBuyCompletedStatuses,
-    onDone: () => { },
+    onDone: () => {},
     preparedQuote: simpleBuyQuote,
     theme: "dark",
     uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,

@@ -204,7 +204,7 @@ function getBridgeParams(args: {
       if (
         paymentMethod.originToken.chainId === destinationToken.chainId &&
         paymentMethod.originToken.address.toLowerCase() ===
-        destinationToken.address.toLowerCase()
+          destinationToken.address.toLowerCase()
       ) {
         return {
           amount: toUnits(amount, destinationToken.decimals),
