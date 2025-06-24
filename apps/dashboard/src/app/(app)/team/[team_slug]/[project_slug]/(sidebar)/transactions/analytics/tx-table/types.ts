@@ -34,7 +34,14 @@ type ExecutionResult4337Serialized =
     }
   | {
       status: "FAILED";
-      error: string;
+      error: {
+        stage: string;
+        message: string;
+        errorCode: string;
+        inner_error: object;
+        nonce_used: string;
+        account_address: string;
+      };
     }
   | {
       status: "SUBMITTED";

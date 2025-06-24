@@ -36,7 +36,7 @@ export async function getServerWallets(params: GetServerWalletsArgs) {
     throw new Error(`Error listing server wallets: ${stringify(result.error)}`);
   }
 
-  const data = result.data?.result;
+  const data = result.data?.[200]?.result;
 
   if (!data) {
     throw new Error("No server wallets found");

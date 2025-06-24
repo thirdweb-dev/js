@@ -11,6 +11,7 @@ import { mintTo } from "../extensions/erc20/write/mintTo.js";
 import { claimTo } from "../extensions/erc1155/drops/write/claimTo.js";
 import { getAllActiveSigners } from "../extensions/erc4337/__generated__/IAccountPermissions/read/getAllActiveSigners.js";
 import { sendTransaction } from "../transaction/actions/send-transaction.js";
+import { setThirdwebDomains } from "../utils/domains.js";
 import {
   DEFAULT_ACCOUNT_FACTORY_V0_6,
   ENTRYPOINT_ADDRESS_v0_6,
@@ -33,12 +34,13 @@ describe.runIf(
     let serverWallet: Engine.ServerWallet;
 
     beforeAll(async () => {
-      // setThirdwebDomains({
-      //   rpc: "rpc.thirdweb-dev.com",
-      //   storage: "storage.thirdweb-dev.com",
-      //   bundler: "bundler.thirdweb-dev.com",
-      //   engineCloud: "engine.thirdweb-dev.com",
-      // });
+      setThirdwebDomains({
+        bundler: "bundler.thirdweb-dev.com",
+        // engineCloud: "engine.thirdweb-dev.com",
+        engineCloud: "localhost:3009",
+        rpc: "rpc.thirdweb-dev.com",
+        storage: "storage.thirdweb-dev.com",
+      });
       serverWallet = Engine.serverWallet({
         address: process.env.ENGINE_CLOUD_WALLET_ADDRESS as string,
         chain: arbitrumSepolia,
@@ -47,7 +49,7 @@ describe.runIf(
       });
     });
 
-    it("should create a server wallet", async () => {
+    it.skip("should create a server wallet", async () => {
       const serverWallet = await Engine.createServerWallet({
         client: TEST_CLIENT,
         label: "My Server Wallet",

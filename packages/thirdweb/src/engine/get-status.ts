@@ -99,7 +99,7 @@ export async function getTransactionStatus(args: {
     );
   }
 
-  const data = searchResult.data?.result?.transactions?.[0];
+  const data = searchResult.data?.[200]?.result?.transactions?.[0];
 
   if (!data) {
     throw new Error(`Transaction ${transactionId} not found`);

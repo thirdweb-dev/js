@@ -122,7 +122,7 @@ export async function searchTransactions(args: SearchTransactionsArgs) {
     );
   }
 
-  const data = searchResult.data?.result;
+  const data = searchResult.data?.[200]?.result;
 
   if (!data) {
     throw new Error(`No transactions found with filters ${stringify(filters)}`);

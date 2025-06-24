@@ -1,9 +1,8 @@
 import {
-  type AaExecutionOptions,
-  type AaZksyncExecutionOptions,
-  sendTransaction,
+  type ExecutionOptions,
   signMessage,
   signTypedData,
+  writeTransaction,
 } from "@thirdweb-dev/engine";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
@@ -44,9 +43,7 @@ export type ServerWalletOptions = {
   /**
    * Optional custom execution options to use for sending transactions and signing data.
    */
-  executionOptions?:
-    | Omit<AaExecutionOptions, "chainId">
-    | Omit<AaZksyncExecutionOptions, "chainId">;
+  executionOptions?: Omit<ExecutionOptions, "chainId">;
 };
 
 export type ServerWallet = Account & {
@@ -152,16 +149,31 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
     "x-vault-access-token": vaultAccessToken,
   };
 
-  const getExecutionOptions = (chainId: number) => {
-    return executionOptions
-      ? {
-          ...executionOptions,
-          chainId: chainId.toString(),
-        }
-      : {
-          chainId: chainId.toString(),
+  const getExecutionOptions = (chainId: number): ExecutionOptions => {
+    const options: ExecutionOptions | undefined = executionOptions as
+      | ExecutionOptions
+      | undefined;
+    if (!options) {
+      return {
+        chainId,
+        from: address,
+        type: "auto",
+      };
+    }
+    switch (options.type) {
+      case "auto":
+        return {
+          chainId,
           from: address,
+          type: "auto",
         };
+      case "ERC4337":
+        return {
+          ...options,
+          chainId,
+          type: "ERC4337",
+        };
+    }
   };
 
   const enqueueTx = async (transaction: SendTransactionOption[]) => {
@@ -184,13 +196,13 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
     const body = {
       executionOptions: getExecutionOptions(chainId),
       params: transaction.map((t) => ({
-        data: t.data,
-        to: t.to ?? undefined,
-        value: t.value?.toString(),
+        data: t.data || "0x",
+        to: t.to ?? "", // TODO this should be allowed to be undefined
+        value: t.value?.toString() || "0",
       })),
     };
 
-    const result = await sendTransaction({
+    const result = await writeTransaction({
       baseUrl: getThirdwebBaseUrl("engineCloud"),
       body,
       bodySerializer: stringify,
@@ -202,7 +214,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
       throw new Error(`Error sending transaction: ${stringify(result.error)}`);
     }
 
-    const data = result.data?.result;
+    const data = result.data?.[202];
     if (!data) {
       throw new Error("No data returned from engine");
     }
@@ -305,17 +317,35 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
       if (!signingChainId) {
         throw new Error("Chain ID is required for signing messages");
       }
-
+      // FIXME
+      const options = executionOptions as ExecutionOptions | undefined;
       const signResult = await signMessage({
         baseUrl: getThirdwebBaseUrl("engineCloud"),
         body: {
-          executionOptions: getExecutionOptions(signingChainId),
           params: [
             {
+              format: isBytes ? "hex" : "text",
               message: engineMessage,
-              messageFormat: isBytes ? "hex" : "text",
             },
           ],
+          // FIXME
+          signingOptions:
+            options?.type === "ERC4337"
+              ? {
+                  accountSalt: options.accountSalt,
+                  chainId: signingChainId,
+                  entrypointAddress: options.entrypointAddress,
+                  entrypointVersion: options.entrypointVersion,
+                  factoryAddress: options.factoryAddress,
+                  signerAddress: address,
+                  smartAccountAddress: options.smartAccountAddress,
+                  type: "smart_account",
+                }
+              : {
+                  chainId: signingChainId,
+                  from: address,
+                  type: "eoa",
+                },
         },
         bodySerializer: stringify,
         fetch: getClientFetch(client),
@@ -328,13 +358,13 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
         );
       }
 
-      const signatureResult = signResult.data?.result.results[0];
+      const signatureResult = signResult.data?.[200]?.result.results[0];
       if (signatureResult?.success) {
         return signatureResult.result.signature as Hex;
       }
 
       throw new Error(
-        `Failed to sign message: ${signatureResult?.error?.message || "Unknown error"}`,
+        `Failed to sign message: ${signatureResult?.error || "Unknown error"}`,
       );
     },
     signTypedData: async (typedData) => {
@@ -343,12 +373,30 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
         throw new Error("Chain ID is required for signing messages");
       }
 
+      const options = executionOptions as ExecutionOptions;
       const signResult = await signTypedData({
         baseUrl: getThirdwebBaseUrl("engineCloud"),
         body: {
-          executionOptions: getExecutionOptions(signingChainId),
           // biome-ignore lint/suspicious/noExplicitAny: TODO: fix ts / hey-api type clash
           params: [typedData as any],
+          // FIXME
+          signOptions:
+            options?.type === "ERC4337"
+              ? {
+                  accountSalt: options.accountSalt,
+                  chainId: signingChainId,
+                  entrypointAddress: options.entrypointAddress,
+                  entrypointVersion: options.entrypointVersion,
+                  factoryAddress: options.factoryAddress,
+                  signerAddress: address,
+                  smartAccountAddress: options.smartAccountAddress,
+                  type: "smart_account",
+                }
+              : {
+                  chainId: signingChainId,
+                  from: address,
+                  type: "eoa",
+                },
         },
         bodySerializer: stringify,
         fetch: getClientFetch(client),
@@ -361,13 +409,13 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
         );
       }
 
-      const signatureResult = signResult.data?.result.results[0];
+      const signatureResult = signResult.data?.[200]?.result.results[0];
       if (signatureResult?.success) {
         return signatureResult.result.signature as Hex;
       }
 
       throw new Error(
-        `Failed to sign message: ${signatureResult?.error?.message || "Unknown error"}`,
+        `Failed to sign message: ${signatureResult?.error || "Unknown error"}`,
       );
     },
   };
