@@ -1,4 +1,4 @@
-import { type Config, createClient, createConfig } from "@hey-api/client-fetch";
+import { type Config, createClient, createConfig } from "./client/client/index.js";
 import type { ThirdwebClient } from "thirdweb";
 import { client } from "./client/client.gen.js";
 

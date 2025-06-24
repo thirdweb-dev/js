@@ -544,6 +544,10 @@ export type AgentResponse = {
    * Is Public
    */
   is_public: boolean;
+  /**
+   * Summary
+   */
+  summary?: string | null;
   context: AgentTaskContext;
   /**
    * Prompts
@@ -2271,6 +2275,10 @@ export type RegistryAgentListResponse = {
    * Description
    */
   description: string;
+  /**
+   * Summary
+   */
+  summary?: string | null;
   /**
    * Created At
    */
@@ -4266,5 +4274,5 @@ export type GetRegistryAgentsResponse =
   GetRegistryAgentsResponses[keyof GetRegistryAgentsResponses];
 
 export type ClientOptions = {
-  baseUrl: "http://localhost:4242" | (string & {});
+  baseUrl: "https://nebula-api.thirdweb-dev.com" | (string & {});
 };

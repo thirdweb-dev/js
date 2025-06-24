@@ -4,7 +4,7 @@ import type {
   Client,
   Options as ClientOptions,
   TDataShape,
-} from "@hey-api/client-fetch";
+} from "./client/index.js";
 import { client as _heyApiClient } from "./client.gen.js";
 import type {
   AuthDelegateLoginData,
