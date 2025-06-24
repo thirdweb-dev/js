@@ -1603,164 +1603,287 @@ let returnType: Element;
 # Buy Crypto
 ---
 
-## PayEmbed
+## BuyWidget
 
-Embed a prebuilt UI for funding wallets, purchases or transactions with crypto or fiat.
+Widget is a prebuilt UI for purchasing a specific token.
 
 ### Example
 
-#### Default configuration
+#### Basic usage
 
-By default, the `PayEmbed` component will allows users to fund their wallets with crypto or fiat on any of the supported chains..
+The `BuyWidget` component requires `client`, `chain`, and `amount` props to function.
 
 ```tsx
-<PayEmbed client={client} />;
+import { ethereum } from "thirdweb/chains";
+
+<BuyWidget
+  client={client}
+  chain={ethereum}
+  amount="0.1"
+/>
 ```
 
-#### Top up wallets
+#### Buy a specific token
 
-You can set the `mode` option to `"fund_wallet"` to allow users to top up their wallets with crypto or fiat.
-
-```tsx
-<PayEmbed
-  client={client}
-  payOptions={{
-    mode: "fund_wallet",
-    metadata: {
-      name: "Get funds", // title of the payment modal
-    },
-    prefillBuy: {
-      chain: base, // chain to prefill the buy screen with
-      amount: "0.01", // amount to prefill the buy screen with
-    },
-  }}
-/>;
-```
-
-#### Direct Payments
-
-You can set the `mode` option to `"direct_payment"` to allow users to make a direct payment to a wallet address.
+You can specify a token to purchase by passing the `tokenAddress` prop.
 
 ```tsx
-<PayEmbed
+<BuyWidget
   client={client}
-  theme={"light"}
-  payOptions={{
-    mode: "direct_payment",
-    paymentInfo: {
-      amount: "35",
-      chain: base,
-      token: getDefaultToken(base, "USDC"),
-      sellerAddress: "0x...", // the wallet address of the seller
-    },
-    metadata: {
-      name: "Black Hoodie (Size L)",
-      image: "/drip-hoodie.png",
-    },
-  }}
-/>;
-```
-
-#### Transactions
-
-You can set the `mode` option to `"transaction"` to allow users to execute a transaction with a different wallet, chain or token.
-
-```tsx
-<PayEmbed
-  client={client}
-  payOptions={{
-    mode: "transaction",
-    // can be any transaction
-    transaction: claimTo({
-      contract: nftContract,
-      quantity: 1n,
-      tokenId: 0n,
-      to: "0x...",
-    }),
-    // this could be any metadata, including NFT metadata
-    metadata: {
-      name: "VIP Ticket",
-      image: "https://...",
-    },
-  }}
-/>;
-```
-
-You can also handle ERC20 payments by passing `erc20value` to your transaction:
-
-```tsx
-<PayEmbed
-  client={client}
-  payOptions={{
-    mode: "transaction",
-    transaction: prepareContractCall({
-      contract: yourContract,
-      functionName: "purchase",
-      args: [arg1, arg2, ...],
-      erc20value: {
-        token: USDC_TOKEN_ADDRESS, // the erc20 token required to purchase
-        amount: toUnits("100", 6), // the amount of erc20 token required to purchase
-      },
-    }),
-  }}
- />
-```
-
-#### Enable/Disable payment methods
-
-You can disable the use of crypto or fiat by setting the `buyWithCrypto` or `buyWithFiat` options to `false`.
-
-```tsx
-<PayEmbed
-  client={client}
-  payOptions={{
-    buyWithFiat: false,
-  }}
-/>;
+  chain={ethereum}
+  amount="100"
+  tokenAddress="0xA0b86a33E6417E4df2057B2d3C6d9F7cc11b0a70"
+/>
 ```
 
 #### Customize the UI
 
-You can customize the UI of the `PayEmbed` component by passing a custom theme object to the `theme` prop.
+You can customize the UI of the `BuyWidget` component by passing a custom theme object to the `theme` prop.
 
 ```tsx
-<PayEmbed
+<BuyWidget
   client={client}
+  chain={ethereum}
+  amount="0.1"
   theme={darkTheme({
     colors: {
       modalBg: "red",
     },
   })}
-/>;
+/>
 ```
 
 Refer to the [Theme](https://portal.thirdweb.com/references/typescript/v5/Theme) type for more details.
 
-#### Configure the wallet connection
+#### Update the Title
 
-You can customize the wallet connection flow by passing a `connectOptions` object to the `PayEmbed` component.
+You can update the title of the widget by passing a `title` prop to the `BuyWidget` component.
 
 ```tsx
-<PayEmbed
+<BuyWidget
   client={client}
-  connectOptions={{
-    connectModal: {
-      size: "compact",
-      title: "Sign in",
-    },
-  }}
-/>;
+  chain={ethereum}
+  amount="0.1"
+  title="Buy ETH"
+/>
 ```
 
-Refer to the [PayEmbedConnectOptions](https://portal.thirdweb.com/references/typescript/v5/PayEmbedConnectOptions) type for more details.
+#### Configure the wallet connection
+
+You can customize the wallet connection flow by passing a `connectOptions` object to the `BuyWidget` component.
+
+```tsx
+<BuyWidget
+  client={client}
+  chain={ethereum}
+  amount="0.1"
+  connectOptions={{
+    connectModal: {
+      size: 'compact',
+      title: "Sign in",
+    }
+  }}
+/>
+```
+
+Refer to the [BuyWidgetConnectOptions](https://portal.thirdweb.com/references/typescript/v5/BuyWidgetConnectOptions) type for more details.
 
 ```ts
-function PayEmbed(props: PayEmbedProps): Element;
+function BuyWidget(props: BuyWidgetProps): Element;
 ```
 
 ### Parameters
 
-Props of type [PayEmbedProps](https://portal.thirdweb.com/references/typescript/v5/PayEmbedProps) to configure the PayEmbed component.
+Props of type [BuyWidgetProps](https://portal.thirdweb.com/references/typescript/v5/BuyWidgetProps) to configure the BuyWidget component.
+
+#### Type
+
+```ts
+let props: {
+  activeWallet?: Wallet;
+  amount: string;
+  chain: Chain;
+  className?: string;
+  client: ThirdwebClient;
+  connectOptions?: BuyWidgetConnectOptions;
+  description?: string;
+  hiddenWallets?: Array<WalletId>;
+  image?: string;
+  locale?: LocaleId;
+  onCancel?: () => void;
+  onError?: (error: Error) => void;
+  onSuccess?: () => void;
+  paymentLinkId?: string;
+  presetOptions?: [number, number, number];
+  purchaseData?: Record<string, unknown>;
+  style?: React.CSSProperties;
+  supportedTokens?: SupportedTokens;
+  theme?: "light" | "dark" | Theme;
+  title?: string;
+  tokenAddress?: Address;
+};
+```
+
+### Returns
+
+```ts
+let returnType: Element;
+```
+
+## CheckoutWidget
+
+Widget is a prebuilt UI for making direct payments to a wallet address.
+
+### Example
+
+#### Basic usage
+
+The `CheckoutWidget` component requires `client`, `chain`, `amount`, `tokenAddress`, and `sellerAddress` props to function.
+
+```tsx
+import { base } from "thirdweb/chains";
+import { getDefaultToken } from "thirdweb/utils";
+
+<CheckoutWidget
+  client={client}
+  chain={base}
+  amount="35"
+  tokenAddress={getDefaultToken(base, "USDC")}
+  sellerAddress="0x..."
+/>
+```
+
+#### With metadata
+
+You can add metadata to display product information.
+
+```tsx
+<CheckoutWidget
+  client={client}
+  chain={base}
+  amount="35"
+  tokenAddress={getDefaultToken(base, "USDC")}
+  sellerAddress="0x..."
+  title="Black Hoodie (Size L)"
+  description="Premium cotton hoodie"
+  image="/drip-hoodie.png"
+/>
+```
+
+```ts
+function CheckoutWidget(props: CheckoutWidgetProps): Element;
+```
+
+### Parameters
+
+Props of type [CheckoutWidgetProps](https://portal.thirdweb.com/references/typescript/v5/CheckoutWidgetProps) to configure the CheckoutWidget component.
+
+#### Type
+
+```ts
+let props: {
+  activeWallet?: Wallet;
+  amount: string;
+  chain: Chain;
+  className?: string;
+  client: ThirdwebClient;
+  connectOptions?: CheckoutWidgetConnectOptions;
+  description?: string;
+  hiddenWallets?: Array<WalletId>;
+  image?: string;
+  locale?: LocaleId;
+  onCancel?: () => void;
+  onError?: (error: Error) => void;
+  onSuccess?: () => void;
+  paymentLinkId?: string;
+  purchaseData?: Record<string, unknown>;
+  sellerAddress: Address;
+  style?: React.CSSProperties;
+  supportedTokens?: SupportedTokens;
+  theme?: "light" | "dark" | Theme;
+  title?: string;
+  tokenAddress: Address;
+};
+```
+
+### Returns
+
+```ts
+let returnType: Element;
+```
+
+## TransactionWidget
+
+Widget is a prebuilt UI for executing a transaction with a different wallet, chain or token.
+
+### Example
+
+#### Basic usage
+
+The `TransactionWidget` component requires `client` and `transaction` props to function.
+
+```tsx
+import { claimTo } from "thirdweb/extensions/erc1155";
+
+<TransactionWidget
+  client={client}
+  transaction={claimTo({
+    contract: nftContract,
+    quantity: 1n,
+    tokenId: 0n,
+    to: "0x...",
+  })}
+/>
+```
+
+#### With metadata
+
+You can add metadata to display transaction information.
+
+```tsx
+<TransactionWidget
+  client={client}
+  transaction={claimTo({
+    contract: nftContract,
+    quantity: 1n,
+    tokenId: 0n,
+    to: "0x...",
+  })}
+  title="VIP Ticket"
+  description="Exclusive NFT collection"
+  image="https://..."
+/>
+```
+
+#### ERC20 payments
+
+You can handle ERC20 payments by passing `erc20value` to your transaction:
+
+```tsx
+import { prepareContractCall } from "thirdweb";
+import { toUnits } from "thirdweb/utils";
+
+<TransactionWidget
+  client={client}
+  transaction={prepareContractCall({
+    contract: yourContract,
+    functionName: "purchase",
+    args: [arg1, arg2, ...],
+    erc20value: {
+      token: USDC_TOKEN_ADDRESS, // the erc20 token required to purchase
+      amount: toUnits("100", 6), // the amount of erc20 token required to purchase
+    },
+  })}
+/>
+```
+
+```ts
+function TransactionWidget(props: TransactionWidgetProps): Element;
+```
+
+### Parameters
+
+Props of type [TransactionWidgetProps](https://portal.thirdweb.com/references/typescript/v5/TransactionWidgetProps) to configure the TransactionWidget component.
 
 #### Type
 
@@ -1769,14 +1892,21 @@ let props: {
   activeWallet?: Wallet;
   className?: string;
   client: ThirdwebClient;
-  connectOptions?: PayEmbedConnectOptions;
+  connectOptions?: TransactionWidgetConnectOptions;
+  description?: string;
   hiddenWallets?: Array<WalletId>;
+  image?: string;
   locale?: LocaleId;
+  onCancel?: () => void;
+  onError?: (error: Error) => void;
+  onSuccess?: () => void;
   paymentLinkId?: string;
-  payOptions?: PayUIOptions;
+  purchaseData?: Record<string, unknown>;
   style?: React.CSSProperties;
   supportedTokens?: SupportedTokens;
   theme?: "light" | "dark" | Theme;
+  title?: string;
+  transaction: PreparedTransaction;
 };
 ```
 

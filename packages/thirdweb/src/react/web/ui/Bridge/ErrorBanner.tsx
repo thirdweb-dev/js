@@ -1,5 +1,8 @@
 "use client";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
+import { useQuery } from "@tanstack/react-query";
+import { trackPayEvent } from "../../../../analytics/track/pay.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useBridgeError } from "../../../core/hooks/useBridgeError.js";
@@ -22,12 +25,29 @@ interface ErrorBannerProps {
    * Called when user wants to cancel
    */
   onCancel?: () => void;
+  client: ThirdwebClient;
 }
 
-export function ErrorBanner({ error, onRetry, onCancel }: ErrorBannerProps) {
+export function ErrorBanner({
+  error,
+  onRetry,
+  onCancel,
+  client,
+}: ErrorBannerProps) {
   const theme = useCustomTheme();
 
   const { userMessage } = useBridgeError({ error });
+
+  useQuery({
+    queryFn: () => {
+      trackPayEvent({
+        client,
+        error: error.message,
+        event: "ub:ui:error",
+      });
+    },
+    queryKey: ["error_banner", userMessage],
+  });
 
   return (
     <Container flex="column" fullHeight gap="md" p="lg">

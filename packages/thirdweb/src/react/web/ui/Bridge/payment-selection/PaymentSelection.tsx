@@ -1,5 +1,7 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { trackPayEvent } from "../../../../../analytics/track/pay.js";
 import type { Token } from "../../../../../bridge/types/Token.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
@@ -94,6 +96,18 @@ export function PaymentSelection({
 
   const [currentStep, setCurrentStep] = useState<Step>({
     type: "walletSelection",
+  });
+
+  useQuery({
+    queryFn: () => {
+      trackPayEvent({
+        client,
+        event: "payment_selection",
+        toChainId: destinationToken.chainId,
+        toToken: destinationToken.address,
+      });
+    },
+    queryKey: ["payment_selection"],
   });
 
   const payerWallet =

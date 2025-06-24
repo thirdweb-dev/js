@@ -26,55 +26,32 @@ Try out the demo for yourself in the [live playground](https://playground.thirdw
 />
 </Stack>
 
-## Usage with PayEmbed
-
-You can use the `PayEmbed` component to let users execute a transaction from any chain, paying with any token.
-
-```tsx
-import { claimTo } from "thirdweb/extensions/erc1155";
-import { PayEmbed, useActiveAccount } from "thirdweb/react";
-
-function App() {
-  const account = useActiveAccount();
-  const { data: nft } = useReadContract(getNFT, {
-    contract: nftContract,
-    tokenId: 0n,
-  });
-
-  return (
-    <PayEmbed
-      client={client}
-      payOptions={{
-        mode: "transaction",
-        transaction: claimTo({
-          contract: nftContract,
-          quantity: 1n,
-          tokenId: 0n,
-          to: account?.address,
-        }),
-        metadata: nft?.metadata,
-      }}
-    />
-  );
-}
-```
-
-Check out the [PayEmbed API reference](/references/typescript/v5/PayEmbed) for more information.
-
-<Stack>
-
-<ArticleIconCard
-	title="PayEmbed"
-	icon={ReactIcon}
-	href="/references/typescript/v5/PayEmbed"
-	description="Prebuilt UI to buy crypto by swapping or fiat onramps"
-/>
-
-</Stack>
-
-
 ## Usage with regular transactions
 
 Any transaction sent with `useSendTransaction` or with `TransactionButton` will prompt the user to choose a different payment method if they don't have enough balance for the transaction.
 
 You can turn off this behaviour by setting the `payModal` option to `false`.
+
+## Usage with TransactionWidget
+
+The `TransactionWidget` component provides a complete UI for executing transactions with built-in cross-chain payment support.
+
+```tsx
+import { TransactionWidget } from "thirdweb/react";
+import { prepareContractCall } from "thirdweb";
+
+function MyComponent() {
+  return (
+    <TransactionWidget
+      client={client}
+      transaction={prepareContractCall({
+        contract: myContract,
+        method: "function mint(uint256 quantity)",
+        params: [1n],
+      })}
+      amount="0.1"
+      title="Mint NFT"
+    />
+  );
+}
+```
