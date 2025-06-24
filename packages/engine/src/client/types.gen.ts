@@ -92,6 +92,28 @@ export type AaZksyncExecutionOptions = {
   chainId: string;
 };
 
+/**
+ * Uses EOA for execution. Only supported for signing currently.
+ */
+export type EoaExecutionOptions = {
+  type: "eoa";
+
+  /**
+   * The EOA address
+   */
+  address: string;
+
+  /**
+   * The chain id of the transaction
+   */
+  chainId: string;
+
+  /**
+   * The idempotency key of the transaction. Transaction requests sent with the same idempotency key will be de-duplicated. If not provided, a randomUUID will be generated. This is also used as the ID of a queued/stored transaction.
+   */
+  idempotencyKey?: string;
+};
+
 export type ListAccountsData = {
   body?: never;
   path?: never;
@@ -434,7 +456,8 @@ export type SignTransactionData = {
     executionOptions:
       | AutoExecutionOptions
       | AaExecutionOptions
-      | AaZksyncExecutionOptions;
+      | AaZksyncExecutionOptions
+      | EoaExecutionOptions;
     params: Array<{
       /**
        * The recipient address
@@ -585,7 +608,8 @@ export type SignMessageData = {
     executionOptions:
       | AutoExecutionOptions
       | AaExecutionOptions
-      | AaZksyncExecutionOptions;
+      | AaZksyncExecutionOptions
+      | EoaExecutionOptions;
     params: Array<{
       /**
        * The message to sign
@@ -661,7 +685,8 @@ export type SignTypedDataData = {
     executionOptions:
       | AutoExecutionOptions
       | AaExecutionOptions
-      | AaZksyncExecutionOptions;
+      | AaZksyncExecutionOptions
+      | EoaExecutionOptions;
     params: Array<{
       domain: {
         chainId?: number | number;

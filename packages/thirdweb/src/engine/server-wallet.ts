@@ -1,6 +1,7 @@
 import {
   type AaExecutionOptions,
   type AaZksyncExecutionOptions,
+  type EoaExecutionOptions,
   sendTransaction,
   signMessage,
   signTypedData,
@@ -46,7 +47,8 @@ export type ServerWalletOptions = {
    */
   executionOptions?:
     | Omit<AaExecutionOptions, "chainId">
-    | Omit<AaZksyncExecutionOptions, "chainId">;
+    | Omit<AaZksyncExecutionOptions, "chainId">
+    | Omit<EoaExecutionOptions, "chainId">;
 };
 
 export type ServerWallet = Account & {
