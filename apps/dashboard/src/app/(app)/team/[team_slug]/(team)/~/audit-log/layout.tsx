@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { getTeamBySlug } from "../../../../../../../@/api/team";
-import { UpsellWrapper } from "../../../../../../../@/components/blocks/upsell-wrapper";
+import { getTeamBySlug } from "@/api/team";
+import { UpsellWrapper } from "@/components/blocks/upsell-wrapper";
 
 export default async function Layout(props: {
   children: React.ReactNode;
