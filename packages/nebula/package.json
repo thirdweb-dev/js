@@ -28,7 +28,6 @@
     "src/*"
   ],
   "dependencies": {
-    "@thirdweb-dev/nebula": "^0.1.1",
     "thirdweb": "workspace:*"
   },
   "devDependencies": {
