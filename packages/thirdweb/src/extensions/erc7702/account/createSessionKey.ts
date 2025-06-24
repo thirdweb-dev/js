@@ -80,6 +80,10 @@ export function createSessionKey(
     transferPolicies,
   } = options;
 
+  if (durationInSeconds <= 0) {
+    throw new Error("durationInSeconds must be positive");
+  }
+
   return createSessionWithSig({
     async asyncParams() {
       const req = {
