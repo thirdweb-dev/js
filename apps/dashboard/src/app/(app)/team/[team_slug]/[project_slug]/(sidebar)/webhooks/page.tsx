@@ -27,15 +27,15 @@ export default async function WebhooksPage({
 
   return (
     <div>
-      <h2 className="mb-0.5 font-semibold text-xl tracking-tight">Overview</h2>
+      <h2 className="mb-0.5 font-semibold text-xl tracking-tight">Analytics</h2>
       <p className="text-muted-foreground text-sm">
         Review your webhooks usage and errors.
       </p>
       <div className="h-6" />
       <AnalyticsPageContent
         project={project}
-        teamSlug={resolvedParams.team_slug}
         searchParams={resolvedSearchParams}
+        teamSlug={resolvedParams.team_slug}
       />
     </div>
   );

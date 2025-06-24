@@ -106,9 +106,9 @@ const projectPageRedirects = [
     source: `${projectRoute}/nebula/:path*`,
   },
   {
+    source: `${projectRoute}/connect/analytics`,
     destination: `${projectRoute}`,
     permanent: false,
-    source: `${projectRoute}/connect/analytics`,
   },
 ];
 

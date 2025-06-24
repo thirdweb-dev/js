@@ -24,7 +24,7 @@ export function WebhookSelector({
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-sm font-medium">Webhook Filter</label>
+      <div className="text-sm font-medium">Webhook Filter</div>
       <Select
         onValueChange={(value) => {
           const params = new URLSearchParams(searchParams);

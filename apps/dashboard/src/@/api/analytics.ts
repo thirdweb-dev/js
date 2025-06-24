@@ -24,9 +24,7 @@ async function fetchAnalytics(
   input: string | URL,
   init?: RequestInit,
 ): Promise<Response> {
-  // const token = await getAuthToken();
-  // DEBUG
-  const token = 'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIweDAxNjc1N2REZjJBYjZhOTk4YTQ3MjlBODBhMDkxMzA4ZDkwNTlFMTciLCJzdWIiOiIweGE1Qjg0OTJEODIyM0QyNTVkQjI3OUM3YzNlYmRBMzRCZTVlQzlEODUiLCJhdWQiOiJ0aGlyZHdlYi5jb20iLCJleHAiOjE3NTA4NjU2NzQsIm5iZiI6MTc1MDYwNTg3MiwiaWF0IjoxNzUwNjA2NDc0LCJqdGkiOiIzNmNjOGExYjBhYWY5ODA4ZWEyMjIyOTc4MzI5NDEwMzlkNDA2OTE0ZTJhN2U3YTQxYmM4ZDc1MWJiOTAzODk4IiwiY3R4Ijp7fX0.MHgzZGE4ZGUyM2M1Y2U2ZGExNWY0MTM4OGM3YjFjM2ZhNWNjODlkMDM3M2Q0ZjJkZDg0NGNmZWM1OTJlNTY4MDY3NGY2MmJkNWY1ZWIxMWIyYWRkNmRkN2Q3NmFlNWJjNTgxNWYzNTYwNDk3NzVkYjNiZGJlNTVjNDQyNDFjMTYzZTFi';
+  const token = await getAuthToken();
   if (!token) {
     throw new Error("You are not authorized to perform this action");
   }

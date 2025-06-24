@@ -2,10 +2,11 @@ import type { Preview } from "@storybook/nextjs";
 import "../src/global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MoonIcon, SunIcon } from "lucide-react";
-import { Inter as interFont } from "next/font/google";
 import { ThemeProvider, useTheme } from "next-themes";
+import { Inter as interFont } from "next/font/google";
 // biome-ignore lint/style/useImportType: <explanation>
-import React, { useEffect } from "react";
+import React from "react";
+import { useEffect } from "react";
 import { Toaster } from "sonner";
 import { Button } from "../src/@/components/ui/button";
 
@@ -17,33 +18,45 @@ const fontSans = interFont({
 });
 
 const customViewports = {
-  sm: {
-    // Larger phones (iphone 15 plus / 15 pro max)
-    name: "iPhone Plus",
-    styles: {
-      height: "932px",
-      width: "430px",
-    },
-  },
   xs: {
     // Regular sized phones (iphone 15 / 15 pro)
     name: "iPhone",
     styles: {
-      height: "844px",
       width: "390px",
+      height: "844px",
+    },
+  },
+  sm: {
+    // Larger phones (iphone 15 plus / 15 pro max)
+    name: "iPhone Plus",
+    styles: {
+      width: "430px",
+      height: "932px",
     },
   },
 };
 
 const preview: Preview = {
+  parameters: {
+    viewport: {
+      viewports: customViewports,
+    },
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+  },
+
   decorators: [
     (Story) => {
       return (
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
           disableTransitionOnChange
           enableSystem={false}
+          defaultTheme="dark"
         >
           <StoryLayout>
             <Story />
@@ -52,22 +65,13 @@ const preview: Preview = {
       );
     },
   ],
-  parameters: {
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
-      },
-    },
-    viewport: {
-      viewports: customViewports,
-    },
-  },
 };
 
 export default preview;
 
-function StoryLayout(props: { children: React.ReactNode }) {
+function StoryLayout(props: {
+  children: React.ReactNode;
+}) {
   const { setTheme, theme } = useTheme();
 
   useEffect(() => {
@@ -79,10 +83,10 @@ function StoryLayout(props: { children: React.ReactNode }) {
       <div className="flex min-h-dvh min-w-0 flex-col bg-background text-foreground">
         <div className="fixed right-0 bottom-0 z-50 flex justify-end gap-2 p-4">
           <Button
-            className="h-auto w-auto shrink-0 rounded-full p-2"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             size="sm"
             variant="outline"
+            className="h-auto w-auto shrink-0 rounded-full p-2"
           >
             {theme === "dark" ? (
               <MoonIcon className="size-4" />

@@ -32,9 +32,9 @@ export function StatusCodesChart({ data, isPending }: StatusCodesChartProps) {
         title: "Status Codes",
       }}
       hideLabel={false}
+      isPending={isPending}
       showLegend={true}
       variant="stacked"
-      isPending={isPending}
     />
   );
 }

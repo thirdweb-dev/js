@@ -9,15 +9,13 @@ function getAbsolutePath(value: string): string {
   return dirname(require.resolve(join(value, "package.json")));
 }
 const config: StorybookConfig = {
+  stories: ["../src/**/*.stories.tsx"],
   addons: [
     getAbsolutePath("@storybook/addon-onboarding"),
     getAbsolutePath("@storybook/addon-links"),
     getAbsolutePath("@chromatic-com/storybook"),
     getAbsolutePath("@storybook/addon-docs"),
   ],
-  features: {
-    experimentalRSC: true,
-  },
   framework: {
     name: getAbsolutePath("@storybook/nextjs"),
     options: {},
@@ -28,6 +26,8 @@ const config: StorybookConfig = {
     },
   },
   staticDirs: ["../public"],
-  stories: ["../src/**/*.stories.tsx"],
+  features: {
+    experimentalRSC: true,
+  },
 };
 export default config;
