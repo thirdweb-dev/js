@@ -43,7 +43,9 @@ export default async function Layout(props: {
       <DeployedContractsPageHeader
         client={client}
         projectId={project.id}
+        projectSlug={params.project_slug}
         teamId={team.id}
+        teamSlug={params.team_slug}
       />
       <TabPathLinks
         links={[

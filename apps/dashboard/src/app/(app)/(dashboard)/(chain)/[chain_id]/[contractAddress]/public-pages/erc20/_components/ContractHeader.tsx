@@ -1,4 +1,4 @@
-import { ExternalLinkIcon, GlobeIcon } from "lucide-react";
+import { ExternalLinkIcon, GlobeIcon, Settings2Icon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
@@ -111,6 +111,13 @@ export function ContractHeaderUI(props: {
                 )}
               </Link>
 
+              <CopyAddressButton
+                address={props.clientContract.address}
+                className="rounded-full bg-card w-[30px] h-[30px] p-0 [&>span]:hidden [&>svg]:text-foreground"
+                copyIconPosition="left"
+                variant="outline"
+              />
+
               {socialUrls
                 .toSorted((a, b) => {
                   const aIcon = platformToIcons[a.name.toLowerCase()];
@@ -140,12 +147,29 @@ export function ContractHeaderUI(props: {
 
         {/* bottom row */}
         <div className="flex flex-row flex-wrap items-center gap-2">
-          <CopyAddressButton
-            address={props.clientContract.address}
-            className="rounded-full bg-card px-2.5 py-1.5 text-xs"
-            copyIconPosition="left"
-            variant="outline"
-          />
+          <ToolTipLabel
+            contentClassName="max-w-[300px]"
+            label={
+              <>
+                View this contract in thirdweb dashboard to view contract
+                management interface
+              </>
+            }
+          >
+            <Button
+              asChild
+              className="rounded-full bg-card gap-1.5 text-xs py-1.5 px-2.5 h-auto"
+              size="sm"
+              variant="outline"
+            >
+              <Link
+                href={`/team/~/~/contract/${props.chainMetadata.slug}/${props.clientContract.address}`}
+              >
+                <Settings2Icon className="size-3.5 text-muted-foreground" />
+                Manage Contract
+              </Link>
+            </Button>
+          </ToolTipLabel>
 
           {explorersToShow?.map((validBlockExplorer) => (
             <BadgeLink
