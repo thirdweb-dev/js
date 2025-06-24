@@ -163,13 +163,13 @@ export declare namespace quote {
     client: ThirdwebClient;
     maxSteps?: number;
   } & (
-    | {
+      | {
         buyAmountWei: bigint;
       }
-    | {
+      | {
         amount: bigint;
       }
-  );
+    );
 
   type Result = Quote & {
     intent: {

@@ -1,6 +1,6 @@
-"use client";
 import { defineChain, type ThirdwebClient } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
+import { SectionTitle } from "./SectionTitle";
 import { BuyWidget } from "thirdweb/react";
 
 export function BuyFundsSection(props: {
@@ -9,11 +9,11 @@ export function BuyFundsSection(props: {
 }) {
   return (
     <section className="flex flex-col gap-4 items-center justify-center">
+      <SectionTitle title="Bridge" />
       <BuyWidget
-        amount="0.01"
-        // eslint-disable-next-line no-restricted-syntax
-        chain={defineChain(props.chain.chainId)}
         client={props.client}
+        chain={defineChain(props.chain.chainId)}
+        amount="0.01"
       />
     </section>
   );
