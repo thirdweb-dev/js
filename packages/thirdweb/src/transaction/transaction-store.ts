@@ -86,7 +86,9 @@ export async function getPastTransactions(options: {
   });
   return result.map((tx) => ({
     chainId:
-      typeof tx.chain_id === "string" ? Number(tx.chain_id) : tx.chain_id as number,
+      typeof tx.chain_id === "string"
+        ? Number(tx.chain_id)
+        : (tx.chain_id as number),
     receipt: {
       status: tx.status === 1 ? "success" : "failed",
       to: tx.to_address,
