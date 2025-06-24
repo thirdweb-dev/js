@@ -1,5 +1,11 @@
 # @thirdweb-dev/engine
 
+## 3.0.4
+
+### Patch Changes
+
+- [#7429](https://github.com/thirdweb-dev/js/pull/7429) [`ef2895f`](https://github.com/thirdweb-dev/js/commit/ef2895fa2c30b8b8b5250dadb05e3f5d125c9e4d) Thanks [@d4mr](https://github.com/d4mr)! - Support EOA Execution Options for Server Wallets
+
 ## 3.0.3
 
 ### Patch Changes
