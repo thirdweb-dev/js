@@ -1,8 +1,19 @@
-import { randomBytesHex } from "../../../utils/random.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
-import { CallSpecRequest, ConstraintRequest, SessionSpecRequest, TransferSpecRequest, UsageLimitRequest, type CallSpecInput, type TransferSpecInput } from "./types.js";
-import { isCreateSessionWithSigSupported, createSessionWithSig } from "../__generated__/MinimalAccount/write/createSessionWithSig.js";
+import {
+  createSessionWithSig,
+  isCreateSessionWithSigSupported,
+} from "../__generated__/MinimalAccount/write/createSessionWithSig.js";
+import {
+  type CallSpecInput,
+  CallSpecRequest,
+  ConstraintRequest,
+  SessionSpecRequest,
+  type TransferSpecInput,
+  TransferSpecRequest,
+  UsageLimitRequest,
+} from "./types.js";
 
 /**
  * @extension ERC7702
@@ -59,30 +70,50 @@ export type CreateSessionKeyOptions = {
 export function createSessionKey(
   options: BaseTransactionOptions<CreateSessionKeyOptions>,
 ) {
-  const { contract, account, sessionKeyAddress, durationInSeconds, grantFullPermissions, callPolicies, transferPolicies } = options;
+  const {
+    contract,
+    account,
+    sessionKeyAddress,
+    durationInSeconds,
+    grantFullPermissions,
+    callPolicies,
+    transferPolicies,
+  } = options;
 
   return createSessionWithSig({
     async asyncParams() {
       const req = {
-        signer: sessionKeyAddress,
-        isWildcard: grantFullPermissions ?? true,
-        expiresAt: BigInt(Math.floor(Date.now() / 1000) + durationInSeconds),
-        callPolicies: (callPolicies || []).map(policy => ({
-          target: policy.target,
-          selector: policy.selector,
-          maxValuePerUse: policy.maxValuePerUse || BigInt(0),
-          valueLimit: policy.valueLimit || { limitType: 0, limit: BigInt(0), period: BigInt(0) },
-          constraints: (policy.constraints || []).map(constraint => ({
+        callPolicies: (callPolicies || []).map((policy) => ({
+          constraints: (policy.constraints || []).map((constraint) => ({
             condition: constraint.condition,
             index: constraint.index || BigInt(0),
+            limit: constraint.limit || {
+              limit: BigInt(0),
+              limitType: 0,
+              period: BigInt(0),
+            },
             refValue: constraint.refValue || "0x",
-            limit: constraint.limit || { limitType: 0, limit: BigInt(0), period: BigInt(0) }
-          }))
-        })),
-        transferPolicies: (transferPolicies || []).map(policy => ({
-          target: policy.target,
+          })),
           maxValuePerUse: policy.maxValuePerUse || BigInt(0),
-          valueLimit: policy.valueLimit || { limitType: 0, limit: BigInt(0), period: BigInt(0) }
+          selector: policy.selector,
+          target: policy.target,
+          valueLimit: policy.valueLimit || {
+            limit: BigInt(0),
+            limitType: 0,
+            period: BigInt(0),
+          },
+        })),
+        expiresAt: BigInt(Math.floor(Date.now() / 1000) + durationInSeconds),
+        isWildcard: grantFullPermissions ?? true,
+        signer: sessionKeyAddress,
+        transferPolicies: (transferPolicies || []).map((policy) => ({
+          maxValuePerUse: policy.maxValuePerUse || BigInt(0),
+          target: policy.target,
+          valueLimit: policy.valueLimit || {
+            limit: BigInt(0),
+            limitType: 0,
+            period: BigInt(0),
+          },
         })),
         uid: await randomBytesHex(),
       };
@@ -97,9 +128,9 @@ export function createSessionKey(
         message: req,
         primaryType: "SessionSpec",
         types: {
-          SessionSpec: SessionSpecRequest,
           CallSpec: CallSpecRequest,
           Constraint: ConstraintRequest,
+          SessionSpec: SessionSpecRequest,
           TransferSpec: TransferSpecRequest,
           UsageLimit: UsageLimitRequest,
         },
