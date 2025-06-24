@@ -356,9 +356,9 @@ export function PayEmbed(props: PayEmbedProps) {
         amount={props.payOptions.prefillBuy.amount || "0.01"}
         chain={props.payOptions.prefillBuy.chain}
         client={props.client}
+        onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
         theme={theme}
         title={metadata?.name || "Buy"}
-        onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
         tokenAddress={
           props.payOptions.prefillBuy.token?.address as Address | undefined
         }
@@ -375,8 +375,8 @@ export function PayEmbed(props: PayEmbedProps) {
         description={metadata?.description}
         image={metadata?.image}
         name={metadata?.name || "Checkout"}
-        seller={props.payOptions.paymentInfo.sellerAddress as Address}
         onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
+        seller={props.payOptions.paymentInfo.sellerAddress as Address}
         theme={theme}
         tokenAddress={
           props.payOptions.paymentInfo.token?.address as Address | undefined
@@ -391,8 +391,8 @@ export function PayEmbed(props: PayEmbedProps) {
         client={props.client}
         description={metadata?.description}
         image={metadata?.image}
-        theme={theme}
         onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
+        theme={theme}
         title={metadata?.name}
         transaction={props.payOptions.transaction}
       />
@@ -513,10 +513,10 @@ export type PayEmbedConnectOptions = {
    * ```
    */
   autoConnect?:
-  | {
-    timeout: number;
-  }
-  | boolean;
+    | {
+        timeout: number;
+      }
+    | boolean;
 
   /**
    * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.
