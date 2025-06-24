@@ -186,7 +186,8 @@ export type WriteContractData = {
     executionOptions:
       | AutoExecutionOptions
       | AaExecutionOptions
-      | AaZksyncExecutionOptions;
+      | AaZksyncExecutionOptions
+      | EoaExecutionOptions;
     params: Array<{
       /**
        * The function to call on the contract
@@ -325,7 +326,8 @@ export type SendTransactionData = {
     executionOptions:
       | AutoExecutionOptions
       | AaExecutionOptions
-      | AaZksyncExecutionOptions;
+      | AaZksyncExecutionOptions
+      | EoaExecutionOptions;
     params: Array<{
       /**
        * The address of the contract to send the transaction to
