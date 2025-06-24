@@ -1,5 +1,18 @@
 # thirdweb
 
+## 5.104.1
+
+### Patch Changes
+
+- [#7413](https://github.com/thirdweb-dev/js/pull/7413) [`3107ba1`](https://github.com/thirdweb-dev/js/commit/3107ba1c3753352cac2f9a3d16dcdccd522b7659) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle non urls for metadata images in payment widgets
+
+- [#7429](https://github.com/thirdweb-dev/js/pull/7429) [`ef2895f`](https://github.com/thirdweb-dev/js/commit/ef2895fa2c30b8b8b5250dadb05e3f5d125c9e4d) Thanks [@d4mr](https://github.com/d4mr)! - Support EOA Execution Options for Server Wallets
+
+- [#7425](https://github.com/thirdweb-dev/js/pull/7425) [`c26be2d`](https://github.com/thirdweb-dev/js/commit/c26be2d958283fb77d7689e31356b1cee7c6ff2a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix wallet row alignement in wide connect modal
+
+- Updated dependencies [[`ef2895f`](https://github.com/thirdweb-dev/js/commit/ef2895fa2c30b8b8b5250dadb05e3f5d125c9e4d)]:
+  - @thirdweb-dev/engine@3.0.4
+
 ## 5.104.0
 
 ### Minor Changes
