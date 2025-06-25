@@ -1,6 +1,9 @@
 "use client";
 import { CheckIcon } from "@radix-ui/react-icons";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { trackPayEvent } from "../../../../../analytics/track/pay.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { WindowAdapter } from "../../../../core/adapters/WindowAdapter.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { iconSize } from "../../../../core/design-system/index.js";
@@ -37,6 +40,8 @@ export interface SuccessScreenProps {
    * Window adapter for opening URLs
    */
   windowAdapter: WindowAdapter;
+
+  client: ThirdwebClient;
 }
 
 type ViewState = "success" | "detail";
@@ -47,9 +52,26 @@ export function SuccessScreen({
   completedStatuses,
   onDone,
   windowAdapter,
+  client,
 }: SuccessScreenProps) {
   const theme = useCustomTheme();
   const [viewState, setViewState] = useState<ViewState>("success");
+
+  useQuery({
+    queryFn: () => {
+      if (preparedQuote.type === "buy" || preparedQuote.type === "sell") {
+        trackPayEvent({
+          chainId: preparedQuote.intent.originChainId,
+          client: client,
+          event: "ub:ui:success_screen",
+          fromToken: preparedQuote.intent.originTokenAddress,
+          toChainId: preparedQuote.intent.destinationChainId,
+          toToken: preparedQuote.intent.destinationTokenAddress,
+        });
+      }
+    },
+    queryKey: ["success_screen", preparedQuote.type],
+  });
 
   if (viewState === "detail") {
     return (

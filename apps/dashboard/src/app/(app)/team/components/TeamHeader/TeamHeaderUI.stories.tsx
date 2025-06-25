@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
+import { BoxIcon } from "lucide-react";
 import { ThirdwebProvider } from "thirdweb/react";
 import type { Project } from "@/api/projects";
 import type { Team } from "@/api/team";
@@ -119,6 +120,19 @@ function Variants(props: { type: "mobile" | "desktop" }) {
             type={props.type}
           />
         </BadgeContainer>
+
+        <BadgeContainer label="Pro Plan - active subpage">
+          <Variant
+            currentProject={proTeam.projects[0]}
+            currentProjectSubpath={{
+              href: "/team/project/foo",
+              icon: <BoxIcon />,
+              label: "Foo",
+            }}
+            team={proTeam.team}
+            type={props.type}
+          />
+        </BadgeContainer>
       </div>
     </ThirdwebProvider>
   );
@@ -132,6 +146,11 @@ function Variant(props: {
   team: Team;
   type: "mobile" | "desktop";
   currentProject?: Project;
+  currentProjectSubpath?: {
+    label: string;
+    href: string;
+    icon: React.ReactNode;
+  };
 }) {
   const Comp =
     props.type === "mobile" ? TeamHeaderMobileUI : TeamHeaderDesktopUI;
@@ -149,6 +168,7 @@ function Variant(props: {
         createProject={() => {}}
         createTeam={() => {}}
         currentProject={undefined}
+        currentProjectSubpath={props.currentProjectSubpath}
         currentTeam={props.team}
         logout={() => {}}
         teamsAndProjects={teamsAndProjectsStub}
