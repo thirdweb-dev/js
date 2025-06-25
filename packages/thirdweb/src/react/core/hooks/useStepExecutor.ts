@@ -27,9 +27,9 @@ export type CompletedStatusResult =
   | ({ type: "sell" } & Extract<Status, { status: "COMPLETED" }>)
   | ({ type: "transfer" } & Extract<Status, { status: "COMPLETED" }>)
   | ({ type: "onramp" } & Extract<
-    OnrampStatus.Result,
-    { status: "COMPLETED" }
-  >);
+      OnrampStatus.Result,
+      { status: "COMPLETED" }
+    >);
 
 /**
  * Options for the step executor hook

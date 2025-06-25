@@ -1,4 +1,5 @@
 import type { Address as ox__Address } from "ox";
+import { defineChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
@@ -6,7 +7,6 @@ import { stringify } from "../utils/json.js";
 import { ApiError } from "./types/Errors.js";
 import type { RouteStep } from "./types/Route.js";
 import type { Token } from "./types/Token.js";
-import { defineChain } from "../chains/utils.js";
 
 // export status within the Onramp module
 export { status } from "./OnrampStatus.js";
