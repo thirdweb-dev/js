@@ -6,6 +6,7 @@ import { stringify } from "../utils/json.js";
 import { ApiError } from "./types/Errors.js";
 import type { RouteStep } from "./types/Route.js";
 import type { Token } from "./types/Token.js";
+import { defineChain } from "../chains/utils.js";
 
 // export status within the Onramp module
 export { status } from "./OnrampStatus.js";
@@ -237,6 +238,8 @@ export async function prepare(
     originAmount: BigInt(step.originAmount),
     transactions: step.transactions.map((tx) => ({
       ...tx,
+      chain: defineChain(tx.chainId),
+      client,
       value: tx.value ? BigInt(tx.value) : undefined,
     })),
   }));
