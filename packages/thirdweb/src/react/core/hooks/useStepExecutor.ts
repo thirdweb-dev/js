@@ -237,7 +237,7 @@ export function useStepExecutor(
       if (tx.action === "approval" || tx.action === "fee") {
         // don't poll status for approval transactions, just wait for confirmation
         await waitForReceipt(result);
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Add an extra second delay for RPC to catch up to new state
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // Add an extra 2 second delay for RPC to catch up to new state
         return;
       }
 
