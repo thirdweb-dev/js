@@ -4,9 +4,11 @@ import type {
 	Client,
 	Options as ClientOptions,
 	TDataShape,
-} from "@hey-api/client-fetch";
+} from "./client/index.js";
 import { client as _heyApiClient } from "./client.gen.js";
 import type {
+	CancelTransactionData,
+	CancelTransactionResponses,
 	CreateAccountData,
 	CreateAccountResponses,
 	EncodeContractData,
@@ -30,14 +32,14 @@ import type {
 	SearchActivityLogsResponses,
 	SearchTransactionsData,
 	SearchTransactionsResponses,
+	SendTransactionData,
+	SendTransactionResponses,
 	SignMessageData,
 	SignMessageResponses,
 	SignTypedDataData,
 	SignTypedDataResponses,
 	WriteContractData,
 	WriteContractResponses,
-	WriteTransactionData,
-	WriteTransactionResponses,
 } from "./types.gen.js";
 
 export type Options<
@@ -55,6 +57,191 @@ export type Options<
 	 * used to access values that aren't defined as part of the SDK function.
 	 */
 	meta?: Record<string, unknown>;
+};
+
+/**
+ * Write Contract
+ * Call a contract function with a transaction
+ */
+export const writeContract = <ThrowOnError extends boolean = false>(
+	options: Options<WriteContractData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<
+		WriteContractResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/write/contract",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options.headers,
+		},
+	});
+};
+
+/**
+ * Write Transaction
+ * Execute raw transactions
+ */
+export const sendTransaction = <ThrowOnError extends boolean = false>(
+	options: Options<SendTransactionData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<
+		SendTransactionResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/write/transaction",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options.headers,
+		},
+	});
+};
+
+/**
+ * Sign Message
+ * Sign messages using either EOA or Smart Account
+ */
+export const signMessage = <ThrowOnError extends boolean = false>(
+	options: Options<SignMessageData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<
+		SignMessageResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/sign/message",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options.headers,
+		},
+	});
+};
+
+/**
+ * Sign Typed Data
+ * Sign EIP-712 typed data using either EOA or Smart Account
+ */
+export const signTypedData = <ThrowOnError extends boolean = false>(
+	options: Options<SignTypedDataData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<
+		SignTypedDataResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/sign/typed-data",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options.headers,
+		},
+	});
+};
+
+/**
+ * Read Contract
+ * Read from multiple smart contracts using multicall
+ */
+export const readContract = <ThrowOnError extends boolean = false>(
+	options: Options<ReadContractData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<
+		ReadContractResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/read/contract",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options.headers,
+		},
+	});
+};
+
+/**
+ * Encode Contract
+ * Encode contract function calls without execution
+ */
+export const encodeContract = <ThrowOnError extends boolean = false>(
+	options: Options<EncodeContractData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<
+		EncodeContractResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/encode/contract",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options.headers,
+		},
+	});
+};
+
+/**
+ * Cancel Transaction
+ * Attempt to cancel a queued transaction. Transactions that have been sent and are waiting for mine cannot be cancelled.
+ */
+export const cancelTransaction = <ThrowOnError extends boolean = false>(
+	options: Options<CancelTransactionData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<
+		CancelTransactionResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/transactions/{id}/cancel",
+		...options,
+	});
 };
 
 /**
@@ -259,168 +446,6 @@ export const searchActivityLogs = <ThrowOnError extends boolean = false>(
 		headers: {
 			"Content-Type": "application/json",
 			...options?.headers,
-		},
-	});
-};
-
-/**
- * Write Contract
- * Call a contract function with a transaction
- */
-export const writeContract = <ThrowOnError extends boolean = false>(
-	options: Options<WriteContractData, ThrowOnError>,
-) => {
-	return (options.client ?? _heyApiClient).post<
-		WriteContractResponses,
-		unknown,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-		],
-		url: "/v1/write/contract",
-		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options.headers,
-		},
-	});
-};
-
-/**
- * Write Transaction
- * Execute raw transactions
- */
-export const writeTransaction = <ThrowOnError extends boolean = false>(
-	options: Options<WriteTransactionData, ThrowOnError>,
-) => {
-	return (options.client ?? _heyApiClient).post<
-		WriteTransactionResponses,
-		unknown,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-		],
-		url: "/v1/write/transaction",
-		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options.headers,
-		},
-	});
-};
-
-/**
- * Sign Message
- * Sign messages using either EOA or Smart Account
- */
-export const signMessage = <ThrowOnError extends boolean = false>(
-	options: Options<SignMessageData, ThrowOnError>,
-) => {
-	return (options.client ?? _heyApiClient).post<
-		SignMessageResponses,
-		unknown,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-		],
-		url: "/v1/sign/message",
-		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options.headers,
-		},
-	});
-};
-
-/**
- * Sign Typed Data
- * Sign EIP-712 typed data using either EOA or Smart Account
- */
-export const signTypedData = <ThrowOnError extends boolean = false>(
-	options: Options<SignTypedDataData, ThrowOnError>,
-) => {
-	return (options.client ?? _heyApiClient).post<
-		SignTypedDataResponses,
-		unknown,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-		],
-		url: "/v1/sign/typed-data",
-		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options.headers,
-		},
-	});
-};
-
-/**
- * Read Contract
- * Read from multiple smart contracts using multicall
- */
-export const readContract = <ThrowOnError extends boolean = false>(
-	options: Options<ReadContractData, ThrowOnError>,
-) => {
-	return (options.client ?? _heyApiClient).post<
-		ReadContractResponses,
-		unknown,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-		],
-		url: "/v1/read/contract",
-		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options.headers,
-		},
-	});
-};
-
-/**
- * Encode Contract
- * Encode contract function calls without execution
- */
-export const encodeContract = <ThrowOnError extends boolean = false>(
-	options: Options<EncodeContractData, ThrowOnError>,
-) => {
-	return (options.client ?? _heyApiClient).post<
-		EncodeContractResponses,
-		unknown,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-		],
-		url: "/v1/encode/contract",
-		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options.headers,
 		},
 	});
 };

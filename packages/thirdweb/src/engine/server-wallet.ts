@@ -1,8 +1,10 @@
 import {
-  type ExecutionOptions,
+  type ExecutionOptions as ExecutionOptionsWithChainId,
+  type SigningOptions,
+  type SpecificExecutionOptions,
+  sendTransaction,
   signMessage,
   signTypedData,
-  writeTransaction,
 } from "@thirdweb-dev/engine";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
@@ -19,6 +21,8 @@ import type {
   SendTransactionOption,
 } from "../wallets/interfaces/wallet.js";
 import { waitForTransactionHash } from "./wait-for-tx-hash.js";
+
+type ExecutionOptions = SpecificExecutionOptions;
 
 /**
  * Options for creating an server wallet.
@@ -43,7 +47,7 @@ export type ServerWalletOptions = {
   /**
    * Optional custom execution options to use for sending transactions and signing data.
    */
-  executionOptions?: Omit<ExecutionOptions, "chainId">;
+  executionOptions?: ExecutionOptions;
 };
 
 export type ServerWallet = Account & {
@@ -145,22 +149,22 @@ export type ServerWallet = Account & {
 export function serverWallet(options: ServerWalletOptions): ServerWallet {
   const { client, vaultAccessToken, address, chain, executionOptions } =
     options;
+
   const headers: HeadersInit = {
     "x-vault-access-token": vaultAccessToken,
   };
 
-  const getExecutionOptions = (chainId: number): ExecutionOptions => {
-    const options: ExecutionOptions | undefined = executionOptions as
-      | ExecutionOptions
-      | undefined;
-    if (!options) {
+  const getExecutionOptionsWithChainId = (
+    chainId: number,
+  ): ExecutionOptionsWithChainId => {
+    if (!executionOptions) {
       return {
         chainId,
         from: address,
         type: "auto",
       };
     }
-    switch (options.type) {
+    switch (executionOptions.type) {
       case "auto":
         return {
           chainId,
@@ -169,10 +173,62 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
         };
       case "ERC4337":
         return {
-          ...options,
+          ...executionOptions,
           chainId,
           type: "ERC4337",
         };
+    }
+  };
+
+  const getSigningOptions = (chainId: number | undefined): SigningOptions => {
+    // if no chainId passed specifically for this signature
+    // we HAVE TO fallback to EOA signature
+    if (!chainId) {
+      return {
+        from: address,
+        type: "eoa",
+      };
+    }
+
+    // todo
+    // ServerWallet needs to have an async initialisation phase
+    // where it fetches details about the wallet from engine cloud
+    // engine cloud needs to provide an endpoint to "find" a wallet, by either smart account address or EOA address
+    // after "inrospection", server wallet always knows both the signer as well as smart account address
+    // regardless of what address was passed in
+    if (!executionOptions) {
+      // let's default to 4337
+      return {
+        chainId,
+        signerAddress: address,
+        type: "ERC4337",
+      };
+    }
+
+    switch (executionOptions.type) {
+      case "ERC4337": {
+        return {
+          chainId,
+          // smartAccountAddress: address,
+          signerAddress: address,
+          type: "ERC4337",
+        };
+      }
+
+      case "auto": {
+        return {
+          chainId,
+          // smartAccountAddress: address,
+          signerAddress: address,
+          type: "ERC4337",
+        };
+      }
+
+      // case "eoa": {
+      //   return {
+      //     chainId,
+      //     from: address,
+      //   }
     }
   };
 
@@ -194,7 +250,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
       }
     }
     const body = {
-      executionOptions: getExecutionOptions(chainId),
+      executionOptions: getExecutionOptionsWithChainId(chainId),
       params: transaction.map((t) => ({
         data: t.data || "0x",
         to: t.to ?? "", // TODO this should be allowed to be undefined
@@ -202,7 +258,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
       })),
     };
 
-    const result = await writeTransaction({
+    const result = await sendTransaction({
       baseUrl: getThirdwebBaseUrl("engineCloud"),
       body,
       bodySerializer: stringify,
@@ -214,7 +270,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
       throw new Error(`Error sending transaction: ${stringify(result.error)}`);
     }
 
-    const data = result.data?.[202];
+    const data = result.data?.result;
     if (!data) {
       throw new Error("No data returned from engine");
     }
@@ -317,8 +373,6 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
       if (!signingChainId) {
         throw new Error("Chain ID is required for signing messages");
       }
-      // FIXME
-      const options = executionOptions as ExecutionOptions | undefined;
       const signResult = await signMessage({
         baseUrl: getThirdwebBaseUrl("engineCloud"),
         body: {
@@ -328,24 +382,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
               message: engineMessage,
             },
           ],
-          // FIXME
-          signingOptions:
-            options?.type === "ERC4337"
-              ? {
-                  accountSalt: options.accountSalt,
-                  chainId: signingChainId,
-                  entrypointAddress: options.entrypointAddress,
-                  entrypointVersion: options.entrypointVersion,
-                  factoryAddress: options.factoryAddress,
-                  signerAddress: address,
-                  smartAccountAddress: options.smartAccountAddress,
-                  type: "smart_account",
-                }
-              : {
-                  chainId: signingChainId,
-                  from: address,
-                  type: "eoa",
-                },
+          signingOptions: getSigningOptions(signingChainId),
         },
         bodySerializer: stringify,
         fetch: getClientFetch(client),
@@ -358,8 +395,8 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
         );
       }
 
-      const signatureResult = signResult.data?.[200]?.result.results[0];
-      if (signatureResult?.success) {
+      const signatureResult = signResult.data?.result.results[0];
+      if (signatureResult && "result" in signatureResult) {
         return signatureResult.result.signature as Hex;
       }
 
@@ -373,30 +410,12 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
         throw new Error("Chain ID is required for signing messages");
       }
 
-      const options = executionOptions as ExecutionOptions;
       const signResult = await signTypedData({
         baseUrl: getThirdwebBaseUrl("engineCloud"),
         body: {
           // biome-ignore lint/suspicious/noExplicitAny: TODO: fix ts / hey-api type clash
           params: [typedData as any],
-          // FIXME
-          signOptions:
-            options?.type === "ERC4337"
-              ? {
-                  accountSalt: options.accountSalt,
-                  chainId: signingChainId,
-                  entrypointAddress: options.entrypointAddress,
-                  entrypointVersion: options.entrypointVersion,
-                  factoryAddress: options.factoryAddress,
-                  signerAddress: address,
-                  smartAccountAddress: options.smartAccountAddress,
-                  type: "smart_account",
-                }
-              : {
-                  chainId: signingChainId,
-                  from: address,
-                  type: "eoa",
-                },
+          signingOptions: getSigningOptions(signingChainId),
         },
         bodySerializer: stringify,
         fetch: getClientFetch(client),
@@ -409,8 +428,8 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
         );
       }
 
-      const signatureResult = signResult.data?.[200]?.result.results[0];
-      if (signatureResult?.success) {
+      const signatureResult = signResult.data?.result.results[0];
+      if (signatureResult && "result" in signatureResult) {
         return signatureResult.result.signature as Hex;
       }
 

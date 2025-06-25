@@ -47,7 +47,7 @@ export async function createServerWallet(params: CreateServerWalletArgs) {
     );
   }
 
-  const data = result.data?.[201]?.result;
+  const data = result.data?.result;
 
   if (!data) {
     throw new Error(`No server wallet created with label ${label}`);
