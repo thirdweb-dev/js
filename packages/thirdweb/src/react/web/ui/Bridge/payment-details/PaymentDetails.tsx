@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { trackPayEvent } from "../../../../../analytics/track/pay.js";
+import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { radius, spacing } from "../../../../core/design-system/index.js";
@@ -105,7 +106,10 @@ export function PaymentDetails({
   });
 
   const chainsQuery = useChainsQuery(
-    preparedQuote.steps.flatMap((s) => s.transactions.map((t) => t.chain)),
+    preparedQuote.steps.flatMap((s) => [
+      defineChain(s.originToken.chainId),
+      defineChain(s.destinationToken.chainId),
+    ]),
     10,
   );
   const chainsMetadata = useMemo(
