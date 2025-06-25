@@ -401,7 +401,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
       }
 
       throw new Error(
-        `Failed to sign message: ${signatureResult?.error || "Unknown error"}`,
+        `Failed to sign message: ${stringify(signatureResult?.error) || "Unknown error"}`,
       );
     },
     signTypedData: async (typedData) => {
@@ -434,7 +434,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
       }
 
       throw new Error(
-        `Failed to sign message: ${signatureResult?.error || "Unknown error"}`,
+        `Failed to sign message: ${stringify(signatureResult?.error) || "Unknown error"}`,
       );
     },
   };
