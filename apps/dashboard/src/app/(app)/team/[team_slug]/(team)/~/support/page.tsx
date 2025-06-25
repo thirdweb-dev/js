@@ -1,0 +1,27 @@
+import { getTeamBySlug } from "@/api/team";
+import { getSupportTicketsByTeam } from "@/api/support";
+import { notFound } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
+import SupportCasesClient from "./_components/SupportCasesClient";
+
+export default async function Page(props: {
+  params: Promise<{
+    team_slug: string;
+  }>;
+}) {
+  const params = await props.params;
+
+  const [team, token] = await Promise.all([
+    getTeamBySlug(params.team_slug),
+    getAuthToken(),
+  ]);
+
+  if (!team || !token) {
+    notFound();
+  }
+
+  // Fetch real support tickets for this team
+  const supportTickets = await getSupportTicketsByTeam(team.id);
+
+  return <SupportCasesClient tickets={supportTickets} />;
+}

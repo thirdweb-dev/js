@@ -98,6 +98,10 @@ export default async function TeamLayout(props: {
               name: "Settings",
               path: `/team/${params.team_slug}/~/settings`,
             },
+            {
+              path: `/team/${params.team_slug}/~/support`,
+              name: "Support",
+            },
           ]}
           tabContainerClassName="px-4 lg:px-6"
         />
