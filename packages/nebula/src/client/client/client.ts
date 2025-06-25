@@ -1,4 +1,4 @@
-import type { Client, Config, RequestOptions } from "./types.js";
+import type { Client, Config, RequestOptions } from "./types";
 import {
   buildUrl,
   createConfig,
@@ -7,7 +7,7 @@ import {
   mergeConfigs,
   mergeHeaders,
   setAuthParams,
-} from "./utils.js";
+} from "./utils";
 
 type ReqInit = Omit<RequestInit, "body" | "headers"> & {
   body?: any;

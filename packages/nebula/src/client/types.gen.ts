@@ -755,6 +755,58 @@ export type AgentToolDataAgent = {
 };
 
 /**
+ * AgentToolDataApi
+ */
+export type AgentToolDataApi = {
+  /**
+   * Type
+   */
+  type?: "api";
+  /**
+   * Url
+   */
+  url: string;
+  /**
+   * Method
+   */
+  method?: string;
+  /**
+   * Headers
+   */
+  headers?: {
+    [key: string]: string;
+  } | null;
+  /**
+   * Params
+   */
+  params?: {
+    [key: string]: unknown;
+  } | null;
+  /**
+   * Task Param
+   */
+  task_param: string;
+  /**
+   * Description
+   */
+  description: string;
+};
+
+/**
+ * AgentToolDataBuiltin
+ */
+export type AgentToolDataBuiltin = {
+  /**
+   * Type
+   */
+  type?: "builtin";
+  /**
+   * Agent Name
+   */
+  agent_name: string;
+};
+
+/**
  * AgentToolDataMcp
  */
 export type AgentToolDataMcp = {
@@ -766,9 +818,9 @@ export type AgentToolDataMcp = {
 };
 
 /**
- * AgentToolDescription
+ * AgentToolReference
  */
-export type AgentToolDescription = {
+export type AgentToolReference = {
   /**
    * Agent Id
    */
@@ -781,6 +833,10 @@ export type AgentToolDescription = {
    * Description
    */
   description: string;
+  /**
+   * Summary
+   */
+  summary?: string | null;
 };
 
 /**
@@ -807,8 +863,14 @@ export type AgentToolResponse = {
         type: "agent";
       } & AgentToolDataAgent)
     | ({
+        type: "builtin";
+      } & AgentToolDataBuiltin)
+    | ({
         type: "mcp";
-      } & AgentToolDataMcp);
+      } & AgentToolDataMcp)
+    | ({
+        type: "api";
+      } & AgentToolDataApi);
   /**
    * Created At
    */
@@ -1105,6 +1167,44 @@ export type AgentWalletResponse = {
 };
 
 /**
+ * ApiToolConfig
+ */
+export type ApiToolConfig = {
+  /**
+   * Url
+   */
+  url: string;
+  /**
+   * Method
+   */
+  method: string;
+  /**
+   * Headers
+   */
+  headers?: {
+    [key: string]: string;
+  } | null;
+  /**
+   * Params
+   */
+  params?: {
+    [key: string]: string;
+  } | null;
+  /**
+   * Task Param
+   */
+  task_param?: string | null;
+  /**
+   * Name
+   */
+  name?: string | null;
+  /**
+   * Description
+   */
+  description: string;
+};
+
+/**
  * BlockchainEntity
  * Base class for all blockchain entities tracked in memory.
  */
@@ -1129,6 +1229,16 @@ export type BlockchainEntity = {
    * Last Mentioned At
    */
   last_mentioned_at?: string;
+};
+
+/**
+ * BuiltinAgentReference
+ */
+export type BuiltinAgentReference = {
+  /**
+   * Agent Name
+   */
+  agent_name: string;
 };
 
 /**
@@ -1192,19 +1302,17 @@ export type ChatMessage = {
   /**
    * Content
    */
-  content:
-    | string
-    | Array<
-        | ({
-            type: "image";
-          } & ChatContentImage)
-        | ({
-            type: "text";
-          } & ChatContentText)
-        | ({
-            type: "transaction";
-          } & ChatContentTransaction)
-      >;
+  content: Array<
+    | ({
+        type: "image";
+      } & ChatContentImage)
+    | ({
+        type: "text";
+      } & ChatContentText)
+    | ({
+        type: "transaction";
+      } & ChatContentTransaction)
+  >;
 };
 
 /**
@@ -1435,11 +1543,19 @@ export type CompletionContextInput = {
   /**
    * Mcp Tools
    */
-  mcp_tools?: Array<McpTool> | null;
+  mcp_tools?: Array<McpToolConfig> | null;
   /**
    * Agent Tools
    */
-  agent_tools?: Array<AgentToolDescription> | null;
+  agent_tools?: Array<AgentToolReference> | null;
+  /**
+   * Builtin Agents
+   */
+  builtin_agents?: Array<BuiltinAgentReference> | null;
+  /**
+   * Api Tools
+   */
+  api_tools?: Array<ApiToolConfig> | null;
   /**
    * Deployed Contracts
    */
@@ -1481,6 +1597,32 @@ export type CompletionContextOutput = {
    * Prompts
    */
   prompts?: Array<ChatMessage>;
+  /**
+   * Mcp Tools
+   */
+  mcp_tools?: Array<McpToolConfig> | null;
+  /**
+   * Agent Tools
+   */
+  agent_tools?: Array<AgentToolReference> | null;
+  /**
+   * Builtin Agents
+   */
+  builtin_agents?: Array<BuiltinAgentReference> | null;
+  /**
+   * Api Tools
+   */
+  api_tools?: Array<ApiToolConfig> | null;
+  /**
+   * Deployed Contracts
+   */
+  deployed_contracts?: Array<ContractBase>;
+  /**
+   * Entities
+   */
+  entities?: {
+    [key: string]: BlockchainEntity;
+  };
 };
 
 /**
@@ -1911,8 +2053,14 @@ export type CreateAgentToolParams = {
         type: "agent";
       } & AgentToolDataAgent)
     | ({
+        type: "builtin";
+      } & AgentToolDataBuiltin)
+    | ({
         type: "mcp";
-      } & AgentToolDataMcp);
+      } & AgentToolDataMcp)
+    | ({
+        type: "api";
+      } & AgentToolDataApi);
   /**
    * Description
    */
@@ -2151,12 +2299,16 @@ export type McpConfig = {
   headers?: {
     [key: string]: unknown;
   } | null;
+  /**
+   * Transport
+   */
+  transport?: string;
 };
 
 /**
- * McpTool
+ * McpToolConfig
  */
-export type McpTool = {
+export type McpToolConfig = {
   /**
    * Url
    */
@@ -2167,7 +2319,24 @@ export type McpTool = {
   headers?: {
     [key: string]: string;
   } | null;
+  /**
+   * Transport
+   */
+  transport?: string;
+  /**
+   * Media Support
+   */
+  media_support?: Array<MediaOutputType> | null;
+  /**
+   * Auto Upload Media
+   */
+  auto_upload_media?: boolean;
 };
+
+/**
+ * MediaOutputType
+ */
+export type MediaOutputType = "text" | "image" | "audio" | "json" | "binary";
 
 /**
  * Model
@@ -2606,6 +2775,14 @@ export type UpdateAgentHandlerParams = {
    * Prompts
    */
   prompts?: Array<ChatMessage> | null;
+  /**
+   * Triggers
+   */
+  triggers?: Array<CreateAgentTriggerParams> | null;
+  /**
+   * Tools
+   */
+  tools?: Array<CreateAgentToolParams> | null;
 };
 
 /**
@@ -2625,8 +2802,14 @@ export type UpdateAgentToolParams = {
             type: "agent";
           } & AgentToolDataAgent)
         | ({
+            type: "builtin";
+          } & AgentToolDataBuiltin)
+        | ({
             type: "mcp";
           } & AgentToolDataMcp)
+        | ({
+            type: "api";
+          } & AgentToolDataApi)
       )
     | null;
   /**
