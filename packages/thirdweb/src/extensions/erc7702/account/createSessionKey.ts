@@ -26,7 +26,7 @@ export type CreateSessionKeyOptions = {
   /**
    * The address to add as a session key.
    */
-  sessionKeyAddress: `0x${string}`;
+  sessionKeyAddress: string;
   /**
    * How long the session key should be valid for, in seconds.
    */
@@ -89,9 +89,13 @@ export function createSessionKey(
       const req = {
         callPolicies: (callPolicies || []).map((policy) => ({
           constraints: (policy.constraints || []).map((constraint) => ({
-            condition: constraint.condition,
+            condition: Number(constraint.condition),
             index: constraint.index || BigInt(0),
-            limit: constraint.limit || {
+            limit: constraint.limit ? {
+              limit: constraint.limit.limit,
+              limitType: Number(constraint.limit.limitType),
+              period: constraint.limit.period,
+            } : {
               limit: BigInt(0),
               limitType: 0,
               period: BigInt(0),
@@ -101,7 +105,11 @@ export function createSessionKey(
           maxValuePerUse: policy.maxValuePerUse || BigInt(0),
           selector: policy.selector,
           target: policy.target,
-          valueLimit: policy.valueLimit || {
+          valueLimit: policy.valueLimit ? {
+            limit: policy.valueLimit.limit,
+            limitType: Number(policy.valueLimit.limitType),
+            period: policy.valueLimit.period,
+          } : {
             limit: BigInt(0),
             limitType: 0,
             period: BigInt(0),
@@ -113,7 +121,11 @@ export function createSessionKey(
         transferPolicies: (transferPolicies || []).map((policy) => ({
           maxValuePerUse: policy.maxValuePerUse || BigInt(0),
           target: policy.target,
-          valueLimit: policy.valueLimit || {
+          valueLimit: policy.valueLimit ? {
+            limit: policy.valueLimit.limit,
+            limitType: Number(policy.valueLimit.limitType),
+            period: policy.valueLimit.period,
+          } : {
             limit: BigInt(0),
             limitType: 0,
             period: BigInt(0),

@@ -27,3 +27,10 @@ export {
   unlinkProfile,
 } from "../../wallets/in-app/web/lib/auth/index.js";
 export { hasStoredPasskey } from "../../wallets/in-app/web/lib/auth/passkeys.js";
+
+//ACCOUNT
+export {
+  type CreateSessionKeyOptions,
+  createSessionKey,
+  isCreateSessionKeySupported,
+} from "../../extensions/erc7702/account/createSessionKey.js";

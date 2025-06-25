@@ -1,17 +1,37 @@
 /* ────────────────────────────────
+   Enums
+   ──────────────────────────────── */
+
+export enum LimitType {
+  Unlimited = 0,
+  Lifetime = 1,
+  Allowance = 2
+}
+
+export enum Condition {
+  Unconstrained = 0,
+  Equal = 1,
+  Greater = 2,
+  Less = 3,
+  GreaterOrEqual = 4,
+  LessOrEqual = 5,
+  NotEqual = 6
+}
+
+/* ────────────────────────────────
    Input types
    ──────────────────────────────── */
 
 /* ---------- UsageLimit ---------- */
 interface UsageLimitInput {
-  limitType: number;
+  limitType: LimitType;
   limit: bigint;
   period: bigint;
 }
 
 /* ---------- Constraint ---------- */
 interface ConstraintInput {
-  condition: number;
+  condition: Condition;
   index: bigint;
   refValue: `0x${string}`;
   limit?: UsageLimitInput;

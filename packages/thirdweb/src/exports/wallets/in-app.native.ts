@@ -23,3 +23,10 @@ export {
 } from "../../wallets/in-app/native/auth/index.js";
 export { hasStoredPasskey } from "../../wallets/in-app/native/auth/passkeys.js";
 export { inAppWallet } from "../../wallets/in-app/native/in-app.js";
+
+//ACCOUNT
+export {
+  type CreateSessionKeyOptions,
+  createSessionKey,
+  isCreateSessionKeySupported,
+} from "../../extensions/erc7702/account/createSessionKey.js";
