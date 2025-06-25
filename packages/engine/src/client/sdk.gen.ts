@@ -4,35 +4,37 @@ import type {
   Client,
   Options as ClientOptions,
   TDataShape,
-} from "@hey-api/client-fetch";
+} from "./client/index.js";
 import { client as _heyApiClient } from "./client.gen.js";
 import type {
   CreateAccountData,
-  CreateAccountResponse,
+  CreateAccountResponses,
   EncodeFunctionDataData,
-  EncodeFunctionDataResponse,
+  EncodeFunctionDataResponses,
   GetNativeBalanceData,
-  GetNativeBalanceResponse,
+  GetNativeBalanceErrors,
+  GetNativeBalanceResponses,
   GetTransactionAnalyticsData,
-  GetTransactionAnalyticsResponse,
+  GetTransactionAnalyticsResponses,
   GetTransactionAnalyticsSummaryData,
-  GetTransactionAnalyticsSummaryResponse,
+  GetTransactionAnalyticsSummaryErrors,
+  GetTransactionAnalyticsSummaryResponses,
   ListAccountsData,
-  ListAccountsResponse,
+  ListAccountsResponses,
   ReadContractData,
-  ReadContractResponse,
+  ReadContractResponses,
   SearchTransactionsData,
-  SearchTransactionsResponse,
+  SearchTransactionsResponses,
   SendTransactionData,
-  SendTransactionResponse,
+  SendTransactionResponses,
   SignMessageData,
-  SignMessageResponse,
+  SignMessageResponses,
   SignTransactionData,
-  SignTransactionResponse,
+  SignTransactionResponses,
   SignTypedDataData,
-  SignTypedDataResponse,
+  SignTypedDataResponses,
   WriteContractData,
-  WriteContractResponse,
+  WriteContractResponses,
 } from "./types.gen.js";
 
 export type Options<
@@ -60,7 +62,7 @@ export const listAccounts = <ThrowOnError extends boolean = false>(
   options?: Options<ListAccountsData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    ListAccountsResponse,
+    ListAccountsResponses,
     unknown,
     ThrowOnError
   >({
@@ -83,7 +85,7 @@ export const createAccount = <ThrowOnError extends boolean = false>(
   options?: Options<CreateAccountData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    CreateAccountResponse,
+    CreateAccountResponses,
     unknown,
     ThrowOnError
   >({
@@ -110,7 +112,7 @@ export const writeContract = <ThrowOnError extends boolean = false>(
   options?: Options<WriteContractData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    WriteContractResponse,
+    WriteContractResponses,
     unknown,
     ThrowOnError
   >({
@@ -137,7 +139,7 @@ export const sendTransaction = <ThrowOnError extends boolean = false>(
   options?: Options<SendTransactionData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    SendTransactionResponse,
+    SendTransactionResponses,
     unknown,
     ThrowOnError
   >({
@@ -164,7 +166,7 @@ export const signTransaction = <ThrowOnError extends boolean = false>(
   options?: Options<SignTransactionData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    SignTransactionResponse,
+    SignTransactionResponses,
     unknown,
     ThrowOnError
   >({
@@ -191,7 +193,7 @@ export const signMessage = <ThrowOnError extends boolean = false>(
   options?: Options<SignMessageData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    SignMessageResponse,
+    SignMessageResponses,
     unknown,
     ThrowOnError
   >({
@@ -218,7 +220,7 @@ export const signTypedData = <ThrowOnError extends boolean = false>(
   options?: Options<SignTypedDataData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    SignTypedDataResponse,
+    SignTypedDataResponses,
     unknown,
     ThrowOnError
   >({
@@ -245,7 +247,7 @@ export const readContract = <ThrowOnError extends boolean = false>(
   options?: Options<ReadContractData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    ReadContractResponse,
+    ReadContractResponses,
     unknown,
     ThrowOnError
   >({
@@ -272,8 +274,8 @@ export const getNativeBalance = <ThrowOnError extends boolean = false>(
   options?: Options<GetNativeBalanceData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    GetNativeBalanceResponse,
-    unknown,
+    GetNativeBalanceResponses,
+    GetNativeBalanceErrors,
     ThrowOnError
   >({
     security: [
@@ -299,7 +301,7 @@ export const encodeFunctionData = <ThrowOnError extends boolean = false>(
   options?: Options<EncodeFunctionDataData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    EncodeFunctionDataResponse,
+    EncodeFunctionDataResponses,
     unknown,
     ThrowOnError
   >({
@@ -326,7 +328,7 @@ export const searchTransactions = <ThrowOnError extends boolean = false>(
   options?: Options<SearchTransactionsData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    SearchTransactionsResponse,
+    SearchTransactionsResponses,
     unknown,
     ThrowOnError
   >({
@@ -353,7 +355,7 @@ export const getTransactionAnalytics = <ThrowOnError extends boolean = false>(
   options?: Options<GetTransactionAnalyticsData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    GetTransactionAnalyticsResponse,
+    GetTransactionAnalyticsResponses,
     unknown,
     ThrowOnError
   >({
@@ -382,8 +384,8 @@ export const getTransactionAnalyticsSummary = <
   options?: Options<GetTransactionAnalyticsSummaryData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    GetTransactionAnalyticsSummaryResponse,
-    unknown,
+    GetTransactionAnalyticsSummaryResponses,
+    GetTransactionAnalyticsSummaryErrors,
     ThrowOnError
   >({
     security: [

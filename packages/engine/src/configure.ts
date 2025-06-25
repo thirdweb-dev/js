@@ -1,4 +1,4 @@
-import type { Config } from "@hey-api/client-fetch";
+import type { Config } from "./client/client/index.js";
 import { client } from "./client/client.gen.js";
 
 export type EngineClientOptions = {

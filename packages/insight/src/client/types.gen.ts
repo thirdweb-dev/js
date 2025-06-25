@@ -501,6 +501,7 @@ export type GetV1EventsData = {
      */
     filter_topic_0?: string;
     /**
+     * address (hex or ENS)
      * Filter by address
      */
     filter_address?: string;
@@ -536,10 +537,10 @@ export type GetV1EventsResponses = {
    */
   200: {
     data?: Array<{
-      chain_id: number;
-      block_number: string;
+      chain_id: string;
+      block_number: number;
       block_hash: string;
-      block_timestamp: string;
+      block_timestamp: number;
       transaction_hash: string;
       transaction_index: number;
       log_index: number;
@@ -576,6 +577,9 @@ export type GetV1EventsResponse =
 export type GetV1EventsByContractAddressData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contractAddress: string;
   };
   query?: {
@@ -747,10 +751,10 @@ export type GetV1EventsByContractAddressResponses = {
    */
   200: {
     data?: Array<{
-      chain_id: number;
-      block_number: string;
+      chain_id: string;
+      block_number: number;
       block_hash: string;
-      block_timestamp: string;
+      block_timestamp: number;
       transaction_hash: string;
       transaction_index: number;
       log_index: number;
@@ -787,6 +791,9 @@ export type GetV1EventsByContractAddressResponse =
 export type GetV1EventsByContractAddressBySignatureData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contractAddress: string;
     signature: string;
   };
@@ -955,10 +962,10 @@ export type GetV1EventsByContractAddressBySignatureResponses = {
    */
   200: {
     data?: Array<{
-      chain_id: number;
-      block_number: string;
+      chain_id: string;
+      block_number: number;
       block_hash: string;
-      block_timestamp: string;
+      block_timestamp: number;
       transaction_hash: string;
       transaction_index: number;
       log_index: number;
@@ -1096,6 +1103,7 @@ export type GetV1TransactionsData = {
      */
     filter_hash?: string;
     /**
+     * address (hex or ENS)
      * Filter by from address
      */
     filter_from_address?: string;
@@ -1164,6 +1172,7 @@ export type GetV1TransactionsData = {
      */
     filter_function_selector?: string;
     /**
+     * address (hex or ENS)
      * Filter by to address
      */
     filter_to_address?: string;
@@ -1200,46 +1209,37 @@ export type GetV1TransactionsResponses = {
    */
   200: {
     data?: Array<{
-      chain_id: number;
-      block_number: string;
+      chain_id: string;
+      block_number: number;
       block_hash: string;
-      block_timestamp: string;
+      block_timestamp: number;
       hash: string;
       nonce: number;
       transaction_index: number;
       from_address: string;
       to_address: string;
-      value: number;
-      gas_price: number;
+      value: string;
+      gas_price: string;
       gas: number;
       function_selector: string;
       data: string;
-      max_fee_per_gas: number;
-      max_priority_fee_per_gas: number;
+      max_fee_per_gas: string;
+      max_priority_fee_per_gas: string;
       transaction_type: number;
-      r: number;
-      s: number;
-      v: number;
+      r: string;
+      s: string;
+      v: string;
       access_list_json?: string;
+      authorization_list_json?: string;
       contract_address?: string;
       gas_used?: number;
       cumulative_gas_used?: number;
-      effective_gas_price?: number;
+      effective_gas_price?: string;
       blob_gas_used?: number;
-      blob_gas_price?: number;
+      blob_gas_price?: string;
       logs_bloom?: string;
       status?: number;
       decoded?: {
-        name: string;
-        signature: string;
-        inputs?: {
-          [key: string]: unknown;
-        };
-      };
-      /**
-       * @deprecated
-       */
-      decodedData?: {
         name: string;
         signature: string;
         inputs?: {
@@ -1266,6 +1266,9 @@ export type GetV1TransactionsResponse =
 export type GetV1TransactionsByContractAddressData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contractAddress: string;
   };
   query?: {
@@ -1369,6 +1372,7 @@ export type GetV1TransactionsByContractAddressData = {
      */
     filter_hash?: string;
     /**
+     * address (hex or ENS)
      * Filter by from address
      */
     filter_from_address?: string;
@@ -1469,33 +1473,34 @@ export type GetV1TransactionsByContractAddressResponses = {
    */
   200: {
     data?: Array<{
-      chain_id: number;
-      block_number: string;
+      chain_id: string;
+      block_number: number;
       block_hash: string;
-      block_timestamp: string;
+      block_timestamp: number;
       hash: string;
       nonce: number;
       transaction_index: number;
       from_address: string;
       to_address: string;
-      value: number;
-      gas_price: number;
+      value: string;
+      gas_price: string;
       gas: number;
       function_selector: string;
       data: string;
-      max_fee_per_gas: number;
-      max_priority_fee_per_gas: number;
+      max_fee_per_gas: string;
+      max_priority_fee_per_gas: string;
       transaction_type: number;
-      r: number;
-      s: number;
-      v: number;
+      r: string;
+      s: string;
+      v: string;
       access_list_json?: string;
+      authorization_list_json?: string;
       contract_address?: string;
       gas_used?: number;
       cumulative_gas_used?: number;
-      effective_gas_price?: number;
+      effective_gas_price?: string;
       blob_gas_used?: number;
-      blob_gas_price?: number;
+      blob_gas_price?: string;
       logs_bloom?: string;
       status?: number;
     }>;
@@ -1518,6 +1523,9 @@ export type GetV1TransactionsByContractAddressResponse =
 export type GetV1TransactionsByContractAddressBySignatureData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contractAddress: string;
     signature: string;
   };
@@ -1622,6 +1630,7 @@ export type GetV1TransactionsByContractAddressBySignatureData = {
      */
     filter_hash?: string;
     /**
+     * address (hex or ENS)
      * Filter by from address
      */
     filter_from_address?: string;
@@ -1718,46 +1727,37 @@ export type GetV1TransactionsByContractAddressBySignatureResponses = {
    */
   200: {
     data?: Array<{
-      chain_id: number;
-      block_number: string;
+      chain_id: string;
+      block_number: number;
       block_hash: string;
-      block_timestamp: string;
+      block_timestamp: number;
       hash: string;
       nonce: number;
       transaction_index: number;
       from_address: string;
       to_address: string;
-      value: number;
-      gas_price: number;
+      value: string;
+      gas_price: string;
       gas: number;
       function_selector: string;
       data: string;
-      max_fee_per_gas: number;
-      max_priority_fee_per_gas: number;
+      max_fee_per_gas: string;
+      max_priority_fee_per_gas: string;
       transaction_type: number;
-      r: number;
-      s: number;
-      v: number;
+      r: string;
+      s: string;
+      v: string;
       access_list_json?: string;
+      authorization_list_json?: string;
       contract_address?: string;
       gas_used?: number;
       cumulative_gas_used?: number;
-      effective_gas_price?: number;
+      effective_gas_price?: string;
       blob_gas_used?: number;
-      blob_gas_price?: number;
+      blob_gas_price?: string;
       logs_bloom?: string;
       status?: number;
       decoded?: {
-        name: string;
-        signature: string;
-        inputs?: {
-          [key: string]: unknown;
-        };
-      };
-      /**
-       * @deprecated
-       */
-      decodedData?: {
         name: string;
         signature: string;
         inputs?: {
@@ -1801,6 +1801,9 @@ export type GetV1TokensOwnersData = {
      */
     limit?: number;
     page?: number | null;
+    /**
+     * address (hex or ENS)
+     */
     contract_address: string;
   };
   url: "/v1/tokens/owners";
@@ -1835,7 +1838,13 @@ export type GetV1TokensOwnersResponses = {
   200: {
     data: Array<{
       chain_id: string;
+      /**
+       * address (hex or ENS)
+       */
       token_address: string;
+      /**
+       * address (hex or ENS)
+       */
       owner_address: string;
       balance: string;
     }>;
@@ -1872,17 +1881,9 @@ export type GetV1TokensTransfersTransactionByTransactionHashData = {
      */
     metadata?: "true" | "false";
     /**
-     * Whether to include sale details for NFT transfers
-     */
-    sales?: "true" | "false";
-    /**
      * Whether to include owner addresses in the NFT metadata (only if metadata is requested)
      */
     include_owners?: "true" | "false";
-    /**
-     * Whether to resolve metadata IPFS or Arweave links
-     */
-    resolve_metadata_links?: "true" | "false";
     /**
      * The types of tokens to include in the response. Can be an empty array to include all types
      */
@@ -1917,6 +1918,66 @@ export type GetV1TokensTransfersTransactionByTransactionHashErrors = {
         name?: string;
         symbol?: string;
         decimals?: number;
+        price_data?: {
+          /**
+           * The price of the token in USD
+           */
+          price_usd?: number;
+          /**
+           * The volume of the token in USD
+           */
+          volume_24h_usd?: number;
+          /**
+           * The market cap of the token in USD
+           */
+          market_cap_usd?: number;
+          /**
+           * The circulating supply of the token
+           */
+          circulating_supply?: number;
+          /**
+           * The total supply of the token
+           */
+          total_supply?: number;
+          /**
+           * The percentage change of the token in the last 24 hours
+           */
+          percent_change_24h?: number;
+          /**
+           * The timestamp of the latest price update
+           */
+          price_timestamp?: string;
+        };
+      };
+      price_data?: {
+        /**
+         * The price of the token in USD
+         */
+        price_usd?: number;
+        /**
+         * The volume of the token in USD
+         */
+        volume_24h_usd?: number;
+        /**
+         * The market cap of the token in USD
+         */
+        market_cap_usd?: number;
+        /**
+         * The circulating supply of the token
+         */
+        circulating_supply?: number;
+        /**
+         * The total supply of the token
+         */
+        total_supply?: number;
+        /**
+         * The percentage change of the token in the last 24 hours
+         */
+        percent_change_24h?: number;
+        /**
+         * The timestamp of the latest price update
+         */
+        price_timestamp?: string;
       };
     }>;
   };
@@ -1947,6 +2008,66 @@ export type GetV1TokensTransfersTransactionByTransactionHashResponses = {
         name?: string;
         symbol?: string;
         decimals?: number;
+        price_data?: {
+          /**
+           * The price of the token in USD
+           */
+          price_usd?: number;
+          /**
+           * The volume of the token in USD
+           */
+          volume_24h_usd?: number;
+          /**
+           * The market cap of the token in USD
+           */
+          market_cap_usd?: number;
+          /**
+           * The circulating supply of the token
+           */
+          circulating_supply?: number;
+          /**
+           * The total supply of the token
+           */
+          total_supply?: number;
+          /**
+           * The percentage change of the token in the last 24 hours
+           */
+          percent_change_24h?: number;
+          /**
+           * The timestamp of the latest price update
+           */
+          price_timestamp?: string;
+        };
+      };
+      price_data?: {
+        /**
+         * The price of the token in USD
+         */
+        price_usd?: number;
+        /**
+         * The volume of the token in USD
+         */
+        volume_24h_usd?: number;
+        /**
+         * The market cap of the token in USD
+         */
+        market_cap_usd?: number;
+        /**
+         * The circulating supply of the token
+         */
+        circulating_supply?: number;
+        /**
+         * The total supply of the token
+         */
+        total_supply?: number;
+        /**
+         * The percentage change of the token in the last 24 hours
+         */
+        percent_change_24h?: number;
+        /**
+         * The timestamp of the latest price update
+         */
+        price_timestamp?: string;
       };
     }>;
   };
@@ -1958,6 +2079,9 @@ export type GetV1TokensTransfersTransactionByTransactionHashResponse =
 export type GetV1TokensTransfersByContractAddressData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contract_address: string;
   };
   query?: {
@@ -1982,17 +2106,9 @@ export type GetV1TokensTransfersByContractAddressData = {
      */
     metadata?: "true" | "false";
     /**
-     * Whether to include sale details for NFT transfers
-     */
-    sales?: "true" | "false";
-    /**
      * Whether to include owner addresses in the NFT metadata (only if metadata is requested)
      */
     include_owners?: "true" | "false";
-    /**
-     * Whether to resolve metadata IPFS or Arweave links
-     */
-    resolve_metadata_links?: "true" | "false";
   };
   url: "/v1/tokens/transfers/{contract_address}";
 };
@@ -2023,6 +2139,66 @@ export type GetV1TokensTransfersByContractAddressErrors = {
         name?: string;
         symbol?: string;
         decimals?: number;
+        price_data?: {
+          /**
+           * The price of the token in USD
+           */
+          price_usd?: number;
+          /**
+           * The volume of the token in USD
+           */
+          volume_24h_usd?: number;
+          /**
+           * The market cap of the token in USD
+           */
+          market_cap_usd?: number;
+          /**
+           * The circulating supply of the token
+           */
+          circulating_supply?: number;
+          /**
+           * The total supply of the token
+           */
+          total_supply?: number;
+          /**
+           * The percentage change of the token in the last 24 hours
+           */
+          percent_change_24h?: number;
+          /**
+           * The timestamp of the latest price update
+           */
+          price_timestamp?: string;
+        };
+      };
+      price_data?: {
+        /**
+         * The price of the token in USD
+         */
+        price_usd?: number;
+        /**
+         * The volume of the token in USD
+         */
+        volume_24h_usd?: number;
+        /**
+         * The market cap of the token in USD
+         */
+        market_cap_usd?: number;
+        /**
+         * The circulating supply of the token
+         */
+        circulating_supply?: number;
+        /**
+         * The total supply of the token
+         */
+        total_supply?: number;
+        /**
+         * The percentage change of the token in the last 24 hours
+         */
+        percent_change_24h?: number;
+        /**
+         * The timestamp of the latest price update
+         */
+        price_timestamp?: string;
       };
     }>;
   };
@@ -2053,6 +2229,66 @@ export type GetV1TokensTransfersByContractAddressResponses = {
         name?: string;
         symbol?: string;
         decimals?: number;
+        price_data?: {
+          /**
+           * The price of the token in USD
+           */
+          price_usd?: number;
+          /**
+           * The volume of the token in USD
+           */
+          volume_24h_usd?: number;
+          /**
+           * The market cap of the token in USD
+           */
+          market_cap_usd?: number;
+          /**
+           * The circulating supply of the token
+           */
+          circulating_supply?: number;
+          /**
+           * The total supply of the token
+           */
+          total_supply?: number;
+          /**
+           * The percentage change of the token in the last 24 hours
+           */
+          percent_change_24h?: number;
+          /**
+           * The timestamp of the latest price update
+           */
+          price_timestamp?: string;
+        };
+      };
+      price_data?: {
+        /**
+         * The price of the token in USD
+         */
+        price_usd?: number;
+        /**
+         * The volume of the token in USD
+         */
+        volume_24h_usd?: number;
+        /**
+         * The market cap of the token in USD
+         */
+        market_cap_usd?: number;
+        /**
+         * The circulating supply of the token
+         */
+        circulating_supply?: number;
+        /**
+         * The total supply of the token
+         */
+        total_supply?: number;
+        /**
+         * The percentage change of the token in the last 24 hours
+         */
+        percent_change_24h?: number;
+        /**
+         * The timestamp of the latest price update
+         */
+        price_timestamp?: string;
       };
     }>;
   };
@@ -2086,17 +2322,9 @@ export type GetV1TokensTransfersData = {
      */
     metadata?: "true" | "false";
     /**
-     * Whether to include sale details for NFT transfers
-     */
-    sales?: "true" | "false";
-    /**
      * Whether to include owner addresses in the NFT metadata (only if metadata is requested)
      */
     include_owners?: "true" | "false";
-    /**
-     * Whether to resolve metadata IPFS or Arweave links
-     */
-    resolve_metadata_links?: "true" | "false";
     /**
      * Filter by block number greater than or equal to
      */
@@ -2106,10 +2334,33 @@ export type GetV1TokensTransfersData = {
      */
     block_number_to?: number | string;
     /**
+     * Filter by block timestamp greater than or equal to
+     */
+    block_timestamp_from?: number;
+    /**
+     * Filter by block timestamp less than or equal to
+     */
+    block_timestamp_to?: number;
+    /**
+     * address (hex or ENS)
+     */
+    owner_address?: string;
+    /**
+     * Filter by contract address. Can be an array of addresses or a single address. If not provided, all contracts will be included
+     */
+    contract_address?: Array<string>;
+    /**
+     * Sort order (asc or desc)
+     */
+    sort_order?: "asc" | "desc";
+    /**
+     * Only include transfers of a certain type
+     */
+    transfer_type?: "mint" | "transfer" | "burn";
+    /**
      * The types of tokens to include in the response. Can be an empty array to include all types
      */
     token_types?: Array<"erc1155" | "erc721" | "erc20">;
-    owner_address?: string;
   };
   url: "/v1/tokens/transfers";
 };
@@ -2140,6 +2391,66 @@ export type GetV1TokensTransfersErrors = {
         name?: string;
         symbol?: string;
         decimals?: number;
+        price_data?: {
+          /**
+           * The price of the token in USD
+           */
+          price_usd?: number;
+          /**
+           * The volume of the token in USD
+           */
+          volume_24h_usd?: number;
+          /**
+           * The market cap of the token in USD
+           */
+          market_cap_usd?: number;
+          /**
+           * The circulating supply of the token
+           */
+          circulating_supply?: number;
+          /**
+           * The total supply of the token
+           */
+          total_supply?: number;
+          /**
+           * The percentage change of the token in the last 24 hours
+           */
+          percent_change_24h?: number;
+          /**
+           * The timestamp of the latest price update
+           */
+          price_timestamp?: string;
+        };
+      };
+      price_data?: {
+        /**
+         * The price of the token in USD
+         */
+        price_usd?: number;
+        /**
+         * The volume of the token in USD
+         */
+        volume_24h_usd?: number;
+        /**
+         * The market cap of the token in USD
+         */
+        market_cap_usd?: number;
+        /**
+         * The circulating supply of the token
+         */
+        circulating_supply?: number;
+        /**
+         * The total supply of the token
+         */
+        total_supply?: number;
+        /**
+         * The percentage change of the token in the last 24 hours
+         */
+        percent_change_24h?: number;
+        /**
+         * The timestamp of the latest price update
+         */
+        price_timestamp?: string;
       };
     }>;
   };
@@ -2170,6 +2481,66 @@ export type GetV1TokensTransfersResponses = {
         name?: string;
         symbol?: string;
         decimals?: number;
+        price_data?: {
+          /**
+           * The price of the token in USD
+           */
+          price_usd?: number;
+          /**
+           * The volume of the token in USD
+           */
+          volume_24h_usd?: number;
+          /**
+           * The market cap of the token in USD
+           */
+          market_cap_usd?: number;
+          /**
+           * The circulating supply of the token
+           */
+          circulating_supply?: number;
+          /**
+           * The total supply of the token
+           */
+          total_supply?: number;
+          /**
+           * The percentage change of the token in the last 24 hours
+           */
+          percent_change_24h?: number;
+          /**
+           * The timestamp of the latest price update
+           */
+          price_timestamp?: string;
+        };
+      };
+      price_data?: {
+        /**
+         * The price of the token in USD
+         */
+        price_usd?: number;
+        /**
+         * The volume of the token in USD
+         */
+        volume_24h_usd?: number;
+        /**
+         * The market cap of the token in USD
+         */
+        market_cap_usd?: number;
+        /**
+         * The circulating supply of the token
+         */
+        circulating_supply?: number;
+        /**
+         * The total supply of the token
+         */
+        total_supply?: number;
+        /**
+         * The percentage change of the token in the last 24 hours
+         */
+        percent_change_24h?: number;
+        /**
+         * The timestamp of the latest price update
+         */
+        price_timestamp?: string;
       };
     }>;
   };
@@ -2181,6 +2552,9 @@ export type GetV1TokensTransfersResponse =
 export type GetV1TokensErc20ByOwnerAddressData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     ownerAddress: string;
   };
   query?: {
@@ -2237,6 +2611,9 @@ export type GetV1TokensErc20ByOwnerAddressResponses = {
        * The chain ID of a relevant entry
        */
       chain_id: number;
+      /**
+       * address (hex or ENS)
+       */
       token_address: string;
       balance: string;
       name?: string;
@@ -2281,6 +2658,9 @@ export type GetV1TokensData = {
      * Whether to include spam tokens
      */
     include_spam?: "true" | "false";
+    /**
+     * address (hex or ENS)
+     */
     owner_address: string;
     /**
      * Whether to include native tokens
@@ -2311,11 +2691,44 @@ export type GetV1TokensResponses = {
        * The chain ID of a relevant entry
        */
       chain_id: number;
+      /**
+       * address (hex or ENS)
+       */
       token_address: string;
       balance: string;
       name?: string;
       symbol?: string;
       decimals?: number;
+      price_data?: {
+        /**
+         * The price of the token in USD
+         */
+        price_usd?: number;
+        /**
+         * The volume of the token in USD
+         */
+        volume_24h_usd?: number;
+        /**
+         * The market cap of the token in USD
+         */
+        market_cap_usd?: number;
+        /**
+         * The circulating supply of the token
+         */
+        circulating_supply?: number;
+        /**
+         * The total supply of the token
+         */
+        total_supply?: number;
+        /**
+         * The percentage change of the token in the last 24 hours
+         */
+        percent_change_24h?: number;
+        /**
+         * The timestamp of the latest price update
+         */
+        price_timestamp?: string;
+      };
     }>;
   };
 };
@@ -2326,6 +2739,9 @@ export type GetV1TokensResponse =
 export type GetV1TokensErc721ByOwnerAddressData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     ownerAddress: string;
   };
   query?: {
@@ -2378,6 +2794,9 @@ export type GetV1TokensErc721ByOwnerAddressResponses = {
        * The chain ID of a relevant entry
        */
       chain_id: number;
+      /**
+       * address (hex or ENS)
+       */
       token_address: string;
       token_id: string;
       balance: string;
@@ -2420,6 +2839,9 @@ export type GetV1TokensErc721ByOwnerAddressResponses = {
          * The chain ID of a relevant entry
          */
         chain_id: number;
+        /**
+         * address (hex or ENS)
+         */
         address: string;
         name?: string;
         symbol?: string;
@@ -2435,6 +2857,9 @@ export type GetV1TokensErc721ByOwnerAddressResponse =
 export type GetV1TokensErc1155ByOwnerAddressData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     ownerAddress: string;
   };
   query?: {
@@ -2487,6 +2912,9 @@ export type GetV1TokensErc1155ByOwnerAddressResponses = {
        * The chain ID of a relevant entry
        */
       chain_id: number;
+      /**
+       * address (hex or ENS)
+       */
       token_address: string;
       token_id: string;
       balance: string;
@@ -2529,6 +2957,9 @@ export type GetV1TokensErc1155ByOwnerAddressResponses = {
          * The chain ID of a relevant entry
          */
         chain_id: number;
+        /**
+         * address (hex or ENS)
+         */
         address: string;
         name?: string;
         symbol?: string;
@@ -2581,6 +3012,9 @@ export type GetV1TokensPriceSupportedResponses = {
        * The chain ID of a relevant entry
        */
       chain_id: number;
+      /**
+       * address (hex or ENS)
+       */
       address: string;
       symbol?: string;
     }>;
@@ -2650,6 +3084,9 @@ export type GetV1TokensPriceResponses = {
        * The chain ID of a relevant entry
        */
       chain_id: number;
+      /**
+       * address (hex or ENS)
+       */
       address: string;
       symbol?: string;
       /**
@@ -2746,10 +3183,43 @@ export type GetV1TokensLookupResponses = {
        * The chain ID of a relevant entry
        */
       chain_id: number;
+      /**
+       * address (hex or ENS)
+       */
       token_address: string;
       name?: string;
       symbol?: string;
       decimals?: number;
+      price_data?: {
+        /**
+         * The price of the token in USD
+         */
+        price_usd?: number;
+        /**
+         * The volume of the token in USD
+         */
+        volume_24h_usd?: number;
+        /**
+         * The market cap of the token in USD
+         */
+        market_cap_usd?: number;
+        /**
+         * The circulating supply of the token
+         */
+        circulating_supply?: number;
+        /**
+         * The total supply of the token
+         */
+        total_supply?: number;
+        /**
+         * The percentage change of the token in the last 24 hours
+         */
+        percent_change_24h?: number;
+        /**
+         * The timestamp of the latest price update
+         */
+        price_timestamp?: string;
+      };
     }>;
   };
 };
@@ -2761,6 +3231,7 @@ export type GetV1ResolveByInputData = {
   body?: never;
   path: {
     /**
+     * hash
      * Can be a block number, transaction or block hash, address, event signature or function selector
      */
     input: string;
@@ -2830,41 +3301,42 @@ export type GetV1ResolveByInputResponses = {
         base_fee_per_gas: number;
       }>;
       transactions?: Array<{
-        chain_id: number;
-        block_number: string;
+        chain_id: string;
+        block_number: number;
         block_hash: string;
-        block_timestamp: string;
+        block_timestamp: number;
         hash: string;
         nonce: number;
         transaction_index: number;
         from_address: string;
         to_address: string;
-        value: number;
-        gas_price: number;
+        value: string;
+        gas_price: string;
         gas: number;
         function_selector: string;
         data: string;
-        max_fee_per_gas: number;
-        max_priority_fee_per_gas: number;
+        max_fee_per_gas: string;
+        max_priority_fee_per_gas: string;
         transaction_type: number;
-        r: number;
-        s: number;
-        v: number;
+        r: string;
+        s: string;
+        v: string;
         access_list_json?: string;
+        authorization_list_json?: string;
         contract_address?: string;
         gas_used?: number;
         cumulative_gas_used?: number;
-        effective_gas_price?: number;
+        effective_gas_price?: string;
         blob_gas_used?: number;
-        blob_gas_price?: number;
+        blob_gas_price?: string;
         logs_bloom?: string;
         status?: number;
       }>;
       events?: Array<{
-        chain_id: number;
-        block_number: string;
+        chain_id: string;
+        block_number: number;
         block_hash: string;
-        block_timestamp: string;
+        block_timestamp: number;
         transaction_hash: string;
         transaction_index: number;
         log_index: number;
@@ -2872,6 +3344,9 @@ export type GetV1ResolveByInputResponses = {
         data: string;
         topics: Array<string>;
       }>;
+      /**
+       * address (hex or ENS)
+       */
       address?: string;
       type:
         | "block"
@@ -3047,6 +3522,9 @@ export type GetV1BlocksResponse =
 export type GetV1ContractsAbiByContractAddressData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contractAddress: string;
   };
   query?: {
@@ -3102,6 +3580,9 @@ export type GetV1ContractsAbiByContractAddressResponse =
 export type GetV1ContractsMetadataByContractAddressData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contractAddress: string;
   };
   query?: {
@@ -3159,6 +3640,9 @@ export type PostV1DecodeByContractAddressData = {
     }>;
   };
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contractAddress: string;
   };
   query?: {
@@ -3226,6 +3710,9 @@ export type PostV1DecodeByContractAddressResponse =
 export type GetV1NftsBalanceByOwnerAddressData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     ownerAddress: string;
   };
   query?: {
@@ -3282,6 +3769,9 @@ export type GetV1NftsBalanceByOwnerAddressResponses = {
        * The chain ID of a relevant entry
        */
       chain_id: number;
+      /**
+       * address (hex or ENS)
+       */
       token_address: string;
       token_id: string;
       balance: string;
@@ -3324,6 +3814,9 @@ export type GetV1NftsBalanceByOwnerAddressResponses = {
          * The chain ID of a relevant entry
          */
         chain_id: number;
+        /**
+         * address (hex or ENS)
+         */
         address: string;
         name?: string;
         symbol?: string;
@@ -3339,6 +3832,9 @@ export type GetV1NftsBalanceByOwnerAddressResponse =
 export type GetV1NftsCollectionsByContractAddressData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contract_address: string;
   };
   query?: {
@@ -3432,6 +3928,9 @@ export type GetV1NftsData = {
      * Whether to resolve metadata IPFS or Arweave links
      */
     resolve_metadata_links?: "true" | "false";
+    /**
+     * address (hex or ENS)
+     */
     owner_address: string;
   };
   url: "/v1/nfts";
@@ -3496,6 +3995,9 @@ export type GetV1NftsResponses = {
          * The chain ID of a relevant entry
          */
         chain_id: number;
+        /**
+         * address (hex or ENS)
+         */
         address: string;
         name?: string;
         symbol?: string;
@@ -3515,6 +4017,9 @@ export type GetV1NftsResponse = GetV1NftsResponses[keyof GetV1NftsResponses];
 export type GetV1NftsOwnersByContractAddressData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contract_address: string;
   };
   query?: {
@@ -3583,6 +4088,9 @@ export type GetV1NftsOwnersByContractAddressResponse =
 export type GetV1NftsOwnersByContractAddressByTokenIdData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contract_address: string;
     token_id: string;
   };
@@ -3674,17 +4182,9 @@ export type GetV1NftsTransfersData = {
      */
     metadata?: "true" | "false";
     /**
-     * Whether to include sale details for NFT transfers
-     */
-    sales?: "true" | "false";
-    /**
      * Whether to include owner addresses in the NFT metadata (only if metadata is requested)
      */
     include_owners?: "true" | "false";
-    /**
-     * Whether to resolve metadata IPFS or Arweave links
-     */
-    resolve_metadata_links?: "true" | "false";
     /**
      * Filter by block number greater than or equal to
      */
@@ -3694,10 +4194,37 @@ export type GetV1NftsTransfersData = {
      */
     block_number_to?: number | string;
     /**
-     * The types of tokens to include in the response. Can be an empty array to include all types
+     * Filter by block timestamp greater than or equal to
      */
-    token_types?: Array<"erc1155" | "erc721" | "erc20">;
+    block_timestamp_from?: number;
+    /**
+     * Filter by block timestamp less than or equal to
+     */
+    block_timestamp_to?: number;
+    /**
+     * address (hex or ENS)
+     */
     owner_address?: string;
+    /**
+     * Filter by contract address. Can be an array of addresses or a single address. If not provided, all contracts will be included
+     */
+    contract_address?: Array<string>;
+    /**
+     * Sort order (asc or desc)
+     */
+    sort_order?: "asc" | "desc";
+    /**
+     * Only include transfers of a certain type
+     */
+    transfer_type?: "mint" | "transfer" | "burn" | "sale";
+    /**
+     * Whether to include sale details for NFT transfers
+     */
+    sales?: "true" | "false";
+    /**
+     * Whether to resolve metadata IPFS or Arweave links
+     */
+    resolve_metadata_links?: "true" | "false";
   };
   url: "/v1/nfts/transfers";
 };
@@ -3777,6 +4304,9 @@ export type GetV1NftsTransfersResponses = {
            * The chain ID of a relevant entry
            */
           chain_id: number;
+          /**
+           * address (hex or ENS)
+           */
           address: string;
           name?: string;
           symbol?: string;
@@ -3786,19 +4316,37 @@ export type GetV1NftsTransfersResponses = {
       nft_sale?: {
         transaction_hash: string;
         items_sold: Array<{
+          /**
+           * address (hex or ENS)
+           */
           token_address: string;
           token_id: string;
           amount: string;
           token_type: string;
+          /**
+           * address (hex or ENS)
+           */
           from_address?: string;
+          /**
+           * address (hex or ENS)
+           */
           to_address?: string;
         }>;
         payment: Array<{
+          /**
+           * address (hex or ENS)
+           */
           token_address: string;
           token_id: string;
           amount: string;
           token_type: string;
+          /**
+           * address (hex or ENS)
+           */
           from_address?: string;
+          /**
+           * address (hex or ENS)
+           */
           to_address?: string;
         }>;
         marketplace_address: string;
@@ -3838,17 +4386,9 @@ export type GetV1NftsTransfersTransactionByTransactionHashData = {
      */
     metadata?: "true" | "false";
     /**
-     * Whether to include sale details for NFT transfers
-     */
-    sales?: "true" | "false";
-    /**
      * Whether to include owner addresses in the NFT metadata (only if metadata is requested)
      */
     include_owners?: "true" | "false";
-    /**
-     * Whether to resolve metadata IPFS or Arweave links
-     */
-    resolve_metadata_links?: "true" | "false";
     /**
      * The types of tokens to include in the response. Can be an empty array to include all types
      */
@@ -3932,6 +4472,9 @@ export type GetV1NftsTransfersTransactionByTransactionHashResponses = {
            * The chain ID of a relevant entry
            */
           chain_id: number;
+          /**
+           * address (hex or ENS)
+           */
           address: string;
           name?: string;
           symbol?: string;
@@ -3941,19 +4484,37 @@ export type GetV1NftsTransfersTransactionByTransactionHashResponses = {
       nft_sale?: {
         transaction_hash: string;
         items_sold: Array<{
+          /**
+           * address (hex or ENS)
+           */
           token_address: string;
           token_id: string;
           amount: string;
           token_type: string;
+          /**
+           * address (hex or ENS)
+           */
           from_address?: string;
+          /**
+           * address (hex or ENS)
+           */
           to_address?: string;
         }>;
         payment: Array<{
+          /**
+           * address (hex or ENS)
+           */
           token_address: string;
           token_id: string;
           amount: string;
           token_type: string;
+          /**
+           * address (hex or ENS)
+           */
           from_address?: string;
+          /**
+           * address (hex or ENS)
+           */
           to_address?: string;
         }>;
         marketplace_address: string;
@@ -3969,6 +4530,9 @@ export type GetV1NftsTransfersTransactionByTransactionHashResponse =
 export type GetV1NftsTransfersByContractAddressData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contract_address: string;
   };
   query?: {
@@ -3993,17 +4557,9 @@ export type GetV1NftsTransfersByContractAddressData = {
      */
     metadata?: "true" | "false";
     /**
-     * Whether to include sale details for NFT transfers
-     */
-    sales?: "true" | "false";
-    /**
      * Whether to include owner addresses in the NFT metadata (only if metadata is requested)
      */
     include_owners?: "true" | "false";
-    /**
-     * Whether to resolve metadata IPFS or Arweave links
-     */
-    resolve_metadata_links?: "true" | "false";
   };
   url: "/v1/nfts/transfers/{contract_address}";
 };
@@ -4083,6 +4639,9 @@ export type GetV1NftsTransfersByContractAddressResponses = {
            * The chain ID of a relevant entry
            */
           chain_id: number;
+          /**
+           * address (hex or ENS)
+           */
           address: string;
           name?: string;
           symbol?: string;
@@ -4092,19 +4651,37 @@ export type GetV1NftsTransfersByContractAddressResponses = {
       nft_sale?: {
         transaction_hash: string;
         items_sold: Array<{
+          /**
+           * address (hex or ENS)
+           */
           token_address: string;
           token_id: string;
           amount: string;
           token_type: string;
+          /**
+           * address (hex or ENS)
+           */
           from_address?: string;
+          /**
+           * address (hex or ENS)
+           */
           to_address?: string;
         }>;
         payment: Array<{
+          /**
+           * address (hex or ENS)
+           */
           token_address: string;
           token_id: string;
           amount: string;
           token_type: string;
+          /**
+           * address (hex or ENS)
+           */
           from_address?: string;
+          /**
+           * address (hex or ENS)
+           */
           to_address?: string;
         }>;
         marketplace_address: string;
@@ -4120,6 +4697,9 @@ export type GetV1NftsTransfersByContractAddressResponse =
 export type GetV1NftsByContractAddressData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contract_address: string;
   };
   query?: {
@@ -4212,6 +4792,9 @@ export type GetV1NftsByContractAddressResponses = {
          * The chain ID of a relevant entry
          */
         chain_id: number;
+        /**
+         * address (hex or ENS)
+         */
         address: string;
         name?: string;
         symbol?: string;
@@ -4232,6 +4815,9 @@ export type GetV1NftsByContractAddressResponse =
 export type GetV1NftsTransfersByContractAddressByTokenIdData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contract_address: string;
     token_id: string;
   };
@@ -4347,6 +4933,9 @@ export type GetV1NftsTransfersByContractAddressByTokenIdResponses = {
            * The chain ID of a relevant entry
            */
           chain_id: number;
+          /**
+           * address (hex or ENS)
+           */
           address: string;
           name?: string;
           symbol?: string;
@@ -4356,19 +4945,37 @@ export type GetV1NftsTransfersByContractAddressByTokenIdResponses = {
       nft_sale?: {
         transaction_hash: string;
         items_sold: Array<{
+          /**
+           * address (hex or ENS)
+           */
           token_address: string;
           token_id: string;
           amount: string;
           token_type: string;
+          /**
+           * address (hex or ENS)
+           */
           from_address?: string;
+          /**
+           * address (hex or ENS)
+           */
           to_address?: string;
         }>;
         payment: Array<{
+          /**
+           * address (hex or ENS)
+           */
           token_address: string;
           token_id: string;
           amount: string;
           token_type: string;
+          /**
+           * address (hex or ENS)
+           */
           from_address?: string;
+          /**
+           * address (hex or ENS)
+           */
           to_address?: string;
         }>;
         marketplace_address: string;
@@ -4384,6 +4991,9 @@ export type GetV1NftsTransfersByContractAddressByTokenIdResponse =
 export type GetV1NftsByContractAddressByTokenIdData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contract_address: string;
     token_id: string;
   };
@@ -4472,6 +5082,9 @@ export type GetV1NftsByContractAddressByTokenIdResponses = {
          * The chain ID of a relevant entry
          */
         chain_id: number;
+        /**
+         * address (hex or ENS)
+         */
         address: string;
         name?: string;
         symbol?: string;
@@ -4492,6 +5105,9 @@ export type GetV1NftsByContractAddressByTokenIdResponse =
 export type GetV1NftsMetadataRefreshByContractAddressData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contract_address: string;
   };
   query?: {
@@ -4546,6 +5162,9 @@ export type GetV1NftsMetadataRefreshByContractAddressResponse =
 export type GetV1NftsMetadataRefreshByContractAddressByTokenIdData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     contract_address: string;
     token_id: string;
   };
@@ -4601,6 +5220,9 @@ export type GetV1NftsMetadataRefreshByContractAddressByTokenIdResponse =
 export type GetV1WalletsByWalletAddressTransactionsData = {
   body?: never;
   path: {
+    /**
+     * address (hex or ENS)
+     */
     wallet_address: string;
   };
   query?: {
@@ -4800,46 +5422,37 @@ export type GetV1WalletsByWalletAddressTransactionsResponses = {
    */
   200: {
     data?: Array<{
-      chain_id: number;
-      block_number: string;
+      chain_id: string;
+      block_number: number;
       block_hash: string;
-      block_timestamp: string;
+      block_timestamp: number;
       hash: string;
       nonce: number;
       transaction_index: number;
       from_address: string;
       to_address: string;
-      value: number;
-      gas_price: number;
+      value: string;
+      gas_price: string;
       gas: number;
       function_selector: string;
       data: string;
-      max_fee_per_gas: number;
-      max_priority_fee_per_gas: number;
+      max_fee_per_gas: string;
+      max_priority_fee_per_gas: string;
       transaction_type: number;
-      r: number;
-      s: number;
-      v: number;
+      r: string;
+      s: string;
+      v: string;
       access_list_json?: string;
+      authorization_list_json?: string;
       contract_address?: string;
       gas_used?: number;
       cumulative_gas_used?: number;
-      effective_gas_price?: number;
+      effective_gas_price?: string;
       blob_gas_used?: number;
-      blob_gas_price?: number;
+      blob_gas_price?: string;
       logs_bloom?: string;
       status?: number;
       decoded?: {
-        name: string;
-        signature: string;
-        inputs?: {
-          [key: string]: unknown;
-        };
-      };
-      /**
-       * @deprecated
-       */
-      decodedData?: {
         name: string;
         signature: string;
         inputs?: {

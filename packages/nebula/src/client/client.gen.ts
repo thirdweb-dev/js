@@ -5,7 +5,7 @@ import {
   createClient,
   createConfig,
   type ClientOptions as DefaultClientOptions,
-} from "@hey-api/client-fetch";
+} from "./client/index.js";
 import type { ClientOptions } from "./types.gen.js";
 
 /**
@@ -23,6 +23,6 @@ export type CreateClientConfig<T extends DefaultClientOptions = ClientOptions> =
 
 export const client = createClient(
   createConfig<ClientOptions>({
-    baseUrl: "https://nebula-api.thirdweb-dev.com",
+    baseUrl: "https://nebula-api.thirdweb-dev.com/",
   }),
 );
