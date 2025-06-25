@@ -30,3 +30,7 @@ export {
   createSessionKey,
   isCreateSessionKeySupported,
 } from "../../extensions/erc7702/account/createSessionKey.js";
+export type {
+  LimitType,
+  Condition,
+} from "../../extensions/erc7702/account/types.js";

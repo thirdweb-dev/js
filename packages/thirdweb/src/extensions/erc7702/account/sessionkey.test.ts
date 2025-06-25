@@ -14,6 +14,7 @@ import { parseEventLogs } from "../../../event/actions/parse-logs.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { sessionCreatedEvent } from "../__generated__/MinimalAccount/events/SessionCreated.js";
 import { createSessionKey } from "./createSessionKey.js";
+import { Condition, LimitType } from "./types.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "Session Key Behavior",
@@ -84,13 +85,19 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           account: account,
           callPolicies: [
             {
-              constraints: [],
+              constraints: [
+                {
+                  condition: Condition.Unconstrained,
+                  index: 0n,
+                  refValue: "0x0000000000000000000000000000000000000000000000000000000000000000"
+                }
+              ],
               maxValuePerUse: 0n,
               selector: "0x00000000",
               target: ZERO_ADDRESS,
               valueLimit: {
                 limit: 0n,
-                limitType: 0,
+                limitType: LimitType.Unlimited,
                 period: 0n,
               },
             },
