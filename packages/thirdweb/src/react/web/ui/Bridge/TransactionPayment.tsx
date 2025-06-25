@@ -15,6 +15,7 @@ import {
 import { useChainMetadata } from "../../../core/hooks/others/useChainQuery.js";
 import { useTransactionDetails } from "../../../core/hooks/useTransactionDetails.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import { ConnectButton } from "../ConnectWallet/ConnectButton.js";
 import { PoweredByThirdweb } from "../ConnectWallet/PoweredByTW.js";
 import { Container, Line } from "../components/basic.js";
@@ -57,6 +58,7 @@ export function TransactionPayment({
 }: TransactionPaymentProps) {
   const theme = useCustomTheme();
   const activeAccount = useActiveAccount();
+  const wallet = useActiveWallet();
 
   // Get chain metadata for native currency symbol
   const chainMetadata = useChainMetadata(uiOptions.transaction.chain);
@@ -65,6 +67,7 @@ export function TransactionPayment({
   const transactionDataQuery = useTransactionDetails({
     client,
     transaction: uiOptions.transaction,
+    wallet,
   });
 
   const contractName =
