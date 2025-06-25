@@ -27,9 +27,9 @@ export type CompletedStatusResult =
   | ({ type: "sell" } & Extract<Status, { status: "COMPLETED" }>)
   | ({ type: "transfer" } & Extract<Status, { status: "COMPLETED" }>)
   | ({ type: "onramp" } & Extract<
-      OnrampStatus.Result,
-      { status: "COMPLETED" }
-    >);
+    OnrampStatus.Result,
+    { status: "COMPLETED" }
+  >);
 
 /**
  * Options for the step executor hook
@@ -237,6 +237,7 @@ export function useStepExecutor(
       if (tx.action === "approval" || tx.action === "fee") {
         // don't poll status for approval transactions, just wait for confirmation
         await waitForReceipt(result);
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Add an extra second delay for RPC to catch up to new state
         return;
       }
 
