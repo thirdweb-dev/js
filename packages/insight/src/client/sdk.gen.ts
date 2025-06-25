@@ -4,124 +4,132 @@ import type {
   Client,
   Options as ClientOptions,
   TDataShape,
-} from "@hey-api/client-fetch";
+} from "./client/index.js";
 import { client as _heyApiClient } from "./client.gen.js";
 import type {
   DeleteV1WebhooksByWebhookIdData,
-  DeleteV1WebhooksByWebhookIdError,
-  DeleteV1WebhooksByWebhookIdResponse,
+  DeleteV1WebhooksByWebhookIdErrors,
+  DeleteV1WebhooksByWebhookIdResponses,
   GetV1BlocksData,
-  GetV1BlocksError,
-  GetV1BlocksResponse,
+  GetV1BlocksErrors,
+  GetV1BlocksResponses,
   GetV1ContractsAbiByContractAddressData,
-  GetV1ContractsAbiByContractAddressError,
-  GetV1ContractsAbiByContractAddressResponse,
+  GetV1ContractsAbiByContractAddressErrors,
+  GetV1ContractsAbiByContractAddressResponses,
   GetV1ContractsMetadataByContractAddressData,
-  GetV1ContractsMetadataByContractAddressError,
-  GetV1ContractsMetadataByContractAddressResponse,
+  GetV1ContractsMetadataByContractAddressErrors,
+  GetV1ContractsMetadataByContractAddressResponses,
   GetV1EventsByContractAddressBySignatureData,
-  GetV1EventsByContractAddressBySignatureError,
-  GetV1EventsByContractAddressBySignatureResponse,
+  GetV1EventsByContractAddressBySignatureErrors,
+  GetV1EventsByContractAddressBySignatureResponses,
   GetV1EventsByContractAddressData,
-  GetV1EventsByContractAddressError,
-  GetV1EventsByContractAddressResponse,
+  GetV1EventsByContractAddressErrors,
+  GetV1EventsByContractAddressResponses,
   GetV1EventsData,
-  GetV1EventsError,
-  GetV1EventsResponse,
+  GetV1EventsErrors,
+  GetV1EventsResponses,
   GetV1NftsBalanceByOwnerAddressData,
-  GetV1NftsBalanceByOwnerAddressResponse,
+  GetV1NftsBalanceByOwnerAddressErrors,
+  GetV1NftsBalanceByOwnerAddressResponses,
   GetV1NftsByContractAddressByTokenIdData,
-  GetV1NftsByContractAddressByTokenIdError,
-  GetV1NftsByContractAddressByTokenIdResponse,
+  GetV1NftsByContractAddressByTokenIdErrors,
+  GetV1NftsByContractAddressByTokenIdResponses,
   GetV1NftsByContractAddressData,
-  GetV1NftsByContractAddressError,
-  GetV1NftsByContractAddressResponse,
+  GetV1NftsByContractAddressErrors,
+  GetV1NftsByContractAddressResponses,
   GetV1NftsCollectionsByContractAddressData,
-  GetV1NftsCollectionsByContractAddressError,
-  GetV1NftsCollectionsByContractAddressResponse,
+  GetV1NftsCollectionsByContractAddressErrors,
+  GetV1NftsCollectionsByContractAddressResponses,
   GetV1NftsData,
-  GetV1NftsError,
+  GetV1NftsErrors,
   GetV1NftsMetadataRefreshByContractAddressByTokenIdData,
-  GetV1NftsMetadataRefreshByContractAddressByTokenIdError,
-  GetV1NftsMetadataRefreshByContractAddressByTokenIdResponse,
+  GetV1NftsMetadataRefreshByContractAddressByTokenIdErrors,
+  GetV1NftsMetadataRefreshByContractAddressByTokenIdResponses,
   GetV1NftsMetadataRefreshByContractAddressData,
-  GetV1NftsMetadataRefreshByContractAddressError,
-  GetV1NftsMetadataRefreshByContractAddressResponse,
+  GetV1NftsMetadataRefreshByContractAddressErrors,
+  GetV1NftsMetadataRefreshByContractAddressResponses,
   GetV1NftsOwnersByContractAddressByTokenIdData,
-  GetV1NftsOwnersByContractAddressByTokenIdError,
-  GetV1NftsOwnersByContractAddressByTokenIdResponse,
+  GetV1NftsOwnersByContractAddressByTokenIdErrors,
+  GetV1NftsOwnersByContractAddressByTokenIdResponses,
   GetV1NftsOwnersByContractAddressData,
-  GetV1NftsOwnersByContractAddressError,
-  GetV1NftsOwnersByContractAddressResponse,
-  GetV1NftsResponse,
+  GetV1NftsOwnersByContractAddressErrors,
+  GetV1NftsOwnersByContractAddressResponses,
+  GetV1NftsResponses,
   GetV1NftsTransfersByContractAddressByTokenIdData,
-  GetV1NftsTransfersByContractAddressByTokenIdError,
-  GetV1NftsTransfersByContractAddressByTokenIdResponse,
+  GetV1NftsTransfersByContractAddressByTokenIdErrors,
+  GetV1NftsTransfersByContractAddressByTokenIdResponses,
   GetV1NftsTransfersByContractAddressData,
-  GetV1NftsTransfersByContractAddressError,
-  GetV1NftsTransfersByContractAddressResponse,
+  GetV1NftsTransfersByContractAddressErrors,
+  GetV1NftsTransfersByContractAddressResponses,
   GetV1NftsTransfersData,
-  GetV1NftsTransfersError,
-  GetV1NftsTransfersResponse,
+  GetV1NftsTransfersErrors,
+  GetV1NftsTransfersResponses,
   GetV1NftsTransfersTransactionByTransactionHashData,
-  GetV1NftsTransfersTransactionByTransactionHashError,
-  GetV1NftsTransfersTransactionByTransactionHashResponse,
+  GetV1NftsTransfersTransactionByTransactionHashErrors,
+  GetV1NftsTransfersTransactionByTransactionHashResponses,
   GetV1ResolveByInputData,
-  GetV1ResolveByInputError,
-  GetV1ResolveByInputResponse,
+  GetV1ResolveByInputErrors,
+  GetV1ResolveByInputResponses,
   GetV1TokensData,
   GetV1TokensErc20ByOwnerAddressData,
-  GetV1TokensErc20ByOwnerAddressResponse,
+  GetV1TokensErc20ByOwnerAddressErrors,
+  GetV1TokensErc20ByOwnerAddressResponses,
   GetV1TokensErc721ByOwnerAddressData,
-  GetV1TokensErc721ByOwnerAddressResponse,
+  GetV1TokensErc721ByOwnerAddressErrors,
+  GetV1TokensErc721ByOwnerAddressResponses,
   GetV1TokensErc1155ByOwnerAddressData,
-  GetV1TokensErc1155ByOwnerAddressResponse,
+  GetV1TokensErc1155ByOwnerAddressErrors,
+  GetV1TokensErc1155ByOwnerAddressResponses,
+  GetV1TokensErrors,
   GetV1TokensLookupData,
-  GetV1TokensLookupResponse,
+  GetV1TokensLookupErrors,
+  GetV1TokensLookupResponses,
   GetV1TokensOwnersData,
-  GetV1TokensOwnersError,
-  GetV1TokensOwnersResponse,
+  GetV1TokensOwnersErrors,
+  GetV1TokensOwnersResponses,
   GetV1TokensPriceData,
-  GetV1TokensPriceResponse,
+  GetV1TokensPriceErrors,
+  GetV1TokensPriceResponses,
   GetV1TokensPriceSupportedData,
-  GetV1TokensPriceSupportedResponse,
-  GetV1TokensResponse,
+  GetV1TokensPriceSupportedErrors,
+  GetV1TokensPriceSupportedResponses,
+  GetV1TokensResponses,
   GetV1TokensTransfersByContractAddressData,
-  GetV1TokensTransfersByContractAddressError,
-  GetV1TokensTransfersByContractAddressResponse,
+  GetV1TokensTransfersByContractAddressErrors,
+  GetV1TokensTransfersByContractAddressResponses,
   GetV1TokensTransfersData,
-  GetV1TokensTransfersError,
-  GetV1TokensTransfersResponse,
+  GetV1TokensTransfersErrors,
+  GetV1TokensTransfersResponses,
   GetV1TokensTransfersTransactionByTransactionHashData,
-  GetV1TokensTransfersTransactionByTransactionHashError,
-  GetV1TokensTransfersTransactionByTransactionHashResponse,
+  GetV1TokensTransfersTransactionByTransactionHashErrors,
+  GetV1TokensTransfersTransactionByTransactionHashResponses,
   GetV1TransactionsByContractAddressBySignatureData,
-  GetV1TransactionsByContractAddressBySignatureError,
-  GetV1TransactionsByContractAddressBySignatureResponse,
+  GetV1TransactionsByContractAddressBySignatureErrors,
+  GetV1TransactionsByContractAddressBySignatureResponses,
   GetV1TransactionsByContractAddressData,
-  GetV1TransactionsByContractAddressError,
-  GetV1TransactionsByContractAddressResponse,
+  GetV1TransactionsByContractAddressErrors,
+  GetV1TransactionsByContractAddressResponses,
   GetV1TransactionsData,
-  GetV1TransactionsError,
-  GetV1TransactionsResponse,
+  GetV1TransactionsErrors,
+  GetV1TransactionsResponses,
   GetV1WalletsByWalletAddressTransactionsData,
-  GetV1WalletsByWalletAddressTransactionsError,
-  GetV1WalletsByWalletAddressTransactionsResponse,
+  GetV1WalletsByWalletAddressTransactionsErrors,
+  GetV1WalletsByWalletAddressTransactionsResponses,
   GetV1WebhooksData,
-  GetV1WebhooksError,
-  GetV1WebhooksResponse,
+  GetV1WebhooksErrors,
+  GetV1WebhooksResponses,
   PatchV1WebhooksByWebhookIdData,
-  PatchV1WebhooksByWebhookIdError,
-  PatchV1WebhooksByWebhookIdResponse,
+  PatchV1WebhooksByWebhookIdErrors,
+  PatchV1WebhooksByWebhookIdResponses,
   PostV1DecodeByContractAddressData,
-  PostV1DecodeByContractAddressError,
-  PostV1DecodeByContractAddressResponse,
+  PostV1DecodeByContractAddressErrors,
+  PostV1DecodeByContractAddressResponses,
   PostV1WebhooksData,
-  PostV1WebhooksError,
-  PostV1WebhooksResponse,
+  PostV1WebhooksErrors,
+  PostV1WebhooksResponses,
   PostV1WebhooksTestData,
-  PostV1WebhooksTestError,
-  PostV1WebhooksTestResponse,
+  PostV1WebhooksTestErrors,
+  PostV1WebhooksTestResponses,
 } from "./types.gen.js";
 
 export type Options<
@@ -149,8 +157,8 @@ export const getV1Webhooks = <ThrowOnError extends boolean = false>(
   options?: Options<GetV1WebhooksData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetV1WebhooksResponse,
-    GetV1WebhooksError,
+    GetV1WebhooksResponses,
+    GetV1WebhooksErrors,
     ThrowOnError
   >({
     security: [
@@ -172,8 +180,8 @@ export const postV1Webhooks = <ThrowOnError extends boolean = false>(
   options?: Options<PostV1WebhooksData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    PostV1WebhooksResponse,
-    PostV1WebhooksError,
+    PostV1WebhooksResponses,
+    PostV1WebhooksErrors,
     ThrowOnError
   >({
     security: [
@@ -201,8 +209,8 @@ export const deleteV1WebhooksByWebhookId = <
   options: Options<DeleteV1WebhooksByWebhookIdData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteV1WebhooksByWebhookIdResponse,
-    DeleteV1WebhooksByWebhookIdError,
+    DeleteV1WebhooksByWebhookIdResponses,
+    DeleteV1WebhooksByWebhookIdErrors,
     ThrowOnError
   >({
     security: [
@@ -226,8 +234,8 @@ export const patchV1WebhooksByWebhookId = <
   options: Options<PatchV1WebhooksByWebhookIdData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).patch<
-    PatchV1WebhooksByWebhookIdResponse,
-    PatchV1WebhooksByWebhookIdError,
+    PatchV1WebhooksByWebhookIdResponses,
+    PatchV1WebhooksByWebhookIdErrors,
     ThrowOnError
   >({
     security: [
@@ -240,7 +248,7 @@ export const patchV1WebhooksByWebhookId = <
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -253,8 +261,8 @@ export const postV1WebhooksTest = <ThrowOnError extends boolean = false>(
   options?: Options<PostV1WebhooksTestData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).post<
-    PostV1WebhooksTestResponse,
-    PostV1WebhooksTestError,
+    PostV1WebhooksTestResponses,
+    PostV1WebhooksTestErrors,
     ThrowOnError
   >({
     security: [
@@ -280,8 +288,8 @@ export const getV1Events = <ThrowOnError extends boolean = false>(
   options?: Options<GetV1EventsData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetV1EventsResponse,
-    GetV1EventsError,
+    GetV1EventsResponses,
+    GetV1EventsErrors,
     ThrowOnError
   >({
     security: [
@@ -305,8 +313,8 @@ export const getV1EventsByContractAddress = <
   options: Options<GetV1EventsByContractAddressData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1EventsByContractAddressResponse,
-    GetV1EventsByContractAddressError,
+    GetV1EventsByContractAddressResponses,
+    GetV1EventsByContractAddressErrors,
     ThrowOnError
   >({
     security: [
@@ -330,8 +338,8 @@ export const getV1EventsByContractAddressBySignature = <
   options: Options<GetV1EventsByContractAddressBySignatureData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1EventsByContractAddressBySignatureResponse,
-    GetV1EventsByContractAddressBySignatureError,
+    GetV1EventsByContractAddressBySignatureResponses,
+    GetV1EventsByContractAddressBySignatureErrors,
     ThrowOnError
   >({
     security: [
@@ -353,8 +361,8 @@ export const getV1Transactions = <ThrowOnError extends boolean = false>(
   options?: Options<GetV1TransactionsData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetV1TransactionsResponse,
-    GetV1TransactionsError,
+    GetV1TransactionsResponses,
+    GetV1TransactionsErrors,
     ThrowOnError
   >({
     security: [
@@ -378,8 +386,8 @@ export const getV1TransactionsByContractAddress = <
   options: Options<GetV1TransactionsByContractAddressData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1TransactionsByContractAddressResponse,
-    GetV1TransactionsByContractAddressError,
+    GetV1TransactionsByContractAddressResponses,
+    GetV1TransactionsByContractAddressErrors,
     ThrowOnError
   >({
     security: [
@@ -406,8 +414,8 @@ export const getV1TransactionsByContractAddressBySignature = <
   >,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1TransactionsByContractAddressBySignatureResponse,
-    GetV1TransactionsByContractAddressBySignatureError,
+    GetV1TransactionsByContractAddressBySignatureResponses,
+    GetV1TransactionsByContractAddressBySignatureErrors,
     ThrowOnError
   >({
     security: [
@@ -429,8 +437,8 @@ export const getV1TokensOwners = <ThrowOnError extends boolean = false>(
   options: Options<GetV1TokensOwnersData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1TokensOwnersResponse,
-    GetV1TokensOwnersError,
+    GetV1TokensOwnersResponses,
+    GetV1TokensOwnersErrors,
     ThrowOnError
   >({
     security: [
@@ -457,8 +465,8 @@ export const getV1TokensTransfersTransactionByTransactionHash = <
   >,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1TokensTransfersTransactionByTransactionHashResponse,
-    GetV1TokensTransfersTransactionByTransactionHashError,
+    GetV1TokensTransfersTransactionByTransactionHashResponses,
+    GetV1TokensTransfersTransactionByTransactionHashErrors,
     ThrowOnError
   >({
     security: [
@@ -482,8 +490,8 @@ export const getV1TokensTransfersByContractAddress = <
   options: Options<GetV1TokensTransfersByContractAddressData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1TokensTransfersByContractAddressResponse,
-    GetV1TokensTransfersByContractAddressError,
+    GetV1TokensTransfersByContractAddressResponses,
+    GetV1TokensTransfersByContractAddressErrors,
     ThrowOnError
   >({
     security: [
@@ -505,8 +513,8 @@ export const getV1TokensTransfers = <ThrowOnError extends boolean = false>(
   options?: Options<GetV1TokensTransfersData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetV1TokensTransfersResponse,
-    GetV1TokensTransfersError,
+    GetV1TokensTransfersResponses,
+    GetV1TokensTransfersErrors,
     ThrowOnError
   >({
     security: [
@@ -521,9 +529,9 @@ export const getV1TokensTransfers = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * @deprecated
  * Get ERC-20 balances by address
  * Get ERC-20 balances for a given address. [BEING DEPRECATED IN FAVOR OF /tokens]
+ * @deprecated
  */
 export const getV1TokensErc20ByOwnerAddress = <
   ThrowOnError extends boolean = false,
@@ -531,8 +539,8 @@ export const getV1TokensErc20ByOwnerAddress = <
   options: Options<GetV1TokensErc20ByOwnerAddressData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1TokensErc20ByOwnerAddressResponse,
-    unknown,
+    GetV1TokensErc20ByOwnerAddressResponses,
+    GetV1TokensErc20ByOwnerAddressErrors,
     ThrowOnError
   >({
     security: [
@@ -554,8 +562,8 @@ export const getV1Tokens = <ThrowOnError extends boolean = false>(
   options: Options<GetV1TokensData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1TokensResponse,
-    unknown,
+    GetV1TokensResponses,
+    GetV1TokensErrors,
     ThrowOnError
   >({
     security: [
@@ -570,9 +578,9 @@ export const getV1Tokens = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * @deprecated
  * Get ERC-721 balances by address
  * Get ERC-721 (NFT) balances for a given address [BEING DEPRECATED IN FAVOR OF /nfts/balance]
+ * @deprecated
  */
 export const getV1TokensErc721ByOwnerAddress = <
   ThrowOnError extends boolean = false,
@@ -580,8 +588,8 @@ export const getV1TokensErc721ByOwnerAddress = <
   options: Options<GetV1TokensErc721ByOwnerAddressData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1TokensErc721ByOwnerAddressResponse,
-    unknown,
+    GetV1TokensErc721ByOwnerAddressResponses,
+    GetV1TokensErc721ByOwnerAddressErrors,
     ThrowOnError
   >({
     security: [
@@ -596,9 +604,9 @@ export const getV1TokensErc721ByOwnerAddress = <
 };
 
 /**
- * @deprecated
  * Get ERC-1155 balances by address
  * Get ERC-1155 (Multi Token) balances for a given address [BEING DEPRECATED IN FAVOR OF /nfts/balance]
+ * @deprecated
  */
 export const getV1TokensErc1155ByOwnerAddress = <
   ThrowOnError extends boolean = false,
@@ -606,8 +614,8 @@ export const getV1TokensErc1155ByOwnerAddress = <
   options: Options<GetV1TokensErc1155ByOwnerAddressData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1TokensErc1155ByOwnerAddressResponse,
-    unknown,
+    GetV1TokensErc1155ByOwnerAddressResponses,
+    GetV1TokensErc1155ByOwnerAddressErrors,
     ThrowOnError
   >({
     security: [
@@ -629,8 +637,8 @@ export const getV1TokensPriceSupported = <ThrowOnError extends boolean = false>(
   options?: Options<GetV1TokensPriceSupportedData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetV1TokensPriceSupportedResponse,
-    unknown,
+    GetV1TokensPriceSupportedResponses,
+    GetV1TokensPriceSupportedErrors,
     ThrowOnError
   >({
     security: [
@@ -652,8 +660,8 @@ export const getV1TokensPrice = <ThrowOnError extends boolean = false>(
   options?: Options<GetV1TokensPriceData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetV1TokensPriceResponse,
-    unknown,
+    GetV1TokensPriceResponses,
+    GetV1TokensPriceErrors,
     ThrowOnError
   >({
     security: [
@@ -675,8 +683,8 @@ export const getV1TokensLookup = <ThrowOnError extends boolean = false>(
   options: Options<GetV1TokensLookupData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1TokensLookupResponse,
-    unknown,
+    GetV1TokensLookupResponses,
+    GetV1TokensLookupErrors,
     ThrowOnError
   >({
     security: [
@@ -698,8 +706,8 @@ export const getV1ResolveByInput = <ThrowOnError extends boolean = false>(
   options: Options<GetV1ResolveByInputData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1ResolveByInputResponse,
-    GetV1ResolveByInputError,
+    GetV1ResolveByInputResponses,
+    GetV1ResolveByInputErrors,
     ThrowOnError
   >({
     security: [
@@ -721,8 +729,8 @@ export const getV1Blocks = <ThrowOnError extends boolean = false>(
   options?: Options<GetV1BlocksData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetV1BlocksResponse,
-    GetV1BlocksError,
+    GetV1BlocksResponses,
+    GetV1BlocksErrors,
     ThrowOnError
   >({
     security: [
@@ -746,8 +754,8 @@ export const getV1ContractsAbiByContractAddress = <
   options: Options<GetV1ContractsAbiByContractAddressData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1ContractsAbiByContractAddressResponse,
-    GetV1ContractsAbiByContractAddressError,
+    GetV1ContractsAbiByContractAddressResponses,
+    GetV1ContractsAbiByContractAddressErrors,
     ThrowOnError
   >({
     security: [
@@ -771,8 +779,8 @@ export const getV1ContractsMetadataByContractAddress = <
   options: Options<GetV1ContractsMetadataByContractAddressData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1ContractsMetadataByContractAddressResponse,
-    GetV1ContractsMetadataByContractAddressError,
+    GetV1ContractsMetadataByContractAddressResponses,
+    GetV1ContractsMetadataByContractAddressErrors,
     ThrowOnError
   >({
     security: [
@@ -796,8 +804,8 @@ export const postV1DecodeByContractAddress = <
   options: Options<PostV1DecodeByContractAddressData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).post<
-    PostV1DecodeByContractAddressResponse,
-    PostV1DecodeByContractAddressError,
+    PostV1DecodeByContractAddressResponses,
+    PostV1DecodeByContractAddressErrors,
     ThrowOnError
   >({
     security: [
@@ -810,7 +818,7 @@ export const postV1DecodeByContractAddress = <
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers,
+      ...options.headers,
     },
   });
 };
@@ -825,8 +833,8 @@ export const getV1NftsBalanceByOwnerAddress = <
   options: Options<GetV1NftsBalanceByOwnerAddressData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1NftsBalanceByOwnerAddressResponse,
-    unknown,
+    GetV1NftsBalanceByOwnerAddressResponses,
+    GetV1NftsBalanceByOwnerAddressErrors,
     ThrowOnError
   >({
     security: [
@@ -850,8 +858,8 @@ export const getV1NftsCollectionsByContractAddress = <
   options: Options<GetV1NftsCollectionsByContractAddressData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1NftsCollectionsByContractAddressResponse,
-    GetV1NftsCollectionsByContractAddressError,
+    GetV1NftsCollectionsByContractAddressResponses,
+    GetV1NftsCollectionsByContractAddressErrors,
     ThrowOnError
   >({
     security: [
@@ -873,8 +881,8 @@ export const getV1Nfts = <ThrowOnError extends boolean = false>(
   options: Options<GetV1NftsData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1NftsResponse,
-    GetV1NftsError,
+    GetV1NftsResponses,
+    GetV1NftsErrors,
     ThrowOnError
   >({
     security: [
@@ -898,8 +906,8 @@ export const getV1NftsOwnersByContractAddress = <
   options: Options<GetV1NftsOwnersByContractAddressData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1NftsOwnersByContractAddressResponse,
-    GetV1NftsOwnersByContractAddressError,
+    GetV1NftsOwnersByContractAddressResponses,
+    GetV1NftsOwnersByContractAddressErrors,
     ThrowOnError
   >({
     security: [
@@ -923,8 +931,8 @@ export const getV1NftsOwnersByContractAddressByTokenId = <
   options: Options<GetV1NftsOwnersByContractAddressByTokenIdData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1NftsOwnersByContractAddressByTokenIdResponse,
-    GetV1NftsOwnersByContractAddressByTokenIdError,
+    GetV1NftsOwnersByContractAddressByTokenIdResponses,
+    GetV1NftsOwnersByContractAddressByTokenIdErrors,
     ThrowOnError
   >({
     security: [
@@ -946,8 +954,8 @@ export const getV1NftsTransfers = <ThrowOnError extends boolean = false>(
   options?: Options<GetV1NftsTransfersData, ThrowOnError>,
 ) => {
   return (options?.client ?? _heyApiClient).get<
-    GetV1NftsTransfersResponse,
-    GetV1NftsTransfersError,
+    GetV1NftsTransfersResponses,
+    GetV1NftsTransfersErrors,
     ThrowOnError
   >({
     security: [
@@ -974,8 +982,8 @@ export const getV1NftsTransfersTransactionByTransactionHash = <
   >,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1NftsTransfersTransactionByTransactionHashResponse,
-    GetV1NftsTransfersTransactionByTransactionHashError,
+    GetV1NftsTransfersTransactionByTransactionHashResponses,
+    GetV1NftsTransfersTransactionByTransactionHashErrors,
     ThrowOnError
   >({
     security: [
@@ -999,8 +1007,8 @@ export const getV1NftsTransfersByContractAddress = <
   options: Options<GetV1NftsTransfersByContractAddressData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1NftsTransfersByContractAddressResponse,
-    GetV1NftsTransfersByContractAddressError,
+    GetV1NftsTransfersByContractAddressResponses,
+    GetV1NftsTransfersByContractAddressErrors,
     ThrowOnError
   >({
     security: [
@@ -1024,8 +1032,8 @@ export const getV1NftsByContractAddress = <
   options: Options<GetV1NftsByContractAddressData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1NftsByContractAddressResponse,
-    GetV1NftsByContractAddressError,
+    GetV1NftsByContractAddressResponses,
+    GetV1NftsByContractAddressErrors,
     ThrowOnError
   >({
     security: [
@@ -1052,8 +1060,8 @@ export const getV1NftsTransfersByContractAddressByTokenId = <
   >,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1NftsTransfersByContractAddressByTokenIdResponse,
-    GetV1NftsTransfersByContractAddressByTokenIdError,
+    GetV1NftsTransfersByContractAddressByTokenIdResponses,
+    GetV1NftsTransfersByContractAddressByTokenIdErrors,
     ThrowOnError
   >({
     security: [
@@ -1077,8 +1085,8 @@ export const getV1NftsByContractAddressByTokenId = <
   options: Options<GetV1NftsByContractAddressByTokenIdData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1NftsByContractAddressByTokenIdResponse,
-    GetV1NftsByContractAddressByTokenIdError,
+    GetV1NftsByContractAddressByTokenIdResponses,
+    GetV1NftsByContractAddressByTokenIdErrors,
     ThrowOnError
   >({
     security: [
@@ -1102,8 +1110,8 @@ export const getV1NftsMetadataRefreshByContractAddress = <
   options: Options<GetV1NftsMetadataRefreshByContractAddressData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1NftsMetadataRefreshByContractAddressResponse,
-    GetV1NftsMetadataRefreshByContractAddressError,
+    GetV1NftsMetadataRefreshByContractAddressResponses,
+    GetV1NftsMetadataRefreshByContractAddressErrors,
     ThrowOnError
   >({
     security: [
@@ -1130,8 +1138,8 @@ export const getV1NftsMetadataRefreshByContractAddressByTokenId = <
   >,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1NftsMetadataRefreshByContractAddressByTokenIdResponse,
-    GetV1NftsMetadataRefreshByContractAddressByTokenIdError,
+    GetV1NftsMetadataRefreshByContractAddressByTokenIdResponses,
+    GetV1NftsMetadataRefreshByContractAddressByTokenIdErrors,
     ThrowOnError
   >({
     security: [
@@ -1155,8 +1163,8 @@ export const getV1WalletsByWalletAddressTransactions = <
   options: Options<GetV1WalletsByWalletAddressTransactionsData, ThrowOnError>,
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetV1WalletsByWalletAddressTransactionsResponse,
-    GetV1WalletsByWalletAddressTransactionsError,
+    GetV1WalletsByWalletAddressTransactionsResponses,
+    GetV1WalletsByWalletAddressTransactionsErrors,
     ThrowOnError
   >({
     security: [

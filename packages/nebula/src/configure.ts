@@ -1,5 +1,9 @@
-import { type Config, createClient, createConfig } from "@hey-api/client-fetch";
 import type { ThirdwebClient } from "thirdweb";
+import {
+  type Config,
+  createClient,
+  createConfig,
+} from "./client/client/index.js";
 import { client } from "./client/client.gen.js";
 
 export type NebulaClientOptions = {
