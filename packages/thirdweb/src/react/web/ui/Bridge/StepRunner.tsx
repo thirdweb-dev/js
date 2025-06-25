@@ -322,7 +322,8 @@ export function StepRunner({
 
               <Container flex="column" gap="3xs" style={{ flex: 1 }}>
                 <Text color="primaryText" size="sm">
-                  TEST
+                  {request.onramp.slice(0, 1).toUpperCase() +
+                    request.onramp.slice(1)}
                 </Text>
                 <Text color="secondaryText" size="xs">
                   {getStepStatusText(onrampStatus)}
