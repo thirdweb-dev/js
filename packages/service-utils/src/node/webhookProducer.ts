@@ -51,7 +51,7 @@ export class WebhookEventProducer {
       return {
         ...event,
         // Default to now.
-        created_at: event.createdAt ?? new Date(),
+        createdAt: event.createdAt ?? new Date(),
         // Default to a generated UUID.
         id: event.id ?? `evt_${createId()}`,
       };
