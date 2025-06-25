@@ -19,6 +19,7 @@ export * from "../core/usage.js";
 export * from "../core/usageV2.js";
 export * from "./kafka.js";
 export * from "./usageV2.js";
+export * from "./webhookProducer.js";
 
 type NodeServiceConfig = CoreServiceConfig;
 
