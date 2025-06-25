@@ -1053,12 +1053,9 @@ importers:
 
   packages/engine:
     dependencies:
-<<<<<<< HEAD
       '@hey-api/client-fetch':
         specifier: 0.10.0
-        version: 0.10.0(@hey-api/openapi-ts@0.77.0(magicast@0.3.5)(typescript@5.8.3))
-=======
->>>>>>> origin/main
+        version: 0.10.0(@hey-api/openapi-ts@0.76.0(magicast@0.3.5)(typescript@5.8.3))
       typescript:
         specifier: '>=5.0.4'
         version: 5.8.3
@@ -1067,13 +1064,8 @@ importers:
         specifier: 2.0.4
         version: 2.0.4
       '@hey-api/openapi-ts':
-<<<<<<< HEAD
-        specifier: 0.77.0
-        version: 0.77.0(magicast@0.3.5)(typescript@5.8.3)
-=======
         specifier: 0.76.0
         version: 0.76.0(magicast@0.3.5)(typescript@5.8.3)
->>>>>>> origin/main
       rimraf:
         specifier: 6.0.1
         version: 6.0.1
@@ -3432,28 +3424,18 @@ packages:
     peerDependencies:
       react: '>= 16 || ^19.0.0-rc'
 
-<<<<<<< HEAD
   '@hey-api/client-fetch@0.10.0':
     resolution: {integrity: sha512-C7vzj4t52qPiHCqjn1l8cRTI2p4pZCd7ViLtJDTHr5ZwI4sWOYC1tmv6bd529qqY6HFFbhGCz4TAZSwKAMJncg==}
     deprecated: Starting with v0.73.0, this package is bundled directly inside @hey-api/openapi-ts.
     peerDependencies:
       '@hey-api/openapi-ts': < 2
 
-=======
->>>>>>> origin/main
   '@hey-api/json-schema-ref-parser@1.0.6':
     resolution: {integrity: sha512-yktiFZoWPtEW8QKS65eqKwA5MTKp88CyiL8q72WynrBs/73SAaxlSWlA2zW/DZlywZ5hX1OYzrCC0wFdvO9c2w==}
     engines: {node: '>= 16'}
 
   '@hey-api/openapi-ts@0.76.0':
     resolution: {integrity: sha512-zNSZX6pqOULV0znt8UFTLLNKT5ArBXAXcIQiVMZLOCNmwyQ7c23B0QsjboRYOrb3NzVwYehT/5Nj65axDkxXOw==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=22.10.0}
-    hasBin: true
-    peerDependencies:
-      typescript: ^5.5.3
-
-  '@hey-api/openapi-ts@0.77.0':
-    resolution: {integrity: sha512-HAJbd8QfxeBPZ788Ghiw7bzzzTKxW+wW+34foleEztyZJnRV20barvevu8YAK1BtyiIGIpEtAfoqO8KUj4VuBw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=22.10.0}
     hasBin: true
     peerDependencies:
@@ -7549,7 +7531,6 @@ packages:
 
   '@walletconnect/modal@2.7.0':
     resolution: {integrity: sha512-RQVt58oJ+rwqnPcIvRFeMGKuXb9qkgSmwz4noF8JZGUym3gUAzVs+uW2NQ1Owm9XOJAV+sANrtJ+VoVq1ftElw==}
-    deprecated: Please follow the migration guide on https://docs.reown.com/appkit/upgrade/wcm
 
   '@walletconnect/react-native-compat@2.17.3':
     resolution: {integrity: sha512-lHKwXKoB0rdDH1ukxUx7o86xosWbttWIHYMZ8tgAQC1k9VH3CZZCoBcHOAAX8iBzyb0n0UP3/9zRrOcJE5nz7Q==}
@@ -19368,17 +19349,10 @@ snapshots:
     dependencies:
       react: 19.1.0
 
-<<<<<<< HEAD
-  '@hey-api/client-fetch@0.10.0(@hey-api/openapi-ts@0.72.1(magicast@0.3.5)(typescript@5.8.3))':
+  '@hey-api/client-fetch@0.10.0(@hey-api/openapi-ts@0.76.0(magicast@0.3.5)(typescript@5.8.3))':
     dependencies:
-      '@hey-api/openapi-ts': 0.72.1(magicast@0.3.5)(typescript@5.8.3)
+      '@hey-api/openapi-ts': 0.76.0(magicast@0.3.5)(typescript@5.8.3)
 
-  '@hey-api/client-fetch@0.10.0(@hey-api/openapi-ts@0.77.0(magicast@0.3.5)(typescript@5.8.3))':
-    dependencies:
-      '@hey-api/openapi-ts': 0.77.0(magicast@0.3.5)(typescript@5.8.3)
-
-=======
->>>>>>> origin/main
   '@hey-api/json-schema-ref-parser@1.0.6':
     dependencies:
       '@jsdevtools/ono': 7.1.3
@@ -19387,19 +19361,6 @@ snapshots:
       lodash: 4.17.21
 
   '@hey-api/openapi-ts@0.76.0(magicast@0.3.5)(typescript@5.8.3)':
-    dependencies:
-      '@hey-api/json-schema-ref-parser': 1.0.6
-      ansi-colors: 4.1.3
-      c12: 2.0.1(magicast@0.3.5)
-      color-support: 1.1.3
-      commander: 13.0.0
-      handlebars: 4.7.8
-      open: 10.1.2
-      typescript: 5.8.3
-    transitivePeerDependencies:
-      - magicast
-
-  '@hey-api/openapi-ts@0.77.0(magicast@0.3.5)(typescript@5.8.3)':
     dependencies:
       '@hey-api/json-schema-ref-parser': 1.0.6
       ansi-colors: 4.1.3
