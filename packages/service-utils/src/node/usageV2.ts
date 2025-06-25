@@ -6,48 +6,60 @@ import {
 } from "../core/usageV2.js";
 import { KafkaProducer } from "./kafka.js";
 
-const TEAM_ID_PREFIX = "team_";
-const PROJECT_ID_PREFIX = "prj_";
-
 /**
- * Creates a UsageV2Producer which opens a persistent TCP connection.
- * This class is thread-safe so your service should re-use one instance.
+ * Creates a producer for usage events.
  *
  * Example:
  * ```ts
- * usageV2 = new UsageV2Producer(..)
- * await usageV2.sendEvents(events)
- * // Non-blocking:
- * // void usageV2.sendEvents(events).catch((e) => console.error(e))
+ * const kafkaProducer = new KafkaProducer({...});
+ * const usageV2 = new UsageV2Producer({ kafkaProducer, source: "storage" });
+ * await usageV2.sendEvents(events);
  * ```
  */
 export class UsageV2Producer {
   private kafkaProducer: KafkaProducer;
   private topic: string;
 
-  constructor(config: {
-    /**
-     * A descriptive name for your service. Example: "storage-server"
-     */
-    producerName: string;
-    /**
-     * A comma-separated list of `host[:port]` Kafka servers.
-     */
-    kafkaServers: string;
-    /**
-     * The product where usage is coming from.
-     */
-    source: UsageV2Source;
-
-    username: string;
-    password: string;
-  }) {
-    this.kafkaProducer = new KafkaProducer({
-      kafkaServers: config.kafkaServers,
-      password: config.password,
-      producerName: config.producerName,
-      username: config.username,
-    });
+  constructor(
+    config:
+      | {
+          /**
+           * Shared KafkaProducer instance.
+           */
+          kafkaProducer: KafkaProducer;
+          /**
+           * The product where usage is coming from.
+           */
+          source: UsageV2Source;
+        }
+      | {
+          /**
+           * A descriptive name for your service. Example: "storage-server"
+           */
+          producerName: string;
+          /**
+           * A comma-separated list of `host[:port]` Kafka servers.
+           * @deprecated: Instantiate and pass in `kafkaProducer` instead.
+           */
+          kafkaServers: string;
+          /**
+           * The product where usage is coming from.
+           */
+          source: UsageV2Source;
+          username: string;
+          password: string;
+        },
+  ) {
+    if ("kafkaProducer" in config) {
+      this.kafkaProducer = config.kafkaProducer;
+    } else {
+      this.kafkaProducer = new KafkaProducer({
+        kafkaServers: config.kafkaServers,
+        password: config.password,
+        producerName: config.producerName,
+        username: config.username,
+      });
+    }
     this.topic = getTopicName(config.source);
   }
 
@@ -61,29 +73,21 @@ export class UsageV2Producer {
    * @param events
    */
   async sendEvents(events: UsageV2Event[]): Promise<void> {
-    const parsedEvents = events.map((event) => ({
+    const parsedEvents: UsageV2Event[] = events.map((event) => ({
       ...event,
       // Default to now.
       created_at: event.created_at ?? new Date(),
       // Default to a generated UUID.
       id: event.id ?? randomUUID(),
-      // Remove the "prj_" prefix, if any.
-      project_id: event.project_id?.startsWith(PROJECT_ID_PREFIX)
-        ? event.project_id.slice(PROJECT_ID_PREFIX.length)
+      // Remove the "prj_" prefix.
+      project_id: event.project_id?.startsWith("prj_")
+        ? event.project_id.slice(4)
         : event.project_id,
-      // Remove the "team_" prefix, if any.
-      team_id: event.team_id.startsWith(TEAM_ID_PREFIX)
-        ? event.team_id.slice(TEAM_ID_PREFIX.length)
+      // Remove the "team_" prefix.
+      team_id: event.team_id.startsWith("team_")
+        ? event.team_id.slice(5)
         : event.team_id,
     }));
     await this.kafkaProducer.send(this.topic, parsedEvents);
-  }
-
-  /**
-   * Disconnects UsageV2Producer.
-   * Useful when shutting down the service to flush in-flight events.
-   */
-  async disconnect() {
-    await this.kafkaProducer.disconnect();
   }
 }
