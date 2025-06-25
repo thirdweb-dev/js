@@ -819,7 +819,18 @@ export type SigningOptions =
 	  })
 	| (Erc4337SigningOptions & {
 			type: "ERC4337";
-	  });
+	  })
+	| {
+			type: "auto";
+			/**
+			 * The address to sign from
+			 */
+			from: string;
+			/**
+			 * The chain ID for the signing operation
+			 */
+			chainId: number;
+	  };
 
 /**
  * Execution Option Variants
