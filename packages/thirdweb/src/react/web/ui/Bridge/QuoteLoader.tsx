@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { Token } from "../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import { toUnits } from "../../../../utils/units.js";
 import {
   type BridgePrepareRequest,
@@ -191,7 +190,6 @@ function getBridgeParams(args: {
         currency: paymentMethod.currency,
         enabled: !!(destinationToken && amount && client),
         onramp: paymentMethod.onramp || "coinbase",
-        onrampTokenAddress: NATIVE_TOKEN_ADDRESS,
         paymentLinkId: args.paymentLinkId,
         purchaseData: args.purchaseData,
         receiver,

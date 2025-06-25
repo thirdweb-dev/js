@@ -326,7 +326,7 @@ export async function getBuyWithFiatQuote(
       maxSteps: 2,
       onramp: onrampProvider,
       onrampChainId: params.onrampChainId,
-      onrampTokenAddress: params.onrampTokenAddress ?? NATIVE_TOKEN_ADDRESS,
+      onrampTokenAddress: params.onrampTokenAddress,
       paymentLinkId: params.paymentLinkId,
       purchaseData: params.purchaseData,
       receiver: params.toAddress, // force onramp to native token to avoid missing gas issues
