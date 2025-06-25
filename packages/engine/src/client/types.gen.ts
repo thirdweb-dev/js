@@ -1625,5 +1625,5 @@ export type SearchActivityLogsResponse =
 	SearchActivityLogsResponses[keyof SearchActivityLogsResponses];
 
 export type ClientOptions = {
-	baseUrl: "http://localhost:3001" | (string & {});
+	baseUrl: "https://engine.thirdweb-dev.com" | (string & {});
 };

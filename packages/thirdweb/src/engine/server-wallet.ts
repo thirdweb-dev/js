@@ -1,6 +1,6 @@
 import {
-  type ExecutionOptions as ExecutionOptionsWithChainId,
-  type SigningOptions,
+  type SendTransactionData,
+  type SignMessageData,
   type SpecificExecutionOptions,
   sendTransaction,
   signMessage,
@@ -16,13 +16,14 @@ import { type Hex, toHex } from "../utils/encoding/hex.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { stringify } from "../utils/json.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
+import type { Prettify } from "../utils/type-utils.js";
 import type {
   Account,
   SendTransactionOption,
 } from "../wallets/interfaces/wallet.js";
 import { waitForTransactionHash } from "./wait-for-tx-hash.js";
 
-type ExecutionOptions = SpecificExecutionOptions;
+type ExecutionOptions = Prettify<SpecificExecutionOptions>;
 
 /**
  * Options for creating an server wallet.
@@ -156,7 +157,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
 
   const getExecutionOptionsWithChainId = (
     chainId: number,
-  ): ExecutionOptionsWithChainId => {
+  ): SendTransactionData["body"]["executionOptions"] => {
     if (!executionOptions) {
       return {
         chainId,
@@ -180,7 +181,9 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
     }
   };
 
-  const getSigningOptions = (chainId: number | undefined): SigningOptions => {
+  const getSigningOptions = (
+    chainId: number | undefined,
+  ): SignMessageData["body"]["signingOptions"] => {
     // if no chainId passed specifically for this signature
     // we HAVE TO fallback to EOA signature
     if (!chainId) {

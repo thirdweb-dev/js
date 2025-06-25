@@ -1,3 +1,4 @@
+import { verifyTypedData } from "src/auth/verify-typed-data.js";
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
@@ -36,8 +37,8 @@ describe.runIf(
     beforeAll(async () => {
       setThirdwebDomains({
         bundler: "bundler.thirdweb-dev.com",
-        // engineCloud: "engine.thirdweb-dev.com",
-        engineCloud: "localhost:3009",
+        engineCloud: "engine.thirdweb-dev.com",
+        // engineCloud: "localhost:3009",
         rpc: "rpc.thirdweb-dev.com",
         storage: "storage.thirdweb-dev.com",
       });
@@ -78,6 +79,32 @@ describe.runIf(
         ...typedData.basic,
       });
       expect(signature).toBeDefined();
+    });
+
+    it("should sign typed data for EOA execution options", async () => {
+      const eoaServerWallet = Engine.serverWallet({
+        address: process.env.ENGINE_CLOUD_WALLET_ADDRESS_EOA as string,
+        chain: arbitrumSepolia,
+        client: TEST_CLIENT,
+        vaultAccessToken: process.env.VAULT_TOKEN as string,
+      });
+
+      const signature = await eoaServerWallet.signTypedData({
+        ...typedData.basic,
+      });
+
+      expect(signature).toBeDefined();
+
+      const is_valid = await verifyTypedData({
+        address: process.env.ENGINE_CLOUD_WALLET_ADDRESS_EOA as string,
+        chain: arbitrumSepolia,
+        client: TEST_CLIENT,
+        ...typedData.basic,
+
+        signature,
+      });
+
+      expect(is_valid).toBe(true);
     });
 
     it("should send a tx with regular API", async () => {

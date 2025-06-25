@@ -5,7 +5,6 @@
     "@auth": true,
     "@beta": true,
     "@bridge": true,
-    "@buyCrypto": true,
     "@chain": true,
     "@client": true,
     "@component": true,
@@ -82,11 +81,7 @@
       "syntaxKind": "block",
       "tagName": "@walletUtils"
     },
-    {
-      "syntaxKind": "block",
-      "tagName": "@buyCrypto"
-    },
-    {
+   {
       "syntaxKind": "block",
       "tagName": "@bridge"
     },

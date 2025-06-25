@@ -1,0 +1,5 @@
+---
+"thirdweb": patch
+---
+
+Deprecate PayEmbed

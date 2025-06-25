@@ -7,7 +7,7 @@ import {
   SuccessScreen,
   type SuccessScreenProps,
 } from "../../react/web/ui/Bridge/payment-success/SuccessScreen.js";
-import { ModalThemeWrapper } from "../utils.js";
+import { ModalThemeWrapper, storyClient } from "../utils.js";
 import {
   FUND_WALLET_UI_OPTIONS,
   simpleBuyQuote,
@@ -126,6 +126,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
+    client: storyClient,
     theme: "dark",
   },
   parameters: {
@@ -135,6 +136,7 @@ export const Default: Story = {
 
 export const DefaultLight: Story = {
   args: {
+    client: storyClient,
     theme: "light",
   },
   parameters: {
@@ -144,6 +146,7 @@ export const DefaultLight: Story = {
 
 export const OnrampPayment: Story = {
   args: {
+    client: storyClient,
     completedStatuses: mockOnrampCompletedStatuses,
     preparedQuote: simpleOnrampQuote,
     theme: "dark",
@@ -161,6 +164,7 @@ export const OnrampPayment: Story = {
 
 export const OnrampPaymentLight: Story = {
   args: {
+    client: storyClient,
     completedStatuses: mockOnrampCompletedStatuses,
     preparedQuote: simpleOnrampQuote,
     theme: "light",
@@ -172,6 +176,7 @@ export const OnrampPaymentLight: Story = {
 
 export const ComplexPayment: Story = {
   args: {
+    client: storyClient,
     completedStatuses: [
       ...mockOnrampCompletedStatuses,
       ...mockBuyCompletedStatuses,
@@ -192,6 +197,7 @@ export const ComplexPayment: Story = {
 
 export const ComplexPaymentLight: Story = {
   args: {
+    client: storyClient,
     completedStatuses: [
       ...mockOnrampCompletedStatuses,
       ...mockBuyCompletedStatuses,
@@ -206,6 +212,7 @@ export const ComplexPaymentLight: Story = {
 
 export const TransactionPayment: Story = {
   args: {
+    client: storyClient,
     completedStatuses: mockBuyCompletedStatuses,
     preparedQuote: simpleBuyQuote,
     theme: "light",

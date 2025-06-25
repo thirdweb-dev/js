@@ -1053,9 +1053,12 @@ importers:
 
   packages/engine:
     dependencies:
+<<<<<<< HEAD
       '@hey-api/client-fetch':
         specifier: 0.10.0
         version: 0.10.0(@hey-api/openapi-ts@0.77.0(magicast@0.3.5)(typescript@5.8.3))
+=======
+>>>>>>> origin/main
       typescript:
         specifier: '>=5.0.4'
         version: 5.8.3
@@ -1064,8 +1067,13 @@ importers:
         specifier: 2.0.4
         version: 2.0.4
       '@hey-api/openapi-ts':
+<<<<<<< HEAD
         specifier: 0.77.0
         version: 0.77.0(magicast@0.3.5)(typescript@5.8.3)
+=======
+        specifier: 0.76.0
+        version: 0.76.0(magicast@0.3.5)(typescript@5.8.3)
+>>>>>>> origin/main
       rimraf:
         specifier: 6.0.1
         version: 6.0.1
@@ -1075,9 +1083,6 @@ importers:
 
   packages/insight:
     dependencies:
-      '@hey-api/client-fetch':
-        specifier: 0.10.0
-        version: 0.10.0(@hey-api/openapi-ts@0.72.1(magicast@0.3.5)(typescript@5.8.3))
       typescript:
         specifier: '>=5.0.4'
         version: 5.8.3
@@ -1086,8 +1091,8 @@ importers:
         specifier: 2.0.4
         version: 2.0.4
       '@hey-api/openapi-ts':
-        specifier: 0.72.1
-        version: 0.72.1(magicast@0.3.5)(typescript@5.8.3)
+        specifier: 0.76.0
+        version: 0.76.0(magicast@0.3.5)(typescript@5.8.3)
       rimraf:
         specifier: 6.0.1
         version: 6.0.1
@@ -1097,9 +1102,6 @@ importers:
 
   packages/nebula:
     dependencies:
-      '@hey-api/client-fetch':
-        specifier: 0.10.0
-        version: 0.10.0(@hey-api/openapi-ts@0.72.1(magicast@0.3.5)(typescript@5.8.3))
       thirdweb:
         specifier: workspace:*
         version: link:../thirdweb
@@ -1111,8 +1113,8 @@ importers:
         specifier: 2.0.4
         version: 2.0.4
       '@hey-api/openapi-ts':
-        specifier: 0.72.1
-        version: 0.72.1(magicast@0.3.5)(typescript@5.8.3)
+        specifier: 0.76.0
+        version: 0.76.0(magicast@0.3.5)(typescript@5.8.3)
       rimraf:
         specifier: 6.0.1
         version: 6.0.1
@@ -1186,6 +1188,9 @@ importers:
       '@confluentinc/kafka-javascript':
         specifier: 1.3.2
         version: 1.3.2(encoding@0.1.13)
+      '@paralleldrive/cuid2':
+        specifier: ^2.2.2
+        version: 2.2.2
       aws4fetch:
         specifier: 1.0.20
         version: 1.0.20
@@ -3427,18 +3432,21 @@ packages:
     peerDependencies:
       react: '>= 16 || ^19.0.0-rc'
 
+<<<<<<< HEAD
   '@hey-api/client-fetch@0.10.0':
     resolution: {integrity: sha512-C7vzj4t52qPiHCqjn1l8cRTI2p4pZCd7ViLtJDTHr5ZwI4sWOYC1tmv6bd529qqY6HFFbhGCz4TAZSwKAMJncg==}
     deprecated: Starting with v0.73.0, this package is bundled directly inside @hey-api/openapi-ts.
     peerDependencies:
       '@hey-api/openapi-ts': < 2
 
+=======
+>>>>>>> origin/main
   '@hey-api/json-schema-ref-parser@1.0.6':
     resolution: {integrity: sha512-yktiFZoWPtEW8QKS65eqKwA5MTKp88CyiL8q72WynrBs/73SAaxlSWlA2zW/DZlywZ5hX1OYzrCC0wFdvO9c2w==}
     engines: {node: '>= 16'}
 
-  '@hey-api/openapi-ts@0.72.1':
-    resolution: {integrity: sha512-PR0w9IJ5Zft9RM9jNDn7NZCX2juDetvs+n6c8wiNw2nC7os8LCowXZDS/yP2rfb9mruQlr9GFGDEWMY1Ie1tpQ==}
+  '@hey-api/openapi-ts@0.76.0':
+    resolution: {integrity: sha512-zNSZX6pqOULV0znt8UFTLLNKT5ArBXAXcIQiVMZLOCNmwyQ7c23B0QsjboRYOrb3NzVwYehT/5Nj65axDkxXOw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=22.10.0}
     hasBin: true
     peerDependencies:
@@ -4595,6 +4603,9 @@ packages:
     resolution: {integrity: sha512-r19cQc7HaEJ76HFsMsbiKMTIV2YqFGSof8H5hB7e5Jkb/23Y8Isv1YrSzkDaGhcw02I/COsrPo+eEmjy35eFuA==}
     cpu: [x64]
     os: [win32]
+
+  '@paralleldrive/cuid2@2.2.2':
+    resolution: {integrity: sha512-ZOBkgDwEdoYVlSeRbYYXs0S9MejQofiVYoTbKzy/6GQa39/q5tQU2IX46+shYnUkpEl3wc+J6wRlar7r2EK2xA==}
 
   '@passwordless-id/webauthn@2.1.2':
     resolution: {integrity: sha512-Ahj+A3O0gP3EsLV4FRXjfhbzzP895d8CnHKmhT1hkAz1zLSBCRE/iXJsasL1kwGoriDFLJ+YtO6x1rok4SZH2g==}
@@ -7538,6 +7549,7 @@ packages:
 
   '@walletconnect/modal@2.7.0':
     resolution: {integrity: sha512-RQVt58oJ+rwqnPcIvRFeMGKuXb9qkgSmwz4noF8JZGUym3gUAzVs+uW2NQ1Owm9XOJAV+sANrtJ+VoVq1ftElw==}
+    deprecated: Please follow the migration guide on https://docs.reown.com/appkit/upgrade/wcm
 
   '@walletconnect/react-native-compat@2.17.3':
     resolution: {integrity: sha512-lHKwXKoB0rdDH1ukxUx7o86xosWbttWIHYMZ8tgAQC1k9VH3CZZCoBcHOAAX8iBzyb0n0UP3/9zRrOcJE5nz7Q==}
@@ -19356,6 +19368,7 @@ snapshots:
     dependencies:
       react: 19.1.0
 
+<<<<<<< HEAD
   '@hey-api/client-fetch@0.10.0(@hey-api/openapi-ts@0.72.1(magicast@0.3.5)(typescript@5.8.3))':
     dependencies:
       '@hey-api/openapi-ts': 0.72.1(magicast@0.3.5)(typescript@5.8.3)
@@ -19364,6 +19377,8 @@ snapshots:
     dependencies:
       '@hey-api/openapi-ts': 0.77.0(magicast@0.3.5)(typescript@5.8.3)
 
+=======
+>>>>>>> origin/main
   '@hey-api/json-schema-ref-parser@1.0.6':
     dependencies:
       '@jsdevtools/ono': 7.1.3
@@ -19371,7 +19386,7 @@ snapshots:
       js-yaml: 4.1.0
       lodash: 4.17.21
 
-  '@hey-api/openapi-ts@0.72.1(magicast@0.3.5)(typescript@5.8.3)':
+  '@hey-api/openapi-ts@0.76.0(magicast@0.3.5)(typescript@5.8.3)':
     dependencies:
       '@hey-api/json-schema-ref-parser': 1.0.6
       ansi-colors: 4.1.3
@@ -20800,6 +20815,10 @@ snapshots:
 
   '@oxc-resolver/binding-win32-x64-msvc@11.2.0':
     optional: true
+
+  '@paralleldrive/cuid2@2.2.2':
+    dependencies:
+      '@noble/hashes': 1.7.2
 
   '@passwordless-id/webauthn@2.1.2': {}
 

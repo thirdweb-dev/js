@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { Token } from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
@@ -260,13 +261,23 @@ type UIOptionsResult =
  *
  * Refer to the [`BuyWidgetConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/BuyWidgetConnectOptions) type for more details.
  *
- * @bridge
- * @beta
- * @react
+ * @bridge Widgets
  */
 export function BuyWidget(props: BuyWidgetProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const theme = props.theme || "dark";
+
+  useQuery({
+    queryFn: () => {
+      trackPayEvent({
+        client: props.client,
+        event: "ub:ui:buy_widget:render",
+        toChainId: props.chain.id,
+        toToken: props.tokenAddress,
+      });
+    },
+    queryKey: ["buy_widget:render"],
+  });
 
   const bridgeDataQuery = useQuery({
     queryFn: async (): Promise<UIOptionsResult> => {
@@ -343,7 +354,13 @@ export function BuyWidget(props: BuyWidgetProps) {
     );
   } else if (bridgeDataQuery.data?.type === "unsupported_token") {
     // Show unsupported token screen
-    content = <UnsupportedTokenScreen chain={bridgeDataQuery.data.chain} />;
+    content = (
+      <UnsupportedTokenScreen
+        chain={bridgeDataQuery.data.chain}
+        client={props.client}
+        tokenAddress={props.tokenAddress}
+      />
+    );
   } else if (bridgeDataQuery.data?.type === "success") {
     // Show normal bridge orchestrator
     content = (

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { createThirdwebClient } from "../../client/client.js";
 import type { Theme } from "../../react/core/design-system/index.js";
 import { ErrorBanner } from "../../react/web/ui/Bridge/ErrorBanner.js";
 import { ModalThemeWrapper } from "../utils.js";
@@ -25,7 +26,10 @@ const ErrorBannerWithTheme = (props: ErrorBannerWithThemeProps) => {
   const { theme, ...componentProps } = props;
   return (
     <ModalThemeWrapper theme={theme}>
-      <ErrorBanner {...componentProps} />
+      <ErrorBanner
+        client={createThirdwebClient({ clientId: "test" })}
+        {...componentProps}
+      />
     </ModalThemeWrapper>
   );
 };

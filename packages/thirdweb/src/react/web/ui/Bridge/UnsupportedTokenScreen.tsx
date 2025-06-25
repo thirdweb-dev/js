@@ -1,4 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
+import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useChainMetadata } from "../../../core/hooks/others/useChainQuery.js";
 import { AccentFailIcon } from "../ConnectWallet/icons/AccentFailIcon.js";
@@ -11,6 +14,8 @@ export interface UnsupportedTokenScreenProps {
    * The chain the token is on
    */
   chain: Chain;
+  client: ThirdwebClient;
+  tokenAddress?: string;
 }
 
 /**
@@ -18,9 +23,21 @@ export interface UnsupportedTokenScreenProps {
  * @internal
  */
 export function UnsupportedTokenScreen(props: UnsupportedTokenScreenProps) {
-  const { chain } = props;
+  const { chain, tokenAddress, client } = props;
 
   const { data: chainMetadata } = useChainMetadata(chain);
+
+  useQuery({
+    queryFn: () => {
+      trackPayEvent({
+        chainId: chain.id,
+        client,
+        event: "ub:ui:unsupported_token",
+        fromToken: tokenAddress,
+      });
+    },
+    queryKey: ["unsupported_token"],
+  });
 
   if (chainMetadata?.testnet) {
     return (

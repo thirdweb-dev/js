@@ -710,11 +710,12 @@ const ShowAllWalletsIcon = /* @__PURE__ */ StyledDiv(() => {
     border: `2px solid ${theme.colors.borderColor}`,
     borderRadius: radius.md,
     display: "grid",
+    gap: spacing["4xs"],
     gridTemplateColumns: "1fr 1fr",
-    height: `${iconSize.lg}px`,
+    height: `${iconSize.xl}px`,
     justifyItems: "center",
     padding: spacing.xs,
-    width: `${iconSize.lg}px`,
+    width: `${iconSize.xl}px`,
   };
 });
 

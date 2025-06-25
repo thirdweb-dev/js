@@ -33,7 +33,9 @@ export function Cards(props: {
           reportAssetImportSuccessful();
         }}
         projectId={props.projectId}
+        projectSlug={props.projectSlug}
         teamId={props.teamId}
+        teamSlug={props.teamSlug}
         type="asset"
       />
 

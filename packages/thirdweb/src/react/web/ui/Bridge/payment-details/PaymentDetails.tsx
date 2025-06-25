@@ -1,4 +1,6 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
+import { trackPayEvent } from "../../../../../analytics/track/pay.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { radius, spacing } from "../../../../core/design-system/index.js";
@@ -67,6 +69,38 @@ export function PaymentDetails({
       onError(error as Error);
     }
   };
+
+  useQuery({
+    queryFn: () => {
+      if (
+        preparedQuote.type === "buy" ||
+        preparedQuote.type === "sell" ||
+        preparedQuote.type === "transfer"
+      ) {
+        trackPayEvent({
+          chainId:
+            preparedQuote.type === "transfer"
+              ? preparedQuote.intent.chainId
+              : preparedQuote.intent.originChainId,
+          client,
+          event: "payment_details",
+          fromToken:
+            preparedQuote.type === "transfer"
+              ? preparedQuote.intent.tokenAddress
+              : preparedQuote.intent.originTokenAddress,
+          toChainId:
+            preparedQuote.type === "transfer"
+              ? preparedQuote.intent.chainId
+              : preparedQuote.intent.destinationChainId,
+          toToken:
+            preparedQuote.type === "transfer"
+              ? preparedQuote.intent.tokenAddress
+              : preparedQuote.intent.destinationTokenAddress,
+        });
+      }
+    },
+    queryKey: ["payment_details", preparedQuote.type],
+  });
 
   // Extract common data based on quote type
   const getDisplayData = () => {
