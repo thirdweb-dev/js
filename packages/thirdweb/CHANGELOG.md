@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.105.0
+
+### Minor Changes
+
+- [#7431](https://github.com/thirdweb-dev/js/pull/7431) [`1387337`](https://github.com/thirdweb-dev/js/commit/1387337955a38f1527266b0a6146bb18d86426aa) Thanks [@PaoloRollo](https://github.com/PaoloRollo)! - update hey-api version to 0.76.0
+
+### Patch Changes
+
+- [#7441](https://github.com/thirdweb-dev/js/pull/7441) [`6712911`](https://github.com/thirdweb-dev/js/commit/67129119504953e8c547f209f184e4aeca5fe23a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - A number of important fixes for payment widgets
+
+- [#7437](https://github.com/thirdweb-dev/js/pull/7437) [`af89836`](https://github.com/thirdweb-dev/js/commit/af89836b6c1b8ea39407fdfddc2fb07ad95d768d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle sponsored gas on TransactionWidget
+
+- [#7426](https://github.com/thirdweb-dev/js/pull/7426) [`6aa2765`](https://github.com/thirdweb-dev/js/commit/6aa2765a344d89e8072010d5aff09d3cc6a59281) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Deprecate PayEmbed
+
+- Updated dependencies [[`1387337`](https://github.com/thirdweb-dev/js/commit/1387337955a38f1527266b0a6146bb18d86426aa)]:
+  - @thirdweb-dev/insight@1.1.0
+  - @thirdweb-dev/engine@3.1.0
+
 ## 5.104.1
 
 ### Patch Changes
