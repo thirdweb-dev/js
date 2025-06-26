@@ -1,0 +1,66 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "EcosystemWallet.GetCallPoliciesForSigner | Thirdweb .NET SDK",
+	description:
+		"Gets the call policies for a specific signer on the EIP-7702 account.",
+});
+
+# EcosystemWallet.GetCallPoliciesForSigner
+
+Gets the call policies for a specific signer on the EIP-7702 account. Returns a list of `CallSpec` objects that define which contracts and functions the signer can call.
+
+## Usage
+
+```csharp
+// Get call policies for a signer
+var callPolicies = await ecosystemWallet.GetCallPoliciesForSigner(
+    chainId: 1,
+    signerAddress: "0x1234567890123456789012345678901234567890"
+);
+
+// Examine the policies
+foreach (var policy in callPolicies)
+{
+    Console.WriteLine($"Can call {policy.Target} with selector {BitConverter.ToString(policy.Selector)}");
+    Console.WriteLine($"Max value per use: {policy.MaxValuePerUse}");
+    Console.WriteLine($"Constraints: {policy.Constraints.Count}");
+}
+```
+
+<Details summary="Parameters">
+
+### chainId
+
+`BigInteger`: The chain ID of the EIP-7702 account.
+
+### signerAddress
+
+`string`: The address of the signer to get call policies for.
+
+</Details>
+
+<Details summary="Return Value">
+
+### List&lt;CallSpec&gt;
+
+A list of call policies for the signer. Each `CallSpec` contains:
+- `Target`: Contract address that can be called
+- `Selector`: Function selector (4 bytes) that can be called
+- `MaxValuePerUse`: Maximum ETH value per function call
+- `ValueLimit`: Overall spending limits
+- `Constraints`: Parameter constraints for function calls
+
+</Details>
+
+<Details summary="Exceptions">
+
+### InvalidOperationException
+
+Thrown when the execution mode is not EIP7702 or EIP7702Sponsored.
+
+### ArgumentException
+
+Thrown when the signer address is null or empty.
+
+</Details>
