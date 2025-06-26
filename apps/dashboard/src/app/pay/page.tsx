@@ -3,7 +3,7 @@ import { createThirdwebClient, defineChain, getContract } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { checksumAddress } from "thirdweb/utils";
 import { PaymentLinkForm } from "./components/client/PaymentLinkForm.client";
-import { PayPageEmbed } from "./components/client/PayPageEmbed.client";
+import { PayPageWidget } from "./components/client/PayPageWidget.client";
 import type { PayParams } from "./components/types";
 import { payAppThirdwebClient } from "./constants";
 
@@ -84,7 +84,7 @@ export default async function PayPage({
   };
 
   return (
-    <PayPageEmbed
+    <PayPageWidget
       amount={BigInt(params.amount)}
       chainId={Number(params.chainId)}
       clientId={client.clientId}

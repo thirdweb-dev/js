@@ -4,7 +4,7 @@ import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { checksumAddress } from "thirdweb/utils";
 import { getPaymentLink } from "@/api/universal-bridge/links";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { PayPageEmbed } from "../components/client/PayPageEmbed.client";
+import { PayPageWidget } from "../components/client/PayPageWidget.client";
 
 const title = "thirdweb Pay";
 const description = "Fast, secure, and simple payments.";
@@ -54,7 +54,7 @@ export default async function PayPage({
   };
 
   return (
-    <PayPageEmbed
+    <PayPageWidget
       amount={paymentLink.amount ? BigInt(paymentLink.amount) : undefined}
       chainId={Number(paymentLink.destinationToken.chainId)}
       clientId={paymentLink.clientId}
