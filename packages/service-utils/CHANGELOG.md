@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.10.1
+
+### Patch Changes
+
+- [#7444](https://github.com/thirdweb-dev/js/pull/7444) [`472e737`](https://github.com/thirdweb-dev/js/commit/472e737616312694f6c7df4876c90861d2edad94) Thanks [@arcoraven](https://github.com/arcoraven)! - chore: require webhook payload to be an array
+
 ## 0.10.0
 
 ### Minor Changes
