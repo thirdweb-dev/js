@@ -121,11 +121,11 @@ export type BatchResultItemEncodeResultSuccessItemEngineError =
 						type: "RPC_CONFIG_ERROR";
 				  }
 				| {
-						contract_address?: null | AddressDef;
+						contractAddress?: null | AddressDef;
 						/**
 						 * Chain ID
 						 */
-						chain_id: number;
+						chainId: number;
 						/**
 						 * Human-readable error message
 						 */
@@ -204,11 +204,11 @@ export type BatchResultItemReadResultSuccessItemEngineError =
 						type: "RPC_CONFIG_ERROR";
 				  }
 				| {
-						contract_address?: null | AddressDef;
+						contractAddress?: null | AddressDef;
 						/**
 						 * Chain ID
 						 */
-						chain_id: number;
+						chainId: number;
 						/**
 						 * Human-readable error message
 						 */
@@ -296,11 +296,11 @@ export type BatchResultItemSignResultDataEngineError =
 						type: "RPC_CONFIG_ERROR";
 				  }
 				| {
-						contract_address?: null | AddressDef;
+						contractAddress?: null | AddressDef;
 						/**
 						 * Chain ID
 						 */
-						chain_id: number;
+						chainId: number;
 						/**
 						 * Human-readable error message
 						 */
@@ -968,18 +968,6 @@ export type WriteContractData = {
 	body: WriteContractRequest;
 	headers?: {
 		/**
-		 * Thirdweb client ID, passed along with the service key
-		 */
-		"x-thirdweb-client-id"?: string | null;
-		/**
-		 * Thirdweb service key, passed when using the client ID
-		 */
-		"x-thirdweb-service-key"?: string | null;
-		/**
-		 * Thirdweb secret key, passed standalone
-		 */
-		"x-thirdweb-secret-key"?: string | null;
-		/**
 		 * Vault access token
 		 */
 		"x-vault-access-token"?: string | null;
@@ -1005,18 +993,6 @@ export type SendTransactionData = {
 	 */
 	body: SendTransactionRequest;
 	headers?: {
-		/**
-		 * Thirdweb client ID, passed along with the service key
-		 */
-		"x-thirdweb-client-id"?: string | null;
-		/**
-		 * Thirdweb service key, passed when using the client ID
-		 */
-		"x-thirdweb-service-key"?: string | null;
-		/**
-		 * Thirdweb secret key, passed standalone
-		 */
-		"x-thirdweb-secret-key"?: string | null;
 		/**
 		 * Vault access token
 		 */
@@ -1044,18 +1020,6 @@ export type SignMessageData = {
 	body: SignMessageRequest;
 	headers?: {
 		/**
-		 * Thirdweb client ID, passed along with the service key
-		 */
-		"x-thirdweb-client-id"?: string | null;
-		/**
-		 * Thirdweb service key, passed when using the client ID
-		 */
-		"x-thirdweb-service-key"?: string | null;
-		/**
-		 * Thirdweb secret key, passed standalone
-		 */
-		"x-thirdweb-secret-key"?: string | null;
-		/**
 		 * Vault access token
 		 */
 		"x-vault-access-token"?: string | null;
@@ -1082,18 +1046,6 @@ export type SignTypedDataData = {
 	body: SignTypedDataRequest;
 	headers?: {
 		/**
-		 * Thirdweb client ID, passed along with the service key
-		 */
-		"x-thirdweb-client-id"?: string | null;
-		/**
-		 * Thirdweb service key, passed when using the client ID
-		 */
-		"x-thirdweb-service-key"?: string | null;
-		/**
-		 * Thirdweb secret key, passed standalone
-		 */
-		"x-thirdweb-secret-key"?: string | null;
-		/**
 		 * Vault access token
 		 */
 		"x-vault-access-token"?: string | null;
@@ -1118,20 +1070,6 @@ export type ReadContractData = {
 	 * Read contract request
 	 */
 	body: ReadRequest;
-	headers?: {
-		/**
-		 * Thirdweb client ID, passed along with the service key
-		 */
-		"x-thirdweb-client-id"?: string | null;
-		/**
-		 * Thirdweb service key, passed when using the client ID
-		 */
-		"x-thirdweb-service-key"?: string | null;
-		/**
-		 * Thirdweb secret key, passed standalone
-		 */
-		"x-thirdweb-secret-key"?: string | null;
-	};
 	path?: never;
 	query?: never;
 	url: "/v1/read/contract";
@@ -1152,20 +1090,6 @@ export type EncodeContractData = {
 	 * Encode contract request
 	 */
 	body: EncodeRequest;
-	headers?: {
-		/**
-		 * Thirdweb client ID, passed along with the service key
-		 */
-		"x-thirdweb-client-id"?: string | null;
-		/**
-		 * Thirdweb service key, passed when using the client ID
-		 */
-		"x-thirdweb-service-key"?: string | null;
-		/**
-		 * Thirdweb secret key, passed standalone
-		 */
-		"x-thirdweb-secret-key"?: string | null;
-	};
 	path?: never;
 	query?: never;
 	url: "/v1/encode/contract";
