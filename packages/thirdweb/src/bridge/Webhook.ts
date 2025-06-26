@@ -8,38 +8,32 @@ const hexSchema = z
 const addressSchema = z
   .string()
   .check(z.refine(isAddress, { message: "Invalid address" }));
+const tokenSchema = z.object({
+  address: addressSchema,
+  chainId: z.coerce.number(),
+  decimals: z.coerce.number(),
+  iconUri: z.optional(z.string()),
+  name: z.string(),
+  priceUsd: z.coerce.number(),
+  symbol: z.string(),
+});
 
-const webhookSchema = z.union([
+const onchainWebhookSchema = z.discriminatedUnion("version", [
   z.object({
     data: z.object({}),
+    type: z.literal("pay.onchain-transaction"),
     version: z.literal(1),
   }),
   z.object({
     data: z.object({
       action: z.enum(["TRANSFER", "BUY", "SELL"]),
       clientId: z.string(),
-      destinationAmount: z.string(),
-      destinationToken: z.object({
-        address: addressSchema,
-        chainId: z.coerce.number(),
-        decimals: z.coerce.number(),
-        iconUri: z.optional(z.string()),
-        name: z.string(),
-        priceUsd: z.coerce.number(),
-        symbol: z.string(),
-      }),
+      destinationAmount: z.coerce.bigint(),
+      destinationToken: tokenSchema,
       developerFeeBps: z.coerce.number(),
       developerFeeRecipient: addressSchema,
-      originAmount: z.string(),
-      originToken: z.object({
-        address: addressSchema,
-        chainId: z.coerce.number(),
-        decimals: z.coerce.number(),
-        iconUri: z.optional(z.string()),
-        name: z.string(),
-        priceUsd: z.coerce.number(),
-        symbol: z.string(),
-      }),
+      originAmount: z.coerce.bigint(),
+      originToken: tokenSchema,
       paymentId: z.string(),
       // only exists when the payment was triggered from a developer specified payment link
       paymentLinkId: z.optional(z.string()),
@@ -55,10 +49,41 @@ const webhookSchema = z.union([
       ),
       type: z.string(),
     }),
+    type: z.literal("pay.onchain-transaction"),
     version: z.literal(2),
   }),
 ]);
 
+const onrampWebhookSchema = z.discriminatedUnion("version", [
+  z.object({
+    data: z.object({}),
+    type: z.literal("pay.onramp-transaction"),
+    version: z.literal(1),
+  }),
+  z.object({
+    data: z.object({
+      amount: z.coerce.bigint(),
+      currency: z.string(),
+      currencyAmount: z.number(),
+      id: z.string(),
+      onramp: z.string(),
+      paymentLinkId: z.optional(z.string()),
+      purchaseData: z.unknown(),
+      receiver: z.optional(addressSchema),
+      sender: z.optional(addressSchema),
+      status: z.enum(["PENDING", "COMPLETED", "FAILED"]),
+      token: tokenSchema,
+      transactionHash: z.optional(hexSchema),
+    }),
+    type: z.literal("pay.onramp-transaction"),
+    version: z.literal(2),
+  }),
+]);
+
+const webhookSchema = z.discriminatedUnion("type", [
+  onchainWebhookSchema,
+  onrampWebhookSchema,
+]);
 export type WebhookPayload = Exclude<
   z.infer<typeof webhookSchema>,
   { version: 1 }
@@ -93,7 +118,7 @@ export async function parse(
    * The tolerance in seconds for the timestamp verification.
    */
   tolerance = 300, // Default to 5 minutes if not specified
-) {
+): Promise<WebhookPayload> {
   // Get the signature and timestamp from headers
   const receivedSignature =
     headers["x-payload-signature"] || headers["x-pay-signature"];
@@ -158,5 +183,5 @@ export async function parse(
     );
   }
 
-  return parsedPayload;
+  return parsedPayload satisfies WebhookPayload;
 }

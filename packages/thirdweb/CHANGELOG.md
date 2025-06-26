@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.1
+
+### Patch Changes
+
+- [#7450](https://github.com/thirdweb-dev/js/pull/7450) [`fa5e13b`](https://github.com/thirdweb-dev/js/commit/fa5e13b5d3f181bda4cd2b4153629b23e7c17dfb) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds onramp webhook parsing for Universal Bridge
+
 ## 5.105.0
 
 ### Minor Changes
