@@ -19,14 +19,17 @@ import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { CustomThemeProvider } from "../../../core/design-system/CustomThemeProvider.js";
-import type { Theme } from "../../../core/design-system/index.js";
+import { iconSize, type Theme } from "../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButton_connectModalOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
+import { AccentFailIcon } from "../ConnectWallet/icons/AccentFailIcon.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
 import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { DynamicHeight } from "../components/DynamicHeight.js";
+import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
+import { Text } from "../components/text.js";
 import type { LocaleId } from "../types.js";
 import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
 import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
@@ -297,7 +300,19 @@ export function TransactionWidget(props: TransactionWidgetProps) {
           props.client,
           checksumAddress(tokenAddress),
           props.transaction.chain.id,
-        );
+        ).catch((e) => {
+          if (e instanceof Error && e.message.includes("not supported")) {
+            return null;
+          }
+          throw e;
+        });
+        if (!token) {
+          return {
+            chain: props.transaction.chain,
+            tokenAddress: checksumAddress(tokenAddress),
+            type: "unsupported_token",
+          };
+        }
 
         erc20Value = {
           amountWei: toUnits(props.amount, token.decimals),
@@ -324,6 +339,7 @@ export function TransactionWidget(props: TransactionWidgetProps) {
       };
     },
     queryKey: ["bridgeData", stringify(props)],
+    retry: 1,
   });
 
   let content = null;
@@ -338,6 +354,24 @@ export function TransactionWidget(props: TransactionWidgetProps) {
         }}
       >
         <Spinner color="secondaryText" size="xl" />
+      </div>
+    );
+  } else if (bridgeDataQuery.error) {
+    content = (
+      <div
+        style={{
+          alignItems: "center",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          minHeight: "350px",
+        }}
+      >
+        <AccentFailIcon size={iconSize["3xl"]} />
+        <Spacer y="lg" />
+        <Text color="secondaryText" size="md">
+          {bridgeDataQuery.error.message}
+        </Text>
       </div>
     );
   } else if (bridgeDataQuery.data?.type === "unsupported_token") {
