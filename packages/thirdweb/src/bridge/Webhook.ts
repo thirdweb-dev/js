@@ -69,7 +69,7 @@ const onrampWebhookSchema = z.discriminatedUnion("version", [
       onramp: z.string(),
       paymentLinkId: z.optional(z.string()),
       purchaseData: z.unknown(),
-      receiver: z.optional(addressSchema),
+      receiver: addressSchema,
       sender: z.optional(addressSchema),
       status: z.enum(["PENDING", "COMPLETED", "FAILED"]),
       token: tokenSchema,

@@ -57,7 +57,7 @@ export default async function PayPage({
     <PayPageWidget
       amount={paymentLink.amount ? BigInt(paymentLink.amount) : undefined}
       chainId={Number(paymentLink.destinationToken.chainId)}
-      clientId={paymentLink.clientId}
+      clientId={undefined} // Payment links don't need to use the same client ID to be executed
       image={paymentLink.imageUrl}
       name={paymentLink.title}
       paymentLinkId={id}
