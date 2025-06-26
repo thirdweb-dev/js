@@ -3,7 +3,7 @@
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
-import { type ThirdwebClient, toEther } from "thirdweb";
+import { hexToNumber, isHex, type ThirdwebClient, toEther } from "thirdweb";
 import type { Project } from "@/api/projects";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
@@ -68,7 +68,7 @@ export function TransactionDetailsUI({
   // Gas information
   const gasUsed =
     executionResult && "actualGasUsed" in executionResult
-      ? `${executionResult.actualGasUsed}`
+      ? `${isHex(executionResult.actualGasUsed) ? hexToNumber(executionResult.actualGasUsed) : executionResult.actualGasUsed}`
       : "N/A";
 
   const gasCost =
@@ -339,7 +339,9 @@ export function TransactionDetailsUI({
                   Block Number
                 </div>
                 <div className="text-sm md:w-2/3">
-                  {transaction.confirmedAtBlockNumber}
+                  {isHex(transaction.confirmedAtBlockNumber)
+                    ? hexToNumber(transaction.confirmedAtBlockNumber)
+                    : transaction.confirmedAtBlockNumber}
                 </div>
               </div>
             )}
