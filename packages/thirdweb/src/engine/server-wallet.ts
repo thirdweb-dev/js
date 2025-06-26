@@ -1,10 +1,10 @@
 import {
-	type SendTransactionData,
-	type SignMessageData,
-	type SpecificExecutionOptions,
-	sendTransaction,
-	signMessage,
-	signTypedData,
+  type SendTransactionData,
+  type SignMessageData,
+  type SpecificExecutionOptions,
+  sendTransaction,
+  signMessage,
+  signTypedData,
 } from "@thirdweb-dev/engine";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
@@ -18,8 +18,8 @@ import { stringify } from "../utils/json.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 import type { Prettify } from "../utils/type-utils.js";
 import type {
-	Account,
-	SendTransactionOption,
+  Account,
+  SendTransactionOption,
 } from "../wallets/interfaces/wallet.js";
 import { waitForTransactionHash } from "./wait-for-tx-hash.js";
 
@@ -29,36 +29,36 @@ type ExecutionOptions = Prettify<SpecificExecutionOptions>;
  * Options for creating an server wallet.
  */
 export type ServerWalletOptions = {
-	/**
-	 * The thirdweb client to use for authentication to thirdweb services.
-	 */
-	client: ThirdwebClient;
-	/**
-	 * The vault access token to use your server wallet.
-	 */
-	vaultAccessToken: string;
-	/**
-	 * The server wallet address to use for sending transactions inside engine.
-	 */
-	address: string;
-	/**
-	 * The chain to use for signing messages and typed data (smart server wallet only).
-	 */
-	chain?: Chain;
-	/**
-	 * Optional custom execution options to use for sending transactions and signing data.
-	 */
-	executionOptions?: ExecutionOptions;
+  /**
+   * The thirdweb client to use for authentication to thirdweb services.
+   */
+  client: ThirdwebClient;
+  /**
+   * The vault access token to use your server wallet.
+   */
+  vaultAccessToken: string;
+  /**
+   * The server wallet address to use for sending transactions inside engine.
+   */
+  address: string;
+  /**
+   * The chain to use for signing messages and typed data (smart server wallet only).
+   */
+  chain?: Chain;
+  /**
+   * Optional custom execution options to use for sending transactions and signing data.
+   */
+  executionOptions?: ExecutionOptions;
 };
 
 export type ServerWallet = Account & {
-	enqueueTransaction: (args: {
-		transaction: PreparedTransaction;
-		simulate?: boolean;
-	}) => Promise<{ transactionId: string }>;
-	enqueueBatchTransaction: (args: {
-		transactions: PreparedTransaction[];
-	}) => Promise<{ transactionId: string }>;
+  enqueueTransaction: (args: {
+    transaction: PreparedTransaction;
+    simulate?: boolean;
+  }) => Promise<{ transactionId: string }>;
+  enqueueBatchTransaction: (args: {
+    transactions: PreparedTransaction[];
+  }) => Promise<{ transactionId: string }>;
 };
 
 /**
@@ -148,289 +148,289 @@ export type ServerWallet = Account & {
  * ```
  */
 export function serverWallet(options: ServerWalletOptions): ServerWallet {
-	const { client, vaultAccessToken, address, chain, executionOptions } =
-		options;
+  const { client, vaultAccessToken, address, chain, executionOptions } =
+    options;
 
-	const headers: HeadersInit = {
-		"x-vault-access-token": vaultAccessToken,
-	};
+  const headers: HeadersInit = {
+    "x-vault-access-token": vaultAccessToken,
+  };
 
-	const getExecutionOptionsWithChainId = (
-		chainId: number,
-	): SendTransactionData["body"]["executionOptions"] => {
-		if (!executionOptions) {
-			return {
-				chainId,
-				from: address,
-				type: "auto",
-			};
-		}
-		switch (executionOptions.type) {
-			case "auto":
-				return {
-					chainId,
-					from: address,
-					type: "auto",
-				};
-			case "ERC4337":
-				return {
-					...executionOptions,
-					chainId,
-					type: "ERC4337",
-				};
-		}
-	};
+  const getExecutionOptionsWithChainId = (
+    chainId: number,
+  ): SendTransactionData["body"]["executionOptions"] => {
+    if (!executionOptions) {
+      return {
+        chainId,
+        from: address,
+        type: "auto",
+      };
+    }
+    switch (executionOptions.type) {
+      case "auto":
+        return {
+          chainId,
+          from: address,
+          type: "auto",
+        };
+      case "ERC4337":
+        return {
+          ...executionOptions,
+          chainId,
+          type: "ERC4337",
+        };
+    }
+  };
 
-	const getSigningOptions = (
-		chainId: number | undefined,
-	): SignMessageData["body"]["signingOptions"] => {
-		// if no chainId passed specifically for this signature
-		// we HAVE TO fallback to EOA signature
-		if (!chainId) {
-			return {
-				from: address,
-				type: "eoa",
-			};
-		}
+  const getSigningOptions = (
+    chainId: number | undefined,
+  ): SignMessageData["body"]["signingOptions"] => {
+    // if no chainId passed specifically for this signature
+    // we HAVE TO fallback to EOA signature
+    if (!chainId) {
+      return {
+        from: address,
+        type: "eoa",
+      };
+    }
 
-		if (!executionOptions) {
-			return {
-				chainId,
-				from: address,
-				type: "auto",
-			};
-		}
+    if (!executionOptions) {
+      return {
+        chainId,
+        from: address,
+        type: "auto",
+      };
+    }
 
-		switch (executionOptions.type) {
-			case "ERC4337": {
-				return {
-					chainId,
-					...executionOptions,
-					type: "ERC4337",
-				};
-			}
+    switch (executionOptions.type) {
+      case "ERC4337": {
+        return {
+          chainId,
+          ...executionOptions,
+          type: "ERC4337",
+        };
+      }
 
-			case "auto": {
-				return {
-					chainId,
-					// smartAccountAddress: address,
-					from: address,
-					type: "auto",
-				};
-			}
+      case "auto": {
+        return {
+          chainId,
+          // smartAccountAddress: address,
+          from: address,
+          type: "auto",
+        };
+      }
 
-			// case "eoa": {
-			//   return {
-			//     chainId,
-			//     from: address,
-			//   }
-		}
-	};
+      // case "eoa": {
+      //   return {
+      //     chainId,
+      //     from: address,
+      //   }
+    }
+  };
 
-	const enqueueTx = async (transaction: SendTransactionOption[]) => {
-		if (transaction.length === 0) {
-			throw new Error("No transactions to enqueue");
-		}
-		const firstTransaction = transaction[0];
-		if (!firstTransaction) {
-			throw new Error("No transactions to enqueue");
-		}
-		const chainId = firstTransaction.chainId;
-		// Validate all transactions are on the same chain
-		for (let i = 1; i < transaction.length; i++) {
-			if (transaction[i]?.chainId !== chainId) {
-				throw new Error(
-					`All transactions in batch must be on the same chain. Expected ${chainId}, got ${transaction[i]?.chainId} at index ${i}`,
-				);
-			}
-		}
-		const body = {
-			executionOptions: getExecutionOptionsWithChainId(chainId),
-			params: transaction.map((t) => ({
-				data: t.data || "0x",
-				to: t.to ?? "", // TODO this should be allowed to be undefined
-				value: t.value?.toString() || "0",
-			})),
-		};
+  const enqueueTx = async (transaction: SendTransactionOption[]) => {
+    if (transaction.length === 0) {
+      throw new Error("No transactions to enqueue");
+    }
+    const firstTransaction = transaction[0];
+    if (!firstTransaction) {
+      throw new Error("No transactions to enqueue");
+    }
+    const chainId = firstTransaction.chainId;
+    // Validate all transactions are on the same chain
+    for (let i = 1; i < transaction.length; i++) {
+      if (transaction[i]?.chainId !== chainId) {
+        throw new Error(
+          `All transactions in batch must be on the same chain. Expected ${chainId}, got ${transaction[i]?.chainId} at index ${i}`,
+        );
+      }
+    }
+    const body = {
+      executionOptions: getExecutionOptionsWithChainId(chainId),
+      params: transaction.map((t) => ({
+        data: t.data || "0x",
+        to: t.to ?? "", // TODO this should be allowed to be undefined
+        value: t.value?.toString() || "0",
+      })),
+    };
 
-		const result = await sendTransaction({
-			baseUrl: getThirdwebBaseUrl("engineCloud"),
-			body,
-			bodySerializer: stringify,
-			fetch: getClientFetch(client),
-			headers,
-		});
+    const result = await sendTransaction({
+      baseUrl: getThirdwebBaseUrl("engineCloud"),
+      body,
+      bodySerializer: stringify,
+      fetch: getClientFetch(client),
+      headers,
+    });
 
-		if (result.error) {
-			throw new Error(`Error sending transaction: ${stringify(result.error)}`);
-		}
+    if (result.error) {
+      throw new Error(`Error sending transaction: ${stringify(result.error)}`);
+    }
 
-		const data = result.data?.result;
-		if (!data) {
-			throw new Error("No data returned from engine");
-		}
-		return data.transactions.map((t) => t.id);
-	};
+    const data = result.data?.result;
+    if (!data) {
+      throw new Error("No data returned from engine");
+    }
+    return data.transactions.map((t) => t.id);
+  };
 
-	return {
-		address,
-		enqueueBatchTransaction: async (args: {
-			transactions: PreparedTransaction[];
-		}) => {
-			const serializedTransactions: SendTransactionOption[] = [];
-			for (const transaction of args.transactions) {
-				const [to, data, value] = await Promise.all([
-					transaction.to ? resolvePromisedValue(transaction.to) : null,
-					encode(transaction),
-					transaction.value ? resolvePromisedValue(transaction.value) : null,
-				]);
-				serializedTransactions.push({
-					chainId: transaction.chain.id,
-					data,
-					to: to ?? undefined,
-					value: value ?? undefined,
-				});
-			}
-			const transactionIds = await enqueueTx(serializedTransactions);
-			const transactionId = transactionIds[0];
-			if (!transactionId) {
-				throw new Error("No transactionId returned from engine");
-			}
-			return { transactionId };
-		},
-		enqueueTransaction: async (args: {
-			transaction: PreparedTransaction;
-			simulate?: boolean;
-		}) => {
-			let serializedTransaction: SendTransactionOption;
-			if (args.simulate) {
-				serializedTransaction = await toSerializableTransaction({
-					transaction: args.transaction,
-				});
-			} else {
-				const [to, data, value] = await Promise.all([
-					args.transaction.to
-						? resolvePromisedValue(args.transaction.to)
-						: null,
-					encode(args.transaction),
-					args.transaction.value
-						? resolvePromisedValue(args.transaction.value)
-						: null,
-				]);
-				serializedTransaction = {
-					chainId: args.transaction.chain.id,
-					data,
-					to: to ?? undefined,
-					value: value ?? undefined,
-				};
-			}
-			const transactionIds = await enqueueTx([serializedTransaction]);
-			const transactionId = transactionIds[0];
-			if (!transactionId) {
-				throw new Error("No transactionId returned from engine");
-			}
-			return { transactionId };
-		},
-		sendBatchTransaction: async (transactions: SendTransactionOption[]) => {
-			const transactionIds = await enqueueTx(transactions);
-			const transactionId = transactionIds[0];
-			if (!transactionId) {
-				throw new Error("No transactionId returned from engine");
-			}
-			return waitForTransactionHash({
-				client,
-				transactionId,
-			});
-		},
-		sendTransaction: async (transaction: SendTransactionOption) => {
-			const transactionIds = await enqueueTx([transaction]);
-			const transactionId = transactionIds[0];
-			if (!transactionId) {
-				throw new Error("No transactionId returned from engine");
-			}
-			return waitForTransactionHash({
-				client,
-				transactionId,
-			});
-		},
-		signMessage: async (data) => {
-			const { message, chainId } = data;
-			let engineMessage: string | Hex;
-			let isBytes = false;
-			if (typeof message === "string") {
-				engineMessage = message;
-			} else {
-				engineMessage = toHex(message.raw);
-				isBytes = true;
-			}
+  return {
+    address,
+    enqueueBatchTransaction: async (args: {
+      transactions: PreparedTransaction[];
+    }) => {
+      const serializedTransactions: SendTransactionOption[] = [];
+      for (const transaction of args.transactions) {
+        const [to, data, value] = await Promise.all([
+          transaction.to ? resolvePromisedValue(transaction.to) : null,
+          encode(transaction),
+          transaction.value ? resolvePromisedValue(transaction.value) : null,
+        ]);
+        serializedTransactions.push({
+          chainId: transaction.chain.id,
+          data,
+          to: to ?? undefined,
+          value: value ?? undefined,
+        });
+      }
+      const transactionIds = await enqueueTx(serializedTransactions);
+      const transactionId = transactionIds[0];
+      if (!transactionId) {
+        throw new Error("No transactionId returned from engine");
+      }
+      return { transactionId };
+    },
+    enqueueTransaction: async (args: {
+      transaction: PreparedTransaction;
+      simulate?: boolean;
+    }) => {
+      let serializedTransaction: SendTransactionOption;
+      if (args.simulate) {
+        serializedTransaction = await toSerializableTransaction({
+          transaction: args.transaction,
+        });
+      } else {
+        const [to, data, value] = await Promise.all([
+          args.transaction.to
+            ? resolvePromisedValue(args.transaction.to)
+            : null,
+          encode(args.transaction),
+          args.transaction.value
+            ? resolvePromisedValue(args.transaction.value)
+            : null,
+        ]);
+        serializedTransaction = {
+          chainId: args.transaction.chain.id,
+          data,
+          to: to ?? undefined,
+          value: value ?? undefined,
+        };
+      }
+      const transactionIds = await enqueueTx([serializedTransaction]);
+      const transactionId = transactionIds[0];
+      if (!transactionId) {
+        throw new Error("No transactionId returned from engine");
+      }
+      return { transactionId };
+    },
+    sendBatchTransaction: async (transactions: SendTransactionOption[]) => {
+      const transactionIds = await enqueueTx(transactions);
+      const transactionId = transactionIds[0];
+      if (!transactionId) {
+        throw new Error("No transactionId returned from engine");
+      }
+      return waitForTransactionHash({
+        client,
+        transactionId,
+      });
+    },
+    sendTransaction: async (transaction: SendTransactionOption) => {
+      const transactionIds = await enqueueTx([transaction]);
+      const transactionId = transactionIds[0];
+      if (!transactionId) {
+        throw new Error("No transactionId returned from engine");
+      }
+      return waitForTransactionHash({
+        client,
+        transactionId,
+      });
+    },
+    signMessage: async (data) => {
+      const { message, chainId } = data;
+      let engineMessage: string | Hex;
+      let isBytes = false;
+      if (typeof message === "string") {
+        engineMessage = message;
+      } else {
+        engineMessage = toHex(message.raw);
+        isBytes = true;
+      }
 
-			const signingChainId = chainId || chain?.id;
-			if (!signingChainId) {
-				throw new Error("Chain ID is required for signing messages");
-			}
-			const signResult = await signMessage({
-				baseUrl: getThirdwebBaseUrl("engineCloud"),
-				body: {
-					params: [
-						{
-							format: isBytes ? "hex" : "text",
-							message: engineMessage,
-						},
-					],
-					signingOptions: getSigningOptions(signingChainId),
-				},
-				bodySerializer: stringify,
-				fetch: getClientFetch(client),
-				headers,
-			});
+      const signingChainId = chainId || chain?.id;
+      if (!signingChainId) {
+        throw new Error("Chain ID is required for signing messages");
+      }
+      const signResult = await signMessage({
+        baseUrl: getThirdwebBaseUrl("engineCloud"),
+        body: {
+          params: [
+            {
+              format: isBytes ? "hex" : "text",
+              message: engineMessage,
+            },
+          ],
+          signingOptions: getSigningOptions(signingChainId),
+        },
+        bodySerializer: stringify,
+        fetch: getClientFetch(client),
+        headers,
+      });
 
-			if (signResult.error) {
-				throw new Error(
-					`Error signing message: ${stringify(signResult.error)}`,
-				);
-			}
+      if (signResult.error) {
+        throw new Error(
+          `Error signing message: ${stringify(signResult.error)}`,
+        );
+      }
 
-			const signatureResult = signResult.data?.result.results[0];
-			if (signatureResult && "result" in signatureResult) {
-				return signatureResult.result.signature as Hex;
-			}
+      const signatureResult = signResult.data?.result.results[0];
+      if (signatureResult && "result" in signatureResult) {
+        return signatureResult.result.signature as Hex;
+      }
 
-			throw new Error(
-				`Failed to sign message: ${stringify(signatureResult?.error) || "Unknown error"}`,
-			);
-		},
-		signTypedData: async (typedData) => {
-			const signingChainId = chain?.id;
-			if (!signingChainId) {
-				throw new Error("Chain ID is required for signing messages");
-			}
+      throw new Error(
+        `Failed to sign message: ${stringify(signatureResult?.error) || "Unknown error"}`,
+      );
+    },
+    signTypedData: async (typedData) => {
+      const signingChainId = chain?.id;
+      if (!signingChainId) {
+        throw new Error("Chain ID is required for signing messages");
+      }
 
-			const signResult = await signTypedData({
-				baseUrl: getThirdwebBaseUrl("engineCloud"),
-				body: {
-					// biome-ignore lint/suspicious/noExplicitAny: TODO: fix ts / hey-api type clash
-					params: [typedData as any],
-					signingOptions: getSigningOptions(signingChainId),
-				},
-				bodySerializer: stringify,
-				fetch: getClientFetch(client),
-				headers,
-			});
+      const signResult = await signTypedData({
+        baseUrl: getThirdwebBaseUrl("engineCloud"),
+        body: {
+          // biome-ignore lint/suspicious/noExplicitAny: TODO: fix ts / hey-api type clash
+          params: [typedData as any],
+          signingOptions: getSigningOptions(signingChainId),
+        },
+        bodySerializer: stringify,
+        fetch: getClientFetch(client),
+        headers,
+      });
 
-			if (signResult.error) {
-				throw new Error(
-					`Error signing message: ${stringify(signResult.error)}`,
-				);
-			}
+      if (signResult.error) {
+        throw new Error(
+          `Error signing message: ${stringify(signResult.error)}`,
+        );
+      }
 
-			const signatureResult = signResult.data?.result.results[0];
-			if (signatureResult && "result" in signatureResult) {
-				return signatureResult.result.signature as Hex;
-			}
+      const signatureResult = signResult.data?.result.results[0];
+      if (signatureResult && "result" in signatureResult) {
+        return signatureResult.result.signature as Hex;
+      }
 
-			throw new Error(
-				`Failed to sign message: ${stringify(signatureResult?.error) || "Unknown error"}`,
-			);
-		},
-	};
+      throw new Error(
+        `Failed to sign message: ${stringify(signatureResult?.error) || "Unknown error"}`,
+      );
+    },
+  };
 }
