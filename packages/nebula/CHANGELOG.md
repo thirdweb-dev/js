@@ -1,5 +1,16 @@
 # @thirdweb-dev/nebula
 
+## 0.2.0
+
+### Minor Changes
+
+- [#7431](https://github.com/thirdweb-dev/js/pull/7431) [`1387337`](https://github.com/thirdweb-dev/js/commit/1387337955a38f1527266b0a6146bb18d86426aa) Thanks [@PaoloRollo](https://github.com/PaoloRollo)! - update hey-api version to 0.76.0
+
+### Patch Changes
+
+- Updated dependencies [[`1387337`](https://github.com/thirdweb-dev/js/commit/1387337955a38f1527266b0a6146bb18d86426aa), [`6712911`](https://github.com/thirdweb-dev/js/commit/67129119504953e8c547f209f184e4aeca5fe23a), [`af89836`](https://github.com/thirdweb-dev/js/commit/af89836b6c1b8ea39407fdfddc2fb07ad95d768d), [`6aa2765`](https://github.com/thirdweb-dev/js/commit/6aa2765a344d89e8072010d5aff09d3cc6a59281)]:
+  - thirdweb@5.105.0
+
 ## 0.1.1
 
 ### Patch Changes

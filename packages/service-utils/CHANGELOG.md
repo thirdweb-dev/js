@@ -1,5 +1,15 @@
 # @thirdweb-dev/service-utils
 
+## 0.10.0
+
+### Minor Changes
+
+- [#7439](https://github.com/thirdweb-dev/js/pull/7439) [`c5f9921`](https://github.com/thirdweb-dev/js/commit/c5f9921dc9cf6c62d754f12ce6171d95bd87a590) Thanks [@arcoraven](https://github.com/arcoraven)! - feat: Add webhook producer to service-utils
+
+### Patch Changes
+
+- [#7440](https://github.com/thirdweb-dev/js/pull/7440) [`a2b737e`](https://github.com/thirdweb-dev/js/commit/a2b737e14493956dc888d94057e806bff77bacd2) Thanks [@arcoraven](https://github.com/arcoraven)! - fix: wrong casing on a field in webhook event helper
+
 ## 0.9.14
 
 ### Patch Changes
