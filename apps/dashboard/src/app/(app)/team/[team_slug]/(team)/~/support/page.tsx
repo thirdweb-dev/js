@@ -1,7 +1,7 @@
-import { getTeamBySlug } from "@/api/team";
-import { getSupportTicketsByTeam } from "@/api/support";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
+import { getSupportTicketsByTeam } from "@/api/support";
+import { getTeamBySlug } from "@/api/team";
 import SupportCasesClient from "./_components/SupportCasesClient";
 
 export default async function Page(props: {
@@ -21,7 +21,9 @@ export default async function Page(props: {
   }
 
   // Fetch real support tickets for this team
-  const supportTickets = await getSupportTicketsByTeam(team.id);
+  const supportTickets = await getSupportTicketsByTeam(
+    team.unthreadCustomerId || "",
+  );
 
   return <SupportCasesClient tickets={supportTickets} />;
 }
