@@ -6,11 +6,14 @@ interface WebhookEvent extends Record<string, unknown> {
   id?: `evt_${string}`;
   teamId: string;
   projectId?: string;
+  /**
+   * The timestamp your event was triggered at.
+   */
   createdAt?: Date;
   /**
-   * This should match your model defined in api-server.
+   * An array of your model (defined in api-server). Must not be empty.
    */
-  payload: Record<string, unknown>;
+  payload: Record<string, unknown>[];
 }
 
 /**
@@ -39,6 +42,7 @@ export class WebhookEventProducer {
    */
   async sendEvents(topic: string, events: WebhookEvent[]): Promise<void> {
     const parsedEvents: WebhookEvent[] = events.map((event) => {
+      assert(event.payload.length > 0, "payload must not be empty");
       assert(
         event.teamId.startsWith("team_"),
         "teamId must start with 'team_'",
