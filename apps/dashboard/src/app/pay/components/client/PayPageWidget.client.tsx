@@ -28,7 +28,7 @@ export function PayPageWidget({
   name?: string;
   image?: string;
   redirectUri?: string;
-  clientId: string;
+  clientId: string | undefined;
   theme?: "light" | "dark";
   purchaseData: Record<string, unknown> | undefined;
 }) {
