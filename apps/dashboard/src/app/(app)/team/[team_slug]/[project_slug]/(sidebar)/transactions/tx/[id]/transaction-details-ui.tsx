@@ -255,7 +255,7 @@ export function TransactionDetailsUI({
                 />
               ) : (
                 <div className="rounded-md bg-destructive/10 p-4 text-destructive">
-                  errorMessage
+                  {errorMessage}
                 </div>
               )}
             </CardContent>

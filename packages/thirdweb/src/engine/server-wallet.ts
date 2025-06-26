@@ -213,17 +213,10 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
       case "auto": {
         return {
           chainId,
-          // smartAccountAddress: address,
           from: address,
           type: "auto",
         };
       }
-
-      // case "eoa": {
-      //   return {
-      //     chainId,
-      //     from: address,
-      //   }
     }
   };
 
@@ -247,9 +240,9 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
     const body = {
       executionOptions: getExecutionOptionsWithChainId(chainId),
       params: transaction.map((t) => ({
-        data: t.data || "0x",
-        to: t.to ?? "", // TODO this should be allowed to be undefined
-        value: t.value?.toString() || "0",
+        data: t.data,
+        to: t.to,
+        value: t.value?.toString(),
       })),
     };
 
