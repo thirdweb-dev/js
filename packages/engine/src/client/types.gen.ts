@@ -117,6 +117,10 @@ export type BatchResultItemEncodeResultSuccessItemEngineError =
 						type: "VAULT_ERROR";
 				  }
 				| {
+						error: IawError;
+						type: "IAW_ERROR";
+				  }
+				| {
 						message: string;
 						type: "RPC_CONFIG_ERROR";
 				  }
@@ -198,6 +202,10 @@ export type BatchResultItemReadResultSuccessItemEngineError =
 				| {
 						message: string;
 						type: "VAULT_ERROR";
+				  }
+				| {
+						error: IawError;
+						type: "IAW_ERROR";
 				  }
 				| {
 						message: string;
@@ -292,6 +300,10 @@ export type BatchResultItemSignResultDataEngineError =
 						type: "VAULT_ERROR";
 				  }
 				| {
+						error: IawError;
+						type: "IAW_ERROR";
+				  }
+				| {
 						message: string;
 						type: "RPC_CONFIG_ERROR";
 				  }
@@ -324,6 +336,36 @@ export type BatchResultItemSignResultDataEngineError =
 						type: "INTERNAL_ERROR";
 				  };
 	  };
+
+/**
+ * Collection of results from multiple contract encode operations
+ */
+export type BatchResultsEncodeResultSuccessItem = {
+	/**
+	 * Array of results, one for each input contract call
+	 */
+	result: Array<BatchResultItemEncodeResultSuccessItemEngineError>;
+};
+
+/**
+ * Collection of results from multiple contract encode operations
+ */
+export type BatchResultsReadResultSuccessItem = {
+	/**
+	 * Array of results, one for each input contract call
+	 */
+	result: Array<BatchResultItemReadResultSuccessItemEngineError>;
+};
+
+/**
+ * Collection of results from multiple contract encode operations
+ */
+export type BatchResultsSignResultData = {
+	/**
+	 * Array of results, one for each input contract call
+	 */
+	result: Array<BatchResultItemSignResultDataEngineError>;
+};
 
 /**
  * # Bytes
@@ -604,6 +646,34 @@ export type Erc4337SigningOptions = EntrypointAndFactoryDetailsDeserHelper & {
 export type ExecutionOptions = BaseExecutionOptions & SpecificExecutionOptions;
 
 /**
+ * Error types for IAW operations
+ */
+export type IawError =
+	| {
+			type: "API_ERROR";
+	  }
+	| {
+			message: string;
+			type: "SERIALIZATION_ERROR";
+	  }
+	| {
+			error: SerializableReqwestError;
+			type: "NETWORK_ERROR";
+	  }
+	| {
+			type: "AUTH_ERROR";
+	  }
+	| (ThirdwebError & {
+			type: "THIRDWEB_ERROR";
+	  })
+	| {
+			type: "UNEXPECTED_ERROR";
+	  }
+	| (UserOpError & {
+			type: "USER_OP_ERROR";
+	  });
+
+/**
  * # InnerTransaction
  * This is the actual encoded inner transaction data that will be sent to the blockchain.
  */
@@ -768,6 +838,76 @@ export type SendTransactionRequest = {
 	webhookOptions?: Array<WebhookOptions> | null;
 };
 
+export type SerializableReqwestError =
+	| {
+			Builder: {
+				message: string;
+				url?: string | null;
+			};
+	  }
+	| {
+			Request: {
+				message: string;
+				url?: string | null;
+			};
+	  }
+	| {
+			Timeout: {
+				message: string;
+				url?: string | null;
+			};
+	  }
+	| {
+			Connect: {
+				message: string;
+				url?: string | null;
+			};
+	  }
+	| {
+			Redirect: {
+				message: string;
+				url?: string | null;
+			};
+	  }
+	| {
+			ClientError: {
+				status: number;
+				message: string;
+				url?: string | null;
+			};
+	  }
+	| {
+			ServerError: {
+				status: number;
+				message: string;
+				url?: string | null;
+			};
+	  }
+	| {
+			Body: {
+				message: string;
+				url?: string | null;
+			};
+	  }
+	| {
+			Decode: {
+				message: string;
+				url?: string | null;
+			};
+	  }
+	| {
+			Upgrade: {
+				message: string;
+				url?: string | null;
+			};
+	  }
+	| {
+			Unknown: {
+				message: string;
+				url?: string | null;
+			};
+	  };
+
 /**
  * Request to sign messages
  */
@@ -844,45 +984,34 @@ export type SpecificExecutionOptions =
 			type: "ERC4337";
 	  });
 
-export type SuccessResponseBatchResultsEncodeResultSuccessItem = {
-	/**
-	 * Collection of results from multiple contract encode operations
-	 */
-	result: {
-		/**
-		 * Array of results, one for each input contract call
-		 */
-		results: Array<BatchResultItemEncodeResultSuccessItemEngineError>;
-	};
-};
-
-export type SuccessResponseBatchResultsReadResultSuccessItem = {
-	/**
-	 * Collection of results from multiple contract encode operations
-	 */
-	result: {
-		/**
-		 * Array of results, one for each input contract call
-		 */
-		results: Array<BatchResultItemReadResultSuccessItemEngineError>;
-	};
-};
-
-export type SuccessResponseBatchResultsSignResultData = {
-	/**
-	 * Collection of results from multiple contract encode operations
-	 */
-	result: {
-		/**
-		 * Array of results, one for each input contract call
-		 */
-		results: Array<BatchResultItemSignResultDataEngineError>;
-	};
-};
-
 export type SuccessResponseQueuedTransactionsResponse = {
 	result: {
 		transactions: Array<QueuedTransaction>;
+	};
+};
+
+export type ThirdwebError =
+	| {
+			error: ThirdwebSerializationError;
+			type: "SERIALIZATION_ERROR";
+	  }
+	| {
+			value: string;
+			message: string;
+			type: "URL_PARSE_ERROR";
+	  }
+	| {
+			message: string;
+			type: "HTTP_CLIENT_BACKEND_ERROR";
+	  }
+	| {
+			error: SerializableReqwestError;
+			type: "HTTP_ERROR";
+	  };
+
+export type ThirdwebSerializationError = {
+	HeaderValue: {
+		value: string;
 	};
 };
 
@@ -933,6 +1062,13 @@ export type TypedDataDomainDef = {
  * Used to represent a 256-bit unsigned integer. Engine can parse these from any valid encoding of the Ethereum "quantity" format.
  */
 export type U256Def = string;
+
+/**
+ * Error type for UserOp operations
+ */
+export type UserOpError = {
+	type: "UNEXPECTED_ERROR";
+};
 
 export type Value = unknown;
 
@@ -1033,7 +1169,7 @@ export type SignMessageResponses = {
 	/**
 	 * Successfully signed messages
 	 */
-	200: SuccessResponseBatchResultsSignResultData;
+	200: BatchResultsSignResultData;
 };
 
 export type SignMessageResponse =
@@ -1059,7 +1195,7 @@ export type SignTypedDataResponses = {
 	/**
 	 * Successfully signed typed data
 	 */
-	200: SuccessResponseBatchResultsSignResultData;
+	200: BatchResultsSignResultData;
 };
 
 export type SignTypedDataResponse =
@@ -1079,7 +1215,7 @@ export type ReadContractResponses = {
 	/**
 	 * Successfully read contract data
 	 */
-	200: SuccessResponseBatchResultsReadResultSuccessItem;
+	200: BatchResultsReadResultSuccessItem;
 };
 
 export type ReadContractResponse =
@@ -1099,7 +1235,7 @@ export type EncodeContractResponses = {
 	/**
 	 * Successfully encoded contract calls
 	 */
-	200: SuccessResponseBatchResultsEncodeResultSuccessItem;
+	200: BatchResultsEncodeResultSuccessItem;
 };
 
 export type EncodeContractResponse =
@@ -1560,5 +1696,5 @@ export type SearchActivityLogsResponse =
 	SearchActivityLogsResponses[keyof SearchActivityLogsResponses];
 
 export type ClientOptions = {
-	baseUrl: "https://engine.thirdweb-dev.com" | (string & {});
+	baseUrl: "http://localhost:3001" | (string & {});
 };

@@ -1,4 +1,5 @@
 import {
+  isSuccessResponse,
   type SendTransactionData,
   type SignMessageData,
   type SpecificExecutionOptions,
@@ -383,8 +384,8 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
         );
       }
 
-      const signatureResult = signResult.data?.result.results[0];
-      if (signatureResult && "result" in signatureResult) {
+      const signatureResult = signResult.data?.result[0];
+      if (signatureResult && isSuccessResponse(signatureResult)) {
         return signatureResult.result.signature as Hex;
       }
 
@@ -416,8 +417,8 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
         );
       }
 
-      const signatureResult = signResult.data?.result.results[0];
-      if (signatureResult && "result" in signatureResult) {
+      const signatureResult = signResult.data?.result[0];
+      if (signatureResult && isSuccessResponse(signatureResult)) {
         return signatureResult.result.signature as Hex;
       }
 
