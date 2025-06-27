@@ -359,7 +359,7 @@ export function PayEmbed(props: PayEmbedProps) {
         onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
         theme={theme}
         title={metadata?.name || "Buy"}
-        enableCard={props.payOptions?.buyWithFiat === false ? false : true}
+        paymentMethods={props.payOptions?.buyWithFiat === false ? ["crypto"] : ["crypto", "card"]}
         tokenAddress={
           props.payOptions.prefillBuy.token?.address as Address | undefined
         }
@@ -378,7 +378,7 @@ export function PayEmbed(props: PayEmbedProps) {
         name={metadata?.name || "Checkout"}
         onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
         seller={props.payOptions.paymentInfo.sellerAddress as Address}
-        enableCard={props.payOptions?.buyWithFiat === false ? false : true}
+        paymentMethods={props.payOptions?.buyWithFiat === false ? ["crypto"] : ["crypto", "card"]}
         theme={theme}
         tokenAddress={
           props.payOptions.paymentInfo.token?.address as Address | undefined
@@ -395,7 +395,7 @@ export function PayEmbed(props: PayEmbedProps) {
         image={metadata?.image}
         onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
         theme={theme}
-        enableCard={props.payOptions?.buyWithFiat === false ? false : true}
+        paymentMethods={props.payOptions?.buyWithFiat === false ? ["crypto"] : ["crypto", "card"]}
         title={metadata?.name}
         transaction={props.payOptions.transaction}
       />

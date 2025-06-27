@@ -21,7 +21,7 @@ interface WalletFiatSelectionProps {
   onWalletSelected: (wallet: Wallet) => void;
   onFiatSelected: () => void;
   onConnectWallet: () => void;
-  enableCard?: boolean;
+  paymentMethods?: ("crypto" | "card")[];
 }
 
 export function WalletFiatSelection({
@@ -30,7 +30,7 @@ export function WalletFiatSelection({
   onWalletSelected,
   onFiatSelected,
   onConnectWallet,
-  enableCard = true,
+  paymentMethods = ["crypto", "card"],
 }: WalletFiatSelectionProps) {
   const theme = useCustomTheme();
 
@@ -128,7 +128,7 @@ export function WalletFiatSelection({
         </Container>
       </Button>
 
-      {enableCard && (
+      {paymentMethods.includes("card") && (
         <>
           <Spacer y="md" />
 
