@@ -22,8 +22,8 @@ export default async function Page(props: {
 
   // Fetch real support tickets for this team
   const supportTickets = await getSupportTicketsByTeam(
-    team.unthreadCustomerId || "",
+    team.unthreadCustomerId || "", // change to customerServiceExternalId
   );
 
-  return <SupportCasesClient tickets={supportTickets} />;
+  return <SupportCasesClient team={team} tickets={supportTickets} />;
 }
