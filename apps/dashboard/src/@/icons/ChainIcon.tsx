@@ -30,7 +30,7 @@ export const ChainIconClient = ({
       fallback={<img alt="" src={fallbackChainIcon} />}
       key={resolvedSrc}
       loading={restProps.loading || "lazy"}
-      skeleton={<div className="animate-pulse rounded-full bg-border" />}
+      skeleton={<span className="animate-pulse rounded-full bg-border" />}
       src={resolvedSrc}
     />
   );

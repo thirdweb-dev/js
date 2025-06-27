@@ -152,6 +152,7 @@ export function SingleNetworkSelector(props: {
   disableChainId?: boolean;
   align?: "center" | "start" | "end";
   disableTestnets?: boolean;
+  disableDeprecated?: boolean;
   placeholder?: string;
   client: ThirdwebClient;
 }) {
@@ -169,8 +170,17 @@ export function SingleNetworkSelector(props: {
       chains = chains.filter((chain) => chainIdSet.has(chain.chainId));
     }
 
+    if (props.disableDeprecated) {
+      chains = chains.filter((chain) => chain.status !== "deprecated");
+    }
+
     return chains;
-  }, [allChains, props.chainIds, props.disableTestnets]);
+  }, [
+    allChains,
+    props.chainIds,
+    props.disableTestnets,
+    props.disableDeprecated,
+  ]);
 
   const options = useMemo(() => {
     return chainsToShow.map((chain) => {

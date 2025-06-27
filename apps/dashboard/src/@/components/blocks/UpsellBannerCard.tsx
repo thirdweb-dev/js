@@ -38,12 +38,18 @@ const ACCENT = {
 type UpsellBannerCardProps = {
   title: React.ReactNode;
   description: React.ReactNode;
-  cta: {
-    text: React.ReactNode;
-    icon?: React.ReactNode;
-    target?: "_blank";
-    link: string;
-  };
+  cta?:
+    | {
+        text: React.ReactNode;
+        icon?: React.ReactNode;
+        target?: "_blank";
+        link: string;
+      }
+    | {
+        text: React.ReactNode;
+        icon?: React.ReactNode;
+        onClick: () => void;
+      };
   accentColor?: keyof typeof ACCENT;
   icon?: React.ReactNode;
 };
@@ -93,25 +99,41 @@ export function UpsellBannerCard(props: UpsellBannerCardProps) {
           </div>
         </div>
 
-        <Button
-          asChild
-          className={cn(
-            "mt-2 gap-2 hover:translate-y-0 hover:shadow-inner sm:mt-0",
-            color.btn,
-          )}
-          size="sm"
-        >
-          <Link
-            href={props.cta.link}
-            rel={
-              props.cta.target === "_blank" ? "noopener noreferrer" : undefined
-            }
-            target={props.cta.target}
+        {props.cta && "target" in props.cta ? (
+          <Button
+            asChild
+            className={cn(
+              "mt-2 gap-2 hover:translate-y-0 hover:shadow-inner sm:mt-0",
+              color.btn,
+            )}
+            size="sm"
+          >
+            <Link
+              href={props.cta.link}
+              rel={
+                props.cta.target === "_blank"
+                  ? "noopener noreferrer"
+                  : undefined
+              }
+              target={props.cta.target}
+            >
+              {props.cta.text}
+              {props.cta.icon && <span className="ml-2">{props.cta.icon}</span>}
+            </Link>
+          </Button>
+        ) : props.cta && "onClick" in props.cta ? (
+          <Button
+            className={cn(
+              "mt-2 gap-2 hover:translate-y-0 hover:shadow-inner sm:mt-0",
+              color.btn,
+            )}
+            onClick={props.cta.onClick}
+            size="sm"
           >
             {props.cta.text}
             {props.cta.icon && <span className="ml-2">{props.cta.icon}</span>}
-          </Link>
-        </Button>
+          </Button>
+        ) : null}
       </div>
     </div>
   );
