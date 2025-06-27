@@ -1,5 +1,15 @@
 // --- KEEEP IN SYNC with exports/wallets/in-app.ts ---
 
+//ACCOUNT
+export {
+  type CreateSessionKeyOptions,
+  createSessionKey,
+  isCreateSessionKeySupported,
+} from "../../extensions/erc7702/account/createSessionKey.js";
+export type {
+  Condition,
+  LimitType,
+} from "../../extensions/erc7702/account/types.js";
 export type {
   GetAuthenticatedUserParams,
   MultiStepAuthArgsType,
@@ -23,14 +33,3 @@ export {
 } from "../../wallets/in-app/native/auth/index.js";
 export { hasStoredPasskey } from "../../wallets/in-app/native/auth/passkeys.js";
 export { inAppWallet } from "../../wallets/in-app/native/in-app.js";
-
-//ACCOUNT
-export {
-  type CreateSessionKeyOptions,
-  createSessionKey,
-  isCreateSessionKeySupported,
-} from "../../extensions/erc7702/account/createSessionKey.js";
-export type {
-  LimitType,
-  Condition,
-} from "../../extensions/erc7702/account/types.js";
