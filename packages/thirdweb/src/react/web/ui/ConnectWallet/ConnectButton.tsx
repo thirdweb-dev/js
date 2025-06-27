@@ -292,8 +292,14 @@ export function ConnectButton(props: ConnectButtonProps) {
       getDefaultWallets({
         appMetadata: props.appMetadata,
         chains: props.chains,
+        executionMode: props.accountAbstraction
+          ? {
+              mode: "EIP4337",
+              smartAccount: props.accountAbstraction,
+            }
+          : undefined,
       }),
-    [props.wallets, props.appMetadata, props.chains],
+    [props.wallets, props.appMetadata, props.chains, props.accountAbstraction],
   );
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const connectionManager = useConnectionManager();
