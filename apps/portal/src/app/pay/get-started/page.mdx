@@ -13,17 +13,17 @@ import {
 
 export const metadata = createMetadata({
 	image: {
-		title: "thirdweb Universal Bridge - Get Started",
+		title: "thirdweb Payments - Get Started",
 		icon: "thirdweb",
 	},
-	title: "Universal Bridge Implementation Guide — thirdweb docs",
+	title: "Payments Implementation Guide — thirdweb docs",
 	description:
-		"Learn how to implement cross-chain payments, bridging, and onramps with the Universal Bridge SDK",
+		"Learn how to implement cross-chain payments, bridging, and onramps with the Payments SDK",
 });
 
 # Get Started
 
-Learn how to integrate Universal Bridge into your application for cross-chain payments, bridging, swapping, and fiat onramps. This guide covers the core SDK modules and practical implementation examples.
+Learn how to integrate Payments into your application for cross-chain payments, bridging, swapping, and fiat onramps. This guide covers the core SDK modules and practical implementation examples.
 
 ---
 
@@ -39,7 +39,7 @@ Learn how to integrate Universal Bridge into your application for cross-chain pa
 </Step>
 <Step title="Get Your Client ID">
 
-Log in to [the thirdweb dashboard](https://thirdweb.com/team). Navigate to the **Settings** page and create an API key to get your **Client ID**. You'll need your Client ID to interact with the Universal Bridge.
+Log in to [the thirdweb dashboard](https://thirdweb.com/team). Navigate to the **Settings** page and create an API key to get your **Client ID**. You'll need your Client ID to interact with the Payments.
 
 </Step>
 <Step title="Initialize the Client">
@@ -231,7 +231,7 @@ console.log(`Found ${filteredRoutes.length} routes`);
 
 ## Transaction Status Tracking
 
-Monitor the progress of your Universal Bridge transactions:
+Monitor the progress of your Payments transactions:
 
 ```typescript
 import { Bridge } from "thirdweb";
@@ -264,7 +264,7 @@ switch (status.status) {
 
 ## Error Handling
 
-Universal Bridge functions throw `ApiError` for failed requests:
+Payments functions throw `ApiError` for failed requests:
 
 ```typescript
 import { Bridge, ApiError } from "thirdweb";

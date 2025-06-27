@@ -10,7 +10,9 @@ export default async function Layout(props: { children: React.ReactNode }) {
       sideBar={sidebar}
       sidebarHeader={
         <div className="flex-col items-center gap-1">
-          <p className="py-5 font-semibold text-foreground text-lg">Engine</p>
+          <p className="py-5 font-semibold text-foreground text-lg">
+            Transactions
+          </p>
           <EngineVersionSelector selected="v3" />
         </div>
       }
@@ -22,6 +24,6 @@ export default async function Layout(props: { children: React.ReactNode }) {
 
 export const metadata = createMetadata({
   description:
-    "Engine is a backend HTTP server that calls smart contracts using your managed backend wallets.",
-  title: "Engine V3",
+    "thirdweb Transactions is a backend HTTP server that calls smart contracts using your managed backend wallets.",
+  title: "Transactions",
 });

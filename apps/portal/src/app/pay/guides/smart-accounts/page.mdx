@@ -9,17 +9,17 @@ import {
 
 export const metadata = createMetadata({
 	image: {
-		title: "thirdweb Universal Bridge - Smart Accounts",
+		title: "thirdweb Payments - Smart Accounts",
 		icon: "thirdweb",
 	},
-	title: "thirdweb Universal Bridge - Smart Accounts | thirdweb",
+	title: "thirdweb Payments - Smart Accounts | thirdweb",
 	description:
-		"Learn how to use EIP7702 smart accounts with batched transactions for seamless Universal Bridge experiences.",
+		"Learn how to use EIP7702 smart accounts with batched transactions for seamless Payments experiences.",
 });
 
-# Smart Accounts with Universal Bridge
+# Smart Accounts with Payments
 
-Learn how to leverage EIP7702 smart accounts to batch Universal Bridge transactions for optimal user experience. This approach enables gasless transactions, batched execution, and seamless cross-chain operations.
+Learn how to leverage EIP7702 smart accounts to batch Payments transactions for optimal user experience. This approach enables gasless transactions, batched execution, and seamless cross-chain operations.
 
 Smart accounts with EIP7702 allow you to upgrade any EOA (Externally Owned Account) into a smart account without code changes, enabling advanced features like transaction batching and gas sponsorship.
 
@@ -67,7 +67,7 @@ const account = await wallet.connect({
 </Step>
 <Step title='Prepare Batched Bridge Transactions'>
 
-Use Universal Bridge to prepare transactions, then batch them per step (since each step may be on a different chain):
+Use Payments to prepare transactions, then batch them per step (since each step may be on a different chain):
 
 ```typescript
 import { Bridge, NATIVE_TOKEN_ADDRESS, toWei } from "thirdweb";
@@ -86,7 +86,7 @@ const bridgePreparation = await Bridge.Buy.prepare({
 ```
 
 <Callout variant="important">
-  **Key Rule**: You can only batch transactions that are on the same chain. Since Universal Bridge steps may span multiple chains, you must batch transactions within each step separately, not across steps.
+  **Key Rule**: You can only batch transactions that are on the same chain. Since Payments steps may span multiple chains, you must batch transactions within each step separately, not across steps.
 </Callout>
 
 </Step>
@@ -151,4 +151,4 @@ for (let i = 0; i < bridgePreparation.steps.length; i++) {
 - **[EIP7702 Documentation](/connect/account-abstraction/overview)** - Learn more about smart account features
 - **[Batching Transactions](/typescript/v5/account-abstraction/batching-transactions)** - Explore advanced batching patterns
 - **[Gas Sponsorship](/connect/account-abstraction/sponsoring-gas)** - Set up custom gas sponsorship rules
-- **[Universal Bridge API](/pay/webhooks)** - Monitor cross-chain operations with webhooks
+- **[Payments API](/pay/webhooks)** - Monitor cross-chain operations with webhooks
