@@ -152,8 +152,6 @@ function BuyEmbed(props: {
         chain={props.clientContract.chain}
         client={props.clientContract.client}
         tokenAddress={props.clientContract.address}
-        tokenName={props.tokenName}
-        tokenSymbol={props.tokenSymbol}
       />
     );
   }
