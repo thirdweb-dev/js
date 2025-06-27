@@ -11,6 +11,7 @@ import { ContractAnalyticsOverview } from "./_components/contract-analytics/cont
 import { BuyTokenEmbed } from "./_components/PayEmbedSection";
 import { TokenStats } from "./_components/PriceChart";
 import { RecentTransfers } from "./_components/RecentTransfers";
+import { fetchTokenInfoFromBridge } from "./_utils/fetch-coin-info";
 import { getCurrencyMeta } from "./_utils/getCurrencyMeta";
 
 export async function ERC20PublicPage(props: {
@@ -22,6 +23,7 @@ export async function ERC20PublicPage(props: {
     contractMetadata,
     activeClaimCondition,
     tokenDecimals,
+    tokenInfo,
     functionSelectors,
   ] = await Promise.all([
     getContractMetadata({
@@ -31,8 +33,17 @@ export async function ERC20PublicPage(props: {
     decimals({
       contract: props.serverContract,
     }),
+    fetchTokenInfoFromBridge({
+      chainId: props.serverContract.chain.id,
+      clientId: props.clientContract.client.clientId,
+      tokenAddress: props.serverContract.address,
+    }),
     resolveFunctionSelectors(props.serverContract),
   ]);
+
+  if (!contractMetadata.image && tokenInfo) {
+    contractMetadata.image = tokenInfo.iconUri;
+  }
 
   const [contractCreator, claimConditionCurrencyMeta] = await Promise.all([
     getContractCreator(props.serverContract, functionSelectors),
