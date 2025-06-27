@@ -104,6 +104,30 @@ const walletActions: SidebarLink = (() => {
             href: `${parentSlug}/generateexternalloginlink`,
             name: "GenerateExternalLoginLink",
           },
+          {
+            href: `${parentSlug}/createsessionkey7702`,
+            name: "CreateSessionKey (EIP-7702)",
+          },
+          {
+            href: `${parentSlug}/signerhaspermissions7702`,
+            name: "SignerHasFullPermissions",
+          },
+          {
+            href: `${parentSlug}/getcallpolicies7702`,
+            name: "GetCallPoliciesForSigner",
+          },
+          {
+            href: `${parentSlug}/gettransferpolicies7702`,
+            name: "GetTransferPoliciesForSigner",
+          },
+          {
+            href: `${parentSlug}/getsessionexpiration7702`,
+            name: "GetSessionExpirationForSigner",
+          },
+          {
+            href: `${parentSlug}/getsessionstate7702`,
+            name: "GetSessionStateForSigner",
+          },
         ],
         name: "InAppWallet & EcosystemWallet",
       },
@@ -116,7 +140,7 @@ const walletActions: SidebarLink = (() => {
           },
           {
             href: `${parentSlug}/createsessionkey`,
-            name: "CreateSessionKey",
+            name: "CreateSessionKey (EIP-4337)",
           },
           {
             href: `${parentSlug}/addadmin`,

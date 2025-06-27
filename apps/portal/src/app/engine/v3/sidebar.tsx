@@ -45,7 +45,7 @@ export const sidebar: SideBar = {
       icon: <WalletIcon />,
       links: [
         {
-          href: `${engineV3Slug}/configure-wallets/smart-server-wallet`,
+          href: `${engineV3Slug}/configure-wallets/server-wallets`,
           name: "Smart Server Wallet",
         },
       ],
@@ -82,5 +82,5 @@ export const sidebar: SideBar = {
       name: "FAQ",
     },
   ],
-  name: "Engine",
+  name: "Transactions",
 };

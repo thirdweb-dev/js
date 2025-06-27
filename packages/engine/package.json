@@ -1,5 +1,10 @@
 {
   "name": "@thirdweb-dev/engine",
+  "version": "3.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thirdweb-dev/js.git#main"
+  },
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"

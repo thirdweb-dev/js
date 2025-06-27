@@ -127,5 +127,5 @@ export const sidebar: SideBar = {
       name: "FAQs",
     },
   ],
-  name: "Universal Bridge",
+  name: "Payments",
 };

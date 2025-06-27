@@ -39,7 +39,7 @@ export function ContractAnalyticsOverview(props: {
       </div>
       <ThirdwebAreaChart
         cardContentClassName="p-0"
-        chartClassName="aspect-[1.5] lg:aspect-[3]"
+        chartClassName="aspect-[1.2] lg:aspect-[2.6]"
         className="border-none bg-background p-0"
         config={{
           events: {

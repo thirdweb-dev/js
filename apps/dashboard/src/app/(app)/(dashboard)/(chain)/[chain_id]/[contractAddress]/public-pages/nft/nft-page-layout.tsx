@@ -12,6 +12,7 @@ export function NFTPublicPageLayout(props: {
     [key: string]: unknown;
   };
   children: React.ReactNode;
+  contractCreator: string | null;
 }) {
   return (
     <div className="flex grow flex-col">
@@ -20,6 +21,7 @@ export function NFTPublicPageLayout(props: {
         <ContractHeaderUI
           chainMetadata={props.chainMetadata}
           clientContract={props.clientContract}
+          contractCreator={props.contractCreator}
           image={
             typeof props.contractMetadata.image === "string"
               ? props.contractMetadata.image

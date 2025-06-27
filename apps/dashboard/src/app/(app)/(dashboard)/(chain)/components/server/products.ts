@@ -10,18 +10,18 @@ import type { ChainSupportedService } from "@/types/chain";
 
 export const products = [
   {
-    description: "Pre-built contracts & deployment tools",
+    description: "Create, deploy and manage smart contracts",
     icon: ContractIcon,
     id: "contracts",
     link: "https://thirdweb.com/explore",
     name: "Contracts",
   },
   {
-    description: "Client-side SDKs for wallets and blockchain interactions",
+    description: "Create and manage crypto wallets",
     icon: ConnectSDKIcon,
     id: "connect-sdk",
     link: "https://thirdweb.com/connect",
-    name: "Connect SDK",
+    name: "Wallets",
   },
   {
     description: "Performant and scalable RPC service",
@@ -35,24 +35,24 @@ export const products = [
     icon: EngineIcon,
     id: "engine",
     link: "https://thirdweb.com/engine",
-    name: "Engine",
+    name: "Transactions",
   },
   {
-    description: "Account factory contracts, bundler & paymaster",
+    description: "Enable gas sponsorship for seamless transactions",
     icon: SmartAccountIcon,
     id: "account-abstraction",
     link: "https://portal.thirdweb.com/connect/account-abstraction/overview",
     name: "Account Abstraction",
   },
   {
-    description: "Point of sale solution for bridging, onramping & swapping",
+    description: "Enable payments in any token on any chain",
     icon: PayIcon,
     id: "pay",
     link: "https://portal.thirdweb.com/connect/pay/overview",
-    name: "Universal Bridge",
+    name: "Payments",
   },
   {
-    description: "Query, transform and analyze blockchain data",
+    description: "Query and analyze blockchain data",
     icon: InsightIcon,
     id: "insight",
     link: "https://thirdweb.com/insight",

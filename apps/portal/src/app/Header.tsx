@@ -33,15 +33,15 @@ import { ThirdwebIcon } from "../icons/thirdweb";
 const links = [
   {
     href: "/connect",
-    name: "Connect",
+    name: "Wallets",
   },
   {
     href: "/pay",
-    name: "Bridge",
+    name: "Payments",
   },
   {
     href: "/engine",
-    name: "Engine",
+    name: "Transactions",
   },
   {
     href: "/contracts",
@@ -181,7 +181,7 @@ const sdkLinks = [
 const supportLinks = [
   {
     href: "/knowledge-base",
-    name: "Get thirdweb support",
+    name: "Articles",
   },
   {
     href: "/account",
@@ -217,6 +217,20 @@ export function Header() {
 
         <div className="flex items-center gap-3">
           <div className="hidden xl:block">
+            <Link
+              className="text-foreground"
+              href="https://github.com/thirdweb-dev"
+              target="_blank"
+            >
+              <GithubIcon className="mx-3 size-6" />
+            </Link>
+          </div>
+
+          <div className="hidden xl:block">
+            <ThemeSwitcher className="border-none bg-transparent" />
+          </div>
+
+          <div className="hidden xl:block">
             <DocSearch variant="search" />
           </div>
 
@@ -229,20 +243,6 @@ export function Header() {
               <MessageCircleIcon className="mr-2 size-4" />
               Ask AI
             </Button>
-          </div>
-
-          <div className="hidden xl:block">
-            <ThemeSwitcher className="border-none bg-transparent" />
-          </div>
-
-          <div className="hidden xl:block">
-            <Link
-              className="text-foreground"
-              href="https://github.com/thirdweb-dev"
-              target="_blank"
-            >
-              <GithubIcon className="mx-3 size-6" />
-            </Link>
           </div>
 
           <div className="flex items-center gap-1 xl:hidden">

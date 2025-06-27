@@ -33,25 +33,25 @@ const HELP_PRODUCTS = [
       "https://playground.thirdweb.com/connect/sign-in/button?tab=code",
   },
   {
-    description: "Wallets, auth, and onchain interactions",
+    description: "Create and manage crypto wallets",
     icon: WalletIcon,
-    title: "Connect",
+    title: "Wallets",
     viewAllUrl: "https://portal.thirdweb.com/connect",
   },
   {
-    description: "Bridge and onramp tokens on any chain",
+    description: "Enable payments on any tokens on any chain",
     icon: PayIcon,
-    title: "Universal Bridge",
-    viewAllUrl: "https://portal.thirdweb.com/pay",
+    title: "Payments",
+    viewAllUrl: "https://portal.thirdweb.com/pay/troubleshoot",
   },
   {
-    description: "Reliable transactions and monitoring",
+    description: "Perform read and write transactions onchain",
     icon: EngineIcon,
-    title: "Engine",
-    viewAllUrl: "https://portal.thirdweb.com/engine/v3",
+    title: "Transactions",
+    viewAllUrl: "https://portal.thirdweb.com/engine/v3/troubleshoot",
   },
   {
-    description: "Blockchain data queries and transformations",
+    description: "Query and analyze blockchain data",
     icon: InsightIcon,
     title: "Insight",
     viewAllUrl: "https://portal.thirdweb.com/insight",
@@ -117,7 +117,7 @@ export default async function SupportPage() {
         </header>
       </div>
       <section className="container flex flex-col gap-6">
-        <h2 className="font-bold text-3xl">Learning Resources</h2>
+        <h2 className="font-bold text-3xl">Support Articles</h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
           {HELP_PRODUCTS.map((product) => (
             <Card className="relative col-span-1 bg-card" key={product.title}>

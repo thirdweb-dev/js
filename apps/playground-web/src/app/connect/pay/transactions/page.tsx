@@ -51,6 +51,7 @@ function BuyOnchainAsset() {
 
           return (
         <TransactionWidget
+          amount={"0.001"}
           client={THIRDWEB_CLIENT}
           theme={theme === "light" ? "light" : "dark"}
           transaction={claimTo({

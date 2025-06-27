@@ -2,9 +2,9 @@ import { createMetadata, DocImage, Callout } from "@doc";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export const metadata = createMetadata({
-	title: "Universal Bridge Webhooks Implementation Guide — thirdweb Docs",
+	title: "Payments Webhooks Implementation Guide — thirdweb Docs",
 	description:
-		"Learn how to set up webhooks for any Universal Bridge transactions.",
+		"Learn how to set up webhooks for any Payments transactions.",
 });
 
 # Webhooks
@@ -13,7 +13,7 @@ export const metadata = createMetadata({
 **When using webhooks to distribute purchased items, always verify that the proper amount was paid to the proper address onchain using the provided transaction hash. Do not make any assumptions regarding onchain data based on webhook payloads.**
 </Callout>
 
-You can create a webhook in your project dashboard under the Universal Bridge tab. You'll be prompted to copy a secret key before saving the webhook. This will be used for verification on all webhook requests received by your backend.
+You can create a webhook in your project dashboard under the Payments tab. You'll be prompted to copy a secret key before saving the webhook. This will be used for verification on all webhook requests received by your backend.
 
 ## Response Objects
 

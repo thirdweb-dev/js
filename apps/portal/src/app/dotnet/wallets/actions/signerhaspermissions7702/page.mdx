@@ -1,0 +1,62 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "EcosystemWallet.SignerHasFullPermissions | Thirdweb .NET SDK",
+	description:
+		"Checks if a signer has full permissions (wildcard access) on the EIP-7702 account.",
+});
+
+# EcosystemWallet.SignerHasFullPermissions
+
+Checks if the signer has full permissions on the EIP-7702 account. Returns `true` if the signer is a wildcard signer with unrestricted access.
+
+## Usage
+
+```csharp
+// Check if a signer has full permissions
+bool hasFullPermissions = await ecosystemWallet.SignerHasFullPermissions(
+    chainId: 1,
+    signerAddress: "0x1234567890123456789012345678901234567890"
+);
+
+if (hasFullPermissions)
+{
+    Console.WriteLine("Signer has unlimited access to the wallet");
+}
+else
+{
+    Console.WriteLine("Signer has restricted access based on policies");
+}
+```
+
+<Details summary="Parameters">
+
+### chainId
+
+`BigInteger`: The chain ID of the EIP-7702 account.
+
+### signerAddress
+
+`string`: The address of the signer to check permissions for.
+
+</Details>
+
+<Details summary="Return Value">
+
+### bool
+
+`true` if the signer has full permissions (wildcard access), `false` if the signer has restricted permissions or no permissions.
+
+</Details>
+
+<Details summary="Exceptions">
+
+### InvalidOperationException
+
+Thrown when the execution mode is not EIP7702 or EIP7702Sponsored.
+
+### ArgumentException
+
+Thrown when the signer address is null or empty.
+
+</Details>

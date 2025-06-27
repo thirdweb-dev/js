@@ -2,15 +2,22 @@ import assert from "node:assert";
 import { createId } from "@paralleldrive/cuid2";
 import type { KafkaProducer } from "./kafka.js";
 
+/**
+ * The event schema for webhook events.
+ * See more: https://github.com/thirdweb-dev/api-server/blob/dev/docs/webhooks.md
+ */
 interface WebhookEvent extends Record<string, unknown> {
   id?: `evt_${string}`;
   teamId: string;
   projectId?: string;
+  /**
+   * The timestamp your event was triggered at.
+   */
   createdAt?: Date;
   /**
-   * This should match your model defined in api-server.
+   * Your model defined in api-server.
    */
-  payload: Record<string, unknown>;
+  data: Record<string, unknown>;
 }
 
 /**
