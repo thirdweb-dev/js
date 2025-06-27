@@ -1,22 +1,26 @@
-export const authOptions = [
-  "email",
-  "phone",
-  "passkey",
-  "siwe",
-  "guest",
-  "google",
-  "facebook",
-  "x",
-  "discord",
-  "farcaster",
-  "telegram",
-  "github",
-  "twitch",
-  "steam",
-  "apple",
-  "coinbase",
-  "line",
-] as const;
+import "server-only";
+
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
+import { getAuthToken } from "./auth-token";
+
+export type AuthOption =
+  | "email"
+  | "phone"
+  | "passkey"
+  | "siwe"
+  | "guest"
+  | "google"
+  | "facebook"
+  | "x"
+  | "discord"
+  | "farcaster"
+  | "telegram"
+  | "github"
+  | "twitch"
+  | "steam"
+  | "apple"
+  | "coinbase"
+  | "line";
 
 export type Ecosystem = {
   name: string;
@@ -24,7 +28,7 @@ export type Ecosystem = {
   id: string;
   slug: string;
   permission: "PARTNER_WHITELIST" | "ANYONE";
-  authOptions: (typeof authOptions)[number][];
+  authOptions: AuthOption[];
   customAuthOptions?: {
     authEndpoint?: {
       url: string;
@@ -46,6 +50,54 @@ export type Ecosystem = {
   createdAt: string;
   updatedAt: string;
 };
+
+export async function fetchEcosystemList(teamIdOrSlug: string) {
+  const token = await getAuthToken();
+
+  if (!token) {
+    return [];
+  }
+
+  const res = await fetch(
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamIdOrSlug}/ecosystem-wallet`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (!res.ok) {
+    return [];
+  }
+
+  return (await res.json()).result as Ecosystem[];
+}
+
+export async function fetchEcosystem(slug: string, teamIdOrSlug: string) {
+  const token = await getAuthToken();
+
+  if (!token) {
+    return null;
+  }
+
+  const res = await fetch(
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamIdOrSlug}/ecosystem-wallet/${slug}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  if (!res.ok) {
+    const data = await res.json();
+    console.error(data);
+    return null;
+  }
+
+  const data = (await res.json()) as { result: Ecosystem };
+  return data.result;
+}
 
 type PartnerPermission = "PROMPT_USER_V1" | "FULL_CONTROL_V1";
 export type Partner = {

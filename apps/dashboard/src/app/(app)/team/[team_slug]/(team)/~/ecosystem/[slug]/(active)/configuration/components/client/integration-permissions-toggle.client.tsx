@@ -2,11 +2,11 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import invariant from "tiny-invariant";
+import type { Ecosystem } from "@/api/ecosystems";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { RadioGroup, RadioGroupItemButton } from "@/components/ui/radio-group";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import type { Ecosystem } from "../../../../../types";
 import { useUpdateEcosystem } from "../../hooks/use-update-ecosystem";
 
 export function IntegrationPermissionsToggle({

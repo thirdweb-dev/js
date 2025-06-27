@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
+import { fetchEcosystemList } from "@/api/ecosystems";
 import { loginRedirect } from "../../../../../login/loginRedirect";
-import { fetchEcosystemList } from "./utils/fetchEcosystemList";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string }>;
@@ -15,12 +15,10 @@ export default async function Page(props: {
     loginRedirect(ecosystemLayoutPath);
   }
 
-  const ecosystems = await fetchEcosystemList(authToken, team_slug).catch(
-    (err) => {
-      console.error("failed to fetch ecosystems", err);
-      return [];
-    },
-  );
+  const ecosystems = await fetchEcosystemList(team_slug).catch((err) => {
+    console.error("failed to fetch ecosystems", err);
+    return [];
+  });
 
   if (ecosystems[0]) {
     redirect(`${ecosystemLayoutPath}/${ecosystems[0].slug}`);

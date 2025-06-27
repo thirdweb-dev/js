@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
-/* eslint-disable */
+import type { Ecosystem } from "@/api/ecosystems";
 import { Img } from "@/components/blocks/Img";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,6 @@ import { useDashboardStorageUpload } from "@/hooks/useDashboardStorageUpload";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
-import type { Ecosystem } from "../../../types";
 import { useUpdateEcosystem } from "../configuration/hooks/use-update-ecosystem";
 import { useEcosystem } from "../hooks/use-ecosystem";
 

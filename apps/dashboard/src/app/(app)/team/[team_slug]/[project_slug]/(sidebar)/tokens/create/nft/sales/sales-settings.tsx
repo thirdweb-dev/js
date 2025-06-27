@@ -2,8 +2,8 @@ import type { UseFormReturn } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import { BasisPointsInput } from "@/components/blocks/BasisPointsInput";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { SolidityInput } from "@/components/solidity-inputs";
 import { Form } from "@/components/ui/form";
-import { SolidityInput } from "../../../../../../../../../../@/components/solidity-inputs";
 import { StepCard } from "../../_common/step-card";
 import type { NFTSalesSettingsFormValues } from "../_common/form";
 

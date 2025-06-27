@@ -12,6 +12,7 @@ import {
 } from "thirdweb/wallets/smart";
 import invariant from "tiny-invariant";
 import { z } from "zod";
+import type { AuthOption, Ecosystem } from "@/api/ecosystems";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { Button } from "@/components/ui/button";
@@ -36,8 +37,27 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import { authOptions, type Ecosystem } from "../../../../../types";
 import { useUpdateEcosystem } from "../../hooks/use-update-ecosystem";
+
+const authOptions = [
+  "email",
+  "phone",
+  "passkey",
+  "siwe",
+  "guest",
+  "google",
+  "facebook",
+  "x",
+  "discord",
+  "farcaster",
+  "telegram",
+  "github",
+  "twitch",
+  "steam",
+  "apple",
+  "coinbase",
+  "line",
+] as const satisfies AuthOption[];
 
 type AuthOptionsFormData = {
   authOptions: string[];
@@ -220,7 +240,7 @@ export function AuthOptionsForm({
 
     updateEcosystem({
       ...ecosystem,
-      authOptions: data.authOptions as (typeof authOptions)[number][],
+      authOptions: data.authOptions as AuthOption[],
       customAuthOptions,
       smartAccountOptions,
     });

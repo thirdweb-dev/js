@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { Project } from "@/api/projects";
 import { type Step, StepsCard } from "@/components/blocks/StepsCard";
-import { Button } from "../../../../../../../../@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { CreateVaultAccountButton } from "../../vault/components/create-vault-account.client";
 import CreateServerWallet from "../server-wallets/components/create-server-wallet.client";
 import type { Wallet } from "../server-wallets/wallet-table/types";

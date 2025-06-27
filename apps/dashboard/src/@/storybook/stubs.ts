@@ -192,6 +192,7 @@ export function teamSubscriptionsStub(
       currentPeriodEnd: "2024-12-15T20:56:06.000Z",
       currentPeriodStart: "2024-11-15T20:56:06.000Z",
       id: "sub-1",
+      skus: [],
       status: "active",
       trialEnd: overrides?.trialEnd || null,
       trialStart: null,
@@ -212,6 +213,7 @@ export function teamSubscriptionsStub(
       currentPeriodEnd: "2024-12-15T20:56:06.000Z",
       currentPeriodStart: "2024-11-15T20:56:15.000Z",
       id: "sub-2",
+      skus: [],
       status: "active",
       trialEnd: null,
       trialStart: null,
@@ -229,25 +231,19 @@ export function teamSubscriptionsStub(
           // In-App Wallets
           {
             amount: usage.inAppWalletAmount?.amount || 0,
-            description: `${
-              usage.inAppWalletAmount?.quantity || 0
-            } x In-App Wallets (Tier 1 at $0.00 / month)`,
+            description: `${usage.inAppWalletAmount?.quantity || 0} x In-App Wallets (Tier 1 at $0.00 / month)`,
             thirdwebSku: "usage:in_app_wallet",
           },
           // AA Sponsorship
           {
             amount: usage.aaSponsorshipAmount?.amount || 0,
-            description: `${
-              usage.aaSponsorshipAmount?.quantity || 0
-            } x AA Gas Sponsorship (at $0.011 / month)`,
+            description: `${usage.aaSponsorshipAmount?.quantity || 0} x AA Gas Sponsorship (at $0.011 / month)`,
             thirdwebSku: "usage:aa_sponsorship",
           },
           // OP Grant
           {
             amount: usage.aaSponsorshipOpGrantAmount?.amount || 0,
-            description: `${
-              usage.aaSponsorshipOpGrantAmount?.quantity || 0
-            } x AA Gas Sponsorship (OP) (at $0.011 / month)`,
+            description: `${usage.aaSponsorshipOpGrantAmount?.quantity || 0} x AA Gas Sponsorship (OP) (at $0.011 / month)`,
             thirdwebSku: "usage:aa_sponsorship_op_grant",
           },
         ],

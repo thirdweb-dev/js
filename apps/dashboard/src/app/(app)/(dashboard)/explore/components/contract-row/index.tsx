@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import {
   ContractCard,
   ContractCardSkeleton,
-} from "../../../../../../@/components/contracts/contract-card";
+} from "@/components/contracts/contract-card";
 
 interface ContractRowProps {
   category: ExploreCategory;
