@@ -2,47 +2,47 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import {
-	createSessionWithSig,
-	isCreateSessionWithSigSupported,
+  createSessionWithSig,
+  isCreateSessionWithSigSupported,
 } from "../__generated__/MinimalAccount/write/createSessionWithSig.js";
 import {
-	type CallSpecInput,
-	CallSpecRequest,
-	ConstraintRequest,
-	SessionSpecRequest,
-	type TransferSpecInput,
-	TransferSpecRequest,
-	UsageLimitRequest,
+  type CallSpecInput,
+  CallSpecRequest,
+  ConstraintRequest,
+  SessionSpecRequest,
+  type TransferSpecInput,
+  TransferSpecRequest,
+  UsageLimitRequest,
 } from "./types.js";
 
 /**
  * @extension ERC7702
  */
 export type CreateSessionKeyOptions = {
-	/**
-	 * The admin account that will perform the operation.
-	 */
-	account: Account;
-	/**
-	 * The address to add as a session key.
-	 */
-	sessionKeyAddress: string;
-	/**
-	 * How long the session key should be valid for, in seconds.
-	 */
-	durationInSeconds: number;
-	/**
-	 * Whether to grant full execution permissions to the session key.
-	 */
-	grantFullPermissions?: boolean;
-	/**
-	 * Smart contract interaction policies to apply to the session key, ignored if grantFullPermissions is true.
-	 */
-	callPolicies?: CallSpecInput[];
-	/**
-	 * Value transfer policies to apply to the session key, ignored if grantFullPermissions is true.
-	 */
-	transferPolicies?: TransferSpecInput[];
+  /**
+   * The admin account that will perform the operation.
+   */
+  account: Account;
+  /**
+   * The address to add as a session key.
+   */
+  sessionKeyAddress: string;
+  /**
+   * How long the session key should be valid for, in seconds.
+   */
+  durationInSeconds: number;
+  /**
+   * Whether to grant full execution permissions to the session key.
+   */
+  grantFullPermissions?: boolean;
+  /**
+   * Smart contract interaction policies to apply to the session key, ignored if grantFullPermissions is true.
+   */
+  callPolicies?: CallSpecInput[];
+  /**
+   * Value transfer policies to apply to the session key, ignored if grantFullPermissions is true.
+   */
+  transferPolicies?: TransferSpecInput[];
 };
 
 /**
@@ -68,100 +68,100 @@ export type CreateSessionKeyOptions = {
  * @extension ERC7702
  */
 export function createSessionKey(
-	options: BaseTransactionOptions<CreateSessionKeyOptions>,
+  options: BaseTransactionOptions<CreateSessionKeyOptions>,
 ) {
-	const {
-		contract,
-		account,
-		sessionKeyAddress,
-		durationInSeconds,
-		grantFullPermissions,
-		callPolicies,
-		transferPolicies,
-	} = options;
+  const {
+    contract,
+    account,
+    sessionKeyAddress,
+    durationInSeconds,
+    grantFullPermissions,
+    callPolicies,
+    transferPolicies,
+  } = options;
 
-	if (durationInSeconds <= 0) {
-		throw new Error("durationInSeconds must be positive");
-	}
+  if (durationInSeconds <= 0) {
+    throw new Error("durationInSeconds must be positive");
+  }
 
-	return createSessionWithSig({
-		async asyncParams() {
-			const req = {
-				callPolicies: (callPolicies || []).map((policy) => ({
-					constraints: (policy.constraints || []).map((constraint) => ({
-						condition: Number(constraint.condition),
-						index: constraint.index || BigInt(0),
-						limit: constraint.limit
-							? {
-									limit: constraint.limit.limit,
-									limitType: Number(constraint.limit.limitType),
-									period: constraint.limit.period,
-								}
-							: {
-									limit: BigInt(0),
-									limitType: 0,
-									period: BigInt(0),
-								},
-						refValue: constraint.refValue || "0x",
-					})),
-					maxValuePerUse: policy.maxValuePerUse || BigInt(0),
-					selector: policy.selector,
-					target: policy.target,
-					valueLimit: policy.valueLimit
-						? {
-								limit: policy.valueLimit.limit,
-								limitType: Number(policy.valueLimit.limitType),
-								period: policy.valueLimit.period,
-							}
-						: {
-								limit: BigInt(0),
-								limitType: 0,
-								period: BigInt(0),
-							},
-				})),
-				expiresAt: BigInt(Math.floor(Date.now() / 1000) + durationInSeconds),
-				isWildcard: grantFullPermissions ?? true,
-				signer: sessionKeyAddress,
-				transferPolicies: (transferPolicies || []).map((policy) => ({
-					maxValuePerUse: policy.maxValuePerUse || BigInt(0),
-					target: policy.target,
-					valueLimit: policy.valueLimit
-						? {
-								limit: policy.valueLimit.limit,
-								limitType: Number(policy.valueLimit.limitType),
-								period: policy.valueLimit.period,
-							}
-						: {
-								limit: BigInt(0),
-								limitType: 0,
-								period: BigInt(0),
-							},
-				})),
-				uid: await randomBytesHex(),
-			};
+  return createSessionWithSig({
+    async asyncParams() {
+      const req = {
+        callPolicies: (callPolicies || []).map((policy) => ({
+          constraints: (policy.constraints || []).map((constraint) => ({
+            condition: Number(constraint.condition),
+            index: constraint.index || BigInt(0),
+            limit: constraint.limit
+              ? {
+                  limit: constraint.limit.limit,
+                  limitType: Number(constraint.limit.limitType),
+                  period: constraint.limit.period,
+                }
+              : {
+                  limit: BigInt(0),
+                  limitType: 0,
+                  period: BigInt(0),
+                },
+            refValue: constraint.refValue || "0x",
+          })),
+          maxValuePerUse: policy.maxValuePerUse || BigInt(0),
+          selector: policy.selector,
+          target: policy.target,
+          valueLimit: policy.valueLimit
+            ? {
+                limit: policy.valueLimit.limit,
+                limitType: Number(policy.valueLimit.limitType),
+                period: policy.valueLimit.period,
+              }
+            : {
+                limit: BigInt(0),
+                limitType: 0,
+                period: BigInt(0),
+              },
+        })),
+        expiresAt: BigInt(Math.floor(Date.now() / 1000) + durationInSeconds),
+        isWildcard: grantFullPermissions ?? true,
+        signer: sessionKeyAddress,
+        transferPolicies: (transferPolicies || []).map((policy) => ({
+          maxValuePerUse: policy.maxValuePerUse || BigInt(0),
+          target: policy.target,
+          valueLimit: policy.valueLimit
+            ? {
+                limit: policy.valueLimit.limit,
+                limitType: Number(policy.valueLimit.limitType),
+                period: policy.valueLimit.period,
+              }
+            : {
+                limit: BigInt(0),
+                limitType: 0,
+                period: BigInt(0),
+              },
+        })),
+        uid: await randomBytesHex(),
+      };
 
-			const signature = await account.signTypedData({
-				domain: {
-					chainId: contract.chain.id,
-					name: "MinimalAccount",
-					verifyingContract: contract.address,
-					version: "1",
-				},
-				message: req,
-				primaryType: "SessionSpec",
-				types: {
-					CallSpec: CallSpecRequest,
-					Constraint: ConstraintRequest,
-					SessionSpec: SessionSpecRequest,
-					TransferSpec: TransferSpecRequest,
-					UsageLimit: UsageLimitRequest,
-				},
-			});
+      const signature = await account.signTypedData({
+        domain: {
+          chainId: contract.chain.id,
+          name: "MinimalAccount",
+          verifyingContract: contract.address,
+          version: "1",
+        },
+        message: req,
+        primaryType: "SessionSpec",
+        types: {
+          CallSpec: CallSpecRequest,
+          Constraint: ConstraintRequest,
+          SessionSpec: SessionSpecRequest,
+          TransferSpec: TransferSpecRequest,
+          UsageLimit: UsageLimitRequest,
+        },
+      });
 
-			return { sessionSpec: req, signature };
-		},
-		contract,
-	});
+      return { sessionSpec: req, signature };
+    },
+    contract,
+  });
 }
 
 /**
@@ -177,5 +177,5 @@ export function createSessionKey(
  * ```
  */
 export function isCreateSessionKeySupported(availableSelectors: string[]) {
-	return isCreateSessionWithSigSupported(availableSelectors);
+  return isCreateSessionWithSigSupported(availableSelectors);
 }

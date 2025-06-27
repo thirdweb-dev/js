@@ -5,7 +5,7 @@
 export enum LimitType {
   Unlimited = 0,
   Lifetime = 1,
-  Allowance = 2
+  Allowance = 2,
 }
 
 export enum Condition {
@@ -15,7 +15,7 @@ export enum Condition {
   Less = 3,
   GreaterOrEqual = 4,
   LessOrEqual = 5,
-  NotEqual = 6
+  NotEqual = 6,
 }
 
 /* ────────────────────────────────

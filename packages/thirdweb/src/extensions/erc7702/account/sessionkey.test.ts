@@ -89,8 +89,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
                 {
                   condition: Condition.Unconstrained,
                   index: 0n,
-                  refValue: "0x0000000000000000000000000000000000000000000000000000000000000000"
-                }
+                  refValue:
+                    "0x0000000000000000000000000000000000000000000000000000000000000000",
+                },
               ],
               maxValuePerUse: 0n,
               selector: "0x00000000",
