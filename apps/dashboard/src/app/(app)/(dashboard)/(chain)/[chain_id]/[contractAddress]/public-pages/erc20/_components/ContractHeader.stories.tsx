@@ -88,6 +88,25 @@ export const WithImageAndMultipleSocialUrls: Story = {
   args: {
     chainMetadata: ethereumChainMetadata,
     clientContract: mockContract,
+    contractCreator: null,
+    image: mockTokenImage,
+    name: "Sample Token",
+    socialUrls: {
+      discord: mockSocialUrls.discord,
+      github: mockSocialUrls.github,
+      telegram: mockSocialUrls.telegram,
+      twitter: mockSocialUrls.twitter,
+      website: mockSocialUrls.website,
+    },
+    symbol: "SMPL",
+  },
+};
+
+export const WithContractCreator: Story = {
+  args: {
+    chainMetadata: ethereumChainMetadata,
+    clientContract: mockContract,
+    contractCreator: "0x1234567890123456789012345678901234567890",
     image: mockTokenImage,
     name: "Sample Token",
     socialUrls: {
@@ -105,6 +124,7 @@ export const WithBrokenImageAndSingleSocialUrl: Story = {
   args: {
     chainMetadata: ethereumChainMetadata,
     clientContract: mockContract,
+    contractCreator: null,
     image: "broken-image.png",
     name: "Sample Token",
     socialUrls: {
@@ -118,6 +138,7 @@ export const WithoutImageAndNoSocialUrls: Story = {
   args: {
     chainMetadata: ethereumChainMetadata,
     clientContract: mockContract,
+    contractCreator: null,
     image: undefined,
     name: "Sample Token",
     socialUrls: {},
@@ -129,6 +150,7 @@ export const LongNameAndLotsOfSocialUrls: Story = {
   args: {
     chainMetadata: ethereumChainMetadata,
     clientContract: mockContract,
+    contractCreator: null,
     image: "https://thirdweb.com/chain-icons/ethereum.svg",
     name: "This is a very long token name that should wrap to multiple lines",
     socialUrls: {
@@ -148,6 +170,7 @@ export const AllSocialUrls: Story = {
   args: {
     chainMetadata: ethereumChainMetadata,
     clientContract: mockContract,
+    contractCreator: null,
     image: "https://thirdweb.com/chain-icons/ethereum.svg",
     name: "Sample Token",
     socialUrls: {
@@ -171,6 +194,7 @@ export const InvalidSocialUrls: Story = {
   args: {
     chainMetadata: ethereumChainMetadata,
     clientContract: mockContract,
+    contractCreator: null,
     image: "https://thirdweb.com/chain-icons/ethereum.svg",
     name: "Sample Token",
     socialUrls: {
@@ -188,6 +212,7 @@ export const SomeSocialUrls: Story = {
   args: {
     chainMetadata: ethereumChainMetadata,
     clientContract: mockContract,
+    contractCreator: null,
     image: "https://thirdweb.com/chain-icons/ethereum.svg",
     name: "Sample Token",
     socialUrls: {

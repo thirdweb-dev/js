@@ -2,6 +2,8 @@ import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { decimals, getActiveClaimCondition } from "thirdweb/extensions/erc20";
+import { resolveFunctionSelectors } from "@/lib/selectors";
+import { getContractCreator } from "../_components/getContractCreator";
 import { PageHeader } from "../_components/PageHeader";
 import { ContractHeaderUI } from "./_components/ContractHeader";
 import { TokenDropClaim } from "./_components/claim-tokens/claim-tokens-ui";
@@ -16,25 +18,33 @@ export async function ERC20PublicPage(props: {
   clientContract: ThirdwebContract;
   chainMetadata: ChainMetadata;
 }) {
-  const [contractMetadata, activeClaimCondition, tokenDecimals] =
-    await Promise.all([
-      getContractMetadata({
-        contract: props.serverContract,
-      }),
-      getActiveClaimConditionWithErrorHandler(props.serverContract),
-      decimals({
-        contract: props.serverContract,
-      }),
-    ]);
+  const [
+    contractMetadata,
+    activeClaimCondition,
+    tokenDecimals,
+    functionSelectors,
+  ] = await Promise.all([
+    getContractMetadata({
+      contract: props.serverContract,
+    }),
+    getActiveClaimConditionWithErrorHandler(props.serverContract),
+    decimals({
+      contract: props.serverContract,
+    }),
+    resolveFunctionSelectors(props.serverContract),
+  ]);
 
-  const claimConditionCurrencyMeta = activeClaimCondition
-    ? await getCurrencyMeta({
-        chain: props.serverContract.chain,
-        chainMetadata: props.chainMetadata,
-        client: props.serverContract.client,
-        currencyAddress: activeClaimCondition.currency,
-      }).catch(() => undefined)
-    : undefined;
+  const [contractCreator, claimConditionCurrencyMeta] = await Promise.all([
+    getContractCreator(props.serverContract, functionSelectors),
+    activeClaimCondition
+      ? getCurrencyMeta({
+          chain: props.serverContract.chain,
+          chainMetadata: props.chainMetadata,
+          client: props.serverContract.client,
+          currencyAddress: activeClaimCondition.currency,
+        }).catch(() => undefined)
+      : undefined,
+  ]);
 
   const buyEmbed = (
     <BuyEmbed
@@ -62,6 +72,7 @@ export async function ERC20PublicPage(props: {
         <ContractHeaderUI
           chainMetadata={props.chainMetadata}
           clientContract={props.clientContract}
+          contractCreator={contractCreator}
           image={contractMetadata.image}
           name={contractMetadata.name}
           socialUrls={
