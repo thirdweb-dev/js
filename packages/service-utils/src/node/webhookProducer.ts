@@ -2,6 +2,10 @@ import assert from "node:assert";
 import { createId } from "@paralleldrive/cuid2";
 import type { KafkaProducer } from "./kafka.js";
 
+/**
+ * The event schema for webhook events.
+ * See more: https://github.com/thirdweb-dev/api-server/blob/dev/docs/webhooks.md
+ */
 interface WebhookEvent extends Record<string, unknown> {
   id?: `evt_${string}`;
   teamId: string;
@@ -11,9 +15,9 @@ interface WebhookEvent extends Record<string, unknown> {
    */
   createdAt?: Date;
   /**
-   * An array of your model (defined in api-server). Must not be empty.
+   * Your model defined in api-server.
    */
-  payload: Record<string, unknown>[];
+  data: Record<string, unknown>;
 }
 
 /**
@@ -42,7 +46,6 @@ export class WebhookEventProducer {
    */
   async sendEvents(topic: string, events: WebhookEvent[]): Promise<void> {
     const parsedEvents: WebhookEvent[] = events.map((event) => {
-      assert(event.payload.length > 0, "payload must not be empty");
       assert(
         event.teamId.startsWith("team_"),
         "teamId must start with 'team_'",
