@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.105.2
+
+### Patch Changes
+
+- [#7452](https://github.com/thirdweb-dev/js/pull/7452) [`277c2e2`](https://github.com/thirdweb-dev/js/commit/277c2e2ed96ff38194a2d5c33916d25a8f1e9a6f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds "Unsupported Token" fallback screen to TransactionWidget
+
+- [#7451](https://github.com/thirdweb-dev/js/pull/7451) [`c2ef5eb`](https://github.com/thirdweb-dev/js/commit/c2ef5eb51cb15dc23942b3681f5f5ca7634594ad) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - update dependencies
+
 ## 5.105.1
 
 ### Patch Changes

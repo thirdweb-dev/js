@@ -404,5 +404,5 @@
     }
   },
   "typings": "./dist/types/exports/thirdweb.d.ts",
-  "version": "5.105.1"
+  "version": "5.105.2"
 }
