@@ -78,6 +78,5 @@
     "wallet-ui": "turbo run dev --filter=./apps/wallet-ui --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine --filter=./packages/nebula",
     "wallet-ui:build": "turbo run build --filter=./apps/wallet-ui --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine --filter=./packages/nebula"
   },
-
   "version": "1.0.0"
 }
