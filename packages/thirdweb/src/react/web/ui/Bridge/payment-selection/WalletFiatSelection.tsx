@@ -21,6 +21,7 @@ interface WalletFiatSelectionProps {
   onWalletSelected: (wallet: Wallet) => void;
   onFiatSelected: () => void;
   onConnectWallet: () => void;
+  enableCard?: boolean;
 }
 
 export function WalletFiatSelection({
@@ -29,6 +30,7 @@ export function WalletFiatSelection({
   onWalletSelected,
   onFiatSelected,
   onConnectWallet,
+  enableCard = true,
 }: WalletFiatSelectionProps) {
   const theme = useCustomTheme();
 
@@ -126,47 +128,50 @@ export function WalletFiatSelection({
         </Container>
       </Button>
 
-      <Spacer y="md" />
+      {enableCard && (
+        <>
+          <Spacer y="md" />
 
-      {/* Pay with Debit Card */}
-      <Text color="primaryText" size="md">
-        Pay with Fiat
-      </Text>
+          <Text color="primaryText" size="md">
+            Pay with Card
+          </Text>
 
-      <Spacer y="md" />
+          <Spacer y="md" />
 
-      <Button
-        fullWidth
-        onClick={onFiatSelected}
-        style={{
-          backgroundColor: theme.colors.tertiaryBg,
-          border: `1px solid ${theme.colors.borderColor}`,
-          borderRadius: radius.md,
-          height: "auto",
-          padding: `${spacing.sm} ${spacing.md}`,
-          textAlign: "left",
-        }}
-        variant="secondary"
-      >
-        <Container
-          flex="row"
-          gap="md"
-          style={{ alignItems: "center", width: "100%" }}
-        >
-          <CreditCardIcon
-            color={theme.colors.secondaryIconColor}
-            size={iconSize.lg}
-          />
-          <Container flex="column" gap="3xs" style={{ flex: 1 }}>
-            <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
-              Pay with Card
-            </Text>
-            <Text color="secondaryText" size="xs">
-              Buy crypto and bridge in one step
-            </Text>
-          </Container>
-        </Container>
-      </Button>
+          <Button
+            fullWidth
+            onClick={onFiatSelected}
+            style={{
+              backgroundColor: theme.colors.tertiaryBg,
+              border: `1px solid ${theme.colors.borderColor}`,
+              borderRadius: radius.md,
+              height: "auto",
+              padding: `${spacing.sm} ${spacing.md}`,
+              textAlign: "left",
+            }}
+            variant="secondary"
+          >
+            <Container
+              flex="row"
+              gap="md"
+              style={{ alignItems: "center", width: "100%" }}
+            >
+              <CreditCardIcon
+                color={theme.colors.secondaryIconColor}
+                size={iconSize.lg}
+              />
+              <Container flex="column" gap="3xs" style={{ flex: 1 }}>
+                <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
+                  Pay with Card
+                </Text>
+                <Text color="secondaryText" size="xs">
+                  Buy crypto and bridge in one step
+                </Text>
+              </Container>
+            </Container>
+          </Button>
+        </>
+      )}
     </>
   );
 }

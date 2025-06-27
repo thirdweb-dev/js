@@ -359,6 +359,7 @@ export function PayEmbed(props: PayEmbedProps) {
         onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
         theme={theme}
         title={metadata?.name || "Buy"}
+        enableCard={props.payOptions?.buyWithFiat === false ? false : true}
         tokenAddress={
           props.payOptions.prefillBuy.token?.address as Address | undefined
         }
@@ -377,6 +378,7 @@ export function PayEmbed(props: PayEmbedProps) {
         name={metadata?.name || "Checkout"}
         onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
         seller={props.payOptions.paymentInfo.sellerAddress as Address}
+        enableCard={props.payOptions?.buyWithFiat === false ? false : true}
         theme={theme}
         tokenAddress={
           props.payOptions.paymentInfo.token?.address as Address | undefined
@@ -393,6 +395,7 @@ export function PayEmbed(props: PayEmbedProps) {
         image={metadata?.image}
         onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
         theme={theme}
+        enableCard={props.payOptions?.buyWithFiat === false ? false : true}
         title={metadata?.name}
         transaction={props.payOptions.transaction}
       />
@@ -513,10 +516,10 @@ export type PayEmbedConnectOptions = {
    * ```
    */
   autoConnect?:
-    | {
-        timeout: number;
-      }
-    | boolean;
+  | {
+    timeout: number;
+  }
+  | boolean;
 
   /**
    * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.

@@ -166,6 +166,12 @@ export type CheckoutWidgetProps = {
    * @hidden
    */
   paymentLinkId?: string;
+
+  /**
+   * Whether to enable the "Buy with card" (fiat payment) option.
+   * @default true
+   */
+  enableCard?: boolean;
 };
 
 // Enhanced UIOptions to handle unsupported token state
@@ -345,6 +351,7 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
         purchaseData={props.purchaseData}
         receiverAddress={props.seller}
         uiOptions={bridgeDataQuery.data.data}
+        enableCard={props.enableCard}
       />
     );
   }

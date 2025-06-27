@@ -113,6 +113,11 @@ export interface BridgeOrchestratorProps {
    * Quick buy amounts
    */
   presetOptions: [number, number, number] | undefined;
+
+  /**
+   * Whether to enable the "Buy with card" (fiat payment) option
+   */
+  enableCard?: boolean;
 }
 
 export function BridgeOrchestrator({
@@ -127,6 +132,7 @@ export function BridgeOrchestrator({
   purchaseData,
   paymentLinkId,
   presetOptions,
+  enableCard,
 }: BridgeOrchestratorProps) {
   // Initialize adapters
   const adapters = useMemo(
@@ -271,6 +277,7 @@ export function BridgeOrchestrator({
             onError={handleError}
             onPaymentMethodSelected={handlePaymentMethodSelected}
             receiverAddress={state.context.receiverAddress}
+            enableCard={enableCard}
           />
         )}
 

@@ -71,6 +71,11 @@ export interface PaymentSelectionProps {
    * Whether to include the destination token in the payment methods
    */
   includeDestinationToken?: boolean;
+
+  /**
+   * Whether to enable the "Buy with card" (fiat payment) option
+   */
+  enableCard?: boolean;
 }
 
 type Step =
@@ -90,6 +95,7 @@ export function PaymentSelection({
   connectOptions,
   connectLocale,
   includeDestinationToken,
+  enableCard,
 }: PaymentSelectionProps) {
   const connectedWallets = useConnectedWallets();
   const activeWallet = useActiveWallet();
@@ -248,6 +254,7 @@ export function PaymentSelection({
             onConnectWallet={handleConnectWallet}
             onFiatSelected={handleFiatSelected}
             onWalletSelected={handleWalletSelected}
+            enableCard={enableCard}
           />
         )}
 
