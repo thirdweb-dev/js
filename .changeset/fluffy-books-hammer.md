@@ -1,0 +1,5 @@
+---
+"thirdweb": patch
+---
+
+update dependencies
