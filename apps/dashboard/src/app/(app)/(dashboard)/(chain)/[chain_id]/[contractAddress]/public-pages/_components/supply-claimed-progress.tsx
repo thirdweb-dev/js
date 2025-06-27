@@ -1,14 +1,13 @@
 import { InfinityIcon } from "lucide-react";
-import { maxUint256 } from "thirdweb/utils";
 import { Progress } from "@/components/ui/progress";
 import { supplyFormatter } from "../nft/format";
 
 export function SupplyClaimedProgress(props: {
   claimedSupply: bigint;
-  totalSupply: bigint;
+  totalSupply: bigint | "unlimited";
 }) {
   // if total supply is unlimited
-  if (props.totalSupply === maxUint256) {
+  if (props.totalSupply === "unlimited") {
     return (
       <p className="flex items-center justify-between gap-2">
         <span className="font-medium text-sm">Claimed Supply </span>

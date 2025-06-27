@@ -6,6 +6,7 @@ import { ResponsiveLayout } from "@/components/blocks/Responsive";
 import { Skeleton } from "@/components/ui/skeleton";
 import { resolveFunctionSelectors } from "@/lib/selectors";
 import { cn } from "@/lib/utils";
+import { getContractCreator } from "../_components/getContractCreator";
 import { NFTPublicPageLayout } from "./nft-page-layout";
 import {
   BuyNFTDropCardServer,
@@ -35,15 +36,17 @@ export async function NFTPublicPage(props: {
       }),
     ]);
 
-  const nftDropClaimParams =
+  const [contractCreator, nftDropClaimParams] = await Promise.all([
+    getContractCreator(props.serverContract, functionSelectors),
     props.type === "erc721"
-      ? await getNFTDropClaimParams({
+      ? getNFTDropClaimParams({
           chainMetadata: props.chainMetadata,
           functionSelectors,
           serverContract: props.serverContract,
           totalNFTCount,
         })
-      : undefined;
+      : undefined,
+  ]);
 
   const _isTokenByIndexSupported =
     props.type === "erc721" && isTokenByIndexSupported(functionSelectors);
@@ -101,6 +104,7 @@ export async function NFTPublicPage(props: {
     <NFTPublicPageLayout
       chainMetadata={props.chainMetadata}
       clientContract={props.clientContract}
+      contractCreator={contractCreator}
       contractMetadata={contractMetadata}
     >
       <ResponsiveLayout

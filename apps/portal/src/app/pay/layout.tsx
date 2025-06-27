@@ -12,10 +12,10 @@ export default async function Layout(props: { children: React.ReactNode }) {
 
 export const metadata = createMetadata({
   description:
-    "thirdweb Universal Bridge documentation. Learn how to use the thirdweb Universal Bridge to send and receive tokens across different blockchains.",
+    "thirdweb Payments documentation. Learn how to use the thirdweb Payments to send and receive tokens across different blockchains.",
   image: {
     icon: "nebula",
-    title: "thirdweb Universal Bridge Docs",
+    title: "thirdweb Payments Docs",
   },
-  title: "thirdweb Universal Bridge Documentation",
+  title: "thirdweb Payments Documentation",
 });

@@ -1,8 +1,8 @@
 import { Callout } from "@doc";
 
-# Migrating from Engine v2 to v3
+# Migrating from Transactions v2 to v3
 
-Learn how to migrate your applications from Engine v2 to Engine v3. We'll cover common operations and highlight the differences in API requests and authentication.
+Learn how to migrate your applications from v2 to v3. We'll cover common operations and highlight the differences in API requests and authentication.
 
 <Callout variant="info" title="Migrating Wallets">
 If you'd like to migrate your wallets from v2 to v3 to also be secured by [Vault](/vault) or thirdweb's key management service, please [contact us for assistance.](https://thirdweb.com/support) 
@@ -14,7 +14,7 @@ Migrating your contract write operations from v2 to v3 involves changes to the e
 
 #### OLD (v2)
 
-The v2 approach used your dedicated engine url, with a specific endpoint for each chain and contract and backend wallet address in the header.
+The v2 approach used your dedicated Transactions url, with a specific endpoint for each chain and contract and backend wallet address in the header.
 
 ```bash
 curl -X POST "<engine_url>/contract/<chain>/<contract_address>/write" \
@@ -173,9 +173,9 @@ curl https://engine.thirdweb.com/v1/read/contract \
 
 ## Extension functions
 
-Engine v2 has a large number of endpoints to do specific contract calls, like mintTo, claimTo, etc.
+V2 has a large number of endpoints to do specific contract calls, like mintTo, claimTo, etc.
 
-Engine v3 does not have these endpoints yet, but they are coming soon. In the meantime, if your backend is written in typescript, we recommend using the [thirdweb SDK](/references/typescript/v5/functions#extensions) to do these operations:
+V3 does not have these endpoints yet, but they are coming soon. In the meantime, if your backend is written in typescript, we recommend using the [thirdweb SDK](/references/typescript/v5/functions#extensions) to do these operations:
 
 ##### OLD (v2)
 
@@ -194,7 +194,7 @@ const response = await fetch(
     metadataWithSupply: {
         metadata: {
         name: "Acme Inc. Superfan",
-        description: "Created with thirdweb Engine",
+        description: "Created with thirdweb",
         image:
             "ipfs://QmciR3WLJsf2BgzTSjbG5zCxsrEQ8PqsHK7JWGWsDSNo46/nft.png",
         },
@@ -233,17 +233,17 @@ const transaction = mintTo({
   supply: 1n, // The quantity of NFTs to mint
   nft: {
     name: "Acme Inc. Superfan",
-    description: "Created with thirdweb Engine",
+    description: "Created with thirdweb",
     image:
       "ipfs://QmciR3WLJsf2BgzTSjbG5zCxsrEQ8PqsHK7JWGWsDSNo46/nft.png",
   },
 });
 
-// Enqueue the transaction via Engine
+// Enqueue the transaction
 const { transactionId } =
   await serverWallet.enqueueTransaction({
     transaction,
   });
 ```
 
-The entire thirdweb SDK is available to use with engine v3 in this manner using the [`Engine` namespace](/references/typescript/v5/functions#engine). Check the [thirdweb SDK docs](/references/typescript/v5/functions#extensions) for all available functions.
+The entire thirdweb SDK is available to use with Transactions v3 in this manner using the [`Transactions` namespace](/references/typescript/v5/functions#engine). Check the [thirdweb SDK docs](/references/typescript/v5/functions#extensions) for all available functions.

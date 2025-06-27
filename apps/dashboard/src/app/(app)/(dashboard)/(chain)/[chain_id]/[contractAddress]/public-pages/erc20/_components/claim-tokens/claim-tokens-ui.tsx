@@ -26,7 +26,7 @@ import {
   getApprovalForTransaction,
 } from "thirdweb/extensions/erc20";
 import { useActiveAccount, useSendTransaction } from "thirdweb/react";
-import { getClaimParams } from "thirdweb/utils";
+import { getClaimParams, maxUint256 } from "thirdweb/utils";
 import {
   reportAssetBuyFailed,
   reportAssetBuySuccessful,
@@ -328,9 +328,16 @@ export function TokenDropClaim(props: {
             claimedSupply={BigInt(
               toTokens(props.claimCondition.supplyClaimed, props.decimals),
             )}
-            totalSupply={BigInt(
-              toTokens(props.claimCondition.maxClaimableSupply, props.decimals),
-            )}
+            totalSupply={
+              props.claimCondition.maxClaimableSupply === maxUint256
+                ? "unlimited"
+                : BigInt(
+                    toTokens(
+                      props.claimCondition.maxClaimableSupply,
+                      props.decimals,
+                    ),
+                  )
+            }
           />
 
           <div className="h-4" />

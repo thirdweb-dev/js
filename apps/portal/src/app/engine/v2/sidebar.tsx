@@ -163,5 +163,5 @@ export const sidebar: SideBar = {
       name: "FAQ",
     },
   ],
-  name: "Engine",
+  name: "Transactions",
 };

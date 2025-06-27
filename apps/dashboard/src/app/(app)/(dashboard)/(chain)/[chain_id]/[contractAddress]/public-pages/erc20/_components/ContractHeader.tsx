@@ -19,6 +19,7 @@ import { YoutubeIcon } from "@/icons/brand-icons/YoutubeIcon";
 import { ChainIconClient } from "@/icons/ChainIcon";
 import { cn } from "@/lib/utils";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
+import { ContractCreatorBadge } from "./ContractCreatorBadge";
 
 const platformToIcons: Record<string, React.FC<{ className?: string }>> = {
   discord: DiscordIcon,
@@ -42,6 +43,7 @@ export function ContractHeaderUI(props: {
   clientContract: ThirdwebContract;
   socialUrls: object;
   imageClassName?: string;
+  contractCreator: string | null;
 }) {
   const socialUrls = useMemo(() => {
     const socialUrlsValue: { name: string; href: string }[] = [];
@@ -147,6 +149,13 @@ export function ContractHeaderUI(props: {
 
         {/* bottom row */}
         <div className="flex flex-row flex-wrap items-center gap-2">
+          {props.contractCreator && (
+            <ContractCreatorBadge
+              clientContract={props.clientContract}
+              contractCreator={props.contractCreator}
+            />
+          )}
+
           <ToolTipLabel
             contentClassName="max-w-[300px]"
             label={
