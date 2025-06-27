@@ -79,3 +79,28 @@ export interface AnalyticsQueryParams {
   to?: Date;
   period?: "day" | "week" | "month" | "year" | "all";
 }
+
+export interface WebhookRequestStats {
+  date: string;
+  webhookId: string;
+  httpStatusCode: number;
+  totalRequests: number;
+}
+
+export interface WebhookLatencyStats {
+  date: string;
+  webhookId: string;
+  p50LatencyMs: number;
+  p90LatencyMs: number;
+  p99LatencyMs: number;
+}
+
+export interface WebhookSummaryStats {
+  webhookId: string;
+  totalRequests: number;
+  successRequests: number;
+  errorRequests: number;
+  successRate: number;
+  avgLatencyMs: number;
+  errorBreakdown: Record<string, number>;
+}

@@ -13,6 +13,9 @@ import type {
   UserOpStats,
   WalletStats,
   WalletUserStats,
+  WebhookLatencyStats,
+  WebhookRequestStats,
+  WebhookSummaryStats,
 } from "@/types/analytics";
 import { getAuthToken } from "./auth-token";
 import { getChains } from "./chain";
@@ -423,4 +426,70 @@ export async function getEngineCloudMethodUsage(
 
   const json = await res.json();
   return json.data as EngineCloudStats[];
+}
+
+export async function getWebhookRequests(
+  params: AnalyticsQueryParams & { webhookId?: string },
+): Promise<WebhookRequestStats[]> {
+  const searchParams = buildSearchParams(params);
+  if (params.webhookId) {
+    searchParams.append("webhookId", params.webhookId);
+  }
+  const res = await fetchAnalytics(
+    `v2/webhook/requests?${searchParams.toString()}`,
+  );
+  if (res.status !== 200) {
+    const reason = await res.text();
+    console.error(
+      `Failed to fetch webhook request stats: ${res.status} - ${reason}`,
+    );
+    return [];
+  }
+
+  const json = await res.json();
+  return json.data as WebhookRequestStats[];
+}
+
+export async function getWebhookLatency(
+  params: AnalyticsQueryParams & { webhookId?: string },
+): Promise<WebhookLatencyStats[]> {
+  const searchParams = buildSearchParams(params);
+  if (params.webhookId) {
+    searchParams.append("webhookId", params.webhookId);
+  }
+  const res = await fetchAnalytics(
+    `v2/webhook/latency?${searchParams.toString()}`,
+  );
+  if (res.status !== 200) {
+    const reason = await res.text();
+    console.error(
+      `Failed to fetch webhook latency stats: ${res.status} - ${reason}`,
+    );
+    return [];
+  }
+
+  const json = await res.json();
+  return json.data as WebhookLatencyStats[];
+}
+
+export async function getWebhookSummary(
+  params: AnalyticsQueryParams & { webhookId?: string },
+): Promise<WebhookSummaryStats[]> {
+  const searchParams = buildSearchParams(params);
+  if (params.webhookId) {
+    searchParams.append("webhookId", params.webhookId);
+  }
+  const res = await fetchAnalytics(
+    `v2/webhook/summary?${searchParams.toString()}`,
+  );
+  if (res.status !== 200) {
+    const reason = await res.text();
+    console.error(
+      `Failed to fetch webhook summary stats: ${res.status} - ${reason}`,
+    );
+    return [];
+  }
+
+  const json = await res.json();
+  return json.data as WebhookSummaryStats[];
 }
