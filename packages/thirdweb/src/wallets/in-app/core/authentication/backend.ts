@@ -31,7 +31,8 @@ export async function backendAuthenticate(args: {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to generate backend account");
+    const error = await res.text();
+    throw new Error(`Failed to generate backend account: ${error}`);
   }
 
   return (await res.json()) satisfies AuthStoredTokenWithCookieReturnType;

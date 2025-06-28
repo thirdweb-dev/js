@@ -38,7 +38,7 @@ export async function waitForTransactionHash(args: {
     switch (status) {
       case "FAILED": {
         throw new Error(
-          `Transaction failed: ${executionResult.error || "Unknown error"}`,
+          `Transaction failed: ${stringify(executionResult.error) || "Unknown error"}`,
         );
       }
       case "CONFIRMED": {

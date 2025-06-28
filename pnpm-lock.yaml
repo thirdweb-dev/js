@@ -1055,6 +1055,9 @@ importers:
 
   packages/engine:
     dependencies:
+      '@hey-api/client-fetch':
+        specifier: 0.10.0
+        version: 0.10.0(@hey-api/openapi-ts@0.76.0(magicast@0.3.5)(typescript@5.8.3))
       typescript:
         specifier: '>=5.0.4'
         version: 5.8.3
@@ -3422,6 +3425,12 @@ packages:
     resolution: {integrity: sha512-LMcepvRaS9LYHJGsF0zzmgKCUim/X3N/DQKc4jepAXJ7l8QxJ1PmxJzqplF2Z3FE4PqBAIGyJAQ/w4B5dsqbtQ==}
     peerDependencies:
       react: '>= 16 || ^19.0.0-rc'
+
+  '@hey-api/client-fetch@0.10.0':
+    resolution: {integrity: sha512-C7vzj4t52qPiHCqjn1l8cRTI2p4pZCd7ViLtJDTHr5ZwI4sWOYC1tmv6bd529qqY6HFFbhGCz4TAZSwKAMJncg==}
+    deprecated: Starting with v0.73.0, this package is bundled directly inside @hey-api/openapi-ts.
+    peerDependencies:
+      '@hey-api/openapi-ts': < 2
 
   '@hey-api/json-schema-ref-parser@1.0.6':
     resolution: {integrity: sha512-yktiFZoWPtEW8QKS65eqKwA5MTKp88CyiL8q72WynrBs/73SAaxlSWlA2zW/DZlywZ5hX1OYzrCC0wFdvO9c2w==}
@@ -19341,6 +19350,10 @@ snapshots:
   '@heroicons/react@2.2.0(react@19.1.0)':
     dependencies:
       react: 19.1.0
+
+  '@hey-api/client-fetch@0.10.0(@hey-api/openapi-ts@0.76.0(magicast@0.3.5)(typescript@5.8.3))':
+    dependencies:
+      '@hey-api/openapi-ts': 0.76.0(magicast@0.3.5)(typescript@5.8.3)
 
   '@hey-api/json-schema-ref-parser@1.0.6':
     dependencies:

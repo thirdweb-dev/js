@@ -370,13 +370,9 @@ export function PaymentDetails({
                               }
                             </>
                           ) : (
-                            <>
-                              {
-                                chainsMetadata.find(
-                                  (c) => c.chainId === step.originToken.chainId,
-                                )?.name
-                              }
-                            </>
+                            chainsMetadata.find(
+                              (c) => c.chainId === step.originToken.chainId,
+                            )?.name
                           )}
                         </Text>
                       </Container>
