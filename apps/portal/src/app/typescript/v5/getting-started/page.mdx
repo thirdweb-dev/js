@@ -14,11 +14,10 @@ To get started, install the thirdweb SDK using your preferred package manager.
 
 <Step title="Create a thirdweb client">
 
-Get a client id from https://thirdweb.com/create-api-key by creating a new project and add it to your `.env`.
+Get a project secret key from https://thirdweb.com/create-api-key by creating a new project and add it to your `.env`.
 
 ```shell
-THIRDWEB_SECRET_KEY=[YOUR SECRET KEY]
-WALLET_PRIVATE_KEY=[YOUR WALLET PRIVATE KEY]
+THIRDWEB_SECRET_KEY=[YOUR PROJECT SECRET KEY]
 ```
 
 Create a thirdweb client in your script.
@@ -53,7 +52,7 @@ A client is all you need to start reading blockchain data.
 import { getContract } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
 // 1. import the extension you want to use
-import { getOwnedNFTs } from "thirdweb/extensions/erc1155";
+import { getNFTs } from "thirdweb/extensions/erc1155";
 
 // 2. get the contract
 const contract = getContract({
@@ -63,26 +62,28 @@ const contract = getContract({
 });
 
 // 3. call the extension function
-const ownedNFTs = await getOwnedNFTs({
+const nfts = await getNFTs({
 	contract,
-	address: "0x1234...",
 });
 
-console.log(ownedNFTs);
+console.log(nfts);
 ```
 
 </Step>
 
-<Step title="Generate a wallet from a private key">
+<Step title="Generate a wallet">
 
-To perform transactions from your script, you'll need an account. You can generate a wallet from a private key using the `privateKeyToAccount` function.
+To perform transactions from your script, you'll need an account. Let's generate a wallet from your project secret key.
 
 ```ts
-import { privateKeyToAccount } from "thirdweb/wallets"
+import { inAppWallet } from "thirdweb/wallets"
 
-const account = privateKeyToAccount({
-	client,
-	privateKey: process.env.PRIVATE_KEY
+// create or access a wallet
+ const wallet = inAppWallet();
+const account = await wallet.connect({
+  client: TEST_CLIENT,
+  strategy: "backend", // we use backend strategy to generate a wallet from a secret key
+  walletSecret: "my-test-wallet-secret", // use this secret to access the same wallet across multiple scripts
 });
 
 // Get the address of the account
