@@ -650,6 +650,7 @@ export type ExecutionOptions = BaseExecutionOptions & SpecificExecutionOptions;
  */
 export type IawError =
 	| {
+			message: string;
 			type: "API_ERROR";
 	  }
 	| {
@@ -1696,5 +1697,5 @@ export type SearchActivityLogsResponse =
 	SearchActivityLogsResponses[keyof SearchActivityLogsResponses];
 
 export type ClientOptions = {
-	baseUrl: "http://localhost:3001" | (string & {});
+	baseUrl: "https://engine.thirdweb.com" | (string & {});
 };

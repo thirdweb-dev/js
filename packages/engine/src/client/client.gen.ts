@@ -23,6 +23,6 @@ export type CreateClientConfig<T extends DefaultClientOptions = ClientOptions> =
 
 export const client = createClient(
 	createConfig<ClientOptions>({
-		baseUrl: "https://engine.thirdweb-dev.com",
+		baseUrl: "https://engine.thirdweb.com",
 	}),
 );
