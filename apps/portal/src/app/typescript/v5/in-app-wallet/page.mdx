@@ -70,8 +70,8 @@ const wallet = inAppWallet({
         passkeyDomain, // for passkey, the domain that the passkey is created on
         redirectUrl, // the URL to redirect to after authentication
 	},
-	metadata, // metadata for the wallet (name, icon, etc.)
-	smartAccount, // smart account options for the wallet (for gasless tx)
+	metadata, // metadata for the wallet (name, icon, etc.), will show in UI components
+	executionMode, // enable gasless transactions for the wallet
 });
 ```
 
@@ -86,7 +86,13 @@ import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
 import { inAppWallet } from "thirdweb/wallets";
 
 const client = createThirdwebClient({ clientId });
-const wallet = inAppWallet();
+const wallet = inAppWallet({
+	// enable gasless transactions for the wallet
+	executionMode: {
+		mode: "EIP7702",
+		sponsorGas: true,
+	},
+});
 
 const account = await wallet.connect({
 	client,

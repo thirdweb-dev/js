@@ -228,7 +228,7 @@ export const sidebar: SideBar = {
           name: "FAQ",
         },
       ],
-      name: "Onboard Users",
+      name: "User Wallets",
     },
     { separator: true },
     // User identity
