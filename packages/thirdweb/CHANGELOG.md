@@ -1,5 +1,18 @@
 # thirdweb
 
+## 5.105.3
+
+### Patch Changes
+
+- [#7432](https://github.com/thirdweb-dev/js/pull/7432) [`acd5656`](https://github.com/thirdweb-dev/js/commit/acd5656d4d592e3a7ba4a3c09994418e0b654120) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Introduces Session Keys to EIP-7702-powered In-App Wallets via a new createSessionKey extension
+
+- [#7454](https://github.com/thirdweb-dev/js/pull/7454) [`6d1d344`](https://github.com/thirdweb-dev/js/commit/6d1d344c48302d45aeb63532c84cc8e79c93e26f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Prevent admin wallet from connecting when no IAW config is specified
+
+- [#7427](https://github.com/thirdweb-dev/js/pull/7427) [`f9d7935`](https://github.com/thirdweb-dev/js/commit/f9d7935d848cbb2dea3f5204d5bff69cd0c3a921) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support latest engine API
+
+- Updated dependencies [[`f9d7935`](https://github.com/thirdweb-dev/js/commit/f9d7935d848cbb2dea3f5204d5bff69cd0c3a921)]:
+  - @thirdweb-dev/engine@3.2.0
+
 ## 5.105.2
 
 ### Patch Changes

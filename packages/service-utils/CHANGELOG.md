@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.10.2
+
+### Patch Changes
+
+- [#7461](https://github.com/thirdweb-dev/js/pull/7461) [`c7f7f48`](https://github.com/thirdweb-dev/js/commit/c7f7f4822283a4d85aa36a0f255bc147c87864dc) Thanks [@arcoraven](https://github.com/arcoraven)! - chore: data in webhook payload is an object
+
 ## 0.10.1
 
 ### Patch Changes
