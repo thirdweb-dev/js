@@ -5,7 +5,10 @@
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
   },
+  "author": "thirdweb eng <eng@thirdweb.com>",
   "type": "module",
+  "main": "./dist/cjs/exports/thirdweb.js",
+  "module": "./dist/esm/exports/thirdweb.js",
   "types": "./dist/types/exports/thirdweb.d.ts",
   "typings": "./dist/types/exports/thirdweb.d.ts",
   "license": "Apache-2.0",
@@ -20,8 +23,8 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/esm/exports/thirdweb.js",
       "types": "./dist/types/exports/thirdweb.d.ts",
+      "import": "./dist/esm/exports/thirdweb.js",
       "default": "./dist/cjs/exports/thirdweb.js"
     },
     "./package.json": "./package.json"
