@@ -1,5 +1,11 @@
 # @thirdweb-dev/engine
 
+## 3.2.0
+
+### Minor Changes
+
+- [#7427](https://github.com/thirdweb-dev/js/pull/7427) [`f9d7935`](https://github.com/thirdweb-dev/js/commit/f9d7935d848cbb2dea3f5204d5bff69cd0c3a921) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New engine v3 APIs - see changelog for breaking changes
+
 ## 3.1.0
 
 ### Minor Changes
