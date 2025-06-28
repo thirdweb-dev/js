@@ -1,5 +1,6 @@
-import type { Address, Chain } from "thirdweb";
+import type { Chain } from "thirdweb/chains";
 import type { ThemeOverrides } from "thirdweb/react";
+import type { Address } from "thirdweb/utils";
 
 export type BridgeComponentsPlaygroundOptions = {
   theme: {
@@ -22,5 +23,7 @@ export type BridgeComponentsPlaygroundOptions = {
 
     // transaction mode options
     transactionData?: string; // Simplified for demo; could be more complex in real implementation
+
+    paymentMethods: ("crypto" | "card")[];
   };
 };

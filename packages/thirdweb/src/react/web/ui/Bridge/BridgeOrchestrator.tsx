@@ -113,6 +113,12 @@ export interface BridgeOrchestratorProps {
    * Quick buy amounts
    */
   presetOptions: [number, number, number] | undefined;
+
+  /**
+   * Allowed payment methods
+   * @default ["crypto", "card"]
+   */
+  paymentMethods?: ("crypto" | "card")[];
 }
 
 export function BridgeOrchestrator({
@@ -127,6 +133,7 @@ export function BridgeOrchestrator({
   purchaseData,
   paymentLinkId,
   presetOptions,
+  paymentMethods = ["crypto", "card"],
 }: BridgeOrchestratorProps) {
   // Initialize adapters
   const adapters = useMemo(
@@ -270,6 +277,7 @@ export function BridgeOrchestrator({
             }}
             onError={handleError}
             onPaymentMethodSelected={handlePaymentMethodSelected}
+            paymentMethods={paymentMethods}
             receiverAddress={state.context.receiverAddress}
           />
         )}

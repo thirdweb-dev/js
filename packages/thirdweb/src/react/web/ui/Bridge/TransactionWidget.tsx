@@ -169,6 +169,12 @@ export type TransactionWidgetProps = {
    * @hidden
    */
   paymentLinkId?: string;
+
+  /**
+   * Allowed payment methods
+   * @default ["crypto", "card"]
+   */
+  paymentMethods?: ("crypto" | "card")[];
 };
 
 // Enhanced UIOptions to handle unsupported token state
@@ -400,6 +406,7 @@ export function TransactionWidget(props: TransactionWidgetProps) {
           props.onError?.(err);
         }}
         paymentLinkId={props.paymentLinkId}
+        paymentMethods={props.paymentMethods}
         presetOptions={props.presetOptions}
         purchaseData={props.purchaseData}
         receiverAddress={undefined}
