@@ -92,7 +92,7 @@ You can use the thirdweb SDK within a wagmi application by setting the wagmi con
 import { useEffect } from 'react'
 import { defineChain } from 'thirdweb'
 import { useSetActiveWallet } from 'thirdweb/react'
-import { createWalletAdapter } from 'thirdweb/wallets'
+import { EIP1193, createWalletAdapter } from 'thirdweb/wallets'
 import { useDisconnect, useSwitchChain, useWalletClient } from 'wagmi'
 import { client } from './client'
 
@@ -133,7 +133,7 @@ Similarly, you can use the thirdweb SDK with privy by setting the privy wallet a
 import { useEffect } from 'react'
 import { defineChain } from 'thirdweb'
 import { useSetActiveWallet } from 'thirdweb/react'
-import { createWalletAdapter } from 'thirdweb/wallets'
+import { EIP1193, createWalletAdapter } from 'thirdweb/wallets'
 import { ethers5Adapter } from 'thirdweb/adapters/ethers5';
 import { client } from './client'
 import { useWallets } from "@privy-io/react-auth";
