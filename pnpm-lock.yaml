@@ -152,8 +152,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/vault-sdk
       '@vercel/functions':
-        specifier: 2.1.0
-        version: 2.1.0(@aws-sdk/credential-provider-web-identity@3.828.0)
+        specifier: 2.2.2
+        version: 2.2.2(@aws-sdk/credential-provider-web-identity@3.828.0)
       '@vercel/og':
         specifier: ^0.6.8
         version: 0.6.8
@@ -455,8 +455,8 @@ importers:
         specifier: 5.80.7
         version: 5.80.7(react@19.1.0)
       '@vercel/functions':
-        specifier: 2.1.0
-        version: 2.1.0(@aws-sdk/credential-provider-web-identity@3.828.0)
+        specifier: 2.2.2
+        version: 2.2.2(@aws-sdk/credential-provider-web-identity@3.828.0)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -7334,8 +7334,8 @@ packages:
     peerDependencies:
       '@urql/core': ^5.0.0
 
-  '@vercel/functions@2.1.0':
-    resolution: {integrity: sha512-1gSbK9zfrbJxk1JTBVERDhLi01mK3fz+gw4GjOjZwHnqs0zsBhQA70HGVtXQX/Z3BTRMfbpAEMVDfhecRw0lDA==}
+  '@vercel/functions@2.2.2':
+    resolution: {integrity: sha512-wgtgFwhYAUzS7UOvw44q14FaoRPONEnyoM0JlrjcDkI+kzSu7M8J5Tk5T3Kvv52//8is+HGxVQtaBSiO3G0wbw==}
     engines: {node: '>= 18'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
@@ -25651,7 +25651,7 @@ snapshots:
       '@urql/core': 5.1.1(graphql@16.11.0)
       wonka: 6.3.5
 
-  '@vercel/functions@2.1.0(@aws-sdk/credential-provider-web-identity@3.828.0)':
+  '@vercel/functions@2.2.2(@aws-sdk/credential-provider-web-identity@3.828.0)':
     optionalDependencies:
       '@aws-sdk/credential-provider-web-identity': 3.828.0
 
