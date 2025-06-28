@@ -237,7 +237,7 @@ export function PlanInfoCardUI(props: {
               size="sm"
               variant="outline"
             >
-              <Link href={`/team/${team.slug}/~/settings/invoices`}>
+              <Link href={`/team/${team.slug}/~/billing/invoices`}>
                 <FileTextIcon className="size-4 text-muted-foreground" />
                 View Invoices
               </Link>

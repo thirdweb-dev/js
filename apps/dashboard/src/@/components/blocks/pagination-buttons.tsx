@@ -48,7 +48,7 @@ export const PaginationButtons = (props: {
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
-              className="rounded-full"
+              className="rounded-full lg:min-w-[38px]"
               disabled={activePage === 1}
               onClick={() => {
                 setPage(activePage - 1);
@@ -57,7 +57,7 @@ export const PaginationButtons = (props: {
           </PaginationItem>
           <PaginationItem>
             <PaginationNext
-              className="rounded-full"
+              className="rounded-full lg:min-w-[38px]"
               disabled={activePage === totalPages}
               onClick={() => {
                 setPage(activePage + 1);
@@ -78,7 +78,7 @@ export const PaginationButtons = (props: {
           {pages.map((page) => (
             <PaginationItem key={page}>
               <PaginationLink
-                className="rounded-full"
+                className="rounded-full lg:min-w-[38px]"
                 isActive={activePage === page}
                 onClick={() => {
                   setPage(page);
@@ -98,7 +98,7 @@ export const PaginationButtons = (props: {
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
-            className="rounded-full"
+            className="rounded-full lg:min-w-[38px]"
             disabled={activePage === 1}
             onClick={() => {
               setPage(activePage - 1);
@@ -111,7 +111,7 @@ export const PaginationButtons = (props: {
           <>
             <PaginationItem>
               <PaginationLink
-                className="rounded-full"
+                className="rounded-full lg:min-w-[38px]"
                 onClick={() => {
                   setPage(1);
                 }}
@@ -129,7 +129,7 @@ export const PaginationButtons = (props: {
         {activePage - 1 > 0 && (
           <PaginationItem className="max-sm:hidden">
             <PaginationLink
-              className="rounded-full"
+              className="rounded-full lg:min-w-[38px]"
               onClick={() => {
                 setPage(activePage - 1);
               }}
@@ -140,7 +140,7 @@ export const PaginationButtons = (props: {
         )}
 
         <PaginationItem>
-          <PaginationLink className="rounded-full" isActive>
+          <PaginationLink className="rounded-full lg:min-w-[38px]" isActive>
             {activePage}
           </PaginationLink>
         </PaginationItem>
@@ -148,7 +148,7 @@ export const PaginationButtons = (props: {
         {activePage + 1 <= totalPages && (
           <PaginationItem className="max-sm:hidden">
             <PaginationLink
-              className="rounded-full"
+              className="rounded-full lg:min-w-[38px]"
               onClick={() => {
                 setPage(activePage + 1);
               }}
@@ -167,7 +167,7 @@ export const PaginationButtons = (props: {
 
             <PaginationItem>
               <PaginationLink
-                className="rounded-full"
+                className="rounded-full lg:min-w-[38px]"
                 onClick={() => {
                   setPage(totalPages);
                 }}
@@ -180,7 +180,7 @@ export const PaginationButtons = (props: {
 
         <PaginationItem>
           <PaginationNext
-            className="rounded-full"
+            className="rounded-full lg:min-w-[38px]"
             disabled={activePage === totalPages}
             onClick={() => {
               setPage(activePage + 1);

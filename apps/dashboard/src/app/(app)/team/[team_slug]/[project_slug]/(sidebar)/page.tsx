@@ -19,12 +19,14 @@ import {
   getWalletUsers,
   isProjectActive,
 } from "@/api/analytics";
+import { getAuthToken } from "@/api/auth-token";
 import { getProject, type Project } from "@/api/projects";
 import {
   type DurationId,
   getLastNDaysRange,
   type Range,
 } from "@/components/analytics/date-range-selector";
+import { LoadingChartState } from "@/components/analytics/empty-chart-state";
 import { RangeSelector } from "@/components/analytics/range-selector";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
@@ -35,8 +37,6 @@ import type {
   WalletStats,
   WalletUserStats,
 } from "@/types/analytics";
-import { getAuthToken } from "../../../../../../@/api/auth-token";
-import { LoadingChartState } from "../../../../../../@/components/analytics/empty-chart-state";
 import { loginRedirect } from "../../../../login/loginRedirect";
 import { CombinedBarChartCard } from "../../../components/Analytics/CombinedBarChartCard";
 import { PieChartCard } from "../../../components/Analytics/PieChartCard";
@@ -623,7 +623,11 @@ export function Header(props: {
           {title}
         </h1>
       </div>
-      {showRangeSelector && <RangeSelector interval={interval} range={range} />}
+      {showRangeSelector && (
+        <div className="max-sm:w-full">
+          <RangeSelector interval={interval} range={range} />
+        </div>
+      )}
     </div>
   );
 }

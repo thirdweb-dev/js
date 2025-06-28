@@ -10,7 +10,7 @@ import {
   SettingsIcon,
   WalletIcon,
 } from "lucide-react";
-import { FullWidthSidebarLayout } from "@/components/blocks/SidebarLayout";
+import { FullWidthSidebarLayout } from "@/components/blocks/full-width-sidebar-layout";
 import { Badge } from "@/components/ui/badge";
 import { ContractIcon } from "@/icons/ContractIcon";
 import { InsightIcon } from "@/icons/InsightIcon";

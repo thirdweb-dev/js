@@ -131,7 +131,7 @@ export function TeamDedicatedSupportCard(props: {
                 label: "Upgrade Plan",
                 onClick: () =>
                   router.push(
-                    `/team/${props.team.slug}/~/settings/billing?showPlans=true&highlight=scale`,
+                    `/team/${props.team.slug}/~/billing?showPlans=true&highlight=scale`,
                   ),
               }
       }

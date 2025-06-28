@@ -132,7 +132,7 @@ export function InviteSection(props: {
           <Button asChild size="sm" variant="outline">
             <Link
               className="gap-2"
-              href={`/team/${props.team.slug}/~/settings/billing?showPlans=true&highlight=growth`}
+              href={`/team/${props.team.slug}/~/billing?showPlans=true&highlight=growth`}
             >
               Upgrade
             </Link>

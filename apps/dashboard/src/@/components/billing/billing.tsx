@@ -60,7 +60,7 @@ function BillingWarning({ teamSlug }: { teamSlug: string }) {
         You have outstanding invoices. Please{" "}
         <Link
           className="font-medium text-amber-700 underline transition-colors hover:text-amber-900 dark:text-amber-400 dark:hover:text-amber-300"
-          href={`/team/${teamSlug}/~/settings/invoices?status=open`}
+          href={`/team/${teamSlug}/~/billing/invoices?status=open`}
         >
           pay them
         </Link>{" "}

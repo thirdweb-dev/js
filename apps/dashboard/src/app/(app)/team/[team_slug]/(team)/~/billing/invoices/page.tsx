@@ -19,7 +19,7 @@ export default async function Page(props: {
     searchParamLoader(props.searchParams),
   ]);
 
-  const pagePath = `/team/${params.team_slug}/settings/invoices`;
+  const pagePath = `/team/${params.team_slug}/invoices`;
 
   const account = await getValidAccount(pagePath);
 

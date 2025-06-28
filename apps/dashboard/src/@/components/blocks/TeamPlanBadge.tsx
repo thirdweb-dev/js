@@ -45,7 +45,7 @@ export function TeamPlanBadge(props: {
     }
     e.stopPropagation();
     e.preventDefault();
-    router.push(`/team/${props.teamSlug}/~/settings/billing?showPlans=true`);
+    router.push(`/team/${props.teamSlug}/~/billing?showPlans=true`);
   }
 
   return (

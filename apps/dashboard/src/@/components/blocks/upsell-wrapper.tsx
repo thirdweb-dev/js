@@ -138,7 +138,7 @@ export function UpsellContent(props: {
         <div className="flex flex-col gap-3 pt-4 sm:flex-row">
           <Button asChild className="flex-1 py-3 font-semibold" size="lg">
             <Link
-              href={`/team/${props.teamSlug}/~/settings/billing?showPlans=true&highlight=${props.requiredPlan}`}
+              href={`/team/${props.teamSlug}/~/billing?showPlans=true&highlight=${props.requiredPlan}`}
             >
               <CrownIcon className="mr-2 h-4 w-4" />
               Upgrade to{" "}
@@ -146,9 +146,7 @@ export function UpsellContent(props: {
             </Link>
           </Button>
           <Button asChild className="md:flex-1" size="lg" variant="outline">
-            <Link
-              href={`/team/${props.teamSlug}/~/settings/billing?showPlans=true`}
-            >
+            <Link href={`/team/${props.teamSlug}/~/billing?showPlans=true`}>
               View All Plans
             </Link>
           </Button>

@@ -1,12 +1,5 @@
 "use client";
-import {
-  AlertTriangleIcon,
-  CheckIcon,
-  ChevronsUpDownIcon,
-  ExternalLinkIcon,
-  PencilIcon,
-  PlusCircleIcon,
-} from "lucide-react";
+import { AlertTriangleIcon, ExternalLinkIcon, PencilIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -25,14 +18,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
@@ -41,7 +26,6 @@ import { useDashboardStorageUpload } from "@/hooks/useDashboardStorageUpload";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
-import { useEcosystemList } from "../../../hooks/use-ecosystem-list";
 import type { Ecosystem } from "../../../types";
 import { useUpdateEcosystem } from "../configuration/hooks/use-update-ecosystem";
 import { useEcosystem } from "../hooks/use-ecosystem";
@@ -76,56 +60,6 @@ function EcosystemAlertBanner({ ecosystem }: { ecosystem: Ecosystem }) {
       return null;
     }
   }
-}
-
-function EcosystemSelect(props: {
-  ecosystem: Ecosystem;
-  ecosystemLayoutPath: string;
-  teamIdOrSlug: string;
-}) {
-  const { data: ecosystems, isPending } = useEcosystemList({
-    teamIdOrSlug: props.teamIdOrSlug,
-  });
-
-  return isPending ? (
-    <Skeleton className="h-10 w-full md:w-[160px]" />
-  ) : (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          className="relative flex w-full justify-start truncate pr-8 pl-3 md:w-48"
-          variant="outline"
-        >
-          <div className="truncate">{props.ecosystem?.name}</div>
-          <ChevronsUpDownIcon className="absolute right-2 h-4 w-4 text-muted-foreground" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-full md:w-48">
-        <DropdownMenuGroup>
-          {ecosystems?.map((ecosystem) => (
-            <DropdownMenuItem asChild key={ecosystem.id}>
-              <Link
-                className="relative flex cursor-pointer items-center pr-3 pl-8"
-                href={`${props.ecosystemLayoutPath}/${ecosystem.slug}`}
-              >
-                {ecosystem.slug === props.ecosystem.slug && (
-                  <CheckIcon className="absolute left-2 h-4 w-4 text-foreground" />
-                )}
-                <div className="truncate">{ecosystem.name}</div>
-              </Link>
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <Link className="" href={`${props.ecosystemLayoutPath}/create`}>
-          <DropdownMenuItem className="relative flex cursor-pointer items-center pr-3 pl-8">
-            <PlusCircleIcon className="absolute left-2 h-4 w-4" />
-            <div className="truncate">New Ecosystem</div>
-          </DropdownMenuItem>
-        </Link>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
 }
 
 export function EcosystemHeader(props: {
@@ -236,8 +170,8 @@ export function EcosystemHeader(props: {
   }
 
   return (
-    <div className="border-b py-8">
-      <div className="container flex flex-col gap-8">
+    <div className="pt-8 pb-4">
+      <div className="container max-w-7xl flex flex-col gap-8">
         <EcosystemAlertBanner ecosystem={ecosystem} />
         <header className="flex flex-col gap-12">
           <div className="flex flex-col justify-between gap-4 md:grid-cols-4 md:flex-row">
@@ -401,13 +335,6 @@ export function EcosystemHeader(props: {
                   </div>
                 )}
               </div>
-            </div>
-            <div className="flex flex-col justify-between gap-4 md:items-end">
-              <EcosystemSelect
-                ecosystem={ecosystem}
-                ecosystemLayoutPath={props.ecosystemLayoutPath}
-                teamIdOrSlug={props.teamIdOrSlug}
-              />
             </div>
           </div>
         </header>

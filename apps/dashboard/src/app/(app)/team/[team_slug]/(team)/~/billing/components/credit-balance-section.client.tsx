@@ -16,7 +16,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { ThirdwebMiniLogo } from "../../../../../../../components/ThirdwebMiniLogo";
+import { ThirdwebMiniLogo } from "../../../../../../components/ThirdwebMiniLogo";
 
 const predefinedAmounts = [
   { label: "$25", value: "25" },

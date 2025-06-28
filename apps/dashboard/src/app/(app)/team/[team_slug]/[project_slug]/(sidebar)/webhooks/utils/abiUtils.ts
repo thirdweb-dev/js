@@ -29,6 +29,7 @@ function isAbiInput(
 }
 
 // Helper to recursively get canonical type for ABI input (handles tuples)
+// biome-ignore lint/suspicious/noExplicitAny: FIXME
 function getCanonicalType(input: any): string {
   if (input.type.startsWith("tuple")) {
     // Recursively build tuple type string
@@ -93,6 +94,7 @@ export const extractEventSignatures = (
               const canonicalInputs = Array.isArray(event.inputs)
                 ? event.inputs
                     .filter((input: unknown) => isAbiInput(input))
+                    // biome-ignore lint/suspicious/noExplicitAny: FIXME
                     .map((input: any) => getCanonicalType(input))
                     .join(",")
                 : "";
@@ -175,6 +177,7 @@ export const extractFunctionSignatures = (
               const canonicalInputs = Array.isArray(func.inputs)
                 ? func.inputs
                     .filter((input: unknown) => isAbiInput(input))
+                    // biome-ignore lint/suspicious/noExplicitAny: FIXME
                     .map((input: any) => getCanonicalType(input))
                     .join(",")
                 : "";

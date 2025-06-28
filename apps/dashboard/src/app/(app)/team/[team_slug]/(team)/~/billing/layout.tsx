@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getTeamBySlug } from "@/api/team";
-import { TabPathLinks } from "@/components/ui/tabs";
+import { TabPathLinks } from "../../../../../../../@/components/ui/tabs";
 import { loginRedirect } from "../../../../../login/loginRedirect";
 
 export default async function Layout(props: {
@@ -27,11 +27,9 @@ export default async function Layout(props: {
 
   return (
     <div className="flex grow flex-col">
-      <div className="border-border pt-10 pb-5">
+      <div className="border-border pt-10 pb-6">
         <div className="container max-w-6xl">
-          <h1 className="font-semibold text-3xl tracking-tight">
-            Team Settings
-          </h1>
+          <h1 className="font-semibold text-3xl tracking-tight">Billing</h1>
         </div>
       </div>
 
@@ -39,22 +37,18 @@ export default async function Layout(props: {
         links={[
           {
             exactMatch: true,
-            name: "General",
-            path: `/team/${params.team_slug}/~/settings`,
+            name: "Overview",
+            path: `/team/${params.team_slug}/~/billing`,
           },
           {
-            name: "Members",
-            path: `/team/${params.team_slug}/~/settings/members`,
-          },
-          {
-            name: "Notifications",
-            path: `/team/${params.team_slug}/~/settings/notifications`,
+            name: "Invoices",
+            path: `/team/${params.team_slug}/~/billing/invoices`,
           },
         ]}
         scrollableClassName="container max-w-6xl"
       />
 
-      <div className="container max-w-6xl flex flex-col grow gap-8 py-8">
+      <div className="container max-w-6xl flex flex-col grow gap-8 pt-6 pb-10">
         {props.children}
       </div>
     </div>

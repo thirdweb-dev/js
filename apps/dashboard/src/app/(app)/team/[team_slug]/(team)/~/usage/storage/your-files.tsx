@@ -151,11 +151,14 @@ export const YourFilesSection = (props: { authToken: string }) => {
 
   return (
     <div>
-      <h2 className="font-semibold text-lg tracking-tight">
-        Your Pinned Files
-      </h2>
+      <div>
+        <h2 className="font-semibold text-2xl tracking-tight">Your files</h2>
+        <p className="text-muted-foreground">
+          These files are stored and pinned on the IPFS
+        </p>
+      </div>
 
-      <div className="h-2" />
+      <div className="h-4" />
 
       <TableContainer>
         <Table>

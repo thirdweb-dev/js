@@ -106,9 +106,27 @@ const projectPageRedirects = [
     source: `${projectRoute}/nebula/:path*`,
   },
   {
-    source: `${projectRoute}/connect/analytics`,
     destination: `${projectRoute}`,
     permanent: false,
+    source: `${projectRoute}/connect/analytics`,
+  },
+];
+
+const teamPageRedirects = [
+  {
+    destination: "/team/:team_slug/~/billing/:path*",
+    permanent: false,
+    source: "/team/:team_slug/~/settings/billing/:path*",
+  },
+  {
+    destination: "/team/:team_slug/~/billing/invoices/:path*",
+    permanent: false,
+    source: "/team/:team_slug/~/settings/invoices/:path*",
+  },
+  {
+    destination: "/team/:team_slug/~/billing",
+    permanent: false,
+    source: "/team/:team_slug/~/settings/credits",
   },
 ];
 
@@ -426,6 +444,7 @@ async function redirects() {
     },
     ...legacyDashboardToTeamRedirects,
     ...projectPageRedirects,
+    ...teamPageRedirects,
   ];
 }
 

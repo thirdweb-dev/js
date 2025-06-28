@@ -44,7 +44,7 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
             <div className="flex w-full flex-col gap-2">
               <Button asChild className="justify-start gap-2" size="sm">
                 <Link
-                  href={`/team/${props.teamSlug}/~/settings/billing?showPlans=true&highlight=${props.requiredPlan}`}
+                  href={`/team/${props.teamSlug}/~/billing?showPlans=true&highlight=${props.requiredPlan}`}
                   rel="noopener noreferrer"
                   target="_blank"
                 >

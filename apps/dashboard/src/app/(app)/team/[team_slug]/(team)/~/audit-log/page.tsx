@@ -47,7 +47,7 @@ export default async function Page(props: {
   }
 
   return (
-    <div className="container flex flex-col gap-8">
+    <div className="flex flex-col gap-8">
       {auditLogs.data.result.length === 0 ? (
         <div className="py-12 text-center text-muted-foreground">
           <p className="text-sm">No audit events found</p>

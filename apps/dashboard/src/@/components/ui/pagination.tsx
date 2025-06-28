@@ -50,9 +50,10 @@ const PaginationLink = ({
   <Button
     aria-current={isActive ? "page" : undefined}
     className={cn(
-      "h-auto px-3 py-2",
+      "h-auto px-3 py-2 border border-transparent",
       className,
       props.disabled && "cursor-not-allowed",
+      !isActive && "border-border",
     )}
     variant={!isActive ? "outline" : "default"}
     {...props}

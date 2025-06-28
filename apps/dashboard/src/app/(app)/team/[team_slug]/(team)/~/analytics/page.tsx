@@ -73,7 +73,7 @@ export default async function TeamOverviewPage(props: {
           title="Analytics"
         />
       </div>
-      <div className="flex grow flex-col justify-between gap-10 md:container md:pt-8 md:pb-16">
+      <div className="flex grow flex-col justify-between gap-10 md:container md:max-w-7xl md:pt-8 md:pb-16">
         <div className="flex grow flex-col gap-6">
           <Suspense
             fallback={<LoadingChartState className="h-[458px] border" />}

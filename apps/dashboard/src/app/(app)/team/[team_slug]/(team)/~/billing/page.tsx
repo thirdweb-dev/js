@@ -7,7 +7,7 @@ import { getTeamSubscriptions } from "@/api/team-subscription";
 import { CreditsInfoCard } from "@/components/billing/PlanCard";
 import { Coupons } from "@/components/billing/SubscriptionCoupons/Coupons";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getValidAccount } from "../../../../../../account/settings/getAccount";
+import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { CreditBalanceSection } from "./components/credit-balance-section.client";
 import { PlanInfoCardClient } from "./components/PlanInfoCard.client";
 
@@ -24,7 +24,7 @@ export default async function Page(props: {
     props.params,
     props.searchParams,
   ]);
-  const pagePath = `/team/${params.team_slug}/settings/billing`;
+  const pagePath = `/team/${params.team_slug}/billing`;
 
   const account = await getValidAccount(pagePath);
 
@@ -64,7 +64,7 @@ export default async function Page(props: {
     team.billingStatus === "validPayment" || team.billingStatus === "pastDue";
 
   return (
-    <div className="flex flex-col gap-12">
+    <div className="flex flex-col gap-8">
       <div>
         <PlanInfoCardClient
           highlightPlan={highlightPlan}

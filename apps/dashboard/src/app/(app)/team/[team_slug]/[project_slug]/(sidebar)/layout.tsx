@@ -1,16 +1,15 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
 import { getProject, getProjects, type Project } from "@/api/projects";
 import { getTeamBySlug, getTeams } from "@/api/team";
 import { CustomChatButton } from "@/components/chat/CustomChatButton";
-import { Button } from "@/components/ui/button";
+import { AnnouncementBanner } from "@/components/misc/AnnouncementBanner";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { AnnouncementBanner } from "../../../../../../@/components/misc/AnnouncementBanner";
 import { siwaExamplePrompts } from "../../../../(dashboard)/support/definitions";
 import { getValidAccount } from "../../../../account/settings/getAccount";
 import { TeamHeaderLoggedIn } from "../../../components/TeamHeader/team-header-logged-in.client";
+import { StaffModeNotice } from "../../(team)/_components/StaffModeNotice";
 import { ProjectSidebarLayout } from "./components/ProjectSidebarLayout";
 import { SaveLastUsedProject } from "./components/SaveLastUsedProject";
 import { getEngineInstances } from "./engine/dedicated/_utils/getEngineInstances";
@@ -62,24 +61,12 @@ export default async function ProjectLayout(props: {
     project,
   });
 
+  const isStaffMode = !teams.some((t) => t.slug === team.slug);
+
   return (
     <SidebarProvider>
       <div className="flex h-dvh min-w-0 grow flex-col">
-        {!teams.some((t) => t.slug === team.slug) && (
-          <div className="bg-warning-text">
-            <div className="container flex items-center justify-between py-4">
-              <div className="flex flex-col gap-2">
-                <p className="font-bold text-white text-xl">👀 STAFF MODE 👀</p>
-                <p className="text-sm text-white">
-                  You can only view this team, not take any actions.
-                </p>
-              </div>
-              <Button asChild variant="default">
-                <Link href="/team/~">Leave Staff Mode</Link>
-              </Button>
-            </div>
-          </div>
-        )}
+        {isStaffMode && <StaffModeNotice />}
         <div className="sticky top-0 z-10 border-border border-b bg-card">
           <AnnouncementBanner />
           <TeamHeaderLoggedIn

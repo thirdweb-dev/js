@@ -24,13 +24,15 @@ export default async function Layout(props: {
     >
       <div className="flex grow flex-col">
         <div className="border-border border-b py-10">
-          <div className="container flex flex-row justify-between">
+          <div className="container max-w-5xl flex flex-row justify-between">
             <h1 className="font-semibold text-3xl tracking-tight lg:px-2">
               Audit Log
             </h1>
           </div>
         </div>
-        {props.children}
+        <div className="container max-w-5xl flex flex-col gap-8 pt-6 pb-10">
+          {props.children}
+        </div>
       </div>
     </UpsellWrapper>
   );

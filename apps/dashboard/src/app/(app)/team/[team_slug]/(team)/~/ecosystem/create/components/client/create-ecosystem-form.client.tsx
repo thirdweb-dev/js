@@ -1,7 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightIcon } from "lucide-react";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -20,6 +19,7 @@ import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItemButton } from "@/components/ui/radio-group";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { createEcosystem } from "../../actions/create-ecosystem";
 
 const formSchema = z.object({
@@ -87,15 +87,6 @@ export function CreateEcosystemForm(props: {
         })}
       >
         <div className="grid gap-6 p-4 lg:p-6">
-          <div>
-            <h2 className="font-semibold text-2xl tracking-tight">
-              Create Ecosystem
-            </h2>
-            <p className="text-muted-foreground">
-              Create wallets that work across every chain and every app
-            </p>
-          </div>
-
           <FormField
             control={form.control}
             name="name"
@@ -175,14 +166,13 @@ export function CreateEcosystemForm(props: {
                   </RadioGroup>
                 </FormControl>
                 <FormDescription>
-                  <Link
-                    className="text-primary"
-                    href="https://portal.thirdweb.com/connect/ecosystems/ecosystem-permissions"
+                  <UnderlineLink
+                    href="https://portal.thirdweb.com/connect/wallet/ecosystem/permissions"
                     rel="noopener noreferrer"
                     target="_blank"
                   >
                     Learn more about ecosystem permissions
-                  </Link>
+                  </UnderlineLink>
                 </FormDescription>
                 <FormMessage />
               </FormItem>

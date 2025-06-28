@@ -53,7 +53,7 @@ export function MobileSidebar(props: {
   );
 }
 
-export function useActiveSidebarLink(links: SidebarLink[]) {
+function useActiveSidebarLink(links: SidebarLink[]) {
   const pathname = usePathname();
 
   const activeLink = useMemo(() => {
