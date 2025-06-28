@@ -1,4 +1,17 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
-  "extends": "//"
+  "$schema": "https://biomejs.dev/schemas/2.0.4/schema.json",
+  "linter": {
+    "rules": {
+      "correctness": {
+        "useImportExtensions": {
+          "fix": "safe",
+          "level": "error",
+          "options": {
+            "forceJsExtensions": true
+          }
+        }
+      }
+    }
+  },
+  "root": true
 }
