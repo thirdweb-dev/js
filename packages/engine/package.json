@@ -5,6 +5,9 @@
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
   },
+  "type": "module",
+  "types": "./dist/types/exports/thirdweb.d.ts",
+  "typings": "./dist/types/exports/thirdweb.d.ts",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"
@@ -17,9 +20,9 @@
   },
   "exports": {
     ".": {
-      "default": "./dist/cjs/exports/thirdweb.js",
       "import": "./dist/esm/exports/thirdweb.js",
-      "types": "./dist/types/exports/thirdweb.d.ts"
+      "types": "./dist/types/exports/thirdweb.d.ts",
+      "default": "./dist/cjs/exports/thirdweb.js"
     },
     "./package.json": "./package.json"
   },
@@ -41,10 +44,6 @@
       "optional": true
     }
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/thirdweb-dev/js.git#main"
-  },
   "scripts": {
     "build": "pnpm clean && pnpm build:cjs && pnpm build:esm && pnpm build:types",
     "build:cjs": "tsc --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
@@ -55,9 +54,5 @@
     "fix": "biome check --write ./src",
     "format": "biome format --write ./src",
     "lint": "biome check ./src"
-  },
-  "type": "module",
-  "types": "./dist/types/exports/thirdweb.d.ts",
-  "typings": "./dist/types/exports/thirdweb.d.ts",
-  "version": "3.0.4"
+  }
 }
