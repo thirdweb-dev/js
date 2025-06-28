@@ -36,97 +36,101 @@ export function WalletFiatSelection({
 
   return (
     <>
-      <Text color="primaryText" size="md">
-        Pay with Crypto
-      </Text>
-      <Spacer y="md" />
-      {/* Connected Wallets */}
-      {connectedWallets.length > 0 && (
+      {paymentMethods.includes("crypto") && (
         <>
-          <Container flex="column" gap="sm">
-            {connectedWallets.map((wallet) => {
-              const account = wallet.getAccount();
-              if (!account?.address) {
-                return null;
-              }
-              return (
-                <Button
-                  fullWidth
-                  key={wallet.id}
-                  onClick={() => onWalletSelected(wallet)}
-                  style={{
-                    backgroundColor: theme.colors.tertiaryBg,
-                    border: `1px solid ${theme.colors.borderColor}`,
-                    borderRadius: radius.md,
-                    justifyContent: "space-between",
-                    padding: `${spacing.sm} ${spacing.md}`,
-                  }}
-                  variant="secondary"
-                >
-                  <WalletRow
-                    address={account?.address}
-                    client={client}
-                    iconSize="lg"
-                    textSize="sm"
-                  />
-                  <ChevronRightIcon
-                    style={{ height: iconSize.md, width: iconSize.md }}
-                  />
-                </Button>
-              );
-            })}
-          </Container>
-          <Spacer y="sm" />
+          <Text color="primaryText" size="md">
+            Pay with Crypto
+          </Text>
+          <Spacer y="md" />
+          {/* Connected Wallets */}
+          {connectedWallets.length > 0 && (
+            <>
+              <Container flex="column" gap="sm">
+                {connectedWallets.map((wallet) => {
+                  const account = wallet.getAccount();
+                  if (!account?.address) {
+                    return null;
+                  }
+                  return (
+                    <Button
+                      fullWidth
+                      key={wallet.id}
+                      onClick={() => onWalletSelected(wallet)}
+                      style={{
+                        backgroundColor: theme.colors.tertiaryBg,
+                        border: `1px solid ${theme.colors.borderColor}`,
+                        borderRadius: radius.md,
+                        justifyContent: "space-between",
+                        padding: `${spacing.sm} ${spacing.md}`,
+                      }}
+                      variant="secondary"
+                    >
+                      <WalletRow
+                        address={account?.address}
+                        client={client}
+                        iconSize="lg"
+                        textSize="sm"
+                      />
+                      <ChevronRightIcon
+                        style={{ height: iconSize.md, width: iconSize.md }}
+                      />
+                    </Button>
+                  );
+                })}
+              </Container>
+              <Spacer y="sm" />
+            </>
+          )}
+
+          {/* Connect Another Wallet */}
+          <Button
+            fullWidth
+            onClick={onConnectWallet}
+            style={{
+              backgroundColor: theme.colors.tertiaryBg,
+              border: `1px solid ${theme.colors.borderColor}`,
+              borderRadius: radius.md,
+              height: "auto",
+              padding: `${spacing.sm} ${spacing.md}`,
+              textAlign: "left",
+            }}
+            variant="secondary"
+          >
+            <Container
+              flex="row"
+              gap="md"
+              style={{ alignItems: "center", width: "100%" }}
+            >
+              <Container
+                style={{
+                  alignItems: "center",
+                  border: `1px dashed ${theme.colors.secondaryIconColor}`,
+                  borderRadius: radius.sm,
+                  display: "flex",
+                  height: iconSize.lg,
+                  justifyContent: "center",
+                  padding: spacing["4xs"],
+                  width: iconSize.lg,
+                }}
+              >
+                <PlusIcon
+                  color={theme.colors.secondaryText}
+                  height={iconSize.md}
+                  width={iconSize.md}
+                />
+              </Container>
+              <Container flex="column" gap="3xs" style={{ flex: 1 }}>
+                <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
+                  Connect Another Wallet
+                </Text>
+                <Text color="secondaryText" size="xs">
+                  Use a different wallet to pay
+                </Text>
+              </Container>
+            </Container>
+          </Button>
         </>
       )}
-
-      {/* Connect Another Wallet */}
-      <Button
-        fullWidth
-        onClick={onConnectWallet}
-        style={{
-          backgroundColor: theme.colors.tertiaryBg,
-          border: `1px solid ${theme.colors.borderColor}`,
-          borderRadius: radius.md,
-          height: "auto",
-          padding: `${spacing.sm} ${spacing.md}`,
-          textAlign: "left",
-        }}
-        variant="secondary"
-      >
-        <Container
-          flex="row"
-          gap="md"
-          style={{ alignItems: "center", width: "100%" }}
-        >
-          <Container
-            style={{
-              alignItems: "center",
-              border: `1px dashed ${theme.colors.secondaryIconColor}`,
-              borderRadius: radius.sm,
-              display: "flex",
-              height: iconSize.lg,
-              justifyContent: "center",
-              padding: spacing["4xs"],
-              width: iconSize.lg,
-            }}
-          >
-            <PlusIcon
-              color={theme.colors.secondaryText}
-              height={iconSize.md}
-              width={iconSize.md}
-            />
-          </Container>
-          <Container flex="column" gap="3xs" style={{ flex: 1 }}>
-            <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
-              Connect Another Wallet
-            </Text>
-            <Text color="secondaryText" size="xs">
-              Use a different wallet to pay
-            </Text>
-          </Container>
-        </Container>
-      </Button>
 
       {paymentMethods.includes("card") && (
         <>

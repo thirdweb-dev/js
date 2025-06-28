@@ -73,7 +73,7 @@ function Example() {
     <${componentName}
       client={client}
       chain={defineChain(${options.payOptions.buyTokenChain.id})}
-      amount="${options.payOptions.buyTokenAmount}"${options.payOptions.buyTokenAddress ? `\n\t  token="${options.payOptions.buyTokenAddress}"` : ""}${options.payOptions.sellerAddress ? `\n\t  seller="${options.payOptions.sellerAddress}"` : ""}${options.payOptions.title ? `\n\t  ${options.payOptions.widget === "checkout" ? "name" : "title"}="${options.payOptions.title}"` : ""}${options.payOptions.image ? `\n\t  image="${options.payOptions.image}"` : ""}${options.payOptions.description ? `\n\t  description="${options.payOptions.description}"` : ""}${
+      amount="${options.payOptions.buyTokenAmount}"${options.payOptions.buyTokenAddress ? `\n\t  token="${options.payOptions.buyTokenAddress}"` : ""}${options.payOptions.sellerAddress ? `\n\t  seller="${options.payOptions.sellerAddress}"` : ""}${options.payOptions.title ? `\n\t  ${options.payOptions.widget === "checkout" ? "name" : "title"}="${options.payOptions.title}"` : ""}${options.payOptions.image ? `\n\t  image="${options.payOptions.image}"` : ""}${options.payOptions.description ? `\n\t  description="${options.payOptions.description}"` : ""}${options.payOptions.paymentMethods && options.payOptions.paymentMethods.length > 0 ? `\n\t  paymentMethods={${JSON.stringify(options.payOptions.paymentMethods)}}` : ""}${
         options.payOptions.widget === "transaction"
           ? `\n\t  transaction={claimTo({
         contract: nftContract,

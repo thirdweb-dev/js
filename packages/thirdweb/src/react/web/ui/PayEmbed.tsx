@@ -238,7 +238,6 @@ export type PayEmbedProps = {
  *   }}
  *  />
  * ```
- *
  * You can also handle ERC20 payments by passing `erc20value` to your transaction:
  *
  * ```tsx
@@ -357,9 +356,15 @@ export function PayEmbed(props: PayEmbedProps) {
         chain={props.payOptions.prefillBuy.chain}
         client={props.client}
         onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
+        paymentMethods={
+          props.payOptions?.buyWithFiat === false
+            ? ["crypto"]
+            : props.payOptions?.buyWithCrypto === false
+              ? ["card"]
+              : ["crypto", "card"]
+        }
         theme={theme}
         title={metadata?.name || "Buy"}
-        paymentMethods={props.payOptions?.buyWithFiat === false ? ["crypto"] : ["crypto", "card"]}
         tokenAddress={
           props.payOptions.prefillBuy.token?.address as Address | undefined
         }
@@ -377,8 +382,12 @@ export function PayEmbed(props: PayEmbedProps) {
         image={metadata?.image}
         name={metadata?.name || "Checkout"}
         onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
+        paymentMethods={
+          props.payOptions?.buyWithFiat === false
+            ? ["crypto"]
+            : ["crypto", "card"]
+        }
         seller={props.payOptions.paymentInfo.sellerAddress as Address}
-        paymentMethods={props.payOptions?.buyWithFiat === false ? ["crypto"] : ["crypto", "card"]}
         theme={theme}
         tokenAddress={
           props.payOptions.paymentInfo.token?.address as Address | undefined
@@ -394,8 +403,12 @@ export function PayEmbed(props: PayEmbedProps) {
         description={metadata?.description}
         image={metadata?.image}
         onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
+        paymentMethods={
+          props.payOptions?.buyWithFiat === false
+            ? ["crypto"]
+            : ["crypto", "card"]
+        }
         theme={theme}
-        paymentMethods={props.payOptions?.buyWithFiat === false ? ["crypto"] : ["crypto", "card"]}
         title={metadata?.name}
         transaction={props.payOptions.transaction}
       />
@@ -516,10 +529,10 @@ export type PayEmbedConnectOptions = {
    * ```
    */
   autoConnect?:
-  | {
-    timeout: number;
-  }
-  | boolean;
+    | {
+        timeout: number;
+      }
+    | boolean;
 
   /**
    * Metadata of the app that will be passed to connected wallet. Setting this is highly recommended.

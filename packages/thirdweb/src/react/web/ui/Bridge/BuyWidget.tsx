@@ -384,11 +384,11 @@ export function BuyWidget(props: BuyWidgetProps) {
           props.onError?.(err);
         }}
         paymentLinkId={props.paymentLinkId}
+        paymentMethods={props.paymentMethods}
         presetOptions={props.presetOptions}
         purchaseData={props.purchaseData}
         receiverAddress={undefined}
         uiOptions={bridgeDataQuery.data.data}
-        paymentMethods={props.paymentMethods}
       />
     );
   }

@@ -277,8 +277,8 @@ export function BridgeOrchestrator({
             }}
             onError={handleError}
             onPaymentMethodSelected={handlePaymentMethodSelected}
-            receiverAddress={state.context.receiverAddress}
             paymentMethods={paymentMethods}
+            receiverAddress={state.context.receiverAddress}
           />
         )}
 

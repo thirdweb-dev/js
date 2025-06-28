@@ -13,6 +13,7 @@ import { useId, useState } from "react";
 import type { Address } from "thirdweb";
 import { defineChain } from "thirdweb/chains";
 import { CustomRadioGroup } from "@/components/ui/CustomRadioGroup";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "../../../../lib/utils";
@@ -53,6 +54,8 @@ export function LeftSection(props: {
   const modalTitleIconId = useId();
   const modalDescriptionId = useId();
   const themeId = useId();
+  const cryptoPaymentId = useId();
+  const cardPaymentId = useId();
 
   return (
     <div className="flex flex-col gap-4">
@@ -161,6 +164,65 @@ export function LeftSection(props: {
                         />
                       </div>
                     </div>
+
+                    {/* Payment Methods */}
+                    <div className="flex flex-col gap-3 pt-4">
+                      <Label>Payment Methods</Label>
+                      <div className="flex gap-4">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            checked={payOptions.paymentMethods.includes(
+                              "crypto",
+                            )}
+                            id={cryptoPaymentId}
+                            onCheckedChange={(checked) => {
+                              setOptions((v) => ({
+                                ...v,
+                                payOptions: {
+                                  ...v.payOptions,
+                                  paymentMethods: checked
+                                    ? [
+                                        ...v.payOptions.paymentMethods.filter(
+                                          (m) => m !== "crypto",
+                                        ),
+                                        "crypto",
+                                      ]
+                                    : v.payOptions.paymentMethods.filter(
+                                        (m) => m !== "crypto",
+                                      ),
+                                },
+                              }));
+                            }}
+                          />
+                          <Label htmlFor={cryptoPaymentId}>Crypto</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            checked={payOptions.paymentMethods.includes("card")}
+                            id={cardPaymentId}
+                            onCheckedChange={(checked) => {
+                              setOptions((v) => ({
+                                ...v,
+                                payOptions: {
+                                  ...v.payOptions,
+                                  paymentMethods: checked
+                                    ? [
+                                        ...v.payOptions.paymentMethods.filter(
+                                          (m) => m !== "card",
+                                        ),
+                                        "card",
+                                      ]
+                                    : v.payOptions.paymentMethods.filter(
+                                        (m) => m !== "card",
+                                      ),
+                                },
+                              }));
+                            }}
+                          />
+                          <Label htmlFor={cardPaymentId}>Card</Label>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -247,6 +309,65 @@ export function LeftSection(props: {
                           placeholder="0x..."
                           value={tokenAddress}
                         />
+                      </div>
+                    </div>
+
+                    {/* Payment Methods */}
+                    <div className="flex flex-col gap-3">
+                      <Label>Payment Methods</Label>
+                      <div className="flex gap-4">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            checked={payOptions.paymentMethods.includes(
+                              "crypto",
+                            )}
+                            id={cryptoPaymentId}
+                            onCheckedChange={(checked) => {
+                              setOptions((v) => ({
+                                ...v,
+                                payOptions: {
+                                  ...v.payOptions,
+                                  paymentMethods: checked
+                                    ? [
+                                        ...v.payOptions.paymentMethods.filter(
+                                          (m) => m !== "crypto",
+                                        ),
+                                        "crypto",
+                                      ]
+                                    : v.payOptions.paymentMethods.filter(
+                                        (m) => m !== "crypto",
+                                      ),
+                                },
+                              }));
+                            }}
+                          />
+                          <Label htmlFor={cryptoPaymentId}>Crypto</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            checked={payOptions.paymentMethods.includes("card")}
+                            id={cardPaymentId}
+                            onCheckedChange={(checked) => {
+                              setOptions((v) => ({
+                                ...v,
+                                payOptions: {
+                                  ...v.payOptions,
+                                  paymentMethods: checked
+                                    ? [
+                                        ...v.payOptions.paymentMethods.filter(
+                                          (m) => m !== "card",
+                                        ),
+                                        "card",
+                                      ]
+                                    : v.payOptions.paymentMethods.filter(
+                                        (m) => m !== "card",
+                                      ),
+                                },
+                              }));
+                            }}
+                          />
+                          <Label htmlFor={cardPaymentId}>Card</Label>
+                        </div>
                       </div>
                     </div>
                   </div>

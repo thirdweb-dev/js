@@ -122,7 +122,7 @@ export function PaymentSelection({
       ? currentStep.selectedWallet
       : activeWallet;
   const {
-    data: paymentMethods,
+    data: suitableTokenPaymentMethods,
     isLoading: paymentMethodsLoading,
     error: paymentMethodsError,
   } = usePaymentMethods({
@@ -269,7 +269,7 @@ export function PaymentSelection({
             destinationToken={destinationToken}
             onBack={handleBackToWalletSelection}
             onPaymentMethodSelected={handlePaymentMethodSelected}
-            paymentMethods={paymentMethods}
+            paymentMethods={suitableTokenPaymentMethods}
             paymentMethodsLoading={paymentMethodsLoading}
           />
         )}
