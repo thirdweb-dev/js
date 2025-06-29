@@ -220,6 +220,10 @@ const transactions: ShadcnSidebarLink = {
       exactMatch: true,
     },
     {
+      href: "/transactions/users",
+      label: "From User Wallets",
+    },
+    {
       href: "/transactions/airdrop-tokens",
       label: "Airdrop Tokens",
     },

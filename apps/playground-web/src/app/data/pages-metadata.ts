@@ -107,6 +107,12 @@ export const headlessComponentsFeatureCards: FeatureCardMetadata[] = [
 
 export const transactionsFeatureCards: FeatureCardMetadata[] = [
   {
+    icon: UserIcon,
+    title: "From User Wallets",
+    link: "/transactions/users",
+    description: "Transactions from user wallets with monitoring and retries.",
+  },
+  {
     icon: PlaneIcon,
     title: "Airdrop Tokens",
     link: "/transactions/airdrop-tokens",
