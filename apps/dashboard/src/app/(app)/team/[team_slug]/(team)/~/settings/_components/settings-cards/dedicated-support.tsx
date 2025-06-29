@@ -1,5 +1,7 @@
 "use client";
 import { useMutation } from "@tanstack/react-query";
+import { ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { createDedicatedSupportChannel } from "@/api/dedicated-support";
@@ -16,7 +18,7 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 
 const CHANNEL_TYPES = {
   slack: "Slack",
-  telegram: "Telegram (Coming Soon)",
+  telegram: "Telegram",
 } as const;
 
 type ChannelType = keyof typeof CHANNEL_TYPES;
@@ -57,6 +59,7 @@ export function TeamDedicatedSupportCard(props: {
 
   const channelType = props.team.dedicatedSupportChannel?.type;
   const channelName = props.team.dedicatedSupportChannel?.name;
+  const channelLink = props.team.dedicatedSupportChannel?.link;
 
   const hasDefaultTeamName = props.team.name.startsWith("Your Projects");
 
@@ -73,11 +76,27 @@ export function TeamDedicatedSupportCard(props: {
         }}
         noPermissionText={undefined}
       >
-        <div className="md:w-[450px]">
-          <p className="text-muted-foreground text-sm">
-            Your dedicated support channel: #<strong>{channelName}</strong>{" "}
-            {CHANNEL_TYPES[channelType]}
-          </p>
+        <div className="space-y-3">
+          <div className="rounded-lg border bg-muted/50 p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-bold">{channelName}</p>
+                <p className="text-muted-foreground text-sm">
+                  {CHANNEL_TYPES[channelType]} channel
+                </p>
+              </div>
+              {channelType === "telegram" && channelLink && (
+                <Link
+                  className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+                  href={channelLink}
+                  target="_blank"
+                >
+                  Join channel
+                  <ExternalLinkIcon className="size-4" />
+                </Link>
+              )}
+            </div>
+          </div>
         </div>
       </SettingsCard>
     );
@@ -145,15 +164,11 @@ export function TeamDedicatedSupportCard(props: {
           value={selectedChannelType}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select Channel Type" />
+            <SelectValue placeholder="Select platform" />
           </SelectTrigger>
           <SelectContent>
             {Object.entries(CHANNEL_TYPES).map(([value, name]) => (
-              <SelectItem
-                disabled={value === "telegram"}
-                key={value}
-                value={value}
-              >
+              <SelectItem key={value} value={value}>
                 {name}
               </SelectItem>
             ))}
