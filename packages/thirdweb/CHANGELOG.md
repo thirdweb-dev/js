@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.4
+
+### Patch Changes
+
+- [#7465](https://github.com/thirdweb-dev/js/pull/7465) [`bc51255`](https://github.com/thirdweb-dev/js/commit/bc512551ab3a685bdb0ac167105f8aa7385d46d8) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds paymentMethods prop to BuyWidget, CheckoutWidget, and TransactionWidget to control available payment options. Accepts an array of "crypto" and/or "card" values.
+
 ## 5.105.3
 
 ### Patch Changes
