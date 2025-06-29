@@ -22,6 +22,7 @@ const fetchAccountList = ({
       headers: {
         Authorization: `Bearer ${jwt}`,
         "Content-Type": "application/json",
+        "x-client-id": clientId,
       },
       method: "GET",
     });
