@@ -228,6 +228,10 @@ export function getPlatformHeaders() {
     ...(bundleId ? { "x-bundle-id": bundleId } : {}),
   });
 
+  if (typeof window !== "undefined") {
+    previousPlatform.push(["x-sdk-location", window.location.href]);
+  }
+
   return previousPlatform;
 }
 
