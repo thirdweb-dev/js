@@ -20,10 +20,15 @@ export default async function Page(props: {
     notFound();
   }
 
-  // Fetch real support tickets for this team
-  const supportTickets = await getSupportTicketsByTeam(
-    team.unthreadCustomerId || "", // change to customerServiceExternalId
-  );
+  // Fetch real support tickets for this team using team slug
+  // getSupportTicketsByTeam will handle calling ensureTeamCustomerService internally
+  const supportTickets = await getSupportTicketsByTeam(params.team_slug, token);
 
-  return <SupportCasesClient team={team} tickets={supportTickets} />;
+  return (
+    <SupportCasesClient
+      authToken={token}
+      team={team}
+      tickets={supportTickets}
+    />
+  );
 }

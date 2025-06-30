@@ -24,6 +24,7 @@ export default async function CreateTicketPage(props: {
   return (
     <CreateTicketForm
       account={account}
+      authToken={token}
       team={team}
       teamSlug={params.team_slug}
     />

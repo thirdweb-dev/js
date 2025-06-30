@@ -1,588 +1,610 @@
 "use server";
 import "server-only";
+import { cache } from "react";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
+import { getAuthToken } from "./auth-token";
+import type { Team } from "./team";
 
-// UNTHREAD_API_KEY is used as Bearer token
+// UNTHREAD_API_KEY is used as X-Api-Key header
 const UNTHREAD_API_KEY = process.env.UNTHREAD_API_KEY || "";
 const UNTHREAD_BASE_URL =
-  process.env.UNTHREAD_BASE_URL || "https://thirdweb.unthread.io";
+	process.env.UNTHREAD_BASE_URL || "https://thirdweb.unthread.io";
 const UNTHREAD_TRIAGE_CHANNEL_ID = process.env.UNTHREAD_TRIAGE_CHANNEL_ID || "";
 const UNTHREAD_EMAIL_INBOX_ID = process.env.UNTHREAD_EMAIL_INBOX_ID || "";
-// Hardcoded mapping of customer plans to customer IDs
-const PLAN_TO_CUSTOMER_ID_MAP: Record<string, string> = {
-  accelerate: process.env.UNTHREAD_GROWTH_TIER_ID || "",
-  growth: process.env.UNTHREAD_GROWTH_TIER_ID || "",
-  pro: process.env.UNTHREAD_PRO_TIER_ID || "",
-  scale: process.env.UNTHREAD_PRO_TIER_ID || "",
-  starter: process.env.UNTHREAD_FREE_TIER_ID || "",
-};
 
 export interface SupportTicket {
-  id: string;
-  title: string;
-  status: "open" | "closed" | "resolved";
-  priority?: "low" | "medium" | "high" | "urgent";
-  createdAt: string;
-  updatedAt: string;
-  openedBy: string;
-  customerId?: string;
-  tags?: string[];
-  assignee?: string;
-  lastMessage?: string;
-  messages?: SupportMessage[];
+	id: string;
+	title: string;
+	status: "open" | "closed" | "resolved";
+	createdAt: string;
+	updatedAt: string;
+	openedBy: string;
+	customerId?: string;
+	tags?: string[];
+	assignee?: string;
+	lastMessage?: string;
+	messages?: SupportMessage[];
 }
 
 export interface SupportMessage {
-  id: string;
-  content: string;
-  createdAt: string;
-  author: {
-    name: string;
-    email: string;
-    type: "user" | "customer";
-  };
+	id: string;
+	content: string;
+	createdAt: string;
+	author: {
+		name: string;
+		email: string;
+		type: "user" | "customer";
+	};
 }
 
 // internal types for Unthread API responses
 interface UnthreadConversation {
-  id: string;
-  friendlyId?: string;
-  title?: string;
-  summary?: string;
-  status: string;
-  priority?: string | number;
-  createdAt: string;
-  updatedAt: string;
-  lastActivityAt?: string;
-  customerId?: string;
-  customer?: {
-    id: string;
-    name: string;
-  };
-  tags?: Array<{
-    id: string;
-    name: string;
-  }>;
-  assignedToUser?: {
-    id: string;
-    name: string;
-  };
-  initialMessage?: {
-    content: string;
-    sentByUser?: {
-      name: string;
-      email: string;
-      type?: string;
-    };
-  };
-  latestMessage?: {
-    content: string;
-  };
-  lastMessage?: {
-    content: string;
-    author: {
-      name: string;
-      email: string;
-      type?: string;
-    };
-  };
+	id: string;
+	friendlyId?: string;
+	title?: string;
+	summary?: string;
+	status: string;
+	createdAt: string;
+	updatedAt: string;
+	lastActivityAt?: string;
+	customerId?: string;
+	customer?: {
+		id: string;
+		name: string;
+	};
+	tags?: Array<{
+		id: string;
+		name: string;
+	}>;
+	assignedToUser?: {
+		id: string;
+		name: string;
+	};
+	initialMessage?: {
+		content: string;
+		sentByUser?: {
+			name: string;
+			email: string;
+			type?: string;
+		};
+	};
+	latestMessage?: {
+		content: string;
+	};
+	lastMessage?: {
+		content: string;
+		author: {
+			name: string;
+			email: string;
+			type?: string;
+		};
+	};
 }
 
 // Reusable types
 interface UserInfo {
-  userId: string;
-  email: string;
-  name: string;
+	id: string;
+	email: string;
+	name: string;
 }
 
 export interface CreateSupportTicketRequest {
-  title: string;
-  message: string;
-  plan: string; // Customer plan (e.g., "free", "pro", "enterprise")
-  onBehalfOf: UserInfo;
-  attachments?: File[];
+	title: string;
+	message: string;
+	customerId: string; // Team's unthreadCustomerId
+	onBehalfOf: UserInfo;
+	attachments?: File[];
 }
 
 export interface SendMessageRequest {
-  ticketId: string;
-  message: string;
-  onBehalfOf: UserInfo;
-  attachments?: File[];
+	ticketId: string;
+	message: string;
+	onBehalfOf: UserInfo;
+	attachments?: File[];
 }
 
 // Internal payload types
 interface CreateConversationPayload {
-  type: "email";
-  title: string;
-  body: {
-    type: "markdown";
-    value: string;
-  };
-  status: "open" | "in_progress" | "on_hold" | "closed";
-  customerId: string;
-  emailInboxId: string;
-  triageChannelId: string;
-  onBehalfOf: UserInfo & { id: string };
+	type: "triage" | "email" | "slack";
+	markdown: string;
+	status: "open" | "in_progress" | "on_hold" | "closed";
+	assignedToUserId?: string;
+	customerId?: string;
+	channelId?: string;
+	projectId?: string;
+	triageChannelId?: string;
+	notes?: string;
+	title?: string;
+	excludeAnalytics?: boolean;
+	emailInboxId?: string;
+	ticketTypeId?: string;
+	onBehalfOf?: {
+		email?: string;
+		name?: string;
+		id?: string;
+	};
 }
 
 interface SendMessagePayload {
-  body: {
-    type: "markdown";
-    value: string;
-  };
-  onBehalfOf: UserInfo;
+	body?: {
+		type: "html" | "markdown";
+		value: string;
+	};
+	blocks?: any[]; // Block type not defined, using any[] for now
+	markdown?: string; // DEPRECATED: Use 'blocks' and/or 'body' instead
+	triageThreadTs?: string;
+	isPrivateNote?: boolean; // Only applicable for email and in-app chat conversations
+	isAutoresponse?: boolean; // Set this to true to treat this as a bot auto-response
+	onBehalfOf?: {
+		email?: string;
+		name?: string;
+		id?: string;
+	};
 }
 
-function mapUnthreadMessage(msg: {
-  ts?: string;
-  id?: string;
-  text?: string;
-  content?: string;
-  timestamp?: string;
-  createdAt?: string;
-  user?: {
-    name: string;
-    email: string;
-    type?: string;
-  };
-  sentByUser?: {
-    name: string;
-    email: string;
-    type?: string;
-  };
-}): SupportMessage {
-  const author = msg.user || msg.sentByUser;
-  return {
-    author: {
-      email: author?.email || "",
-      name: author?.name || "Unknown",
-      type: author?.type === "user" ? "user" : "customer",
-    },
-    content: msg.text || msg.content || "",
-    createdAt: msg.timestamp || msg.createdAt || "",
-    id: msg.ts || msg.id || "",
-  };
+function mapUnthreadMessage(
+	msg: {
+		ts?: string;
+		id?: string;
+		text?: string;
+		content?: string;
+		timestamp?: string;
+		createdAt?: string;
+		isPrivateNote?: boolean;
+		user?: {
+			name: string;
+			email: string;
+			type?: string;
+		};
+		sentByUser?: {
+			id: string;
+			name: string;
+			email: string;
+			type?: string;
+		} | null;
+	},
+	customerId?: string,
+): SupportMessage | null {
+	// Filter out private notes - they should not be shown to customers
+	if (msg.isPrivateNote) {
+		return null;
+	}
+
+	// Filter out messages without sentByUser (system messages)
+	if (!msg.sentByUser) {
+		return null;
+	}
+
+	const author = msg.user || msg.sentByUser;
+
+	// Determine if this is the customer or support
+	const isCustomer = customerId && msg.sentByUser.id === customerId;
+
+	const authorType = isCustomer ? "customer" : "user";
+	const authorName = isCustomer ? "" : author?.name || "Support";
+
+	// Clean up the message content and remove /unthread send commands
+	const content = (msg.text || msg.content || "")
+		.replace(/\/unthread\s+send/gi, "")
+		.trim();
+
+	return {
+		author: {
+			email: author?.email || "",
+			name: authorName,
+			type: authorType,
+		},
+		content: content,
+		createdAt: msg.timestamp || msg.createdAt || "",
+		id: msg.ts || msg.id || "",
+	};
 }
 
 function mapUnthreadToSupportTicket(
-  conversation: UnthreadConversation,
+	conversation: UnthreadConversation,
 ): SupportTicket {
-  // Map status values from Unthread to our expected format
-  let status: "open" | "closed" | "resolved" = "open";
-  if (conversation.status === "closed" || conversation.status === "resolved") {
-    status = conversation.status;
-  } else if (conversation.status === "in_progress") {
-    status = "open";
-  }
+	// Map status values from Unthread to our expected format
+	let status: "open" | "closed" | "resolved" = "open";
+	if (conversation.status === "closed" || conversation.status === "resolved") {
+		status = conversation.status;
+	} else if (conversation.status === "in_progress") {
+		status = "open";
+	}
 
-  // Map priority from number to string (Unthread uses numeric priorities)
-  let priority: "low" | "medium" | "high" | "urgent" | undefined;
-  if (typeof conversation.priority === "number") {
-    if (conversation.priority <= 3) {
-      priority = "low";
-    } else if (conversation.priority <= 6) {
-      priority = "medium";
-    } else if (conversation.priority <= 8) {
-      priority = "high";
-    } else {
-      priority = "urgent";
-    }
-  } else if (typeof conversation.priority === "string") {
-    priority = conversation.priority.toLowerCase() as
-      | "low"
-      | "medium"
-      | "high"
-      | "urgent";
-  }
-
-  return {
-    assignee: conversation.assignedToUser?.name,
-    createdAt: conversation.createdAt,
-    customerId: conversation.customer?.id,
-    id: conversation.id || conversation.friendlyId || "unknown",
-    lastMessage:
-      conversation.latestMessage?.content ||
-      conversation.initialMessage?.content,
-    openedBy:
-      conversation.initialMessage?.sentByUser?.name ||
-      conversation.customer?.name ||
-      "Unknown",
-    priority: priority,
-    status: status,
-    tags: conversation.tags?.map((tag) => tag.name || tag.id) || [],
-    title:
-      conversation.title || conversation.summary || "Untitled Support Case",
-    updatedAt:
-      conversation.updatedAt ||
-      conversation.lastActivityAt ||
-      conversation.createdAt,
-  };
+	return {
+		assignee: conversation.assignedToUser?.name,
+		createdAt: conversation.createdAt,
+		customerId: conversation.customer?.id,
+		id: conversation.id || conversation.friendlyId || "unknown",
+		lastMessage:
+			conversation.latestMessage?.content ||
+			conversation.initialMessage?.content,
+		openedBy:
+			conversation.initialMessage?.sentByUser?.name ||
+			conversation.customer?.name ||
+			"Unknown",
+		status,
+		tags: conversation.tags?.map((tag) => tag.name) || [],
+		title:
+			conversation.title || conversation.summary || "Untitled Support Case",
+		updatedAt:
+			conversation.updatedAt ||
+			conversation.lastActivityAt ||
+			conversation.createdAt,
+	};
 }
 
-async function getSupportTickets(userId: string): Promise<SupportTicket[]> {
-  // If no API key is configured, return empty array
-  if (!UNTHREAD_API_KEY) {
-    throw new Error("UNTHREAD_API_KEY is not configured");
-  }
+async function getSupportTickets(customerId: string): Promise<SupportTicket[]> {
+	// If no API key is configured, return empty array
+	if (!UNTHREAD_API_KEY) {
+		throw new Error("UNTHREAD_API_KEY is not configured");
+	}
 
-  try {
-    const url = new URL(
-      `${UNTHREAD_BASE_URL}/api/conversations/list?useFullContent=true`,
-    );
+	try {
+		const url = new URL(
+			`${UNTHREAD_BASE_URL}/api/conversations/list?useFullContent=true`,
+		);
 
-    // Build the POST payload according to Unthread API spec
-    const payload = {
-      descending: true,
-      includeIntake: false,
-      limit: 50,
-      order: ["lastActivityAt"],
-      select: [
-        "id",
-        "status",
-        "title",
-        "createdAt",
-        "updatedAt",
-        "lastActivityAt",
-        "priority",
-        "category",
-        "assignedToUserId",
-        "summary",
-        "customer.id",
-        "customer.name",
-        "assignedToUser.id",
-        "assignedToUser.name",
-        "initialMessage.content",
-        "initialMessage.sentByUser.name",
-        "initialMessage.sentByUser.email",
-        "latestMessage.content",
-        "tags.id",
-        "tags.name",
-      ],
-      where: [
-        {
-          field: "status",
-          operator: "in",
-          value: ["open", "in_progress", "closed", "resolved"],
-        },
-        {
-          field: "submitterUserId",
-          operator: "in",
-          value: [userId],
-        },
-      ],
-    };
+		// Build the POST payload according to Unthread API spec
+		const payload = {
+			descending: true,
+			includeIntake: false,
+			limit: 50,
+			order: ["lastActivityAt"],
+			select: [
+				"id",
+				"status",
+				"title",
+				"createdAt",
+				"updatedAt",
+				"lastActivityAt",
+				"customer.id",
+				"customer.name",
+				"assignedToUser.name",
+				"initialMessage.content",
+				"initialMessage.sentByUser.name",
+				"latestMessage.content",
+				"tags.name",
+			],
+			where: [
+				{
+					field: "status",
+					operator: "in",
+					value: ["open", "in_progress", "closed", "resolved"],
+				},
+				{
+					field: "customerId",
+					operator: "in",
+					value: [customerId],
+				},
+			],
+		};
 
-    const response = await fetch(url.toString(), {
-      body: JSON.stringify(payload),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "X-Api-Key": UNTHREAD_API_KEY,
-      },
-      method: "POST",
-      // Cache for 5 minutes to avoid excessive API calls
-      next: { revalidate: 300 },
-    } as RequestInit & { next?: { revalidate?: number } });
+		const response = await fetch(url.toString(), {
+			body: JSON.stringify(payload),
+			// Disable caching to get real-time data
+			cache: "no-store",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+				"X-Api-Key": UNTHREAD_API_KEY,
+			},
+			method: "POST",
+		});
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Unthread API error: ${response.status} - ${errorText}`);
-    }
+		if (!response.ok) {
+			const errorText = await response.text();
+			throw new Error(`Unthread API error: ${response.status} - ${errorText}`);
+		}
 
-    const data: { data?: UnthreadConversation[] } = await response.json();
+		const data: { data?: UnthreadConversation[] } = await response.json();
 
-    // The Unthread API returns conversations directly in an array or under a 'data' key
-    const conversations = data.data || [];
+		// The Unthread API returns conversations directly in an array or under a 'data' key
+		const conversations = data.data || [];
 
-    // Return empty array if no conversations found
-    if (conversations.length === 0) {
-      return [];
-    }
+		// Return empty array if no conversations found
+		if (conversations.length === 0) {
+			return [];
+		}
 
-    const mappedTickets = conversations.map(mapUnthreadToSupportTicket);
+		const mappedTickets = conversations.map(mapUnthreadToSupportTicket);
 
-    return mappedTickets;
-  } catch (error) {
-    console.error("Error fetching support tickets:", error);
-    throw error;
-  }
+		return mappedTickets;
+	} catch (error) {
+		console.error("Error fetching support tickets:", error);
+		throw error;
+	}
 }
 
 export async function getSupportTicketsByTeam(
-  userId: string,
+	teamSlug: string,
+	authToken?: string,
 ): Promise<SupportTicket[]> {
-  // If no user ID provided, return mock data for development
-  if (!userId) {
-    return getMockTickets();
-  }
+	// If no team slug provided, throw error
+	if (!teamSlug) {
+		throw new Error("Team slug is required to fetch support tickets");
+	}
 
-  // Try to fetch real data, fallback to mock data on failure
-  try {
-    const tickets = await getSupportTickets(userId);
-    // If no tickets found, return mock data for development
-    if (tickets.length === 0) {
-      return getMockTickets();
-    }
-    return tickets;
-  } catch (error) {
-    console.error("Failed to fetch real tickets, using mock data:", error);
-    return getMockTickets();
-  }
-}
+	// Fetch real data, throw error on failure
+	try {
+		// Ensure the team has customer service setup (this is cached)
+		const team = await ensureTeamCustomerService(teamSlug, authToken);
 
-// Mock tickets for development and fallback
-function getMockTickets(): SupportTicket[] {
-  return [
-    {
-      assignee: "Support Team",
-      createdAt: "2025-05-15T10:30:00Z",
-      customerId: "cust_001",
-      id: "1001",
-      lastMessage:
-        "I'm having trouble integrating the API with my application. The authentication keeps failing even with the correct API key.",
-      openedBy: "customer1",
-      priority: "high",
-      status: "open",
-      tags: ["api", "integration", "urgent"],
-      title: "API Integration Issue",
-      updatedAt: "2025-05-15T14:20:00Z",
-    },
-    {
-      assignee: "Billing Team",
-      createdAt: "2025-05-14T09:15:00Z",
-      customerId: "cust_002",
-      id: "1002",
-      lastMessage:
-        "Thank you for clarifying the billing cycle. My question has been resolved.",
-      openedBy: "customer2",
-      priority: "medium",
-      status: "closed",
-      tags: ["billing", "resolved"],
-      title: "Billing Question",
-      updatedAt: "2025-05-14T16:45:00Z",
-    },
-  ];
+		// Get the customer ID from the team
+		const customerId = team.unthreadCustomerId;
+		if (!customerId) {
+			throw new Error("Team does not have a customer ID set up");
+		}
+
+		const tickets = await getSupportTickets(customerId);
+		return tickets;
+	} catch (error) {
+		console.error("Failed to fetch support tickets:", error);
+		throw error;
+	}
 }
 
 export async function getSupportTicket(
-  ticketId: string,
+	ticketId: string,
 ): Promise<SupportTicket | null> {
-  // If no API key is configured, throw error
-  if (!UNTHREAD_API_KEY) {
-    throw new Error("UNTHREAD_API_KEY is not configured");
-  }
+	// If no API key is configured, throw error
+	if (!UNTHREAD_API_KEY) {
+		throw new Error("UNTHREAD_API_KEY is not configured");
+	}
 
-  try {
-    // Fetch conversation details and messages in parallel
-    const [conversationResponse, messagesResponse] = await Promise.all([
-      fetch(`${UNTHREAD_BASE_URL}/api/conversations/${ticketId}`, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "X-Api-Key": UNTHREAD_API_KEY,
-        },
-        method: "GET",
-        // Cache for 2 minutes for individual tickets
-        next: { revalidate: 120 },
-      } as RequestInit & { next?: { revalidate?: number } }),
-      fetch(
-        `${UNTHREAD_BASE_URL}/api/conversations/${ticketId}/messages/list`,
-        {
-          body: JSON.stringify({
-            descending: false,
-            order: ["timestamp"], // Get messages in chronological order
-          }),
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "X-Api-Key": UNTHREAD_API_KEY,
-          },
-          method: "POST",
-          // Cache for 1 minute for messages
-          next: { revalidate: 60 },
-        } as RequestInit & { next?: { revalidate?: number } },
-      ),
-    ]);
+	try {
+		// Fetch conversation details and messages in parallel
+		const [conversationResponse, messagesResponse] = await Promise.all([
+			fetch(`${UNTHREAD_BASE_URL}/api/conversations/${ticketId}`, {
+				// Disable caching to get real-time data
+				cache: "no-store",
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json",
+					"X-Api-Key": UNTHREAD_API_KEY,
+				},
+				method: "GET",
+			}),
+			fetch(
+				`${UNTHREAD_BASE_URL}/api/conversations/${ticketId}/messages/list`,
+				{
+					body: JSON.stringify({
+						descending: false,
+						order: ["timestamp"], // Get messages in chronological order
+					}),
+					// Disable caching to get real-time data
+					cache: "no-store",
+					headers: {
+						Accept: "application/json",
+						"Content-Type": "application/json",
+						"X-Api-Key": UNTHREAD_API_KEY,
+					},
+					method: "POST",
+				},
+			),
+		]);
 
-    if (!conversationResponse.ok) {
-      if (conversationResponse.status === 404) {
-        return null; // Ticket not found
-      }
-      const errorText = await conversationResponse.text();
-      throw new Error(
-        `Unthread API error: ${conversationResponse.status} - ${errorText}`,
-      );
-    }
+		if (!conversationResponse.ok) {
+			if (conversationResponse.status === 404) {
+				return null; // Ticket not found
+			}
+			const errorText = await conversationResponse.text();
+			throw new Error(
+				`Unthread API error: ${conversationResponse.status} - ${errorText}`,
+			);
+		}
 
-    const conversation: UnthreadConversation =
-      await conversationResponse.json();
-    const mappedTicket = mapUnthreadToSupportTicket(conversation);
+		const conversation: UnthreadConversation =
+			await conversationResponse.json();
+		const mappedTicket = mapUnthreadToSupportTicket(conversation);
 
-    // Fetch and map messages if the messages request was successful
-    if (messagesResponse.ok) {
-      const messagesData: { data?: unknown[] } = await messagesResponse.json();
-      const messages = messagesData.data || [];
+		// Fetch and map messages if the messages request was successful
+		if (messagesResponse.ok) {
+			const messagesData: { data?: unknown[] } = await messagesResponse.json();
+			const messages = messagesData.data || [];
 
-      mappedTicket.messages = messages.map((msg) =>
-        mapUnthreadMessage(msg as Parameters<typeof mapUnthreadMessage>[0]),
-      );
-    }
+			mappedTicket.messages = messages
+				.map((msg) =>
+					mapUnthreadMessage(
+						msg as Parameters<typeof mapUnthreadMessage>[0],
+						mappedTicket.customerId,
+					),
+				)
+				.filter((msg): msg is SupportMessage => msg !== null);
+		} else {
+			console.error(
+				`Failed to fetch messages for ticket ${ticketId}:`,
+				messagesResponse.status,
+			);
+			const errorText = await messagesResponse.text();
+			console.error("Messages API error:", errorText);
+			// Don't throw error, just leave messages empty
+			mappedTicket.messages = [];
+		}
 
-    return mappedTicket;
-  } catch (error) {
-    console.error(`Error fetching support ticket ${ticketId}:`, error);
-    throw error;
-  }
+		return mappedTicket;
+	} catch (error) {
+		console.error(`Error fetching support ticket ${ticketId}:`, error);
+		throw error;
+	}
 }
 
 export async function createSupportTicket(
-  request: CreateSupportTicketRequest,
+	request: CreateSupportTicketRequest,
 ): Promise<SupportTicket> {
-  // If no API key is configured, throw error
-  if (!UNTHREAD_API_KEY) {
-    throw new Error("UNTHREAD_API_KEY is not configured");
-  }
+	// If no API key is configured, throw error
+	if (!UNTHREAD_API_KEY) {
+		throw new Error("UNTHREAD_API_KEY is not configured");
+	}
 
-  // Validate required environment variables
-  if (!UNTHREAD_EMAIL_INBOX_ID) {
-    throw new Error("UNTHREAD_EMAIL_INBOX_ID is not configured");
-  }
+	// Validate required environment variables
+	if (!UNTHREAD_EMAIL_INBOX_ID) {
+		throw new Error("UNTHREAD_EMAIL_INBOX_ID is not configured");
+	}
 
-  if (!UNTHREAD_TRIAGE_CHANNEL_ID) {
-    throw new Error("UNTHREAD_TRIAGE_CHANNEL_ID is not configured");
-  }
+	if (!UNTHREAD_TRIAGE_CHANNEL_ID) {
+		throw new Error("UNTHREAD_TRIAGE_CHANNEL_ID is not configured");
+	}
 
-  // Map plan to customer ID
-  const customerId = PLAN_TO_CUSTOMER_ID_MAP[request.plan];
-  if (!customerId) {
-    throw new Error(`Invalid plan: ${request.plan}`);
-  }
+	try {
+		const apiUrl = `${UNTHREAD_BASE_URL}/api/conversations`;
 
-  try {
-    const apiUrl = `${UNTHREAD_BASE_URL}/api/conversations`;
+		// Build the payload for creating a conversation
+		const payload: CreateConversationPayload = {
+			customerId: request.customerId,
+			emailInboxId: UNTHREAD_EMAIL_INBOX_ID,
+			markdown: request.message.trim(),
+			onBehalfOf: request.onBehalfOf,
+			status: "open",
+			title: request.title,
+			triageChannelId: UNTHREAD_TRIAGE_CHANNEL_ID,
+			type: "email",
+		};
 
-    // Build the payload for creating a conversation
-    const payload: CreateConversationPayload = {
-      body: {
-        type: "markdown",
-        value: request.message,
-      },
-      customerId: customerId,
-      emailInboxId: UNTHREAD_EMAIL_INBOX_ID,
-      onBehalfOf: {
-        email: request.onBehalfOf.email,
-        id: request.onBehalfOf.userId,
-        name: request.onBehalfOf.name,
-        userId: request.onBehalfOf.userId,
-      },
-      status: "open",
-      title: request.title,
-      triageChannelId: UNTHREAD_TRIAGE_CHANNEL_ID,
-      type: "email",
-    };
+		let body: string | FormData;
+		const headers: Record<string, string> = {
+			Accept: "application/json",
+			"X-Api-Key": UNTHREAD_API_KEY,
+		};
 
-    let body: string | FormData;
-    const headers: Record<string, string> = {
-      Accept: "application/json",
-      "X-Api-Key": UNTHREAD_API_KEY,
-    };
+		// Handle file attachments
+		if (request.attachments && request.attachments.length > 0) {
+			const formData = new FormData();
+			formData.append("json", JSON.stringify(payload));
 
-    // Handle file attachments
-    if (request.attachments && request.attachments.length > 0) {
-      const formData = new FormData();
-      formData.append("json", JSON.stringify(payload));
+			for (const file of request.attachments) {
+				formData.append("attachments", file);
+			}
 
-      for (const file of request.attachments) {
-        formData.append("attachments", file);
-      }
+			body = formData;
+			// Don't set Content-Type for FormData, browser will set it with boundary
+		} else {
+			body = JSON.stringify(payload);
+			headers["Content-Type"] = "application/json";
+		}
 
-      body = formData;
-      // Don't set Content-Type for FormData, browser will set it with boundary
-    } else {
-      body = JSON.stringify(payload);
-      headers["Content-Type"] = "application/json";
-    }
+		const response = await fetch(apiUrl, {
+			body,
+			headers,
+			method: "POST",
+		});
 
-    const response = await fetch(apiUrl, {
-      body,
-      headers,
-      method: "POST",
-    });
+		if (!response.ok) {
+			const errorText = await response.text();
+			throw new Error(`Unthread API error: ${response.status} - ${errorText}`);
+		}
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Unthread API error: ${response.status} - ${errorText}`);
-    }
+		const createdConversation = await response.json();
+		// Map the created conversation to our SupportTicket format
+		const mappedTicket = mapUnthreadToSupportTicket(createdConversation);
 
-    const createdConversation = await response.json();
-    // Map the created conversation to our SupportTicket format
-    const mappedTicket = mapUnthreadToSupportTicket(createdConversation);
-
-    return mappedTicket;
-  } catch (error) {
-    console.error("Error creating support ticket:", error);
-    throw error;
-  }
+		return mappedTicket;
+	} catch (error) {
+		console.error("Error creating support ticket:", error);
+		throw error;
+	}
 }
 
 export async function sendMessageToTicket(
-  request: SendMessageRequest,
+	request: SendMessageRequest,
 ): Promise<void> {
-  // If no API key is configured, throw error
-  if (!UNTHREAD_API_KEY) {
-    throw new Error("UNTHREAD_API_KEY is not configured");
-  }
+	// If no API key is configured, throw error
+	if (!UNTHREAD_API_KEY) {
+		throw new Error("UNTHREAD_API_KEY is not configured");
+	}
 
-  try {
-    const apiUrl = `${UNTHREAD_BASE_URL}/api/conversations/${request.ticketId}/messages`;
+	try {
+		const apiUrl = `${UNTHREAD_BASE_URL}/api/conversations/${request.ticketId}/messages`;
 
-    // Build the payload for sending a message
-    const payload: SendMessagePayload = {
-      body: {
-        type: "markdown",
-        value: request.message,
-      },
-      onBehalfOf: request.onBehalfOf,
-    };
+		// Build the payload for sending a message
+		// Add /unthread send at the end to ensure the message is sent to the customer
+		const messageWithSend = `${request.message.trim()}\n\n/unthread send`;
 
-    let body: string | FormData;
-    const headers: Record<string, string> = {
-      Accept: "application/json",
-      "X-Api-Key": UNTHREAD_API_KEY,
-    };
+		const payload: SendMessagePayload = {
+			body: {
+				type: "markdown",
+				value: messageWithSend,
+			},
+			onBehalfOf: request.onBehalfOf,
+		};
 
-    // Handle file attachments
-    if (request.attachments && request.attachments.length > 0) {
-      const formData = new FormData();
-      formData.append("json", JSON.stringify(payload));
+		let body: string | FormData;
+		const headers: Record<string, string> = {
+			Accept: "application/json",
+			"X-Api-Key": UNTHREAD_API_KEY,
+		};
 
-      for (const file of request.attachments) {
-        formData.append("attachments", file);
-      }
+		// Handle file attachments
+		if (request.attachments && request.attachments.length > 0) {
+			const formData = new FormData();
+			formData.append("json", JSON.stringify(payload));
 
-      body = formData;
-      // Don't set Content-Type for FormData, browser will set it with boundary
-    } else {
-      body = JSON.stringify(payload);
-      headers["Content-Type"] = "application/json";
-    }
+			for (const file of request.attachments) {
+				formData.append("attachments", file);
+			}
 
-    const response = await fetch(apiUrl, {
-      body,
-      headers,
-      method: "POST",
-    });
+			body = formData;
+			// Don't set Content-Type for FormData, browser will set it with boundary
+		} else {
+			body = JSON.stringify(payload);
+			headers["Content-Type"] = "application/json";
+		}
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Unthread API error: ${response.status} - ${errorText}`);
-    }
+		const response = await fetch(apiUrl, {
+			body,
+			headers,
+			method: "POST",
+		});
 
-    // Message sent successfully, no need to return anything
-  } catch (error) {
-    console.error(
-      `Error sending message to ticket ${request.ticketId}:`,
-      error,
-    );
-    throw error;
-  }
+		if (!response.ok) {
+			const errorText = await response.text();
+			throw new Error(`Unthread API error: ${response.status} - ${errorText}`);
+		}
+
+		// Message sent successfully, no need to return anything
+	} catch (error) {
+		console.error(
+			`Error sending message to ticket ${request.ticketId}:`,
+			error,
+		);
+		throw error;
+	}
 }
+
+export const ensureTeamCustomerService = cache(
+	async function ensureTeamCustomerService(
+		teamIdOrSlug: string,
+		authToken?: string,
+	): Promise<Team> {
+		const token = authToken || (await getAuthToken());
+
+		if (!token) {
+			throw new Error("No auth token available");
+		}
+
+		try {
+			const apiUrl = `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamIdOrSlug}/ensure-customer-service`;
+
+			const response = await fetch(apiUrl, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				method: "POST",
+			});
+
+			if (!response.ok) {
+				const errorText = await response.text();
+				throw new Error(`API Server error: ${response.status} - ${errorText}`);
+			}
+
+			const result: { result: Team } = await response.json();
+			return result.result;
+		} catch (error) {
+			console.error(
+				`Error ensuring customer service for team ${teamIdOrSlug}:`,
+				error,
+			);
+			throw error;
+		}
+	},
+);

@@ -1,8 +1,8 @@
+import { redirect } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { redirect } from "next/navigation";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
-import { getAuthToken } from "@/api/auth-token";
 import { loginRedirect } from "../../../../../login/loginRedirect";
 import { SupportLayout } from "./SupportLayout";
 
@@ -34,7 +34,12 @@ export default async function Layout({
   });
 
   return (
-    <SupportLayout team={team} account={account} client={client} authToken={authToken}>
+    <SupportLayout
+      account={account}
+      authToken={authToken}
+      client={client}
+      team={team}
+    >
       {children}
     </SupportLayout>
   );

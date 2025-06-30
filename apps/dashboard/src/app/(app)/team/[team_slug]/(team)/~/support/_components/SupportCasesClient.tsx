@@ -1,33 +1,73 @@
 "use client";
 
 import { format } from "date-fns";
-import { BotIcon, PlusIcon, SendIcon } from "lucide-react";
-import { useState } from "react";
+import { PlusIcon, SendIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { SupportTicket } from "@/api/support";
-import { sendMessageToTicket } from "@/api/support";
+import { getSupportTicket, sendMessageToTicket } from "@/api/support";
 import type { Team } from "@/api/team";
+import { CustomChatButton } from "@/components/chat/CustomChatButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { siwaExamplePrompts } from "../../../../../../(dashboard)/support/definitions";
 import { SupportTabs } from "./SupportTabs";
 
 interface SupportCasesClientProps {
   tickets: SupportTicket[];
   team: Team;
+  authToken?: string;
 }
 
 export default function SupportCasesClient({
   tickets,
   team,
+  authToken,
 }: SupportCasesClientProps) {
   const [selectedCaseId, setSelectedCaseId] = useState<string | null>(null);
+  const [selectedCaseDetails, setSelectedCaseDetails] =
+    useState<SupportTicket | null>(null);
+  const [isLoadingCaseDetails, setIsLoadingCaseDetails] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [replyMessage, setReplyMessage] = useState("");
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const selectedCase = tickets.find((c) => c.id === selectedCaseId);
+  const selectedCase =
+    selectedCaseDetails || tickets.find((c) => c.id === selectedCaseId);
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    if (messagesEndRef.current && selectedCaseDetails?.messages) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [selectedCaseDetails?.messages]);
+
+  const handleSelectCase = async (ticketId: string) => {
+    setSelectedCaseId(ticketId);
+    setSelectedCaseDetails(null);
+    setIsLoadingCaseDetails(true);
+
+    try {
+      const ticketDetails = await getSupportTicket(ticketId);
+      if (ticketDetails) {
+        setSelectedCaseDetails(ticketDetails);
+      }
+    } catch (error) {
+      console.error("Error fetching ticket details:", error);
+      toast.error("Failed to load ticket details");
+    } finally {
+      setIsLoadingCaseDetails(false);
+    }
+  };
+
+  const handleBackToCases = () => {
+    setSelectedCaseId(null);
+    setSelectedCaseDetails(null);
+    setReplyMessage("");
+  };
 
   const handleSendReply = async () => {
     if (
@@ -47,15 +87,32 @@ export default function SupportCasesClient({
         message: replyMessage,
         onBehalfOf: {
           email: team.billingEmail,
+          id: team.unthreadCustomerId || "",
           name: team.name,
-          userId: team.unthreadCustomerId,
         },
         ticketId: selectedCase.id,
       });
 
       toast.success("Reply sent successfully!");
       setReplyMessage("");
-      // Optionally refresh the ticket or show the new message
+
+      // Force refresh the ticket details to show the new message
+      // Clear cached details first to ensure fresh fetch
+      setSelectedCaseDetails(null);
+      setIsLoadingCaseDetails(true);
+
+      try {
+        // Add a small delay to ensure the message is processed on the server
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const ticketDetails = await getSupportTicket(selectedCase.id);
+        if (ticketDetails) {
+          setSelectedCaseDetails(ticketDetails);
+        }
+      } catch (refreshError) {
+        console.error("Error refreshing ticket details:", refreshError);
+      } finally {
+        setIsLoadingCaseDetails(false);
+      }
     } catch (error) {
       console.error("Error sending reply:", error);
       toast.error("Failed to send reply. Please try again.");
@@ -147,6 +204,21 @@ export default function SupportCasesClient({
     }
   };
 
+  const getLastMessageAuthor = (ticket: SupportTicket) => {
+    if (ticket.messages && ticket.messages.length > 0) {
+      const lastMessage = ticket.messages[ticket.messages.length - 1];
+      return lastMessage?.author.type || "customer";
+    }
+    // If no messages, assume it's from customer (the ticket opener)
+    return "customer";
+  };
+
+  const needsResponse = (ticket: SupportTicket) => {
+    return (
+      getLastMessageAuthor(ticket) === "customer" && ticket.status === "open"
+    );
+  };
+
   if (selectedCase) {
     return (
       <div className="min-h-screen bg-[#000000] text-white">
@@ -154,7 +226,7 @@ export default function SupportCasesClient({
           <div className="mb-4">
             <Button
               className="border-[#1F1F1F] bg-[#0A0A0A] text-white hover:bg-[#1F1F1F] hover:text-white"
-              onClick={() => setSelectedCaseId(null)}
+              onClick={handleBackToCases}
               variant="outline"
             >
               ← Back to Cases
@@ -203,24 +275,71 @@ export default function SupportCasesClient({
                 <h3 className="text-lg font-medium text-white mb-4">
                   Messages
                 </h3>
-                <div className="space-y-4 mb-6">
-                  <div className="border border-[#1F1F1F] bg-[#0A0A0A] p-4 rounded">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="font-medium text-white">
-                        {selectedCase.openedBy}
-                      </span>
-                      <span className="text-xs text-[#737373]">
-                        {format(
-                          new Date(selectedCase.createdAt),
-                          "MMM d, yyyy 'at' h:mm a",
-                        )}
-                      </span>
+                <div className="space-y-4 mb-6 max-h-[400px] overflow-y-auto">
+                  {isLoadingCaseDetails ? (
+                    <div className="flex items-center justify-center py-8">
+                      <div className="text-[#737373]">Loading messages...</div>
                     </div>
-                    <p className="text-[#9ca3af]">
-                      {selectedCase.lastMessage ||
-                        "Having trouble with API integration"}
-                    </p>
-                  </div>
+                  ) : selectedCase.messages &&
+                    selectedCase.messages.length > 0 ? (
+                    selectedCase.messages.map((message) => (
+                      <div
+                        className="border border-[#1F1F1F] bg-[#0A0A0A] p-4 rounded"
+                        key={message.id}
+                      >
+                        <div className="flex justify-between items-start mb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-white">
+                              {message.author.type === "customer"
+                                ? "You"
+                                : message.author.name || "Support"}
+                            </span>
+                            <Badge
+                              className={
+                                message.author.type === "user"
+                                  ? "border-blue-500 text-blue-500 bg-blue-500/10 text-xs"
+                                  : "border-green-500 text-green-500 bg-green-500/10 text-xs"
+                              }
+                              variant="outline"
+                            >
+                              {message.author.type === "user"
+                                ? "Support"
+                                : "Customer"}
+                            </Badge>
+                          </div>
+                          <span className="text-xs text-[#737373]">
+                            {format(
+                              new Date(message.createdAt),
+                              "MMM d, yyyy 'at' h:mm a",
+                            )}
+                          </span>
+                        </div>
+                        <div className="text-[#9ca3af] whitespace-pre-wrap">
+                          {message.content}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="border border-[#1F1F1F] bg-[#0A0A0A] p-4 rounded">
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="font-medium text-white">
+                          {selectedCase.openedBy}
+                        </span>
+                        <span className="text-xs text-[#737373]">
+                          {format(
+                            new Date(selectedCase.createdAt),
+                            "MMM d, yyyy 'at' h:mm a",
+                          )}
+                        </span>
+                      </div>
+                      <p className="text-[#9ca3af]">
+                        {selectedCase.lastMessage ||
+                          "No message content available"}
+                      </p>
+                    </div>
+                  )}
+                  {/* Scroll anchor */}
+                  <div ref={messagesEndRef} />
                 </div>
 
                 {/* Reply Section */}
@@ -281,13 +400,19 @@ export default function SupportCasesClient({
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Button
-                className="border-[#1F1F1F] bg-[#0A0A0A] text-white hover:bg-[#1F1F1F] hover:text-white"
-                variant="outline"
-              >
-                <BotIcon className="w-4 h-4 mr-1" />
-                Ask Nebula AI for support
-              </Button>
+              <div className="inline-block [&>button]:border-[#1F1F1F] [&>button]:bg-[#0A0A0A] [&>button]:text-white [&>button]:hover:bg-[#1F1F1F] [&>button]:hover:text-white [&>button]:rounded-md [&>button]:shadow-none">
+                <CustomChatButton
+                  authToken={authToken}
+                  clientId={undefined}
+                  examplePrompts={siwaExamplePrompts}
+                  isFloating={false}
+                  isLoggedIn={!!authToken}
+                  label="Ask Nebula AI for support"
+                  networks="all"
+                  pageType="support"
+                  teamId={team.id}
+                />
+              </div>
               <Button
                 className="bg-[#2663EB] hover:bg-[#2663EB]/90 text-white"
                 onClick={() => {
@@ -326,19 +451,33 @@ export default function SupportCasesClient({
           <div className="space-y-3 mt-6">
             {filteredTickets.map((ticket) => (
               <button
-                className="w-full border border-[#1F1F1F] bg-[#0A0A0A] hover:border-[#333333] transition-colors cursor-pointer p-4 rounded-lg text-left"
+                className={`w-full border bg-[#0A0A0A] hover:border-[#333333] transition-colors cursor-pointer p-4 rounded-lg text-left ${
+                  needsResponse(ticket)
+                    ? "border-orange-500/50 bg-orange-500/5"
+                    : "border-[#1F1F1F]"
+                }`}
                 key={ticket.id}
-                onClick={() => setSelectedCaseId(ticket.id)}
+                onClick={() => handleSelectCase(ticket.id)}
                 type="button"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-6 flex-1">
-                    <Badge
-                      className={getStatusColor(ticket.status)}
-                      variant="outline"
-                    >
-                      {getStatusLabel(ticket.status)}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        className={getStatusColor(ticket.status)}
+                        variant="outline"
+                      >
+                        {getStatusLabel(ticket.status)}
+                      </Badge>
+                      {needsResponse(ticket) && (
+                        <Badge
+                          className="border-orange-500 text-orange-500 bg-orange-500/10 text-xs"
+                          variant="outline"
+                        >
+                          Needs Response
+                        </Badge>
+                      )}
+                    </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <span className="text-white font-medium">
@@ -348,6 +487,11 @@ export default function SupportCasesClient({
                           #{ticket.id}
                         </span>
                       </div>
+                      {ticket.lastMessage && (
+                        <p className="text-[#737373] text-sm mt-1 truncate max-w-[300px]">
+                          Last: {ticket.lastMessage}
+                        </p>
+                      )}
                     </div>
                     <div className="text-[#737373] text-sm">
                       {ticket.openedBy}
