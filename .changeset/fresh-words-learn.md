@@ -1,5 +1,5 @@
 ---
-"thirdweb": major
+'thirdweb': minor
 ---
 
 Add Somnia Testnet
