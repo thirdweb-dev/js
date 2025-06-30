@@ -291,7 +291,7 @@ export async function AsyncTotalSponsoredCard(props: {
   ) : (
     <EmptyStateCard
       link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
-      metric="Sponsored Transactions"
+      metric="Account Abstraction"
     />
   );
 }
@@ -313,7 +313,7 @@ async function AsyncAuthMethodDistributionCard(props: {
   ) : (
     <EmptyStateCard
       link="https://portal.thirdweb.com/typescript/v5/inAppWallet"
-      metric="In-App Wallets"
+      metric="Wallets"
     />
   );
 }
@@ -374,7 +374,7 @@ async function AsyncAppHighlightsCard(props: {
   return (
     <EmptyStateCard
       link="https://portal.thirdweb.com/connect/quickstart"
-      metric="Connect"
+      metric="Wallets"
     />
   );
 }
@@ -396,7 +396,7 @@ async function AsyncWalletDistributionCard(props: {
   ) : (
     <EmptyStateCard
       link="https://portal.thirdweb.com/connect/quickstart"
-      metric="Connect"
+      metric="Wallets"
     />
   );
 }
