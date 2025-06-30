@@ -3,6 +3,7 @@ import { InfoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getTeamBySlug } from "@/api/team";
 import { getBilledUsage } from "@/api/usage/billing-preview";
+import { UpsellContent } from "@/components/blocks/upsell-wrapper";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Card,
@@ -12,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
 import {
   formatPrice,
@@ -34,23 +36,28 @@ export default async function Page(props: {
   }
 
   const usagePreview = await getBilledUsage(team.slug);
+  const validPlan = getValidTeamPlan(team);
+
+  if (validPlan === "free") {
+    return (
+      <div className="grow flex flex-col justify-center items-center">
+        <UpsellContent
+          currentPlan={team.billingPlan}
+          featureDescription="View RPC, Wallet, Storage, Account Abstraction, Engine Cloud, Webhooks usage and more"
+          featureName="Usage"
+          requiredPlan="starter"
+          teamSlug={params.team_slug}
+        />
+      </div>
+    );
+  }
 
   if (usagePreview.status === "error") {
-    switch (usagePreview.reason) {
-      case "free_plan":
-        return (
-          <div className="flex min-h-[350px] items-center justify-center rounded-lg border p-4 text-destructive-text">
-            You are on a free plan. Please upgrade to a paid plan to view your
-            usage.
-          </div>
-        );
-      default:
-        return (
-          <div className="flex min-h-[350px] items-center justify-center rounded-lg border p-4 text-destructive-text">
-            Something went wrong. Please try again later.
-          </div>
-        );
-    }
+    return (
+      <div className="flex min-h-[350px] items-center justify-center rounded-lg border p-4 text-destructive-text">
+        Something went wrong. Please try again later.
+      </div>
+    );
   }
 
   const grandTotalCents = usagePreview.data.result.reduce((total, category) => {

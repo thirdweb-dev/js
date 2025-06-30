@@ -82,7 +82,7 @@ function UnpaidInvoicesWarning({ teamSlug }: { teamSlug: string }) {
 
       <Button asChild className="w-full gap-2 bg-card" variant="outline">
         <Link
-          href={`/team/${teamSlug}/~/settings/invoices?status=open`}
+          href={`/team/${teamSlug}/~/billing/invoices?status=open`}
           rel="noopener noreferrer"
           target="_blank"
         >

@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { maxUint256 } from "thirdweb/utils";
-import { BadgeContainer } from "../../../../../../../../@/storybook/utils";
+import { BadgeContainer } from "@/storybook/utils";
 import { SupplyClaimedProgress } from "./supply-claimed-progress";
 
 const meta = {
@@ -19,7 +18,7 @@ function StoryVariants() {
   return (
     <div className="container max-w-md space-y-10 py-10">
       <BadgeContainer label="10 / Unlimited Supply">
-        <SupplyClaimedProgress claimedSupply={10n} totalSupply={maxUint256} />
+        <SupplyClaimedProgress claimedSupply={10n} totalSupply="unlimited" />
       </BadgeContainer>
 
       <BadgeContainer label="500/1000 Supply">

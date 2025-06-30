@@ -82,7 +82,7 @@ function AssetsHeader() {
           Tokens
         </h1>
         <p className="text-muted-foreground">
-          Create and Manage tokens for your project
+          Create and manage tokens for your project
         </p>
       </div>
     </div>

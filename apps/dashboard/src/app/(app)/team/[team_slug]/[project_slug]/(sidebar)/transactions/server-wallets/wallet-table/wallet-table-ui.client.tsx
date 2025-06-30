@@ -102,41 +102,39 @@ export function ServerWalletsTableUI({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {wallets.length === 0 ? (
-              <TableRow>
-                <TableCell className="text-center" colSpan={3}>
-                  No server wallets found
+            {wallets.map((wallet) => (
+              <TableRow className="hover:bg-accent/50" key={wallet.id}>
+                <TableCell>
+                  {showSigners ? (
+                    <WalletAddress address={wallet.address} client={client} />
+                  ) : (
+                    <SmartAccountCell client={client} wallet={wallet} />
+                  )}
+                </TableCell>
+                <TableCell>{wallet.metadata.label || "none"}</TableCell>
+                <TableCell className="text-right">
+                  <WalletDateCell date={wallet.createdAt} />
+                </TableCell>
+                <TableCell className="text-right">
+                  <WalletDateCell date={wallet.updatedAt} />
+                </TableCell>
+                <TableCell className="flex justify-end">
+                  <SendTestTransaction
+                    project={project}
+                    teamSlug={teamSlug}
+                    wallet={wallet}
+                  />
                 </TableCell>
               </TableRow>
-            ) : (
-              wallets.map((wallet) => (
-                <TableRow className="hover:bg-accent/50" key={wallet.id}>
-                  <TableCell>
-                    {showSigners ? (
-                      <WalletAddress address={wallet.address} client={client} />
-                    ) : (
-                      <SmartAccountCell client={client} wallet={wallet} />
-                    )}
-                  </TableCell>
-                  <TableCell>{wallet.metadata.label || "none"}</TableCell>
-                  <TableCell className="text-right">
-                    <WalletDateCell date={wallet.createdAt} />
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <WalletDateCell date={wallet.updatedAt} />
-                  </TableCell>
-                  <TableCell className="flex justify-end">
-                    <SendTestTransaction
-                      project={project}
-                      teamSlug={teamSlug}
-                      wallet={wallet}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
+            ))}
           </TableBody>
         </Table>
+
+        {wallets.length === 0 && (
+          <div className="py-20 flex items-center justify-center px-4 text-center">
+            No server wallets found
+          </div>
+        )}
       </TableContainer>
 
       {totalPages > 1 && (

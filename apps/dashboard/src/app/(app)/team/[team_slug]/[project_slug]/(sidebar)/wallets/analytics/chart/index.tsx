@@ -5,7 +5,7 @@ import {
   type Range,
 } from "@/components/analytics/date-range-selector";
 import { RangeSelector } from "@/components/analytics/range-selector";
-import type { InAppWalletStats } from "../../../../../../../../../@/types/analytics";
+import type { InAppWalletStats } from "@/types/analytics";
 import { InAppWalletUsersChartCardUI } from "./InAppWalletUsersChartCard";
 
 type InAppWalletAnalyticsProps = {

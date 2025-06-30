@@ -21,6 +21,13 @@ export type TeamHeaderCompProps = {
   currentTeam: Team;
   teamsAndProjects: Array<{ team: Team; projects: Project[] }>;
   currentProject: Project | undefined;
+  currentProjectSubpath:
+    | {
+        label: string;
+        icon: React.ReactNode;
+        href: string;
+      }
+    | undefined;
   className?: string;
   account: Pick<Account, "email" | "id">;
   logout: () => void;
@@ -107,6 +114,23 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
                 teamsAndProjects={props.teamsAndProjects}
               />
             </div>
+
+            {props.currentProjectSubpath && (
+              <>
+                <SlashSeparator />
+                <div className="flex items-center gap-1.5">
+                  <div className="flex items-center justify-center rounded-full border size-6 [&>svg]:size-[50%] [&>svg]:text-muted-foreground">
+                    {props.currentProjectSubpath.icon}
+                  </div>
+                  <Link
+                    className="flex flex-row items-center gap-2 font-semibold text-sm"
+                    href={props.currentProjectSubpath.href}
+                  >
+                    {props.currentProjectSubpath.label}
+                  </Link>
+                </div>
+              </>
+            )}
           </>
         )}
       </div>

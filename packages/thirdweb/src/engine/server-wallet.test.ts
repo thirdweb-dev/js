@@ -1,3 +1,4 @@
+import { verifyTypedData } from "src/auth/verify-typed-data.js";
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
@@ -7,14 +8,11 @@ import { baseSepolia } from "../chains/chain-definitions/base-sepolia.js";
 import { sepolia } from "../chains/chain-definitions/sepolia.js";
 import { getContract } from "../contract/contract.js";
 import { setContractURI } from "../extensions/common/__generated__/IContractMetadata/write/setContractURI.js";
-import { mintTo } from "../extensions/erc20/write/mintTo.js";
+import { setApprovalForAll } from "../extensions/erc1155/__generated__/IERC1155/write/setApprovalForAll.js";
 import { claimTo } from "../extensions/erc1155/drops/write/claimTo.js";
 import { getAllActiveSigners } from "../extensions/erc4337/__generated__/IAccountPermissions/read/getAllActiveSigners.js";
 import { sendTransaction } from "../transaction/actions/send-transaction.js";
-import {
-  DEFAULT_ACCOUNT_FACTORY_V0_6,
-  ENTRYPOINT_ADDRESS_v0_6,
-} from "../wallets/smart/lib/constants.js";
+import { setThirdwebDomains } from "../utils/domains.js";
 import { smartWallet } from "../wallets/smart/smart-wallet.js";
 import { generateAccount } from "../wallets/utils/generateAccount.js";
 import * as Engine from "./index.js";
@@ -33,15 +31,16 @@ describe.runIf(
     let serverWallet: Engine.ServerWallet;
 
     beforeAll(async () => {
-      // setThirdwebDomains({
-      //   rpc: "rpc.thirdweb-dev.com",
-      //   storage: "storage.thirdweb-dev.com",
-      //   bundler: "bundler.thirdweb-dev.com",
-      //   engineCloud: "engine.thirdweb-dev.com",
-      // });
+      setThirdwebDomains({
+        bundler: "bundler.thirdweb-dev.com",
+        engineCloud: "engine.thirdweb-dev.com",
+        // engineCloud: "localhost:3009",
+        rpc: "rpc.thirdweb-dev.com",
+        storage: "storage.thirdweb-dev.com",
+      });
       serverWallet = Engine.serverWallet({
         address: process.env.ENGINE_CLOUD_WALLET_ADDRESS as string,
-        chain: arbitrumSepolia,
+        chain: sepolia,
         client: TEST_CLIENT,
         vaultAccessToken: process.env.VAULT_TOKEN as string,
       });
@@ -76,6 +75,32 @@ describe.runIf(
         ...typedData.basic,
       });
       expect(signature).toBeDefined();
+    });
+
+    it("should sign typed data for EOA execution options", async () => {
+      const eoaServerWallet = Engine.serverWallet({
+        address: process.env.ENGINE_CLOUD_WALLET_ADDRESS_EOA as string,
+        chain: arbitrumSepolia,
+        client: TEST_CLIENT,
+        vaultAccessToken: process.env.VAULT_TOKEN as string,
+      });
+
+      const signature = await eoaServerWallet.signTypedData({
+        ...typedData.basic,
+      });
+
+      expect(signature).toBeDefined();
+
+      const is_valid = await verifyTypedData({
+        address: process.env.ENGINE_CLOUD_WALLET_ADDRESS_EOA as string,
+        chain: arbitrumSepolia,
+        client: TEST_CLIENT,
+        ...typedData.basic,
+
+        signature,
+      });
+
+      expect(is_valid).toBe(true);
     });
 
     it("should send a tx with regular API", async () => {
@@ -126,14 +151,14 @@ describe.runIf(
 
     it("should send a extension tx", async () => {
       const tokenContract = getContract({
-        address: "0x87C52295891f208459F334975a3beE198fE75244",
+        address: "0x638263e3eAa3917a53630e61B1fBa685308024fa",
         chain: baseSepolia,
         client: TEST_CLIENT,
       });
-      const claimTx = mintTo({
-        amount: "0.001",
+      const claimTx = setApprovalForAll({
+        approved: true,
         contract: tokenContract,
-        to: serverWallet.address,
+        operator: "0x4b8ceC1Eb227950F0bfd034449B2781e689242A1",
       });
       const tx = await sendTransaction({
         account: serverWallet,
@@ -144,19 +169,21 @@ describe.runIf(
 
     it("should enqueue a batch of txs", async () => {
       const tokenContract = getContract({
-        address: "0x87C52295891f208459F334975a3beE198fE75244",
+        address: "0x638263e3eAa3917a53630e61B1fBa685308024fa",
         chain: baseSepolia,
         client: TEST_CLIENT,
       });
-      const claimTx1 = mintTo({
-        amount: "0.001",
+      const claimTx1 = claimTo({
         contract: tokenContract,
+        quantity: 1n,
         to: serverWallet.address,
+        tokenId: 2n,
       });
-      const claimTx2 = mintTo({
-        amount: "0.002",
+      const claimTx2 = claimTo({
         contract: tokenContract,
+        quantity: 1n,
         to: serverWallet.address,
+        tokenId: 2n,
       });
       const tx = await serverWallet.enqueueBatchTransaction({
         transactions: [claimTx1, claimTx2],
@@ -226,8 +253,7 @@ describe.runIf(
         chain: sepolia,
         client: TEST_CLIENT,
         executionOptions: {
-          entrypointAddress: ENTRYPOINT_ADDRESS_v0_6,
-          factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_6,
+          entrypointVersion: "0.6",
           signerAddress: sessionKeyAccountAddress,
           smartAccountAddress: smartAccount.address,
           type: "ERC4337",

@@ -14,6 +14,8 @@ import type { PreparedTransaction } from "../../../transaction/prepare-transacti
 import { getTransactionGasCost } from "../../../transaction/utils.js";
 import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
 import { toTokens } from "../../../utils/units.js";
+import type { Wallet } from "../../../wallets/interfaces/wallet.js";
+import { hasSponsoredTransactionsEnabled } from "../../../wallets/smart/is-smart-wallet.js";
 import {
   formatCurrencyAmount,
   formatTokenAmount,
@@ -40,6 +42,7 @@ interface TransactionDetails {
 interface UseTransactionDetailsOptions {
   transaction: PreparedTransaction;
   client: ThirdwebClient;
+  wallet: Wallet | undefined;
 }
 
 /**
@@ -49,8 +52,10 @@ interface UseTransactionDetailsOptions {
 export function useTransactionDetails({
   transaction,
   client,
+  wallet,
 }: UseTransactionDetailsOptions) {
   const chainMetadata = useChainMetadata(transaction.chain);
+  const hasSponsoredTransactions = hasSponsoredTransactionsEnabled(wallet);
 
   return useQuery({
     enabled: !!transaction.to && !!chainMetadata.data,
@@ -76,7 +81,9 @@ export function useTransactionDetails({
           erc20Value ? erc20Value.tokenAddress : NATIVE_TOKEN_ADDRESS,
           transaction.chain.id,
         ).catch(() => null),
-        getTransactionGasCost(transaction).catch(() => null),
+        hasSponsoredTransactions
+          ? 0n
+          : getTransactionGasCost(transaction).catch(() => null),
       ]);
 
       // Process function info from ABI if available
@@ -172,6 +179,7 @@ export function useTransactionDetails({
       transaction.to,
       transaction.chain.id,
       transaction.erc20Value?.toString(),
+      hasSponsoredTransactions,
     ],
   });
 }

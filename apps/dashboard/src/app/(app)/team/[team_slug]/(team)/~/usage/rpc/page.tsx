@@ -81,148 +81,154 @@ export default async function RPCUsage(props: {
   })();
 
   return (
-    <div className="container mx-auto space-y-8 py-6">
-      <div className="flex flex-col gap-2">
-        <h2 className="font-bold text-3xl tracking-tight">
-          RPC Usage Dashboard
-        </h2>
+    <div>
+      <div className="flex flex-col gap-0.5 mb-4">
+        <h2 className="font-semibold text-2xl tracking-tight">RPC Usage</h2>
         <p className="text-muted-foreground">
           Monitor your RPC usage and rate limits for the last 24 hours
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="font-medium text-sm">
-              Plan Rate Limit
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div className="font-bold text-2xl capitalize">
-                {currentRateLimit.toLocaleString()} RPS
+      <div className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="font-medium text-sm">
+                Plan Rate Limit
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="font-bold text-2xl capitalize">
+                  {currentRateLimit.toLocaleString()} RPS
+                </div>
+                <TeamPlanBadge plan={currentPlan} teamSlug={team.slug} />
               </div>
-              <TeamPlanBadge plan={currentPlan} teamSlug={team.slug} />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="font-medium text-sm">Peak Usage</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              <div className="font-bold text-2xl">
-                {Number(peakRate.peakRPS)} RPS
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="font-medium text-sm">Peak Usage</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="font-bold text-2xl">
+                  {Number(peakRate.peakRPS)} RPS
+                </div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`h-3 w-3 rounded-full ${getStatusColor(peakPercentage)}`}
+                  />
+                  <span className="text-muted-foreground text-xs">
+                    {peakPercentage > 100
+                      ? `${(peakPercentage - 100).toFixed(0)}% over limit`
+                      : `${peakPercentage.toFixed(0)}% of limit`}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <div
-                  className={`h-3 w-3 rounded-full ${getStatusColor(peakPercentage)}`}
-                />
-                <span className="text-muted-foreground text-xs">
-                  {peakPercentage > 100
-                    ? `${(peakPercentage - 100).toFixed(0)}% over limit`
-                    : `${peakPercentage.toFixed(0)}% of limit`}
+              <p className="mt-1 text-muted-foreground text-xs">
+                <ClockIcon className="mr-1 inline h-3 w-3" />
+                {peakRateDate ? peakRateDate : "No Requests in last 24 hours"}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="font-medium text-sm">
+                Total Requests
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="font-bold text-2xl">
+                {totalRequests.toLocaleString()}
+              </div>
+              <div className="mt-1 flex items-center text-muted-foreground text-xs">
+                <CheckCircleIcon className="mr-1 h-3 w-3 text-green-500" />
+                <span>
+                  {/* we count both included and overage as included */}
+                  {totalRequests === 0
+                    ? "0.0"
+                    : (
+                        ((Number(totalCounts.includedCount) +
+                          Number(totalCounts.overageCount)) /
+                          Number(totalRequests)) *
+                        100
+                      ).toFixed(1)}
+                  % successful requests
                 </span>
               </div>
-            </div>
-            <p className="mt-1 text-muted-foreground text-xs">
-              <ClockIcon className="mr-1 inline h-3 w-3" />
-              {peakRateDate ? peakRateDate : "No Requests in last 24 hours"}
-            </p>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="font-medium text-sm">
-              Total Requests
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="font-bold text-2xl">
-              {totalRequests.toLocaleString()}
-            </div>
-            <div className="mt-1 flex items-center text-muted-foreground text-xs">
-              <CheckCircleIcon className="mr-1 h-3 w-3 text-green-500" />
-              <span>
-                {/* we count both included and overage as included */}
-                {totalRequests === 0
-                  ? "0.0"
-                  : (
-                      ((Number(totalCounts.includedCount) +
-                        Number(totalCounts.overageCount)) /
-                        Number(totalRequests)) *
-                      100
-                    ).toFixed(1)}
-                % successful requests
-              </span>
-            </div>
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="font-medium text-sm">
+                Rate Limited
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="font-bold text-2xl">
+                {totalCounts.rateLimitedCount.toLocaleString()}
+              </div>
+              <div className="mt-1 flex items-center text-muted-foreground text-xs">
+                <XCircleIcon className="mr-1 h-3 w-3 text-red-500" />
+                <span>
+                  {/* if there are no requests, we show 100% success rate */}
+                  {totalRequests === 0
+                    ? "0.0"
+                    : (
+                        (Number(totalCounts.rateLimitedCount) /
+                          Number(totalRequests)) *
+                        100
+                      ).toFixed(1)}
+                  % of requests
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="font-medium text-sm">Rate Limited</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="font-bold text-2xl">
-              {totalCounts.rateLimitedCount.toLocaleString()}
-            </div>
-            <div className="mt-1 flex items-center text-muted-foreground text-xs">
-              <XCircleIcon className="mr-1 h-3 w-3 text-red-500" />
-              <span>
-                {/* if there are no requests, we show 100% success rate */}
-                {totalRequests === 0
-                  ? "0.0"
-                  : (
-                      (Number(totalCounts.rateLimitedCount) /
-                        Number(totalRequests)) *
-                      100
-                    ).toFixed(1)}
-                % of requests
-              </span>
-            </div>
-          </CardContent>
-        </Card>
+        {peakPercentage > 100 && (
+          <Alert variant="destructive">
+            <AlertTriangleIcon className="h-4 w-4" />
+            <AlertTitle>Rate Limit Exceeded</AlertTitle>
+            <AlertDescription>
+              Your peak usage of {Number(peakRate.peakRPS)} RPS has exceeded
+              your plan limit of {currentRateLimit} RPS. Consider upgrading your
+              plan to avoid rate limiting.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {peakPercentage > 80 && peakPercentage <= 100 && (
+          <Alert
+            className="border-yellow-500 text-yellow-700"
+            variant="warning"
+          >
+            <AlertTriangleIcon className="h-4 w-4" />
+            <AlertTitle>Approaching Rate Limit</AlertTitle>
+            <AlertDescription>
+              Your peak usage is at {peakPercentage.toFixed(0)}% of your plan
+              limit. You may experience rate limiting during high traffic
+              periods.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        <RateGraph
+          currentRateLimit={currentRateLimit}
+          data={averageRate}
+          peakPercentage={peakPercentage}
+        />
+
+        <CountGraph
+          currentRateLimit={currentRateLimit}
+          data={averageRate}
+          peakPercentage={peakPercentage}
+        />
       </div>
-
-      {peakPercentage > 100 && (
-        <Alert variant="destructive">
-          <AlertTriangleIcon className="h-4 w-4" />
-          <AlertTitle>Rate Limit Exceeded</AlertTitle>
-          <AlertDescription>
-            Your peak usage of {Number(peakRate.peakRPS)} RPS has exceeded your
-            plan limit of {currentRateLimit} RPS. Consider upgrading your plan
-            to avoid rate limiting.
-          </AlertDescription>
-        </Alert>
-      )}
-
-      {peakPercentage > 80 && peakPercentage <= 100 && (
-        <Alert className="border-yellow-500 text-yellow-700" variant="warning">
-          <AlertTriangleIcon className="h-4 w-4" />
-          <AlertTitle>Approaching Rate Limit</AlertTitle>
-          <AlertDescription>
-            Your peak usage is at {peakPercentage.toFixed(0)}% of your plan
-            limit. You may experience rate limiting during high traffic periods.
-          </AlertDescription>
-        </Alert>
-      )}
-
-      <RateGraph
-        currentRateLimit={currentRateLimit}
-        data={averageRate}
-        peakPercentage={peakPercentage}
-      />
-
-      <CountGraph
-        currentRateLimit={currentRateLimit}
-        data={averageRate}
-        peakPercentage={peakPercentage}
-      />
     </div>
   );
 }

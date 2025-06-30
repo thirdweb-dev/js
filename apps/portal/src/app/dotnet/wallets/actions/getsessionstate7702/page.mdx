@@ -1,0 +1,95 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "EcosystemWallet.GetSessionStateForSigner | Thirdweb .NET SDK",
+	description:
+		"Gets the complete session state for a specific signer on the EIP-7702 account, including remaining limits and usage information.",
+});
+
+# EcosystemWallet.GetSessionStateForSigner
+
+Gets the complete session state for a specific signer on the EIP-7702 account, including remaining limits and usage information. This provides a comprehensive view of what the signer can still do within their session limits.
+
+## Usage
+
+```csharp
+// Get complete session state for a signer
+var sessionState = await ecosystemWallet.GetSessionStateForSigner(
+    chainId: 1,
+    signerAddress: "0x1234567890123456789012345678901234567890"
+);
+
+// Check remaining transfer limits
+Console.WriteLine("Transfer Limits:");
+foreach (var limit in sessionState.TransferValue)
+{
+    string tokenType = limit.Target == "0x0000000000000000000000000000000000000000" 
+        ? "ETH" 
+        : $"Token {limit.Target}";
+    Console.WriteLine($"  {tokenType}: {limit.Remaining} remaining");
+}
+
+// Check remaining call value limits
+Console.WriteLine("\nCall Value Limits:");
+foreach (var limit in sessionState.CallValue)
+{
+    Console.WriteLine($"  {limit.Target}.{BitConverter.ToString(limit.Selector)}: {limit.Remaining} ETH remaining");
+}
+
+// Check parameter constraint limits
+Console.WriteLine("\nParameter Constraints:");
+foreach (var limit in sessionState.CallParams)
+{
+    Console.WriteLine($"  {limit.Target}.{BitConverter.ToString(limit.Selector)} param[{limit.Index}]: {limit.Remaining} remaining");
+}
+```
+
+<Details summary="Parameters">
+
+### chainId
+
+`BigInteger`: The chain ID of the EIP-7702 account.
+
+### signerAddress
+
+`string`: The address of the signer to get session state for.
+
+</Details>
+
+<Details summary="Return Value">
+
+### SessionState
+
+An object containing the current session state with three arrays:
+
+#### TransferValue
+- `LimitState[]`: Remaining limits for token transfers
+- Each entry shows remaining transfer amounts for specific tokens
+
+#### CallValue  
+- `LimitState[]`: Remaining ETH value limits for contract calls
+- Each entry shows remaining ETH that can be sent with function calls
+
+#### CallParams
+- `LimitState[]`: Remaining limits for constrained function parameters
+- Each entry shows remaining usage for specific parameter constraints
+
+#### LimitState Properties
+- `Remaining`: Amount remaining for this limit
+- `Target`: Contract or token address
+- `Selector`: Function selector (for calls only)
+- `Index`: Parameter index (for parameter constraints only)
+
+</Details>
+
+<Details summary="Exceptions">
+
+### InvalidOperationException
+
+Thrown when the execution mode is not EIP7702 or EIP7702Sponsored.
+
+### ArgumentException
+
+Thrown when the signer address is null or empty.
+
+</Details>

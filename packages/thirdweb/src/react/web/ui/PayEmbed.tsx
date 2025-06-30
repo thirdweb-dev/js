@@ -238,7 +238,6 @@ export type PayEmbedProps = {
  *   }}
  *  />
  * ```
- *
  * You can also handle ERC20 payments by passing `erc20value` to your transaction:
  *
  * ```tsx
@@ -307,7 +306,7 @@ export type PayEmbedProps = {
  *
  * Refer to the [`PayEmbedConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/PayEmbedConnectOptions) type for more details.
  *
- * @buyCrypto
+ * @deprecated Use `BuyWidget`, `CheckoutWidget` or `TransactionWidget` instead.
  */
 export function PayEmbed(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
@@ -356,6 +355,14 @@ export function PayEmbed(props: PayEmbedProps) {
         amount={props.payOptions.prefillBuy.amount || "0.01"}
         chain={props.payOptions.prefillBuy.chain}
         client={props.client}
+        onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
+        paymentMethods={
+          props.payOptions?.buyWithFiat === false
+            ? ["crypto"]
+            : props.payOptions?.buyWithCrypto === false
+              ? ["card"]
+              : ["crypto", "card"]
+        }
         theme={theme}
         title={metadata?.name || "Buy"}
         tokenAddress={
@@ -374,6 +381,12 @@ export function PayEmbed(props: PayEmbedProps) {
         description={metadata?.description}
         image={metadata?.image}
         name={metadata?.name || "Checkout"}
+        onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
+        paymentMethods={
+          props.payOptions?.buyWithFiat === false
+            ? ["crypto"]
+            : ["crypto", "card"]
+        }
         seller={props.payOptions.paymentInfo.sellerAddress as Address}
         theme={theme}
         tokenAddress={
@@ -389,6 +402,12 @@ export function PayEmbed(props: PayEmbedProps) {
         client={props.client}
         description={metadata?.description}
         image={metadata?.image}
+        onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
+        paymentMethods={
+          props.payOptions?.buyWithFiat === false
+            ? ["crypto"]
+            : ["crypto", "card"]
+        }
         theme={theme}
         title={metadata?.name}
         transaction={props.payOptions.transaction}

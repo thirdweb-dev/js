@@ -18,7 +18,7 @@ export function FreePlanUpsellBannerUI(props: {
       accentColor="green"
       cta={{
         icon: <ArrowRightIcon className="size-4" />,
-        link: `/team/${props.teamSlug}/~/settings/billing?showPlans=true&highlight=${
+        link: `/team/${props.teamSlug}/~/billing?showPlans=true&highlight=${
           props.highlightPlan || "growth"
         }`,
         text: "View plans",

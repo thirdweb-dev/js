@@ -6,37 +6,17 @@ import { AllSupportedWallets } from "@/components/others/AllSupportedWallets";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Supported Wallets",
+		title: "External Wallets",
 		icon: "typescript",
 	},
-	title: "Supported Wallets | Connect SDK",
-	description: "List of all the supported wallets in Connect SDK.",
+	title: "External Wallets | thirdweb",
+	description: "List of all the supported external wallets in thirdweb.",
 });
 
-# Supported Wallets
+# External Wallets
 
-## thirdweb first-party wallets
+thirdweb natively supports 500+ first-party wallets and all wallets that implement EIP-6963 (Multi-injected Provider Discovery).
 
-<WalletCardGrid>
-	<WalletCard
-		label="Smart Wallet"
-		href="/references/typescript/v5/smartWallet"
-		icon={SmartWalletIcon}
-	/>
-	<WalletCard
-		label="In App Wallet"
-		href="/references/typescript/v5/inAppWallet"
-		icon={EmbeddedWalletIcon}
-	/>
-	<WalletCard
-		label="Ecosystem Wallet"
-		href="/references/typescript/v5/ecosystemWallet"
-		icon={EmbeddedWalletIcon}
-	/>
-</WalletCardGrid>
-
-<div className="h-10" />
-
-## Other wallets
+Select a wallet in the list below to see how to connect it with thirdweb.
 
 <AllSupportedWallets />

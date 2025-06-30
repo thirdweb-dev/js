@@ -113,6 +113,12 @@ export interface BridgeOrchestratorProps {
    * Quick buy amounts
    */
   presetOptions: [number, number, number] | undefined;
+
+  /**
+   * Allowed payment methods
+   * @default ["crypto", "card"]
+   */
+  paymentMethods?: ("crypto" | "card")[];
 }
 
 export function BridgeOrchestrator({
@@ -127,6 +133,7 @@ export function BridgeOrchestrator({
   purchaseData,
   paymentLinkId,
   presetOptions,
+  paymentMethods = ["crypto", "card"],
 }: BridgeOrchestratorProps) {
   // Initialize adapters
   const adapters = useMemo(
@@ -217,6 +224,7 @@ export function BridgeOrchestrator({
       {/* Error Banner */}
       {state.value === "error" && state.context.currentError && (
         <ErrorBanner
+          client={client}
           error={state.context.currentError}
           onCancel={onCancel}
           onRetry={handleRetry}
@@ -269,6 +277,7 @@ export function BridgeOrchestrator({
             }}
             onError={handleError}
             onPaymentMethodSelected={handlePaymentMethodSelected}
+            paymentMethods={paymentMethods}
             receiverAddress={state.context.receiverAddress}
           />
         )}
@@ -282,6 +291,7 @@ export function BridgeOrchestrator({
             amount={state.context.destinationAmount}
             client={client}
             destinationToken={state.context.destinationToken}
+            mode={uiOptions.mode}
             onBack={() => {
               send({ type: "BACK" });
             }}
@@ -332,6 +342,7 @@ export function BridgeOrchestrator({
         state.context.quote &&
         state.context.completedStatuses && (
           <SuccessScreen
+            client={client}
             completedStatuses={state.context.completedStatuses}
             onDone={handleBuyComplete}
             preparedQuote={state.context.quote}

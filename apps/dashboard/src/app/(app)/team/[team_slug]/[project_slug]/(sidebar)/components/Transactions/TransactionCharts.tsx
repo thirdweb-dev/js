@@ -20,11 +20,10 @@ export function TransactionsChartsUI({
     <>
       <TransactionsChartCardUI
         aggregatedData={aggregatedData}
-        className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
         data={data}
         searchParams={searchParams}
       />
-      <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <ChainDistributionCard data={aggregatedData} />
         <ContractDistributionCard client={client} data={aggregatedData} />
       </div>

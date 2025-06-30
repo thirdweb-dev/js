@@ -84,7 +84,7 @@ const onClick = () => {
 
 ### Converting a wagmi wallet client to a thirdweb wallet
 
-You can use the thirdweb SDK within a wagmi application by setting the wagmi connected account as the thirdweb 'active wallet'. After that, you can use all of the react components and hooks normally, including `PayEmbed`, `TransactionButton`, etc.
+You can use the thirdweb SDK within a wagmi application by setting the wagmi connected account as the thirdweb 'active wallet'. After that, you can use all of the react components and hooks normally, including `BuyWidget`, `TransactionButton`, etc.
 
 ```ts
 // Assumes you've wrapped your application in a `<ThirdwebProvider>`
@@ -92,9 +92,8 @@ You can use the thirdweb SDK within a wagmi application by setting the wagmi con
 import { useEffect } from 'react'
 import { defineChain } from 'thirdweb'
 import { useSetActiveWallet } from 'thirdweb/react'
-import { createWalletAdapter } from 'thirdweb/wallets'
+import { EIP1193 } from 'thirdweb/wallets'
 import { useDisconnect, useSwitchChain, useWalletClient } from 'wagmi'
-import { viemAdapter } from "thirdweb/adapters/viem";
 import { client } from './client'
 
 
@@ -126,7 +125,7 @@ You can view a fully functioning wagmi + thirdweb app in this [github repository
 
 ## Privy
 
-Similarly, you can use the thirdweb SDK with privy by setting the privy wallet as the thirdweb 'active wallet'. After that, you can use all of the react components, functions and hooks normally, including `PayEmbed`, `TransactionButton`, etc.
+Similarly, you can use the thirdweb SDK with privy by setting the privy wallet as the thirdweb 'active wallet'. After that, you can use all of the react components, functions and hooks normally, including `BuyWidget`, `TransactionButton`, etc.
 
 ```ts
 // Assumes you've wrapped your application in a `<ThirdwebProvider>`
@@ -134,7 +133,7 @@ Similarly, you can use the thirdweb SDK with privy by setting the privy wallet a
 import { useEffect } from 'react'
 import { defineChain } from 'thirdweb'
 import { useSetActiveWallet } from 'thirdweb/react'
-import { createWalletAdapter } from 'thirdweb/wallets'
+import { EIP1193 } from 'thirdweb/wallets'
 import { ethers5Adapter } from 'thirdweb/adapters/ethers5';
 import { client } from './client'
 import { useWallets } from "@privy-io/react-auth";

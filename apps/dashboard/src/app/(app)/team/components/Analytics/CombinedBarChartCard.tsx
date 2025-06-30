@@ -62,7 +62,7 @@ export function CombinedBarChartCard<
               const key = chart as K;
               return (
                 <Link
-                  className="relative z-30 flex min-w-[200px] flex-1 flex-col justify-center gap-1 border-l first:border-l-0 hover:bg-card"
+                  className="relative z-30 flex min-w-[200px] flex-1 flex-col justify-center gap-1 border-l first:border-l-0 hover:bg-accent/50"
                   data-active={activeChart === chart}
                   href={{
                     query: {

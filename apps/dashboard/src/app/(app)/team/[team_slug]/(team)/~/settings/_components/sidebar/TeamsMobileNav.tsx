@@ -13,7 +13,7 @@ export function TeamSettingsMobileNav(props: {
 
   if (!showFull) {
     return (
-      <div className="flex items-center gap-2 border-border border-b px-4 py-4 text-muted-foreground">
+      <div className="flex items-center gap-2 border-border border-b px-4 py-4 text-muted-foreground text-sm">
         <Link
           className="inline-flex items-center gap-1"
           href={teamLinks[0]?.href || "#"}

@@ -60,6 +60,7 @@ export function RightSection(props: {
         client={THIRDWEB_CLIENT}
         description={props.options.payOptions.description}
         image={props.options.payOptions.image}
+        paymentMethods={props.options.payOptions.paymentMethods}
         theme={themeObj}
         title={props.options.payOptions.title}
         tokenAddress={props.options.payOptions.buyTokenAddress}
@@ -81,6 +82,7 @@ export function RightSection(props: {
           getDefaultImage(props.options.theme.type)
         }
         name={props.options.payOptions.title || "Your Product Name"}
+        paymentMethods={props.options.payOptions.paymentMethods}
         presetOptions={[1, 2, 3]}
         seller={props.options.payOptions.sellerAddress}
         theme={themeObj}
@@ -95,6 +97,7 @@ export function RightSection(props: {
         client={THIRDWEB_CLIENT}
         description={props.options.payOptions.description}
         image={props.options.payOptions.image}
+        paymentMethods={props.options.payOptions.paymentMethods}
         theme={themeObj}
         title={props.options.payOptions.title}
         transaction={claimTo({

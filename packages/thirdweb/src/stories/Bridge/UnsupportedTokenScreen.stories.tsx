@@ -1,11 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { defineChain } from "../../chains/utils.js";
+import { createThirdwebClient } from "../../client/client.js";
 import type { Theme } from "../../react/core/design-system/index.js";
 import {
   UnsupportedTokenScreen,
   type UnsupportedTokenScreenProps,
 } from "../../react/web/ui/Bridge/UnsupportedTokenScreen.js";
 import { ModalThemeWrapper } from "../utils.js";
+
+const TEST_CLIENT = createThirdwebClient({ clientId: "test" });
 
 // Props interface for the wrapper component
 interface UnsupportedTokenScreenWithThemeProps
@@ -57,6 +60,7 @@ type Story = StoryObj<typeof meta>;
 export const TokenNotSupported: Story = {
   args: {
     chain: defineChain(1),
+    client: TEST_CLIENT,
     theme: "dark", // Ethereum mainnet - will show indexing spinner
   },
   parameters: {
@@ -73,6 +77,7 @@ export const TokenNotSupported: Story = {
 export const TokenNotSupportedLight: Story = {
   args: {
     chain: defineChain(1),
+    client: TEST_CLIENT,
     theme: "light", // Ethereum mainnet - will show indexing spinner
   },
   parameters: {
@@ -89,6 +94,7 @@ export const TokenNotSupportedLight: Story = {
 export const TestnetNotSupported: Story = {
   args: {
     chain: defineChain(11155111),
+    client: TEST_CLIENT,
     theme: "dark", // Sepolia testnet - will show error state
   },
   parameters: {
@@ -105,6 +111,7 @@ export const TestnetNotSupported: Story = {
 export const TestnetNotSupportedLight: Story = {
   args: {
     chain: defineChain(11155111),
+    client: TEST_CLIENT,
     theme: "light", // Sepolia testnet - will show error state
   },
   parameters: {

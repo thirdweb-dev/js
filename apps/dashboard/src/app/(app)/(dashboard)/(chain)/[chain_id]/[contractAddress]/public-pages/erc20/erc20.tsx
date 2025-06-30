@@ -2,6 +2,8 @@ import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { decimals, getActiveClaimCondition } from "thirdweb/extensions/erc20";
+import { resolveFunctionSelectors } from "@/lib/selectors";
+import { getContractCreator } from "../_components/getContractCreator";
 import { PageHeader } from "../_components/PageHeader";
 import { ContractHeaderUI } from "./_components/ContractHeader";
 import { TokenDropClaim } from "./_components/claim-tokens/claim-tokens-ui";
@@ -9,6 +11,7 @@ import { ContractAnalyticsOverview } from "./_components/contract-analytics/cont
 import { BuyTokenEmbed } from "./_components/PayEmbedSection";
 import { TokenStats } from "./_components/PriceChart";
 import { RecentTransfers } from "./_components/RecentTransfers";
+import { fetchTokenInfoFromBridge } from "./_utils/fetch-coin-info";
 import { getCurrencyMeta } from "./_utils/getCurrencyMeta";
 
 export async function ERC20PublicPage(props: {
@@ -16,25 +19,43 @@ export async function ERC20PublicPage(props: {
   clientContract: ThirdwebContract;
   chainMetadata: ChainMetadata;
 }) {
-  const [contractMetadata, activeClaimCondition, tokenDecimals] =
-    await Promise.all([
-      getContractMetadata({
-        contract: props.serverContract,
-      }),
-      getActiveClaimConditionWithErrorHandler(props.serverContract),
-      decimals({
-        contract: props.serverContract,
-      }),
-    ]);
+  const [
+    contractMetadata,
+    activeClaimCondition,
+    tokenDecimals,
+    tokenInfo,
+    functionSelectors,
+  ] = await Promise.all([
+    getContractMetadata({
+      contract: props.serverContract,
+    }),
+    getActiveClaimConditionWithErrorHandler(props.serverContract),
+    decimals({
+      contract: props.serverContract,
+    }),
+    fetchTokenInfoFromBridge({
+      chainId: props.serverContract.chain.id,
+      clientId: props.clientContract.client.clientId,
+      tokenAddress: props.serverContract.address,
+    }),
+    resolveFunctionSelectors(props.serverContract),
+  ]);
 
-  const claimConditionCurrencyMeta = activeClaimCondition
-    ? await getCurrencyMeta({
-        chain: props.serverContract.chain,
-        chainMetadata: props.chainMetadata,
-        client: props.serverContract.client,
-        currencyAddress: activeClaimCondition.currency,
-      }).catch(() => undefined)
-    : undefined;
+  if (!contractMetadata.image && tokenInfo) {
+    contractMetadata.image = tokenInfo.iconUri;
+  }
+
+  const [contractCreator, claimConditionCurrencyMeta] = await Promise.all([
+    getContractCreator(props.serverContract, functionSelectors),
+    activeClaimCondition
+      ? getCurrencyMeta({
+          chain: props.serverContract.chain,
+          chainMetadata: props.chainMetadata,
+          client: props.serverContract.client,
+          currencyAddress: activeClaimCondition.currency,
+        }).catch(() => undefined)
+      : undefined,
+  ]);
 
   const buyEmbed = (
     <BuyEmbed
@@ -62,6 +83,7 @@ export async function ERC20PublicPage(props: {
         <ContractHeaderUI
           chainMetadata={props.chainMetadata}
           clientContract={props.clientContract}
+          contractCreator={contractCreator}
           image={contractMetadata.image}
           name={contractMetadata.name}
           socialUrls={
@@ -141,8 +163,6 @@ function BuyEmbed(props: {
         chain={props.clientContract.chain}
         client={props.clientContract.client}
         tokenAddress={props.clientContract.address}
-        tokenName={props.tokenName}
-        tokenSymbol={props.tokenSymbol}
       />
     );
   }

@@ -1,17 +1,18 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
 import { getProjects } from "@/api/projects";
 import { getTeamBySlug, getTeams } from "@/api/team";
 import { CustomChatButton } from "@/components/chat/CustomChatButton";
-import { AppFooter } from "@/components/footers/app-footer";
 import { AnnouncementBanner } from "@/components/misc/AnnouncementBanner";
-import { Button } from "@/components/ui/button";
-import { TabPathLinks } from "@/components/ui/tabs";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { siwaExamplePrompts } from "../../../(dashboard)/support/definitions";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
+import { StaffModeNotice } from "./_components/StaffModeNotice";
+import type { Ecosystem } from "./~/ecosystem/types";
+import { TeamSidebarLayout } from "./TeamSidebarLayout";
 
 export default async function TeamLayout(props: {
   children: React.ReactNode;
@@ -43,81 +44,66 @@ export default async function TeamLayout(props: {
     teamId: team.id,
   });
 
+  const ecosystems = await fetchEcosystemList(team.id, authToken);
+
+  const isStaffMode = !teams.some((t) => t.slug === team.slug);
+
   return (
-    <div className="flex h-full grow flex-col">
-      {!teams.some((t) => t.slug === team.slug) && (
-        <div className="bg-warning-text">
-          <div className="container flex items-center justify-between py-4">
-            <div className="flex flex-col gap-2">
-              <p className="font-bold text-white text-xl">👀 STAFF MODE 👀</p>
-              <p className="text-sm text-white">
-                You can only view this team, not take any actions.
-              </p>
-            </div>
-            <Button asChild variant="default">
-              <Link href="/team/~">Leave Staff Mode</Link>
-            </Button>
-          </div>
+    <SidebarProvider>
+      <div className="flex h-dvh min-w-0 grow flex-col">
+        {isStaffMode && <StaffModeNotice />}
+        <AnnouncementBanner />
+        <div className="bg-card border-b">
+          <TeamHeaderLoggedIn
+            account={account}
+            accountAddress={accountAddress}
+            client={client}
+            currentProject={undefined}
+            currentTeam={team}
+            teamsAndProjects={teamsAndProjects}
+          />
         </div>
-      )}
-      <AnnouncementBanner />
-      <div className="bg-card">
-        <TeamHeaderLoggedIn
-          account={account}
-          accountAddress={accountAddress}
-          client={client}
-          currentProject={undefined}
-          currentTeam={team}
-          teamsAndProjects={teamsAndProjects}
-        />
 
-        <TabPathLinks
-          links={[
-            {
-              exactMatch: true,
-              name: "Overview",
-              path: `/team/${params.team_slug}`,
-            },
-            {
-              name: "Analytics",
-              path: `/team/${params.team_slug}/~/analytics`,
-            },
-            {
-              name: "Ecosystems",
-              path: `/team/${params.team_slug}/~/ecosystem`,
-            },
-            {
-              name: "Usage",
-              path: `/team/${params.team_slug}/~/usage`,
-            },
-            {
-              name: "Audit Log",
-              path: `/team/${params.team_slug}/~/audit-log`,
-            },
-            {
-              name: "Settings",
-              path: `/team/${params.team_slug}/~/settings`,
-            },
-          ]}
-          tabContainerClassName="px-4 lg:px-6"
-        />
+        <TeamSidebarLayout
+          ecosystems={ecosystems.map((ecosystem) => ({
+            name: ecosystem.name,
+            slug: ecosystem.slug,
+          }))}
+          layoutPath={`/team/${params.team_slug}`}
+        >
+          {props.children}
+        </TeamSidebarLayout>
+        <div className="fixed right-6 bottom-6 z-50">
+          <CustomChatButton
+            authToken={authToken}
+            clientId={undefined}
+            examplePrompts={siwaExamplePrompts}
+            isFloating={true}
+            isLoggedIn={true}
+            label="Ask AI Assistant"
+            networks="all"
+            pageType="support"
+            teamId={team.id}
+          />
+        </div>
       </div>
-
-      <main className="flex grow flex-col">{props.children}</main>
-      <div className="fixed right-6 bottom-6 z-50">
-        <CustomChatButton
-          authToken={authToken}
-          clientId={undefined}
-          examplePrompts={siwaExamplePrompts}
-          isFloating={true}
-          isLoggedIn={true}
-          label="Ask AI Assistant"
-          networks="all"
-          pageType="support"
-          teamId={team.id}
-        />
-      </div>
-      <AppFooter />
-    </div>
+    </SidebarProvider>
   );
+}
+
+async function fetchEcosystemList(teamId: string, authToken: string) {
+  const res = await fetch(
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamId}/ecosystem-wallet`,
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    },
+  );
+
+  if (!res.ok) {
+    return [];
+  }
+
+  return (await res.json()).result as Ecosystem[];
 }

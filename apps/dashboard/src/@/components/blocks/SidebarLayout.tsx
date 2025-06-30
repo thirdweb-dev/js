@@ -1,22 +1,7 @@
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarRail,
-  SidebarSeparator,
-  SidebarTrigger,
-  useSidebar,
-} from "@/components/ui/sidebar";
+"use client";
+
 import { cn } from "../../lib/utils";
-import { AppFooter } from "../footers/app-footer";
-import { NavLink } from "../ui/NavLink";
-import { Separator } from "../ui/separator";
-import { MobileSidebar, useActiveSidebarLink } from "./MobileSidebar";
+import { MobileSidebar } from "./MobileSidebar";
 import { CustomSidebar, type SidebarLink } from "./Sidebar";
 
 export function SidebarLayout(props: {
@@ -46,120 +31,6 @@ export function SidebarLayout(props: {
       <main className="flex min-w-0 grow flex-col pb-10 max-sm:w-full lg:pt-8">
         {children}
       </main>
-    </div>
-  );
-}
-
-export function FullWidthSidebarLayout(props: {
-  contentSidebarLinks: SidebarLink[];
-  footerSidebarLinks?: SidebarLink[];
-  children: React.ReactNode;
-  className?: string;
-}) {
-  const { contentSidebarLinks, children, footerSidebarLinks } = props;
-  return (
-    <div
-      className={cn(
-        "relative flex w-full flex-1 overflow-y-hidden",
-        props.className,
-      )}
-    >
-      {/* left - sidebar */}
-      <Sidebar className="pt-2" collapsible="icon" side="left">
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <RenderSidebarGroup
-                groupName={undefined}
-                sidebarLinks={contentSidebarLinks}
-              />
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-
-        {footerSidebarLinks && (
-          <SidebarFooter className="pb-3">
-            <RenderSidebarGroup
-              groupName={undefined}
-              sidebarLinks={footerSidebarLinks}
-            />
-          </SidebarFooter>
-        )}
-
-        <SidebarRail />
-      </Sidebar>
-
-      {/* right - content */}
-      <div className="flex h-full flex-grow flex-col overflow-y-auto">
-        <MobileSidebarTrigger
-          links={[...contentSidebarLinks, ...(footerSidebarLinks || [])]}
-        />
-
-        <main className="flex min-w-0 grow flex-col max-sm:w-full">
-          {children}
-        </main>
-        <AppFooter containerClassName="max-w-7xl" />
-      </div>
-    </div>
-  );
-}
-
-function RenderSidebarGroup(props: {
-  sidebarLinks: SidebarLink[];
-  groupName: string | undefined;
-}) {
-  const { sidebarLinks } = props;
-  const sidebar = useSidebar();
-
-  return (
-    <SidebarMenu className="gap-1.5">
-      {sidebarLinks.map((link) => {
-        if ("href" in link) {
-          return (
-            <SidebarMenuItem key={link.href}>
-              <SidebarMenuButton asChild>
-                <NavLink
-                  activeClassName="text-foreground bg-accent"
-                  className="flex items-center gap-2 text-muted-foreground text-sm hover:bg-accent"
-                  exactMatch={link.exactMatch}
-                  href={link.href}
-                  isActive={link.isActive}
-                  onClick={() => {
-                    sidebar.setOpenMobile(false);
-                  }}
-                >
-                  {link.icon && <link.icon className="size-4" />}
-                  <span>{link.label}</span>
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          );
-        }
-
-        if ("separator" in link) {
-          return <SidebarSeparator className="my-1" key={Math.random()} />;
-        }
-
-        return (
-          <RenderSidebarGroup
-            groupName={link.group}
-            key={link.group}
-            sidebarLinks={link.links}
-          />
-        );
-      })}
-    </SidebarMenu>
-  );
-}
-
-function MobileSidebarTrigger(props: { links: SidebarLink[] }) {
-  const activeLink = useActiveSidebarLink(props.links);
-
-  return (
-    <div className="flex items-center gap-3 border-b px-4 py-4 lg:hidden">
-      <SidebarTrigger className="size-4" />
-      <Separator className="h-4" orientation="vertical" />
-      {activeLink && <span className="text-sm">{activeLink.label}</span>}
     </div>
   );
 }

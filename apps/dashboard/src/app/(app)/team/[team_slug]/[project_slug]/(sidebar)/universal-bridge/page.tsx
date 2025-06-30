@@ -1,16 +1,11 @@
 import { loginRedirect } from "@app/login/loginRedirect";
 import { ArrowUpRightIcon } from "lucide-react";
 import { redirect } from "next/navigation";
-import {
-  ResponsiveSearchParamsProvider,
-  ResponsiveSuspense,
-} from "responsive-rsc";
+import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { PayAnalytics } from "./components/PayAnalytics";
-import { PayAnalyticsFilter } from "./components/PayAnalyticsFilter";
 import { getUniversalBridgeFiltersFromSearchParams } from "./components/time";
 
 export default async function Page(props: {
@@ -54,26 +49,14 @@ export default async function Page(props: {
   return (
     <ResponsiveSearchParamsProvider value={searchParams}>
       <div>
-        <div className="mb-4 flex justify-start">
-          <PayAnalyticsFilter />
-        </div>
-        <ResponsiveSuspense
-          fallback={
-            <div className="flex w-full items-center justify-center py-24">
-              <Spinner className="size-8" />
-            </div>
-          }
-          searchParamsUsed={["from", "to", "interval"]}
-        >
-          <PayAnalytics
-            client={client}
-            interval={interval}
-            projectClientId={project.publishableKey}
-            projectId={project.id}
-            range={range}
-            teamId={project.teamId}
-          />
-        </ResponsiveSuspense>
+        <PayAnalytics
+          client={client}
+          interval={interval}
+          projectClientId={project.publishableKey}
+          projectId={project.id}
+          range={range}
+          teamId={project.teamId}
+        />
 
         <div className="h-10" />
         <div className="relative overflow-hidden rounded-lg border-2 border-green-500/20 bg-gradient-to-br from-card/80 to-card/50 p-4 shadow-[inset_0_1px_2px_0_rgba(0,0,0,0.02)]">

@@ -7,10 +7,10 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.status", () => {
   // TODO: flaky test
   it.skip("should handle successful status", async () => {
     const result = await status({
-      chainId: 137,
+      chainId: 8453,
       client: TEST_CLIENT,
       transactionHash:
-        "0x5959b9321ec581640db531b80bac53cbd968f3d34fc6cb1d5f4ea75f26df2ad7",
+        "0x8e8ab7c998bdfef6e10951c801a862373ce87af62c21fb870e62fca57683bf10",
     });
 
     expect(result).toBeDefined();
@@ -46,7 +46,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.status", () => {
       chain: defineChain(8453),
       client: TEST_CLIENT,
       transactionHash:
-        "0x06ac91479b3ea4c6507f9b7bff1f2d5f553253fa79af9a7db3755563b60f7dfb",
+        "0x8e8ab7c998bdfef6e10951c801a862373ce87af62c21fb870e62fca57683bf10",
     });
 
     expect(result).toBeDefined();

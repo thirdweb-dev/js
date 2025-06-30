@@ -37,6 +37,8 @@ type ImportModalProps = {
   onClose: () => void;
   teamId: string;
   projectId: string;
+  projectSlug: string;
+  teamSlug: string;
   client: ThirdwebClient;
   type: "contract" | "asset";
   onSuccess?: () => void;
@@ -69,7 +71,9 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
           client={props.client}
           onSuccess={props.onSuccess}
           projectId={props.projectId}
+          projectSlug={props.projectSlug}
           teamId={props.teamId}
+          teamSlug={props.teamSlug}
           type={props.type}
         />
       </DialogContent>
@@ -96,6 +100,8 @@ const importFormSchema = z.object({
 function ImportForm(props: {
   teamId: string;
   projectId: string;
+  teamSlug: string;
+  projectSlug: string;
   client: ThirdwebClient;
   type: "contract" | "asset";
   onSuccess?: () => void;
@@ -216,7 +222,7 @@ function ImportForm(props: {
           addContractToProject.data?.result ? (
             <Button asChild className="gap-2">
               <Link
-                href={`/${chainSlug}/${addContractToProject.data.result.contractAddress}`}
+                href={`/team/${props.teamSlug}/${props.projectSlug}/contract/${chainSlug}/${addContractToProject.data.result.contractAddress}`}
                 rel="noopener noreferrer"
                 target="_blank"
               >

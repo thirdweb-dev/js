@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { Token } from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
@@ -165,6 +166,12 @@ export type CheckoutWidgetProps = {
    * @hidden
    */
   paymentLinkId?: string;
+
+  /**
+   * Allowed payment methods
+   * @default ["crypto", "card"]
+   */
+  paymentMethods?: ("crypto" | "card")[];
 };
 
 // Enhanced UIOptions to handle unsupported token state
@@ -243,13 +250,23 @@ type UIOptionsResult =
  *
  * Refer to the [`CheckoutWidgetConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/CheckoutWidgetConnectOptions) type for more details.
  *
- * @bridge
- * @beta
- * @react
+ * @bridge Widgets
  */
 export function CheckoutWidget(props: CheckoutWidgetProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const theme = props.theme || "dark";
+
+  useQuery({
+    queryFn: () => {
+      trackPayEvent({
+        client: props.client,
+        event: "ub:ui:checkout_widget:render",
+        toChainId: props.chain.id,
+        toToken: props.tokenAddress,
+      });
+    },
+    queryKey: ["checkout_widget:render"],
+  });
 
   const bridgeDataQuery = useQuery({
     queryFn: async (): Promise<UIOptionsResult> => {
@@ -306,7 +323,13 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
     );
   } else if (bridgeDataQuery.data?.type === "unsupported_token") {
     // Show unsupported token screen
-    content = <UnsupportedTokenScreen chain={bridgeDataQuery.data.chain} />;
+    content = (
+      <UnsupportedTokenScreen
+        chain={bridgeDataQuery.data.chain}
+        client={props.client}
+        tokenAddress={props.tokenAddress}
+      />
+    );
   } else if (bridgeDataQuery.data?.type === "success") {
     // Show normal bridge orchestrator
     content = (
@@ -324,6 +347,7 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
           props.onError?.(err);
         }}
         paymentLinkId={props.paymentLinkId}
+        paymentMethods={props.paymentMethods}
         presetOptions={props.presetOptions}
         purchaseData={props.purchaseData}
         receiverAddress={props.seller}

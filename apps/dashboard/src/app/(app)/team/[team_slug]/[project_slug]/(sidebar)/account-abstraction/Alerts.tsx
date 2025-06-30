@@ -9,7 +9,7 @@ export const SmartWalletsBillingAlert = (props: { teamSlug: string }) => {
       <AlertTitle>Account Abstraction on Mainnet</AlertTitle>
       <AlertDescription>
         To enable AA on mainnet chains,{" "}
-        <UnderlineLink href={`/team/${props.teamSlug}/~/settings/billing`}>
+        <UnderlineLink href={`/team/${props.teamSlug}/~/billing`}>
           subscribe to a billing plan.
         </UnderlineLink>
       </AlertDescription>

@@ -54,7 +54,7 @@ function BillingAlertBanner(props: {
             "border border-red-600 bg-red-100 text-red-800 hover:bg-red-200 dark:border-red-700 dark:bg-red-900 dark:text-red-100 dark:hover:bg-red-800",
         )}
       >
-        <Link href={`/team/${props.teamSlug}/~/settings/invoices`}>
+        <Link href={`/team/${props.teamSlug}/~/billing/invoices`}>
           {props.ctaLabel}
         </Link>
       </Button>

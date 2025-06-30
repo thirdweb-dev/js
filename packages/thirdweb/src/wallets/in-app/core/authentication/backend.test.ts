@@ -49,6 +49,7 @@ describe("backendAuthenticate", () => {
     // Mock failed fetch response
     const mockFetch = vi.fn().mockResolvedValue({
       ok: false,
+      text: () => Promise.resolve("Failed to generate backend account"),
     });
 
     // Mock dependencies

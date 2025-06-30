@@ -76,8 +76,9 @@ export function RangeSelector({
   });
 
   return (
-    <div className="flex justify-end gap-4">
+    <div className="flex justify-end gap-3 flex-col lg:flex-row">
       <DateRangeSelector
+        className="rounded-full"
         range={localRange}
         setRange={(newRange) => {
           setRange(newRange);
@@ -89,7 +90,7 @@ export function RangeSelector({
         }}
       />
       <IntervalSelector
-        className="bg-card"
+        className="bg-card rounded-full"
         intervalType={localInterval}
         setIntervalType={(newInterval) => {
           setInterval(newInterval);

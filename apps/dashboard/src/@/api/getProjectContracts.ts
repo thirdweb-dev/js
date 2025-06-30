@@ -1,4 +1,5 @@
 import "server-only";
+import { getAddress } from "thirdweb";
 import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 
 export type ProjectContract = {
@@ -39,6 +40,46 @@ export async function getProjectContracts(options: {
 
   const data = (await res.json()) as {
     result: ProjectContract[];
+  };
+
+  return data.result;
+}
+
+export type PartialProject = {
+  id: string;
+  name: string;
+  slug: string;
+  image: string | null;
+};
+
+/**
+ * get a list of projects within a team that have a given contract imported
+ */
+export async function getContractImportedProjects(options: {
+  teamId: string;
+  authToken: string;
+  chainId: number;
+  contractAddress: string;
+}) {
+  const url = new URL(
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamId}/projects/contracts/lookup?chainId=${options.chainId}&contractAddress=${getAddress(options.contractAddress)}`,
+  );
+
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${options.authToken}`,
+    },
+  });
+
+  if (!res.ok) {
+    const errorMessage = await res.text();
+    console.error("Error fetching: /projects/contracts/lookup");
+    console.error(errorMessage);
+    return [];
+  }
+
+  const data = (await res.json()) as {
+    result: PartialProject[];
   };
 
   return data.result;

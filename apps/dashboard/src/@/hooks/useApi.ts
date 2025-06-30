@@ -6,13 +6,6 @@ import { accountKeys, authorizedWallets } from "../query-keys/cache-keys";
 
 // FIXME: We keep repeating types, API server should provide them
 
-export const accountPlan = {
-  enterprise: "enterprise",
-  free: "free",
-  growth: "growth",
-  pro: "pro",
-} as const;
-
 export type AuthorizedWallet = {
   id: string;
   accountId: string;

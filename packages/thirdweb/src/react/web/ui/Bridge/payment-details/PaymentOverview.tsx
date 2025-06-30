@@ -188,6 +188,7 @@ export function PaymentOverview(props: {
         {props.uiOptions.mode === "transaction" && (
           <TransactionOverViewCompact
             client={props.client}
+            paymentMethod={props.paymentMethod}
             uiOptions={props.uiOptions}
           />
         )}
@@ -198,12 +199,14 @@ export function PaymentOverview(props: {
 
 const TransactionOverViewCompact = (props: {
   uiOptions: Extract<UIOptions, { mode: "transaction" }>;
+  paymentMethod: PaymentMethod;
   client: ThirdwebClient;
 }) => {
   const theme = useCustomTheme();
   const txInfo = useTransactionDetails({
     client: props.client,
     transaction: props.uiOptions.transaction,
+    wallet: props.paymentMethod.payerWallet,
   });
 
   if (!txInfo.data) {

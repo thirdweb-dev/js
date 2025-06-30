@@ -24,7 +24,7 @@ import {
 import type { BundlerOptions } from "../../../smart/types.js";
 
 const MINIMAL_ACCOUNT_IMPLEMENTATION_ADDRESS =
-  "0xbaC7e770af15d130Cd72838ff386f14FBF3e9a3D";
+  "0xD6999651Fc0964B9c6B444307a0ab20534a66560";
 
 export const create7702MinimalAccount = (args: {
   client: ThirdwebClient;

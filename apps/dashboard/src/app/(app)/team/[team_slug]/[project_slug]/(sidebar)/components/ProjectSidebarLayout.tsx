@@ -10,7 +10,7 @@ import {
   SettingsIcon,
   WalletIcon,
 } from "lucide-react";
-import { FullWidthSidebarLayout } from "@/components/blocks/SidebarLayout";
+import { FullWidthSidebarLayout } from "@/components/blocks/full-width-sidebar-layout";
 import { Badge } from "@/components/ui/badge";
 import { ContractIcon } from "@/icons/ContractIcon";
 import { InsightIcon } from "@/icons/InsightIcon";
@@ -34,57 +34,81 @@ export function ProjectSidebarLayout(props: {
           label: "Overview",
         },
         {
-          href: `${layoutPath}/wallets`,
-          icon: WalletIcon,
-          label: "Wallets",
+          separator: true,
         },
         {
-          href: `${layoutPath}/account-abstraction`,
-          icon: SmartAccountIcon,
-          label: "Account Abstraction",
+          group: "Build",
+          links: [
+            {
+              href: `${layoutPath}/wallets`,
+              icon: WalletIcon,
+              label: "Wallets",
+            },
+            {
+              href:
+                engineLinkType === "cloud"
+                  ? `${layoutPath}/transactions`
+                  : `${layoutPath}/engine/dedicated`,
+              icon: ArrowLeftRightIcon,
+              isActive: (pathname) => {
+                return (
+                  pathname.startsWith(`${layoutPath}/transactions`) ||
+                  pathname.startsWith(`${layoutPath}/engine/dedicated`)
+                );
+              },
+              label: "Transactions",
+            },
+            {
+              href: `${layoutPath}/contracts`,
+              icon: ContractIcon,
+              label: "Contracts",
+            },
+          ],
         },
         {
-          href: `${layoutPath}/universal-bridge`,
-          icon: PayIcon,
-          label: "Universal Bridge",
+          separator: true,
         },
         {
-          href: `${layoutPath}/contracts`,
-          icon: ContractIcon,
-          label: "Contracts",
+          group: "Monetize",
+          links: [
+            {
+              href: `${layoutPath}/universal-bridge`,
+              icon: PayIcon,
+              label: "Universal Bridge",
+            },
+            {
+              href: `${layoutPath}/tokens`,
+              icon: CoinsIcon,
+              label: (
+                <span className="flex items-center gap-2">
+                  Tokens <Badge>New</Badge>
+                </span>
+              ),
+            },
+          ],
         },
         {
-          href: `${layoutPath}/tokens`,
-          icon: CoinsIcon,
-          label: (
-            <span className="flex items-center gap-2">
-              Tokens <Badge>New</Badge>
-            </span>
-          ),
+          separator: true,
         },
         {
-          href:
-            engineLinkType === "cloud"
-              ? `${layoutPath}/transactions`
-              : `${layoutPath}/engine/dedicated`,
-          icon: ArrowLeftRightIcon,
-          isActive: (pathname) => {
-            return (
-              pathname.startsWith(`${layoutPath}/transactions`) ||
-              pathname.startsWith(`${layoutPath}/engine/dedicated`)
-            );
-          },
-          label: "Transactions",
-        },
-        {
-          href: `${layoutPath}/insight`,
-          icon: InsightIcon,
-          label: "Insight",
-        },
-        {
-          href: `${layoutPath}/vault`,
-          icon: LockIcon,
-          label: "Vault",
+          group: "Scale",
+          links: [
+            {
+              href: `${layoutPath}/insight`,
+              icon: InsightIcon,
+              label: "Insight",
+            },
+            {
+              href: `${layoutPath}/account-abstraction`,
+              icon: SmartAccountIcon,
+              label: "Account Abstraction",
+            },
+            {
+              href: `${layoutPath}/vault`,
+              icon: LockIcon,
+              label: "Vault",
+            },
+          ],
         },
       ]}
       footerSidebarLinks={[

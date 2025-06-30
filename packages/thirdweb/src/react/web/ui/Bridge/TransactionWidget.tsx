@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { Token } from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
@@ -18,14 +19,17 @@ import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { CustomThemeProvider } from "../../../core/design-system/CustomThemeProvider.js";
-import type { Theme } from "../../../core/design-system/index.js";
+import { iconSize, type Theme } from "../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButton_connectModalOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
+import { AccentFailIcon } from "../ConnectWallet/icons/AccentFailIcon.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
 import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { DynamicHeight } from "../components/DynamicHeight.js";
+import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
+import { Text } from "../components/text.js";
 import type { LocaleId } from "../types.js";
 import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
 import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
@@ -165,6 +169,12 @@ export type TransactionWidgetProps = {
    * @hidden
    */
   paymentLinkId?: string;
+
+  /**
+   * Allowed payment methods
+   * @default ["crypto", "card"]
+   */
+  paymentMethods?: ("crypto" | "card")[];
 };
 
 // Enhanced UIOptions to handle unsupported token state
@@ -267,13 +277,23 @@ type UIOptionsResult =
  *
  * Refer to the [`TransactionWidgetConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/TransactionWidgetConnectOptions) type for more details.
  *
- * @bridge
- * @beta
- * @react
+ * @bridge Widgets
  */
 export function TransactionWidget(props: TransactionWidgetProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const theme = props.theme || "dark";
+
+  useQuery({
+    queryFn: () => {
+      trackPayEvent({
+        chainId: props.transaction.chain.id,
+        client: props.client,
+        event: "ub:ui:transaction_widget:render",
+        toToken: props.tokenAddress,
+      });
+    },
+    queryKey: ["transaction_widget:render"],
+  });
 
   const bridgeDataQuery = useQuery({
     queryFn: async (): Promise<UIOptionsResult> => {
@@ -286,7 +306,19 @@ export function TransactionWidget(props: TransactionWidgetProps) {
           props.client,
           checksumAddress(tokenAddress),
           props.transaction.chain.id,
-        );
+        ).catch((e) => {
+          if (e instanceof Error && e.message.includes("not supported")) {
+            return null;
+          }
+          throw e;
+        });
+        if (!token) {
+          return {
+            chain: props.transaction.chain,
+            tokenAddress: checksumAddress(tokenAddress),
+            type: "unsupported_token",
+          };
+        }
 
         erc20Value = {
           amountWei: toUnits(props.amount, token.decimals),
@@ -313,6 +345,7 @@ export function TransactionWidget(props: TransactionWidgetProps) {
       };
     },
     queryKey: ["bridgeData", stringify(props)],
+    retry: 1,
   });
 
   let content = null;
@@ -329,9 +362,33 @@ export function TransactionWidget(props: TransactionWidgetProps) {
         <Spinner color="secondaryText" size="xl" />
       </div>
     );
+  } else if (bridgeDataQuery.error) {
+    content = (
+      <div
+        style={{
+          alignItems: "center",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          minHeight: "350px",
+        }}
+      >
+        <AccentFailIcon size={iconSize["3xl"]} />
+        <Spacer y="lg" />
+        <Text color="secondaryText" size="md">
+          {bridgeDataQuery.error.message}
+        </Text>
+      </div>
+    );
   } else if (bridgeDataQuery.data?.type === "unsupported_token") {
     // Show unsupported token screen
-    content = <UnsupportedTokenScreen chain={bridgeDataQuery.data.chain} />;
+    content = (
+      <UnsupportedTokenScreen
+        chain={bridgeDataQuery.data.chain}
+        client={props.client}
+        tokenAddress={props.tokenAddress}
+      />
+    );
   } else if (bridgeDataQuery.data?.type === "success") {
     // Show normal bridge orchestrator
     content = (
@@ -349,6 +406,7 @@ export function TransactionWidget(props: TransactionWidgetProps) {
           props.onError?.(err);
         }}
         paymentLinkId={props.paymentLinkId}
+        paymentMethods={props.paymentMethods}
         presetOptions={props.presetOptions}
         purchaseData={props.purchaseData}
         receiverAddress={undefined}

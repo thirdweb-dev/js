@@ -21,11 +21,11 @@ const generateSignature = async (
 
 describe("parseIncomingWebhook", () => {
   const testTimestamp = Math.floor(Date.now() / 1000).toString();
-  const validPayload: WebhookPayload = {
+  const validWebhook: WebhookPayload = {
     data: {
       action: "TRANSFER",
       clientId: "client123",
-      destinationAmount: "1.0",
+      destinationAmount: 10n,
       destinationToken: {
         address: "0x1234567890123456789012345678901234567890" as const,
         chainId: 1,
@@ -37,7 +37,7 @@ describe("parseIncomingWebhook", () => {
       },
       developerFeeBps: 100,
       developerFeeRecipient: "0x1234567890123456789012345678901234567890",
-      originAmount: "1.0",
+      originAmount: 10n,
       originToken: {
         address: "0x1234567890123456789012345678901234567890" as const,
         chainId: 1,
@@ -64,7 +64,16 @@ describe("parseIncomingWebhook", () => {
       ],
       type: "transfer",
     },
+    type: "pay.onchain-transaction",
     version: 2,
+  };
+  const validPayload = {
+    ...validWebhook,
+    data: {
+      ...validWebhook.data,
+      destinationAmount: validWebhook.data.destinationAmount.toString(),
+      originAmount: validWebhook.data.originAmount.toString(),
+    },
   };
 
   it("should successfully verify a valid webhook", async () => {
@@ -78,7 +87,7 @@ describe("parseIncomingWebhook", () => {
     };
 
     const result = await parse(JSON.stringify(validPayload), headers, secret);
-    expect(result).toEqual(validPayload);
+    expect(result).toEqual(validWebhook);
   });
 
   it("should accept alternative header names", async () => {
@@ -92,7 +101,7 @@ describe("parseIncomingWebhook", () => {
     };
 
     const result = await parse(JSON.stringify(validPayload), headers, secret);
-    expect(result).toEqual(validPayload);
+    expect(result).toEqual(validWebhook);
   });
 
   it("should throw error for missing headers", async () => {
@@ -149,6 +158,7 @@ describe("parseIncomingWebhook", () => {
       data: {
         someField: "value",
       },
+      type: "pay.onchain-transaction",
       version: 1,
     };
     const v1PayloadString = JSON.stringify(v1Payload);
@@ -180,7 +190,7 @@ describe("parseIncomingWebhook", () => {
       secret,
       300,
     );
-    expect(result).toEqual(validPayload);
+    expect(result).toEqual(validWebhook);
   });
 
   describe("payload validation", () => {
@@ -575,6 +585,7 @@ describe("parseIncomingWebhook", () => {
 
     it("should throw error for version 1 payload missing data object", async () => {
       const invalidPayload = {
+        type: "pay.onchain-transaction",
         version: 1,
         // no data field
       } as unknown as WebhookPayload;

@@ -8,13 +8,13 @@ export function EmptyStateCard({
   link,
   description,
 }: {
-  metric: string;
+  metric?: string;
   link?: string;
   description?: string;
 }) {
   return (
-    <Card className="container h-[300px] p-2 md:h-[400px]">
-      <div className="flex h-full flex-col items-center justify-center gap-2 rounded-md border text-center">
+    <Card className="container min-h-[300px] p-2 md:min-h-[400px]">
+      <div className="flex h-full flex-col items-center justify-center gap-2 rounded-md border border-dashed text-center">
         <EmptyStateContent
           description={description}
           link={link}
@@ -25,33 +25,44 @@ export function EmptyStateCard({
   );
 }
 
-export function EmptyStateContent({
-  metric,
-  description,
-  link,
-}: {
-  metric: string;
+export function EmptyStateContent(props: {
+  metric: string | undefined;
   description?: string;
   link?: string;
 }) {
+  const description =
+    props.description ||
+    (props.metric
+      ? `Your app may not be configured to use ${props.metric}`
+      : undefined);
+
   return (
     <div className="flex w-full flex-col items-center justify-center gap-2 text-foreground">
-      <div className="flex size-8 items-center justify-center rounded-md border bg-card">
-        <PlugIcon className="size-4" />
+      <div className="flex size-10 items-center justify-center rounded-full border bg-background">
+        <PlugIcon className="size-5 text-muted-foreground" />
       </div>
-      <div className="font-semibold text-lg">No data available</div>
-      <div className="text-muted-foreground text-sm">
-        {description ?? `Your app may not be configured to use ${metric}.`}
+
+      <div className="space-y-0.5 text-center">
+        <div className="font-semibold text-lg">No data available</div>
+        {description && (
+          <div className="text-muted-foreground text-sm">{description}</div>
+        )}
       </div>
-      {link && (
-        <Button asChild className="mt-4" size="sm" variant="primary">
+
+      {props.link && (
+        <Button
+          asChild
+          className="mt-2 rounded-full text-center"
+          size="sm"
+          variant="default"
+        >
           <Link
             className="text-sm"
-            href={link}
+            href={props.link}
             rel="noopener noreferrer"
             target="_blank"
           >
-            Configure {metric}
+            Configure {props.metric}
           </Link>
         </Button>
       )}

@@ -128,10 +128,12 @@ function CreateVaultAccountStep(props: {
       />
       <Button asChild variant="outline">
         <Link
-          href="https://portal.thirdweb.com/engine/vault"
+          href="https://portal.thirdweb.com/vault"
           rel="noopener noreferrer"
           target="_blank"
-        ></Link>
+        >
+          Learn more about Vault
+        </Link>
       </Button>
     </div>
   );

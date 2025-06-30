@@ -163,24 +163,30 @@ function LearningResourcesSection() {
   return (
     <section>
       <SectionTitle anchorId="learning" title="Learning Resources" />
-      <Grid className="md:grid-cols-1 lg:grid-cols-2">
+      <Grid className="md:grid-cols-1 lg:grid-cols-3">
         <ArticleCardIndex
-          description="Wallets, auth, and onchain interactions"
+          description="Create and manage crypto wallets"
           href="/connect"
           icon={ConnectIcon}
-          title="Connect"
+          title="Wallets"
         />
         <ArticleCardIndex
           description="Bridge and onramp tokens on any chain"
           href="/pay"
           icon={BridgeIcon}
-          title="Universal Bridge"
+          title="Payments"
         />
         <ArticleCardIndex
           description="Reliable transactions and monitoring"
           href="/engine"
           icon={EngineIcon}
-          title="Engine"
+          title="Transactions"
+        />
+        <ArticleCardIndex
+          description="Create, deploy, and manage smart contracts"
+          href="/contracts"
+          icon={EngineIcon}
+          title="Contracts"
         />
         <ArticleCardIndex
           description="Blockchain data queries and transformations"
@@ -193,6 +199,12 @@ function LearningResourcesSection() {
           href="/nebula"
           icon={NebulaIcon}
           title="Nebula"
+        />
+        <ArticleCardIndex
+          description="Non-custodial key management service"
+          href="/vault"
+          icon={NebulaIcon}
+          title="Vault"
         />
       </Grid>
     </section>

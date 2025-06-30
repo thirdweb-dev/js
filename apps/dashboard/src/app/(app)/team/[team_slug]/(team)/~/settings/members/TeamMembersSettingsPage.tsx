@@ -27,7 +27,7 @@ export function TeamMembersSettingsPage(props: {
   return (
     <div>
       <h2 className="font-semibold text-2xl tracking-tight">Members</h2>
-      <p className="text-muted-foreground text-sm">
+      <p className="text-muted-foreground">
         Manage team members and invitations
       </p>
 

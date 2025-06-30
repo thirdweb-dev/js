@@ -1,6 +1,8 @@
 import {
-  type AaExecutionOptions,
-  type AaZksyncExecutionOptions,
+  isSuccessResponse,
+  type SendTransactionData,
+  type SignMessageData,
+  type SpecificExecutionOptions,
   sendTransaction,
   signMessage,
   signTypedData,
@@ -15,11 +17,14 @@ import { type Hex, toHex } from "../utils/encoding/hex.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { stringify } from "../utils/json.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
+import type { Prettify } from "../utils/type-utils.js";
 import type {
   Account,
   SendTransactionOption,
 } from "../wallets/interfaces/wallet.js";
 import { waitForTransactionHash } from "./wait-for-tx-hash.js";
+
+type ExecutionOptions = Prettify<SpecificExecutionOptions>;
 
 /**
  * Options for creating an server wallet.
@@ -44,9 +49,7 @@ export type ServerWalletOptions = {
   /**
    * Optional custom execution options to use for sending transactions and signing data.
    */
-  executionOptions?:
-    | Omit<AaExecutionOptions, "chainId">
-    | Omit<AaZksyncExecutionOptions, "chainId">;
+  executionOptions?: ExecutionOptions;
 };
 
 export type ServerWallet = Account & {
@@ -148,20 +151,74 @@ export type ServerWallet = Account & {
 export function serverWallet(options: ServerWalletOptions): ServerWallet {
   const { client, vaultAccessToken, address, chain, executionOptions } =
     options;
+
   const headers: HeadersInit = {
     "x-vault-access-token": vaultAccessToken,
   };
 
-  const getExecutionOptions = (chainId: number) => {
-    return executionOptions
-      ? {
-          ...executionOptions,
-          chainId: chainId.toString(),
-        }
-      : {
-          chainId: chainId.toString(),
+  const getExecutionOptionsWithChainId = (
+    chainId: number,
+  ): SendTransactionData["body"]["executionOptions"] => {
+    if (!executionOptions) {
+      return {
+        chainId,
+        from: address,
+        type: "auto",
+      };
+    }
+    switch (executionOptions.type) {
+      case "auto":
+        return {
+          chainId,
           from: address,
+          type: "auto",
         };
+      case "ERC4337":
+        return {
+          ...executionOptions,
+          chainId,
+          type: "ERC4337",
+        };
+    }
+  };
+
+  const getSigningOptions = (
+    chainId: number | undefined,
+  ): SignMessageData["body"]["signingOptions"] => {
+    // if no chainId passed specifically for this signature
+    // we HAVE TO fallback to EOA signature
+    if (!chainId) {
+      return {
+        from: address,
+        type: "eoa",
+      };
+    }
+
+    if (!executionOptions) {
+      return {
+        chainId,
+        from: address,
+        type: "auto",
+      };
+    }
+
+    switch (executionOptions.type) {
+      case "ERC4337": {
+        return {
+          chainId,
+          ...executionOptions,
+          type: "ERC4337",
+        };
+      }
+
+      case "auto": {
+        return {
+          chainId,
+          from: address,
+          type: "auto",
+        };
+      }
+    }
   };
 
   const enqueueTx = async (transaction: SendTransactionOption[]) => {
@@ -182,10 +239,10 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
       }
     }
     const body = {
-      executionOptions: getExecutionOptions(chainId),
+      executionOptions: getExecutionOptionsWithChainId(chainId),
       params: transaction.map((t) => ({
         data: t.data,
-        to: t.to ?? undefined,
+        to: t.to,
         value: t.value?.toString(),
       })),
     };
@@ -305,17 +362,16 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
       if (!signingChainId) {
         throw new Error("Chain ID is required for signing messages");
       }
-
       const signResult = await signMessage({
         baseUrl: getThirdwebBaseUrl("engineCloud"),
         body: {
-          executionOptions: getExecutionOptions(signingChainId),
           params: [
             {
+              format: isBytes ? "hex" : "text",
               message: engineMessage,
-              messageFormat: isBytes ? "hex" : "text",
             },
           ],
+          signingOptions: getSigningOptions(signingChainId),
         },
         bodySerializer: stringify,
         fetch: getClientFetch(client),
@@ -328,13 +384,13 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
         );
       }
 
-      const signatureResult = signResult.data?.result.results[0];
-      if (signatureResult?.success) {
+      const signatureResult = signResult.data?.result[0];
+      if (signatureResult && isSuccessResponse(signatureResult)) {
         return signatureResult.result.signature as Hex;
       }
 
       throw new Error(
-        `Failed to sign message: ${signatureResult?.error?.message || "Unknown error"}`,
+        `Failed to sign message: ${stringify(signatureResult?.error) || "Unknown error"}`,
       );
     },
     signTypedData: async (typedData) => {
@@ -346,9 +402,9 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
       const signResult = await signTypedData({
         baseUrl: getThirdwebBaseUrl("engineCloud"),
         body: {
-          executionOptions: getExecutionOptions(signingChainId),
           // biome-ignore lint/suspicious/noExplicitAny: TODO: fix ts / hey-api type clash
           params: [typedData as any],
+          signingOptions: getSigningOptions(signingChainId),
         },
         bodySerializer: stringify,
         fetch: getClientFetch(client),
@@ -361,13 +417,13 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
         );
       }
 
-      const signatureResult = signResult.data?.result.results[0];
-      if (signatureResult?.success) {
+      const signatureResult = signResult.data?.result[0];
+      if (signatureResult && isSuccessResponse(signatureResult)) {
         return signatureResult.result.signature as Hex;
       }
 
       throw new Error(
-        `Failed to sign message: ${signatureResult?.error?.message || "Unknown error"}`,
+        `Failed to sign message: ${stringify(signatureResult?.error) || "Unknown error"}`,
       );
     },
   };

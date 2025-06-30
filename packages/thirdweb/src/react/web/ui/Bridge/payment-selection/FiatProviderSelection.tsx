@@ -71,6 +71,16 @@ export function FiatProviderSelection({
     return quoteQueries.map((q) => q.data).filter((q) => !!q);
   }, [quoteQueries]);
 
+  if (quoteQueries.every((q) => q.isError)) {
+    return (
+      <Container center="both" flex="column" style={{ minHeight: "120px" }}>
+        <Text color="secondaryText" size="sm">
+          No quotes available
+        </Text>
+      </Container>
+    );
+  }
+
   // TODO: add a "remember my choice" checkbox
 
   return (

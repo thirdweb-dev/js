@@ -1,8 +1,9 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { Token } from "../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import { toUnits } from "../../../../utils/units.js";
 import {
   type BridgePrepareRequest,
@@ -79,9 +80,11 @@ interface QuoteLoaderProps {
    * Fee payer for direct transfers (defaults to sender)
    */
   feePayer?: "sender" | "receiver";
+  mode: "fund_wallet" | "direct_payment" | "transaction";
 }
 
 export function QuoteLoader({
+  mode,
   destinationToken,
   paymentMethod,
   amount,
@@ -108,6 +111,26 @@ export function QuoteLoader({
     sender,
   });
   const prepareQuery = useBridgePrepare(request);
+
+  useQuery({
+    queryFn: () => {
+      trackPayEvent({
+        chainId:
+          paymentMethod.type === "wallet"
+            ? paymentMethod.originToken.chainId
+            : undefined,
+        client,
+        event: `ub:ui:loading_quote:${mode}`,
+        fromToken:
+          paymentMethod.type === "wallet"
+            ? paymentMethod.originToken.address
+            : undefined,
+        toChainId: destinationToken.chainId,
+        toToken: destinationToken.address,
+      });
+    },
+    queryKey: ["loading_quote", paymentMethod.type],
+  });
 
   // Handle successful quote
   useEffect(() => {
@@ -167,7 +190,6 @@ function getBridgeParams(args: {
         currency: paymentMethod.currency,
         enabled: !!(destinationToken && amount && client),
         onramp: paymentMethod.onramp || "coinbase",
-        onrampTokenAddress: NATIVE_TOKEN_ADDRESS,
         paymentLinkId: args.paymentLinkId,
         purchaseData: args.purchaseData,
         receiver,

@@ -23,7 +23,9 @@ export function DeployedContractsPage(props: {
       <DeployViaCLIOrImportCard
         client={props.client}
         projectId={props.projectId}
+        projectSlug={props.projectSlug}
         teamId={props.teamId}
+        teamSlug={props.teamSlug}
       />
     </div>
   );

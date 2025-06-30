@@ -1,5 +1,7 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { trackPayEvent } from "../../../../../analytics/track/pay.js";
 import type { Token } from "../../../../../bridge/types/Token.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
@@ -69,6 +71,12 @@ export interface PaymentSelectionProps {
    * Whether to include the destination token in the payment methods
    */
   includeDestinationToken?: boolean;
+
+  /**
+   * Allowed payment methods
+   * @default ["crypto", "card"]
+   */
+  paymentMethods?: ("crypto" | "card")[];
 }
 
 type Step =
@@ -88,6 +96,7 @@ export function PaymentSelection({
   connectOptions,
   connectLocale,
   includeDestinationToken,
+  paymentMethods = ["crypto", "card"],
 }: PaymentSelectionProps) {
   const connectedWallets = useConnectedWallets();
   const activeWallet = useActiveWallet();
@@ -96,12 +105,24 @@ export function PaymentSelection({
     type: "walletSelection",
   });
 
+  useQuery({
+    queryFn: () => {
+      trackPayEvent({
+        client,
+        event: "payment_selection",
+        toChainId: destinationToken.chainId,
+        toToken: destinationToken.address,
+      });
+    },
+    queryKey: ["payment_selection"],
+  });
+
   const payerWallet =
     currentStep.type === "tokenSelection"
       ? currentStep.selectedWallet
       : activeWallet;
   const {
-    data: paymentMethods,
+    data: suitableTokenPaymentMethods,
     isLoading: paymentMethodsLoading,
     error: paymentMethodsError,
   } = usePaymentMethods({
@@ -234,6 +255,7 @@ export function PaymentSelection({
             onConnectWallet={handleConnectWallet}
             onFiatSelected={handleFiatSelected}
             onWalletSelected={handleWalletSelected}
+            paymentMethods={paymentMethods}
           />
         )}
 
@@ -247,7 +269,7 @@ export function PaymentSelection({
             destinationToken={destinationToken}
             onBack={handleBackToWalletSelection}
             onPaymentMethodSelected={handlePaymentMethodSelected}
-            paymentMethods={paymentMethods}
+            paymentMethods={suitableTokenPaymentMethods}
             paymentMethodsLoading={paymentMethodsLoading}
           />
         )}

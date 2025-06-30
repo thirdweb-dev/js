@@ -1,0 +1,441 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "EcosystemWallet.CreateSessionKey | Thirdweb .NET SDK",
+	description:
+		"Creates a session key for EIP-7702 accounts with configurable permissions and policies.",
+});
+
+# EcosystemWallet.CreateSessionKey
+
+Creates a session key for the user wallet with EIP-7702 functionality. Session keys allow delegated access to the wallet with specific permissions and time constraints. This method is only supported for EIP7702 and EIP7702Sponsored execution modes.
+
+**How it works**: The method creates a `SessionSpec` with your parameters, signs it using EIP-712, and calls `createSessionWithSig` on the EIP-7702 account contract to register the session key on-chain.
+
+## Usage
+
+```csharp
+// Create a session key for 24 hours with full permissions
+var receipt = await ecosystemWallet.CreateSessionKey(
+    chainId: 1,
+    signerAddress: await sessionSigner.GetAddress(),
+    durationInSeconds: 86400, // 24 hours
+    grantFullPermissions: true
+);
+
+// Create a session key with specific call and transfer policies
+var callPolicies = new List<CallSpec>
+{
+    new CallSpec
+    {
+        Target = "0x1234567890123456789012345678901234567890",
+        Selector = new byte[] { 0xa9, 0x05, 0x9c, 0xbb }, // transfer(address,uint256)
+        MaxValuePerUse = BigInteger.Parse("100000000000000000"), // 0.1 ETH max per call
+        ValueLimit = new UsageLimit
+        {
+            LimitType = 1, // Lifetime limit
+            Limit = BigInteger.Parse("1000000000000000000"), // 1 ETH total
+            Period = 86400 // 1 day period
+        },
+        Constraints = new List<Constraint>
+        {
+            new Constraint
+            {
+                Condition = 1, // Equal to (not 0)
+                Index = 0, // First parameter (to address)
+                RefValue = new byte[32], // Reference value for validation
+                Limit = new UsageLimit
+                {
+                    LimitType = 2, // Allowance (not 0)
+                    Limit = BigInteger.Parse("500000000000000000"), // 0.5 ETH per period
+                    Period = 3600 // 1 hour
+                }
+            }
+        }
+    }
+};
+
+var transferPolicies = new List<TransferSpec>
+{
+    new TransferSpec
+    {
+        Target = "0x0000000000000000000000000000000000000000", // ETH transfers
+        MaxValuePerUse = BigInteger.Parse("100000000000000000"), // 0.1 ETH max per transfer
+        ValueLimit = new UsageLimit
+        {
+            LimitType = 1, // Lifetime limit
+            Limit = BigInteger.Parse("1000000000000000000"), // 1 ETH total
+            Period = 86400 // 1 day
+        }
+    },
+    new TransferSpec
+    {
+        Target = "0xA0b86a33E6411a3bb4CC4C7b9C5C5C7C7C8C9C0c", // Specific token contract
+        MaxValuePerUse = BigInteger.Parse("1000000000000000000000"), // 1000 tokens max per transfer
+        ValueLimit = new UsageLimit
+        {
+            LimitType = 2, // Allowance (resets every period)
+            Limit = BigInteger.Parse("10000000000000000000000"), // 10,000 tokens per period
+            Period = 3600 // 1 hour period
+        }
+    }
+};
+
+var receipt = await ecosystemWallet.CreateSessionKey(
+    chainId: 1,
+    signerAddress: await sessionSigner.GetAddress(),
+    durationInSeconds: 3600, // 1 hour
+    grantFullPermissions: false,
+    callPolicies: callPolicies,
+    transferPolicies: transferPolicies,
+    uid: System.Text.Encoding.UTF8.GetBytes("unique-session-id") // Custom unique identifier
+);
+
+// Create a wildcard session key (works with any address)
+var wildcardReceipt = await ecosystemWallet.CreateSessionKey(
+    chainId: 1,
+    signerAddress: "0x0000000000000000000000000000000000000000", // Wildcard address
+    durationInSeconds: 7200, // 2 hours
+    grantFullPermissions: true
+);
+```
+
+## Common Use Cases
+
+### Gaming Session Key
+```csharp
+// Allow spending game tokens with daily limits
+var gameTokenPolicy = new List<CallSpec>
+{
+    new CallSpec
+    {
+        Target = "0xGameTokenContract...", 
+        Selector = new byte[] { 0xa9, 0x05, 0x9c, 0xbb }, // transfer(address,uint256)
+        MaxValuePerUse = BigInteger.Parse("1000000000000000000000"), // 1000 tokens per transaction
+        ValueLimit = new UsageLimit
+        {
+            LimitType = 2, // Allowance (resets daily)
+            Limit = BigInteger.Parse("10000000000000000000000"), // 10,000 tokens per day
+            Period = 86400 // 1 day
+        }
+    }
+};
+```
+
+### DeFi Trading Session Key
+```csharp
+// Allow DEX trades with specific token constraints
+var dexTradingPolicy = new List<CallSpec>
+{
+    new CallSpec
+    {
+        Target = "0xUniswapV3Router...",
+        Selector = new byte[] { 0x41, 0x4b, 0xf3, 0x89 }, // exactInputSingle
+        MaxValuePerUse = BigInteger.Parse("100000000000000000"), // 0.1 ETH max per trade
+        ValueLimit = new UsageLimit
+        {
+            LimitType = 2, // Daily allowance
+            Limit = BigInteger.Parse("1000000000000000000"), // 1 ETH per day
+            Period = 86400
+        },
+        Constraints = new List<Constraint>
+        {
+            new Constraint
+            {
+                Condition = 1, // Equal - only allow specific token
+                Index = 0, // First parameter (tokenIn)
+                RefValue = new byte[32], // USDC token address (padded to 32 bytes)
+                Limit = new UsageLimit { LimitType = 0 } // Unlimited usage of this constraint
+            }
+        }
+    }
+};
+```
+
+### Subscription Payment Session Key
+```csharp
+// Allow recurring payments to specific service
+var subscriptionPolicy = new List<CallSpec>
+{
+    new CallSpec
+    {
+        Target = "0xSubscriptionContract...",
+        Selector = new byte[] { 0x12, 0x34, 0x56, 0x78 }, // paySubscription()
+        MaxValuePerUse = BigInteger.Parse("50000000000000000000"), // $50 worth of tokens
+        ValueLimit = new UsageLimit
+        {
+            LimitType = 2, // Monthly allowance
+            Limit = BigInteger.Parse("50000000000000000000"), // $50 per month
+            Period = 2592000 // 30 days
+        },
+        Constraints = new List<Constraint>
+        {
+            new Constraint
+            {
+                Condition = 1, // Equal - only allow payments to specific service
+                Index = 0, // Service ID parameter
+                RefValue = BitConverter.GetBytes(12345).Concat(new byte[28]).ToArray(), // Service ID 12345
+                Limit = new UsageLimit { LimitType = 0 }
+            }
+        }
+    }
+};
+```
+
+### Emergency Withdrawal Session Key
+```csharp
+// Allow emergency withdrawals with strict limits
+var emergencyPolicy = new List<TransferSpec>
+{
+    new TransferSpec
+    {
+        Target = "0x0000000000000000000000000000000000000000", // ETH
+        MaxValuePerUse = BigInteger.Parse("100000000000000000"), // 0.1 ETH per withdrawal
+        ValueLimit = new UsageLimit
+        {
+            LimitType = 1, // Lifetime limit
+            Limit = BigInteger.Parse("500000000000000000"), // 0.5 ETH total
+            Period = 0 // Not used for lifetime limits
+        }
+    }
+};
+
+var emergencyReceipt = await ecosystemWallet.CreateSessionKey(
+    chainId: 1,
+    signerAddress: await emergencyWallet.GetAddress(),
+    durationInSeconds: 604800, // 1 week
+    grantFullPermissions: false,
+    callPolicies: null,
+    transferPolicies: emergencyPolicy
+);
+```
+
+<Details summary="Parameters">
+
+### chainId
+
+`BigInteger`: The chain ID for the session key.
+
+### signerAddress
+
+`string`: The address of the signer for the session key. Use `"0x0000000000000000000000000000000000000000"` for wildcard session keys that work with any address.
+
+### durationInSeconds
+
+`long`: Duration in seconds for which the session key will be valid.
+
+### grantFullPermissions
+
+`bool` (optional): Whether to grant full permissions to the session key. When `true`, creates a "wildcard" session that ignores call and transfer policies and allows any action. When `false`, only the specified call and transfer policies will be applied. Defaults to `true`.
+
+**Important**: When `grantFullPermissions` is `true`, the `callPolicies` and `transferPolicies` parameters are ignored.
+
+### callPolicies
+
+`List<CallSpec>` (optional): List of call policies to apply to the session key. If `null`, no call policies will be applied. Only used when `grantFullPermissions` is `false`.
+
+#### CallSpec Properties:
+- `Target` (`string`): The contract address that can be called
+- `Selector` (`byte[]`): The function selector (4 bytes) that can be called - use tools like [4byte.directory](https://www.4byte.directory/) to find selectors
+- `MaxValuePerUse` (`BigInteger`): Maximum ETH value that can be sent per function call
+- `ValueLimit` (`UsageLimit`): Overall ETH spending limits for this call policy  
+- `Constraints` (`List<Constraint>`): Additional parameter constraints for function calls
+
+**Selector Examples:**
+- `transfer(address,uint256)`: `0xa9059cbb`
+- `approve(address,uint256)`: `0x095ea7b3`
+- `swapExactETHForTokens(uint256,address[],address,uint256)`: `0x7ff36ab5`
+
+### transferPolicies
+
+`List<TransferSpec>` (optional): List of transfer policies to apply to the session key. If `null`, no transfer policies will be applied. Only used when `grantFullPermissions` is `false`.
+
+#### TransferSpec Properties:
+- `Target` (`string`): The token contract address for transfers 
+  - Use `"0x0000000000000000000000000000000000000000"` for native ETH
+  - Use specific token contract addresses for ERC-20 tokens
+- `MaxValuePerUse` (`BigInteger`): Maximum amount that can be transferred per transaction
+- `ValueLimit` (`UsageLimit`): Overall usage limits for transfers of this token
+
+**Common Token Examples:**
+- ETH: `0x0000000000000000000000000000000000000000`
+- USDC: `0xA0b86a33E6411a3bb4CC4C7b9C5C5C7C7C8C9C0c` (mainnet)
+- USDT: `0xdAC17F958D2ee523a2206206994597C13D831ec7` (mainnet)
+
+### uid
+
+`byte[]` (optional): A unique identifier for the session key. If `null`, a new GUID will be generated automatically. This UID is used to identify and manage the session key on-chain.
+
+</Details>
+
+<Details summary="Related Methods">
+
+### Managing Session Keys
+
+Once a session key is created, you can use these methods to inspect and manage it:
+
+```csharp
+// Check if a signer has full permissions (wildcard access)
+bool hasFullPermissions = await ecosystemWallet.SignerHasFullPermissions(
+    chainId: 1, 
+    signerAddress: await sessionSigner.GetAddress()
+);
+
+// Get the call policies for a specific signer
+var callPolicies = await ecosystemWallet.GetCallPoliciesForSigner(
+    chainId: 1,
+    signerAddress: await sessionSigner.GetAddress()
+);
+
+// Get the transfer policies for a specific signer  
+var transferPolicies = await ecosystemWallet.GetTransferPoliciesForSigner(
+    chainId: 1,
+    signerAddress: await sessionSigner.GetAddress()
+);
+
+// Get the session expiration timestamp
+var expirationTimestamp = await ecosystemWallet.GetSessionExpirationForSigner(
+    chainId: 1,
+    signerAddress: await sessionSigner.GetAddress()
+);
+
+// Get complete session state including remaining limits
+var sessionState = await ecosystemWallet.GetSessionStateForSigner(
+    chainId: 1,
+    signerAddress: await sessionSigner.GetAddress()
+);
+
+// Check remaining limits
+foreach (var limit in sessionState.TransferValue)
+{
+    Console.WriteLine($"Transfer limit remaining for {limit.Target}: {limit.Remaining}");
+}
+
+foreach (var limit in sessionState.CallValue) 
+{
+    Console.WriteLine($"Call value limit remaining for {limit.Target}.{limit.Selector.ToHex()}: {limit.Remaining}");
+}
+```
+
+</Details>
+
+<Details summary="Type Definitions">
+
+### LimitType Enum
+
+Controls how usage limits are enforced over time:
+
+- `0` (Unlimited): No limits applied
+- `1` (Lifetime): Total limit that never resets  
+- `2` (Allowance): Limit that resets every period (e.g., daily/hourly spending limits)
+
+### Condition Enum
+
+Defines how parameter constraints are evaluated:
+
+- `0` (Unconstrained): No constraint applied
+- `1` (Equal): Parameter must equal the reference value
+- `2` (Greater): Parameter must be greater than reference value
+- `3` (Less): Parameter must be less than reference value
+- `4` (GreaterOrEqual): Parameter must be greater than or equal to reference value
+- `5` (LessOrEqual): Parameter must be less than or equal to reference value
+- `6` (NotEqual): Parameter must not equal the reference value
+
+### UsageLimit
+
+Defines spending or usage limits over time periods:
+
+```csharp
+public class UsageLimit
+{
+    public byte LimitType { get; set; }     // 0=Unlimited, 1=Lifetime, 2=Allowance
+    public BigInteger Limit { get; set; }   // The limit amount (ignored if Unlimited)
+    public BigInteger Period { get; set; }  // Time period in seconds (only used for Allowance)
+}
+```
+
+**Examples:**
+- **Unlimited**: `LimitType = 0` (Limit and Period ignored)
+- **Lifetime limit**: `LimitType = 1, Limit = 1000` (max 1000 tokens ever)
+- **Daily allowance**: `LimitType = 2, Limit = 100, Period = 86400` (100 tokens per day)
+
+### Constraint
+
+Defines parameter validation and usage limits for function calls:
+
+```csharp
+public class Constraint
+{
+    public byte Condition { get; set; }     // Condition type (0-6, see enum above)
+    public ulong Index { get; set; }        // Parameter index to constrain (0-based)
+    public byte[] RefValue { get; set; }    // Reference value for comparison (32 bytes)
+    public UsageLimit Limit { get; set; }   // Usage limit for this parameter value
+}
+```
+
+**Example Use Cases:**
+- Limit transfers to specific addresses
+- Restrict token amounts in function calls
+- Control which contracts can be called
+- Set spending limits per recipient
+
+</Details>
+
+<Details summary="Return Value">
+
+### ThirdwebTransactionReceipt
+
+The transaction receipt for the session key creation, as a `ThirdwebTransactionReceipt` object.
+
+</Details>
+
+<Details summary="Exceptions">
+
+### InvalidOperationException
+
+Thrown when the execution mode is not EIP7702 or EIP7702Sponsored.
+
+### ArgumentException
+
+Thrown when the signer address is null or empty, or when the duration is less than or equal to zero.
+
+</Details>
+
+<Details summary="Common Errors & Troubleshooting">
+
+### Session Creation Errors
+
+**"Execution mode not supported"**
+- Ensure your EcosystemWallet is created with `ExecutionMode.EIP7702` or `ExecutionMode.EIP7702Sponsored`
+
+**"Invalid signer address"**
+- Verify the signer address is a valid Ethereum address
+- Use `"0x0000000000000000000000000000000000000000"` for wildcard sessions
+
+**"Duration too short"**  
+- Duration must be greater than 0 seconds
+- Consider reasonable session lengths (1 hour to 30 days)
+
+### Runtime Session Errors
+
+**"MaxValueExceeded"**
+- Transaction value exceeds `MaxValuePerUse` in CallSpec/TransferSpec
+- Increase the limit or split into smaller transactions
+
+**"LifetimeUsageExceeded"**
+- Total usage has exceeded the lifetime limit
+- Create a new session key or increase limits
+
+**"AllowanceExceeded"**
+- Period allowance has been exhausted
+- Wait for the next period or create additional session keys
+
+**"CallPolicyViolated"**
+- Attempting to call a contract/function not in the CallSpec list
+- Add the required contract and selector to callPolicies
+
+**"ConditionFailed"**
+- Function parameter doesn't meet constraint requirements
+- Check parameter values match the expected constraints
+
+</Details>

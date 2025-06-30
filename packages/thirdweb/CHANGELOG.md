@@ -1,5 +1,69 @@
 # thirdweb
 
+## 5.105.4
+
+### Patch Changes
+
+- [#7465](https://github.com/thirdweb-dev/js/pull/7465) [`bc51255`](https://github.com/thirdweb-dev/js/commit/bc512551ab3a685bdb0ac167105f8aa7385d46d8) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds paymentMethods prop to BuyWidget, CheckoutWidget, and TransactionWidget to control available payment options. Accepts an array of "crypto" and/or "card" values.
+
+## 5.105.3
+
+### Patch Changes
+
+- [#7432](https://github.com/thirdweb-dev/js/pull/7432) [`acd5656`](https://github.com/thirdweb-dev/js/commit/acd5656d4d592e3a7ba4a3c09994418e0b654120) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Introduces Session Keys to EIP-7702-powered In-App Wallets via a new createSessionKey extension
+
+- [#7454](https://github.com/thirdweb-dev/js/pull/7454) [`6d1d344`](https://github.com/thirdweb-dev/js/commit/6d1d344c48302d45aeb63532c84cc8e79c93e26f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Prevent admin wallet from connecting when no IAW config is specified
+
+- [#7427](https://github.com/thirdweb-dev/js/pull/7427) [`f9d7935`](https://github.com/thirdweb-dev/js/commit/f9d7935d848cbb2dea3f5204d5bff69cd0c3a921) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support latest engine API
+
+- Updated dependencies [[`f9d7935`](https://github.com/thirdweb-dev/js/commit/f9d7935d848cbb2dea3f5204d5bff69cd0c3a921)]:
+  - @thirdweb-dev/engine@3.2.0
+
+## 5.105.2
+
+### Patch Changes
+
+- [#7452](https://github.com/thirdweb-dev/js/pull/7452) [`277c2e2`](https://github.com/thirdweb-dev/js/commit/277c2e2ed96ff38194a2d5c33916d25a8f1e9a6f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds "Unsupported Token" fallback screen to TransactionWidget
+
+- [#7451](https://github.com/thirdweb-dev/js/pull/7451) [`c2ef5eb`](https://github.com/thirdweb-dev/js/commit/c2ef5eb51cb15dc23942b3681f5f5ca7634594ad) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - update dependencies
+
+## 5.105.1
+
+### Patch Changes
+
+- [#7450](https://github.com/thirdweb-dev/js/pull/7450) [`fa5e13b`](https://github.com/thirdweb-dev/js/commit/fa5e13b5d3f181bda4cd2b4153629b23e7c17dfb) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds onramp webhook parsing for Universal Bridge
+
+## 5.105.0
+
+### Minor Changes
+
+- [#7431](https://github.com/thirdweb-dev/js/pull/7431) [`1387337`](https://github.com/thirdweb-dev/js/commit/1387337955a38f1527266b0a6146bb18d86426aa) Thanks [@PaoloRollo](https://github.com/PaoloRollo)! - update hey-api version to 0.76.0
+
+### Patch Changes
+
+- [#7441](https://github.com/thirdweb-dev/js/pull/7441) [`6712911`](https://github.com/thirdweb-dev/js/commit/67129119504953e8c547f209f184e4aeca5fe23a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - A number of important fixes for payment widgets
+
+- [#7437](https://github.com/thirdweb-dev/js/pull/7437) [`af89836`](https://github.com/thirdweb-dev/js/commit/af89836b6c1b8ea39407fdfddc2fb07ad95d768d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle sponsored gas on TransactionWidget
+
+- [#7426](https://github.com/thirdweb-dev/js/pull/7426) [`6aa2765`](https://github.com/thirdweb-dev/js/commit/6aa2765a344d89e8072010d5aff09d3cc6a59281) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Deprecate PayEmbed
+
+- Updated dependencies [[`1387337`](https://github.com/thirdweb-dev/js/commit/1387337955a38f1527266b0a6146bb18d86426aa)]:
+  - @thirdweb-dev/insight@1.1.0
+  - @thirdweb-dev/engine@3.1.0
+
+## 5.104.1
+
+### Patch Changes
+
+- [#7413](https://github.com/thirdweb-dev/js/pull/7413) [`3107ba1`](https://github.com/thirdweb-dev/js/commit/3107ba1c3753352cac2f9a3d16dcdccd522b7659) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle non urls for metadata images in payment widgets
+
+- [#7429](https://github.com/thirdweb-dev/js/pull/7429) [`ef2895f`](https://github.com/thirdweb-dev/js/commit/ef2895fa2c30b8b8b5250dadb05e3f5d125c9e4d) Thanks [@d4mr](https://github.com/d4mr)! - Support EOA Execution Options for Server Wallets
+
+- [#7425](https://github.com/thirdweb-dev/js/pull/7425) [`c26be2d`](https://github.com/thirdweb-dev/js/commit/c26be2d958283fb77d7689e31356b1cee7c6ff2a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix wallet row alignement in wide connect modal
+
+- Updated dependencies [[`ef2895f`](https://github.com/thirdweb-dev/js/commit/ef2895fa2c30b8b8b5250dadb05e3f5d125c9e4d)]:
+  - @thirdweb-dev/engine@3.0.4
+
 ## 5.104.0
 
 ### Minor Changes

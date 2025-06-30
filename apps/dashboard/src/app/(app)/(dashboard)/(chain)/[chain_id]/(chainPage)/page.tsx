@@ -2,10 +2,8 @@ import { CircleAlertIcon } from "lucide-react";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getRawAccount } from "../../../../account/settings/getAccount";
 import { getChain, getChainMetadata } from "../../utils";
-import NextSteps from "./components/client/NextSteps";
-import { BuyFundsSection } from "./components/server/BuyFundsSection";
+import { BuyFundsSection } from "./components/client/BuyFundsSection";
 import { ChainOverviewSection } from "./components/server/ChainOverviewSection";
-import { ClaimChainSection } from "./components/server/ClaimChainSection";
 import { ChainCTA } from "./components/server/cta-card";
 import { ExplorersSection } from "./components/server/explorer-section";
 import { FaucetSection } from "./components/server/FaucetSection";
@@ -60,11 +58,6 @@ export default async function Page(props: {
       {chain.services.filter((s) => s.enabled).length > 0 && (
         <SupportedProductsSection services={chain.services} />
       )}
-      {/*Next Steps */}
-      <NextSteps chain={chain} />
-
-      {/* Claim Chain */}
-      {!chainMetadata && <ClaimChainSection />}
     </div>
   );
 }

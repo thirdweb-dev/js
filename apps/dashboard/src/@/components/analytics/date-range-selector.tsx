@@ -8,11 +8,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { normalizeTime } from "@/lib/time";
+import { cn } from "@/lib/utils";
 
 export function DateRangeSelector(props: {
   range: Range;
   setRange: (range: Range) => void;
   popoverAlign?: "start" | "end" | "center";
+  className?: string;
 }) {
   const { range, setRange } = props;
   const daysDiff = differenceInCalendarDays(range.to, range.from);
@@ -26,7 +28,7 @@ export function DateRangeSelector(props: {
 
   return (
     <DatePickerWithRange
-      className="w-auto bg-card"
+      className={cn("w-auto bg-card", props.className)}
       from={range.from}
       header={
         <div className="mb-2 border-border border-b p-4">

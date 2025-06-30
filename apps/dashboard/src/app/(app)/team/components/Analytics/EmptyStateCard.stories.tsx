@@ -21,15 +21,16 @@ export const Variants: Story = {
 function Component() {
   return (
     <div className="container max-w-6xl space-y-10 py-10">
-      <BadgeContainer label="Basic">
-        <EmptyStateCard metric="transactions" />
+      <BadgeContainer label="With Metric">
+        <EmptyStateCard metric="xyz" />
       </BadgeContainer>
 
       <BadgeContainer label="With Link">
-        <EmptyStateCard
-          link="https://docs.example.com/analytics"
-          metric="revenue"
-        />
+        <EmptyStateCard link="https://docs.example.com/xyz" />
+      </BadgeContainer>
+
+      <BadgeContainer label="With Link and Metric">
+        <EmptyStateCard link="https://docs.example.com/xyz" metric="xyz" />
       </BadgeContainer>
     </div>
   );
