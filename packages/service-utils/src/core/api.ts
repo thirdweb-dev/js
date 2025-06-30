@@ -150,6 +150,7 @@ export type TeamResponse = {
   dedicatedSupportChannel: {
     type: "slack" | "telegram";
     name: string;
+    link: string | null;
   } | null;
 };
 
