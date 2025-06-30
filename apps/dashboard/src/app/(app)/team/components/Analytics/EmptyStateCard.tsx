@@ -13,7 +13,7 @@ export function EmptyStateCard({
   description?: string;
 }) {
   return (
-    <Card className="container h-[300px] p-2 md:h-[400px]">
+    <Card className="container min-h-[300px] p-2 md:min-h-[400px]">
       <div className="flex h-full flex-col items-center justify-center gap-2 rounded-md border border-dashed text-center">
         <EmptyStateContent
           description={description}
@@ -42,7 +42,7 @@ export function EmptyStateContent(props: {
         <PlugIcon className="size-5 text-muted-foreground" />
       </div>
 
-      <div className="space-y-0.5">
+      <div className="space-y-0.5 text-center">
         <div className="font-semibold text-lg">No data available</div>
         {description && (
           <div className="text-muted-foreground text-sm">{description}</div>
@@ -52,7 +52,7 @@ export function EmptyStateContent(props: {
       {props.link && (
         <Button
           asChild
-          className="mt-2 rounded-full"
+          className="mt-2 rounded-full text-center"
           size="sm"
           variant="default"
         >

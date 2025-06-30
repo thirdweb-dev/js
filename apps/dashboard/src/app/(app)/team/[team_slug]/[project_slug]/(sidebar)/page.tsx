@@ -455,7 +455,6 @@ function AppHighlightsCard({
         return timeSeriesData.reduce((acc, curr) => acc + curr[key], 0);
       }}
       chartConfig={chartConfig}
-      className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
       data={timeSeriesData}
       existingQueryParams={searchParams}
       queryKey="appHighlights"
@@ -590,7 +589,6 @@ async function TotalSponsoredCard({
       }
       aggregateFn={(_data, key) => processedAggregatedData[key]}
       chartConfig={chartConfig}
-      className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
       data={timeSeriesData}
       existingQueryParams={searchParams}
       isCurrency

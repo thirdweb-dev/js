@@ -73,7 +73,8 @@ export default async function TeamOverviewPage(props: {
           title="Analytics"
         />
       </div>
-      <div className="flex grow flex-col justify-between gap-10 md:container md:max-w-7xl md:pt-8 md:pb-16">
+
+      <div className="flex grow flex-col justify-between gap-10 container max-w-7xl pt-8 pb-16">
         <div className="flex grow flex-col gap-6">
           <Suspense
             fallback={<LoadingChartState className="h-[458px] border" />}
@@ -86,7 +87,7 @@ export default async function TeamOverviewPage(props: {
             />
           </Suspense>
 
-          <div className="grid gap-6 max-md:px-6 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-2">
             <Suspense
               fallback={<LoadingChartState className="h-[431px] border" />}
             >
@@ -242,7 +243,6 @@ async function AsyncTransactionsChartCard(props: {
     clientTransactions.value.length > 0 ? (
     <TransactionsChartCardUI
       aggregatedData={clientTransactions.value}
-      className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
       data={clientTransactionsTimeSeries.value}
       searchParams={props.searchParams}
     />
@@ -280,7 +280,6 @@ async function AsyncTotalSponsoredCard(props: {
     userOpUsage.value.length > 0 ? (
     <TotalSponsoredChartCardUI
       aggregatedData={userOpUsage.value}
-      className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
       data={userOpUsageTimeSeries.value}
       searchParams={props.searchParams}
     />
@@ -391,7 +390,6 @@ function AppHighlightsCard({
         return timeSeriesData.reduce((acc, curr) => acc + curr[key], 0);
       }}
       chartConfig={chartConfig}
-      className="max-md:rounded-none max-md:border-r-0 max-md:border-l-0"
       data={timeSeriesData}
       existingQueryParams={searchParams}
       queryKey="appHighlights"
