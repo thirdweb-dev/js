@@ -452,7 +452,6 @@ export const EmbedContainer = /* @__PURE__ */ StyledDiv<{
       color: theme.colors.selectedTextColor,
     },
     background: theme.colors.modalBg,
-    border: `1px solid ${theme.colors.borderColor}`,
     borderRadius: radius.xl,
     boxSizing: "border-box",
     color: theme.colors.primaryText,
