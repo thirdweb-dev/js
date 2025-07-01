@@ -14,6 +14,12 @@ export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
     V3PositionManager: "",
     V4PositionManager: "",
   },
+  8453: {
+    AssetEntrypointERC20: "0xad8978A9E8E39c5Ba81cAcE02358e4D90A7dBDcC",
+    ERC20AssetImpl: "",
+    V3PositionManager: "",
+    V4PositionManager: "",
+  },
 };
 
 export enum ImplementationType {
