@@ -15,7 +15,7 @@ export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
     V4PositionManager: "",
   },
   8453: {
-    AssetEntrypointERC20: "0xad8978A9E8E39c5Ba81cAcE02358e4D90A7dBDcC",
+    AssetEntrypointERC20: "0x7FF679bFb89ee0F88645CAb8Ab0844ea485a3434",
     ERC20AssetImpl: "",
     V3PositionManager: "",
     V4PositionManager: "",
