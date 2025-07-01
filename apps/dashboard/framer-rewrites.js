@@ -14,12 +14,15 @@ module.exports = [
   "/in-app-wallets",
   "/transactions",
   // -- end build category
-  // -- storage
+
+  // -- scale category
+  "/rpc-edge",
+  "/insight",
   "/storage",
+  // -- end scale category
+
   // -- nebula
   "/nebula",
-  // --insight
-  "/insight",
   // -- contracts
   "/contracts",
   "/contracts/modular-contracts",
