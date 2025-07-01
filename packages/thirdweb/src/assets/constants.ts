@@ -8,14 +8,14 @@ export const DEFAULT_FEE_BPS = 50n;
 export const DEFAULT_SALT = "thirdweb";
 
 export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
-  84532: {
-    AssetEntrypointERC20: "0x79C1236cFe59f1f088A15Da08b0D8667387d9703",
+  8453: {
+    AssetEntrypointERC20: "0x7FF679bFb89ee0F88645CAb8Ab0844ea485a3434",
     ERC20AssetImpl: "",
     V3PositionManager: "",
     V4PositionManager: "",
   },
-  8453: {
-    AssetEntrypointERC20: "0x7FF679bFb89ee0F88645CAb8Ab0844ea485a3434",
+  84532: {
+    AssetEntrypointERC20: "0x79C1236cFe59f1f088A15Da08b0D8667387d9703",
     ERC20AssetImpl: "",
     V3PositionManager: "",
     V4PositionManager: "",
