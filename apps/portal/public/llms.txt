@@ -10,8 +10,7 @@
 * [AccountBlobbie](https://portal.thirdweb.com/references/typescript/v5/AccountBlobbie): A wrapper for the Blobbie component
 * [AccountProvider](https://portal.thirdweb.com/references/typescript/v5/AccountProvider): A React context provider component that supplies Account-related data to its child components.
 * [Blobbie](https://portal.thirdweb.com/references/typescript/v5/Blobbie): A unique gradient avatar based on the provided address.
-* [SocialIcon](https://portal.thirdweb.com/references/typescript/v5/SocialIcon): Social auth provider icon
-* [WalletProvider](https://portal.thirdweb.com/references/typescript/v5/WalletProvider): A React context provider component that supplies Wallet-related data to its child components.
+* [WalletProvider](https://portal.thirdweb.com/references/typescript/v5/WalletProvider): /\*\*
 ---
 # Wallet Connection
 * [AutoConnectProps](https://portal.thirdweb.com/references/typescript/v5/AutoConnect): Enable Account abstraction for all wallets. This will connect to the users's smart account based on the connected personal wallet and the given options.
@@ -33,31 +32,27 @@
 # NFT
 * [NFTProvider](https://portal.thirdweb.com/references/typescript/v5/NFTProvider): A React context provider component that supplies NFT-related data to its child components.
 ---
-# Buy Crypto
-* [PayEmbed](https://portal.thirdweb.com/references/typescript/v5/PayEmbed): Embed a prebuilt UI for funding wallets, purchases or transactions with crypto or fiat.
----
 # Tokens
 * [TokenProvider](https://portal.thirdweb.com/references/typescript/v5/TokenProvider): A React context provider component that supplies Token-related data to its child components.
 ---
 # Miscellaneous
 * [MediaRenderer](https://portal.thirdweb.com/references/typescript/v5/MediaRenderer): Refer to [MediaRendererProps](https://portal.thirdweb.com/references/typescript/v5/MediaRendererProps) to see the available props.
+* [PayEmbed](https://portal.thirdweb.com/references/typescript/v5/PayEmbed): Embed a prebuilt UI for funding wallets, purchases or transactions with crypto or fiat.
 ---
 **React Hooks**
 ---
 # Extensions
 ---
 ## EIP5792
+* [EIP5792.useCallsStatus](https://portal.thirdweb.com/references/typescript/v5/eip5792/useCallsStatus): A hook to get a call bundle's current status according to [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792).
 * [EIP5792.useCapabilities](https://portal.thirdweb.com/references/typescript/v5/eip5792/useCapabilities): A hook to get the current wallet's capabilities according to [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792).
-* [EIP5792.useSendAndConfirmCalls](https://portal.thirdweb.com/references/typescript/v5/eip5792/useSendAndConfirmCalls): A hook to send [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) calls to a wallet. This hook works with all Thirdweb wallets (in-app and smart) and certain injected wallets that already support EIP-5792\. Transactions will be batched and sponsored when those capabilities are supported, otherwise they will be sent as individual transactions.
 * [EIP5792.useSendCalls](https://portal.thirdweb.com/references/typescript/v5/eip5792/useSendCalls): A hook to send [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) calls to a wallet. This hook works with all Thirdweb wallets (in-app and smart) and certain injected wallets that already support EIP-5792\. Transactions will be bundled and sponsored when those capabilities are supported, otherwise they will be sent as individual transactions.
-* [EIP5792.useWaitForCallsReceipt](https://portal.thirdweb.com/references/typescript/v5/eip5792/useWaitForCallsReceipt): A hook to wait for the receipt of eip5792 calls.
 ---
 ## ENS
 * [ENS.useEnsAvatar](https://portal.thirdweb.com/references/typescript/v5/ens/useEnsAvatar): Get the ENS avatar for an ENS name
 * [ENS.useEnsName](https://portal.thirdweb.com/references/typescript/v5/ens/useEnsName): Get the ENS name and avatar for an address
 ---
 # Wallets
-* [useAuthToken](https://portal.thirdweb.com/references/typescript/v5/useAuthToken): A hook that returns the authentication token (JWT) for the currently active wallet. This token can be used to authorize API calls to your backend server.
 * [useLinkProfile](https://portal.thirdweb.com/references/typescript/v5/useLinkProfile): Links a web2 or web3 profile to the connected in-app or ecosystem account._When a profile is linked to the account, that profile can then be used to sign into the same account._
 * [useNetworkSwitcherModal](https://portal.thirdweb.com/references/typescript/v5/useNetworkSwitcherModal): Hook to open the Wallet Network Switcher Modal that shows allows users to switch to different network.
 * [useProfiles](https://portal.thirdweb.com/references/typescript/v5/useProfiles): Retrieves all linked profiles of the connected in-app or ecosystem account.
@@ -101,7 +96,10 @@
 # Social API
 * [useSocialProfiles](https://portal.thirdweb.com/references/typescript/v5/useSocialProfiles): Fetches the wallet's available social profiles.
 ---
-# Buy Crypto
+# Utils
+* [useBlockNumber](https://portal.thirdweb.com/references/typescript/v5/useBlockNumber): Hook that watches for changes in the block number on a given chain.
+---
+# Miscellaneous
 * [useBuyHistory](https://portal.thirdweb.com/references/typescript/v5/useBuyHistory): Hook to get the history of Buy transactions for a given wallet - This includes both "buy with crypto" and "buy with fiat" transactions.
 * [useBuyWithCryptoHistory](https://portal.thirdweb.com/references/typescript/v5/useBuyWithCryptoHistory): Hook to get the "Buy with crypto" transaction history for a given wallet address.
 * [useBuyWithCryptoQuote](https://portal.thirdweb.com/references/typescript/v5/useBuyWithCryptoQuote): Hook to get a price quote for performing a "Buy with crypto" transaction that allows users to buy a token with another token - aka a swap.
@@ -110,9 +108,6 @@
 * [useBuyWithFiatQuote](https://portal.thirdweb.com/references/typescript/v5/useBuyWithFiatQuote): Hook to get a price quote for performing a "Buy with Fiat" transaction that allows users to buy a token with fiat currency.
 * [useBuyWithFiatStatus](https://portal.thirdweb.com/references/typescript/v5/useBuyWithFiatStatus): A hook to get a status of a "Buy with Fiat" transaction to determine if the transaction is completed, failed or pending.
 * [usePostOnRampQuote](https://portal.thirdweb.com/references/typescript/v5/usePostOnRampQuote): When buying a token with fiat currency - It only involes doing on-ramp if the on-ramp provider supports buying the given destination token directly.
----
-# Utils
-* [useBlockNumber](https://portal.thirdweb.com/references/typescript/v5/useBlockNumber): Hook that watches for changes in the block number on a given chain.
 ---
 **Core Functions**
 ---
@@ -129,68 +124,10 @@
 * [DEPLOY.deployERC1155Contract](https://portal.thirdweb.com/references/typescript/v5/deploy/deployERC1155Contract): Deploys an thirdweb ERC1155 contract of the given type. On chains where the thirdweb infrastructure contracts are not deployed, this function will deploy them as well.
 * [DEPLOY.deployERC20Contract](https://portal.thirdweb.com/references/typescript/v5/deploy/deployERC20Contract): Deploys an thirdweb ERC20 contract of the given type. On chains where the thirdweb infrastructure contracts are not deployed, this function will deploy them as well.
 * [DEPLOY.deployERC721Contract](https://portal.thirdweb.com/references/typescript/v5/deploy/deployERC721Contract): Deploys an thirdweb ERC721 contract of the given type. On chains where the thirdweb infrastructure contracts are not deployed, this function will deploy them as well.
-* [DEPLOY.deployPackContract](https://portal.thirdweb.com/references/typescript/v5/deploy/deployPackContract): \[Pack contract is incompatible with Pectra update. Support for this contract is being removed in next release.\]
+* [DEPLOY.deployPackContract](https://portal.thirdweb.com/references/typescript/v5/deploy/deployPackContract): Deploy a thirdweb Pack contract
 * [DEPLOY.deployPublishedContract](https://portal.thirdweb.com/references/typescript/v5/deploy/deployPublishedContract): Deploy an instance of a published contract on a given chain
 * [DEPLOY.deploySplitContract](https://portal.thirdweb.com/references/typescript/v5/deploy/deploySplitContract): Deploys a thirdweb [Split contract](https://thirdweb.com/thirdweb.eth/Split)On chains where the thirdweb infrastructure contracts are not deployed, this function will deploy them as well.
 * [DEPLOY.prepareDeterministicDeployTransaction](https://portal.thirdweb.com/references/typescript/v5/deploy/prepareDeterministicDeployTransaction): Deploy a contract deterministically - will maintain the same address across chains. This is meant to be used with published contracts configured with the 'direct deploy' method. Under the hood, this uses a keyless transaction with a common create2 factory.
----
-## MARKETPLACE
-* [MARKETPLACE.deployMarketplaceContract](https://portal.thirdweb.com/references/typescript/v5/marketplace/deployMarketplaceContract): Deploys a marketplace contract.
-* [MARKETPLACE.acceptedOfferEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/acceptedOfferEvent): Creates an event object for the AcceptedOffer event.
-* [MARKETPLACE.acceptOffer](https://portal.thirdweb.com/references/typescript/v5/marketplace/acceptOffer): Accepts an offer after performing necessary checks and validations. Throws an error if the offer is not active, the offeror's balance is insufficient, or the offeror's allowance is insufficient.
-* [MARKETPLACE.approveBuyerForListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/approveBuyerForListing): Prepares a transaction to call the "approveBuyerForListing" function on the contract.
-* [MARKETPLACE.approveCurrencyForListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/approveCurrencyForListing): Prepares a transaction to call the "approveCurrencyForListing" function on the contract.
-* [MARKETPLACE.auctionClosedEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/auctionClosedEvent): Creates an event object for the AuctionClosed event.
-* [MARKETPLACE.bidInAuction](https://portal.thirdweb.com/references/typescript/v5/marketplace/bidInAuction): Places a bid in an English auction.
-* [MARKETPLACE.buyerApprovedForListingEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/buyerApprovedForListingEvent): Creates an event object for the BuyerApprovedForListing event.
-* [MARKETPLACE.buyFromListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/buyFromListing): Buys a listing from the marketplace.
-* [MARKETPLACE.buyoutAuction](https://portal.thirdweb.com/references/typescript/v5/marketplace/buyoutAuction): Buys out an English auction.
-* [MARKETPLACE.cancelAuction](https://portal.thirdweb.com/references/typescript/v5/marketplace/cancelAuction): Cancels an auction by providing the necessary options.
-* [MARKETPLACE.cancelledAuctionEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/cancelledAuctionEvent): Creates an event object for the CancelledAuction event.
-* [MARKETPLACE.cancelledListingEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/cancelledListingEvent): Creates an event object for the CancelledListing event.
-* [MARKETPLACE.cancelledOfferEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/cancelledOfferEvent): Creates an event object for the CancelledOffer event.
-* [MARKETPLACE.cancelListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/cancelListing): Prepares a transaction to call the "cancelListing" function on the contract.
-* [MARKETPLACE.cancelOffer](https://portal.thirdweb.com/references/typescript/v5/marketplace/cancelOffer): Prepares a transaction to call the "cancelOffer" function on the contract.
-* [MARKETPLACE.collectAuctionPayout](https://portal.thirdweb.com/references/typescript/v5/marketplace/collectAuctionPayout): Prepares a transaction to call the "collectAuctionPayout" function on the contract.
-* [MARKETPLACE.collectAuctionTokens](https://portal.thirdweb.com/references/typescript/v5/marketplace/collectAuctionTokens): Prepares a transaction to call the "collectAuctionTokens" function on the contract.
-* [MARKETPLACE.createAuction](https://portal.thirdweb.com/references/typescript/v5/marketplace/createAuction): Creates an auction.
-* [MARKETPLACE.createListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/createListing): Creates a direct listing.
-* [MARKETPLACE.currencyApprovedForListingEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/currencyApprovedForListingEvent): Creates an event object for the CurrencyApprovedForListing event.
-* [MARKETPLACE.currencyPriceForListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/currencyPriceForListing): Retrieves the currency price for a listing.
-* [MARKETPLACE.executeSale](https://portal.thirdweb.com/references/typescript/v5/marketplace/executeSale): Executes a sale for an English auction.
-* [MARKETPLACE.getAllAuctions](https://portal.thirdweb.com/references/typescript/v5/marketplace/getAllAuctions): Retrieves all auctions based on the provided options.
-* [MARKETPLACE.getAllListings](https://portal.thirdweb.com/references/typescript/v5/marketplace/getAllListings): Retrieves all direct listings based on the provided options.
-* [MARKETPLACE.getAllOffers](https://portal.thirdweb.com/references/typescript/v5/marketplace/getAllOffers): Retrieves all offers based on the provided options.
-* [MARKETPLACE.getAllValidAuctions](https://portal.thirdweb.com/references/typescript/v5/marketplace/getAllValidAuctions): Retrieves all valid auctions based on the provided options.
-* [MARKETPLACE.getAllValidListings](https://portal.thirdweb.com/references/typescript/v5/marketplace/getAllValidListings): Retrieves all valid direct listings based on the provided options.
-* [MARKETPLACE.getAllValidOffers](https://portal.thirdweb.com/references/typescript/v5/marketplace/getAllValidOffers): Retrieves all valid offers based on the provided options.
-* [MARKETPLACE.getAuction](https://portal.thirdweb.com/references/typescript/v5/marketplace/getAuction): Retrieves an auction listing based on the provided options.
-* [MARKETPLACE.getListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/getListing): Retrieves a direct listing based on the provided options.
-* [MARKETPLACE.getOffer](https://portal.thirdweb.com/references/typescript/v5/marketplace/getOffer): Retrieves an offer based on the provided options.
-* [MARKETPLACE.getWinningBid](https://portal.thirdweb.com/references/typescript/v5/marketplace/getWinningBid): Retrieves the winning bid information for a given auction.
-* [MARKETPLACE.isBidInAuctionSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isBidInAuctionSupported): Checks if the `bidInAuction` method is supported by the given contract.
-* [MARKETPLACE.isBuyerApprovedForListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/isBuyerApprovedForListing): Checks if the buyer is approved for a listing.
-* [MARKETPLACE.isBuyFromListingSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isBuyFromListingSupported): Checks if the `buyFromListing` method is supported by the given contract.
-* [MARKETPLACE.isCancelAuctionSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isCancelAuctionSupported): Checks if the `cancelAuction` method is supported by the given contract.
-* [MARKETPLACE.isCancelListingSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isCancelListingSupported): Checks if the `cancelListing` method is supported by the given contract.
-* [MARKETPLACE.isCreateAuctionSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isCreateAuctionSupported): Checks if the `createAuction` method is supported by the given contract.
-* [MARKETPLACE.isCreateListingSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isCreateListingSupported): Checks if the `createListing` method is supported by the given contract.
-* [MARKETPLACE.isCurrencyApprovedForListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/isCurrencyApprovedForListing): Calls the "isCurrencyApprovedForListing" function on the contract.
-* [MARKETPLACE.isGetAuctionSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isGetAuctionSupported): Checks if the `getAuction` method is supported by the given contract.
-* [MARKETPLACE.isGetListingSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isGetListingSupported): Checks if the `isGetListingSupported` method is supported by the given contract.
-* [MARKETPLACE.isGetWinningBidSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isGetWinningBidSupported): Checks if the `getWinningBid` method is supported by the given contract.
-* [MARKETPLACE.isNewWinningBid](https://portal.thirdweb.com/references/typescript/v5/marketplace/isNewWinningBid): Calls the "isNewWinningBid" function on the contract.
-* [MARKETPLACE.makeOffer](https://portal.thirdweb.com/references/typescript/v5/marketplace/makeOffer): Makes an offer for any asset (ERC721 or ERC1155).
-* [MARKETPLACE.newAuctionEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/newAuctionEvent): Creates an event object for the NewAuction event.
-* [MARKETPLACE.newBidEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/newBidEvent): Creates an event object for the NewBid event.
-* [MARKETPLACE.newListingEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/newListingEvent): Creates an event object for the NewListing event.
-* [MARKETPLACE.newOfferEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/newOfferEvent): Creates an event object for the NewOffer event.
-* [MARKETPLACE.newSaleEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/newSaleEvent): Creates an event object for the NewSale event.
-* [MARKETPLACE.totalAuctions](https://portal.thirdweb.com/references/typescript/v5/marketplace/totalAuctions): Calls the "totalAuctions" function on the contract.
-* [MARKETPLACE.totalListings](https://portal.thirdweb.com/references/typescript/v5/marketplace/totalListings): Calls the "totalListings" function on the contract.
-* [MARKETPLACE.totalOffers](https://portal.thirdweb.com/references/typescript/v5/marketplace/totalOffers): Calls the "totalOffers" function on the contract.
-* [MARKETPLACE.updatedListingEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/updatedListingEvent): Creates an event object for the UpdatedListing event.
-* [MARKETPLACE.updateListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/updateListing): Updates an existing direct listing.
 ---
 ## AIRDROP
 * [AIRDROP.airdropERC1155](https://portal.thirdweb.com/references/typescript/v5/airdrop/airdropERC1155): Prepares a transaction to call the "airdropERC1155" function on the contract.
@@ -268,16 +205,14 @@
 * [ERC1155.batchMetadataUpdateEvent](https://portal.thirdweb.com/references/typescript/v5/erc1155/batchMetadataUpdateEvent): Creates an event object for the BatchMetadataUpdate event.
 * [ERC1155.burn](https://portal.thirdweb.com/references/typescript/v5/erc1155/burn): Prepares a transaction to call the "burn" function on the contract.
 * [ERC1155.burnBatch](https://portal.thirdweb.com/references/typescript/v5/erc1155/burnBatch): Prepares a transaction to call the "burnBatch" function on the contract.
-* [ERC1155.canClaim](https://portal.thirdweb.com/references/typescript/v5/erc1155/canClaim): Check if a user can claim a drop. This method is only available on the `DropERC1155` contract.
-* [ERC1155.claimCondition](https://portal.thirdweb.com/references/typescript/v5/erc1155/claimCondition): Calls the "claimCondition" function on the contract.
-* [ERC1155.claimTo](https://portal.thirdweb.com/references/typescript/v5/erc1155/claimTo): Claim ERC1155 NFTs to a specified address This method is only available on the `DropERC1155` contract.
+* [ERC1155.claimTo](https://portal.thirdweb.com/references/typescript/v5/erc1155/claimTo): Claim ERC1155 NFTs to a specified address
 * [ERC1155.createPack](https://portal.thirdweb.com/references/typescript/v5/erc1155/createPack): Prepares a transaction to call the "createPack" function on the contract.
 * [ERC1155.encodeSafeTransferFrom](https://portal.thirdweb.com/references/typescript/v5/erc1155/encodeSafeTransferFrom): Encodes the "safeTransferFrom" function into a Hex string with its parameters.
 * [ERC1155.freezeMetadata](https://portal.thirdweb.com/references/typescript/v5/erc1155/freezeMetadata): Prepares a transaction to call the "freezeMetadata" function on the contract.
 * [ERC1155.generateMintSignature](https://portal.thirdweb.com/references/typescript/v5/erc1155/generateMintSignature): Generates the payload and signature for minting an ERC1155 token.
-* [ERC1155.getActiveClaimCondition](https://portal.thirdweb.com/references/typescript/v5/erc1155/getActiveClaimCondition): Retrieves the active claim condition. This method is only available on the `DropERC1155` contract.
+* [ERC1155.getActiveClaimCondition](https://portal.thirdweb.com/references/typescript/v5/erc1155/getActiveClaimCondition): Retrieves the active claim condition.
 * [ERC1155.getClaimConditionById](https://portal.thirdweb.com/references/typescript/v5/erc1155/getClaimConditionById): Calls the "getClaimConditionById" function on the contract.
-* [ERC1155.getClaimConditions](https://portal.thirdweb.com/references/typescript/v5/erc1155/getClaimConditions): Retrieves all claim conditions. This method is only available on the `DropERC1155` contract.
+* [ERC1155.getClaimConditions](https://portal.thirdweb.com/references/typescript/v5/erc1155/getClaimConditions): Retrieves all claim conditions.
 * [ERC1155.getNFT](https://portal.thirdweb.com/references/typescript/v5/erc1155/getNFT): Retrieves information about a specific ERC1155 non-fungible token (NFT).
 * [ERC1155.getNFTs](https://portal.thirdweb.com/references/typescript/v5/erc1155/getNFTs): Retrieves an array of NFTs ("ERC1155") based on the provided options.
 * [ERC1155.getOwnedNFTs](https://portal.thirdweb.com/references/typescript/v5/erc1155/getOwnedNFTs): Retrieves the owned ERC1155 NFTs for a given wallet address.
@@ -299,25 +234,25 @@
 * [ERC1155.isSetClaimConditionsSupported](https://portal.thirdweb.com/references/typescript/v5/erc1155/isSetClaimConditionsSupported): Checks if the `setClaimConditions` method is supported by the given contract.
 * [ERC1155.isTotalSupplySupported](https://portal.thirdweb.com/references/typescript/v5/erc1155/isTotalSupplySupported): Checks if the `totalSupply` method is supported by the given contract.
 * [ERC1155.isUpdateTokenURISupported](https://portal.thirdweb.com/references/typescript/v5/erc1155/isUpdateTokenURISupported): Checks if the `setTokenURI` method is supported by the given contract.
-* [ERC1155.lazyMint](https://portal.thirdweb.com/references/typescript/v5/erc1155/lazyMint): Lazily mints ERC1155 tokens. This method is only available on the `DropERC1155` contract.
+* [ERC1155.lazyMint](https://portal.thirdweb.com/references/typescript/v5/erc1155/lazyMint): Lazily mints ERC1155 tokens.
 * [ERC1155.metadataFrozenEvent](https://portal.thirdweb.com/references/typescript/v5/erc1155/metadataFrozenEvent): Creates an event object for the MetadataFrozen event.
 * [ERC1155.metadataUpdateEvent](https://portal.thirdweb.com/references/typescript/v5/erc1155/metadataUpdateEvent): Creates an event object for the MetadataUpdate event.
-* [ERC1155.mintAdditionalSupplyTo](https://portal.thirdweb.com/references/typescript/v5/erc1155/mintAdditionalSupplyTo): Mints a "supply" number of additional ERC1155 tokens to the specified "to" address. This method is only available on the `TokenERC1155` contract.
-* [ERC1155.mintAdditionalSupplyToBatch](https://portal.thirdweb.com/references/typescript/v5/erc1155/mintAdditionalSupplyToBatch): This extension batches multiple `mintAdditionalSupplyToBatch` extensions into one single multicall. This method is only available on the `TokenERC1155` contract. Keep in mind that there is a limit of how many NFTs you can mint per transaction. This limit varies depends on the network that you are transacting on.
-* [ERC1155.mintTo](https://portal.thirdweb.com/references/typescript/v5/erc1155/mintTo): Mints a "supply" number of new ERC1155 tokens to the specified "to" address. This method is only available on the `TokenERC1155` contract. If the `nft` parameter is a string, it will be used as the token URI. If the `nft` parameter is a file, it will be uploaded to the storage server and the resulting URI will be used as the token URI.
-* [ERC1155.mintToBatch](https://portal.thirdweb.com/references/typescript/v5/erc1155/mintToBatch): This extension batches multiple `mintTo` extensions into one single multicall. This method is only available on the `TokenERC1155` contract. Keep in mind that there is a limit of how many NFTs you can mint per transaction. This limit varies depends on the network that you are transacting on.
-* [ERC1155.mintWithSignature](https://portal.thirdweb.com/references/typescript/v5/erc1155/mintWithSignature): Mints a new ERC1155 token with the given minter signature This method is only available on the `TokenERC1155` contract.
+* [ERC1155.mintAdditionalSupplyTo](https://portal.thirdweb.com/references/typescript/v5/erc1155/mintAdditionalSupplyTo): Mints a "supply" number of additional ERC1155 tokens to the specified "to" address.
+* [ERC1155.mintAdditionalSupplyToBatch](https://portal.thirdweb.com/references/typescript/v5/erc1155/mintAdditionalSupplyToBatch): This extension batches multiple `mintAdditionalSupplyToBatch` extensions into one single multicall. Keep in mind that there is a limit of how many NFTs you can mint per transaction. This limit varies depends on the network that you are transacting on.
+* [ERC1155.mintTo](https://portal.thirdweb.com/references/typescript/v5/erc1155/mintTo): Mints a "supply" number of new ERC1155 tokens to the specified "to" address. If the `nft` parameter is a string, it will be used as the token URI. If the `nft` parameter is a file, it will be uploaded to the storage server and the resulting URI will be used as the token URI.
+* [ERC1155.mintToBatch](https://portal.thirdweb.com/references/typescript/v5/erc1155/mintToBatch): This extension batches multiple `mintTo` extensions into one single multicall. Keep in mind that there is a limit of how many NFTs you can mint per transaction. This limit varies depends on the network that you are transacting on.
+* [ERC1155.mintWithSignature](https://portal.thirdweb.com/references/typescript/v5/erc1155/mintWithSignature): Mints a new ERC1155 token with the given minter signature
 * [ERC1155.nextTokenId](https://portal.thirdweb.com/references/typescript/v5/erc1155/nextTokenId): Calls the "nextTokenId" function on the contract.
 * [ERC1155.nextTokenIdToMint](https://portal.thirdweb.com/references/typescript/v5/erc1155/nextTokenIdToMint): Calls the "nextTokenIdToMint" function on the contract.
 * [ERC1155.openPack](https://portal.thirdweb.com/references/typescript/v5/erc1155/openPack): Prepares a transaction to call the "openPack" function on the contract.
 * [ERC1155.packCreatedEvent](https://portal.thirdweb.com/references/typescript/v5/erc1155/packCreatedEvent): Creates an event object for the PackCreated event.
 * [ERC1155.packOpenedEvent](https://portal.thirdweb.com/references/typescript/v5/erc1155/packOpenedEvent): Creates an event object for the PackOpened event.
 * [ERC1155.packUpdatedEvent](https://portal.thirdweb.com/references/typescript/v5/erc1155/packUpdatedEvent): Creates an event object for the PackUpdated event.
-* [ERC1155.resetClaimEligibility](https://portal.thirdweb.com/references/typescript/v5/erc1155/resetClaimEligibility): Reset the claim eligibility for all users. This method is only available on the `DropERC1155` contract.
+* [ERC1155.resetClaimEligibility](https://portal.thirdweb.com/references/typescript/v5/erc1155/resetClaimEligibility): Reset the claim eligibility for all users.
 * [ERC1155.safeBatchTransferFrom](https://portal.thirdweb.com/references/typescript/v5/erc1155/safeBatchTransferFrom): Prepares a transaction to call the "safeBatchTransferFrom" function on the contract.
 * [ERC1155.safeTransferFrom](https://portal.thirdweb.com/references/typescript/v5/erc1155/safeTransferFrom): Prepares a transaction to call the "safeTransferFrom" function on the contract.
 * [ERC1155.setApprovalForAll](https://portal.thirdweb.com/references/typescript/v5/erc1155/setApprovalForAll): Prepares a transaction to call the "setApprovalForAll" function on the contract.
-* [ERC1155.setClaimConditions](https://portal.thirdweb.com/references/typescript/v5/erc1155/setClaimConditions): Set the claim conditions for a ERC1155 drop This method is only available on the `DropERC1155` contract.
+* [ERC1155.setClaimConditions](https://portal.thirdweb.com/references/typescript/v5/erc1155/setClaimConditions): Set the claim conditions for a ERC1155 drop
 * [ERC1155.setTokenURI](https://portal.thirdweb.com/references/typescript/v5/erc1155/setTokenURI): Prepares a transaction to call the "setTokenURI" function on the contract.
 * [ERC1155.tokensClaimedEvent](https://portal.thirdweb.com/references/typescript/v5/erc1155/tokensClaimedEvent): Creates an event object for the TokensClaimed event.
 * [ERC1155.tokensLazyMintedEvent](https://portal.thirdweb.com/references/typescript/v5/erc1155/tokensLazyMintedEvent): Creates an event object for the TokensLazyMinted event.
@@ -326,7 +261,7 @@
 * [ERC1155.transferBatchEvent](https://portal.thirdweb.com/references/typescript/v5/erc1155/transferBatchEvent): Creates an event object for the TransferBatch event.
 * [ERC1155.transferSingleEvent](https://portal.thirdweb.com/references/typescript/v5/erc1155/transferSingleEvent): Creates an event object for the TransferSingle event.
 * [ERC1155.updateMetadata](https://portal.thirdweb.com/references/typescript/v5/erc1155/updateMetadata): Update the metadata of the single token in an Edition Drop (DropERC1155) collection For Edition contracts, use `setTokenURI`
-* [ERC1155.updateTokenURI](https://portal.thirdweb.com/references/typescript/v5/erc1155/updateTokenURI): This function is an abstracted layer of the [setTokenURI extension](https://portal.thirdweb.com/references/typescript/v5/erc1155/setTokenURI), which means it uses `setTokenURI` under the hood. While the `setTokenURI` method only takes in a uri string, this extension takes in a user-friendly [NFTInput](https://portal.thirdweb.com/references/typescript/v5/NFTInput), upload that content to IPFS and pass the IPFS URI (of said `NFTInput`) to the underlying `setTokenURI` method. This method is only available on the `TokenERC1155` contract.
+* [ERC1155.updateTokenURI](https://portal.thirdweb.com/references/typescript/v5/erc1155/updateTokenURI): This function is an abstracted layer of the [setTokenURI extension](https://portal.thirdweb.com/references/typescript/v5/erc1155/setTokenURI), which means it uses `setTokenURI` under the hood. While the `setTokenURI` method only takes in a uri string, this extension takes in a user-friendly [NFTInput](https://portal.thirdweb.com/references/typescript/v5/NFTInput), upload that content to IPFS and pass the IPFS URI (of said `NFTInput`) to the underlying `setTokenURI` method.
 * [ERC1155.uri](https://portal.thirdweb.com/references/typescript/v5/erc1155/uri): Calls the "uri" function on the contract.
 ---
 ## ERC721
@@ -337,16 +272,14 @@
 * [ERC721.approve](https://portal.thirdweb.com/references/typescript/v5/erc721/approve): Prepares a transaction to call the "approve" function on the contract.
 * [ERC721.balanceOf](https://portal.thirdweb.com/references/typescript/v5/erc721/balanceOf): Calls the "balanceOf" function on the contract.
 * [ERC721.burn](https://portal.thirdweb.com/references/typescript/v5/erc721/burn): Prepares a transaction to call the "burn" function on the contract.
-* [ERC721.canClaim](https://portal.thirdweb.com/references/typescript/v5/erc721/canClaim): Check if a user can claim a drop.
 * [ERC721.claimConditionsUpdatedEvent](https://portal.thirdweb.com/references/typescript/v5/erc721/claimConditionsUpdatedEvent): Creates an event object for the ClaimConditionsUpdated event.
-* [ERC721.claimTo](https://portal.thirdweb.com/references/typescript/v5/erc721/claimTo): Claim ERC721 NFTs to a specified address This method is only available on the `DropERC721` contract.
-* [ERC721.claimToBatch](https://portal.thirdweb.com/references/typescript/v5/erc721/claimToBatch): This extension batches multiple `claimTo` extensions into one single multicall. Keep in mind that there is a limit of how many NFTs you can claim per transaction. This limit varies depends on the network that you are transacting on. This method is only available on the `DropERC721` contract.
-* [ERC721.createDelayedRevealBatch](https://portal.thirdweb.com/references/typescript/v5/erc721/createDelayedRevealBatch): Creates a batch of encrypted NFTs that can be revealed at a later time. This method is only available on the `DropERC721` contract.
+* [ERC721.claimTo](https://portal.thirdweb.com/references/typescript/v5/erc721/claimTo): Claim ERC721 NFTs to a specified address
+* [ERC721.claimToBatch](https://portal.thirdweb.com/references/typescript/v5/erc721/claimToBatch): This extension batches multiple `claimTo` extensions into one single multicall. Keep in mind that there is a limit of how many NFTs you can claim per transaction. This limit varies depends on the network that you are transacting on.
+* [ERC721.createDelayedRevealBatch](https://portal.thirdweb.com/references/typescript/v5/erc721/createDelayedRevealBatch): Creates a batch of encrypted NFTs that can be revealed at a later time.
 * [ERC721.generateMintSignature](https://portal.thirdweb.com/references/typescript/v5/erc721/generateMintSignature): Generates the payload and signature for minting an ERC721 token.
-* [ERC721.getActiveClaimCondition](https://portal.thirdweb.com/references/typescript/v5/erc721/getActiveClaimCondition): Retrieves the active claim condition. This method is only available on the `DropERC721` contract.
+* [ERC721.getActiveClaimCondition](https://portal.thirdweb.com/references/typescript/v5/erc721/getActiveClaimCondition): Retrieves the active claim condition.
 * [ERC721.getActiveClaimConditionId](https://portal.thirdweb.com/references/typescript/v5/erc721/getActiveClaimConditionId): Calls the "getActiveClaimConditionId" function on the contract.
 * [ERC721.getAllOwners](https://portal.thirdweb.com/references/typescript/v5/erc721/getAllOwners): Retrieves the owners of all ERC721 tokens within a specified range.
-* [ERC721.getApproved](https://portal.thirdweb.com/references/typescript/v5/erc721/getApproved): Calls the "getApproved" function on the contract.
 * [ERC721.getBatchesToReveal](https://portal.thirdweb.com/references/typescript/v5/erc721/getBatchesToReveal): Retrieves the batches available to reveal in an NFT contract.
 * [ERC721.getClaimConditionById](https://portal.thirdweb.com/references/typescript/v5/erc721/getClaimConditionById): Calls the "getClaimConditionById" function on the contract.
 * [ERC721.getClaimConditions](https://portal.thirdweb.com/references/typescript/v5/erc721/getClaimConditions): Retrieves all claim conditions.
@@ -362,8 +295,7 @@
 * [ERC721.isCreateDelayedRevealBatchSupported](https://portal.thirdweb.com/references/typescript/v5/erc721/isCreateDelayedRevealBatchSupported): Checks if the `createDelayedRevealBatch` method is supported by the given contract.
 * [ERC721.isERC721](https://portal.thirdweb.com/references/typescript/v5/erc721/isERC721): Check if a contract supports the ERC721 interface.
 * [ERC721.isGetActiveClaimConditionIdSupported](https://portal.thirdweb.com/references/typescript/v5/erc721/isGetActiveClaimConditionIdSupported): Checks if the `getActiveClaimConditionId` method is supported by the given contract.
-* [ERC721.isGetActiveClaimConditionSupported](https://portal.thirdweb.com/references/typescript/v5/erc721/isGetActiveClaimConditionSupported): Checks if the `getActiveClaimCondition` method is supported by the given contract. This method is only available on the `DropERC721` contract.
-* [ERC721.isGetApprovedSupported](https://portal.thirdweb.com/references/typescript/v5/erc721/isGetApprovedSupported): Checks if the `getApproved` method is supported by the given contract.
+* [ERC721.isGetActiveClaimConditionSupported](https://portal.thirdweb.com/references/typescript/v5/erc721/isGetActiveClaimConditionSupported): Checks if the `getActiveClaimCondition` method is supported by the given contract.
 * [ERC721.isGetBatchesToRevealSupported](https://portal.thirdweb.com/references/typescript/v5/erc721/isGetBatchesToRevealSupported): Checks if the `getBatchesToReveal` method is supported by the given contract.
 * [ERC721.isGetClaimConditionByIdSupported](https://portal.thirdweb.com/references/typescript/v5/erc721/isGetClaimConditionByIdSupported): Checks if the `getClaimConditionById` method is supported by the given contract.
 * [ERC721.isGetClaimConditionsSupported](https://portal.thirdweb.com/references/typescript/v5/erc721/isGetClaimConditionsSupported-2): Checks if the `getClaimConditions` method is supported by the given contract.
@@ -377,19 +309,18 @@
 * [ERC721.isSetClaimConditionsSupported](https://portal.thirdweb.com/references/typescript/v5/erc721/isSetClaimConditionsSupported): Checks if the `setClaimConditions` method is supported by the given contract.
 * [ERC721.isSetSharedMetadataSupported](https://portal.thirdweb.com/references/typescript/v5/erc721/isSetSharedMetadataSupported): Checks if the `setSharedMetadata` method is supported by the given contract.
 * [ERC721.isSharedMetadataSupported](https://portal.thirdweb.com/references/typescript/v5/erc721/isSharedMetadataSupported): Checks if the `sharedMetadata` method is supported by the given contract.
-* [ERC721.isTokenByIndexSupported](https://portal.thirdweb.com/references/typescript/v5/erc721/isTokenByIndexSupported): Checks if the `tokenByIndex` method is supported by the given contract.
 * [ERC721.isTotalSupplySupported](https://portal.thirdweb.com/references/typescript/v5/erc721/isTotalSupplySupported): Checks if the `totalSupply` method is supported by the given contract.
 * [ERC721.isUpdateMetadataSupported](https://portal.thirdweb.com/references/typescript/v5/erc721/isUpdateMetadataSupported-2): Checks if the `updateMetadata` method is supported by the given contract.
 * [ERC721.isUpdateTokenURISupported](https://portal.thirdweb.com/references/typescript/v5/erc721/isUpdateTokenURISupported): Checks if the `setTokenURI` method is supported by the given contract.
-* [ERC721.lazyMint](https://portal.thirdweb.com/references/typescript/v5/erc721/lazyMint): Lazily mints ERC721 tokens. This method is only available on the `DropERC721` contract.
-* [ERC721.mintTo](https://portal.thirdweb.com/references/typescript/v5/erc721/mintTo): Mints a new ERC721 token and assigns it to the specified address. This method is only available on the `TokenERC721` contract.
-* [ERC721.mintWithSignature](https://portal.thirdweb.com/references/typescript/v5/erc721/mintWithSignature): Mints a new ERC721 token with the given minter signature This method is only available on the `TokenERC721` contract.
+* [ERC721.lazyMint](https://portal.thirdweb.com/references/typescript/v5/erc721/lazyMint): Lazily mints ERC721 tokens.
+* [ERC721.mintTo](https://portal.thirdweb.com/references/typescript/v5/erc721/mintTo): Mints a new ERC721 token and assigns it to the specified address. If the `nft` parameter is a string, it will be used as the token URI. If the `nft` parameter is a file, it will be uploaded to the storage server and the resulting URI will be used as the token URI.
+* [ERC721.mintWithSignature](https://portal.thirdweb.com/references/typescript/v5/erc721/mintWithSignature): Mints a new ERC721 token with the given minter signature
 * [ERC721.nextTokenIdToMint](https://portal.thirdweb.com/references/typescript/v5/erc721/nextTokenIdToMint): Calls the "nextTokenIdToMint" function on the contract.
 * [ERC721.ownerOf](https://portal.thirdweb.com/references/typescript/v5/erc721/ownerOf): Calls the "ownerOf" function on the contract.
-* [ERC721.resetClaimEligibility](https://portal.thirdweb.com/references/typescript/v5/erc721/resetClaimEligibility): Reset the claim eligibility for all users. This method is only available on the `DropERC721` contract.
-* [ERC721.reveal](https://portal.thirdweb.com/references/typescript/v5/erc721/reveal): Reveals a previously lazy minted batch of NFTs. This method is only available on the `DropERC721` contract.
+* [ERC721.resetClaimEligibility](https://portal.thirdweb.com/references/typescript/v5/erc721/resetClaimEligibility): Reset the claim eligibility for all users.
+* [ERC721.reveal](https://portal.thirdweb.com/references/typescript/v5/erc721/reveal): Reveals a previously lazy minted batch of NFTs.
 * [ERC721.setApprovalForAll](https://portal.thirdweb.com/references/typescript/v5/erc721/setApprovalForAll): Prepares a transaction to call the "setApprovalForAll" function on the contract.
-* [ERC721.setClaimConditions](https://portal.thirdweb.com/references/typescript/v5/erc721/setClaimConditions): Set the claim conditions for a ERC721 drop This method is only available on the `DropERC721` contract.
+* [ERC721.setClaimConditions](https://portal.thirdweb.com/references/typescript/v5/erc721/setClaimConditions): Set the claim conditions for a ERC721 drop
 * [ERC721.setSharedMetadata](https://portal.thirdweb.com/references/typescript/v5/erc721/setSharedMetadata): Sets the shared metadata for a OpenEdition contract.
 * [ERC721.setTokenURI](https://portal.thirdweb.com/references/typescript/v5/erc721/setTokenURI): Prepares a transaction to call the "setTokenURI" function on the contract.
 * [ERC721.sharedMetadata](https://portal.thirdweb.com/references/typescript/v5/erc721/sharedMetadata): Calls the "sharedMetadata" function on the contract.
@@ -419,19 +350,18 @@
 * [ERC20.balanceOf](https://portal.thirdweb.com/references/typescript/v5/erc20/balanceOf): Calls the "balanceOf" function on the contract.
 * [ERC20.burn](https://portal.thirdweb.com/references/typescript/v5/erc20/burn): Prepares a transaction to call the "burn" function on the contract.
 * [ERC20.burnFrom](https://portal.thirdweb.com/references/typescript/v5/erc20/burnFrom): Prepares a transaction to call the "burnFrom" function on the contract.
-* [ERC20.canClaim](https://portal.thirdweb.com/references/typescript/v5/erc20/canClaim): Check if a user can claim a drop. This method is only available on the `DropERC20` contract.
 * [ERC20.claimConditionsUpdatedEvent](https://portal.thirdweb.com/references/typescript/v5/erc20/claimConditionsUpdatedEvent): Creates an event object for the ClaimConditionsUpdated event.
-* [ERC20.claimTo](https://portal.thirdweb.com/references/typescript/v5/erc20/claimTo): Claim ERC20 NFTs to a specified address This method is only available on the `DropERC20` contract.
+* [ERC20.claimTo](https://portal.thirdweb.com/references/typescript/v5/erc20/claimTo): Claim ERC20 NFTs to a specified address
 * [ERC20.decimals](https://portal.thirdweb.com/references/typescript/v5/erc20/decimals): Retrieves the number of decimal places for a given ERC20 contract.
 * [ERC20.delegate](https://portal.thirdweb.com/references/typescript/v5/erc20/delegate): Prepares a transaction to call the "delegate" function on the contract.
 * [ERC20.delegates](https://portal.thirdweb.com/references/typescript/v5/erc20/delegates): Calls the "delegates" function on the contract.
 * [ERC20.deposit](https://portal.thirdweb.com/references/typescript/v5/erc20/deposit): Calls the "deposit" function on the contract (useful to wrap ETH).
 * [ERC20.generateMintSignature](https://portal.thirdweb.com/references/typescript/v5/erc20/generateMintSignature): Generates the payload and signature for minting an ERC20 token.
-* [ERC20.getActiveClaimCondition](https://portal.thirdweb.com/references/typescript/v5/erc20/getActiveClaimCondition): Retrieves the active claim condition. This method is only available on the `DropERC20` contract.
+* [ERC20.getActiveClaimCondition](https://portal.thirdweb.com/references/typescript/v5/erc20/getActiveClaimCondition): Retrieves the active claim condition.
 * [ERC20.getActiveClaimConditionId](https://portal.thirdweb.com/references/typescript/v5/erc20/getActiveClaimConditionId): Calls the "getActiveClaimConditionId" function on the contract.
 * [ERC20.getBalance](https://portal.thirdweb.com/references/typescript/v5/erc20/getBalance): Retrieves the balance of an ERC20 token for a specific address.
 * [ERC20.getClaimConditionById](https://portal.thirdweb.com/references/typescript/v5/erc20/getClaimConditionById): Calls the "getClaimConditionById" function on the contract.
-* [ERC20.getClaimConditions](https://portal.thirdweb.com/references/typescript/v5/erc20/getClaimConditions): Retrieves all claim conditions. This method is only available on the `DropERC20` contract.
+* [ERC20.getClaimConditions](https://portal.thirdweb.com/references/typescript/v5/erc20/getClaimConditions): Retrieves all claim conditions.
 * [ERC20.getCurrencyMetadata](https://portal.thirdweb.com/references/typescript/v5/erc20/getCurrencyMetadata): Retrieves the metadata of a currency.
 * [ERC20.isClaimToSupported](https://portal.thirdweb.com/references/typescript/v5/erc20/isClaimToSupported): Checks if the `claimTo` method is supported by the given contract.
 * [ERC20.isERC20](https://portal.thirdweb.com/references/typescript/v5/erc20/isERC20): Check if a contract is an ERC20 token.
@@ -441,10 +371,10 @@
 * [ERC20.isMintToSupported](https://portal.thirdweb.com/references/typescript/v5/erc20/isMintToSupported): Checks if the `mintTo` method is supported by the given contract.
 * [ERC20.isResetClaimEligibilitySupported](https://portal.thirdweb.com/references/typescript/v5/erc20/isResetClaimEligibilitySupported): Checks if the `resetClaimEligibility` method is supported by the given contract.
 * [ERC20.isSetClaimConditionsSupported](https://portal.thirdweb.com/references/typescript/v5/erc20/isSetClaimConditionsSupported): Checks if the `setClaimConditions` method is supported by the given contract.
-* [ERC20.mintTo](https://portal.thirdweb.com/references/typescript/v5/erc20/mintTo): Mints a specified amount of tokens to a given address. This method is only available on the `TokenERC20` contract.
-* [ERC20.mintWithSignature](https://portal.thirdweb.com/references/typescript/v5/erc20/mintWithSignature): Mints a new ERC20 token with the given minter signature This method is only available on the `TokenERC20` contract.
-* [ERC20.resetClaimEligibility](https://portal.thirdweb.com/references/typescript/v5/erc20/resetClaimEligibility): Reset the claim eligibility for all users. This method is only available on the `DropERC20` contract.
-* [ERC20.setClaimConditions](https://portal.thirdweb.com/references/typescript/v5/erc20/setClaimConditions): Set the claim conditions for a ERC20 drop This method is only available on the `DropERC20` contract.
+* [ERC20.mintTo](https://portal.thirdweb.com/references/typescript/v5/erc20/mintTo): Mints a specified amount of tokens to a given address.
+* [ERC20.mintWithSignature](https://portal.thirdweb.com/references/typescript/v5/erc20/mintWithSignature): Mints a new ERC20 token with the given minter signature
+* [ERC20.resetClaimEligibility](https://portal.thirdweb.com/references/typescript/v5/erc20/resetClaimEligibility): Reset the claim eligibility for all users.
+* [ERC20.setClaimConditions](https://portal.thirdweb.com/references/typescript/v5/erc20/setClaimConditions): Set the claim conditions for a ERC20 drop
 * [ERC20.tokensClaimedEvent](https://portal.thirdweb.com/references/typescript/v5/erc20/tokensClaimedEvent): Creates an event object for the TokensClaimed event.
 * [ERC20.tokensMintedEvent](https://portal.thirdweb.com/references/typescript/v5/erc20/tokensMintedEvent): Creates an event object for the TokensMinted event.
 * [ERC20.tokensMintedWithSignatureEvent](https://portal.thirdweb.com/references/typescript/v5/erc20/tokensMintedWithSignatureEvent): Creates an event object for the TokensMintedWithSignature event.
@@ -492,7 +422,6 @@
 * [ERC4337.predictAccountAddress](https://portal.thirdweb.com/references/typescript/v5/erc4337/predictAccountAddress): Calls the "getAddress" function on the contract.
 * [ERC4337.removeAdmin](https://portal.thirdweb.com/references/typescript/v5/erc4337/removeAdmin): Removes admin permissions for a specified address.
 * [ERC4337.removeSessionKey](https://portal.thirdweb.com/references/typescript/v5/erc4337/removeSessionKey): Removes session key permissions for a specified address.
-* [ERC4337.shouldUpdateSessionKey](https://portal.thirdweb.com/references/typescript/v5/erc4337/shouldUpdateSessionKey): Checks if the session key should be updated.
 * [ERC4337.signerPermissionsUpdatedEvent](https://portal.thirdweb.com/references/typescript/v5/erc4337/signerPermissionsUpdatedEvent): Creates an event object for the SignerPermissionsUpdated event.
 * [ERC4337.simulateHandleOp](https://portal.thirdweb.com/references/typescript/v5/erc4337/simulateHandleOp): Prepares a transaction to call the "simulateHandleOp" function on the contract.
 * [ERC4337.totalAccounts](https://portal.thirdweb.com/references/typescript/v5/erc4337/totalAccounts): Calls the "totalAccounts" function on the contract.
@@ -645,6 +574,63 @@
 * [LENS.resolveAddress](https://portal.thirdweb.com/references/typescript/v5/lens/resolveAddress): Take in a Lens handle or local-name and return the wallet address behind that handle/local-name. For example, "lens/vitalik" is a handle, with "lens" being the namespace and "vitalik" being the local name
 * [LENS.tokenDataOf](https://portal.thirdweb.com/references/typescript/v5/lens/tokenDataOf): Calls the "tokenDataOf" function on the contract.
 ---
+## MARKETPLACE
+* [MARKETPLACE.acceptedOfferEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/acceptedOfferEvent): Creates an event object for the AcceptedOffer event.
+* [MARKETPLACE.acceptOffer](https://portal.thirdweb.com/references/typescript/v5/marketplace/acceptOffer): Accepts an offer after performing necessary checks and validations. Throws an error if the offer is not active, the offeror's balance is insufficient, or the offeror's allowance is insufficient.
+* [MARKETPLACE.approveBuyerForListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/approveBuyerForListing): Prepares a transaction to call the "approveBuyerForListing" function on the contract.
+* [MARKETPLACE.approveCurrencyForListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/approveCurrencyForListing): Prepares a transaction to call the "approveCurrencyForListing" function on the contract.
+* [MARKETPLACE.auctionClosedEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/auctionClosedEvent): Creates an event object for the AuctionClosed event.
+* [MARKETPLACE.bidInAuction](https://portal.thirdweb.com/references/typescript/v5/marketplace/bidInAuction): Places a bid in an English auction.
+* [MARKETPLACE.buyerApprovedForListingEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/buyerApprovedForListingEvent): Creates an event object for the BuyerApprovedForListing event.
+* [MARKETPLACE.buyFromListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/buyFromListing): Buys a listing from the marketplace.
+* [MARKETPLACE.buyoutAuction](https://portal.thirdweb.com/references/typescript/v5/marketplace/buyoutAuction): Buys out an English auction.
+* [MARKETPLACE.cancelAuction](https://portal.thirdweb.com/references/typescript/v5/marketplace/cancelAuction): Cancels an auction by providing the necessary options.
+* [MARKETPLACE.cancelledAuctionEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/cancelledAuctionEvent): Creates an event object for the CancelledAuction event.
+* [MARKETPLACE.cancelledListingEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/cancelledListingEvent): Creates an event object for the CancelledListing event.
+* [MARKETPLACE.cancelledOfferEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/cancelledOfferEvent): Creates an event object for the CancelledOffer event.
+* [MARKETPLACE.cancelListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/cancelListing): Prepares a transaction to call the "cancelListing" function on the contract.
+* [MARKETPLACE.cancelOffer](https://portal.thirdweb.com/references/typescript/v5/marketplace/cancelOffer): Prepares a transaction to call the "cancelOffer" function on the contract.
+* [MARKETPLACE.collectAuctionPayout](https://portal.thirdweb.com/references/typescript/v5/marketplace/collectAuctionPayout): Prepares a transaction to call the "collectAuctionPayout" function on the contract.
+* [MARKETPLACE.collectAuctionTokens](https://portal.thirdweb.com/references/typescript/v5/marketplace/collectAuctionTokens): Prepares a transaction to call the "collectAuctionTokens" function on the contract.
+* [MARKETPLACE.createAuction](https://portal.thirdweb.com/references/typescript/v5/marketplace/createAuction): Creates an auction.
+* [MARKETPLACE.createListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/createListing): Creates a direct listing.
+* [MARKETPLACE.currencyApprovedForListingEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/currencyApprovedForListingEvent): Creates an event object for the CurrencyApprovedForListing event.
+* [MARKETPLACE.currencyPriceForListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/currencyPriceForListing): Retrieves the currency price for a listing.
+* [MARKETPLACE.executeSale](https://portal.thirdweb.com/references/typescript/v5/marketplace/executeSale): Executes a sale for an English auction.
+* [MARKETPLACE.getAllAuctions](https://portal.thirdweb.com/references/typescript/v5/marketplace/getAllAuctions): Retrieves all auctions based on the provided options.
+* [MARKETPLACE.getAllListings](https://portal.thirdweb.com/references/typescript/v5/marketplace/getAllListings): Retrieves all direct listings based on the provided options.
+* [MARKETPLACE.getAllOffers](https://portal.thirdweb.com/references/typescript/v5/marketplace/getAllOffers): Retrieves all offers based on the provided options.
+* [MARKETPLACE.getAllValidAuctions](https://portal.thirdweb.com/references/typescript/v5/marketplace/getAllValidAuctions): Retrieves all valid auctions based on the provided options.
+* [MARKETPLACE.getAllValidListings](https://portal.thirdweb.com/references/typescript/v5/marketplace/getAllValidListings): Retrieves all valid direct listings based on the provided options.
+* [MARKETPLACE.getAllValidOffers](https://portal.thirdweb.com/references/typescript/v5/marketplace/getAllValidOffers): Retrieves all valid offers based on the provided options.
+* [MARKETPLACE.getAuction](https://portal.thirdweb.com/references/typescript/v5/marketplace/getAuction): Retrieves an auction listing based on the provided options.
+* [MARKETPLACE.getListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/getListing): Retrieves a direct listing based on the provided options.
+* [MARKETPLACE.getOffer](https://portal.thirdweb.com/references/typescript/v5/marketplace/getOffer): Retrieves an offer based on the provided options.
+* [MARKETPLACE.getWinningBid](https://portal.thirdweb.com/references/typescript/v5/marketplace/getWinningBid): Retrieves the winning bid information for a given auction.
+* [MARKETPLACE.isBidInAuctionSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isBidInAuctionSupported): Checks if the `bidInAuction` method is supported by the given contract.
+* [MARKETPLACE.isBuyerApprovedForListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/isBuyerApprovedForListing): Checks if the buyer is approved for a listing.
+* [MARKETPLACE.isBuyFromListingSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isBuyFromListingSupported): Checks if the `buyFromListing` method is supported by the given contract.
+* [MARKETPLACE.isCancelAuctionSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isCancelAuctionSupported): Checks if the `cancelAuction` method is supported by the given contract.
+* [MARKETPLACE.isCancelListingSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isCancelListingSupported): Checks if the `cancelListing` method is supported by the given contract.
+* [MARKETPLACE.isCreateAuctionSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isCreateAuctionSupported): Checks if the `createAuction` method is supported by the given contract.
+* [MARKETPLACE.isCreateListingSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isCreateListingSupported): Checks if the `createListing` method is supported by the given contract.
+* [MARKETPLACE.isCurrencyApprovedForListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/isCurrencyApprovedForListing): Calls the "isCurrencyApprovedForListing" function on the contract.
+* [MARKETPLACE.isGetAuctionSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isGetAuctionSupported): Checks if the `getAuction` method is supported by the given contract.
+* [MARKETPLACE.isGetListingSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isGetListingSupported): Checks if the `isGetListingSupported` method is supported by the given contract.
+* [MARKETPLACE.isGetWinningBidSupported](https://portal.thirdweb.com/references/typescript/v5/marketplace/isGetWinningBidSupported): Checks if the `getWinningBid` method is supported by the given contract.
+* [MARKETPLACE.isNewWinningBid](https://portal.thirdweb.com/references/typescript/v5/marketplace/isNewWinningBid): Calls the "isNewWinningBid" function on the contract.
+* [MARKETPLACE.makeOffer](https://portal.thirdweb.com/references/typescript/v5/marketplace/makeOffer): Makes an offer for any asset (ERC721 or ERC1155).
+* [MARKETPLACE.newAuctionEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/newAuctionEvent): Creates an event object for the NewAuction event.
+* [MARKETPLACE.newBidEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/newBidEvent): Creates an event object for the NewBid event.
+* [MARKETPLACE.newListingEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/newListingEvent): Creates an event object for the NewListing event.
+* [MARKETPLACE.newOfferEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/newOfferEvent): Creates an event object for the NewOffer event.
+* [MARKETPLACE.newSaleEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/newSaleEvent): Creates an event object for the NewSale event.
+* [MARKETPLACE.totalAuctions](https://portal.thirdweb.com/references/typescript/v5/marketplace/totalAuctions): Calls the "totalAuctions" function on the contract.
+* [MARKETPLACE.totalListings](https://portal.thirdweb.com/references/typescript/v5/marketplace/totalListings): Calls the "totalListings" function on the contract.
+* [MARKETPLACE.totalOffers](https://portal.thirdweb.com/references/typescript/v5/marketplace/totalOffers): Calls the "totalOffers" function on the contract.
+* [MARKETPLACE.updatedListingEvent](https://portal.thirdweb.com/references/typescript/v5/marketplace/updatedListingEvent): Creates an event object for the UpdatedListing event.
+* [MARKETPLACE.updateListing](https://portal.thirdweb.com/references/typescript/v5/marketplace/updateListing): Updates an existing direct listing.
+---
 ## MULTICALL3
 * [MULTICALL3.aggregate](https://portal.thirdweb.com/references/typescript/v5/multicall3/aggregate): Prepares a transaction to call the "aggregate" function on the contract.
 * [MULTICALL3.aggregate3](https://portal.thirdweb.com/references/typescript/v5/multicall3/aggregate3): Prepares a transaction to call the "aggregate3" function on the contract.
@@ -664,7 +650,7 @@
 * [MULTICALL3.tryBlockAndAggregate](https://portal.thirdweb.com/references/typescript/v5/multicall3/tryBlockAndAggregate): Prepares a transaction to call the "tryBlockAndAggregate" function on the contract.
 ---
 ## PACK
-* [PACK.createNewPack](https://portal.thirdweb.com/references/typescript/v5/pack/createNewPack): \[Pack contract is incompatible with Pectra update. Support for this contract is being removed in next release.\]
+* [PACK.createNewPack](https://portal.thirdweb.com/references/typescript/v5/pack/createNewPack): Reference for PACK.createNewPack
 * [PACK.createPack](https://portal.thirdweb.com/references/typescript/v5/pack/createPack): Prepares a transaction to call the "createPack" function on the contract.
 * [PACK.getPackContents](https://portal.thirdweb.com/references/typescript/v5/pack/getPackContents): Calls the "getPackContents" function on the contract.
 * [PACK.getTokenCountOfBundle](https://portal.thirdweb.com/references/typescript/v5/pack/getTokenCountOfBundle): Calls the "getTokenCountOfBundle" function on the contract.
@@ -726,10 +712,12 @@
 * [THIRDWEB.getPublishedUriFromCompilerUri](https://portal.thirdweb.com/references/typescript/v5/thirdweb/getPublishedUriFromCompilerUri): Calls the "getPublishedUriFromCompilerUri" function on the contract.
 * [THIRDWEB.getPublisherProfileUri](https://portal.thirdweb.com/references/typescript/v5/thirdweb/getPublisherProfileUri): Calls the "getPublisherProfileUri" function on the contract.
 * [THIRDWEB.isContractTypeSupported](https://portal.thirdweb.com/references/typescript/v5/thirdweb/isContractTypeSupported): Checks if the `contractType` method is supported by the given contract.
-* [THIRDWEB.publishContract](https://portal.thirdweb.com/references/typescript/v5/thirdweb/publishContract): Publish a contract to the contract publisher.
 * [THIRDWEB.remove](https://portal.thirdweb.com/references/typescript/v5/thirdweb/remove): Prepares a transaction to call the "remove" function on the contract.
 * [THIRDWEB.setPublisherProfileUri](https://portal.thirdweb.com/references/typescript/v5/thirdweb/setPublisherProfileUri): Prepares a transaction to call the "setPublisherProfileUri" function on the contract.
 * [THIRDWEB.unpublishContract](https://portal.thirdweb.com/references/typescript/v5/thirdweb/unpublishContract): Prepares a transaction to call the "unpublishContract" function on the contract.
+---
+## thirdweb
+* [thirdweb.publishContract](https://portal.thirdweb.com/references/typescript/v5/thirdweb/publishContract): Publish a contract to the contract publisher.
 ---
 ## UNISWAP
 * [UNISWAP.createPool](https://portal.thirdweb.com/references/typescript/v5/uniswap/createPool): Prepares a transaction to call the "createPool" function on the contract.
@@ -809,7 +797,6 @@
 * [MODULES.isGetSupportedCallbackFunctionsSupported](https://portal.thirdweb.com/references/typescript/v5/modules/isGetSupportedCallbackFunctionsSupported): Checks if the `getSupportedCallbackFunctions` method is supported by the given contract.
 * [MODULES.isInstallModuleSupported](https://portal.thirdweb.com/references/typescript/v5/modules/isInstallModuleSupported): Checks if the `installModule` method is supported by the given contract.
 * [MODULES.isUninstallModuleSupported](https://portal.thirdweb.com/references/typescript/v5/modules/isUninstallModuleSupported): Checks if the `uninstallModule` method is supported by the given contract.
-* [MODULES.moduleInstalledEvent](https://portal.thirdweb.com/references/typescript/v5/modules/moduleInstalledEvent): Creates an event object for the ModuleInstalled event.
 * [MODULES.owner](https://portal.thirdweb.com/references/typescript/v5/modules/owner): Calls the "owner" function on the contract.
 * [MODULES.ownershipHandoverExpiresAt](https://portal.thirdweb.com/references/typescript/v5/modules/ownershipHandoverExpiresAt): Calls the "ownershipHandoverExpiresAt" function on the contract.
 * [MODULES.renounceOwnership](https://portal.thirdweb.com/references/typescript/v5/modules/renounceOwnership): Prepares a transaction to call the "renounceOwnership" function on the contract.
@@ -826,9 +813,8 @@
 ## EIP5792
 * [EIP5792.getCallsStatus](https://portal.thirdweb.com/references/typescript/v5/eip5792/getCallsStatus): Get the status of an [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) bundle.
 * [EIP5792.getCapabilities](https://portal.thirdweb.com/references/typescript/v5/eip5792/getCapabilities): Get the capabilities of a wallet based on the [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) specification.
-* [EIP5792.sendAndConfirmCalls](https://portal.thirdweb.com/references/typescript/v5/eip5792/sendAndConfirmCalls): Send and confirm calls in a single transaction.
 * [EIP5792.sendCalls](https://portal.thirdweb.com/references/typescript/v5/eip5792/sendCalls): Send [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) calls to a wallet. This function works with all Thirdweb wallets (in-app and smart) and certain injected wallets that already support EIP-5792\. Transactions will be bundled and sponsored when those capabilities are supported, otherwise they will be sent as individual transactions.
-* [EIP5792.waitForCallsReceipt](https://portal.thirdweb.com/references/typescript/v5/eip5792/waitForCallsReceipt): Waits for the [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) bundle to be confirmed.
+* [EIP5792.waitForBundle](https://portal.thirdweb.com/references/typescript/v5/eip5792/waitForBundle): Waits for the [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) bundle to be confirmed.
 ---
 # Modules
 ---
@@ -972,16 +958,6 @@
 * [TransferableERC721.setTransferable](https://portal.thirdweb.com/references/typescript/v5/transferableerc721/setTransferable): Prepares a transaction to call the "setTransferable" function on the contract.
 * [TransferableERC721.setTransferableFor](https://portal.thirdweb.com/references/typescript/v5/transferableerc721/setTransferableFor): Prepares a transaction to call the "setTransferableFor" function on the contract.
 ---
-# Universal Bridge
----
-## Buy
-* [Buy.prepare](https://portal.thirdweb.com/references/typescript/v5/buy/prepare): Prepares a _finalized_ Universal Bridge quote for the provided buy request with transaction data. This function will return everything `quote` does, with the addition of a series of prepared transactions and the associated expiration timestamp.
-* [Buy.quote](https://portal.thirdweb.com/references/typescript/v5/buy/quote): Retrieves a Universal Bridge quote for the provided buy intent. The quote will specify the necessary `originAmount` to receive the desired `destinationAmount`, which is specified with the `buyAmountWei` option.
----
-## Sell
-* [Sell.prepare](https://portal.thirdweb.com/references/typescript/v5/sell/prepare): Prepares a _finalized_ Universal Bridge quote for the provided sell request with transaction data. This function will return everything `quote` does, with the addition of a series of prepared transactions and the associated expiration timestamp.
-* [Sell.quote](https://portal.thirdweb.com/references/typescript/v5/sell/quote): Retrieves a Universal Bridge quote for the provided sell intent. The quote will specify the expected `destinationAmount` that will be received in exchange for the specified `originAmount`, which is specified with the `sellAmountWei` option.
----
 # Client
 * [createThirdwebClient](https://portal.thirdweb.com/references/typescript/v5/createThirdwebClient): Creates a Thirdweb client using the provided client ID (client-side) or secret key (server-side).
 ---
@@ -990,7 +966,7 @@
 * [AccountBalance](https://portal.thirdweb.com/references/typescript/v5/AccountBalance): This component fetches and shows the balance of the wallet address on a given chain. It inherits all the attributes of a HTML `<span>` component, hence you can style it just like how you would style a normal `<span>`
 * [AccountName](https://portal.thirdweb.com/references/typescript/v5/AccountName): This component is used to display the name of the account. A "name" in this context is the username, or account of the social profiles that the wallet may have. In case a name is not found or failed to resolve, you can always fallback to displaying the wallet address instead by using the `fallbackComponent` prop.
 * [WalletIcon](https://portal.thirdweb.com/references/typescript/v5/WalletIcon): This component tries to resolve the icon of a given wallet, then return an image.
-* [deploySmartAccount](https://portal.thirdweb.com/references/typescript/v5/deploySmartAccount): Deployes a smart account via a dummy transaction. If the account is already deployed, this will do nothing.
+* [deploySmartAccount](https://portal.thirdweb.com/references/typescript/v5/deploySmartAccount): Deployes a smart account via a dummy transaction.
 * [getUser](https://portal.thirdweb.com/references/typescript/v5/getUser): Gets user based on the provided query parameters. This function is only available on the server (a secret key is required in the client).
 * [authenticate](https://portal.thirdweb.com/references/typescript/v5/authenticate): Authenticates the user based on the provided authentication arguments.
 * [authenticateWithRedirect](https://portal.thirdweb.com/references/typescript/v5/authenticateWithRedirect): Authenticates the user based on the provided authentication arguments using a redirect.
@@ -1011,11 +987,8 @@
 * [smartWallet](https://portal.thirdweb.com/references/typescript/v5/smartWallet): Creates a ERC4337 smart wallet based on a admin account.
 * [unlinkProfile](https://portal.thirdweb.com/references/typescript/v5/unlinkProfile): Disconnects an existing profile (authentication method) from the current user. Once disconnected, that profile can no longer be used to sign into the account.
 * [walletConnect](https://portal.thirdweb.com/references/typescript/v5/walletConnect): Creates a wallet that allows connecting to any wallet that supports the WalletConnect protocol.
-* [engineAccount](https://portal.thirdweb.com/references/typescript/v5/engineAccount): This for v2 dedicated engine instances, for v3 and engine cloud use Engine.serverWallet()
+* [engineAccount](https://portal.thirdweb.com/references/typescript/v5/engineAccount): Creates an account that uses your engine backend wallet for sending transactions and signing messages.
 * [ERC7579.erc7579](https://portal.thirdweb.com/references/typescript/v5/erc7579): Config for a ERC7579 modular smart wallet.
----
-# Wallet Connection
-* [AutoConnect](https://portal.thirdweb.com/references/typescript/v5/autoConnect): AutoConnect last connected wallet on page reload or revisit. Note: If you are using `ConnectButton` or `ConnectEmbed` components, You don't need to use this component as it is already included.
 ---
 # Wallet Utilities
 * [generateAccount](https://portal.thirdweb.com/references/typescript/v5/generateAccount): Generates a new account with a random private key.
@@ -1027,15 +1000,12 @@
 * [createAndSignUserOp](https://portal.thirdweb.com/references/typescript/v5/createAndSignUserOp): Create and sign a user operation.
 * [createUnsignedUserOp](https://portal.thirdweb.com/references/typescript/v5/createUnsignedUserOp): Creates an unsigned user operation from a prepared transaction.
 * [estimateUserOpGas](https://portal.thirdweb.com/references/typescript/v5/estimateUserOpGas): Estimate the gas cost of a user operation.
-* [estimateUserOpGasCost](https://portal.thirdweb.com/references/typescript/v5/estimateUserOpGasCost): Estimate the gas cost of a user operation.
 * [getPaymasterAndData](https://portal.thirdweb.com/references/typescript/v5/getPaymasterAndData): Get paymaster and data details for a user operation.
 * [getUserOpGasFees](https://portal.thirdweb.com/references/typescript/v5/getUserOpGasFees): Get the gas fees of a user operation.
-* [getUserOpHash](https://portal.thirdweb.com/references/typescript/v5/getUserOpHash): Get the hash of a user operation.
 * [getUserOpReceipt](https://portal.thirdweb.com/references/typescript/v5/getUserOpReceipt): Get the receipt of a user operation.
 * [getUserOpReceiptRaw](https://portal.thirdweb.com/references/typescript/v5/getUserOpReceiptRaw): Get the receipt of a user operation.
 * [predictAddress](https://portal.thirdweb.com/references/typescript/v5/predictAddress): Use `predictSmartAccountAddress` instead.
 * [predictSmartAccountAddress](https://portal.thirdweb.com/references/typescript/v5/predictSmartAccountAddress): Predict the address of a smart account.
-* [prepareUserOp](https://portal.thirdweb.com/references/typescript/v5/prepareUserOp): Prepare a user operation for signing.
 * [signUserOp](https://portal.thirdweb.com/references/typescript/v5/signUserOp): Sign a user operation.
 * [waitForUserOpReceipt](https://portal.thirdweb.com/references/typescript/v5/waitForUserOpReceipt): Wait for the user operation to be mined.
 ---
@@ -1061,7 +1031,7 @@
 * [verifyContract](https://portal.thirdweb.com/references/typescript/v5/verifyContract): Verifies a contract by performing the following steps:
 * [getInitializeTransaction](https://portal.thirdweb.com/references/typescript/v5/getInitializeTransaction): Prepares the initialization transaction for a contract deployment
 * [getOrDeployInfraForPublishedContract](https://portal.thirdweb.com/references/typescript/v5/getOrDeployInfraForPublishedContract): Gets or deploys the infrastructure contracts needed for a published contract deployment
-* [getContractEvents](https://portal.thirdweb.com/references/typescript/v5/getContractEvents): Get contract events
+* [getContractEvents](https://portal.thirdweb.com/references/typescript/v5/getContractEvents): Retrieves events from a contract based on the provided options.
 * [parseEventLogs](https://portal.thirdweb.com/references/typescript/v5/parseEventLogs): Parses logs and returns the corresponding events.
 * [prepareEvent](https://portal.thirdweb.com/references/typescript/v5/prepareEvent): Prepares an event by parsing the signature, generating the event hash, and encoding the event topics.
 * [watchContractEvents](https://portal.thirdweb.com/references/typescript/v5/watchContractEvents): Listens for contract events from the blockchain.
@@ -1090,19 +1060,6 @@
 * [waitForReceipt](https://portal.thirdweb.com/references/typescript/v5/waitForReceipt): Waits for the transaction receipt of a given transaction hash on a specific contract.
 * [getTransactionStore](https://portal.thirdweb.com/references/typescript/v5/getTransactionStore): Retrieve the transaction store for a given address.
 ---
-# Insight
-* [getContractEvents](https://portal.thirdweb.com/references/typescript/v5/getContractEvents-2): Get contract events
-* [getContractNFTs](https://portal.thirdweb.com/references/typescript/v5/getContractNFTs): Get all NFTs from a contract
-* [getNFT](https://portal.thirdweb.com/references/typescript/v5/getNFT): Get NFT metadata by contract address and token id
-* [getOwnedNFTs](https://portal.thirdweb.com/references/typescript/v5/getOwnedNFTs): Get NFTs owned by an address
-* [getOwnedTokens](https://portal.thirdweb.com/references/typescript/v5/getOwnedTokens): Get ERC20 tokens owned by an address
-* [getTransactions](https://portal.thirdweb.com/references/typescript/v5/getTransactions): Get transactions for a wallet
----
-# Engine
-* [getTransactionStatus](https://portal.thirdweb.com/references/typescript/v5/getTransactionStatus): Get the execution status of a transaction.
-* [ServerWallet](https://portal.thirdweb.com/references/typescript/v5/serverWallet): Reference for ServerWallet
-* [waitForTransactionHash](https://portal.thirdweb.com/references/typescript/v5/waitForTransactionHash): Wait for a transaction to be submitted onchain and return the transaction hash.
----
 # Nebula
 * [chat](https://portal.thirdweb.com/references/typescript/v5/chat): Chat with Nebula.
 * [execute](https://portal.thirdweb.com/references/typescript/v5/execute): Execute a transaction based on a prompt.
@@ -1112,14 +1069,14 @@
 ---
 # Auth
 * [createAuth](https://portal.thirdweb.com/references/typescript/v5/createAuth): Creates an authentication object with the given options.
-* [isErc6492Signature](https://portal.thirdweb.com/references/typescript/v5/isErc6492Signature): Determines if a signature is compatible with [ERC6492](https://eips.ethereum.org/EIPS/eip-6492)
-* [parseErc6492Signature](https://portal.thirdweb.com/references/typescript/v5/parseErc6492Signature): Parses a serialized (Hex) [ERC-6492](https://eips.ethereum.org/EIPS/eip-6492) signature. If the signature is not in ERC-6492 format, the original signature is returned.
-* [serializeErc6492Signature](https://portal.thirdweb.com/references/typescript/v5/serializeErc6492Signature): Serializes a signature for use with [ERC-6492](https://eips.ethereum.org/EIPS/eip-6492). The signature must be generated by a signer for an [ERC-4337](https://eips.ethereum.org/EIPS/eip-4337) Account Factory account with counterfactual deployment addresses.
+* [isErc6492Signature](https://portal.thirdweb.com/references/typescript/v5/isErc6492Signature): The signature to check for ERC6492 compatibility
+* [parseErc6492Signature](https://portal.thirdweb.com/references/typescript/v5/parseErc6492Signature): The signature to parse
+* [serializeErc6492Signature](https://portal.thirdweb.com/references/typescript/v5/serializeErc6492Signature): The serialized signature
 * [signLoginPayload](https://portal.thirdweb.com/references/typescript/v5/signLoginPayload): Signs the login payload using the provided account.
-* [verifyContractWalletSignature](https://portal.thirdweb.com/references/typescript/v5/verifyContractWalletSignature): Verifies a contract wallet signature using [ERC-6942](https://eips.ethereum.org/EIPS/eip-6942) Signature Validation for Predeploy Contracts. This function will validate signatures for both deployed and undeployed smart accounts of all signature types.
+* [verifyContractWalletSignature](https://portal.thirdweb.com/references/typescript/v5/verifyContractWalletSignature): A boolean indicating whether the signature is valid.
 * [verifyEOASignature](https://portal.thirdweb.com/references/typescript/v5/verifyEOASignature): Verifies the signature of a message using an Ethereum account's EOA (Externally Owned Account).
 * [verifySignature](https://portal.thirdweb.com/references/typescript/v5/verifySignature): Verifies the signature based on the provided options. Handles smart contract wallet signatures and EOA signatures._IMPORTANT: in order to check smart contract signatures, a chain and client must be provided. Or, you can use the `verifyContractWalletSignature` function directly if all signatures will be from smart accounts._
-* [verifyTypedData](https://portal.thirdweb.com/references/typescript/v5/verifyTypedData): Verify am [EIP-712](https://eips.ethereum.org/EIPS/eip-712) typed data signature. This function is interoperable with all wallet types (smart accounts or EOAs).
+* [verifyTypedData](https://portal.thirdweb.com/references/typescript/v5/verifyTypedData): A promise that resolves to `true` if the signature is valid, or `false` otherwise.
 * [decodeJWT](https://portal.thirdweb.com/references/typescript/v5/decodeJWT): Decodes a JSON Web Token (JWT) and returns the decoded payload and signature.
 * [encodeJWT](https://portal.thirdweb.com/references/typescript/v5/encodeJWT): Builds a JSON Web Token (JWT) using the provided options.
 * [refreshJWT](https://portal.thirdweb.com/references/typescript/v5/refreshJWT): Refreshes a JSON Web Token (JWT) by encoding a new payload with updated expiration time.
@@ -1129,27 +1086,13 @@
 * [NFTMedia](https://portal.thirdweb.com/references/typescript/v5/NFTMedia): This component fetches and displays an NFT's media. It uses thirdweb [MediaRenderer](https://portal.thirdweb.com/refernces/typescript/v5/MediaRenderer) under the hood so you can style it just like how you would style a MediaRenderer.
 * [NFTName](https://portal.thirdweb.com/references/typescript/v5/NFTName): This component fetches and displays an NFT's name. It takes in a `className` and `style` props so you can style it just like how you would style a `<span>` element.
 ---
-# Buy Crypto
-* [convertCryptoToFiat](https://portal.thirdweb.com/references/typescript/v5/convertCryptoToFiat): Get a price of a token (using tokenAddress + chainId) in fiat. Only USD is supported at the moment.
-* [convertFiatToCrypto](https://portal.thirdweb.com/references/typescript/v5/convertFiatToCrypto): Convert a fiat value to a token. Currently only USD is supported.
-* [getBuyHistory](https://portal.thirdweb.com/references/typescript/v5/getBuyHistory): Get Buy transaction history for a given wallet address.
-* [getBuyWithCryptoHistory](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory): Gets the History of purchases for a given wallet address
-* [getBuyWithCryptoQuote](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote): Get a quote of type [BuyWithCryptoQuote](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote) to buy any given token with crypto. This quote contains the information about the swap such as token amounts, processing fees, estimated time etc.
-* [getBuyWithCryptoStatus](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoStatus): use Bridge.status instead
-* [getBuyWithCryptoTransfer](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoTransfer): Get a quote of type [BuyWithCryptoTransfer](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoTransfer) to facilitate a token transfer transaction. Using this instead of a native transfer allows you to receive status and webhooks about successful or failed payments.
-* [getBuyWithFiatHistory](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatHistory): Get the "Buy with fiat" transaction history for a given wallet address
-* [getBuyWithFiatQuote](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote): Get a quote of type [BuyWithFiatQuote](https://portal.thirdweb.com/references/typescript/v5/BuyWithFiatQuote) to buy given token with fiat currency. This quote contains the information about the swap such as token amounts, processing fees, estimated time etc.
-* [getBuyWithFiatStatus](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatStatus): Once you get a `quote` from [getBuyWithFiatQuote](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote)and open the `quote.onRampLink` in a new tab, you can start polling for the transaction status using `getBuyWithFiatStatus`
-* [getPostOnRampQuote](https://portal.thirdweb.com/references/typescript/v5/getPostOnRampQuote): When buying a token with fiat currency - It only involes doing on-ramp if the on-ramp provider supports buying the given destination token directly.
-* [isSwapRequiredPostOnramp](https://portal.thirdweb.com/references/typescript/v5/isSwapRequiredPostOnramp): Check if a Swap is required after on-ramp when buying a token with fiat currency.
----
 # Tokens
 * [TokenIcon](https://portal.thirdweb.com/references/typescript/v5/TokenIcon): This component tries to resolve the icon of a given token, then return an image.
 * [TokenName](https://portal.thirdweb.com/references/typescript/v5/TokenName): This component fetches then shows the name of a token. For ERC20 tokens, it calls the `name` function in the ERC20 contract. It inherits all the attributes of a HTML `<span>` component, hence you can style it just like how you would style a normal `<span>`
 * [TokenSymbol](https://portal.thirdweb.com/references/typescript/v5/TokenSymbol): This component fetches then shows the symbol of a token. For ERC20 tokens, it calls the `symbol` function in the ERC20 contract. It inherits all the attributes of a HTML `<span>` component, hence you can style it just like how you would style a normal `<span>`
 ---
 # Storage
-* [download](https://portal.thirdweb.com/references/typescript/v5/download): Downloads a file from the specified IPFS, Arweave, or HTTP URI.
+* [download](https://portal.thirdweb.com/references/typescript/v5/download): Download a file from IPFS:
 * [resolveArweaveScheme](https://portal.thirdweb.com/references/typescript/v5/resolveArweaveScheme): Resolves the scheme of a given Arweave URI and returns the corresponding URL.
 * [resolveScheme](https://portal.thirdweb.com/references/typescript/v5/resolveScheme): Resolves the scheme of a given URI and returns the corresponding URL. If the URI starts with "ipfs://", it constructs a URL using the IPFS client ID and the IPFS gateway. If the URI starts with "http", it returns the URI as is. Otherwise, it throws an error indicating an invalid URI scheme.
 * [unpin](https://portal.thirdweb.com/references/typescript/v5/unpin): Unpins a file from IPFS. For security purposes, this method requires a secret key to be set in the ThirdwebClient instance.
@@ -1248,18 +1191,23 @@
 * [stringify](https://portal.thirdweb.com/references/typescript/v5/stringify): Stringify a JSON object and convert all bigint values to string
 ---
 # Miscellaneous
-* [installPublishedExtension](https://portal.thirdweb.com/references/typescript/v5/installPublishedExtension): Install a published extension on a dynamic contract
-* [uninstallExtension](https://portal.thirdweb.com/references/typescript/v5/uninstallExtension): Uninstall an extension on a dynamic contract
-* [activateStylusContract](https://portal.thirdweb.com/references/typescript/v5/activateStylusContract): Activate a stylus contract by calling ArbWasm Precompile
+* [convertCryptoToFiat](https://portal.thirdweb.com/references/typescript/v5/convertCryptoToFiat): Get a price of a token (using tokenAddress + chainId) in fiat. Only USD is supported at the moment.
+* [convertFiatToCrypto](https://portal.thirdweb.com/references/typescript/v5/convertFiatToCrypto): Convert a fiat value to a token. Currently only USD is supported.
+* [getBuyHistory](https://portal.thirdweb.com/references/typescript/v5/getBuyHistory): Get Buy transaction history for a given wallet address.
+* [getBuyWithCryptoHistory](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory): Gets the History of purchases for a given wallet address
+* [getBuyWithCryptoQuote](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote): Get a quote of type [BuyWithCryptoQuote](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote) to buy any given token with crypto. This quote contains the information about the swap such as token amounts, processing fees, estimated time etc.
+* [getBuyWithCryptoStatus](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoStatus): Gets the status of a buy with crypto transaction
+* [getBuyWithCryptoTransfer](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoTransfer): Get a quote of type [BuyWithCryptoTransfer](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoTransfer) to facilitate a token transfer transaction. Using this instead of a native transfer allows you to receive status and webhooks about successful or failed payments.
+* [getBuyWithFiatHistory](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatHistory): Get the "Buy with fiat" transaction history for a given wallet address
+* [getBuyWithFiatQuote](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote): Get a quote of type [BuyWithFiatQuote](https://portal.thirdweb.com/references/typescript/v5/BuyWithFiatQuote) to buy given token with fiat currency. This quote contains the information about the swap such as token amounts, processing fees, estimated time etc.
+* [getBuyWithFiatStatus](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatStatus): Once you get a `quote` from [getBuyWithFiatQuote](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote)and open the `quote.onRampLink` in a new tab, you can start polling for the transaction status using `getBuyWithFiatStatus`
+* [getPostOnRampQuote](https://portal.thirdweb.com/references/typescript/v5/getPostOnRampQuote): When buying a token with fiat currency - It only involes doing on-ramp if the on-ramp provider supports buying the given destination token directly.
+* [isSwapRequiredPostOnramp](https://portal.thirdweb.com/references/typescript/v5/isSwapRequiredPostOnramp): Check if a Swap is required after on-ramp when buying a token with fiat currency.
 * [WalletName](https://portal.thirdweb.com/references/typescript/v5/WalletName): This component fetches then shows the name of a wallet. It inherits all the attributes of a HTML `<span>` component, hence you can style it just like how you would style a normal `<span>`
 * [decodeAbiParameters](https://portal.thirdweb.com/references/typescript/v5/decodeAbiParameters): Reference for decodeAbiParameters
 * [encodePacked](https://portal.thirdweb.com/references/typescript/v5/encodePacked): Reference for encodePacked
 * [isBytes](https://portal.thirdweb.com/references/typescript/v5/isBytes): Reference for isBytes
 * [isValidENSName](https://portal.thirdweb.com/references/typescript/v5/isValidENSName): Checks if a string is a valid ENS name. It does not check if the ENS name is currently registered or resolves to an address - it only validates the string format.
-* [setServiceKey](https://portal.thirdweb.com/references/typescript/v5/setServiceKey): Reference for setServiceKey
-* [setThirdwebDomains](https://portal.thirdweb.com/references/typescript/v5/setThirdwebDomains): Reference for setThirdwebDomains
 * [toEventSelector](https://portal.thirdweb.com/references/typescript/v5/toEventSelector): Returns the hash (of the function/event signature) for a given event or function definition.
 * [toFunctionSelector](https://portal.thirdweb.com/references/typescript/v5/toFunctionSelector): Reference for toFunctionSelector
-* [getInstalledWallets](https://portal.thirdweb.com/references/typescript/v5/getInstalledWallets): Get All currently installed wallets. Uses EIP-6963 to discover installed browser extension wallets.
-* [randomPrivateKey](https://portal.thirdweb.com/references/typescript/v5/randomPrivateKey): Generates a random ECDSA private key on the secp256k1 curve.
-* [create7702MinimalAccount](https://portal.thirdweb.com/references/typescript/v5/create7702MinimalAccount): Reference for create7702MinimalAccount
+* [AutoConnect](https://portal.thirdweb.com/references/typescript/v5/autoConnect): AutoConnect last connected wallet on page reload or revisit. Note: If you are using `ConnectButton` or `ConnectEmbed` components, You don't need to use this component as it is already included.
