@@ -9,7 +9,10 @@ import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { defineChain, type ThirdwebClient } from "thirdweb";
 import { TokenProvider, TokenSymbol, useActiveWallet } from "thirdweb/react";
-import { reportAssetCreationFailed } from "@/analytics/report";
+import {
+  reportAssetCreationFailed,
+  reportAssetCreationSuccessful,
+} from "@/analytics/report";
 import type { MultiStepState } from "@/components/blocks/multi-step-status/multi-step-status";
 import { MultiStepStatus } from "@/components/blocks/multi-step-status/multi-step-status";
 import { WalletAddress } from "@/components/blocks/wallet-address";
@@ -221,6 +224,11 @@ export function LaunchNFT(props: {
         throw error;
       }
     }
+
+    reportAssetCreationSuccessful({
+      assetType: "nft",
+      contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
+    });
 
     props.onLaunchSuccess();
     batchesProcessedRef.current = 0;
