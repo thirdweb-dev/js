@@ -227,7 +227,7 @@ export default function SupportCasesClient({
             <Button
               className="border-[#1F1F1F] bg-[#0A0A0A] text-white hover:bg-[#1F1F1F] hover:text-white"
               onClick={handleBackToCases}
-              variant="outline"
+              variant="outline" 
             >
               ← Back to Cases
             </Button>
