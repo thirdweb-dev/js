@@ -1,5 +1,5 @@
 ---
-'thirdweb': minor
+"thirdweb": patch
 ---
 
 Add Somnia Testnet
