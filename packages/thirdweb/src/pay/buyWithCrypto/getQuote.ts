@@ -7,6 +7,7 @@ import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
 import { getContract } from "../../contract/contract.js";
 import { decimals } from "../../extensions/erc20/read/decimals.js";
 import type { PrepareTransactionOptions } from "../../transaction/prepare-transaction.js";
+import type { PurchaseData } from "../types.js";
 import type {
   QuoteApprovalInfo,
   QuotePaymentToken,
@@ -76,7 +77,7 @@ export type GetBuyWithCryptoQuoteParams = {
    *
    * This details will be stored with the purchase and can be retrieved later via the status API or Webhook
    */
-  purchaseData?: object;
+  purchaseData?: PurchaseData;
 
   /**
    * The maximum slippage in basis points (bps) allowed for the swap.

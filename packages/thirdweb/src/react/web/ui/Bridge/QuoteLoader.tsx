@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { Token } from "../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import type { PurchaseData } from "../../../../pay/types.js";
 import { toUnits } from "../../../../utils/units.js";
 import {
   type BridgePrepareRequest,
@@ -69,7 +70,7 @@ interface QuoteLoaderProps {
   /**
    * Optional purchase data for the payment
    */
-  purchaseData?: object;
+  purchaseData?: PurchaseData;
 
   /**
    * Optional payment link ID for the payment
@@ -175,7 +176,7 @@ function getBridgeParams(args: {
   client: ThirdwebClient;
   sender?: string;
   feePayer?: "sender" | "receiver";
-  purchaseData?: object;
+  purchaseData?: PurchaseData;
   paymentLinkId?: string;
 }): UseBridgePrepareParams {
   const { paymentMethod, amount, destinationToken, receiver, client, sender } =

@@ -6,6 +6,7 @@ import { getContract } from "../../contract/contract.js";
 import { decimals } from "../../extensions/erc20/read/decimals.js";
 import type { CurrencyMeta } from "../../react/web/ui/ConnectWallet/screens/Buy/fiat/currencies.js";
 import { toTokens, toUnits } from "../../utils/units.js";
+import type { PurchaseData } from "../types.js";
 import type { FiatProvider, PayTokenInfo } from "../utils/commonTypes.js";
 /**
  * Parameters for [`getBuyWithFiatQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote) function
@@ -80,7 +81,7 @@ export type GetBuyWithFiatQuoteParams = {
    *
    * This details will be stored with the purchase and can be retrieved later via the status API or Webhook
    */
-  purchaseData?: object;
+  purchaseData?: PurchaseData;
 
   /**
    * Optional parameter to onramp gas with the purchase
