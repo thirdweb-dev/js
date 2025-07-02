@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import type { Token } from "../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { type Address, getAddress } from "../../../../utils/address.js";
+import { numberToPlainString } from "../../../../utils/formatNumber.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
@@ -112,9 +113,9 @@ export function FundWallet({
     // Convert USD amount to token amount using token price
     const tokenAmount = usdAmount / uiOptions.destinationToken.priceUsd;
     // Format to reasonable decimal places (up to 6 decimals, remove trailing zeros)
-    const formattedAmount = Number.parseFloat(
-      tokenAmount.toFixed(6),
-    ).toString();
+    const formattedAmount = numberToPlainString(
+      Number.parseFloat(tokenAmount.toFixed(6)),
+    );
     setAmount(formattedAmount);
   };
 
