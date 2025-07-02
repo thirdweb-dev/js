@@ -72,6 +72,16 @@ export interface UniversalBridgeWalletStats {
   developerFeeUsdCents: number;
 }
 
+export interface WebhookSummaryStats {
+  webhookId: string;
+  totalRequests: number;
+  successRequests: number;
+  errorRequests: number;
+  successRate: number;
+  avgLatencyMs: number;
+  errorBreakdown: Record<string, unknown>;
+}
+
 export interface AnalyticsQueryParams {
   teamId: string;
   projectId?: string;

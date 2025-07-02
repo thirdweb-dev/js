@@ -1,3 +1,4 @@
+import posthog from "posthog-js";
 import { TabPathLinks } from "@/components/ui/tabs";
 
 export default async function WebhooksLayout(props: {
@@ -7,6 +8,10 @@ export default async function WebhooksLayout(props: {
     project_slug: string;
   }>;
 }) {
+  // Enabled on dev or if FF is enabled.
+  const isFeatureEnabled =
+    !posthog.__loaded || posthog.isFeatureEnabled("centralized-webhooks");
+
   const params = await props.params;
   return (
     <div className="flex grow flex-col">
@@ -23,10 +28,18 @@ export default async function WebhooksLayout(props: {
 
       <TabPathLinks
         links={[
+          ...(isFeatureEnabled
+            ? [
+                {
+                  exactMatch: true,
+                  name: "Overview",
+                  path: `/team/${params.team_slug}/${params.project_slug}/webhooks`,
+                },
+              ]
+            : []),
           {
-            exactMatch: true,
             name: "Contracts",
-            path: `/team/${params.team_slug}/${params.project_slug}/webhooks`,
+            path: `/team/${params.team_slug}/${params.project_slug}/webhooks/contracts`,
           },
           {
             name: "Universal Bridge",
