@@ -5,6 +5,13 @@
 ---
 **UI Components**
 ---
+# Universal Bridge
+---
+## Widgets
+* [Widgets.BuyWidget](https://portal.thirdweb.com/references/typescript/v5/widgets/BuyWidget): Widget is a prebuilt UI for purchasing a specific token.
+* [Widgets.CheckoutWidget](https://portal.thirdweb.com/references/typescript/v5/widgets/CheckoutWidget): Widget a prebuilt UI for purchasing a specific token.
+* [Widgets.TransactionWidget](https://portal.thirdweb.com/references/typescript/v5/widgets/TransactionWidget): Widget a prebuilt UI for purchasing a specific token.
+---
 # Wallets
 * [AccountAddress](https://portal.thirdweb.com/references/typescript/v5/AccountAddress): Result:
 * [AccountBlobbie](https://portal.thirdweb.com/references/typescript/v5/AccountBlobbie): A wrapper for the Blobbie component
@@ -33,14 +40,12 @@
 # NFT
 * [NFTProvider](https://portal.thirdweb.com/references/typescript/v5/NFTProvider): A React context provider component that supplies NFT-related data to its child components.
 ---
-# Buy Crypto
-* [PayEmbed](https://portal.thirdweb.com/references/typescript/v5/PayEmbed): Embed a prebuilt UI for funding wallets, purchases or transactions with crypto or fiat.
----
 # Tokens
 * [TokenProvider](https://portal.thirdweb.com/references/typescript/v5/TokenProvider): A React context provider component that supplies Token-related data to its child components.
 ---
 # Miscellaneous
 * [MediaRenderer](https://portal.thirdweb.com/references/typescript/v5/MediaRenderer): Refer to [MediaRendererProps](https://portal.thirdweb.com/references/typescript/v5/MediaRendererProps) to see the available props.
+* [PayEmbed](https://portal.thirdweb.com/references/typescript/v5/PayEmbed): Use `BuyWidget`, `CheckoutWidget` or `TransactionWidget` instead.
 ---
 **React Hooks**
 ---
@@ -101,7 +106,11 @@
 # Social API
 * [useSocialProfiles](https://portal.thirdweb.com/references/typescript/v5/useSocialProfiles): Fetches the wallet's available social profiles.
 ---
-# Buy Crypto
+# Utils
+* [useBlockNumber](https://portal.thirdweb.com/references/typescript/v5/useBlockNumber): Hook that watches for changes in the block number on a given chain.
+---
+# Miscellaneous
+* [useBridgeRoutes](https://portal.thirdweb.com/references/typescript/v5/useBridgeRoutes): Hook that fetches available bridge routes with caching and retry logic
 * [useBuyHistory](https://portal.thirdweb.com/references/typescript/v5/useBuyHistory): Hook to get the history of Buy transactions for a given wallet - This includes both "buy with crypto" and "buy with fiat" transactions.
 * [useBuyWithCryptoHistory](https://portal.thirdweb.com/references/typescript/v5/useBuyWithCryptoHistory): Hook to get the "Buy with crypto" transaction history for a given wallet address.
 * [useBuyWithCryptoQuote](https://portal.thirdweb.com/references/typescript/v5/useBuyWithCryptoQuote): Hook to get a price quote for performing a "Buy with crypto" transaction that allows users to buy a token with another token - aka a swap.
@@ -110,9 +119,6 @@
 * [useBuyWithFiatQuote](https://portal.thirdweb.com/references/typescript/v5/useBuyWithFiatQuote): Hook to get a price quote for performing a "Buy with Fiat" transaction that allows users to buy a token with fiat currency.
 * [useBuyWithFiatStatus](https://portal.thirdweb.com/references/typescript/v5/useBuyWithFiatStatus): A hook to get a status of a "Buy with Fiat" transaction to determine if the transaction is completed, failed or pending.
 * [usePostOnRampQuote](https://portal.thirdweb.com/references/typescript/v5/usePostOnRampQuote): When buying a token with fiat currency - It only involes doing on-ramp if the on-ramp provider supports buying the given destination token directly.
----
-# Utils
-* [useBlockNumber](https://portal.thirdweb.com/references/typescript/v5/useBlockNumber): Hook that watches for changes in the block number on a given chain.
 ---
 **Core Functions**
 ---
@@ -481,9 +487,9 @@
 * [ERC4337.isGetAllActiveSignersSupported](https://portal.thirdweb.com/references/typescript/v5/erc4337/isGetAllActiveSignersSupported): Checks if the `getAllActiveSigners` method is supported by the given contract.
 * [ERC4337.isGetAllAdminsSupported](https://portal.thirdweb.com/references/typescript/v5/erc4337/isGetAllAdminsSupported): Checks if the `getAllAdmins` method is supported by the given contract.
 * [ERC4337.isGetAllSignersSupported](https://portal.thirdweb.com/references/typescript/v5/erc4337/isGetAllSignersSupported): Checks if the `getAllSigners` method is supported by the given contract.
-* [ERC4337.isIsAccountDeployedSupported](https://portal.thirdweb.com/references/typescript/v5/erc4337/isIsAccountDeployedSupported): Checks if the `getAddress` method is supported by the given contract.
 * [ERC4337.isIsActiveSignerSupported](https://portal.thirdweb.com/references/typescript/v5/erc4337/isIsActiveSignerSupported): Checks if the `isActiveSigner` method is supported by the given contract.
 * [ERC4337.isIsAdminSupported](https://portal.thirdweb.com/references/typescript/v5/erc4337/isIsAdminSupported): Checks if the `isAdmin` method is supported by the given contract.
+* [ERC4337.isPredictAccountAddressSupported](https://portal.thirdweb.com/references/typescript/v5/erc4337/isPredictAccountAddressSupported): Checks if the `getAddress` method is supported by the given contract.
 * [ERC4337.isRegistered](https://portal.thirdweb.com/references/typescript/v5/erc4337/isRegistered): Calls the "isRegistered" function on the contract.
 * [ERC4337.isRemoveAdminSupported](https://portal.thirdweb.com/references/typescript/v5/erc4337/isRemoveAdminSupported): Checks if the `isRemoveAdminSupported` method is supported by the given contract.
 * [ERC4337.isRemoveSessionKeySupported](https://portal.thirdweb.com/references/typescript/v5/erc4337/isRemoveSessionKeySupported): Checks if the `isRemoveSessionKeySupported` method is supported by the given contract.
@@ -830,6 +836,10 @@
 * [EIP5792.sendCalls](https://portal.thirdweb.com/references/typescript/v5/eip5792/sendCalls): Send [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) calls to a wallet. This function works with all Thirdweb wallets (in-app and smart) and certain injected wallets that already support EIP-5792\. Transactions will be bundled and sponsored when those capabilities are supported, otherwise they will be sent as individual transactions.
 * [EIP5792.waitForCallsReceipt](https://portal.thirdweb.com/references/typescript/v5/eip5792/waitForCallsReceipt): Waits for the [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) bundle to be confirmed.
 ---
+## ERC7702
+* [ERC7702.createSessionKey](https://portal.thirdweb.com/references/typescript/v5/erc7702/createSessionKey): Creates session key permissions for a specified address.
+* [ERC7702.isCreateSessionKeySupported](https://portal.thirdweb.com/references/typescript/v5/erc7702/isCreateSessionKeySupported): Checks if the `isCreateSessionKeySupported` method is supported by the given contract.
+---
 # Modules
 ---
 ## BatchMetadataERC1155
@@ -978,6 +988,10 @@
 * [Buy.prepare](https://portal.thirdweb.com/references/typescript/v5/buy/prepare): Prepares a _finalized_ Universal Bridge quote for the provided buy request with transaction data. This function will return everything `quote` does, with the addition of a series of prepared transactions and the associated expiration timestamp.
 * [Buy.quote](https://portal.thirdweb.com/references/typescript/v5/buy/quote): Retrieves a Universal Bridge quote for the provided buy intent. The quote will specify the necessary `originAmount` to receive the desired `destinationAmount`, which is specified with the `buyAmountWei` option.
 ---
+## Onramp
+* [Onramp.prepare](https://portal.thirdweb.com/references/typescript/v5/onramp/prepare): Prepares an onramp transaction, returning a link from the specified provider to onramp to the specified token.
+* [Onramp.status](https://portal.thirdweb.com/references/typescript/v5/onramp/status): Retrieves the status of an Onramp session created via Bridge.Onramp.prepare. The status will include any on-chain transactions that have occurred as a result of the onramp as well as any arbitrary `purchaseData` that was supplied when the onramp was prepared.
+---
 ## Sell
 * [Sell.prepare](https://portal.thirdweb.com/references/typescript/v5/sell/prepare): Prepares a _finalized_ Universal Bridge quote for the provided sell request with transaction data. This function will return everything `quote` does, with the addition of a series of prepared transactions and the associated expiration timestamp.
 * [Sell.quote](https://portal.thirdweb.com/references/typescript/v5/sell/quote): Retrieves a Universal Bridge quote for the provided sell intent. The quote will specify the expected `destinationAmount` that will be received in exchange for the specified `originAmount`, which is specified with the `sellAmountWei` option.
@@ -1099,7 +1113,10 @@
 * [getTransactions](https://portal.thirdweb.com/references/typescript/v5/getTransactions): Get transactions for a wallet
 ---
 # Engine
+* [createServerWallet](https://portal.thirdweb.com/references/typescript/v5/createServerWallet): Create a server wallet.
+* [getServerWallets](https://portal.thirdweb.com/references/typescript/v5/getServerWallets): List all server wallets.
 * [getTransactionStatus](https://portal.thirdweb.com/references/typescript/v5/getTransactionStatus): Get the execution status of a transaction.
+* [searchTransactions](https://portal.thirdweb.com/references/typescript/v5/searchTransactions): Search for transactions by their ids.
 * [ServerWallet](https://portal.thirdweb.com/references/typescript/v5/serverWallet): Reference for ServerWallet
 * [waitForTransactionHash](https://portal.thirdweb.com/references/typescript/v5/waitForTransactionHash): Wait for a transaction to be submitted onchain and return the transaction hash.
 ---
@@ -1128,20 +1145,6 @@
 * [NFTDescription](https://portal.thirdweb.com/references/typescript/v5/NFTDescription): This component fetches and displays an NFT's description. It inherits all the attributes of a `<span>`so you can style it just like how you would style a `<span>` element.
 * [NFTMedia](https://portal.thirdweb.com/references/typescript/v5/NFTMedia): This component fetches and displays an NFT's media. It uses thirdweb [MediaRenderer](https://portal.thirdweb.com/refernces/typescript/v5/MediaRenderer) under the hood so you can style it just like how you would style a MediaRenderer.
 * [NFTName](https://portal.thirdweb.com/references/typescript/v5/NFTName): This component fetches and displays an NFT's name. It takes in a `className` and `style` props so you can style it just like how you would style a `<span>` element.
----
-# Buy Crypto
-* [convertCryptoToFiat](https://portal.thirdweb.com/references/typescript/v5/convertCryptoToFiat): Get a price of a token (using tokenAddress + chainId) in fiat. Only USD is supported at the moment.
-* [convertFiatToCrypto](https://portal.thirdweb.com/references/typescript/v5/convertFiatToCrypto): Convert a fiat value to a token. Currently only USD is supported.
-* [getBuyHistory](https://portal.thirdweb.com/references/typescript/v5/getBuyHistory): Get Buy transaction history for a given wallet address.
-* [getBuyWithCryptoHistory](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory): Gets the History of purchases for a given wallet address
-* [getBuyWithCryptoQuote](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote): Get a quote of type [BuyWithCryptoQuote](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote) to buy any given token with crypto. This quote contains the information about the swap such as token amounts, processing fees, estimated time etc.
-* [getBuyWithCryptoStatus](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoStatus): use Bridge.status instead
-* [getBuyWithCryptoTransfer](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoTransfer): Get a quote of type [BuyWithCryptoTransfer](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoTransfer) to facilitate a token transfer transaction. Using this instead of a native transfer allows you to receive status and webhooks about successful or failed payments.
-* [getBuyWithFiatHistory](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatHistory): Get the "Buy with fiat" transaction history for a given wallet address
-* [getBuyWithFiatQuote](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote): Get a quote of type [BuyWithFiatQuote](https://portal.thirdweb.com/references/typescript/v5/BuyWithFiatQuote) to buy given token with fiat currency. This quote contains the information about the swap such as token amounts, processing fees, estimated time etc.
-* [getBuyWithFiatStatus](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatStatus): Once you get a `quote` from [getBuyWithFiatQuote](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote)and open the `quote.onRampLink` in a new tab, you can start polling for the transaction status using `getBuyWithFiatStatus`
-* [getPostOnRampQuote](https://portal.thirdweb.com/references/typescript/v5/getPostOnRampQuote): When buying a token with fiat currency - It only involes doing on-ramp if the on-ramp provider supports buying the given destination token directly.
-* [isSwapRequiredPostOnramp](https://portal.thirdweb.com/references/typescript/v5/isSwapRequiredPostOnramp): Check if a Swap is required after on-ramp when buying a token with fiat currency.
 ---
 # Tokens
 * [TokenIcon](https://portal.thirdweb.com/references/typescript/v5/TokenIcon): This component tries to resolve the icon of a given token, then return an image.
@@ -1251,6 +1254,18 @@
 * [installPublishedExtension](https://portal.thirdweb.com/references/typescript/v5/installPublishedExtension): Install a published extension on a dynamic contract
 * [uninstallExtension](https://portal.thirdweb.com/references/typescript/v5/uninstallExtension): Uninstall an extension on a dynamic contract
 * [activateStylusContract](https://portal.thirdweb.com/references/typescript/v5/activateStylusContract): Activate a stylus contract by calling ArbWasm Precompile
+* [convertCryptoToFiat](https://portal.thirdweb.com/references/typescript/v5/convertCryptoToFiat): Get a price of a token (using tokenAddress + chainId) in fiat. Only USD is supported at the moment.
+* [convertFiatToCrypto](https://portal.thirdweb.com/references/typescript/v5/convertFiatToCrypto): Convert a fiat value to a token. Currently only USD is supported.
+* [getBuyHistory](https://portal.thirdweb.com/references/typescript/v5/getBuyHistory): Get Buy transaction history for a given wallet address.
+* [getBuyWithCryptoHistory](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory): Gets the History of purchases for a given wallet address
+* [getBuyWithCryptoQuote](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote): Get a quote of type [BuyWithCryptoQuote](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote) to buy any given token with crypto. This quote contains the information about the swap such as token amounts, processing fees, estimated time etc.
+* [getBuyWithCryptoStatus](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoStatus): use Bridge.status instead
+* [getBuyWithCryptoTransfer](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoTransfer): Get a quote of type [BuyWithCryptoTransfer](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoTransfer) to facilitate a token transfer transaction. Using this instead of a native transfer allows you to receive status and webhooks about successful or failed payments.
+* [getBuyWithFiatHistory](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatHistory): Get the "Buy with fiat" transaction history for a given wallet address
+* [getBuyWithFiatQuote](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote): Get a quote of type [BuyWithFiatQuote](https://portal.thirdweb.com/references/typescript/v5/BuyWithFiatQuote) to buy given token with fiat currency. This quote contains the information about the swap such as token amounts, processing fees, estimated time etc.
+* [getBuyWithFiatStatus](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatStatus): Once you get a `quote` from [getBuyWithFiatQuote](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote)and open the `quote.onRampLink` in a new tab, you can start polling for the transaction status using `getBuyWithFiatStatus`
+* [getPostOnRampQuote](https://portal.thirdweb.com/references/typescript/v5/getPostOnRampQuote): When buying a token with fiat currency - It only involes doing on-ramp if the on-ramp provider supports buying the given destination token directly.
+* [isSwapRequiredPostOnramp](https://portal.thirdweb.com/references/typescript/v5/isSwapRequiredPostOnramp): Check if a Swap is required after on-ramp when buying a token with fiat currency.
 * [WalletName](https://portal.thirdweb.com/references/typescript/v5/WalletName): This component fetches then shows the name of a wallet. It inherits all the attributes of a HTML `<span>` component, hence you can style it just like how you would style a normal `<span>`
 * [decodeAbiParameters](https://portal.thirdweb.com/references/typescript/v5/decodeAbiParameters): Reference for decodeAbiParameters
 * [encodePacked](https://portal.thirdweb.com/references/typescript/v5/encodePacked): Reference for encodePacked
