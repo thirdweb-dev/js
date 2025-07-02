@@ -68,6 +68,7 @@ export { scroll } from "../chains/chain-definitions/scroll.js";
 export { scrollAlphaTestnet } from "../chains/chain-definitions/scroll-alpha-testnet.js";
 export { scrollSepoliaTestnet } from "../chains/chain-definitions/scroll-sepolia-testnet.js";
 export { sepolia } from "../chains/chain-definitions/sepolia.js";
+export { somniaTestnet } from "../chains/chain-definitions/somniaTestnet.js";
 export { soneiumMinato } from "../chains/chain-definitions/soneium-minato.js";
 export { treasure } from "../chains/chain-definitions/treasure.js";
 export { treasureTopaz } from "../chains/chain-definitions/treasureTopaz.js";
@@ -78,6 +79,7 @@ export { zkSync } from "../chains/chain-definitions/zksync.js";
 export { zkSyncSepolia } from "../chains/chain-definitions/zksync-sepolia.js";
 export { zora } from "../chains/chain-definitions/zora.js";
 export { zoraSepolia } from "../chains/chain-definitions/zora-sepolia.js";
+
 export type { Chain, ChainMetadata, ChainOptions } from "../chains/types.js";
 // define chain, chainMetadata
 export {
