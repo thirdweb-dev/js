@@ -363,9 +363,7 @@ export function PayEmbed(props: PayEmbedProps) {
               ? ["card"]
               : ["crypto", "card"]
         }
-        purchaseData={
-          props.payOptions?.purchaseData as Record<string, unknown> | undefined
-        }
+        purchaseData={props.payOptions?.purchaseData}
         theme={theme}
         title={metadata?.name || "Buy"}
         tokenAddress={
@@ -390,9 +388,7 @@ export function PayEmbed(props: PayEmbedProps) {
             ? ["crypto"]
             : ["crypto", "card"]
         }
-        purchaseData={
-          props.payOptions?.purchaseData as Record<string, unknown> | undefined
-        }
+        purchaseData={props.payOptions?.purchaseData}
         seller={props.payOptions.paymentInfo.sellerAddress as Address}
         theme={theme}
         tokenAddress={
@@ -414,9 +410,7 @@ export function PayEmbed(props: PayEmbedProps) {
             ? ["crypto"]
             : ["crypto", "card"]
         }
-        purchaseData={
-          props.payOptions?.purchaseData as Record<string, unknown> | undefined
-        }
+        purchaseData={props.payOptions?.purchaseData}
         theme={theme}
         title={metadata?.name}
         transaction={props.payOptions.transaction}

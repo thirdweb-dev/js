@@ -7,6 +7,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import { getToken } from "../../../../pay/convert/get-token.js";
+import type { PurchaseData } from "../../../../pay/types.js";
 import { type Address, checksumAddress } from "../../../../utils/address.js";
 import { stringify } from "../../../../utils/json.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -145,7 +146,7 @@ export type CheckoutWidgetProps = {
   /**
    * Arbitrary data to be included in the returned status and webhook events.
    */
-  purchaseData?: Record<string, unknown>;
+  purchaseData?: PurchaseData;
 
   /**
    * Callback triggered when the purchase is successful.

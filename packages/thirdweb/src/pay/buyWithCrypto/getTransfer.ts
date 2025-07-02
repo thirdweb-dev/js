@@ -7,6 +7,7 @@ import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
 import { getContract } from "../../contract/contract.js";
 import { decimals } from "../../extensions/erc20/read/decimals.js";
 import type { PrepareTransactionOptions } from "../../transaction/prepare-transaction.js";
+import type { PurchaseData } from "../types.js";
 import type { QuoteApprovalInfo, QuotePaymentToken } from "./commonTypes.js";
 
 /**
@@ -54,7 +55,7 @@ export type GetBuyWithCryptoTransferParams = {
    *
    * This details will be stored with the purchase and can be retrieved later via the status API or Webhook
    */
-  purchaseData?: object;
+  purchaseData?: PurchaseData;
 
   /**
    * For direct transfers, specify who will pay for the transfer fee. Can be "sender" or "receiver".

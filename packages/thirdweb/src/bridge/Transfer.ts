@@ -1,6 +1,7 @@
 import type { Address as ox__Address } from "ox";
 import { defineChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
+import type { PurchaseData } from "../pay/types.js";
 import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { stringify } from "../utils/json.js";
@@ -258,7 +259,7 @@ export declare namespace prepare {
     receiver: ox__Address.Address;
     amount: bigint;
     client: ThirdwebClient;
-    purchaseData?: unknown;
+    purchaseData?: PurchaseData;
     feePayer?: "sender" | "receiver";
     /**
      * @hidden
@@ -273,7 +274,7 @@ export declare namespace prepare {
       amount: bigint;
       sender: ox__Address.Address;
       receiver: ox__Address.Address;
-      purchaseData?: unknown;
+      purchaseData?: PurchaseData;
       feePayer?: "sender" | "receiver";
     };
   };
