@@ -13,6 +13,7 @@ import type {
   UserOpStats,
   WalletStats,
   WalletUserStats,
+  WebhookSummaryStats,
 } from "@/types/analytics";
 import { getAuthToken } from "./auth-token";
 import { getChains } from "./chain";
@@ -423,4 +424,49 @@ export async function getEngineCloudMethodUsage(
 
   const json = await res.json();
   return json.data as EngineCloudStats[];
+}
+
+export async function getWebhookMetrics(params: {
+  teamId: string;
+  projectId: string;
+  webhookId: string;
+  period?: "day" | "week" | "month" | "year" | "all";
+  from?: Date;
+  to?: Date;
+}): Promise<WebhookSummaryStats[]> {
+  const searchParams = new URLSearchParams();
+
+  // Required params
+  searchParams.append("teamId", params.teamId);
+  searchParams.append("projectId", params.projectId);
+  searchParams.append("webhookId", params.webhookId);
+
+  // Optional params
+  if (params.period) {
+    searchParams.append("period", params.period);
+  }
+  if (params.from) {
+    searchParams.append("from", params.from.toISOString());
+  }
+  if (params.to) {
+    searchParams.append("to", params.to.toISOString());
+  }
+
+  const res = await fetchAnalytics(
+    `v2/webhook/summary?${searchParams.toString()}`,
+    {
+      method: "GET",
+    },
+  );
+
+  if (res?.status !== 200) {
+    const reason = await res?.text();
+    console.error(
+      `Failed to fetch webhook metrics: ${res?.status} - ${res.statusText} - ${reason}`,
+    );
+    return [];
+  }
+
+  const json = await res.json();
+  return json.data as WebhookSummaryStats[];
 }
