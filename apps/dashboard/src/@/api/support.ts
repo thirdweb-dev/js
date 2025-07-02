@@ -4,348 +4,371 @@ import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { getAuthToken } from "./auth-token";
 
 export interface SupportTicket {
-  id: string;
-  title: string;
-  status: "open" | "closed" | "resolved";
-  createdAt: string;
-  updatedAt: string;
-  openedBy: string;
-  customerId?: string;
-  tags?: string[];
-  assignee?: string;
-  lastMessage?: string;
-  messages?: SupportMessage[];
+	id: string;
+	title: string;
+	status: "open" | "closed" | "resolved";
+	createdAt: string;
+	updatedAt: string;
+	openedBy: string;
+	customerId?: string;
+	tags?: string[];
+	assignee?: string;
+	lastMessage?: string;
+	messages?: SupportMessage[];
 }
 
 export interface SupportMessage {
-  id: string;
-  content: string;
-  createdAt: string;
-  author: {
-    name: string;
-    email: string;
-    type: "user" | "customer";
-  };
+	id: string;
+	content: string;
+	createdAt: string;
+	author: {
+		name: string;
+		email: string;
+		type: "user" | "customer";
+	};
 }
 
 // Reusable types
 interface UserInfo {
-  id: string;
-  email: string;
-  name: string;
+	id: string;
+	email: string;
+	name: string;
 }
 
 export interface CreateSupportTicketRequest {
-  title: string;
-  message: string;
-  teamSlug: string;
-  onBehalfOf: UserInfo;
-  attachments?: File[];
+	title: string;
+	message: string;
+	teamSlug: string;
+	onBehalfOf: UserInfo;
+	attachments?: File[];
 }
 
 export interface SendMessageRequest {
-  ticketId: string;
-  teamSlug: string;
-  message: string;
-  onBehalfOf: UserInfo;
-  attachments?: File[];
+	ticketId: string;
+	teamSlug: string;
+	message: string;
+	onBehalfOf: UserInfo;
+	attachments?: File[];
 }
 
 export async function getSupportTicketsByTeam(
-  teamSlug: string,
-  authToken?: string,
+	teamSlug: string,
+	authToken?: string,
 ): Promise<SupportTicket[]> {
-  // If no team slug provided, throw error
-  if (!teamSlug) {
-    throw new Error("Team slug is required to fetch support tickets");
-  }
+	// If no team slug provided, throw error
+	if (!teamSlug) {
+		throw new Error("Team slug is required to fetch support tickets");
+	}
 
-  const token = authToken || (await getAuthToken());
-  if (!token) {
-    throw new Error("No auth token available");
-  }
+	const token = authToken || (await getAuthToken());
+	if (!token) {
+		throw new Error("No auth token available");
+	}
 
-  try {
-    // URL encode the team slug to handle special characters like #
-    const encodedTeamSlug = encodeURIComponent(teamSlug);
-    const apiUrl = `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodedTeamSlug}/support-conversations/list`;
+	try {
+		// URL encode the team slug to handle special characters like #
+		const encodedTeamSlug = encodeURIComponent(teamSlug);
+		const apiUrl = `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodedTeamSlug}/support-conversations/list`;
 
-    // Build the POST payload according to API spec
-    const payload = {
-      descending: true,
-      includeIntake: false,
-      limit: 50,
-      order: ["lastActivityAt"],
-      select: [
-        "id",
-        "status",
-        "title",
-        "createdAt",
-        "updatedAt",
-        "lastActivityAt",
-        "customer.id",
-        "customer.name",
-        "assignedToUser.name",
-        "initialMessage.content",
-        "initialMessage.sentByUser.name",
-        "latestMessage.content",
-        "tags.name",
-      ],
-      where: [
-        {
-          field: "status",
-          operator: "in",
-          value: ["open", "in_progress", "closed", "resolved"],
-        },
-      ],
-    };
+		// Build the POST payload according to API spec
+		const payload = {
+			descending: true,
+			includeIntake: false,
+			limit: 50,
+			order: ["lastActivityAt"],
+			select: [
+				"id",
+				"status",
+				"title",
+				"createdAt",
+				"updatedAt",
+				"lastActivityAt",
+				"customer.id",
+				"customer.name",
+				"assignedToUser.name",
+				"initialMessage.content",
+				"initialMessage.sentByUser.name",
+				"latestMessage.content",
+				"tags.name",
+			],
+			where: [
+				{
+					field: "status",
+					operator: "in",
+					value: ["open", "in_progress", "closed", "resolved"],
+				},
+			],
+		};
 
-    const response = await fetch(apiUrl, {
-      body: JSON.stringify(payload),
-      // Disable caching to get real-time data
-      cache: "no-store",
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-    });
+		console.log(
+			`[Support API] Request body for list:`,
+			JSON.stringify(payload, null, 2),
+		);
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`API Server error: ${response.status} - ${errorText}`);
-    }
+		const response = await fetch(apiUrl, {
+			body: JSON.stringify(payload),
+			// Disable caching to get real-time data
+			cache: "no-store",
+			headers: {
+				Accept: "application/json",
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+			method: "POST",
+		});
 
-    const data: { data?: SupportTicket[] } = await response.json();
+		if (!response.ok) {
+			const errorText = await response.text();
+			throw new Error(`API Server error: ${response.status} - ${errorText}`);
+		}
 
-    // The API returns conversations directly in an array or under a 'data' key
-    const conversations = data.data || [];
+		const data: { data?: SupportTicket[] } = await response.json();
 
-    // Return empty array if no conversations found
-    if (conversations.length === 0) {
-      return [];
-    }
+		// The API returns conversations directly in an array or under a 'data' key
+		const conversations = data.data || [];
 
-    return conversations;
-  } catch (error) {
-    throw error;
-  }
+		// Return empty array if no conversations found
+		if (conversations.length === 0) {
+			return [];
+		}
+
+		return conversations;
+	} catch (error) {
+		throw error;
+	}
 }
 
 export async function getSupportTicket(
-  ticketId: string,
-  teamSlug: string,
-  authToken?: string,
+	ticketId: string,
+	teamSlug: string,
+	authToken?: string,
 ): Promise<SupportTicket | null> {
-  if (!ticketId || !teamSlug) {
-    throw new Error("Ticket ID and team slug are required");
-  }
+	if (!ticketId || !teamSlug) {
+		throw new Error("Ticket ID and team slug are required");
+	}
 
-  const token = authToken || (await getAuthToken());
-  if (!token) {
-    throw new Error("No auth token available");
-  }
+	const token = authToken || (await getAuthToken());
+	if (!token) {
+		throw new Error("No auth token available");
+	}
 
-  try {
-    // URL encode the team slug to handle special characters like #
-    const encodedTeamSlug = encodeURIComponent(teamSlug);
-    const encodedTicketId = encodeURIComponent(ticketId);
+	try {
+		// URL encode the team slug to handle special characters like #
+		const encodedTeamSlug = encodeURIComponent(teamSlug);
+		const encodedTicketId = encodeURIComponent(ticketId);
 
-    // Fetch conversation details and messages in parallel
-    const [conversationResponse, messagesResponse] = await Promise.all([
-      fetch(
-        `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodedTeamSlug}/support-conversations/${encodedTicketId}`,
-        {
-          // Disable caching to get real-time data
-          cache: "no-store",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          method: "GET",
-        },
-      ),
-      fetch(
-        `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodedTeamSlug}/support-conversations/${encodedTicketId}/messages`,
-        {
-          body: JSON.stringify({
-            descending: false,
-            order: ["timestamp"], // Get messages in chronological order
-          }),
-          // Disable caching to get real-time data
-          cache: "no-store",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-        },
-      ),
-    ]);
+		const messagesPayload = {
+			descending: false,
+			order: ["timestamp"], // Get messages in chronological order
+		};
+		console.log(
+			`[Support API] Request body for messages:`,
+			JSON.stringify(messagesPayload, null, 2),
+		);
 
-    if (!conversationResponse.ok) {
-      if (conversationResponse.status === 404) {
-        return null; // Ticket not found
-      }
-      const errorText = await conversationResponse.text();
-      throw new Error(
-        `API Server error: ${conversationResponse.status} - ${errorText}`,
-      );
-    }
+		// Fetch conversation details and messages in parallel
+		const [conversationResponse, messagesResponse] = await Promise.all([
+			fetch(
+				`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodedTeamSlug}/support-conversations/${encodedTicketId}`,
+				{
+					// Disable caching to get real-time data
+					cache: "no-store",
+					headers: {
+						Accept: "application/json",
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					method: "GET",
+				},
+			),
+			fetch(
+				`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodedTeamSlug}/support-conversations/${encodedTicketId}/messages`,
+				{
+					body: JSON.stringify(messagesPayload),
+					// Disable caching to get real-time data
+					cache: "no-store",
+					headers: {
+						Accept: "application/json",
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "application/json",
+					},
+					method: "POST",
+				},
+			),
+		]);
 
-    const conversation: SupportTicket = await conversationResponse.json();
+		if (!conversationResponse.ok) {
+			if (conversationResponse.status === 404) {
+				return null; // Ticket not found
+			}
+			const errorText = await conversationResponse.text();
+			throw new Error(
+				`API Server error: ${conversationResponse.status} - ${errorText}`,
+			);
+		}
 
-    // Fetch and map messages if the messages request was successful
-    if (messagesResponse.ok) {
-      const messagesData: { data?: SupportMessage[] } =
-        await messagesResponse.json();
-      const messages = messagesData.data || [];
-      conversation.messages = messages;
-    } else {
-      // Don't throw error, just leave messages empty
-      conversation.messages = [];
-    }
+		const conversation: SupportTicket = await conversationResponse.json();
 
-    return conversation;
-  } catch (error) {
-    throw error;
-  }
+		// Fetch and map messages if the messages request was successful
+		if (messagesResponse.ok) {
+			const messagesData: { data?: SupportMessage[] } =
+				await messagesResponse.json();
+			const messages = messagesData.data || [];
+			conversation.messages = messages;
+		} else {
+			// Don't throw error, just leave messages empty
+			conversation.messages = [];
+		}
+
+		return conversation;
+	} catch (error) {
+		throw error;
+	}
 }
 
 export async function createSupportTicket(
-  request: CreateSupportTicketRequest,
+	request: CreateSupportTicketRequest,
 ): Promise<SupportTicket> {
-  if (!request.teamSlug) {
-    throw new Error("Team slug is required to create support ticket");
-  }
+	if (!request.teamSlug) {
+		throw new Error("Team slug is required to create support ticket");
+	}
 
-  const token = await getAuthToken();
-  if (!token) {
-    throw new Error("No auth token available");
-  }
+	const token = await getAuthToken();
+	if (!token) {
+		throw new Error("No auth token available");
+	}
 
-  try {
-    // URL encode the team slug to handle special characters like #
-    const encodedTeamSlug = encodeURIComponent(request.teamSlug);
-    const apiUrl = `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodedTeamSlug}/support-conversations`;
+	try {
+		// URL encode the team slug to handle special characters like #
+		const encodedTeamSlug = encodeURIComponent(request.teamSlug);
+		const apiUrl = `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodedTeamSlug}/support-conversations`;
 
-    // Build the payload for creating a conversation
-    const payload = {
-      markdown: request.message.trim(),
-      onBehalfOf: request.onBehalfOf,
-      status: "open",
-      title: request.title,
-      type: "email",
-    };
+		// Build the payload for creating a conversation
+		const payload = {
+			triageChannelId: "C05CE35U0A0",
+			emailInboxId: "60076148-57ad-4a5f-96aa-510ce1a705ab",
+			markdown: request.message.trim(),
+			onBehalfOf: request.onBehalfOf,
+			status: "open",
+			title: request.title,
+			type: "email",
+		};
 
-    let body: string | FormData;
-    const headers: Record<string, string> = {
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    };
+		console.log(
+			`[Support API] Request body for create ticket:`,
+			JSON.stringify(payload, null, 2),
+		);
 
-    // Handle file attachments
-    if (request.attachments && request.attachments.length > 0) {
-      const formData = new FormData();
-      formData.append("json", JSON.stringify(payload));
+		let body: string | FormData;
+		const headers: Record<string, string> = {
+			Accept: "application/json",
+			Authorization: `Bearer ${token}`,
+		};
 
-      for (const file of request.attachments) {
-        formData.append("attachments", file);
-      }
+		// Handle file attachments
+		if (request.attachments && request.attachments.length > 0) {
+			const formData = new FormData();
+			formData.append("json", JSON.stringify(payload));
 
-      body = formData;
-      // Don't set Content-Type for FormData, browser will set it with boundary
-    } else {
-      body = JSON.stringify(payload);
-      headers["Content-Type"] = "application/json";
-    }
+			for (const file of request.attachments) {
+				formData.append("attachments", file);
+			}
 
-    const response = await fetch(apiUrl, {
-      body,
-      headers,
-      method: "POST",
-    });
+			body = formData;
+			// Don't set Content-Type for FormData, browser will set it with boundary
+		} else {
+			body = JSON.stringify(payload);
+			headers["Content-Type"] = "application/json";
+		}
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`API Server error: ${response.status} - ${errorText}`);
-    }
+		const response = await fetch(apiUrl, {
+			body,
+			headers,
+			method: "POST",
+		});
 
-    const createdConversation: SupportTicket = await response.json();
-    return createdConversation;
-  } catch (error) {
-    throw error;
-  }
+		if (!response.ok) {
+			const errorText = await response.text();
+			throw new Error(`API Server error: ${response.status} - ${errorText}`);
+		}
+
+		const createdConversation: SupportTicket = await response.json();
+		return createdConversation;
+	} catch (error) {
+		throw error;
+	}
 }
 
 export async function sendMessageToTicket(
-  request: SendMessageRequest,
+	request: SendMessageRequest,
 ): Promise<void> {
-  if (!request.ticketId || !request.teamSlug) {
-    throw new Error("Ticket ID and team slug are required");
-  }
+	if (!request.ticketId || !request.teamSlug) {
+		throw new Error("Ticket ID and team slug are required");
+	}
 
-  const token = await getAuthToken();
-  if (!token) {
-    throw new Error("No auth token available");
-  }
+	const token = await getAuthToken();
+	if (!token) {
+		throw new Error("No auth token available");
+	}
 
-  try {
-    // URL encode the team slug and ticket ID to handle special characters like #
-    const encodedTeamSlug = encodeURIComponent(request.teamSlug);
-    const encodedTicketId = encodeURIComponent(request.ticketId);
-    const apiUrl = `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodedTeamSlug}/support-conversations/${encodedTicketId}/messages`;
+	try {
+		// URL encode the team slug and ticket ID to handle special characters like #
+		const encodedTeamSlug = encodeURIComponent(request.teamSlug);
+		const encodedTicketId = encodeURIComponent(request.ticketId);
+		const apiUrl = `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodedTeamSlug}/support-conversations/${encodedTicketId}/messages`;
 
-    // Build the payload for sending a message
-    // Add /unthread send at the end to ensure the message is sent to the customer
-    const messageWithSend = `${request.message.trim()}\n\n/unthread send`;
+		// Build the payload for sending a message
+		// Add /unthread send at the end to ensure the message is sent to the customer
+		const messageWithSend = `${request.message.trim()}\n\n/unthread send`;
 
-    const payload = {
-      body: {
-        type: "markdown",
-        value: messageWithSend,
-      },
-      onBehalfOf: request.onBehalfOf,
-    };
+		const payload = {
+			body: {
+				type: "markdown",
+				value: messageWithSend,
+			},
+			onBehalfOf: request.onBehalfOf,
+		};
 
-    let body: string | FormData;
-    const headers: Record<string, string> = {
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    };
+		console.log(
+			`[Support API] Request body for send message:`,
+			JSON.stringify(payload, null, 2),
+		);
 
-    // Handle file attachments
-    if (request.attachments && request.attachments.length > 0) {
-      const formData = new FormData();
-      formData.append("json", JSON.stringify(payload));
+		let body: string | FormData;
+		const headers: Record<string, string> = {
+			Accept: "application/json",
+			Authorization: `Bearer ${token}`,
+		};
 
-      for (const file of request.attachments) {
-        formData.append("attachments", file);
-      }
+		// Handle file attachments
+		if (request.attachments && request.attachments.length > 0) {
+			const formData = new FormData();
+			formData.append("json", JSON.stringify(payload));
 
-      body = formData;
-      // Don't set Content-Type for FormData, browser will set it with boundary
-    } else {
-      body = JSON.stringify(payload);
-      headers["Content-Type"] = "application/json";
-    }
+			for (const file of request.attachments) {
+				formData.append("attachments", file);
+			}
 
-    const response = await fetch(apiUrl, {
-      body,
-      headers,
-      method: "POST",
-    });
+			body = formData;
+			// Don't set Content-Type for FormData, browser will set it with boundary
+		} else {
+			body = JSON.stringify(payload);
+			headers["Content-Type"] = "application/json";
+		}
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`API Server error: ${response.status} - ${errorText}`);
-    }
+		const response = await fetch(apiUrl, {
+			body,
+			headers,
+			method: "POST",
+		});
 
-    // Message sent successfully, no need to return anything
-  } catch (error) {
-    throw error;
-  }
+		if (!response.ok) {
+			const errorText = await response.text();
+			throw new Error(`API Server error: ${response.status} - ${errorText}`);
+		}
+
+		// Message sent successfully, no need to return anything
+	} catch (error) {
+		throw error;
+	}
 }
