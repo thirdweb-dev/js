@@ -43,6 +43,7 @@ export async function createStylusProject() {
     choices: [
       { title: "Default", value: "default" },
       { title: "ERC20", value: "erc20" },
+      { title: "ERC721", value: "erc721" },
     ],
     message: "Select a template:",
     name: "projectType",
@@ -50,25 +51,29 @@ export async function createStylusProject() {
   });
 
   // Step 5: Create the project
+  let newProject;
   if (projectType === "default") {
     spinner.start(`Creating new Stylus project: ${projectName}...`);
-    const newProject = spawnSync("cargo", ["stylus", "new", projectName], {
+    newProject = spawnSync("cargo", ["stylus", "new", projectName], {
       stdio: "inherit",
     });
-    if (newProject.status !== 0) {
-      spinner.fail("Failed to create Stylus project.");
-      process.exit(1);
-    }
   } else if (projectType === "erc20") {
     const repoUrl = "git@github.com:thirdweb-example/stylus-erc20-template.git";
     spinner.start(`Creating new ERC20 Stylus project: ${projectName}...`);
-    const clone = spawnSync("git", ["clone", repoUrl, projectName], {
+    newProject = spawnSync("git", ["clone", repoUrl, projectName], {
       stdio: "inherit",
     });
-    if (clone.status !== 0) {
-      spinner.fail("Failed to create Stylus project.");
-      process.exit(1);
-    }
+  } else if (projectType === "erc721") {
+    const repoUrl = "git@github.com:thirdweb-example/stylus-erc721-template.git";
+    spinner.start(`Creating new ERC721 Stylus project: ${projectName}...`);
+    newProject = spawnSync("git", ["clone", repoUrl, projectName], {
+      stdio: "inherit",
+    });
+  }
+
+  if (!newProject?.status || newProject.status !== 0) {
+    spinner.fail("Failed to create Stylus project.");
+    process.exit(1);
   }
 
   spinner.succeed("Project created successfully.");
