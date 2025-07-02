@@ -24,6 +24,8 @@ export { bsc } from "../chains/chain-definitions/bsc.js";
 export { bscTestnet } from "../chains/chain-definitions/bsc-testnet.js";
 export { celo } from "../chains/chain-definitions/celo.js";
 export { celoAlfajoresTestnet } from "../chains/chain-definitions/celo-alfajores-testnet.js";
+export { coreMainnet } from "../chains/chain-definitions/core-mainnet.js";
+export { coreTestnet } from "../chains/chain-definitions/core-testnet.js";
 export { cronos } from "../chains/chain-definitions/cronos.js";
 export { degen } from "../chains/chain-definitions/degen.js";
 // mainnet = alias for ethereum
@@ -68,6 +70,7 @@ export { scroll } from "../chains/chain-definitions/scroll.js";
 export { scrollAlphaTestnet } from "../chains/chain-definitions/scroll-alpha-testnet.js";
 export { scrollSepoliaTestnet } from "../chains/chain-definitions/scroll-sepolia-testnet.js";
 export { sepolia } from "../chains/chain-definitions/sepolia.js";
+export { somniaTestnet } from "../chains/chain-definitions/somniaTestnet.js";
 export { soneiumMinato } from "../chains/chain-definitions/soneium-minato.js";
 export { treasure } from "../chains/chain-definitions/treasure.js";
 export { treasureTopaz } from "../chains/chain-definitions/treasureTopaz.js";
@@ -78,6 +81,7 @@ export { zkSync } from "../chains/chain-definitions/zksync.js";
 export { zkSyncSepolia } from "../chains/chain-definitions/zksync-sepolia.js";
 export { zora } from "../chains/chain-definitions/zora.js";
 export { zoraSepolia } from "../chains/chain-definitions/zora-sepolia.js";
+
 export type { Chain, ChainMetadata, ChainOptions } from "../chains/types.js";
 // define chain, chainMetadata
 export {

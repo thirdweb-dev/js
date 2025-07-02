@@ -25,7 +25,7 @@ export default async function WebhooksLayout(props: {
         links={[
           {
             exactMatch: true,
-            name: "Contract",
+            name: "Contracts",
             path: `/team/${params.team_slug}/${params.project_slug}/webhooks`,
           },
           {

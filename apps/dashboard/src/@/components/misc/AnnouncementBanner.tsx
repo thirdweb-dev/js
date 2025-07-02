@@ -46,9 +46,9 @@ function AnnouncementBannerUI(props: {
 export function AnnouncementBanner() {
   return (
     <AnnouncementBannerUI
-      href="https://nebula.thirdweb.com/"
-      label="Announcing Nebula App — the most powerful AI for blockchains! Try it now!"
-      trackingLabel="nebula-beta-launch"
+      href="https://blog.thirdweb.com/the-fastest-way-to-build-web3-applications/"
+      label="We have re-branded our Engine, Universal Bridge, and Connect products. Please read the full blog post for details on changes"
+      trackingLabel="product-rebrand"
     />
   );
 }

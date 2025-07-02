@@ -1,6 +1,5 @@
-import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
-import { SettingsNotificationsPage } from "./NotificationsPage";
+import { Notifications } from "./Notifications";
 
 export default async function Page(props: {
   params: Promise<{
@@ -13,8 +12,15 @@ export default async function Page(props: {
   );
 
   return (
-    <ChakraProviderSetup>
-      <SettingsNotificationsPage account={account} />
-    </ChakraProviderSetup>
+    <div>
+      <div className="mb-4">
+        <h1 className="font-semibold text-2xl tracking-tight">Notifications</h1>
+        <p className="text-muted-foreground">
+          Configure your email notification preferences
+        </p>
+      </div>
+
+      <Notifications account={account} />
+    </div>
   );
 }

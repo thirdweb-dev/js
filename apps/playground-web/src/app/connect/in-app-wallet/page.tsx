@@ -41,43 +41,44 @@ function UIIntegration() {
   return (
     <div>
       <CodeExample
-        code={`import { inAppWallet } from "thirdweb/wallets";
-        import { ConnectEmbed } from "thirdweb/react";
+        code={`\
+import { inAppWallet } from "thirdweb/wallets";
+import { ConnectEmbed } from "thirdweb/react";
 
-        const wallets = [
-          inAppWallet(
-            // built-in auth methods
-            // or bring your own auth endpoint
-            { auth: {
-              options: [
-              "google",
-              "x",
-              "apple",
-              "discord",
-              "facebook",
-              "farcaster",
-              "telegram",
-              "coinbase",
-              "line",
-              "email",
-              "phone",
-              "passkey",
-              "guest",
-              ]
-              }
-            },
-            // optional execution mode, defaults to "EOA"
-            executionMode: {
-              mode: "EIP7702", // or "EIP4337" or "EOA"
-              sponsorGas: true, // sponsor gas for all transactions
-            }
-          )
-        ];
+const wallets = [
+  inAppWallet(
+    // built-in auth methods
+    // or bring your own auth endpoint
+    {
+      auth: {
+        options: [
+          "google",
+          "x",
+          "apple",
+          "discord",
+          "facebook",
+          "farcaster",
+          "telegram",
+          "coinbase",
+          "line",
+          "email",
+          "phone",
+          "passkey",
+          "guest",
+        ],
+      },
+      // optional execution mode, defaults to "EOA"
+      executionMode: {
+        mode: "EIP7702", // or "EIP4337" or "EOA"
+        sponsorGas: true, // sponsor gas for all transactions
+      },
+    },
+  ),
+];
 
-        function App(){
-          return (
-<ConnectEmbed client={client} wallets={wallets} />);
-};`}
+function App() {
+  return <ConnectEmbed client={client} wallets={wallets} />;
+}`}
         header={{
           description:
             "Instant out of the box authentication with a prebuilt UI.",

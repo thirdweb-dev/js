@@ -37,13 +37,15 @@ export const Notifications: React.FC<NotificationsProps> = ({ account }) => {
   };
 
   return (
-    <div>
+    <div className="p-4 bg-card border rounded-lg">
       <SettingSwitch
         checked={preferences?.billing === "email"}
         description="Approaching and exceeding usage credits"
         label="Reminders"
         onCheckedChange={(v) => handleChange("billing", v)}
       />
+
+      <div className="border-t border-dashed my-4" />
 
       <SettingSwitch
         checked={preferences?.updates === "email"}
@@ -63,7 +65,7 @@ function SettingSwitch(props: {
 }) {
   const id = useId();
   return (
-    <div className="flex items-center justify-between gap-6 border-border border-b py-6">
+    <div className="flex items-center justify-between gap-6">
       <div>
         <Label className="text-foreground text-lg" htmlFor={id}>
           {props.label}
