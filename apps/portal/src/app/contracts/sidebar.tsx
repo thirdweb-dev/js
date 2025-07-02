@@ -56,54 +56,56 @@ export const sidebar: SideBar = {
           href: "/contracts/explore/overview",
           name: "Overview",
         },
-        {
-          links: [
-            {
-              links: [
-                {
-                  href: `${prebuiltModular}/token`,
-                  name: "Token",
-                },
-                {
-                  href: `${prebuiltModular}/token-drop`,
-                  name: "Token Drop",
-                },
-              ],
-              name: "ERC-20",
-            },
-            {
-              links: [
-                {
-                  href: `${prebuiltModular}/nft-collection`,
-                  name: "NFT Collection",
-                },
-                {
-                  href: `${prebuiltModular}/nft-drop`,
-                  name: "NFT Drop",
-                },
-                {
-                  href: `${prebuiltModular}/open-edition`,
-                  name: "Open Edition",
-                },
-              ],
-              name: "ERC-721",
-            },
-            {
-              links: [
-                {
-                  href: `${prebuiltModular}/edition`,
-                  name: "Edition",
-                },
-                {
-                  href: `${prebuiltModular}/edition-drop`,
-                  name: "Edition Drop",
-                },
-              ],
-              name: "ERC-1155",
-            },
-          ],
-          name: "Pre-built Modular",
-        },
+        // DEPRECATED: Pre-built Modular contracts have been deprecated from explore
+        // Keeping framework documentation available but removing pre-built contract references
+        // {
+        //   links: [
+        //     {
+        //       links: [
+        //         {
+        //           href: `${prebuiltModular}/token`,
+        //           name: "Token",
+        //         },
+        //         {
+        //           href: `${prebuiltModular}/token-drop`,
+        //           name: "Token Drop",
+        //         },
+        //       ],
+        //       name: "ERC-20",
+        //     },
+        //     {
+        //       links: [
+        //         {
+        //           href: `${prebuiltModular}/nft-collection`,
+        //           name: "NFT Collection",
+        //         },
+        //         {
+        //           href: `${prebuiltModular}/nft-drop`,
+        //           name: "NFT Drop",
+        //         },
+        //         {
+        //           href: `${prebuiltModular}/open-edition`,
+        //           name: "Open Edition",
+        //         },
+        //       ],
+        //       name: "ERC-721",
+        //     },
+        //     {
+        //       links: [
+        //         {
+        //           href: `${prebuiltModular}/edition`,
+        //           name: "Edition",
+        //         },
+        //         {
+        //           href: `${prebuiltModular}/edition-drop`,
+        //           name: "Edition Drop",
+        //         },
+        //       ],
+        //       name: "ERC-1155",
+        //     },
+        //   ],
+        //   name: "Pre-built Modular",
+        // },
         {
           links: [
             {
@@ -448,11 +450,11 @@ export const sidebar: SideBar = {
           href: `${buildSlug}/get-started`,
           name: "Get Started",
         },
-        // modular contracts
-        {
-          href: `${buildSlug}/modular-contracts`,
-          name: "Modular Contracts",
-        },
+        // DEPRECATED: Modular contracts deprecated from build section
+        // {
+        //   href: `${buildSlug}/modular-contracts`,
+        //   name: "Modular Contracts",
+        // },
         // base contracts
         {
           href: `${baseContractsSlug}`,

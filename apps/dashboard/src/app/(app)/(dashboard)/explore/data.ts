@@ -189,6 +189,8 @@ const MODULAR_CONTRACTS = {
   displayName: "Modular Contracts",
   id: "modular-contracts",
   name: "modular",
+  // DEPRECATED: Modular contracts are no longer shown in explore
+  showInExplore: false,
 } satisfies ExploreCategory;
 
 const SUPERCHAIN = {
@@ -315,6 +317,7 @@ const SMART_WALLET = {
 
 const CATEGORIES: Record<string, ExploreCategory> = {
   [POPULAR.id]: POPULAR,
+  // Keep MODULAR_CONTRACTS available for existing users but deprecated from explore
   [MODULAR_CONTRACTS.id]: MODULAR_CONTRACTS,
   [SUPERCHAIN.id]: SUPERCHAIN,
   [NFTS.id]: NFTS,
