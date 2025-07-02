@@ -21,7 +21,6 @@ export default async function Page(props: {
   }
 
   // Fetch real support tickets for this team using team slug
-  // getSupportTicketsByTeam will handle calling ensureTeamCustomerService internally
   const supportTickets = await getSupportTicketsByTeam(params.team_slug, token);
 
   return (

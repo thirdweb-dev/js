@@ -51,7 +51,11 @@ export default function SupportCasesClient({
     setIsLoadingCaseDetails(true);
 
     try {
-      const ticketDetails = await getSupportTicket(ticketId);
+      const ticketDetails = await getSupportTicket(
+        ticketId,
+        team.slug,
+        authToken,
+      );
       if (ticketDetails) {
         setSelectedCaseDetails(ticketDetails);
       }
@@ -90,6 +94,7 @@ export default function SupportCasesClient({
           id: team.unthreadCustomerId || "",
           name: team.name,
         },
+        teamSlug: team.slug,
         ticketId: selectedCase.id,
       });
 
@@ -104,7 +109,11 @@ export default function SupportCasesClient({
       try {
         // Add a small delay to ensure the message is processed on the server
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        const ticketDetails = await getSupportTicket(selectedCase.id);
+        const ticketDetails = await getSupportTicket(
+          selectedCase.id,
+          team.slug,
+          authToken,
+        );
         if (ticketDetails) {
           setSelectedCaseDetails(ticketDetails);
         }
@@ -227,7 +236,7 @@ export default function SupportCasesClient({
             <Button
               className="border-[#1F1F1F] bg-[#0A0A0A] text-white hover:bg-[#1F1F1F] hover:text-white"
               onClick={handleBackToCases}
-              variant="outline" 
+              variant="outline"
             >
               ← Back to Cases
             </Button>
