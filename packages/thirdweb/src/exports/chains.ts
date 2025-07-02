@@ -24,6 +24,8 @@ export { bsc } from "../chains/chain-definitions/bsc.js";
 export { bscTestnet } from "../chains/chain-definitions/bsc-testnet.js";
 export { celo } from "../chains/chain-definitions/celo.js";
 export { celoAlfajoresTestnet } from "../chains/chain-definitions/celo-alfajores-testnet.js";
+export { coreMainnet } from "../chains/chain-definitions/core-mainnet.js";
+export { coreTestnet } from "../chains/chain-definitions/core-testnet.js";
 export { cronos } from "../chains/chain-definitions/cronos.js";
 export { degen } from "../chains/chain-definitions/degen.js";
 // mainnet = alias for ethereum
