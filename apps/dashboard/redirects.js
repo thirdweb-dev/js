@@ -435,6 +435,11 @@ async function redirects() {
       permanent: false,
       source: "/engine",
     },
+    {
+      destination: "/rpc",
+      permanent: false,
+      source: "/rpc-edge",
+    },
     ...legacyDashboardToTeamRedirects,
     ...projectPageRedirects,
     ...teamPageRedirects,

@@ -16,7 +16,7 @@ module.exports = [
   // -- end build category
 
   // -- scale category
-  "/rpc-edge",
+  "/rpc",
   "/insight",
   "/storage",
   // -- end scale category
