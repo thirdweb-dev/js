@@ -23,6 +23,7 @@ import {
   reportAssetCreationFailed,
   reportContractDeployed,
 } from "@/analytics/report";
+import type { Team } from "@/api/team";
 import {
   DEFAULT_FEE_BPS_NEW,
   DEFAULT_FEE_RECIPIENT,
@@ -42,6 +43,7 @@ export function CreateTokenAssetPage(props: {
   projectId: string;
   teamSlug: string;
   projectSlug: string;
+  teamPlan: Team["billingPlan"];
 }) {
   const account = useActiveAccount();
   const { idToChain } = useAllChainsData();
@@ -347,6 +349,7 @@ export function CreateTokenAssetPage(props: {
         );
       }}
       projectSlug={props.projectSlug}
+      teamPlan={props.teamPlan}
       teamSlug={props.teamSlug}
     />
   );

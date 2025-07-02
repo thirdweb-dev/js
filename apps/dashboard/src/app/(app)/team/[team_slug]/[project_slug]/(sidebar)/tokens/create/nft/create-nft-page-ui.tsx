@@ -10,6 +10,7 @@ import {
 } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { reportAssetCreationStepConfigured } from "@/analytics/report";
+import type { Team } from "@/api/team";
 import {
   type CreateNFTCollectionFunctions,
   type NFTCollectionInfoFormValues,
@@ -30,6 +31,7 @@ export function CreateNFTPageUI(props: {
   onLaunchSuccess: () => void;
   teamSlug: string;
   projectSlug: string;
+  teamPlan: Team["billingPlan"];
 }) {
   const [step, setStep] =
     useState<keyof typeof nftCreationPages>("collection-info");
@@ -140,6 +142,7 @@ export function CreateNFTPageUI(props: {
             setStep(nftCreationPages["sales-settings"]);
           }}
           projectSlug={props.projectSlug}
+          teamPlan={props.teamPlan}
           teamSlug={props.teamSlug}
           values={{
             collectionInfo: nftCollectionInfoForm.watch(),
