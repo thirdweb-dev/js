@@ -24,15 +24,7 @@ export default async function Page(props: {
   let supportTickets: SupportTicket[] = [];
 
   try {
-    // Add a timeout to prevent hanging
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error("Request timeout")), 10000); // 10 second timeout
-    });
-
-    const ticketsPromise = getSupportTicketsByTeam(params.team_slug, token);
-    console.log(`[Support Page] Tickets promise created`);
-
-    supportTickets = await Promise.race([ticketsPromise, timeoutPromise]);
+    supportTickets = await getSupportTicketsByTeam(params.team_slug, token);
   } catch (error) {
     // Return empty array instead of crashing the page
     supportTickets = [];

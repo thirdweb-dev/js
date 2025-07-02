@@ -100,19 +100,16 @@ export async function getSupportTicketsByTeam(
 			],
 		};
 
-		console.log(
-			`[Support API] Request body for list:`,
-			JSON.stringify(payload, null, 2),
-		);
-
 		const response = await fetch(apiUrl, {
 			body: JSON.stringify(payload),
-			// Disable caching to get real-time data
+			// Disable caching to get real-time data and avoid compression issues
 			cache: "no-store",
 			headers: {
 				Accept: "application/json",
 				Authorization: `Bearer ${token}`,
 				"Content-Type": "application/json",
+				// Disable compression to avoid Z_DATA_ERROR
+				"Accept-Encoding": "identity",
 			},
 			method: "POST",
 		});
@@ -121,9 +118,7 @@ export async function getSupportTicketsByTeam(
 			const errorText = await response.text();
 			throw new Error(`API Server error: ${response.status} - ${errorText}`);
 		}
-
 		const data: { data?: SupportTicket[] } = await response.json();
-
 		// The API returns conversations directly in an array or under a 'data' key
 		const conversations = data.data || [];
 
@@ -148,6 +143,7 @@ export async function getSupportTicket(
 	}
 
 	const token = authToken || (await getAuthToken());
+	console.log(`[Support API] Token:`, token);
 	if (!token) {
 		throw new Error("No auth token available");
 	}
@@ -177,12 +173,14 @@ export async function getSupportTicket(
 						Accept: "application/json",
 						Authorization: `Bearer ${token}`,
 						"Content-Type": "application/json",
+						// Disable compression to avoid Z_DATA_ERROR
+						"Accept-Encoding": "identity",
 					},
 					method: "GET",
 				},
 			),
 			fetch(
-				`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodedTeamSlug}/support-conversations/${encodedTicketId}/messages`,
+				`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodedTeamSlug}/support-conversations/${encodedTicketId}/mes`,
 				{
 					body: JSON.stringify(messagesPayload),
 					// Disable caching to get real-time data
@@ -191,11 +189,18 @@ export async function getSupportTicket(
 						Accept: "application/json",
 						Authorization: `Bearer ${token}`,
 						"Content-Type": "application/json",
+						// Disable compression to avoid Z_DATA_ERROR
+						"Accept-Encoding": "identity",
 					},
 					method: "POST",
 				},
 			),
 		]);
+
+		console.log(
+			`[Support API] Messages response status:`,
+			messagesResponse.status,
+		);
 
 		if (!conversationResponse.ok) {
 			if (conversationResponse.status === 404) {
@@ -214,9 +219,17 @@ export async function getSupportTicket(
 			const messagesData: { data?: SupportMessage[] } =
 				await messagesResponse.json();
 			const messages = messagesData.data || [];
+			console.log(`[Support API] Messages data:`, messages);
 			conversation.messages = messages;
 		} else {
 			// Don't throw error, just leave messages empty
+			const errorText = await messagesResponse.text();
+			console.log(
+				`[Support API] Messages request failed:`,
+				messagesResponse.status,
+				`Error:`,
+				errorText,
+			);
 			conversation.messages = [];
 		}
 
@@ -254,11 +267,6 @@ export async function createSupportTicket(
 			type: "email",
 		};
 
-		console.log(
-			`[Support API] Request body for create ticket:`,
-			JSON.stringify(payload, null, 2),
-		);
-
 		let body: string | FormData;
 		const headers: Record<string, string> = {
 			Accept: "application/json",
@@ -283,7 +291,11 @@ export async function createSupportTicket(
 
 		const response = await fetch(apiUrl, {
 			body,
-			headers,
+			headers: {
+				...headers,
+				// Disable compression to avoid Z_DATA_ERROR
+				"Accept-Encoding": "identity",
+			},
 			method: "POST",
 		});
 
@@ -329,11 +341,6 @@ export async function sendMessageToTicket(
 			onBehalfOf: request.onBehalfOf,
 		};
 
-		console.log(
-			`[Support API] Request body for send message:`,
-			JSON.stringify(payload, null, 2),
-		);
-
 		let body: string | FormData;
 		const headers: Record<string, string> = {
 			Accept: "application/json",
@@ -358,7 +365,11 @@ export async function sendMessageToTicket(
 
 		const response = await fetch(apiUrl, {
 			body,
-			headers,
+			headers: {
+				...headers,
+				// Disable compression to avoid Z_DATA_ERROR
+				"Accept-Encoding": "identity",
+			},
 			method: "POST",
 		});
 
