@@ -130,6 +130,7 @@ const getClaimConditionTypeFromPhase = (
 
   if (phase.snapshot) {
     if (
+      phase.maxClaimablePerWallet?.toString() === "0" &&
       phase.price === "0" &&
       typeof phase.snapshot !== "string" &&
       phase.snapshot.length === 1 &&

@@ -2,4 +2,4 @@
 "thirdweb": patch
 ---
 
-Add Somnia Testnet
+properly type purchaseData

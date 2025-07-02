@@ -4,6 +4,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
 import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
+import type { PurchaseData } from "../../../../pay/types.js";
 import type { FiatProvider } from "../../../../pay/utils/commonTypes.js";
 import type { AssetTabs } from "../../../../react/web/ui/ConnectWallet/screens/ViewAssets.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
@@ -117,7 +118,7 @@ export type PayUIOptions = Prettify<
      *
      * This details will be stored with the purchase and can be retrieved later via the status API or Webhook
      */
-    purchaseData?: object;
+    purchaseData?: PurchaseData;
 
     /**
      * Callback to be called when the user successfully completes the purchase.

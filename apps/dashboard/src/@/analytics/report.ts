@@ -1,6 +1,7 @@
 import posthog from "posthog-js";
 
 import type { Team } from "@/api/team";
+import type { ProductSKU } from "../types/billing";
 
 // ----------------------------
 // CONTRACTS
@@ -379,4 +380,32 @@ export function reportAssetCreationFailed(
     error: properties.error,
     step: properties.step,
   });
+}
+
+type UpsellParams = {
+  content: "storage-limit";
+  campaign: "create-coin" | "create-nft";
+  sku: Exclude<ProductSKU, null>;
+};
+
+/**
+ * ### Why do we need to report this event?
+ * - To track how effective the upsells are in driving users to upgrade
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportUpsellShown(properties: UpsellParams) {
+  posthog.capture("upsell shown", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track how effective the upsells are in driving users to upgrade
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportUpsellClicked(properties: UpsellParams) {
+  posthog.capture("upsell clicked", properties);
 }

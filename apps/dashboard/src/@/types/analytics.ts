@@ -39,12 +39,6 @@ export interface TransactionStats {
   count: number;
 }
 
-export interface RpcMethodStats {
-  date: string;
-  evmMethod: string;
-  count: number;
-}
-
 export interface EngineCloudStats {
   date: string;
   chainId: string;
@@ -78,4 +72,5 @@ export interface AnalyticsQueryParams {
   from?: Date;
   to?: Date;
   period?: "day" | "week" | "month" | "year" | "all";
+  limit?: number;
 }

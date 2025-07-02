@@ -6,6 +6,7 @@ import * as Bridge from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
+import type { PurchaseData } from "../../../../pay/types.js";
 import type { FiatProvider } from "../../../../pay/utils/commonTypes.js";
 import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
@@ -65,7 +66,7 @@ export type SendTransactionPayModalConfig =
             testMode?: boolean;
             preferredProvider?: FiatProvider;
           };
-      purchaseData?: object;
+      purchaseData?: PurchaseData;
       /**
        * Callback to be called when the user successfully completes the purchase.
        */

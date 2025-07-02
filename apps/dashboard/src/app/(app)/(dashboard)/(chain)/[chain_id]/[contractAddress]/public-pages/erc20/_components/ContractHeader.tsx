@@ -1,7 +1,7 @@
 import { ExternalLinkIcon, GlobeIcon, Settings2Icon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
-import type { ThirdwebContract } from "thirdweb";
+import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { Img } from "@/components/blocks/Img";
 import { Button } from "@/components/ui/button";
@@ -149,7 +149,7 @@ export function ContractHeaderUI(props: {
 
         {/* bottom row */}
         <div className="flex flex-row flex-wrap items-center gap-2">
-          {props.contractCreator && (
+          {props.contractCreator && props.contractCreator !== ZERO_ADDRESS && (
             <ContractCreatorBadge
               clientContract={props.clientContract}
               contractCreator={props.contractCreator}

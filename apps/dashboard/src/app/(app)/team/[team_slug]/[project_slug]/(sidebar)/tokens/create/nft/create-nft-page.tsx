@@ -25,6 +25,7 @@ import {
   reportAssetCreationFailed,
   reportContractDeployed,
 } from "@/analytics/report";
+import type { Team } from "@/api/team";
 import { useAddContractToProject } from "@/hooks/project-contracts";
 import { parseError } from "@/utils/errorParser";
 import type { CreateNFTCollectionAllValues } from "./_common/form";
@@ -37,6 +38,7 @@ export function CreateNFTPage(props: {
   projectSlug: string;
   teamId: string;
   projectId: string;
+  teamPlan: Team["billingPlan"];
 }) {
   const activeAccount = useActiveAccount();
 

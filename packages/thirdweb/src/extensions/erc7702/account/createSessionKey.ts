@@ -52,7 +52,7 @@ export type CreateSessionKeyOptions = {
  * @returns The transaction object to be sent.
  * @example
  * ```ts
- * import { createSessionKey } from 'thirdweb/extensions/7702';
+ * import { createSessionKey } from 'thirdweb/wallets/in-app';
  * import { sendTransaction } from 'thirdweb';
  *
  * const transaction = createSessionKey({

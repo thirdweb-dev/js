@@ -1,5 +1,19 @@
 # thirdweb
 
+## 5.105.5
+
+### Patch Changes
+
+- [#7486](https://github.com/thirdweb-dev/js/pull/7486) [`ec75d95`](https://github.com/thirdweb-dev/js/commit/ec75d9502c308c87fdf620769b66e1c87679c7ab) Thanks [@Yash094](https://github.com/Yash094)! - add core chains
+
+- [#7487](https://github.com/thirdweb-dev/js/pull/7487) [`50e01ce`](https://github.com/thirdweb-dev/js/commit/50e01ce06771fdae03b8ce07efa7383322b71a69) Thanks [@MananTank](https://github.com/MananTank)! - Restore border on embed components: `ConnectEmbed`, `BuyWidget`, `CheckoutWidget`, `TransactionWidget`
+
+- [#7474](https://github.com/thirdweb-dev/js/pull/7474) [`85c4ef1`](https://github.com/thirdweb-dev/js/commit/85c4ef10ce02b005e97da96e7f4dfcb3fb15e87b) Thanks [@emmaodia](https://github.com/emmaodia)! - Add Somnia Testnet
+
+- [#7503](https://github.com/thirdweb-dev/js/pull/7503) [`7ab8808`](https://github.com/thirdweb-dev/js/commit/7ab8808b50fae437e43d4f2e2f95754fbc7ee992) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle very large numbers in BuyWidget
+
+- [#7507](https://github.com/thirdweb-dev/js/pull/7507) [`fd967ce`](https://github.com/thirdweb-dev/js/commit/fd967ce8e362cb8a954d2a0a0ae87137a2a5bb4d) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Fix purchaseData propagation in PayEmbed component to new widget implementations
+
 ## 5.105.4
 
 ### Patch Changes
