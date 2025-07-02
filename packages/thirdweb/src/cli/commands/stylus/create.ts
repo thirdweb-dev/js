@@ -44,6 +44,7 @@ export async function createStylusProject() {
 			{ title: "Default", value: "default" },
 			{ title: "ERC20", value: "erc20" },
 			{ title: "ERC721", value: "erc721" },
+			{ title: "ERC1155", value: "erc1155" },
 		],
 		message: "Select a template:",
 		name: "projectType",
@@ -68,6 +69,13 @@ export async function createStylusProject() {
 		const repoUrl =
 			"git@github.com:thirdweb-example/stylus-erc721-template.git";
 		spinner.start(`Creating new ERC721 Stylus project: ${projectName}...`);
+		newProject = spawnSync("git", ["clone", repoUrl, projectName], {
+			stdio: "inherit",
+		});
+	} else if (projectType === "erc1155") {
+		const repoUrl =
+			"git@github.com:thirdweb-example/stylus-erc1155-template.git";
+		spinner.start(`Creating new ERC1155 Stylus project: ${projectName}...`);
 		newProject = spawnSync("git", ["clone", repoUrl, projectName], {
 			stdio: "inherit",
 		});
