@@ -19,7 +19,7 @@ export default async function Layout(props: {
 
   return (
     <div className="flex grow flex-col">
-      <div className="pt-4 lg:pt-6">
+      <div className="py-8 border-b">
         <div className="container max-w-7xl">
           <h1 className="mb-1 font-semibold text-2xl tracking-tight lg:text-3xl">
             Insight
@@ -36,8 +36,6 @@ export default async function Layout(props: {
             </UnderlineLink>
           </p>
         </div>
-
-        <div className="h-4" />
       </div>
 
       <div className="h-6" />

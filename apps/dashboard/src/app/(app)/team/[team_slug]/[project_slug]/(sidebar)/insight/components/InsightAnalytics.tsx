@@ -121,7 +121,7 @@ export async function InsightAnalytics(props: {
 
   if (!hasVolume) {
     return (
-      <div className="container flex max-w-7xl grow flex-col">
+      <div className="flex grow flex-col">
         <InsightFTUX clientId={props.projectClientId} />
       </div>
     );
@@ -134,22 +134,18 @@ export async function InsightAnalytics(props: {
       </div>
       <ResponsiveSuspense
         fallback={
-          <div className="flex flex-col gap-10 lg:gap-6">
+          <div className="flex flex-col gap-6">
             <div className="grid grid-cols-2 gap-4 lg:gap-6">
-              <Skeleton className="h-[120px] border rounded-xl" />
-              <Skeleton className="h-[120px] border rounded-xl" />
+              <Skeleton className="h-[88px] border rounded-xl" />
+              <Skeleton className="h-[88px] border rounded-xl" />
             </div>
-            <Skeleton className="h-[350px] border rounded-xl" />
-            <div className="relative grid grid-cols-1 gap-6 rounded-xl border border-border bg-card p-4 lg:gap-12 xl:grid-cols-2 xl:p-6">
-              <Skeleton className="h-[350px] border rounded-xl" />
-              <Skeleton className="h-[350px] border rounded-xl" />
-              <div className="absolute top-6 bottom-6 left-[50%] hidden w-[1px] bg-border xl:block" />
-            </div>
+            <Skeleton className="h-[480px] border rounded-xl" />
+            <Skeleton className="h-[376px] border rounded-xl" />
           </div>
         }
         searchParamsUsed={["from", "to", "interval"]}
       >
-        <div className="flex flex-col gap-10 lg:gap-6">
+        <div className="flex flex-col gap-6">
           <div className="grid grid-cols-2 gap-4 lg:gap-6">
             <StatCard
               icon={ActivityIcon}

@@ -6,7 +6,6 @@ import type {
   EcosystemWalletStats,
   EngineCloudStats,
   InAppWalletStats,
-  RpcMethodStats,
   TransactionStats,
   UniversalBridgeStats,
   UniversalBridgeWalletStats,
@@ -38,6 +37,18 @@ export interface InsightEndpointStats {
 interface InsightUsageStats {
   date: string;
   totalRequests: number;
+}
+
+export interface RpcMethodStats {
+  date: string;
+  evmMethod: string;
+  count: number;
+}
+
+export interface RpcUsageTypeStats {
+  date: string;
+  usageType: string;
+  count: number;
 }
 
 async function fetchAnalytics(
@@ -249,6 +260,26 @@ export async function getRpcMethodUsage(
 
   const json = await res.json();
   return json.data as RpcMethodStats[];
+}
+
+export async function getRpcUsageByType(
+  params: AnalyticsQueryParams,
+): Promise<RpcUsageTypeStats[]> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(
+    `v2/rpc/usage-types?${searchParams.toString()}`,
+    {
+      method: "GET",
+    },
+  );
+
+  if (res?.status !== 200) {
+    console.error("Failed to fetch RPC usage");
+    return [];
+  }
+
+  const json = await res.json();
+  return json.data as RpcUsageTypeStats[];
 }
 
 export async function getWalletUsers(
