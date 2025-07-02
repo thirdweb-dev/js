@@ -180,7 +180,7 @@ export async function getSupportTicket(
 				},
 			),
 			fetch(
-				`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodedTeamSlug}/support-conversations/${encodedTicketId}/mes`,
+				`${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodedTeamSlug}/support-conversations/${encodedTicketId}/messages/list`,
 				{
 					body: JSON.stringify(messagesPayload),
 					// Disable caching to get real-time data
