@@ -78,4 +78,5 @@ export interface AnalyticsQueryParams {
   from?: Date;
   to?: Date;
   period?: "day" | "week" | "month" | "year" | "all";
+  limit?: number;
 }

@@ -17,6 +17,29 @@ import type {
 import { getAuthToken } from "./auth-token";
 import { getChains } from "./chain";
 
+export interface InsightChainStats {
+  date: string;
+  chainId: string;
+  totalRequests: number;
+}
+
+export interface InsightStatusCodeStats {
+  date: string;
+  httpStatusCode: number;
+  totalRequests: number;
+}
+
+export interface InsightEndpointStats {
+  date: string;
+  endpoint: string;
+  totalRequests: number;
+}
+
+interface InsightUsageStats {
+  date: string;
+  totalRequests: number;
+}
+
 async function fetchAnalytics(
   input: string | URL,
   init?: RequestInit,
@@ -75,6 +98,9 @@ function buildSearchParams(params: AnalyticsQueryParams): URLSearchParams {
   }
   if (params.period) {
     searchParams.append("period", params.period);
+  }
+  if (params.limit) {
+    searchParams.append("limit", params.limit.toString());
   }
   return searchParams;
 }
@@ -423,4 +449,92 @@ export async function getEngineCloudMethodUsage(
 
   const json = await res.json();
   return json.data as EngineCloudStats[];
+}
+
+export async function getInsightChainUsage(
+  params: AnalyticsQueryParams,
+): Promise<{ data: InsightChainStats[] } | { errorMessage: string }> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(
+    `v2/insight/usage/by-chain?${searchParams.toString()}`,
+    {
+      method: "GET",
+    },
+  );
+
+  if (res?.status !== 200) {
+    const reason = await res?.text();
+    const errMsg = `Failed to fetch Insight chain usage: ${res?.status} - ${res.statusText} - ${reason}`;
+    console.error(errMsg);
+    return { errorMessage: errMsg };
+  }
+
+  const json = await res.json();
+  return { data: json.data as InsightChainStats[] };
+}
+
+export async function getInsightStatusCodeUsage(
+  params: AnalyticsQueryParams,
+): Promise<{ data: InsightStatusCodeStats[] } | { errorMessage: string }> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(
+    `v2/insight/usage/by-status-code?${searchParams.toString()}`,
+    {
+      method: "GET",
+    },
+  );
+
+  if (res?.status !== 200) {
+    const reason = await res?.text();
+    const errMsg = `Failed to fetch Insight status code usage: ${res?.status} - ${res.statusText} - ${reason}`;
+    console.error(errMsg);
+    return { errorMessage: errMsg };
+  }
+
+  const json = await res.json();
+  return { data: json.data as InsightStatusCodeStats[] };
+}
+
+export async function getInsightEndpointUsage(
+  params: AnalyticsQueryParams,
+): Promise<{ data: InsightEndpointStats[] } | { errorMessage: string }> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(
+    `v2/insight/usage/by-endpoint?${searchParams.toString()}`,
+    {
+      method: "GET",
+    },
+  );
+
+  if (res?.status !== 200) {
+    const reason = await res?.text();
+    const errMsg = `Failed to fetch Insight endpoint usage: ${res?.status} - ${res.statusText} - ${reason}`;
+    console.error(errMsg);
+    return { errorMessage: errMsg };
+  }
+
+  const json = await res.json();
+  return { data: json.data as InsightEndpointStats[] };
+}
+
+export async function getInsightUsage(
+  params: AnalyticsQueryParams,
+): Promise<{ data: InsightUsageStats[] } | { errorMessage: string }> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(
+    `v2/insight/usage?${searchParams.toString()}`,
+    {
+      method: "GET",
+    },
+  );
+
+  if (res?.status !== 200) {
+    const reason = await res?.text();
+    const errMsg = `Failed to fetch Insight usage: ${res?.status} - ${res.statusText} - ${reason}`;
+    console.error(errMsg);
+    return { errorMessage: errMsg };
+  }
+
+  const json = await res.json();
+  return { data: json.data as InsightUsageStats[] };
 }
