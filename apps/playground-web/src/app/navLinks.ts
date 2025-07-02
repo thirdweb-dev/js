@@ -117,6 +117,10 @@ const engineSidebarLinks: SidebarLink = {
   isCollapsible: false,
   links: [
     {
+      href: "/engine/users",
+      name: "From User Wallets",
+    },
+    {
       href: "/engine/airdrop",
       name: "Airdrop",
     },
