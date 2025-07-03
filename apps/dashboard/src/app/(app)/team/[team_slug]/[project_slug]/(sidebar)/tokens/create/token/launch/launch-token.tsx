@@ -47,7 +47,10 @@ export function LaunchTokenStatus(props: {
   values: CreateAssetFormValues;
   onPrevious: () => void;
   client: ThirdwebClient;
-  onLaunchSuccess: () => void;
+  onLaunchSuccess: (params: {
+    chainId: number;
+    contractAddress: string;
+  }) => void;
   teamSlug: string;
   projectSlug: string;
 }) {
@@ -55,7 +58,7 @@ export function LaunchTokenStatus(props: {
   const { createTokenFunctions } = props;
   const [steps, setSteps] = useState<MultiStepState<StepId>[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [contractLink, setContractLink] = useState<string | null>(null);
+  const [contractAddress, setContractAddress] = useState<string | null>(null);
   const activeWallet = useActiveWallet();
   const walletRequiresApproval = activeWallet?.id !== "inApp";
 
@@ -79,16 +82,6 @@ export function LaunchTokenStatus(props: {
         label: "Deploy contract",
         status: { type: "idle" },
       },
-      {
-        id: stepIds["set-claim-conditions"],
-        label: "Set claim conditions",
-        status: { type: "idle" },
-      },
-      {
-        id: stepIds["mint-tokens"],
-        label: "Mint tokens",
-        status: { type: "idle" },
-      },
     ];
 
     if (formValues.airdropEnabled && formValues.airdropAddresses.length > 0) {
@@ -110,13 +103,7 @@ export function LaunchTokenStatus(props: {
   async function executeStep(stepId: StepId) {
     if (stepId === "deploy-contract") {
       const result = await createTokenFunctions.deployContract(formValues);
-      setContractLink(
-        `/team/${props.teamSlug}/${props.projectSlug}/contract/${formValues.chain}/${result.contractAddress}`,
-      );
-    } else if (stepId === "set-claim-conditions") {
-      await createTokenFunctions.setClaimConditions(formValues);
-    } else if (stepId === "mint-tokens") {
-      await createTokenFunctions.mintTokens(formValues);
+      setContractAddress(result.contractAddress);
     } else if (stepId === "airdrop-tokens") {
       await createTokenFunctions.airdropTokens(formValues);
     }
@@ -166,7 +153,12 @@ export function LaunchTokenStatus(props: {
       contractType: "DropERC20",
     });
 
-    props.onLaunchSuccess();
+    if (contractAddress) {
+      props.onLaunchSuccess({
+        chainId: Number(formValues.chain),
+        contractAddress,
+      });
+    }
   }
 
   async function handleRetry(step: MultiStepState<StepId>) {
@@ -177,6 +169,10 @@ export function LaunchTokenStatus(props: {
 
     await executeSteps(steps, startIndex);
   }
+
+  const contractLink = contractAddress
+    ? `/team/${props.teamSlug}/${props.projectSlug}/contract/${formValues.chain}/${contractAddress}`
+    : null;
 
   return (
     <StepCard

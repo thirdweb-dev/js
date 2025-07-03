@@ -35,7 +35,7 @@ export function StepCard(props: {
       {props.children}
 
       {(props.prevButton || props.nextButton) && (
-        <div className="flex justify-end gap-3 border-t p-6">
+        <div className="flex justify-end gap-3 border-t p-4 md:p-6">
           {props.prevButton && (
             <Button
               className="gap-2"

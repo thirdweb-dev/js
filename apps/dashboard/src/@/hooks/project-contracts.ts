@@ -11,7 +11,7 @@ export function useAddContractToProject() {
       contractAddress: string;
       chainId: string;
       deploymentType: "asset" | undefined;
-      contractType: "DropERC20" | "DropERC721" | "DropERC1155" | undefined;
+      contractType: "ERC20Asset" | "DropERC721" | "DropERC1155" | undefined;
     }) => {
       const res = await apiServerProxy({
         body: JSON.stringify({
