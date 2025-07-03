@@ -1,9 +1,19 @@
 import { spawnSync } from "node:child_process";
 import ora from "ora";
 import prompts from "prompts";
+import { checkPrerequisites } from "./check-prerequisites.js";
 
 export async function createStylusProject() {
   const spinner = ora();
+
+  checkPrerequisites(spinner, "cargo", ["--version"], "Rust (cargo)");
+  checkPrerequisites(spinner, "rustc", ["--version"], "Rust compiler (rustc)");
+  checkPrerequisites(
+    spinner,
+    "solc",
+    ["--version"],
+    "Solidity compiler (solc)",
+  );
 
   // Step 1: Ensure cargo is installed
   const cargoCheck = spawnSync("cargo", ["--version"]);
@@ -23,7 +33,7 @@ export async function createStylusProject() {
   }
   spinner.succeed("Stylus installed.");
 
-  spawnSync("rustup", ["default", "1.83"], {
+  spawnSync("rustup", ["default", "1.87"], {
     stdio: "inherit",
   });
   spawnSync("rustup", ["target", "add", "wasm32-unknown-unknown"], {

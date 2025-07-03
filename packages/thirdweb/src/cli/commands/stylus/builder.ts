@@ -7,11 +7,22 @@ import prompts from "prompts";
 import { parse } from "toml";
 import { createThirdwebClient } from "../../../client/client.js";
 import { upload } from "../../../storage/upload.js";
+import { checkPrerequisites } from "./check-prerequisites.js";
 
 const THIRDWEB_URL = "https://thirdweb.com";
 
 export async function publishStylus(secretKey?: string) {
   const spinner = ora("Checking if this is a Stylus project...").start();
+
+  checkPrerequisites(spinner, "cargo", ["--version"], "Rust (cargo)");
+  checkPrerequisites(spinner, "rustc", ["--version"], "Rust compiler (rustc)");
+  checkPrerequisites(
+    spinner,
+    "solc",
+    ["--version"],
+    "Solidity compiler (solc)",
+  );
+
   const uri = await buildStylus(spinner, secretKey);
 
   const url = getUrl(uri, "publish").toString();
@@ -21,6 +32,16 @@ export async function publishStylus(secretKey?: string) {
 
 export async function deployStylus(secretKey?: string) {
   const spinner = ora("Checking if this is a Stylus project...").start();
+
+  checkPrerequisites(spinner, "cargo", ["--version"], "Rust (cargo)");
+  checkPrerequisites(spinner, "rustc", ["--version"], "Rust compiler (rustc)");
+  checkPrerequisites(
+    spinner,
+    "solc",
+    ["--version"],
+    "Solidity compiler (solc)",
+  );
+
   const uri = await buildStylus(spinner, secretKey);
 
   const url = getUrl(uri, "deploy").toString();
