@@ -1,11 +1,8 @@
 import type { Abi, AbiConstructor } from "abitype";
 import { parseEventLogs } from "../../event/actions/parse-logs.js";
-import { FN_SELECTOR } from "../../extensions/stylus/__generated__/IStylusConstructor/write/stylus_constructor.js";
 import { contractDeployedEvent } from "../../extensions/stylus/__generated__/IStylusDeployer/events/ContractDeployed.js";
-import { deploy } from "../../extensions/stylus/__generated__/IStylusDeployer/write/deploy.js";
 import { activateStylusContract } from "../../extensions/stylus/write/activateStylusContract.js";
-import { eth_blockNumber } from "../../rpc/actions/eth_blockNumber.js";
-import { getRpcClient } from "../../rpc/rpc.js";
+import { deployWithStylusConstructor } from "../../extensions/stylus/write/deployWithStylusConstructor.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
@@ -17,7 +14,7 @@ import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import { ensureBytecodePrefix } from "../../utils/bytecode/prefix.js";
 import { concatHex } from "../../utils/encoding/helpers/concat-hex.js";
-import { type Hex, isHex, toHex } from "../../utils/encoding/hex.js";
+import { type Hex, isHex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChain } from "../../utils/types.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
@@ -178,39 +175,12 @@ export async function deployContract(
       }),
     });
   } else if (options.isStylus && options.constructorParams) {
-    const STYLUS_DEPLOYER = "0xCeCbA2F1dC234F70Dd89f2041029807F8D03A990";
-    const stylusDeployer = getContract({
-      address: STYLUS_DEPLOYER,
+    const deployTx = deployWithStylusConstructor({
+      abi: options.abi,
+      bytecode: options.bytecode,
       chain: options.chain,
       client: options.client,
-    });
-
-    const constructorAbi = options.abi.find(
-      (abi) => abi.type === "constructor",
-    ) as AbiConstructor | undefined;
-    const constructorCalldata = (FN_SELECTOR +
-      encodeAbiParameters(
-        constructorAbi?.inputs || [], // Leave an empty array if there's no constructor
-        normalizeFunctionParams(
-          constructorAbi,
-          options.constructorParams,
-        ).slice(2),
-      )) as `${typeof FN_SELECTOR}${string}`;
-
-    const rpcRequest = getRpcClient({
-      ...options,
-    });
-    const blockNumber = await eth_blockNumber(rpcRequest);
-    const salt = toHex(blockNumber, {
-      size: 32,
-    });
-
-    const deployTx = deploy({
-      bytecode: options.bytecode,
-      contract: stylusDeployer,
-      initData: constructorCalldata,
-      initValue: 0n,
-      salt,
+      constructorParams: options.constructorParams,
     });
 
     const receipt = await sendAndConfirmTransaction({
