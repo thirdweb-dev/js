@@ -34,7 +34,10 @@ export function CreateTokenAssetPageUI(props: {
   accountAddress: string;
   client: ThirdwebClient;
   createTokenFunctions: CreateTokenFunctions;
-  onLaunchSuccess: () => void;
+  onLaunchSuccess: (params: {
+    chainId: number;
+    contractAddress: string;
+  }) => void;
   teamSlug: string;
   projectSlug: string;
 }) {

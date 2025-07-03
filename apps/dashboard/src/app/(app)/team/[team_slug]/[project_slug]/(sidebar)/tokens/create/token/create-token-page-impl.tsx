@@ -24,6 +24,7 @@ import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useAddContractToProject } from "@/hooks/project-contracts";
 import { defineDashboardChain } from "@/lib/defineDashboardChain";
 import { parseError } from "@/utils/errorParser";
+import { createTokenOnUniversalBridge } from "../_apis/create-token-on-bridge";
 import type { CreateAssetFormValues } from "./_common/form";
 import { CreateTokenAssetPageUI } from "./create-token-page.client";
 
@@ -227,7 +228,12 @@ export function CreateTokenAssetPage(props: {
         airdropTokens,
         deployContract,
       }}
-      onLaunchSuccess={() => {
+      onLaunchSuccess={(params) => {
+        createTokenOnUniversalBridge({
+          chainId: params.chainId,
+          client: props.client,
+          tokenAddress: params.contractAddress,
+        });
         revalidatePathAction(
           `/team/${props.teamSlug}/project/${props.projectId}/tokens`,
           "page",
