@@ -43,38 +43,36 @@ export function CountrySelector({
         ]);
 
   return (
-    <>
-      <Select
-        name="countries"
-        onChange={(e) => {
-          setCountryCode(e.target.value);
-        }}
-        ref={selectRef}
+    <Select
+      name="countries"
+      onChange={(e) => {
+        setCountryCode(e.target.value);
+      }}
+      ref={selectRef}
+      style={{
+        padding: `${spacing.sm} ${spacing.md}`,
+      }}
+      value={countryCode}
+    >
+      <Option
         style={{
-          padding: `${spacing.sm} ${spacing.md}`,
+          display: "none",
         }}
         value={countryCode}
       >
-        <Option
-          style={{
-            display: "none",
-          }}
-          value={countryCode}
-        >
-          {countryCode}
-        </Option>
-        {supportedCountriesForSms.map((country) => {
-          return (
-            <Option
-              key={country.countryIsoCode}
-              value={getCountrySelector(country.countryIsoCode)}
-            >
-              {country.countryName} +{country.phoneNumberCode}
-            </Option>
-          );
-        })}
-      </Select>
-    </>
+        {countryCode}
+      </Option>
+      {supportedCountriesForSms.map((country) => {
+        return (
+          <Option
+            key={country.countryIsoCode}
+            value={getCountrySelector(country.countryIsoCode)}
+          >
+            {country.countryName} +{country.phoneNumberCode}
+          </Option>
+        );
+      })}
+    </Select>
   );
 }
 

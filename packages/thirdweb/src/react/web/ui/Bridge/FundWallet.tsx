@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/a11y/useSemanticElements: FIXME */
 "use client";
 import { useRef, useState } from "react";
 import type { Token } from "../../../../bridge/types/Token.js";
@@ -163,7 +164,6 @@ export function FundWallet({
                   focusInput();
                 }
               }}
-              // biome-ignore lint/a11y/useSemanticElements: FIXME
               role="button"
               style={{ cursor: "text" }}
               tabIndex={0}

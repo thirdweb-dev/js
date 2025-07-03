@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/a11y/useSemanticElements: FIXME */
 "use client";
 
 import {
@@ -164,7 +165,6 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
             return (
               <TableRow
                 key={row.id}
-                // biome-ignore lint/a11y/useSemanticElements: FIXME
                 role="group"
                 {...(tableProps.onRowClick
                   ? {
