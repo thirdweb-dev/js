@@ -19,12 +19,22 @@ export interface SupportTicket {
 
 export interface SupportMessage {
 	id: string;
-	content: string;
+	content?: string;
+	resolvedContent?: string[];
+	text?: string;
 	createdAt: string;
-	author: {
+	timestamp: string;
+	author?: {
 		name: string;
 		email: string;
 		type: "user" | "customer";
+	};
+	sentByUser?: {
+		id: string;
+		name: string;
+		email: string;
+		isExternal: boolean;
+		photo?: string;
 	};
 }
 
@@ -214,12 +224,33 @@ export async function getSupportTicket(
 
 		const conversation: SupportTicket = await conversationResponse.json();
 
+		// Set openedBy from available fields
+		conversation.openedBy =
+			(conversation as any).customer?.name ||
+			(conversation as any).initialMessage?.sentByUser?.name ||
+			(conversation as any).initialMessage?.sentByUser?.email ||
+			"";
+
 		// Fetch and map messages if the messages request was successful
 		if (messagesResponse.ok) {
-			const messagesData: { data?: SupportMessage[] } =
-				await messagesResponse.json();
-			const messages = messagesData.data || [];
-			console.log(`[Support API] Messages data:`, messages);
+			const messagesData: { data?: any[] } = await messagesResponse.json();
+			const rawMessages = messagesData.data || [];
+			console.log(`[Support API] Messages data:`, rawMessages);
+
+			// Transform the raw messages to match our interface and filter out messages with null sentByUser
+			const messages: SupportMessage[] = rawMessages
+				.filter((msg) => msg.sentByUser !== null) // Filter out messages with null sentByUser
+				.map((msg) => ({
+					id: msg.id,
+					content: msg.text || msg.resolvedContent?.join("\n"),
+					resolvedContent: msg.resolvedContent,
+					text: msg.text,
+					createdAt: msg.timestamp || msg.createdAt,
+					timestamp: msg.timestamp,
+					author: msg.author,
+					sentByUser: msg.sentByUser,
+				}));
+
 			conversation.messages = messages;
 		} else {
 			// Don't throw error, just leave messages empty

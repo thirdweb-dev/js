@@ -216,7 +216,12 @@ export default function SupportCasesClient({
   const getLastMessageAuthor = (ticket: SupportTicket) => {
     if (ticket.messages && ticket.messages.length > 0) {
       const lastMessage = ticket.messages[ticket.messages.length - 1];
-      return lastMessage?.author.type || "customer";
+      // Check if sentByUser exists and is external (customer) or internal (user)
+      if (lastMessage?.sentByUser) {
+        return lastMessage.sentByUser.isExternal ? "customer" : "user";
+      }
+      // Fallback to author.type if available
+      return lastMessage?.author?.type || "customer";
     }
     // If no messages, assume it's from customer (the ticket opener)
     return "customer";
@@ -291,43 +296,62 @@ export default function SupportCasesClient({
                     </div>
                   ) : selectedCase.messages &&
                     selectedCase.messages.length > 0 ? (
-                    selectedCase.messages.map((message) => (
-                      <div
-                        className="border border-[#1F1F1F] bg-[#0A0A0A] p-4 rounded"
-                        key={message.id}
-                      >
-                        <div className="flex justify-between items-start mb-2">
-                          <div className="flex items-center gap-2">
-                            <span className="font-medium text-white">
-                              {message.author.type === "customer"
-                                ? "You"
-                                : message.author.name || "Support"}
+                    selectedCase.messages.map((message) => {
+                      // Determine message author and type
+                      const isCustomer =
+                        message.sentByUser?.isExternal ||
+                        message.author?.type === "customer";
+                      const authorName =
+                        message.sentByUser?.name ||
+                        message.author?.name ||
+                        "Support";
+                      const displayName = isCustomer ? "You" : authorName;
+
+                      // Get message content from available fields
+                      const messageContent =
+                        message.resolvedContent?.join("\n") ||
+                        message.text ||
+                        message.content ||
+                        "No content available";
+
+                      // Use timestamp or createdAt for date
+                      const messageDate =
+                        message.timestamp || message.createdAt;
+
+                      return (
+                        <div
+                          className="border border-[#1F1F1F] bg-[#0A0A0A] p-4 rounded"
+                          key={message.id}
+                        >
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium text-white">
+                                {displayName}
+                              </span>
+                              <Badge
+                                className={
+                                  !isCustomer
+                                    ? "border-blue-500 text-blue-500 bg-blue-500/10 text-xs"
+                                    : "border-green-500 text-green-500 bg-green-500/10 text-xs"
+                                }
+                                variant="outline"
+                              >
+                                {!isCustomer ? "Support" : "Customer"}
+                              </Badge>
+                            </div>
+                            <span className="text-xs text-[#737373]">
+                              {format(
+                                new Date(messageDate),
+                                "MMM d, yyyy 'at' h:mm a",
+                              )}
                             </span>
-                            <Badge
-                              className={
-                                message.author.type === "user"
-                                  ? "border-blue-500 text-blue-500 bg-blue-500/10 text-xs"
-                                  : "border-green-500 text-green-500 bg-green-500/10 text-xs"
-                              }
-                              variant="outline"
-                            >
-                              {message.author.type === "user"
-                                ? "Support"
-                                : "Customer"}
-                            </Badge>
                           </div>
-                          <span className="text-xs text-[#737373]">
-                            {format(
-                              new Date(message.createdAt),
-                              "MMM d, yyyy 'at' h:mm a",
-                            )}
-                          </span>
+                          <div className="text-[#9ca3af] whitespace-pre-wrap">
+                            {messageContent}
+                          </div>
                         </div>
-                        <div className="text-[#9ca3af] whitespace-pre-wrap">
-                          {message.content}
-                        </div>
-                      </div>
-                    ))
+                      );
+                    })
                   ) : (
                     <div className="border border-[#1F1F1F] bg-[#0A0A0A] p-4 rounded">
                       <div className="flex justify-between items-start mb-2">
