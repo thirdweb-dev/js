@@ -1,8 +1,9 @@
 "use client";
 
 import { format, formatDistanceToNowStrict } from "date-fns";
-import { ExternalLinkIcon, InfoIcon } from "lucide-react";
+import { ExternalLink, Info, ChevronDown, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { hexToNumber, isHex, type ThirdwebClient, toEther } from "thirdweb";
 import type { Project } from "@/api/projects";
 import { WalletAddress } from "@/components/blocks/wallet-address";
@@ -16,15 +17,18 @@ import { useAllChainsData } from "@/hooks/chains/allChains";
 import { ChainIconClient } from "@/icons/ChainIcon";
 import { statusDetails } from "../../analytics/tx-table/tx-table-ui";
 import type { Transaction } from "../../analytics/tx-table/types";
+import { type ActivityLogEntry } from "../../lib/analytics";
 
 export function TransactionDetailsUI({
   transaction,
   client,
+  activityLogs,
 }: {
   transaction: Transaction;
   teamSlug: string;
   client: ThirdwebClient;
   project: Project;
+  activityLogs: ActivityLogEntry[];
 }) {
   const { idToChain } = useAllChainsData();
 
@@ -45,8 +49,8 @@ export function TransactionDetailsUI({
     executionResult && "error" in executionResult
       ? executionResult.error.message
       : executionResult && "revertData" in executionResult
-        ? executionResult.revertData?.revertReason
-        : null;
+      ? executionResult.revertData?.revertReason
+      : null;
   const errorDetails =
     executionResult && "error" in executionResult
       ? executionResult.error
@@ -68,12 +72,18 @@ export function TransactionDetailsUI({
   // Gas information
   const gasUsed =
     executionResult && "actualGasUsed" in executionResult
-      ? `${isHex(executionResult.actualGasUsed) ? hexToNumber(executionResult.actualGasUsed) : executionResult.actualGasUsed}`
+      ? `${
+          isHex(executionResult.actualGasUsed)
+            ? hexToNumber(executionResult.actualGasUsed)
+            : executionResult.actualGasUsed
+        }`
       : "N/A";
 
   const gasCost =
     executionResult && "actualGasCost" in executionResult
-      ? `${toEther(BigInt(executionResult.actualGasCost || "0"))} ${chain?.nativeCurrency.symbol || ""}`
+      ? `${toEther(BigInt(executionResult.actualGasCost || "0"))} ${
+          chain?.nativeCurrency.symbol || ""
+        }`
       : "N/A";
 
   return (
@@ -156,7 +166,10 @@ export function TransactionDetailsUI({
                           rel="noopener noreferrer"
                           target="_blank"
                         >
-                          {`${transactionHash.slice(0, 8)}...${transactionHash.slice(-6)}`}{" "}
+                          {`${transactionHash.slice(
+                            0,
+                            8,
+                          )}...${transactionHash.slice(-6)}`}{" "}
                           <ExternalLinkIcon className="size-4 text-muted-foreground" />
                         </Link>
                       </Button>
@@ -165,7 +178,10 @@ export function TransactionDetailsUI({
                         className="font-mono text-muted-foreground text-sm"
                         copyIconPosition="left"
                         textToCopy={transactionHash}
-                        textToShow={`${transactionHash.slice(0, 6)}...${transactionHash.slice(-4)}`}
+                        textToShow={`${transactionHash.slice(
+                          0,
+                          6,
+                        )}...${transactionHash.slice(-4)}`}
                         tooltip="Copy transaction hash"
                         variant="ghost"
                       />
@@ -347,7 +363,122 @@ export function TransactionDetailsUI({
             )}
           </CardContent>
         </Card>
+
+        {/* Activity Log Card */}
+        <ActivityLogCard activityLogs={activityLogs} />
       </div>
     </>
+  );
+}
+
+// Activity Log Timeline Component
+function ActivityLogCard({
+  activityLogs,
+}: { activityLogs: ActivityLogEntry[] }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg">Activity Log</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {activityLogs.length === 0 ? (
+          <p className="text-muted-foreground text-sm">
+            No activity logs available for this transaction
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {activityLogs.map((log, index) => (
+              <ActivityLogEntry
+                key={log.id}
+                log={log}
+                isLast={index === activityLogs.length - 1}
+              />
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function ActivityLogEntry({
+  log,
+  isLast,
+}: { log: ActivityLogEntry; isLast: boolean }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div className="relative">
+      {/* Timeline line */}
+      {!isLast && (
+        <div className="absolute left-4 top-8 h-full w-0.5 bg-border" />
+      )}
+
+      <div className="flex items-start gap-4">
+        {/* Timeline dot */}
+        <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+          <div className="h-3 w-3 rounded-full bg-primary" />
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="flex w-full items-center justify-between py-2 text-left hover:bg-muted/50 rounded-md px-2 -ml-2"
+          >
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-sm">{log.stageName}</span>
+              <span className="text-muted-foreground text-xs">
+                {formatDistanceToNowStrict(new Date(log.timestamp), {
+                  addSuffix: true,
+                })}
+              </span>
+            </div>
+            {isExpanded ? (
+              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            )}
+          </button>
+
+          {isExpanded && (
+            <div className="mt-2 space-y-3 px-2">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <div className="text-muted-foreground">Event Type</div>
+                  <div className="font-mono">{log.eventType}</div>
+                </div>
+                <div>
+                  <div className="text-muted-foreground">Executor</div>
+                  <div className="font-mono">{log.executorName}</div>
+                </div>
+                <div>
+                  <div className="text-muted-foreground">Batch Index</div>
+                  <div className="font-mono">{log.batchIndex}</div>
+                </div>
+                <div>
+                  <div className="text-muted-foreground">Timestamp</div>
+                  <div className="font-mono text-xs">
+                    {format(new Date(log.timestamp), "PP pp z")}
+                  </div>
+                </div>
+              </div>
+
+              {log.payload && (
+                <div>
+                  <div className="text-muted-foreground text-sm mb-2">
+                    Payload
+                  </div>
+                  <CodeClient
+                    code={JSON.stringify(log.payload, null, 2)}
+                    lang="json"
+                  />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

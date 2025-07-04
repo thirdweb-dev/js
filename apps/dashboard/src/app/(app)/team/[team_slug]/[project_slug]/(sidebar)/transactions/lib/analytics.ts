@@ -122,7 +122,9 @@ export async function getTransactionsChart({
 
     // TODO - need to handle this error state, like we do with the connect charts
     throw new Error(
-      `Error fetching transactions chart data: ${response.status} ${response.statusText} - ${await response.text().catch(() => "Unknown error")}`,
+      `Error fetching transactions chart data: ${response.status} ${
+        response.statusText
+      } - ${await response.text().catch(() => "Unknown error")}`,
     );
   }
 
@@ -192,11 +194,87 @@ export async function getSingleTransaction({
 
     // TODO - need to handle this error state, like we do with the connect charts
     throw new Error(
-      `Error fetching single transaction data: ${response.status} ${response.statusText} - ${await response.text().catch(() => "Unknown error")}`,
+      `Error fetching single transaction data: ${response.status} ${
+        response.statusText
+      } - ${await response.text().catch(() => "Unknown error")}`,
     );
   }
 
   const data = (await response.json()).result as TransactionsResponse;
 
   return data.transactions[0];
+}
+
+// Activity log types
+export type ActivityLogEntry = {
+  id: string;
+  transactionId: string;
+  batchIndex: number;
+  eventType: string;
+  stageName: string;
+  executorName: string;
+  notificationId: string;
+  payload: Record<string, unknown> | string | number | boolean | null;
+  timestamp: string;
+  createdAt: string;
+};
+
+type ActivityLogsResponse = {
+  result: {
+    activityLogs: ActivityLogEntry[];
+    transaction: {
+      id: string;
+      batchIndex: number;
+      clientId: string;
+    };
+    pagination: {
+      totalCount: number;
+      page: number;
+      limit: number;
+    };
+  };
+};
+
+export async function getTransactionActivityLogs({
+  teamId,
+  clientId,
+  transactionId,
+}: {
+  teamId: string;
+  clientId: string;
+  transactionId: string;
+}): Promise<ActivityLogEntry[]> {
+  const authToken = await getAuthToken();
+
+  const response = await fetch(
+    `${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/transactions/activity-logs?transactionId=${transactionId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+        "x-client-id": clientId,
+        "x-team-id": teamId,
+      },
+      method: "GET",
+    },
+  );
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      return [];
+    }
+
+    // Don't throw on 404 - activity logs might not exist for all transactions
+    if (response.status === 404) {
+      return [];
+    }
+
+    console.error(
+      `Error fetching activity logs: ${response.status} ${response.statusText}`,
+    );
+    return [];
+  }
+
+  const data = (await response.json()) as ActivityLogsResponse;
+  return data.result.activityLogs;
 }
