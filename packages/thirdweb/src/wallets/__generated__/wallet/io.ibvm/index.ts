@@ -3,15 +3,14 @@
 
 export const wallet = {
   app: {
-    android:
-      "https://play.google.com/store/apps/details?id=com.slingshot.finance",
+    android: "https://play.google.com/store/apps/details?id=com.ibvm.wallet",
     browser: null,
     chrome: null,
     edge: null,
     firefox: null,
-    ios: "https://apps.apple.com/app/apple-store/id1633406472",
+    ios: "https://apps.apple.com/us/app/ibvm-wallet/id6744966630",
     linux: null,
-    mac: "",
+    mac: null,
     opera: null,
     safari: null,
     windows: null,
@@ -20,13 +19,13 @@ export const wallet = {
     native: null,
     universal: null,
   },
-  homepage: "https://slingshot.finance/",
-  id: "finance.slingshot",
-  image_id: "10c75467-6612-48ad-b97b-63985e922200",
+  homepage: "https://ibvm.io/",
+  id: "io.ibvm",
+  image_id: "a9b8d4c4-b6e1-4b2e-15c3-81331511c400",
   mobile: {
-    native: "slingshot://",
-    universal: "https://app.slingshot.finance",
+    native: "ibvm://",
+    universal: null,
   },
-  name: "Slingshot Wallet",
+  name: "IBVM Wallet",
   rdns: null,
 } as const;

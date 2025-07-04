@@ -22,7 +22,7 @@ export const wallet = {
   },
   homepage: "https://web3.bitget.com",
   id: "com.bitget.web3",
-  image_id: "ac927cca-531b-40e1-0ff2-4eefe946d100",
+  image_id: "f6ff957e-7e74-4f43-a3ae-a643bf18a200",
   mobile: {
     native: "bitkeep://",
     universal: "https://bkapp.vip",

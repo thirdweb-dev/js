@@ -24,7 +24,7 @@ export const wallet = {
   id: "com.payperless",
   image_id: "4a867e30-44c9-4627-6281-33457b8e2100",
   mobile: {
-    native: " payperless.com://",
+    native: " payperless://",
     universal: null,
   },
   name: "Payperless",

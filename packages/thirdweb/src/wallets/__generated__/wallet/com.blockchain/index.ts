@@ -22,10 +22,10 @@ export const wallet = {
   },
   homepage: "https://www.blockchain.com/en/app",
   id: "com.blockchain",
-  image_id: "6f913b80-86c0-46f9-61ca-cc90a1805900",
+  image_id: "0884948c-c6ce-421e-b4bd-3d2adb261500",
   mobile: {
     native: "blockchain-wallet://",
-    universal: "https://www.blockchain.com",
+    universal: "https://login.blockchain.com/app",
   },
   name: "Blockchain.com",
   rdns: null,

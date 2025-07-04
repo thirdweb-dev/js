@@ -17,8 +17,8 @@ export const wallet = {
     windows: null,
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
   homepage: "https://gemwallet.com",
   id: "com.gemwallet",

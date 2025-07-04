@@ -22,7 +22,7 @@ export const wallet = {
   },
   homepage: "https://dcentwallet.com",
   id: "com.dcentwallet",
-  image_id: "0b0ca1f1-1e43-4429-7b23-2e0ce4b1b700",
+  image_id: "bd543439-1b64-4291-f6ce-c5ffbc0a3500",
   mobile: {
     native: "dcent://",
     universal: "https://link.dcentwallet.com",
