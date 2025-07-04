@@ -10,36 +10,25 @@ export type TokenMetadata = {
 };
 
 export async function getUniversalBridgeTokens(props: { chainId?: number }) {
-  // This is a simplified implementation for the portal app
-  // In a real implementation, this would fetch from an API
-  const mockTokens: TokenMetadata[] = [
-    {
-      name: "Ethereum",
-      symbol: "ETH",
-      address: "0x0000000000000000000000000000000000000000",
-      decimals: 18,
-      chainId: props.chainId || 1,
-    },
-    {
-      name: "USD Coin",
-      symbol: "USDC",
-      address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-      decimals: 6,
-      chainId: props.chainId || 1,
-    },
-    {
-      name: "Tether USD",
-      symbol: "USDT",
-      address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-      decimals: 6,
-      chainId: props.chainId || 1,
-    },
-  ];
+  const url = new URL("https://bridge.thirdweb.com/v1/tokens");
 
-  // Filter by chainId if provided
   if (props.chainId) {
-    return mockTokens.map((token) => ({ ...token, chainId: props.chainId }));
+    url.searchParams.append("chainId", String(props.chainId));
+  }
+  url.searchParams.append("limit", "1000");
+
+  const res = await fetch(url.toString(), {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "GET",
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text);
   }
 
-  return mockTokens;
+  const json = await res.json();
+  return json.data as Array<TokenMetadata>;
 }
