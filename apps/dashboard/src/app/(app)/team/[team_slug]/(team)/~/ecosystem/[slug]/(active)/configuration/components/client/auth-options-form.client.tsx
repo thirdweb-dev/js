@@ -90,9 +90,9 @@ export function AuthOptionsForm({
         DEFAULT_ACCOUNT_FACTORY_V0_7
           ? "v0.7"
           : ecosystem.smartAccountOptions?.accountFactoryAddress ===
-              DEFAULT_ACCOUNT_FACTORY_V0_6
-            ? "v0.6"
-            : "custom",
+            DEFAULT_ACCOUNT_FACTORY_V0_6
+          ? "v0.6"
+          : "custom",
       authOptions: ecosystem.authOptions || [],
       customAccountFactoryAddress:
         ecosystem.smartAccountOptions?.accountFactoryAddress || "",
@@ -133,6 +133,8 @@ export function AuthOptionsForm({
           (data) => {
             if (
               data.useSmartAccount &&
+              data.executionMode === "EIP4337" &&
+              data.accountFactoryType === "custom" &&
               data.customAccountFactoryAddress &&
               !isAddress(data.customAccountFactoryAddress)
             ) {
@@ -142,6 +144,23 @@ export function AuthOptionsForm({
           },
           {
             message: "Please enter a valid custom account factory address",
+            path: ["customAccountFactoryAddress"],
+          },
+        )
+        .refine(
+          (data) => {
+            if (
+              data.useSmartAccount &&
+              data.executionMode === "EIP4337" &&
+              data.accountFactoryType === "custom" &&
+              !data.customAccountFactoryAddress
+            ) {
+              return false;
+            }
+            return true;
+          },
+          {
+            message: "Please enter a custom account factory address",
             path: ["customAccountFactoryAddress"],
           },
         )
