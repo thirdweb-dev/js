@@ -137,7 +137,7 @@ const apisLinks = [
   },
   {
     href: "https://engine.thirdweb.com/reference#tag/write",
-    name: "Engine Cloud",
+    name: "Transactions",
   },
   {
     href: "https://bridge.thirdweb.com/reference",
