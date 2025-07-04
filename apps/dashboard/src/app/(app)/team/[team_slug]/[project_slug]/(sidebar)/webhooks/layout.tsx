@@ -1,4 +1,3 @@
-import posthog from "posthog-js";
 import { TabPathLinks } from "@/components/ui/tabs";
 
 export default async function WebhooksLayout(props: {
@@ -9,8 +8,8 @@ export default async function WebhooksLayout(props: {
   }>;
 }) {
   // Enabled on dev or if FF is enabled.
-  const isFeatureEnabled =
-    !posthog.__loaded || posthog.isFeatureEnabled("centralized-webhooks");
+  // In server components, we default to true since posthog is client-side only
+  const isFeatureEnabled = true;
 
   const params = await props.params;
   return (
@@ -34,6 +33,11 @@ export default async function WebhooksLayout(props: {
                   exactMatch: true,
                   name: "Overview",
                   path: `/team/${params.team_slug}/${params.project_slug}/webhooks`,
+                },
+                {
+                  exactMatch: true,
+                  name: "Analytics",
+                  path: `/team/${params.team_slug}/${params.project_slug}/webhooks/analytics`,
                 },
               ]
             : []),
