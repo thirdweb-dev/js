@@ -1,8 +1,5 @@
 [
   {
-    "name": "Your Collection #1",
-    "description": "Remember to replace this description",
-    "image": "ipfs://NewUriToReplace/1.png",
     "attributes": [
       {
         "trait_type": "Background",
@@ -32,12 +29,12 @@
         "trait_type": "Top lid",
         "value": "High"
       }
-    ]
+    ],
+    "description": "Remember to replace this description",
+    "image": "ipfs://NewUriToReplace/1.png",
+    "name": "Your Collection #1"
   },
   {
-    "name": "Your Collection #2",
-    "description": "Remember to replace this description",
-    "image": "ipfs://NewUriToReplace/2.png",
     "attributes": [
       {
         "trait_type": "Background",
@@ -67,6 +64,9 @@
         "trait_type": "Top lid",
         "value": "Middle"
       }
-    ]
+    ],
+    "description": "Remember to replace this description",
+    "image": "ipfs://NewUriToReplace/2.png",
+    "name": "Your Collection #2"
   }
 ]

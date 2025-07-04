@@ -24,10 +24,16 @@ export interface WebhookConfig {
   }[];
 }
 
-interface WebhookConfigsResponse {
-  data: WebhookConfig[];
-  error?: string;
-}
+type WebhookConfigsResponse =
+  | {
+      data: WebhookConfig[];
+      status: "success";
+    }
+  | {
+      body: string;
+      reason: string;
+      status: "error";
+    };
 
 interface CreateWebhookConfigRequest {
   topicIds: string[];
@@ -36,10 +42,16 @@ interface CreateWebhookConfigRequest {
   isPaused?: boolean;
 }
 
-interface CreateWebhookConfigResponse {
-  data: WebhookConfig;
-  error?: string;
-}
+type CreateWebhookConfigResponse =
+  | {
+      data: WebhookConfig;
+      status: "success";
+    }
+  | {
+      body: string;
+      reason: string;
+      status: "error";
+    };
 
 export interface Topic {
   id: string;
@@ -50,10 +62,16 @@ export interface Topic {
   deletedAt: string | null;
 }
 
-interface TopicsResponse {
-  data: Topic[];
-  error?: string;
-}
+type TopicsResponse =
+  | {
+      data: Topic[];
+      status: "success";
+    }
+  | {
+      body: string;
+      reason: string;
+      status: "error";
+    };
 
 interface UpdateWebhookConfigRequest {
   destinationUrl?: string;
@@ -62,15 +80,27 @@ interface UpdateWebhookConfigRequest {
   isPaused?: boolean;
 }
 
-interface UpdateWebhookConfigResponse {
-  data: WebhookConfig;
-  error?: string;
-}
+type UpdateWebhookConfigResponse =
+  | {
+      data: WebhookConfig;
+      status: "success";
+    }
+  | {
+      body: string;
+      reason: string;
+      status: "error";
+    };
 
-interface DeleteWebhookConfigResponse {
-  data: WebhookConfig;
-  error?: string;
-}
+type DeleteWebhookConfigResponse =
+  | {
+      data: WebhookConfig;
+      status: "success";
+    }
+  | {
+      body: string;
+      reason: string;
+      status: "error";
+    };
 
 export async function getWebhookConfigs(props: {
   teamIdOrSlug: string;
@@ -80,8 +110,9 @@ export async function getWebhookConfigs(props: {
 
   if (!authToken) {
     return {
-      data: [],
-      error: "Authentication required",
+      body: "Authentication required",
+      reason: "no_auth_token",
+      status: "error",
     };
   }
 
@@ -97,17 +128,18 @@ export async function getWebhookConfigs(props: {
   );
 
   if (!response.ok) {
-    const errorText = await response.text();
+    const body = await response.text();
     return {
-      data: [],
-      error: `Failed to fetch webhook configs: ${errorText}`,
+      body,
+      reason: "unknown",
+      status: "error",
     };
   }
 
   const result = await response.json();
   return {
     data: result.data,
-    error: undefined,
+    status: "success",
   };
 }
 
@@ -120,8 +152,9 @@ export async function createWebhookConfig(props: {
 
   if (!authToken) {
     return {
-      data: {} as WebhookConfig,
-      error: "Authentication required",
+      body: "Authentication required",
+      reason: "no_auth_token",
+      status: "error",
     };
   }
 
@@ -138,17 +171,18 @@ export async function createWebhookConfig(props: {
   );
 
   if (!response.ok) {
-    const errorText = await response.text();
+    const body = await response.text();
     return {
-      data: {} as WebhookConfig,
-      error: `Failed to create webhook config: ${errorText}`,
+      body,
+      reason: "unknown",
+      status: "error",
     };
   }
 
   const result = await response.json();
   return {
     data: result.data,
-    error: undefined,
+    status: "success",
   };
 }
 
@@ -157,8 +191,9 @@ export async function getAvailableTopics(): Promise<TopicsResponse> {
 
   if (!authToken) {
     return {
-      data: [],
-      error: "Authentication required",
+      body: "Authentication required",
+      reason: "no_auth_token",
+      status: "error",
     };
   }
 
@@ -174,17 +209,18 @@ export async function getAvailableTopics(): Promise<TopicsResponse> {
   );
 
   if (!response.ok) {
-    const errorText = await response.text();
+    const body = await response.text();
     return {
-      data: [],
-      error: `Failed to fetch topics: ${errorText}`,
+      body,
+      reason: "unknown",
+      status: "error",
     };
   }
 
   const result = await response.json();
   return {
     data: result.data,
-    error: undefined,
+    status: "success",
   };
 }
 
@@ -198,8 +234,9 @@ export async function updateWebhookConfig(props: {
 
   if (!authToken) {
     return {
-      data: {} as WebhookConfig,
-      error: "Authentication required",
+      body: "Authentication required",
+      reason: "no_auth_token",
+      status: "error",
     };
   }
 
@@ -216,17 +253,18 @@ export async function updateWebhookConfig(props: {
   );
 
   if (!response.ok) {
-    const errorText = await response.text();
+    const body = await response.text();
     return {
-      data: {} as WebhookConfig,
-      error: `Failed to update webhook config: ${errorText}`,
+      body,
+      reason: "unknown",
+      status: "error",
     };
   }
 
   const result = await response.json();
   return {
     data: result.data,
-    error: undefined,
+    status: "success",
   };
 }
 
@@ -239,8 +277,9 @@ export async function deleteWebhookConfig(props: {
 
   if (!authToken) {
     return {
-      data: {} as WebhookConfig,
-      error: "Authentication required",
+      body: "Authentication required",
+      reason: "no_auth_token",
+      status: "error",
     };
   }
 
@@ -256,16 +295,17 @@ export async function deleteWebhookConfig(props: {
   );
 
   if (!response.ok) {
-    const errorText = await response.text();
+    const body = await response.text();
     return {
-      data: {} as WebhookConfig,
-      error: `Failed to delete webhook config: ${errorText}`,
+      body,
+      reason: "unknown",
+      status: "error",
     };
   }
 
   const result = await response.json();
   return {
     data: result.data,
-    error: undefined,
+    status: "success",
   };
 }
