@@ -208,35 +208,29 @@ function getConfig(): NextConfig {
     const withBundleAnalyzer = require("@next/bundle-analyzer")({
       enabled: process.env.ANALYZE === "true",
     });
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { withPlausibleProxy } = require("next-plausible");
+
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { withSentryConfig } = require("@sentry/nextjs");
     return withBundleAnalyzer(
-      withPlausibleProxy({
-        customDomain: "https://pl.thirdweb.com",
-        scriptName: "pl",
-      })(
-        withSentryConfig(
-          {
-            ...baseNextConfig,
-            // @ts-expect-error - this is a valid option
-            webpack: (config) => {
-              if (config.cache) {
-                config.cache = Object.freeze({
-                  type: "memory",
-                });
-              }
-              config.module = {
-                ...config.module,
-                exprContextCritical: false,
-              };
-              // Important: return the modified config
-              return config;
-            },
+      withSentryConfig(
+        {
+          ...baseNextConfig,
+          // @ts-expect-error - this is a valid option
+          webpack: (config) => {
+            if (config.cache) {
+              config.cache = Object.freeze({
+                type: "memory",
+              });
+            }
+            config.module = {
+              ...config.module,
+              exprContextCritical: false,
+            };
+            // Important: return the modified config
+            return config;
           },
-          SENTRY_OPTIONS,
-        ),
+        },
+        SENTRY_OPTIONS,
       ),
     );
   }
