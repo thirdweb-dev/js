@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiServerProxy } from "@/actions/proxies";
-import type { Ecosystem } from "../../../types";
+import type { Ecosystem } from "@/api/ecosystems";
 
 export function useEcosystem({
   teamIdOrSlug,

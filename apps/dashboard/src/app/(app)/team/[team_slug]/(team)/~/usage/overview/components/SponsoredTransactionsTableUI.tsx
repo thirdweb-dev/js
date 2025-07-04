@@ -459,7 +459,7 @@ function ProjectFilter(props: {
         renderOption={(option) => {
           const project = props.projects.find((p) => p.id === option.value);
           if (!project) {
-            return <></>;
+            return null;
           }
           return (
             <div className="flex items-center gap-2">

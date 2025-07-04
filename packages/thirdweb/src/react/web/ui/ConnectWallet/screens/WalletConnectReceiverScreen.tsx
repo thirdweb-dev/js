@@ -1,4 +1,7 @@
+/** biome-ignore-all lint/nursery/useUniqueElementIds: "id" is not a html attribute here - TODO: stop using 'id' as a prop on JSX elements */
+
 "use client";
+
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -130,7 +133,6 @@ export function WalletConnectReceiverScreen(props: {
       >
         <Container py="sm" style={{ position: "relative" }}>
           <Container py="md">
-            {/** biome-ignore lint/nursery/useUniqueElementIds: "id" is not a html attribute here - TODO: stop using 'id' as a prop on JSX elements */}
             <WalletLogoSpinner
               client={props.client}
               error={!!errorConnecting}

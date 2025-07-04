@@ -12,6 +12,7 @@ import {
 } from "thirdweb/wallets/smart";
 import invariant from "tiny-invariant";
 import { z } from "zod";
+import type { AuthOption, Ecosystem } from "@/api/ecosystems";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { Button } from "@/components/ui/button";
@@ -36,8 +37,27 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import { authOptions, type Ecosystem } from "../../../../../types";
 import { useUpdateEcosystem } from "../../hooks/use-update-ecosystem";
+
+const authOptions = [
+  "email",
+  "phone",
+  "passkey",
+  "siwe",
+  "guest",
+  "google",
+  "facebook",
+  "x",
+  "discord",
+  "farcaster",
+  "telegram",
+  "github",
+  "twitch",
+  "steam",
+  "apple",
+  "coinbase",
+  "line",
+] as const satisfies AuthOption[];
 
 type AuthOptionsFormData = {
   authOptions: string[];
@@ -113,6 +133,8 @@ export function AuthOptionsForm({
           (data) => {
             if (
               data.useSmartAccount &&
+              data.executionMode === "EIP4337" &&
+              data.accountFactoryType === "custom" &&
               data.customAccountFactoryAddress &&
               !isAddress(data.customAccountFactoryAddress)
             ) {
@@ -122,6 +144,23 @@ export function AuthOptionsForm({
           },
           {
             message: "Please enter a valid custom account factory address",
+            path: ["customAccountFactoryAddress"],
+          },
+        )
+        .refine(
+          (data) => {
+            if (
+              data.useSmartAccount &&
+              data.executionMode === "EIP4337" &&
+              data.accountFactoryType === "custom" &&
+              !data.customAccountFactoryAddress
+            ) {
+              return false;
+            }
+            return true;
+          },
+          {
+            message: "Please enter a custom account factory address",
             path: ["customAccountFactoryAddress"],
           },
         )
@@ -192,7 +231,7 @@ export function AuthOptionsForm({
     }
 
     let smartAccountOptions: Ecosystem["smartAccountOptions"] | null = null;
-    if (data.useSmartAccount) {
+    if (data.useSmartAccount && data.executionMode === "EIP4337") {
       let accountFactoryAddress: string;
       switch (data.accountFactoryType) {
         case "v0.6":
@@ -220,7 +259,7 @@ export function AuthOptionsForm({
 
     updateEcosystem({
       ...ecosystem,
-      authOptions: data.authOptions as (typeof authOptions)[number][],
+      authOptions: data.authOptions as AuthOption[],
       customAuthOptions,
       smartAccountOptions,
     });

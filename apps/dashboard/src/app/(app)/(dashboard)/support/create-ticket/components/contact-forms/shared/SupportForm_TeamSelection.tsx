@@ -27,34 +27,32 @@ export const SupportForm_TeamSelection = (props: Props) => {
   const teamId = useId();
 
   return (
-    <>
-      <div className="flex flex-col items-start gap-2">
-        <Label className="relative" htmlFor={teamId}>
-          Select Team
-          <span className="-top-1.5 -right-2 absolute text-destructive">•</span>
-        </Label>
+    <div className="flex flex-col items-start gap-2">
+      <Label className="relative" htmlFor={teamId}>
+        Select Team
+        <span className="-top-1.5 -right-2 absolute text-destructive">•</span>
+      </Label>
 
-        <Select
-          name="teamId"
-          onValueChange={(selectedId) => {
-            props.onChange(selectedId);
-          }}
-          value={props.selectedTeamId}
-        >
-          <SelectTrigger id={teamId}>
-            <SelectValue placeholder="Select a Team">
-              {selectedTeamName}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {props.teams.map((team) => (
-              <SelectItem key={team.id} value={team.id}>
-                {team.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-    </>
+      <Select
+        name="teamId"
+        onValueChange={(selectedId) => {
+          props.onChange(selectedId);
+        }}
+        value={props.selectedTeamId}
+      >
+        <SelectTrigger id={teamId}>
+          <SelectValue placeholder="Select a Team">
+            {selectedTeamName}
+          </SelectValue>
+        </SelectTrigger>
+        <SelectContent>
+          {props.teams.map((team) => (
+            <SelectItem key={team.id} value={team.id}>
+              {team.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
   );
 };

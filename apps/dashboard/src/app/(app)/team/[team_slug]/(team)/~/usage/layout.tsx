@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { TabPathLinks } from "../../../../../../../@/components/ui/tabs";
+import { TabPathLinks } from "@/components/ui/tabs";
 
 export default async function Layout(props: {
   children: React.ReactNode;

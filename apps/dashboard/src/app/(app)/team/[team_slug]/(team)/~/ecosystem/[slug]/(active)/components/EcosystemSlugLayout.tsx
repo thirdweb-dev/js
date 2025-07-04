@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
+import { fetchEcosystem } from "@/api/ecosystems";
 import { getTeamBySlug } from "@/api/team";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { fetchEcosystem } from "../../../utils/fetchEcosystem";
 import { EcosystemHeader } from "./ecosystem-header.client";
 
 export async function EcosystemLayoutSlug({
@@ -21,11 +21,7 @@ export async function EcosystemLayoutSlug({
     redirect(ecosystemLayoutPath);
   }
 
-  const ecosystem = await fetchEcosystem(
-    params.slug,
-    authToken,
-    params.team_slug,
-  );
+  const ecosystem = await fetchEcosystem(params.slug, params.team_slug);
 
   // Fetch team details to obtain team ID for further authenticated updates
   const team = await getTeamBySlug(params.team_slug);
