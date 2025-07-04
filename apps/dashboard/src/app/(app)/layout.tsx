@@ -1,7 +1,6 @@
 import "../../global.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import PlausibleProvider from "next-plausible";
 import NextTopLoader from "nextjs-toploader";
 import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
@@ -52,14 +51,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <PlausibleProvider
-          customDomain="https://pl.thirdweb.com"
-          domain="thirdweb.com"
-          selfHosted
-        />
-      </head>
-
       <body
         className={cn("bg-background font-sans antialiased", fontSans.variable)}
       >
