@@ -1,4 +1,4 @@
-import type { Ecosystem, Partner } from "../../../../types";
+import type { Ecosystem, Partner } from "@/api/ecosystems";
 
 /**
  * Fetches partners for an ecosystem

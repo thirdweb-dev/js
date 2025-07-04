@@ -2,10 +2,10 @@
 import "server-only";
 import { redirect } from "next/navigation";
 import { upload } from "thirdweb/storage";
+import { getAuthToken } from "@/api/auth-token";
 import { BASE_URL } from "@/constants/env-utils";
 import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../../../../../../../../@/api/auth-token";
 
 export async function createEcosystem(options: {
   teamSlug: string;

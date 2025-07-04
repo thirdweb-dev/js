@@ -3,7 +3,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import type { Ecosystem } from "../../../../types";
+import type { Ecosystem } from "@/api/ecosystems";
 
 type DeletePartnerParams = {
   ecosystem: Ecosystem;
