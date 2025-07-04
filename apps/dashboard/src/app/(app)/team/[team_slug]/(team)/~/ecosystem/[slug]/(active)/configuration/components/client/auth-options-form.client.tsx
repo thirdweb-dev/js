@@ -231,7 +231,7 @@ export function AuthOptionsForm({
     }
 
     let smartAccountOptions: Ecosystem["smartAccountOptions"] | null = null;
-    if (data.useSmartAccount) {
+    if (data.useSmartAccount && data.executionMode === "EIP4337") {
       let accountFactoryAddress: string;
       switch (data.accountFactoryType) {
         case "v0.6":
