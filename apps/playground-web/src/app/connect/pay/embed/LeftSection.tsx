@@ -16,6 +16,9 @@ import { CustomRadioGroup } from "@/components/ui/CustomRadioGroup";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { TokenSelector } from "@/components/ui/TokenSelector";
+import { THIRDWEB_CLIENT } from "@/lib/client";
+import type { TokenMetadata } from "@/lib/types";
 import { cn } from "../../../../lib/utils";
 import { CollapsibleSection } from "../../sign-in/components/CollapsibleSection";
 import { ColorFormGroup } from "../../sign-in/components/ColorFormGroup";
@@ -39,23 +42,75 @@ export function LeftSection(props: {
     }));
   };
 
-  const [tokenAddress, setTokenAddress] = useState<string>(
-    payOptions.buyTokenAddress || "",
-  );
+  // State for selected tokens in both buy and checkout modes
+  const [buyModeSelectedToken, setBuyModeSelectedToken] = useState<
+    { chainId: number; address: string } | undefined
+  >(() => {
+    if (payOptions.buyTokenAddress && payOptions.buyTokenChain?.id) {
+      return {
+        chainId: payOptions.buyTokenChain.id,
+        address: payOptions.buyTokenAddress,
+      };
+    }
+    return undefined;
+  });
+
+  const [checkoutModeSelectedToken, setCheckoutModeSelectedToken] = useState<
+    { chainId: number; address: string } | undefined
+  >(() => {
+    if (payOptions.buyTokenAddress && payOptions.buyTokenChain?.id) {
+      return {
+        chainId: payOptions.buyTokenChain.id,
+        address: payOptions.buyTokenAddress,
+      };
+    }
+    return undefined;
+  });
 
   const payModeId = useId();
   const buyTokenAmountId = useId();
-  const buyTokenChainId = useId();
-  const tokenAddressId = useId();
   const sellerAddressId = useId();
   const paymentAmountId = useId();
-  const directPaymentChainId = useId();
   const modalTitleId = useId();
   const modalTitleIconId = useId();
   const modalDescriptionId = useId();
   const themeId = useId();
   const cryptoPaymentId = useId();
   const cardPaymentId = useId();
+
+  const handleBuyModeTokenChange = (token: TokenMetadata) => {
+    const newSelectedToken = {
+      chainId: token.chainId,
+      address: token.address,
+    };
+    setBuyModeSelectedToken(newSelectedToken);
+
+    setOptions((v) => ({
+      ...v,
+      payOptions: {
+        ...v.payOptions,
+        buyTokenChain: defineChain(token.chainId),
+        buyTokenAddress: token.address as Address,
+      },
+    }));
+  };
+
+  const handleCheckoutModeTokenChange = (token: TokenMetadata) => {
+    const newSelectedToken = {
+      chainId: token.chainId,
+      address: token.address,
+    };
+    setCheckoutModeSelectedToken(newSelectedToken);
+
+    setOptions((v) => ({
+      ...v,
+      payOptions: {
+        ...v.payOptions,
+        buyTokenChain: defineChain(token.chainId),
+        buyTokenAddress: token.address as Address,
+      },
+    }));
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -95,133 +150,92 @@ export function LeftSection(props: {
             {/* Fund Wallet Mode Options */}
             {(!payOptions.widget || payOptions.widget === "buy") && (
               <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-4">
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor={buyTokenAmountId}>Amount</Label>
-                    <Input
-                      className="bg-card"
-                      id={buyTokenAmountId}
-                      onChange={(e) =>
-                        setOptions((v) => ({
-                          ...v,
-                          payOptions: {
-                            ...v.payOptions,
-                            buyTokenAmount: e.target.value,
-                          },
-                        }))
-                      }
-                      placeholder="0.01"
-                      value={payOptions.buyTokenAmount || ""}
-                    />
-                  </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor={buyTokenAmountId}>Amount</Label>
+                  <Input
+                    className="bg-card"
+                    id={buyTokenAmountId}
+                    onChange={(e) =>
+                      setOptions((v) => ({
+                        ...v,
+                        payOptions: {
+                          ...v.payOptions,
+                          buyTokenAmount: e.target.value,
+                        },
+                      }))
+                    }
+                    placeholder="0.01"
+                    value={payOptions.buyTokenAmount || ""}
+                  />
+                </div>
 
-                  {/* Chain selection */}
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor={buyTokenChainId}>Chain ID</Label>
-                    <Input
-                      className="bg-card"
-                      id={buyTokenChainId}
-                      onChange={(e) => {
-                        const chainId = Number.parseInt(e.target.value);
-                        if (!Number.isNaN(chainId)) {
-                          const chain = defineChain(chainId);
+                {/* Token and Chain selection */}
+                <div className="flex flex-col gap-2">
+                  <Label>Token & Chain</Label>
+                  <TokenSelector
+                    addNativeTokenIfMissing={true}
+                    chainId={buyModeSelectedToken?.chainId}
+                    client={THIRDWEB_CLIENT}
+                    enabled={true}
+                    onChange={handleBuyModeTokenChange}
+                    placeholder="Select token and chain"
+                    selectedToken={buyModeSelectedToken}
+                  />
+                </div>
+
+                {/* Payment Methods */}
+                <div className="flex flex-col gap-3 pt-4">
+                  <Label>Payment Methods</Label>
+                  <div className="flex gap-4">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        checked={payOptions.paymentMethods.includes("crypto")}
+                        id={cryptoPaymentId}
+                        onCheckedChange={(checked) => {
                           setOptions((v) => ({
                             ...v,
                             payOptions: {
                               ...v.payOptions,
-                              buyTokenChain: chain,
+                              paymentMethods: checked
+                                ? [
+                                    ...v.payOptions.paymentMethods.filter(
+                                      (m) => m !== "crypto",
+                                    ),
+                                    "crypto",
+                                  ]
+                                : v.payOptions.paymentMethods.filter(
+                                    (m) => m !== "crypto",
+                                  ),
                             },
                           }));
-                        }
-                      }}
-                      placeholder="1 (Ethereum)"
-                      type="text"
-                      value={payOptions.buyTokenChain?.id || ""}
-                    />
-                  </div>
-                </div>
-
-                {/* Token selection for fund_wallet mode */}
-                <div className="flex flex-col gap-2">
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-4">
-                      <div className="flex flex-1 flex-col gap-2">
-                        <Label htmlFor={tokenAddressId}>Token Address</Label>
-                        <Input
-                          className={cn("bg-card")}
-                          id={tokenAddressId}
-                          onChange={(e) => {
-                            setOptions((v) => ({
-                              ...v,
-                              payOptions: {
-                                ...v.payOptions,
-                                buyTokenAddress: e.target.value as Address,
-                              },
-                            }));
-                          }}
-                          placeholder="0x..."
-                          value={payOptions.buyTokenAddress}
-                        />
-                      </div>
+                        }}
+                      />
+                      <Label htmlFor={cryptoPaymentId}>Crypto</Label>
                     </div>
-
-                    {/* Payment Methods */}
-                    <div className="flex flex-col gap-3 pt-4">
-                      <Label>Payment Methods</Label>
-                      <div className="flex gap-4">
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            checked={payOptions.paymentMethods.includes(
-                              "crypto",
-                            )}
-                            id={cryptoPaymentId}
-                            onCheckedChange={(checked) => {
-                              setOptions((v) => ({
-                                ...v,
-                                payOptions: {
-                                  ...v.payOptions,
-                                  paymentMethods: checked
-                                    ? [
-                                        ...v.payOptions.paymentMethods.filter(
-                                          (m) => m !== "crypto",
-                                        ),
-                                        "crypto",
-                                      ]
-                                    : v.payOptions.paymentMethods.filter(
-                                        (m) => m !== "crypto",
-                                      ),
-                                },
-                              }));
-                            }}
-                          />
-                          <Label htmlFor={cryptoPaymentId}>Crypto</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            checked={payOptions.paymentMethods.includes("card")}
-                            id={cardPaymentId}
-                            onCheckedChange={(checked) => {
-                              setOptions((v) => ({
-                                ...v,
-                                payOptions: {
-                                  ...v.payOptions,
-                                  paymentMethods: checked
-                                    ? [
-                                        ...v.payOptions.paymentMethods.filter(
-                                          (m) => m !== "card",
-                                        ),
-                                        "card",
-                                      ]
-                                    : v.payOptions.paymentMethods.filter(
-                                        (m) => m !== "card",
-                                      ),
-                                },
-                              }));
-                            }}
-                          />
-                          <Label htmlFor={cardPaymentId}>Card</Label>
-                        </div>
-                      </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        checked={payOptions.paymentMethods.includes("card")}
+                        id={cardPaymentId}
+                        onCheckedChange={(checked) => {
+                          setOptions((v) => ({
+                            ...v,
+                            payOptions: {
+                              ...v.payOptions,
+                              paymentMethods: checked
+                                ? [
+                                    ...v.payOptions.paymentMethods.filter(
+                                      (m) => m !== "card",
+                                    ),
+                                    "card",
+                                  ]
+                                : v.payOptions.paymentMethods.filter(
+                                    (m) => m !== "card",
+                                  ),
+                            },
+                          }));
+                        }}
+                      />
+                      <Label htmlFor={cardPaymentId}>Card</Label>
                     </div>
                   </div>
                 </div>
@@ -250,125 +264,94 @@ export function LeftSection(props: {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-4">
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor={paymentAmountId}>Price</Label>
-                    <Input
-                      className="bg-card"
-                      id={paymentAmountId}
-                      onChange={(e) =>
-                        setOptions((v) => ({
-                          ...v,
-                          payOptions: {
-                            ...v.payOptions,
-                            buyTokenAmount: e.target.value,
-                          },
-                        }))
-                      }
-                      placeholder="0.01"
-                      value={payOptions.buyTokenAmount || ""}
-                    />
-                  </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor={paymentAmountId}>Price</Label>
+                  <Input
+                    className="bg-card"
+                    id={paymentAmountId}
+                    onChange={(e) =>
+                      setOptions((v) => ({
+                        ...v,
+                        payOptions: {
+                          ...v.payOptions,
+                          buyTokenAmount: e.target.value,
+                        },
+                      }))
+                    }
+                    placeholder="0.01"
+                    value={payOptions.buyTokenAmount || ""}
+                  />
+                </div>
 
-                  {/* Chain selection */}
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor={directPaymentChainId}>Chain ID</Label>
-                    <Input
-                      className="bg-card"
-                      id={directPaymentChainId}
-                      onChange={(e) => {
-                        const chainId = Number.parseInt(e.target.value);
-                        if (!Number.isNaN(chainId)) {
-                          const chain = defineChain(chainId);
+                {/* Token and Chain selection for checkout mode */}
+                <div className="flex flex-col gap-2">
+                  <Label>Token & Chain</Label>
+                  <TokenSelector
+                    addNativeTokenIfMissing={true}
+                    chainId={checkoutModeSelectedToken?.chainId}
+                    client={THIRDWEB_CLIENT}
+                    enabled={true}
+                    onChange={handleCheckoutModeTokenChange}
+                    placeholder="Select token and chain"
+                    selectedToken={checkoutModeSelectedToken}
+                  />
+                </div>
+
+                {/* Payment Methods */}
+                <div className="flex flex-col gap-3">
+                  <Label>Payment Methods</Label>
+                  <div className="flex gap-4">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        checked={payOptions.paymentMethods.includes("crypto")}
+                        id={`${cryptoPaymentId}-checkout`}
+                        onCheckedChange={(checked) => {
                           setOptions((v) => ({
                             ...v,
                             payOptions: {
                               ...v.payOptions,
-                              buyTokenChain: chain,
+                              paymentMethods: checked
+                                ? [
+                                    ...v.payOptions.paymentMethods.filter(
+                                      (m) => m !== "crypto",
+                                    ),
+                                    "crypto",
+                                  ]
+                                : v.payOptions.paymentMethods.filter(
+                                    (m) => m !== "crypto",
+                                  ),
                             },
                           }));
-                        }
-                      }}
-                      placeholder="1 (Ethereum)"
-                      type="number"
-                      value={payOptions.buyTokenChain?.id || ""}
-                    />
-                  </div>
-                </div>
-
-                {/* Token selection for direct_payment mode - shares state with fund_wallet mode */}
-                <div className="flex flex-col gap-2">
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-4">
-                      <div className="flex flex-1 flex-col gap-2">
-                        <Label htmlFor={tokenAddressId}>Token Address</Label>
-                        <Input
-                          className={cn("bg-card")}
-                          id={tokenAddressId}
-                          onChange={(e) => setTokenAddress(e.target.value)}
-                          placeholder="0x..."
-                          value={tokenAddress}
-                        />
-                      </div>
+                        }}
+                      />
+                      <Label htmlFor={`${cryptoPaymentId}-checkout`}>
+                        Crypto
+                      </Label>
                     </div>
-
-                    {/* Payment Methods */}
-                    <div className="flex flex-col gap-3">
-                      <Label>Payment Methods</Label>
-                      <div className="flex gap-4">
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            checked={payOptions.paymentMethods.includes(
-                              "crypto",
-                            )}
-                            id={cryptoPaymentId}
-                            onCheckedChange={(checked) => {
-                              setOptions((v) => ({
-                                ...v,
-                                payOptions: {
-                                  ...v.payOptions,
-                                  paymentMethods: checked
-                                    ? [
-                                        ...v.payOptions.paymentMethods.filter(
-                                          (m) => m !== "crypto",
-                                        ),
-                                        "crypto",
-                                      ]
-                                    : v.payOptions.paymentMethods.filter(
-                                        (m) => m !== "crypto",
-                                      ),
-                                },
-                              }));
-                            }}
-                          />
-                          <Label htmlFor={cryptoPaymentId}>Crypto</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            checked={payOptions.paymentMethods.includes("card")}
-                            id={cardPaymentId}
-                            onCheckedChange={(checked) => {
-                              setOptions((v) => ({
-                                ...v,
-                                payOptions: {
-                                  ...v.payOptions,
-                                  paymentMethods: checked
-                                    ? [
-                                        ...v.payOptions.paymentMethods.filter(
-                                          (m) => m !== "card",
-                                        ),
-                                        "card",
-                                      ]
-                                    : v.payOptions.paymentMethods.filter(
-                                        (m) => m !== "card",
-                                      ),
-                                },
-                              }));
-                            }}
-                          />
-                          <Label htmlFor={cardPaymentId}>Card</Label>
-                        </div>
-                      </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        checked={payOptions.paymentMethods.includes("card")}
+                        id={`${cardPaymentId}-checkout`}
+                        onCheckedChange={(checked) => {
+                          setOptions((v) => ({
+                            ...v,
+                            payOptions: {
+                              ...v.payOptions,
+                              paymentMethods: checked
+                                ? [
+                                    ...v.payOptions.paymentMethods.filter(
+                                      (m) => m !== "card",
+                                    ),
+                                    "card",
+                                  ]
+                                : v.payOptions.paymentMethods.filter(
+                                    (m) => m !== "card",
+                                  ),
+                            },
+                          }));
+                        }}
+                      />
+                      <Label htmlFor={`${cardPaymentId}-checkout`}>Card</Label>
                     </div>
                   </div>
                 </div>
