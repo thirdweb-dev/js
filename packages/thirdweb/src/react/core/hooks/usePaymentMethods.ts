@@ -122,9 +122,6 @@ export function usePaymentMethods(options: {
         page += 1;
       }
 
-      const requiredDollarAmount =
-        Number.parseFloat(destinationAmount) * destinationToken.priceUsd;
-
       // sort by dollar balance descending
       owned.sort((a, b) => {
         const aDollarBalance =
@@ -140,13 +137,6 @@ export function usePaymentMethods(options: {
 
       for (const b of owned) {
         if (b.originToken && b.balance > 0n) {
-          const dollarBalance =
-            Number.parseFloat(toTokens(b.balance, b.originToken.decimals)) *
-            b.originToken.priceUsd;
-          if (b.originToken.priceUsd && dollarBalance < requiredDollarAmount) {
-            continue;
-          }
-
           if (
             includeDestinationToken &&
             b.originToken.address.toLowerCase() ===
