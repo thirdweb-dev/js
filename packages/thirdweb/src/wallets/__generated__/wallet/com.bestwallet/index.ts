@@ -22,7 +22,7 @@ export const wallet = {
   },
   homepage: "https://bestwallet.com/",
   id: "com.bestwallet",
-  image_id: "7f9574ed-eb42-4e04-0888-be2939936700",
+  image_id: "c1bd1250-b97a-4e26-c584-554019bc1d00",
   mobile: {
     native: "bw://app/connect",
     universal: "https://best-wallet-prod.web.app/connect",

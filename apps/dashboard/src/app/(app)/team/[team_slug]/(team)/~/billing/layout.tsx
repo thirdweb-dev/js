@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getTeamBySlug } from "@/api/team";
-import { TabPathLinks } from "../../../../../../../@/components/ui/tabs";
+import { TabPathLinks } from "@/components/ui/tabs";
 import { loginRedirect } from "../../../../../login/loginRedirect";
 
 export default async function Layout(props: {

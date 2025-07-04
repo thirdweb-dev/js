@@ -23,7 +23,7 @@ export const wallet = {
   },
   homepage: "https://timelesswallet.xyz",
   id: "xyz.timelesswallet",
-  image_id: "7870d465-6028-49cb-6667-d0a2cc509400",
+  image_id: "92f1ead4-0bc4-4932-10d3-761c509b4d00",
   mobile: {
     native: "timeless-x://connect",
     universal: "https://timelesswallet.xyz/x",

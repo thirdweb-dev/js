@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
+import { fetchEcosystem } from "@/api/ecosystems";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../../../../../../../../../../@/api/auth-token";
 import { loginRedirect } from "../../../../../../../../../login/loginRedirect";
 import { AddPartnerForm } from "../components/client/add-partner-form.client";
-import { fetchEcosystem } from "../hooks/fetchEcosystem";
 
 export default async function AddPartnerPage({
   params,
@@ -34,11 +34,10 @@ export default async function AddPartnerPage({
   });
 
   try {
-    const ecosystem = await fetchEcosystem({
-      authToken,
-      slug: ecosystemSlug,
-      teamIdOrSlug: teamSlug,
-    });
+    const ecosystem = await fetchEcosystem(ecosystemSlug, teamSlug);
+    if (!ecosystem) {
+      throw new Error("Ecosystem not found");
+    }
 
     return (
       <div className="flex flex-col">
