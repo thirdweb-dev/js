@@ -22,10 +22,10 @@ export const wallet = {
   },
   homepage: "https://bifrostwallet.com",
   id: "com.bifrostwallet",
-  image_id: "86be07e2-6652-4fd1-5f33-651682c95400",
+  image_id: "c1ab3987-7e3c-43fa-0b27-c746f6135a00",
   mobile: {
     native: "bifrostwallet://",
-    universal: "https://app.bifrostwallet.com",
+    universal: "https://app.bifrostwallet.com/",
   },
   name: "Bifrost Wallet",
   rdns: "com.bifrostwallet",

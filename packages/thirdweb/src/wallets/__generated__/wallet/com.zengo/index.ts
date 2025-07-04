@@ -4,7 +4,7 @@
 export const wallet = {
   app: {
     android: "https://play.google.com/store/apps/details?id=com.zengo.wallet",
-    browser: null,
+    browser: "https://web.zengo.com/",
     chrome: null,
     edge: null,
     firefox: null,
@@ -17,7 +17,7 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: null,
+    universal: "https://web.zengo.com/",
   },
   homepage: "https://zengo.com/",
   id: "com.zengo",

@@ -4,12 +4,12 @@
 export const wallet = {
   app: {
     android: "https://play.google.com/store/apps/details?id=com.coinsdo.wallet",
-    browser: "https://www.coinsdo.com/wallet_coinsdo.html",
+    browser: null,
     chrome:
       "https://chromewebstore.google.com/detail/coinwallet-btc-crypto-wal/oafedfoadhdjjcipmcbecikgokpaphjk",
     edge: null,
     firefox: null,
-    ios: "https://apps.apple.com/us/app/coinsdo-wallet-btc-eth-wallet/id6479635869",
+    ios: "https://apps.apple.com/us/app/coinsdo-wallet-btc-eth-wallet/id6479635869?_branch_match_id=1272829295187210747&utm_medium=marketing&_branch_referrer=H4sIAAAAAAAAAwXBwQqAMAgA0D%2Ba1wiiQx8yLKzJTIcKu%2FXtvdcyR6wAuGBiwTGKsHa4jHWiCGVli%2F1zusmd9amn2wzy7WhuL%2F3hmd6jPwAAAA%3D%3D",
     linux: null,
     mac: null,
     opera: null,
@@ -18,7 +18,7 @@ export const wallet = {
   },
   desktop: {
     native: "coinwallet://",
-    universal: "https://www.coinsdo.com/wallet_coinsdo.html",
+    universal: null,
   },
   homepage: "https://www.coinsdo.com",
   id: "com.coinsdo",

@@ -3,13 +3,12 @@
 
 export const wallet = {
   app: {
-    android:
-      "https://play.google.com/store/apps/details?id=com.companyname.swaptobe&hl=vi",
+    android: "https://play.google.com/store/apps/details?id=xyz.joeywallet",
     browser: null,
     chrome: null,
     edge: null,
     firefox: null,
-    ios: null,
+    ios: "https://apps.apple.com/us/app/joey-wallet/id6745415911",
     linux: null,
     mac: null,
     opera: null,
@@ -17,16 +16,16 @@ export const wallet = {
     windows: null,
   },
   desktop: {
-    native: "tobewallet://",
+    native: null,
     universal: null,
   },
-  homepage: "https://testnet.tobechain.net/testnet/faucet/",
-  id: "com.companyname.swaptobe",
-  image_id: "ccfadd90-2fe4-41c0-4762-32e1cf9b2700",
+  homepage: "https://joeywallet.xyz/",
+  id: "xyz.joeywallet",
+  image_id: "eefe45e8-0a5e-421c-29d0-fd8191e7e600",
   mobile: {
-    native: "tobewallet://",
+    native: "joey://settings",
     universal: null,
   },
-  name: "TobeWallet",
-  rdns: "com.companyname.swaptobe",
+  name: "Joey Wallet",
+  rdns: null,
 } as const;

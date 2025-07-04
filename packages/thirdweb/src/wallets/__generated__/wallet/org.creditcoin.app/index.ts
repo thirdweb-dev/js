@@ -3,14 +3,15 @@
 
 export const wallet = {
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.ancryptoWallet",
+    android:
+      "https://play.google.com/store/apps/details?id=com.creditcoin.mobile",
     browser: null,
     chrome: null,
     edge: null,
     firefox: null,
-    ios: "https://apps.apple.com/in/app/ancrypto/id1660898349",
+    ios: "https://apps.apple.com/us/app/apple-store/id6478491272",
     linux: null,
-    mac: "",
+    mac: null,
     opera: null,
     safari: null,
     windows: null,
@@ -19,13 +20,13 @@ export const wallet = {
     native: null,
     universal: null,
   },
-  homepage: "https://www.ancrypto.io/",
-  id: "io.ancrypto",
-  image_id: "8dee1c33-b277-4a5a-5ddd-5e70fd9d1800",
+  homepage: "https://app.creditcoin.org",
+  id: "org.creditcoin.app",
+  image_id: "cf606650-415f-4e7f-a45d-fd6b16769400",
   mobile: {
-    native: "ancrypto://app",
+    native: "creditwallet://",
     universal: null,
   },
-  name: "Ancrypto",
+  name: "Credit Wallet",
   rdns: null,
 } as const;
