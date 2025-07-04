@@ -1,9 +1,9 @@
 import { ImageResponse } from "next/og";
 import { useId } from "react";
 import { download } from "thirdweb/storage";
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { fetchChain } from "@/utils/fetchChain";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 
 // Route segment config
 export const runtime = "edge";
@@ -84,10 +84,23 @@ export default async function Image({
     ),
     // download the chain icon if there is one and secret key is available
     chain.icon?.url && hasWorkingChainIcon && DASHBOARD_THIRDWEB_SECRET_KEY
-      ? download({
-          client: serverThirdwebClient,
-          uri: chain.icon.url,
-        }).then((res) => res.arrayBuffer())
+      ? (async () => {
+          try {
+            const client = getConfiguredThirdwebClient({
+              secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+              teamId: undefined,
+            });
+            const response = await download({
+              client,
+              uri: chain.icon?.url || "",
+            });
+            return response.arrayBuffer();
+          } catch (error) {
+            // If download fails, return undefined to fallback to no icon
+            console.warn("Failed to download chain icon:", error);
+            return undefined;
+          }
+        })()
       : undefined,
     // download the background image (based on chain)
     fetch(

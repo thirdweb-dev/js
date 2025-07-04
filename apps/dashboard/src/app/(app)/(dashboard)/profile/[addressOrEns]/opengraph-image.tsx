@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 import { resolveAvatar } from "thirdweb/extensions/ens";
 import { GradientBlobbie } from "@/components/blocks/avatar/GradientBlobbie";
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
+import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 /* eslint-disable @next/next/no-img-element */
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { shortenIfAddress } from "@/utils/usedapp-external";
@@ -23,10 +24,18 @@ type PageProps = {
 
 export default async function Image(props: PageProps) {
   const params = await props.params;
-  const resolvedInfo = await resolveAddressAndEns(
-    params.addressOrEns,
-    serverThirdwebClient,
-  );
+
+  // Create client only if secret key is available
+  if (!DASHBOARD_THIRDWEB_SECRET_KEY) {
+    notFound();
+  }
+
+  const client = getConfiguredThirdwebClient({
+    secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+    teamId: undefined,
+  });
+
+  const resolvedInfo = await resolveAddressAndEns(params.addressOrEns, client);
 
   if (!resolvedInfo) {
     notFound();
@@ -43,14 +52,14 @@ export default async function Image(props: PageProps) {
 
   const ensImage = resolvedInfo.ensName
     ? await resolveAvatar({
-        client: serverThirdwebClient,
+        client,
         name: resolvedInfo.ensName,
       })
     : null;
 
   const resolvedENSImageSrc = ensImage
     ? resolveSchemeWithErrorHandler({
-        client: serverThirdwebClient,
+        client,
         uri: ensImage,
       })
     : null;

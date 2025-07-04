@@ -4,7 +4,8 @@ import { ImageResponse } from "next/og";
 import { isAddress } from "thirdweb";
 import { download } from "thirdweb/storage";
 import { shortenAddress } from "thirdweb/utils";
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
+import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 
 const OgBrandIcon: React.FC = () => (
   // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
@@ -187,17 +188,41 @@ export async function publishedContractOGImageTemplate(params: {
     ibmPlexMono500_,
     ibmPlexMono700_,
     image,
-    params.logo
-      ? download({
-          client: serverThirdwebClient,
-          uri: params.logo,
-        }).then((res) => res.arrayBuffer())
+    params.logo && DASHBOARD_THIRDWEB_SECRET_KEY
+      ? (async () => {
+          try {
+            const client = getConfiguredThirdwebClient({
+              secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+              teamId: undefined,
+            });
+            const response = await download({
+              client,
+              uri: params.logo || "",
+            });
+            return response.arrayBuffer();
+          } catch (error) {
+            console.warn("Failed to download logo:", error);
+            return undefined;
+          }
+        })()
       : undefined,
-    params.publisherAvatar
-      ? download({
-          client: serverThirdwebClient,
-          uri: params.publisherAvatar,
-        }).then((res) => res.arrayBuffer())
+    params.publisherAvatar && DASHBOARD_THIRDWEB_SECRET_KEY
+      ? (async () => {
+          try {
+            const client = getConfiguredThirdwebClient({
+              secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+              teamId: undefined,
+            });
+            const response = await download({
+              client,
+              uri: params.publisherAvatar || "",
+            });
+            return response.arrayBuffer();
+          } catch (error) {
+            console.warn("Failed to download avatar:", error);
+            return undefined;
+          }
+        })()
       : undefined,
   ]);
 
@@ -350,7 +375,7 @@ const ERC_CATEGORIES = ["ERC721", "ERC1155", "ERC20"] as const;
 
 function categorizeExtensions(extensions: string[]) {
   const categoriesWithCount: Record<
-    (typeof ERC_CATEGORIES)[number] | "Other",
+    typeof ERC_CATEGORIES[number] | "Other",
     number
   > = {
     ERC20: 0,

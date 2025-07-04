@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import { getSocialProfiles } from "thirdweb/social";
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
+import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 import { resolveEns } from "@/lib/ens";
 import { correctAndUniqueLicenses } from "@/lib/licenses";
 import { getPublishedContractsWithPublisherMapping } from "../utils/getPublishedContractsWithPublisherMapping";
@@ -22,17 +23,25 @@ export default async function Image(props: {
 }) {
   const { publisher, contract_id } = props.params;
 
+  // Create client only if secret key is available
+  if (!DASHBOARD_THIRDWEB_SECRET_KEY) {
+    return null;
+  }
+
+  const client = getConfiguredThirdwebClient({
+    secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+    teamId: undefined,
+  });
+
   const [publishedContracts, socialProfiles] = await Promise.all([
     getPublishedContractsWithPublisherMapping({
-      client: serverThirdwebClient,
+      client,
       contract_id: contract_id,
       publisher: publisher,
     }),
     getSocialProfiles({
-      address:
-        (await resolveEns(publisher, serverThirdwebClient)).address ||
-        publisher,
-      client: serverThirdwebClient,
+      address: (await resolveEns(publisher, client)).address || publisher,
+      client,
     }),
   ]);
 

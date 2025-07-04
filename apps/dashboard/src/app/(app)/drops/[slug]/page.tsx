@@ -11,7 +11,8 @@ import {
   getActiveClaimCondition as getActiveClaimCondition1155,
   getNFT as getNFT1155,
 } from "thirdweb/extensions/erc1155";
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
+import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 import { defineDashboardChain } from "@/lib/defineDashboardChain";
 import { DROP_PAGES } from "./data";
 import { NftMint } from "./mint-ui";
@@ -41,13 +42,24 @@ export default async function DropPage({
   if (!project) {
     return notFound();
   }
+
+  // Create client only if secret key is available
+  if (!DASHBOARD_THIRDWEB_SECRET_KEY) {
+    return notFound();
+  }
+
+  const client = getConfiguredThirdwebClient({
+    secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+    teamId: undefined,
+  });
+
   // eslint-disable-next-line no-restricted-syntax
   const chain = defineDashboardChain(project.chainId, undefined);
 
   const contract = getContract({
     address: project.contractAddress,
     chain,
-    client: serverThirdwebClient,
+    client,
   });
 
   const [nft, claimCondition, contractMetadata] = await Promise.all([
@@ -92,7 +104,7 @@ export default async function DropPage({
         contract: getContract({
           address: claimCondition.currency,
           chain,
-          client: serverThirdwebClient,
+          client,
         }),
       })
     : undefined;
