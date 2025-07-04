@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/a11y/useSemanticElements: EXPECTED */
 "use client";
 
 import { ChevronsUpDownIcon } from "lucide-react";
@@ -64,7 +65,6 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
           aria-expanded={open}
           aria-label={`Select a ${props.focus === "project-selection" ? "project" : "team"}`}
           className="!h-auto w-auto rounded-xl px-1 py-2"
-          // biome-ignore lint/a11y/useSemanticElements: EXPECTED
           role="combobox"
           size="icon"
           variant="ghost"

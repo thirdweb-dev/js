@@ -35,7 +35,7 @@
     "zod": "3.25.67"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.4",
+    "@biomejs/biome": "2.0.6",
     "@types/node": "22.14.1",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
@@ -57,6 +57,7 @@
     "dev": "rm -rf .next && next dev --turbopack",
     "fix": "eslint ./src --fix",
     "format": "biome format ./src --write",
+    "knip": "knip",
     "lint": "biome check ./src && knip && eslint ./src",
     "prefix": "biome check ./src --fix",
     "prelint": "biome check ./src",

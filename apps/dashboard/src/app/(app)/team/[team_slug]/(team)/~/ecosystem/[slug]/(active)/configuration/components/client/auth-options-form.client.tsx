@@ -133,6 +133,8 @@ export function AuthOptionsForm({
           (data) => {
             if (
               data.useSmartAccount &&
+              data.executionMode === "EIP4337" &&
+              data.accountFactoryType === "custom" &&
               data.customAccountFactoryAddress &&
               !isAddress(data.customAccountFactoryAddress)
             ) {
@@ -142,6 +144,23 @@ export function AuthOptionsForm({
           },
           {
             message: "Please enter a valid custom account factory address",
+            path: ["customAccountFactoryAddress"],
+          },
+        )
+        .refine(
+          (data) => {
+            if (
+              data.useSmartAccount &&
+              data.executionMode === "EIP4337" &&
+              data.accountFactoryType === "custom" &&
+              !data.customAccountFactoryAddress
+            ) {
+              return false;
+            }
+            return true;
+          },
+          {
+            message: "Please enter a custom account factory address",
             path: ["customAccountFactoryAddress"],
           },
         )
@@ -212,7 +231,7 @@ export function AuthOptionsForm({
     }
 
     let smartAccountOptions: Ecosystem["smartAccountOptions"] | null = null;
-    if (data.useSmartAccount) {
+    if (data.useSmartAccount && data.executionMode === "EIP4337") {
       let accountFactoryAddress: string;
       switch (data.accountFactoryType) {
         case "v0.6":

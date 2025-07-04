@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/nursery/useUniqueElementIds: "id" is not a html attribute here - TODO: stop using 'id' as a prop on JSX elements */
+
 "use client";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import type { ThirdwebClient } from "../../../../../client/client.js";
@@ -38,7 +40,6 @@ export function WalletConnectDisconnectScreen(props: {
       >
         <Container py="lg" style={{ position: "relative" }}>
           <Container py="md">
-            {/** biome-ignore lint/nursery/useUniqueElementIds: "id" is not a html attribute here - TODO: stop using 'id' as a prop on JSX elements */}
             <WalletLogoSpinner
               client={props.client}
               error={!!props.error}

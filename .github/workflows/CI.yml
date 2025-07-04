@@ -63,7 +63,7 @@ jobs:
       - name: Setup Biome
         uses: biomejs/setup-biome@a9763ed3d2388f5746f9dc3e1a55df7f4609bc89 # v2.5.1
         with:
-          version: 2.0.4 
+          version: 2.0.6
 
       - run: pnpm lint
 

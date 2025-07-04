@@ -21,37 +21,33 @@ export const SupportForm_SelectInput = (props: Props) => {
   const { options, formLabel, name, required, promptText } = props;
 
   return (
-    <>
-      <div className="flex flex-col items-start gap-2">
-        <Label className="relative" htmlFor={name}>
-          {formLabel}
-          {required && (
-            <span className="-top-1.5 -right-2 absolute text-destructive">
-              •
-            </span>
-          )}
-        </Label>
+    <div className="flex flex-col items-start gap-2">
+      <Label className="relative" htmlFor={name}>
+        {formLabel}
+        {required && (
+          <span className="-top-1.5 -right-2 absolute text-destructive">•</span>
+        )}
+      </Label>
 
-        <Select
-          name={name}
-          onValueChange={(val) => {
-            props.onValueChange(val);
-          }}
-          required={required}
-          value={props.value}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={promptText}>{props.value}</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {options.map((option) => (
-              <SelectItem key={option} value={option}>
-                {option}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-    </>
+      <Select
+        name={name}
+        onValueChange={(val) => {
+          props.onValueChange(val);
+        }}
+        required={required}
+        value={props.value}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder={promptText}>{props.value}</SelectValue>
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((option) => (
+            <SelectItem key={option} value={option}>
+              {option}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
   );
 };
