@@ -24,7 +24,7 @@
     "zod": "3.25.67"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.4",
+    "@biomejs/biome": "2.0.6",
     "@next/eslint-plugin-next": "15.3.3",
     "@types/node": "22.14.1",
     "@types/react": "19.1.8",
@@ -46,6 +46,7 @@
     "build": "next build",
     "dev": "next dev --turbopack",
     "fix": "biome check ./src --fix && knip --fix --allow-remove-files && eslint ./src --fix",
+    "knip": "knip",
     "lint": "biome check ./src && knip && eslint ./src",
     "start": "next start"
   },

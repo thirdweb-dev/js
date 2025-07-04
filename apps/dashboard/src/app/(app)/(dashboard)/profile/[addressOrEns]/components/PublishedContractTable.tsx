@@ -182,19 +182,17 @@ function ContractTableRow(props: { row: Row<ContractDataRow> }) {
   const { row } = props;
   const { key, ...rowProps } = row.getRowProps();
   return (
-    <>
-      <TableRow
-        className="cursor-pointer hover:bg-card"
-        linkBox
-        {...rowProps}
-        key={key}
-      >
-        {row.cells.map((cell) => (
-          <TableCell {...cell.getCellProps()} key={cell.getCellProps().key}>
-            {cell.render("Cell")}
-          </TableCell>
-        ))}
-      </TableRow>
-    </>
+    <TableRow
+      className="cursor-pointer hover:bg-card"
+      linkBox
+      {...rowProps}
+      key={key}
+    >
+      {row.cells.map((cell) => (
+        <TableCell {...cell.getCellProps()} key={cell.getCellProps().key}>
+          {cell.render("Cell")}
+        </TableCell>
+      ))}
+    </TableRow>
   );
 }
