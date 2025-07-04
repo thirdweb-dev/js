@@ -54,11 +54,11 @@ export default async function TransactionPage({
   return (
     <div className="space-y-6 p-2">
       <TransactionDetailsUI
+        activityLogs={activityLogs}
         client={client}
         project={project}
         teamSlug={team_slug}
         transaction={transactionData}
-        activityLogs={activityLogs}
       />
     </div>
   );

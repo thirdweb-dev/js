@@ -1,7 +1,12 @@
 "use client";
 
 import { format, formatDistanceToNowStrict } from "date-fns";
-import { ExternalLink, Info, ChevronDown, ChevronRight } from "lucide-react";
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  ExternalLinkIcon,
+  InfoIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { hexToNumber, isHex, type ThirdwebClient, toEther } from "thirdweb";
@@ -17,7 +22,7 @@ import { useAllChainsData } from "@/hooks/chains/allChains";
 import { ChainIconClient } from "@/icons/ChainIcon";
 import { statusDetails } from "../../analytics/tx-table/tx-table-ui";
 import type { Transaction } from "../../analytics/tx-table/types";
-import { type ActivityLogEntry } from "../../lib/analytics";
+import type { ActivityLogEntry } from "../../lib/analytics";
 
 export function TransactionDetailsUI({
   transaction,
@@ -49,8 +54,8 @@ export function TransactionDetailsUI({
     executionResult && "error" in executionResult
       ? executionResult.error.message
       : executionResult && "revertData" in executionResult
-      ? executionResult.revertData?.revertReason
-      : null;
+        ? executionResult.revertData?.revertReason
+        : null;
   const errorDetails =
     executionResult && "error" in executionResult
       ? executionResult.error
@@ -205,7 +210,7 @@ export function TransactionDetailsUI({
                       client={client}
                       src={chain.icon?.url}
                     />
-                    <span className="text-sm">{chain.name}</span>
+                    <span className="text-sm">{chain.name || "Unknown"}</span>
                   </div>
                 ) : (
                   <div>Chain ID: {chainId || "Unknown"}</div>
@@ -374,7 +379,9 @@ export function TransactionDetailsUI({
 // Activity Log Timeline Component
 function ActivityLogCard({
   activityLogs,
-}: { activityLogs: ActivityLogEntry[] }) {
+}: {
+  activityLogs: ActivityLogEntry[];
+}) {
   return (
     <Card>
       <CardHeader>
@@ -388,10 +395,10 @@ function ActivityLogCard({
         ) : (
           <div className="space-y-4">
             {activityLogs.map((log, index) => (
-              <ActivityLogEntry
+              <ActivityLogEntryItem
+                isLast={index === activityLogs.length - 1}
                 key={log.id}
                 log={log}
-                isLast={index === activityLogs.length - 1}
               />
             ))}
           </div>
@@ -401,10 +408,13 @@ function ActivityLogCard({
   );
 }
 
-function ActivityLogEntry({
+function ActivityLogEntryItem({
   log,
   isLast,
-}: { log: ActivityLogEntry; isLast: boolean }) {
+}: {
+  log: ActivityLogEntry;
+  isLast: boolean;
+}) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -423,8 +433,9 @@ function ActivityLogEntry({
         {/* Content */}
         <div className="flex-1 min-w-0">
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
             className="flex w-full items-center justify-between py-2 text-left hover:bg-muted/50 rounded-md px-2 -ml-2"
+            onClick={() => setIsExpanded(!isExpanded)}
+            type="button"
           >
             <div className="flex items-center gap-2">
               <span className="font-medium text-sm">{log.stageName}</span>
@@ -435,9 +446,9 @@ function ActivityLogEntry({
               </span>
             </div>
             {isExpanded ? (
-              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              <ChevronDownIcon className="h-4 w-4 text-muted-foreground" />
             ) : (
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              <ChevronRightIcon className="h-4 w-4 text-muted-foreground" />
             )}
           </button>
 
