@@ -90,9 +90,9 @@ export function AuthOptionsForm({
         DEFAULT_ACCOUNT_FACTORY_V0_7
           ? "v0.7"
           : ecosystem.smartAccountOptions?.accountFactoryAddress ===
-            DEFAULT_ACCOUNT_FACTORY_V0_6
-          ? "v0.6"
-          : "custom",
+              DEFAULT_ACCOUNT_FACTORY_V0_6
+            ? "v0.6"
+            : "custom",
       authOptions: ecosystem.authOptions || [],
       customAccountFactoryAddress:
         ecosystem.smartAccountOptions?.accountFactoryAddress || "",
