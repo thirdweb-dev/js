@@ -3,6 +3,7 @@ import { useId } from "react";
 import { download } from "thirdweb/storage";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { fetchChain } from "@/utils/fetchChain";
+import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 
 // Route segment config
 export const runtime = "edge";
@@ -81,8 +82,8 @@ export default async function Image({
     fetch(new URL("og-lib/fonts/inter/700.ttf", import.meta.url)).then((res) =>
       res.arrayBuffer(),
     ),
-    // download the chain icon if there is one
-    chain.icon?.url && hasWorkingChainIcon
+    // download the chain icon if there is one and secret key is available
+    chain.icon?.url && hasWorkingChainIcon && DASHBOARD_THIRDWEB_SECRET_KEY
       ? download({
           client: serverThirdwebClient,
           uri: chain.icon.url,
@@ -90,7 +91,7 @@ export default async function Image({
       : undefined,
     // download the background image (based on chain)
     fetch(
-      chain.icon?.url && hasWorkingChainIcon
+      chain.icon?.url && hasWorkingChainIcon && DASHBOARD_THIRDWEB_SECRET_KEY
         ? new URL(
             "og-lib/assets/chain/bg-with-icon.png",
 
@@ -118,7 +119,7 @@ export default async function Image({
       />
       {/* the actual component starts here */}
 
-      {hasWorkingChainIcon && (
+      {hasWorkingChainIcon && chainIcon && (
         <img
           alt=""
           // @ts-expect-error - TS doesn't know about the ImageResponse component
