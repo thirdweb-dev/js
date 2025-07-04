@@ -231,7 +231,7 @@ export async function deployContract(
     address = receipt.contractAddress;
     if (!address) {
       throw new Error(
-        `Could not find deployed contract address in transaction: $receipt.transactionHash`,
+        `Could not find deployed contract address in transaction: ${receipt.transactionHash}`,
       );
     }
   }
