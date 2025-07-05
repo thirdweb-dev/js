@@ -507,11 +507,6 @@ function ActivityLogEntryItem({
               <Badge variant={eventInfo.variant}>{eventInfo.label}</Badge>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-muted-foreground text-xs">
-                {formatDistanceToNowStrict(new Date(log.createdAt), {
-                  addSuffix: true,
-                })}
-              </span>
               {isExpanded ? (
                 <ChevronDownIcon className="h-4 w-4 text-muted-foreground" />
               ) : (
