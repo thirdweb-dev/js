@@ -451,7 +451,7 @@ function ActivityLogEntryItem({
             <div className="flex items-center gap-2">
               <span className="font-medium text-sm">{log.stageName}</span>
               <span className="text-muted-foreground text-xs">
-                {formatDistanceToNowStrict(new Date(log.timestamp), {
+                {formatDistanceToNowStrict(new Date(log.createdAt), {
                   addSuffix: true,
                 })}
               </span>
@@ -479,9 +479,9 @@ function ActivityLogEntryItem({
                   <div className="font-mono">{log.batchIndex}</div>
                 </div>
                 <div>
-                  <div className="text-muted-foreground">Timestamp</div>
+                  <div className="text-muted-foreground">Created At</div>
                   <div className="font-mono text-xs">
-                    {format(new Date(log.timestamp), "PP pp z")}
+                    {format(new Date(log.createdAt), "PP pp z")}
                   </div>
                 </div>
               </div>
