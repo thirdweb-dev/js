@@ -394,13 +394,19 @@ function ActivityLogCard({
           </p>
         ) : (
           <div className="space-y-4">
-            {activityLogs.map((log, index) => (
-              <ActivityLogEntryItem
-                isLast={index === activityLogs.length - 1}
-                key={log.id}
-                log={log}
-              />
-            ))}
+            {activityLogs
+              .sort(
+                (a, b) =>
+                  new Date(a.createdAt).getTime() -
+                  new Date(b.createdAt).getTime(),
+              )
+              .map((log, index, sortedArray) => (
+                <ActivityLogEntryItem
+                  isLast={index === sortedArray.length - 1}
+                  key={log.id}
+                  log={log}
+                />
+              ))}
           </div>
         )}
       </CardContent>
