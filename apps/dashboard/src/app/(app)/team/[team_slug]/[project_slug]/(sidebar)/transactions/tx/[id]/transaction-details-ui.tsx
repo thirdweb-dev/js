@@ -417,12 +417,6 @@ function ActivityLogEntryItem({
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Fix timestamp by ensuring it has 'Z' suffix for proper UTC parsing
-  const fixedTimestamp = log.timestamp.endsWith("Z")
-    ? log.timestamp
-    : `${log.timestamp}Z`;
-  const timestamp = new Date(fixedTimestamp);
-
   // Get dot color based on event type
   const getDotColor = (eventType: string) => {
     const type = eventType.toLowerCase();
@@ -457,7 +451,7 @@ function ActivityLogEntryItem({
             <div className="flex items-center gap-2">
               <span className="font-medium text-sm">{log.stageName}</span>
               <span className="text-muted-foreground text-xs">
-                {formatDistanceToNowStrict(timestamp, {
+                {formatDistanceToNowStrict(new Date(log.timestamp), {
                   addSuffix: true,
                 })}
               </span>
@@ -487,7 +481,7 @@ function ActivityLogEntryItem({
                 <div>
                   <div className="text-muted-foreground">Timestamp</div>
                   <div className="font-mono text-xs">
-                    {format(timestamp, "PP pp z")}
+                    {format(new Date(log.timestamp), "PP pp z")}
                   </div>
                 </div>
               </div>
