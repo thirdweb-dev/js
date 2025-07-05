@@ -54,8 +54,8 @@ export function TransactionDetailsUI({
     executionResult && "error" in executionResult
       ? executionResult.error.message
       : executionResult && "revertData" in executionResult
-      ? executionResult.revertData?.revertReason
-      : null;
+        ? executionResult.revertData?.revertReason
+        : null;
   const errorDetails =
     executionResult && "error" in executionResult
       ? executionResult.error
