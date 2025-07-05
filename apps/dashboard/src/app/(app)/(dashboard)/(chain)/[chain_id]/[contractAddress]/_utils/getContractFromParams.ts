@@ -1,7 +1,7 @@
 import { getAddress, getContract, isAddress } from "thirdweb";
 import { localhost } from "thirdweb/chains";
-import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { mapV4ChainToV5Chain } from "@/utils/map-chains";
 import { getUserThirdwebClient } from "../../../../../../../@/api/auth-token";
 import { fetchChainWithLocalOverrides } from "../../../../../../../@/utils/fetchChainWithLocalOverrides";

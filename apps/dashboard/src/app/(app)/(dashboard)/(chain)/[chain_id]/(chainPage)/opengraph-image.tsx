@@ -1,9 +1,9 @@
 import { ImageResponse } from "next/og";
 import { useId } from "react";
 import { download } from "thirdweb/storage";
-import { fetchChain } from "@/utils/fetchChain";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
+import { fetchChain } from "@/utils/fetchChain";
 
 // Route segment config
 export const runtime = "edge";

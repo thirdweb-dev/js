@@ -19,8 +19,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import {
   PROJECT_SHOWCASE_DATA,
   PROJECT_SHOWCASE_INDUSTRIES,
@@ -141,15 +141,15 @@ export default async function ProjectShowcasePage(props: {
                       src={
                         project.image?.startsWith("ipfs://") &&
                         DASHBOARD_THIRDWEB_SECRET_KEY
-                          ? resolveSchemeWithErrorHandler({
+                          ? (resolveSchemeWithErrorHandler({
                               client: getConfiguredThirdwebClient({
                                 secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
                                 teamId: undefined,
                               }),
                               uri: project.image,
-                            }) ?? ""
-                          : project.image ??
-                            "/assets/showcase/default_image.png"
+                            }) ?? "")
+                          : (project.image ??
+                            "/assets/showcase/default_image.png")
                       }
                       width={300}
                     />

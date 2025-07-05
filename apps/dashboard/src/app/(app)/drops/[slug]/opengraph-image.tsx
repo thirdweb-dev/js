@@ -1,8 +1,8 @@
 import { ImageResponse } from "next/og";
 import { useId } from "react";
 import { download } from "thirdweb/storage";
-import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { fetchChain } from "@/utils/fetchChain";
 import { DROP_PAGES } from "./data";
 

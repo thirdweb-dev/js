@@ -4,8 +4,8 @@ import { ImageResponse } from "next/og";
 import { isAddress } from "thirdweb";
 import { download } from "thirdweb/storage";
 import { shortenAddress } from "thirdweb/utils";
-import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 
 const OgBrandIcon: React.FC = () => (
   // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
@@ -375,7 +375,7 @@ const ERC_CATEGORIES = ["ERC721", "ERC1155", "ERC20"] as const;
 
 function categorizeExtensions(extensions: string[]) {
   const categoriesWithCount: Record<
-    typeof ERC_CATEGORIES[number] | "Other",
+    (typeof ERC_CATEGORIES)[number] | "Other",
     number
   > = {
     ERC20: 0,

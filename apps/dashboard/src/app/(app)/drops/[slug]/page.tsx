@@ -11,8 +11,8 @@ import {
   getActiveClaimCondition as getActiveClaimCondition1155,
   getNFT as getNFT1155,
 } from "thirdweb/extensions/erc1155";
-import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { defineDashboardChain } from "@/lib/defineDashboardChain";
 import { DROP_PAGES } from "./data";
 import { NftMint } from "./mint-ui";

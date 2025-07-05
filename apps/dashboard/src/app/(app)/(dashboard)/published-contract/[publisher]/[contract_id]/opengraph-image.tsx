@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { getSocialProfiles } from "thirdweb/social";
-import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveEns } from "@/lib/ens";
 import { correctAndUniqueLicenses } from "@/lib/licenses";
 import { getLatestPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";

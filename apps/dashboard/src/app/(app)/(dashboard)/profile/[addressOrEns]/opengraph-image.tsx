@@ -2,8 +2,8 @@ import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 import { resolveAvatar } from "thirdweb/extensions/ens";
 import { GradientBlobbie } from "@/components/blocks/avatar/GradientBlobbie";
-import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 /* eslint-disable @next/next/no-img-element */
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { shortenIfAddress } from "@/utils/usedapp-external";
