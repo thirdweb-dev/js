@@ -8,7 +8,7 @@ import {
   InfoIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { hexToNumber, isHex, type ThirdwebClient, toEther } from "thirdweb";
 import type { Project } from "@/api/projects";
 import { WalletAddress } from "@/components/blocks/wallet-address";
@@ -17,12 +17,14 @@ import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CodeClient } from "@/components/ui/code/code.client";
+import { TabButtons } from "@/components/ui/tabs";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { ChainIconClient } from "@/icons/ChainIcon";
 import { statusDetails } from "../../analytics/tx-table/tx-table-ui";
 import type { Transaction } from "../../analytics/tx-table/types";
 import type { ActivityLogEntry } from "../../lib/analytics";
+import { DecodedTransactionParams } from "./decoded-transaction-params";
 
 export function TransactionDetailsUI({
   transaction,
@@ -54,8 +56,8 @@ export function TransactionDetailsUI({
     executionResult && "error" in executionResult
       ? executionResult.error.message
       : executionResult && "revertData" in executionResult
-        ? executionResult.revertData?.revertReason
-        : null;
+      ? executionResult.revertData?.revertReason
+      : null;
   const errorDetails =
     executionResult && "error" in executionResult
       ? executionResult.error
@@ -243,24 +245,7 @@ export function TransactionDetailsUI({
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Transaction Parameters</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {transaction.transactionParams &&
-            transaction.transactionParams.length > 0 ? (
-              <CodeClient
-                code={JSON.stringify(transaction.transactionParams, null, 2)}
-                lang="json"
-              />
-            ) : (
-              <p className="text-muted-foreground text-sm">
-                No transaction parameters available
-              </p>
-            )}
-          </CardContent>
-        </Card>
+        <TransactionParametersCard transaction={transaction} />
         {errorMessage && (
           <Card className="border-destructive">
             <CardHeader>
@@ -373,6 +358,64 @@ export function TransactionDetailsUI({
         <ActivityLogCard activityLogs={activityLogs} />
       </div>
     </>
+  );
+}
+
+// Transaction Parameters Card with Tabs
+function TransactionParametersCard({
+  transaction,
+}: { transaction: Transaction }) {
+  const [activeTab, setActiveTab] = useState<"decoded" | "raw">("decoded");
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg">Transaction Parameters</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <TabButtons
+          tabClassName="!text-sm"
+          tabs={[
+            {
+              isActive: activeTab === "decoded",
+              name: "Decoded",
+              onClick: () => setActiveTab("decoded"),
+            },
+            {
+              isActive: activeTab === "raw",
+              name: "Raw",
+              onClick: () => setActiveTab("raw"),
+            },
+          ]}
+        />
+
+        {activeTab === "decoded" ? (
+          <Suspense
+            fallback={
+              <div className="text-sm text-muted-foreground">
+                Decoding transaction data...
+              </div>
+            }
+          >
+            <DecodedTransactionParams transaction={transaction} />
+          </Suspense>
+        ) : (
+          <div>
+            {transaction.transactionParams &&
+            transaction.transactionParams.length > 0 ? (
+              <CodeClient
+                code={JSON.stringify(transaction.transactionParams, null, 2)}
+                lang="json"
+              />
+            ) : (
+              <p className="text-muted-foreground text-sm">
+                No transaction parameters available
+              </p>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
