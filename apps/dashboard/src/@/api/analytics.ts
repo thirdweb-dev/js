@@ -13,6 +13,8 @@ import type {
   UserOpStats,
   WalletStats,
   WalletUserStats,
+  WebhookLatencyStats,
+  WebhookRequestStats,
   WebhookSummaryStats,
 } from "@/types/analytics";
 import { getAuthToken } from "./auth-token";
@@ -426,44 +428,56 @@ export async function getEngineCloudMethodUsage(
   return json.data as EngineCloudStats[];
 }
 
-export async function getWebhookMetrics(params: {
-  teamId: string;
-  projectId: string;
-  webhookId: string;
-  period?: "day" | "week" | "month" | "year" | "all";
-  from?: Date;
-  to?: Date;
-}): Promise<{ data: WebhookSummaryStats[] } | { error: string }> {
-  const searchParams = new URLSearchParams();
-
-  // Required params
-  searchParams.append("teamId", params.teamId);
-  searchParams.append("projectId", params.projectId);
+export async function getWebhookSummary(
+  params: AnalyticsQueryParams & { webhookId: string },
+): Promise<{ data: WebhookSummaryStats[] } | { error: string }> {
+  const searchParams = buildSearchParams(params);
   searchParams.append("webhookId", params.webhookId);
-
-  // Optional params
-  if (params.period) {
-    searchParams.append("period", params.period);
-  }
-  if (params.from) {
-    searchParams.append("from", params.from.toISOString());
-  }
-  if (params.to) {
-    searchParams.append("to", params.to.toISOString());
-  }
 
   const res = await fetchAnalytics(
     `v2/webhook/summary?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
   );
-
   if (!res.ok) {
-    const reason = await res?.text();
+    const reason = await res.text();
     return { error: reason };
   }
-  return (await res.json()) as {
-    data: WebhookSummaryStats[];
-  };
+
+  return (await res.json()) as { data: WebhookSummaryStats[] };
+}
+
+export async function getWebhookRequests(
+  params: AnalyticsQueryParams & { webhookId?: string },
+): Promise<{ data: WebhookRequestStats[] } | { error: string }> {
+  const searchParams = buildSearchParams(params);
+  if (params.webhookId) {
+    searchParams.append("webhookId", params.webhookId);
+  }
+
+  const res = await fetchAnalytics(
+    `v2/webhook/requests?${searchParams.toString()}`,
+  );
+  if (!res.ok) {
+    const reason = await res.text();
+    return { error: reason };
+  }
+
+  return (await res.json()) as { data: WebhookRequestStats[] };
+}
+
+export async function getWebhookLatency(
+  params: AnalyticsQueryParams & { webhookId?: string },
+): Promise<{ data: WebhookLatencyStats[] } | { error: string }> {
+  const searchParams = buildSearchParams(params);
+  if (params.webhookId) {
+    searchParams.append("webhookId", params.webhookId);
+  }
+  const res = await fetchAnalytics(
+    `v2/webhook/latency?${searchParams.toString()}`,
+  );
+  if (!res.ok) {
+    const reason = await res.text();
+    return { error: reason };
+  }
+
+  return (await res.json()) as { data: WebhookLatencyStats[] };
 }

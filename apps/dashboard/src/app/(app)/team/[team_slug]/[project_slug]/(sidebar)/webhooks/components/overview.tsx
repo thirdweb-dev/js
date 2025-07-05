@@ -1,7 +1,6 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import posthog from "posthog-js";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { useAvailableTopics } from "../hooks/use-available-topics";
 import { useWebhookConfigs } from "../hooks/use-webhook-configs";
@@ -20,9 +19,8 @@ export function WebhooksOverview({
   projectId,
   projectSlug,
 }: WebhooksOverviewProps) {
-  // Enabled on dev or if FF is enabled.
-  const isFeatureEnabled =
-    !posthog.__loaded || posthog.isFeatureEnabled("centralized-webhooks");
+  // Feature is enabled (matches server component behavior)
+  const isFeatureEnabled = true;
 
   const webhookConfigsQuery = useWebhookConfigs({
     enabled: isFeatureEnabled,
