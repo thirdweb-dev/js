@@ -422,7 +422,7 @@ function ActivityLogEntryItem({
     const type = eventType.toLowerCase();
     if (type.includes("success")) return "bg-green-500";
     if (type.includes("nack")) return "bg-yellow-500";
-    if (type.includes("failed") || type.includes("error")) return "bg-red-500";
+    if (type.includes("failure")) return "bg-red-500";
     return "bg-primary"; // default color
   };
 
