@@ -25,7 +25,7 @@ import { ChainIconClient } from "@/icons/ChainIcon";
 import { statusDetails } from "../../analytics/tx-table/tx-table-ui";
 import type { Transaction } from "../../analytics/tx-table/types";
 import type { ActivityLogEntry } from "../../lib/analytics";
-import type { DecodedTransactionData } from "./page";
+import type { DecodedTransactionData, DecodedTransactionResult } from "./page";
 
 export function TransactionDetailsUI({
 	transaction,
@@ -38,7 +38,7 @@ export function TransactionDetailsUI({
 	client: ThirdwebClient;
 	project: Project;
 	activityLogs: ActivityLogEntry[];
-	decodedTransactionData: DecodedTransactionData;
+	decodedTransactionData: DecodedTransactionResult;
 }) {
 	const { idToChain } = useAllChainsData();
 
@@ -373,7 +373,7 @@ function TransactionParametersCard({
 	decodedTransactionData,
 }: {
 	transaction: Transaction;
-	decodedTransactionData: DecodedTransactionData;
+	decodedTransactionData: DecodedTransactionResult;
 }) {
 	const [activeTab, setActiveTab] = useState<"decoded" | "raw">("decoded");
 
@@ -400,8 +400,8 @@ function TransactionParametersCard({
 				/>
 
 				{activeTab === "decoded" ? (
-					<DecodedTransactionDisplay
-						decodedData={decodedTransactionData}
+					<DecodedTransactionListDisplay
+						decodedDataList={decodedTransactionData}
 						onSwitchToRaw={() => setActiveTab("raw")}
 					/>
 				) : (
@@ -424,15 +424,15 @@ function TransactionParametersCard({
 	);
 }
 
-// Client component to display decoded transaction data
-function DecodedTransactionDisplay({
-	decodedData,
+// Client component to display list of decoded transaction data
+function DecodedTransactionListDisplay({
+	decodedDataList,
 	onSwitchToRaw,
 }: {
-	decodedData: DecodedTransactionData;
+	decodedDataList: DecodedTransactionResult;
 	onSwitchToRaw: () => void;
 }) {
-	if (!decodedData) {
+	if (decodedDataList.length === 0) {
 		return (
 			<p className="text-muted-foreground text-sm">
 				Unable to decode transaction data. The contract may not have verified
@@ -450,7 +450,60 @@ function DecodedTransactionDisplay({
 	}
 
 	return (
+		<div className="space-y-6">
+			{decodedDataList.map(
+				(decodedData: DecodedTransactionData, index: number) => (
+					<div key={`transaction-${index}`}>
+						{index > 0 && <div className="border-t border-border my-6" />}
+						<DecodedTransactionDisplay
+							decodedData={decodedData}
+							onSwitchToRaw={onSwitchToRaw}
+							transactionIndex={index}
+						/>
+					</div>
+				),
+			)}
+		</div>
+	);
+}
+
+// Client component to display decoded transaction data
+function DecodedTransactionDisplay({
+	decodedData,
+	onSwitchToRaw,
+	transactionIndex,
+}: {
+	decodedData: DecodedTransactionData;
+	onSwitchToRaw: () => void;
+	transactionIndex: number;
+}) {
+	if (!decodedData) {
+		return (
+			<div className="space-y-4">
+				<div className="text-muted-foreground text-sm font-medium">
+					Transaction {transactionIndex + 1}
+				</div>
+				<p className="text-muted-foreground text-sm">
+					Unable to decode transaction data. The contract may not have verified
+					metadata available.{" "}
+					<button
+						onClick={onSwitchToRaw}
+						className="text-foreground underline-offset-4 hover:underline cursor-pointer"
+						type="button"
+					>
+						View raw transaction data
+					</button>
+					.
+				</p>
+			</div>
+		);
+	}
+
+	return (
 		<div className="space-y-4">
+			<div className="text-muted-foreground text-sm font-medium">
+				Transaction {transactionIndex + 1}
+			</div>
 			<div>
 				<div className="text-muted-foreground text-sm">Contract Name</div>
 				<div className="font-mono text-sm">{decodedData.contractName}</div>
