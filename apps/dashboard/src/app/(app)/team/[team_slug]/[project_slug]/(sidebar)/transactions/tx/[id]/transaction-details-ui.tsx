@@ -382,34 +382,42 @@ function ActivityLogCard({
 }: {
   activityLogs: ActivityLogEntry[];
 }) {
+  // Sort activity logs and prepare JSX elements using for...of loop
+  const renderActivityLogs = () => {
+    if (activityLogs.length === 0) {
+      return (
+        <p className="text-muted-foreground text-sm">
+          No activity logs available for this transaction
+        </p>
+      );
+    }
+
+    // Sort logs chronologically
+    const sortedLogs = [...activityLogs].sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    );
+
+    const logElements: React.ReactElement[] = [];
+    let index = 0;
+
+    for (const log of sortedLogs) {
+      const isLast = index === sortedLogs.length - 1;
+      logElements.push(
+        <ActivityLogEntryItem isLast={isLast} key={log.id} log={log} />,
+      );
+      index++;
+    }
+
+    return <div className="space-y-4">{logElements}</div>;
+  };
+
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-lg">Activity Log</CardTitle>
       </CardHeader>
-      <CardContent>
-        {activityLogs.length === 0 ? (
-          <p className="text-muted-foreground text-sm">
-            No activity logs available for this transaction
-          </p>
-        ) : (
-          <div className="space-y-4">
-            {activityLogs
-              .sort(
-                (a, b) =>
-                  new Date(a.createdAt).getTime() -
-                  new Date(b.createdAt).getTime(),
-              )
-              .map((log, index, sortedArray) => (
-                <ActivityLogEntryItem
-                  isLast={index === sortedArray.length - 1}
-                  key={log.id}
-                  log={log}
-                />
-              ))}
-          </div>
-        )}
-      </CardContent>
+      <CardContent>{renderActivityLogs()}</CardContent>
     </Card>
   );
 }
