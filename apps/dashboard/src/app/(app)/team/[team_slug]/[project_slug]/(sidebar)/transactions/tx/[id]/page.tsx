@@ -95,21 +95,21 @@ async function decodeTransactionData(
     const functionName = matchingFunction.name;
 
     // Decode function data
-    const decodedData = (await decodeFunctionData({
+    const decodedArgs = (await decodeFunctionData({
       contract: getContract({
         ...contract,
         abi: [matchingFunction],
       }),
       data: txParam.data,
-    })) as { args: readonly unknown[] };
+    })) as readonly unknown[];
 
     // Create a clean object for display
     const functionArgs: Record<string, unknown> = {};
-    if (matchingFunction.inputs && decodedData.args) {
+    if (matchingFunction.inputs && decodedArgs) {
       for (let index = 0; index < matchingFunction.inputs.length; index++) {
         const input = matchingFunction.inputs[index];
         if (input) {
-          functionArgs[input.name || `arg${index}`] = decodedData.args[index];
+          functionArgs[input.name || `arg${index}`] = decodedArgs[index];
         }
       }
     }
