@@ -392,11 +392,29 @@ function ActivityLogCard({
       );
     }
 
-    // Sort logs chronologically
-    const sortedLogs = [...activityLogs].sort(
-      (a, b) =>
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-    );
+    // Sort logs chronologically using for...of loop (insertion sort)
+    const sortedLogs: ActivityLogEntry[] = [];
+
+    for (const log of activityLogs) {
+      let inserted = false;
+      let insertIndex = 0;
+
+      for (const sortedLog of sortedLogs) {
+        if (
+          new Date(log.createdAt).getTime() <=
+          new Date(sortedLog.createdAt).getTime()
+        ) {
+          sortedLogs.splice(insertIndex, 0, log);
+          inserted = true;
+          break;
+        }
+        insertIndex++;
+      }
+
+      if (!inserted) {
+        sortedLogs.push(log);
+      }
+    }
 
     const logElements: React.ReactElement[] = [];
     let index = 0;
