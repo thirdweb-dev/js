@@ -423,33 +423,35 @@ function ActivityLogEntryItem({
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Get colors based on event type
-  const getEventTypeColors = (eventType: string) => {
+  // Get display info based on event type
+  const getEventTypeInfo = (eventType: string) => {
     const type = eventType.toLowerCase();
     if (type.includes("success"))
       return {
-        badge:
-          "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
         dot: "bg-green-500",
+        label: "Success",
+        variant: "success" as const,
       };
     if (type.includes("nack"))
       return {
-        badge:
-          "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
         dot: "bg-yellow-500",
+        label: "Retry",
+        variant: "warning" as const,
       };
     if (type.includes("failure"))
       return {
-        badge: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
         dot: "bg-red-500",
+        label: "Error",
+        variant: "destructive" as const,
       };
     return {
-      badge: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300",
       dot: "bg-primary",
+      label: eventType,
+      variant: "secondary" as const,
     };
   };
 
-  const colors = getEventTypeColors(log.eventType);
+  const eventInfo = getEventTypeInfo(log.eventType);
 
   return (
     <div className="relative">
@@ -461,7 +463,7 @@ function ActivityLogEntryItem({
       <div className="flex items-start gap-4">
         {/* Timeline dot */}
         <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-muted">
-          <div className={`h-3 w-3 rounded-full ${colors.dot}`} />
+          <div className={`h-3 w-3 rounded-full ${eventInfo.dot}`} />
         </div>
 
         {/* Content */}
@@ -473,11 +475,7 @@ function ActivityLogEntryItem({
           >
             <div className="flex items-center gap-2">
               <span className="font-medium text-sm">{log.stageName}</span>
-              <span
-                className={`px-2 py-1 text-xs rounded-full ${colors.badge}`}
-              >
-                {log.eventType}
-              </span>
+              <Badge variant={eventInfo.variant}>{eventInfo.label}</Badge>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground text-xs">
