@@ -428,24 +428,24 @@ function ActivityLogEntryItem({
     const type = eventType.toLowerCase();
     if (type.includes("success"))
       return {
-        dot: "bg-green-500",
         badge:
           "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+        dot: "bg-green-500",
       };
     if (type.includes("nack"))
       return {
-        dot: "bg-yellow-500",
         badge:
           "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
+        dot: "bg-yellow-500",
       };
     if (type.includes("failure"))
       return {
-        dot: "bg-red-500",
         badge: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+        dot: "bg-red-500",
       };
     return {
-      dot: "bg-primary",
       badge: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300",
+      dot: "bg-primary",
     };
   };
 
