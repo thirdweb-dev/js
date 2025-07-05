@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import "server-only";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { cn } from "@/lib/utils";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { fallbackChainIcon } from "../../../../../../@/utils/chain-icons";
@@ -13,10 +13,16 @@ export async function ChainIcon(props: {
   if (props.iconUrl) {
     let imageLink = fallbackChainIcon;
 
-    const resolved = resolveSchemeWithErrorHandler({
-      client: serverThirdwebClient,
-      uri: props.iconUrl,
-    });
+    // Only resolve if we have a secret key available
+    const resolved = DASHBOARD_THIRDWEB_SECRET_KEY
+      ? resolveSchemeWithErrorHandler({
+          client: getConfiguredThirdwebClient({
+            secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+            teamId: undefined,
+          }),
+          uri: props.iconUrl,
+        })
+      : null;
 
     if (resolved) {
       // check if it loads or not

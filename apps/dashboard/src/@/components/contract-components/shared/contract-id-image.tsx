@@ -3,7 +3,8 @@
 import type { StaticImageData } from "next/image";
 import Image from "next/image";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { replaceIpfsUrl } from "@/lib/sdk";
 import generalContractIcon from "../../../../../public/assets/tw-icons/general.png";
 
@@ -26,7 +27,17 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
       <img
         alt=""
         className="size-8 rounded-full"
-        src={replaceIpfsUrl(logo, serverThirdwebClient)}
+        src={
+          DASHBOARD_THIRDWEB_SECRET_KEY
+            ? replaceIpfsUrl(
+                logo,
+                getConfiguredThirdwebClient({
+                  secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+                  teamId: undefined,
+                }),
+              )
+            : logo
+        }
       />
     );
   }

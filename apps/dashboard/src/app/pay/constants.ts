@@ -31,6 +31,20 @@ function getPayThirdwebClient() {
     });
   }
 
+  // During build time, client ID might not be available
+  if (!NEXT_PUBLIC_DASHBOARD_CLIENT_ID) {
+    // Return a minimal client that will fail gracefully at runtime if needed
+    return createThirdwebClient({
+      clientId: "dummy-build-time-client",
+      config: {
+        storage: {
+          gatewayUrl: NEXT_PUBLIC_IPFS_GATEWAY_URL,
+        },
+      },
+      secretKey: undefined,
+    });
+  }
+
   return createThirdwebClient({
     clientId: NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
     config: {

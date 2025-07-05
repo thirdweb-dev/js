@@ -1,8 +1,14 @@
 "use client";
 
 import { format, formatDistanceToNowStrict } from "date-fns";
-import { ExternalLinkIcon, InfoIcon } from "lucide-react";
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  ExternalLinkIcon,
+  InfoIcon,
+} from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { hexToNumber, isHex, type ThirdwebClient, toEther } from "thirdweb";
 import type { Project } from "@/api/projects";
 import { WalletAddress } from "@/components/blocks/wallet-address";
@@ -16,15 +22,18 @@ import { useAllChainsData } from "@/hooks/chains/allChains";
 import { ChainIconClient } from "@/icons/ChainIcon";
 import { statusDetails } from "../../analytics/tx-table/tx-table-ui";
 import type { Transaction } from "../../analytics/tx-table/types";
+import type { ActivityLogEntry } from "../../lib/analytics";
 
 export function TransactionDetailsUI({
   transaction,
   client,
+  activityLogs,
 }: {
   transaction: Transaction;
   teamSlug: string;
   client: ThirdwebClient;
   project: Project;
+  activityLogs: ActivityLogEntry[];
 }) {
   const { idToChain } = useAllChainsData();
 
@@ -68,12 +77,18 @@ export function TransactionDetailsUI({
   // Gas information
   const gasUsed =
     executionResult && "actualGasUsed" in executionResult
-      ? `${isHex(executionResult.actualGasUsed) ? hexToNumber(executionResult.actualGasUsed) : executionResult.actualGasUsed}`
+      ? `${
+          isHex(executionResult.actualGasUsed)
+            ? hexToNumber(executionResult.actualGasUsed)
+            : executionResult.actualGasUsed
+        }`
       : "N/A";
 
   const gasCost =
     executionResult && "actualGasCost" in executionResult
-      ? `${toEther(BigInt(executionResult.actualGasCost || "0"))} ${chain?.nativeCurrency.symbol || ""}`
+      ? `${toEther(BigInt(executionResult.actualGasCost || "0"))} ${
+          chain?.nativeCurrency.symbol || ""
+        }`
       : "N/A";
 
   return (
@@ -156,7 +171,10 @@ export function TransactionDetailsUI({
                           rel="noopener noreferrer"
                           target="_blank"
                         >
-                          {`${transactionHash.slice(0, 8)}...${transactionHash.slice(-6)}`}{" "}
+                          {`${transactionHash.slice(
+                            0,
+                            8,
+                          )}...${transactionHash.slice(-6)}`}{" "}
                           <ExternalLinkIcon className="size-4 text-muted-foreground" />
                         </Link>
                       </Button>
@@ -165,7 +183,10 @@ export function TransactionDetailsUI({
                         className="font-mono text-muted-foreground text-sm"
                         copyIconPosition="left"
                         textToCopy={transactionHash}
-                        textToShow={`${transactionHash.slice(0, 6)}...${transactionHash.slice(-4)}`}
+                        textToShow={`${transactionHash.slice(
+                          0,
+                          6,
+                        )}...${transactionHash.slice(-4)}`}
                         tooltip="Copy transaction hash"
                         variant="ghost"
                       />
@@ -189,7 +210,7 @@ export function TransactionDetailsUI({
                       client={client}
                       src={chain.icon?.url}
                     />
-                    <span className="text-sm">{chain.name}</span>
+                    <span className="text-sm">{chain.name || "Unknown"}</span>
                   </div>
                 ) : (
                   <div>Chain ID: {chainId || "Unknown"}</div>
@@ -347,7 +368,183 @@ export function TransactionDetailsUI({
             )}
           </CardContent>
         </Card>
+
+        {/* Activity Log Card */}
+        <ActivityLogCard activityLogs={activityLogs} />
       </div>
     </>
+  );
+}
+
+// Activity Log Timeline Component
+function ActivityLogCard({
+  activityLogs,
+}: {
+  activityLogs: ActivityLogEntry[];
+}) {
+  // Sort activity logs and prepare JSX elements using for...of loop
+  const renderActivityLogs = () => {
+    if (activityLogs.length === 0) {
+      return (
+        <p className="text-muted-foreground text-sm">
+          No activity logs available for this transaction
+        </p>
+      );
+    }
+
+    // Sort logs chronologically using for...of loop (manual sorting)
+    const sortedLogs: ActivityLogEntry[] = [];
+
+    // Copy all logs to sortedLogs first
+    for (const log of activityLogs) {
+      sortedLogs[sortedLogs.length] = log;
+    }
+
+    // Manual bubble sort using for...of loops
+    for (let i = 0; i < sortedLogs.length; i++) {
+      for (let j = 0; j < sortedLogs.length - 1 - i; j++) {
+        const currentLog = sortedLogs[j];
+        const nextLog = sortedLogs[j + 1];
+
+        if (
+          currentLog &&
+          nextLog &&
+          new Date(currentLog.createdAt).getTime() >
+            new Date(nextLog.createdAt).getTime()
+        ) {
+          // Swap elements
+          sortedLogs[j] = nextLog;
+          sortedLogs[j + 1] = currentLog;
+        }
+      }
+    }
+
+    const logElements: React.ReactElement[] = [];
+    let index = 0;
+
+    for (const log of sortedLogs) {
+      const isLast = index === sortedLogs.length - 1;
+      logElements.push(
+        <ActivityLogEntryItem isLast={isLast} key={log.id} log={log} />,
+      );
+      index++;
+    }
+
+    return <div className="space-y-4">{logElements}</div>;
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg">Activity Log</CardTitle>
+      </CardHeader>
+      <CardContent>{renderActivityLogs()}</CardContent>
+    </Card>
+  );
+}
+
+function ActivityLogEntryItem({
+  log,
+  isLast,
+}: {
+  log: ActivityLogEntry;
+  isLast: boolean;
+}) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Get display info based on event type
+  const getEventTypeInfo = (eventType: string) => {
+    const type = eventType.toLowerCase();
+    if (type.includes("success"))
+      return {
+        dot: "bg-green-500",
+        label: "Success",
+        variant: "success" as const,
+      };
+    if (type.includes("nack"))
+      return {
+        dot: "bg-yellow-500",
+        label: "Retry",
+        variant: "warning" as const,
+      };
+    if (type.includes("failure"))
+      return {
+        dot: "bg-red-500",
+        label: "Error",
+        variant: "destructive" as const,
+      };
+    return {
+      dot: "bg-primary",
+      label: eventType,
+      variant: "secondary" as const,
+    };
+  };
+
+  const eventInfo = getEventTypeInfo(log.eventType);
+
+  return (
+    <div className="relative">
+      {/* Timeline line */}
+      {!isLast && (
+        <div className="absolute left-4 top-8 h-full w-0.5 bg-border" />
+      )}
+
+      <div className="flex items-start gap-4">
+        {/* Timeline dot */}
+        <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+          <div className={`h-3 w-3 rounded-full ${eventInfo.dot}`} />
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          <button
+            className="flex w-full items-center justify-between py-2 text-left hover:bg-muted/50 rounded-md px-2 -ml-2"
+            onClick={() => setIsExpanded(!isExpanded)}
+            type="button"
+          >
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-sm">{log.stageName}</span>
+              <Badge variant={eventInfo.variant}>{eventInfo.label}</Badge>
+            </div>
+            <div className="flex items-center gap-2">
+              {isExpanded ? (
+                <ChevronDownIcon className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <ChevronRightIcon className="h-4 w-4 text-muted-foreground" />
+              )}
+            </div>
+          </button>
+
+          {isExpanded && (
+            <div className="mt-2 space-y-3 px-2">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <div className="text-muted-foreground">Executor</div>
+                  <div className="font-mono">{log.executorName}</div>
+                </div>
+                <div>
+                  <div className="text-muted-foreground">Created At</div>
+                  <div className="font-mono text-xs">
+                    {format(new Date(log.createdAt), "PP pp z")}
+                  </div>
+                </div>
+              </div>
+
+              {log.payload && (
+                <div>
+                  <div className="text-muted-foreground text-sm mb-2">
+                    Payload
+                  </div>
+                  <CodeClient
+                    code={JSON.stringify(log.payload, null, 2)}
+                    lang="json"
+                  />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
