@@ -417,6 +417,21 @@ function ActivityLogEntryItem({
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Fix timestamp by ensuring it has 'Z' suffix for proper UTC parsing
+  const fixedTimestamp = log.timestamp.endsWith("Z")
+    ? log.timestamp
+    : `${log.timestamp}Z`;
+  const timestamp = new Date(fixedTimestamp);
+
+  // Get dot color based on event type
+  const getDotColor = (eventType: string) => {
+    const type = eventType.toLowerCase();
+    if (type.includes("success")) return "bg-green-500";
+    if (type.includes("nack")) return "bg-yellow-500";
+    if (type.includes("failed") || type.includes("error")) return "bg-red-500";
+    return "bg-primary"; // default color
+  };
+
   return (
     <div className="relative">
       {/* Timeline line */}
@@ -427,7 +442,9 @@ function ActivityLogEntryItem({
       <div className="flex items-start gap-4">
         {/* Timeline dot */}
         <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-muted">
-          <div className="h-3 w-3 rounded-full bg-primary" />
+          <div
+            className={`h-3 w-3 rounded-full ${getDotColor(log.eventType)}`}
+          />
         </div>
 
         {/* Content */}
@@ -440,7 +457,7 @@ function ActivityLogEntryItem({
             <div className="flex items-center gap-2">
               <span className="font-medium text-sm">{log.stageName}</span>
               <span className="text-muted-foreground text-xs">
-                {formatDistanceToNowStrict(new Date(log.timestamp), {
+                {formatDistanceToNowStrict(timestamp, {
                   addSuffix: true,
                 })}
               </span>
@@ -470,7 +487,7 @@ function ActivityLogEntryItem({
                 <div>
                   <div className="text-muted-foreground">Timestamp</div>
                   <div className="font-mono text-xs">
-                    {format(new Date(log.timestamp), "PP pp z")}
+                    {format(timestamp, "PP pp z")}
                   </div>
                 </div>
               </div>
