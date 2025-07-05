@@ -400,7 +400,10 @@ function TransactionParametersCard({
 				/>
 
 				{activeTab === "decoded" ? (
-					<DecodedTransactionDisplay decodedData={decodedTransactionData} />
+					<DecodedTransactionDisplay
+						decodedData={decodedTransactionData}
+						onSwitchToRaw={() => setActiveTab("raw")}
+					/>
 				) : (
 					<div>
 						{transaction.transactionParams &&
@@ -424,14 +427,24 @@ function TransactionParametersCard({
 // Client component to display decoded transaction data
 function DecodedTransactionDisplay({
 	decodedData,
+	onSwitchToRaw,
 }: {
 	decodedData: DecodedTransactionData;
+	onSwitchToRaw: () => void;
 }) {
 	if (!decodedData) {
 		return (
 			<p className="text-muted-foreground text-sm">
 				Unable to decode transaction data. The contract may not have verified
-				metadata available.
+				metadata available.{" "}
+				<button
+					onClick={onSwitchToRaw}
+					className="text-foreground underline-offset-4 hover:underline cursor-pointer"
+					type="button"
+				>
+					View raw transaction data
+				</button>
+				.
 			</p>
 		);
 	}
