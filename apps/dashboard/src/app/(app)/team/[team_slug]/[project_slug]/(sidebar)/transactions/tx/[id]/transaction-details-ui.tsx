@@ -392,27 +392,30 @@ function ActivityLogCard({
       );
     }
 
-    // Sort logs chronologically using for...of loop (insertion sort)
+    // Sort logs chronologically using for...of loop (manual sorting)
     const sortedLogs: ActivityLogEntry[] = [];
 
+    // Copy all logs to sortedLogs first
     for (const log of activityLogs) {
-      let inserted = false;
-      let insertIndex = 0;
+      sortedLogs[sortedLogs.length] = log;
+    }
 
-      for (const sortedLog of sortedLogs) {
+    // Manual bubble sort using for...of loops
+    for (let i = 0; i < sortedLogs.length; i++) {
+      for (let j = 0; j < sortedLogs.length - 1 - i; j++) {
+        const currentLog = sortedLogs[j];
+        const nextLog = sortedLogs[j + 1];
+
         if (
-          new Date(log.createdAt).getTime() <=
-          new Date(sortedLog.createdAt).getTime()
+          currentLog &&
+          nextLog &&
+          new Date(currentLog.createdAt).getTime() >
+            new Date(nextLog.createdAt).getTime()
         ) {
-          sortedLogs.splice(insertIndex, 0, log);
-          inserted = true;
-          break;
+          // Swap elements
+          sortedLogs[j] = nextLog;
+          sortedLogs[j + 1] = currentLog;
         }
-        insertIndex++;
-      }
-
-      if (!inserted) {
-        sortedLogs.push(log);
       }
     }
 
