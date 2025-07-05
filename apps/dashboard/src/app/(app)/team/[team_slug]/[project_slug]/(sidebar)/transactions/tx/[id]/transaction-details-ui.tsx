@@ -54,8 +54,8 @@ export function TransactionDetailsUI({
     executionResult && "error" in executionResult
       ? executionResult.error.message
       : executionResult && "revertData" in executionResult
-        ? executionResult.revertData?.revertReason
-        : null;
+      ? executionResult.revertData?.revertReason
+      : null;
   const errorDetails =
     executionResult && "error" in executionResult
       ? executionResult.error
@@ -423,14 +423,33 @@ function ActivityLogEntryItem({
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Get dot color based on event type
-  const getDotColor = (eventType: string) => {
+  // Get colors based on event type
+  const getEventTypeColors = (eventType: string) => {
     const type = eventType.toLowerCase();
-    if (type.includes("success")) return "bg-green-500";
-    if (type.includes("nack")) return "bg-yellow-500";
-    if (type.includes("failure")) return "bg-red-500";
-    return "bg-primary"; // default color
+    if (type.includes("success"))
+      return {
+        dot: "bg-green-500",
+        badge:
+          "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+      };
+    if (type.includes("nack"))
+      return {
+        dot: "bg-yellow-500",
+        badge:
+          "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
+      };
+    if (type.includes("failure"))
+      return {
+        dot: "bg-red-500",
+        badge: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+      };
+    return {
+      dot: "bg-primary",
+      badge: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300",
+    };
   };
+
+  const colors = getEventTypeColors(log.eventType);
 
   return (
     <div className="relative">
@@ -442,9 +461,7 @@ function ActivityLogEntryItem({
       <div className="flex items-start gap-4">
         {/* Timeline dot */}
         <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-muted">
-          <div
-            className={`h-3 w-3 rounded-full ${getDotColor(log.eventType)}`}
-          />
+          <div className={`h-3 w-3 rounded-full ${colors.dot}`} />
         </div>
 
         {/* Content */}
@@ -456,33 +473,32 @@ function ActivityLogEntryItem({
           >
             <div className="flex items-center gap-2">
               <span className="font-medium text-sm">{log.stageName}</span>
+              <span
+                className={`px-2 py-1 text-xs rounded-full ${colors.badge}`}
+              >
+                {log.eventType}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
               <span className="text-muted-foreground text-xs">
                 {formatDistanceToNowStrict(new Date(log.createdAt), {
                   addSuffix: true,
                 })}
               </span>
+              {isExpanded ? (
+                <ChevronDownIcon className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <ChevronRightIcon className="h-4 w-4 text-muted-foreground" />
+              )}
             </div>
-            {isExpanded ? (
-              <ChevronDownIcon className="h-4 w-4 text-muted-foreground" />
-            ) : (
-              <ChevronRightIcon className="h-4 w-4 text-muted-foreground" />
-            )}
           </button>
 
           {isExpanded && (
             <div className="mt-2 space-y-3 px-2">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <div className="text-muted-foreground">Event Type</div>
-                  <div className="font-mono">{log.eventType}</div>
-                </div>
-                <div>
                   <div className="text-muted-foreground">Executor</div>
                   <div className="font-mono">{log.executorName}</div>
-                </div>
-                <div>
-                  <div className="text-muted-foreground">Batch Index</div>
-                  <div className="font-mono">{log.batchIndex}</div>
                 </div>
                 <div>
                   <div className="text-muted-foreground">Created At</div>
