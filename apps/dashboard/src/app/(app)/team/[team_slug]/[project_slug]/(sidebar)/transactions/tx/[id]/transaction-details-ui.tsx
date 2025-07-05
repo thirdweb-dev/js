@@ -8,7 +8,7 @@ import {
   InfoIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { hexToNumber, isHex, type ThirdwebClient, toEther } from "thirdweb";
 import type { Project } from "@/api/projects";
 import { WalletAddress } from "@/components/blocks/wallet-address";
@@ -24,18 +24,20 @@ import { ChainIconClient } from "@/icons/ChainIcon";
 import { statusDetails } from "../../analytics/tx-table/tx-table-ui";
 import type { Transaction } from "../../analytics/tx-table/types";
 import type { ActivityLogEntry } from "../../lib/analytics";
-import { DecodedTransactionParams } from "./decoded-transaction-params";
+import type { DecodedTransactionData } from "./page";
 
 export function TransactionDetailsUI({
   transaction,
   client,
   activityLogs,
+  decodedTransactionData,
 }: {
   transaction: Transaction;
   teamSlug: string;
   client: ThirdwebClient;
   project: Project;
   activityLogs: ActivityLogEntry[];
+  decodedTransactionData: DecodedTransactionData;
 }) {
   const { idToChain } = useAllChainsData();
 
@@ -245,7 +247,10 @@ export function TransactionDetailsUI({
             </div>
           </CardContent>
         </Card>
-        <TransactionParametersCard transaction={transaction} />
+        <TransactionParametersCard
+          transaction={transaction}
+          decodedTransactionData={decodedTransactionData}
+        />
         {errorMessage && (
           <Card className="border-destructive">
             <CardHeader>
@@ -364,7 +369,11 @@ export function TransactionDetailsUI({
 // Transaction Parameters Card with Tabs
 function TransactionParametersCard({
   transaction,
-}: { transaction: Transaction }) {
+  decodedTransactionData,
+}: {
+  transaction: Transaction;
+  decodedTransactionData: DecodedTransactionData;
+}) {
   const [activeTab, setActiveTab] = useState<"decoded" | "raw">("decoded");
 
   return (
@@ -390,15 +399,7 @@ function TransactionParametersCard({
         />
 
         {activeTab === "decoded" ? (
-          <Suspense
-            fallback={
-              <div className="text-sm text-muted-foreground">
-                Decoding transaction data...
-              </div>
-            }
-          >
-            <DecodedTransactionParams transaction={transaction} />
-          </Suspense>
+          <DecodedTransactionDisplay decodedData={decodedTransactionData} />
         ) : (
           <div>
             {transaction.transactionParams &&
@@ -416,6 +417,42 @@ function TransactionParametersCard({
         )}
       </CardContent>
     </Card>
+  );
+}
+
+// Client component to display decoded transaction data
+function DecodedTransactionDisplay({
+  decodedData,
+}: {
+  decodedData: DecodedTransactionData;
+}) {
+  if (!decodedData) {
+    return (
+      <p className="text-muted-foreground text-sm">
+        Unable to decode transaction data. The contract may not have verified
+        metadata available.
+      </p>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <div className="text-muted-foreground text-sm">Contract Name</div>
+        <div className="font-mono text-sm">{decodedData.contractName}</div>
+      </div>
+      <div>
+        <div className="text-muted-foreground text-sm">Function Name</div>
+        <div className="font-mono text-sm">{decodedData.functionName}</div>
+      </div>
+      <div>
+        <div className="text-muted-foreground text-sm">Function Arguments</div>
+        <CodeClient
+          code={JSON.stringify(decodedData.functionArgs, null, 2)}
+          lang="json"
+        />
+      </div>
+    </div>
   );
 }
 

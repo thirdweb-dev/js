@@ -1,13 +1,129 @@
 import { loginRedirect } from "@app/login/loginRedirect";
 import { notFound, redirect } from "next/navigation";
+import { getContract } from "thirdweb";
+import { defineChain } from "thirdweb/chains";
+import { getCompilerMetadata } from "thirdweb/contract";
+import { decodeFunctionData, toFunctionSelector } from "thirdweb/utils";
+import type { AbiFunction } from "abitype";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import {
   getSingleTransaction,
   getTransactionActivityLogs,
 } from "../../lib/analytics";
+import type { Transaction } from "../../analytics/tx-table/types";
 import { TransactionDetailsUI } from "./transaction-details-ui";
+
+type AbiItem =
+  | AbiFunction
+  | {
+      type: string;
+      name?: string;
+    };
+
+export type DecodedTransactionData = {
+  contractName: string;
+  functionName: string;
+  functionArgs: Record<string, unknown>;
+} | null;
+
+async function decodeTransactionData(
+  transaction: Transaction,
+): Promise<DecodedTransactionData> {
+  try {
+    // Check if we have transaction parameters
+    if (
+      !transaction.transactionParams ||
+      transaction.transactionParams.length === 0
+    ) {
+      return null;
+    }
+
+    // Get the first transaction parameter (assuming single transaction)
+    const txParam = transaction.transactionParams[0];
+    if (!txParam || !txParam.to || !txParam.data) {
+      return null;
+    }
+
+    // Ensure we have a chainId
+    if (!transaction.chainId) {
+      return null;
+    }
+
+    const chainId = parseInt(transaction.chainId);
+
+    // Create contract instance
+    const contract = getContract({
+      client: serverThirdwebClient,
+      address: txParam.to,
+      chain: defineChain(chainId),
+    });
+
+    // Fetch compiler metadata
+    const compilerMetadata = await getCompilerMetadata(contract);
+
+    if (!compilerMetadata || !compilerMetadata.abi) {
+      return null;
+    }
+
+    const contractName = compilerMetadata.name || "Unknown Contract";
+    const abi = compilerMetadata.abi;
+
+    // Extract function selector from transaction data (first 4 bytes)
+    const functionSelector = txParam.data.slice(0, 10) as `0x${string}`;
+
+    // Find matching function in ABI
+    const functions = (abi as readonly AbiItem[]).filter(
+      (item): item is AbiFunction => item.type === "function",
+    );
+    let matchingFunction: AbiFunction | null = null;
+
+    for (const func of functions) {
+      const selector = toFunctionSelector(func);
+      if (selector === functionSelector) {
+        matchingFunction = func;
+        break;
+      }
+    }
+
+    if (!matchingFunction) {
+      return null;
+    }
+
+    const functionName = matchingFunction.name;
+
+    // Decode function data
+    const decodedData = (await decodeFunctionData({
+      contract: getContract({
+        ...contract,
+        abi: [matchingFunction],
+      }),
+      data: txParam.data,
+    })) as { args: readonly unknown[] };
+
+    // Create a clean object for display
+    const functionArgs: Record<string, unknown> = {};
+    if (matchingFunction.inputs && decodedData.args) {
+      for (let index = 0; index < matchingFunction.inputs.length; index++) {
+        const input = matchingFunction.inputs[index];
+        if (input) {
+          functionArgs[input.name || `arg${index}`] = decodedData.args[index];
+        }
+      }
+    }
+
+    return {
+      contractName,
+      functionName,
+      functionArgs,
+    };
+  } catch (error) {
+    console.error("Error decoding transaction:", error);
+    return null;
+  }
+}
 
 export default async function TransactionPage({
   params,
@@ -51,6 +167,9 @@ export default async function TransactionPage({
     notFound();
   }
 
+  // Decode transaction data on the server
+  const decodedTransactionData = await decodeTransactionData(transactionData);
+
   return (
     <div className="space-y-6 p-2">
       <TransactionDetailsUI
@@ -59,6 +178,7 @@ export default async function TransactionPage({
         project={project}
         teamSlug={team_slug}
         transaction={transactionData}
+        decodedTransactionData={decodedTransactionData}
       />
     </div>
   );
