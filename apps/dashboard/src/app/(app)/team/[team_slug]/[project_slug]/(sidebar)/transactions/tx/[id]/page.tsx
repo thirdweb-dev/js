@@ -1,10 +1,14 @@
 import { loginRedirect } from "@app/login/loginRedirect";
 import type { AbiFunction } from "abitype";
 import { notFound, redirect } from "next/navigation";
-import { getContract } from "thirdweb";
-import { defineChain } from "thirdweb/chains";
+import { getContract, toTokens } from "thirdweb";
+import { defineChain, getChainMetadata } from "thirdweb/chains";
 import { getCompilerMetadata } from "thirdweb/contract";
-import { decodeFunctionData, toFunctionSelector } from "thirdweb/utils";
+import {
+  decodeFunctionData,
+  shortenAddress,
+  toFunctionSelector,
+} from "thirdweb/utils";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
@@ -26,6 +30,7 @@ type AbiItem =
 export type DecodedTransactionData = {
   chainId: number;
   contractAddress: string;
+  value: string;
   contractName: string;
   functionName: string;
   functionArgs: Record<string, unknown>;
@@ -37,6 +42,7 @@ async function decodeSingleTransactionParam(
   txParam: {
     to: string;
     data: `0x${string}`;
+    value: string;
   },
   chainId: number,
 ): Promise<DecodedTransactionData> {
@@ -45,15 +51,32 @@ async function decodeSingleTransactionParam(
       return null;
     }
 
+    // eslint-disable-next-line no-restricted-syntax
+    const chain = defineChain(chainId);
+
     // Create contract instance
     const contract = getContract({
       address: txParam.to,
-      // eslint-disable-next-line no-restricted-syntax
-      chain: defineChain(chainId),
+      chain,
       client: serverThirdwebClient,
     });
 
     // Fetch compiler metadata
+    const chainMetadata = await getChainMetadata(chain);
+
+    const txValue = `${txParam.value ? toTokens(BigInt(txParam.value), chainMetadata.nativeCurrency.decimals) : "0"} ${chainMetadata.nativeCurrency.symbol}`;
+
+    if (txParam.data === "0x") {
+      return {
+        chainId,
+        contractAddress: txParam.to,
+        contractName: shortenAddress(txParam.to),
+        functionArgs: {},
+        functionName: "Transfer",
+        value: txValue,
+      };
+    }
+
     const compilerMetadata = await getCompilerMetadata(contract);
 
     if (!compilerMetadata || !compilerMetadata.abi) {
@@ -112,6 +135,7 @@ async function decodeSingleTransactionParam(
       contractName,
       functionArgs,
       functionName,
+      value: txValue,
     };
   } catch (error) {
     console.error("Error decoding transaction param:", error);

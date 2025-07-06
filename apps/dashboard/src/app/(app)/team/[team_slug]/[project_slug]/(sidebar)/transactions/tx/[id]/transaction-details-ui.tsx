@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { hexToNumber, isHex, type ThirdwebClient, toEther } from "thirdweb";
-import { stringify,shortenAddress } from "thirdweb/utils";
+import { stringify } from "thirdweb/utils";
 import type { Project } from "@/api/projects";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
@@ -453,12 +453,9 @@ function DecodedTransactionListDisplay({
     <div className="space-y-6">
       {decodedDataList.map(
         (decodedData: DecodedTransactionData, index: number) => {
-          if (!decodedData) {
-            return null;
-          }
           return (
             <div
-              key={`transaction-${decodedData.contractName}-${decodedData.functionName}-${stringify(decodedData.functionArgs)}`}
+              key={`transaction-${index}-${decodedData?.contractName}-${decodedData?.functionName}-${stringify(decodedData?.functionArgs)}`}
             >
               {index > 0 && <div className="border-t border-border my-6" />}
               <DecodedTransactionDisplay
@@ -504,19 +501,27 @@ function DecodedTransactionDisplay({
     <div className="space-y-4">
       <div className="flex flex-row">
         <div className="flex flex-col flex-1">
-          <div className="text-muted-foreground text-sm">Function</div>
-          <div className="font-mono text-sm">{decodedData.functionName}</div>
-        </div>
-        <div className="flex flex-col flex-1">
-          <div className="text-muted-foreground text-sm">Contract</div>
+          <div className="text-muted-foreground text-sm">Target</div>
           <div className="font-mono text-sm">
-            <Link href={`/${decodedData.chainId}/${decodedData.contractAddress}`} target="_blank" className="underline">
+            <Link
+              className="underline"
+              href={`/${decodedData.chainId}/${decodedData.contractAddress}`}
+              target="_blank"
+            >
               {decodedData.contractName}
             </Link>
           </div>
         </div>
+        <div className="flex flex-col flex-1">
+          <div className="text-muted-foreground text-sm">Function</div>
+          <div className="font-mono text-sm">{decodedData.functionName}</div>
+        </div>
+        <div className="flex flex-col flex-1">
+          <div className="text-muted-foreground text-sm">Value</div>
+          <div className="font-mono text-sm">{decodedData.value}</div>
+        </div>
       </div>
-      <div>
+      <div className="flex flex-col gap-2">
         <div className="text-muted-foreground text-sm">Arguments</div>
         <CodeClient
           code={stringify(decodedData.functionArgs, null, 2)}
