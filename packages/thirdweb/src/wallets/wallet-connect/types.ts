@@ -1,23 +1,7 @@
-// import type { UniversalProvider } from "@walletconnect/universal-provider"; // Types defined manually
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { AppMetadata } from "../types.js";
-
-// For UniversalProvider, we need to define the options manually since it has a different API
-export type UniversalProviderOptions = {
-  projectId: string;
-  relayUrl?: string;
-  metadata?: {
-    name: string;
-    description: string;
-    url: string;
-    icons: string[];
-  };
-  logger?: string;
-  storage?: Record<string, unknown>;
-  storageOptions?: Record<string, unknown>;
-};
 
 type WalletConnectQRCodeModalOptions = {
   themeMode?: "light" | "dark";

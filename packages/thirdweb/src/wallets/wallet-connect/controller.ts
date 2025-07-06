@@ -148,22 +148,19 @@ export async function connectWC(
     chainsToRequest.map((x) => Number(x.split(":")[1])),
     storage,
   );
-  // If session exists and chains are authorized, enable provider for required chain
+  const currentChainId = chainsToRequest[0]?.split(":")[1] || 1;
+  const providerChainId = normalizeChainId(currentChainId);
   const accounts: string[] = await provider.request(
     {
       method: "eth_requestAccounts",
       params: [],
     },
-    `eip155:${chainToRequest?.id}`,
+    `eip155:${providerChainId}`,
   );
   const address = accounts[0];
   if (!address) {
     throw new Error("No accounts found on provider.");
   }
-
-  // For UniversalProvider, get chainId from the session namespaces
-  const currentChainId = chainsToRequest[0]?.split(":")[1] || 1;
-  const providerChainId = normalizeChainId(currentChainId);
 
   const chain =
     options.chain && options.chain.id === providerChainId
