@@ -65,7 +65,7 @@ const storageKeys = {
  * @returns True if the wallet is a Wallet Connect wallet, false otherwise.
  */
 export function isWalletConnect(
-  wallet: Wallet<WalletId>
+  wallet: Wallet<WalletId>,
 ): wallet is Wallet<"walletConnect"> {
   return wallet.id === "walletConnect";
 }
@@ -78,7 +78,7 @@ export async function connectWC(
   emitter: WalletEmitter<WCSupportedWalletIds>,
   walletId: WCSupportedWalletIds | "walletConnect",
   storage: AsyncStorage,
-  sessionHandler?: (uri: string) => void
+  sessionHandler?: (uri: string) => void,
 ): Promise<ReturnType<typeof onConnect>> {
   const provider = await initProvider(options, walletId, sessionHandler);
   const wcOptions = options.walletConnect;
@@ -150,7 +150,7 @@ export async function connectWC(
 
   setRequestedChainsIds(
     chainsToRequest.map((x) => Number(x.split(":")[1])),
-    storage
+    storage,
   );
   const currentChainId = chainsToRequest[0]?.split(":")[1] || 1;
   const providerChainId = normalizeChainId(currentChainId);
@@ -159,7 +159,7 @@ export async function connectWC(
       method: "eth_requestAccounts",
       params: [],
     },
-    `eip155:${providerChainId}`
+    `eip155:${providerChainId}`,
   );
   const address = accounts[0];
   if (!address) {
@@ -199,7 +199,7 @@ export async function autoConnectWC(
   emitter: WalletEmitter<WCSupportedWalletIds>,
   walletId: WCSupportedWalletIds | "walletConnect",
   storage: AsyncStorage,
-  sessionHandler?: (uri: string) => void
+  sessionHandler?: (uri: string) => void,
 ): Promise<ReturnType<typeof onConnect>> {
   const savedConnectParams: SavedConnectParams | null = storage
     ? await getSavedConnectParamsFromStorage(storage, walletId)
@@ -340,7 +340,7 @@ function createAccount({
             },
           ],
         },
-        `eip155:${tx.chainId}`
+        `eip155:${tx.chainId}`,
       )) as Hex;
 
       trackTransaction({
@@ -372,7 +372,7 @@ function createAccount({
           method: "personal_sign",
           params: [messageToSign, this.address],
         },
-        `eip155:${chain.id}`
+        `eip155:${chain.id}`,
       );
     },
     async signTypedData(_data) {
@@ -401,7 +401,7 @@ function createAccount({
           method: "eth_signTypedData_v4",
           params: [this.address, typedData],
         },
-        `eip155:${chain.id}`
+        `eip155:${chain.id}`,
       );
     },
   };
@@ -415,7 +415,7 @@ function onConnect(
   provider: WCProvider,
   emitter: WalletEmitter<WCSupportedWalletIds>,
   storage: AsyncStorage,
-  client: ThirdwebClient
+  client: ThirdwebClient,
 ): [Account, Chain, DisconnectFn, SwitchChainFn] {
   const account = createAccount({ address, chain, client, provider });
 
@@ -489,7 +489,7 @@ async function switchChainWC(provider: WCProvider, chain: Chain) {
  */
 function setRequestedChainsIds(
   chains: number[] | undefined,
-  storage: AsyncStorage
+  storage: AsyncStorage,
 ) {
   storage?.setItem(storageKeys.requestedChains, stringify(chains));
 }
