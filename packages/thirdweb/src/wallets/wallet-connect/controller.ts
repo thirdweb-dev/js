@@ -11,10 +11,7 @@ import {
 } from "viem";
 import { trackTransaction } from "../../analytics/track/transaction.js";
 import type { Chain } from "../../chains/types.js";
-import {
-  getCachedChain,
-  getRpcUrlForChain,
-} from "../../chains/utils.js";
+import { getCachedChain, getRpcUrlForChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getAddress } from "../../utils/address.js";
 import {
@@ -473,10 +470,7 @@ function onConnect(
   ];
 }
 
-async function switchChainWC(
-  provider: WCProvider,
-  chain: Chain,
-) {
+async function switchChainWC(provider: WCProvider, chain: Chain) {
   const chainId = chain.id;
   try {
     provider.setDefaultChain(`eip155:${chainId}`);
