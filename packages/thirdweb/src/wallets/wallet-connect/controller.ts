@@ -45,6 +45,8 @@ import type { WCAutoConnectOptions, WCConnectOptions } from "./types.js";
 
 type WCProvider = InstanceType<typeof UniversalProvider>;
 
+let cachedProvider: WCProvider | null = null;
+
 type SavedConnectParams = {
   optionalChains?: Chain[];
   chain?: Chain;
@@ -63,7 +65,7 @@ const storageKeys = {
  * @returns True if the wallet is a Wallet Connect wallet, false otherwise.
  */
 export function isWalletConnect(
-  wallet: Wallet<WalletId>,
+  wallet: Wallet<WalletId>
 ): wallet is Wallet<"walletConnect"> {
   return wallet.id === "walletConnect";
 }
@@ -76,7 +78,7 @@ export async function connectWC(
   emitter: WalletEmitter<WCSupportedWalletIds>,
   walletId: WCSupportedWalletIds | "walletConnect",
   storage: AsyncStorage,
-  sessionHandler?: (uri: string) => void,
+  sessionHandler?: (uri: string) => void
 ): Promise<ReturnType<typeof onConnect>> {
   const provider = await initProvider(options, walletId, sessionHandler);
   const wcOptions = options.walletConnect;
@@ -121,32 +123,34 @@ export async function connectWC(
     optionalChains: optionalChains,
   });
 
-  // For UniversalProvider, we need to connect with namespaces
-  await provider.connect({
-    ...(wcOptions?.pairingTopic
-      ? { pairingTopic: wcOptions?.pairingTopic }
-      : {}),
-    namespaces: {
-      [NAMESPACE]: {
-        chains: chainsToRequest,
-        events: ["chainChanged", "accountsChanged"],
-        methods: [
-          "eth_sendTransaction",
-          "eth_signTransaction",
-          "eth_sign",
-          "personal_sign",
-          "eth_signTypedData",
-          "wallet_switchEthereumChain",
-          "wallet_addEthereumChain",
-        ],
-        rpcMap,
+  if (!provider.session) {
+    // For UniversalProvider, we need to connect with namespaces
+    await provider.connect({
+      ...(wcOptions?.pairingTopic
+        ? { pairingTopic: wcOptions?.pairingTopic }
+        : {}),
+      namespaces: {
+        [NAMESPACE]: {
+          chains: chainsToRequest,
+          events: ["chainChanged", "accountsChanged"],
+          methods: [
+            "eth_sendTransaction",
+            "eth_signTransaction",
+            "eth_sign",
+            "personal_sign",
+            "eth_signTypedData",
+            "wallet_switchEthereumChain",
+            "wallet_addEthereumChain",
+          ],
+          rpcMap,
+        },
       },
-    },
-  });
+    });
+  }
 
   setRequestedChainsIds(
     chainsToRequest.map((x) => Number(x.split(":")[1])),
-    storage,
+    storage
   );
   const currentChainId = chainsToRequest[0]?.split(":")[1] || 1;
   const providerChainId = normalizeChainId(currentChainId);
@@ -155,7 +159,7 @@ export async function connectWC(
       method: "eth_requestAccounts",
       params: [],
     },
-    `eip155:${providerChainId}`,
+    `eip155:${providerChainId}`
   );
   const address = accounts[0];
   if (!address) {
@@ -195,7 +199,7 @@ export async function autoConnectWC(
   emitter: WalletEmitter<WCSupportedWalletIds>,
   walletId: WCSupportedWalletIds | "walletConnect",
   storage: AsyncStorage,
-  sessionHandler?: (uri: string) => void,
+  sessionHandler?: (uri: string) => void
 ): Promise<ReturnType<typeof onConnect>> {
   const savedConnectParams: SavedConnectParams | null = storage
     ? await getSavedConnectParamsFromStorage(storage, walletId)
@@ -217,7 +221,6 @@ export async function autoConnectWC(
         },
     walletId,
     sessionHandler,
-    true, // is auto connect
   );
 
   // For UniversalProvider, get accounts from enable() method
@@ -246,8 +249,11 @@ async function initProvider(
   options: WCConnectOptions,
   walletId: WCSupportedWalletIds | "walletConnect",
   sessionRequestHandler?: (uri: string) => void | Promise<void>,
-  isAutoConnect = false,
 ) {
+  if (cachedProvider) {
+    return cachedProvider;
+  }
+
   const walletInfo = await getWalletInfo(walletId);
   const wcOptions = options.walletConnect;
   const { UniversalProvider } = await import(
@@ -277,18 +283,9 @@ async function initProvider(
       url: wcOptions?.appMetadata?.url || getDefaultAppMetadata().url,
     },
     projectId: wcOptions?.projectId || DEFAULT_PROJECT_ID,
-    relayUrl: "wss://relay.walletconnect.com",
   });
 
   provider.events.setMaxListeners(Number.POSITIVE_INFINITY);
-
-  // disconnect the provider if chains are stale when (if not auto connecting)
-  if (!isAutoConnect) {
-    // For UniversalProvider, we handle disconnection differently
-    if (provider.session) {
-      await provider.disconnect();
-    }
-  }
 
   if (walletId !== "walletConnect") {
     async function handleSessionRequest() {
@@ -307,8 +304,11 @@ async function initProvider(
     provider.on("session_request_sent", handleSessionRequest);
     provider.events.addListener("disconnect", () => {
       provider.off("session_request_sent", handleSessionRequest);
+      cachedProvider = null;
     });
   }
+
+  cachedProvider = provider;
 
   return provider;
 }
@@ -340,7 +340,7 @@ function createAccount({
             },
           ],
         },
-        `eip155:${tx.chainId}`,
+        `eip155:${tx.chainId}`
       )) as Hex;
 
       trackTransaction({
@@ -372,7 +372,7 @@ function createAccount({
           method: "personal_sign",
           params: [messageToSign, this.address],
         },
-        `eip155:${chain.id}`,
+        `eip155:${chain.id}`
       );
     },
     async signTypedData(_data) {
@@ -401,7 +401,7 @@ function createAccount({
           method: "eth_signTypedData_v4",
           params: [this.address, typedData],
         },
-        `eip155:${chain.id}`,
+        `eip155:${chain.id}`
       );
     },
   };
@@ -415,7 +415,7 @@ function onConnect(
   provider: WCProvider,
   emitter: WalletEmitter<WCSupportedWalletIds>,
   storage: AsyncStorage,
-  client: ThirdwebClient,
+  client: ThirdwebClient
 ): [Account, Chain, DisconnectFn, SwitchChainFn] {
   const account = createAccount({ address, chain, client, provider });
 
@@ -424,6 +424,7 @@ function onConnect(
     provider.removeListener("chainChanged", onChainChanged);
     provider.removeListener("disconnect", onDisconnect);
     await provider.disconnect();
+    cachedProvider = null;
   }
 
   function onDisconnect() {
@@ -488,7 +489,7 @@ async function switchChainWC(provider: WCProvider, chain: Chain) {
  */
 function setRequestedChainsIds(
   chains: number[] | undefined,
-  storage: AsyncStorage,
+  storage: AsyncStorage
 ) {
   storage?.setItem(storageKeys.requestedChains, stringify(chains));
 }
