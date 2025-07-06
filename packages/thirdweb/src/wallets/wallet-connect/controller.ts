@@ -13,7 +13,6 @@ import { trackTransaction } from "../../analytics/track/transaction.js";
 import type { Chain } from "../../chains/types.js";
 import {
   getCachedChain,
-  getChainMetadata,
   getRpcUrlForChain,
 } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
@@ -40,7 +39,6 @@ import type {
   Wallet,
 } from "../interfaces/wallet.js";
 import type { DisconnectFn, SwitchChainFn } from "../types.js";
-import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
@@ -55,8 +53,6 @@ type SavedConnectParams = {
   chain?: Chain;
   pairingTopic?: string;
 };
-
-const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
 
 const storageKeys = {
   lastUsedChainId: "tw.wc.lastUsedChainId",
@@ -275,13 +271,6 @@ async function initProvider(
     }
   }
 
-  // For UniversalProvider, chain configuration is handled during session establishment
-  // const { requiredChain, optionalChains: chainsToRequest } = getChainsToRequest({
-  //   chain: chainToRequest,
-  //   client: options.client,
-  //   optionalChains: optionalChains,
-  // });
-
   const provider = await UniversalProvider.init({
     metadata: {
       description:
@@ -480,74 +469,17 @@ function onConnect(
     account,
     chain,
     disconnect,
-    (newChain) => switchChainWC(provider, newChain, storage),
+    (newChain) => switchChainWC(provider, newChain),
   ];
-}
-
-// Storage utils  -----------------------------------------------------------------------------------------------
-
-function getNamespaceMethods(provider: WCProvider) {
-  return provider.session?.namespaces[NAMESPACE]?.methods || [];
-}
-
-function getNamespaceChainsIds(provider: WCProvider): number[] {
-  const chainIds = provider.session?.namespaces[NAMESPACE]?.chains?.map(
-    (chain: string) => Number.parseInt(chain.split(":")[1] || ""),
-  );
-
-  return chainIds ?? [];
 }
 
 async function switchChainWC(
   provider: WCProvider,
   chain: Chain,
-  storage: AsyncStorage,
 ) {
   const chainId = chain.id;
   try {
-    const namespaceChains = getNamespaceChainsIds(provider);
-    const namespaceMethods = getNamespaceMethods(provider);
-    const isChainApproved = namespaceChains.includes(chainId);
-
     provider.setDefaultChain(`eip155:${chainId}`);
-
-    if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
-      const apiChain = await getChainMetadata(chain);
-
-      const blockExplorerUrls = [
-        ...new Set([
-          ...(chain.blockExplorers?.map((x) => x.url) || []),
-          ...(apiChain.explorers?.map((x) => x.url) || []),
-        ]),
-      ];
-
-      await provider.request(
-        {
-          method: ADD_ETH_CHAIN_METHOD,
-          params: [
-            {
-              blockExplorerUrls:
-                blockExplorerUrls.length > 0 ? blockExplorerUrls : undefined,
-              chainId: numberToHex(apiChain.chainId),
-              chainName: apiChain.name,
-              nativeCurrency: apiChain.nativeCurrency, // no clientId on purpose
-              rpcUrls: getValidPublicRPCUrl(apiChain),
-            },
-          ],
-        },
-        `eip155:${chainId}`,
-      );
-      const requestedChains = await getRequestedChainsIds(storage);
-      requestedChains.push(chainId);
-      setRequestedChainsIds(requestedChains, storage);
-    }
-    await provider.request(
-      {
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: numberToHex(chainId) }],
-      },
-      `eip155:${8453}`,
-    );
   } catch (error) {
     const message =
       typeof error === "string" ? error : (error as ProviderRpcError)?.message;
@@ -568,15 +500,6 @@ function setRequestedChainsIds(
   storage: AsyncStorage,
 ) {
   storage?.setItem(storageKeys.requestedChains, stringify(chains));
-}
-
-/**
- * Get the last requested chains from the storage.
- * @internal
- */
-async function getRequestedChainsIds(storage: AsyncStorage): Promise<number[]> {
-  const data = await storage.getItem(storageKeys.requestedChains);
-  return data ? JSON.parse(data) : [];
 }
 
 function getChainsToRequest(options: {
