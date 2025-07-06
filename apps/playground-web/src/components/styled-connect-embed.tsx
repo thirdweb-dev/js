@@ -36,17 +36,17 @@ export function StyledConnectEmbed(
   ) : (
     <ConnectEmbed
       chains={[
+        base,
+        ethereum,
+        polygon,
+        optimism,
+        arbitrum,
         sepolia,
         baseSepolia,
         optimismSepolia,
         polygonAmoy,
         arbitrumSepolia,
         abstract,
-        base,
-        ethereum,
-        polygon,
-        optimism,
-        arbitrum,
       ]}
       client={THIRDWEB_CLIENT}
       theme={theme === "light" ? "light" : "dark"}

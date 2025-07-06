@@ -129,41 +129,47 @@ export async function connectWC(
   });
 
   // For UniversalProvider, we need to connect with namespaces
-  if (provider.session) {
-    await provider.connect({
-      ...(wcOptions?.pairingTopic
-        ? { pairingTopic: wcOptions?.pairingTopic }
-        : {}),
-      namespaces: {
-        [NAMESPACE]: {
-          chains: chainsToRequest,
-          events: ["chainChanged", "accountsChanged"],
-          methods: [
-            "eth_sendTransaction",
-            "eth_signTransaction",
-            "eth_sign",
-            "personal_sign",
-            "eth_signTypedData",
-          ],
-          rpcMap,
-        },
+  await provider.connect({
+    ...(wcOptions?.pairingTopic
+      ? { pairingTopic: wcOptions?.pairingTopic }
+      : {}),
+    namespaces: {
+      [NAMESPACE]: {
+        chains: chainsToRequest,
+        events: ["chainChanged", "accountsChanged"],
+        methods: [
+          "eth_sendTransaction",
+          "eth_signTransaction",
+          "eth_sign",
+          "personal_sign",
+          "eth_signTypedData",
+          "wallet_switchEthereumChain",
+          "wallet_addEthereumChain",
+        ],
+        rpcMap,
       },
-    });
-  }
+    },
+  });
 
   setRequestedChainsIds(
     chainsToRequest.map((x) => Number(x.split(":")[1])),
     storage,
   );
   // If session exists and chains are authorized, enable provider for required chain
-  const addresses = await provider.enable();
-  const address = addresses[0];
+  const accounts: string[] = await provider.request(
+    {
+      method: "eth_requestAccounts",
+      params: [],
+    },
+    `eip155:${chainToRequest?.id}`,
+  );
+  const address = accounts[0];
   if (!address) {
     throw new Error("No accounts found on provider.");
   }
 
   // For UniversalProvider, get chainId from the session namespaces
-  const currentChainId = chainsToRequest[0] || 1;
+  const currentChainId = chainsToRequest[0]?.split(":")[1] || 1;
   const providerChainId = normalizeChainId(currentChainId);
 
   const chain =
@@ -328,26 +334,31 @@ function createAccount({
   provider,
   address,
   client,
+  chain,
 }: {
   provider: WCProvider;
   address: string;
   client: ThirdwebClient;
+  chain: Chain;
 }) {
   const account: Account = {
     address: getAddress(address),
     async sendTransaction(tx: SendTransactionOption) {
-      const transactionHash = (await provider.request({
-        method: "eth_sendTransaction",
-        params: [
-          {
-            data: tx.data,
-            from: getAddress(address),
-            gas: tx.gas ? numberToHex(tx.gas) : undefined,
-            to: tx.to as Address,
-            value: tx.value ? numberToHex(tx.value) : undefined,
-          },
-        ],
-      })) as Hex;
+      const transactionHash = (await provider.request(
+        {
+          method: "eth_sendTransaction",
+          params: [
+            {
+              data: tx.data,
+              from: getAddress(address),
+              gas: tx.gas ? numberToHex(tx.gas) : undefined,
+              to: tx.to as Address,
+              value: tx.value ? numberToHex(tx.value) : undefined,
+            },
+          ],
+        },
+        `eip155:${tx.chainId}`,
+      )) as Hex;
 
       trackTransaction({
         chainId: tx.chainId,
@@ -373,10 +384,13 @@ function createAccount({
         }
         return message.raw;
       })();
-      return provider.request({
-        method: "personal_sign",
-        params: [messageToSign, this.address],
-      });
+      return provider.request(
+        {
+          method: "personal_sign",
+          params: [messageToSign, this.address],
+        },
+        `eip155:${chain.id}`,
+      );
     },
     async signTypedData(_data) {
       const data = parseTypedData(_data);
@@ -399,10 +413,13 @@ function createAccount({
         types,
       });
 
-      return await provider.request({
-        method: "eth_signTypedData_v4",
-        params: [this.address, typedData],
-      });
+      return await provider.request(
+        {
+          method: "eth_signTypedData_v4",
+          params: [this.address, typedData],
+        },
+        `eip155:${chain.id}`,
+      );
     },
   };
 
@@ -417,7 +434,7 @@ function onConnect(
   storage: AsyncStorage,
   client: ThirdwebClient,
 ): [Account, Chain, DisconnectFn, SwitchChainFn] {
-  const account = createAccount({ address, client, provider });
+  const account = createAccount({ address, chain, client, provider });
 
   async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
@@ -437,6 +454,7 @@ function onConnect(
     if (accounts[0]) {
       const newAccount = createAccount({
         address: getAddress(accounts[0]),
+        chain,
         client,
         provider,
       });
@@ -491,6 +509,8 @@ async function switchChainWC(
     const namespaceMethods = getNamespaceMethods(provider);
     const isChainApproved = namespaceChains.includes(chainId);
 
+    provider.setDefaultChain(`eip155:${chainId}`);
+
     if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
       const apiChain = await getChainMetadata(chain);
 
@@ -501,27 +521,33 @@ async function switchChainWC(
         ]),
       ];
 
-      await provider.request({
-        method: ADD_ETH_CHAIN_METHOD,
-        params: [
-          {
-            blockExplorerUrls:
-              blockExplorerUrls.length > 0 ? blockExplorerUrls : undefined,
-            chainId: numberToHex(apiChain.chainId),
-            chainName: apiChain.name,
-            nativeCurrency: apiChain.nativeCurrency, // no clientId on purpose
-            rpcUrls: getValidPublicRPCUrl(apiChain),
-          },
-        ],
-      });
+      await provider.request(
+        {
+          method: ADD_ETH_CHAIN_METHOD,
+          params: [
+            {
+              blockExplorerUrls:
+                blockExplorerUrls.length > 0 ? blockExplorerUrls : undefined,
+              chainId: numberToHex(apiChain.chainId),
+              chainName: apiChain.name,
+              nativeCurrency: apiChain.nativeCurrency, // no clientId on purpose
+              rpcUrls: getValidPublicRPCUrl(apiChain),
+            },
+          ],
+        },
+        `eip155:${chainId}`,
+      );
       const requestedChains = await getRequestedChainsIds(storage);
       requestedChains.push(chainId);
       setRequestedChainsIds(requestedChains, storage);
     }
-    await provider.request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chainId: numberToHex(chainId) }],
-    });
+    await provider.request(
+      {
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: numberToHex(chainId) }],
+      },
+      `eip155:${8453}`,
+    );
   } catch (error) {
     const message =
       typeof error === "string" ? error : (error as ProviderRpcError)?.message;
