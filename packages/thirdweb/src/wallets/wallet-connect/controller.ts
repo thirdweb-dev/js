@@ -58,8 +58,6 @@ type SavedConnectParams = {
 
 const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
 
-// const defaultShowQrModal = true; // Unused in UniversalProvider
-
 const storageKeys = {
   lastUsedChainId: "tw.wc.lastUsedChainId",
   requestedChains: "tw.wc.requestedChains",
@@ -124,13 +122,11 @@ export async function connectWC(
   }
 
   // For UniversalProvider, we still need chain configuration for session management
-  const { requiredChain, optionalChains: chainsToRequest } = getChainsToRequest(
-    {
-      chain: chainToRequest,
-      client: options.client,
-      optionalChains: optionalChains,
-    },
-  );
+  const { chains: chainsToRequest, rpcMap } = getChainsToRequest({
+    chain: chainToRequest,
+    client: options.client,
+    optionalChains: optionalChains,
+  });
 
   // For UniversalProvider, we need to connect with namespaces
   if (provider.session) {
@@ -138,10 +134,27 @@ export async function connectWC(
       ...(wcOptions?.pairingTopic
         ? { pairingTopic: wcOptions?.pairingTopic }
         : {}),
+      namespaces: {
+        [NAMESPACE]: {
+          chains: chainsToRequest,
+          events: ["chainChanged", "accountsChanged"],
+          methods: [
+            "eth_sendTransaction",
+            "eth_signTransaction",
+            "eth_sign",
+            "personal_sign",
+            "eth_signTypedData",
+          ],
+          rpcMap,
+        },
+      },
     });
   }
 
-  setRequestedChainsIds(chainsToRequest, storage);
+  setRequestedChainsIds(
+    chainsToRequest.map((x) => Number(x.split(":")[1])),
+    storage,
+  );
   // If session exists and chains are authorized, enable provider for required chain
   const addresses = await provider.enable();
   const address = addresses[0];
@@ -150,7 +163,7 @@ export async function connectWC(
   }
 
   // For UniversalProvider, get chainId from the session namespaces
-  const currentChainId = requiredChain?.id || chainsToRequest[0] || 1;
+  const currentChainId = chainsToRequest[0] || 1;
   const providerChainId = normalizeChainId(currentChainId);
 
   const chain =
@@ -264,8 +277,6 @@ async function initProvider(
   // });
 
   const provider = await UniversalProvider.init({
-    projectId: wcOptions?.projectId || DEFAULT_PROJECT_ID,
-    relayUrl: "wss://relay.walletconnect.com",
     metadata: {
       description:
         wcOptions?.appMetadata?.description ||
@@ -276,6 +287,8 @@ async function initProvider(
       name: wcOptions?.appMetadata?.name || getDefaultAppMetadata().name,
       url: wcOptions?.appMetadata?.url || getDefaultAppMetadata().url,
     },
+    projectId: wcOptions?.projectId || DEFAULT_PROJECT_ID,
+    relayUrl: "wss://relay.walletconnect.com",
   });
 
   provider.events.setMaxListeners(Number.POSITIVE_INFINITY);
@@ -540,26 +553,23 @@ async function getRequestedChainsIds(storage: AsyncStorage): Promise<number[]> {
   return data ? JSON.parse(data) : [];
 }
 
-type ArrayOneOrMore<T> = {
-  0: T;
-} & Array<T>;
-
 function getChainsToRequest(options: {
   chain?: Chain;
   optionalChains?: Chain[];
   client: ThirdwebClient;
 }): {
   rpcMap: Record<number, string>;
-  requiredChain: Chain | undefined;
-  optionalChains: ArrayOneOrMore<number>;
+  chains: string[];
 } {
   const rpcMap: Record<number, string> = {};
+  const chainIds: number[] = [];
 
   if (options.chain) {
     rpcMap[options.chain.id] = getRpcUrlForChain({
       chain: options.chain,
       client: options.client,
     });
+    chainIds.push(options.chain.id);
   }
 
   // limit optional chains to 10
@@ -570,18 +580,16 @@ function getChainsToRequest(options: {
       chain: chain,
       client: options.client,
     });
+    chainIds.push(chain.id);
   }
 
   if (!options.chain && optionalChains.length === 0) {
     rpcMap[1] = getCachedChain(1).rpc;
+    chainIds.push(1);
   }
 
   return {
-    optionalChains:
-      optionalChains.length > 0
-        ? (optionalChains.map((x) => x.id) as ArrayOneOrMore<number>)
-        : [1],
-    requiredChain: options.chain ? options.chain : undefined,
+    chains: chainIds.map((x) => `eip155:${x}`),
     rpcMap,
   };
 }

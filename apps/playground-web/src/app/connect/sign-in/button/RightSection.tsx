@@ -3,10 +3,15 @@ import { XIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
+  abstract,
+  arbitrum,
   arbitrumSepolia,
+  base,
   baseSepolia,
-  defineChain,
+  ethereum,
+  optimism,
   optimismSepolia,
+  polygon,
   sepolia,
 } from "thirdweb/chains";
 import {
@@ -115,7 +120,12 @@ export function RightSection(props: {
       auth={connectOptions.enableAuth ? playgroundAuth : undefined}
       autoConnect={false}
       chains={[
-        defineChain(578),
+        base,
+        ethereum,
+        polygon,
+        optimism,
+        arbitrum,
+        abstract,
         sepolia,
         baseSepolia,
         optimismSepolia,
