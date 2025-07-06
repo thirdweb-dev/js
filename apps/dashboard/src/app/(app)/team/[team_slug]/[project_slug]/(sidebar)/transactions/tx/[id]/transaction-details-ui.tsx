@@ -10,6 +10,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { hexToNumber, isHex, type ThirdwebClient, toEther } from "thirdweb";
+import { stringify } from "thirdweb/utils";
 import type { Project } from "@/api/projects";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
@@ -17,23 +18,27 @@ import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CodeClient } from "@/components/ui/code/code.client";
+import { TabButtons } from "@/components/ui/tabs";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { ChainIconClient } from "@/icons/ChainIcon";
 import { statusDetails } from "../../analytics/tx-table/tx-table-ui";
 import type { Transaction } from "../../analytics/tx-table/types";
 import type { ActivityLogEntry } from "../../lib/analytics";
+import type { DecodedTransactionData, DecodedTransactionResult } from "./page";
 
 export function TransactionDetailsUI({
   transaction,
   client,
   activityLogs,
+  decodedTransactionData,
 }: {
   transaction: Transaction;
   teamSlug: string;
   client: ThirdwebClient;
   project: Project;
   activityLogs: ActivityLogEntry[];
+  decodedTransactionData: DecodedTransactionResult;
 }) {
   const { idToChain } = useAllChainsData();
 
@@ -243,24 +248,10 @@ export function TransactionDetailsUI({
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Transaction Parameters</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {transaction.transactionParams &&
-            transaction.transactionParams.length > 0 ? (
-              <CodeClient
-                code={JSON.stringify(transaction.transactionParams, null, 2)}
-                lang="json"
-              />
-            ) : (
-              <p className="text-muted-foreground text-sm">
-                No transaction parameters available
-              </p>
-            )}
-          </CardContent>
-        </Card>
+        <TransactionParametersCard
+          decodedTransactionData={decodedTransactionData}
+          transaction={transaction}
+        />
         {errorMessage && (
           <Card className="border-destructive">
             <CardHeader>
@@ -271,7 +262,7 @@ export function TransactionDetailsUI({
             <CardContent>
               {errorDetails ? (
                 <CodeClient
-                  code={JSON.stringify(errorDetails, null, 2)}
+                  code={stringify(errorDetails, null, 2)}
                   lang="json"
                 />
               ) : (
@@ -373,6 +364,171 @@ export function TransactionDetailsUI({
         <ActivityLogCard activityLogs={activityLogs} />
       </div>
     </>
+  );
+}
+
+// Transaction Parameters Card with Tabs
+function TransactionParametersCard({
+  transaction,
+  decodedTransactionData,
+}: {
+  transaction: Transaction;
+  decodedTransactionData: DecodedTransactionResult;
+}) {
+  const [activeTab, setActiveTab] = useState<"decoded" | "raw">("decoded");
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg">Transaction Parameters</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <TabButtons
+          tabClassName="!text-sm"
+          tabs={[
+            {
+              isActive: activeTab === "decoded",
+              name: "Decoded",
+              onClick: () => setActiveTab("decoded"),
+            },
+            {
+              isActive: activeTab === "raw",
+              name: "Raw",
+              onClick: () => setActiveTab("raw"),
+            },
+          ]}
+        />
+
+        {activeTab === "decoded" ? (
+          <DecodedTransactionListDisplay
+            decodedDataList={decodedTransactionData}
+            onSwitchToRaw={() => setActiveTab("raw")}
+          />
+        ) : (
+          <div>
+            {transaction.transactionParams &&
+            transaction.transactionParams.length > 0 ? (
+              <CodeClient
+                code={stringify(transaction.transactionParams, null, 2)}
+                lang="json"
+              />
+            ) : (
+              <p className="text-muted-foreground text-sm">
+                No transaction parameters available
+              </p>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+// Client component to display list of decoded transaction data
+function DecodedTransactionListDisplay({
+  decodedDataList,
+  onSwitchToRaw,
+}: {
+  decodedDataList: DecodedTransactionResult;
+  onSwitchToRaw: () => void;
+}) {
+  if (decodedDataList.length === 0) {
+    return (
+      <p className="text-muted-foreground text-sm">
+        Unable to decode transaction data. The contract may not have verified
+        metadata available.{" "}
+        <button
+          className="text-foreground underline-offset-4 hover:underline cursor-pointer"
+          onClick={onSwitchToRaw}
+          type="button"
+        >
+          View raw transaction data
+        </button>
+        .
+      </p>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {decodedDataList.map(
+        (decodedData: DecodedTransactionData, index: number) => {
+          return (
+            <div
+              key={`transaction-${index}-${decodedData?.contractName}-${decodedData?.functionName}-${stringify(decodedData?.functionArgs)}`}
+            >
+              {index > 0 && <div className="border-t border-border my-6" />}
+              <DecodedTransactionDisplay
+                decodedData={decodedData}
+                onSwitchToRaw={onSwitchToRaw}
+              />
+            </div>
+          );
+        },
+      )}
+    </div>
+  );
+}
+
+// Client component to display decoded transaction data
+function DecodedTransactionDisplay({
+  decodedData,
+  onSwitchToRaw,
+}: {
+  decodedData: DecodedTransactionData;
+  onSwitchToRaw: () => void;
+}) {
+  if (!decodedData) {
+    return (
+      <div className="space-y-4">
+        <p className="text-muted-foreground text-sm">
+          Unable to decode transaction data. The contract may not have verified
+          metadata available.{" "}
+          <button
+            className="text-foreground underline-offset-4 hover:underline cursor-pointer"
+            onClick={onSwitchToRaw}
+            type="button"
+          >
+            View raw transaction data
+          </button>
+          .
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-row">
+        <div className="flex flex-col flex-1">
+          <div className="text-muted-foreground text-sm">Target</div>
+          <div className="font-mono text-sm">
+            <Link
+              className="underline"
+              href={`/${decodedData.chainId}/${decodedData.contractAddress}`}
+              target="_blank"
+            >
+              {decodedData.contractName}
+            </Link>
+          </div>
+        </div>
+        <div className="flex flex-col flex-1">
+          <div className="text-muted-foreground text-sm">Function</div>
+          <div className="font-mono text-sm">{decodedData.functionName}</div>
+        </div>
+        <div className="flex flex-col flex-1">
+          <div className="text-muted-foreground text-sm">Value</div>
+          <div className="font-mono text-sm">{decodedData.value}</div>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2">
+        <div className="text-muted-foreground text-sm">Arguments</div>
+        <CodeClient
+          code={stringify(decodedData.functionArgs, null, 2)}
+          lang="json"
+        />
+      </div>
+    </div>
   );
 }
 
