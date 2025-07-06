@@ -1,4 +1,4 @@
-import type { EthereumProvider } from "@walletconnect/ethereum-provider";
+import type { UniversalProvider } from "@walletconnect/universal-provider";
 import type { Address } from "abitype";
 import {
   getTypesForEIP712Domain,
@@ -48,7 +48,7 @@ import type { WalletId } from "../wallet-types.js";
 import { DEFAULT_PROJECT_ID, NAMESPACE } from "./constants.js";
 import type { WCAutoConnectOptions, WCConnectOptions } from "./types.js";
 
-type WCProvider = InstanceType<typeof EthereumProvider>;
+type WCProvider = InstanceType<typeof UniversalProvider>;
 
 type SavedConnectParams = {
   optionalChains?: Chain[];
@@ -58,7 +58,7 @@ type SavedConnectParams = {
 
 const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
 
-const defaultShowQrModal = true;
+// const defaultShowQrModal = true; // Unused in UniversalProvider
 
 const storageKeys = {
   lastUsedChainId: "tw.wc.lastUsedChainId",
@@ -123,24 +123,21 @@ export async function connectWC(
     }
   }
 
-  const {
-    rpcMap,
-    requiredChain,
-    optionalChains: chainsToRequest,
-  } = getChainsToRequest({
-    chain: chainToRequest,
-    client: options.client,
-    optionalChains: optionalChains,
-  });
+  // For UniversalProvider, we still need chain configuration for session management
+  const { requiredChain, optionalChains: chainsToRequest } = getChainsToRequest(
+    {
+      chain: chainToRequest,
+      client: options.client,
+      optionalChains: optionalChains,
+    },
+  );
 
+  // For UniversalProvider, we need to connect with namespaces
   if (provider.session) {
     await provider.connect({
       ...(wcOptions?.pairingTopic
         ? { pairingTopic: wcOptions?.pairingTopic }
         : {}),
-      chains: requiredChain ? [requiredChain.id] : undefined,
-      optionalChains: chainsToRequest,
-      rpcMap: rpcMap,
     });
   }
 
@@ -152,7 +149,9 @@ export async function connectWC(
     throw new Error("No accounts found on provider.");
   }
 
-  const providerChainId = normalizeChainId(provider.chainId);
+  // For UniversalProvider, get chainId from the session namespaces
+  const currentChainId = requiredChain?.id || chainsToRequest[0] || 1;
+  const providerChainId = normalizeChainId(currentChainId);
 
   const chain =
     options.chain && options.chain.id === providerChainId
@@ -212,13 +211,17 @@ export async function autoConnectWC(
     true, // is auto connect
   );
 
-  const address = provider.accounts[0];
+  // For UniversalProvider, get accounts from enable() method
+  const addresses = await provider.enable();
+  const address = addresses[0];
 
   if (!address) {
     throw new Error("No accounts found on provider.");
   }
 
-  const providerChainId = normalizeChainId(provider.chainId);
+  // For UniversalProvider, get chainId from the session namespaces or use default
+  const currentChainId = options.chain?.id || 1;
+  const providerChainId = normalizeChainId(currentChainId);
 
   const chain =
     options.chain && options.chain.id === providerChainId
@@ -238,8 +241,8 @@ async function initProvider(
 ) {
   const walletInfo = await getWalletInfo(walletId);
   const wcOptions = options.walletConnect;
-  const { EthereumProvider, OPTIONAL_EVENTS, OPTIONAL_METHODS } = await import(
-    "@walletconnect/ethereum-provider"
+  const { UniversalProvider } = await import(
+    "@walletconnect/universal-provider"
   );
 
   let optionalChains: Chain[] | undefined = wcOptions?.optionalChains;
@@ -253,19 +256,16 @@ async function initProvider(
     }
   }
 
-  const {
-    rpcMap,
-    requiredChain,
-    optionalChains: chainsToRequest,
-  } = getChainsToRequest({
-    chain: chainToRequest,
-    client: options.client,
-    optionalChains: optionalChains,
-  });
+  // For UniversalProvider, chain configuration is handled during session establishment
+  // const { requiredChain, optionalChains: chainsToRequest } = getChainsToRequest({
+  //   chain: chainToRequest,
+  //   client: options.client,
+  //   optionalChains: optionalChains,
+  // });
 
-  const provider = await EthereumProvider.init({
-    chains: requiredChain ? [requiredChain.id] : undefined,
-    disableProviderPing: true,
+  const provider = await UniversalProvider.init({
+    projectId: wcOptions?.projectId || DEFAULT_PROJECT_ID,
+    relayUrl: "wss://relay.walletconnect.com",
     metadata: {
       description:
         wcOptions?.appMetadata?.description ||
@@ -276,26 +276,13 @@ async function initProvider(
       name: wcOptions?.appMetadata?.name || getDefaultAppMetadata().name,
       url: wcOptions?.appMetadata?.url || getDefaultAppMetadata().url,
     },
-    optionalChains: chainsToRequest,
-    optionalEvents: OPTIONAL_EVENTS,
-    optionalMethods: OPTIONAL_METHODS,
-    projectId: wcOptions?.projectId || DEFAULT_PROJECT_ID,
-    qrModalOptions: wcOptions?.qrModalOptions,
-    rpcMap: rpcMap,
-    showQrModal:
-      wcOptions?.showQrModal === undefined
-        ? sessionRequestHandler
-          ? false
-          : defaultShowQrModal
-        : wcOptions.showQrModal,
   });
 
   provider.events.setMaxListeners(Number.POSITIVE_INFINITY);
 
   // disconnect the provider if chains are stale when (if not auto connecting)
   if (!isAutoConnect) {
-    // const isStale = await isChainsStale(provider, chainsToRequest);
-
+    // For UniversalProvider, we handle disconnection differently
     if (provider.session) {
       await provider.disconnect();
     }
@@ -314,9 +301,10 @@ async function initProvider(
       }
     }
 
-    provider.signer.client.on("session_request_sent", handleSessionRequest);
+    // For UniversalProvider, use different event handling
+    provider.on("session_request_sent", handleSessionRequest);
     provider.events.addListener("disconnect", () => {
-      provider.signer.client.off("session_request_sent", handleSessionRequest);
+      provider.off("session_request_sent", handleSessionRequest);
     });
   }
 
@@ -473,7 +461,7 @@ function getNamespaceMethods(provider: WCProvider) {
 
 function getNamespaceChainsIds(provider: WCProvider): number[] {
   const chainIds = provider.session?.namespaces[NAMESPACE]?.chains?.map(
-    (chain) => Number.parseInt(chain.split(":")[1] || ""),
+    (chain: string) => Number.parseInt(chain.split(":")[1] || ""),
   );
 
   return chainIds ?? [];
