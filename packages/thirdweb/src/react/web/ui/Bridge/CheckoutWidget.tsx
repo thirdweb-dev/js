@@ -265,6 +265,7 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
         toChainId: props.chain.id,
         toToken: props.tokenAddress,
       });
+      return true;
     },
     queryKey: ["checkout_widget:render"],
   });
