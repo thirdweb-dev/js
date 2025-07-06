@@ -25,9 +25,8 @@
     "@tanstack/react-query": "5.81.5",
     "@thirdweb-dev/engine": "workspace:*",
     "@thirdweb-dev/insight": "workspace:*",
-    "@walletconnect/ethereum-provider": "2.20.1",
+    "@walletconnect/ethereum-provider": "2.21.4",
     "@walletconnect/sign-client": "2.20.1",
-    "@walletconnect/universal-provider": "2.21.4",
     "abitype": "1.0.8",
     "cross-spawn": "7.0.6",
     "fuse.js": "7.1.0",
@@ -342,66 +341,26 @@
   "types": "./dist/types/exports/thirdweb.d.ts",
   "typesVersions": {
     "*": {
-      "adapters/*": [
-        "./dist/types/exports/adapters/*.d.ts"
-      ],
-      "ai": [
-        "./dist/types/exports/ai.d.ts"
-      ],
-      "auth": [
-        "./dist/types/exports/auth.d.ts"
-      ],
-      "bridge": [
-        "./dist/types/exports/bridge.d.ts"
-      ],
-      "chains": [
-        "./dist/types/exports/chains.d.ts"
-      ],
-      "contract": [
-        "./dist/types/exports/contract.d.ts"
-      ],
-      "deploys": [
-        "./dist/types/exports/deploys.d.ts"
-      ],
-      "event": [
-        "./dist/types/exports/event.d.ts"
-      ],
-      "extensions/*": [
-        "./dist/types/exports/extensions/*.d.ts"
-      ],
-      "modules": [
-        "./dist/types/exports/modules.d.ts"
-      ],
-      "pay": [
-        "./dist/types/exports/pay.d.ts"
-      ],
-      "react": [
-        "./dist/types/exports/react.d.ts"
-      ],
-      "react-native": [
-        "./dist/types/exports/react.native.d.ts"
-      ],
-      "rpc": [
-        "./dist/types/exports/rpc.d.ts"
-      ],
-      "social": [
-        "./dist/types/exports/social.d.ts"
-      ],
-      "storage": [
-        "./dist/types/exports/storage.d.ts"
-      ],
-      "transaction": [
-        "./dist/types/exports/transaction.d.ts"
-      ],
-      "utils": [
-        "./dist/types/exports/utils.d.ts"
-      ],
-      "wallets": [
-        "./dist/types/exports/wallets.d.ts"
-      ],
-      "wallets/*": [
-        "./dist/types/exports/wallets/*.d.ts"
-      ]
+      "adapters/*": ["./dist/types/exports/adapters/*.d.ts"],
+      "ai": ["./dist/types/exports/ai.d.ts"],
+      "auth": ["./dist/types/exports/auth.d.ts"],
+      "bridge": ["./dist/types/exports/bridge.d.ts"],
+      "chains": ["./dist/types/exports/chains.d.ts"],
+      "contract": ["./dist/types/exports/contract.d.ts"],
+      "deploys": ["./dist/types/exports/deploys.d.ts"],
+      "event": ["./dist/types/exports/event.d.ts"],
+      "extensions/*": ["./dist/types/exports/extensions/*.d.ts"],
+      "modules": ["./dist/types/exports/modules.d.ts"],
+      "pay": ["./dist/types/exports/pay.d.ts"],
+      "react": ["./dist/types/exports/react.d.ts"],
+      "react-native": ["./dist/types/exports/react.native.d.ts"],
+      "rpc": ["./dist/types/exports/rpc.d.ts"],
+      "social": ["./dist/types/exports/social.d.ts"],
+      "storage": ["./dist/types/exports/storage.d.ts"],
+      "transaction": ["./dist/types/exports/transaction.d.ts"],
+      "utils": ["./dist/types/exports/utils.d.ts"],
+      "wallets": ["./dist/types/exports/wallets.d.ts"],
+      "wallets/*": ["./dist/types/exports/wallets/*.d.ts"]
     }
   },
   "typings": "./dist/types/exports/thirdweb.d.ts",

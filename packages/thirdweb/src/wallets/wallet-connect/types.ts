@@ -4,7 +4,7 @@ import type { ThirdwebClient } from "../../client/client.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { AppMetadata } from "../types.js";
 
-type EthereumProviderOptions = Parameters<(typeof EthereumProvider)["init"]>[0];
+type EthereumProviderOptions = Parameters<typeof EthereumProvider["init"]>[0];
 
 type WalletConnectQRCodeModalOptions = Pick<
   NonNullable<EthereumProviderOptions["qrModalOptions"]>,
