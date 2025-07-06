@@ -502,16 +502,18 @@ function DecodedTransactionDisplay({
 
   return (
     <div className="space-y-4">
-      <div>
-        <div className="text-muted-foreground text-sm">Contract Name</div>
-        <div className="font-mono text-sm">{decodedData.contractName}</div>
+      <div className="flex flex-row">
+        <div className="flex flex-col flex-1">
+          <div className="text-muted-foreground text-sm">Function</div>
+          <div className="font-mono text-sm">{decodedData.functionName}</div>
+        </div>
+        <div className="flex flex-col flex-1">
+          <div className="text-muted-foreground text-sm">Contract</div>
+          <div className="font-mono text-sm">{decodedData.contractName}</div>
+        </div>
       </div>
       <div>
-        <div className="text-muted-foreground text-sm">Function Name</div>
-        <div className="font-mono text-sm">{decodedData.functionName}</div>
-      </div>
-      <div>
-        <div className="text-muted-foreground text-sm">Function Arguments</div>
+        <div className="text-muted-foreground text-sm">Arguments</div>
         <CodeClient
           code={stringify(decodedData.functionArgs, null, 2)}
           lang="json"
