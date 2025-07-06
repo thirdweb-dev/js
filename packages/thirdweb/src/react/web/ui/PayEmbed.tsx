@@ -380,6 +380,9 @@ export function PayEmbed(props: PayEmbedProps) {
         chain={props.payOptions.paymentInfo.chain}
         client={props.client}
         description={metadata?.description}
+        feePayer={
+          props.payOptions.paymentInfo.feePayer === "sender" ? "user" : "seller"
+        }
         image={metadata?.image}
         name={metadata?.name || "Checkout"}
         onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
