@@ -292,7 +292,6 @@ export function BridgeOrchestrator({
             amount={state.context.destinationAmount}
             client={client}
             destinationToken={state.context.destinationToken}
-            mode={uiOptions.mode}
             onBack={() => {
               send({ type: "BACK" });
             }}
@@ -302,6 +301,7 @@ export function BridgeOrchestrator({
             paymentMethod={state.context.selectedPaymentMethod}
             purchaseData={purchaseData}
             receiver={state.context.receiverAddress}
+            uiOptions={uiOptions}
           />
         )}
 
