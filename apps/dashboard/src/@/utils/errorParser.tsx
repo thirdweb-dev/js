@@ -19,6 +19,60 @@ const PLEASE_REACH_OUT_MESSAGE = (
 
 const UNKNOWN_ERROR_MESSAGE = "An unknown error occurred, please try again.";
 
+// Type definitions for better error handling
+interface ErrorWithNestedError {
+  error?: {
+    message?: string;
+  };
+}
+
+interface ErrorWithCode extends Error {
+  code: number | string;
+  data?: { code?: number; message?: string };
+  stack?: string;
+  reason?: string;
+}
+
+interface ErrorWithMessage {
+  message: string;
+}
+
+// Type guards
+function isErrorWithNestedError(error: unknown): error is ErrorWithNestedError {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "error" in error &&
+    typeof (error as ErrorWithNestedError).error === "object" &&
+    (error as ErrorWithNestedError).error !== null
+  );
+}
+
+function isErrorWithCode(error: unknown): error is ErrorWithCode {
+  return (
+    error instanceof Error &&
+    "code" in error &&
+    (error as ErrorWithCode).code !== undefined
+  );
+}
+
+function isErrorWithMessage(error: unknown): error is ErrorWithMessage {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error &&
+    typeof (error as ErrorWithMessage).message === "string"
+  );
+}
+
+function hasExecutionRevertedMessage(error: ErrorWithNestedError): boolean {
+  return Boolean(
+    error.error?.message &&
+      typeof error.error.message === "string" &&
+      error.error.message.includes("execution reverted:"),
+  );
+}
+
 export function parseErrorToMessage(error: unknown): string | JSX.Element {
   const message = parseError(error);
 
@@ -36,10 +90,9 @@ export function parseError(error: unknown): string {
     return error;
   }
 
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME: remove any
-  if ((error as any)?.error?.message?.includes("execution reverted:")) {
-    // biome-ignore lint/suspicious/noExplicitAny: FIXME: remove any
-    return (error as any)?.error?.message;
+  // Check for nested error with execution reverted message
+  if (isErrorWithNestedError(error) && hasExecutionRevertedMessage(error)) {
+    return error.error?.message || UNKNOWN_ERROR_MESSAGE;
   }
 
   // errors with code top level
@@ -56,12 +109,7 @@ export function parseError(error: unknown): string {
   }
 
   // handle rpc errors
-  if (
-    error &&
-    typeof error === "object" &&
-    "message" in error &&
-    typeof error.message === "string"
-  ) {
+  if (isErrorWithMessage(error)) {
     return error.message;
   }
 
@@ -69,17 +117,6 @@ export function parseError(error: unknown): string {
   console.error("unknown error", error);
   // worst case scenario send a generic error message back
   return UNKNOWN_ERROR_MESSAGE;
-}
-
-interface ErrorWithCode extends Error {
-  code: number | string;
-  data: { code: number; message: string };
-  stack?: string;
-  reason?: string;
-}
-
-function isErrorWithCode(error: unknown): error is ErrorWithCode {
-  return (error as ErrorWithCode)?.code !== undefined;
 }
 
 function parseErrorCode(error: ErrorWithCode): string | undefined {
