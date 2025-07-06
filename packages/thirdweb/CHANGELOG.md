@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.7
+
+### Patch Changes
+
+- [#7533](https://github.com/thirdweb-dev/js/pull/7533) [`cb77544`](https://github.com/thirdweb-dev/js/commit/cb77544a46b4c4ca7899920f7077760e8d0e94c9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect feePayer property in Payment widgets
+
 ## 5.105.6
 
 ### Patch Changes
