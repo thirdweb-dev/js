@@ -282,6 +282,7 @@ export function BuyWidget(props: BuyWidgetProps) {
         toChainId: props.chain.id,
         toToken: props.tokenAddress,
       });
+      return true;
     },
     queryKey: ["buy_widget:render"],
   });

@@ -292,6 +292,7 @@ export function TransactionWidget(props: TransactionWidgetProps) {
         event: "ub:ui:transaction_widget:render",
         toToken: props.tokenAddress,
       });
+      return true;
     },
     queryKey: ["transaction_widget:render"],
   });

@@ -1,24 +1,20 @@
-import type { EthereumProvider } from "@walletconnect/ethereum-provider";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { AppMetadata } from "../types.js";
 
-type EthereumProviderOptions = Parameters<(typeof EthereumProvider)["init"]>[0];
-
-type WalletConnectQRCodeModalOptions = Pick<
-  NonNullable<EthereumProviderOptions["qrModalOptions"]>,
-  | "themeMode"
-  | "themeVariables"
-  | "desktopWallets"
-  | "enableExplorer"
-  | "explorerRecommendedWalletIds"
-  | "explorerExcludedWalletIds"
-  | "mobileWallets"
-  | "privacyPolicyUrl"
-  | "termsOfServiceUrl"
-  | "walletImages"
->;
+type WalletConnectQRCodeModalOptions = {
+  themeMode?: "light" | "dark";
+  themeVariables?: Record<string, string>;
+  desktopWallets?: Record<string, unknown>[];
+  enableExplorer?: boolean;
+  explorerRecommendedWalletIds?: string[];
+  explorerExcludedWalletIds?: string[];
+  mobileWallets?: Record<string, unknown>[];
+  privacyPolicyUrl?: string;
+  termsOfServiceUrl?: string;
+  walletImages?: Record<string, string>;
+};
 
 export type WalletConnectConfig = {
   /**

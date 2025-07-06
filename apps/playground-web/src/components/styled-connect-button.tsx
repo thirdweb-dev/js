@@ -3,9 +3,14 @@
 import { useTheme } from "next-themes";
 import {
   abstract,
+  arbitrum,
   arbitrumSepolia,
+  base,
   baseSepolia,
+  ethereum,
+  optimism,
   optimismSepolia,
+  polygon,
   polygonAmoy,
   sepolia,
 } from "thirdweb/chains";
@@ -28,6 +33,11 @@ export function StyledConnectButton(
         polygonAmoy,
         arbitrumSepolia,
         abstract,
+        base,
+        ethereum,
+        polygon,
+        optimism,
+        arbitrum,
       ]}
       client={THIRDWEB_CLIENT}
       theme={theme === "light" ? "light" : "dark"}

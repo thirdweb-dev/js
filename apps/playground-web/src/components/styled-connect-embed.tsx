@@ -2,9 +2,15 @@
 
 import { useTheme } from "next-themes";
 import {
+  abstract,
+  arbitrum,
   arbitrumSepolia,
+  base,
   baseSepolia,
+  ethereum,
+  optimism,
   optimismSepolia,
+  polygon,
   polygonAmoy,
   sepolia,
 } from "thirdweb/chains";
@@ -30,11 +36,17 @@ export function StyledConnectEmbed(
   ) : (
     <ConnectEmbed
       chains={[
+        base,
+        ethereum,
+        polygon,
+        optimism,
+        arbitrum,
         sepolia,
         baseSepolia,
         optimismSepolia,
         polygonAmoy,
         arbitrumSepolia,
+        abstract,
       ]}
       client={THIRDWEB_CLIENT}
       theme={theme === "light" ? "light" : "dark"}
