@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { hexToNumber, isHex, type ThirdwebClient, toEther } from "thirdweb";
-import { stringify } from "thirdweb/utils";
+import { stringify,shortenAddress } from "thirdweb/utils";
 import type { Project } from "@/api/projects";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
@@ -509,7 +509,11 @@ function DecodedTransactionDisplay({
         </div>
         <div className="flex flex-col flex-1">
           <div className="text-muted-foreground text-sm">Contract</div>
-          <div className="font-mono text-sm">{decodedData.contractName}</div>
+          <div className="font-mono text-sm">
+            <Link href={`/${decodedData.chainId}/${decodedData.contractAddress}`} target="_blank" className="underline">
+              {decodedData.contractName}
+            </Link>
+          </div>
         </div>
       </div>
       <div>

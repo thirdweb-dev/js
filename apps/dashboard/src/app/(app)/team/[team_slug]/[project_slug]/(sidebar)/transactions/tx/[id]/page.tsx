@@ -24,6 +24,8 @@ type AbiItem =
     };
 
 export type DecodedTransactionData = {
+  chainId: number;
+  contractAddress: string;
   contractName: string;
   functionName: string;
   functionArgs: Record<string, unknown>;
@@ -105,6 +107,8 @@ async function decodeSingleTransactionParam(
     }
 
     return {
+      chainId,
+      contractAddress: txParam.to,
       contractName,
       functionArgs,
       functionName,
