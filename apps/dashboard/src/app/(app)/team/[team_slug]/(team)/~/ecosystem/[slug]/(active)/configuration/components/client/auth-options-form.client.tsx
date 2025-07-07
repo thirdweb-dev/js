@@ -231,22 +231,24 @@ export function AuthOptionsForm({
     }
 
     let smartAccountOptions: Ecosystem["smartAccountOptions"] | null = null;
-    if (data.useSmartAccount && data.executionMode === "EIP4337") {
-      let accountFactoryAddress: string;
-      switch (data.accountFactoryType) {
-        case "v0.6":
-          accountFactoryAddress = DEFAULT_ACCOUNT_FACTORY_V0_6;
-          break;
-        case "v0.7":
-          accountFactoryAddress = DEFAULT_ACCOUNT_FACTORY_V0_7;
-          break;
-        case "custom":
-          if (!data.customAccountFactoryAddress) {
-            toast.error("Please enter a custom account factory address");
-            return;
-          }
-          accountFactoryAddress = data.customAccountFactoryAddress;
-          break;
+    if (data.useSmartAccount) {
+      let accountFactoryAddress: string | undefined;
+      if (data.executionMode === "EIP4337") {
+        switch (data.accountFactoryType) {
+          case "v0.6":
+            accountFactoryAddress = DEFAULT_ACCOUNT_FACTORY_V0_6;
+            break;
+          case "v0.7":
+            accountFactoryAddress = DEFAULT_ACCOUNT_FACTORY_V0_7;
+            break;
+          case "custom":
+            if (!data.customAccountFactoryAddress) {
+              toast.error("Please enter a custom account factory address");
+              return;
+            }
+            accountFactoryAddress = data.customAccountFactoryAddress;
+            break;
+        }
       }
 
       smartAccountOptions = {
