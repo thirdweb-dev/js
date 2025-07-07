@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.8
+
+### Patch Changes
+
+- [#7532](https://github.com/thirdweb-dev/js/pull/7532) [`0ea25bb`](https://github.com/thirdweb-dev/js/commit/0ea25bb9ae7b17524b4f883993bba5ebb20ca939) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Upgrade to wallet connect universal provider
+
 ## 5.105.7
 
 ### Patch Changes
