@@ -12,6 +12,6 @@ export const tRexTestnet = /*@__PURE__*/ defineChain({
   ],
   id: 1962,
   name: "T-Rex Testnet",
-  nativeCurrency: { decimals: 18, name: "TREX", symbol: "TREX" },
+  nativeCurrency: { decimals: 18, name: "Ether", symbol: "ETH" },
   testnet: true,
 });
