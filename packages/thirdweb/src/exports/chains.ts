@@ -69,6 +69,7 @@ export { scrollAlphaTestnet } from "../chains/chain-definitions/scroll-alpha-tes
 export { scrollSepoliaTestnet } from "../chains/chain-definitions/scroll-sepolia-testnet.js";
 export { sepolia } from "../chains/chain-definitions/sepolia.js";
 export { soneiumMinato } from "../chains/chain-definitions/soneium-minato.js";
+export { tRexTestnet } from "../chains/chain-definitions/t-rex-testnet.js";
 export { treasure } from "../chains/chain-definitions/treasure.js";
 export { treasureTopaz } from "../chains/chain-definitions/treasureTopaz.js";
 export { xai } from "../chains/chain-definitions/xai.js";
