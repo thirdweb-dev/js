@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.9
+
+### Patch Changes
+
+- [#7536](https://github.com/thirdweb-dev/js/pull/7536) [`f48d800`](https://github.com/thirdweb-dev/js/commit/f48d8006bc5845c05f9bfc050a850edfaee7bdb5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Optimize fetching payment tokens in payment widgets
+
 ## 5.105.8
 
 ### Patch Changes
