@@ -18,7 +18,8 @@ import {
   generateAccount, 
   smartWallet, 
   sendTransaction, 
-  getContract 
+  getContract,
+  createThirdwebClient
 } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
 import { getAllActiveSigners } from "thirdweb/extensions/erc4337";
@@ -39,7 +40,7 @@ const targetAddress = "0x..."; // Replace with your target address
 
 ## Step 1: Configure User Smart Wallet with Session Key
 
-The first step is to add our session key address as a signer to the user's smart account. This can be done by configuring the smart wallet with the session key address and permissions.
+The first step is to add our session key address as a signer to the user's smart account. This is typically done on the client side since it needs explicit user approval. This can be done by configuring the smart wallet with the session key address and permissions.
 
 In a React application, this can be done by using the `ConnectButton` or `ConnectEmbed` component. This will automatically configure the smart wallet with the session key address and permissions.
 
@@ -49,6 +50,10 @@ In a React application, this can be done by using the `ConnectButton` or `Connec
     chain: sepolia,
     sessionKey: {
       address: sessionKeyAccountAddress,
+      permissions: {
+        // "*" allows all targets, or specify specific contract addresses
+        approvedTargets: "*",
+      },
     },
     sponsorGas: true,
   }}
