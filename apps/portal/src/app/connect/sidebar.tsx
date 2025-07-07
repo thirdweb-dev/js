@@ -18,10 +18,6 @@ export const sidebar: SideBar = {
       name: "Introduction",
     },
     {
-      href: "/connect/why-thirdweb",
-      name: "Why thirdweb?",
-    },
-    {
       href: "https://playground.thirdweb.com/",
       icon: <ExternalLinkIcon />,
       name: "Playground",

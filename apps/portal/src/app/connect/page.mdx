@@ -3,6 +3,7 @@ import {
 	GithubTemplateCard,
 	Grid,
 	ExpandableGrid,
+	FeatureCard,
 	createMetadata,
 	OpenSourceCard,
 	Stack,
@@ -12,7 +13,6 @@ import {
 	ArticleIconCard,
 	DocImage
 } from "@doc";
-import { ExternalLink } from "lucide-react";
 import {
 	TypeScriptIcon,
 	ReactIcon,
@@ -24,6 +24,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import SupportedChains from "../_images/supported-chains.png";
+import {FuelIcon,MonitorCheckIcon,WalletCardsIcon,UserLockIcon, ExternalLinkIcon, WalletIcon, PencilIcon, ShieldCheckIcon, PiggyBankIcon, GlobeIcon, ComponentIcon, CodeIcon, ApiIcon, WebhookIcon, IdCardIcon, HandCoinsIcon, MonitorSmartphoneIcon} from "lucide-react";
+
 
 export const metadata = createMetadata({
 	title: "thirdweb Connect",
@@ -36,26 +38,79 @@ export const metadata = createMetadata({
 
 # Wallets
 
-Wallets is the complete toolkit for connecting every user to your application. It features customizable onboarding flows, self-custodial in-app wallets, account abstraction, onramps, and a performant API to interact with the blockchain.
+Wallets is a complete toolkit for connecting any user to your application. It includes **customizable components** for onboarding, **embedded wallets** , **account abstraction**
+for gasless transactions, **server wallets** for developers to carry out transactions, and a secure **non-custodial key management system**.
 
 ## Live Playground
-
-You can interact with the React SDK in the [Live Playground](https://playground.thirdweb.com/).
 
 <Stack>
 
 <ArticleIconCard
-	title="Try the demo"
-	icon={ExternalLink}
+	title="Try Wallets"
+	icon={ExternalLinkIcon}
 	href="https://playground.thirdweb.com"
-	description="See the SDK in action on the live playground"
+	description="Try out the wallet components live in the interactive playground"
 />
 
 </Stack>
 
-## Quick starts
+## Features
 
-Get started with Wallets in your preferred language.
+<div
+	className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-2"
+>
+	<FeatureCard
+		title="Non-Custodial Wallets"
+		description="Secure non-custodial wallets only accessible by the owner."
+		iconUrl={<UserLockIcon />}
+	/>
+
+	<FeatureCard
+		title="EOA Support"
+		description="Connect to over 500+ EOA wallet providers for crypto native users."
+		iconUrl={<WalletCardsIcon />}
+	/>
+
+	<FeatureCard
+		title="Gas Sponsorship"
+		description="Support for gasless transactions with account abstraction."
+		iconUrl={<FuelIcon />}
+	/>
+			
+	<FeatureCard
+		title="Ecosystem Wallets"
+		description="Global wallets to connect your users to any application in an ecosystem."
+		iconUrl={<MonitorCheckIcon />}
+	/>
+		
+	<FeatureCard
+		title="Cross Platform Support"
+		description="Create and manage wallets for web, mobile, games, and agents."
+		iconUrl={<MonitorSmartphoneIcon />}
+	/>
+
+
+	<FeatureCard
+		title="One-Click Funding"
+		description="Buy crypto or swap tokens directly in the wallet modal."
+		iconUrl={<HandCoinsIcon />}
+	/>
+
+	<FeatureCard
+		title="Authentication"
+		description="Enable SIWE standard for blockchain-based ID verification."
+		iconUrl={<IdCardIcon />}
+	/>
+
+	<FeatureCard
+		title="Hardware-Level Security"
+		description="Built with AWS Enclaves (TEE) to isolate and protect keys."
+		iconUrl={<ShieldCheckIcon />}
+	/>
+
+</div>
+
+## Quick Starts
 
 <Grid>
 	<SDKCard
@@ -78,37 +133,15 @@ Get started with Wallets in your preferred language.
 	/>
 </Grid>
 
-## With Wallets, you can
-
-- **Connect to 500+ different wallet providers** with support for every EVM network
-- **Log in and authenticate your users** with customizable and secure [email, phone, passkeys and social login](https://portal.thirdweb.com/connect/in-app-wallet/overview) flows.
-- **Sponsor transactions** to seamlessly onboard non-native or new crypto users with [Account Abstraction](https://portal.thirdweb.com/connect/account-abstraction/overview).
-- **Perform wallet actions** like connecting and disconnecting wallets, viewing balance, displaying ENS names, and execute transactions with our [performant, reliable and type safe API](https://portal.thirdweb.com/connect/blockchain-api)
-- **Easily integrate with thirdweb's contracts** to enable users to interact with your application.
-- **Facilitate payments** by letting user top up their wallets or do onchain purchases with a credit card with [Pay](https://portal.thirdweb.com/connect/pay/overview).
-
-<Callout variant="info" title="Have you generated a client ID?">
-	<div className="flex flex-col gap-4 items-start">
-	<p>
-		You'll need a client ID to access the Wallet APIs, storage, and more.
-	</p>
-
-	<Button asChild variant='outline'>
-		<Link href="https://thirdweb.com/create-api-key" target="_blank"> Generate </Link>
-	</Button>
-
-  </div>
-</Callout>
-
 ## Supported Chains
 
-Wallets are supported on every EVM compatible chain. To view the full list, visit [thirdweb chainlist](https://thirdweb.com/chainlist).
+Wallets are supported on EVM compatible chains. To view the full list, visit [thirdweb chainlist](https://thirdweb.com/chainlist?service=connect-sdk).
 
 <DocImage src={SupportedChains} />
 
 ## Starter Kits & demos
 
-View all available starter kits, demos and templates on Github.
+View all available starter kits, demos, and templates on Github.
 
 <GithubTemplateCard
 	title="View all templates"
