@@ -17,15 +17,15 @@ export const wallet = {
     windows: null,
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
   homepage: "https://crypto.com/onchain",
   id: "com.crypto.wallet",
   image_id: "4903acdd-6463-44b6-3cf9-f23f4c75ca00",
   mobile: {
     native: "dfw://",
-    universal: "https://wallet.crypto.com",
+    universal: "https://wallet.crypto.com/deeplink",
   },
   name: "Crypto.com Onchain",
   rdns: "com.crypto.wallet",

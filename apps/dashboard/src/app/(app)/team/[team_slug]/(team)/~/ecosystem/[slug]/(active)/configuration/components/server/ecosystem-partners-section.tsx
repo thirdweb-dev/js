@@ -1,4 +1,4 @@
-import type { Ecosystem } from "../../../../../types";
+import type { Ecosystem } from "@/api/ecosystems";
 import { AddPartnerDialogButton } from "../client/AddPartnerDialogButton";
 import { PartnersTable } from "./partners-table";
 

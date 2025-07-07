@@ -1,6 +1,7 @@
 "use client";
 import { format } from "date-fns";
 import { useMemo } from "react";
+import type { Partner } from "@/api/ecosystems";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
 import { DocLink } from "@/components/blocks/DocLink";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
@@ -10,7 +11,6 @@ import { TypeScriptIcon } from "@/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "@/icons/brand-icons/UnityIcon";
 import type { EcosystemWalletStats } from "@/types/analytics";
 import { formatTickerNumber } from "@/utils/format-utils";
-import type { Partner } from "../../../../types";
 
 type ChartData = Record<string, number> & {
   time: string; // human readable date

@@ -12,6 +12,7 @@ import {
   reportAssetCreationFailed,
   reportAssetCreationSuccessful,
 } from "@/analytics/report";
+import type { Team } from "@/api/team";
 import {
   type MultiStepState,
   MultiStepStatus,
@@ -29,6 +30,7 @@ import { parseError } from "@/utils/errorParser";
 import { ChainOverview } from "../../_common/chain-overview";
 import { FilePreview } from "../../_common/file-preview";
 import { StepCard } from "../../_common/step-card";
+import { StorageErrorPlanUpsell } from "../../_common/storage-error-upsell";
 import type { CreateAssetFormValues } from "../_common/form";
 import type { CreateTokenFunctions } from "../create-token-page.client";
 import { TokenDistributionBarChart } from "../distribution/token-distribution";
@@ -50,6 +52,7 @@ export function LaunchTokenStatus(props: {
   onLaunchSuccess: () => void;
   teamSlug: string;
   projectSlug: string;
+  teamPlan: Team["billingPlan"];
 }) {
   const formValues = props.values;
   const { createTokenFunctions } = props;
@@ -177,7 +180,6 @@ export function LaunchTokenStatus(props: {
 
     await executeSteps(steps, startIndex);
   }
-
   return (
     <StepCard
       nextButton={{
@@ -271,7 +273,26 @@ export function LaunchTokenStatus(props: {
               )}
             </DialogHeader>
 
-            <MultiStepStatus onRetry={handleRetry} steps={steps} />
+            <MultiStepStatus
+              onRetry={handleRetry}
+              renderError={(step, errorMessage) => {
+                if (
+                  props.teamPlan === "free" &&
+                  errorMessage.toLowerCase().includes("storage limit")
+                ) {
+                  return (
+                    <StorageErrorPlanUpsell
+                      onRetry={() => handleRetry(step)}
+                      teamSlug={props.teamSlug}
+                      trackingCampaign="create-coin"
+                    />
+                  );
+                }
+
+                return null;
+              }}
+              steps={steps}
+            />
           </div>
 
           <div className="mt-2 flex justify-between gap-4 border-border border-t bg-card p-6">

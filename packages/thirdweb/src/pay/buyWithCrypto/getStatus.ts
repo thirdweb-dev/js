@@ -3,6 +3,7 @@ import type { Token } from "../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import { toTokens } from "../../utils/units.js";
+import type { PurchaseData } from "../types.js";
 import type {
   PayOnChainTransactionDetails,
   PayTokenInfo,
@@ -80,7 +81,7 @@ export type BuyWithCryptoStatus =
       toAddress: string;
       failureMessage?: string;
       bridge?: string;
-      purchaseData?: object;
+      purchaseData?: PurchaseData;
     };
 
 export type ValidBuyWithCryptoStatus = Exclude<
@@ -162,7 +163,7 @@ export async function getBuyWithCryptoStatus(
           originTokenAddress: result.originTokenAddress,
           originTransaction,
           paymentId: result.paymentId,
-          purchaseData: result.purchaseData as object | undefined,
+          purchaseData: result.purchaseData,
           receiver: result.receiver,
           sender: result.sender,
           status: result.status,
@@ -178,7 +179,7 @@ export async function getBuyWithCryptoStatus(
           originToken: result.originToken,
           originTokenAddress: result.originTokenAddress,
           paymentId: result.paymentId,
-          purchaseData: result.purchaseData as object | undefined,
+          purchaseData: result.purchaseData,
           receiver: result.receiver,
           sender: result.sender,
           status: result.status,
@@ -202,7 +203,7 @@ export async function getBuyWithCryptoStatus(
           originTokenAddress: "",
           originTransaction,
           paymentId: "",
-          purchaseData: result.purchaseData as object | undefined,
+          purchaseData: result.purchaseData,
           receiver: "",
           sender: "",
           status: result.status,
@@ -230,7 +231,7 @@ function toBuyWithCryptoStatus(args: {
   originChainId: number;
   destinationChainId: number;
   status: Status["status"];
-  purchaseData?: object;
+  purchaseData?: PurchaseData;
   sender: string;
   receiver: string;
   paymentId: string;
@@ -277,7 +278,7 @@ function toBuyWithCryptoStatus(args: {
       transactionHash: destinationTransaction?.transactionHash ?? "",
     },
     fromAddress: sender,
-    purchaseData: purchaseData as object | undefined, // TODO transfer type?
+    purchaseData: purchaseData,
     quote: {
       createdAt: new Date().toISOString(),
       estimated: {

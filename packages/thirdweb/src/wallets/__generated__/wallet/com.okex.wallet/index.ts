@@ -25,7 +25,7 @@ export const wallet = {
   image_id: "b011bd5a-a887-44e2-12b0-39efbd9e5600",
   mobile: {
     native: "okex://main",
-    universal: "https://www.okx.com/download",
+    universal: "https://www.okx.com/ul/yG45x2",
   },
   name: "OKX Wallet",
   rdns: "com.okex.wallet",

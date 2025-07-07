@@ -363,6 +363,7 @@ export function PayEmbed(props: PayEmbedProps) {
               ? ["card"]
               : ["crypto", "card"]
         }
+        purchaseData={props.payOptions?.purchaseData}
         theme={theme}
         title={metadata?.name || "Buy"}
         tokenAddress={
@@ -379,6 +380,9 @@ export function PayEmbed(props: PayEmbedProps) {
         chain={props.payOptions.paymentInfo.chain}
         client={props.client}
         description={metadata?.description}
+        feePayer={
+          props.payOptions.paymentInfo.feePayer === "sender" ? "user" : "seller"
+        }
         image={metadata?.image}
         name={metadata?.name || "Checkout"}
         onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
@@ -387,6 +391,7 @@ export function PayEmbed(props: PayEmbedProps) {
             ? ["crypto"]
             : ["crypto", "card"]
         }
+        purchaseData={props.payOptions?.purchaseData}
         seller={props.payOptions.paymentInfo.sellerAddress as Address}
         theme={theme}
         tokenAddress={
@@ -408,6 +413,7 @@ export function PayEmbed(props: PayEmbedProps) {
             ? ["crypto"]
             : ["crypto", "card"]
         }
+        purchaseData={props.payOptions?.purchaseData}
         theme={theme}
         title={metadata?.name}
         transaction={props.payOptions.transaction}

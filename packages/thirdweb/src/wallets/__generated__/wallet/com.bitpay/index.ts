@@ -21,7 +21,7 @@ export const wallet = {
   },
   homepage: "https://bitpay.com/wallet",
   id: "com.bitpay",
-  image_id: "553e8fff-37c9-4a62-5bfe-02ff22e1e200",
+  image_id: "c81295d5-363c-4476-16ef-1e8ab557b100",
   mobile: {
     native: "bitpay://",
     universal: "https://link.bitpay.com",

@@ -1,6 +1,7 @@
 import type { Address as ox__Address } from "ox";
 import { defineChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
+import type { PurchaseData } from "../pay/types.js";
 import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { stringify } from "../utils/json.js";
@@ -17,7 +18,7 @@ type OnrampIntent = {
   tokenAddress: ox__Address.Address;
   receiver: ox__Address.Address;
   amount?: string; // Corresponds to buyAmountWei in some other contexts
-  purchaseData?: unknown;
+  purchaseData?: PurchaseData;
   sender?: ox__Address.Address;
   onrampTokenAddress?: ox__Address.Address;
   onrampChainId?: number;
@@ -46,7 +47,7 @@ interface OnrampApiRequestBody {
   tokenAddress: ox__Address.Address;
   receiver: ox__Address.Address;
   amount?: string;
-  purchaseData?: unknown;
+  purchaseData?: PurchaseData;
   sender?: ox__Address.Address;
   onrampTokenAddress?: ox__Address.Address;
   onrampChainId?: number;
@@ -265,7 +266,7 @@ export declare namespace prepare {
     tokenAddress: ox__Address.Address;
     receiver: ox__Address.Address;
     amount?: bigint;
-    purchaseData?: unknown;
+    purchaseData?: PurchaseData;
     sender?: ox__Address.Address;
     onrampTokenAddress?: ox__Address.Address;
     onrampChainId?: number;

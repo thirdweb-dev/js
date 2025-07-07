@@ -9,6 +9,7 @@ import {
   type ThirdwebClient,
 } from "thirdweb";
 import { reportAssetCreationStepConfigured } from "@/analytics/report";
+import type { Team } from "@/api/team";
 import {
   type CreateAssetFormValues,
   type TokenDistributionFormValues,
@@ -38,6 +39,7 @@ export function CreateTokenAssetPageUI(props: {
   onLaunchSuccess: () => void;
   teamSlug: string;
   projectSlug: string;
+  teamPlan: Team["billingPlan"];
 }) {
   const [step, setStep] = useState<"token-info" | "distribution" | "launch">(
     "token-info",
@@ -133,6 +135,7 @@ export function CreateTokenAssetPageUI(props: {
             setStep("distribution");
           }}
           projectSlug={props.projectSlug}
+          teamPlan={props.teamPlan}
           teamSlug={props.teamSlug}
           values={{
             ...tokenInfoForm.getValues(),

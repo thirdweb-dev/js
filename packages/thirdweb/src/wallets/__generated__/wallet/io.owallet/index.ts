@@ -28,5 +28,5 @@ export const wallet = {
     universal: null,
   },
   name: "OWallet",
-  rdns: null,
+  rdns: "io.owallet",
 } as const;

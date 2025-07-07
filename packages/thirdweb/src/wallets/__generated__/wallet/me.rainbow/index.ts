@@ -24,7 +24,7 @@ export const wallet = {
   },
   homepage: "https://rainbow.me/",
   id: "me.rainbow",
-  image_id: "a9978739-0685-43d5-bb3c-c11545d91300",
+  image_id: "7a33d7f1-3d12-4b5c-f3ee-5cd83cb1b500",
   mobile: {
     native: "rainbow://",
     universal: "https://rnbwapp.com",

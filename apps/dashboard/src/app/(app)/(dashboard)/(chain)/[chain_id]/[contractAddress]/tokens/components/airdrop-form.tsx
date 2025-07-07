@@ -43,94 +43,92 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
   );
 
   return (
-    <>
-      <div className="pt-3">
-        <form
-          onSubmit={handleSubmit(async (data) => {
-            try {
-              const tx = transferBatch({
-                batch: data.addresses
-                  .filter((address) => address.quantity !== undefined)
-                  .map((address) => ({
-                    amount: address.quantity,
-                    to: address.address,
-                  })),
-                contract,
-              });
-              await sendTransaction.mutateAsync(tx, {
-                onError: (error) => {
-                  console.error(error);
-                },
-                onSuccess: () => {
-                  // Close the sheet/modal on success
-                  if (toggle) {
-                    toggle(false);
-                  }
-                },
-              });
-              airdropNotifications.onSuccess();
-            } catch (err) {
-              airdropNotifications.onError(err);
-              console.error(err);
-            }
-          })}
-        >
-          <div className="mb-3 flex w-full flex-col gap-6 md:flex-row">
-            {airdropFormOpen ? (
-              <AirdropUpload
-                client={contract.client}
-                onClose={() => setAirdropFormOpen(false)}
-                setAirdrop={(value) =>
-                  setValue("addresses", value, { shouldDirty: true })
+    <div className="pt-3">
+      <form
+        onSubmit={handleSubmit(async (data) => {
+          try {
+            const tx = transferBatch({
+              batch: data.addresses
+                .filter((address) => address.quantity !== undefined)
+                .map((address) => ({
+                  amount: address.quantity,
+                  to: address.address,
+                })),
+              contract,
+            });
+            await sendTransaction.mutateAsync(tx, {
+              onError: (error) => {
+                console.error(error);
+              },
+              onSuccess: () => {
+                // Close the sheet/modal on success
+                if (toggle) {
+                  toggle(false);
                 }
-              />
-            ) : (
-              <div className="flex flex-col gap-4 md:flex-row">
-                <Button
-                  borderRadius="md"
-                  colorScheme="primary"
-                  onClick={() => setAirdropFormOpen(true)}
-                  rightIcon={<UploadIcon className="size-4" />}
-                >
-                  Upload addresses
-                </Button>
-                {addresses.length > 0 && (
-                  <div className="flex flex-row items-center justify-center gap-2 text-green-500">
-                    <CircleCheckIcon className="text-green-500" size={16} />
-                    <Text color="inherit" size="body.sm">
-                      <strong>{addresses.length} addresses</strong> ready to be
-                      airdropped
-                    </Text>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-          {addresses?.length > 0 && !airdropFormOpen && (
-            <>
-              {estimateGasCost && (
-                <Text>
-                  This transaction requires at least {estimateGasCost} gas.
-                  Since each chain has a different gas limit, please split this
-                  operation into multiple transactions if necessary. Usually
-                  under 10M gas is safe.
-                </Text>
-              )}
-              <TransactionButton
-                className="self-end"
-                client={contract.client}
-                isLoggedIn={isLoggedIn}
-                isPending={sendTransaction.isPending}
-                transactionCount={1}
-                txChainID={contract.chain.id}
-                type="submit"
+              },
+            });
+            airdropNotifications.onSuccess();
+          } catch (err) {
+            airdropNotifications.onError(err);
+            console.error(err);
+          }
+        })}
+      >
+        <div className="mb-3 flex w-full flex-col gap-6 md:flex-row">
+          {airdropFormOpen ? (
+            <AirdropUpload
+              client={contract.client}
+              onClose={() => setAirdropFormOpen(false)}
+              setAirdrop={(value) =>
+                setValue("addresses", value, { shouldDirty: true })
+              }
+            />
+          ) : (
+            <div className="flex flex-col gap-4 md:flex-row">
+              <Button
+                borderRadius="md"
+                colorScheme="primary"
+                onClick={() => setAirdropFormOpen(true)}
+                rightIcon={<UploadIcon className="size-4" />}
               >
-                Airdrop
-              </TransactionButton>
-            </>
+                Upload addresses
+              </Button>
+              {addresses.length > 0 && (
+                <div className="flex flex-row items-center justify-center gap-2 text-green-500">
+                  <CircleCheckIcon className="text-green-500" size={16} />
+                  <Text color="inherit" size="body.sm">
+                    <strong>{addresses.length} addresses</strong> ready to be
+                    airdropped
+                  </Text>
+                </div>
+              )}
+            </div>
           )}
-        </form>
-      </div>
-    </>
+        </div>
+        {addresses?.length > 0 && !airdropFormOpen && (
+          <>
+            {estimateGasCost && (
+              <Text>
+                This transaction requires at least {estimateGasCost} gas. Since
+                each chain has a different gas limit, please split this
+                operation into multiple transactions if necessary. Usually under
+                10M gas is safe.
+              </Text>
+            )}
+            <TransactionButton
+              className="self-end"
+              client={contract.client}
+              isLoggedIn={isLoggedIn}
+              isPending={sendTransaction.isPending}
+              transactionCount={1}
+              txChainID={contract.chain.id}
+              type="submit"
+            >
+              Airdrop
+            </TransactionButton>
+          </>
+        )}
+      </form>
+    </div>
   );
 };

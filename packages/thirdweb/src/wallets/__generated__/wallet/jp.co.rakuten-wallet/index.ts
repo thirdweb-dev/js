@@ -22,7 +22,7 @@ export const wallet = {
   },
   homepage: "https://www.rakuten-wallet.co.jp/web3/",
   id: "jp.co.rakuten-wallet",
-  image_id: "a7b5c4b1-8b55-4b6c-af68-4b2786480600",
+  image_id: "ce8ac290-b727-493c-7b9c-ca63ae2e9300",
   mobile: {
     native: "rakutenwalletweb3://",
     universal: null,

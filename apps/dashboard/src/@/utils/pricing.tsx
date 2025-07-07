@@ -23,7 +23,6 @@ export const TEAM_PLANS: Record<
     features: [
       "Email Support",
       "48hr Guaranteed Response",
-      "Invite Team Members",
       "Custom In-App Wallet Auth",
     ],
     price: 99,

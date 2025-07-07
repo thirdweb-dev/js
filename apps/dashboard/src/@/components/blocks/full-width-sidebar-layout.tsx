@@ -279,7 +279,14 @@ function RenderSidebarMenu(props: { links: ShadcnSidebarLink[] }) {
         // subnav
         if ("subMenu" in link) {
           return (
-            <RenderSidebarSubmenu links={link.links} subMenu={link.subMenu} />
+            <RenderSidebarSubmenu
+              key={`submenu_$${
+                // biome-ignore lint/suspicious/noArrayIndexKey:  index is fine here
+                idx
+              }`}
+              links={link.links}
+              subMenu={link.subMenu}
+            />
           );
         }
 

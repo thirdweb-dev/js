@@ -41,5 +41,5 @@ import { useAutoConnect } from "../../hooks/wallets/useAutoConnect.js";
  */
 export function AutoConnect(props: AutoConnectProps) {
   useAutoConnect(props);
-  return <></>;
+  return null;
 }

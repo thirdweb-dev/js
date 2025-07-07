@@ -1,109 +1,83 @@
-import { notFound } from "next/navigation";
-import { isProjectActive } from "@/api/analytics";
+import { loginRedirect } from "@app/login/loginRedirect";
+import { ArrowUpRightIcon } from "lucide-react";
+import { redirect } from "next/navigation";
+import { ResponsiveSearchParamsProvider } from "responsive-rsc";
+import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
-import { FooterLinksSection } from "../components/footer/FooterLinksSection";
-import { BlueprintCard } from "./blueprint-card";
-import { InsightFTUX } from "./insight-ftux";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { getFiltersFromSearchParams } from "@/lib/time";
+import { InsightAnalytics } from "./components/InsightAnalytics";
 
 export default async function Page(props: {
   params: Promise<{
     team_slug: string;
     project_slug: string;
   }>;
+  searchParams: Promise<{
+    from?: string | undefined | string[];
+    to?: string | undefined | string[];
+    interval?: string | undefined | string[];
+  }>;
 }) {
-  const params = await props.params;
+  const [params, authToken] = await Promise.all([props.params, getAuthToken()]);
 
-  const [team, project] = await Promise.all([
-    getTeamBySlug(params.team_slug),
-    getProject(params.team_slug, params.project_slug),
-  ]);
+  const project = await getProject(params.team_slug, params.project_slug);
 
-  if (!team || !project) {
-    notFound();
+  if (!authToken) {
+    loginRedirect(`/team/${params.team_slug}/${params.project_slug}/insight`);
   }
 
-  const activeResponse = await isProjectActive({
-    projectId: project.id,
-    teamId: team.id,
+  if (!project) {
+    redirect(`/team/${params.team_slug}`);
+  }
+
+  const searchParams = await props.searchParams;
+  const { range, interval } = getFiltersFromSearchParams({
+    defaultRange: "last-30",
+    from: searchParams.from,
+    interval: searchParams.interval,
+    to: searchParams.to,
   });
 
-  const showFTUX = !activeResponse.insight;
+  const client = getClientThirdwebClient({
+    jwt: authToken,
+    teamId: project.teamId,
+  });
 
   return (
-    <div className="flex grow flex-col">
-      {/* header */}
-      <div className="border-b py-10">
-        <div className="container max-w-7xl">
-          <h1 className="mb-1 font-semibold text-3xl tracking-tight">
-            Insight
-          </h1>
-          <p className="text-muted-foreground text-sm">
-            APIs to retrieve blockchain data from any EVM chain, enrich it with
-            metadata, and transform it using custom logic
-          </p>
+    <ResponsiveSearchParamsProvider value={searchParams}>
+      <div>
+        <InsightAnalytics
+          client={client}
+          interval={interval}
+          projectClientId={project.publishableKey}
+          projectId={project.id}
+          range={range}
+          teamId={project.teamId}
+        />
+
+        <div className="h-10" />
+        <div className="relative overflow-hidden rounded-lg border-2 border-green-500/20 bg-gradient-to-br from-card/80 to-card/50 p-4 shadow-[inset_0_1px_2px_0_rgba(0,0,0,0.02)]">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent" />
+          <div className="relative flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-1">
+              <h3 className="font-medium text-lg">Get Started with Insight</h3>
+              <p className="text-muted-foreground text-sm">
+                A cross-chain API for historic blockchain data.
+              </p>
+            </div>
+            <a
+              className="inline-flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 font-medium text-sm text-white transition-all hover:bg-green-600/90 hover:shadow-sm"
+              href="https://portal.thirdweb.com/insight"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn More
+              <ArrowUpRightIcon className="size-4" />
+            </a>
+          </div>
         </div>
       </div>
-
-      <div className="h-6" />
-
-      <div className="container flex max-w-7xl grow flex-col">
-        {showFTUX ? (
-          <InsightFTUX clientId={project.publishableKey} />
-        ) : (
-          <BlueprintCard />
-        )}
-      </div>
-
-      <div className="h-20" />
-      <div className="border-t">
-        <div className="container max-w-7xl">
-          <InsightFooter />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function InsightFooter() {
-  return (
-    <FooterLinksSection
-      center={{
-        links: [
-          {
-            href: "https://www.youtube.com/watch?v=U2aW7YIUJVw",
-            label:
-              "Blockchain Data on Any EVM - Quick and Easy REST APIs for Onchain Data",
-          },
-          {
-            href: "https://www.youtube.com/watch?v=HvqewXLVRig",
-            label: "Build a Whale Alerts Telegram Bot with Insight",
-          },
-        ],
-        title: "Tutorials",
-      }}
-      left={{
-        links: [
-          {
-            href: "https://portal.thirdweb.com/insight",
-            label: "Overview",
-          },
-          {
-            href: "https://insight-api.thirdweb.com/reference",
-            label: "API Reference",
-          },
-        ],
-        title: "Documentation",
-      }}
-      right={{
-        links: [
-          {
-            href: "https://playground.thirdweb.com/insight",
-            label: "API Playground",
-          },
-        ],
-        title: "Demos",
-      }}
-    />
+    </ResponsiveSearchParamsProvider>
   );
 }

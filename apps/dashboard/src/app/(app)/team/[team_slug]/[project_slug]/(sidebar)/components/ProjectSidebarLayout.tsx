@@ -7,6 +7,7 @@ import {
   CoinsIcon,
   HomeIcon,
   LockIcon,
+  RssIcon,
   SettingsIcon,
   WalletIcon,
 } from "lucide-react";
@@ -102,6 +103,11 @@ export function ProjectSidebarLayout(props: {
               href: `${layoutPath}/account-abstraction`,
               icon: SmartAccountIcon,
               label: "Account Abstraction",
+            },
+            {
+              href: `${layoutPath}/rpc`,
+              icon: RssIcon,
+              label: "RPC",
             },
             {
               href: `${layoutPath}/vault`,

@@ -7,6 +7,7 @@ import {
   BarChart as RechartsBarChart,
   XAxis,
 } from "recharts";
+import type { RpcMethodStats } from "@/api/analytics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   type ChartConfig,
@@ -14,7 +15,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import type { RpcMethodStats } from "@/types/analytics";
 import { EmptyStateCard } from "../../../../../components/Analytics/EmptyStateCard";
 
 export function RpcMethodBarChartCardUI({

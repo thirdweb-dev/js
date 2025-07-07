@@ -9,19 +9,23 @@ export async function getContractCreator(
   contract: ThirdwebContract,
   functionSelectors: string[],
 ) {
-  if (isOwnerSupported(functionSelectors)) {
-    return owner({
-      contract,
-    });
-  }
+  try {
+    if (isOwnerSupported(functionSelectors)) {
+      return await owner({
+        contract,
+      });
+    }
 
-  if (isGetRoleAdminSupported(functionSelectors)) {
-    return getRoleMember({
-      contract,
-      index: BigInt(0),
-      role: "admin",
-    });
-  }
+    if (isGetRoleAdminSupported(functionSelectors)) {
+      return await getRoleMember({
+        contract,
+        index: BigInt(0),
+        role: "admin",
+      });
+    }
 
-  return null;
+    return null;
+  } catch {
+    return null;
+  }
 }

@@ -1,4 +1,5 @@
 /** biome-ignore-all lint/nursery/noNestedComponentDefinitions: FIXME */
+/** biome-ignore-all lint/a11y/useSemanticElements: FIXME */
 "use client";
 
 import {
@@ -320,7 +321,6 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                   }}
                   opacity={failedToLoad ? 0.3 : 1}
                   pointerEvents={failedToLoad ? "none" : "auto"}
-                  // biome-ignore lint/a11y/useSemanticElements: FIXME
                   role="group"
                   style={{ cursor: "pointer" }}
                 >

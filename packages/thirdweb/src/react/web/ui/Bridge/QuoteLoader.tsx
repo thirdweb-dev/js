@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { Token } from "../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import type { PurchaseData } from "../../../../pay/types.js";
 import { toUnits } from "../../../../utils/units.js";
 import {
   type BridgePrepareRequest,
@@ -16,6 +17,7 @@ import { Container } from "../components/basic.js";
 import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
 import { Text } from "../components/text.js";
+import type { UIOptions } from "./BridgeOrchestrator.js";
 
 interface QuoteLoaderProps {
   /**
@@ -69,7 +71,7 @@ interface QuoteLoaderProps {
   /**
    * Optional purchase data for the payment
    */
-  purchaseData?: object;
+  purchaseData?: PurchaseData;
 
   /**
    * Optional payment link ID for the payment
@@ -77,14 +79,13 @@ interface QuoteLoaderProps {
   paymentLinkId?: string;
 
   /**
-   * Fee payer for direct transfers (defaults to sender)
+   * UI options
    */
-  feePayer?: "sender" | "receiver";
-  mode: "fund_wallet" | "direct_payment" | "transaction";
+  uiOptions: UIOptions;
 }
 
 export function QuoteLoader({
-  mode,
+  uiOptions,
   destinationToken,
   paymentMethod,
   amount,
@@ -95,10 +96,14 @@ export function QuoteLoader({
   onError,
   purchaseData,
   paymentLinkId,
-  feePayer,
 }: QuoteLoaderProps) {
   // For now, we'll use a simple buy operation
   // This will be expanded to handle different bridge types based on the payment method
+  const feePayer =
+    uiOptions.mode === "direct_payment"
+      ? uiOptions.paymentInfo.feePayer
+      : undefined;
+  const mode = uiOptions.mode;
   const request: BridgePrepareRequest = getBridgeParams({
     amount,
     client,
@@ -175,7 +180,7 @@ function getBridgeParams(args: {
   client: ThirdwebClient;
   sender?: string;
   feePayer?: "sender" | "receiver";
-  purchaseData?: object;
+  purchaseData?: PurchaseData;
   paymentLinkId?: string;
 }): UseBridgePrepareParams {
   const { paymentMethod, amount, destinationToken, receiver, client, sender } =

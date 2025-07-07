@@ -26,7 +26,7 @@ export const wallet = {
   id: "app.nightly",
   image_id: "7fb6e288-6d7e-4f29-d934-8b3f229c2d00",
   mobile: {
-    native: null,
+    native: "nightly://",
     universal: null,
   },
   name: "Nightly",

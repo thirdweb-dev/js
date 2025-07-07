@@ -87,8 +87,7 @@ export function InviteTeamMembersUI(props: {
         client={props.client}
         customCTASection={
           <div className="flex gap-3">
-            {(props.team.billingPlan === "free" ||
-              props.team.billingPlan === "starter") && (
+            {props.team.billingPlan === "free" && (
               <Button
                 className="gap-2"
                 onClick={() => {

@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/a11y/useSemanticElements: TODO */
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
@@ -617,7 +618,6 @@ function WalletSelector(props: {
                     props.onClick(wallet);
                   }
                 }}
-                // biome-ignore lint/a11y/useSemanticElements: TODO
                 role="button"
                 tabIndex={0}
               >

@@ -1,4 +1,5 @@
 import type { Address as ox__Address, Hex as ox__Hex } from "ox";
+import type { PurchaseData } from "../../pay/types.js";
 import type { Token } from "./Token.js";
 export type Status =
   | {
@@ -18,7 +19,7 @@ export type Status =
         chainId: number;
         transactionHash: ox__Hex.Hex;
       }>;
-      purchaseData?: unknown;
+      purchaseData?: PurchaseData;
     }
   | {
       status: "PENDING";
@@ -36,7 +37,7 @@ export type Status =
         chainId: number;
         transactionHash: ox__Hex.Hex;
       }>;
-      purchaseData?: unknown;
+      purchaseData?: PurchaseData;
     }
   | {
       status: "FAILED";
@@ -45,7 +46,7 @@ export type Status =
         chainId: number;
         transactionHash: ox__Hex.Hex;
       }>;
-      purchaseData?: unknown;
+      purchaseData?: PurchaseData;
     }
   | {
       status: "NOT_FOUND";

@@ -1,6 +1,7 @@
 import { Link } from "chakra/link";
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
+import type { Ecosystem, Partner } from "@/api/ecosystems";
 import { Button } from "@/components/ui/button";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { CopyButton } from "@/components/ui/CopyButton";
@@ -17,7 +18,6 @@ import {
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import type { Ecosystem, Partner } from "../../../../../types";
 import { usePartners } from "../../../hooks/use-partners";
 import { useDeletePartner } from "../../hooks/use-delete-partner";
 

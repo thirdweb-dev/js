@@ -2,6 +2,7 @@
 import { useCallback, useMemo } from "react";
 import type { Token } from "../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import type { PurchaseData } from "../../../../pay/types.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { Address } from "../../../../utils/address.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
@@ -102,7 +103,7 @@ export interface BridgeOrchestratorProps {
   /**
    * Optional purchase data for the payment
    */
-  purchaseData: object | undefined;
+  purchaseData?: PurchaseData;
 
   /**
    * Optional payment link ID for the payment
@@ -291,7 +292,6 @@ export function BridgeOrchestrator({
             amount={state.context.destinationAmount}
             client={client}
             destinationToken={state.context.destinationToken}
-            mode={uiOptions.mode}
             onBack={() => {
               send({ type: "BACK" });
             }}
@@ -301,6 +301,7 @@ export function BridgeOrchestrator({
             paymentMethod={state.context.selectedPaymentMethod}
             purchaseData={purchaseData}
             receiver={state.context.receiverAddress}
+            uiOptions={uiOptions}
           />
         )}
 
