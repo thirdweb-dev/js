@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@abstract-foundation/agw-react": "^1.6.4",
+    "@abstract-foundation/agw-react": "^1.8.6",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-checkbox": "^1.3.2",
     "@radix-ui/react-label": "^2.1.7",
