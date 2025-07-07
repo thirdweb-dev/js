@@ -21,10 +21,6 @@ import {
   reportContractDeployed,
 } from "@/analytics/report";
 import type { Team } from "@/api/team";
-import {
-  DEFAULT_FEE_BPS_NEW,
-  DEFAULT_FEE_RECIPIENT,
-} from "@/constants/addresses";
 
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useAddContractToProject } from "@/hooks/project-contracts";
