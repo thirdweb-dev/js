@@ -141,7 +141,6 @@ export function usePaymentMethods(options: {
               limit: 100,
               maxSteps: 3,
               originChainId: chainId,
-              sortBy: "popularity",
             });
 
             // Add all origin tokens from this chain's routes

@@ -720,7 +720,6 @@ const ShowAllWalletsIcon = /* @__PURE__ */ StyledDiv(() => {
 });
 
 const WalletList = /* @__PURE__ */ StyledUl({
-  all: "unset",
   boxSizing: "border-box",
   display: "flex",
   flex: 1,

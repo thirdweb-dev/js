@@ -38,7 +38,6 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
       cursor: "not-allowed",
     },
     alignItems: "center",
-    all: "unset",
     background: (() => {
       if (props.bg) {
         return theme.colors[props.bg];
@@ -152,7 +151,6 @@ export const IconButton = /* @__PURE__ */ StyledButton((_) => {
       cursor: "not-allowed",
     },
     alignItems: "center",
-    all: "unset",
     borderRadius: radius.sm,
     color: theme.colors.secondaryIconColor,
     cursor: "pointer",

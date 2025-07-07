@@ -88,7 +88,6 @@ const WalletAddressContainer = /* @__PURE__ */ StyledButton((_) => {
     "&:hover": {
       borderColor: theme.colors.accentText,
     },
-    all: "unset",
     border: `1px solid ${theme.colors.borderColor}`,
     borderRadius: radius.md,
     boxSizing: "border-box",
