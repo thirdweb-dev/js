@@ -1120,8 +1120,8 @@ importers:
         specifier: 3.592.0
         version: 3.592.0
       '@aws-sdk/client-lambda':
-        specifier: 3.592.0
-        version: 3.592.0
+        specifier: 3.840.0
+        version: 3.840.0
       '@aws-sdk/credential-providers':
         specifier: 3.592.0
         version: 3.592.0(@aws-sdk/client-sso-oidc@3.840.0)
@@ -1306,8 +1306,8 @@ importers:
         specifier: 3.592.0
         version: 3.592.0
       '@aws-sdk/client-lambda':
-        specifier: 3.592.0
-        version: 3.592.0
+        specifier: 3.840.0
+        version: 3.840.0
       '@aws-sdk/credential-providers':
         specifier: 3.592.0
         version: 3.592.0(@aws-sdk/client-sso-oidc@3.840.0)
@@ -1605,9 +1605,9 @@ packages:
     resolution: {integrity: sha512-BjarFhm7be+5SFKFIg+H9gxEuOkMjuYd+Rhh4BusmWkOH1/AXHPFpAvRJeWUYgSQs7z2KKpG/cmW4uGP5i8OLA==}
     engines: {node: '>=16.0.0'}
 
-  '@aws-sdk/client-lambda@3.592.0':
-    resolution: {integrity: sha512-uCtyrccg+qZ/KbZtY9OHb8dXG59yYDvoQULiQaj+73XkI/P4Z69prflg87cA5UpXoSeoAinCahwyJM5+G/EXYw==}
-    engines: {node: '>=16.0.0'}
+  '@aws-sdk/client-lambda@3.840.0':
+    resolution: {integrity: sha512-aUKHKWW4Z1nxQ0q/shHkSA278oyv+lRJSvpin1GJXQumDdMKcOuXktmufOCZzjbl6UVw/Pqaw6V1Vo2gda6RdQ==}
+    engines: {node: '>=18.0.0'}
 
   '@aws-sdk/client-sso-oidc@3.592.0':
     resolution: {integrity: sha512-11Zvm8nm0s/UF3XCjzFRpQU+8FFVW5rcr3BHfnH6xAe5JEoN6bJN/n+wOfnElnjek+90hh+Qc7s141AMrCjiiw==}
@@ -2798,8 +2798,8 @@ packages:
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
     engines: {node: '>=10.0.0'}
 
-  '@ecies/ciphers@0.2.3':
-    resolution: {integrity: sha512-tapn6XhOueMwht3E2UzY0ZZjYokdaw9XtL9kEyjhQ/Fb9vL9xTFbOaI+fV0AWvTpYu4BNloC6getKW6NtSg4mA==}
+  '@ecies/ciphers@0.2.4':
+    resolution: {integrity: sha512-t+iX+Wf5nRKyNzk8dviW3Ikb/280+aEJAnw9YXvCp2tYGPSkMki+NRY+8aNLmVFv3eNtMdvViPNOPxS8SZNP+w==}
     engines: {bun: '>=1', deno: '>=2', node: '>=16'}
     peerDependencies:
       '@noble/ciphers': ^1.0.0
@@ -5289,60 +5289,60 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@reown/appkit-common@1.7.12':
-    resolution: {integrity: sha512-Fho7RFj+xN7uHM9MvCRm4QHf2Oxnl9ZKp9K0lm4MMawKzZZZ8riuUwRJkHOf75++SjNGYx9+Y8bAV6Xf+nlHxg==}
+  '@reown/appkit-common@1.7.13':
+    resolution: {integrity: sha512-A89OddJp0KImneGnJfwBvAtbrD5vX0KqqKWU8l3EXYGaFAiW+hitl4GwZ6kjoBFgXRc8sQ3T7xg1MBZRZH6wLQ==}
 
   '@reown/appkit-common@1.7.8':
     resolution: {integrity: sha512-ridIhc/x6JOp7KbDdwGKY4zwf8/iK8EYBl+HtWrruutSLwZyVi5P8WaZa+8iajL6LcDcDF7LoyLwMTym7SRuwQ==}
 
-  '@reown/appkit-controllers@1.7.12':
-    resolution: {integrity: sha512-FkxpsuEAqn+BKacpj9rz9psUcwPgahd5YhVek478J1fr1GIVfJACIxfqGZRPczTHV2RLd+Z+N+hBUwavTvYRew==}
+  '@reown/appkit-controllers@1.7.13':
+    resolution: {integrity: sha512-p4KkQKw9tvB56OyBKvJQFHWTtIw9xSX/sXIAWo8RZ5yrzp3Xln5THe75ATbIjqiIW4sywYCGe0C7vfyjJl/Z3A==}
 
   '@reown/appkit-controllers@1.7.8':
     resolution: {integrity: sha512-IdXlJlivrlj6m63VsGLsjtPHHsTWvKGVzWIP1fXZHVqmK+rZCBDjCi9j267Rb9/nYRGHWBtlFQhO8dK35WfeDA==}
 
-  '@reown/appkit-pay@1.7.12':
-    resolution: {integrity: sha512-g3tnudCE5ZPHfEOWwShx0Lk5bVO7xfYMjcQD6qqrx8ZrviUK1BQiqUxFJpLltPvMIoqCssPkhP/6tPu/VHYFIQ==}
+  '@reown/appkit-pay@1.7.13':
+    resolution: {integrity: sha512-1C5E7DM+C5z48eqV2N5CrimYOLGQLeOi7LwBoliQn9S50fDxPIi17XePDQ3+/q1zIYDw2N3a1aEoZ9khlPIGjQ==}
 
   '@reown/appkit-pay@1.7.8':
     resolution: {integrity: sha512-OSGQ+QJkXx0FEEjlpQqIhT8zGJKOoHzVnyy/0QFrl3WrQTjCzg0L6+i91Ad5Iy1zb6V5JjqtfIFpRVRWN4M3pw==}
 
-  '@reown/appkit-polyfills@1.7.12':
-    resolution: {integrity: sha512-LK55M1/JlGPCWnhLhiEof/N5S+bf4rXcAyOXfwTYvjCit8yI3z0SpDaOLJWQZrULLgq/+AYXgjYMiSIR5h1x+A==}
+  '@reown/appkit-polyfills@1.7.13':
+    resolution: {integrity: sha512-vMiVd+H5HrpShVHAtiGp1GHxZf6hkXkxLB1NCfR0m4/49KOFzfxAcu52CBq6f6ttljeTIj/clbO3b8s4eP1rUw==}
 
   '@reown/appkit-polyfills@1.7.8':
     resolution: {integrity: sha512-W/kq786dcHHAuJ3IV2prRLEgD/2iOey4ueMHf1sIFjhhCGMynMkhsOhQMUH0tzodPqUgAC494z4bpIDYjwWXaA==}
 
-  '@reown/appkit-scaffold-ui@1.7.12':
-    resolution: {integrity: sha512-3Rx6i+Qr4O253xigYnTXKeuwJ9vJiYMrlR3E1q6eDghPgBlrTL8kJqbC8Dnrf9Im6H80h+uHS4LIwzbIzmp6Lg==}
+  '@reown/appkit-scaffold-ui@1.7.13':
+    resolution: {integrity: sha512-KFfrpMGWXfXzWNt9FKkkhFQ/xdDSjlDAiAtBXYuM6e9GSi9j2EwvLw64mluLHRkgZHZL+z2tauZ+4S57B/N95w==}
 
   '@reown/appkit-scaffold-ui@1.7.8':
     resolution: {integrity: sha512-RCeHhAwOrIgcvHwYlNWMcIDibdI91waaoEYBGw71inE0kDB8uZbE7tE6DAXJmDkvl0qPh+DqlC4QbJLF1FVYdQ==}
 
-  '@reown/appkit-ui@1.7.12':
-    resolution: {integrity: sha512-DDo+mk4Lx2af3j9QkyLgQdEh0KStDdoVv4R3ob8w+pklpzmxLp8Tr/tfWZQAJn8OZ51IaRQTHO7vzvTOhPKJ8w==}
+  '@reown/appkit-ui@1.7.13':
+    resolution: {integrity: sha512-u/r+SpJ2UgXdCFo0YXdMDP5/SRjbO1qDsqbJGRhPo1q/RyH1r3QhmCkZDGKKAiyARinC+k5NnBTVJ1cXNgh77Q==}
 
   '@reown/appkit-ui@1.7.8':
     resolution: {integrity: sha512-1hjCKjf6FLMFzrulhl0Y9Vb9Fu4royE+SXCPSWh4VhZhWqlzUFc7kutnZKx8XZFVQH4pbBvY62SpRC93gqoHow==}
 
-  '@reown/appkit-utils@1.7.12':
-    resolution: {integrity: sha512-LoTklAWkMov6YjFVVwE8OpoW9ksUb5F3uDpYfjamQ80Q9ExKc0Cm3VMP8haEF9501I2fojFOH+1DSQ+pMeY8kA==}
+  '@reown/appkit-utils@1.7.13':
+    resolution: {integrity: sha512-0BBtGLXEONLaGFThnbQ18CxNY9KOxbHIeG9rVIiSvHzyvCn2KIAtKHcJxIJfcz/1UQpMHq4BHMV4sqejvrBJGA==}
     peerDependencies:
-      valtio: 1.13.2
+      valtio: 2.1.5
 
   '@reown/appkit-utils@1.7.8':
     resolution: {integrity: sha512-8X7UvmE8GiaoitCwNoB86pttHgQtzy4ryHZM9kQpvjQ0ULpiER44t1qpVLXNM4X35O0v18W0Dk60DnYRMH2WRw==}
     peerDependencies:
       valtio: 1.13.2
 
-  '@reown/appkit-wallet@1.7.12':
-    resolution: {integrity: sha512-ChAdX/Et31wsJArHJ4VdaNej9+pdt1G3c7axpNku6oWA3p17Eo0+cR3QGI4ycnepFChxE8LiJCqyv8R9BGJ95w==}
+  '@reown/appkit-wallet@1.7.13':
+    resolution: {integrity: sha512-E8/jwahY8CKlnzadF3+ZFeMpxnlnBOKHzHXEsibCUeR5dzohEai1qEIkV81rArmhm4RB+0p5JM+/eYlIB8h7YQ==}
 
   '@reown/appkit-wallet@1.7.8':
     resolution: {integrity: sha512-kspz32EwHIOT/eg/ZQbFPxgXq0B/olDOj3YMu7gvLEFz4xyOFd/wgzxxAXkp5LbG4Cp++s/elh79rVNmVFdB9A==}
 
-  '@reown/appkit@1.7.12':
-    resolution: {integrity: sha512-llNLf6tkY9mwr0IcVWkNmISARn35FU0NAl29mgLr3s/r2o6yid+/M2UuA3dXh0koY2BLpyrjAwiY/DOXN6kgfw==}
+  '@reown/appkit@1.7.13':
+    resolution: {integrity: sha512-/9gvKTS3nuDU7K7PPxgPTS0zyPguPxM/v1szKdXvuBaq/P9GbsL3U9WoxBj7+6crGGjr9Dub3QwSt0iWyvPSnw==}
 
   '@reown/appkit@1.7.8':
     resolution: {integrity: sha512-51kTleozhA618T1UvMghkhKfaPcc9JlKwLJ5uV+riHyvSoWPKPRIa5A6M1Wano5puNyW0s3fwywhyqTHSilkaA==}
@@ -5947,24 +5947,25 @@ packages:
     resolution: {integrity: sha512-hKMWcANhUiNbCJouYkZ9V3+/Qf9pteR1dnwgdyzR09R4ODEYx8BbUysHwRSyex4rZ9zapddZhLFTnT4ZijR4pw==}
     engines: {node: '>=18.0.0'}
 
-  '@smithy/eventstream-codec@3.1.10':
-    resolution: {integrity: sha512-323B8YckSbUH0nMIpXn7HZsAVKHYHFUODa8gG9cHo0ySvA1fr5iWaNT+iIL0UCqUzG6QPHA3BSsBtRQou4mMqQ==}
+  '@smithy/eventstream-codec@4.0.4':
+    resolution: {integrity: sha512-7XoWfZqWb/QoR/rAU4VSi0mWnO2vu9/ltS6JZ5ZSZv0eovLVfDfu0/AX4ub33RsJTOth3TiFWSHS5YdztvFnig==}
+    engines: {node: '>=18.0.0'}
 
-  '@smithy/eventstream-serde-browser@3.0.14':
-    resolution: {integrity: sha512-kbrt0vjOIihW3V7Cqj1SXQvAI5BR8SnyQYsandva0AOR307cXAc+IhPngxIPslxTLfxwDpNu0HzCAq6g42kCPg==}
-    engines: {node: '>=16.0.0'}
+  '@smithy/eventstream-serde-browser@4.0.4':
+    resolution: {integrity: sha512-3fb/9SYaYqbpy/z/H3yIi0bYKyAa89y6xPmIqwr2vQiUT2St+avRt8UKwsWt9fEdEasc5d/V+QjrviRaX1JRFA==}
+    engines: {node: '>=18.0.0'}
 
-  '@smithy/eventstream-serde-config-resolver@3.0.11':
-    resolution: {integrity: sha512-P2pnEp4n75O+QHjyO7cbw/vsw5l93K/8EWyjNCAAybYwUmj3M+hjSQZ9P5TVdUgEG08ueMAP5R4FkuSkElZ5tQ==}
-    engines: {node: '>=16.0.0'}
+  '@smithy/eventstream-serde-config-resolver@4.1.2':
+    resolution: {integrity: sha512-JGtambizrWP50xHgbzZI04IWU7LdI0nh/wGbqH3sJesYToMi2j/DcoElqyOcqEIG/D4tNyxgRuaqBXWE3zOFhQ==}
+    engines: {node: '>=18.0.0'}
 
-  '@smithy/eventstream-serde-node@3.0.13':
-    resolution: {integrity: sha512-zqy/9iwbj8Wysmvi7Lq7XFLeDgjRpTbCfwBhJa8WbrylTAHiAu6oQTwdY7iu2lxigbc9YYr9vPv5SzYny5tCXQ==}
-    engines: {node: '>=16.0.0'}
+  '@smithy/eventstream-serde-node@4.0.4':
+    resolution: {integrity: sha512-RD6UwNZ5zISpOWPuhVgRz60GkSIp0dy1fuZmj4RYmqLVRtejFqQ16WmfYDdoSoAjlp1LX+FnZo+/hkdmyyGZ1w==}
+    engines: {node: '>=18.0.0'}
 
-  '@smithy/eventstream-serde-universal@3.0.13':
-    resolution: {integrity: sha512-L1Ib66+gg9uTnqp/18Gz4MDpJPKRE44geOjOQ2SVc0eiaO5l255ADziATZgjQjqumC7yPtp1XnjHlF1srcwjKw==}
-    engines: {node: '>=16.0.0'}
+  '@smithy/eventstream-serde-universal@4.0.4':
+    resolution: {integrity: sha512-UeJpOmLGhq1SLox79QWw/0n2PFX+oPRE1ZyRMxPIaFEfCqWaqpB7BU9C8kpPOGEhLF7AwEqfFbtwNxGy4ReENA==}
+    engines: {node: '>=18.0.0'}
 
   '@smithy/fetch-http-handler@3.2.9':
     resolution: {integrity: sha512-hYNVQOqhFQ6vOpenifFME546f0GfJn2OiQ3M0FDmuUu8V/Uiwy2wej7ZXxFBNqdx0R5DZAqWM1l6VRhGz8oE6A==}
@@ -6257,9 +6258,9 @@ packages:
     resolution: {integrity: sha512-b+zebfKCfRdgNJDknHCob3O7FpeYQN6ZG6YLExMcasDHsCXlsXCEuiPZeLnJLpwa5dvPetGlnGCiMHuLwGvFow==}
     engines: {node: '>=18.0.0'}
 
-  '@smithy/util-waiter@3.2.0':
-    resolution: {integrity: sha512-PpjSboaDUE6yl+1qlg3Si57++e84oXdWGbuFUSAciXsVfEZJJJupR2Nb0QuXHiunt2vGR+1PTizOMvnUPaG2Qg==}
-    engines: {node: '>=16.0.0'}
+  '@smithy/util-waiter@4.0.6':
+    resolution: {integrity: sha512-slcr1wdRbX7NFphXZOxtxRNA7hXAAtJAXJDE/wdoMAos27SIquVCKiSqfB6/28YzQ8FCsB5NKkhdM5gMADbqxg==}
+    engines: {node: '>=18.0.0'}
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
@@ -13216,6 +13217,9 @@ packages:
   proxy-compare@2.6.0:
     resolution: {integrity: sha512-8xuCeM3l8yqdmbPoYeLbrAXCBWu19XEYc5/F28f5qOaoAIMyfmBUkl5axiK+x9olUvRlcekvnm98AP9RDngOIw==}
 
+  proxy-compare@3.0.1:
+    resolution: {integrity: sha512-V9plBAt3qjMlS1+nC8771KNf6oJ12gExvaxnNzN/9yVRLdTv/lc+oJlnSzrdYDAvBfTStPCoiaCOTmTs0adv7Q==}
+
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
 
@@ -15326,6 +15330,18 @@ packages:
       react:
         optional: true
 
+  valtio@2.1.5:
+    resolution: {integrity: sha512-vsh1Ixu5mT0pJFZm+Jspvhga5GzHUTYv0/+Th203pLfh3/wbHwxhu/Z2OkZDXIgHfjnjBns7SN9HNcbDvPmaGw==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      react: '>=18.0.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
+
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
@@ -16030,7 +16046,7 @@ snapshots:
       '@aws-crypto/sha256-js': 3.0.0
       '@aws-crypto/supports-web-crypto': 3.0.0
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.840.0
+      '@aws-sdk/types': 3.577.0
       '@aws-sdk/util-locate-window': 3.804.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
@@ -16048,7 +16064,7 @@ snapshots:
   '@aws-crypto/sha256-js@3.0.0':
     dependencies:
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.840.0
+      '@aws-sdk/types': 3.577.0
       tslib: 1.14.1
 
   '@aws-crypto/sha256-js@5.2.0':
@@ -16169,53 +16185,51 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-lambda@3.592.0':
+  '@aws-sdk/client-lambda@3.840.0':
     dependencies:
-      '@aws-crypto/sha256-browser': 3.0.0
-      '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sso-oidc': 3.592.0(@aws-sdk/client-sts@3.592.0)
-      '@aws-sdk/client-sts': 3.592.0
-      '@aws-sdk/core': 3.592.0
-      '@aws-sdk/credential-provider-node': 3.592.0(@aws-sdk/client-sso-oidc@3.592.0(@aws-sdk/client-sts@3.592.0))(@aws-sdk/client-sts@3.592.0)
-      '@aws-sdk/middleware-host-header': 3.577.0
-      '@aws-sdk/middleware-logger': 3.577.0
-      '@aws-sdk/middleware-recursion-detection': 3.577.0
-      '@aws-sdk/middleware-user-agent': 3.587.0
-      '@aws-sdk/region-config-resolver': 3.587.0
-      '@aws-sdk/types': 3.577.0
-      '@aws-sdk/util-endpoints': 3.587.0
-      '@aws-sdk/util-user-agent-browser': 3.577.0
-      '@aws-sdk/util-user-agent-node': 3.587.0
-      '@smithy/config-resolver': 3.0.13
-      '@smithy/core': 2.5.7
-      '@smithy/eventstream-serde-browser': 3.0.14
-      '@smithy/eventstream-serde-config-resolver': 3.0.11
-      '@smithy/eventstream-serde-node': 3.0.13
-      '@smithy/fetch-http-handler': 3.2.9
-      '@smithy/hash-node': 3.0.11
-      '@smithy/invalid-dependency': 3.0.11
-      '@smithy/middleware-content-length': 3.0.13
-      '@smithy/middleware-endpoint': 3.2.8
-      '@smithy/middleware-retry': 3.0.34
-      '@smithy/middleware-serde': 3.0.11
-      '@smithy/middleware-stack': 3.0.11
-      '@smithy/node-config-provider': 3.1.12
-      '@smithy/node-http-handler': 3.3.3
-      '@smithy/protocol-http': 4.1.8
-      '@smithy/smithy-client': 3.7.0
-      '@smithy/types': 3.7.2
-      '@smithy/url-parser': 3.0.11
-      '@smithy/util-base64': 3.0.0
-      '@smithy/util-body-length-browser': 3.0.0
-      '@smithy/util-body-length-node': 3.0.0
-      '@smithy/util-defaults-mode-browser': 3.0.34
-      '@smithy/util-defaults-mode-node': 3.0.34
-      '@smithy/util-endpoints': 2.1.7
-      '@smithy/util-middleware': 3.0.11
-      '@smithy/util-retry': 3.0.11
-      '@smithy/util-stream': 3.3.4
-      '@smithy/util-utf8': 3.0.0
-      '@smithy/util-waiter': 3.2.0
+      '@aws-crypto/sha256-browser': 5.2.0
+      '@aws-crypto/sha256-js': 5.2.0
+      '@aws-sdk/core': 3.840.0
+      '@aws-sdk/credential-provider-node': 3.840.0
+      '@aws-sdk/middleware-host-header': 3.840.0
+      '@aws-sdk/middleware-logger': 3.840.0
+      '@aws-sdk/middleware-recursion-detection': 3.840.0
+      '@aws-sdk/middleware-user-agent': 3.840.0
+      '@aws-sdk/region-config-resolver': 3.840.0
+      '@aws-sdk/types': 3.840.0
+      '@aws-sdk/util-endpoints': 3.840.0
+      '@aws-sdk/util-user-agent-browser': 3.840.0
+      '@aws-sdk/util-user-agent-node': 3.840.0
+      '@smithy/config-resolver': 4.1.4
+      '@smithy/core': 3.6.0
+      '@smithy/eventstream-serde-browser': 4.0.4
+      '@smithy/eventstream-serde-config-resolver': 4.1.2
+      '@smithy/eventstream-serde-node': 4.0.4
+      '@smithy/fetch-http-handler': 5.0.4
+      '@smithy/hash-node': 4.0.4
+      '@smithy/invalid-dependency': 4.0.4
+      '@smithy/middleware-content-length': 4.0.4
+      '@smithy/middleware-endpoint': 4.1.13
+      '@smithy/middleware-retry': 4.1.14
+      '@smithy/middleware-serde': 4.0.8
+      '@smithy/middleware-stack': 4.0.4
+      '@smithy/node-config-provider': 4.1.3
+      '@smithy/node-http-handler': 4.0.6
+      '@smithy/protocol-http': 5.1.2
+      '@smithy/smithy-client': 4.4.5
+      '@smithy/types': 4.3.1
+      '@smithy/url-parser': 4.0.4
+      '@smithy/util-base64': 4.0.0
+      '@smithy/util-body-length-browser': 4.0.0
+      '@smithy/util-body-length-node': 4.0.0
+      '@smithy/util-defaults-mode-browser': 4.0.21
+      '@smithy/util-defaults-mode-node': 4.0.21
+      '@smithy/util-endpoints': 3.0.6
+      '@smithy/util-middleware': 4.0.4
+      '@smithy/util-retry': 4.0.6
+      '@smithy/util-stream': 4.2.2
+      '@smithy/util-utf8': 4.0.0
+      '@smithy/util-waiter': 4.0.6
       tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
@@ -18391,7 +18405,7 @@ snapshots:
 
   '@discoveryjs/json-ext@0.5.7': {}
 
-  '@ecies/ciphers@0.2.3(@noble/ciphers@1.3.0)':
+  '@ecies/ciphers@0.2.4(@noble/ciphers@1.3.0)':
     dependencies:
       '@noble/ciphers': 1.3.0
 
@@ -20815,7 +20829,7 @@ snapshots:
       '@privy-io/ethereum': 0.0.2(viem@2.31.6(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71))
       '@privy-io/js-sdk-core': 0.52.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.31.6(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71))
       '@privy-io/public-api': 2.37.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)
-      '@reown/appkit': 1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit': 1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
       '@scure/base': 1.2.6
       '@simplewebauthn/browser': 9.0.1
       '@solana/wallet-adapter-base': 0.9.23(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))
@@ -21724,7 +21738,7 @@ snapshots:
     dependencies:
       react: 19.1.0
 
-  '@reown/appkit-common@1.7.12(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.22.4)':
+  '@reown/appkit-common@1.7.13(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.22.4)':
     dependencies:
       big.js: 6.2.2
       dayjs: 1.11.13
@@ -21735,7 +21749,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-common@1.7.12(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)':
+  '@reown/appkit-common@1.7.13(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)':
     dependencies:
       big.js: 6.2.2
       dayjs: 1.11.13
@@ -21768,12 +21782,12 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-controllers@1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)':
+  '@reown/appkit-controllers@1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)':
     dependencies:
-      '@reown/appkit-common': 1.7.12(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      '@reown/appkit-wallet': 1.7.12(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)
+      '@reown/appkit-common': 1.7.13(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit-wallet': 1.7.13(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)
       '@walletconnect/universal-provider': 2.21.3(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      valtio: 1.13.2(@types/react@19.1.8)(react@19.1.0)
+      valtio: 2.1.5(@types/react@19.1.8)(react@19.1.0)
       viem: 2.31.6(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -21836,14 +21850,14 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-pay@1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)':
+  '@reown/appkit-pay@1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)':
     dependencies:
-      '@reown/appkit-common': 1.7.12(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      '@reown/appkit-controllers': 1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      '@reown/appkit-ui': 1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      '@reown/appkit-utils': 1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.1.8)(react@19.1.0))(zod@3.25.71)
+      '@reown/appkit-common': 1.7.13(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit-controllers': 1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit-ui': 1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit-utils': 1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.1.8)(react@19.1.0))(zod@3.25.71)
       lit: 3.3.0
-      valtio: 1.13.2(@types/react@19.1.8)(react@19.1.0)
+      valtio: 2.1.5(@types/react@19.1.8)(react@19.1.0)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -21906,7 +21920,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-polyfills@1.7.12':
+  '@reown/appkit-polyfills@1.7.13':
     dependencies:
       buffer: 6.0.3
 
@@ -21914,13 +21928,13 @@ snapshots:
     dependencies:
       buffer: 6.0.3
 
-  '@reown/appkit-scaffold-ui@1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.1.8)(react@19.1.0))(zod@3.25.71)':
+  '@reown/appkit-scaffold-ui@1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.1.8)(react@19.1.0))(zod@3.25.71)':
     dependencies:
-      '@reown/appkit-common': 1.7.12(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      '@reown/appkit-controllers': 1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      '@reown/appkit-ui': 1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      '@reown/appkit-utils': 1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.1.8)(react@19.1.0))(zod@3.25.71)
-      '@reown/appkit-wallet': 1.7.12(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)
+      '@reown/appkit-common': 1.7.13(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit-controllers': 1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit-ui': 1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit-utils': 1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.1.8)(react@19.1.0))(zod@3.25.71)
+      '@reown/appkit-wallet': 1.7.13(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)
       lit: 3.3.0
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -21986,11 +22000,11 @@ snapshots:
       - valtio
       - zod
 
-  '@reown/appkit-ui@1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)':
+  '@reown/appkit-ui@1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)':
     dependencies:
-      '@reown/appkit-common': 1.7.12(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      '@reown/appkit-controllers': 1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      '@reown/appkit-wallet': 1.7.12(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)
+      '@reown/appkit-common': 1.7.13(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit-controllers': 1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit-wallet': 1.7.13(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)
       lit: 3.3.0
       qrcode: 1.5.3
     transitivePeerDependencies:
@@ -22054,16 +22068,16 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-utils@1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.1.8)(react@19.1.0))(zod@3.25.71)':
+  '@reown/appkit-utils@1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.1.8)(react@19.1.0))(zod@3.25.71)':
     dependencies:
-      '@reown/appkit-common': 1.7.12(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      '@reown/appkit-controllers': 1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      '@reown/appkit-polyfills': 1.7.12
-      '@reown/appkit-wallet': 1.7.12(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)
+      '@reown/appkit-common': 1.7.13(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit-controllers': 1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit-polyfills': 1.7.13
+      '@reown/appkit-wallet': 1.7.13(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)
       '@wallet-standard/wallet': 1.1.0
       '@walletconnect/logger': 2.1.2
       '@walletconnect/universal-provider': 2.21.3(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      valtio: 1.13.2(@types/react@19.1.8)(react@19.1.0)
+      valtio: 2.1.5(@types/react@19.1.8)(react@19.1.0)
       viem: 2.31.6(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -22129,10 +22143,10 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-wallet@1.7.12(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)':
+  '@reown/appkit-wallet@1.7.13(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)':
     dependencies:
-      '@reown/appkit-common': 1.7.12(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.22.4)
-      '@reown/appkit-polyfills': 1.7.12
+      '@reown/appkit-common': 1.7.13(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.22.4)
+      '@reown/appkit-polyfills': 1.7.13
       '@walletconnect/logger': 2.1.2
       zod: 3.22.4
     transitivePeerDependencies:
@@ -22151,21 +22165,21 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@reown/appkit@1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)':
+  '@reown/appkit@1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)':
     dependencies:
-      '@reown/appkit-common': 1.7.12(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      '@reown/appkit-controllers': 1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      '@reown/appkit-pay': 1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      '@reown/appkit-polyfills': 1.7.12
-      '@reown/appkit-scaffold-ui': 1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.1.8)(react@19.1.0))(zod@3.25.71)
-      '@reown/appkit-ui': 1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
-      '@reown/appkit-utils': 1.7.12(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(valtio@1.13.2(@types/react@19.1.8)(react@19.1.0))(zod@3.25.71)
-      '@reown/appkit-wallet': 1.7.12(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)
+      '@reown/appkit-common': 1.7.13(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit-controllers': 1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit-pay': 1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit-polyfills': 1.7.13
+      '@reown/appkit-scaffold-ui': 1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.1.8)(react@19.1.0))(zod@3.25.71)
+      '@reown/appkit-ui': 1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
+      '@reown/appkit-utils': 1.7.13(@types/react@19.1.8)(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(react@19.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.1.8)(react@19.1.0))(zod@3.25.71)
+      '@reown/appkit-wallet': 1.7.13(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)
       '@walletconnect/types': 2.21.3(aws4fetch@1.0.20)(ioredis@5.6.1)
       '@walletconnect/universal-provider': 2.21.3(aws4fetch@1.0.20)(bufferutil@4.0.9)(encoding@0.1.13)(ioredis@5.6.1)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
       bs58: 6.0.0
       semver: 7.7.2
-      valtio: 1.13.2(@types/react@19.1.8)(react@19.1.0)
+      valtio: 2.1.5(@types/react@19.1.8)(react@19.1.0)
       viem: 2.31.6(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.71)
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -23146,34 +23160,34 @@ snapshots:
       '@smithy/url-parser': 4.0.4
       tslib: 2.8.1
 
-  '@smithy/eventstream-codec@3.1.10':
+  '@smithy/eventstream-codec@4.0.4':
     dependencies:
       '@aws-crypto/crc32': 5.2.0
-      '@smithy/types': 3.7.2
-      '@smithy/util-hex-encoding': 3.0.0
+      '@smithy/types': 4.3.1
+      '@smithy/util-hex-encoding': 4.0.0
       tslib: 2.8.1
 
-  '@smithy/eventstream-serde-browser@3.0.14':
+  '@smithy/eventstream-serde-browser@4.0.4':
     dependencies:
-      '@smithy/eventstream-serde-universal': 3.0.13
-      '@smithy/types': 3.7.2
+      '@smithy/eventstream-serde-universal': 4.0.4
+      '@smithy/types': 4.3.1
       tslib: 2.8.1
 
-  '@smithy/eventstream-serde-config-resolver@3.0.11':
+  '@smithy/eventstream-serde-config-resolver@4.1.2':
     dependencies:
-      '@smithy/types': 3.7.2
+      '@smithy/types': 4.3.1
       tslib: 2.8.1
 
-  '@smithy/eventstream-serde-node@3.0.13':
+  '@smithy/eventstream-serde-node@4.0.4':
     dependencies:
-      '@smithy/eventstream-serde-universal': 3.0.13
-      '@smithy/types': 3.7.2
+      '@smithy/eventstream-serde-universal': 4.0.4
+      '@smithy/types': 4.3.1
       tslib: 2.8.1
 
-  '@smithy/eventstream-serde-universal@3.0.13':
+  '@smithy/eventstream-serde-universal@4.0.4':
     dependencies:
-      '@smithy/eventstream-codec': 3.1.10
-      '@smithy/types': 3.7.2
+      '@smithy/eventstream-codec': 4.0.4
+      '@smithy/types': 4.3.1
       tslib: 2.8.1
 
   '@smithy/fetch-http-handler@3.2.9':
@@ -23640,10 +23654,10 @@ snapshots:
       '@smithy/util-buffer-from': 4.0.0
       tslib: 2.8.1
 
-  '@smithy/util-waiter@3.2.0':
+  '@smithy/util-waiter@4.0.6':
     dependencies:
-      '@smithy/abort-controller': 3.1.9
-      '@smithy/types': 3.7.2
+      '@smithy/abort-controller': 4.0.4
+      '@smithy/types': 4.3.1
       tslib: 2.8.1
 
   '@socket.io/component-emitter@3.1.2': {}
@@ -28662,7 +28676,7 @@ snapshots:
 
   eciesjs@0.4.15:
     dependencies:
-      '@ecies/ciphers': 0.2.3(@noble/ciphers@1.3.0)
+      '@ecies/ciphers': 0.2.4(@noble/ciphers@1.3.0)
       '@noble/ciphers': 1.3.0
       '@noble/curves': 1.9.2
       '@noble/hashes': 1.8.0
@@ -28979,8 +28993,8 @@ snapshots:
       '@typescript-eslint/parser': 7.14.1(eslint@8.57.0)(typescript@5.8.3)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@8.57.0)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.0)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.57.0)
       eslint-plugin-react: 7.37.5(eslint@8.57.0)
       eslint-plugin-react-hooks: 5.2.0(eslint@8.57.0)
@@ -28999,7 +29013,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@8.57.0):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.1(supports-color@8.1.1)
@@ -29010,7 +29024,7 @@ snapshots:
       tinyglobby: 0.2.14
       unrs-resolver: 1.10.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -29035,18 +29049,18 @@ snapshots:
       - bluebird
       - supports-color
 
-  eslint-module-utils@2.12.1(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-module-utils@2.12.1(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 7.14.1(eslint@8.57.0)(typescript@5.8.3)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.0):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -29057,7 +29071,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -33633,6 +33647,8 @@ snapshots:
 
   proxy-compare@2.6.0: {}
 
+  proxy-compare@3.0.1: {}
+
   proxy-from-env@1.1.0: {}
 
   psl@1.15.0:
@@ -36224,6 +36240,13 @@ snapshots:
       derive-valtio: 0.1.0(valtio@1.13.2(@types/react@19.1.8)(react@19.1.0))
       proxy-compare: 2.6.0
       use-sync-external-store: 1.2.0(react@19.1.0)
+    optionalDependencies:
+      '@types/react': 19.1.8
+      react: 19.1.0
+
+  valtio@2.1.5(@types/react@19.1.8)(react@19.1.0):
+    dependencies:
+      proxy-compare: 3.0.1
     optionalDependencies:
       '@types/react': 19.1.8
       react: 19.1.0
