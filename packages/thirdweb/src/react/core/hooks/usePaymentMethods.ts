@@ -1,9 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
+import { chains } from "../../../bridge/Chains.js";
 import { routes } from "../../../bridge/Routes.js";
 import type { Token } from "../../../bridge/types/Token.js";
-import { getCachedChain } from "../../../chains/utils.js";
+import {
+  getCachedChain,
+  getInsightEnabledChainIds,
+} from "../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import { isInsightEnabled } from "../../../insight/common.js";
 import { getOwnedTokens } from "../../../insight/get-tokens.js";
 import { toTokens } from "../../../utils/units.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
@@ -56,42 +59,29 @@ export function usePaymentMethods(options: {
       if (!wallet) {
         throw new Error("No wallet connected");
       }
-      const allRoutes = await routes({
-        client,
-        destinationChainId: destinationToken.chainId,
-        destinationTokenAddress: destinationToken.address,
-        includePrices: true,
-        limit: 100,
-        maxSteps: 3,
-        sortBy: "popularity", // Get top 100 most popular routes
-      });
 
-      const allOriginTokens = includeDestinationToken
-        ? [destinationToken, ...allRoutes.map((route) => route.originToken)]
-        : allRoutes.map((route) => route.originToken);
+      // 1. Get all supported chains
+      const [allChains, insightEnabledChainIds] = await Promise.all([
+        chains({ client }),
+        getInsightEnabledChainIds(),
+      ]);
 
-      // 1. Resolve all unique chains in the supported token map
-      const uniqueChains = Array.from(
-        new Set(allOriginTokens.map((t) => t.chainId)),
+      // 2. Check insight availability for all chains
+      const insightEnabledChains = allChains.filter((c) =>
+        insightEnabledChainIds.includes(c.chainId),
       );
 
-      // 2. Check insight availability once per chain
-      const insightSupport = await Promise.all(
-        uniqueChains.map(async (c) => ({
-          chain: getCachedChain(c),
-          enabled: await isInsightEnabled(getCachedChain(c)),
-        })),
-      );
-      const insightEnabledChains = insightSupport.filter((c) => c.enabled);
-
-      // 3. ERC-20 balances for insight-enabled chains (batched 5 chains / call)
-      let owned: OwnedTokenWithQuote[] = [];
+      // 3. Get all owned tokens for insight-enabled chains
+      let allOwnedTokens: Array<{
+        balance: bigint;
+        originToken: Token;
+      }> = [];
       let page = 0;
-      const limit = 100;
+      const limit = 500;
 
       while (true) {
         const batch = await getOwnedTokens({
-          chains: insightEnabledChains.map((c) => c.chain),
+          chains: insightEnabledChains.map((c) => getCachedChain(c.chainId)),
           client,
           ownerAddress: wallet.getAccount()?.address || "",
           queryOptions: {
@@ -105,28 +95,85 @@ export function usePaymentMethods(options: {
           break;
         }
 
-        // find matching origin token in allRoutes
+        // Convert to our format and filter out zero balances
         const tokensWithBalance = batch
+          .filter((b) => b.value > 0n)
           .map((b) => ({
             balance: b.value,
-            originAmount: 0n,
-            originToken: allOriginTokens.find(
-              (t) =>
-                t.address.toLowerCase() === b.tokenAddress.toLowerCase() &&
-                t.chainId === b.chainId,
-            ),
-          }))
-          .filter((t) => !!t.originToken) as OwnedTokenWithQuote[];
+            originToken: {
+              address: b.tokenAddress,
+              chainId: b.chainId,
+              decimals: b.decimals,
+              iconUri: "",
+              name: b.name,
+              priceUsd: 0,
+              symbol: b.symbol,
+            } as Token,
+          }));
 
-        owned = [...owned, ...tokensWithBalance];
+        allOwnedTokens = [...allOwnedTokens, ...tokensWithBalance];
         page += 1;
       }
 
-      const requiredDollarAmount =
-        Number.parseFloat(destinationAmount) * destinationToken.priceUsd;
+      // 4. For each chain where we have owned tokens, fetch possible routes
+      const chainsWithOwnedTokens = Array.from(
+        new Set(allOwnedTokens.map((t) => t.originToken.chainId)),
+      );
 
-      // sort by dollar balance descending
-      owned.sort((a, b) => {
+      const allValidOriginTokens = new Map<string, Token>();
+
+      // Add destination token if included
+      if (includeDestinationToken) {
+        const tokenKey = `${destinationToken.chainId}-${destinationToken.address.toLowerCase()}`;
+        allValidOriginTokens.set(tokenKey, destinationToken);
+      }
+
+      // Fetch routes for each chain with owned tokens
+      await Promise.all(
+        chainsWithOwnedTokens.map(async (chainId) => {
+          try {
+            // TODO (bridge): this is quite inefficient, need to fix the popularity sorting to really capture all users tokens
+            const routesForChain = await routes({
+              client,
+              destinationChainId: destinationToken.chainId,
+              destinationTokenAddress: destinationToken.address,
+              includePrices: true,
+              limit: 100,
+              maxSteps: 3,
+              originChainId: chainId,
+              sortBy: "popularity",
+            });
+
+            // Add all origin tokens from this chain's routes
+            for (const route of routesForChain) {
+              const tokenKey = `${route.originToken.chainId}-${route.originToken.address.toLowerCase()}`;
+              allValidOriginTokens.set(tokenKey, route.originToken);
+            }
+          } catch (error) {
+            // Log error but don't fail the entire operation
+            console.warn(`Failed to fetch routes for chain ${chainId}:`, error);
+          }
+        }),
+      );
+
+      // 5. Filter owned tokens to only include valid origin tokens
+      const validOwnedTokens: OwnedTokenWithQuote[] = [];
+
+      for (const ownedToken of allOwnedTokens) {
+        const tokenKey = `${ownedToken.originToken.chainId}-${ownedToken.originToken.address.toLowerCase()}`;
+        const validOriginToken = allValidOriginTokens.get(tokenKey);
+
+        if (validOriginToken) {
+          validOwnedTokens.push({
+            balance: ownedToken.balance,
+            originAmount: 0n,
+            originToken: validOriginToken, // Use the token with pricing info from routes
+          });
+        }
+      }
+
+      // Sort by dollar balance descending
+      validOwnedTokens.sort((a, b) => {
         const aDollarBalance =
           Number.parseFloat(toTokens(a.balance, a.originToken.decimals)) *
           a.originToken.priceUsd;
@@ -138,36 +185,19 @@ export function usePaymentMethods(options: {
 
       const suitableOriginTokens: OwnedTokenWithQuote[] = [];
 
-      for (const b of owned) {
-        if (b.originToken && b.balance > 0n) {
-          const dollarBalance =
-            Number.parseFloat(toTokens(b.balance, b.originToken.decimals)) *
-            b.originToken.priceUsd;
-          if (b.originToken.priceUsd && dollarBalance < requiredDollarAmount) {
-            continue;
-          }
-
-          if (
-            includeDestinationToken &&
-            b.originToken.address.toLowerCase() ===
-              destinationToken.address.toLowerCase() &&
-            b.originToken.chainId === destinationToken.chainId
-          ) {
-            // add same token to the front of the list
-            suitableOriginTokens.unshift({
-              balance: b.balance,
-              originAmount: 0n,
-              originToken: b.originToken,
-            });
-            continue;
-          }
-
-          suitableOriginTokens.push({
-            balance: b.balance,
-            originAmount: 0n,
-            originToken: b.originToken,
-          });
+      for (const token of validOwnedTokens) {
+        if (
+          includeDestinationToken &&
+          token.originToken.address.toLowerCase() ===
+            destinationToken.address.toLowerCase() &&
+          token.originToken.chainId === destinationToken.chainId
+        ) {
+          // Add same token to the front of the list
+          suitableOriginTokens.unshift(token);
+          continue;
         }
+
+        suitableOriginTokens.push(token);
       }
 
       const transformedRoutes = [

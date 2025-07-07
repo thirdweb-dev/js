@@ -16,6 +16,11 @@ export function TeamSidebarLayout(props: {
   layoutPath: string;
   children: React.ReactNode;
   ecosystems: Array<{ name: string; slug: string }>;
+  chainSubscriptions: Array<{
+    chainId: number;
+    chainName: string;
+    slug: string;
+  }>;
 }) {
   const { layoutPath, children } = props;
 
@@ -59,6 +64,29 @@ export function TeamSidebarLayout(props: {
           icon: DatabaseIcon,
           label: "Usage",
         },
+        ...(props.chainSubscriptions.length > 0
+          ? [
+              {
+                separator: true,
+              } as const,
+              {
+                links: [
+                  ...props.chainSubscriptions.map((chainSubscription) => ({
+                    href: `${layoutPath}/~/infrastructure/${chainSubscription.slug}`,
+                    label: chainSubscription.chainName,
+                  })),
+                  {
+                    href: `${layoutPath}/~/infrastructure/deploy`,
+                    label: "Deploy Infrastructure",
+                  },
+                ],
+                subMenu: {
+                  icon: WalletCardsIcon,
+                  label: "Chain Infrastucture",
+                },
+              },
+            ]
+          : []),
       ]}
       footerSidebarLinks={[
         {

@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/a11y/useSemanticElements: EXPECTED */
 "use client";
 
 import { CheckCheckIcon } from "lucide-react";
@@ -210,7 +211,6 @@ function NFTCard(props: {
             }
           : undefined
       }
-      // biome-ignore lint/a11y/useSemanticElements: FIXME
       role="button"
       tabIndex={props.onClick ? 0 : undefined}
     >

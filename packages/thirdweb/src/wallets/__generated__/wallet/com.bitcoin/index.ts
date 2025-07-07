@@ -22,7 +22,7 @@ export const wallet = {
   },
   homepage: "https://www.bitcoin.com/",
   id: "com.bitcoin",
-  image_id: "0d7938e1-9b3b-4d8b-177b-98188c4cf400",
+  image_id: "8c575dec-0401-495f-d217-db965b48bf00",
   mobile: {
     native: "bitcoincom://",
     universal: "https://wallet.bitcoin.com/",

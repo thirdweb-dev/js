@@ -1,5 +1,7 @@
-import { defineChain } from "thirdweb";
-import { getChainMetadata } from "thirdweb/chains";
+import { ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
+import { defineChain, getAddress, NATIVE_TOKEN_ADDRESS } from "thirdweb";
+import { type ChainMetadata, getChainMetadata } from "thirdweb/chains";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
@@ -53,7 +55,7 @@ export async function RouteListCard({
 
   return (
     <div className="relative h-full">
-      <Card className="h-full w-full transition-colors hover:border-active-border">
+      <Card className="h-full w-full">
         <CardHeader className="flex flex-row items-center justify-between p-4">
           <div className="flex flex-row items-center gap-2">
             {resolvedOriginTokenIconUri ? (
@@ -80,32 +82,60 @@ export async function RouteListCard({
         </CardHeader>
 
         <CardContent className="px-4 pt-0 pb-4">
-          <table className="w-full">
-            <tbody className="text-sm [&_td>*]:min-h-[25px]">
-              <tr>
-                <th className="text-left font-normal text-base">
-                  {originTokenName === "ETH"
-                    ? originChain.nativeCurrency.name
-                    : originTokenName}
-                </th>
-                <td className="text-right text-base text-muted-foreground">
-                  {originChain.name}
-                </td>
-              </tr>
-              <tr>
-                <th className="text-left font-normal text-base">
-                  {destinationTokenName === "ETH"
-                    ? destinationChain.nativeCurrency.name
-                    : destinationTokenName}
-                </th>
-                <td className="text-right text-base text-muted-foreground">
-                  {destinationChain.name}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="flex flex-col gap-1">
+            <div className="flex justify-between gap-2">
+              <TokenName
+                chainMetadata={originChain}
+                tokenAddress={originTokenAddress}
+                tokenName={originTokenName}
+              />
+              <div className="text-right text-base text-muted-foreground">
+                {originChain.name}
+              </div>
+            </div>
+
+            <div className="flex justify-between gap-2">
+              <TokenName
+                chainMetadata={destinationChain}
+                tokenAddress={destinationTokenAddress}
+                tokenName={destinationTokenName}
+              />
+              <div className="text-right text-base text-muted-foreground">
+                {destinationChain.name}
+              </div>
+            </div>
+          </div>
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+const nativeTokenAddress = getAddress(NATIVE_TOKEN_ADDRESS);
+
+function TokenName(props: {
+  tokenAddress: string;
+  tokenName: string;
+  chainMetadata: ChainMetadata;
+}) {
+  const isERC20 = getAddress(props.tokenAddress) !== nativeTokenAddress;
+
+  if (isERC20) {
+    return (
+      <Link
+        className="flex items-center gap-1.5 font-normal text-base group/link hover:underline underline-offset-4 decoration-muted-foreground/50 decoration-dotted"
+        href={`https://thirdweb.com/${props.chainMetadata.slug}/${props.tokenAddress}`}
+        target="_blank"
+      >
+        {props.tokenName}
+        <ExternalLinkIcon className="size-3.5 text-muted-foreground group-hover/link:text-foreground" />
+      </Link>
+    );
+  }
+
+  return (
+    <div className="text-left font-normal text-base">
+      {props.chainMetadata.nativeCurrency.name}
     </div>
   );
 }

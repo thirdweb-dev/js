@@ -399,7 +399,14 @@ export function createWallet<const ID extends WalletId>(
         getConfig: () => args[1],
         id,
         subscribe: emitter.subscribe,
-        switchChain: (c) => handleSwitchChain(c),
+        switchChain: async (c) => {
+          try {
+            await handleSwitchChain(c);
+            chain = c;
+          } catch (e) {
+            console.error("Error switching chain", e);
+          }
+        },
       };
       return wallet;
     }

@@ -54,6 +54,7 @@ export default async function Page(props: {
           projectId={project.id}
           projectSlug={params.project_slug}
           teamId={team.id}
+          teamPlan={team.billingPlan}
           teamSlug={params.team_slug}
         />
       </div>

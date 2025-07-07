@@ -1,5 +1,9 @@
 import type { Abi, AbiConstructor } from "abitype";
+import { parseEventLogs } from "../../event/actions/parse-logs.js";
+import { contractDeployedEvent } from "../../extensions/stylus/__generated__/IStylusDeployer/events/ContractDeployed.js";
 import { activateStylusContract } from "../../extensions/stylus/write/activateStylusContract.js";
+import { deployWithStylusConstructor } from "../../extensions/stylus/write/deployWithStylusConstructor.js";
+import { isContractActivated } from "../../extensions/stylus/write/isContractActivated.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
@@ -171,6 +175,53 @@ export async function deployContract(
         to: info.create2FactoryAddress,
       }),
     });
+  } else if (options.isStylus && options.constructorParams) {
+    const isActivated = await isContractActivated(options);
+
+    if (!isActivated) {
+      // one time deploy to activate the new codehash
+      const impl = await deployContract({
+        ...options,
+        abi: [],
+        constructorParams: undefined,
+      });
+
+      // fetch metadata
+      await fetch(
+        `https://contract.thirdweb.com/metadata/${options.chain.id}/${impl}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "GET",
+        },
+      );
+    }
+
+    const deployTx = deployWithStylusConstructor({
+      abi: options.abi,
+      bytecode: options.bytecode,
+      chain: options.chain,
+      client: options.client,
+      constructorParams: options.constructorParams,
+    });
+
+    const receipt = await sendAndConfirmTransaction({
+      account: options.account,
+      transaction: deployTx,
+    });
+
+    const deployEvent = contractDeployedEvent();
+    const decodedEvent = parseEventLogs({
+      events: [deployEvent],
+      logs: receipt.logs,
+    });
+    if (decodedEvent.length === 0 || !decodedEvent[0]) {
+      throw new Error(
+        `No ContractDeployed event found in transaction: ${receipt.transactionHash}`,
+      );
+    }
+    address = decodedEvent[0]?.args.deployedContract;
   } else {
     const deployTx = prepareDirectDeployTransaction(options);
     const receipt = await sendAndConfirmTransaction({

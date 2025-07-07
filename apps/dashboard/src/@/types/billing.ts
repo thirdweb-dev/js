@@ -14,3 +14,8 @@ export type ProductSKU =
   | "usage:aa_sponsorship"
   | "usage:aa_sponsorship_op_grant"
   | null;
+
+export type ChainInfraSKU =
+  | "chain:infra:rpc"
+  | "chain:infra:insight"
+  | "chain:infra:account_abstraction";

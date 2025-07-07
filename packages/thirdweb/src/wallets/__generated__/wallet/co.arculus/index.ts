@@ -22,10 +22,10 @@ export const wallet = {
   },
   homepage: "https://www.arculus.co",
   id: "co.arculus",
-  image_id: "f78dab27-7165-4a3d-fdb1-fcff06c0a700",
+  image_id: "3882c5aa-61f8-4ef6-a628-97cdc4494000",
   mobile: {
     native: "arculuswc://",
-    universal: "https://gw.arculus.co/app",
+    universal: "https://gw.arculus.co/app/wc",
   },
   name: "Arculus Wallet",
   rdns: null,

@@ -327,13 +327,6 @@ async function redirects() {
       permanent: false,
       source: "/solutions/chains",
     },
-    // redirect /rpc to portal
-    {
-      destination:
-        "https://portal.thirdweb.com/infrastructure/rpc-edge/overview",
-      permanent: false,
-      source: "/rpc-edge",
-    },
     // redirect /sdk to portal
     {
       destination: "https://portal.thirdweb.com/connect/blockchain-api",
@@ -441,6 +434,11 @@ async function redirects() {
       destination: "/transactions",
       permanent: false,
       source: "/engine",
+    },
+    {
+      destination: "/rpc",
+      permanent: false,
+      source: "/rpc-edge",
     },
     ...legacyDashboardToTeamRedirects,
     ...projectPageRedirects,

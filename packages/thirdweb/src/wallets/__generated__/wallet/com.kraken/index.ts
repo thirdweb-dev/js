@@ -22,7 +22,7 @@ export const wallet = {
   },
   homepage: "https://www.kraken.com/wallet",
   id: "com.kraken",
-  image_id: "3f4e6025-d008-4edc-1fbd-19f54294a900",
+  image_id: "8909e826-63e4-42b3-60b2-8a6a54060900",
   mobile: {
     native: "krakenwallet://",
     universal: null,

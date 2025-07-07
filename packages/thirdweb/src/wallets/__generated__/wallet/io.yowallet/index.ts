@@ -18,7 +18,7 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: null,
+    universal: "https://yowallet.io",
   },
   homepage: "https://yowallet.io",
   id: "io.yowallet",

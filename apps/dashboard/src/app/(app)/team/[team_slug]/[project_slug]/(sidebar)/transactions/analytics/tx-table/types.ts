@@ -85,12 +85,7 @@ export type Transaction = {
   cancelledAt: Date | null;
 };
 
-export type TransactionStatus =
-  | "QUEUED"
-  | "SUBMITTED"
-  | "CONFIRMED"
-  | "REVERTED"
-  | "FAILED";
+export type TransactionStatus = "QUEUED" | "SUBMITTED" | "CONFIRMED" | "FAILED";
 
 type Pagination = {
   totalCount: number;

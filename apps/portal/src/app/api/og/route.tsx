@@ -9,7 +9,7 @@ const BAST_URL = getBaseUrl();
 const width = 1200;
 const height = 630;
 
-const iconSize = 300;
+const iconSize = 400;
 
 const inter600 = fetch(new URL("./inter/700.ttf", import.meta.url)).then(
   (res) => res.arrayBuffer(),
@@ -136,8 +136,8 @@ export async function GET(request: Request) {
         style={{
           display: "flex",
           position: "absolute",
-          right: width / 6.6,
-          top: height / 2 - iconSize / 2 + 10,
+          right: width / 20,
+          top: height / 2 - iconSize / 1.5,
         }}
         width={iconSize}
       />

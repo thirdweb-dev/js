@@ -315,7 +315,7 @@ const NetworkFilterCell = React.memo(function NetworkFilterCell({
   client: ThirdwebClient;
 }) {
   if (chainIds.length < 2) {
-    return <> NETWORK </>;
+    return "NETWORK";
   }
 
   return (

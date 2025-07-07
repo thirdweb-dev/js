@@ -22,7 +22,7 @@ export const wallet = {
   },
   homepage: "https://www.fireblocks.com/",
   id: "com.fireblocks",
-  image_id: "7e1514ba-932d-415d-1bdb-bccb6c2cbc00",
+  image_id: "94e7efd8-001d-40c0-e490-61e6b85e1b00",
   mobile: {
     native: "fireblocks-wc://",
     universal: null,

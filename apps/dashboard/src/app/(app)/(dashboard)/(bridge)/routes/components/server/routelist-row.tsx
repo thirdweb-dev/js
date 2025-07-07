@@ -1,5 +1,14 @@
-import { defineChain, getChainMetadata } from "thirdweb/chains";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
+import { getAddress, NATIVE_TOKEN_ADDRESS } from "thirdweb";
+import {
+  type ChainMetadata,
+  defineChain,
+  getChainMetadata,
+} from "thirdweb/chains";
+import { shortenAddress } from "thirdweb/utils";
+import { Img } from "@/components/blocks/Img";
+import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
@@ -52,37 +61,14 @@ export async function RouteListRow({
   ]);
 
   return (
-    <TableRow className="group transition-colors hover:bg-accent/50" linkBox>
+    <TableRow className="group">
       <TableCell>
-        <div className="flex flex-row items-center gap-3">
-          <div className="flex items-center gap-2">
-            {resolvedOriginTokenIconUri ? (
-              // For now we're using a normal img tag because the domain for these images is unknown
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                alt={originTokenAddress}
-                className="size-7 rounded-full border border-border/50 shadow-sm transition-transform group-hover:scale-105"
-                src={resolvedOriginTokenIconUri}
-              />
-            ) : (
-              <div className="size-7 rounded-full bg-muted-foreground/20" />
-            )}
-            {originTokenSymbol && (
-              <CopyTextButton
-                className="relative z-10 font-medium text-base"
-                copyIconPosition="right"
-                textToCopy={originTokenAddress}
-                textToShow={
-                  originTokenSymbol === "ETH"
-                    ? originChain.nativeCurrency.symbol
-                    : originTokenSymbol
-                }
-                tooltip="Copy Token Address"
-                variant="ghost"
-              />
-            )}
-          </div>
-        </div>
+        <TokenInfo
+          chainMetadata={originChain}
+          tokenAddress={originTokenAddress}
+          tokenIconUri={resolvedOriginTokenIconUri}
+          tokenSymbol={originTokenSymbol}
+        />
       </TableCell>
 
       <TableCell className="text-muted-foreground/90">
@@ -90,39 +76,61 @@ export async function RouteListRow({
       </TableCell>
 
       <TableCell>
-        <div className="flex flex-row items-center gap-3">
-          <div className="flex items-center gap-2">
-            {resolvedDestinationTokenIconUri ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                alt={destinationTokenAddress}
-                className="size-7 rounded-full border border-border/50 shadow-sm transition-transform group-hover:scale-105"
-                src={resolvedDestinationTokenIconUri}
-              />
-            ) : (
-              <div className="size-7 rounded-full bg-muted-foreground/20" />
-            )}
-            {destinationTokenSymbol && (
-              <CopyTextButton
-                className="relative z-10 font-medium text-base"
-                copyIconPosition="right"
-                textToCopy={destinationTokenAddress}
-                textToShow={
-                  destinationTokenSymbol === "ETH"
-                    ? destinationChain.nativeCurrency.symbol
-                    : destinationTokenSymbol
-                }
-                tooltip="Copy Token Address"
-                variant="ghost"
-              />
-            )}
-          </div>
-        </div>
+        <TokenInfo
+          chainMetadata={destinationChain}
+          tokenAddress={destinationTokenAddress}
+          tokenIconUri={resolvedDestinationTokenIconUri}
+          tokenSymbol={destinationTokenSymbol}
+        />
       </TableCell>
 
       <TableCell className="text-muted-foreground/90">
         <span className="font-medium">{destinationChain.name}</span>
       </TableCell>
     </TableRow>
+  );
+}
+
+const nativeTokenAddress = getAddress(NATIVE_TOKEN_ADDRESS);
+
+function TokenInfo(props: {
+  tokenAddress: string;
+  tokenSymbol: string | undefined;
+  chainMetadata: ChainMetadata;
+  tokenIconUri: string | undefined;
+}) {
+  const isERC20 = getAddress(props.tokenAddress) !== nativeTokenAddress;
+
+  return (
+    <div className="flex items-center gap-1.5">
+      {props.tokenIconUri ? (
+        <Img
+          alt={props.tokenAddress}
+          className="size-7 rounded-full border border-border/50"
+          src={props.tokenIconUri}
+        />
+      ) : (
+        <div className="size-7 rounded-full bg-muted-foreground/20" />
+      )}
+      {isERC20 ? (
+        <Button
+          asChild
+          className="h-auto w-auto py-1 px-1.5 gap-2"
+          variant="ghost"
+        >
+          <Link
+            href={`https://thirdweb.com/${props.chainMetadata.slug}/${props.tokenAddress}`}
+            target="_blank"
+          >
+            {props.tokenSymbol || shortenAddress(props.tokenAddress)}
+            <ExternalLinkIcon className="size-3.5 text-muted-foreground" />
+          </Link>
+        </Button>
+      ) : (
+        <span className="font-medium text-sm px-1.5 py-1">
+          {props.chainMetadata.nativeCurrency.symbol}
+        </span>
+      )}
+    </div>
   );
 }

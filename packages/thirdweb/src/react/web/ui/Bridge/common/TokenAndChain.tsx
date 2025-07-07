@@ -138,10 +138,10 @@ function TokenIconWithFallback(props: {
         border: `1px solid ${theme.colors.borderColor}`,
         borderRadius: "50%",
         display: "flex",
-        height: `${iconSize.md}px`,
+        height: `${iconSize[props.size]}px`,
         justifyContent: "center",
         padding: spacing.xs,
-        width: `${iconSize.md}px`,
+        width: `${iconSize[props.size]}px`,
       }}
     >
       <Text

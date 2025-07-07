@@ -40,10 +40,7 @@ import { projectDomainsSchema, projectNameSchema } from "@/schema/validations";
 import { toArrFromList } from "@/utils/string";
 
 const ALL_PROJECT_SERVICES = SERVICES.filter(
-  (srv) =>
-    srv.name !== "relayer" &&
-    srv.name !== "chainsaw" &&
-    srv.name !== "engineCloud", // TODO enable once API server is out
+  (srv) => srv.name !== "relayer" && srv.name !== "chainsaw",
 );
 
 export type CreateProjectPrefillOptions = {

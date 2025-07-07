@@ -17,12 +17,12 @@ export const wallet = {
     windows: null,
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "https://ctrl.xyz/",
   },
   homepage: "https://ctrl.xyz/",
   id: "xyz.ctrl",
-  image_id: "749856b0-3f0e-4876-4d0f-27835310db00",
+  image_id: "55e59c54-43bf-434a-e966-547514f21500",
   mobile: {
     native: "ctrl-mobile://",
     universal: "https://ctrl.xyz/deeplink/wallet",

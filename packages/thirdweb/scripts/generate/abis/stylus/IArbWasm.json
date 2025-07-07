@@ -1,3 +1,4 @@
 [
-  "function activateProgram(address program) returns (uint16,uint256)"
+  "function activateProgram(address program) returns (uint16,uint256)",
+  "function codehashVersion(bytes32 codehash) external view returns (uint16 version)"
 ]

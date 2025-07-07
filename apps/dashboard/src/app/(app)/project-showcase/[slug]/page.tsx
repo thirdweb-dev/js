@@ -9,7 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { PROJECT_SHOWCASE_DATA } from "@/lib/project-showcase-constants";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 
@@ -78,9 +79,13 @@ export default async function DetailPage(props: {
                 className="rounded-b-lg object-cover md:rounded-r-lg md:rounded-bl-none"
                 height={500}
                 src={
-                  project.image?.startsWith("ipfs://")
+                  project.image?.startsWith("ipfs://") &&
+                  DASHBOARD_THIRDWEB_SECRET_KEY
                     ? (resolveSchemeWithErrorHandler({
-                        client: serverThirdwebClient,
+                        client: getConfiguredThirdwebClient({
+                          secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+                          teamId: undefined,
+                        }),
                         uri: project.image,
                       }) ?? "")
                     : (project.image ?? "/assets/showcase/default_image.png")

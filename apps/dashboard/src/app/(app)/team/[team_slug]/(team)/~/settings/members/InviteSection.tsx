@@ -85,10 +85,7 @@ export function InviteSection(props: {
   let bottomSection: React.ReactNode = null;
   const maxAllowedInvitesAtOnce = 10;
   // invites are enabled if user has edit permission and team plan is not "free"
-  const inviteEnabled =
-    teamPlan !== "free" &&
-    teamPlan !== "starter" &&
-    props.userHasEditPermission;
+  const inviteEnabled = teamPlan !== "free" && props.userHasEditPermission;
 
   const form = useForm<InviteFormValues>({
     defaultValues: {
@@ -111,7 +108,7 @@ export function InviteSection(props: {
     },
   });
 
-  if (teamPlan === "free" || teamPlan === "starter") {
+  if (teamPlan === "free") {
     bottomSection = (
       <div className="lg:px6 flex items-center justify-between gap-4 border-border border-t px-4 py-4">
         <p className="text-muted-foreground text-sm">

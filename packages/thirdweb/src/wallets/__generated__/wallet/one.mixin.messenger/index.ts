@@ -14,7 +14,7 @@ export const wallet = {
     mac: null,
     opera: null,
     safari: null,
-    windows: null,
+    windows: "https://apps.microsoft.com/detail/9nq6hf99b8nj?hl=en-US&gl=US",
   },
   desktop: {
     native: null,

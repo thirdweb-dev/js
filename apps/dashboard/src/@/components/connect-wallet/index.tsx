@@ -120,20 +120,18 @@ export const CustomConnectWallet = (props: {
 
   if ((!isLoggedIn || !account) && loginRequired) {
     return (
-      <>
-        <Button
-          asChild
-          className={props.signInLinkButtonClassName}
-          size="lg"
-          variant="default"
+      <Button
+        asChild
+        className={props.signInLinkButtonClassName}
+        size="lg"
+        variant="default"
+      >
+        <Link
+          href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
         >
-          <Link
-            href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
-          >
-            Connect Wallet
-          </Link>
-        </Button>
-      </>
+          Connect Wallet
+        </Link>
+      </Button>
     );
   }
 

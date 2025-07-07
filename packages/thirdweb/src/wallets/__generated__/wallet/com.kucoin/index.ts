@@ -4,7 +4,7 @@
 export const wallet = {
   app: {
     android: "https://www.kucoin.com/download",
-    browser: "https://www.kucoin.com",
+    browser: null,
     chrome: null,
     edge: null,
     firefox: null,
@@ -19,7 +19,7 @@ export const wallet = {
     native: null,
     universal: null,
   },
-  homepage: "https://www.kucoin.com",
+  homepage: "https://www.kucoin.com/Web3",
   id: "com.kucoin",
   image_id: "70d8a90b-457b-4c04-4bc3-791e97caab00",
   mobile: {
