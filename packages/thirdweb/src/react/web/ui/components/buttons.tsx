@@ -8,7 +8,7 @@ import {
 } from "../../../core/design-system/index.js";
 import { StyledButton } from "../design-system/elements.js";
 
-export type ButtonProps = {
+type ButtonProps = {
   variant: "primary" | "secondary" | "link" | "accent" | "outline" | "ghost";
   unstyled?: boolean;
   fullWidth?: boolean;

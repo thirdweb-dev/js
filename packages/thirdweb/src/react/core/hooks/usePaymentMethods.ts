@@ -145,6 +145,14 @@ export function usePaymentMethods(options: {
 
             // Add all origin tokens from this chain's routes
             for (const route of routesForChain) {
+              // Skip if the origin token is the same as the destination token, will be added later only if includeDestinationToken is true
+              if (
+                route.originToken.chainId === destinationToken.chainId &&
+                route.originToken.address.toLowerCase() ===
+                  destinationToken.address.toLowerCase()
+              ) {
+                continue;
+              }
               const tokenKey = `${route.originToken.chainId}-${route.originToken.address.toLowerCase()}`;
               allValidOriginTokens.set(tokenKey, route.originToken);
             }
