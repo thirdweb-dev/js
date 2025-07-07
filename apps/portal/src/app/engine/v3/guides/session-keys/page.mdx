@@ -37,23 +37,35 @@ const sessionKeyAccountAddress = "0x..."; // Replace with your session key addre
 const targetAddress = "0x..."; // Replace with your target address
 ```
 
-## Step 1: Create a Personal Account
+## Step 1: Configure User Smart Wallet with Session Key
 
-Generate a personal account that will be used to create the smart wallet:
+The first step is to add our session key address as a signer to the user's smart account. This can be done by configuring the smart wallet with the session key address and permissions.
+
+In a React application, this can be done by using the `ConnectButton` or `ConnectEmbed` component. This will automatically configure the smart wallet with the session key address and permissions.
 
 ```typescript
+<ConnectButton
+  accountAbstraction={{
+    chain: sepolia,
+    sessionKey: {
+      address: sessionKeyAccountAddress,
+    },
+    sponsorGas: true,
+  }}
+/>
+```
+
+This can also be done in pure TypeScript by using the `smartWallet` function and connecting it to a personal account.
+
+For this guide, we'll generate a random personal account that will be used to create the smart wallet:
+
+```typescript
+// this would be the user's personal account
 const personalAccount = await generateAccount({
   client: client,
 });
 
-console.log("Personal account created:", personalAccount.address);
-```
-
-## Step 2: Configure Smart Wallet with Session Key
-
-Create a smart wallet configuration with session key permissions:
-
-```typescript
+// wrapped in a smart wallet with session key permissions
 const smart = smartWallet({
   chain: sepolia,
   sessionKey: {
@@ -65,6 +77,8 @@ const smart = smartWallet({
   },
   sponsorGas: true, // Enable gas sponsorship
 });
+
+console.log("Personal account created:", personalAccount.address);
 ```
 
 ### Session Key Permissions
@@ -75,7 +89,7 @@ The `permissions` object allows you to control what the session key can do:
   - Use `"*"` for all targets
   - Use an array of addresses for specific contracts: `["0x123...", "0x456..."]`
 
-## Step 3: Connect Smart Account
+## Step 2: Connect Smart Account
 
 Connect the smart wallet using the personal account:
 
@@ -88,7 +102,9 @@ const smartAccount = await smart.connect({
 console.log("Smart account address:", smartAccount.address);
 ```
 
-## Step 4: Verify Session Key Registration
+Note that in a React application, this would be done automatically by the `ConnectButton` or `ConnectEmbed` component.
+
+## Step 3 (Optional): Verify Session Key Registration
 
 Check that the session key is properly registered as an active signer:
 
@@ -110,7 +126,7 @@ console.log("Session key is active:", isSessionKeyActive);
 console.log("All active signers:", signers.map((s) => s.signer));
 ```
 
-## Step 5: Create Engine Server Wallet
+## Step 4: Create Engine Server Wallet
 
 Set up an Engine server wallet using the session key for transaction execution:
 
@@ -136,7 +152,7 @@ const serverWallet = Engine.serverWallet({
 - `smartAccountAddress`: The smart account address that will execute transactions
 - `type`: The account abstraction type (ERC4337)
 
-## Step 6: Execute Transactions
+## Step 5: Execute Transactions
 
 Now you can execute transactions using the session key:
 
@@ -179,7 +195,7 @@ async function executeTransactionWithSessionKey() {
   });
   
   const sessionKeyAccountAddress = "0x..."; // Your session key address
-  const targetAddress = "0x..."; // Target address for transaction
+  const targetAddress = "0x..."; // Target address for the final transaction
   
   try {
     // Step 1: Create personal account

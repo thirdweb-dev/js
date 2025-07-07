@@ -1,4 +1,5 @@
 import {
+  BookOpenIcon,
   BracesIcon,
   CloudIcon,
   CodeIcon,
@@ -9,7 +10,6 @@ import {
   ShieldQuestionIcon,
   WalletIcon,
   WrenchIcon,
-  BookOpenIcon,
 } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 
