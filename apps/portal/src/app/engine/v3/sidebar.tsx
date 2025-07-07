@@ -9,6 +9,7 @@ import {
   ShieldQuestionIcon,
   WalletIcon,
   WrenchIcon,
+  BookOpenIcon,
 } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 
@@ -50,6 +51,16 @@ export const sidebar: SideBar = {
         },
       ],
       name: "Configure Wallets",
+    },
+    {
+      icon: <BookOpenIcon />,
+      links: [
+        {
+          href: `${engineV3Slug}/guides/session-keys`,
+          name: "Session Keys",
+        },
+      ],
+      name: "Guides",
     },
     {
       href: "https://engine.thirdweb.com/reference",
