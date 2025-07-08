@@ -77,6 +77,11 @@ export interface PaymentSelectionProps {
    * @default ["crypto", "card"]
    */
   paymentMethods?: ("crypto" | "card")[];
+
+  /**
+   * Fee payer
+   */
+  feePayer?: "sender" | "receiver";
 }
 
 type Step =
@@ -97,6 +102,7 @@ export function PaymentSelection({
   connectLocale,
   includeDestinationToken,
   paymentMethods = ["crypto", "card"],
+  feePayer,
 }: PaymentSelectionProps) {
   const connectedWallets = useConnectedWallets();
   const activeWallet = useActiveWallet();
@@ -113,6 +119,7 @@ export function PaymentSelection({
         toChainId: destinationToken.chainId,
         toToken: destinationToken.address,
       });
+      return true;
     },
     queryKey: ["payment_selection"],
   });
@@ -267,6 +274,7 @@ export function PaymentSelection({
               destinationToken.decimals,
             )}
             destinationToken={destinationToken}
+            feePayer={feePayer}
             onBack={handleBackToWalletSelection}
             onPaymentMethodSelected={handlePaymentMethodSelected}
             paymentMethods={suitableTokenPaymentMethods}
