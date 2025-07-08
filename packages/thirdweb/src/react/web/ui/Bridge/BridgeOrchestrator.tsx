@@ -275,6 +275,11 @@ export function BridgeOrchestrator({
             connectOptions={connectOptions}
             destinationAmount={state.context.destinationAmount}
             destinationToken={state.context.destinationToken}
+            feePayer={
+              uiOptions.mode === "direct_payment"
+                ? uiOptions.paymentInfo.feePayer
+                : undefined
+            }
             includeDestinationToken={uiOptions.mode !== "fund_wallet"}
             onBack={() => {
               send({ type: "BACK" });
